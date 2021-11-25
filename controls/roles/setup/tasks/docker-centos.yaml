@@ -1,0 +1,25 @@
+---
+- name: Install system packages for docker
+  yum:
+    name:
+      - yum-utils
+      - curl
+    state: present
+
+- name: Add repository
+  yum_repository:
+    name: docker-ce
+    description: Docker CE repo
+    baseurl: https://download.docker.com/linux/centos/8/x86_64/stable/
+
+- name: Install docker-ce
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - python3-docker
+    state: present
+    disable_gpg_check: yes
+
+# EOF

@@ -1,0 +1,26 @@
+---
+#dependency:
+#  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: "configure-updates--default--ubuntu-20.04"
+    image: ubuntu:focal
+  - name: "configure-updates--default--centos-8"
+    image: geerlingguy/docker-centos8-ansible
+provisioner:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - lint
+    - verify
+    - destroy

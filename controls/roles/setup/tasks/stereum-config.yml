@@ -1,0 +1,20 @@
+---
+- name: Make sure Stereum's config path exists
+  file:
+    path: "/etc/stereum/services"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0644
+  become: yes
+
+- name: Write stereum config
+  template:
+    src: stereum.yaml
+    dest: "/etc/stereum/stereum.yaml"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  become: yes
+
+# EOF

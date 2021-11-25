@@ -1,0 +1,21 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "setup--default--ubuntu-2004"
+    server_type: cx21
+    image: ubuntu-20.04
+  - name: "setup--default--centos-8"
+    server_type: cx21
+    image: centos-8
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .

@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Start Linux Build ') {
+            steps {
+                checkout scm
+                dir('electron-launcher') {  
+                    dir ('dist') {
+                      writeFile file:'dummy', text:''
+                    }                  
+                    sh 'DOCKER_BUILDKIT=1 docker build -o dist .'
+                    archiveArtifacts artifacts: 'dist/*.snap', excludes: ''
+                }                
+            }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }
+}

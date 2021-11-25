@@ -1,0 +1,36 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    stereum_args:
+      manage_service:
+        save: true
+        state: start
+        configuration:
+          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+          image: stereum/lighthouse:v2.0.1-47
+          env: 
+            DEBUG_LEVEL: debug
+            NETWORK: mainnet
+            ETH1_NODES: http://geth:8545
+            DATADIR: /opt/app/beacon
+            SLASHERDIR: /opt/app/slasher
+            SLASHER_DB_SIZE: "16"
+          command: []
+          entrypoint: ["/opt/app/start/beacon.sh"]
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+          user: "2000"
+          volumes:
+            - /opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon:/opt/app/beacon
+            - /opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher:/opt/app/slasher
+
+  tasks:
+    - set_fact:
+        stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+    - name: "Include manage-service"
+      include_role:
+        name: "manage-service"

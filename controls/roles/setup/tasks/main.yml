@@ -1,0 +1,22 @@
+---
+- name: Apply stereum configuration to this setup
+  set_fact:
+    stereum: "{{ stereum_static }}"
+
+- include_tasks: update-os-ubuntu.yml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- include_tasks: update-os-centos.yml
+  when: ansible_distribution == "CentOS"
+
+- include_tasks: timesyncd.yml
+
+- include_tasks: docker.yml
+
+- include_tasks: add-stereum-user.yml
+
+- include_tasks: stereum-config.yml
+
+- name: Reboot
+  reboot:
+  changed_when: "'molecule-notest' not in ansible_skip_tags"

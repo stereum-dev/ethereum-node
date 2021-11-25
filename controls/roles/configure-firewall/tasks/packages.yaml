@@ -1,0 +1,19 @@
+---
+- name: Install ufw, fail2ban
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ufw
+    - fail2ban
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Install ufw, fail2ban
+  yum:
+    name:
+      - ufw
+      - fail2ban
+    state: present
+  when: ansible_distribution == "CentOS"
+
+# EOF

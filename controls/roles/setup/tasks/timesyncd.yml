@@ -1,0 +1,31 @@
+---
+- name: Install timesyncd
+  package:
+    name: systemd-timesyncd
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install timesyncd
+  yum:
+    name: systemd-timesyncd
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: enable service systemd-timesyncd
+  systemd:
+    name: systemd-timesyncd
+    enabled: yes
+    masked: no
+    state: started
+
+- name: set correct ntp settings
+  blockinfile:
+    path: "/etc/systemd/timesyncd.conf"
+    backup: yes
+    insertafter: "[Time]"
+    block: |
+      NTP=0.pool.ntp.org 2.pool.ntp.org
+      FallbackNTP=1.pool.ntp.org 3.pool.ntp.org
+      RootDistanceMaxSec=1
+  notify: Restart timesyncd
+  become: yes

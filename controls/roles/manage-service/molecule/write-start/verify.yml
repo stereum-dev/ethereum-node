@@ -1,0 +1,39 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # config
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # docker container
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+  # data dir
+  - stat: path=/opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon
+    register: service_beacon_dir
+    become: yes
+  - stat: path=/opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher
+    register: service_slasher_dir
+    become: yes
+  - debug:
+      msg: "{{ service_beacon_dir }}"
+  - name: Check data dirs
+    assert:
+      that:
+        - service_beacon_dir.stat.exists
+        - service_beacon_dir.stat.isdir
+        - service_beacon_dir.stat.uid == 2000
+        - service_beacon_dir.stat.gid == 2000
+        - service_slasher_dir.stat.exists
+        - service_slasher_dir.stat.isdir
+        - service_slasher_dir.stat.uid == 2000
+        - service_slasher_dir.stat.gid == 2000

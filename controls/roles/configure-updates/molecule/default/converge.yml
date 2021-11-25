@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  tasks:
+    - name: Apply default stereum settings
+      set_fact:
+        stereum: "{{ stereum_static }}"
+    - name: "Include configure-updates"
+      include_role:
+        name: "configure-updates"

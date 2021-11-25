@@ -1,0 +1,84 @@
+---
+- include_tasks: write-configuration.yml
+  when: stereum.manage_service.save is defined and stereum.manage_service.save
+
+- name: Change state of service
+  block:
+  - name: Build service configuration's path
+    set_fact:
+      stereum_service_config_path: "/etc/stereum/services/{{ stereum.manage_service.configuration.id }}.yaml"
+
+  - name: Read service's configuration
+    slurp:
+      src: "{{ stereum_service_config_path }}"
+    register: stereum_service_configuration_raw
+    become: yes
+
+  - name: Read variable
+    set_fact:
+      stereum_service_configuration: "{{ stereum_service_configuration_raw.content | b64decode | from_yaml }}"
+    become: yes
+
+  - name: Build service container's name
+    set_fact:
+      stereum_service_container_name: "stereum-{{ stereum_service_configuration.id }}"
+
+  - name: Stop service
+    docker_container:
+      name: "{{ stereum_service_container_name }}"
+      state: absent
+    become: yes
+    when: stereum.manage_service.state == "stopped" or stereum.manage_service.state == "restarted"
+
+  - name: Set directory permissions
+    file:
+      path: "{{ item.split(':') | first }}"
+      state: directory
+      owner: "{{ stereum_service_configuration.user }}"
+      group: "2000"
+      mode: 0700
+    become: yes
+    when: stereum.manage_service.state == "start" or stereum.manage_service.state == "restarted"
+    with_items: "{{ stereum_service_configuration.volumes }}"
+
+  - name: Stereum's docker network
+    docker_network:
+      name: stereum
+
+  - name: Set firewall rules
+    ufw:
+      direction: in
+      dest: "{{ 'any' if (item.split(':') | first) == '0.0.0.0' else (item.split(':') | first) }}"
+      rule: allow
+      port: "{{ item.split(':')[1] }}"
+      proto: "{{ item.split('/')[1] }}"
+      delete: "{{ 'yes' if stereum.manage_service.state == 'stopped' else 'no' }}"
+    environment:
+      PATH: /sbin:{{ ansible_env.PATH }}
+    with_items: "{{ stereum_service_configuration.ports }}"
+    when: stereum.manage_service.state != "restarted"
+
+  - name: Start service
+    docker_container:
+      command_handling: correct
+      name: "{{ stereum_service_container_name }}"
+      user: "{{ stereum_service_configuration.user }}"
+      image: "{{ stereum_service_configuration.image }}"
+      env: "{{ stereum_service_configuration.env }}"
+      command: "{{ stereum_service_configuration.command }}"
+      entrypoint: "{{ stereum_service_configuration.entrypoint }}"
+      restart_policy: "unless-stopped"
+      state: started
+      # recreate: yes # default: no
+      ports: "{{ stereum_service_configuration.ports }}"
+      networks:
+        - name: stereum
+      # working_dir: "{{ stereum_service_configuration.working_dir }}" # doesn't work at all
+      volumes: "{{ stereum_service_configuration.volumes }}"
+      log_driver: "json-file"
+      log_options:
+        max-file: "10"
+        max-size: "100m"
+    become: yes
+    when: stereum.manage_service.state == "start" or stereum.manage_service.state == "restarted"
+  when: stereum.manage_service.state is defined

@@ -1,0 +1,11 @@
+stereum_static:
+  defaults:
+    controls_install_path: /opt/stereumnode
+    os_user: stereum
+    updates:
+      in_progress:
+      lane: stable
+      available:
+      unattended:
+        check: true
+        install: false

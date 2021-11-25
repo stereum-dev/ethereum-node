@@ -1,0 +1,55 @@
+name: Tests Molecule
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  molecule-test:
+    strategy:
+      matrix:
+        tests: [
+          {role: "manage-service", test: "start"},
+          {role: "manage-service", test: "start-multiple"},
+          {role: "manage-service", test: "start-stop"},
+          {role: "manage-service", test: "write-start"},
+
+          #{role: "configure-firewall", test: "default"}, # tested via manage-service:start-multiple
+
+          {role: "configure-updates", test: "default"},
+
+          {role: "setup", test: "default"},
+
+          {role: "fastsync", test: "default"},
+        ]
+      fail-fast: false
+    concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install depencencies
+        run: |
+          pip install molecule
+          pip install "molecule[docker.lint]"
+          pip install molecule-docker
+          pip install molecule-hetznercloud
+          pip install docker
+          pip install hcloud
+      - name: Install dependency for pipx
+        run: |
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
+      - name: Install ansible-lint
+        run: sudo apt-get install -y ansible-lint
+      - name: Run tests
+        working-directory: ./controls/roles/${{ matrix.tests.role }}
+        run: molecule test -s ${{ matrix.tests.test }}
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          ansible_python_interpreter: "/usr/bin/python3"

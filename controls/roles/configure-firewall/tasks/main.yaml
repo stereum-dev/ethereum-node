@@ -1,0 +1,6 @@
+---
+- include_tasks: packages.yaml
+
+- include_tasks: ufw.yaml
+
+# EOF

@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: "role-configure-updates-ubuntu-20.04"
+    image: geerlingguy/docker-ubuntu2004-ansible
+    privileged: true
+    pre_build_image: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /lib/modules:/lib/modules:ro
+  #### centos docker image doesn't support ufw right now
+  # - name: "role-configure-updates-centos-7"
+  #   image: geerlingguy/docker-centos7-ansible:python3
+  #   privileged: true
+  #   pre_build_image: true
+  #   volumes:
+  #     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #     - /lib/modules:/lib/modules:ro
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

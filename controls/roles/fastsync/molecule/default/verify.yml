@@ -1,0 +1,17 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Stereum config files
+  - stat: path=/opt/stereum/lighthouse/beacon/chain_db/CURRENT
+    register: stereum_fastsync_db_file
+  - debug:
+      msg: "{{ stereum_fastsync_db_file }}"
+  - name: Check for config
+    assert:
+      that:
+        - stereum_fastsync_db_file.stat.exists

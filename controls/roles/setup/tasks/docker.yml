@@ -1,0 +1,15 @@
+---
+- name: Docker on CentOS
+  include_tasks: docker-centos.yaml
+  when: ansible_distribution == "CentOS"
+
+- name: Docker on Ubuntu
+  include_tasks: docker-ubuntu.yaml
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Enable service docker
+  systemd:
+    name: docker
+    enabled: yes
+    masked: no
+    state: started

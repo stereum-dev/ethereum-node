@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include configure-firewall"
+      include_role:
+        name: "configure-firewall"

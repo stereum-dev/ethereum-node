@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+
+  tasks:
+    - name: "Set testing params"
+      set_fact:
+        stereum:
+          fastsync:
+            network: prater
+            service: lighthouse
+            dest: /opt/stereum
+    - name: "Include fastsync"
+      include_role:
+        name: "fastsync"

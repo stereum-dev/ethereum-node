@@ -1,0 +1,21 @@
+---
+- name: Configure update check
+  ansible.builtin.cron:
+    name: "stereum auto update check"
+    minute: "{{ 59 | random }}"
+    job: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}\" && ansible-playbook update-check.yaml"
+    state: "{{ 'present' if (stereum.settings.updates.unattended.check | default(stereum.defaults.updates.unattended.check)) else 'absent' }}"
+    user: "root"
+  become: yes
+
+- name: Configure unattended update
+  ansible.builtin.cron:
+    name: "stereum auto unattended update"
+    minute: "{{ 59 | random }}"
+    hour: "{{ 5 | random }}" # execute updates only in the night time/very early morning
+    job: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}\" && ./unattended-update.sh"
+    state: "{{ 'present' if (stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.install)) else 'absent' }}"
+    user: "root"
+  become: yes
+
+# EOF

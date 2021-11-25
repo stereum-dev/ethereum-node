@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    stereum_args:
+      manage_service:
+        save: false
+        state: start
+        configuration:
+          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+
+  tasks:
+    - set_fact:
+        stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+    - name: "Include manage-service"
+      include_role:
+        name: "manage-service"

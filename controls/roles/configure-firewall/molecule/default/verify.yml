@@ -1,0 +1,13 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - shell: ufw status
+    register: stereum_ufw_status
+  - name: Check ufw status
+    assert:
+      that:
+      - stereum_ufw_status.stdout.find("Status: active") != -1
