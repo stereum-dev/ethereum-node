@@ -168,9 +168,9 @@
     args: 
       chdir: /opt/app/import
     become: yes
-    register: haha
+    register: import_output
 
   - debug: 
-      msg: "{{ haha }}"      
+      msg: "{{ import_output }}"      
 
   when: stereum.manage_service.state is defined 
