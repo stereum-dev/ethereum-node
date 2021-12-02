@@ -1,12 +1,18 @@
 <template>
   <div>
     <div id="container">
-      <base-logo :link="link"> </base-logo>
+      <section @click="activePage">
+        <base-logo :link="link"> </base-logo>
+      </section>
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
-      <lang-dialog @close="hideDialog" :open="dialogIsVisible">
-        <ul>
-          <li v-for="link in linkFlags" :key="link" @click="hideDialog">
-            <img :src="link" />
+      <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
+        <ul id="flag">
+          <li
+            v-for="link in linkFlags"
+            :key="link.langImg"
+            @click="setLang(link.langName, link.langSelect)"
+          >
+            <img :src="link.langImg" id="flagId" />
           </li>
         </ul>
       </lang-dialog>
@@ -31,7 +37,29 @@ export default {
       link: "stereumLogoExtern.png",
       flag: "SelectLang.png",
       dialogIsVisible: false,
-      linkFlags: ["Img/Flag/ENGLISH.png", "Img/Flag/ENGLISH.png"],
+      linkFlags: [
+        {
+          langImg: "Img/Flag/ENGLISH.png",
+          langSelect: "Img/Flag/En.png",
+          langName: "english",
+        },
+        {
+          langImg: "Img/Flag/GERMAN.png",
+          langSelect: "Img/Flag/Gr.png",
+          langName: "german",
+        },
+        {
+          langImg: "Img/Flag/FRENCH.png",
+          langSelect: "Img/Flag/Fr.png",
+          langName: "french",
+        },
+        {
+          langImg: "Img/Flag/SPANISH.png",
+          langSelect: "Img/Flag/Sp.png",
+          langName: "spanish",
+        },
+      ],
+      language: "",
     };
   },
   methods: {
@@ -41,6 +69,18 @@ export default {
 
     hideDialog() {
       this.dialogIsVisible = false;
+    },
+    setLang(lang, langSelect) {
+      this.language = lang;
+      this.flag = langSelect;
+      this.hideDialog();
+      this.link = "stereum_logo_extern.png";
+    },
+    activePage() {
+      if (this.language === "") {
+      } else {
+        alert("");
+      }
     },
   },
 };
@@ -54,7 +94,7 @@ export default {
   margin: 2rem auto;
   width: 95vw;
   height: 95vh;
-  background-color: #336666;
+  animation: blink 1s 1000000 alternate;
 }
 div {
   background-color: #000;
@@ -71,5 +111,30 @@ div {
   width: 4em;
   z-index: 100;
   resize: both;
+}
+#flag {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  /* width: 100px; */
+  text-align: left;
+  float: left;
+}
+#flag li {
+  list-style: none;
+  display: inline-block;
+  padding: 5px;
+}
+#flagId {
+  width: 120px;
+  resize: both;
+}
+@keyframes blink {
+  from {
+    background-color: #336666;
+  }
+  to {
+    background-color: #448a8a;
+  }
 }
 </style>
