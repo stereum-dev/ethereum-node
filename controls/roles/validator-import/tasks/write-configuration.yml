@@ -1,0 +1,20 @@
+---
+- name: validator Make sure Stereum's config path exists
+  file:
+    path: "/etc/stereum/services"
+    state: directory
+    owner: "root"
+    group: "root"
+    mode: 0644
+  become: yes
+
+- name: validator Write service config
+  template:
+    src: service.yaml
+    dest: "/etc/stereum/services/{{ stereum.manage_service.configuration.id }}.yaml"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  become: yes
+
+# EOF
