@@ -1,7 +1,4 @@
 ---
-- include_tasks: write-configuration.yml
-  when: stereum.manage_service.save is defined and stereum.manage_service.save
-
 - name: Change state of service
   block:
   - name: Build service configuration's path
