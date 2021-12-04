@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card
+    <!-- <b-card
       img-src="setup-banner.png"
       img-top
       tag="article"
@@ -34,7 +34,7 @@
           </form-wizard>
         </div>
       </b-card-body>
-    </b-card>
+    </b-card> -->
   </div>
 </template>
 
