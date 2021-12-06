@@ -39,7 +39,7 @@
 
     /*========== Colors ==========*/
     /* Change favorite color */
-    --hue-color: 230; /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
+    --hue-color: 180; /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
 
     /*HSL color mode light
     --first-color: hsl(var(--hue-color),87.6%,67.1%);
@@ -62,8 +62,10 @@
     --text-color: hsl(var(--hue-color),8.6%, 75.1%);
     --input-color: hsl(var(--hue-color),29.6%, 16.1%);
     --container-color: hsl(var(--hue-color), 29%, 16%);
+    --background-grey-color: hsl(var(--hue-color), 3%, 29%);
+    --lang-border-color: hsl(var(--hue-color), 0%, 6%);
     --scroll-bar-color: hsl(var(--hue-color),12%, 48.1%);
-    --scroll-thumb-color: hsl(var(--hue-color),12%, 36.1%);    
+    --scroll-thumb-color: hsl(var(--hue-color),12%, 36.1%);  
 
     /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
     --big-font-size: 2rem;
@@ -84,6 +86,7 @@
     --mb-0-5: .5rem;
     --mb-0-75: .75rem;
     --mb-1: 1rem;
+    --mb-1-25: 1.25rem;
     --mb-1-5: 1.5rem;
     --mb-2: 2rem;
     --mb-2-5: 2.5rem;
@@ -94,8 +97,8 @@
     --z-fixed: 100;
     --z-modal: 1000;
     --z-body: -1000;
-    --z-background: -500;
-    --z-between: -100;
+    --z-background: -100;
+    --z-between: -10;
     --z-normal: 0;
 }
 

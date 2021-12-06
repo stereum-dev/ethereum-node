@@ -88,17 +88,16 @@ export default {
 
 <style scoped>
 #container {
-  border-radius: 40px;
+  border-radius: var(--mb-1-5);;
 
-  padding: 1rem;
-  margin: 2rem auto;
+  padding: var(--mb-1);
+  margin: var(--mb-2) auto;
   width: 95vw;
   height: 95vh;
   animation: blink 1s 1000000 alternate;
 }
 div {
-  background-color: #000;
-
+  background-color: var(--body-color);
   justify-content: center;
   align-items: center;
   height: 100vh;
@@ -107,10 +106,9 @@ div {
 .lang {
   position: fixed;
   top: 81vh;
-  left: 86%;
-  width: 4em;
-  z-index: 100;
-  resize: both;
+  left: 86vw;
+  width: var(--mb-2);
+  z-index: var(--z-fixed);
 }
 #flag {
   display: inline-flex;
@@ -122,8 +120,8 @@ div {
 }
 #flag li {
   list-style: none;
-  display: inline-block;
-  padding: 5px;
+  display: border-box;
+  padding: var(--mb-0-25);
 }
 #flagId {
   width: 120px;
