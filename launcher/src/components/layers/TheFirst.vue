@@ -131,10 +131,10 @@ div {
 }
 @keyframes blink {
   from {
-    background-color: #336666;
+    background-color: var(--first-color-second);
   }
   to {
-    background-color: #448a8a;
+    background-color: var(--container-color);
   }
 }
 </style>
