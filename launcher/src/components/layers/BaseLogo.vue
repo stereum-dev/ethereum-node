@@ -1,18 +1,20 @@
 <template>
-  <div>
-    <img :src="link" />
-  </div>
+<div> 
+      <img :src='link' >
+</div>
+
 </template>
 
 <script>
 export default {
-  name: "BaseLogo",
-  props: ["link"],
-};
+name:'BaseLogo',
+props:['link']
+}
 </script>
 
 <style scoped>
-img {
+
+img{
   display: block;
   position: absolute;
   top: 50%;

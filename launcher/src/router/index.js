@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 //import Setup from "../views/Setup.vue";
-import TheFirst from "../components/layers/TheFirst.vue";
-
+//import TheFirst from '../components/layers/TheFirst.vue'
+import BaseHome from '../components/layers/BaseHome.vue'
 Vue.use(VueRouter);
 
 const routes = [
@@ -10,16 +10,16 @@ const routes = [
   //   path: "/",
   //   name: "Setup",
   //   component: Setup,
-  // },
+  // },  
   {
     path: "/",
-    name: "TheFirst",
-    component: TheFirst,
-  },
+    name: "BaseHome",
+    component: BaseHome,
+  },  
 ];
 
 const router = new VueRouter({
-  mode: "hash",
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes,
 });

@@ -1,25 +1,28 @@
 <template>
   <dialog open v-if="open">
     <!-- @link="setLink" -->
-    <slot></slot>
+      <slot>
+      </slot>
   </dialog>
 </template>
 
 <script>
 export default {
-  name: "LangDialog",
-  props: ["open"],
-  //    data(){
-  //      return{
-  //        links:''
-  //      }
-  //    },
-  //    methods: {
-  //      setLink(linkUrl){
-  // links=linkUrl
-  //      }
-  //    },
-};
+  name:'LangDialog',
+    props: ['open'],
+//    data(){
+//      return{
+//        links:''
+//      }
+//    },
+//    methods: {
+//      setLink(linkUrl){
+// links=linkUrl
+//      }
+//    },
+  
+
+}
 </script>
 
 <style scoped>

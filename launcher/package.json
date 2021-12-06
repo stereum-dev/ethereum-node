@@ -22,7 +22,10 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
-    "coverageReporters": ["json", "html"]
+    "coverageReporters": [
+      "json",
+      "html"
+    ]
   },
   "repository": {
     "type": "git",
