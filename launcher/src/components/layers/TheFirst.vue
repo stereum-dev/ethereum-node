@@ -73,7 +73,7 @@ export default {
 
 <style scoped>
 #container {
-  border-radius: var(--mb-1-5);;
+  border-radius: var(--mb-1-5);
 
   padding: var(--mb-1);
   margin: var(--mb-2) auto;
