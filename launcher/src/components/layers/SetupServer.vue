@@ -1,7 +1,7 @@
 <template>
 
 <div class="test">
-         <section id="header">
+    <section id="header">
       <h2>CONNECT TO YOUR SERVER</h2>
     </section>
     <form @submit.prevent>
