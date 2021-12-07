@@ -3,6 +3,8 @@
   hosts: all
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    eth1_node: https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c  
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -33,7 +35,72 @@
           - expect
         state: latest
       become: true  
-      when: ansible_distribution == "CentOS"
+      when: ansible_distribution == "CentOS"  
 
     - include_role:
         name: "setup"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: start
+            configuration:
+              id: e1370b42-5678-11ec-988b-5b5038492927
+              image: stereum/lighthouse:v2.0.1-47
+              hostname: beacon
+              env:
+                DEBUG_LEVEL: debug
+                NETWORK: prater
+                ETH1_NODES: "{{ eth1_node }}"
+                DATADIR: /opt/app/beacon
+                SLASHERDIR: /opt/app/slasher
+                SLASHER_DB_SIZE: "16"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp 
+                - 127.0.0.1:5052:5052  
+              command: []
+              entrypoint: ["/opt/app/start/beacon.sh"]
+              user: "2000"
+              volumes:
+                - /opt/app/services/e1370b42-5678-11ec-988b-5b5038492927/beacon:/opt/app/beacon
+                - /opt/app/services/e1370b42-5678-11ec-988b-5b5038492927/slasher:/opt/app/slasher    
+
+    # lh validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: start
+            configuration:
+              id: 2e83d610-48b8-11ec-802a-330dee8e6b2e
+              image: stereum/lighthouse:v2.0.1-47
+              hostname: []
+              env:
+                DEBUG_LEVEL: info
+                NETWORK: prater
+                DATADIR: /opt/app/validator
+                LAUNCHPADDIR: /opt/app/launchpad
+                GRAFFITI: stereum.net
+              ports: []    
+              command: []
+              entrypoint: ["/opt/app/start/validator.sh"]
+              user: "2000"
+              volumes:
+                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/validator:/opt/app/validator
+                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad:/opt/app/launchpad
+                - /opt/app/import:/opt/app/import
