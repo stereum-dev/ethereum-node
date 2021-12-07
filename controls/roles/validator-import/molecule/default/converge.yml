@@ -6,7 +6,7 @@
 
   vars:
     validator_password: MyTestPassword
-    eth1_infura: https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c
+    validator_service_name: 2e83d610-48b8-11ec-802a-330dee8e6b2e
     validator_keys:
      - name: keystore-m_12381_3600_0_0_0-1637577658.json
        content: '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "1ccb24f0f1469ab56cc0147dae242aab59ff360177c8ec4f710966913da839b6"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "b5d944adfb65e33873c5c1b809c3c15b558821f2829cd7e9da1df65d0b78fdb6"}}, "description": "", "pubkey": "acaa51756fb445b406c9e599f3f4bec991f7799c002619566ab1fa5b70445c62f1ac6561154ca5e49d7542dbe690b96b", "path": "m/12381/3600/0/0/0", "uuid": "1ea9ed13-e3bb-4555-99d9-c5e83ab9eb67", "version": 4}'
@@ -16,32 +16,6 @@
        content: '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b"}}, "description": "", "pubkey": "948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458", "path": "m/12381/3600/2/0/0", "uuid": "c7521eed-533a-4fd1-90b7-ad1aa0f24a2d", "version": 4}'
 
   tasks:
-    - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include validator-import"
-        include_role:
-          name: "validator-import"
-      vars:
-        stereum_args:
-          manage_service:
-            save: true
-            state: start
-            configuration:
-              id: 2e83d610-48b8-11ec-802a-330dee8e6b2e
-              image: stereum/lighthouse:v2.0.1-47
-              env:
-                DEBUG_LEVEL: info
-                NETWORK: prater
-                DATADIR: /opt/app/validator
-                LAUNCHPADDIR: /opt/app/launchpad
-                GRAFFITI: stereum.net
-              command: []
-              entrypoint: ["/opt/app/start/validator.sh"]
-              user: "2000"
-              volumes:
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/validator:/opt/app/validator # for validator
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad:/opt/app/launchpad # for validator
-                - /opt/app/import:/opt/app/import                                                     # for lighthouse_validator_import.sh
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/beacon:/opt/app/beacon       # for beacon node
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/slasher:/opt/app/slasher     # for beacon node
+    - name: "Include validator-import"
+      include_role:
+        name: "validator-import"       
