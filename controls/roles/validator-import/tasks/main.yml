@@ -1,7 +1,7 @@
 ---  
 - name: Create validator keys
   copy:
-    dest: "/opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad/{{ item.name }}"
+    dest: "/opt/app/services/{{ validator_service_name }}/launchpad/{{ item.name }}"
     content: "{{ item.content }}"
     owner: "2000"
     group: "2000"
@@ -27,8 +27,8 @@
                      -e NETWORK=prater \
                      -e DATADIR="/opt/app/validator" \
                      -e DIRECTORY="/opt/app/launchpad" \
-                     -v "/opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/validator":"/opt/app/validator" \
-                     -v "/opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad":"/opt/app/launchpad" \
+                     -v "/opt/app/services/{{ validator_service_name }}/validator":"/opt/app/validator" \
+                     -v "/opt/app/services/{{ validator_service_name }}/launchpad":"/opt/app/launchpad" \
                      --user "2000":"2000" \
                      --net "stereum" \
                      --entrypoint "/opt/app/start/import-launchpad-wallet.sh" \
