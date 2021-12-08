@@ -4,7 +4,9 @@
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
-    eth1_node: https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c  
+    eth1_node: https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c
+    validator_service: 2e83d610-48b8-11ec-802a-330dee8e6b2e
+    beacon_service: e1370b42-5678-11ec-988b-5b5038492927  
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -53,9 +55,9 @@
             save: true
             state: start
             configuration:
-              id: e1370b42-5678-11ec-988b-5b5038492927
-              image: stereum/lighthouse:v2.0.1-47
-              hostname: beacon
+              id: "{{ beacon_service }}"
+              image: stereum/lighthouse:v2.0.1-48
+              hostname: "stereum-{{ beacon_service }}"
               env:
                 DEBUG_LEVEL: debug
                 NETWORK: prater
@@ -71,8 +73,8 @@
               entrypoint: ["/opt/app/start/beacon.sh"]
               user: "2000"
               volumes:
-                - /opt/app/services/e1370b42-5678-11ec-988b-5b5038492927/beacon:/opt/app/beacon
-                - /opt/app/services/e1370b42-5678-11ec-988b-5b5038492927/slasher:/opt/app/slasher    
+                - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"    
 
     # lh validator service
     - block:
@@ -87,20 +89,21 @@
             save: true
             state: start
             configuration:
-              id: 2e83d610-48b8-11ec-802a-330dee8e6b2e
-              image: stereum/lighthouse:v2.0.1-47
-              hostname: []
+              id: "{{ validator_service }}"
+              image: stereum/lighthouse:v2.0.1-48
+              hostname: "stereum-{{ validator_service }}"
               env:
                 DEBUG_LEVEL: info
                 NETWORK: prater
                 DATADIR: /opt/app/validator
                 LAUNCHPADDIR: /opt/app/launchpad
                 GRAFFITI: stereum.net
+                BEACON_NODES: "http://stereum-{{ beacon_service }}:5052"
               ports: []    
               command: []
-              entrypoint: ["/opt/app/start/validator.sh"]
+              entrypoint: ["/opt/app/start/validator-stereum2.sh"]
               user: "2000"
               volumes:
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/validator:/opt/app/validator
-                - /opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad:/opt/app/launchpad
+                - "/opt/app/services/{{ validator_service }}/validator:/opt/app/validator"
+                - "/opt/app/services/{{ validator_service }}/launchpad:/opt/app/launchpad"
                 - /opt/app/import:/opt/app/import
