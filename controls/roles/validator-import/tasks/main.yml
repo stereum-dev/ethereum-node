@@ -67,5 +67,5 @@
   command: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
   args:
     chdir: /opt/app/import
-  changed_when: false  
+  changed_when: false
   become: yes
