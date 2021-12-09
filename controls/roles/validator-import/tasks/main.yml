@@ -1,4 +1,4 @@
----  
+---
 - name: Create validator keys
   copy:
     dest: "/opt/app/services/{{ validator_service_name }}/launchpad/{{ item.name }}"
@@ -7,9 +7,9 @@
     group: "2000"
     mode: 0700
   become: yes
-  with_items: "{{ validator_keys }}"  
+  with_items: "{{ validator_keys }}"
 
-- name: Creating expect script for import 
+- name: Creating expect script for import
   copy:
     dest: "/opt/app/import/lighthouse_validator_import.sh"
     content: |
@@ -47,15 +47,15 @@
             }
             exp_continue
           }
-      } 
+      }
     owner: "2000"
-    group: "2000"     
+    group: "2000"
     mode: 0700
-  become: yes      
+  become: yes
 
 - name: Stop validator service
   docker_container:
-    name: "stereum-{{ validator_service_name }}" 
+    name: "stereum-{{ validator_service_name }}"
     state: stopped
   become: yes
 
@@ -65,6 +65,6 @@
 
 - name: Run validator import
   shell: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
-  args: 
+  args:
     chdir: /opt/app/import
-  become: yes   
+  become: yes
