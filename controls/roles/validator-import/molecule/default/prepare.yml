@@ -4,7 +4,6 @@
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
-    eth1_node: https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c
     validator_service: 2e83d610-48b8-11ec-802a-330dee8e6b2e
     beacon_service: e1370b42-5678-11ec-988b-5b5038492927  
 
@@ -60,7 +59,7 @@
               env:
                 DEBUG_LEVEL: debug
                 NETWORK: prater
-                ETH1_NODES: "{{ eth1_node }}"
+                ETH1_NODES: MyEth1Node
                 DATADIR: /opt/app/beacon
                 SLASHERDIR: /opt/app/slasher
                 SLASHER_DB_SIZE: "16"
