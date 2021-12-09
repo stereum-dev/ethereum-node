@@ -64,7 +64,8 @@
   become: yes
 
 - name: Run validator import
-  shell: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
+  command: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
   args:
     chdir: /opt/app/import
+  changed_when: false
   become: yes
