@@ -57,7 +57,6 @@
             configuration:
               id: "{{ beacon_service }}"
               image: stereum/lighthouse:v2.0.1-48
-              hostname: "stereum-{{ beacon_service }}"
               env:
                 DEBUG_LEVEL: debug
                 NETWORK: prater
@@ -91,7 +90,6 @@
             configuration:
               id: "{{ validator_service }}"
               image: stereum/lighthouse:v2.0.1-48
-              hostname: "stereum-{{ validator_service }}"
               env:
                 DEBUG_LEVEL: info
                 NETWORK: prater
