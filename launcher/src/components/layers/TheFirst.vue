@@ -36,7 +36,7 @@ export default {
     emit:['open','page'],
     data(){
         return{
-            link:'stereumLogoExtern.png',
+            link:'stereum_logo_blinking.gif',
             flag:'SelectLang.png',
           dialogIsVisible: false,
           linkFlags:[{langImg:'Img/Flag/ENGLISH.png',langSelect:'Img/Flag/En.png',langName:'english'},{langImg:'Img/Flag/GERMAN.png',langSelect:'Img/Flag/Gr.png',langName:'german'},{langImg:'Img/Flag/FRENCH.png',langSelect:'Img/Flag/Fr.png',langName:'french'},{langImg:'Img/Flag/SPANISH.png',langSelect:'Img/Flag/Sp.png',langName:'spanish'}],
@@ -81,7 +81,8 @@ export default {
   margin: 2rem auto;
   width:95vw ;
     height: 95vh;
-  animation: blink 1s 1000000 alternate;
+  /* animation: blink 1s 1000000 alternate; */
+  background-color: #336666;
   
 }
 div{
@@ -94,6 +95,7 @@ div{
      display: flex;
 }
 .lang{
+  cursor: pointer;
     position: fixed;
   top: 81vh;
   left: 86%;
@@ -113,15 +115,16 @@ div{
  list-style: none;
   display: inline-block;
   padding: 5px;
+  cursor: pointer;
 }
 #flagId {
   width:120px ;
   resize: both;
 }
-@keyframes blink {
+/* @keyframes blink {
   from { background-color: #336666; }
   to { background-color: #448a8a; }
-}
+} */
 
 
 </style>

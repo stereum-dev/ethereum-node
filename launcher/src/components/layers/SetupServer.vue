@@ -1,97 +1,151 @@
 <template>
-<section id="main">
-      <section id="cont">
-        <section>
-          <img src="stereum_logo_extern.png" alt="" />
-<!-- avale test -->
+  <section id="main">
+    <section id="cont">
+      <section>
+        <img src="stereum_logo_extern.png" alt="" />
+        <!-- avale test -->
 
+        <div class="test" style="border-style: none">
+          <section id="header">
+            <h2>CONNECT TO YOUR SERVER</h2>
+          </section>
+          <form @submit.prevent>
+            <div id="container">
+              <div id="one">
+                <div class="select-wrapper">
+                  <select @change="setTunnelsSelect($event)">
+                    <option
+                      v-for="tunnel in tunnels"
+                      :key="tunnel.name"
+                      :value="tunnel.name"
+                    >
+                      {{ tunnel.name }}
+                    </option>
+                  </select>
+                </div>
+                <input
+                  class="three"
+                  type="image"
+                  src="./img/icon/+.png"
+                  @click="showDialog"
+                />
+                <input class="three" type="image" src="./img/icon/TRASH CAN.png" @click="showBDialog" />
+                <add-dialog v-if="dialogVisible" @dialogDis="hideDialog" @pass="addModel"></add-dialog>
+                <base-dialog v-if="bDialogVisible" @bDialogDis="hideBDialog" @bDialogOk="baseDialogDelete">
+                <template v-slot:title><h4>Warning!</h4></template>
+                <template v-slot:des><p>Are you sure recode Delete ?</p></template>
+                <template v-slot:cancel>Cancel</template>
+                <template v-slot:ok >Delete</template>
+                </base-dialog>
+              </div>
+              <div class="formGroup">
+                <label for="servername">SARVERNAME</label>
+                <input name="servername" id="servername" type="text" />
+              </div>
+              <div class="formGroup">
+                <label for="host">IP or HOSTNAME</label>
+                <input name="host" id="iporhostname" type="text" v-model="model.host" />
+              </div>
+              <div class="formGroup">
+                <label for="user">USERNAME</label>
+                <input name="user" id="username" v-model="model.user" />
+              </div>
+            </div>
+            <div id="keyLocation">
+              <label for="keylocation">KEYLOCATION</label>
+              <input name="keylocation" id="keylocation" />
+            </div>
+            <div class="ssh" style="border-style: none">
+              <label id="lbl" for="" style="margin-right: 10px">SSH</label>
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  v-model="model.sshKeyAuth"
+                  name="check-button"
+                  checked
+                />
+                <span class="slider round"></span>
+              </label>
+            </div>
 
-
-  <div class="test" style="border-style:none;">
-    <section id="header">
-      <h2>CONNECT TO YOUR SERVER</h2>
-    </section>
-    <form @submit.prevent>
-      <div id="container">
-        <div id="one">
-           <div class="select-wrapper">
-             
-         
-           <select >
-           
-            <option v-for="tunnel in tunnels" :key="tunnel.name" value="`http://localhost:${tunnel.localPort}/`">
-             {{
-                tunnel.name
-              }}
-            </option>
-           </select>
-  </div>
-          <input class="three" type="image" src="./img/icon/+.png" />
-          <input class="three" type="image" src="./img/icon/TRASH CAN.png" />
+            <input id="login" type="submit" value="LOGIN" />
+          </form>
         </div>
-        <div class="formGroup">
-          <label for="servername">SARVERNAME</label>
-          <input name="servername" id="servername" type="text" />
-        </div>
-        <div class="formGroup">
-          <label for="host">IP or HOSTNAME</label>
-          <input
-            name="host"
-            id="iporhostname"
-            type="text"
-            v-model="model.host"
-          />
-        </div>
-        <div class="formGroup">
-          <label for="user">USERNAME</label>
-          <input name="user" id="username" v-model="model.user" />
-        </div>
-      </div>
-      <div id="keyLocation">
-        <label for="keylocation">KEYLOCATION</label>
-        <input name="keylocation" id="keylocation" />
-      </div>
-      <div class="ssh" style="border-style:none;">
-        <label id="lbl" for="">SSH</label>
-        <label class="switch">
-          <input
-            type="checkbox"
-            v-model="model.sshKeyAuth"
-            name="check-button"
-            checked
-          />
-          <span class="slider round"></span>
-        </label>
-      </div>
 
-      <input id="login" type="submit" value="LOGIN" />
-    </form>
-  </div>
-
-<!-- akhare test -->
-  </section>
+        <!-- akhare test -->
       </section>
     </section>
- 
+  </section>
 </template>
 <script>
+import AddDialog from './AddDialog.vue';
+import BaseDialog from './BaseDialog.vue';
 import BaseLogo from "./BaseLogo.vue";
 
 export default {
-  components: { BaseLogo },
-  name: "SetupServer",
+  components: { BaseLogo, AddDialog, BaseDialog },
+  name: "SetupFServer",
+  props:['pass','dialogDis','bDialogDis'],
   data() {
     return {
       link: "stereumLogoExtern.png",
       stereumVersions: {},
-      tunnels: [{name: "-------None-------", localPort: 0, dstPort: 0},{ name: "web-cc", localPort: 9081, dstPort: 8000 }],
+      tunnels: [
+        { name: "-------None-------", localPort: 0, dstPort: 0 },
+        { name: "web-cc", localPort: 9081, dstPort: 8000 },
+      ],
       model: {},
+      dialogVisible: false,
+      bDialogVisible:false,
+      selectTunnelName:''
+    
     };
   },
-  // props: {
+ //props: {
   //   model: Object,
-  // },
+   //},
   methods: {
+    addModel(val){
+      this.dialogVisible=false
+      const check=this.tunnels.find(obj => obj.name===val.name);
+      if(!check ){
+this.tunnels.unshift(val)
+      }else{
+alert('Ready')
+
+      }
+    },
+    deleteRow(){
+     var record=[]
+     const r= this.tunnels.find(tunel => tunel.name!=this.selectTunnelName)
+     record.push(r)
+     this.tunnels=record;
+    },
+    setTunnelsSelect(val){
+            const select=val.target.value
+
+      this.selectTunnelName=select
+},
+    showBDialog(){
+      this.bDialogVisible=true
+    },
+
+    showDialog() {
+      this.dialogVisible = true;
+    },
+    hideBDialog(){
+      this.bDialogVisible=false
+    },
+    hideDialog() {
+      this.dialogVisible = false;
+    },
+    baseDialogDelete(){
+            this.bDialogVisible = false;
+this.deleteRow()
+
+    },
+    
+    //es
     async connect(e) {
       this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
       try {
@@ -99,18 +153,14 @@ export default {
       } catch (ex) {
         console.log(ex);
         this.$toasted.show(
-          "Error connecting to server! Level: " +
-            ex.level +
-            " Message: " +
-            ex.message
+          "Error connecting to server! Level: " + ex.level + " Message: " + ex.message
         );
         return;
       }
 
       const stereumStatus = await ControlService.inquire(this.model);
 
-      if (!stereumStatus.exists)
-        await ControlService.setup(stereumStatus.latestRelease);
+      if (!stereumStatus.exists) await ControlService.setup(stereumStatus.latestRelease);
       else {
         this.$toasted.show("Multiple Stereum Versions found!");
         this.stereumVersions = stereumStatus;
@@ -124,38 +174,30 @@ export default {
 };
 </script>
 <style scoped>
-
-
-
 .select-wrapper {
-   overflow: hidden;
-text-align: center;
+  overflow: hidden;
+  text-align: center;
   width: 70%;
-  padding:0;
+  padding: 0;
   border-radius: 40px;
   float: left;
-      
-
 }
 
-
-select{
- width: 100%;
- align-items: center;
+select {
+  width: 100%;
+  align-items: center;
   padding: 1rem;
   border-radius: 40px;
-
+  cursor: pointer;
 }
-.select-wrapper::after{
+.select-wrapper::after {
   position: absolute;
   width: 50%;
-   z-index: 100;
+  z-index: 100;
 }
 test {
-  
   /* animation: modal 0.3s ease-out forwards; */
   background-color: rgba(76, 72, 72, 0.5);
-  
 }
 #header {
   text-align: center;
@@ -164,8 +206,9 @@ test {
   border-radius: 40px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.5rem;
-  background-color: #aa2626;
+  background-color: #567891;
   color: #fff;
+  border: 2px solid grey;
 }
 div {
   text-align: center;
@@ -184,13 +227,12 @@ div {
   border-radius: 40px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 1rem;
-  background-color: #681264;
+  background-color: #567891;
   justify-content: center;
   align-items: center;
   display: flex;
-  
 }
-#one select{
+#one select {
   text-align: center;
 }
 #two {
@@ -232,7 +274,7 @@ div {
   border-radius: 20px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.3rem;
-  background-color: #26aa43;
+  background-color: #567891;
   justify-content: center;
 
   display: flex;
@@ -270,11 +312,12 @@ div {
   text-align: center;
   font-weight: bold;
 }
+input {
+  cursor: pointer;
+}
 
 .ssh {
-  
-  
-  margin-top: 0;
+  margin-top: -20px;
   text-align: left;
 
   max-width: 35rem;
@@ -284,12 +327,14 @@ div {
   display: flex;
   color: #fff;
 }
-.shh #lbl {
+#lbl {
   /* Other styling... */
   text-align: right;
   clear: both;
   float: left;
   margin-right: 15px;
+  font-weight: bold;
+  font-size: 15pt;
 }
 .switch {
   position: relative;
@@ -381,8 +426,4 @@ img {
   transform: translate(-50%, -50%);
   resize: both;
 }
-
-
-
-
 </style>
