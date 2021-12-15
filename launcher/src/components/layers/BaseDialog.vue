@@ -6,7 +6,6 @@
     <button @click="$emit('bDialogOk',true)"><slot name="ok"></slot></button>
 
     </dialog>
-
 </template>
 <script>
 export default {

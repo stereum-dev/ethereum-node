@@ -9,6 +9,9 @@
           <section id="header">
             <h2>CONNECT TO YOUR SERVER</h2>
           </section>
+          
+                <add-dialog v-if="dialogVisible" @dialogDis="hideDialog" @pass="addModel" class="priority"></add-dialog>
+               
           <form @submit.prevent>
             <div id="container">
               <div id="one">
@@ -30,13 +33,14 @@
                   @click="showDialog"
                 />
                 <input class="three" type="image" src="./img/icon/TRASH CAN.png" @click="showBDialog" />
-                <add-dialog v-if="dialogVisible" @dialogDis="hideDialog" @pass="addModel"></add-dialog>
+               
                 <base-dialog v-if="bDialogVisible" @bDialogDis="hideBDialog" @bDialogOk="baseDialogDelete">
                 <template v-slot:title><h4>Warning!</h4></template>
                 <template v-slot:des><p>Are you sure recode Delete ?</p></template>
                 <template v-slot:cancel>Cancel</template>
                 <template v-slot:ok >Delete</template>
                 </base-dialog>
+                
               </div>
               <div class="formGroup">
                 <label for="servername">SARVERNAME</label>
@@ -52,11 +56,11 @@
               </div>
             </div>
             <div id="keyLocation">
-              <label for="keylocation">KEYLOCATION</label>
+              <label for="keylocation">{{sourceBase}}</label>
               <input name="keylocation" id="keylocation" />
             </div>
             <div class="ssh" style="border-style: none">
-              <label id="lbl" for="" style="margin-right: 10px">SSH</label>
+              <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
               <label class="switch">
                 <input
                   type="checkbox"
@@ -88,13 +92,14 @@ export default {
   props:['pass','dialogDis','bDialogDis'],
   data() {
     return {
+      source:false,
       link: "stereumLogoExtern.png",
       stereumVersions: {},
       tunnels: [
         { name: "-------None-------", localPort: 0, dstPort: 0 },
         { name: "web-cc", localPort: 9081, dstPort: 8000 },
       ],
-      model: {},
+      model: {sshAuthKey:false},
       dialogVisible: false,
       bDialogVisible:false,
       selectTunnelName:''
@@ -104,6 +109,15 @@ export default {
  //props: {
   //   model: Object,
    //},
+   computed:{
+     sourceBase(){
+if (this.model.sshKeyAuth){
+return 0
+}else{
+return 'PASSWORD'
+}
+     }
+   },
   methods: {
     addModel(val){
       this.dialogVisible=false
@@ -174,6 +188,9 @@ this.deleteRow()
 };
 </script>
 <style scoped>
+.priority{
+  z-index: 200;
+}
 .select-wrapper {
   overflow: hidden;
   text-align: center;
@@ -193,11 +210,12 @@ select {
 .select-wrapper::after {
   position: absolute;
   width: 50%;
-  z-index: 100;
+
 }
 test {
   /* animation: modal 0.3s ease-out forwards; */
   background-color: rgba(76, 72, 72, 0.5);
+  z-index: 0;
 }
 #header {
   text-align: center;
@@ -304,7 +322,7 @@ div {
   top: 81vh;
   left: 86%;
   width: 100px;
-  z-index: 100;
+  
   resize: both;
   padding: 0.4rem;
   border-radius: 40px;
