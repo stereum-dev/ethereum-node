@@ -17,9 +17,9 @@
                 <p>Please complete all filed!</p>
               </div>
               <div>
-                <button @click="addServer">Add Server</button>
+                <button @click="addServer" id="add">Add Server</button>
 
-                  <button @click="$emit('dialogDis',true)">Cancel</button>
+                  <button @click="$emit('dialogDis',true)" id="canc">Cancel</button>
                   </div> 
                 </dialog>
 </template>
@@ -53,6 +53,40 @@ if(serverName!='' && localPort!='' && dstPort!=''  ){
 </script>
 <style scoped>
 dialog{
-  border:2px solid grey;
+    border-radius: 40px;
+    background-color:rgba(248, 247, 247, 0.849);
+ resize: both;
+ border: solid 3px rgb(124, 119, 119);
+ z-index: 100;
+ opacity: 140%;
+}
+dialog label{
+  text-align: right;
+  clear: both;
+  float: left;
+  /* margin-right: 40px; */
+  font-size: large;
+}
+dialog input{
+   
+  border-radius: 15px;
+  
+  float: right;
+  text-align: right;
+}
+#add{
+    border-radius: 15px 0 0 15px ;
+    background-color: rgb(124, 119, 119);
+    font-weight: bold;
+    color: #fff;
+    margin-top: 10px;
+    
+}
+#canc{
+    border-radius: 0 15px 15px 0;
+    background-color: rgb(124, 119, 119);
+    font-weight: bold;
+    color: #fff;
+     
 }
 </style>

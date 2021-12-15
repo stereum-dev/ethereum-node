@@ -11,7 +11,13 @@
           </section>
           
                 <add-dialog v-if="dialogVisible" @dialogDis="hideDialog" @pass="addModel" class="priority"></add-dialog>
-               
+               <base-dialog v-if="bDialogVisible" @bDialogDis="hideBDialog" @bDialogOk="baseDialogDelete"
+                >
+                <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
+                <template v-slot:des><h5>Are you sure recode Delete ?</h5></template>
+                <template v-slot:cancel>Cancel</template>
+                <template v-slot:ok >Delete</template>
+                </base-dialog>
           <form @submit.prevent>
             <div id="container">
               <div id="one">
@@ -34,12 +40,7 @@
                 />
                 <input class="three" type="image" src="./img/icon/TRASH CAN.png" @click="showBDialog" />
                
-                <base-dialog v-if="bDialogVisible" @bDialogDis="hideBDialog" @bDialogOk="baseDialogDelete">
-                <template v-slot:title><h4>Warning!</h4></template>
-                <template v-slot:des><p>Are you sure recode Delete ?</p></template>
-                <template v-slot:cancel>Cancel</template>
-                <template v-slot:ok >Delete</template>
-                </base-dialog>
+                
                 
               </div>
               <div class="formGroup">
@@ -188,6 +189,14 @@ this.deleteRow()
 };
 </script>
 <style scoped>
+#dialTitle{
+   animation: blink 1s 1000000 alternate;
+  font-weight: bold;
+}
+@keyframes blink {
+  from { background-color: red; }
+  to { background-color: orange; }
+}
 .priority{
   z-index: 200;
 }
@@ -237,7 +246,7 @@ div {
   padding: 0.3rem;
   border: 2px solid grey;
   position: relative;
-  opacity: 90%;
+  opacity: 95%;
 }
 #one {
   margin: 1rem auto;
