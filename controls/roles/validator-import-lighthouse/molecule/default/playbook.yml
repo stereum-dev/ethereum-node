@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include validator-import"
+    - name: "Include validator-import-lighthouse"
       include_role:
-        name: "validator-import"
+        name: "validator-import-lighthouse"
