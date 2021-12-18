@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include validator-import"
-      include_role:
-        name: "validator-import"

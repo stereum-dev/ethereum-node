@@ -1,0 +1,45 @@
+---
+- name: Create validator keys
+  copy:
+    dest: "/opt/app/services/{{ beacon_service_name }}/launchpad/{{ item.name }}"
+    content: "{{ item.content }}"
+    owner: "2000"
+    group: "2000"
+    mode: 0700
+  become: yes
+  with_items: "{{ validator_keys }}"
+
+- name: Creating expect script for import
+  copy:
+    dest: "/opt/app/import/nimbus_validator_import.sh"
+    content: |
+      #!/usr/bin/expect -f
+
+      set timeout -1
+      set validator_password [lindex $argv 0];
+
+      if {[ llength $validator_password ] == 0 } {
+         exit
+      }
+
+      spawn sh -c { sudo docker exec -it stereum-{{ beacon_service_name }} /opt/app/build/nimbus_beacon_node deposits import "/opt/app/launchpad" --data-dir="/opt/app/validator" --network="prater" }
+
+      expect {
+          "Please enter the password for decrypting" {
+            send "$validator_password\r"
+            sleep 5
+            exp_continue
+          }
+          "The entered password was incorrect" exit
+      }
+    owner: "2000"
+    group: "2000"
+    mode: 0700
+  become: yes
+
+- name: Run validator import
+  command: "./nimbus_validator_import.sh {{ validator_password | quote }}"
+  args:
+    chdir: /opt/app/import
+  changed_when: false
+  become: yes
