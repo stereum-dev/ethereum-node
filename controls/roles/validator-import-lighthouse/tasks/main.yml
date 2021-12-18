@@ -60,11 +60,13 @@
   become: yes
 
 - name: Create validator_image from validator service
-  shell: "docker commit 'stereum-{{ validator_service_name }}' validator_image"
+  command: "docker commit 'stereum-{{ validator_service_name }}' validator_image"
+  changed_when: false
   become: yes
 
 - name: Run validator import
-  shell: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
+  command: "./lighthouse_validator_import.sh {{ validator_password | quote }}"
   args:
     chdir: /opt/app/import
+  changed_when: false
   become: yes
