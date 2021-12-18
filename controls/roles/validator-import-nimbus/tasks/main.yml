@@ -22,7 +22,12 @@
          exit
       }
 
-      spawn sh -c { sudo docker exec -it stereum-{{ beacon_service_name }} /opt/app/build/nimbus_beacon_node deposits import "/opt/app/launchpad" --data-dir="/opt/app/validator" --network="prater" }
+      spawn sh -c {
+          sudo docker exec
+            -it stereum-{{ beacon_service_name }}
+            /opt/app/build/nimbus_beacon_node deposits import "/opt/app/launchpad"
+            --data-dir="/opt/app/validator"
+            --network="prater" }
 
       expect {
           "Please enter the password for decrypting" {
