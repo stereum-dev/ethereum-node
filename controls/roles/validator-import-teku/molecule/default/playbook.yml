@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include validator-import-teku"
+      include_role:
+        name: "validator-import-teku"
+
