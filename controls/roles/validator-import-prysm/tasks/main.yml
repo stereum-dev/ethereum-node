@@ -37,7 +37,14 @@
          exit
       }
 
-      spawn sudo docker exec -it stereum-942bde4e-5f16-11ec-b10a-bfb028e31895 /app/cmd/validator/validator accounts import --keys-dir=/opt/app/launchpad --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use
+      spawn sh -c {
+          sudo docker exec 
+            -it stereum-{{ validator_service_name }}
+            /app/cmd/validator/validator accounts import
+            --keys-dir="/opt/app/launchpad"
+            --wallet-dir="/opt/app/data/wallets" 
+            --wallet-password-file="/opt/app/data/passwords/wallet-password"
+            --accept-terms-of-use }
 
       expect {
           "Enter the password for your imported accounts" {
