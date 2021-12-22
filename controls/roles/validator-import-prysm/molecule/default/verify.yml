@@ -15,7 +15,7 @@
       that:
       - stereum_docker_ps.stdout.find("prysm") != -1
   # Check import expect script
-  - name: Check nimbus_validator_import.sh
+  - name: Check prysm_validator_import.sh
     stat:
       path: /opt/app/import/prysm_validator_import.sh
     register: expect_script
