@@ -38,11 +38,11 @@
       }
 
       spawn sh -c {
-          sudo docker exec 
+          sudo docker exec
             -it stereum-{{ validator_service_name }}
             /app/cmd/validator/validator accounts import
             --keys-dir="/opt/app/launchpad"
-            --wallet-dir="/opt/app/data/wallets" 
+            --wallet-dir="/opt/app/data/wallets"
             --wallet-password-file="/opt/app/data/passwords/wallet-password"
             --accept-terms-of-use }
 
