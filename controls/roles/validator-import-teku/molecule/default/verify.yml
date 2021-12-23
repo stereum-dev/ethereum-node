@@ -13,21 +13,11 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("prysm") != -1
-  # Check import expect script
-  - name: Check prysm_validator_import.sh
-    stat:
-      path: /opt/app/import/prysm_validator_import.sh
-    register: expect_script
-  - debug:
-      msg: "{{ expect_script }}"
-  - fail:
-      msg: "import-script file doesn't exist"
-    when: not expect_script.stat.exists
+      - stereum_docker_ps.stdout.find("consensys/teku") != -1
   # Check keystore files
   - name: Find keystore files
     find:
-      paths: /opt/app/services/942bde4e-5f16-11ec-b10a-bfb028e31895/launchpad
+      paths: /opt/app/services/bf1ef0f8-6332-11ec-9532-a70ade71baf8/launchpad
       patterns: 'keystore-m*.json'
     register: keystore_files
   - debug:
@@ -37,3 +27,17 @@
   - fail:
       msg: "Keystore file doesn't exist"
     when: keystore_files.examined == 0
+  # Check password files
+  - name: Find password files
+    find:
+      paths: /opt/app/services/bf1ef0f8-6332-11ec-9532-a70ade71baf8/launchpad
+      patterns: 'keystore-m*.txt'
+    register: password_files
+  - debug:
+      msg: "{{ item.path }}"
+    with_items: "{{ password_files.files }}"
+    when: password_files.examined > 0
+  - fail:
+      msg: "Password file doesn't exist"
+    when: password_files.examined == 0
+

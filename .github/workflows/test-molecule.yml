@@ -28,6 +28,8 @@ jobs:
           {role: "validator-import-nimbus", test: "default"},
 
           {role: "validator-import-prysm", test: "default"},
+
+          {role: "validator-import-teku", test: "default"},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
