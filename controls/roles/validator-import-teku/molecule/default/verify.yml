@@ -40,4 +40,3 @@
   - fail:
       msg: "Password file doesn't exist"
     when: password_files.examined == 0
-
