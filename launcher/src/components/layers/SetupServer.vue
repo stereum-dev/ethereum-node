@@ -9,15 +9,19 @@
           <section id="header">
             <h2>CONNECT TO YOUR SERVER</h2>
           </section>
-          
-                <add-dialog v-if="dialogVisible" @dialogDis="hideDialog" @pass="addModel" class="priority"></add-dialog>
-               <base-dialog v-if="bDialogVisible" @bDialogDis="hideBDialog" @bDialogOk="baseDialogDelete"
-                >
-                <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
-                <template v-slot:des><h5>Are you sure recode Delete ?</h5></template>
-                <template v-slot:cancel>Cancel</template>
-                <template v-slot:ok >Delete</template>
-                </base-dialog>
+
+          <base-dialog
+            v-if="bDialogVisible"
+            @bDialogDis="hideBDialog"
+            @bDialogOk="baseDialogDelete"
+          >
+            <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
+            <template v-slot:des
+              ><h5>Are you sure recode Delete ?</h5></template
+            >
+            <template v-slot:cancel>Cancel</template>
+            <template v-slot:ok>Delete</template>
+          </base-dialog>
           <form @submit.prevent>
             <div id="container">
               <div id="one">
@@ -36,32 +40,58 @@
                   class="three"
                   type="image"
                   src="./img/icon/+.png"
-                  @click="showDialog"
+                  @click="addModel"
                 />
-                <input class="three" type="image" src="./img/icon/TRASH CAN.png" @click="showBDialog" />
-               
-                
-                
+                <input
+                  class="three"
+                  type="image"
+                  src="./img/icon/TRASH CAN.png"
+                  @click="showBDialog"
+                />
               </div>
-              <div class="formGroup">
+              <div class="formGroup" :class="{ errors: !serverName.isValid }">
                 <label for="servername">SARVERNAME</label>
-                <input name="servername" id="servername" type="text" />
+                <input
+                  name="servername"
+                  id="servername"
+                  type="text"
+                  v-model.trim="serverName.val"
+                  @blur="clearValidity('serverName')"
+                />
               </div>
-              <div class="formGroup">
+              <div class="formGroup" :class="{ errors: !host.isValid }">
                 <label for="host">IP or HOSTNAME</label>
-                <input name="host" id="iporhostname" type="text" v-model="model.host" />
+                <input
+                  name="host"
+                  id="iporhostname"
+                  type="text"
+                  v-model.trim="host.val"
+                  @blur="clearValidity('host')"
+                />
               </div>
-              <div class="formGroup">
+              <div class="formGroup" :class="{ errors: !userName.isValid }">
                 <label for="user">USERNAME</label>
-                <input name="user" id="username" v-model="model.user" />
+                <input
+                  name="user"
+                  id="username"
+                  v-model.trim="userName.val"
+                  @blur="clearValidity('userName')"
+                />
               </div>
             </div>
-            <div id="keyLocation">
-              <label for="keylocation">{{sourceBase}}</label>
-              <input name="keylocation" id="keylocation" />
+            <div id="keyLocation" :class="{ errors: !pass.isValid }">
+              <label for="keylocation">{{ sourceBase }}</label>
+              <input
+                name="keylocation"
+                id="keylocation"
+                v-model="pass.val"
+                @blur="clearValidity('pass')"
+              />
             </div>
             <div class="ssh" style="border-style: none">
-              <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
+              <label id="lbl" for="" style="margin-right: 10px"
+                >USE SSH KEY</label
+              >
               <label class="switch">
                 <input
                   type="checkbox"
@@ -83,83 +113,118 @@
   </section>
 </template>
 <script>
-import AddDialog from './AddDialog.vue';
-import BaseDialog from './BaseDialog.vue';
+import BaseDialog from "./BaseDialog.vue";
 import BaseLogo from "./BaseLogo.vue";
 
 export default {
-  components: { BaseLogo, AddDialog, BaseDialog },
+  components: { BaseLogo, BaseDialog },
   name: "SetupFServer",
-  props:['pass','dialogDis','bDialogDis'],
+  props: ["bDialogDis"],
   data() {
     return {
-      source:false,
+      source: false,
       link: "stereumLogoExtern.png",
       stereumVersions: {},
       tunnels: [
         { name: "-------None-------", localPort: 0, dstPort: 0 },
         { name: "web-cc", localPort: 9081, dstPort: 8000 },
       ],
-      model: {sshAuthKey:false},
-      dialogVisible: false,
-      bDialogVisible:false,
-      selectTunnelName:''
-    
+      model: { sshAuthKey: false },
+      bDialogVisible: false,
+      selectTunnelName: "",
+      serverName: {
+        val: "",
+        isValid: true,
+      },
+      host: {
+        val: "",
+        isValid: true,
+      },
+      userName: {
+        val: "",
+        isValid: true,
+      },
+      pass: {
+        val: "",
+        isValid: true,
+      },
     };
   },
- //props: {
+  //props: {
   //   model: Object,
-   //},
-   computed:{
-     sourceBase(){
-if (this.model.sshKeyAuth){
-return 0
-}else{
-return 'PASSWORD'
-}
-     }
-   },
-  methods: {
-    addModel(val){
-      this.dialogVisible=false
-      const check=this.tunnels.find(obj => obj.name===val.name);
-      if(!check ){
-this.tunnels.unshift(val)
-      }else{
-alert('Ready')
-
+  //},
+  computed: {
+    sourceBase() {
+      if (this.model.sshKeyAuth) {
+        return "SSH";
+      } else {
+        return "PASSWORD";
       }
     },
-    deleteRow(){
-     var record=[]
-     const r= this.tunnels.find(tunel => tunel.name!=this.selectTunnelName)
-     record.push(r)
-     this.tunnels=record;
+  },
+  methods: {
+    clearValidity(input) {
+      this[input].isValid = true;
     },
-    setTunnelsSelect(val){
-            const select=val.target.value
+    addModel(val) {
+      this.checkVisibleInput();
+      if (!this.isValidInput) {
+        return;
+      }
+      const check = this.tunnels.find((obj) => obj.name === val.name);
+      if (!check) {
+        this.tunnels.unshift(val);
+      } else {
+        alert("Ready");
+      }
+    },
+    deleteRow() {
+      var record = [];
+      const r = this.tunnels.find(
+        (tunel) => tunel.name != this.selectTunnelName
+      );
+      record.push(r);
+      this.tunnels = record;
+    },
+    setTunnelsSelect(val) {
+      const select = val.target.value;
 
-      this.selectTunnelName=select
-},
-    showBDialog(){
-      this.bDialogVisible=true
+      this.selectTunnelName = select;
     },
+    checkVisibleInput() {
+      this.isValidInput = true;
 
-    showDialog() {
-      this.dialogVisible = true;
+      if (this.serverName.val === "") {
+        this.serverName.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.host.val === "") {
+        this.host.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.userName.val === "") {
+        this.userName.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.pass.val === "" && !this.model.sshAuthKey) {
+        this.pass.isValid = false;
+        this.isValidInput = false;
+      }
     },
-    hideBDialog(){
-      this.bDialogVisible=false
+    showBDialog() {
+      this.bDialogVisible = true;
+    },
+    hideBDialog() {
+      this.bDialogVisible = false;
     },
     hideDialog() {
       this.dialogVisible = false;
     },
-    baseDialogDelete(){
-            this.bDialogVisible = false;
-this.deleteRow()
-
+    baseDialogDelete() {
+      this.bDialogVisible = false;
+      this.deleteRow();
     },
-    
+
     //es
     async connect(e) {
       this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
@@ -168,14 +233,18 @@ this.deleteRow()
       } catch (ex) {
         console.log(ex);
         this.$toasted.show(
-          "Error connecting to server! Level: " + ex.level + " Message: " + ex.message
+          "Error connecting to server! Level: " +
+            ex.level +
+            " Message: " +
+            ex.message
         );
         return;
       }
 
       const stereumStatus = await ControlService.inquire(this.model);
 
-      if (!stereumStatus.exists) await ControlService.setup(stereumStatus.latestRelease);
+      if (!stereumStatus.exists)
+        await ControlService.setup(stereumStatus.latestRelease);
       else {
         this.$toasted.show("Multiple Stereum Versions found!");
         this.stereumVersions = stereumStatus;
@@ -189,15 +258,19 @@ this.deleteRow()
 };
 </script>
 <style scoped>
-#dialTitle{
-   animation: blink 1s 1000000 alternate;
+#dialTitle {
+  animation: blink 1s 1000000 alternate;
   font-weight: bold;
 }
 @keyframes blink {
-  from { background-color: red; }
-  to { background-color: orange; }
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: orange;
+  }
 }
-.priority{
+.priority {
   z-index: 200;
 }
 .select-wrapper {
@@ -219,7 +292,6 @@ select {
 .select-wrapper::after {
   position: absolute;
   width: 50%;
-
 }
 test {
   /* animation: modal 0.3s ease-out forwards; */
@@ -282,9 +354,9 @@ div {
   text-align: right;
   clear: both;
   float: left;
-  margin-right: 40px;
+  margin-right: auto;
   font-size: large;
-
+  margin-left: 2px auto;
   color: #fff;
 }
 .formGroup input {
@@ -331,7 +403,7 @@ div {
   top: 81vh;
   left: 86%;
   width: 100px;
-  
+
   resize: both;
   padding: 0.4rem;
   border-radius: 40px;
@@ -452,5 +524,8 @@ img {
   min-width: 20%;
   transform: translate(-50%, -50%);
   resize: both;
+}
+.errors input {
+  border-color: red;
 }
 </style>
