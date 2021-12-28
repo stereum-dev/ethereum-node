@@ -1,0 +1,74 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_validator_service: bf1ef0f8-6332-11ec-9532-a70ade71baf8
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # teku beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: start
+            configuration:
+              id: "{{ beacon_validator_service }}"
+              image: consensys/teku:21.12.2
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+                - 127.0.0.1:5051:5051/tcp
+              env:
+                JAVA_OPTS: -Xmx3g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=prater
+                - --p2p-enabled=true
+                - --p2p-port=9001
+                - --validator-keys=/opt/app/launchpad:/opt/app/launchpad
+                - --validators-keystore-locking-enabled=false
+                - --validators-graffiti="stereum.net"
+                - --eth1-endpoint=MyEth1EndPoint
+                - --metrics-enabled=true
+                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                - --metrics-port=8008
+                - --metrics-interface=0.0.0.0
+                - --metrics-host-allowlist="*"
+                - --data-path=/opt/app/data
+                - --data-storage-mode=archive
+                - --rest-api-port=5051
+                - --rest-api-host-allowlist="*"
+                - --rest-api-interface=0.0.0.0
+                - --rest-api-docs-enabled=true
+                - --rest-api-enabled=true
+                - --log-destination=CONSOLE
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_validator_service }}/launchpad:/opt/app/launchpad"
+                - "/opt/app/services/{{ beacon_validator_service }}/data:/opt/app/data"

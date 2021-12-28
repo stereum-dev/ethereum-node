@@ -1,0 +1,30 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "validator-import-teku--default--ubuntu-20.04"
+    hostname: ubuntu
+    server_type: cpx21
+    image: ubuntu-20.04
+  - name: "validator-import-teku--default--centos-8"
+    hostname: "centos"
+    server_type: cpx21
+    image: centos-8
+provisioner:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - lint
+    - verify
+    - destroy

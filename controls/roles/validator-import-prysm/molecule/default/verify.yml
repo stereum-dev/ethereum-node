@@ -1,0 +1,39 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("prysm") != -1
+  # Check import expect script
+  - name: Check prysm_validator_import.sh
+    stat:
+      path: /opt/app/import/prysm_validator_import.sh
+    register: expect_script
+  - debug:
+      msg: "{{ expect_script }}"
+  - fail:
+      msg: "import-script file doesn't exist"
+    when: not expect_script.stat.exists
+  # Check keystore files
+  - name: Find keystore files
+    find:
+      paths: /opt/app/services/942bde4e-5f16-11ec-b10a-bfb028e31895/launchpad
+      patterns: 'keystore-m*.json'
+    register: keystore_files
+  - debug:
+      msg: "{{ item.path }}"
+    with_items: "{{ keystore_files.files }}"
+    when: keystore_files.examined > 0
+  - fail:
+      msg: "Keystore file doesn't exist"
+    when: keystore_files.examined == 0

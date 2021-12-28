@@ -61,6 +61,7 @@
   - name: Start service
     docker_container:
       command_handling: correct
+      hostname: "{{ stereum_service_container_name }}"
       name: "{{ stereum_service_container_name }}"
       user: "{{ stereum_service_configuration.user }}"
       image: "{{ stereum_service_configuration.image }}"

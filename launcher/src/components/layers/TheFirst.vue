@@ -3,24 +3,23 @@
 
         <div id="container">
           <section @click="activePage">
- <base-logo :link='link' >
-</base-logo> </section>
-    <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
-     <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
-<ul id="flag">
-    <li v-for="link in linkFlags" :key="link.langImg" @click="setLang(link.langName,link.langSelect)">
-         <img :src="link.langImg" id="flagId" />
-         </li>
-         </ul>
+            <base-logo :link='link' >
+            </base-logo> 
+          </section>
+        <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
+        <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
+          <ul id="flag">
+            <li v-for="link in linkFlags" :key="link.langImg" @click="setLang(link.langName,link.langSelect)">
+              <img :src="link.langImg" id="flagId" />
+            </li>
+          </ul>
     
-  </lang-dialog>
-     <section  @click="showDialog">     
-             <lang-button :flag="flag" class="lang" ></lang-button>
-</section>
+        </lang-dialog>
+        <section  @click="showDialog">     
+          <lang-button :flag="flag" class="lang" ></lang-button>
+        </section>
 
-   
- 
-    </div>
+        </div>
     </div>
 </template>
 
@@ -73,7 +72,9 @@ export default {
 </script>
 
 <style scoped>
-#container{
+#container {
+  border-radius: var(--mb-1-5);
+
 
     border-radius: 40px;
   
@@ -84,47 +85,49 @@ export default {
   /* animation: blink 1s 1000000 alternate; */
   background-color: #336666;
   
+
 }
-div{
-    
-    background-color: #000;
-   
-    justify-content: center;
-    align-items:center;
-     height: 100vh;
-     display: flex;
+div {
+  background-color: var(--body-color);
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  display: flex;
 }
 .lang{
+
   cursor: pointer;
     position: fixed;
-  top: 81vh;
-  left: 86%;
-  width: 4em;
-  z-index: 100;
-  resize: both;
+
+  position: fixed;
+
 }
 #flag{
- display: inline-flex;
+  display: inline-flex;
   margin: 0;
   padding: 0;
   /* width: 100px; */
   text-align: left;
   float: left;
 }
-#flag li{
- list-style: none;
+#flag li {
+  list-style: none;
   display: inline-block;
+
   padding: 5px;
   cursor: pointer;
+
 }
 #flagId {
   width:120px ;
   resize: both;
 }
+
 /* @keyframes blink {
   from { background-color: #336666; }
   to { background-color: #448a8a; }
 } */
+
 
 
 </style>
