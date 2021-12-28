@@ -12,7 +12,8 @@
 - name: Create password files
   shell: "find '/opt/app/services/{{ beacon_validator_service_name }}/launchpad' -name '*.json' | while read f; do cp $f $(basename ${f} .json).txt; done"
   args:
-    chdir: "/opt/app/services/{{ beacon_validator_service_name }}/launchpad"
+    executable: /bin/bash
+  changed_when: false
   become: yes
 
 - name: Get password files
