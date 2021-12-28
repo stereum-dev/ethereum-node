@@ -1,204 +1,449 @@
 <template>
+  <section id="main">
+    <section id="cont">
+      <section>
+        <img src="stereum_logo_extern.png" alt="" />
+        <!-- avale test -->
 
-<div class="test">
-    <section id="header">
-      <h2>CONNECT TO YOUR SERVER</h2>
+        <div class="test" style="border-style: none">
+          <section id="header">
+            <h2>CONNECT TO YOUR SERVER</h2>
+          </section>
+
+          <base-dialog
+            v-if="bDialogVisible"
+            @bDialogDis="hideBDialog"
+            @bDialogOk="baseDialogDelete"
+          >
+            <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
+            <template v-slot:des
+              ><h5>Are you sure recode Delete ?</h5></template
+            >
+            <template v-slot:cancel>Cancel</template>
+            <template v-slot:ok>Delete</template>
+          </base-dialog>
+          <form @submit.prevent>
+            <div id="container">
+              <div id="one">
+                <div class="select-wrapper">
+                  <select @change="setTunnelsSelect($event)">
+                    <option
+                      v-for="tunnel in tunnels"
+                      :key="tunnel.name"
+                      :value="tunnel.name"
+                    >
+                      {{ tunnel.name }}
+                    </option>
+                  </select>
+                </div>
+                <input
+                  class="three"
+                  type="image"
+                  src="./img/icon/+.png"
+                  @click="addModel"
+                />
+                <input
+                  class="three"
+                  type="image"
+                  src="./img/icon/TRASH CAN.png"
+                  @click="showBDialog"
+                />
+              </div>
+              <div class="formGroup" :class="{ errors: !serverName.isValid }">
+                <label for="servername">SARVERNAME</label>
+                <input
+                  name="servername"
+                  id="servername"
+                  type="text"
+                  v-model.trim="serverName.val"
+                  @blur="clearValidity('serverName')"
+                />
+              </div>
+              <div class="formGroup" :class="{ errors: !host.isValid }">
+                <label for="host">IP or HOSTNAME</label>
+                <input
+                  name="host"
+                  id="iporhostname"
+                  type="text"
+                  v-model.trim="host.val"
+                  @blur="clearValidity('host')"
+                />
+              </div>
+              <div class="formGroup" :class="{ errors: !userName.isValid }">
+                <label for="user">USERNAME</label>
+                <input
+                  name="user"
+                  id="username"
+                  v-model.trim="userName.val"
+                  @blur="clearValidity('userName')"
+                />
+              </div>
+            </div>
+            <div id="keyLocation" :class="{ errors: !pass.isValid }">
+              <label for="keylocation">{{ sourceBase }}</label>
+              <input
+                name="keylocation"
+                id="keylocation"
+                v-model="pass.val"
+                @blur="clearValidity('pass')"
+              />
+            </div>
+            <div class="ssh" style="border-style: none">
+              <label id="lbl" for="" style="margin-right: 10px"
+                >USE SSH KEY</label
+              >
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  v-model="model.sshKeyAuth"
+                  name="check-button"
+                  checked
+                />
+                <span class="slider round"></span>
+              </label>
+            </div>
+
+            <input id="login" type="submit" value="LOGIN" />
+          </form>
+
+        </div>
+
+        <!-- akhare test -->
+      </section>
     </section>
-    <form @submit.prevent>
-      <div id="container">
-        <div id="one">
-          <input id="two" type="number" placeholder="--NONE--" />
-          <input class="three" type="image" src="./img/icon/+.png" />
-          <input class="three" type="image" src="./img/icon/TRASH CAN.png" />
-        </div>
-        <div class="formGroup">
-          <label for="servername">SARVERNAME</label>
-          <input name="servername" id="servername" type="text" />
-        </div>
-        <div class="formGroup">
-          <label for="iporhostname">IP or HOSTNAME</label>
-          <input name="iporhostname" id="iporhostname" type="text" />
-        </div>
-        <div class="formGroup">
-          <label for="username">USERNAME</label>
-          <input name="username" id="username" />
-        </div>
-      </div>
-      <div id="keyLocation">
-        <label for="keylocation">KEYLOCATION</label>
-        <input name="keylocation" id="keylocation" />
-      </div>
-<div class="ssh">
-    <label id="lbl" for="">SSH</label>
-    <label class="switch">
-        <input type="checkbox" checked>
-        <span class="slider round"></span>
-      </label>
-    
-</div>
-
-      <input id="login" type="submit" value="LOGIN">
-    </form>
-  
-    </div>
-    
-
+  </section>
 </template>
 <script>
-import BaseLogo from './BaseLogo.vue'
+import BaseDialog from "./BaseDialog.vue";
+import BaseLogo from "./BaseLogo.vue";
 
-export default{
-  components: { BaseLogo },
-    name:'SetupServer',
-    data(){return{
-        link:'stereumLogoExtern.png'
-    }}
-}
+export default {
+  components: { BaseLogo, BaseDialog },
+  name: "SetupFServer",
+  props: ["bDialogDis"],
+  data() {
+    return {
+      source: false,
+      link: "stereumLogoExtern.png",
+      stereumVersions: {},
+      tunnels: [
+        { name: "-------None-------", localPort: 0, dstPort: 0 },
+        { name: "web-cc", localPort: 9081, dstPort: 8000 },
+      ],
+      model: { sshAuthKey: false },
+      bDialogVisible: false,
+      selectTunnelName: "",
+      serverName: {
+        val: "",
+        isValid: true,
+      },
+      host: {
+        val: "",
+        isValid: true,
+      },
+      userName: {
+        val: "",
+        isValid: true,
+      },
+      pass: {
+        val: "",
+        isValid: true,
+      },
+    };
+  },
+  //props: {
+  //   model: Object,
+  //},
+  computed: {
+    sourceBase() {
+      if (this.model.sshKeyAuth) {
+        return "SSH";
+      } else {
+        return "PASSWORD";
+      }
+    },
+  },
+  methods: {
+    clearValidity(input) {
+      this[input].isValid = true;
+    },
+    addModel(val) {
+      this.checkVisibleInput();
+      if (!this.isValidInput) {
+        return;
+      }
+      const check = this.tunnels.find((obj) => obj.name === val.name);
+      if (!check) {
+        this.tunnels.unshift(val);
+      } else {
+        alert("Ready");
+      }
+    },
+    deleteRow() {
+      var record = [];
+      const r = this.tunnels.find(
+        (tunel) => tunel.name != this.selectTunnelName
+      );
+      record.push(r);
+      this.tunnels = record;
+    },
+    setTunnelsSelect(val) {
+      const select = val.target.value;
+
+      this.selectTunnelName = select;
+    },
+    checkVisibleInput() {
+      this.isValidInput = true;
+
+      if (this.serverName.val === "") {
+        this.serverName.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.host.val === "") {
+        this.host.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.userName.val === "") {
+        this.userName.isValid = false;
+        this.isValidInput = false;
+      }
+      if (this.pass.val === "" && !this.model.sshAuthKey) {
+        this.pass.isValid = false;
+        this.isValidInput = false;
+      }
+    },
+    showBDialog() {
+      this.bDialogVisible = true;
+    },
+    hideBDialog() {
+      this.bDialogVisible = false;
+    },
+    hideDialog() {
+      this.dialogVisible = false;
+    },
+    baseDialogDelete() {
+      this.bDialogVisible = false;
+      this.deleteRow();
+    },
+
+    //es
+    async connect(e) {
+      this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
+      try {
+        await ControlService.connect(this.model);
+      } catch (ex) {
+        console.log(ex);
+        this.$toasted.show(
+          "Error connecting to server! Level: " +
+            ex.level +
+            " Message: " +
+            ex.message
+        );
+        return;
+      }
+
+      const stereumStatus = await ControlService.inquire(this.model);
+
+      if (!stereumStatus.exists)
+        await ControlService.setup(stereumStatus.latestRelease);
+      else {
+        this.$toasted.show("Multiple Stereum Versions found!");
+        this.stereumVersions = stereumStatus;
+      }
+
+      await ControlService.openTunnels(this.tunnels);
+      await ControlService.disconnect();
+      e.preventDefault();
+    },
+  },
+};
 </script>
 <style scoped>
-
-test{
-      border: solid 5px rgba(15, 15, 15, .5);
-  /* animation: modal 0.3s ease-out forwards; */
-  background-color:rgba(76, 72, 72, .5);
+#dialTitle {
+  animation: blink 1s 1000000 alternate;
+  font-weight: bold;
 }
-      #header {
-        text-align: center;
-        margin: 2rem auto;
-        max-width: 35rem;
-        border-radius: 40px;
-        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-        padding: 0.5rem;
-        background-color: #aa2626;
-        color: #FFF;
-      }
-      div {
-        text-align: center;
-        margin: 1rem auto;
-        max-width: 40rem;
-        border-radius: 20px;
-        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-        padding: 0.3rem;
-        background-color: #3326aa;
-      }
-      #one {
-        margin: 1rem auto;
-        max-width: 40rem;
-        border-radius: 40px;
-        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-        padding: 1rem;
-        background-color: #681264;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-      }
-      #two {
-        width: 70%;
-        padding: 1rem;
-        border-radius: 40px;
-        float: left;
-      }
-      .three {
-        width: 50px;
-        float: left;
-      }
-      .formGroup {
-        display: flex;
-        background-color: #567891;
-      }
+@keyframes blink {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: orange;
+  }
+}
+.priority {
+  z-index: 200;
+}
+.select-wrapper {
+  overflow: hidden;
+  text-align: center;
+  width: 70%;
+  padding: 0;
+  border-radius: 40px;
+  float: left;
+}
 
-      .formGroup label {
-        /* Other styling... */
-        text-align: right;
-        clear: both;
-        float: left;
-        margin-right: 40px;
-        font-size: large;
+select {
+  width: 100%;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 40px;
+  cursor: pointer;
+}
+.select-wrapper::after {
+  position: absolute;
+  width: 50%;
+}
+test {
+  /* animation: modal 0.3s ease-out forwards; */
+  background-color: rgba(76, 72, 72, 0.5);
+  z-index: 0;
+}
+#header {
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 35rem;
+  border-radius: 40px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+  padding: 0.5rem;
+  background-color: #567891;
+  color: #fff;
+  border: 2px solid grey;
+}
+div {
+  text-align: center;
+  margin: 1rem auto;
+  max-width: 40rem;
+  border-radius: 20px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+  padding: 0.3rem;
+  border: 2px solid grey;
+  position: relative;
+  opacity: 95%;
+}
+#one {
+  margin: 1rem auto;
+  max-width: 40rem;
+  border-radius: 40px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+  padding: 1rem;
+  background-color: #567891;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+#one select {
+  text-align: center;
+}
+#two {
+  width: 70%;
+  padding: 1rem;
+  border-radius: 40px;
+  float: left;
+}
+.three {
+  width: 50px;
+  float: left;
+}
+.formGroup {
+  display: flex;
+  background-color: #567891;
+}
 
-        color: #fff;
-      }
-      .formGroup input {
-        width: 60%;
-        border-radius: 40px;
-        padding: 0.1rem;
-        float: right;
-        text-align: right;
-      }
-      #keyLocation {
-        text-align: center;
-        margin: 1rem auto;
-        max-width: 35rem;
-        border-radius: 20px;
-        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-        padding: 0.3rem;
-        background-color: #26aa43;
-        justify-content: center;
+.formGroup label {
+  /* Other styling... */
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: auto;
+  font-size: large;
+  margin-left: 2px auto;
+  color: #fff;
+}
+.formGroup input {
+  width: 60%;
+  border-radius: 40px;
+  padding: 0.1rem;
+  float: right;
+  text-align: right;
+}
+#keyLocation {
+  text-align: center;
+  margin: 1rem auto;
+  max-width: 35rem;
+  border-radius: 20px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+  padding: 0.3rem;
+  background-color: #567891;
+  justify-content: center;
 
-        display: flex;
-      }
-      #keyLocation label {
-        /* Other styling... */
-        text-align: right;
-        clear: both;
-        float: left;
-        margin-right: 40px;
-        font-size: large;
+  display: flex;
+}
+#keyLocation label {
+  /* Other styling... */
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: 40px;
+  font-size: large;
 
-        color: #fff;
-      }
-      #keyLocation input {
-        width: 60%;
-        border-radius: 40px;
-        padding: 0.1rem;
-        float: right;
-        text-align: right;
-        justify-content: center;
+  color: #fff;
+}
+#keyLocation input {
+  width: 60%;
+  border-radius: 40px;
+  padding: 0.1rem;
+  float: right;
+  text-align: right;
+  justify-content: center;
 
-        display: flex;
-      }
-      #login{
-        position: fixed;
+  display: flex;
+}
+#login {
+  position: fixed;
   top: 81vh;
   left: 86%;
- width: 100px;
-  z-index: 100;
+  width: 100px;
+
   resize: both;
-  padding: .4rem;
+  padding: 0.4rem;
   border-radius: 40px;
   background-color: orange;
   text-align: center;
   font-weight: bold;
-      }
-   
-
-.ssh{
-    width: 15%;
-    background-color: indianred;
-   margin-top: 0;
-    text-align: left;
-        
-        max-width: 35rem;
-        border-radius: 40px;
-        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-        padding: 0.3rem;
-       display: flex;
-        color: #FFF;
 }
-.shh #lbl{
-        /* Other styling... */
-        text-align: right;
-    clear: both;
-    float:left;
-    margin-right:15px;
-
+input {
+  cursor: pointer;
 }
-.switch {  position: relative;
+
+.ssh {
+  margin-top: -20px;
+  text-align: left;
+
+  max-width: 35rem;
+  border-radius: 40px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+  padding: 0.3rem;
+  display: flex;
+  color: #fff;
+}
+#lbl {
+  /* Other styling... */
+  text-align: right;
+  clear: both;
+  float: left;
+  margin-right: 15px;
+  font-weight: bold;
+  font-size: 15pt;
+}
+.switch {
+  position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -212,8 +457,8 @@ test{
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -224,16 +469,16 @@ test{
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #2196f3;
 }
 
 input:checked + .slider:before {
@@ -249,5 +494,39 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* test background */
+#cont {
+  border-radius: 40px;
+
+  padding: 1rem;
+  margin: 2rem auto;
+  width: 95vw;
+  height: 90vh;
+  background-color: #336666;
+}
+#main {
+  background-color: #000;
+
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  display: flex;
+}
+
+img {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 45%;
+  min-height: 20%;
+  min-width: 20%;
+  transform: translate(-50%, -50%);
+  resize: both;
+}
+.errors input {
+  border-color: red;
 }
 </style>

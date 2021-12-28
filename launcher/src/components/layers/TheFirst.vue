@@ -35,7 +35,7 @@ export default {
     emit:['open','page'],
     data(){
         return{
-            link:'stereumLogoExtern.png',
+            link:'stereum_logo_blinking.gif',
             flag:'SelectLang.png',
           dialogIsVisible: false,
           linkFlags:[{langImg:'Img/Flag/ENGLISH.png',langSelect:'Img/Flag/En.png',langName:'english'},{langImg:'Img/Flag/GERMAN.png',langSelect:'Img/Flag/Gr.png',langName:'german'},{langImg:'Img/Flag/FRENCH.png',langSelect:'Img/Flag/Fr.png',langName:'french'},{langImg:'Img/Flag/SPANISH.png',langSelect:'Img/Flag/Sp.png',langName:'spanish'}],
@@ -75,10 +75,17 @@ export default {
 #container {
   border-radius: var(--mb-1-5);
 
-  padding: var(--mb-1);
-  margin: var(--mb-2) auto;
-  width: 95vw;
-  height: 95vh;
+
+    border-radius: 40px;
+  
+  padding: 1rem;
+  margin: 2rem auto;
+  width:95vw ;
+    height: 95vh;
+  /* animation: blink 1s 1000000 alternate; */
+  background-color: #336666;
+  
+
 }
 div {
   background-color: var(--body-color);
@@ -88,11 +95,12 @@ div {
   display: flex;
 }
 .lang{
+
+  cursor: pointer;
+    position: fixed;
+
   position: fixed;
-  top: 81vh;
-  left: 86vw;
-  width: var(--mb-2);
-  z-index: var(--z-fixed);
+
 }
 #flag{
   display: inline-flex;
@@ -105,20 +113,21 @@ div {
 #flag li {
   list-style: none;
   display: inline-block;
-  padding: var(--mb-0-25);
+
+  padding: 5px;
+  cursor: pointer;
+
 }
 #flagId {
   width:120px ;
   resize: both;
 }
-@keyframes blink {
-  from {
-    background-color: var(--first-color-second);
-  }
-  to {
-    background-color: var(--container-color);
-  }
-}
+
+/* @keyframes blink {
+  from { background-color: #336666; }
+  to { background-color: #448a8a; }
+} */
+
 
 
 </style>
