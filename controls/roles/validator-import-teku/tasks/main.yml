@@ -10,7 +10,9 @@
   with_items: "{{ validator_keys }}"
 
 - name: Create password files
-  shell: "find '/opt/app/services/{{ beacon_validator_service_name }}/launchpad' -name '*.json' | while read f; do cp $f $(basename ${f} .json).txt; done"
+  shell: >
+    set -o pipefail && \
+    find '/opt/app/services/{{ beacon_validator_service_name }}/launchpad' -name '*.json' | while read f; do cp $f $(basename ${f} .json).txt; done
   args:
     executable: /bin/bash
   changed_when: false
