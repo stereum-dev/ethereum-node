@@ -53,4 +53,3 @@
         content: "{{ instance_conf | to_yaml }}"
         dest: "{{ molecule_instance_config }}"
       when: server.changed | bool
-

@@ -19,4 +19,3 @@
     - name: "Include validator-import-teku"
       include_role:
         name: "validator-import-teku"
-

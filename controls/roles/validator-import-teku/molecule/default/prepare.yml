@@ -72,4 +72,3 @@
               volumes:
                 - "/opt/app/services/{{ beacon_validator_service }}/launchpad:/opt/app/launchpad"
                 - "/opt/app/services/{{ beacon_validator_service }}/data:/opt/app/data"
-
