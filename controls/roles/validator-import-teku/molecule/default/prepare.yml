@@ -36,7 +36,7 @@
         stereum_args:
           manage_service:
             save: true
-            state: start
+            state: started
             configuration:
               id: "{{ beacon_validator_service }}"
               image: consensys/teku:21.12.2
