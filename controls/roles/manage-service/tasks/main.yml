@@ -38,7 +38,7 @@
       group: "2000"
       mode: 0700
     become: yes
-    when: stereum.manage_service.state == "start" or stereum.manage_service.state == "restarted"
+    when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
     with_items: "{{ stereum_service_configuration.volumes }}"
 
   - name: Stereum's docker network
@@ -81,5 +81,5 @@
         max-file: "10"
         max-size: "100m"
     become: yes
-    when: stereum.manage_service.state == "start" or stereum.manage_service.state == "restarted"
+    when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
   when: stereum.manage_service.state is defined
