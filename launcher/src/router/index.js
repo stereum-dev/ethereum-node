@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 //import Setup from "../views/Setup.vue";
 //import TheFirst from '../components/layers/TheFirst.vue'
-import BaseHome from '../components/layers/BaseHome.vue'
+import BaseHome from '../pages/BaseHome.vue'
 Vue.use(VueRouter);
 
 const routes = [

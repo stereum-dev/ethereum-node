@@ -16,13 +16,11 @@
             @bDialogOk="baseDialogDelete"
           >
             <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
-            <template v-slot:des
-              ><h5>Are you sure recode Delete ?</h5></template
-            >
+            <template v-slot:des><h5>Are you sure recode Delete ?</h5></template>
             <template v-slot:cancel>Cancel</template>
             <template v-slot:ok>Delete</template>
           </base-dialog>
-          <form @submit.prevent>
+          <form @submit.prevent="login">
             <div id="container">
               <div id="one">
                 <div class="select-wrapper">
@@ -31,6 +29,7 @@
                       v-for="tunnel in tunnels"
                       :key="tunnel.name"
                       :value="tunnel.name"
+                      @click="completeFiled"
                     >
                       {{ tunnel.name }}
                     </option>
@@ -55,7 +54,7 @@
                   name="servername"
                   id="servername"
                   type="text"
-                  v-model.trim="serverName.val"
+                  v-model="serverName.val"
                   @blur="clearValidity('serverName')"
                 />
               </div>
@@ -65,7 +64,7 @@
                   name="host"
                   id="iporhostname"
                   type="text"
-                  v-model.trim="host.val"
+                  v-model="host.val"
                   @blur="clearValidity('host')"
                 />
               </div>
@@ -74,7 +73,7 @@
                 <input
                   name="user"
                   id="username"
-                  v-model.trim="userName.val"
+                  v-model="userName.val"
                   @blur="clearValidity('userName')"
                 />
               </div>
@@ -89,9 +88,7 @@
               />
             </div>
             <div class="ssh" style="border-style: none">
-              <label id="lbl" for="" style="margin-right: 10px"
-                >USE SSH KEY</label
-              >
+              <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
               <label class="switch">
                 <input
                   type="checkbox"
@@ -164,6 +161,9 @@ export default {
     },
   },
   methods: {
+    completeFiled() {
+      console.log("s");
+    },
     clearValidity(input) {
       this[input].isValid = true;
     },
@@ -181,16 +181,15 @@ export default {
     },
     deleteRow() {
       var record = [];
-      const r = this.tunnels.find(
-        (tunel) => tunel.name != this.selectTunnelName
-      );
+      const r = this.tunnels.find((tunel) => tunel.name != this.selectTunnelName);
       record.push(r);
       this.tunnels = record;
     },
     setTunnelsSelect(val) {
       const select = val.target.value;
-
+      const active = this.tunnels.find((tunnel) => tunnel.name === select);
       this.selectTunnelName = select;
+      this.serverName.val = active.name;
     },
     checkVisibleInput() {
       this.isValidInput = true;
@@ -225,7 +224,12 @@ export default {
       this.bDialogVisible = false;
       this.deleteRow();
     },
-
+    login() {
+      this.checkVisibleInput();
+      if (!this.isValidInput) {
+        return;
+      }
+    },
     //es
     async connect(e) {
       this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
@@ -234,18 +238,14 @@ export default {
       } catch (ex) {
         console.log(ex);
         this.$toasted.show(
-          "Error connecting to server! Level: " +
-            ex.level +
-            " Message: " +
-            ex.message
+          "Error connecting to server! Level: " + ex.level + " Message: " + ex.message
         );
         return;
       }
 
       const stereumStatus = await ControlService.inquire(this.model);
 
-      if (!stereumStatus.exists)
-        await ControlService.setup(stereumStatus.latestRelease);
+      if (!stereumStatus.exists) await ControlService.setup(stereumStatus.latestRelease);
       else {
         this.$toasted.show("Multiple Stereum Versions found!");
         this.stereumVersions = stereumStatus;

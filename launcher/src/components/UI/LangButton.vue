@@ -1,5 +1,12 @@
 <template>
+
   <img :src="flag">
+
+      
+   
+
+    
+  
 </template>
 
 <script>
