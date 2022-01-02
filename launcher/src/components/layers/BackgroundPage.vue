@@ -45,10 +45,11 @@ img {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 45%;
+  width: 65%;
   min-height: 20%;
   min-width: 20%;
   transform: translate(-50%, -50%);
   resize: both;
+  z-index: 0;
 }
 </style>

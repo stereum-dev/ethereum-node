@@ -1,12 +1,15 @@
 <template>
   <section>
-    <background-page>Welcome</background-page>
+    <background-page>
+      <installation-menu></installation-menu>
+    </background-page>
   </section>
 </template>
 <script>
 import BackgroundPage from "../components/layers/BackgroundPage.vue";
+import InstallationMenu from "../components/layers/InstallitionMenu.vue";
 export default {
-  components: { BackgroundPage },
+  components: { BackgroundPage, InstallationMenu },
   name: "WelcomePage",
 };
 </script>
