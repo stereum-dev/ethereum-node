@@ -25,10 +25,14 @@ export default {
 }
 #title p {
   margin: 1px;
+  font-size: 10pt;
+  color: #eee;
+  font-weight: bold;
 }
 #img img {
   width: 95%;
   margin-top: 5pt;
   resize: both;
+  cursor: pointer;
 }
 </style>

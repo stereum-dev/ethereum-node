@@ -14,10 +14,11 @@
     <circle-loading open="true"></circle-loading>
     <div class="txt">
       <p class="help">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus adipisci id
-        mollitia culpa? Distinctio dolores error commodi cupiditate quam ipsam
-        consequuntur aut iste praesentium voluptates, recusandae quae, alias fugiat quod
-        pariatur quidem. Nisi explicabo modi illum ut, maxime soluta earum!
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus
+        adipisci id mollitia culpa? Distinctio dolores error commodi cupiditate
+        quam ipsam consequuntur aut iste praesentium voluptates, recusandae
+        quae, alias fugiat quod pariatur quidem. Nisi explicabo modi illum ut,
+        maxime soluta earum!
       </p>
     </div>
   </section>
@@ -32,7 +33,10 @@ export default {
       installation: [
         { title: "1CLICK INSTALLATION", img: "/img/icon/clickinstall.png" },
         { title: "CUSTOM INSTALLATION", img: "/img/icon/custominstall.png" },
-        { title: "IMPORT CONFIGURATION", img: "/img/icon/one click installer.png" },
+        {
+          title: "IMPORT CONFIGURATION",
+          img: "/img/icon/one click installer.png",
+        },
       ],
     };
   },
@@ -49,7 +53,7 @@ export default {
 }
 .col {
   width: 25%;
-  height: 22vh;
+  height: 23vh;
   background: rgba(51, 102, 102, 0.4);
   float: left;
   border: 3px solid grey;
@@ -87,11 +91,12 @@ export default {
   padding: 5px;
   resize: both;
 }
-.help {
+.txt p {
   margin-top: -1px;
   font-size: 10pt;
   font-weight: bold;
   color: #fff;
+  float: left;
 }
 .headCol {
   text-align: center;

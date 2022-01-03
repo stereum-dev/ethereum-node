@@ -45,6 +45,7 @@ dialog {
   animation: modal 5s linear infinite;
   position: relative;
   width: 4%;
+  float: right;
 }
 @keyframes modal {
   from {
@@ -60,24 +61,28 @@ dialog {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2a9d8f;
+  /* background-color: #2a9d8f; */
   max-width: 500vw;
+  margin: 2%;
+  resize: both;
 }
 .progress {
   position: relative;
   height: 20px;
   width: 50vw;
-  border: 3px solid #f4a261;
+  border: 3px solid grey;
   border-radius: 15px;
 }
 .progress p {
   float: left;
-  margin: 0;
+  margin: 2px;
   position: relative;
+  font-weight: bold;
+  color: #eee;
 }
 .progress .color {
   position: absolute;
-  background-color: #ffffff;
+  background-color: blue;
   width: 0px;
   height: 20px;
   border-radius: 15px;
@@ -99,5 +104,5 @@ dialog {
   100% {
     width: 100%;
   }
-} ;
+}
 </style>

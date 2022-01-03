@@ -8,8 +8,9 @@
 <script>
 import BackgroundPage from "../components/layers/BackgroundPage.vue";
 import InstallationMenu from "../components/layers/InstallitionMenu.vue";
+import BaseButton from "../components/layers/BaseButton.vue";
 export default {
-  components: { BackgroundPage, InstallationMenu },
+  components: { BackgroundPage, InstallationMenu, BaseButton },
   name: "WelcomePage",
 };
 </script>
