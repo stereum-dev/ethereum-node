@@ -1,6 +1,7 @@
 import { BloxSSVService } from './BloxSSVService.js';
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
+const log = require('electron-log');
 
 test('BloxSSVService buildConfiguration', () => {
     const ports = [
@@ -28,10 +29,11 @@ test('BloxSSVService buildConfiguration', () => {
 
     const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseService.LighthouseService()]).buildConfiguration();
 
+    log.info("cmd: ", bloxService.command);
+
     expect(bloxService.env.CONFIG_PATH).toMatch(/\/config.yaml/);
-    expect(bloxService.volumes).toHaveLength(2);
+    expect(bloxService.volumes).toHaveLength(1);
     expect(bloxService.volumes).toContain("/opt/stereum/ssv/data:/data");
-    expect(bloxService.volumes).toContain("/opt/stereum/ssv/config.yaml:/config.yaml");
     expect(bloxService.ports).toHaveLength(2);
     expect(bloxService.id).toHaveLength(36);
     expect(bloxService.user).toMatch(/root/);
