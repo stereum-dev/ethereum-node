@@ -21,6 +21,7 @@ export class NodeService {
 
     buildConfiguration() {
         return {
+            service: this.constructor.name,
             id: this.id,
             command: this.command,
             entrypoint: this.entrypoint,

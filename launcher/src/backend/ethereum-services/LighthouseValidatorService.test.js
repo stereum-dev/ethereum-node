@@ -25,6 +25,8 @@ test('LighthouseValidatorService buildConfiguration', () => {
     expect(lhService.id).toHaveLength(36);
     expect(lhService.user).toMatch(/2000/);
     expect(lhService.image).toMatch(/stereum\/lighthouse/);
+
+    expect(lhService.service).toMatch(/LighthouseValidatorService/);
 });
 
 
