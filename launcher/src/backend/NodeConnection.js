@@ -91,13 +91,13 @@ export class NodeConnection {
             let installResult;
             try {
                 installResult = await this.sshService.exec(`
-                sudo mkdir ` + installationDirectory + `/ansible &&
-                cd ` + installationDirectory + `/ansible &&
+                sudo mkdir -p "` + installationDirectory + `/ansible" &&
+                cd "` + installationDirectory + `/ansible" &&
                 sudo git init &&
-                sudo git remote add -f https://github.com/stereum-dev/ethereum-node.git &&
+                sudo git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
                 sudo git config core.sparseCheckout true &&
                 sudo echo 'controls' >> .git/info/sparse-checkout &&
-                sudo git pull origin master
+                sudo git checkout stable
                 `);
             } catch (err) {
                 log.error("can't install ansible roles", err);
