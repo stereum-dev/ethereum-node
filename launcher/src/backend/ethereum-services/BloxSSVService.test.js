@@ -18,16 +18,16 @@ test('BloxSSVService buildConfiguration', () => {
         };
     });
 
-    jest.mock('./LighthouseService');
-    const LighthouseService = require('./LighthouseService');
+    jest.mock('./LighthouseBeaconService');
+    const LighthouseBeaconService = require('./LighthouseBeaconService');
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
-    LighthouseService.LighthouseService.mockImplementation(() => {
+    LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
             buildConsensusClientHttpEntpointUrl: mMockLh,
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseService.LighthouseService()]).buildConfiguration();
+    const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration();
 
     log.info("cmd: ", bloxService.command);
 
@@ -50,16 +50,16 @@ test('BloxSSVService getServiceConfiguration', () => {
         };
     });
 
-    jest.mock('./LighthouseService');
-    const LighthouseService = require('./LighthouseService');
+    jest.mock('./LighthouseBeaconService');
+    const LighthouseBeaconService = require('./LighthouseBeaconService');
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
-    LighthouseService.LighthouseService.mockImplementation(() => {
+    LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
             buildConsensusClientHttpEntpointUrl: mMockLh,
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseService.LighthouseService()]).getServiceConfiguration();
+    const bloxService = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration();
 
     expect(bloxService.MetricsAPIPort).toBeDefined();
     expect(bloxService.eth2.Network).toMatch(/prater/);

@@ -253,7 +253,7 @@ test('prepareStereumNode success', async () => {
 
     expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-    expect(mMock.mock.calls[3][0]).toMatch(/git pull/);
+    expect(mMock.mock.calls[3][0]).toMatch(/git checkout/);
 
     expect(mMock.mock.calls[4][0]).toMatch(/ansible-playbook/);
 });
@@ -289,7 +289,7 @@ test('prepareStereumNode error playbook', async () => {
 
     expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-    expect(mMock.mock.calls[3][0]).toMatch(/git pull/);
+    expect(mMock.mock.calls[3][0]).toMatch(/git checkout/);
 
     expect(mMock.mock.calls[4][0]).toMatch(/ansible-playbook/);
 });
@@ -325,7 +325,7 @@ test('prepareStereumNode failure playbook', async () => {
 
     expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
 
-    expect(mMock.mock.calls[3][0]).toMatch(/git pull/);
+    expect(mMock.mock.calls[3][0]).toMatch(/git checkout/);
 
     expect(mMock.mock.calls[4][0]).toMatch(/ansible-playbook/);
 });
