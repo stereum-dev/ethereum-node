@@ -2,7 +2,7 @@ import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js';
 import { ServiceVolume } from './ServiceVolume.js';
 
-export class LighthouseService extends NodeService {
+export class LighthouseBeaconService extends NodeService {
     constructor(network, ports, workingDir, executionClients) {
         super();
 
