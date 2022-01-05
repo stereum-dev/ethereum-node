@@ -12,9 +12,7 @@
 </template>
 
 <script>
-export default {
-  name: "BackgroundPage",
-};
+export default {};
 </script>
 
 <style scoped>

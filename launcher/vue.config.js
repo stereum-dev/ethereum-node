@@ -1,14 +1,19 @@
 module.exports = {
-    lintOnSave: false,
-    publicPath: process.env.VUE_BASE_URL || '/',
-    productionSourceMap: false,
-    pluginOptions: {
-        electronBuilder: {
-          preload: 'src/preload.js',
-          externals: ['ssh2', 'tunnel-ssh'],
-        }
-    },
-    transpileDependencies: [
-        'resize-detector' // vue-echarts
-    ]
-}
+  chainWebpack: (config) => {
+    config.resolve.alias.set("vue", "@vue/compat");
+
+    config.module
+      .rule("vue")
+      .use("vue-loader")
+      .tap((options) => {
+        return {
+          ...options,
+          compilerOptions: {
+            compatConfig: {
+              MODE: 2,
+            },
+          },
+        };
+      });
+  },
+};

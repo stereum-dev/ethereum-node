@@ -1,28 +1,56 @@
 <template>
-  <section class="main">
-    <section class="header">
-      ONE CLICK INSTALLATION
-    </section>
-    <div class="container">
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat ratione
-        veritatis ducimus voluptate ea, voluptatum ullam voluptas accusamus
-        dicta obcaecati iste. Similique repellat dolor reiciendis quasi ducimus,
-        repellendus incidunt nostrum!
-      </p>
-      <hr />
-      <div class="icon">
-        <slot></slot>
+    <section class="main">
+      <section class="header">ONE CLICK INSTALLATION</section>
+      <div class="container">
+        <p>
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, cum
+          harum? Cumque ipsa eum laudantium.
+        </p>
+        <hr />
+        <div class="row">
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <img src="" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <img src="" />
+          </div>
+          <div class="icon">
+            <!-- <img src="./BLOX SSV.png" /> -->
+          </div>
+        </div>
+        <hr />
       </div>
-    </div>
-  </section>
+    </section>
 </template>
+
+<script>
+export default {
+
+}
+</script>
 
 <style scoped>
 .header {
   text-align: center;
   margin: 2rem auto;
-  max-width: 35rem;
+  max-width: 25rem;
   border-radius: 40px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.5rem;
@@ -30,13 +58,49 @@
   color: #fff;
   border: 2px solid grey;
 }
+
 .container {
-  max-width: 60%;
-  border: 2px solid grey;
+  width: 42.5%;
+  height: 50%;
+  resize: both;
+  margin: 0 auto;
+  position: relative;
   border-radius: 40px;
+  border: 5px solid grey;
+  resize: both;
+}
+.row {
+  display: flex;
 }
 .container hr {
   width: 80%;
   color: #494949;
+  height: 2px;
+  background: grey;
 }
+.icon {
+  border: 2px solid grey;
+  margin: 5px;
+  width: 23%;
+  resize: both;
+  border-radius: 45px;
+  /* margin-left: 1%; */
+}
+.icon img {
+  float: left;
+  padding: 5px auto;
+  width: 100%;
+  resize: both;
+}
+.container p {
+  text-align: center;
+  margin: 15pt auto;
+  font-size: 12pt;
+  font-weight: bold;
+  width: 95%;
+}
+.main {
+  resize: both;
+}
+
 </style>

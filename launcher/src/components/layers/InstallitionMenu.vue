@@ -4,42 +4,63 @@
       <h2>welcome</h2>
     </section>
     <div class="container">
-      <div class="col" v-for="install in installation" :key="install.title">
+      <div class="col" v-for="install in installation" :key="install.id">
         <button-installation
+        @clickId="checkClick"
+        :id="install.id"
           :title="install.title"
           :img="install.img"
+          page="welcome-page"
         ></button-installation>
       </div>
     </div>
     <circle-loading open="true"></circle-loading>
     <div class="txt">
       <p class="help">
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus
-        adipisci id mollitia culpa? Distinctio dolores error commodi cupiditate
-        quam ipsam consequuntur aut iste praesentium voluptates, recusandae
-        quae, alias fugiat quod pariatur quidem. Nisi explicabo modi illum ut,
-        maxime soluta earum!
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus adipisci id
+        mollitia culpa? Distinctio dolores error commodi cupiditate quam ipsam
+        consequuntur aut iste praesentium voluptates, recusandae quae, alias fugiat quod
+        pariatur quidem. Nisi explicabo modi illum ut, maxime soluta earum!
       </p>
     </div>
+    <base-button id="back" @click="activePage">Back</base-button>
   </section>
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 export default {
+  emits: ["page"],
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
       installation: [
-        { title: "1CLICK INSTALLATION", img: "/img/icon/clickinstall.png" },
-        { title: "CUSTOM INSTALLATION", img: "/img/icon/custominstall.png" },
-        {
-          title: "IMPORT CONFIGURATION",
-          img: "/img/icon/one click installer.png",
-        },
+        {id:'1', title: "1CLICK INSTALLATION", img: "/img/icon/clickinstall.png" },
+        {id:'2', title: "CUSTOM INSTALLATION", img: "/img/icon/custominstall.png" },
+        { id:'3',title: "IMPORT CONFIGURATION", img: "/img/icon/one click installer.png" },
       ],
     };
   },
+  methods:{
+    activePage(){
+      this.$emit("page", "welcome-page");
+
+    },
+    checkClick(value){
+      switch (value){
+        case '1':
+          this.activePage()
+break;
+          case '2':
+            ///
+            break;
+            case '3':
+              ///
+              break;
+      }
+
+    }
+  }
 };
 </script>
 <style scope>
@@ -53,7 +74,7 @@ export default {
 }
 .col {
   width: 25%;
-  height: 23vh;
+  height: auto;
   background: rgba(51, 102, 102, 0.4);
   float: left;
   border: 3px solid grey;
@@ -85,7 +106,7 @@ export default {
   height: 8vh;
   border: 3px solid grey;
   margin: 100px auto;
-  background: rgba(51, 102, 102, 0.4);
+  background: rgba(51, 102, 102, 1);
   border-radius: 40px;
   position: relative;
   padding: 5px;
@@ -103,5 +124,13 @@ export default {
   width: 98%;
   border: 3px solid red;
   border-radius: 40px;
+}
+#back{
+  position: fixed;
+  top: 81vh;
+  left: 14%;
+  width: 100px;
+position: absolute;
+  resize: both;
 }
 </style>
