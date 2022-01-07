@@ -7,7 +7,7 @@ export const networks = {
 };
 
 export class NodeService {
-    init(id, image, imageVersion, command, entrypoint, env, ports, volumes, user) {
+    init(id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network) {
         this.id = id ?? crypto.randomUUID();
         this.image = image;
         this.imaveVersion = imageVersion;
@@ -17,6 +17,7 @@ export class NodeService {
         this.ports = ports ?? [];
         this.volumes = volumes ?? [];
         this.user = user ?? "2000";
+        this.network = network ?? networks.prater;
     }
 
     buildConfiguration() {
@@ -31,6 +32,8 @@ export class NodeService {
             restart_policy: this.restartPolicy,
             volumes: this.volumes.map(volume => {return volume.buildVolumeMapping()}),
             user: this.user,
+            autoupdate: true,
+            network: this.network,
         };
     }
 }

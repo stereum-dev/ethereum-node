@@ -1,0 +1,24 @@
+---
+- name: Get update data
+  uri:
+    url: https://stereum.net/downloads/updates-test.json
+    method: GET
+    return_content: yes
+    status_code: 200
+    body_format: json
+  register: update_data
+
+- name: List services
+  find:
+    paths: /etc/stereum/services
+  register: services_data
+  become: yes
+
+- name: Update services
+  include_tasks: update-service.yml
+  with_items: "{{ services_data.files }}"
+
+- name: Restart services
+  include_tasks: restart-service.yml
+  with_items: "{{ services_data.files }}"
+# EOF

@@ -37,7 +37,8 @@ export class LighthouseValidatorService extends NodeService {
             },
             null,
             volumes,
-            null);
+            null,
+            network);
     }
 
     getAvailablePorts() {

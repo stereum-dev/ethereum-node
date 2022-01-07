@@ -35,7 +35,8 @@ export class LighthouseBeaconService extends NodeService {
             },
             ports,
             volumes,
-            null);
+            null,
+            network);
     }
 
     buildConsensusClientHttpEntpointUrl() {

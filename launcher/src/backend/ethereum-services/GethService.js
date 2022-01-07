@@ -17,7 +17,8 @@ export class GethService extends NodeService {
             null,
             ports,
             volumes,
-            "root");
+            "root",
+            network);
     }
 
     buildExecutionClientHttpEndpointUrl() {

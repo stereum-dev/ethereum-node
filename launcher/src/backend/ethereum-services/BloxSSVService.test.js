@@ -81,4 +81,10 @@ test('BloxSSVService service name', () => {
     expect(service.service).toMatch(/BloxSSVService/);
 });
 
+test('BloxSSVService autoupdate', () => {
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+
+    expect(service.autoupdate).toBe(true);
+});
+
 // EOF

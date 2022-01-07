@@ -1,0 +1,37 @@
+---
+- name: Read service's configuration
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+  become: yes
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Restart if autoupdate enabled
+  block:
+    - name: Extract information of configuration
+      set_fact:
+        service_container_name: "stereum-{{ service_configuration.id }}"
+    - name: Get information of running service
+      community.docker.docker_container_info:
+        name: "{{ service_container_name }}"
+      register: service_container
+
+    - name: Restart service
+      include_role:
+        name: manage-service
+      when: |
+        service_container.exists and
+        service_container.container.Config.Image != service_configuration.image
+      vars:
+        stereum:
+          manage_service:
+            save: false
+            state: restarted
+            configuration:
+              id: "{{ service_configuration.id }}"
+  when: service_configuration.autoupdate
+
+# EOF

@@ -59,4 +59,10 @@ test('LighthouseBeaconService getAvailablePorts', () => {
     expect(lhServicePorts).toHaveLength(3);
 });
 
+test('LighthouseBeaconService network', () => {
+    const lhServicePorts = new LighthouseBeaconService(networks.goerli, [], "/opt/stereum/lh", []).buildConfiguration();
+
+    expect(lhServicePorts.network).toMatch(/goerli/);
+});
+
 // EOF

@@ -29,11 +29,22 @@ test('LighthouseValidatorService buildConfiguration', () => {
     expect(lhService.service).toMatch(/LighthouseValidatorService/);
 });
 
-
 test('LighthouseValidatorService getAvailablePorts', () => {
     const lhService = new LighthouseValidatorService(networks.prater, "/opt/stereum/lh", [], "foobar").getAvailablePorts();
 
     expect(lhService).toHaveLength(0);
+});
+
+test('LighthouseValidatorService autoupdate', () => {
+    const lhService = new LighthouseValidatorService(networks.prater, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+
+    expect(lhService.autoupdate).toBe(true);
+});
+
+test('LighthouseValidatorService network', () => {
+    const lhService = new LighthouseValidatorService(networks.mainnet, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+
+    expect(lhService.network).toMatch(/mainnet/);
 });
 
 // EOF
