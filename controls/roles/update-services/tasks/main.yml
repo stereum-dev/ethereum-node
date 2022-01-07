@@ -1,12 +1,16 @@
 ---
-- name: Get update data
+- name: Download update metadata
   uri:
-    url: https://stereum.net/downloads/updates-test.json
+    url: https://stereum.net/downloads/updates.json
     method: GET
     return_content: yes
     status_code: 200
     body_format: json
-  register: update_data
+  register: update_data_download
+
+- name: Set update data
+  set_fact:
+    update_data: "{{ update_data_test | default(update_data_download) }}"
 
 - name: List services
   find:
@@ -21,4 +25,5 @@
 - name: Restart services
   include_tasks: restart-service.yml
   with_items: "{{ services_data.files }}"
+
 # EOF

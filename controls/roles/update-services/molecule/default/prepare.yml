@@ -22,6 +22,9 @@
     - include_role:
         name: "setup"
 
+    - include_role:
+        name: "configure-firewall"
+
     - name: Write service configuration lighthouse beacon
       copy:
         dest: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
