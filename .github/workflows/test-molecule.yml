@@ -63,7 +63,7 @@ jobs:
           ansible_python_interpreter: "/usr/bin/python3"
       # destroying is necessary when previous task failed and didn't clean up properly
       - name: Destroy previous testing VMs
-        if: failure()
+        if: ${{ failure() || cancelled() }}
         working-directory: ./controls/roles/${{ matrix.tests.role }}
         run: molecule destroy -s ${{ matrix.tests.test }}
         env:
