@@ -21,6 +21,8 @@ jobs:
 
           {role: "setup", test: "default"},
 
+          {role: "update-services", test: "default"},
+
           {role: "fastsync", test: "default"},
 
           {role: "validator-import-lighthouse", test: "default"},
