@@ -70,9 +70,21 @@ test('BloxSSVService getServiceConfiguration', () => {
 });
 
 test('BloxSSVService getAvailablePorts', () => {
-    const ports = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
 
-    expect(ports).toHaveLength(2);
+    expect(service).toHaveLength(2);
+});
+
+test('BloxSSVService service name', () => {
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+
+    expect(service.service).toMatch(/BloxSSVService/);
+});
+
+test('BloxSSVService autoupdate', () => {
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+
+    expect(service.autoupdate).toBe(true);
 });
 
 // EOF

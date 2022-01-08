@@ -1,0 +1,44 @@
+---
+- name: Read service's configuration
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+  become: yes
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Extract docker image and version
+  set_fact:
+    service_docker_image: "{{ service_configuration.image.split(':') | first }}"
+    service_docker_image_tag: "{{ service_configuration.image.split(':') | last }}"
+  when: service_configuration.autoupdate
+
+- name: Get latest version for this service
+  set_fact:
+    new_service_docker_image_tag: "{{ update_data.json[service_configuration.network][service_configuration.service] | last }}"
+  when: service_configuration.autoupdate
+
+- name: Build new image tag
+  set_fact:
+    new_service_configuration_fraction:
+      image: "{{ service_docker_image }}:{{ new_service_docker_image_tag }}"
+  when: service_configuration.autoupdate
+
+- name: Update configuration
+  set_fact:
+    new_service_configuration: "{{ service_configuration | combine(new_service_configuration_fraction) }}"
+  when: service_configuration.autoupdate and new_service_docker_image_tag != service_docker_image_tag
+
+- name: Write configuration
+  copy:
+    content: '{{ new_service_configuration | to_nice_yaml }}'
+    dest: "{{ item.path }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  when: service_configuration.autoupdate and new_service_docker_image_tag != service_docker_image_tag
+  become: yes
+
+# EOF

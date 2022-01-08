@@ -41,7 +41,8 @@ export class BloxSSVService extends NodeService {
             },
             ports,
             volumes,
-            "root");
+            "root",
+            network);
     }
 
     getServiceConfiguration() {
