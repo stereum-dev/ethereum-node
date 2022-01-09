@@ -15,7 +15,7 @@
       set_fact:
         service_container_name: "stereum-{{ service_configuration.id }}"
     - name: Get information of running service
-      community.docker.docker_container_info:
+      docker_container_info:
         name: "{{ service_container_name }}"
       register: service_container
 
