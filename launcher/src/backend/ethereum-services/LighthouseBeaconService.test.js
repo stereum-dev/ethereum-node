@@ -19,7 +19,7 @@ test('LighthouseBeaconService buildConfiguration', () => {
         };
     });
 
-    const lhService = new LighthouseBeaconService(networks.prater, ports, "/opt/stereum/lh", [new GethService.GethService()]).buildConfiguration();
+    const lhService = new LighthouseBeaconService(networks.prater, ports, "/opt/stereum/lh", [new GethService.GethService()], 16).buildConfiguration();
 
     expect(lhService.env.ETH1_NODES).toHaveLength(1);
     expect(lhService.env.ETH1_NODES).toContain("http-endpoint-string");
@@ -48,21 +48,27 @@ test('LighthouseBeaconService buildConsensusClientHttpEntpointUrl', () => {
         };
     });
 
-    const lhService = new LighthouseBeaconService(networks.prater, ports, "/opt/stereum/lh", []).buildConsensusClientHttpEntpointUrl();
+    const lhService = new LighthouseBeaconService(networks.prater, ports, "/opt/stereum/lh", [], 16).buildConsensusClientHttpEntpointUrl();
 
     expect(lhService).toMatch(/http:\/\/stereum-.{36}:5052/);
 });
 
 test('LighthouseBeaconService getAvailablePorts', () => {
-    const lhServicePorts = new LighthouseBeaconService(networks.prater, [], "/opt/stereum/lh", []).getAvailablePorts();
+    const lhServicePorts = new LighthouseBeaconService(networks.prater, [], "/opt/stereum/lh", [], 16).getAvailablePorts();
 
     expect(lhServicePorts).toHaveLength(3);
 });
 
 test('LighthouseBeaconService network', () => {
-    const lhServicePorts = new LighthouseBeaconService(networks.goerli, [], "/opt/stereum/lh", []).buildConfiguration();
+    const lhServicePorts = new LighthouseBeaconService(networks.goerli, [], "/opt/stereum/lh", [], 16).buildConfiguration();
 
     expect(lhServicePorts.network).toMatch(/goerli/);
+});
+
+test('LighthouseBeaconService slasherDbSize', () => {
+    const lhServicePorts = new LighthouseBeaconService(networks.goerli, [], "/opt/stereum/lh", [], 123).buildConfiguration();
+
+    expect(lhServicePorts.env.SLASHER_DB_SIZE).toBe(123);
 });
 
 // EOF
