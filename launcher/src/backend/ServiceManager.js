@@ -22,9 +22,8 @@ export class ServiceManager {
      * @param state a string with the desired state, see serivceState
      * @returns an object containing a reference to the ansible process output, usable with NodeConnection.playbookStatus
      */
-    async manageServiceState(serviceId, state) {
-        return new Promise(async (resolve, reject) => {
-            return this.nodeConnection.runPlaybook("manage-service", {
+    manageServiceState(serviceId, state) {
+        return this.nodeConnection.runPlaybook("manage-service", {
                 // extra args
                 stereum: {
                     manage_service: {
@@ -35,11 +34,8 @@ export class ServiceManager {
                     },
                 },
             }).then(res => {
-                resolve(res);
-            }).catch(res => {
-                reject(res);
+                return res;
             });
-        });
     }
 
     /**
@@ -47,10 +43,10 @@ export class ServiceManager {
      *
      * @returns an array of all service configurations
      */
-    async readServiceConfigurations() {
-        return new Promise(async (resolve, reject) => {
-            this.nodeConnection.listServicesConfigurations()
+    readServiceConfigurations() {
+        return this.nodeConnection.listServicesConfigurations()
             .then(services => {
+                // return services;
                 const serviceConfigs = new Array();
                 for (let i = 0; i < services.length; i++) {
                     const service = services[i];
@@ -58,8 +54,7 @@ export class ServiceManager {
                     this.nodeConnection.readServiceConfiguration(service).then(config => serviceConfigs.push(config));
                 }
 
-                resolve(serviceConfigs);
+                return serviceConfigs;
             });
-        });
     }
 }
