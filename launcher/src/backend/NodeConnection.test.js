@@ -452,6 +452,29 @@ test('listServicesConfigurations success', async () => {
     expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/);
 });
 
+test('listServicesConfigurations success empty', async () => {
+    jest.mock('./SSHService');
+    const SSHService = require('./SSHService');
+    const mMock = jest.fn();
+    mMock.mockReturnValueOnce({rc: 0, stdout: ""});
+    SSHService.SSHService.mockImplementation(() => {
+        return {
+            exec: mMock,
+        };
+    });
+
+    const nodeConnection = new NodeConnection(null);
+    nodeConnection.sshService = new SSHService.SSHService();
+
+    const list = await nodeConnection.listServicesConfigurations();
+
+    expect(list.length).toBe(0);
+
+    expect(mMock.mock.calls.length).toBe(1);
+
+    expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/);
+});
+
 test('readServiceConfiguration success', async () => {
     jest.mock('./SSHService');
     const SSHService = require('./SSHService');

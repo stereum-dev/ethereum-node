@@ -212,7 +212,7 @@ export class NodeConnection {
                 return reject("Failed reading services configurations: " + SSHService.extractExecError(services));
             }
 
-            return resolve(services.stdout.split("\n"));
+            return resolve(services.stdout.split("\n").filter(i => i));
         });
     }
 
@@ -249,7 +249,7 @@ export class NodeConnection {
             try {
                 configStatus = await this.sshService.exec(
                     `sudo echo -e ` + StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) + `
-                    > /etc/stereum/services/` + serviceConfiguration.id);
+                    > /etc/stereum/services/` + serviceConfiguration.id + `.yaml`);
             } catch (err) {
                 log.error("Can't write service configuration of " + serviceConfiguration.id, err);
                 return reject("Can't write service configuration of " + serviceConfiguration.id + ": " + err);
