@@ -30,6 +30,7 @@ export default {
 dialog {
   position: absolute;
   top: 30vh;
+
   
   min-width: 20rem;
   left: auto;
@@ -44,6 +45,7 @@ dialog {
   /* animation: modal 0.3s ease-out forwards; */
   background-color:rgba(76, 72, 72, .5);
  resize: both;
+
 
 }
 </style>

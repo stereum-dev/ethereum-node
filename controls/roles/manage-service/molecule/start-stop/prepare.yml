@@ -59,6 +59,6 @@
         stereum_args:
           manage_service:
             save: false
-            state: start
+            state: started
             configuration:
               id: 9024aec6-12a8-456a-8096-ee7ef6f67167

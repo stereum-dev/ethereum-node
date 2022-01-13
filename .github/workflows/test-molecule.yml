@@ -21,7 +21,17 @@ jobs:
 
           {role: "setup", test: "default"},
 
+          {role: "update-services", test: "default"},
+
           {role: "fastsync", test: "default"},
+
+          {role: "validator-import-lighthouse", test: "default"},
+
+          {role: "validator-import-nimbus", test: "default"},
+
+          {role: "validator-import-prysm", test: "default"},
+
+          {role: "validator-import-teku", test: "default"},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
@@ -50,6 +60,14 @@ jobs:
       - name: Run tests
         working-directory: ./controls/roles/${{ matrix.tests.role }}
         run: molecule test -s ${{ matrix.tests.test }}
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          ansible_python_interpreter: "/usr/bin/python3"
+      # destroying is necessary when previous task failed and didn't clean up properly
+      - name: Destroy previous testing VMs
+        if: ${{ failure() || cancelled() }}
+        working-directory: ./controls/roles/${{ matrix.tests.role }}
+        run: molecule destroy -s ${{ matrix.tests.test }}
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
           ansible_python_interpreter: "/usr/bin/python3"

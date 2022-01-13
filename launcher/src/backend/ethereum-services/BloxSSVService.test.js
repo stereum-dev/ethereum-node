@@ -1,6 +1,7 @@
 import { BloxSSVService } from './BloxSSVService.js';
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
+const log = require('electron-log');
 
 test('BloxSSVService buildConfiguration', () => {
     const ports = [
@@ -17,21 +18,22 @@ test('BloxSSVService buildConfiguration', () => {
         };
     });
 
-    jest.mock('./LighthouseService');
-    const LighthouseService = require('./LighthouseService');
+    jest.mock('./LighthouseBeaconService');
+    const LighthouseBeaconService = require('./LighthouseBeaconService');
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
-    LighthouseService.LighthouseService.mockImplementation(() => {
+    LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
             buildConsensusClientHttpEntpointUrl: mMockLh,
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseService.LighthouseService()]).buildConfiguration();
+    const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration();
+
+    log.info("cmd: ", bloxService.command);
 
     expect(bloxService.env.CONFIG_PATH).toMatch(/\/config.yaml/);
-    expect(bloxService.volumes).toHaveLength(2);
+    expect(bloxService.volumes).toHaveLength(1);
     expect(bloxService.volumes).toContain("/opt/stereum/ssv/data:/data");
-    expect(bloxService.volumes).toContain("/opt/stereum/ssv/config.yaml:/config.yaml");
     expect(bloxService.ports).toHaveLength(2);
     expect(bloxService.id).toHaveLength(36);
     expect(bloxService.user).toMatch(/root/);
@@ -48,16 +50,16 @@ test('BloxSSVService getServiceConfiguration', () => {
         };
     });
 
-    jest.mock('./LighthouseService');
-    const LighthouseService = require('./LighthouseService');
+    jest.mock('./LighthouseBeaconService');
+    const LighthouseBeaconService = require('./LighthouseBeaconService');
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
-    LighthouseService.LighthouseService.mockImplementation(() => {
+    LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
             buildConsensusClientHttpEntpointUrl: mMockLh,
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseService.LighthouseService()]).getServiceConfiguration();
+    const bloxService = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration();
 
     expect(bloxService.MetricsAPIPort).toBeDefined();
     expect(bloxService.eth2.Network).toMatch(/prater/);
@@ -68,9 +70,21 @@ test('BloxSSVService getServiceConfiguration', () => {
 });
 
 test('BloxSSVService getAvailablePorts', () => {
-    const ports = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
 
-    expect(ports).toHaveLength(2);
+    expect(service).toHaveLength(2);
+});
+
+test('BloxSSVService service name', () => {
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+
+    expect(service.service).toMatch(/BloxSSVService/);
+});
+
+test('BloxSSVService autoupdate', () => {
+    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+
+    expect(service.autoupdate).toBe(true);
 });
 
 // EOF
