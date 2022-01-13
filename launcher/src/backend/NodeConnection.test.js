@@ -186,7 +186,7 @@ test('prepareStereumNode failure ubuntu install', async () => {
     nodeConnection.sshService = new SSHService.SSHService();
 
     await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't install ansible role: unknown");
+        expect(e).toMatch("Can't install ansible role: <stderr empty>");
     });
 
     expect(mMock.mock.calls.length).toBe(3);
@@ -344,6 +344,8 @@ test('playbookStatus error', async () => {
     const nodeConnection = new NodeConnection(null);
     nodeConnection.sshService = new SSHService.SSHService();
 
+    expect.assertions(1);
+
     await nodeConnection.playbookStatus("ref-123").catch(e => {
         expect(e).toMatch("Can't read playbook status 'ref-123': error123");
     });
@@ -353,7 +355,7 @@ test('playbookStatus failure', async () => {
     jest.mock('./SSHService');
     const SSHService = require('./SSHService');
     const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 1, stderr: "err-1"});
+    mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({rc: 1, stderr: "err-1"})));
     SSHService.SSHService.mockImplementation(() => {
         return {
             exec: mMock,
@@ -363,7 +365,10 @@ test('playbookStatus failure', async () => {
     const nodeConnection = new NodeConnection(null);
     nodeConnection.sshService = new SSHService.SSHService();
 
+    expect.assertions(1);
+
     await nodeConnection.playbookStatus("ref-123").catch(e => {
+        log.debug("playbookStatus failure:", e);
         expect(e).toMatch("Failed reading status of ref 'ref-123': err-1");
     });
 });
@@ -372,7 +377,7 @@ test('playbookStatus success', async () => {
     jest.mock('./SSHService');
     const SSHService = require('./SSHService');
     const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "playbook-output"});
+    mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({rc: 0, stdout: "playbook-output"})));
     SSHService.SSHService.mockImplementation(() => {
         return {
             exec: mMock,
@@ -446,6 +451,29 @@ test('listServicesConfigurations success', async () => {
     expect(list).toContain("foo.yaml");
     expect(list).toContain("bar.yaml");
     expect(list).toContain("xyz.yaml");
+
+    expect(mMock.mock.calls.length).toBe(1);
+
+    expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/);
+});
+
+test('listServicesConfigurations success empty', async () => {
+    jest.mock('./SSHService');
+    const SSHService = require('./SSHService');
+    const mMock = jest.fn();
+    mMock.mockReturnValueOnce({rc: 0, stdout: ""});
+    SSHService.SSHService.mockImplementation(() => {
+        return {
+            exec: mMock,
+        };
+    });
+
+    const nodeConnection = new NodeConnection(null);
+    nodeConnection.sshService = new SSHService.SSHService();
+
+    const list = await nodeConnection.listServicesConfigurations();
+
+    expect(list.length).toBe(0);
 
     expect(mMock.mock.calls.length).toBe(1);
 

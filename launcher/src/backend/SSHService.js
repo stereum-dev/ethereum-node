@@ -17,7 +17,7 @@ export class SSHService {
     }
 
     static extractExecError(err) {
-        return err && err.stderr ? err.stderr : "unknown";
+        return err && err.stderr ? err.stderr : "<stderr empty>";
     }
 
     async connect(connectionInfo) {
@@ -58,7 +58,7 @@ export class SSHService {
     }
 
     async exec(command) {
-        this.exec(command, command)
+        return this.exec(command, command);
     }
 
     async exec(command, logline) {
@@ -76,7 +76,6 @@ export class SSHService {
                     .on('close', (code, signal) => {
                         log.info('stream closed', code);
                         data.rc = code;
-                        resolve(data);
                     })
                     .on('data', (stdout) => {
                         log.info('stdout got data', stdout.toString('utf8'));
@@ -86,6 +85,7 @@ export class SSHService {
                         log.info('stderr got data', stderr.toString('utf8'));
                         data.stderr = stderr.toString('utf8');
                     });
+                resolve(data);
             })
         });
     }

@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js';
 import { ServiceVolume } from './ServiceVolume.js';
 
 export class LighthouseBeaconService extends NodeService {
-    constructor(network, ports, workingDir, executionClients) {
+    constructor(network, ports, workingDir, executionClients, slasherDbSize) {
         super();
 
         // volumes
@@ -31,7 +31,7 @@ export class LighthouseBeaconService extends NodeService {
                 ETH1_NODES: eth1Nodes,
                 NETWORK: network,
                 SLASHERDIR: "/opt/app/slasher",
-                SLASHER_DB_SIZE: "16",
+                SLASHER_DB_SIZE: slasherDbSize,
             },
             ports,
             volumes,
