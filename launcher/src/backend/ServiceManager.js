@@ -33,8 +33,6 @@ export class ServiceManager {
                         },
                     },
                 },
-            }).then(res => {
-                return res;
             });
     }
 
