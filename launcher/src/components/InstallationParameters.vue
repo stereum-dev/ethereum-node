@@ -88,7 +88,7 @@ export default {
 #msform {
     text-align: center;
     position: relative;
-    margin-top: var(--mb-1-25);
+    margin-top: 20px
 }
 
 #msform fieldset .form-card {
@@ -304,6 +304,6 @@ select.list-dt:focus {
 
 .fit-image {
     width: 100%;
-    object-fit: cover;
+    object-fit: cover
 }
 </style>

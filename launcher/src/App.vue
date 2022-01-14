@@ -6,16 +6,26 @@
     <router-view />
   </div>
 </template>
-
+<script>
+export default {
+  watch: {
+    items: {
+      handler(val, oldVal) {
+        console.log(oldVal + " --> " + val);
+      },
+      deep: true,
+    },
+  },
+};
+</script>
 <style>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   /* color: #2c3e50; */
- /* background-color: #000; */
+  /* background-color: #000; */
 }
 
 #nav {

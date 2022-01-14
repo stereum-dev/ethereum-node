@@ -1,24 +1,26 @@
-import Vue from "vue";
+import Vue, { createApp } from "vue"; // CHANGE
 import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import Toasted from "vue-toasted";
-import ControlService from '@/store/ControlService';
-import { BootstrapVue, BootstrapVueIcons } from "bootstrap-vue";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
 
-Vue.use(Toasted);
-Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons);
-import "./main.css";
+import BaseButton from "./components/UI/BaseButton.vue";
+import BackgroundPage from "./components/layers/BackgroundPage.vue";
+import router from "./router/index.js";
+//import store from "./store/index.js";
+//import ControlService from "@/store/ControlService";
+Vue.configureCompat({ WATCH_ARRAY: false });
 
-ControlService.init(store);
+const app = createApp(App);
+//app.use(store);
 
-Vue.config.productionTip = false;
+app.component("base-button", BaseButton);
+app.component("background-page", BackgroundPage);
 
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount("#app");
+app.use(router);
+
+app.mount("#app");
+//Vue.config.productionTip = false;
+
+// new Vue({
+//   router,
+//   store,
+//   render: (h) => h(App),
+// }).$mount("#app");
