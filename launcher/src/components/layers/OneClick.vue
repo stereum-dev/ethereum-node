@@ -9,30 +9,29 @@
         <hr />
         <div class="row">
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
         </div>
         <div class="row">
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <img src="" />
+            <img :src="img" />
           </div>
           <div class="icon">
-            <!-- <img src="./BLOX SSV.png" /> -->
           </div>
         </div>
         <hr />
@@ -42,7 +41,11 @@
 
 <script>
 export default {
-
+data() {
+  return {
+    img:"/img/icon/ROCKETPOOL.png",
+  }
+},
 }
 </script>
 
@@ -68,6 +71,7 @@ export default {
   border-radius: 40px;
   border: 5px solid grey;
   resize: both;
+  background: greenyellow;
 }
 .row {
   display: flex;
