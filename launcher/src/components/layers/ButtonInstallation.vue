@@ -22,13 +22,22 @@ export default {
   border-radius: 50px;
   padding: 0;
   height: auto;
+  background: #336666;
 }
 #title p {
   margin: 1px;
+  font-weight: bold;
+  color: #eee;
+  font-size: 10pt;
+}
+#img{
+padding: 5px;
+height: auto;
 }
 #img img {
   width: 95%;
   margin-top: 5pt;
   resize: both;
 }
+
 </style>

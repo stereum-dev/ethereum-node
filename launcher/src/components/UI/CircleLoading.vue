@@ -57,27 +57,29 @@ dialog {
 /* TEST*/
 .body {
   position: absolute;
-  top: 50%;
+  top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #2a9d8f;
+  /*background-color: #2a9d8f;*/
   max-width: 500vw;
-}
+text-align: right;}
 .progress {
   position: relative;
   height: 20px;
   width: 50vw;
-  border: 3px solid #f4a261;
+  border: 3px solid grey;
   border-radius: 15px;
 }
 .progress p {
   float: left;
-  margin: 0;
+  margin:0 2%;
+  font-weight: bold;
+  color: #eee;
   position: relative;
 }
 .progress .color {
   position: absolute;
-  background-color: #ffffff;
+  background-color: #1715c4;
   width: 0px;
   height: 20px;
   border-radius: 15px;

@@ -12,8 +12,8 @@
       </div>
     </div>
     <circle-loading open="true"></circle-loading>
-    <div class="txt">
-      <p class="help">
+    <div id="txt">
+      <p>
         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus adipisci id
         mollitia culpa? Distinctio dolores error commodi cupiditate quam ipsam
         consequuntur aut iste praesentium voluptates, recusandae quae, alias fugiat quod
@@ -65,31 +65,31 @@ export default {
   border-radius: 40px;
   /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.1rem;
-  background: rgba(51, 102, 102, 0.7);
+  background: #336666;
   color: #fff;
   border: 3px solid rgb(88, 86, 86);
   position: relative;
   resize: both;
 }
 #header h2 {
-  margin: 12px auto;
-  font-size: 20pt;
+  margin:   0 auto;
+  font-size: 30pt;
   resize: both;
 }
-.txt {
+#txt {
   width: 70vw;
-  height: 8vh;
+  height: auto;
   border: 3px solid grey;
   margin: 100px auto;
-  background: rgba(51, 102, 102, 0.4);
+  background: #336666;
   border-radius: 40px;
   position: relative;
-  padding: 5px;
+  padding: 2%;
   resize: both;
 }
-.help {
+#txt p {
   margin-top: -1px;
-  font-size: 10pt;
+  font-size: 14pt;
   font-weight: bold;
   color: #fff;
 }
