@@ -32,6 +32,8 @@ jobs:
           {role: "validator-import-prysm", test: "default"},
 
           {role: "validator-import-teku", test: "default"},
+
+          {role: "ssv-lighthouse", test: "default"},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
