@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+  # Check SSV configuration file
+  - name: Check lighthouse_validator_import.sh
+    stat:
+      path: /opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/blox-ssv.yaml
+    register: ssv_config
+  - debug:
+      msg: "{{ ssv_config }}"
+  - fail:
+      msg: "SSV configuration file doesn't exist"
+    when: not ssv_config.stat.exists
