@@ -7,7 +7,6 @@
 import TheFirst from "./TheFirst.vue";
 import SetupServer from "./SetupServer.vue";
 import WelcomePage from "./WelcomePage.vue";
-import ClickInstall from './ClickInstall.vue' 
 
 export default {
   data() {
@@ -15,12 +14,10 @@ export default {
       pageName: "TheFirst",
     };
   },
-  components: { TheFirst, SetupServer, WelcomePage,ClickInstall },
+  components: { TheFirst, SetupServer, WelcomePage },
   name: "BaseHome",
   methods: {
     page(pageId) {
-            alert(pageId)
-
       this.pageName = pageId;
     },
   },

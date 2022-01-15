@@ -1,6 +1,9 @@
 import { networks, NodeService } from './NodeService.js'
+import { StringUtils } from '../StringUtils.js';
 import { ServicePortDefinition } from './SerivcePortDefinition.js';
 import { ServiceVolume } from './ServiceVolume.js';
+
+const YAML = require('yaml');
 
 export class BloxSSVService extends NodeService {
     constructor(network, ports, workingDir, executionClients, consensusClients) {
@@ -14,8 +17,7 @@ export class BloxSSVService extends NodeService {
         this.workingDir = workingDir;
 
         const volumes = [
-            new ServiceVolume(workingDir + "/data", "/data"),
-            new ServiceVolume(workingDir + "/config.yaml", "/config.yaml")
+            new ServiceVolume(workingDir + "/data", "/data")
         ];
 
         // eth1 nodes
@@ -23,18 +25,24 @@ export class BloxSSVService extends NodeService {
 
         const eth1Nodes = executionClients.map(client => {return client.buildExecutionClientHttpEndpointUrl()});
 
+        // prepare service's config file
+        const configFile = new YAML.Document();
+        configFile.contents = this.getServiceConfiguration();
+        const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString());
+
         // build service
         super.init(null,
             "bloxstaking/ssv-node",
-            "v0.1.4",
-            "make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node",
+            "ubuntu-latest",
+            "echo " + escapedConfigFile + " > /config.yaml && make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node",
             null,
             {
                 CONFIG_PATH: "/config.yaml",
             },
             ports,
             volumes,
-            "root");
+            "root",
+            network);
     }
 
     getServiceConfiguration() {

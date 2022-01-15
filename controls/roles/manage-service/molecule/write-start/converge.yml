@@ -7,11 +7,11 @@
     stereum_args:
       manage_service:
         save: true
-        state: start
+        state: started
         configuration:
           id: 9024aec6-12a8-456a-8096-ee7ef6f67167
           image: stereum/lighthouse:v2.0.1-47
-          env: 
+          env:
             DEBUG_LEVEL: debug
             NETWORK: mainnet
             ETH1_NODES: http://geth:8545

@@ -54,7 +54,7 @@
         stereum_args:
           manage_service:
             save: true
-            state: start
+            state: started
             configuration:
               id: "{{ beacon_service }}"
               image: stereum/nimbus:v1.5.5-54

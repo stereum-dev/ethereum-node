@@ -1,0 +1,34 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Stereum config files
+  - name: Read service's configuration
+    slurp:
+      src: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
+    register: service_configuration_raw
+    become: yes
+
+  - name: Parse service's configuration
+    set_fact:
+      service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - name: Check service's configuration
+    assert:
+      that:
+        - service_configuration.image == 'stereum/lighthouse:v2.0.1-48'
+
+  - name: Get information of running updated service
+    community.docker.docker_container_info:
+      name: "stereum-9024aec6-12a8-456a-8096-ee7ef6f67167"
+    register: service_container
+
+  - name: Check version of running and updated service
+    assert:
+      that:
+        - service_container.exists
+        - service_container.container.Config.Image == 'stereum/lighthouse:v2.0.1-48'

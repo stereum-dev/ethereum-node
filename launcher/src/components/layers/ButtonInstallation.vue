@@ -1,5 +1,5 @@
 <template>
-  <section @click="setClickId">
+  <section>
     <div id="title">
       <p>{{ title }}</p>
     </div>
@@ -11,17 +11,7 @@
 <script>
 export default {
   name: "ButtonInstallation",
-  props: ["title", "img",'id'],
-  emits:['clickId'],
-  data(){return{
-    clickId:null
-  }},
-  methods:{
-    setClickId(){
-      this.clickId=this.id
-      this.$emit('clickId',this.clickId);
-    }
-  }
+  props: ["title", "img"],
 };
 </script>
 <style scoped>
@@ -31,22 +21,23 @@ export default {
   text-align: center;
   border-radius: 50px;
   padding: 0;
-  background: rgba(51, 102, 102, 1);
   height: auto;
+  background: #336666;
 }
 #title p {
   margin: 1px;
-  font-size: 10pt;
-  color: #eee;
   font-weight: bold;
-
-  margin: 1px;
-  border-radius: 40px;
+  color: #eee;
+  font-size: 10pt;
+}
+#img{
+padding: 5px;
+height: auto;
 }
 #img img {
   width: 95%;
   margin-top: 5pt;
   resize: both;
-  cursor: pointer;
 }
+
 </style>

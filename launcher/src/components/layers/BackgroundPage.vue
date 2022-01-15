@@ -43,7 +43,7 @@ img {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 65%;
+  width: 50%;
   min-height: 20%;
   min-width: 20%;
   transform: translate(-50%, -50%);
