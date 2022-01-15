@@ -32,7 +32,12 @@
                 </option>
               </select>
             </div>
-            <input class="three" type="image" src="./img/icon/+.png" @click="addModel" />
+            <input
+              class="three"
+              type="image"
+              src="./img/icon/+.png"
+              @click="addModel"
+            />
             <input
               class="three"
               type="image"
@@ -86,7 +91,11 @@
         <div class="ssh" style="border-style: none">
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
-            <input type="checkbox" v-model="model.sshKeyAuth" name="check-button" />
+            <input
+              type="checkbox"
+              v-model="model.sshKeyAuth"
+              name="check-button"
+            />
             <span class="slider round"></span>
           </label>
         </div>
@@ -99,12 +108,10 @@
 </template>
 
 <script>
-import BackgroundPage from "./BackgroundPage.vue";
 import BaseDialog from "./BaseDialog.vue";
-import BaseLogo from "./BaseLogo.vue";
 
 export default {
-  components: { BaseLogo, BaseDialog, BackgroundPage },
+  components: { BaseDialog },
   name: "FormSetup",
   props: ["bDialogDis"],
   emits: ["page"],
@@ -143,7 +150,8 @@ export default {
   //props: {
   //   model: Object,
   //},
-  computed: {
+
+  methods: {
     sourceBase() {
       if (this.model.sshKeyAuth) {
         this.passType = "file";
@@ -153,8 +161,6 @@ export default {
         return "PASSWORD";
       }
     },
-  },
-  methods: {
     mouseOver(val) {
       if (val === "over") {
         this.imgTrash = "./Img/icon/Trash Can2.png";
@@ -182,7 +188,9 @@ export default {
     },
     deleteRow() {
       var record = [];
-      const r = this.tunnels.find((tunel) => tunel.name != this.selectTunnelName);
+      const r = this.tunnels.find(
+        (tunel) => tunel.name != this.selectTunnelName
+      );
       record.push(r);
       this.tunnels = record;
     },
@@ -237,30 +245,34 @@ export default {
       }
     },
     //es
-    async connect(e) {
-      this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
-      try {
-        await ControlService.connect(this.model);
-      } catch (ex) {
-        console.log(ex);
-        this.$toasted.show(
-          "Error connecting to server! Level: " + ex.level + " Message: " + ex.message
-        );
-        return;
-      }
+    // async connect(e) {
+    //   this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
+    //   try {
+    //     await ControlService.connect(this.model);
+    //   } catch (ex) {
+    //     console.log(ex);
+    //     this.$toasted.show(
+    //       "Error connecting to server! Level: " +
+    //         ex.level +
+    //         " Message: " +
+    //         ex.message
+    //     );
+    //     return;
+    //   }
 
-      const stereumStatus = await ControlService.inquire(this.model);
+    //   const stereumStatus = await ControlService.inquire(this.model);
 
-      if (!stereumStatus.exists) await ControlService.setup(stereumStatus.latestRelease);
-      else {
-        this.$toasted.show("Multiple Stereum Versions found!");
-        this.stereumVersions = stereumStatus;
-      }
+    //   if (!stereumStatus.exists)
+    //     await ControlService.setup(stereumStatus.latestRelease);
+    //   else {
+    //     this.$toasted.show("Multiple Stereum Versions found!");
+    //     this.stereumVersions = stereumStatus;
+    //   }
 
-      await ControlService.openTunnels(this.tunnels);
-      await ControlService.disconnect();
-      e.preventDefault();
-    },
+    //   await ControlService.openTunnels(this.tunnels);
+    //   await ControlService.disconnect();
+    //   e.preventDefault();
+    // },
   },
 };
 </script>
@@ -502,36 +514,9 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* test background */
-/* #cont {
-  border-radius: 40px;
 
-  padding: 1rem;
-  margin: 2rem auto;
-  width: 95vw;
-  height: 90vh;
-  background-color: #336666;
-}
-#main {
-  background-color: #000;
 
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  display: flex;
-}
 
-img {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 45%;
-  min-height: 20%;
-  min-width: 20%;
-  transform: translate(-50%, -50%);
-  resize: both;
-} */
 .errors input {
   border-color: red;
 }

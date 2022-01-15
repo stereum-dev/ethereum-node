@@ -1,0 +1,30 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    json_update_data: |
+      {
+          "prater": {
+              "LighthouseBeaconService": [
+                  "v1.5.2-45",
+                  "v2.0.0-46",
+                  "v2.0.1-48"
+              ],
+              "LighthouseValidatorService": [
+                  "v1.5.2-45",
+                  "v2.0.0-46",
+                  "v2.0.1-48"
+              ]
+          }
+      }
+
+  tasks:
+    - name: json config
+      set_fact:
+        update_data_test:
+          json: "{{ json_update_data | from_json }}"
+    - name: "Include update-services"
+      include_role:
+        name: "update-services"
+
+# EOF

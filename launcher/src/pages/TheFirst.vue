@@ -27,11 +27,11 @@
 import BaseLogo from "../components/layers/BaseLogo.vue";
 import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
-import SetupServer from "./SetupServer.vue";
+//import SetupServer from "./SetupServer.vue";
 export default {
   name: "TheFirst",
-  components: { BaseLogo, LangButton, LangDialog, SetupServer },
-  name: "TheFirst",
+  components: { BaseLogo, LangButton, LangDialog },
+
   emit: ["open", "page"],
   data() {
     return {
@@ -79,6 +79,7 @@ export default {
     },
     activePage() {
       if (this.language === "") {
+        ///
       } else {
         this.$emit("page", "SetupServer");
       }

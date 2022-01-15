@@ -3,7 +3,7 @@
   hosts: all
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
-  
+
 
   tasks:
     # geth
@@ -17,7 +17,7 @@
         stereum_args:
           manage_service:
             save: false
-            state: start
+            state: started
             configuration:
               id: 25df0439-80e6-4afe-8876-72d7718035c3
     #lh
@@ -31,6 +31,6 @@
         stereum_args:
           manage_service:
             save: false
-            state: start
+            state: started
             configuration:
               id: 9024aec6-12a8-456a-8096-ee7ef6f67167

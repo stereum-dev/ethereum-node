@@ -7,3 +7,7 @@ test('escapeStringForShell small json', () => {
 test('escapeStringForShell simple String', () => {
     expect(StringUtils.escapeStringForShell("this is a test! \"wooo\"")).toEqual("\"this is a test! \\\"wooo\\\"\"");
 });
+
+test('escapeStringForShell new line', () => {
+    expect(StringUtils.escapeStringForShell("this\nnext-line")).toEqual("\"this\nnext-line\"");
+});

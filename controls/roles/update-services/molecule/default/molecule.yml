@@ -5,10 +5,10 @@ driver:
   name: hetznercloud
 platforms:
   # cpx31 for the storage requirements
-  - name: "fastsync--default--ubuntu-2004"
+  - name: "update-services--default--ubuntu-2004"
     server_type: cpx31
     image: ubuntu-20.04
-  - name: "fastsync--default--centos-stream-8"
+  - name: "update-services--default--centos-stream-8"
     server_type: cpx31
     image: centos-stream-8
 provisioner:
@@ -26,7 +26,7 @@ scenario:
     - create
     - prepare
     - converge
-    #- idempotence
+    - idempotence
     - lint
     - verify
     - destroy

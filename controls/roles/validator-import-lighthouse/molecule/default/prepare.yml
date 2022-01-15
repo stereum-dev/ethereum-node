@@ -55,7 +55,7 @@
         stereum_args:
           manage_service:
             save: true
-            state: start
+            state: started
             configuration:
               id: "{{ beacon_service }}"
               image: stereum/lighthouse:v2.0.1-48
@@ -88,7 +88,7 @@
         stereum_args:
           manage_service:
             save: true
-            state: start
+            state: started
             configuration:
               id: "{{ validator_service }}"
               image: stereum/lighthouse:v2.0.1-48

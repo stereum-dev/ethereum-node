@@ -1,6 +1,6 @@
 <template>
   <dialog open v-if="open">
-     <!-- @link="setLink" -->
+   
       <slot>
        
 </slot>
@@ -11,17 +11,6 @@
 export default {
   name:'LangDialog',
    props: ['open'],
-//    data(){
-//      return{
-//        links:''
-//      }
-//    },
-//    methods: {
-//      setLink(linkUrl){
-// links=linkUrl
-//      }
-//    },
-  
 
 }
 </script>

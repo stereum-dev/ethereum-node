@@ -54,7 +54,7 @@
         stereum_args:
           manage_service:
             save: true
-            state: start
+            state: started
             configuration:
               id: "{{ validator_service }}"
               image: gcr.io/prysmaticlabs/prysm/validator:v2.0.4
