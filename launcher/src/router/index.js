@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import BaseHome from "../pages/BaseHome.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
 import WelcomePage from '../pages/WelcomePage.vue';
+import TheNode from '../peges/TheNode.vue';
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     name: "ClickInstall",
     component: ClickInstall,
   },
+  {
+    path:"/node",
+    name:"TheNode",
+    component:TheNode
+  }
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });
