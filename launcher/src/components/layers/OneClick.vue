@@ -36,7 +36,9 @@
       <hr />
     </div>
     <base-button id="instal">INSTAL</base-button>
-    <router-link :to="{ path: '/welcome' }"><base-button id="back">BACK</base-button></router-link>
+    <router-link :to="{ path: '/welcome' }"
+      ><base-button id="back">BACK</base-button></router-link
+    >
   </section>
 </template>
 
@@ -114,8 +116,8 @@ export default {
   width: 100px;
   resize: both;
 }
-#back{
- position: fixed;
+#back {
+  position: fixed;
   top: 81vh;
   left: 14%;
   width: 100px;

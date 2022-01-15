@@ -514,9 +514,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-
-
-
 .errors input {
   border-color: red;
 }

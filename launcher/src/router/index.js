@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import BaseHome from "../pages/BaseHome.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
-import WelcomePage from '../pages/WelcomePage.vue';
-import TheNode from '../peges/TheNode.vue';
+import WelcomePage from "../pages/WelcomePage.vue";
+import TheNode from "../pages/TheNode.vue";
 
 const routes = [
   {
@@ -12,9 +12,9 @@ const routes = [
     component: BaseHome,
   },
   {
-    path:"/welcome",
-    name:"WelcomePage",
-    component:WelcomePage
+    path: "/welcome",
+    name: "WelcomePage",
+    component: WelcomePage,
   },
   {
     path: "/clickinstall",
@@ -22,10 +22,10 @@ const routes = [
     component: ClickInstall,
   },
   {
-    path:"/node",
-    name:"TheNode",
-    component:TheNode
-  }
+    path: "/node",
+    name: "TheNode",
+    component: TheNode,
+  },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });
