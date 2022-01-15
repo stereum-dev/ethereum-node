@@ -1,52 +1,53 @@
 <template>
-    <section class="main">
-      <section class="header">ONE CLICK INSTALLATION</section>
-      <div class="container">
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, cum
-          harum? Cumque ipsa eum laudantium.
-        </p>
-        <hr />
-        <div class="row">
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
+  <section class="main">
+    <section class="header">ONE CLICK INSTALLATION</section>
+    <div class="container">
+      <p>
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, cum
+        harum? Cumque ipsa eum laudantium.
+      </p>
+      <hr />
+      <div class="row">
+        <div class="icon">
+          <img :src="img" />
         </div>
-        <div class="row">
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-          </div>
+        <div class="icon">
+          <img :src="img" />
         </div>
-        <hr />
+        <div class="icon">
+          <img :src="img" />
+        </div>
+        <div class="icon">
+          <img :src="img" />
+        </div>
       </div>
-    </section>
+      <div class="row">
+        <div class="icon">
+          <img :src="img" />
+        </div>
+        <div class="icon">
+          <img :src="img" />
+        </div>
+        <div class="icon">
+          <img :src="img" />
+        </div>
+        <div class="icon"></div>
+      </div>
+      <hr />
+    </div>
+    <base-button id="instal">INSTAL</base-button>
+    <router-link :to="{ path: '/welcome' }"><base-button id="back">BACK</base-button></router-link>
+  </section>
 </template>
 
 <script>
 export default {
-data() {
-  return {
-    img:"/img/icon/ROCKETPOOL.png",
-  }
-},
-}
+  data() {
+    return {
+      img: "/img/icon/ROCKETPOOL.png",
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -106,5 +107,18 @@ data() {
 .main {
   resize: both;
 }
-
+#instal {
+  position: fixed;
+  top: 81vh;
+  left: 76%;
+  width: 100px;
+  resize: both;
+}
+#back{
+ position: fixed;
+  top: 81vh;
+  left: 14%;
+  width: 100px;
+  resize: both;
+}
 </style>

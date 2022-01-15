@@ -514,36 +514,9 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* test background */
-/* #cont {
-  border-radius: 40px;
 
-  padding: 1rem;
-  margin: 2rem auto;
-  width: 95vw;
-  height: 90vh;
-  background-color: #336666;
-}
-#main {
-  background-color: #000;
 
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  display: flex;
-}
 
-img {
-  display: block;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 45%;
-  min-height: 20%;
-  min-width: 20%;
-  transform: translate(-50%, -50%);
-  resize: both;
-} */
 .errors input {
   border-color: red;
 }

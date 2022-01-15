@@ -5,10 +5,13 @@
     </section>
     <div class="container">
       <div class="col" v-for="install in installation" :key="install.title">
-        <button-installation
+        
+
+        <router-link :to="{ path: '/clickinstall' }"><button-installation
           :title="install.title"
           :img="install.img"
-        ></button-installation>
+        ></button-installation></router-link>
+
       </div>
     </div>
     <circle-loading open="true"></circle-loading>
