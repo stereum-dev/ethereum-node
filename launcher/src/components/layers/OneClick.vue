@@ -35,7 +35,9 @@
       </div>
       <hr />
     </div>
-    <base-button id="instal">INSTAL</base-button>
+     <router-link :to="{ path: '/node' }"
+      ><base-button id="instal">INSTAL</base-button></router-link
+    >
     <router-link :to="{ path: '/welcome' }"
       ><base-button id="back">BACK</base-button></router-link
     >
