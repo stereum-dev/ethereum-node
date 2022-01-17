@@ -3,39 +3,32 @@
     <section class="header">ONE CLICK INSTALLATION</section>
     <div class="container">
       <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, cum
-        harum? Cumque ipsa eum laudantium.
+        ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER
+        CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
+        SERVE YOUR USE CASE
       </p>
       <hr />
-      <div class="row">
+      <div
+        class="row1"
+        v-for="R1clkInstl in R1clkInstls"
+        :key="R1clkInstl.clkId"
+      >
         <div class="icon">
-          <img :src="img" />
-        </div>
-        <div class="icon">
-          <img :src="img" />
-        </div>
-        <div class="icon">
-          <img :src="img" />
-        </div>
-        <div class="icon">
-          <img :src="img" />
+          <img :src="R1clkInstl.img" />
         </div>
       </div>
-      <div class="row">
+      <div
+        class="row2"
+        v-for="R2clkInstl in R2clkInstls"
+        :key="R2clkInstl.clkId"
+      >
         <div class="icon">
-          <img :src="img" />
+          <img :src="R2clkInstl.img" />
         </div>
-        <div class="icon">
-          <img :src="img" />
-        </div>
-        <div class="icon">
-          <img :src="img" />
-        </div>
-        <div class="icon"></div>
       </div>
       <hr />
     </div>
-     <router-link :to="{ path: '/node' }"
+    <router-link :to="{ path: '/node' }"
       ><base-button id="instal">INSTAL</base-button></router-link
     >
     <router-link :to="{ path: '/welcome' }"
@@ -48,7 +41,18 @@
 export default {
   data() {
     return {
-      img: "/img/icon/ROCKETPOOL.png",
+      R1clkInstls: [
+        { clkId: "staking", img: "/img/icon/STAKING.png" },
+        { clkId: "testnet", img: "/img/icon/TESTNET.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+      ],
+      R2clkInstls: [
+        { clkId: "rocket", img: "/img/icon/ROCKETPOOL.png" },
+        { clkId: "staking", img: "/img/icon/STAKING.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+      ],
     };
   },
 };
@@ -76,11 +80,13 @@ export default {
   border-radius: 40px;
   border: 5px solid grey;
   resize: both;
-  background: greenyellow;
+  background: rgb(161, 193, 173, 0.5);
 }
-.row {
+.row1,
+.row2 {
   display: flex;
 }
+
 .container hr {
   width: 80%;
   color: #494949;
@@ -92,7 +98,7 @@ export default {
   margin: 5px;
   width: 23%;
   resize: both;
-  border-radius: 45px;
+  border-radius: 40px;
   /* margin-left: 1%; */
 }
 .icon img {

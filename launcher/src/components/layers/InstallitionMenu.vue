@@ -16,11 +16,9 @@
     <circle-loading open="true"></circle-loading>
     <div id="txt">
       <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus
-        adipisci id mollitia culpa? Distinctio dolores error commodi cupiditate
-        quam ipsam consequuntur aut iste praesentium voluptates, recusandae
-        quae, alias fugiat quod pariatur quidem. Nisi explicabo modi illum ut,
-        maxime soluta earum!
+        IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
+        ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU
+        OUT
       </p>
     </div>
   </section>
