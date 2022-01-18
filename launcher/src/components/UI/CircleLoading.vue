@@ -2,7 +2,7 @@
   <div class="body">
     <div class="progress">
       <div class="color"></div>
-      <p>Lorem ipsum dolor sit amet consectetur.</p>
+      <p>CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
       <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
     </div>
   </div>
