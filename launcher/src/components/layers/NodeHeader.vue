@@ -79,7 +79,7 @@
   position: relative;
 }
 .main-header {
-  width: 100%;
+  width: 100vw;
   background: #336666;
   padding: 1% 0;
   border-bottom: 5px solid gray;
@@ -94,6 +94,7 @@
   position: absolute;
   top: 0;
   left: 0;
+  width: 15%;
 }
 
 .main-nav1 {
@@ -101,7 +102,7 @@
   text-align: left;
   width: calc(100% - 74px);
   vertical-align: middle;
-  margin-left: 12%;
+  margin-left: 14%;
 }
 
 .main-nav__items {
@@ -112,20 +113,24 @@
 
 .main-nav__item {
   display: inline-block;
-  margin: 0 10px;
+  margin: 0 1%;
 }
 
 .box__item {
   display: inline-block;
   margin: 0 10px;
-  width: 25pt;
-  height: 25pt;
+  width: 15pt;
+  height: 15pt;
   border: 1px solid rgb(180, 179, 179);
 }
 .btn__item {
   display: inline-block;
-  margin: 0 4px;
+  margin: 0 1pt;
+  
 }
+.btn__item input{
+
+width: 80%;}
 .btn__item:hover {
   border: 1px solid #eee;
   border-radius: 40%;
@@ -144,7 +149,7 @@
   color: #eee;
   font-weight: bold;
   padding: 0 0;
-  font-size: 25pt;
+  font-size: 15pt;
 }
 
 .main-nav__item a:hover,
@@ -154,8 +159,7 @@
 
 .main-nav__item--cta a {
   color: #a1c1ad;
-  padding: 8px 16px;
-  border-radius: 8px;
+  
 }
 
 .main-nav__item--cta a:hover,
