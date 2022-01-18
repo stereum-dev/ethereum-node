@@ -8,24 +8,24 @@
         SERVE YOUR USE CASE
       </p>
       <hr />
-      <div
-        class="row1"
-        v-for="R1clkInstl in R1clkInstls"
-        :key="R1clkInstl.clkId"
-      >
-        <div class="icon">
-          <img :src="R1clkInstl.img" />
+
+      <div id="grid-container ">
+        <div
+          class="row1"
+          v-for="R1clkInstl in R1clkInstls"
+          :key="R1clkInstl.clkId"
+        >
+          <input type="image" :src="R1clkInstl.img" />
+        </div>
+        <div
+          class="row2"
+          v-for="R2clkInstl in R2clkInstls"
+          :key="R2clkInstl.clkId"
+        >
+          <input type="image" :src="R2clkInstl.img" />
         </div>
       </div>
-      <div
-        class="row2"
-        v-for="R2clkInstl in R2clkInstls"
-        :key="R2clkInstl.clkId"
-      >
-        <div class="icon">
-          <img :src="R2clkInstl.img" />
-        </div>
-      </div>
+
       <hr />
     </div>
     <router-link :to="{ path: '/node' }"
@@ -82,9 +82,23 @@ export default {
   resize: both;
   background: rgb(161, 193, 173, 0.5);
 }
-.row1,
-.row2 {
+#grid-container {
   display: flex;
+  height: 200px;
+  padding: 1em;
+  color: white;
+  outline: 2px solid silver;
+}
+
+#grid-container > div {
+  width: 100%;
+  margin: 1em;
+  height: 100px;
+  background-color: #b200ff;
+  font-family: sans-serif;
+  text-align: center;
+  line-height: 100px;
+  font-size: xx-large;
 }
 
 .container hr {
@@ -93,14 +107,14 @@ export default {
   height: 2px;
   background: grey;
 }
-.icon {
+/*.icon {
   border: 2px solid grey;
   margin: 5px;
   width: 23%;
   resize: both;
   border-radius: 40px;
-  /* margin-left: 1%; */
-}
+  margin-left: 1%; 
+}*/
 .icon img {
   float: left;
   padding: 5px auto;
