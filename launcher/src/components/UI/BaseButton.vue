@@ -19,6 +19,7 @@ button {
   padding: 10px;
   font-size: 16pt;
   color: #eee;
+  cursor: pointer;
 }
 button:hover {
   background-color: grey;

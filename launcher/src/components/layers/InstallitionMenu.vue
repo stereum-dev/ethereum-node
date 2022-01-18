@@ -5,19 +5,20 @@
     </section>
     <div class="container">
       <div class="col" v-for="install in installation" :key="install.title">
-        <button-installation
-          :title="install.title"
-          :img="install.img"
-        ></button-installation>
+        <router-link :to="{ path: '/clickinstall' }"
+          ><button-installation
+            :title="install.title"
+            :img="install.img"
+          ></button-installation
+        ></router-link>
       </div>
     </div>
     <circle-loading open="true"></circle-loading>
     <div id="txt">
       <p>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus adipisci id
-        mollitia culpa? Distinctio dolores error commodi cupiditate quam ipsam
-        consequuntur aut iste praesentium voluptates, recusandae quae, alias fugiat quod
-        pariatur quidem. Nisi explicabo modi illum ut, maxime soluta earum!
+        IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
+        ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU
+        OUT
       </p>
     </div>
   </section>
@@ -32,7 +33,10 @@ export default {
       installation: [
         { title: "1CLICK INSTALLATION", img: "/img/icon/clickinstall.png" },
         { title: "CUSTOM INSTALLATION", img: "/img/icon/custominstall.png" },
-        { title: "IMPORT CONFIGURATION", img: "/img/icon/one click installer.png" },
+        {
+          title: "IMPORT CONFIGURATION",
+          img: "/img/icon/one click installer.png",
+        },
       ],
     };
   },
@@ -72,7 +76,7 @@ export default {
   resize: both;
 }
 #header h2 {
-  margin:   0 auto;
+  margin: 0 auto;
   font-size: 30pt;
   resize: both;
 }

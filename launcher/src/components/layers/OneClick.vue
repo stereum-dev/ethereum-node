@@ -1,52 +1,61 @@
 <template>
-    <section class="main">
-      <section class="header">ONE CLICK INSTALLATION</section>
-      <div class="container">
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto, cum
-          harum? Cumque ipsa eum laudantium.
-        </p>
-        <hr />
-        <div class="row">
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
+  <section class="main">
+    <section class="header">ONE CLICK INSTALLATION</section>
+    <div class="container">
+      <p>
+        ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER
+        CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
+        SERVE YOUR USE CASE
+      </p>
+      <hr />
+
+      <div id="grid-container ">
+        <div
+          class="row1"
+          v-for="R1clkInstl in R1clkInstls"
+          :key="R1clkInstl.clkId"
+        >
+          <input type="image" :src="R1clkInstl.img" />
         </div>
-        <div class="row">
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-            <img :src="img" />
-          </div>
-          <div class="icon">
-          </div>
+        <div
+          class="row2"
+          v-for="R2clkInstl in R2clkInstls"
+          :key="R2clkInstl.clkId"
+        >
+          <input type="image" :src="R2clkInstl.img" />
         </div>
-        <hr />
       </div>
-    </section>
+
+      <hr />
+    </div>
+    <router-link :to="{ path: '/node' }"
+      ><base-button id="instal">INSTAL</base-button></router-link
+    >
+    <router-link :to="{ path: '/welcome' }"
+      ><base-button id="back">BACK</base-button></router-link
+    >
+  </section>
 </template>
 
 <script>
 export default {
-data() {
-  return {
-    img:"/img/icon/ROCKETPOOL.png",
-  }
-},
-}
+  data() {
+    return {
+      R1clkInstls: [
+        { clkId: "staking", img: "/img/icon/STAKING.png" },
+        { clkId: "testnet", img: "/img/icon/TESTNET.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+      ],
+      R2clkInstls: [
+        { clkId: "rocket", img: "/img/icon/ROCKETPOOL.png" },
+        { clkId: "staking", img: "/img/icon/STAKING.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -71,25 +80,41 @@ data() {
   border-radius: 40px;
   border: 5px solid grey;
   resize: both;
-  background: greenyellow;
+  background: rgb(161, 193, 173, 0.5);
 }
-.row {
+#grid-container {
   display: flex;
+  height: 200px;
+  padding: 1em;
+  color: white;
+  outline: 2px solid silver;
 }
+
+#grid-container > div {
+  width: 100%;
+  margin: 1em;
+  height: 100px;
+  background-color: #b200ff;
+  font-family: sans-serif;
+  text-align: center;
+  line-height: 100px;
+  font-size: xx-large;
+}
+
 .container hr {
   width: 80%;
   color: #494949;
   height: 2px;
   background: grey;
 }
-.icon {
+/*.icon {
   border: 2px solid grey;
   margin: 5px;
   width: 23%;
   resize: both;
-  border-radius: 45px;
-  /* margin-left: 1%; */
-}
+  border-radius: 40px;
+  margin-left: 1%; 
+}*/
 .icon img {
   float: left;
   padding: 5px auto;
@@ -106,5 +131,18 @@ data() {
 .main {
   resize: both;
 }
-
+#instal {
+  position: fixed;
+  top: 81vh;
+  left: 76%;
+  width: 100px;
+  resize: both;
+}
+#back {
+  position: fixed;
+  top: 81vh;
+  left: 14%;
+  width: 100px;
+  resize: both;
+}
 </style>
