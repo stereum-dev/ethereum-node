@@ -6,7 +6,7 @@ import BaseButton from "./components/UI/BaseButton.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from './components/UI/TheTrapezium.vue';
 import NodeBg from './components/UI/NodeBg.vue';
-import NodeHeader from 'launcher/src/components/layers/NodeHeader'
+import NodeHeader from './components/layers/NodeHeader'
 //import store from "./store/index.js";
 //import ControlService from "@/store/ControlService";
 Vue.configureCompat({ WATCH_ARRAY: false });

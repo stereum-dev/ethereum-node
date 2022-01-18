@@ -1,7 +1,7 @@
 <template>
-    <div class="parrent">
+    <div class="parent">
       <div>
-        <img src="LOGO.png" class="main-header__brand" />
+        <img src="/img/icon/LOGO.png" class="main-header__brand" />
       </div>
       <header class="main-header">
         <nav class="main-nav1">
@@ -25,15 +25,15 @@
             <li class="box__item"></li>
             <li class="spacer"></li>
             <li class="btn__item"><input type="image" id="image" alt="Login"
-                src="HELP BUTTON.png"></li>
+                src="/img/icon/HELP BUTTON.png"></li>
             <li class="btn__item"><input type="image" id="image" alt="Login"
-                src="PHONE ICON.png"></li>
+                src="/img/icon/PHONE ICON.png"></li>
             <li class="btn__item"><input type="image" id="image" alt="Login"
-                src="UPDATE ICON.png"></li>
+                src="/img/icon/UPDATE ICON.png"></li>
             <li class="btn__item"><input type="image" id="image" alt="Login"
-                src="SETTING ICON.png"></li>
+                src="/img/icon/SETTING ICON.png"></li>
             <li class="btn__item"><input type="image" id="image" alt="Login"
-                src="EXIT ICON.png"></li>
+                src="/img/icon/EXIT ICON.png"></li>
           </ul>
         </nav>
       </header>
@@ -41,7 +41,7 @@
 </template>
 
 <style scoped>
-.parrent{
+.parent{
     position: relative;
 }
 .main-header {
@@ -59,6 +59,7 @@
 .main-header__brand {
     position: absolute;
     top: 0;
+  
 }
 
 .main-nav1 {
