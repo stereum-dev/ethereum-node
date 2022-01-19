@@ -11,6 +11,13 @@ export class ServicePort {
         this.servicePortProtocol = servicePortProtocol;
     }
 
+    static buildByConfig(portString) {
+        const portSettings = portString.split(":");
+        const servicePortSettings = portSettings[2].split("/");
+
+        return new ServicePort(portSettings[0], portSettings[1], servicePortSettings[0], servicePortSettings[1]);
+    }
+
     buildPortMapping() {
         let destination;
         if (this.destinationIp) { // https://stackoverflow.com/a/5515349

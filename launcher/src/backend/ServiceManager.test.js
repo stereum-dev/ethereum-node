@@ -62,14 +62,13 @@ test('readServiceConfigurations success', async () => {
             resolve(["first", "second"]);
         });
     });
-    const readServiceConfigurationMock = jest.fn();
-    readServiceConfigurationMock.mockReturnValueOnce(new Promise(async (resolve, reject) => {
-        resolve({
+    const readServiceConfigurationMock = jest.fn().mockReturnValueOnce(new Promise(async (resolve, reject) => {
+        return resolve({
             service: "LighthouseBeaconService",
             id: "first",
         });
     })).mockReturnValueOnce(new Promise(async (resolve, reject) => {
-        resolve({
+        return resolve({
             service: "LighthouseValidatorService",
             id: "second",
         });
@@ -87,14 +86,12 @@ test('readServiceConfigurations success', async () => {
     const serviceConfigs = await sm.readServiceConfigurations();
 
     expect(serviceConfigs.length).toBe(2);
-    expect(serviceConfigs[0]).toEqual({
-        service: "LighthouseBeaconService",
-        id: "first",
-    });
-    expect(serviceConfigs[1]).toEqual({
-        service: "LighthouseValidatorService",
-        id: "second",
-    });
+
+    expect(serviceConfigs[0].service).toEqual("LighthouseBeaconService");
+    expect(serviceConfigs[0].id).toEqual("first");
+
+    expect(serviceConfigs[1].service).toEqual("LighthouseValidatorService");
+    expect(serviceConfigs[1].id).toEqual("second");
 });
 
 test('readServiceConfigurations success empty', async () => {
