@@ -234,7 +234,7 @@ export class NodeConnection {
                 return reject("Failed reading service configuration " + serviceId + ": " + SSHService.extractExecError(serviceConfig));
             }
 
-            resolve(YAML.parse(serviceConfig.stdout));
+            return resolve(YAML.parse(serviceConfig.stdout));
         });
     }
 

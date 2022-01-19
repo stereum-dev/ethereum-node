@@ -1,29 +1,14 @@
 <template>
   <dialog open v-if="open">
-     <!-- @link="setLink" -->
-      <slot>
-       
-</slot>
-    </dialog>
+    <slot> </slot>
+  </dialog>
 </template>
 
 <script>
 export default {
-  name:'LangDialog',
-   props: ['open'],
-//    data(){
-//      return{
-//        links:''
-//      }
-//    },
-//    methods: {
-//      setLink(linkUrl){
-// links=linkUrl
-//      }
-//    },
-  
-
-}
+  name: "LangDialog",
+  props: ["open"],
+};
 </script>
 
 <style scoped>
@@ -31,7 +16,6 @@ dialog {
   position: absolute;
   top: 30vh;
 
-  
   min-width: 20rem;
   left: auto;
   right: auto;
@@ -41,11 +25,9 @@ dialog {
   padding: 1rem;
   background-color: white;
   z-index: 100;
-  border: solid 5px rgba(15, 15, 15, .5);
+  border: solid 5px rgba(15, 15, 15, 0.5);
   /* animation: modal 0.3s ease-out forwards; */
-  background-color:rgba(76, 72, 72, .5);
- resize: both;
-
-
+  background-color: rgba(76, 72, 72, 0.5);
+  resize: both;
 }
 </style>
