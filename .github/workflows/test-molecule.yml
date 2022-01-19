@@ -14,6 +14,7 @@ jobs:
           {role: "manage-service", test: "start-multiple"},
           {role: "manage-service", test: "start-stop"},
           {role: "manage-service", test: "write-start"},
+          {role: "manage-service", test: "ssv-lighthouse"},
 
           #{role: "configure-firewall", test: "default"}, # tested via manage-service:start-multiple
 
@@ -33,7 +34,6 @@ jobs:
 
           {role: "validator-import-teku", test: "default"},
 
-          {role: "ssv-lighthouse", test: "default"},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
