@@ -1,29 +1,24 @@
 import { NodeService } from './NodeService.js'
 import { ServiceVolume } from './ServiceVolume.js';
 
-export class LighthouseValidatorService extends NodeService {
-    constructor(network, workingDir, consensusClients, graffiti) {
-        super();
+const image = "stereum/lighthouse";
 
+export class LighthouseValidatorService extends NodeService {
+    static buildByUserInput(network, workingDir, consensusClients, graffiti) {
         const dataDir = "/opt/app/validator";
         const launchpadDir = "/opt/app/launchpad";
-
-        // volumes
-        this.workingDir = workingDir;
 
         const volumes = [
             new ServiceVolume(workingDir + "/wallets", dataDir),
             new ServiceVolume(workingDir + "/launchpad", launchpadDir)
         ];
 
-        // eth1 nodes
-        this.consensusClients = consensusClients;
-
         const eth2Nodes = consensusClients.map(client => {return client.buildConsensusClientHttpEntpointUrl()});
 
         // build service
-        super.init(null,
-            "stereum/lighthouse",
+        const service = new LighthouseValidatorService();
+        service.init(null,
+            image,
             "v2.0.1-47",
             null,
             ["/opt/app/start/validator.sh"],
@@ -39,6 +34,16 @@ export class LighthouseValidatorService extends NodeService {
             volumes,
             null,
             network);
+
+        return service;
+    }
+
+    static buildByConfiguration(config) {
+        const service = new LighthouseValidatorService();
+
+        service.initByConfig(config);
+
+        return service;
     }
 
     getAvailablePorts() {

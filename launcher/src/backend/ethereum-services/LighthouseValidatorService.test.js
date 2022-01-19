@@ -13,7 +13,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
         };
     });
 
-    const lhService = new LighthouseValidatorService(networks.prater, "/opt/stereum/lh", [new LighthouseBeaconService.LighthouseBeaconService()], "foobar").buildConfiguration();
+    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [new LighthouseBeaconService.LighthouseBeaconService()], "foobar").buildConfiguration();
 
     expect(lhService.env.BEACON_NODES).toHaveLength(1);
     expect(lhService.env.BEACON_NODES).toContain("http-endpoint-string");
@@ -30,21 +30,54 @@ test('LighthouseValidatorService buildConfiguration', () => {
 });
 
 test('LighthouseValidatorService getAvailablePorts', () => {
-    const lhService = new LighthouseValidatorService(networks.prater, "/opt/stereum/lh", [], "foobar").getAvailablePorts();
+    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [], "foobar").getAvailablePorts();
 
     expect(lhService).toHaveLength(0);
 });
 
 test('LighthouseValidatorService autoupdate', () => {
-    const lhService = new LighthouseValidatorService(networks.prater, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [], "foobar").buildConfiguration();
 
     expect(lhService.autoupdate).toBe(true);
 });
 
 test('LighthouseValidatorService network', () => {
-    const lhService = new LighthouseValidatorService(networks.mainnet, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+    const lhService = LighthouseValidatorService.buildByUserInput(networks.mainnet, "/opt/stereum/lh", [], "foobar").buildConfiguration();
 
-    expect(lhService.network).toMatch(/mainnet/);
+    expect(lhService.network).toBe(networks.mainnet);
+});
+
+test('buildByConfiguration', () => {
+    const bn1 = "http://node1:5052";
+    const bn2 = "https://node2:999";
+
+    const lh = LighthouseValidatorService.buildByConfiguration({
+        id: "123",
+        service: "LighthouseValidatorService",
+        image: "lhval:v0.0.1",
+        env: {
+            DATADIR: "/data",
+            DEBUG_LEVEL: "info",
+            BEACON_NODES: [bn1, bn2],
+            NETWORK: "mainnet",
+            GRAFFITI: "stereum.net",
+            LAUNCHPADDIR: "/launchpad",
+        },
+    });
+
+    expect(lh.id).toBe("123");
+    expect(lh.service).toBe("LighthouseValidatorService");
+    expect(lh.image).toBe("lhval");
+    expect(lh.imageVersion).toBe("v0.0.1");
+    expect(lh.ports).toHaveLength(0);
+
+    expect(lh.volumes).toHaveLength(0);
+
+    expect(lh.env).toBeDefined();
+    expect(lh.env.DEBUG_LEVEL).toMatch(/info/);
+    expect(lh.env.BEACON_NODES).toHaveLength(2);
+    expect(lh.env.BEACON_NODES[0]).toBe(bn1);
+    expect(lh.env.BEACON_NODES[1]).toBe(bn2);
 });
 
 // EOF
