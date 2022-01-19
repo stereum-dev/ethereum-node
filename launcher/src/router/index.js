@@ -1,27 +1,33 @@
-//import Vue from "vue";
 import { createRouter, createWebHistory } from "vue-router";
-//import Setup from "../views/Setup.vue";
-//import TheFirst from '../components/layers/TheFirst.vue'
+
 import BaseHome from "../pages/BaseHome.vue";
+import ClickInstall from "../pages/ClickInstall.vue";
+import WelcomePage from "../pages/WelcomePage.vue";
+import TheNode from "../pages/TheNode.vue";
 
 const routes = [
-  // {
-  //   path: "/",
-  //   name: "Setup",
-  //   component: Setup,
-  // },
   {
     path: "/",
     name: "BaseHome",
     component: BaseHome,
   },
+  {
+    path: "/welcome",
+    name: "WelcomePage",
+    component: WelcomePage,
+  },
+  {
+    path: "/clickinstall",
+    name: "ClickInstall",
+    component: ClickInstall,
+  },
+  {
+    path: "/node",
+    name: "TheNode",
+    component: TheNode,
+  },
 ];
 
-// const router = new VueRouter({
-//   mode: "hash",
-//   base: process.env.BASE_URL,
-//   routes,
-// });
 const router = createRouter({ history: createWebHistory(), routes });
 
 export default router;

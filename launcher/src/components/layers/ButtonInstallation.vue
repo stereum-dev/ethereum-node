@@ -30,14 +30,13 @@ export default {
   color: #eee;
   font-size: 10pt;
 }
-#img{
-padding: 5px;
-height: auto;
+#img {
+  padding: 5px;
+  height: auto;
 }
 #img img {
   width: 95%;
   margin-top: 5pt;
   resize: both;
 }
-
 </style>
