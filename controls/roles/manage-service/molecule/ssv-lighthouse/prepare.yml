@@ -92,7 +92,7 @@
                 - 0.0.0.0:13000:13000/tcp
               env:
                 CONFIG_PATH: /data/config.yaml
-                TEST_CONFIG: |
+                CONFIG: |
                   eth2:
                     Network: "prater"
                     BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
@@ -103,7 +103,7 @@
                   global:
                     LogLevel: "debug"
                   MetricsAPIPort: 15000
-              command: bash -c "touch /data/config.yaml && echo \"$TEST_CONFIG\" > /data/config.yaml && make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node"
+              command: bash -c "touch /data/config.yaml && echo \"$CONFIG\" > /data/config.yaml && make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node"
               entrypoint: []
               user: "2000"
               volumes:
