@@ -103,9 +103,9 @@
                   global:
                     LogLevel: "debug"
                   MetricsAPIPort: 15000
-              command: bash -c "touch /data/config.yaml && 
-                                echo9afca79adc27 \"$CONFIG\" > /data/config.yaml && 
-                                make BUILD_PATH=/go/bin/ssvnode start-node && 
+              command: bash -c "touch /data/config.yaml &&
+                                echo \"$CONFIG\" > /data/config.yaml &&
+                                make BUILD_PATH=/go/bin/ssvnode start-node &&
                                 docker logs ssv_node"
               entrypoint: []
               user: "2000"
