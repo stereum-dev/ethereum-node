@@ -36,8 +36,7 @@
       state: directory
       owner: "{{ stereum_service_configuration.user }}"
       group: "2000"
-      mode: 0700
-    ignore_errors: yes  
+      mode: 0700  
     become: yes
     when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
     with_items: "{{ stereum_service_configuration.volumes }}"
