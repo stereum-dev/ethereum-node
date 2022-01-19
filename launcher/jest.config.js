@@ -19,5 +19,7 @@ module.exports = {
     '^.+\\.(js|jsx|ts|tsx|mjs)$': 'babel-jest',
     // ".*\\.(ts)$": "ts-jest"
   },
+  collectCoverage: true,
+  collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js']
 };
 
