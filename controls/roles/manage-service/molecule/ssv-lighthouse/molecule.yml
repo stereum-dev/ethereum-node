@@ -6,14 +6,17 @@ driver:
 platforms:
   - name: "manage-service--ssv-lighthouse--ubuntu-20.04"
     hostname: ubuntu
-    server_type: cpx21
+    server_type: cpx31
     image: ubuntu-20.04
   - name: "manage-service--ssv-lighthouse--centos-stream-8"
     hostname: "centos"
-    server_type: cpx21
+    server_type: cpx31
     image: centos-stream-8
 provisioner:
   name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
 lint: |
   set -e
   yamllint .
