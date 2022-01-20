@@ -23,5 +23,6 @@ img {
   min-width: 10%;
   transform: translate(-50%, -50%);
   resize: both;
+  cursor: pointer;
 }
 </style>
