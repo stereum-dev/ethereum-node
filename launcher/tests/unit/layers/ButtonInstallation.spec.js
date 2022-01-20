@@ -1,12 +1,10 @@
-import { mount } from '@vue/test-utils'
-import ButtonInstallation from '../../../src/components/layers/ButtonInstallation'
+import { mount } from "@vue/test-utils";
+import ButtonInstallation from "../../../src/components/layers/ButtonInstallation";
 
-describe('ButtonInstallation.vue', () => {
-  it('renders props.title when passed', () => {
-    const title = 'new message'
-    const wrapper = mount(ButtonInstallation, {
-      props: { title }
-    })
-    expect(wrapper.text()).toMatch(title)
-  })
-})
+it("renders props.title when passed", () => {
+  const title = "new message";
+  const wrapper = mount(ButtonInstallation, {
+    props: { title },
+  });
+  expect(wrapper.text()).toMatch(title);
+});
