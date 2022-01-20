@@ -7,10 +7,10 @@
             </div>
             <hr />
             <ul class="row">
-                <li class="list" v-for="R1clkInstl in R1clkInstls" :key="R1clkInstl.clkId"><img :src="R1clkInstl.img" /></li>
+                <div class="list__size"><li class="list" v-for="R1clkInstl in R1clkInstls" :key="R1clkInstl.clkId"><img :src="R1clkInstl.img" /></li></div>
             </ul>
             <ul class="row">
-                <li class="list" v-for="R2clkInstl in R2clkInstls" :key="R2clkInstl.clkId"><img :src="R2clkInstl.img" /></li>
+                <div class="list__size"><li class="list" v-for="R2clkInstl in R2clkInstls" :key="R2clkInstl.clkId"><img :src="R2clkInstl.img" /></li></div>
             </ul>
             <hr />
         </div>
@@ -69,8 +69,13 @@ export default {
 .row {
     list-style: none;
     height: 30%;
-    width: 90%;
+    box-sizing: border-box;
+   
+}
+.list__size{
+ width: 98%;
     margin: auto;
+    box-sizing: border-box;
 }
 
 .row .list {
