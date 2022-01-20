@@ -71,11 +71,13 @@ export default {
     height: 30%;
     box-sizing: border-box;
    
+   
 }
 .list__size{
  width: 98%;
     margin: auto;
     box-sizing: border-box;
+     text-align: center;
 }
 
 .row .list {
