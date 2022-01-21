@@ -1,0 +1,72 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - block:
+      - name: Set fastsync params
+        set_fact:
+          stereum:
+            fastsync:
+              network: prater
+              service: lighthouse
+              dest: /opt/app/services/{{ beacon_service }}/beacon
+      - include_role:
+          name: "fastsync"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: stereum/lighthouse:v2.0.1-48
+              env:
+                DEBUG_LEVEL: debug
+                NETWORK: prater
+                ETH1_NODES: wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c
+                DATADIR: /opt/app/beacon
+                SLASHERDIR: /opt/app/slasher
+                SLASHER_DB_SIZE: "16"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+                - 127.0.0.1:5052:5052/tcp
+              command: []
+              entrypoint: ["/opt/app/start/beacon.sh"]
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
