@@ -1,10 +1,10 @@
-<template>
+<!-- <template>
     <div id="parent">
         <div class="container"></div>
     </div>
-</template>
+</template> -->
 <style>
-    .container{
+    /*.container{
     background: red;
   border-left: 3px solid #808080;
   width: 15%;
@@ -15,5 +15,5 @@
   border-radius: 0 0 40px 0;
   top: 10%;
   margin: 0;
-    }
+    }*/
 </style>

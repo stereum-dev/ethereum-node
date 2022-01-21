@@ -75,9 +75,7 @@
 </template>
 
 <style scoped>
-.parent {
-  position: relative;
-}
+
 .main-header {
   width: 100vw;
   background: #336666;

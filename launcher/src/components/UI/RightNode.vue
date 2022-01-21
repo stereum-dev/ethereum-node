@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="container"><slot></slot></div>
+    <div id="rside"><slot></slot></div>
   </div>
 </template>
 
@@ -12,7 +12,7 @@
   height: 88%;
   right: -1%;
   box-sizing: border-box;
-  position: absolute;
+
   border-radius: 0 0 40px 0;
   top: 10%;
   margin: 0;

@@ -17,14 +17,15 @@ export default {
 
 <style scoped>
 #parent {
-  position: relative;
+ 
   box-sizing: border-box;
   padding: 0;
 }
 
 #head {
-  position: absolute;
+  position: fixed;
   top: 0;
+  
 }
 
 
