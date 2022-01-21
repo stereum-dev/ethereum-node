@@ -32,4 +32,3 @@
       that:
       - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 14
     when: ansible_distribution == "CentOS"
-  
