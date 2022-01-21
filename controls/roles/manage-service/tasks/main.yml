@@ -34,8 +34,8 @@
     file:
       path: "{{ item.split(':') | first }}"
       state: directory
-      owner: "2000"
-      group: "2000"
+      owner: "{{ stereum_service_configuration.user }}"
+      group: "{{ stereum_service_configuration.user }}"
       mode: 0700
       recurse: yes
     become: yes
