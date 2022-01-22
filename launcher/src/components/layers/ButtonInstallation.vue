@@ -23,6 +23,7 @@ export default {
   padding: 0;
   height: auto;
   background: #336666;
+  resize: both;
 }
 #title p {
   margin: 1px;
@@ -33,6 +34,7 @@ export default {
 #img {
   padding: 5px;
   height: auto;
+  resize: both;
 }
 #img img {
   width: 95%;
