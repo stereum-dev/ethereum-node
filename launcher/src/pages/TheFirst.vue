@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div class="parent">
     <div id="container">
       <section @click="activePage">
         <base-logo :link="link"> </base-logo>
       </section>
+
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
+
       <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
         <ul id="flag">
           <li
@@ -16,6 +18,7 @@
           </li>
         </ul>
       </lang-dialog>
+
       <section @click="showDialog">
         <lang-button :flag="flag" class="lang"></lang-button>
       </section>
@@ -91,23 +94,29 @@ export default {
 <style scoped>
 #container {
   border-radius: 40px;
-
-  padding: 1rem;
-  margin: 2rem auto;
-  width: 95vw;
-  height: 95vh;
-  /* animation: blink 1s 1000000 alternate; */
+  height: 95%;
+  width: 95%;
+  margin: auto;
+  position: relative;
+  top: 2%;
+  left: 0;
+  box-sizing: border-box;
   background-color: #336666;
 }
-div {
-  background-color: #000;
 
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  display: flex;
+.parent {
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  position: fixed;
+  z-index: -1;
+  padding: 0;
+  box-sizing: border-box;
 }
-.lang {
+
+/*.lang {
   cursor: pointer;
   position: fixed;
   top: 81vh;
@@ -115,7 +124,8 @@ div {
   width: 4em;
   z-index: 100;
   resize: both;
-}
+}*/
+
 #flag {
   display: inline-flex;
   margin: 0;
@@ -124,16 +134,19 @@ div {
   text-align: left;
   float: left;
 }
+
 #flag li {
   list-style: none;
   display: inline-block;
   padding: 5px;
   cursor: pointer;
 }
+
 #flagId {
   width: 120px;
   resize: both;
 }
+
 /* @keyframes blink {
   from { background-color: #336666; }
   to { background-color: #448a8a; }
