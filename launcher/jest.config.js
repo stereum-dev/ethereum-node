@@ -20,6 +20,7 @@ module.exports = {
     // ".*\\.(ts)$": "ts-jest"
   },
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js']
+  collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js'],
+  coverageReporters: ["text", "json", "html"],
 };
 
