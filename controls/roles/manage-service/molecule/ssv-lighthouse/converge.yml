@@ -1,0 +1,49 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
+    ssv_service: 1ce654a0-7162-11ec-91f3-8fdbc286367e
+
+  tasks:
+    # ssv service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ ssv_service }}"
+              image: bloxstaking/ssv-node:latest-ubuntu
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env:
+                CONFIG_PATH: /data/config.yaml
+                CONFIG: |
+                  eth2:
+                    Network: "prater"
+                    BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
+                  eth1:
+                    ETH1Addr: "wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c"
+                    RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+                  OperatorPrivateKey: ""
+                  global:
+                    LogLevel: "debug"
+                  MetricsAPIPort: 15000
+              command: bash -c "touch /data/config.yaml &&
+                                echo \"$CONFIG\" > /data/config.yaml &&
+                                make BUILD_PATH=/go/bin/ssvnode start-node &&
+                                docker logs ssv_node"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
