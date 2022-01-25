@@ -9,12 +9,12 @@
   background: red;
   border-left: 3px solid #808080;
   width: 12%;
-  height: 88%;
+  height: 83.6%;
   right: 2.5%;
   box-sizing: border-box;
   position: absolute;
-  border-radius: 0 0 40px 0;
-  top: 8.5%;
+  
+  top: 8.2%;
   margin: 0;
   resize: both;
 }

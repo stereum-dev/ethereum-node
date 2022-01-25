@@ -1,19 +1,19 @@
- <template>
-    <div id="parent">
-        <div class="servicePlg">
-            <div class="servicePlgTitle"> service plugins</div>
-            <div class="serviceCtrl">
-                ServicePlugin
-            </div>
-        </div>
+<template>
+  <div id="parent">
+    <div class="servicePlg">
+      <div class="servicePlgTitle">service plugins</div>
+      <div class="serviceCtrl">
+        ServicePlugin
+      </div>
     </div>
-</template> 
+  </div>
+</template>
 <style>
-    .servicePlg{
-    background: blue;
+.servicePlg {
+  background: blue;
   border: 3px solid #808080;
   width: 20%;
-  height: 88%;
+  height: 83.6%;
   right: 14.5%;
   box-sizing: border-box;
   position: absolute;
@@ -21,20 +21,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  top: 8.5%;
-  padding: .3rem;
-    }
-    .servicePlgTitle{
-        padding: .5rem;
-        background: chocolate;
-        width: 100%;
-
-    }
-    .serviceCtrl{
-        
-        width: 95%;
-        height: 92%;
-        background: chartreuse;
-border-radius: 40px;
-    }
+  top: 8.2%;
+  padding: 0.3rem;
+}
+.servicePlgTitle {
+  padding: 0.5rem;
+  background: chocolate;
+  width: 100%;
+}
+.serviceCtrl {
+  width: 95%;
+  height: 92%;
+  background: chartreuse;
+  border-radius: 40px;
+}
 </style>

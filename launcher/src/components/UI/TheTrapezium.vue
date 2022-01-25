@@ -1,6 +1,6 @@
 <template>
   <section id="main">
-    <section id="container">
+    <section id="contTra">
       <div id="trapezoid">
       <slot></slot>
         <br />Test<br />
@@ -20,7 +20,11 @@
   padding: 0 8px 0 0;
   margin: 5px auto;
 }
-#container {
-  border: 1px solid red;
+#contTra {
+  border: 3px solid red;
+  position: absolute;
+  top: 8%;
+  left: 2.5%;
+  width: 62.5%;
 }
 </style>
