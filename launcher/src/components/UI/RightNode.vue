@@ -14,7 +14,7 @@
   box-sizing: border-box;
   position: absolute;
   border-radius: 0 0 40px 0;
-  top: 3.6rem;
+  top: 8.5%;
   margin: 0;
   resize: both;
 }

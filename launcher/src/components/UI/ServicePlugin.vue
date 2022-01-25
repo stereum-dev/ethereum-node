@@ -1,19 +1,40 @@
-<!-- <template>
+ <template>
     <div id="parent">
-        <div class="container"></div>
+        <div class="servicePlg">
+            <div class="servicePlgTitle"> service plugins</div>
+            <div class="serviceCtrl">
+                ServicePlugin
+            </div>
+        </div>
     </div>
-</template> -->
+</template> 
 <style>
-    /*.container{
-    background: red;
-  border-left: 3px solid #808080;
-  width: 15%;
+    .servicePlg{
+    background: blue;
+  border: 3px solid #808080;
+  width: 20%;
   height: 88%;
-  right: 40%;
+  right: 14.5%;
   box-sizing: border-box;
   position: absolute;
-  border-radius: 0 0 40px 0;
-  top: 10%;
-  margin: 0;
-    }*/
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  top: 8.5%;
+  padding: .3rem;
+    }
+    .servicePlgTitle{
+        padding: .5rem;
+        background: chocolate;
+        width: 100%;
+
+    }
+    .serviceCtrl{
+        
+        width: 95%;
+        height: 92%;
+        background: chartreuse;
+border-radius: 40px;
+    }
 </style>
