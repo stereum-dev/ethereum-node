@@ -2,7 +2,7 @@
   <section id="parent">
     <node-bg> </node-bg>
     <node-header id="head"></node-header>
-    <right-node > </right-node>
+    <right-node >baraye test </right-node>
     <service-plugin></service-plugin>
   </section>
 </template>
