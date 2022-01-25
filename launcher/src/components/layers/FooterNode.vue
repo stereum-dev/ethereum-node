@@ -2,9 +2,9 @@
   <div class="parent">
     <div class="footerPlace">
       <div class="footerNode">
-        <label>SYSTEM ALERT ,</label>
-        <label>UPDATES ,</label>
-        <label>ETC.</label>
+        <p>SYSTEM ALERT ,</p>
+        <p>UPDATES ,</p>
+        <p>ETC.</p>
       </div>
     </div>
   </div>
@@ -12,23 +12,26 @@
 
 <style scoped>
 .footerNode {
-  position: absolute;
-  bottom: 3.9%;
-  left: 2.8%;  
-  width: 94.5%;
-  padding:.2rem .5rem;
-  background: coral;
+  left: 3%;
+ position: absolute;
+ bottom: 4.2%; 
+ width: 94.2%;
+  padding: 0 1rem;
+  background: #333;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin:0 auto;
-  border-radius: 0 0 45px 45px;
-  border: 3px solid grey;
+  margin: 0;
+  border-radius: 0 0 30px 30px;
+ 
   box-sizing: border-box;
 }
-.footerNode label {
+
+.footerNode p {
   font-weight: bold;
   color: #eee;
+  font-size: .7rem;
+  
 }
 </style>

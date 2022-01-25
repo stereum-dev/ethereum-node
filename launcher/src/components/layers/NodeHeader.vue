@@ -1,5 +1,5 @@
 <template>
-  <div class="parent">
+  <div class="parent"><div class="header"></div>
     <div>
       <img src="/img/icon/LOGO.png" class="main-header__brand" />
     </div>
@@ -89,7 +89,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 15%;
+  width: 10%;
+  z-index: 2;
 }
 
 .main-nav1 {

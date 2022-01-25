@@ -1,10 +1,10 @@
 <template>
   <section id="parent">
-    <node-bg> </node-bg>
+    <node-bg><footer-node></footer-node> </node-bg>
     <node-header id="head"></node-header>
     <right-node>baraye test </right-node>
     <service-plugin></service-plugin>
-    <footer-node></footer-node>
+    <!-- <footer-node></footer-node> -->
     <the-trapezium></the-trapezium>
   </section>
 </template>

@@ -13,7 +13,7 @@
   background: blue;
   border: 3px solid #808080;
   width: 20%;
-  height: 83.6%;
+  height: 84.1%;
   right: 14.5%;
   box-sizing: border-box;
   position: absolute;
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  top: 8.2%;
+  top: 8.1%;
   padding: 0.3rem;
 }
 .servicePlgTitle {

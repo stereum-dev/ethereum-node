@@ -1,7 +1,9 @@
 <template>
   <div id="parent">
     <div class="green"></div>
-    <div class="black"></div>
+    <div class="black">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -22,7 +24,9 @@
   background: #000;
   width: 95vw;
   height: 95vh;
-  border-radius: 40px;
+  border-radius: 30px;
   margin: auto;
+  box-sizing: border-box;
+  border: 4px solid grey;
 }
 </style>
