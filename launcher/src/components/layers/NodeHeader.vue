@@ -1,5 +1,6 @@
 <template>
-  <div class="parent"><div class="header"></div>
+  <div class="parent">
+    <div class="header"></div>
     <div>
       <img src="/img/icon/LOGO.png" class="main-header__brand" />
     </div>
@@ -7,10 +8,10 @@
       <nav class="main-nav1">
         <ul class="main-nav__items">
           <li class="main-nav__item main-nav__item--cta">
-            <a href="start-hosting/index.html">NODE</a>
+            <router-link :to="{ path: '/node' }"><a>NODE</a></router-link>
           </li>
           <li class="main-nav__item">
-            <a href="packages/index.html">CONTROL</a>
+            <router-link :to="{ path: '/control' }"><a>CONTROL</a></router-link>
           </li>
           <li class="main-nav__item">
             <a href="customers/index.html">STAKING</a>
@@ -75,7 +76,6 @@
 </template>
 
 <style scoped>
-
 .main-header {
   width: 100vw;
   background: #336666;
@@ -87,7 +87,6 @@
   align-content: space-between;
 }
 
-
 .main-header__brand {
   position: absolute;
   top: 0;
@@ -97,7 +96,6 @@
 }
 
 .main-nav1 {
-  
   text-align: left;
   width: calc(100% - 74px);
   vertical-align: middle;
@@ -114,26 +112,25 @@
 }
 
 .main-nav__item {
-  margin: 0 .5rem;
+  margin: 0 0.5rem;
 }
 
 .box__item {
-  margin: 0 .5rem;
+  margin: 0 0.5rem;
   width: 1rem;
   height: 1rem;
   border: 1px solid rgb(180, 179, 179);
 }
 
-.btn__item input{
-width: 70%;
+.btn__item input {
+  width: 70%;
 }
 .btn__item:hover {
   border: 1px solid #eee;
   border-radius: 40%;
 }
 .spacer {
-  
-  margin: 0 .8rem;
+  margin: 0 0.8rem;
   width: 3pt;
   height: 1.2rem;
   background: grey;
@@ -155,7 +152,6 @@ width: 70%;
 
 .main-nav__item--cta a {
   color: #a1c1ad;
-  
 }
 
 .main-nav__item--cta a:hover,
