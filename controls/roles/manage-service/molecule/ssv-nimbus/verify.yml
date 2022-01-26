@@ -1,0 +1,58 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - stereum_docker_ps.stdout.find("9190->9190") != -1
+      - stereum_docker_ps.stdout.find("12000->12000") != -1
+      - stereum_docker_ps.stdout.find("13000->13000") != -1
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("12000/udp") != -1
+      - stereum_ufw_status.stdout.find("13000/tcp") != -1
+  # ssv config file
+  - stat: path=/opt/app/services/52d77bd0-7e13-11ec-a95e-bb669ccf3e66/data/blox/ssv/config.yaml
+    register: ssv_config_file
+  - debug:
+      msg: "{{ ssv_config_file }}"
+  - name: Check for ssv config
+    assert:
+      that:
+        - ssv_config_file.stat.exists
+  - name: Waiting for the services to up
+    pause:
+      minutes: 10
+  # nimbus beacon & ssv logs
+  - name: nimbus beacon node
+    ansible.builtin.shell: docker logs --tail=150 stereum-493f2578-7e13-11ec-80bb-1b593d9699ff
+    register: beacon
+    until: beacon.stdout.find("sync=synced") != -1
+    retries: 360
+    delay: 10
+  - name: Blox-SSV
+    ansible.builtin.shell: docker logs --tail=100 stereum-52d77bd0-7e13-11ec-a95e-bb669ccf3e66
+    register: blox_ssv
+    until: blox_ssv.stdout.find("beacon node is not healthy") == -1
+    retries: 360
+    delay: 10
