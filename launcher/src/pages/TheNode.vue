@@ -1,21 +1,24 @@
 <template>
   <section id="parent">
-    <node-bg><footer-node></footer-node> </node-bg>
+  <node-bg><node-grid></node-grid></node-bg>
+    <!-- <node-bg><footer-node></footer-node> </node-bg> -->
     <node-header id="head"></node-header>
-    <right-node>baraye test </right-node>
-    <service-plugin></service-plugin>
+    <!-- <right-node>baraye test </right-node> -->
+    <!-- <service-plugin></service-plugin> -->
     <!-- <footer-node></footer-node> -->
-    <the-trapezium></the-trapezium>
+    <!-- <the-trapezium></the-trapezium> -->
   </section>
 </template>
 
 <script>
-import TheTrapezium from '../components/UI/TheTrapezium.vue'
-import FooterNode from '../components/layers/FooterNode.vue';
-import RightNode from "../components/UI/RightNode.vue";
-import ServicePlugin from "../components/UI/ServicePlugin.vue";
+//import TheTrapezium from '../components/UI/TheTrapezium.vue'
+//import FooterNode from '../components/layers/FooterNode.vue';
+//import RightNode from "../components/UI/RightNode.vue";
+//import ServicePlugin from "../components/UI/ServicePlugin.vue";
+import NodeGrid from '../components/UI/NodeGrid.vue';
 export default {
-  components: { RightNode, ServicePlugin, FooterNode,TheTrapezium },
+  //components: { RightNode, ServicePlugin, FooterNode,TheTrapezium },
+  components:{NodeGrid}
 };
 </script>
 
