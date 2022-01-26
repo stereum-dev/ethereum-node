@@ -28,5 +28,6 @@
   margin: auto;
   box-sizing: border-box;
   border: 4px solid grey;
+  padding: 0;
 }
 </style>

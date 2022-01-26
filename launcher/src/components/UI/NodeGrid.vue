@@ -13,11 +13,13 @@
 <style scoped>
 .nodeparent {
     display: grid;
-    height: 100vh;
+    height: 93%;
     grid-template-columns: 70% 20% 10%;
-    grid-template-rows: repeat(4, 20%) 5%;
+    grid-template-rows: repeat(4, 23.75%) 5%;
    position: relative;
-   top: 8%;
+   top: 7%;
+   margin: 0;
+ 
 }
 
 .execution {
@@ -71,5 +73,6 @@
     color: white;
     grid-column-start: 1;
     grid-column-end: 4;
+    border-radius: 0 0 25px 25px;
 }
 </style>
