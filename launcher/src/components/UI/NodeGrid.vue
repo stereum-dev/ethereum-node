@@ -1,14 +1,21 @@
 <template>
     <div class="nodeparent">
-        <div class="execution">EXECUTION</div>
-        <div class="consensus">CONSENSUS</div>
-        <div class="validator">VALIDATOR</div>
+        <div class="execution">execution</div>
+        <div class="consensus">consensus</div>
+        <div class="validator"><the-trapezium></the-trapezium></div>
         <div class="nodesetup">NODE SETUP</div>
         <div class="service">SERVICE</div>
         <div class="sidebar">SIDEBAR</div>
         <div class="footer">FOOTER</div>
     </div>
 </template>
+
+<script>
+import TheTrapezium from '../UI/TheTrapezium.vue'
+export default {
+    components:{TheTrapezium}
+}
+</script>
 
 <style scoped>
 .nodeparent {
@@ -41,6 +48,7 @@
     color: white;
     grid-column-start: 1;
     grid-column-end: 2;
+    border: 2px dotted red;
 }
 
 .nodesetup {
