@@ -3,6 +3,7 @@
     <div id="title">
       <p>{{ title }}</p>
     </div>
+
     <div id="img">
       <img :src="img" />
     </div>
@@ -25,18 +26,20 @@ export default {
   background: #336666;
   resize: both;
 }
+
 #title p {
   margin: 1px;
   font-weight: bold;
   color: #eee;
   font-size: 10pt;
 }
+
 #img {
   padding: 5px;
   height: auto;
-
   resize: both;
 }
+
 #img img {
   width: 95%;
   margin-top: 5pt;

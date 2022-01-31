@@ -65,7 +65,6 @@ dialog label {
   text-align: right;
   clear: both;
   float: left;
-  /* margin-right: 40px; */
   font-size: large;
 }
 dialog input {

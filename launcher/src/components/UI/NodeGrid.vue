@@ -1,11 +1,9 @@
 <template>
   <div class="nodeparent">
-
-    <div class="execution"><the-trapezium></the-trapezium>execution</div>
-    <div class="consensus"><the-trapezium></the-trapezium>consensus</div>
-    <div class="validator"><the-trapezium></the-trapezium>validator></div>
-    <div class="nodesetup"> NODE SETUP</div>
-
+    <div class="execution"><the-trapezium>execution</the-trapezium></div>
+    <div class="consensus"><the-trapezium>consensus</the-trapezium></div>
+    <div class="validator"><the-trapezium>validator</the-trapezium></div>
+    <div class="nodesetup">NODE SETUP</div>
     <div class="service">SERVICE</div>
     <div class="sidebar">SIDEBAR</div>
     <div class="footer">FOOTER</div>
@@ -13,12 +11,10 @@
 </template>
 
 <script>
-
-import TheTrapezium from '../UI/TheTrapezium.vue'
+import TheTrapezium from "../UI/TheTrapezium.vue";
 export default {
-components: { TheTrapezium },
+  components: { TheTrapezium },
 };
-
 </script>
 
 <style scoped>
@@ -33,10 +29,14 @@ components: { TheTrapezium },
 }
 
 .execution {
-  background: red;
+  background: blue;
   color: white;
   grid-column-start: 1;
   grid-column-end: 2;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .consensus {
@@ -44,6 +44,10 @@ components: { TheTrapezium },
   color: red;
   grid-column-start: 1;
   grid-column-end: 2;
+display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .validator {
@@ -52,6 +56,10 @@ components: { TheTrapezium },
   grid-column-start: 1;
   grid-column-end: 2;
   border: 2px dotted red;
+ display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .nodesetup {

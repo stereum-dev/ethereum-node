@@ -99,7 +99,6 @@
             <span class="slider round"></span>
           </label>
         </div>
-
         <base-button id="login" @click="login">login</base-button>
       </form>
     </div>
@@ -313,7 +312,6 @@ select {
   width: 50%;
 }
 test {
-  /* animation: modal 0.3s ease-out forwards; */
   background-color: rgba(76, 72, 72, 0.5);
   z-index: 0;
 }
@@ -322,7 +320,7 @@ test {
   margin: 2rem auto;
   max-width: 35rem;
   border-radius: 40px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
+
   padding: 0.5rem;
   background-color: #567891;
   color: #fff;
@@ -333,7 +331,6 @@ div {
   margin: 1rem auto;
   max-width: 40rem;
   border-radius: 20px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.3rem;
   border: 2px solid grey;
   position: relative;
@@ -343,7 +340,6 @@ div {
   margin: 1rem auto;
   max-width: 40rem;
   border-radius: 40px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 1rem;
   background-color: #567891;
   justify-content: center;
@@ -387,14 +383,9 @@ div {
 }
 #keyLocation {
   text-align: center;
-  /* margin: 1rem auto; */
   max-width: 35rem;
   border-radius: 20px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
-  /* padding: 0.3rem; */
   background-color: #567891;
-  /* justify-content: center; */
-
   display: flex;
 }
 #keyLocation label {
@@ -422,13 +413,7 @@ div {
   top: 81vh;
   left: 86%;
   width: 100px;
-
   resize: both;
-  /*padding: 0.4rem;
-   border-radius: 40px;
-  background-color: orange;
-  text-align: center;
-  font-weight: bold; */
 }
 input {
   cursor: pointer;
@@ -440,7 +425,6 @@ input {
 
   max-width: 35rem;
   border-radius: 40px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.3rem;
   display: flex;
   color: #fff;
