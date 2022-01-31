@@ -14,9 +14,10 @@ props:['link']
 
 <style scoped>
 
-img{
+
+/*img{
   display: block;
-  position: absolute;
+
   top: 50%;
   left: 50%;
   width: 52%;
@@ -24,5 +25,15 @@ img{
   min-width: 20%;
   transform: translate(-50%, -50%);
   resize: both;
+
+  
+}*/
+img{
+width: 50%;
+min-width: 60%;
+
+
+
+
 }
 </style>

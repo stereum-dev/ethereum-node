@@ -55,7 +55,8 @@ export default {
   width: 25%;
   height: 22vh;
   background: rgba(51, 102, 102, 0.4);
-  float: left;
+  display: inline-block;
+  box-sizing: border-box;
   border: 3px solid grey;
   resize: both;
   margin: 25px;
