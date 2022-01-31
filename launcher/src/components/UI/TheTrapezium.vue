@@ -23,10 +23,10 @@
 #contTra {
   border: 3px solid red;
   margin: auto;
-  height: auto;
+  height: 99%;
   width: 98%;
   display: grid;
   grid-template-columns: 98%;
-  grid-template-rows: 88%;
+  grid-template-rows: 98%;
 }
 </style>
