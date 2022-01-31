@@ -1,12 +1,9 @@
 <template>
-
   <div class="parent">
-
     <div id="container">
       <section @click="activePage">
         <base-logo :link="link"> </base-logo>
       </section>
-
 
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
       <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
@@ -130,7 +127,6 @@ export default {
   resize: both;
 
 }*/
-
 
 #flag {
   display: inline-flex;
