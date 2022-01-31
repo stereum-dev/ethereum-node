@@ -21,19 +21,17 @@
   padding: 0 5px 0 0;
   margin: 5px auto;
   resize: both;
-  flex-wrap: wrap;
-  position: relative;
+ 
 }
 #contTra {
   border: 3px solid red;
 margin: auto;
- height:9rem;
+ height:auto;
   width: 98%;
-  display: flex;
-  z-index: 0;
-  justify-content: center;
-  flex-direction: column;
-  flex-wrap: wrap;
+ display: grid;
+ grid-template-columns: 98%;
+grid-template-rows: 88%;
 
 }
+
 </style>
