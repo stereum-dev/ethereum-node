@@ -1,10 +1,10 @@
 <template>
   <section id="main">
-    <section id="container">
+
+    <section id="contTra">
       <div id="trapezoid">
       <slot></slot>
-        <br />Test<br />
-        for the node page
+      
       </div>
     </section>
   </section>
@@ -13,14 +13,27 @@
 <style scoped>
 #trapezoid {
   height: 0;
-  width: 92%;
-  border-bottom: 80px solid #05ed08;
-  border-left: 45px solid transparent;
-  border-right: 45px solid transparent;
-  padding: 0 8px 0 0;
+
+  width: 65%;
+  border-bottom: 7rem solid #05ed08;
+  border-left: 7rem solid transparent;
+  border-right: 7rem solid transparent;
+  padding: 0 5px 0 0;
   margin: 5px auto;
+  resize: both;
+  flex-wrap: wrap;
+  position: relative;
 }
-#container {
-  border: 1px solid red;
+#contTra {
+  border: 3px solid red;
+margin: auto;
+ height:9rem;
+  width: 98%;
+  display: flex;
+  z-index: 0;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+
 }
 </style>

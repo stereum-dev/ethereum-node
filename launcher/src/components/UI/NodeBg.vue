@@ -1,30 +1,33 @@
 <template>
-  <section id="main">
-    <section id="container">
-      <h1>Test</h1>
-    </section>
-  </section>
+
+  <div id="parent">
+    <div class="green"></div>
+    <div class="black">
+      <slot></slot>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-#body {
-  margin: 0;
-  padding: 0;
-}
-#main {
+
+.green {
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background: #336666;
-  overflow: hidden;
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  right: 0;
 }
-#container {
-  position: relative;
-  width: 97%;
-  height: 90%;
-  margin: 4% auto;
+.black {
   background: #000;
-  border: 5px solid #4c4848;
+  width: 95vw;
+  height: 95vh;
+  border-radius: 30px;
+  margin: auto;
   box-sizing: border-box;
-  border-radius: 40px;
+  border: 4px solid grey;
+  padding: 0;
+
 }
 </style>
