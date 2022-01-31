@@ -1,13 +1,17 @@
 <template>
 
+
     <div id="main">
+
       <section id="container">
         <section>
           <img src="stereum_logo_extern.png" alt="" />
           <slot></slot>
         </section>
       </section>
+
     </div>
+
 
 </template>
 
@@ -16,6 +20,7 @@ export default {};
 </script>
 
 <style scoped>
+
 
 #container {
   border-radius: 40px;
@@ -39,6 +44,7 @@ left: 0;
 box-sizing: border-box;
 padding: 0;
 margin: 0;
+
 }
 
 img {

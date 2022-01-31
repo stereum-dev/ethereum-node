@@ -10,8 +10,8 @@
   file:
     path: "{{ stereum.fastsync.dest }}"
     state: directory
-    owner: "stereum"
-    group: "stereum"
+    owner: "2000"
+    group: "2000"
     mode: 0700
   become: yes
 
@@ -19,8 +19,8 @@
   unarchive:
     src: "/tmp/{{ stereum.fastsync.service }}-latest.tar.gz"
     dest: "{{ stereum.fastsync.dest }}"
-    owner: "stereum"
-    group: "stereum"
+    owner: "2000"
+    group: "2000"
     remote_src: yes
   become: yes
 

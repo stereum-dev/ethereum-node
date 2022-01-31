@@ -1,4 +1,5 @@
 <template>
+
   <div id="parent">
     <div class="green"></div>
     <div class="black">
@@ -29,5 +30,6 @@
   box-sizing: border-box;
   border: 4px solid grey;
   padding: 0;
+
 }
 </style>

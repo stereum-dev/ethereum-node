@@ -3,7 +3,7 @@ import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 const log = require('electron-log');
 
-test('BloxSSVService buildConfiguration', () => {
+test('buildConfiguration', () => {
     const ports = [
         new ServicePort(null, 100, 200, servicePortProtocol.tcp),
         new ServicePort(null, 101, 202, servicePortProtocol.udp),
@@ -15,6 +15,10 @@ test('BloxSSVService buildConfiguration', () => {
     GethService.GethService.mockImplementation(() => {
         return {
             buildExecutionClientHttpEndpointUrl: mMock,
+            buildMinimalConfiguration: jest.fn(() => {return {
+                id: "geth-id",
+                service: "GethService",
+            }}),
         };
     });
 
@@ -24,10 +28,14 @@ test('BloxSSVService buildConfiguration', () => {
     LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
             buildConsensusClientHttpEntpointUrl: mMockLh,
+            buildMinimalConfiguration: jest.fn(() => {return {
+                id: "lh-beacon-id",
+                service: "LighthouseBeaconService",
+            }}),
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration();
+    const bloxService = BloxSSVService.buildByUserInput(networks.prater, ports, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration();
 
     log.info("cmd: ", bloxService.command);
 
@@ -40,7 +48,7 @@ test('BloxSSVService buildConfiguration', () => {
     expect(bloxService.image).toMatch(/bloxstaking\/ssv-node/);
 });
 
-test('BloxSSVService getServiceConfiguration', () => {
+test('getServiceConfiguration', () => {
     jest.mock('./GethService');
     const GethService = require('./GethService');
     const mMock = jest.fn(() => { return "http-endpoint-string" });
@@ -59,7 +67,7 @@ test('BloxSSVService getServiceConfiguration', () => {
         };
     });
 
-    const bloxService = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration();
+    const bloxService = BloxSSVService.getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]);
 
     expect(bloxService.MetricsAPIPort).toBeDefined();
     expect(bloxService.eth2.Network).toMatch(/prater/);
@@ -69,20 +77,20 @@ test('BloxSSVService getServiceConfiguration', () => {
     expect(bloxService.OperatorPrivateKey).toBeDefined();
 });
 
-test('BloxSSVService getAvailablePorts', () => {
-    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
+test('getAvailablePorts', () => {
+    const service = BloxSSVService.buildByUserInput(networks.prater, null, "/opt/stereum/ssv", [], []).getAvailablePorts();
 
     expect(service).toHaveLength(2);
 });
 
-test('BloxSSVService service name', () => {
-    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+test('service name', () => {
+    const service = BloxSSVService.buildByUserInput(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
 
     expect(service.service).toMatch(/BloxSSVService/);
 });
 
-test('BloxSSVService autoupdate', () => {
-    const service = new BloxSSVService(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
+test('autoupdate', () => {
+    const service = BloxSSVService.buildByUserInput(networks.prater, null, "/opt/stereum/ssv", [], []).buildConfiguration();
 
     expect(service.autoupdate).toBe(true);
 });

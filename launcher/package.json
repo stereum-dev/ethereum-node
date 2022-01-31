@@ -7,6 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 8081",
     "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint --fix",
     "build-themes": "node-sass src/styles/themes -o public/themes",
     "electron:build": "vue-cli-service electron:build",
@@ -19,9 +20,12 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@babel/core": "^7.16.7",
     "@fortawesome/fontawesome-free": "^5.15.3",
+    "@vue/cli": "^4.5.15",
     "@vue/compat": "^3.1.0-0",
     "axios": "^0.21.1",
+    "babel-jest": "^27.4.6",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.15.1",
     "electron-log": "^4.4.1",
@@ -32,8 +36,10 @@
     "tunnel-ssh": "^4.1.4",
     "vue": "^3.1.0-0",
     "vue-form-wizard": "^0.8.4",
+    "vue-loader": "^16.0.0",
     "vue-router": "^4.0.12",
     "vue-toasted": "^1.1.28",
+    "vue3-jest": "^27.0.0-alpha.1",
     "vuex": "^3.6.2",
     "yaml": "^1.10.2"
   },
@@ -42,28 +48,21 @@
     "@vue/cli-plugin-babel": "~4.5.15",
     "@vue/cli-plugin-eslint": "~4.5.15",
     "@vue/cli-plugin-router": "~4.5.15",
+    "@vue/cli-plugin-unit-jest": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.15",
     "@vue/cli-service": "~4.5.15",
     "@vue/compiler-sfc": "^3.1.0-0",
+    "@vue/test-utils": "^2.0.0-rc.18",
     "babel-eslint": "^10.1.0",
     "electron": "^11.0.0",
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "flush-promises": "^1.0.2",
     "imports-loader": "0.8.0",
-    "jest": "^27.3.1",
+    "jest": "^27.4.7",
     "modernizr": "^3.11.7",
     "vue-cli-plugin-electron-builder": "~2.1.1"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "coverageReporters": [
-      "json",
-      "html"
-    ]
   },
   "license": "https://wrapbootstrap.com/help/licenses",
   "repository": {

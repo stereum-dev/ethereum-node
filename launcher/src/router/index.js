@@ -6,6 +6,7 @@ import WelcomePage from "../pages/WelcomePage.vue";
 import TheNode from "../pages/TheNode.vue";
 import ControlPanel from '../pages/ControlPanel.vue';
 
+
 const routes = [
   {
     path: "/",
@@ -27,11 +28,13 @@ const routes = [
     name: "TheNode",
     component: TheNode,
   },
+
   {
     path:"/control",
     name:"ControlPanel",
     component:ControlPanel
   }
+
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });

@@ -34,6 +34,7 @@ export default {
 #img {
   padding: 5px;
   height: auto;
+
   resize: both;
 }
 #img img {

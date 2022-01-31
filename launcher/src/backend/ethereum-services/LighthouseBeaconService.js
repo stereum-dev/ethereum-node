@@ -2,41 +2,50 @@ import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js';
 import { ServiceVolume } from './ServiceVolume.js';
 
+const image = "stereum/lighthouse";
+
 export class LighthouseBeaconService extends NodeService {
-    constructor(network, ports, workingDir, executionClients, slasherDbSize) {
-        super();
+    static buildByUserInput(network, ports, workingDir, executionClients, slasherDbSize) {
+        const dataDir = "/opt/app/beacon";
+        const slasherDir = "/opt/app/slasher";
 
         // volumes
-        this.workingDir = workingDir;
-
         const volumes = [
-            new ServiceVolume(workingDir + "/beacon", "/opt/app/beacon"),
-            new ServiceVolume(workingDir + "/slasher", "/opt/app/slasher")
+            new ServiceVolume(workingDir + "/beacon", dataDir),
+            new ServiceVolume(workingDir + "/slasher", slasherDir)
         ];
 
         // eth1 nodes
-        this.executionClients = executionClients;
-
         const eth1Nodes = executionClients.map(client => {return client.buildExecutionClientHttpEndpointUrl()});
 
-        // build service
-        super.init(null,
-            "stereum/lighthouse",
+        const service = new LighthouseBeaconService()
+        service.init(null,
+            image,
             "v2.0.1-47",
             null,
             ["/opt/app/start/beacon.sh"],
             {
-                DATADIR: "/opt/app/beacon",
+                DATADIR: dataDir,
                 DEBUG_LEVEL: "info",
                 ETH1_NODES: eth1Nodes,
                 NETWORK: network,
-                SLASHERDIR: "/opt/app/slasher",
+                SLASHERDIR: slasherDir,
                 SLASHER_DB_SIZE: slasherDbSize,
             },
             ports,
             volumes,
             null,
             network);
+
+        return service;
+    }
+
+    static buildByConfiguration(config) {
+        const service = new LighthouseBeaconService();
+
+        service.initByConfig(config);
+
+        return service;
     }
 
     buildConsensusClientHttpEntpointUrl() {

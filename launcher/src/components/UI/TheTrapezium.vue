@@ -1,9 +1,10 @@
 <template>
   <section id="main">
+
     <section id="contTra">
       <div id="trapezoid">
       <slot></slot>
-        
+      
       </div>
     </section>
   </section>
@@ -12,6 +13,7 @@
 <style scoped>
 #trapezoid {
   height: 0;
+
   width: 65%;
   border-bottom: 7rem solid #05ed08;
   border-left: 7rem solid transparent;
@@ -32,5 +34,6 @@ margin: auto;
   justify-content: center;
   flex-direction: column;
   flex-wrap: wrap;
+
 }
 </style>

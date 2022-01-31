@@ -1,12 +1,14 @@
 <template>
+
   <div class="parent">
+
     <div id="container">
       <section @click="activePage">
         <base-logo :link="link"> </base-logo>
       </section>
 
-      <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
 
+      <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
       <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
         <ul id="flag">
           <li
@@ -94,6 +96,7 @@ export default {
 <style scoped>
 #container {
   border-radius: 40px;
+
   height: 95%;
   width: 95%;
   margin: auto;
@@ -117,6 +120,7 @@ export default {
 }
 
 /*.lang {
+
   cursor: pointer;
   position: fixed;
   top: 81vh;
@@ -124,7 +128,9 @@ export default {
   width: 4em;
   z-index: 100;
   resize: both;
+
 }*/
+
 
 #flag {
   display: inline-flex;

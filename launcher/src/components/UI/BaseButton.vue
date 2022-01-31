@@ -4,7 +4,6 @@
   </button>
 </template>
 
-
 <style scoped>
 button {
   border-radius: 40px;

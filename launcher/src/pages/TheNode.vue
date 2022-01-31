@@ -1,4 +1,5 @@
 <template>
+
     <section id="parent">
         <node-bg>
             <node-grid></node-grid>
@@ -28,3 +29,4 @@ export default {
     top: 0;
 }
 </style>
+

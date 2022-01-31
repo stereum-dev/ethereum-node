@@ -1,3 +1,8 @@
+import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
+import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
+import { GethService } from "./ethereum-services/GethService";
+import { BloxSSVService } from "./ethereum-services/BloxSSVService";
+
 const log = require('electron-log');
 
 /**
@@ -42,17 +47,55 @@ export class ServiceManager {
      * @returns an array of all service configurations
      */
     readServiceConfigurations() {
-        return this.nodeConnection.listServicesConfigurations()
-            .then(services => {
-                // return services;
-                const serviceConfigs = new Array();
-                for (let i = 0; i < services.length; i++) {
-                    const service = services[i];
+        return this.nodeConnection.listServicesConfigurations().then(services => {
+            log.debug("found services:");
+            log.debug(services);
 
-                    this.nodeConnection.readServiceConfiguration(service).then(config => serviceConfigs.push(config));
+            const serviceConfigurations = new Array();
+            for (let i = 0; i < services.length; i++) {
+                const service = services[i];
+
+                log.debug("reading config of service <" + service + ">");
+
+                this.nodeConnection.readServiceConfiguration(service).then(config => {
+                    log.debug("read config:");
+                    log.debug(config);
+                    serviceConfigurations.push(config);
+                    log.debug(serviceConfigurations);
+                });
+            }
+
+            return serviceConfigurations;
+        }).then(serviceConfigurations => {
+            log.debug("proceeding with service configurations:");
+            log.debug(serviceConfigurations);
+
+            const services = new Array();
+
+            for (let i = 0; i < serviceConfigurations.length; i++) {
+                const config = serviceConfigurations[i];
+
+                log.debug("parsing config:");
+                log.debug(config);
+
+                if (config.service) {
+                    if (config.service == "LighthouseBeaconService") {
+                        services.push(LighthouseBeaconService.buildByConfiguration(config));
+                    } else if (config.service == "LighthouseValidatorService") {
+                        services.push(LighthouseValidatorService.buildByConfiguration(config));
+                    } else if (config.service == "GethService") {
+                        services.push(GethService.buildByConfiguration(config));
+                    } else if (config.service == "BloxSSVService") {
+                        services.push(BloxSSVService.buildByConfiguration(config));
+                    }
+                } else {
+                    log.error("found configuration without service!");
+                    log.error(config);
+                    throw "configuration without service specified";
                 }
+            }
 
-                return serviceConfigs;
-            });
+            return services;
+        });
     }
 }
