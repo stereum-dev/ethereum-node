@@ -55,7 +55,8 @@ export default {
   width: 25%;
   height: 22vh;
   background: rgba(51, 102, 102, 0.4);
-  float: left;
+  display: inline-block;
+  box-sizing: border-box;
   border: 3px solid grey;
   resize: both;
   margin: 25px;
@@ -67,7 +68,6 @@ export default {
   margin-top: 1.7rem;
   max-width: 15rem;
   border-radius: 40px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.1rem;
   background: #336666;
   color: #fff;

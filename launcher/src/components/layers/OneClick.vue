@@ -64,7 +64,6 @@ export default {
   margin: 2rem auto;
   max-width: 25rem;
   border-radius: 40px;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26); */
   padding: 0.5rem;
   background-color: #567891;
   color: #fff;
@@ -107,14 +106,7 @@ export default {
   height: 2px;
   background: grey;
 }
-/*.icon {
-  border: 2px solid grey;
-  margin: 5px;
-  width: 23%;
-  resize: both;
-  border-radius: 40px;
-  margin-left: 1%; 
-}*/
+
 .icon img {
   float: left;
   padding: 5px auto;

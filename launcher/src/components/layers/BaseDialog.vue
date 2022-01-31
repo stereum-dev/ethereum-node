@@ -35,6 +35,5 @@ dialog{
     background-color: rgb(124, 119, 119);
     font-weight: bold;
     color: #fff;
-     
 }
 </style>

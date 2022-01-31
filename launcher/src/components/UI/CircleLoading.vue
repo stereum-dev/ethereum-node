@@ -38,7 +38,6 @@ dialog {
   background-color: white;
   z-index: 100;
   border: none;
-  /* animation: modal 0.3s ease-out forwards; */
 }
 
 .modal {
@@ -60,9 +59,9 @@ dialog {
   top: 53%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /*background-color: #2a9d8f;*/
   max-width: 500vw;
-text-align: right;}
+  text-align: right;
+}
 .progress {
   position: relative;
   height: 20px;
@@ -72,7 +71,7 @@ text-align: right;}
 }
 .progress p {
   float: left;
-  margin:0 2%;
+  margin: 0 2%;
   font-weight: bold;
   color: #eee;
   position: relative;
