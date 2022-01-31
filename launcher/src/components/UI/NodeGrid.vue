@@ -1,9 +1,11 @@
 <template>
   <div class="nodeparent">
+
     <div class="execution"><the-trapezium></the-trapezium>execution</div>
     <div class="consensus"><the-trapezium></the-trapezium>consensus</div>
     <div class="validator"><the-trapezium></the-trapezium>validator></div>
     <div class="nodesetup"> NODE SETUP</div>
+
     <div class="service">SERVICE</div>
     <div class="sidebar">SIDEBAR</div>
     <div class="footer">FOOTER</div>
@@ -11,10 +13,12 @@
 </template>
 
 <script>
+
 import TheTrapezium from '../UI/TheTrapezium.vue'
 export default {
 components: { TheTrapezium },
 };
+
 </script>
 
 <style scoped>

@@ -21,17 +21,16 @@
   padding: 0 5px 0 0;
   margin: 5px auto;
   resize: both;
- 
 }
 #contTra {
   border: 3px solid red;
 margin: auto;
+
  height:auto;
   width: 98%;
  display: grid;
  grid-template-columns: 98%;
 grid-template-rows: 88%;
-
 }
 
 </style>
