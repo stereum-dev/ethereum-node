@@ -1,10 +1,8 @@
 <template>
   <section id="main">
-
     <section id="contTra">
       <div id="trapezoid">
-      <slot></slot>
-      
+        <slot></slot>
       </div>
     </section>
   </section>
@@ -24,13 +22,11 @@
 }
 #contTra {
   border: 3px solid red;
-margin: auto;
-
- height:auto;
+  margin: auto;
+  height: auto;
   width: 98%;
- display: grid;
- grid-template-columns: 98%;
-grid-template-rows: 88%;
+  display: grid;
+  grid-template-columns: 98%;
+  grid-template-rows: 88%;
 }
-
 </style>
