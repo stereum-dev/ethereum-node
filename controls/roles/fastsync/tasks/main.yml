@@ -3,7 +3,7 @@
   get_url:
     url: "https://fastsync.stereum.cloud/{{ stereum.fastsync.network }}/{{ stereum.fastsync.service }}/{{ stereum.fastsync.service }}-latest.tar.gz"
     dest: "/tmp/{{ stereum.fastsync.service }}-latest.tar.gz"
-    mode: '0600'
+    mode: 0600
     timeout: 60
   become: yes
 
