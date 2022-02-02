@@ -1,0 +1,58 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("consensys/teku") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("5051") != -1
+      - stereum_docker_ps.stdout.find("9001->9001") != -1
+      - stereum_docker_ps.stdout.find("12000->12000") != -1
+      - stereum_docker_ps.stdout.find("13000->13000") != -1
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9001/tcp") != -1
+      - stereum_ufw_status.stdout.find("9001/udp") != -1
+      - stereum_ufw_status.stdout.find("12000/udp") != -1
+      - stereum_ufw_status.stdout.find("13000/tcp") != -1
+  # ssv config file
+  - stat: path=/opt/app/services/f6a89270-7fa4-11ec-9378-fbd364d02350/data/blox/ssv/config.yaml
+    register: ssv_config_file
+  - debug:
+      msg: "{{ ssv_config_file }}"
+  - name: Check for ssv config
+    assert:
+      that:
+        - ssv_config_file.stat.exists
+  - name: Waiting for the services to up
+    pause:
+      minutes: 10
+  # teku beacon & ssv logs
+  - name: Teku beacon node
+    ansible.builtin.shell: docker logs --tail=150 stereum-731c4b72-7f7c-11ec-b824-c304f53cda24
+    register: beacon
+    until: beacon.stdout.find("Syncing") == -1
+    retries: 360
+    delay: 10
+  - name: Blox-SSV
+    ansible.builtin.shell: docker logs --tail=100 stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
+    register: blox_ssv
+    until: blox_ssv.stdout.find("beacon node is not healthy") == -1
+    retries: 360
+    delay: 10

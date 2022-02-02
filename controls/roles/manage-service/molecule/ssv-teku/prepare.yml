@@ -1,0 +1,83 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 731c4b72-7f7c-11ec-b824-c304f53cda24
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - block:
+      - name: Set fastsync params
+        set_fact:
+          stereum:
+            fastsync:
+              network: prater
+              service: teku
+              dest: /opt/app/services/{{ beacon_service }}/data
+      - include_role:
+          name: "fastsync"
+
+    # teku beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: consensys/teku:21.12.2
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+              env:
+                JAVA_OPTS: -Xmx3g
+              entrypoint: []
+              command: |
+                /opt/teku/bin/teku
+                --network=prater
+                --p2p-enabled=true
+                --p2p-port=9001
+                --eth1-endpoint=https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c
+                --metrics-enabled=true
+                --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                --metrics-port=8008
+                --metrics-interface=0.0.0.0
+                --metrics-host-allowlist="*"
+                --data-path=/opt/app/data
+                --data-storage-mode=archive
+                --rest-api-port=5051
+                --rest-api-host-allowlist="*"
+                --rest-api-interface=0.0.0.0
+                --rest-api-docs-enabled=true
+                --rest-api-enabled=true
+                --log-destination=CONSOLE
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/data/teku:/opt/app/data"
