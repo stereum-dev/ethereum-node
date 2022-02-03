@@ -1,0 +1,9 @@
+---
+- name: Install system packages for zip
+  yum:
+    name:
+      - zip
+      - unzip
+    state: present
+
+# EOF
