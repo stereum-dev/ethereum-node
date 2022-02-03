@@ -7,19 +7,6 @@
     register: stereum_services_dir
   - debug:
       msg: "{{ stereum_services_dir }}"
-  # container's images & ports
-  - shell: docker ps
-    register: stereum_docker_ps
-  - debug:
-      msg: "{{ stereum_docker_ps }}"
-  - assert:
-      that:
-      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
-      - stereum_docker_ps.stdout.find("9000->9000") != -1
-      - stereum_docker_ps.stdout.find("9190->9190") != -1
-      - stereum_docker_ps.stdout.find("12000->12000") != -1
-      - stereum_docker_ps.stdout.find("13000->13000") != -1
   # ufw
   - shell: ufw status
     register: stereum_ufw_status
@@ -40,7 +27,7 @@
     assert:
       that:
         - ssv_config_file.stat.exists
-  - name: Waiting for the services to up
+  - name: Waiting for the services to start properly
     pause:
       minutes: 10
   # nimbus beacon & ssv logs
@@ -56,3 +43,18 @@
     until: blox_ssv.stdout.find("beacon node is not healthy") == -1
     retries: 360
     delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - stereum_docker_ps.stdout.find("9190->9190") != -1
+      - stereum_docker_ps.stdout.find("12000->12000") != -1
+      - stereum_docker_ps.stdout.find("13000->13000") != -1
+
+# EOF
