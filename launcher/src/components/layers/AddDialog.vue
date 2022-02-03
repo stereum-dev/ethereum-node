@@ -69,6 +69,7 @@ dialog label {
 }
 dialog input {
   border-radius: 15px;
+
   float: right;
   text-align: right;
 }
