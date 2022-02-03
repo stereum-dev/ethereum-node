@@ -13,6 +13,8 @@
 
 - include_tasks: docker.yml
 
+- include_tasks: zip-centos.yml
+
 - include_tasks: add-stereum-user.yml
 
 - include_tasks: stereum-config.yml
