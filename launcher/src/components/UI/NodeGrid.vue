@@ -56,10 +56,7 @@ display: flex;
   grid-column-start: 1;
   grid-column-end: 2;
   border: 2px dotted red;
- display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
+ 
 }
 
 .nodesetup {
