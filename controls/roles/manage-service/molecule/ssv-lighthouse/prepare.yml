@@ -56,7 +56,7 @@
               env:
                 DEBUG_LEVEL: debug
                 NETWORK: prater
-                ETH1_NODES: wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c
+                ETH1_NODES: http://10.10.0.3:8545
                 DATADIR: /opt/app/beacon
                 SLASHERDIR: /opt/app/slasher
                 SLASHER_DB_SIZE: "16"

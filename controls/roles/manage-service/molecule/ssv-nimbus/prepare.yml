@@ -62,7 +62,7 @@
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon
-                - --web3-url=wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c
+                - --web3-url=ws://10.10.0.2:8545
                 - --tcp-port=9000
                 - --udp-port=9000
                 - --rpc
