@@ -25,6 +25,5 @@ margin: 5px auto;
   height: 99%;
   width: 98%;
 
-
 }
 </style>

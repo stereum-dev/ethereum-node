@@ -33,7 +33,9 @@ export default {
   color: white;
   grid-column-start: 1;
   grid-column-end: 2;
+
 align-self: center;
+
 }
 
 .consensus {
@@ -41,7 +43,9 @@ align-self: center;
   color: red;
   grid-column-start: 1;
   grid-column-end: 2;
+
 align-self: center;
+
 }
 
 .validator {
@@ -50,7 +54,9 @@ align-self: center;
   grid-column-start: 1;
   grid-column-end: 2;
   border: 2px dotted red;
+
  align-self: center;
+
 }
 
 .nodesetup {

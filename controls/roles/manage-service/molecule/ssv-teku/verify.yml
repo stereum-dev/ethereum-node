@@ -14,12 +14,12 @@
       msg: "{{ stereum_ufw_status }}"
   - assert:
       that:
-      - stereum_ufw_status.stdout.find("9000/tcp") != -1
-      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("9001/tcp") != -1
+      - stereum_ufw_status.stdout.find("9001/udp") != -1
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
   # ssv config file
-  - stat: path=/opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/data/blox/ssv/config.yaml
+  - stat: path=/opt/app/services/f6a89270-7fa4-11ec-9378-fbd364d02350/data/blox/ssv/config.yaml
     register: ssv_config_file
   - debug:
       msg: "{{ ssv_config_file }}"
@@ -30,15 +30,15 @@
   - name: Waiting for the services to start properly
     pause:
       minutes: 10
-  # lh beacon & ssv logs
-  - name: Lighthouse beacon node
-    ansible.builtin.shell: docker logs --tail=150 stereum-d00ff1ae-7161-11ec-915c-0f48d393560f
+  # teku beacon & ssv logs
+  - name: Teku beacon node
+    ansible.builtin.shell: docker logs --tail=150 stereum-731c4b72-7f7c-11ec-b824-c304f53cda24
     register: beacon
-    until: beacon.stdout.find("est_time") == -1
+    until: beacon.stdout.find("Syncing") == -1
     retries: 360
     delay: 10
   - name: Blox-SSV
-    ansible.builtin.shell: docker logs --tail=100 stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e
+    ansible.builtin.shell: docker logs --tail=100 stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
     register: blox_ssv
     until: blox_ssv.stdout.find("beacon node is not healthy") == -1
     retries: 360
@@ -50,9 +50,10 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("stereum/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("consensys/teku") != -1
       - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
-      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - stereum_docker_ps.stdout.find("5051") != -1
+      - stereum_docker_ps.stdout.find("9001->9001") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
 
