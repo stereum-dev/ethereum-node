@@ -11,15 +11,12 @@
 <style scoped>
 #trapezoid {
   height: 0;
-
-  width:  65%;
+width: auto;
+margin: 5px auto;
   border-bottom: 7rem solid #05ed08;
   border-left: 7rem solid transparent;
   border-right: 7rem solid transparent;
-  margin: 5px auto;
-  resize: both;
-  grid-row-start: 1;
-  grid-row-end: 2;
+
 
 }
 #contTra {
@@ -27,12 +24,7 @@
   margin: auto;
   height: 99%;
   width: 98%;
-  display: grid;
-  grid-template-columns: 90%;
-  grid-template-rows: 98%;
-justify-content: center;
 
-  resize: both;
-  
+
 }
 </style>
