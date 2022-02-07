@@ -18,17 +18,17 @@
   height: 0;
 width: auto;
 margin: 5px auto;
-  border-bottom: 7rem solid #05ed08;
+  border-bottom: 7rem solid #828282;
   border-left: 7rem solid transparent;
   border-right: 7rem solid transparent;
 
 
 }
 #contTra {
-  border: 3px solid red;
+  border: 3px solid #828282;
   margin: auto;
   height: 99%;
   width: 98%;
-
+background: #336666;
 }
 </style>
