@@ -33,10 +33,9 @@ export default {
   color: white;
   grid-column-start: 1;
   grid-column-end: 2;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
+
+align-self: center;
+
 }
 
 .consensus {
@@ -44,10 +43,9 @@ export default {
   color: red;
   grid-column-start: 1;
   grid-column-end: 2;
-display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
+
+align-self: center;
+
 }
 
 .validator {
@@ -56,10 +54,9 @@ display: flex;
   grid-column-start: 1;
   grid-column-end: 2;
   border: 2px dotted red;
- display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
+
+ align-self: center;
+
 }
 
 .nodesetup {
