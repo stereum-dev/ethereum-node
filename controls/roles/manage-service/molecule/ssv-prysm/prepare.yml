@@ -71,7 +71,7 @@
                 --grpc-gateway-host=0.0.0.0
                 --grpc-gateway-port=3500
                 --p2p-max-peers=100
-                --http-web3provider=https://goerli.infura.io/v3/c5914a7948ab4c08aa5f59e0818fb526
+                --http-web3provider=http://10.10.0.3:8545
                 --prater=true
                 --fallback-web3provider=[]
                 --block-batch-limit=512
