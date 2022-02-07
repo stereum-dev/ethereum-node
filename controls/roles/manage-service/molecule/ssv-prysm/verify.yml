@@ -32,15 +32,17 @@
       minutes: 10
   # prysm beacon & ssv logs
   - name: prysm beacon node
-    ansible.builtin.shell: docker logs --tail=150 stereum-995c224c-82e9-11ec-9115-2349bc4566fa
+    command: "docker logs --tail=150 stereum-995c224c-82e9-11ec-9115-2349bc4566fa"
     register: beacon
-    until: beacon.stdout.find("estimated time remaining") == -1
+    until: beacon.stderr is not search('estimated time remaining')
     retries: 360
     delay: 10
   - name: Blox-SSV
-    ansible.builtin.shell: docker logs --tail=100 stereum-99e8942a-82e9-11ec-9f76-cbc103131365
+    command: "docker logs --tail=250 stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: blox_ssv
-    until: blox_ssv.stdout.find("beacon node is not healthy") == -1
+    until: 
+      - blox_ssv.stderr.find("beacon node is not healthy") == -1
+      - blox_ssv.stderr.find("at peer limit") != -1
     retries: 360
     delay: 10
   # container's images & ports
@@ -57,3 +59,4 @@
       - stereum_docker_ps.stdout.find("13000->13000") != -1
       - stereum_docker_ps.stdout.find("12001->12001") != -1
       - stereum_docker_ps.stdout.find("13001->13001") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2  
