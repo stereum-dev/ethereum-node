@@ -4,5 +4,5 @@ import TheTrapezium from "../../../src/components/UI/TheTrapezium";
 
 test("Child component exists", () => {
   const wrapper = mount(NodeGrid);
-  expect(wrapper.findComponent(TheTrapezium).exists()).toBe(true);
+  expect(wrapper.findComponent(TheTrapezium).exists());
 });
