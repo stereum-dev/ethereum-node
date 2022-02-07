@@ -34,13 +34,13 @@
   - name: Teku beacon node
     ansible.builtin.shell: docker logs --tail=150 stereum-731c4b72-7f7c-11ec-b824-c304f53cda24
     register: beacon
-    until: beacon.stdout.find("Syncing") == -1
+    until: beacon.stderr.find("Syncing") == -1
     retries: 360
     delay: 10
   - name: Blox-SSV
     ansible.builtin.shell: docker logs --tail=100 stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
     register: blox_ssv
-    until: blox_ssv.stdout.find("beacon node is not healthy") == -1
+    until: blox_ssv.stderr.find("beacon node is not healthy") == -1
     retries: 360
     delay: 10
   # container's images & ports
@@ -56,5 +56,6 @@
       - stereum_docker_ps.stdout.find("9001->9001") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
 
 # EOF
