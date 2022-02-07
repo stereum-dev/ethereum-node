@@ -1,4 +1,5 @@
 <template>
+
     <div class="nodeparent">
         <div class="execution">
             <the-trapezium>
@@ -20,13 +21,16 @@
         <div class="sidebar">SIDEBAR</div>
         <div class="footer">FOOTER</div>
     </div>
+
 </template>
 
 <script>
 import TheTrapezium from "../UI/TheTrapezium.vue";
 import NodeDrag from '../UI/NodeDrag.vue'
 export default {
+
     components: { TheTrapezium, NodeDrag },
+
 };
 </script>
 
@@ -43,6 +47,7 @@ export default {
 }
 
 .execution {
+
     color: white;
     grid-column-start: 1;
     grid-column-end: 2;
@@ -61,6 +66,7 @@ export default {
     grid-column-start: 1;
     grid-column-end: 2;
     align-self: center;
+
 }
 
 .nodesetup {

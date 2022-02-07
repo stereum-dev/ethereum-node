@@ -8,7 +8,7 @@
     </div>
 </template>
 
-<style scoped>
+
 .drag-node {
     padding: 5px;
     display: flex;
@@ -27,3 +27,4 @@
     resize: both;
 }
 </style>
+

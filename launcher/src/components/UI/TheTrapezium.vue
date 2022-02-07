@@ -18,7 +18,9 @@
   height: 0;
 width: auto;
 margin: 5px auto;
+
   border-bottom: 7rem solid #828282;
+
   border-left: 7rem solid transparent;
   border-right: 7rem solid transparent;
 
@@ -29,6 +31,7 @@ margin: 5px auto;
   margin: auto;
   height: 99%;
   width: 98%;
+
 background: #336666;
 }
 </style>
