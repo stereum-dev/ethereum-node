@@ -5,26 +5,20 @@
     </div>
     <div class="config-table">
       <div class="config-row" v-for="(item, index) in configData" :key="index">
-        <div v-if="item.status === 'notOk'" class="netStatus-icon">
-          <img src="../../public/img/icon/red-status.png" alt="status-icon" />
+        <div v-if="item.status === 'online'" class="netStatus-icon">
+          <img src="/public/img/icon/green-status.png" alt="status-icon" />
         </div>
         <div v-else-if="item.status === 'serverOff'" class="netStatus-icon">
-          <img src="../../public/img/icon/blue-status.png" alt="status-icon" />
+          <img src="/public/img/icon/blue-status.png" alt="status-icon" />
         </div>
         <div v-else-if="item.status === 'offline'" class="netStatus-icon">
-          <img
-            src="../../public/img/icon/yellow-status.png"
-            alt="status-icon"
-          />
+          <img src="/public/img/icon/yellow-status.png" alt="status-icon" />
         </div>
         <div v-else class="netStatus-icon">
-          <img src="../../public/img/icon/green-status.png" alt="status-icon" />
+          <img src="/public/img/icon/red-status.png" alt="netStatus-icon" />
         </div>
         <div class="netTest-icon">
-          <img
-            src="../../public/img/icon/testNet-icon-2.png"
-            alt="status-icon"
-          />
+          <img src="/public/img/icon/testNet-icon-2.png" alt="status-icon" />
         </div>
         <div class="row-content">
           <p>{{ item.id }}#{{ item.name }}</p>
@@ -41,7 +35,7 @@ export default {
         {
           id: 1,
           name: "Node Configuration",
-          status: "available",
+          status: "online",
         },
         {
           id: 2,
@@ -77,7 +71,7 @@ export default {
 }
 .nodeSetupTitle {
   padding: 2px;
-  /* color: #fff; */
+  color: #fff;
 }
 .nodeSetupTitle span {
   font-family: sans-serif;

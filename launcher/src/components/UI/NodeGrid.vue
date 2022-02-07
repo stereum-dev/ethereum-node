@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from "../UI/NodeDrag.vue";
+import TheTrapezium from "./TheTrapezium.vue";
+import NodeDrag from "./NodeDrag.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 export default {
   components: { TheTrapezium, NodeDrag, NodeSetupConfig },
