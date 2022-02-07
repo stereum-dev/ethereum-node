@@ -2,11 +2,16 @@
   <section id="main">
     <section id="contTra">
       <div id="trapezoid">
-        <slot></slot>
+      <slot></slot>
+
       </div>
     </section>
   </section>
 </template>
+
+<script>
+
+</script>
 
 <style scoped>
 #trapezoid {
