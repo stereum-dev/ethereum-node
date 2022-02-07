@@ -1,9 +1,15 @@
 <template>
   <div class="nodeparent">
-    <div class="execution"><the-trapezium><node-drag></node-drag></the-trapezium></div>
-    <div class="consensus"><the-trapezium><node-drag></node-drag></the-trapezium></div>
-    <div class="validator"><the-trapezium><node-drag></node-drag></the-trapezium></div>
-    <div class="nodesetup">NODE SETUP</div>
+    <div class="execution">
+      <the-trapezium><node-drag></node-drag></the-trapezium>
+    </div>
+    <div class="consensus">
+      <the-trapezium><node-drag></node-drag></the-trapezium>
+    </div>
+    <div class="validator">
+      <the-trapezium><node-drag></node-drag></the-trapezium>
+    </div>
+    <node-setup-config></node-setup-config>
     <div class="service">SERVICE</div>
     <div class="sidebar">SIDEBAR</div>
     <div class="footer">FOOTER</div>
@@ -12,9 +18,10 @@
 
 <script>
 import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from '../UI/NodeDrag.vue'
+import NodeDrag from "../UI/NodeDrag.vue";
+import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 export default {
-  components: { TheTrapezium ,NodeDrag},
+  components: { TheTrapezium, NodeDrag, NodeSetupConfig },
 };
 </script>
 
@@ -34,9 +41,7 @@ export default {
   color: white;
   grid-column-start: 1;
   grid-column-end: 2;
-
-align-self: center;
-
+  align-self: center;
 }
 
 .consensus {
@@ -44,9 +49,7 @@ align-self: center;
   color: red;
   grid-column-start: 1;
   grid-column-end: 2;
-
-align-self: center;
-
+  align-self: center;
 }
 
 .validator {
@@ -55,9 +58,7 @@ align-self: center;
   grid-column-start: 1;
   grid-column-end: 2;
   border: 2px dotted red;
-
- align-self: center;
-
+  align-self: center;
 }
 
 .nodesetup {
