@@ -1,6 +1,6 @@
 <template>
   <div class="nodeparent">
-    <div class="execution"><the-trapezium>execution</the-trapezium></div>
+    <div class="execution"><the-trapezium><node-drag></node-drag></the-trapezium></div>
     <div class="consensus"><the-trapezium>consensus</the-trapezium></div>
     <div class="validator"><the-trapezium>validator</the-trapezium></div>
     <div class="nodesetup">NODE SETUP</div>
@@ -12,8 +12,9 @@
 
 <script>
 import TheTrapezium from "../UI/TheTrapezium.vue";
+import NodeDrag from '../UI/NodeDrag.vue'
 export default {
-  components: { TheTrapezium },
+  components: { TheTrapezium ,NodeDrag},
 };
 </script>
 
