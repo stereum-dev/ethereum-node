@@ -20,7 +20,7 @@
   border-right: 7rem solid transparent;
 }
 #contTra {
-  border: 3px solid red;
+  border: 3px solid #828282;
   margin: auto;
   height: 99%;
   width: 98%;
