@@ -1,5 +1,5 @@
 <template>
-    <div class="drag_node">
+    <div class="drag-node">
         <div class="drag_input"></div>
         <div class="drag_input"></div>
         <div class="drag_input"></div>
@@ -10,15 +10,22 @@
 
 <style scoped>
 .drag-node{
-width: 100%;
-height: 100%;
-
-position: relative;
+ padding: 5px;
+      
+       display: flex;
+      
+       box-sizing: border-box;
 }
 
 .drag_input{
-width: 17%;
-height: 95%;
-border: 1px solid black;
+ background: orange;
+       color: white;
+       padding: 10px;
+       border: 5px solid black;
+       margin: 5PX;
+       width: 20%;
+       height: 3rem;
+       border-radius: 10px;
+       resize: both;
 }
 </style>

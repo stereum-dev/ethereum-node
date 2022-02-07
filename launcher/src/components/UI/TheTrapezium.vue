@@ -2,7 +2,7 @@
   <section id="main">
     <section id="contTra">
       <div id="trapezoid">
-      <node-drag></node-drag>
+      <slot></slot>
 
       </div>
     </section>
@@ -10,10 +10,7 @@
 </template>
 
 <script>
-import NodeDrag from './NodeDrag.vue';
-export default {
-  components:{NodeDrag}
-}
+
 </script>
 
 <style scoped>

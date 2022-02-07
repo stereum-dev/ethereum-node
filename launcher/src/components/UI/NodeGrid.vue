@@ -1,8 +1,8 @@
 <template>
   <div class="nodeparent">
     <div class="execution"><the-trapezium><node-drag></node-drag></the-trapezium></div>
-    <div class="consensus"><the-trapezium>consensus</the-trapezium></div>
-    <div class="validator"><the-trapezium>validator</the-trapezium></div>
+    <div class="consensus"><the-trapezium><node-drag></node-drag></the-trapezium></div>
+    <div class="validator"><the-trapezium><node-drag></node-drag></the-trapezium></div>
     <div class="nodesetup">NODE SETUP</div>
     <div class="service">SERVICE</div>
     <div class="sidebar">SIDEBAR</div>
