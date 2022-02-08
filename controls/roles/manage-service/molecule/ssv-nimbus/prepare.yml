@@ -52,7 +52,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/nimbus:v1.5.5-54
+              image: stereum/nimbus:v1.6.0-55
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
@@ -62,7 +62,7 @@
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon
-                - --web3-url=wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c
+                - --web3-url=ws://10.10.0.2:8545
                 - --tcp-port=9000
                 - --udp-port=9000
                 - --rpc
