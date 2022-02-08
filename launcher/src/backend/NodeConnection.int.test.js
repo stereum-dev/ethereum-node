@@ -18,7 +18,12 @@ test('prepareStereumNode on ubuntu', async () => {
         location: "fsn1",
         server_type: "cx11",
         start_after_create: true
-      };
+      };    
+      
+    let testServer = new HetznerServer();
+    await testServer.create(serverSettings);
+    log.info("Server started");
+
     const connectionParams = {
         host: testServer.serverIPv4,  //testServer.serverIPv4
         port: '22',
@@ -27,10 +32,6 @@ test('prepareStereumNode on ubuntu', async () => {
         privatekey: undefined
     };
     
-    let testServer = new HetznerServer();
-    await testServer.create(serverSettings);
-    log.info("Server started");
-
     let nodeConnection = new NodeConnection(connectionParams);
     let retry = {connected : false, counter : 0, maxTries : 10};
     log.info("Connecting via SSH");
