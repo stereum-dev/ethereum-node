@@ -17,7 +17,9 @@
             </the-trapezium>
         </div>
         <div class="nodesetup">NODE SETUP</div>
-        <div class="service">SERVICE</div>
+
+        <div class="service"><div class="title">SERVICE PLUGIN</div><service-plugin></service-plugin></div>
+
         <div class="sidebar">SIDEBAR</div>
         <div class="footer">FOOTER</div>
     </div>
@@ -26,10 +28,13 @@
 
 <script>
 import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from '../UI/NodeDrag.vue'
+import NodeDrag from '../UI/NodeDrag.vue';
+import ServicePlugin from "../layers/ServicePlugin.vue";
 export default {
 
-    components: { TheTrapezium, NodeDrag },
+
+    components: { TheTrapezium, NodeDrag, ServicePlugin },
+
 
 };
 </script>
@@ -77,12 +82,25 @@ export default {
 }
 
 .service {
-    background: magenta;
+    background: #336666;
     color: white;
     grid-row-start: 1;
     grid-row-end: 5;
     grid-column-start: 2;
     grid-column-end: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+.title{
+height: 5%;
+background: #000;
+margin:1rem 0;
+font-weight: bold;
+padding: .5px;
+text-align: center;
+
 }
 
 .sidebar {
