@@ -60,6 +60,14 @@
     with_items: "{{ stereum_service_configuration.ports }}"
     when: stereum.manage_service.state != "restarted"
 
+  - name: Copy ssz files
+    copy:
+      src: "{{ role_path }}/files/prysm-prater-genesis.ssz"
+      dest: /opt/app/services/995c224c-82e9-11ec-9115-2349bc4566fa/genesis/prysm-prater-genesis.ssz
+      mode: 0644
+    become: yes
+    when: stereum_service_configuration.image is match("gcr.io/prysmaticlabs/prysm/beacon-chain:*") and stereum_service_configuration.command.find("prater") != -1  
+
   - name: Start service
     docker_container:
       command_handling: correct
