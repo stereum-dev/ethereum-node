@@ -32,15 +32,20 @@
       minutes: 10
   # lh beacon & ssv logs
   - name: Lighthouse beacon node
-    ansible.builtin.shell: docker logs --tail=150 stereum-d00ff1ae-7161-11ec-915c-0f48d393560f
+    command: "docker logs --tail=150 stereum-d00ff1ae-7161-11ec-915c-0f48d393560f"
     register: beacon
-    until: beacon.stdout.find("est_time") == -1
+    until:
+      - beacon.stderr is not search('est_time')
+      - beacon.stderr is not search('Failed to start beacon node')
+      - beacon.stderr is search('sync_state:\ Synced')
     retries: 360
     delay: 10
   - name: Blox-SSV
-    ansible.builtin.shell: docker logs --tail=100 stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e
+    command: "docker logs --tail=250 stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
     register: blox_ssv
-    until: blox_ssv.stdout.find("beacon node is not healthy") == -1
+    until:
+      - blox_ssv.stdout is not search('beacon node is not healthy')
+      - blox_ssv.stdout is search('at peer limit')
     retries: 360
     delay: 10
   # container's images & ports
@@ -55,5 +60,6 @@
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
 
 # EOF
