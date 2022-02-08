@@ -41,8 +41,8 @@
     command: "docker logs --tail=250 stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: blox_ssv
     until: 
-      - blox_ssv.stderr.find("beacon node is not healthy") == -1
-      - blox_ssv.stderr.find("at peer limit") != -1
+      - blox_ssv.stdout is not search('beacon node is not healthy')
+      - blox_ssv.stdout is search('at peer limit')
     retries: 360
     delay: 10
   # container's images & ports
