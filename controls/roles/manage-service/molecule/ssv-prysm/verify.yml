@@ -34,13 +34,15 @@
   - name: prysm beacon node
     command: "docker logs --tail=150 stereum-995c224c-82e9-11ec-9115-2349bc4566fa"
     register: beacon
-    until: beacon.stderr is not search('estimated time remaining')
+    until:
+      - beacon.stderr is not search('estimated time remaining')
+      - beacon.stderr is search('Synced new block')
     retries: 360
     delay: 10
   - name: Blox-SSV
     command: "docker logs --tail=250 stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: blox_ssv
-    until: 
+    until:
       - blox_ssv.stdout is not search('beacon node is not healthy')
       - blox_ssv.stdout is search('at peer limit')
     retries: 360
@@ -59,4 +61,4 @@
       - stereum_docker_ps.stdout.find("13000->13000") != -1
       - stereum_docker_ps.stdout.find("12001->12001") != -1
       - stereum_docker_ps.stdout.find("13001->13001") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2  
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
