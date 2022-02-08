@@ -33,7 +33,7 @@
                     Network: "prater"
                     BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5051"
                   eth1:
-                    ETH1Addr: "wss://goerli.infura.io/ws/v3/20fd3ed2418742e9b727857e32b40f9c"
+                    ETH1Addr: "ws://10.10.0.2:8545"
                     RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
                   OperatorPrivateKey: ""
                   global:

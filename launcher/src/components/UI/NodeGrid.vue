@@ -17,7 +17,9 @@
             </the-trapezium>
         </div>
         <div class="nodesetup">NODE SETUP</div>
+
         <div class="service"><div class="title">SERVICE PLUGIN</div><service-plugin></service-plugin></div>
+
         <div class="sidebar">SIDEBAR</div>
         <div class="footer">FOOTER</div>
     </div>
@@ -30,7 +32,9 @@ import NodeDrag from '../UI/NodeDrag.vue';
 import ServicePlugin from "../layers/ServicePlugin.vue";
 export default {
 
+
     components: { TheTrapezium, NodeDrag, ServicePlugin },
+
 
 };
 </script>
@@ -96,6 +100,7 @@ margin:1rem 0;
 font-weight: bold;
 padding: .5px;
 text-align: center;
+
 }
 
 .sidebar {
