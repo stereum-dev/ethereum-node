@@ -20,3 +20,5 @@ jobs:
         working-directory: ./launcher
       - run: npm run test
         working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
