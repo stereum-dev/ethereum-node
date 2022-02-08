@@ -1,0 +1,157 @@
+<template>
+  <div class="config-box">
+    <div class="nodeSetupTitle">
+      <span>Node Setup Configuration</span>
+    </div>
+    <div class="config-table">
+      <div class="config-row" v-for="(item, index) in configData" :key="index">
+        <div v-if="item.status === 'online'" class="netStatus-icon">
+          <img src="/public/img/icon/green-status.png" alt="status-icon" />
+        </div>
+        <div v-else-if="item.status === 'serverOff'" class="netStatus-icon">
+          <img src="/public/img/icon/blue-status.png" alt="status-icon" />
+        </div>
+        <div v-else-if="item.status === 'offline'" class="netStatus-icon">
+          <img src="/public/img/icon/yellow-status.png" alt="status-icon" />
+        </div>
+        <div v-else class="netStatus-icon">
+          <img src="/public/img/icon/red-status.png" alt="netStatus-icon" />
+        </div>
+        <div class="netTest-icon">
+          <img src="/public/img/icon/testNet-icon-2.png" alt="status-icon" />
+        </div>
+        <div class="row-content">
+          <p>{{ item.id }}#{{ item.name }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      configData: [
+        {
+          id: 1,
+          name: "Node Configuration",
+          status: "online",
+        },
+        {
+          id: 2,
+          name: "Node Configuration",
+          status: "offline",
+        },
+        {
+          id: 3,
+          name: "Node Configuration",
+          status: "notOk",
+        },
+        {
+          id: 4,
+          name: "Node Configuration",
+          status: "serverOff",
+        },
+      ],
+    };
+  },
+};
+</script>
+<style scoped>
+* {
+  box-sizing: border-box;
+}
+.config-box {
+  border: 10px solid #7f7f7f;
+  border-radius: 10px;
+  padding: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: transparent;
+}
+.nodeSetupTitle {
+  padding: 2px;
+  color: #fff;
+}
+.nodeSetupTitle span {
+  font-family: sans-serif;
+  font-weight: 600;
+  margin-left: 20px;
+}
+.config-table {
+  width: auto;
+  border: 2px solid#747474;
+  background: #33393e;
+  color: #fff;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+.config-table:hover {
+  background-color: #2d3134;
+}
+.config-row {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid gray;
+}
+.config-row:nth-child(even) {
+  background-color: #26292b;
+}
+.config-row:last-child {
+  border-bottom: none;
+}
+.netStatus-icon,
+.netTest-icon {
+  display: flex;
+  min-width: 40px;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.netStatus-icon img {
+  width: 19px;
+  height: 19px;
+}
+.netTest-icon img {
+  width: 24px;
+  height: 24px;
+}
+.row-content {
+  flex: 30;
+}
+
+.row-content p {
+  margin: 0;
+  padding: 9px;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+  background-color: transparent;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+  background-color: transparent;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 3px solid #676767;
+  border-radius: 100px;
+  margin: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #676767;
+  border: 2px solid rgb(145, 144, 144);
+  border-radius: 100px;
+  background-clip: content-box;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3134;
+}
+</style>
