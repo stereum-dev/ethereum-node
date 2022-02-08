@@ -64,7 +64,7 @@
                 --network=prater
                 --p2p-enabled=true
                 --p2p-port=9001
-                --eth1-endpoint=https://goerli.infura.io/v3/20fd3ed2418742e9b727857e32b40f9c
+                --eth1-endpoint=http://10.10.0.3:8545
                 --metrics-enabled=true
                 --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 --metrics-port=8008
