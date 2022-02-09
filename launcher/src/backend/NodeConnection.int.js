@@ -1,8 +1,8 @@
-import { HetznerServer } from "./HetznerServer";
+import { HetznerServer } from "./HetznerServer.int";
 import { NodeConnection } from "./NodeConnection";
 import { nodeOS } from "./NodeOS";
+import * as crypto from "crypto";
 const log = require('electron-log');
-
 
 jest.setTimeout(500000);
 
@@ -13,7 +13,7 @@ function Sleep(ms) {
 test('prepareStereumNode on ubuntu', async () => {
 
     const serverSettings = {
-        name: 'my-server',
+        name: 'NodeConnection--integration-test--ubuntu-2004',
         image: "ubuntu-20.04",
         location: "fsn1",
         server_type: "cx11",
@@ -47,7 +47,10 @@ test('prepareStereumNode on ubuntu', async () => {
             await Sleep(2000);
         }
     }
-    await testServer.passwordAuthentication(nodeConnection,testServer.serverRootPassword,"thisisaverysecurepassword");
+
+    let buf = crypto.randomBytes(20);
+    const password = buf.toString('hex');
+    await testServer.passwordAuthentication(nodeConnection,testServer.serverRootPassword,password);
     
     await nodeConnection.findOS();
 
@@ -56,7 +59,7 @@ test('prepareStereumNode on ubuntu', async () => {
     echo "{stereum: {settings: {controls_install_path: /opt/stereumnode, os_user: stereum, updates: {in_progress: null, lane: stable, available: null, unattended: {check: true, install: false}}}}}" > /etc/stereum/stereum.yaml`);
     await nodeConnection.findStereumSettings();
     
-    //will be implemented once Playbooks exists to run roles
+    //will be implemented once Playbooks exist to run roles
     //await nodeConnection.prepareStereumNode("/opt/stereumnode");
     
     await nodeConnection.sshService.disconnect();
