@@ -45,7 +45,7 @@ export default {
     height: 93%;
     grid-template-columns: 70% 20% 10%;
     grid-template-rows: repeat(4, 23.75%) 5%;
-    grid-row-gap: 2px;
+    grid-row-gap: 1px;
     position: relative;
     top: 7%;
     margin: 0;
