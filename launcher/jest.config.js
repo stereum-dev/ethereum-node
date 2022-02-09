@@ -6,9 +6,9 @@ module.exports = {
   ],
   roots: ["<rootDir>/src/", "<rootDir>/tests/"],
   // testEnvironment: "jest-environment-jsdom",
-  // testMatch: [
-  //   "**/?(*.)+(spec|test).[tj]s?(x)"
-  // ],
+  testMatch: [
+     "**/?(*.)+(spec|test|int).[tj]s?(x)"
+   ],
   moduleDirectories: [
     "node_modules","src"
   ],
