@@ -26,7 +26,7 @@
 #contTra {
     border: 3px solid #828282;
     margin: auto;
-    height: 99%;
+    height: 100%;
     width: 98%;
     background: #336666;
 }

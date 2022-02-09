@@ -1,5 +1,4 @@
 <template>
-
     <div class="nodeparent">
         <div class="execution">
             <the-trapezium>
@@ -17,13 +16,23 @@
             </the-trapezium>
         </div>
         <div class="nodesetup">NODE SETUP</div>
-
-        <div class="service"><div class="title">SERVICE PLUGIN</div><service-plugin></service-plugin></div>
-
+    
+        <div class="service">
+            <div class="title">SERVICE PLUGIN</div>
+            <div class="service-container">
+                <base-button class="btn">
+                    <div class="arrow-up"></div>
+                </base-button>
+                <service-plugin></service-plugin>
+                <base-button class="btn">
+                    <div class="arrow-down"></div>
+                </base-button>
+            </div>
+        </div>
+    
         <div class="sidebar">SIDEBAR</div>
         <div class="footer">FOOTER</div>
     </div>
-
 </template>
 
 <script>
@@ -52,7 +61,6 @@ export default {
 }
 
 .execution {
-
     color: white;
     grid-column-start: 1;
     grid-column-end: 2;
@@ -71,7 +79,7 @@ export default {
     grid-column-start: 1;
     grid-column-end: 2;
     align-self: center;
-
+    box-sizing: border-box;
 }
 
 .nodesetup {
@@ -93,14 +101,54 @@ export default {
     justify-content: center;
     align-content: center;
 }
-.title{
-height: 5%;
-background: #000;
-margin:1rem 0;
-font-weight: bold;
-padding: .5px;
-text-align: center;
 
+.title {
+    height: 5%;
+    background: #000;
+    margin: 1rem 0;
+    font-weight: bold;
+    padding: .5px;
+    text-align: center;
+    font-size: 90%;
+}
+
+.service-container {
+    width: 90%;
+    height: 85%;
+    background: #4F4F4F;
+    align-self: center;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 5%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn {
+    width: 90%;
+    margin: 3%;
+    height: 5%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    overflow: hidden;
+}
+
+.arrow-up {
+    width: 0;
+    height: 50%;
+    border-bottom: solid .5rem #eee;
+    border-left: solid 50px transparent;
+    border-right: solid 50px transparent;
+    resize: both;
+}
+.arrow-down{
+    width: 0;
+  height: 50%;
+  border-top: solid .5rem #eee;
+  border-left: solid 50px transparent;
+  border-right: solid 50px transparent;
 }
 
 .sidebar {

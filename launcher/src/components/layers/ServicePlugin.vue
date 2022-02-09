@@ -38,8 +38,8 @@ overflow: hidden;
     padding: 10px;
     border: 5px solid black;
     margin: 5px;
-    width: 25%;
-    height: 3rem;
+    width: 20%;
+    height: 10%;
     border-radius: 10px;
     resize: both;
 }
