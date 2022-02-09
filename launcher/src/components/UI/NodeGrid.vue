@@ -111,6 +111,13 @@ export default {
   text-align: center;
   font-size: 90%;
 }
+.validator {
+  color: white;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  align-self: center;
+  box-sizing: border-box;
+}
 
 .service-container {
   width: 90%;
