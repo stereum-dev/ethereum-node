@@ -52,7 +52,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/lighthouse:v2.0.1-48
+              image: stereum/lighthouse:v2.1.2-50
               env:
                 DEBUG_LEVEL: debug
                 NETWORK: prater

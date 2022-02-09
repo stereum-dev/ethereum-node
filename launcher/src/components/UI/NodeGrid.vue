@@ -1,4 +1,5 @@
 <template>
+
     <div class="nodeparent">
         <div class="execution">
             <the-trapezium>
@@ -16,6 +17,7 @@
             </the-trapezium>
         </div>
         <div class="nodesetup">NODE SETUP</div>
+
     
         <div class="service">
             <div class="title">SERVICE PLUGIN</div>
@@ -36,6 +38,7 @@
 </template>
 
 <script>
+
 import TheTrapezium from "../UI/TheTrapezium.vue";
 import NodeDrag from '../UI/NodeDrag.vue';
 import ServicePlugin from "../layers/ServicePlugin.vue";
@@ -43,6 +46,7 @@ export default {
 
 
     components: { TheTrapezium, NodeDrag, ServicePlugin },
+
 
 
 };
