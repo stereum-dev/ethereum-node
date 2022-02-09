@@ -5,20 +5,20 @@
     </div>
     <div class="config-table">
       <div class="config-row" v-for="(item, index) in configData" :key="index">
-        <div v-if="item.status === 'online'" class="netStatus-icon">
-          <img src="/public/img/icon/green-status.png" alt="status-icon" />
+        <div v-if="item.status === 'online'" class="testnet-icon">
+          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
         </div>
-        <div v-else-if="item.status === 'serverOff'" class="netStatus-icon">
-          <img src="/public/img/icon/blue-status.png" alt="status-icon" />
+        <div v-else-if="item.status === 'serverOff'" class="testnet-icon">
+          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
         </div>
-        <div v-else-if="item.status === 'offline'" class="netStatus-icon">
-          <img src="/public/img/icon/yellow-status.png" alt="status-icon" />
+        <div v-else-if="item.status === 'offline'" class="testnet-icon">
+          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
         </div>
-        <div v-else class="netStatus-icon">
-          <img src="/public/img/icon/red-status.png" alt="netStatus-icon" />
+        <div v-else class="testnet-icon">
+          <img src="/img/icon/testnetIcon.png" alt="netStatus-icon" />
         </div>
-        <div class="netTest-icon">
-          <img src="/public/img/icon/testNet-icon-2.png" alt="status-icon" />
+        <div class="mainnet-icon">
+          <img src="/img/icon/mainnetIcon.png" alt="status-icon" />
         </div>
         <div class="row-content">
           <p>{{ item.id }}#{{ item.name }}</p>
@@ -72,11 +72,12 @@ export default {
 .nodeSetupTitle {
   padding: 2px;
   color: #fff;
+  text-align: left;
+  margin-left: 40px;
 }
 .nodeSetupTitle span {
   font-family: sans-serif;
   font-weight: 600;
-  margin-left: 20px;
 }
 .config-table {
   width: auto;
@@ -100,29 +101,28 @@ export default {
 .config-row:last-child {
   border-bottom: none;
 }
-.netStatus-icon,
-.netTest-icon {
+.mainnet-icon,
+.testnet-icon {
   display: flex;
   min-width: 40px;
   justify-content: center;
   align-items: center;
   flex: 1;
 }
-.netStatus-icon img {
-  width: 19px;
-  height: 19px;
-}
-.netTest-icon img {
+.testnet-icon img,
+.mainnet-icon img {
   width: 24px;
   height: 24px;
 }
+
 .row-content {
   flex: 30;
 }
 
 .row-content p {
   margin: 0;
-  padding: 9px;
+  padding: 5px;
+  text-align: left;
 }
 /* width */
 ::-webkit-scrollbar {
