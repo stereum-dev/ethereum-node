@@ -1,15 +1,13 @@
-name: Tests Jest
+name: Integration Tests
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    branches: [main]
+  
   workflow_dispatch:
 
 jobs:
-  jest-test:
+  integration-test:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -18,5 +16,7 @@ jobs:
           node-version: '16'
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test .test
+      - run: npm run test .int
         working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
