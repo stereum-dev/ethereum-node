@@ -1,4 +1,4 @@
-name: Integration Tests
+name: Tests Integration
 
 on:
   push:
@@ -7,8 +7,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  integration-test:
+  setup:
     runs-on: ubuntu-20.04
+    outputs:
+      tests: ${{ steps.get-tests.outputs.tests }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -16,7 +18,27 @@ jobs:
           node-version: '16'
       - run: npm install
         working-directory: ./launcher
-      - run: npm run test .int
+      - id: get-tests
+        name: Get Tests 
+        run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int")) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
+        working-directory: ./launcher
+
+  integration-test:
+    runs-on: ubuntu-20.04
+    name: test ${{ matrix.test.name }}
+    needs:
+      - setup
+    strategy:
+      matrix:
+        test: ${{ fromJson(needs.setup.outputs.tests) }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test ${{ matrix.test.name }}
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
