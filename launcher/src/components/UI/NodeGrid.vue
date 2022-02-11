@@ -32,7 +32,9 @@
       </div>
     </div>
 
-    <div class="sidebar">SIDEBAR</div>
+    <div class="sidebar">
+      <node-sidebar></node-sidebar>
+    </div>
     <div class="footer">FOOTER</div>
   </div>
 </template>
@@ -42,8 +44,15 @@ import TheTrapezium from "../UI/TheTrapezium.vue";
 import NodeDrag from "../UI/NodeDrag.vue";
 import ServicePlugin from "../layers/ServicePlugin.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
+import NodeSidebar from "./NodeSidebar.vue";
 export default {
-  components: { TheTrapezium, NodeDrag, ServicePlugin, NodeSetupConfig },
+  components: {
+    TheTrapezium,
+    NodeDrag,
+    ServicePlugin,
+    NodeSetupConfig,
+    NodeSidebar,
+  },
 };
 </script>
 
@@ -51,7 +60,7 @@ export default {
 .nodeparent {
   display: grid;
   height: 93%;
-  grid-template-columns: 70% 20% 10%;
+  grid-template-columns: 60% 25% 15%;
   grid-template-rows: repeat(3, 22%) 29% 4.5%;
   grid-row-gap: 1px;
   position: relative;
@@ -85,7 +94,7 @@ export default {
   background: transparent;
   color: white;
   grid-column-start: 1;
-  grid-column-end: 2;
+  grid-row: 4/5;
   padding: 0 10px;
 }
 
@@ -159,19 +168,18 @@ export default {
 }
 
 .sidebar {
-  background: green;
-  color: white;
+  display: grid;
   grid-row-start: 1;
   grid-row-end: 5;
   grid-column-start: 3;
-  grid-column-end: 4;
+  background: transparent;
+  border-top-right-radius: 40px;
 }
 
 .footer {
   background: purple;
   color: white;
-  grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column: 1/5;
   border-radius: 0 0 25px 25px;
 }
 </style>
