@@ -1,5 +1,4 @@
 <template>
-
   <div id="parent">
     <div class="green"></div>
     <div class="black">
@@ -9,7 +8,6 @@
 </template>
 
 <style scoped>
-
 .green {
   width: 100%;
   height: 100%;
@@ -21,13 +19,12 @@
 }
 .black {
   background: #000;
+  margin:0 auto;
   width: 95vw;
   height: 95vh;
   border-radius: 30px;
-  margin: auto;
   box-sizing: border-box;
   border: 4px solid grey;
-  padding: 0;
-
+ 
 }
 </style>

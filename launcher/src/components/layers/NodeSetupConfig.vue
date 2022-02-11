@@ -62,10 +62,10 @@ export default {
   box-sizing: border-box;
 }
 .config-box {
+  grid-row: 2/5;
   border: 10px solid #7f7f7f;
   border-radius: 10px;
   padding: 5px;
-  overflow-x: hidden;
   overflow-y: auto;
   background-color: transparent;
 }
@@ -86,6 +86,7 @@ export default {
   color: #fff;
   font-weight: 600;
   font-family: sans-serif;
+  overflow: hidden;
 }
 .config-table:hover {
   background-color: #2d3134;
