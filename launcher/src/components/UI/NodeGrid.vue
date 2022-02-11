@@ -1,5 +1,4 @@
 <template>
-
     <div class="nodeparent">
         <div class="execution">
             <the-trapezium>
@@ -48,7 +47,6 @@ export default {
     components: { TheTrapezium, NodeDrag, ServicePlugin },
 
 
-
 };
 </script>
 
@@ -73,13 +71,28 @@ export default {
     align-self: center;
 }
 
-.consensus {
-    color: red;
-    grid-column-start: 1;
-    grid-column-end: 2;
-    align-self: center;
+.service {
+  background: #336666;
+  color: white;
+  grid-row-start: 1;
+  grid-row-end: 5;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
 }
 
+.title {
+  height: 5%;
+  background: #000;
+  margin: 1rem 0;
+  font-weight: bold;
+  padding: 0.5px;
+  text-align: center;
+  font-size: 90%;
+}
 .validator {
     color: white;
     grid-column-start: 1;
@@ -88,26 +101,28 @@ export default {
     box-sizing: border-box;
 }
 
-.nodesetup {
-    background: orange;
-    color: white;
-    grid-column-start: 1;
-    grid-column-end: 2;
+.service-container {
+  width: 90%;
+  height: 85%;
+  background: #4f4f4f;
+  align-self: center;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.service {
-    background: #336666;
-    color: white;
-    grid-row-start: 1;
-    grid-row-end: 5;
-    grid-column-start: 2;
-    grid-column-end: 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: center;
+.btn {
+  width: 90%;
+  margin: 3%;
+  height: 5%;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  overflow: hidden;
 }
-
 .title {
     height: 5%;
     background: #000;
@@ -153,24 +168,24 @@ export default {
     width: 0;
   height: 50%;
   border-top: solid .5rem #eee;
+
   border-left: solid 50px transparent;
   border-right: solid 50px transparent;
 }
 
 .sidebar {
-    background: green;
-    color: white;
-    grid-row-start: 1;
-    grid-row-end: 5;
-    grid-column-start: 3;
-    grid-column-end: 4;
+  display: grid;
+  grid-row-start: 1;
+  grid-row-end: 5;
+  grid-column-start: 3;
+  background: transparent;
+  border-top-right-radius: 40px;
 }
 
 .footer {
-    background: purple;
-    color: white;
-    grid-column-start: 1;
-    grid-column-end: 4;
-    border-radius: 0 0 25px 25px;
+  background: purple;
+  color: white;
+  grid-column: 1/5;
+  border-radius: 0 0 25px 25px;
 }
 </style>
