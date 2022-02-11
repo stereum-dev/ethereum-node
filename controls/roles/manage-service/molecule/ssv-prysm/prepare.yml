@@ -1,0 +1,84 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 995c224c-82e9-11ec-9115-2349bc4566fa
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - block:
+      - name: Set fastsync params
+        set_fact:
+          stereum:
+            fastsync:
+              network: prater
+              service: prysm
+              dest: /opt/app/services/{{ beacon_service }}
+      - include_role:
+          name: "fastsync"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: gcr.io/prysmaticlabs/prysm/beacon-chain:v2.0.6
+              ports:
+                - 127.0.0.1:4000:4000/tcp
+                - 0.0.0.0:12001:12001/udp
+                - 0.0.0.0:13001:13001/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --rpc-host=0.0.0.0
+                --rpc-port=4000
+                --monitoring-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --grpc-gateway-port=3500
+                --p2p-max-peers=100
+                --http-web3provider=http://10.10.0.3:8545
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --p2p-udp-port=12001
+                --p2p-tcp-port=13001
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/genesis:/opt/app/genesis"
