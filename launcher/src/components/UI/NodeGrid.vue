@@ -58,6 +58,8 @@ export default {
     position: relative;
     top: 7%;
     margin: 0;
+    
+    
 }
 
 .execution {

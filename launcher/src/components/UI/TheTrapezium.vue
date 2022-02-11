@@ -19,15 +19,16 @@
     width: auto;
     margin: 5px;
     border-bottom: 7rem solid #828282;
-    border-left: 7rem solid transparent;
-    border-right: 7rem solid transparent;
+    border-left: 5rem solid transparent;
+    border-right: 5rem solid transparent;
 }
 
 #contTra {
     border: 3px solid #828282;
-    margin: auto;
-    height: 100%;
+    margin: 0 auto;
+    height:100%;
     width: 98%;
     background: #336666;
+    overflow: hidden;
 }
 </style>
