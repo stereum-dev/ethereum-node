@@ -33,7 +33,7 @@
     </div>
 
     <div class="sidebar">
-      <node-sidebar></node-sidebar>
+      <sidebar-parent></sidebar-parent>
     </div>
     <div class="footer">FOOTER</div>
   </div>
@@ -44,14 +44,14 @@ import TheTrapezium from "../UI/TheTrapezium.vue";
 import NodeDrag from "../UI/NodeDrag.vue";
 import ServicePlugin from "../layers/ServicePlugin.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
-import NodeSidebar from "./NodeSidebar.vue";
+import SidebarParent from "./NodeSidebarParent.vue";
 export default {
   components: {
     TheTrapezium,
     NodeDrag,
     ServicePlugin,
     NodeSetupConfig,
-    NodeSidebar,
+    SidebarParent,
   },
 };
 </script>
