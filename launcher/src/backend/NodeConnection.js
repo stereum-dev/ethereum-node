@@ -154,7 +154,7 @@ export class NodeConnection {
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars ` + StringUtils.escapeStringForShell(extraVarsJson) + `\
-                        playbook` + this.settings.stereum.settings.controls_install_path + `/ansible/` + playbook + `.yaml\
+                        playbook ` + this.settings.stereum.settings.controls_install_path + `/ansible/` + playbook + `.yaml\
                         `);
             } catch (err) {
                 log.error("Can't run playbook '" + playbook + "'", err);
