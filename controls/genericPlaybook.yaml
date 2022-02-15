@@ -4,4 +4,3 @@
   - defaults/stereum_defaults.yaml
   roles:
     - role: "{{ stereum_role }}"   
-      message: "{{ stereum_role }} role was run"

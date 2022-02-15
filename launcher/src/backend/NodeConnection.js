@@ -114,7 +114,7 @@ export class NodeConnection {
             log.info("run stereum ansible playbook 'setup'");
 
             try {
-                const playbookRun = await this.runPlaybook("setup");
+                const playbookRun = await this.runPlaybook("setup",{"stereum_role": "setup"});
 
                 return resolve(playbookRun);
             } catch (err) {
@@ -154,7 +154,7 @@ export class NodeConnection {
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars ` + StringUtils.escapeStringForShell(extraVarsJson) + `\
-                        playbook ` + this.settings.stereum.settings.controls_install_path + `/ansible/` + playbook + `.yaml\
+                        ` + this.settings.stereum.settings.controls_install_path + `/ansible/controls/genericPlaybook.yaml\
                         `);
             } catch (err) {
                 log.error("Can't run playbook '" + playbook + "'", err);
