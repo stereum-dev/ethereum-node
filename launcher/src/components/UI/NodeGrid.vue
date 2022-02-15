@@ -67,21 +67,18 @@ export default {
   top: 7%;
   margin: 0;
 }
-
 .execution {
   color: white;
   grid-column-start: 1;
   grid-column-end: 2;
   align-self: center;
 }
-
 .consensus {
   color: red;
   grid-column-start: 1;
   grid-column-end: 2;
   align-self: center;
 }
-
 .validator {
   color: white;
   grid-column-start: 1;
@@ -89,7 +86,6 @@ export default {
   align-self: center;
   box-sizing: border-box;
 }
-
 .nodesetup {
   background: transparent;
   color: white;
@@ -97,7 +93,6 @@ export default {
   grid-row: 4/5;
   padding: 0 10px;
 }
-
 .service {
   background: #336666;
   color: white;
@@ -110,7 +105,6 @@ export default {
   justify-content: center;
   align-content: center;
 }
-
 .title {
   height: 5%;
   background: #000;
@@ -127,7 +121,6 @@ export default {
   align-self: center;
   box-sizing: border-box;
 }
-
 .service-container {
   width: 90%;
   height: 85%;
@@ -140,7 +133,6 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 .btn {
   width: 90%;
   margin: 3%;
@@ -150,7 +142,6 @@ export default {
   align-self: center;
   overflow: hidden;
 }
-
 .arrow-up {
   width: 0;
   height: 50%;
@@ -166,7 +157,6 @@ export default {
   border-left: solid 50px transparent;
   border-right: solid 50px transparent;
 }
-
 .sidebar {
   display: grid;
   grid-row-start: 1;
@@ -175,7 +165,6 @@ export default {
   background: transparent;
   border-top-right-radius: 40px;
 }
-
 .footer {
   background: purple;
   color: white;

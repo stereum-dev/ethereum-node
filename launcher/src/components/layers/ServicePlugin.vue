@@ -21,7 +21,7 @@
 .Service-plugin__parent{
 border: 3px solid black;
 width: 90%;
-height: 88%;
+height:100vh;
 background: #828282;
 align-self: center;
 border-radius: 20px;
