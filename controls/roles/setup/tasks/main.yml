@@ -19,7 +19,3 @@
 - include_tasks: add-stereum-user.yml
 
 - include_tasks: stereum-config.yml
-
-- name: Reboot
-  reboot:
-  changed_when: "'molecule-notest' not in ansible_skip_tags"
