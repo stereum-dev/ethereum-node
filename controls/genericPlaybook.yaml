@@ -1,8 +1,9 @@
 ---
-- name: run role setup
-  hosts: localhost
-
+- hosts: localhost
   tasks:
-  - name: log a message
-    debug:
-        msg: "{{ role }}"
+    - name: Include role "{{ role }}"
+      roles:
+        role: "{{ role }}"
+
+    - debug:
+      msg:  "role {{ role }} was executed"      
