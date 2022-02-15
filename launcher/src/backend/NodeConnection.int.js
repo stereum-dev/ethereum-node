@@ -207,14 +207,16 @@ test('prepareStereumNode on ubuntu', async () => {
     echo "{stereum: {settings: {controls_install_path: /opt/stereumnode, os_user: stereum, updates: {in_progress: null, lane: stable, available: null, unattended: {check: true, install: false}}}}}" > /etc/stereum/stereum.yaml`);
     await nodeConnection.findStereumSettings();
     
-    //will be implemented once Playbooks exist to run roles
-    //await nodeConnection.prepareStereumNode("/opt/stereumnode");
+    //will be implemented once Playbook and stable branch exist
+    //const playbookRun = await nodeConnection.prepareStereumNode("/opt/stereumnode");
     
     await nodeConnection.sshService.disconnect();
     await testServer.destroy();
 
     expect(nodeConnection.os).toBe(nodeOS.ubuntu);
     expect(nodeConnection.settings).toBeDefined();
+    //expect(playbookRun).toHaveProperty('playbook','setup');
+    //expect(playbookRun).toHaveProperty('playbookRunRef');
 });
 
 //EOF
