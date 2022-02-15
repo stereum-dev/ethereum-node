@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  vars_files:
+  - defaults/stereum_defaults.yaml
+  roles:
+    - role: "{{ stereum_role }}"   
