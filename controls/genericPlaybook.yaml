@@ -1,9 +1,5 @@
 ---
 - hosts: localhost
-  tasks:
-    - name: Include role
-      roles:
-        role: "{{ stereum_role }}"
-
-    - debug:
-      msg:  "role {{ stereum_role }} was executed"      
+  roles:
+    - role: "{{ stereum_role }}"   
+      message: "{{ stereum_role }} role was run"
