@@ -1,0 +1,8 @@
+---
+- name: run role setup
+  hosts: localhost
+
+  tasks:
+  - name: log a message
+    debug:
+        msg: "Hello Worlds"
