@@ -62,10 +62,12 @@ export default {
   box-sizing: border-box;
 }
 .config-box {
+
+  max-height: 140px;
   grid-row: 2/5;
   border: 10px solid #7f7f7f;
   border-radius: 10px;
-  padding: 5px;
+  padding: 5px 2px;
   overflow-y: auto;
   background-color: transparent;
 }

@@ -1,0 +1,6 @@
+{
+  "formsetup": {
+    "login": "login",
+    "server": "Connect to your server"
+  }
+}

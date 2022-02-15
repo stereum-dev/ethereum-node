@@ -4,7 +4,7 @@
 
     <div class="test" style="border-style: none">
       <section id="header">
-        <h2>CONNECT TO YOUR SERVER</h2>
+        <h2>{{ $t("formsetup.server") }}</h2>
       </section>
 
       <base-dialog

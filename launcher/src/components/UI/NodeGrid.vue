@@ -91,7 +91,6 @@ export default {
   color: white;
   grid-column-start: 1;
   grid-row: 4/5;
-  padding: 0 10px;
 }
 .service {
   background: #336666;
