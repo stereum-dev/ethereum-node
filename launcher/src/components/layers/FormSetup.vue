@@ -404,14 +404,15 @@ div {
   float: right;
   text-align: right;
   justify-content: center;
-
   display: flex;
 }
 #login {
   position: fixed;
+  font-size: medium;
   top: 81vh;
   left: 86%;
   width: 100px;
+  padding: 5px;
   resize: both;
 }
 input {
