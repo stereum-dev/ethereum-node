@@ -99,7 +99,9 @@
             <span class="slider round"></span>
           </label>
         </div>
-        <base-button id="login" @click="login">login</base-button>
+        <base-button id="login" @click="login">{{
+          $t("formsetup.login")
+        }}</base-button>
       </form>
     </div>
     <!-- test dovom -->
@@ -311,21 +313,18 @@ select {
   position: absolute;
   width: 50%;
 }
-test {
-  background-color: rgba(76, 72, 72, 0.5);
-  z-index: 0;
-}
+
 #header {
   text-align: center;
   margin: 2rem auto;
   max-width: 35rem;
   border-radius: 40px;
-
   padding: 0.5rem;
   background-color: #567891;
   color: #fff;
   border: 2px solid grey;
 }
+
 div {
   text-align: center;
   margin: 1rem auto;
