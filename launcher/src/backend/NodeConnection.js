@@ -114,7 +114,7 @@ export class NodeConnection {
             log.info("run stereum ansible playbook 'setup'");
 
             try {
-                const playbookRun = await this.runPlaybook("setup");
+                const playbookRun = await this.runPlaybook("setup",{"stereum_role": "setup"});
 
                 return resolve(playbookRun);
             } catch (err) {
@@ -147,15 +147,15 @@ export class NodeConnection {
             let ansibleResult;
             try {
                 ansibleResult = await this.sshService.exec(
-                    `sudo
-                        ANSIBLE_STDOUT_CALLBACK=log_plays
-                        ANSIBLE_LOG_FOLDER=/tmp/` + playbookRunRef + `
-                        ansible-playbook
-                        --connection=local
-                        --inventory 127.0.0.1,
-                        --extra-vars ` + StringUtils.escapeStringForShell(extraVarsJson) + `
-                        ` + this.settings.stereum.settings.controls_install_path + `/ansible/` + playbook + `.yaml
-                        &`);
+                    `sudo\
+                        ANSIBLE_STDOUT_CALLBACK=log_plays\
+                        ANSIBLE_LOG_FOLDER=/tmp/` + playbookRunRef + `\
+                        ansible-playbook\
+                        --connection=local\
+                        --inventory 127.0.0.1,\
+                        --extra-vars ` + StringUtils.escapeStringForShell(extraVarsJson) + `\
+                        ` + this.settings.stereum.settings.controls_install_path + `/ansible/controls/genericPlaybook.yaml\
+                        `);
             } catch (err) {
                 log.error("Can't run playbook '" + playbook + "'", err);
                 return reject("Can't run playbook: " + err);
