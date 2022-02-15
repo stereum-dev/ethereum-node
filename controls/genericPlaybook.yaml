@@ -5,4 +5,4 @@
   tasks:
   - name: log a message
     debug:
-        msg: "Hello Worlds"
+        msg: "{{ role }}"
