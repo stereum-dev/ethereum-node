@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img :src="link" />
+    <img :src="link" :class="mode" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ export default {
 <style scoped>
 img {
   width: 50%;
-  min-width: 60%;
+  min-width: 40%;
+  opacity: 0.3;
 }
 </style>

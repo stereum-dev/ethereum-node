@@ -5,7 +5,7 @@ import de from "../languages/de-GR.json";
 import fa from "../languages/fa-IR.json";
 
 const i18n = createI18n({
-  locale: "de-GR",
+  locale: "en-US",
   messages: {
     "en-US": en,
     "de-GR": de,

@@ -2,7 +2,7 @@
   <div class="parent">
     <div id="container">
       <section @click="activePage">
-        <base-logo :link="link"> </base-logo>
+        <base-logo mode="logo" :link="link"> </base-logo>
       </section>
 
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
@@ -93,7 +93,6 @@ export default {
 <style scoped>
 #container {
   border-radius: 40px;
-
   height: 95%;
   width: 95%;
   margin: auto;
@@ -103,7 +102,11 @@ export default {
   box-sizing: border-box;
   background-color: #336666;
 }
-
+.lang {
+  position: absolute;
+  top: 5%;
+  right: 5%;
+}
 .parent {
   background-color: #000;
   width: 100%;
@@ -116,7 +119,6 @@ export default {
   box-sizing: border-box;
 }
 
-
 #flag {
   display: inline-flex;
   margin: 0;
@@ -128,7 +130,7 @@ export default {
 #flag li {
   list-style: none;
   display: inline-block;
-  padding: 5px;
+  padding: 10px;
   cursor: pointer;
 }
 
@@ -136,5 +138,4 @@ export default {
   width: 120px;
   resize: both;
 }
-
 </style>
