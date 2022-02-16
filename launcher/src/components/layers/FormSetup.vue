@@ -393,7 +393,7 @@ div {
   border: 3px solid rgb(190, 242, 190);
 }
 #keyLocation {
-  border: 4px solid rgb(62, 61, 61);
+  border: 5px solid rgb(62, 61, 61);
   border-radius: 40px;
   max-width: 30rem;
   background-color: #264c4c;
