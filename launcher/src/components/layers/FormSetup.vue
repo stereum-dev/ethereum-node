@@ -292,11 +292,10 @@ export default {
 }
 #container {
   width: 100%;
-  border: none;
+  border: 5px solid #3a3939;
   height: auto;
   background-color: #264c4c;
   opacity: 0.9;
-  box-shadow: 1px 0 10px 5px rgb(50, 87, 87);
 }
 .priority {
   z-index: 200;
@@ -352,6 +351,7 @@ div {
   align-items: center;
   display: flex;
 }
+
 #one select {
   outline-style: none;
   font-size: 20px;
@@ -365,10 +365,19 @@ div {
   float: left;
 }
 .three {
-  width: 50px;
-  float: left;
+  width: 45px;
+  margin-right: 10px;
+  border-radius: 50%;
+  outline-style: none;
+  box-shadow: 0 0 3px 1px rgb(47, 46, 46);
+}
+.three:active {
+  box-shadow: none;
 }
 .formGroup {
+  margin: 0;
+  height: 50px;
+  padding: 5px;
   display: flex;
   border: none;
   justify-content: space-between;
@@ -378,12 +387,14 @@ div {
 .formGroup label {
   clear: both;
   font-size: large;
+  font-weight:900;
   margin-left: 10px;
   color: #fff;
 }
 .formGroup input {
   width: 60%;
-  height: 25px;
+  height: 20px;
+  border: 6px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
   font-weight: bold;
@@ -393,7 +404,7 @@ div {
   border: 3px solid rgb(190, 242, 190);
 }
 #keyLocation {
-  border: 5px solid rgb(62, 61, 61);
+  border: 5px solid #3a3939;
   border-radius: 40px;
   max-width: 30rem;
   background-color: #264c4c;
@@ -414,18 +425,18 @@ div {
   font-size: large;
   font-weight: bold;
   outline-style: none;
+  border: 5px solid #3a3939;
 }
-#keyLocation input:hover {
-  border: 3px solid rgb(190, 242, 190);
-}
+
 #login {
   width: 100px;
-  height: 50px;
+  height: 55px;
   outline-style: none;
-  border: 3px solid grey;
+  border: 5px solid #3a3939;
   cursor: pointer;
   position: absolute;
   right: 0;
+  top: 97%;
   background-color: #264c4c;
   box-shadow: 0 2px 8px rgba(179, 179, 179, 0.26);
 }
@@ -456,6 +467,7 @@ input {
   top: 95%;
 }
 #lbl {
+  align-self: center;
   padding-left: 10px;
   clear: both;
   font-weight: bold;
