@@ -4,17 +4,20 @@
       <div class="side-background"></div>
       <div class="menu-box">
         <div class="menu">
-          <img
-            class="home-icon"
-            src="/img/icon/manage-node-icons/home-item-icon.png"
-            alt="icon"
-          />
-
-          <img
-            class="manage-icon"
-            src="/img/icon/manage-node-icons/manage-item-icon.png"
-            alt="icon"
-          />
+          <router-link to="/node">
+            <img
+              class="home-icon"
+              src="/img/icon/manage-node-icons/home-item-icon.png"
+              alt="icon"
+            />
+          </router-link>
+          <router-link to="/manage">
+            <img
+              class="manage-icon"
+              src="/img/icon/manage-node-icons/manage-item-icon.png"
+              alt="icon"
+            />
+          </router-link>
         </div>
       </div>
     </div>
@@ -27,17 +30,21 @@
 
     <div class="service"></div>
 
-    <div class="sidebar"></div>
+    <div class="sidebar">
+      <SidebarManage />
+    </div>
     <div class="footer">FOOTER</div>
   </div>
 </template>
 
 <script>
 import TheTrapezium from "../components/UI/TheTrapezium.vue";
+import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 
 export default {
   components: {
     TheTrapezium,
+    SidebarManage,
   },
 };
 </script>

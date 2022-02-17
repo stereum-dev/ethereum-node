@@ -4,17 +4,20 @@
       <div class="side-background"></div>
       <div class="menu-box">
         <div class="menu">
-          <img
-            class="home-icon"
-            src="/img/icon/manage-node-icons/home-item-icon.png"
-            alt="icon"
-          />
-
-          <img
-            class="manage-icon"
-            src="/img/icon/manage-node-icons/manage-item-icon.png"
-            alt="icon"
-          />
+          <router-link to="/node">
+            <img
+              class="home-icon"
+              src="/img/icon/manage-node-icons/home-item-icon.png"
+              alt="icon"
+            />
+          </router-link>
+          <router-link to="/manage">
+            <img
+              class="manage-icon"
+              src="/img/icon/manage-node-icons/manage-item-icon.png"
+              alt="icon"
+            />
+          </router-link>
         </div>
       </div>
     </div>
@@ -232,7 +235,7 @@ export default {
   border-top-right-radius: 40px;
 }
 .footer {
-  background: rgb(79, 79, 79);
+  background: #4c4848;
   color: white;
   grid-column: 1/6;
   border-radius: 0 0 25px 25px;
