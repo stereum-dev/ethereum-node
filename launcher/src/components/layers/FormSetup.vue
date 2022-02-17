@@ -351,13 +351,56 @@ div {
   align-items: center;
   display: flex;
 }
-
 #one select {
+  /* styling */
+  outline-style: none;
+  background-color: white;
+  border-radius: 40px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.5em;
+  padding: 0.5em 3.5em 0.5em 1em;
+  /* reset */
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* arrows */
+#one select {
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      rgb(254, 254, 255) 50%
+    ),
+    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
+    linear-gradient(to right, #5d5d5d, #5d5d5d);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+}
+
+select.classic:focus {
+  background-image: linear-gradient(45deg, white 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, white 50%),
+    linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+  border-color: grey;
+  outline: 0;
+}
+/* #one select {
   outline-style: none;
   font-size: 20px;
   text-align: center;
   padding: 0 auto;
-}
+} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -387,7 +430,7 @@ div {
 .formGroup label {
   clear: both;
   font-size: large;
-  font-weight:900;
+  font-weight: 900;
   margin-left: 10px;
   color: #fff;
 }
