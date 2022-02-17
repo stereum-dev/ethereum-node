@@ -18,58 +18,26 @@
         </div>
       </div>
     </div>
-    <div class="execution">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
-    </div>
-    <div class="consensus">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
-    </div>
+    <div class="execution"></div>
+    <div class="consensus"></div>
     <div class="validator">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <the-trapezium> </the-trapezium>
     </div>
-    <div class="nodesetup">
-      <node-setup-config></node-setup-config>
-    </div>
+    <div class="nodesetup"></div>
 
-    <div class="service">
-      <div class="title">SERVICE PLUGIN</div>
-      <div class="service-container">
-        <base-button class="btn">
-          <div class="arrow-up"></div>
-        </base-button>
-        <service-plugin></service-plugin>
-        <base-button class="btn">
-          <div class="arrow-down"></div>
-        </base-button>
-      </div>
-    </div>
+    <div class="service"></div>
 
-    <div class="sidebar">
-      <sidebar-parent></sidebar-parent>
-    </div>
+    <div class="sidebar"></div>
     <div class="footer">FOOTER</div>
   </div>
 </template>
 
 <script>
-import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from "../UI/NodeDrag.vue";
-import ServicePlugin from "../layers/ServicePlugin.vue";
-import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
-import SidebarParent from "./NodeSidebarParent.vue";
+import TheTrapezium from "../components/UI/TheTrapezium.vue";
+
 export default {
   components: {
     TheTrapezium,
-    NodeDrag,
-    ServicePlugin,
-    NodeSetupConfig,
-    SidebarParent,
   },
 };
 </script>

@@ -1,5 +1,4 @@
 <template>
-
   <div class="parent">
     <div class="header"></div>
     <div>
@@ -93,7 +92,7 @@
   top: 0;
   left: 0;
   width: 10%;
-  z-index: 2;
+  z-index: 10;
 }
 
 .main-nav1 {
@@ -144,25 +143,20 @@
   font-weight: bold;
   padding: 0 0;
   font-size: 1.4rem;
-
 }
 
 .main-nav__item a:hover,
 .main-nav__item a:active {
-
   color: #97ddff;
 }
 
 .main-nav__item--cta a {
   color: #a1c1ad;
-
 }
 
 .main-nav__item--cta a:hover,
 .main-nav__item--cta a:active {
-
   color: #97ddff;
   border: none;
 }
 </style>
-
