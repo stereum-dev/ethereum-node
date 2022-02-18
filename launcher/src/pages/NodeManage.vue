@@ -1,40 +1,68 @@
 <template>
-  <div class="nodeparent">
-    <div class="asside">
-      <div class="side-background"></div>
-      <div class="menu-box">
-        <div class="menu">
-          <router-link to="/node">
-            <img
-              class="home-icon"
-              src="/img/icon/manage-node-icons/home-item-icon.png"
-              alt="icon"
-            />
-          </router-link>
-          <router-link to="/manage">
-            <img
-              class="manage-icon"
-              src="/img/icon/manage-node-icons/manage-item-icon.png"
-              alt="icon"
-            />
-          </router-link>
+  <section id="parent">
+    <node-header id="head"></node-header>
+    <node-bg>
+      <div class="manage-parent">
+        <div class="menu-side">
+          <div class="menu-background"></div>
+          <div class="menu-box">
+            <div class="menu">
+              <router-link to="/node">
+                <img
+                  class="home-icon"
+                  src="/img/icon/manage-node-icons/home-item-icon.png"
+                  alt="icon"
+                />
+              </router-link>
+              <router-link to="/manage">
+                <img
+                  class="manage-icon"
+                  src="/img/icon/manage-node-icons/manage-item-icon.png"
+                  alt="icon"
+                />
+              </router-link>
+            </div>
+          </div>
+        </div>
+        <div class="config-box">
+          <div class="config-node"></div>
+        </div>
+        <div class="consensus">
+          <the-trapezium> </the-trapezium>
+        </div>
+        <div class="validator">
+          <the-trapezium> </the-trapezium>
+        </div>
+        <div class="execution">
+          <the-trapezium> </the-trapezium>
+        </div>
+
+        <div class="service">
+          <div class="title">SERVICE PLUGIN</div>
+          <div class="service-container"></div>
+        </div>
+        <div class="change-menu">
+          <div class="confirm-box">
+            <div class="confirm-bg">
+              <div class="check-icon">
+                <img
+                  src="Img/icon/manage-node-icons/check-mark.png"
+                  alt="icon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sidebar">
+          <sidebar-manage> </sidebar-manage>
+        </div>
+
+        <div class="footer">
+          <div class="footer-content"></div>
         </div>
       </div>
-    </div>
-    <div class="execution"></div>
-    <div class="consensus"></div>
-    <div class="validator">
-      <the-trapezium> </the-trapezium>
-    </div>
-    <div class="nodesetup"></div>
-
-    <div class="service"></div>
-
-    <div class="sidebar">
-      <SidebarManage />
-    </div>
-    <div class="footer">FOOTER</div>
-  </div>
+    </node-bg>
+  </section>
 </template>
 
 <script>
@@ -50,30 +78,39 @@ export default {
 </script>
 
 <style scoped>
-.nodeparent {
-  display: grid;
-  height: 95%;
-  grid-template-columns: 3% 58% 22% 17%;
-  grid-template-rows: repeat(3, 21%) 27.5% 4.5%;
-  grid-row-gap: 1px;
+#parent {
+  box-sizing: border-box;
+  padding: 0;
+}
 
+#head {
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+.manage-parent {
+  display: grid;
+  height: 92%;
+  grid-template-columns: 3% 17% 45% 20% 15%;
+  grid-template-rows: 8% repeat(3, 29%) 4.5%;
+  grid-row-gap: 1px;
   position: relative;
   top: 9%;
 }
 
-.asside {
+.menu-side {
   grid-column-start: 1;
-  grid-row: 1/5;
+  grid-row: 1/6;
   background-color: transparent;
   width: 100%;
   position: relative;
 }
-.side-background {
+.menu-background {
   grid-row: 1/5;
   background-color: #336666;
   height: 100%;
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
-  z-index: -1;
+  z-index: -3;
 }
 .menu-box {
   position: absolute;
@@ -105,42 +142,48 @@ export default {
   margin-top: 10px;
 }
 
-.execution {
+.config-box {
   color: white;
+  width: 100%;
   height: 100%;
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column: 2/3;
+  grid-row: 2/5;
   align-self: center;
+  background-color: transparent;
+}
+.config-node {
+  width: 90%;
+  height: 90%;
+  background-color: #33393e;
+  border-radius: 0 30px 30px 30px;
 }
 .consensus {
-  color: red;
-  grid-column-start: 2;
-  grid-column-end: 3;
+  grid-column: 3/4;
+  grid-row: 2/3;
   height: 100%;
   align-self: center;
 }
 .validator {
+  grid-column: 3/4;
+  grid-row: 3/4;
   color: white;
-  grid-column-start: 2;
-  grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
   height: 100%;
 }
-.nodesetup {
-  background: transparent;
-  color: white;
-  grid-column-start: 2;
+.execution {
+  grid-column: 3/4;
   grid-row: 4/5;
-  overflow-x: hidden;
+  color: white;
+  align-self: center;
+  box-sizing: border-box;
+  height: 100%;
 }
 .service {
+  grid-column: 4/5;
+  grid-row: 1/5;
   background: #336666;
   color: white;
-  grid-row-start: 1;
-  grid-row-end: 5;
-  grid-column-start: 3;
-  grid-column-end: 4;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -154,13 +197,6 @@ export default {
   padding: 0.5px;
   text-align: center;
   font-size: 90%;
-}
-.validator {
-  color: white;
-  grid-column-start: 2;
-  grid-column-end: 3;
-  align-self: center;
-  box-sizing: border-box;
 }
 .service-container {
   width: 90%;
@@ -198,18 +234,61 @@ export default {
   border-left: solid 50px transparent;
   border-right: solid 50px transparent;
 }
-.sidebar {
-  display: grid;
-  grid-row-start: 1;
-  grid-row-end: 5;
-  grid-column-start: 4;
-  background: transparent;
+.change-menu {
+  grid-row: 1/5;
+  grid-column: 5/6;
+  margin: 0 5px;
+  background: #334b3f;
+  border: solid #1a2620;
+  border-width: 1px 6px;
   border-top-right-radius: 40px;
+  border-bottom-right-radius: 4px;
+}
+.change-menu .confirm-box {
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
+  border-radius: 50%;
+  background-color: #33393e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .confirm-bg {
+  width: 80px;
+  height: 80px;
+  background-color: #232628;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .check-icon {
+  width: 70px;
+  height: 70px;
+  background-color: #33393e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu img {
+  width: 40px;
+  height: 40px;
 }
 .footer {
-  background: rgb(79, 79, 79);
   color: white;
-  grid-column: 1/6;
-  border-radius: 0 0 25px 25px;
+  grid-column: 1/7;
+  grid-row: 5;
+  background-color: gray;
+  border-radius: 0 0 1.9rem 1.9rem;
+  position: relative;
 }
+/* .footer-content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+  background-color: rgb(195, 21, 21);
+} */
 </style>

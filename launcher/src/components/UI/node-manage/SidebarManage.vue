@@ -97,7 +97,7 @@ export default {
   top: 10%;
   right: -200px;
   width: 150px;
-  height: 88%;
+  height: 81.5%;
   padding: 5px;
   background-color: gray;
   border-top-left-radius: 35px;
@@ -110,24 +110,33 @@ export default {
   position: fixed;
   top: 36%;
   right: 108px;
+  height: 150px;
+  width: 85px;
+  border: 1px solid rgb(183, 176, 176);
+  border-radius: 35px;
 }
 .show-icon {
   position: fixed;
   top: 36%;
   right: -50px;
+  height: 150px;
+  width: 85px;
+  border: 1px solid rgb(183, 176, 176);
+  border-radius: 35px;
 }
 .cloud {
-  width: 150px;
-  height: 50px;
+  width: 120px;
+  margin: 0 auto;
+  height: 40px;
 }
 .cloud img {
   margin-top: 5px;
-  width: 120px;
+  width: 90%;
 }
 .plugin-box {
   padding: 0;
   margin: 0;
-  height: 69vh;
+  height: 64vh;
   position: relative;
 }
 .plugin-box .up-arrow {
@@ -151,15 +160,15 @@ export default {
   border-radius: 15px;
 }
 .plugin-item {
-  width: 75px;
-  height: 75px;
+  width: 65px;
+  height: 65px;
   margin: 5px auto;
   border-radius: 15px;
   border: 2px solid rgb(70, 70, 70);
 }
 .plugin-item img {
-  width: 75px;
-  height: 75px;
+  width: 65px;
+  height: 65px;
 }
 .filter-box {
   display: flex;

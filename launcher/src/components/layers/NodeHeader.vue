@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <div class="header"></div>
-    <div>
+    <div class="logo-box">
       <img src="/img/icon/LOGO.png" class="main-header__brand" />
     </div>
     <header class="main-header">
@@ -80,7 +80,6 @@
   width: 100vw;
   background: #336666;
   padding: 1% 0;
-  border-bottom: 5px solid gray;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -92,7 +91,7 @@
   top: 0;
   left: 0;
   width: 10%;
-  z-index: 10;
+  z-index: 100;
 }
 
 .main-nav1 {
