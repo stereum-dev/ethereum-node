@@ -9,6 +9,9 @@ module.exports = {
   testMatch: [
      "**/?(*.)+(spec|test|int).[tj]s?(x)"
    ],
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1"
+  },
   moduleDirectories: [
     "node_modules","src"
   ],

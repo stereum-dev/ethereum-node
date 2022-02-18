@@ -1,4 +1,4 @@
-import * as EventEmitter from "events";
+import EventEmitter from "events";
 
 let instance = null;
 class ControlService extends EventEmitter {
