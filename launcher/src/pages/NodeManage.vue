@@ -28,7 +28,16 @@
           <div class="config-node"></div>
         </div>
         <div class="consensus">
-          <the-trapezium> </the-trapezium>
+          <the-trapezium>
+            <img
+              @click="addPlugin"
+              src="../../public/Img/icon/manage-node-icons/plus-icon.png"
+              alt=""
+            />
+            <div v-for="(item, index) in consesusItems" :key="index">
+              <img :src="item.source" alt="icon" />
+            </div>
+          </the-trapezium>
         </div>
         <div class="validator">
           <the-trapezium> </the-trapezium>
@@ -39,7 +48,17 @@
 
         <div class="service">
           <div class="title">SERVICE PLUGIN</div>
-          <div class="service-container"></div>
+          <div class="service-container">
+            <div
+              v-for="item in servicePlugins"
+              :key="item.id"
+              :class="{ 'chosen-plugin': item.active }"
+              class="service-item"
+              @click="item.active = !item.active"
+            >
+              <img :src="item.source" alt="icon" />
+            </div>
+          </div>
         </div>
         <div class="change-menu">
           <div class="confirm-box">
@@ -73,6 +92,45 @@ export default {
   components: {
     TheTrapezium,
     SidebarManage,
+  },
+  data() {
+    return {
+      consesusItems: [],
+      servicePlugins: [
+        {
+          id: 1,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 2,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 3,
+
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 4,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+      ],
+    };
+  },
+  methods: {
+    addPlugin() {
+      this.servicePlugins.forEach((item) => {
+        if (item.active) {
+          this.consesusItems.push(item);
+        }
+        item.active = false;
+      });
+      console.log(this.consesusItems);
+    },
   },
 };
 </script>
@@ -201,7 +259,7 @@ export default {
 .service-container {
   width: 90%;
   height: 85%;
-  background: #4f4f4f;
+  background: #dcdcdc;
   align-self: center;
   border-radius: 20px;
   overflow: hidden;
@@ -209,6 +267,10 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+}
+.chosen-plugin {
+  border: 1px solid blue;
+  padding: 5px;
 }
 .btn {
   width: 90%;
