@@ -7,14 +7,14 @@
     group: root
     mode: 0655
   loop:
-    - "/opt/app/services/{{ grafana_service }}/grafana/provisioning/datasources"
-    - "/opt/app/services/{{ grafana_service }}/grafana/provisioning/dashboards"
+    - "{{ grafana_config_path }}/provisioning/datasources"
+    - "{{ grafana_config_path }}/provisioning/dashboards"
   become: yes
 
 - name: Copy Grafana's "datasource" file
   copy:
     src: "{{ role_path }}/files/grafana/datasource.yml"
-    dest: "/opt/app/services/{{ grafana_service }}/grafana/provisioning/datasources"
+    dest: "{{ grafana_config_path }}/provisioning/datasources"
     mode: 0655
   become: yes
   when: stereum_service_configuration.command.find("GRAFANA_INI_LH") != -1
@@ -22,7 +22,7 @@
 - name: Copy Grafana's dashboard(s)
   copy:
     src: "{{ role_path }}/files/grafana/provisioning-lh/dashboards/BeaconProcessing.json"
-    dest: "/opt/app/services/{{ grafana_service }}/grafana/provisioning/dashboards"
+    dest: "{{ grafana_config_path }}/provisioning/dashboards"
     mode: 0655
   become: yes
   when: stereum_service_configuration.command.find("GRAFANA_INI_LH") != -1
