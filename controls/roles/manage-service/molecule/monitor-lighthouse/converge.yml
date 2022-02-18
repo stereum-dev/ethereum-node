@@ -8,6 +8,7 @@
     prometheus_node_exporter_service: ef7d66cc-9022-11ec-8bd0-57e35985136a
     grafana_service: 59827650-8ac6-11ec-81ec-f3dc0fb8f30e
     beacon_service: cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86
+    grafana_config_path: /opt/app/services/59827650-8ac6-11ec-81ec-f3dc0fb8f30e/grafana
 
   tasks:
     # prometheus service
@@ -107,6 +108,6 @@
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
-                - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
-                - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
+                - "{{ grafana_config_path }}/provisioning:/etc/grafana/provisioning"
+                - "{{ grafana_config_path }}/data:/var/lib/grafana"
+                - "{{ grafana_config_path }}:/etc/grafana"
