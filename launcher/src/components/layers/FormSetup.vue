@@ -21,14 +21,16 @@
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
-              <select @change="setTunnelsSelect($event)">
+              <select v-model="selectedName" @change="setSelectedConnection($event)">
+                <option value= "" disabled>
+                  Select your Server-Connection
+                </option>
                 <option
-                  v-for="tunnel in tunnels"
-                  :key="tunnel.name"
-                  :value="tunnel.name"
-                  @click="completeFiled"
+                  v-for="connection in connections"
+                  :key="connection.name"
+                  :value="connection.name"
                 >
-                  {{ tunnel.name }}
+                  {{ connection.name }}
                 </option>
               </select>
             </div>
@@ -47,45 +49,54 @@
               @mouseleave="mouseOver('leave')"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !serverName.isValid }">
+          <div class="formGroup" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
             <input
               name="servername"
               id="servername"
               type="text"
-              :ref="serverName.val"
-              :value="serverName.val"
-              @blur="clearValidity('serverName')"
+              v-model="model.name.value"
+              @blur="checkInput(model.name)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !host.isValid }">
+          <div class="formGroup" :class="{ errors: !model.host.isFilled }">
             <label for="host">IP or HOSTNAME</label>
             <input
               name="host"
               id="iporhostname"
               type="text"
-              v-model="host.val"
-              @blur="clearValidity('host')"
+              v-model="model.host.value"
+              @blur="checkInput(model.host)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !userName.isValid }">
+          <div class="formGroup" :class="{ errors: !model.user.isFilled }">
             <label for="user">USERNAME</label>
             <input
               name="user"
               id="username"
-              v-model="userName.val"
-              @blur="clearValidity('userName')"
+              v-model="model.user.value"
+              @blur="checkInput(model.user)"
             />
           </div>
         </div>
-        <div id="keyLocation" :class="{ errors: !pass.isValid }">
-          <label for="keylocation">{{ sourceBase }}</label>
+        <div id="keyLocation" :class="{ errors: keyAuth ? !model.keylocation.isFilled: !model.pass.isFilled }">
+          <label v-show="keyAuth" >KEYLOCATION</label>
+          <label v-show="!keyAuth" >PASSWORD</label>
           <input
-            :type="passType"
+            v-show="keyAuth"
+            type="text"
             name="keylocation"
             id="keylocation"
-            v-model="pass.val"
-            @blur="clearValidity('pass')"
+            v-model="model.keylocation.value"
+            @blur="checkInput(model.keylocation)"
+          />
+          <input
+            v-show="!keyAuth"
+            type="password"
+            name="keylocation"
+            id="keylocation"
+            v-model="model.pass.value"
+            @blur="checkInput(model.pass)"
           />
         </div>
         <div class="ssh" style="border-style: none">
@@ -93,8 +104,9 @@
           <label class="switch">
             <input
               type="checkbox"
-              v-model="model.sshKeyAuth"
+              v-model="model.useAuthKey"
               name="check-button"
+              @change="changeLabel"
             />
             <span class="slider round"></span>
           </label>
@@ -110,119 +122,122 @@
 
 <script>
 import BaseDialog from "./BaseDialog.vue";
+import ControlService from "@/store/ControlService";
 
 export default {
   components: { BaseDialog },
   name: "FormSetup",
-  props: ["bDialogDis"],
   emits: ["page"],
   data() {
     return {
-      source: false,
+      keyAuth: false,
       link: "stereumLogoExtern.png",
       stereumVersions: {},
-      tunnels: [
-        { name: "-------None-------", localPort: 0, dstPort: 0 },
-        { name: "web-cc", localPort: 9081, dstPort: 8000 },
-      ],
-      model: { sshAuthKey: false },
+      connections: [],
+      selectedName: '',
       bDialogVisible: false,
-      selectTunnelName: "",
-      serverName: {
-        val: "",
-        isValid: true,
+      model: {
+        name: {value: "", isFilled: true},
+        host: {value: "", isFilled: true},
+        user: {value: "", isFilled: true},
+        pass: {value: "", isFilled: true},
+        keylocation: {value: "", isFilled: true},
+        useAuthKey: false
       },
-      host: {
-        val: "",
-        isValid: true,
-      },
-      userName: {
-        val: "",
-        isValid: true,
-      },
-      pass: {
-        val: "",
-        isValid: true,
-      },
-      passType: "text",
       imgTrash: "./Img/icon/TRASH CAN.png",
     };
   },
-  //props: {
-  //   model: Object,
-  //},
-
+  created() {
+    this.loadStoredConnections();
+  },
   methods: {
-    sourceBase() {
-      if (this.model.sshKeyAuth) {
-        this.passType = "file";
-        return "KEYFILE";
-      } else {
-        this.passType = "password";
-        return "PASSWORD";
+    changeLabel() {
+      this.keyAuth = !this.keyAuth
+    },
+    setSelectedConnection(event){
+      this.selectedConnection = this.connections.find(obj => obj.name === event.target.value);
+      console.log(this.selectedConnection);
+      this.model.name.value = this.selectedConnection.name;
+      this.model.host.value = this.selectedConnection.host;
+      this.model.user.value = this.selectedConnection.user;
+      this.model.keylocation.value = this.selectedConnection.keylocation;
+      this.model.useAuthKey = this.selectedConnection.useAuthKey;
+      this.keyAuth = this.selectedConnection.useAuthKey;
+      this.model.pass.value = "";
+
+    },
+    addModel(){
+      const newConnection = this.createConnection();
+      console.log(newConnection);
+      this.connections.push(newConnection);
+
+      this.selectedConnection = newConnection;
+      this.selectedName = this.selectedConnection.name;
+
+      ControlService.writeConfig({ savedConnections: this.getstorableConnections() });
+    },
+    getstorableConnections() {
+      let storableConnections = [];
+      this.connections.forEach(e => {
+        storableConnections.push(
+          {
+            name: e.name,
+            host: e.host,
+            user: e.user,
+            keylocation: e.keylocation,
+            useAuthKey: e.useAuthKey
+          }
+        );
+      });
+      return storableConnections;
+    },
+    deleteModel(){
+      console.log(this.selectedConnection);
+      let currSelected = this.selectedConnection.name;
+      this.connections = this.connections.filter(function(conn) {
+          return currSelected != conn.name;
+      });
+      ControlService.writeConfig({ savedConnections: this.getstorableConnections() })
+      this.model.name.value = "";
+      this.model.host.value = "";
+      this.model.user.value = "";
+      this.model.pass.value = "";
+      this.model.keylocation.value = "";
+      this.model.useAuthKey = false;
+      this.keyAuth = false
+      this.loadStoredConnections();
+    },
+    createConnection(){
+      return {
+        name: this.model.name.value,
+        host: this.model.host.value,
+        user: this.model.user.value,
+        keylocation: this.model.keylocation.value,
+        useAuthKey: this.model.useAuthKey
       }
     },
+    loadStoredConnections: async function(){
+      const storageSavedConnections = await ControlService.readConfig();
+      let savedConnections = [];
+      if(storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
+        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
+      }
+      console.log(savedConnections);
+      this.connections = savedConnections;
+    },
+    checkInput(model) {
+      if(model.value == ''){
+        model.isFilled = false;
+      }else{
+        model.isFilled = true;
+      }
+    },
+
     mouseOver(val) {
       if (val === "over") {
         this.imgTrash = "./Img/icon/Trash Can2.png";
       } else {
         this.imgTrash = "./Img/icon/Trash Can.png";
-      }
-    },
-    completeFiled() {
-      console.log("s");
-    },
-    clearValidity(input) {
-      this[input].isValid = true;
-    },
-    addModel(val) {
-      this.checkVisibleInput();
-      if (!this.isValidInput) {
-        return;
-      }
-      const check = this.tunnels.find((obj) => obj.name === val.name);
-      if (!check) {
-        this.tunnels.unshift(val);
-      } else {
-        alert("Ready");
-      }
-    },
-    deleteRow() {
-      var record = [];
-      const r = this.tunnels.find(
-        (tunel) => tunel.name != this.selectTunnelName
-      );
-      record.push(r);
-      this.tunnels = record;
-    },
-    setTunnelsSelect(val) {
-      const select = val.target.value;
-      const active = this.tunnels.find((tunnel) => tunnel.name === select);
-      this.selectTunnelName = select;
-      this.serverName.val = active.name;
-      this.host.val = "active";
-      this.userName.val = "";
-      this.pass.val = "";
-      console.log(this.active);
-    },
-    checkVisibleInput() {
-      this.isValidInput = true;
-
-      if (this.serverName.val === "") {
-        this.serverName.isValid = false;
-        this.isValidInput = false;
-      }
-      if (this.host.val === "") {
-        this.host.isValid = false;
-        this.isValidInput = false;
-      }
-      if (this.userName.val === "") {
-        this.userName.isValid = false;
-        this.isValidInput = false;
-      }
-      if (this.pass.val === "" && !this.model.sshAuthKey) {
-        this.pass.isValid = false;
-        this.isValidInput = false;
       }
     },
     showBDialog() {
@@ -236,44 +251,24 @@ export default {
     },
     baseDialogDelete() {
       this.bDialogVisible = false;
-      this.deleteRow();
+      this.deleteModel();
     },
-    login() {
-      this.checkVisibleInput();
-      this.$emit("page", "welcome-page");
-      if (this.isValidInput) {
-        return;
-      }
+    login: async function () {
+     try{
+      await ControlService.connect({
+        host: this.model.host.value,
+        user: this.model.user.value,
+        password: this.model.pass.value,
+        sshKeyAuth: this.model.useAuthKey,
+        keyfileLocation: this.model.keylocation.value
+      });
+     } catch (err) {
+       console.log(`${err.name} occurred:\n ${err.message}`)
+       //stay on page if error occurs
+       return;
+     }
+     this.$emit("page", "welcome-page");
     },
-    //es
-    // async connect(e) {
-    //   this.tunnels = [{ name: "web-cc", localPort: 9081, dstPort: 8000 }];
-    //   try {
-    //     await ControlService.connect(this.model);
-    //   } catch (ex) {
-    //     console.log(ex);
-    //     this.$toasted.show(
-    //       "Error connecting to server! Level: " +
-    //         ex.level +
-    //         " Message: " +
-    //         ex.message
-    //     );
-    //     return;
-    //   }
-
-    //   const stereumStatus = await ControlService.inquire(this.model);
-
-    //   if (!stereumStatus.exists)
-    //     await ControlService.setup(stereumStatus.latestRelease);
-    //   else {
-    //     this.$toasted.show("Multiple Stereum Versions found!");
-    //     this.stereumVersions = stereumStatus;
-    //   }
-
-    //   await ControlService.openTunnels(this.tunnels);
-    //   await ControlService.disconnect();
-    //   e.preventDefault();
-    // },
   },
 };
 </script>
