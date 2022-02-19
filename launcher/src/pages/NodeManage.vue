@@ -34,7 +34,11 @@
               src="../../public/Img/icon/manage-node-icons/plus-icon.png"
               alt=""
             />
-            <div v-for="(item, index) in consesusItems" :key="index">
+            <div
+              class="cons-items"
+              v-for="(item, index) in consesusItems"
+              :key="index"
+            >
               <img :src="item.source" alt="icon" />
             </div>
           </the-trapezium>
@@ -49,27 +53,79 @@
         <div class="service">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-container">
-            <div
-              v-for="item in servicePlugins"
-              :key="item.id"
-              :class="{ 'chosen-plugin': item.active }"
-              class="service-item"
-              @click="item.active = !item.active"
-            >
-              <img :src="item.source" alt="icon" />
+            <img
+              class="service-arrow"
+              src="../../public/Img/icon/manage-node-icons/up-arrow.png"
+              alt="icon"
+            />
+            <div class="service-bg">
+              <div
+                v-for="item in servicePlugins"
+                :key="item.id"
+                :class="{ 'chosen-plugin': item.active }"
+                class="service-item"
+                @click="item.active = !item.active"
+              >
+                <img :src="item.source" alt="icon" />
+              </div>
             </div>
+            <img
+              class="service-arrow"
+              src="../../public/Img/icon/manage-node-icons/down-arrow.png"
+              alt="icon"
+            />
           </div>
         </div>
         <div class="change-menu">
           <div class="confirm-box">
-            <div class="confirm-bg">
-              <div class="check-icon">
-                <img
-                  src="Img/icon/manage-node-icons/check-mark.png"
-                  alt="icon"
-                />
+            <div class="confirm-bg-1">
+              <div class="confirm-bg-2">
+                <div class="check-icon">
+                  <img
+                    src="Img/icon/manage-node-icons/check-mark.png"
+                    alt="icon"
+                  />
+                </div>
               </div>
             </div>
+            <base-button class="confirm-btn">CONFIRM</base-button>
+          </div>
+          <div class="table-container">
+            <div class="table-header">
+              <span>CHANGES TO CONFIRM</span>
+            </div>
+            <div class="table-box">
+              <div
+                class="table-item"
+                v-for="item in servicePlugins"
+                :key="item.id"
+              >
+                <div class="left-icon">
+                  <img :src="item.contentIcon" alt="" />
+                </div>
+                <span>{{ item.content }}</span>
+                <div class="right-icon">
+                  <img
+                    src="../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
+                    alt="icon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="table-footer"></div>
+          </div>
+          <div class="trash-box">
+            <div class="trash-bg-1">
+              <div class="trash-bg-2">
+                <div class="trash-icon">
+                  <img
+                    src="Img/icon/manage-node-icons/trash-icon.png"
+                    alt="icon"
+                  />
+                </div>
+              </div>
+            </div>
+            <base-button class="trash-btn">DELETE</base-button>
           </div>
         </div>
         <div class="sidebar">
@@ -87,11 +143,13 @@
 <script>
 import TheTrapezium from "../components/UI/TheTrapezium.vue";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
+import BaseButton from "../components/UI/BaseButton.vue";
 
 export default {
   components: {
     TheTrapezium,
     SidebarManage,
+    BaseButton,
   },
   data() {
     return {
@@ -99,22 +157,53 @@ export default {
       servicePlugins: [
         {
           id: 1,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          content: "INSTALL",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/plus.png"),
+          source: require("../../public/Img/icon/manage-node-icons/plus.png"),
           active: false,
         },
         {
           id: 2,
+          content: "DELETE",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/minus.png"),
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
         {
           id: 3,
-
+          content: "ACTIVATE",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/green-power-icon.png"),
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
         {
           id: 4,
+          content: "DEACTIVATE",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/red-power-icon.png"),
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 5,
+          content: "LINK WITH",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/link-icon.png"),
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 6,
+          content: "DELINK FROM",
+          contentIcon: require("../../public/Img/icon/manage-node-icons/delink-icon.png"),
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 7,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 8,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
@@ -240,7 +329,7 @@ export default {
 .service {
   grid-column: 4/5;
   grid-row: 1/5;
-  background: #336666;
+  background: #2c4030;
   color: white;
   display: flex;
   flex-direction: column;
@@ -257,20 +346,55 @@ export default {
   font-size: 90%;
 }
 .service-container {
-  width: 90%;
-  height: 85%;
-  background: #dcdcdc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 95%;
+  height: 95%;
+  margin-bottom: 10px;
+  background: #4f4f4f;
   align-self: center;
   border-radius: 20px;
   overflow: hidden;
-  padding: 5%;
+  padding: 5px;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+}
+.service-bg {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: repeat(4, 22%);
+  align-items: center;
+  justify-items: center;
+  padding-top: 20px;
+  width: 90%;
+  height: 80%;
+  /* margin: 5px auto; */
+  background: #707070;
+  border-radius: 20px;
+  gap: 3px;
+}
+.service-arrow {
+  width: 50%;
+}
+.service-item {
+  width: 60px;
+  height: 60px;
+  border: 2px solid gray;
+  border-radius: 13px;
+}
+.service-item img {
+  width: 60px;
+  height: 60px;
+  border-radius: 13px;
+  box-shadow: 1px 1px 5px 1px rgb(132, 130, 130);
+}
+.service-item img:active {
+  box-shadow: none;
 }
 .chosen-plugin {
-  border: 1px solid blue;
-  padding: 5px;
+  border: 2px solid rgb(86, 172, 138);
+  border-radius: 13px;
 }
 .btn {
   width: 90%;
@@ -305,10 +429,20 @@ export default {
   border-width: 1px 6px;
   border-top-right-radius: 40px;
   border-bottom-right-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-.change-menu .confirm-box {
-  width: 100px;
-  height: 100px;
+.confirm-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .confirm-bg-1 {
+  width: 70px;
+  height: 70px;
   margin: 10px auto;
   border-radius: 50%;
   background-color: #33393e;
@@ -316,18 +450,18 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.change-menu .confirm-bg {
-  width: 80px;
-  height: 80px;
-  background-color: #232628;
-  border-radius: 30px;
+.change-menu .confirm-bg-2 {
+  width: 55px;
+  height: 55px;
+  background-color: #2c2f30;
+  border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .change-menu .check-icon {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   background-color: #33393e;
   border-radius: 50%;
   display: flex;
@@ -337,6 +471,144 @@ export default {
 .change-menu img {
   width: 40px;
   height: 40px;
+}
+.confirm-btn {
+  font-size: 0.8rem;
+  font-weight: bold;
+  width: 85px;
+  height: 35px;
+  outline-style: none;
+}
+.table-container {
+  margin: 5px auto 0 auto;
+  width: 88%;
+  height: 200px;
+  background-color: #707070;
+  border: 1px solid rgb(63, 63, 63);
+  border-radius: 25px;
+  padding: 5px;
+  position: relative;
+}
+.table-header {
+  width: 85%;
+  height: 25px;
+  background-color: #707070;
+  border: 1px solid rgb(63, 63, 63);
+  border-radius: 50px;
+  margin: 0 auto;
+  position: absolute;
+  top: 4px;
+  right: 8px;
+}
+.table-header span {
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 800;
+}
+.table-box {
+  width: 90%;
+  height: 85%;
+  margin: 0 auto;
+  background-color: #3b3a3a;
+  border-left: 2px solid gray;
+  border-right: 2px solid gray;
+  border-radius: 10px;
+  padding-top: 30px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.table-item {
+  width: 90%;
+  height: 25px;
+  margin: 5px auto;
+  background-color: #24272a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-item .right-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+}
+.table-item .left-icon {
+  width: 20px;
+  height: 20px;
+  background-color: #336666;
+}
+.table-item .right-icon img {
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
+}
+.table-item .left-icon img {
+  width: 18px;
+  height: 18px;
+}
+.table-item span {
+  color: white;
+  font-size: 0.5rem;
+  font-weight: bold;
+}
+.table-footer {
+  width: 85%;
+  height: 20px;
+  background-color: #707070;
+  border: 1px solid rgb(63, 63, 63);
+  border-radius: 50px;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 4px;
+  right: 8px;
+}
+.table-box img {
+  width: 90%;
+  height: 200px;
+}
+.trash-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .trash-bg-1 {
+  width: 70px;
+  height: 70px;
+  margin: 10px auto;
+  border-radius: 50%;
+  background-color: #33393e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .trash-bg-2 {
+  width: 55px;
+  height: 55px;
+  background-color: #454646;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-menu .trash-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #33393e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.trash-icon img {
+  width: 70px;
+  height: 70px;
+}
+.trash-btn {
+  font-size: 0.8rem;
+  font-weight: bold;
+  width: 85px;
+  height: 35px;
+  outline-style: none;
 }
 .footer {
   color: white;
