@@ -292,9 +292,8 @@ export default {
     },
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
-      const item = {...list.find((item) => item.id == itemId)};
+      const item = { ...list.find((item) => item.id == itemId) };
       this.consensusItems.push(item);
-      console.log("2", this.consensusItems);
     },
   },
 };
