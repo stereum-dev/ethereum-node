@@ -116,23 +116,11 @@ export default {
   box-sizing: border-box;
 }
 
-/*.lang {
-
-  cursor: pointer;
-  position: fixed;
-  top: 81vh;
-  left: 86%;
-  width: 4em;
-  z-index: 100;
-  resize: both;
-
-}*/
 
 #flag {
   display: inline-flex;
   margin: 0;
   padding: 0;
-  /* width: 100px; */
   text-align: left;
   float: left;
 }
@@ -149,8 +137,4 @@ export default {
   resize: both;
 }
 
-/* @keyframes blink {
-  from { background-color: #336666; }
-  to { background-color: #448a8a; }
-} */
 </style>

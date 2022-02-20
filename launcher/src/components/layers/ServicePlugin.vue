@@ -8,10 +8,6 @@
       <div class="service-plugin_icon"></div>
       <div class="service-plugin_icon"></div>
      <div class="service-plugin_icon"></div>
-      <div class="service-plugin_icon"></div>
-      <div class="service-plugin_icon"></div>
-     <div class="service-plugin_icon"></div>
-      <div class="service-plugin_icon"></div>
       
       
     </div>
