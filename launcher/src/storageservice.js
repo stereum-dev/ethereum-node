@@ -7,12 +7,12 @@ export class StorageService {
     }
 
     async writeConfig(config) {
-        this.store.set("config", config);
+        this.store.set("config-v2", config);
     }
 
     async readConfig() {
         return new Promise((resolve, reject) => {
-            resolve(this.store.get("config"));
+            resolve(this.store.get("config-v2"));
         });
     }
 }
