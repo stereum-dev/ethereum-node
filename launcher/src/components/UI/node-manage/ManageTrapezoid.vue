@@ -63,22 +63,6 @@ export default {
   border: 1px solid #fff;
   position: relative;
 }
-.item-box {
-  display: grid;
-  grid-template-columns: repeat(4, 25%);
-  align-self: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  top: 19%;
-  left: 21%;
-  row-gap: 10px;
-  height: 63px;
-  width: 230px;
-  padding: 5px 3px 0 3px;
-  background-color: rgb(35, 35, 35);
-  border-radius: 10px;
-}
 
 .plus-icon {
   position: absolute;

@@ -382,26 +382,31 @@ export default {
 .item-box {
   display: grid;
   grid-template-columns: repeat(4, 25%);
+  grid-template-rows: repeat(2, 63px);
+  justify-content: space-between;
   align-self: center;
+  align-items: center;
+  row-gap: 10px;
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  top: 19%;
+  top: 21%;
   left: 21%;
-  row-gap: 10px;
   height: 63px;
-  width: 230px;
-  padding: 5px 3px 0 3px;
+  width: 235px;
   background-color: rgb(35, 35, 35);
   border-radius: 10px;
 }
 
 .item-box .items {
+  display: flex;
+  justify-content: center;
+  align-self: center;
   width: 50px;
   height: 50px;
   border: 1px solid rgb(96, 95, 95);
   border-radius: 10px;
-  margin: 3px auto;
+  margin: 0 auto;
 }
 .item-box .items img {
   width: 50px;
@@ -496,6 +501,7 @@ export default {
   padding-top: 20px;
   width: 90%;
   height: 80%;
+  overflow-x: hidden;
   overflow-y: auto;
   background: #707070;
   border-radius: 20px;
@@ -743,5 +749,8 @@ export default {
   background-color: gray;
   border-radius: 0 0 1.9rem 1.9rem;
   position: relative;
+}
+* {
+  scrollbar-width: thin;
 }
 </style>
