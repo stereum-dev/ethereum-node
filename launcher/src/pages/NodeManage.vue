@@ -28,26 +28,83 @@
           <div class="config-node"></div>
         </div>
         <div class="consensus">
-          <the-trapezium>
-            <img
-              @click="addPlugin"
-              src="../../public/Img/icon/manage-node-icons/plus-icon.png"
-              alt=""
-            />
-            <div
-              class="cons-items"
-              v-for="(item, index) in consesusItems"
-              :key="index"
-            >
-              <img :src="item.source" alt="icon" />
-            </div>
-          </the-trapezium>
+          <manage-trapezoid>
+            <template #title>
+              <span class="cons-title">consensus</span>
+            </template>
+            <template #plusIcon>
+              <img
+                @click="addPlugin"
+                class="trap-plus-icon"
+                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
+                alt="icon"
+              />
+            </template>
+            <template #default>
+              <div
+                class="item-box"
+                @drop="onDrop($event, servicePlugins)"
+                @dragenter.prevent
+                @dragover.prevent
+              >
+                <div
+                  class="items"
+                  v-for="(item, index) in consensusItems"
+                  :key="index"
+                >
+                  <img :src="item.source" alt="icon" />
+                </div>
+              </div>
+            </template>
+          </manage-trapezoid>
         </div>
         <div class="validator">
-          <the-trapezium> </the-trapezium>
+          <manage-trapezoid>
+            <template #title>
+              <span class="validator-title">consensus</span>
+            </template>
+            <template #plusIcon>
+              <img
+                class="trap-plus-icon"
+                @click="addPlugin"
+                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
+                alt="icon"
+              />
+            </template>
+            <template #default>
+              <div
+                class="cons-items"
+                v-for="(item, index) in consesusItems"
+                :key="index"
+              >
+                <img :src="item.source" alt="icon" />
+              </div>
+            </template>
+          </manage-trapezoid>
         </div>
         <div class="execution">
-          <the-trapezium> </the-trapezium>
+          <manage-trapezoid>
+            <template #title>
+              <span class="execution-title">consensus</span>
+            </template>
+            <template #plusIcon>
+              <img
+                class="trap-plus-icon"
+                @click="addPlugin"
+                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
+                alt="icon"
+              />
+            </template>
+            <template #default>
+              <div
+                class="cons-items"
+                v-for="(item, index) in consesusItems"
+                :key="index"
+              >
+                <img :src="item.source" alt="icon" />
+              </div>
+            </template>
+          </manage-trapezoid>
         </div>
 
         <div class="service">
@@ -60,6 +117,8 @@
             />
             <div class="service-bg">
               <div
+                draggable="true"
+                @dragstart="startDrag($event, item)"
                 v-for="item in servicePlugins"
                 :key="item.id"
                 :class="{ 'chosen-plugin': item.active }"
@@ -97,7 +156,7 @@
             <div class="table-box">
               <div
                 class="table-item"
-                v-for="item in servicePlugins"
+                v-for="item in confirmChanges"
                 :key="item.id"
               >
                 <div class="left-icon">
@@ -141,69 +200,75 @@
 </template>
 
 <script>
-import TheTrapezium from "../components/UI/TheTrapezium.vue";
+import ManageTrapezoid from "../components/UI/node-manage/ManageTrapezoid.vue";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import BaseButton from "../components/UI/BaseButton.vue";
 
 export default {
   components: {
-    TheTrapezium,
+    ManageTrapezoid,
     SidebarManage,
     BaseButton,
   },
+  provide: ["addPlugin"],
   data() {
     return {
-      consesusItems: [],
-      servicePlugins: [
+      consensusItems: [],
+      confirmChanges: [
         {
           id: 1,
           content: "INSTALL",
           contentIcon: require("../../public/Img/icon/manage-node-icons/plus.png"),
-          source: require("../../public/Img/icon/manage-node-icons/plus.png"),
-          active: false,
         },
         {
           id: 2,
           content: "DELETE",
           contentIcon: require("../../public/Img/icon/manage-node-icons/minus.png"),
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
         },
         {
           id: 3,
           content: "ACTIVATE",
           contentIcon: require("../../public/Img/icon/manage-node-icons/green-power-icon.png"),
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
         },
         {
           id: 4,
           content: "DEACTIVATE",
           contentIcon: require("../../public/Img/icon/manage-node-icons/red-power-icon.png"),
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
         },
         {
           id: 5,
           content: "LINK WITH",
           contentIcon: require("../../public/Img/icon/manage-node-icons/link-icon.png"),
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
         },
         {
           id: 6,
           content: "DELINK FROM",
           contentIcon: require("../../public/Img/icon/manage-node-icons/delink-icon.png"),
+        },
+      ],
+      servicePlugins: [
+        {
+          id: 1,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
         {
-          id: 7,
+          id: 2,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
         {
-          id: 8,
+          id: 3,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 4,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          active: false,
+        },
+        {
+          id: 5,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           active: false,
         },
@@ -214,11 +279,22 @@ export default {
     addPlugin() {
       this.servicePlugins.forEach((item) => {
         if (item.active) {
-          this.consesusItems.push(item);
+          this.consensusItems.push(item);
         }
         item.active = false;
       });
-      console.log(this.consesusItems);
+    },
+    startDrag(event, item) {
+      console.log(item);
+      event.dataTransfer.dropEffect = "move";
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("itemId", item.id);
+    },
+    onDrop(event, list) {
+      const itemId = event.dataTransfer.getData("itemId");
+      const item = [list.find((item) => item.id == itemId)];
+      this.consensusItems.push(item);
+      console.log("2", item);
     },
   },
 };
@@ -239,7 +315,7 @@ export default {
   display: grid;
   height: 92%;
   grid-template-columns: 3% 17% 45% 20% 15%;
-  grid-template-rows: 8% repeat(3, 29%) 4.5%;
+  grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: relative;
   top: 9%;
@@ -253,7 +329,7 @@ export default {
   position: relative;
 }
 .menu-background {
-  grid-row: 1/5;
+  grid-row: 1/4;
   background-color: #336666;
   height: 100%;
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
@@ -294,7 +370,7 @@ export default {
   width: 100%;
   height: 100%;
   grid-column: 2/3;
-  grid-row: 2/5;
+  grid-row: 1/5;
   align-self: center;
   background-color: transparent;
 }
@@ -304,13 +380,60 @@ export default {
   background-color: #33393e;
   border-radius: 0 30px 30px 30px;
 }
+.item-box {
+  display: grid;
+  grid-template-columns: repeat(4, 25%);
+  align-self: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: 19%;
+  left: 21%;
+  row-gap: 10px;
+  height: 63px;
+  width: 230px;
+  padding: 5px 3px 0 3px;
+  background-color: rgb(35, 35, 35);
+  border-radius: 10px;
+}
+
+.item-box .items {
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgb(96, 95, 95);
+  border-radius: 10px;
+  margin: 3px auto;
+}
+.item-box .items img {
+  width: 50px;
+  height: 50px;
+}
 .consensus {
   grid-column: 3/4;
-  grid-row: 2/3;
+  grid-row: 1/2;
   height: 100%;
   align-self: center;
 }
+
+.cons-title,
+.validator-title,
+.execution-title {
+  width: auto;
+  height: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 5px;
+  background-color: #334b3f;
+  border-radius: 20px;
+}
 .validator {
+  grid-column: 3/4;
+  grid-row: 2/3;
+  align-self: center;
+  height: 100%;
+}
+.execution {
   grid-column: 3/4;
   grid-row: 3/4;
   color: white;
@@ -318,17 +441,9 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
-.execution {
-  grid-column: 3/4;
-  grid-row: 4/5;
-  color: white;
-  align-self: center;
-  box-sizing: border-box;
-  height: 100%;
-}
 .service {
   grid-column: 4/5;
-  grid-row: 1/5;
+  grid-row: 1/4;
   background: #2c4030;
   color: white;
   display: flex;
@@ -338,12 +453,25 @@ export default {
 }
 .title {
   height: 5%;
-  background: #000;
+  background: #263529;
   margin: 1rem 0;
   font-weight: bold;
   padding: 0.5px;
   text-align: center;
-  font-size: 90%;
+  font-size: 1rem;
+}
+.trap-title {
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+}
+.trap-plus-icon {
+  width: 50px;
+  height: 30px;
+}
+.trap-plus-icon img {
+  width: 50px;
+  height: 30px;
 }
 .service-container {
   display: flex;
@@ -369,7 +497,7 @@ export default {
   padding-top: 20px;
   width: 90%;
   height: 80%;
-  /* margin: 5px auto; */
+  overflow-y: auto;
   background: #707070;
   border-radius: 20px;
   gap: 3px;
@@ -421,14 +549,13 @@ export default {
   border-right: solid 50px transparent;
 }
 .change-menu {
-  grid-row: 1/5;
+  grid-row: 1/4;
   grid-column: 5/6;
   margin: 0 5px;
   background: #334b3f;
   border: solid #1a2620;
   border-width: 1px 6px;
   border-top-right-radius: 40px;
-  border-bottom-right-radius: 4px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -521,7 +648,7 @@ export default {
   width: 90%;
   height: 25px;
   margin: 5px auto;
-  background-color: #24272a;
+  background-color: #1c1e1f;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -546,7 +673,7 @@ export default {
   height: 18px;
 }
 .table-item span {
-  color: white;
+  color: #fff;
   font-size: 0.5rem;
   font-weight: bold;
 }
@@ -613,16 +740,9 @@ export default {
 .footer {
   color: white;
   grid-column: 1/7;
-  grid-row: 5;
+  grid-row: 4;
   background-color: gray;
   border-radius: 0 0 1.9rem 1.9rem;
   position: relative;
 }
-/* .footer-content {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  bottom: 0;
-  background-color: rgb(195, 21, 21);
-} */
 </style>

@@ -108,20 +108,20 @@ export default {
 }
 .hidden-icon {
   position: fixed;
-  top: 36%;
+  top: 38%;
   right: 108px;
-  height: 150px;
-  width: 85px;
-  border: 1px solid rgb(183, 176, 176);
+  height: 120px;
+  width: 87px;
+  border: 2px solid rgb(183, 176, 176);
   border-radius: 35px;
 }
 .show-icon {
   position: fixed;
-  top: 36%;
+  top: 38%;
   right: -50px;
-  height: 150px;
-  width: 85px;
-  border: 1px solid rgb(183, 176, 176);
+  height: 120px;
+  width: 80px;
+  border: 2px solid rgb(183, 176, 176);
   border-radius: 35px;
 }
 .cloud {

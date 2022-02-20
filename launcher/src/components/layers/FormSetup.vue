@@ -265,7 +265,7 @@ export default {
      } catch (err) {
        console.log(`${err.name} occurred:\n ${err.message}`)
        //stay on page if error occurs
-       return;
+      //  return;
      }
      this.$emit("page", "welcome-page");
     },
