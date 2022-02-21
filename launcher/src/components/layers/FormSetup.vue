@@ -99,7 +99,7 @@
             @blur="checkInput(model.pass)"
           />
         </div>
-        <div class="ssh" style="border-style: none">
+        <div class="ssh">
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
             <input
@@ -265,7 +265,7 @@ export default {
      } catch (err) {
        console.log(`${err.name} occurred:\n ${err.message}`)
        //stay on page if error occurs
-       return;
+      //  return;
      }
      this.$emit("page", "welcome-page");
     },
@@ -285,24 +285,30 @@ export default {
     background-color: orange;
   }
 }
+#container {
+  width: 100%;
+  border: 5px solid #3a3939;
+  height: auto;
+  background-color: #264c4c;
+  opacity: 0.9;
+}
 .priority {
   z-index: 200;
 }
 .select-wrapper {
-  overflow: hidden;
-  text-align: center;
-  width: 70%;
-  padding: 0;
+  width: 80%;
+  margin: 0;
   border-radius: 40px;
-  float: left;
+  border: none;
 }
 
 select {
   width: 100%;
-  align-items: center;
-  padding: 1rem;
+  height: 35px;
   border-radius: 40px;
   cursor: pointer;
+  text-align-last: center;
+  font-weight: bold;
 }
 .select-wrapper::after {
   position: absolute;
@@ -310,20 +316,21 @@ select {
 }
 
 #header {
+  border: 5px solid rgb(58, 58, 58);
   text-align: center;
-  margin: 2rem auto;
-  max-width: 35rem;
+  margin: 10px auto;
+  max-width: 30rem;
   border-radius: 40px;
   padding: 0.5rem;
-  background-color: #567891;
+  background-color: #264c4c;
   color: #fff;
-  border: 2px solid grey;
+  opacity: 0.9;
 }
 
 div {
   text-align: center;
   margin: 1rem auto;
-  max-width: 40rem;
+  max-width: 50rem;
   border-radius: 20px;
   padding: 0.3rem;
   border: 2px solid grey;
@@ -331,18 +338,64 @@ div {
   opacity: 95%;
 }
 #one {
-  margin: 1rem auto;
-  max-width: 40rem;
+  margin: 0;
+  border: none;
   border-radius: 40px;
-  padding: 1rem;
-  background-color: #567891;
-  justify-content: center;
+  background-color: #1a3a33;
+  justify-content: space-between;
   align-items: center;
   display: flex;
 }
 #one select {
-  text-align: center;
+  /* styling */
+  outline-style: none;
+  background-color: white;
+  border-radius: 40px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.5em;
+  padding: 0.5em 3.5em 0.5em 1em;
+  /* reset */
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
+
+/* arrows */
+#one select {
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      rgb(254, 254, 255) 50%
+    ),
+    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
+    linear-gradient(to right, #5d5d5d, #5d5d5d);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+}
+
+select.classic:focus {
+  background-image: linear-gradient(45deg, white 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, white 50%),
+    linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+  border-color: grey;
+  outline: 0;
+}
+/* #one select {
+  outline-style: none;
+  font-size: 20px;
+  text-align: center;
+  padding: 0 auto;
+} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -350,94 +403,119 @@ div {
   float: left;
 }
 .three {
-  width: 50px;
-  float: left;
+  width: 45px;
+  margin-right: 10px;
+  border-radius: 50%;
+  outline-style: none;
+  box-shadow: 0 0 3px 1px rgb(47, 46, 46);
+}
+.three:active {
+  box-shadow: none;
 }
 .formGroup {
+  margin: 0;
+  height: 50px;
+  padding: 5px;
   display: flex;
-  background-color: #567891;
+  border: none;
+  justify-content: space-between;
+  font-weight: bold;
 }
 
 .formGroup label {
-  /* Other styling... */
-  text-align: right;
   clear: both;
-  float: left;
-  margin-right: auto;
   font-size: large;
-  margin-left: 2px auto;
+  font-weight: 900;
+  margin-left: 10px;
   color: #fff;
 }
 .formGroup input {
   width: 60%;
+  height: 20px;
+  border: 6px solid #3a3939;
   border-radius: 40px;
-  padding: 0.1rem;
-  float: right;
-  text-align: right;
+  padding-left: 10px;
+  font-weight: bold;
+  outline-style: none;
+}
+.formGroup input:hover {
+  border: 3px solid rgb(190, 242, 190);
 }
 #keyLocation {
-  text-align: center;
-  max-width: 35rem;
-  border-radius: 20px;
-  background-color: #567891;
+  border: 5px solid #3a3939;
+  border-radius: 40px;
+  max-width: 30rem;
+  background-color: #264c4c;
   display: flex;
+  justify-content: space-between;
+  height: 45px;
 }
 #keyLocation label {
-  /* Other styling... */
-  text-align: right;
   clear: both;
-  float: left;
-  margin-right: 40px;
   font-size: large;
-
+  font-weight: bold;
   color: #fff;
 }
 #keyLocation input {
   width: 60%;
   border-radius: 40px;
-  padding: 0.1rem;
-  float: right;
-  text-align: right;
-  justify-content: center;
-  display: flex;
+  padding-left: 10px;
+  font-size: large;
+  font-weight: bold;
+  outline-style: none;
+  border: 5px solid #3a3939;
 }
+
 #login {
-  position: fixed;
-  font-size: medium;
-  top: 81vh;
-  left: 86%;
   width: 100px;
-  padding: 5px;
-  resize: both;
+  height: 55px;
+  outline-style: none;
+  border: 5px solid #3a3939;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 97%;
+  background-color: #264c4c;
+  box-shadow: 0 2px 8px rgba(179, 179, 179, 0.26);
+}
+#login:hover {
+  box-shadow: none;
+  border: none;
+  background-color: #1b3737;
+}
+#login:active {
+  border: none;
+  box-shadow: inset 0 2px 5px 5px #172424;
 }
 input {
   cursor: pointer;
 }
 
 .ssh {
-  margin-top: -20px;
-  text-align: left;
-
-  max-width: 35rem;
-  border-radius: 40px;
-  padding: 0.3rem;
   display: flex;
+  justify-content: space-between;
+  width: 170px;
+  min-width: 170px;
+  height: 25px;
+  background-color: rgb(48, 47, 47);
+  border: none;
   color: #fff;
+  position: absolute;
+  left: 157px;
+  top: 95%;
 }
 #lbl {
-  /* Other styling... */
-  text-align: right;
+  align-self: center;
+  padding-left: 10px;
   clear: both;
-  float: left;
-  margin-right: 15px;
   font-weight: bold;
-  font-size: 15pt;
+  font-size: 16px;
 }
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 40px;
+  height: 24px;
 }
 
 .switch input {
@@ -461,17 +539,17 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 22px;
+  width: 22px;
+  left: 1px;
+  bottom: 1px;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #4ad376;
 }
 
 input:focus + .slider {
@@ -479,9 +557,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
 /* Rounded sliders */
