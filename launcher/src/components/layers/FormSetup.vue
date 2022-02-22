@@ -35,11 +35,11 @@
                 </option>
               </select>
             </div>
-            <div class="three" @click.prevent="addModel">
+            <div class="three plus" @click.prevent="addModel">
               <img src="Img/icon/+.png" alt="" />
             </div>
             <div
-              class="three"
+              class="three trash"
               @click.prevent="showBDialog"
               @mouseover="mouseOver('over')"
               @mouseleave="mouseOver('leave')"
@@ -417,13 +417,24 @@ select.classic:focus {
 }
 .three {
   width: 45px;
+  height: 45px;
   margin-right: 10px;
   border-radius: 50%;
   outline-style: none;
-  box-shadow: 0 0 3px 1px rgb(47, 46, 46);
+  box-shadow: 0 0 3px 1px rgb(149, 149, 149);
 }
 .three:active {
   box-shadow: none;
+}
+.plus:hover {
+  background-color: green;
+}
+.trash:hover {
+  background-color: rgb(230, 84, 81);
+}
+.three img {
+  width: 45px;
+  height: 45px;
 }
 .formGroup {
   margin: 0;
