@@ -21,10 +21,11 @@
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
-              <select v-model="selectedName" @change="setSelectedConnection($event)">
-                <option value= "" disabled>
-                  Select your Server-Connection
-                </option>
+              <select
+                v-model="selectedName"
+                @change="setSelectedConnection($event)"
+              >
+                <option value="" disabled>Select your Server-Connection</option>
                 <option
                   v-for="connection in connections"
                   :key="connection.name"
@@ -79,9 +80,16 @@
             />
           </div>
         </div>
-        <div id="keyLocation" :class="{ errors: keyAuth ? !model.keylocation.isFilled: !model.pass.isFilled }">
-          <label v-show="keyAuth" >KEYLOCATION</label>
-          <label v-show="!keyAuth" >PASSWORD</label>
+        <div
+          id="keyLocation"
+          :class="{
+            errors: keyAuth
+              ? !model.keylocation.isFilled
+              : !model.pass.isFilled,
+          }"
+        >
+          <label v-show="keyAuth">KEYLOCATION</label>
+          <label v-show="!keyAuth">PASSWORD</label>
           <input
             v-show="keyAuth"
             type="text"
@@ -134,15 +142,15 @@ export default {
       link: "stereumLogoExtern.png",
       stereumVersions: {},
       connections: [],
-      selectedName: '',
+      selectedName: "",
       bDialogVisible: false,
       model: {
-        name: {value: "", isFilled: true},
-        host: {value: "", isFilled: true},
-        user: {value: "", isFilled: true},
-        pass: {value: "", isFilled: true},
-        keylocation: {value: "", isFilled: true},
-        useAuthKey: false
+        name: { value: "", isFilled: true },
+        host: { value: "", isFilled: true },
+        user: { value: "", isFilled: true },
+        pass: { value: "", isFilled: true },
+        keylocation: { value: "", isFilled: true },
+        useAuthKey: false,
       },
       imgTrash: "./Img/icon/TRASH CAN.png",
     };
@@ -152,10 +160,12 @@ export default {
   },
   methods: {
     changeLabel() {
-      this.keyAuth = !this.keyAuth
+      this.keyAuth = !this.keyAuth;
     },
-    setSelectedConnection(event){
-      this.selectedConnection = this.connections.find(obj => obj.name === event.target.value);
+    setSelectedConnection(event) {
+      this.selectedConnection = this.connections.find(
+        (obj) => obj.name === event.target.value
+      );
       console.log(this.selectedConnection);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
@@ -164,9 +174,8 @@ export default {
       this.model.useAuthKey = this.selectedConnection.useAuthKey;
       this.keyAuth = this.selectedConnection.useAuthKey;
       this.model.pass.value = "";
-
     },
-    addModel(){
+    addModel() {
       const newConnection = this.createConnection();
       console.log(newConnection);
       this.connections.push(newConnection);
@@ -174,61 +183,68 @@ export default {
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() });
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
     },
     getstorableConnections() {
       let storableConnections = [];
-      this.connections.forEach(e => {
-        storableConnections.push(
-          {
-            name: e.name,
-            host: e.host,
-            user: e.user,
-            keylocation: e.keylocation,
-            useAuthKey: e.useAuthKey
-          }
-        );
+      this.connections.forEach((e) => {
+        storableConnections.push({
+          name: e.name,
+          host: e.host,
+          user: e.user,
+          keylocation: e.keylocation,
+          useAuthKey: e.useAuthKey,
+        });
       });
       return storableConnections;
     },
-    deleteModel(){
+    deleteModel() {
       console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
-      this.connections = this.connections.filter(function(conn) {
-          return currSelected != conn.name;
+      this.connections = this.connections.filter(function (conn) {
+        return currSelected != conn.name;
       });
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() })
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
       this.model.name.value = "";
       this.model.host.value = "";
       this.model.user.value = "";
       this.model.pass.value = "";
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
-      this.keyAuth = false
+      this.keyAuth = false;
       this.loadStoredConnections();
     },
-    createConnection(){
+    createConnection() {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey
-      }
+        useAuthKey: this.model.useAuthKey,
+      };
     },
-    loadStoredConnections: async function(){
+    loadStoredConnections: async function () {
       const storageSavedConnections = await ControlService.readConfig();
       let savedConnections = [];
-      if(storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
+      if (
+        storageSavedConnections !== undefined &&
+        storageSavedConnections.savedConnections !== undefined
+      ) {
+        savedConnections = savedConnections.concat(
+          storageSavedConnections.savedConnections
+        );
       }
       console.log(savedConnections);
       this.connections = savedConnections;
     },
     checkInput(model) {
-      if(model.value == ''){
+      if (model.value == "") {
         model.isFilled = false;
-      }else{
+      } else {
         model.isFilled = true;
       }
     },
@@ -254,20 +270,20 @@ export default {
       this.deleteModel();
     },
     login: async function () {
-     try{
-      await ControlService.connect({
-        host: this.model.host.value,
-        user: this.model.user.value,
-        password: this.model.pass.value,
-        sshKeyAuth: this.model.useAuthKey,
-        keyfileLocation: this.model.keylocation.value
-      });
-     } catch (err) {
-       console.log(`${err.name} occurred:\n ${err.message}`)
-       //stay on page if error occurs
-       return;
-     }
-     this.$emit("page", "welcome-page");
+      try {
+        await ControlService.connect({
+          host: this.model.host.value,
+          user: this.model.user.value,
+          password: this.model.pass.value,
+          sshKeyAuth: this.model.useAuthKey,
+          keyfileLocation: this.model.keylocation.value,
+        });
+      } catch (err) {
+        console.log(`${err.name} occurred:\n ${err.message}`);
+        //stay on page if error occurs
+        //return;
+      }
+      this.$emit("page", "welcome-page");
     },
   },
 };
