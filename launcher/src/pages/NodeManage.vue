@@ -9,6 +9,7 @@
         </div>
         <div class="drop-parent">
           <div
+            class="consensus"
             @drop="onDrop($event, sidebarPlugins)"
             @dragenter.prevent
             @dragover.prevent
@@ -287,43 +288,12 @@ export default {
   background-color: transparent;
 }
 .drop-parent {
+  grid-column: 3;
+  grid-row: 1/4;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
-/* .consensus {
-  grid-column: 3/4;
-  grid-row: 1/2;
-  height: 100%;
-  align-self: center;
-} */
-
-/* .cons-title,
-.validator-title,
-.execution-title {
-  width: auto;
-  height: 20px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 3px 5px;
-  background-color: #334b3f;
-  border-radius: 20px;
-} */
-/* .validator {
-  grid-column: 3/4;
-  grid-row: 2/3;
-  align-self: center;
-  height: 100%;
-} */
-/* .execution {
-  grid-column: 3/4;
-  grid-row: 3/4;
-  color: white;
-  align-self: center;
-  box-sizing: border-box;
-  height: 100%;
-} */
 .service {
   grid-column: 4/5;
   grid-row: 1/4;
