@@ -26,6 +26,7 @@
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
+import ControlService from "@/store/ControlService";
 export default {
   components: { ButtonInstallation, CircleLoading },
   data() {
@@ -49,6 +50,11 @@ export default {
       ],
     };
   },
+setup(){
+  console.log("check OS");
+  ControlService.checkOS().then(result => console.log(result));
+  ControlService.inquire().then(result => console.log(result));
+},
 };
 </script>
 <style scope>

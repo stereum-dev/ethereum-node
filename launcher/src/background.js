@@ -5,9 +5,11 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { StereumService } from './stereumservice.js'
 import { StorageService } from './storageservice.js'
+import { NodeConnection } from './backend/NodeConnection.js';
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const stereumService = new StereumService();
 const storageService = new StorageService();
+const nodeConnection = new NodeConnection();
 import promiseIpc from 'electron-promise-ipc';
 import path from 'path';
 import { readFileSync } from 'fs';
@@ -26,7 +28,10 @@ promiseIpc.on('connect', async (arg) => {
   remoteHost = arg;
   if (arg.sshKeyAuth)
     remoteHost.privateKey = readFileSync(arg.keyfileLocation, {encoding: 'utf8'});
-    return stereumService.connect(remoteHost);
+  stereumService.connect(remoteHost);
+  nodeConnection.nodeConnectionParams = remoteHost;
+  await nodeConnection.establish();
+  return 0;
 });
 
 // called via promiseIpc as an async function
@@ -55,6 +60,11 @@ promiseIpc.on('readConfig', async () => {
 });
 promiseIpc.on('writeConfig', async (arg) => {
   return storageService.writeConfig(arg);
+});
+
+promiseIpc.on('checkOS', async () => {
+  await nodeConnection.findOS();
+  return nodeConnection.os;
 });
 
 // Scheme must be registered before the app is ready
