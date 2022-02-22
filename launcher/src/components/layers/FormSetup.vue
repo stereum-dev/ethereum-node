@@ -332,12 +332,16 @@ select {
   border: 5px solid rgb(58, 58, 58);
   text-align: center;
   margin: 10px auto;
+  width: 25rem;
   max-width: 30rem;
   border-radius: 40px;
   padding: 0.5rem;
   background-color: #264c4c;
   color: #fff;
   opacity: 0.9;
+}
+#header h2 {
+  font-size: 2rem;
 }
 
 div {
@@ -351,6 +355,7 @@ div {
   opacity: 95%;
 }
 #one {
+  height: 50px;
   margin: 0;
   border: none;
   border-radius: 40px;
@@ -416,9 +421,9 @@ select.classic:focus {
   float: left;
 }
 .three {
-  width: 45px;
-  height: 45px;
-  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
   border-radius: 50%;
   outline-style: none;
   box-shadow: 0 0 3px 1px rgb(149, 149, 149);
@@ -433,8 +438,8 @@ select.classic:focus {
   background-color: rgb(230, 84, 81);
 }
 .three img {
-  width: 45px;
-  height: 45px;
+  width: 30px;
+  height: 30px;
 }
 .formGroup {
   margin: 0;
@@ -471,7 +476,8 @@ select.classic:focus {
   max-width: 30rem;
   background-color: #264c4c;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
   height: 45px;
 }
 #keyLocation label {
