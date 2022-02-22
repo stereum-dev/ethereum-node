@@ -68,7 +68,9 @@ export default {
   border-top: 1px solid #656565;
   border-bottom: 1px solid #656565;
 }
-
+.item-box::-webkit-scrollbar {
+  width: 1px;
+}
 .item-box .items {
   display: flex;
   justify-content: center;
