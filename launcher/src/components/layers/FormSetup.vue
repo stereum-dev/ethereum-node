@@ -21,10 +21,11 @@
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
-              <select v-model="selectedName" @change="setSelectedConnection($event)">
-                <option value= "" disabled>
-                  Select your Server-Connection
-                </option>
+              <select
+                v-model="selectedName"
+                @change="setSelectedConnection($event)"
+              >
+                <option value="" disabled>Select your Server-Connection</option>
                 <option
                   v-for="connection in connections"
                   :key="connection.name"
@@ -34,20 +35,17 @@
                 </option>
               </select>
             </div>
-            <input
-              class="three"
-              type="image"
-              src="./img/icon/+.png"
-              @click="addModel"
-            />
-            <input
-              class="three"
-              type="image"
-              :src="imgTrash"
-              @click="showBDialog"
+            <div class="three plus" @click.prevent="addModel">
+              <img src="Img/icon/+.png" alt="" />
+            </div>
+            <div
+              class="three trash"
+              @click.prevent="showBDialog"
               @mouseover="mouseOver('over')"
               @mouseleave="mouseOver('leave')"
-            />
+            >
+              <img :src="imgTrash" alt="" />
+            </div>
           </div>
           <div class="formGroup" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
@@ -79,9 +77,16 @@
             />
           </div>
         </div>
-        <div id="keyLocation" :class="{ errors: keyAuth ? !model.keylocation.isFilled: !model.pass.isFilled }">
-          <label v-show="keyAuth" >KEYLOCATION</label>
-          <label v-show="!keyAuth" >PASSWORD</label>
+        <div
+          id="keyLocation"
+          :class="{
+            errors: keyAuth
+              ? !model.keylocation.isFilled
+              : !model.pass.isFilled,
+          }"
+        >
+          <label v-show="keyAuth">KEYLOCATION</label>
+          <label v-show="!keyAuth">PASSWORD</label>
           <input
             v-show="keyAuth"
             type="text"
@@ -134,15 +139,15 @@ export default {
       link: "stereumLogoExtern.png",
       stereumVersions: {},
       connections: [],
-      selectedName: '',
+      selectedName: "",
       bDialogVisible: false,
       model: {
-        name: {value: "", isFilled: true},
-        host: {value: "", isFilled: true},
-        user: {value: "", isFilled: true},
-        pass: {value: "", isFilled: true},
-        keylocation: {value: "", isFilled: true},
-        useAuthKey: false
+        name: { value: "", isFilled: true },
+        host: { value: "", isFilled: true },
+        user: { value: "", isFilled: true },
+        pass: { value: "", isFilled: true },
+        keylocation: { value: "", isFilled: true },
+        useAuthKey: false,
       },
       imgTrash: "./Img/icon/TRASH CAN.png",
     };
@@ -152,10 +157,12 @@ export default {
   },
   methods: {
     changeLabel() {
-      this.keyAuth = !this.keyAuth
+      this.keyAuth = !this.keyAuth;
     },
-    setSelectedConnection(event){
-      this.selectedConnection = this.connections.find(obj => obj.name === event.target.value);
+    setSelectedConnection(event) {
+      this.selectedConnection = this.connections.find(
+        (obj) => obj.name === event.target.value
+      );
       console.log(this.selectedConnection);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
@@ -164,9 +171,8 @@ export default {
       this.model.useAuthKey = this.selectedConnection.useAuthKey;
       this.keyAuth = this.selectedConnection.useAuthKey;
       this.model.pass.value = "";
-
     },
-    addModel(){
+    addModel() {
       const newConnection = this.createConnection();
       console.log(newConnection);
       this.connections.push(newConnection);
@@ -174,61 +180,68 @@ export default {
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() });
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
     },
     getstorableConnections() {
       let storableConnections = [];
-      this.connections.forEach(e => {
-        storableConnections.push(
-          {
-            name: e.name,
-            host: e.host,
-            user: e.user,
-            keylocation: e.keylocation,
-            useAuthKey: e.useAuthKey
-          }
-        );
+      this.connections.forEach((e) => {
+        storableConnections.push({
+          name: e.name,
+          host: e.host,
+          user: e.user,
+          keylocation: e.keylocation,
+          useAuthKey: e.useAuthKey,
+        });
       });
       return storableConnections;
     },
-    deleteModel(){
+    deleteModel() {
       console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
-      this.connections = this.connections.filter(function(conn) {
-          return currSelected != conn.name;
+      this.connections = this.connections.filter(function (conn) {
+        return currSelected != conn.name;
       });
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() })
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
       this.model.name.value = "";
       this.model.host.value = "";
       this.model.user.value = "";
       this.model.pass.value = "";
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
-      this.keyAuth = false
+      this.keyAuth = false;
       this.loadStoredConnections();
     },
-    createConnection(){
+    createConnection() {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey
-      }
+        useAuthKey: this.model.useAuthKey,
+      };
     },
-    loadStoredConnections: async function(){
+    loadStoredConnections: async function () {
       const storageSavedConnections = await ControlService.readConfig();
       let savedConnections = [];
-      if(storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
+      if (
+        storageSavedConnections !== undefined &&
+        storageSavedConnections.savedConnections !== undefined
+      ) {
+        savedConnections = savedConnections.concat(
+          storageSavedConnections.savedConnections
+        );
       }
       console.log(savedConnections);
       this.connections = savedConnections;
     },
     checkInput(model) {
-      if(model.value == ''){
+      if (model.value == "") {
         model.isFilled = false;
-      }else{
+      } else {
         model.isFilled = true;
       }
     },
@@ -254,20 +267,20 @@ export default {
       this.deleteModel();
     },
     login: async function () {
-     try{
-      await ControlService.connect({
-        host: this.model.host.value,
-        user: this.model.user.value,
-        password: this.model.pass.value,
-        sshKeyAuth: this.model.useAuthKey,
-        keyfileLocation: this.model.keylocation.value
-      });
-     } catch (err) {
-       console.log(`${err.name} occurred:\n ${err.message}`)
-       //stay on page if error occurs
-      //  return;
-     }
-     this.$emit("page", "welcome-page");
+      try {
+        await ControlService.connect({
+          host: this.model.host.value,
+          user: this.model.user.value,
+          password: this.model.pass.value,
+          sshKeyAuth: this.model.useAuthKey,
+          keyfileLocation: this.model.keylocation.value,
+        });
+      } catch (err) {
+        console.log(`${err.name} occurred:\n ${err.message}`);
+        //stay on page if error occurs
+        //  return;
+      }
+      this.$emit("page", "welcome-page");
     },
   },
 };
@@ -319,12 +332,16 @@ select {
   border: 5px solid rgb(58, 58, 58);
   text-align: center;
   margin: 10px auto;
+  width: 25rem;
   max-width: 30rem;
   border-radius: 40px;
   padding: 0.5rem;
   background-color: #264c4c;
   color: #fff;
   opacity: 0.9;
+}
+#header h2 {
+  font-size: 2rem;
 }
 
 div {
@@ -338,6 +355,7 @@ div {
   opacity: 95%;
 }
 #one {
+  height: 50px;
   margin: 0;
   border: none;
   border-radius: 40px;
@@ -403,14 +421,25 @@ select.classic:focus {
   float: left;
 }
 .three {
-  width: 45px;
-  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
   border-radius: 50%;
   outline-style: none;
-  box-shadow: 0 0 3px 1px rgb(47, 46, 46);
+  box-shadow: 0 0 3px 1px rgb(149, 149, 149);
 }
 .three:active {
   box-shadow: none;
+}
+.plus:hover {
+  background-color: green;
+}
+.trash:hover {
+  background-color: rgb(230, 84, 81);
+}
+.three img {
+  width: 30px;
+  height: 30px;
 }
 .formGroup {
   margin: 0;
@@ -447,7 +476,8 @@ select.classic:focus {
   max-width: 30rem;
   background-color: #264c4c;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
   height: 45px;
 }
 #keyLocation label {

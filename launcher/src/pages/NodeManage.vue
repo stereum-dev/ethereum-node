@@ -23,13 +23,13 @@
             <template #default>
               <div
                 class="item-box"
-                @drop="onDrop($event, servicePlugins)"
+                @drop="onDrop($event, sidebarPlugins)"
                 @dragenter.prevent
                 @dragover.prevent
               >
                 <div
                   class="items"
-                  v-for="(item, index) in consensusItems"
+                  v-for="(item, index) in filteredConsensus()"
                   :key="index"
                 >
                   <img :src="item.source" alt="icon" />
@@ -41,7 +41,7 @@
         <div class="validator">
           <manage-trapezoid>
             <template #title>
-              <span class="cons-title">consensus</span>
+              <span class="cons-title">Validator</span>
             </template>
             <template #plusIcon>
               <img
@@ -54,13 +54,13 @@
             <template #default>
               <div
                 class="item-box"
-                @drop="onDrop($event, servicePlugins)"
+                @drop="onDrop($event, sidebarPlugins)"
                 @dragenter.prevent
                 @dragover.prevent
               >
                 <div
                   class="items"
-                  v-for="(item, index) in consensusItems"
+                  v-for="(item, index) in filteredValidator()"
                   :key="index"
                 >
                   <img :src="item.source" alt="icon" />
@@ -72,7 +72,7 @@
         <div class="execution">
           <manage-trapezoid>
             <template #title>
-              <span class="cons-title">consensus</span>
+              <span class="cons-title">Execution</span>
             </template>
             <template #plusIcon>
               <img
@@ -85,13 +85,13 @@
             <template #default>
               <div
                 class="item-box"
-                @drop="onDrop($event, servicePlugins)"
+                @drop="onDrop($event, sidebarPlugins)"
                 @dragenter.prevent
                 @dragover.prevent
               >
                 <div
                   class="items"
-                  v-for="(item, index) in consensusItems"
+                  v-for="(item, index) in filteredExecution()"
                   :key="index"
                 >
                   <img :src="item.source" alt="icon" />
@@ -102,13 +102,17 @@
         </div>
         <div class="service">
           <div class="title">SERVICE PLUGIN</div>
-          <service-plugin :servicePlugins="servicePlugins" :consensusItems="consensusItems"></service-plugin>
+          <service-plugin :servicePlugins="servicePlugins"></service-plugin>
         </div>
         <div class="change-menu">
           <change-confirm :confirmChanges="confirmChanges"></change-confirm>
         </div>
         <div class="sidebar">
-          <sidebar-manage> </sidebar-manage>
+          <sidebar-manage
+            :startDrag="startDrag"
+            :sidebarPlugins="sidebarPlugins"
+          >
+          </sidebar-manage>
         </div>
         <div class="footer">
           <div class="footer-content"></div>
@@ -133,13 +137,17 @@ export default {
     MenuSide,
     NodeConfiguration,
     ChangeConfirm,
-    ServicePlugin
+    ServicePlugin,
   },
-  provide: ["addPlugin"],
+  emits: ["startDrag"],
 
   data() {
     return {
+      dragging: false,
       consensusItems: [],
+      executionItems: [],
+      validationItems: [],
+      droppedItems: [],
       confirmChanges: [
         {
           id: 1,
@@ -199,6 +207,56 @@ export default {
           active: false,
         },
       ],
+      sidebarPlugins: [
+        {
+          id: 1,
+          source: require("../../public/Img/icon/manage-node-icons/filter-confirm.png"),
+          drag: true,
+          category: "execution",
+        },
+        {
+          id: 2,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
+        },
+        {
+          id: 3,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
+        },
+        {
+          id: 4,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "validator",
+        },
+        {
+          id: 5,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
+        },
+        {
+          id: 3,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "validator",
+        },
+        {
+          id: 4,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
+        },
+        {
+          id: 5,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "execution",
+        },
+      ],
       configData: [
         {
           id: 1,
@@ -242,7 +300,44 @@ export default {
         item.active = false;
       });
     },
-
+    startDrag(event, item) {
+      if (event.type === "dragstart") {
+        event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("itemId", item.id);
+        console.log("drag", event.type);
+        console.log("category", item.category);
+      }
+    },
+    onDrop(event, list) {
+      const itemId = event.dataTransfer.getData("itemId");
+      const item = { ...list.find((item) => item.id == itemId) };
+      if (item.category) {
+        this.droppedItems.push(item);
+      }
+      console.log(this.droppedItems);
+      console.log("item", item);
+      console.log("category", item.category);
+      console.log("type", event.type);
+    },
+    filteredConsensus() {
+      this.consensusItems = this.droppedItems.filter(
+        (item) => item.category == "consensus"
+      );
+      return this.consensusItems;
+    },
+    filteredExecution() {
+      this.executionItems = this.droppedItems.filter(
+        (item) => item.category == "execution"
+      );
+      return this.executionItems;
+    },
+    filteredValidator() {
+      this.validatorItems = this.droppedItems.filter(
+        (item) => item.category == "validator"
+      );
+      return this.validatorItems;
+    },
   },
 };
 </script>

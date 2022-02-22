@@ -7,15 +7,14 @@
     />
     <div class="service-bg">
       <div
-        draggable="true"
-        @dragstart="startDrag($event, item)"
+        draggable="false"
         v-for="item in servicePlugins"
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
         @click="item.active = !item.active"
       >
-        <img :src="item.source" alt="icon" />
+        <img draggable="false" :src="item.source" alt="icon" />
       </div>
     </div>
     <img
@@ -27,19 +26,10 @@
 </template>
 <script>
 export default {
-  props: ["servicePlugins","consensusItems"],
-  methods: {
-    startDrag(event, item) {
-      console.log(item);
-      event.dataTransfer.dropEffect = "move";
-      event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("itemId", item.id);
-    },
-    onDrop(event, list) {
-      const itemId = event.dataTransfer.getData("itemId");
-      const item = { ...list.find((item) => item.id == itemId) };
-      this.consensusItems.push(item);
-    },
+  props: ["servicePlugins"],
+  data() {
+    return {
+    };
   },
 };
 </script>
