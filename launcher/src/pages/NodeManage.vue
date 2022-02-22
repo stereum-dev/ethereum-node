@@ -7,98 +7,28 @@
         <div class="config-box">
           <node-configuration :configData="configData"></node-configuration>
         </div>
-        <div class="consensus">
-          <manage-trapezoid>
-            <template #title>
-              <span class="cons-title">consensus</span>
-            </template>
-            <template #plusIcon>
-              <img
-                @click="addPlugin"
-                class="trap-plus-icon"
-                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
-                alt="icon"
-              />
-            </template>
-            <template #default>
-              <div
-                class="item-box"
-                @drop="onDrop($event, sidebarPlugins)"
-                @dragenter.prevent
-                @dragover.prevent
-              >
-                <div
-                  class="items"
-                  v-for="(item, index) in filteredConsensus()"
-                  :key="index"
-                >
-                  <img :src="item.source" alt="icon" />
-                </div>
-              </div>
-            </template>
-          </manage-trapezoid>
-        </div>
-        <div class="validator">
-          <manage-trapezoid>
-            <template #title>
-              <span class="cons-title">Validator</span>
-            </template>
-            <template #plusIcon>
-              <img
-                @click="addPlugin"
-                class="trap-plus-icon"
-                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
-                alt="icon"
-              />
-            </template>
-            <template #default>
-              <div
-                class="item-box"
-                @drop="onDrop($event, sidebarPlugins)"
-                @dragenter.prevent
-                @dragover.prevent
-              >
-                <div
-                  class="items"
-                  v-for="(item, index) in filteredValidator()"
-                  :key="index"
-                >
-                  <img :src="item.source" alt="icon" />
-                </div>
-              </div>
-            </template>
-          </manage-trapezoid>
-        </div>
-        <div class="execution">
-          <manage-trapezoid>
-            <template #title>
-              <span class="cons-title">Execution</span>
-            </template>
-            <template #plusIcon>
-              <img
-                @click="addPlugin"
-                class="trap-plus-icon"
-                src="../../public/Img/icon/manage-node-icons/plus-icon.png"
-                alt="icon"
-              />
-            </template>
-            <template #default>
-              <div
-                class="item-box"
-                @drop="onDrop($event, sidebarPlugins)"
-                @dragenter.prevent
-                @dragover.prevent
-              >
-                <div
-                  class="items"
-                  v-for="(item, index) in filteredExecution()"
-                  :key="index"
-                >
-                  <img :src="item.source" alt="icon" />
-                </div>
-              </div>
-            </template>
-          </manage-trapezoid>
+        <div class="drop-parent">
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone :title="'consensus'" :list="consensusItems"></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone :title="'validator'" :list="validatorItems"></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone :title="'execution'" :list="executionItems"></drop-zone>
+          </div>
         </div>
         <div class="service">
           <div class="title">SERVICE PLUGIN</div>
@@ -123,21 +53,22 @@
 </template>
 
 <script>
-import ManageTrapezoid from "../components/UI/node-manage/ManageTrapezoid.vue";
+// import ManageTrapezoid from "../components/UI/node-manage/ManageTrapezoid.vue";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import MenuSide from "../components/UI/node-manage/MenuSide.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import ServicePlugin from "../components/UI/node-manage/ServicePlugin.vue";
-
+import DropZone from "../components/UI/node-manage/DropZone.vue";
 export default {
   components: {
-    ManageTrapezoid,
+    // ManageTrapezoid,
     SidebarManage,
     MenuSide,
     NodeConfiguration,
     ChangeConfirm,
     ServicePlugin,
+    DropZone,
   },
   emits: ["startDrag"],
 
@@ -146,7 +77,7 @@ export default {
       dragging: false,
       consensusItems: [],
       executionItems: [],
-      validationItems: [],
+      validatorItems: [],
       droppedItems: [],
       confirmChanges: [
         {
@@ -236,22 +167,22 @@ export default {
           id: 5,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
-          category: "consensus",
+          category: "validator",
         },
         {
-          id: 3,
+          id: 6,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "validator",
         },
         {
-          id: 4,
+          id: 7,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
         },
         {
-          id: 5,
+          id: 8,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "execution",
@@ -312,31 +243,14 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if (item.category) {
-        this.droppedItems.push(item);
+      if (item.category === "validator") {
+        this.validatorItems.push(item);
+      } else if (item.category === "consensus") {
+        this.consensusItems.push(item);
+      } else {
+        this.executionItems.push(item);
       }
-      console.log(this.droppedItems);
-      console.log("item", item);
-      console.log("category", item.category);
-      console.log("type", event.type);
-    },
-    filteredConsensus() {
-      this.consensusItems = this.droppedItems.filter(
-        (item) => item.category == "consensus"
-      );
-      return this.consensusItems;
-    },
-    filteredExecution() {
-      this.executionItems = this.droppedItems.filter(
-        (item) => item.category == "execution"
-      );
-      return this.executionItems;
-    },
-    filteredValidator() {
-      this.validatorItems = this.droppedItems.filter(
-        (item) => item.category == "validator"
-      );
-      return this.validatorItems;
+      console.log(item);
     },
   },
 };
@@ -372,49 +286,19 @@ export default {
   align-self: center;
   background-color: transparent;
 }
-
-.item-box {
-  display: grid;
-  grid-template-columns: repeat(4, 25%);
-  grid-template-rows: repeat(2, 63px);
-  justify-content: space-between;
-  align-self: center;
-  align-items: center;
-  row-gap: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  position: absolute;
-  top: 21%;
-  left: 21.6%;
-  height: 63px;
-  width: 230px;
-  background-color: transparent;
-  border-top: 1px solid #656565;
-  border-bottom: 1px solid #656565;
-}
-
-.item-box .items {
+.drop-parent {
   display: flex;
-  justify-content: center;
-  align-self: center;
-  width: 50px;
-  height: 50px;
-  border: 1px solid rgb(96, 95, 95);
-  border-radius: 10px;
-  margin: 0 auto;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
-.item-box .items img {
-  width: 50px;
-  height: 50px;
-}
-.consensus {
+/* .consensus {
   grid-column: 3/4;
   grid-row: 1/2;
   height: 100%;
   align-self: center;
-}
+} */
 
-.cons-title,
+/* .cons-title,
 .validator-title,
 .execution-title {
   width: auto;
@@ -425,21 +309,21 @@ export default {
   padding: 3px 5px;
   background-color: #334b3f;
   border-radius: 20px;
-}
-.validator {
+} */
+/* .validator {
   grid-column: 3/4;
   grid-row: 2/3;
   align-self: center;
   height: 100%;
-}
-.execution {
+} */
+/* .execution {
   grid-column: 3/4;
   grid-row: 3/4;
   color: white;
   align-self: center;
   box-sizing: border-box;
   height: 100%;
-}
+} */
 .service {
   grid-column: 4/5;
   grid-row: 1/4;
