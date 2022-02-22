@@ -5,7 +5,7 @@
     </section>
     <div class="container">
       <div class="col" v-for="install in installation" :key="install.title">
-        <router-link :to="{ path: '/clickinstall' }"
+        <router-link :to="install.path"
           ><button-installation
             :title="install.title"
             :img="install.img"
@@ -31,11 +31,20 @@ export default {
   data() {
     return {
       installation: [
-        { title: "1CLICK INSTALLATION", img: "/img/icon/clickinstall.png" },
-        { title: "CUSTOM INSTALLATION", img: "/img/icon/custominstall.png" },
+        {
+          title: "1CLICK INSTALLATION",
+          img: "/img/icon/clickinstall.png",
+          path: "/clickinstall",
+        },
+        {
+          title: "CUSTOM INSTALLATION",
+          img: "/img/icon/custominstall.png",
+          path: "/manage",
+        },
         {
           title: "IMPORT CONFIGURATION",
           img: "/img/icon/one click installer.png",
+          path: "/",
         },
       ],
     };

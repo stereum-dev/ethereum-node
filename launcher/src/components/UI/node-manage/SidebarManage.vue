@@ -17,49 +17,47 @@
       />
     </div>
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
-      <div class="cloud">
+      <div class="plugin-box">
         <img
-          src="../../../../public/Img/icon/manage-node-icons/cloud-icon.png"
+          class="up-arrow"
+          src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+          alt="icon"
+          @click="scrollToElement"
+        />
+        <div class="plugin-col">
+          <div class="plugin-item">
+            <svg
+              id="cloud"
+              xmlns="http://www.w3.org/2000/svg"
+              width="50"
+              height="50"
+              viewBox="0 0 119 118"
+            >
+              <rect
+                id="LOGO_BACKGROUND"
+                data-name="LOGO BACKGROUND"
+                width="119"
+                height="118"
+                rx="15"
+                fill="#19c2f4"
+              />
+            </svg>
+          </div>
+          <div
+            draggable="true"
+            @dragstart="startDrag($event, item)"
+            class="plugin-item"
+            v-for="item in sidebarPlugins"
+            :key="item.id"
+          >
+            <img :src="item.source" alt="" />
+          </div>
+        </div>
+        <img
+          class="down-arrow"
+          src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
           alt="icon"
         />
-      </div>
-      <div class="plugin-box">
-        <div class="plugin-col">
-          <img
-            class="up-arrow"
-            src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
-            alt="icon"
-          />
-          <div class="plugin-item">
-            <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
-              alt=""
-            />
-          </div>
-          <div class="plugin-item">
-            <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
-              alt=""
-            />
-          </div>
-          <div class="plugin-item">
-            <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
-              alt=""
-            />
-          </div>
-          <div class="plugin-item">
-            <!-- <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
-              alt=""
-            /> -->
-          </div>
-          <img
-            class="down-arrow"
-            src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
-            alt="icon"
-          />
-        </div>
       </div>
       <div class="filter-box">
         <input class="filter-inp" type="text" placeholder="Filter..." />
@@ -83,12 +81,12 @@
 </template>
 <script>
 export default {
+  props: ["startDrag", "sidebarPlugins"],
   data() {
     return {
       showSidebar: false,
     };
   },
-  methods: {},
 };
 </script>
 <style scoped>
@@ -108,31 +106,23 @@ export default {
 }
 .hidden-icon {
   position: fixed;
-  top: 38%;
-  right: 108px;
+  top: 41%;
+  right: 123px;
   height: 120px;
-  width: 87px;
+  width: 66px;
   border: 2px solid rgb(183, 176, 176);
   border-radius: 35px;
 }
 .show-icon {
   position: fixed;
-  top: 38%;
-  right: -50px;
+  top: 41%;
+  right: -44px;
   height: 120px;
-  width: 80px;
+  width: 71px;
   border: 2px solid rgb(183, 176, 176);
   border-radius: 35px;
 }
-.cloud {
-  width: 120px;
-  margin: 0 auto;
-  height: 40px;
-}
-.cloud img {
-  margin-top: 5px;
-  width: 90%;
-}
+
 .plugin-box {
   padding: 0;
   margin: 0;
@@ -140,42 +130,54 @@ export default {
   position: relative;
 }
 .plugin-box .up-arrow {
+  position: absolute;
+  top: -5px;
+  right: 20px;
   width: 110px;
   height: 25px;
-  margin: 0 auto;
 }
 .plugin-box .down-arrow {
+  position: absolute;
   width: 110px;
   height: 25px;
   margin: 0 auto;
-  position: absolute;
-  bottom: 0;
+  bottom: -12px;
   right: 20px;
 }
 .plugin-col {
-  margin: 0 auto;
+  margin: 17px auto;
+  padding: 25px 0 30px 0;
   width: 110px;
-  height: 100%;
+  height: 88%;
   background-color: #565656;
   border-radius: 15px;
+  overflow-y: auto;
+}
+.plugin-col::-webkit-scrollbar {
+  display: none;
 }
 .plugin-item {
-  width: 65px;
-  height: 65px;
+  width: 50px;
+  height: 50px;
   margin: 5px auto;
-  border-radius: 15px;
+  border-radius: 12px;
   border: 2px solid rgb(70, 70, 70);
 }
+
 .plugin-item img {
-  width: 65px;
-  height: 65px;
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+}
+.plugin-item:hover {
+  border: 2px solid green;
 }
 .filter-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 100px;
-  margin: 3px auto;
+  margin: 17px auto;
 }
 .filter-box .filter-inp {
   width: 95px;

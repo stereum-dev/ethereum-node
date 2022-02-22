@@ -188,4 +188,16 @@ export default {
   width: 20px;
   height: 20px;
 }
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(160, 160, 160);
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  margin: 10px;
+}
 </style>
