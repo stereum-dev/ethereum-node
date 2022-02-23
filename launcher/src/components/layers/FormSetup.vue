@@ -21,10 +21,11 @@
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
-              <select v-model="selectedName" @change="setSelectedConnection($event)">
-                <option value= "" disabled>
-                  Select your Server-Connection
-                </option>
+              <select
+                v-model="selectedName"
+                @change="setSelectedConnection($event)"
+              >
+                <option value="" disabled>Select your Server-Connection</option>
                 <option
                   v-for="connection in connections"
                   :key="connection.name"
@@ -34,20 +35,17 @@
                 </option>
               </select>
             </div>
-            <input
-              class="three"
-              type="image"
-              src="./img/icon/+.png"
-              @click="addModel"
-            />
-            <input
-              class="three"
-              type="image"
-              :src="imgTrash"
-              @click="showBDialog"
+            <div class="three plus" @click.prevent="addModel">
+              <img src="Img/icon/+.png" alt="" />
+            </div>
+            <div
+              class="three trash"
+              @click.prevent="showBDialog"
               @mouseover="mouseOver('over')"
               @mouseleave="mouseOver('leave')"
-            />
+            >
+              <img :src="imgTrash" alt="" />
+            </div>
           </div>
           <div class="formGroup" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
@@ -79,9 +77,16 @@
             />
           </div>
         </div>
-        <div id="keyLocation" :class="{ errors: keyAuth ? !model.keylocation.isFilled: !model.pass.isFilled }">
-          <label v-show="keyAuth" >KEYLOCATION</label>
-          <label v-show="!keyAuth" >PASSWORD</label>
+        <div
+          id="keyLocation"
+          :class="{
+            errors: keyAuth
+              ? !model.keylocation.isFilled
+              : !model.pass.isFilled,
+          }"
+        >
+          <label v-show="keyAuth">KEYLOCATION</label>
+          <label v-show="!keyAuth">PASSWORD</label>
           <input
             v-show="keyAuth"
             type="text"
@@ -99,7 +104,7 @@
             @blur="checkInput(model.pass)"
           />
         </div>
-        <div class="ssh" style="border-style: none">
+        <div class="ssh">
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
             <input
@@ -134,15 +139,15 @@ export default {
       link: "stereumLogoExtern.png",
       stereumVersions: {},
       connections: [],
-      selectedName: '',
+      selectedName: "",
       bDialogVisible: false,
       model: {
-        name: {value: "", isFilled: true},
-        host: {value: "", isFilled: true},
-        user: {value: "", isFilled: true},
-        pass: {value: "", isFilled: true},
-        keylocation: {value: "", isFilled: true},
-        useAuthKey: false
+        name: { value: "", isFilled: true },
+        host: { value: "", isFilled: true },
+        user: { value: "", isFilled: true },
+        pass: { value: "", isFilled: true },
+        keylocation: { value: "", isFilled: true },
+        useAuthKey: false,
       },
       imgTrash: "./Img/icon/TRASH CAN.png",
     };
@@ -152,10 +157,12 @@ export default {
   },
   methods: {
     changeLabel() {
-      this.keyAuth = !this.keyAuth
+      this.keyAuth = !this.keyAuth;
     },
-    setSelectedConnection(event){
-      this.selectedConnection = this.connections.find(obj => obj.name === event.target.value);
+    setSelectedConnection(event) {
+      this.selectedConnection = this.connections.find(
+        (obj) => obj.name === event.target.value
+      );
       console.log(this.selectedConnection);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
@@ -164,9 +171,8 @@ export default {
       this.model.useAuthKey = this.selectedConnection.useAuthKey;
       this.keyAuth = this.selectedConnection.useAuthKey;
       this.model.pass.value = "";
-
     },
-    addModel(){
+    addModel() {
       const newConnection = this.createConnection();
       console.log(newConnection);
       this.connections.push(newConnection);
@@ -174,61 +180,68 @@ export default {
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() });
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
     },
     getstorableConnections() {
       let storableConnections = [];
-      this.connections.forEach(e => {
-        storableConnections.push(
-          {
-            name: e.name,
-            host: e.host,
-            user: e.user,
-            keylocation: e.keylocation,
-            useAuthKey: e.useAuthKey
-          }
-        );
+      this.connections.forEach((e) => {
+        storableConnections.push({
+          name: e.name,
+          host: e.host,
+          user: e.user,
+          keylocation: e.keylocation,
+          useAuthKey: e.useAuthKey,
+        });
       });
       return storableConnections;
     },
-    deleteModel(){
+    deleteModel() {
       console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
-      this.connections = this.connections.filter(function(conn) {
-          return currSelected != conn.name;
+      this.connections = this.connections.filter(function (conn) {
+        return currSelected != conn.name;
       });
-      ControlService.writeConfig({ savedConnections: this.getstorableConnections() })
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+      });
       this.model.name.value = "";
       this.model.host.value = "";
       this.model.user.value = "";
       this.model.pass.value = "";
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
-      this.keyAuth = false
+      this.keyAuth = false;
       this.loadStoredConnections();
     },
-    createConnection(){
+    createConnection() {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey
-      }
+        useAuthKey: this.model.useAuthKey,
+      };
     },
-    loadStoredConnections: async function(){
+    loadStoredConnections: async function () {
       const storageSavedConnections = await ControlService.readConfig();
       let savedConnections = [];
-      if(storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
+      if (
+        storageSavedConnections !== undefined &&
+        storageSavedConnections.savedConnections !== undefined
+      ) {
+        savedConnections = savedConnections.concat(
+          storageSavedConnections.savedConnections
+        );
       }
       console.log(savedConnections);
       this.connections = savedConnections;
     },
     checkInput(model) {
-      if(model.value == ''){
+      if (model.value == "") {
         model.isFilled = false;
-      }else{
+      } else {
         model.isFilled = true;
       }
     },
@@ -254,20 +267,20 @@ export default {
       this.deleteModel();
     },
     login: async function () {
-     try{
-      await ControlService.connect({
-        host: this.model.host.value,
-        user: this.model.user.value,
-        password: this.model.pass.value,
-        sshKeyAuth: this.model.useAuthKey,
-        keyfileLocation: this.model.keylocation.value
-      });
-     } catch (err) {
-       console.log(`${err.name} occurred:\n ${err.message}`)
-       //stay on page if error occurs
-       return;
-     }
-     this.$emit("page", "welcome-page");
+      try {
+        await ControlService.connect({
+          host: this.model.host.value,
+          user: this.model.user.value,
+          password: this.model.pass.value,
+          sshKeyAuth: this.model.useAuthKey,
+          keyfileLocation: this.model.keylocation.value,
+        });
+      } catch (err) {
+        console.log(`${err.name} occurred:\n ${err.message}`);
+        //stay on page if error occurs
+        //  return;
+      }
+      this.$emit("page", "welcome-page");
     },
   },
 };
@@ -285,24 +298,30 @@ export default {
     background-color: orange;
   }
 }
+#container {
+  width: 100%;
+  border: 5px solid #3a3939;
+  height: auto;
+  background-color: #264c4c;
+  opacity: 0.9;
+}
 .priority {
   z-index: 200;
 }
 .select-wrapper {
-  overflow: hidden;
-  text-align: center;
-  width: 70%;
-  padding: 0;
+  width: 80%;
+  margin: 0;
   border-radius: 40px;
-  float: left;
+  border: none;
 }
 
 select {
   width: 100%;
-  align-items: center;
-  padding: 1rem;
+  height: 35px;
   border-radius: 40px;
   cursor: pointer;
+  text-align-last: center;
+  font-weight: bold;
 }
 .select-wrapper::after {
   position: absolute;
@@ -310,20 +329,25 @@ select {
 }
 
 #header {
+  border: 5px solid rgb(58, 58, 58);
   text-align: center;
-  margin: 2rem auto;
-  max-width: 35rem;
+  margin: 10px auto;
+  width: 25rem;
+  max-width: 30rem;
   border-radius: 40px;
   padding: 0.5rem;
-  background-color: #567891;
+  background-color: #264c4c;
   color: #fff;
-  border: 2px solid grey;
+  opacity: 0.9;
+}
+#header h2 {
+  font-size: 2rem;
 }
 
 div {
   text-align: center;
   margin: 1rem auto;
-  max-width: 40rem;
+  max-width: 50rem;
   border-radius: 20px;
   padding: 0.3rem;
   border: 2px solid grey;
@@ -331,18 +355,65 @@ div {
   opacity: 95%;
 }
 #one {
-  margin: 1rem auto;
-  max-width: 40rem;
+  height: 50px;
+  margin: 0;
+  border: none;
   border-radius: 40px;
-  padding: 1rem;
-  background-color: #567891;
-  justify-content: center;
+  background-color: #1a3a33;
+  justify-content: space-between;
   align-items: center;
   display: flex;
 }
 #one select {
-  text-align: center;
+  /* styling */
+  outline-style: none;
+  background-color: white;
+  border-radius: 40px;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.5em;
+  padding: 0.5em 3.5em 0.5em 1em;
+  /* reset */
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
+
+/* arrows */
+#one select {
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      rgb(254, 254, 255) 50%
+    ),
+    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
+    linear-gradient(to right, #5d5d5d, #5d5d5d);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px), 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+}
+
+select.classic:focus {
+  background-image: linear-gradient(45deg, white 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, white 50%),
+    linear-gradient(to right, gray, gray);
+  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
+  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
+  background-repeat: no-repeat;
+  border-color: grey;
+  outline: 0;
+}
+/* #one select {
+  outline-style: none;
+  font-size: 20px;
+  text-align: center;
+  padding: 0 auto;
+} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -350,94 +421,131 @@ div {
   float: left;
 }
 .three {
-  width: 50px;
-  float: left;
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  border-radius: 50%;
+  outline-style: none;
+  box-shadow: 0 0 3px 1px rgb(149, 149, 149);
+}
+.three:active {
+  box-shadow: none;
+}
+.plus:hover {
+  background-color: green;
+}
+.trash:hover {
+  background-color: rgb(230, 84, 81);
+}
+.three img {
+  width: 30px;
+  height: 30px;
 }
 .formGroup {
+  margin: 0;
+  height: 50px;
+  padding: 5px;
   display: flex;
-  background-color: #567891;
+  border: none;
+  justify-content: space-between;
+  font-weight: bold;
 }
 
 .formGroup label {
-  /* Other styling... */
-  text-align: right;
   clear: both;
-  float: left;
-  margin-right: auto;
   font-size: large;
-  margin-left: 2px auto;
+  font-weight: 900;
+  margin-left: 10px;
   color: #fff;
 }
 .formGroup input {
   width: 60%;
+  height: 20px;
+  border: 6px solid #3a3939;
   border-radius: 40px;
-  padding: 0.1rem;
-  float: right;
-  text-align: right;
+  padding-left: 10px;
+  font-weight: bold;
+  outline-style: none;
+}
+.formGroup input:hover {
+  border: 3px solid rgb(190, 242, 190);
 }
 #keyLocation {
-  text-align: center;
-  max-width: 35rem;
-  border-radius: 20px;
-  background-color: #567891;
+  border: 5px solid #3a3939;
+  border-radius: 40px;
+  max-width: 30rem;
+  background-color: #264c4c;
   display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 45px;
 }
 #keyLocation label {
-  /* Other styling... */
-  text-align: right;
   clear: both;
-  float: left;
-  margin-right: 40px;
   font-size: large;
-
+  font-weight: bold;
   color: #fff;
 }
 #keyLocation input {
   width: 60%;
   border-radius: 40px;
-  padding: 0.1rem;
-  float: right;
-  text-align: right;
-  justify-content: center;
-  display: flex;
+  padding-left: 10px;
+  font-size: large;
+  font-weight: bold;
+  outline-style: none;
+  border: 5px solid #3a3939;
 }
+
 #login {
-  position: fixed;
-  font-size: medium;
-  top: 81vh;
-  left: 86%;
   width: 100px;
-  padding: 5px;
-  resize: both;
+  height: 55px;
+  outline-style: none;
+  border: 5px solid #3a3939;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 97%;
+  background-color: #264c4c;
+  box-shadow: 0 2px 8px rgba(179, 179, 179, 0.26);
+}
+#login:hover {
+  box-shadow: none;
+  border: none;
+  background-color: #1b3737;
+}
+#login:active {
+  border: none;
+  box-shadow: inset 0 2px 5px 5px #172424;
 }
 input {
   cursor: pointer;
 }
 
 .ssh {
-  margin-top: -20px;
-  text-align: left;
-
-  max-width: 35rem;
-  border-radius: 40px;
-  padding: 0.3rem;
   display: flex;
+  justify-content: space-between;
+  width: 170px;
+  min-width: 170px;
+  height: 25px;
+  background-color: rgb(48, 47, 47);
+  border: none;
   color: #fff;
+  position: absolute;
+  left: 157px;
+  top: 95%;
 }
 #lbl {
-  /* Other styling... */
-  text-align: right;
+  align-self: center;
+  padding-left: 10px;
   clear: both;
-  float: left;
-  margin-right: 15px;
   font-weight: bold;
-  font-size: 15pt;
+  font-size: 16px;
 }
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 40px;
+  height: 24px;
 }
 
 .switch input {
@@ -461,17 +569,17 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 22px;
+  width: 22px;
+  left: 1px;
+  bottom: 1px;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196f3;
+  background-color: #4ad376;
 }
 
 input:focus + .slider {
@@ -479,9 +587,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
 }
 
 /* Rounded sliders */

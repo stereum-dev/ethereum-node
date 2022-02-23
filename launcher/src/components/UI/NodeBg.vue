@@ -19,12 +19,10 @@
 }
 .black {
   background: #000;
-  margin:0 auto;
+  margin: 0 auto;
   width: 95vw;
   height: 95vh;
   border-radius: 30px;
   box-sizing: border-box;
-  border: 4px solid grey;
- 
 }
 </style>
