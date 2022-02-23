@@ -3,7 +3,7 @@
     <div class="progress">
       <div class="color"></div>
       <p v-if="active" >CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
-      <p v-if="!active" >{{ this.os }}</p>
+      <p v-if="!active" >{{ this.message }}</p>
       <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
     </div>
   </div>
@@ -13,7 +13,7 @@
 export default {
   //emits: ["close"],
   props: {
-    os: String,
+    message: String,
     open: Boolean
     },
   data() {
@@ -24,7 +24,7 @@ export default {
   created() {
     setTimeout(() => {
       this.active = false;
-    }, 2000);
+    }, 5000);
   },
 };
 </script>
@@ -96,7 +96,7 @@ dialog {
   width: 0px;
   height: 20px;
   border-radius: 15px;
-  animation: progres 2s linear;
+  animation: progres 5s linear;
   animation-fill-mode: forwards;
 }
 @keyframes progres {

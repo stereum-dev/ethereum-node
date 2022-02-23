@@ -13,7 +13,7 @@
         ></router-link>
       </div>
     </div>
-    <circle-loading :os="os" :open="running" ></circle-loading>
+    <circle-loading :message="message" :open="running" ></circle-loading>
     <div id="txt">
       <p>
         IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
@@ -30,14 +30,16 @@ import ControlService from "@/store/ControlService";
 export default {
 created(){
   console.log("check OS");
-  let response = ControlService.checkOS().then(result => {return result});
-  this.setOS(response)
+  let response = ControlService.checkOS()
+    .then(result => {return result})
+    .catch(error => {return error})
+  this.display(response)
 },
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
       running: true,
-      os: '',
+      message: '',
       installation: [
         {
           title: "1CLICK INSTALLATION",
@@ -58,12 +60,15 @@ created(){
     };
   },
   methods:{
-    setOS : async function(os){
-      let a = await os;
-      if(a == "Ubuntu" || a == "CentOS"){
-        this.os = a.toUpperCase() + " IS A SUPPORTED OS"
-      }else{
-        this.os = "UNSUPPORTED OS";
+    display : async function(response){
+      let data = await response;
+      console.log(data);
+      if(data == "Ubuntu" || data == "CentOS"){
+        this.message = data.toUpperCase() + " IS A SUPPORTED OS"
+      } else if(data.name !== undefined) {
+        this.message = data.name.toUpperCase() + ": " + data.message.toUpperCase();
+      } else {
+        this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     }
