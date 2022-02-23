@@ -13,7 +13,7 @@
         ></router-link>
       </div>
     </div>
-    <circle-loading open="true"></circle-loading>
+    <circle-loading :os="os" :open="running" ></circle-loading>
     <div id="txt">
       <p>
         IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
@@ -28,9 +28,16 @@ import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
 export default {
+created(){
+  console.log("check OS");
+  let response = ControlService.checkOS().then(result => {return result});
+  this.setOS(response)
+},
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
+      running: true,
+      os: '',
       installation: [
         {
           title: "1CLICK INSTALLATION",
@@ -50,11 +57,17 @@ export default {
       ],
     };
   },
-setup(){
-  console.log("check OS");
-  ControlService.checkOS().then(result => console.log(result));
-  ControlService.inquire().then(result => console.log(result));
-},
+  methods:{
+    setOS : async function(os){
+      let a = await os;
+      if(a == "Ubuntu" || a == "CentOS"){
+        this.os = a.toUpperCase() + " IS A SUPPORTED OS"
+      }else{
+        this.os = "UNSUPPORTED OS";
+      }
+      this.running = false;
+    }
+  }
 };
 </script>
 <style scope>
