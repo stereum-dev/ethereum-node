@@ -185,7 +185,6 @@ export default {
   height: 23px;
   padding-left: 5px;
   border: none;
-  /* border: 2px solid white; */
   border-radius: 45px;
   outline-style: none;
   margin-top: 2px;

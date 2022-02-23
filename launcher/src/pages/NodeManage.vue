@@ -54,7 +54,6 @@
 </template>
 
 <script>
-// import ManageTrapezoid from "../components/UI/node-manage/ManageTrapezoid.vue";
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import MenuSide from "../components/UI/node-manage/MenuSide.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
@@ -63,7 +62,7 @@ import ServicePlugin from "../components/UI/node-manage/ServicePlugin.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 export default {
   components: {
-    // ManageTrapezoid,
+ 
     SidebarManage,
     MenuSide,
     NodeConfiguration,
