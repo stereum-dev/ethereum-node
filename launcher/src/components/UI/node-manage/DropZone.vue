@@ -1,16 +1,23 @@
 <template>
   <manage-trapezoid>
-    <span class="title">{{ title }}</span>
-    <div
-      class="item-box"
-      @drop="onDrop($event, sidebarPlugins)"
-      @dragenter.prevent
-      @dragover.prevent
-    >
-      <div class="items" v-for="(item, index) in list" :key="index">
-        <img :src="item.source" alt="icon" />
+    <template #default>
+      <span class="title">{{ title }}</span>
+      <div
+        class="item-box"
+        @drop="onDrop($event, sidebarPlugins)"
+        @dragenter.prevent
+        @dragover.prevent
+      >
+        <div class="items" v-for="(item, index) in list" :key="index">
+          <img :src="item.source" alt="icon" />
+        </div>
       </div>
-    </div>
+    </template>
+    <template #plusIcon>
+      <div class="plus-icon-box">
+        <span>+</span>
+      </div>
+    </template>
   </manage-trapezoid>
 </template>
 <script>
@@ -84,5 +91,33 @@ export default {
 .item-box .items img {
   width: 50px;
   height: 50px;
+}
+.plus-icon-box {
+  background-color: rgb(237, 237, 237);
+  width: 30px;
+  height: 20px;
+  border-radius: 50px;
+  position: absolute;
+  top: 2px;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: rgb(65, 65, 65);
+  border: 1px solid rgb(67, 67, 67);
+  box-shadow: inset 0 1px 4px 1px rgb(142, 142, 142);
+  cursor: pointer;
+}
+
+.plus-icon-box:hover {
+  border: 1px solid green;
+  /* box-shadow: 0 1px 4px 1px rgb(142, 142, 142); */
+}
+.plus-icon-box:active {
+  background-color: #fff;
+  border: 1px solid rgb(159, 159, 159);
+  box-shadow: none;
+  font-size: 14px;
 }
 </style>

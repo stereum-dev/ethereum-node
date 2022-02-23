@@ -62,7 +62,6 @@ import ServicePlugin from "../components/UI/node-manage/ServicePlugin.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 export default {
   components: {
- 
     SidebarManage,
     MenuSide,
     NodeConfiguration,
