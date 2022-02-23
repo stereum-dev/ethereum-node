@@ -22,9 +22,11 @@
           class="up-arrow"
           src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
           alt="icon"
+
           @click="$refs.pluginCol.scrollTop = 0"
         />
         <div class="plugin-col" ref="pluginCol">
+
           <div class="plugin-item">
             <svg
               id="cloud"
