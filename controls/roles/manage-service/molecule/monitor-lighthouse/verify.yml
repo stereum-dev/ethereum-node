@@ -60,9 +60,14 @@
   - assert:
       that:
       - grafana.stdout.find("HTTP Server Listen") != -1
+      - grafana.stdout.find("can't read datasource provisioning files from directory") == -1
+      - grafana.stdout.find("can't read dashboard provisioning files from directory") == -1
       - prometheus.stderr.find("Server is ready to receive web requests") != -1
+      - prometheus.stderr.find("Error loading config") == -1
       - node_exporter.stderr.find("Listening on") != -1
       - lighthouse_beacon.stderr.find("est_time") != -1
+      - lighthouse_beacon.stderr.find("eth1-endpoints contains an invalid URL") == -1
+      - lighthouse_beacon.stderr.find("Error connecting to eth1 node endpoint") == -1
   # container's images & ports
   - shell: docker ps
     register: stereum_docker_ps
