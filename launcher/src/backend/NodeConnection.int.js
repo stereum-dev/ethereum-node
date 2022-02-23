@@ -198,7 +198,7 @@ test('prepareStereumNode on ubuntu', async () => {
     };
     
     let nodeConnection = new NodeConnection(connectionParams);
-    let retry = {connected : false, counter : 0, maxTries : 10};
+    let retry = {connected : false, counter : 0, maxTries : 20};
     log.info("Connecting via SSH");
     while(!retry.connected){
         try {
