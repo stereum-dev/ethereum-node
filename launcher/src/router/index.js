@@ -4,8 +4,8 @@ import BaseHome from "../pages/BaseHome.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
 import WelcomePage from "../pages/WelcomePage.vue";
 import TheNode from "../pages/TheNode.vue";
-import ControlPanel from '../pages/ControlPanel.vue';
-
+import ControlPanel from "../pages/ControlPanel.vue";
+import NodeManage from "../pages/NodeManage.vue";
 
 const routes = [
   {
@@ -28,13 +28,16 @@ const routes = [
     name: "TheNode",
     component: TheNode,
   },
-
   {
-    path:"/control",
-    name:"ControlPanel",
-    component:ControlPanel
-  }
-
+    path: "/control",
+    name: "ControlPanel",
+    component: ControlPanel,
+  },
+  {
+    path: "/manage",
+    name: "NodeManage",
+    component: NodeManage,
+  },
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });

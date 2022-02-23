@@ -67,9 +67,10 @@ export default {
 .tutorial-table {
   display: flex;
   flex-direction: column;
+  height:300px;
   width: 100%;
   border: 3px solid#3E5757;
-  border-radius: 35px;
+  border-radius: 25px;
   padding: 20px 10px;
   background: #193232;
   overflow-x: hidden;
@@ -122,7 +123,7 @@ export default {
 }
 .round-icon {
   text-align: center;
-  margin: 20px auto;
+  margin: 5px auto;
 }
 
 /* width */
