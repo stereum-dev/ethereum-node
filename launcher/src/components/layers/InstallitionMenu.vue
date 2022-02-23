@@ -62,7 +62,7 @@ export default {
 }
 .col {
   width: 25%;
-  height: 22vh;
+  height: 28vh;
   background: rgba(51, 102, 102, 0.4);
   display: inline-block;
   box-sizing: border-box;
@@ -70,6 +70,7 @@ export default {
   resize: both;
   margin: 25px;
   border-radius: 20px;
+  flex-direction: row;
 }
 #header {
   text-align: center;
