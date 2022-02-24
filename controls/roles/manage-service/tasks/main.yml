@@ -70,6 +70,9 @@
       stereum_service_configuration.image is match("gcr.io/prysmaticlabs/prysm/beacon-chain:*") and
       stereum_service_configuration.command.find("prater") != -1
 
+  - include_tasks: write-grafana-configuration.yml
+    when: stereum_service_configuration.image is match("grafana/grafana:*")
+
   - name: Start service
     docker_container:
       command_handling: correct

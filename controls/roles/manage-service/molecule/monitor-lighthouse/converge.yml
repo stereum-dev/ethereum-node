@@ -1,0 +1,114 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prometheus_service: 4f260e42-8ac6-11ec-abba-4be6f5fee8db
+    prometheus_node_exporter_service: ef7d66cc-9022-11ec-8bd0-57e35985136a
+    grafana_service: 59827650-8ac6-11ec-81ec-f3dc0fb8f30e
+    beacon_service: cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86
+    grafana_provisioning: provisioning-lh
+
+  tasks:
+    # prometheus service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ prometheus_service }}"
+              image: prom/prometheus:v2.33.1
+              ports:
+                - 127.0.0.1:9090:9090/tcp
+              env:
+                CONFIG: |
+                  global:
+                    scrape_interval:     15s
+                    evaluation_interval: 15s
+
+                  alerting:
+                    alertmanagers:
+                    - static_configs:
+                      - targets:
+                        # - alertmanager:9093
+
+                  rule_files:
+                    # - "first_rules.yml"
+                    # - "second_rules.yml"
+
+                  scrape_configs:
+                    - job_name: 'stereum-{{ beacon_service }}'
+                      static_configs:
+                        - targets: ['stereum-{{ beacon_service }}:5054']
+                    - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
+                      static_configs:
+                        - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
+              command: sh -c "touch /etc/prometheus/prometheus.yml &&
+                              echo \"$CONFIG\" > /etc/prometheus/prometheus.yml &&
+                              /bin/prometheus --config.file=/etc/prometheus/prometheus.yml"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
+                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
+    # prometheus node-exporter service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ prometheus_node_exporter_service }}"
+              image: prom/node-exporter:v1.3.1
+              ports: []
+              env: {}
+              command: []
+              entrypoint: ["/bin/node_exporter"]
+              user: "2000"
+              volumes: []
+    # grafana service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ grafana_service }}"
+              image: grafana/grafana:8.4.0
+              ports:
+                - 127.0.0.1:3000:3000/tcp
+              env:
+                GRAFANA_INI: |
+                  [auth.anonymous]
+                  enabled = true
+                  org_role = Admin
+                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
+              command: bash -c "touch /etc/grafana/grafana.ini &&
+                                echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
+                                /run.sh"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
+                - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
+                - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
