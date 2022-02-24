@@ -120,9 +120,11 @@ export class HetznerServer {
                 }
             });
             await this.destroy();
+            await Sleep(2000);
             data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
             responseData = JSON.parse(data);
-        } else if(responseData.error !== undefined) {
+        }
+        if(responseData.error !== undefined) {
             throw responseData.error;
         }
         this.serverID = responseData.server.id;
