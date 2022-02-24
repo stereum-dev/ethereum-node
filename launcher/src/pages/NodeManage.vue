@@ -1,10 +1,10 @@
 <template>
   <section id="parent">
-    <node-header id="head"></node-header>
+    <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="manage-parent">
-        <menu-side></menu-side>
-        <div class="config-box">
+        <menu-side onmousedown="return false"></menu-side>
+        <div class="config-box" onmousedown="return false">
           <node-configuration :configData="configData"></node-configuration>
         </div>
         <div class="drop-parent">
@@ -31,11 +31,18 @@
             <drop-zone :title="'execution'" :list="executionItems"></drop-zone>
           </div>
         </div>
-        <div class="service">
+        <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
-          <service-plugin :servicePlugins="servicePlugins"></service-plugin>
+          <div
+            class="service-parent"
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <service-plugin :list="servicePlugins"> </service-plugin>
+          </div>
         </div>
-        <div class="change-menu">
+        <div class="change-menu" onmousedown="return false">
           <change-confirm :confirmChanges="confirmChanges"></change-confirm>
         </div>
         <div class="sidebar">
@@ -45,7 +52,7 @@
           >
           </sidebar-manage>
         </div>
-        <div class="footer">
+        <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
       </div>
@@ -154,7 +161,7 @@ export default {
           id: 3,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
-          category: "consensus",
+          category: "service",
         },
         {
           id: 4,
@@ -172,7 +179,7 @@ export default {
           id: 6,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
-          category: "validator",
+          category: "service",
         },
         {
           id: 7,
@@ -185,6 +192,18 @@ export default {
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "execution",
+        },
+        {
+          id: 9,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "service",
+        },
+        {
+          id: 10,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
         },
       ],
       configData: [
@@ -246,10 +265,15 @@ export default {
         this.validatorItems.push(item);
       } else if (item.category === "consensus") {
         this.consensusItems.push(item);
-      } else {
+      } else if (item.category === "execution") {
         this.executionItems.push(item);
+      } else {
+        this.servicePlugins.push(item);
       }
       console.log(item);
+    },
+    openModal() {
+      console.log("title");
     },
   },
 };
@@ -299,9 +323,16 @@ export default {
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
 }
+.service-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 .title {
   height: 5%;
   background: #263529;

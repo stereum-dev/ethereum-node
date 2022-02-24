@@ -8,7 +8,12 @@
         @dragenter.prevent
         @dragover.prevent
       >
-        <div class="items" v-for="(item, index) in list" :key="index">
+        <div
+          class="items"
+          v-for="(item, index) in list"
+          :key="index"
+          ref="itemsList"
+        >
           <img :src="item.source" alt="icon" />
         </div>
       </div>
@@ -40,9 +45,17 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      itemsList: [],
+    };
+  },
 };
 </script>
 <style scoped>
+.showModal {
+  display: none;
+}
 .title {
   width: auto;
   height: 20px;
