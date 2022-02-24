@@ -120,7 +120,9 @@ export class HetznerServer {
                 }
             });
             await this.destroy();
-            await Sleep(2000);
+            log.info(await this.getStatusAll());
+            await Sleep(20000);
+            log.info(await this.getStatusAll());
             data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
             responseData = JSON.parse(data);
         }
