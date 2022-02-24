@@ -112,7 +112,7 @@ export class HetznerServer {
     async create(serverSettings) {
         let data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
         let responseData = JSON.parse(data);
-        if(responseData.error !== undefined && responseData.error == "server name is already used"){
+        if(responseData.error !== undefined && responseData.error.message == "server name is already used"){
             let response = await this.getStatusAll();
             response.servers.forEach(server => {
                 if(server.name = serverSettings.name){
