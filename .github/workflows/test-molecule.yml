@@ -18,6 +18,7 @@ jobs:
           {role: "manage-service", test: "ssv-nimbus"},
           {role: "manage-service", test: "ssv-teku"},
           {role: "manage-service", test: "ssv-prysm"},
+          {role: "manage-service", test: "monitor-lighthouse"},
 
           #{role: "configure-firewall", test: "default"}, # tested via manage-service:start-multiple
 
