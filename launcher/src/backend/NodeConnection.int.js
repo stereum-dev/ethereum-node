@@ -110,25 +110,24 @@ export class HetznerServer {
      * @param serverSettings object with settings for Server Creation 
      */
     async create(serverSettings) {
-        let data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
-        let responseData = JSON.parse(data);
-        if(responseData.error !== undefined && responseData.error.message == "server name is already used"){
-            let response = await this.getStatusAll();
+        let response = await this.getStatusAll();
+        if(response.servers.some(server => server.name == serverSettings.name)){
+            log.info("server already exists");
             response.servers.forEach(server => {
-                if(server.name = serverSettings.name){
+                if(server.name == serverSettings.name){
                     this.serverID = server.id;
                 }
             });
             await this.destroy();
-            log.info(await this.getStatusAll());
-            await Sleep(20000);
-            log.info(await this.getStatusAll());
-            data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
-            responseData = JSON.parse(data);
         }
+        
+        let data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
+        const responseData = JSON.parse(data);
+        
         if(responseData.error !== undefined) {
             throw responseData.error;
         }
+
         this.serverID = responseData.server.id;
         this.serverName = responseData.server.name;
         this.serverIPv4 = responseData.server.public_net.ipv4.ip;
@@ -146,8 +145,8 @@ export class HetznerServer {
                 throw e;
             }
             await Sleep(2000);
-        } while(status == 'initializing');
-    } 
+        } while(status[check.counter] == 'initializing');
+    }
 
     /**
      * Destroys Server via API call
