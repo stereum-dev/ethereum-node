@@ -7,15 +7,20 @@
         @drop="onDrop($event, sidebarPlugins)"
         @dragenter.prevent
         @dragover.prevent
+        onmousedown="return false"
       >
         <div
           class="items"
           v-for="(item, index) in list"
           :key="index"
           ref="itemsList"
-          @click="selectedItem(item)"
         >
-          <img :src="item.source" alt="icon" />
+          <img
+            :src="item.source"
+            alt="icon"
+            @click="selectedItem(item)"
+            :class="{ 'chosen-plugin': item.active }"
+          />
         </div>
       </div>
     </template>
@@ -55,6 +60,7 @@ export default {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("itemSelect", item);
+      console.log(item.active);
     },
   },
 };
@@ -139,5 +145,12 @@ export default {
   border: 1px solid rgb(159, 159, 159);
   box-shadow: none;
   font-size: 14px;
+}
+.items img:active {
+  box-shadow: none;
+}
+.chosen-plugin {
+  border: 2px solid rgb(86, 172, 138);
+  border-radius: 13px;
 }
 </style>
