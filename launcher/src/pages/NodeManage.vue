@@ -8,27 +8,47 @@
           <node-configuration :configData="configData"></node-configuration>
         </div>
         <div class="drop-parent">
-          <div
-            class="consensus"
-            @drop="onDrop($event, sidebarPlugins)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
-            <drop-zone :title="'consensus'" :list="consensusItems"></drop-zone>
+          <div class="modal-parent" v-if="isModalActive">
+            <base-modal
+              :modalItems="modalItems"
+              @close-me="closeModal"
+            ></base-modal>
           </div>
           <div
             @drop="onDrop($event, sidebarPlugins)"
             @dragenter.prevent
             @dragover.prevent
           >
-            <drop-zone :title="'validator'" :list="validatorItems"></drop-zone>
+            <drop-zone
+              @modal-view="showModal"
+              :title="'consensus'"
+              :list="consensusItems"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
           </div>
           <div
             @drop="onDrop($event, sidebarPlugins)"
             @dragenter.prevent
             @dragover.prevent
           >
-            <drop-zone :title="'execution'" :list="executionItems"></drop-zone>
+            <drop-zone
+              @modal-view="showModal"
+              :title="'validator'"
+              :list="validatorItems"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
@@ -39,11 +59,18 @@
             @dragenter.prevent
             @dragover.prevent
           >
-            <service-plugin :list="servicePlugins"> </service-plugin>
+            <service-plugin
+              :list="servicePlugins"
+              @itemSelect="serviceItemSelection"
+            >
+            </service-plugin>
           </div>
         </div>
         <div class="change-menu" onmousedown="return false">
-          <change-confirm :confirmChanges="confirmChanges"></change-confirm>
+          <change-confirm
+            :confirmChanges="confirmChanges"
+            @clickOnRemove="clickOnRemoveBtn()"
+          ></change-confirm>
         </div>
         <div class="sidebar">
           <sidebar-manage
@@ -67,6 +94,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import ServicePlugin from "../components/UI/node-manage/ServicePlugin.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
+import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 export default {
   components: {
     SidebarManage,
@@ -75,15 +103,19 @@ export default {
     ChangeConfirm,
     ServicePlugin,
     DropZone,
+    BaseModal,
   },
-  emits: ["startDrag"],
+  emits: ["startDrag", "closeMe", "modalView"],
 
   data() {
     return {
       dragging: false,
+      isModalActive: false,
       consensusItems: [],
       executionItems: [],
       validatorItems: [],
+      selectedItemToRemove: {},
+      modalItems: [],
       droppedItems: [],
       confirmChanges: [
         {
@@ -241,13 +273,12 @@ export default {
     };
   },
   methods: {
-    addPlugin() {
-      this.servicePlugins.forEach((item) => {
-        if (item.active) {
-          this.consensusItems.push(item);
-        }
-        item.active = false;
-      });
+    showModal(data) {
+      this.isModalActive = true;
+      this.modalItems = data;
+    },
+    closeModal() {
+      this.isModalActive = false;
     },
     startDrag(event, item) {
       if (event.type === "dragstart") {
@@ -272,8 +303,31 @@ export default {
       }
       console.log(item);
     },
-    openModal() {
-      console.log("title");
+    serviceItemSelection(item) {
+      this.selectedItemToRemove = item;
+    },
+    clickOnRemoveBtn() {
+      console.log("category", this.selectedItemToRemove.category);
+      if (this.selectedItemToRemove.category == "service") {
+        this.servicePlugins = this.servicePlugins.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "execution") {
+        this.executionItems = this.executionItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "consensus") {
+        this.consensusItems = this.consensusItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "validator") {
+        this.validatorItems = this.validatorItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
     },
   },
 };
@@ -315,6 +369,13 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+}
+.modal-parent {
+  display: flex;
+  grid-column: 3;
+  grid-row: 1/4;
+  position: absolute;
+  z-index: 1;
 }
 .service {
   grid-column: 4/5;

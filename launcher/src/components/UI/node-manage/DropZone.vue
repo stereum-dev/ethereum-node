@@ -13,13 +13,14 @@
           v-for="(item, index) in list"
           :key="index"
           ref="itemsList"
+          @click="selectedItem(item)"
         >
           <img :src="item.source" alt="icon" />
         </div>
       </div>
     </template>
     <template #plusIcon>
-      <div class="plus-icon-box">
+      <div class="plus-icon-box" @click="$emit('modalView', list)">
         <span>+</span>
       </div>
     </template>
@@ -49,6 +50,12 @@ export default {
     return {
       itemsList: [],
     };
+  },
+  methods: {
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
   },
 };
 </script>

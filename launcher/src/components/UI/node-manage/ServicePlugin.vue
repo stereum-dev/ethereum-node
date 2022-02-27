@@ -4,7 +4,7 @@
       class="service-arrow"
       src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
       alt="icon"
-      @click="$refs.serviceBg.scrollTop = 0"
+      @click="$refs.serviceBg.resetScrollTop = 0"
     />
     <div class="service-bg">
       <div
@@ -12,7 +12,7 @@
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
-        @click="item.active = !item.active"
+        @click="selectedItem(item)"
       >
         <img draggable="false" :src="item.source" alt="icon" />
       </div>
@@ -39,6 +39,12 @@ export default {
   },
   data() {
     return {};
+  },
+  methods: {
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
   },
 };
 </script>

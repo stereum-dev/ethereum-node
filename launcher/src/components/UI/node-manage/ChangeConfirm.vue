@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-      <base-button class="trash-btn">DELETE</base-button>
+      <button class="trash-btn" @click="removeSelectedItem">DELETE</button>
     </div>
   </div>
 </template>
@@ -51,6 +51,11 @@ import BaseButton from "../BaseButton.vue";
 export default {
   components: { BaseButton },
   props: ["confirmChanges"],
+  methods: {
+    removeSelectedItem(){
+      this.$emit("clickOnRemove")
+    }
+  }
 };
 </script>
 <style scoped>
@@ -234,10 +239,13 @@ export default {
 }
 .trash-btn {
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 900;
   width: 85px;
   height: 35px;
   outline-style: none;
+  border-radius: 50px;
+  background-color: rgb(42, 42, 42);
+  color: rgb(215, 215, 215);
 }
 ::-webkit-scrollbar {
   width: 1px;
