@@ -65,9 +65,9 @@
       - prometheus.stderr.find("Server is ready to receive web requests") != -1
       - prometheus.stderr.find("Error loading config") == -1
       - node_exporter.stderr.find("Listening on") != -1
-      - nimbus_beacon.stderr.find("Eth1 sync progress") != -1
-      - nimbus_beacon.stderr.find("Eth1 chain monitoring failure") == -1
-      - nimbus_beacon.stderr.find("Failed to setup web3 connection") == -1
+      - nimbus_beacon.stdout.find("Eth1 sync progress") != -1
+      - nimbus_beacon.stdout.find("Eth1 chain monitoring failure") == -1
+      - nimbus_beacon.stdout.find("Failed to setup web3 connection") == -1
   # container's images & ports
   - shell: docker ps
     register: stereum_docker_ps
