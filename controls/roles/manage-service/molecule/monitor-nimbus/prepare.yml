@@ -1,0 +1,67 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 5ac8408c-9744-11ec-8b66-0f11f6579737
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # nimbus beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: stereum/nimbus:v1.6.0-55
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+                - 127.0.0.1:9190:9190/tcp
+              env: {}
+              entrypoint: ["/opt/app/build/nimbus_beacon_node"]
+              command:
+                - --network=prater
+                - --data-dir=/opt/app/beacon
+                - --web3-url=ws://10.10.0.6:8545
+                - --tcp-port=9000
+                - --udp-port=9000
+                - --rpc
+                - --rpc-port=9190
+                - --metrics
+                - --metrics-port=8008
+                - --metrics-address=0.0.0.0
+                - --rest
+                - --rest-address=0.0.0.0
+                - --graffiti="stereum.net"
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/nimbus/beacon:/opt/app/beacon"
