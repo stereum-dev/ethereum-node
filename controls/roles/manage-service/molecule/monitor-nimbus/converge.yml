@@ -4,11 +4,11 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    prometheus_service: 4f260e42-8ac6-11ec-abba-4be6f5fee8db
-    prometheus_node_exporter_service: ef7d66cc-9022-11ec-8bd0-57e35985136a
-    grafana_service: 59827650-8ac6-11ec-81ec-f3dc0fb8f30e
-    beacon_service: cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86
-    grafana_provisioning: lighthouse
+    prometheus_service: 4a87cc9c-9744-11ec-a2ef-73b1b3e1ee0e
+    prometheus_node_exporter_service: 77784ab0-9744-11ec-9726-ab848289b406
+    grafana_service: 52134fcc-9744-11ec-b5ca-572497326b43
+    beacon_service: 5ac8408c-9744-11ec-8b66-0f11f6579737
+    grafana_provisioning: nimbus
 
   tasks:
     # prometheus service
