@@ -1,0 +1,89 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("9190/tcp") != -1
+      - stereum_ufw_status.stdout.find("9090/tcp") != -1
+      - stereum_ufw_status.stdout.find("3000/tcp") != -1
+  # grafana config files
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/grafana.ini
+    register: grafana_ini
+  - debug:
+      msg: "{{ grafana_ini }}"
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/beacon_nodes_Grafana_dashboard.json
+    register: grafana_dashboard
+  - debug:
+      msg: "{{ grafana_dashboard }}"
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/datasources/datasource.yml
+    register: grafana_datasource
+  - debug:
+      msg: "{{ grafana_datasource }}"
+  - name: Check for grafana config files
+    assert:
+      that:
+        - grafana_ini.stat.exists
+        - grafana_dashboard.stat.exists
+        - grafana_datasource.stat.exists
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 2
+  #  grafana logs
+  - name: Grafana
+    command: "docker logs --tail=100 stereum-52134fcc-9744-11ec-b5ca-572497326b43"
+    register: grafana
+  #  prometheus logs
+  - name: Prometheus
+    command: "docker logs --tail=100  stereum-4a87cc9c-9744-11ec-a2ef-73b1b3e1ee0e"
+    register: prometheus
+  #  node exporter logs
+  - name: Node exporter
+    command: "docker logs --tail=100 stereum-77784ab0-9744-11ec-9726-ab848289b406"
+    register: node_exporter
+  #  nimbus beacon logs
+  - name: nimbus beacon
+    command: "docker logs --tail=200 stereum-5ac8408c-9744-11ec-8b66-0f11f6579737"
+    register: nimbus_beacon
+  - assert:
+      that:
+      - grafana.stdout.find("HTTP Server Listen") != -1
+      - grafana.stdout.find("can't read datasource provisioning files from directory") == -1
+      - grafana.stdout.find("can't read dashboard provisioning files from directory") == -1
+      - prometheus.stderr.find("Server is ready to receive web requests") != -1
+      - prometheus.stderr.find("Error loading config") == -1
+      - node_exporter.stderr.find("Listening on") != -1
+      - nimbus_beacon.stdout.find("Eth1 sync progress") != -1
+      - nimbus_beacon.stdout.find("Eth1 chain monitoring failure") == -1
+      - nimbus_beacon.stdout.find("Failed to setup web3 connection") == -1
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("grafana/grafana") != -1
+      - stereum_docker_ps.stdout.find("prom/node-exporter") != -1
+      - stereum_docker_ps.stdout.find("prom/prometheus") != -1
+      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
+      - stereum_docker_ps.stdout.find("3000->3000") != -1
+      - stereum_docker_ps.stdout.find("9100/tcp") != -1
+      - stereum_docker_ps.stdout.find("9090->9090") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - stereum_docker_ps.stdout.find("9190->9190") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 4
+
+# EOF
