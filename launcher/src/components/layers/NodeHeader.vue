@@ -119,10 +119,13 @@
   width: 1rem;
   height: 1rem;
   border: 1px solid rgb(180, 179, 179);
+  display: none;
 }
 
 .btn__item input {
   width: 70%;
+  justify-self: end;
+  align-self: flex-end;
 }
 .btn__item:hover {
   border: 1px solid #eee;
