@@ -14,7 +14,7 @@
             <router-link :to="{ path: '/control' }"><a>CONTROL</a></router-link>
           </li>
           <li class="main-nav__item">
-            <a href="customers/index.html">STAKING</a>
+            <router-link :to="{ path: '/manage' }"><a>STAKING</a></router-link>
           </li>
           <li class="spacer"></li>
           <li class="box__item"></li>
