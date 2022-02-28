@@ -4,9 +4,11 @@ import CircleLoading from "../../../src/components/UI/CircleLoading";
 test("Props rendered", () => {
   const wrapper = mount(CircleLoading, {
     propsData: {
-      open: "open",
+      message: "Ubuntu",
+      open: true
     },
   });
 
-  expect(wrapper.props().open).toBe("open");
+  expect(wrapper.props().open).toBe(true);
+  expect(wrapper.props().message).toBe("Ubuntu");
 });
