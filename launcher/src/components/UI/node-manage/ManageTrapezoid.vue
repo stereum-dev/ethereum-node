@@ -1,13 +1,8 @@
 <template>
   <div class="trap-container">
     <div class="trap-box">
-      <div class="trap-title">
-        <slot name="title"></slot>
-      </div>
       <div class="trapezoid">
-        
-          <slot></slot>
-      
+        <slot></slot>
       </div>
       <div class="plus-icon">
         <slot name="plusIcon"></slot>
@@ -16,14 +11,12 @@
   </div>
 </template>
 <script>
-export default {
-  
-};
+export default {};
 </script>
 <style scoped>
 .trap-container {
   width: 98%;
-  height: 90%;
+  height: 140px;
   background-color: #181818;
   display: flex;
   justify-content: center;
@@ -31,20 +24,12 @@ export default {
 }
 .trap-box {
   width: 95%;
-  height: 70%;
+  /* height: 70%; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #4f4f4f;
   position: relative;
-}
-.trap-title {
-  position: absolute;
-  top: -10%;
-  left: 2%;
-  width: auto;
-  height: 20px;
-  border-radius: 20px;
 }
 .trapezoid {
   height: 0;

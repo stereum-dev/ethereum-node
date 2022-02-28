@@ -10,7 +10,7 @@ function Sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-class HetznerServer {
+export class HetznerServer {
     constructor(){
         this.apiToken = process.env.HCLOUD_TOKEN    //don't forget to set env variable "export HCLOUD_TOKEN=<your-hetzner-api-token>"
         this.serverID = null;
@@ -110,9 +110,23 @@ class HetznerServer {
      * @param serverSettings object with settings for Server Creation 
      */
     async create(serverSettings) {
+        let response = await this.getStatusAll();
+        if(response.servers.some(server => server.name == serverSettings.name)){
+            log.info("server already exists");
+            response.servers.forEach(server => {
+                if(server.name == serverSettings.name){
+                    this.serverID = server.id;
+                }
+            });
+            await this.destroy();
+        }
+        
         let data = await this.makeRequest(await this.createHTTPOptions("POST"),JSON.stringify(serverSettings));
         const responseData = JSON.parse(data);
-        if(responseData.error !== undefined) throw responseData.error;
+        
+        if(responseData.error !== undefined) {
+            throw responseData.error;
+        }
 
         this.serverID = responseData.server.id;
         this.serverName = responseData.server.name;
@@ -131,8 +145,8 @@ class HetznerServer {
                 throw e;
             }
             await Sleep(2000);
-        } while(status == 'initializing');
-    } 
+        } while(status[check.counter] == 'initializing');
+    }
 
     /**
      * Destroys Server via API call
@@ -156,15 +170,21 @@ class HetznerServer {
         const responseData = JSON.parse(data);
         return responseData;
     }
+
+    async getStatusAll() {
+        let data = await this.makeRequest(await this.createHTTPOptions("GET"));
+        const responseData = JSON.parse(data);
+        return responseData;
+    }
 }
 
 test('prepareStereumNode on ubuntu', async () => {
 
     const serverSettings = {
         name: 'NodeConnection--integration-test--ubuntu-2004',
-        image: "ubuntu-20.04",
-        location: "fsn1",
-        server_type: "cx11",
+        image: 'ubuntu-20.04',
+        location: 'fsn1',
+        server_type: 'cx11',
         start_after_create: true
       };    
       
@@ -181,7 +201,7 @@ test('prepareStereumNode on ubuntu', async () => {
     };
     
     let nodeConnection = new NodeConnection(connectionParams);
-    let retry = {connected : false, counter : 0, maxTries : 10};
+    let retry = {connected : false, counter : 0, maxTries : 20};
     log.info("Connecting via SSH");
     while(!retry.connected){
         try {
