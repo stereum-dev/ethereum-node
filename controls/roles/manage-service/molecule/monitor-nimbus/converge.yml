@@ -8,7 +8,7 @@
     prometheus_node_exporter_service: 77784ab0-9744-11ec-9726-ab848289b406
     grafana_service: 52134fcc-9744-11ec-b5ca-572497326b43
     beacon_service: 5ac8408c-9744-11ec-8b66-0f11f6579737
-    grafana_provisioning: provisioning-n
+    grafana_provisioning: nimbus
 
   tasks:
     # prometheus service
