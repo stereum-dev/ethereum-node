@@ -182,102 +182,77 @@ export default {
           source: require("../../public/Img/icon/manage-node-icons/filter-confirm.png"),
           drag: true,
           category: "execution",
-          active: false
+          active: false,
         },
         {
           id: 2,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
-          active: false
+          active: false,
         },
         {
           id: 3,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "service",
-          active: false
+          active: false,
         },
         {
           id: 4,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "validator",
-          active: false
+          active: false,
         },
         {
           id: 5,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "validator",
-          active: false
+          active: false,
         },
         {
           id: 6,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "service",
-          active: false
+          active: false,
         },
         {
           id: 7,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
-          active: false
+          active: false,
         },
         {
           id: 8,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "execution",
-          active: false
+          active: false,
         },
         {
           id: 9,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "service",
-          active: false
+          active: false,
         },
         {
           id: 10,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
-          active: false
+          active: false,
         },
       ],
       configData: [
         {
           id: 1,
-          name: "Node Configuration",
-          status: "online",
-        },
-        {
-          id: 2,
-          name: "Node Configuration",
-          status: "offline",
-        },
-        {
-          id: 3,
-          name: "Node Configuration",
-          status: "notOk",
-        },
-        {
-          id: 4,
-          name: "Node Configuration",
-          status: "serverOff",
-        },
-        {
-          id: 5,
-          name: "Node Configuration",
-          status: "update",
-        },
-        {
-          id: 5,
-          name: "Node Configuration",
-          status: "update",
+          name: "Configuration",
+          network: "testNet",
         },
       ],
     };
@@ -396,12 +371,14 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
+  max-height: 100%;
 }
 .service-parent {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
+  overflow: hidden;
 }
 
 .title {

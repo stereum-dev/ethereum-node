@@ -3,62 +3,27 @@
     <div class="config-title">
       <span>NODE CONFIGURATION</span>
     </div>
-    <div class="config-squares">
-      <div class="sq-1"></div>
-      <div class="sq-2"></div>
+    <div class="config-row">
+      <div class="row-content" v-for="(item, index) in configData" :key="index">
+        <div v-if="item.network == 'testNet'" class="testnet-icon">
+          <img src="../../../../public/Img/icon/mainnetIcon.png" alt="icon" />
+        </div>
+        <div v-else class="testnet-icon">
+          <img src="../../../../public/Img/icon/testnetIcon.png" alt="" />
+        </div>
+        <span>{{ item.id }}#{{ item.name }}</span>
+        <div class="color-icon"></div>
+      </div>
     </div>
     <div class="config-btns">
       <div class="config-add">
         <span>ADD 1 CLICK PRESET</span>
       </div>
-      <div class="config-remove">
-        <span>REMOVE NODE CONFIG</span>
+      <div class="config-network">
+        <span>CHANGE NETWORK</span>
       </div>
-    </div>
-    <div class="config-table">
-      <div class="table-title">
-        <span>CONFIGURATION SETS</span>
-      </div>
-      <div class="config-table-box">
-        <div
-          class="config-row"
-          v-for="(item, index) in configData"
-          :key="index"
-        >
-          <div class="row-content">
-            <span>{{ item.id }}#{{ item.name }}</span>
-          </div>
-          <div v-if="item.status === 'online'" class="testnet-icon">
-            <img
-              src="../../../../public/Img/icon/manage-node-icons/green-status.png"
-              alt="status-icon"
-            />
-          </div>
-          <div v-else-if="item.status === 'serverOff'" class="testnet-icon">
-            <img
-              src="/Img/icon/manage-node-icons/yellow-status.png"
-              alt="status-icon"
-            />
-          </div>
-          <div v-else-if="item.status === 'offline'" class="testnet-icon">
-            <img
-              src="/Img/icon/manage-node-icons/red-status.png"
-              alt="status-icon"
-            />
-          </div>
-          <div v-else-if="item.status === 'update'" class="testnet-icon">
-            <img
-              src="/Img/icon/manage-node-icons/purple-status.png"
-              alt="status-icon"
-            />
-          </div>
-          <div v-else class="testnet-icon">
-            <img
-              src="/Img/icon/manage-node-icons/blue-status.png"
-              alt="status-icon"
-            />
-          </div>
-        </div>
+      <div class="config-priority">
+        <span>ADD PRIORITY</span>
       </div>
     </div>
   </div>
@@ -70,19 +35,21 @@ export default {
 </script>
 <style scoped>
 .config-node {
-  display: grid;
   grid-column: 1;
   grid-template-rows: repeat(12, 42px);
-  width: 90%;
   height: 93%;
   padding: 5px;
   background-color: #33393e;
   border-radius: 0 30px 30px 30px;
+  display: grid;
+  grid-template-columns: repeat(5, 20%);
+  grid-template-rows: repeat(9, 1fr);
 }
 .config-box .config-title {
-  grid-row: 1;
-  justify-self: end;
-  align-self: flex-end;
+  grid-column: 1/6;
+  grid-row: 2;
+  justify-content: center;
+  align-items: center;
 }
 .config-title span {
   font-size: 8px;
@@ -93,100 +60,86 @@ export default {
   border-radius: 8px;
   box-shadow: 1px 1px 5px 2px rgb(69, 68, 68);
 }
-.config-node .config-squares {
-  grid-row: 2/3;
-  width: 94%;
-  height: 70px;
-  border: 5px solid gray;
-  margin: 10px auto;
-  border-radius: 4px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.config-squares .sq-1,
-.config-squares .sq-2 {
-  width: 45%;
-  height: 90%;
-  background-color: #336666;
-  border: 1px solid #747474;
-  border-radius: 1px;
-}
 
-.config-node .config-btns {
-  grid-row: 4/6;
+.config-btns {
+  grid-column: 1/6;
+  grid-row: 4/5;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
 }
 .config-btns .config-add,
-.config-btns .config-remove {
-  width: 90%;
+.config-btns .config-network,
+.config-btns .config-priority {
+  width: 85%;
+  height: 30px;
   background-color: #323232;
   font-size: 10px;
   font-weight: bold;
   border: 1px solid rgb(169, 168, 168);
-  padding: 5px;
+  margin-top: 5px;
   border-radius: 8px;
-  box-shadow: 0 0 5px 1px rgb(82, 81, 81);
-}
-.config-node .config-table {
-  grid-row: 6/11;
-  margin-top: 10px;
-}
-.config-table .table-title span {
-  width: 90%;
-  background-color: #323232;
-  font-size: 8px;
-  font-weight: bold;
-  border: 1px solid rgb(169, 168, 168);
-  padding: 2px 4px;
-  border-radius: 8px;
-}
-.config-table .config-table-box {
-  width: 95%;
-  height: 90%;
-  margin: 10px auto;
-  padding: 2px 0;
-  border: 4px solid gray;
-  border-radius: 15px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.config-row {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: inset 0 0 5px 1px rgb(136, 136, 136);
+}
+.config-btns .config-add:hover,
+.config-btns .config-network:hover,
+.config-btns .config-priority:hover {
+  background-color: #2c2c2c;
+  box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
+}
+.config-btns .config-add:active,
+.config-btns .config-network:active,
+.config-btns .config-priority:active {
+  background-color: #252525;
+  font-size: 9px;
+  box-shadow: none;
+}
+
+.config-row {
+  grid-column: 1/6;
+  grid-row: 3/4;
+  width: 98%;
+  height: 25px;
+  border: 1px solid gray;
+  border-radius: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.1rem;
+}
+
+.config-row .row-content {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-bottom: 1px solid gray;
-}
-.config-row:nth-child(even) {
-  background-color: #26292b;
-}
-.config-row:last-child {
-  border-bottom: none;
-  border-radius: 0 0 15px 15px;
-}
-.config-row .row-content {
-  height: 30px;
+  height: 25px;
 }
 .config-row .row-content span {
   font-size: 10px;
   font-weight: bold;
 }
 .testnet-icon {
+  width: 25px;
+  min-width: 25px;
   display: flex;
-  width: 20px;
-  min-width: 20px;
   justify-content: center;
   align-items: center;
-  /* flex: 1; */
 }
 .testnet-icon img {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+}
+.color-icon {
+  width: 22px;
+  height: 23px;
+  background-color: greenyellow;
+  border-radius: 50px;
 }
 ::-webkit-scrollbar {
   width: 1px;

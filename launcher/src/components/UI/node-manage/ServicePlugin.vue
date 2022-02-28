@@ -4,9 +4,9 @@
       class="service-arrow"
       src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
       alt="icon"
-      @click="$refs.serviceBg.resetScrollTop = 0"
+      @click="$refs.serviceBg.scrollTop = 0"
     />
-    <div class="service-bg">
+    <div class="service-bg" ref="serviceBg">
       <div
         v-for="item in list"
         :key="item.id"
@@ -60,7 +60,7 @@ export default {
   background: #4f4f4f;
   align-self: center;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: auto;
   padding: 5px;
   box-sizing: border-box;
 }
@@ -78,7 +78,7 @@ export default {
 .service-bg {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: repeat(4, 22%);
+  grid-template-rows: auto;
   align-items: center;
   justify-items: center;
   padding-top: 20px;
@@ -90,6 +90,8 @@ export default {
   border-radius: 20px;
   gap: 3px;
   cursor: pointer;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .service-bg::-webkit-scrollbar {
   display: none;
