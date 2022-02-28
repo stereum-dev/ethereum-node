@@ -53,6 +53,10 @@ class ControlService extends EventEmitter {
     await this.promiseIpc.send("writeConfig", args);
     return args;
   }
+
+  async checkOS() {
+    return await this.promiseIpc.send("checkOS");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
