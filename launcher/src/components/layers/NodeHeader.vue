@@ -14,7 +14,7 @@
             <router-link :to="{ path: '/control' }"><a>CONTROL</a></router-link>
           </li>
           <li class="main-nav__item">
-            <a href="customers/index.html">STAKING</a>
+            <router-link :to="{ path: '/manage' }"><a>STAKING</a></router-link>
           </li>
           <li class="spacer"></li>
           <li class="box__item"></li>
@@ -119,10 +119,13 @@
   width: 1rem;
   height: 1rem;
   border: 1px solid rgb(180, 179, 179);
+  display: none;
 }
 
 .btn__item input {
   width: 70%;
+  justify-self: end;
+  align-self: flex-end;
 }
 .btn__item:hover {
   border: 1px solid #eee;

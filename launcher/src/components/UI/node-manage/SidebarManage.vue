@@ -22,9 +22,11 @@
           class="up-arrow"
           src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
           alt="icon"
-          @click="scrollToElement"
+
+          @click="$refs.pluginCol.scrollTop = 0"
         />
-        <div class="plugin-col">
+        <div class="plugin-col" ref="pluginCol">
+
           <div class="plugin-item">
             <svg
               id="cloud"
@@ -57,6 +59,7 @@
           class="down-arrow"
           src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
           alt="icon"
+          @click="$refs.pluginCol.scrollTop = 1000"
         />
       </div>
       <div class="filter-box">
@@ -184,7 +187,6 @@ export default {
   height: 23px;
   padding-left: 5px;
   border: none;
-  /* border: 2px solid white; */
   border-radius: 45px;
   outline-style: none;
   margin-top: 2px;

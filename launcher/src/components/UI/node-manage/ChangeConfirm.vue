@@ -76,13 +76,15 @@ export default {
   align-items: center;
 }
 .change-menu .check-icon {
-  width: 50px;
-  height: 50px;
+  width: 46px;
+  height: 46px;
   background-color: #33393e;
+  border: 1px solid #2b3034;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 2px 2px 1px rgb(75, 75, 75);
 }
 .change-menu img {
   width: 40px;
