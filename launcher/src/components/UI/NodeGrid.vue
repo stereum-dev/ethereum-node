@@ -41,7 +41,7 @@
     </div>
 
     <div class="service">
-      <div class="title">SERVICE PLUGIN</div>
+      <!-- <div class="title">SERVICE PLUGIN</div>
       <div class="service-container">
         <base-button class="btn">
           <div class="arrow-up"></div>
@@ -50,7 +50,8 @@
         <base-button class="btn">
           <div class="arrow-down"></div>
         </base-button>
-      </div>
+      </div> -->
+      <service-plugin></service-plugin>
     </div>
 
     <div class="sidebar">
@@ -63,14 +64,13 @@
 <script>
 import TheTrapezium from "../UI/TheTrapezium.vue";
 import NodeDrag from "../UI/NodeDrag.vue";
-import ServicePlugin from "../layers/ServicePlugin.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 import SidebarParent from "./NodeSidebarParent.vue";
+
 export default {
   components: {
     TheTrapezium,
     NodeDrag,
-    ServicePlugin,
     NodeSetupConfig,
     SidebarParent,
   },

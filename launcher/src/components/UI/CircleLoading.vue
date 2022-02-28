@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <div class="progress">
+    <div class="progress" v-if="active">
       <div class="color"></div>
       <p>CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
       <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
@@ -12,6 +12,16 @@
 export default {
   //emits: ["close"],
   props: ["open"],
+  data() {
+    return {
+      active: true,
+    };
+  },
+  created() {
+    setTimeout(() => {
+      this.active = false;
+    }, 15000);
+  },
 };
 </script>
 
@@ -82,11 +92,14 @@ dialog {
   width: 0px;
   height: 20px;
   border-radius: 15px;
-  animation: progres 4s infinite linear;
+  animation: progres 15s linear;
 }
 @keyframes progres {
   0% {
     width: 0%;
+  }
+  10% {
+    width: 10%;
   }
   25% {
     width: 50%;
