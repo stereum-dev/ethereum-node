@@ -134,7 +134,7 @@ export class HetznerServer {
         this.serverRootPassword = responseData.root_password;
 
         let status = [];
-        let check = {counter : 0, maxTries : 25};
+        let check = {counter : 0, maxTries : 300};
         do {
         log.info("Initializing Server");
             try{
@@ -201,7 +201,7 @@ test('prepareStereumNode on ubuntu', async () => {
     };
     
     let nodeConnection = new NodeConnection(connectionParams);
-    let retry = {connected : false, counter : 0, maxTries : 20};
+    let retry = {connected : false, counter : 0, maxTries : 300};
     log.info("Connecting via SSH");
     while(!retry.connected){
         try {
