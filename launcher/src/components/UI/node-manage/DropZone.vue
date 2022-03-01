@@ -7,14 +7,25 @@
         @drop="onDrop($event, sidebarPlugins)"
         @dragenter.prevent
         @dragover.prevent
+        onmousedown="return false"
       >
-        <div class="items" v-for="(item, index) in list" :key="index">
-          <img :src="item.source" alt="icon" />
+        <div
+          class="items"
+          v-for="(item, index) in list"
+          :key="index"
+          ref="itemsList"
+        >
+          <img
+            :src="item.source"
+            alt="icon"
+            @click="selectedItem(item)"
+            :class="{ 'chosen-plugin': item.active }"
+          />
         </div>
       </div>
     </template>
     <template #plusIcon>
-      <div class="plus-icon-box">
+      <div class="plus-icon-box" @click="$emit('modalView', list)">
         <span>+</span>
       </div>
     </template>
@@ -40,9 +51,24 @@ export default {
       },
     },
   },
+  data() {
+    return {
+      itemsList: [],
+    };
+  },
+  methods: {
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+      console.log(item.active);
+    },
+  },
 };
 </script>
 <style scoped>
+.showModal {
+  display: none;
+}
 .title {
   width: auto;
   height: 20px;
@@ -119,5 +145,12 @@ export default {
   border: 1px solid rgb(159, 159, 159);
   box-shadow: none;
   font-size: 14px;
+}
+.items img:active {
+  box-shadow: none;
+}
+.chosen-plugin {
+  border: 2px solid rgb(86, 172, 138);
+  border-radius: 13px;
 }
 </style>

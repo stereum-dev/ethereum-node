@@ -2,6 +2,7 @@
   <div>
     <div @click="showSidebar = !showSidebar" class="toggle-btn">
       <img
+        onmousedown="return false"
         v-if="showSidebar"
         class="hidden-icon"
         width="88"
@@ -9,6 +10,7 @@
         alt=""
       />
       <img
+        onmousedown="return false"
         v-else
         class="show-icon"
         width="88"
@@ -19,14 +21,13 @@
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
       <div class="plugin-box">
         <img
+          onmousedown="return false"
           class="up-arrow"
           src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
           alt="icon"
-
           @click="$refs.pluginCol.scrollTop = 0"
         />
         <div class="plugin-col" ref="pluginCol">
-
           <div class="plugin-item">
             <svg
               id="cloud"
@@ -56,13 +57,14 @@
           </div>
         </div>
         <img
+          onmousedown="return false"
           class="down-arrow"
           src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 1000"
         />
       </div>
-      <div class="filter-box">
+      <div class="filter-box" onmousedown="return false">
         <input class="filter-inp" type="text" placeholder="Filter..." />
         <div class="filter-icons">
           <img
@@ -205,5 +207,14 @@ export default {
 .filter-icons img {
   width: 23px;
   height: 23px;
+}
+.up-arrow,
+.down-arrow {
+  border-radius: 50px;
+  box-shadow: 0 2px 3px 1px rgb(67, 67, 67);
+}
+.up-arrow:active,
+.down-arrow:active {
+  box-shadow: none;
 }
 </style>
