@@ -38,7 +38,6 @@ export class SSHService {
                 username: connectionInfo.user || 'root',
                 password: connectionInfo.password || undefined,
                 privateKey: connectionInfo.privateKey || undefined,
-                readyTimeout: 99999,
             });
         })
     }
