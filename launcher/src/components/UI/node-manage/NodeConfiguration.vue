@@ -52,7 +52,7 @@ export default {
   background-color: #33393e;
   border-radius: 0 30px 30px 30px;
   display: grid;
-  grid-template-rows: repeat(12, 42px);
+  grid-template-rows: repeat(12, 1fr);
   grid-template-columns: repeat(6, 1fr);
   justify-content: center;
   align-items: center;

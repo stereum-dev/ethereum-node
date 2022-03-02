@@ -29,22 +29,12 @@
         />
         <div class="plugin-col" ref="pluginCol">
           <div class="plugin-item">
-            <svg
-              id="cloud"
-              xmlns="http://www.w3.org/2000/svg"
-              width="50"
-              height="50"
-              viewBox="0 0 119 118"
-            >
-              <rect
-                id="LOGO_BACKGROUND"
-                data-name="LOGO BACKGROUND"
-                width="119"
-                height="118"
-                rx="15"
-                fill="#19c2f4"
+            <div class="cloud-item">
+              <img
+                src="../../../../public/Img/icon/manage-node-icons/cloud-1.png"
+                alt="icon"
               />
-            </svg>
+            </div>
           </div>
           <div
             draggable="true"
@@ -173,6 +163,21 @@ export default {
   width: 50px;
   height: 50px;
   border-radius: 15px;
+}
+.cloud-item {
+  width: 50px;
+  height: 50px;
+  border-radius: 11px;
+  background: rgb(11, 148, 206);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cloud-item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 11px;
+  background: transparent;
 }
 .plugin-item:hover {
   border: 2px solid green;
