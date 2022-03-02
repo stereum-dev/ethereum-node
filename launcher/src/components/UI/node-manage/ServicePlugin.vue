@@ -1,35 +1,50 @@
 <template>
-  <div class="service-container">
+  <div class="service-container" onmousedown="return false">
     <img
       class="service-arrow"
       src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
       alt="icon"
+      @click="$refs.serviceBg.scrollTop = 0"
     />
-    <div class="service-bg">
+    <div class="service-bg" ref="serviceBg">
       <div
-        draggable="false"
-        v-for="item in servicePlugins"
+        v-for="item in list"
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
-        @click="item.active = !item.active"
+        @click="selectedItem(item)"
       >
         <img draggable="false" :src="item.source" alt="icon" />
       </div>
     </div>
     <img
+      draggable="false"
       class="service-arrow"
       src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
       alt="icon"
+      @click="$refs.serviceBg.scrollTop = 1000"
     />
   </div>
 </template>
 <script>
 export default {
-  props: ["servicePlugins"],
+  props: {
+    list: {
+      type: Array,
+      required: true,
+      default: () => {
+        return [];
+      },
+    },
+  },
   data() {
-    return {
-    };
+    return {};
+  },
+  methods: {
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
   },
 };
 </script>
@@ -45,14 +60,25 @@ export default {
   background: #4f4f4f;
   align-self: center;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: auto;
   padding: 5px;
   box-sizing: border-box;
+}
+
+.service-arrow {
+  width: 50%;
+  height: 25px;
+}
+.service-item {
+  width: 60px;
+  height: 60px;
+  border: 2px solid gray;
+  border-radius: 13px;
 }
 .service-bg {
   display: grid;
   grid-template-columns: 50% 50%;
-  grid-template-rows: repeat(4, 22%);
+  grid-template-rows: auto;
   align-items: center;
   justify-items: center;
   padding-top: 20px;
@@ -63,16 +89,14 @@ export default {
   background: #707070;
   border-radius: 20px;
   gap: 3px;
+  cursor: pointer;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
-.service-arrow {
-  width: 50%;
+.service-bg::-webkit-scrollbar {
+  display: none;
 }
-.service-item {
-  width: 60px;
-  height: 60px;
-  border: 2px solid gray;
-  border-radius: 13px;
-}
+
 .service-item img {
   width: 60px;
   height: 60px;
@@ -86,28 +110,11 @@ export default {
   border: 2px solid rgb(86, 172, 138);
   border-radius: 13px;
 }
-/* .btn {
-  width: 90%;
-  margin: 3%;
-  height: 5%;
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  overflow: hidden;
-} */
-.arrow-up {
-  width: 0;
-  height: 50%;
-  border-bottom: solid 0.5rem #eee;
-  border-left: solid 50px transparent;
-  border-right: solid 50px transparent;
-  resize: both;
+.service-arrow {
+  border-radius: 50px;
+  box-shadow: 1px 2px 3px 1px rgb(63, 63, 63);
 }
-.arrow-down {
-  width: 0;
-  height: 50%;
-  border-top: solid 0.5rem #eee;
-  border-left: solid 50px transparent;
-  border-right: solid 50px transparent;
+.service-arrow:active {
+  box-shadow: none;
 }
 </style>

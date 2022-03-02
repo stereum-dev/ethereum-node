@@ -1,42 +1,76 @@
 <template>
   <section id="parent">
-    <node-header id="head"></node-header>
+    <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="manage-parent">
-        <menu-side></menu-side>
-        <div class="config-box">
+        <menu-side onmousedown="return false"></menu-side>
+        <div class="config-box" onmousedown="return false">
           <node-configuration :configData="configData"></node-configuration>
         </div>
         <div class="drop-parent">
-          <div
-            class="consensus"
-            @drop="onDrop($event, sidebarPlugins)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
-            <drop-zone :title="'consensus'" :list="consensusItems"></drop-zone>
+          <div class="modal-parent" v-if="isModalActive">
+            <base-modal
+              :modalItems="modalItems"
+              @close-me="closeModal"
+            ></base-modal>
           </div>
           <div
             @drop="onDrop($event, sidebarPlugins)"
             @dragenter.prevent
             @dragover.prevent
           >
-            <drop-zone :title="'validator'" :list="validatorItems"></drop-zone>
+            <drop-zone
+              @modal-view="showModal"
+              :title="'consensus'"
+              :list="consensusItems"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
           </div>
           <div
             @drop="onDrop($event, sidebarPlugins)"
             @dragenter.prevent
             @dragover.prevent
           >
-            <drop-zone :title="'execution'" :list="executionItems"></drop-zone>
+            <drop-zone
+              @modal-view="showModal"
+              :title="'validator'"
+              :list="validatorItems"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
           </div>
         </div>
-        <div class="service">
+        <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
-          <service-plugin :servicePlugins="servicePlugins"></service-plugin>
+          <div
+            class="service-parent"
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <service-plugin
+              :list="servicePlugins"
+              @itemSelect="serviceItemSelection"
+            >
+            </service-plugin>
+          </div>
         </div>
-        <div class="change-menu">
-          <change-confirm :confirmChanges="confirmChanges"></change-confirm>
+        <div class="change-menu" onmousedown="return false">
+          <change-confirm
+            :confirmChanges="confirmChanges"
+            @clickOnRemove="clickOnRemoveBtn()"
+          ></change-confirm>
         </div>
         <div class="sidebar">
           <sidebar-manage
@@ -45,7 +79,7 @@
           >
           </sidebar-manage>
         </div>
-        <div class="footer">
+        <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
       </div>
@@ -59,6 +93,7 @@ import MenuSide from "../components/UI/node-manage/MenuSide.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
+import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 export default {
   components: {
     SidebarManage,
@@ -66,15 +101,19 @@ export default {
     NodeConfiguration,
     ChangeConfirm,
     DropZone,
+    BaseModal,
   },
-  emits: ["startDrag"],
+  emits: ["startDrag", "closeMe", "modalView"],
 
   data() {
     return {
       dragging: false,
+      isModalActive: false,
       consensusItems: [],
       executionItems: [],
       validatorItems: [],
+      selectedItemToRemove: {},
+      modalItems: [],
       droppedItems: [],
       confirmChanges: [
         {
@@ -141,92 +180,88 @@ export default {
           source: require("../../public/Img/icon/manage-node-icons/filter-confirm.png"),
           drag: true,
           category: "execution",
+          active: false,
         },
         {
           id: 2,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
+          active: false,
         },
         {
           id: 3,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
-          category: "consensus",
+          category: "service",
+          active: false,
         },
         {
           id: 4,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "validator",
+          active: false,
         },
         {
           id: 5,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "validator",
+          active: false,
         },
         {
           id: 6,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
-          category: "validator",
+          category: "service",
+          active: false,
         },
         {
           id: 7,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "consensus",
+          active: false,
         },
         {
           id: 8,
           source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
           drag: true,
           category: "execution",
+          active: false,
+        },
+        {
+          id: 9,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "service",
+          active: false,
+        },
+        {
+          id: 10,
+          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
+          drag: true,
+          category: "consensus",
+          active: false,
         },
       ],
       configData: [
         {
           id: 1,
-          name: "Node Configuration",
-          status: "online",
-        },
-        {
-          id: 2,
-          name: "Node Configuration",
-          status: "offline",
-        },
-        {
-          id: 3,
-          name: "Node Configuration",
-          status: "notOk",
-        },
-        {
-          id: 4,
-          name: "Node Configuration",
-          status: "serverOff",
-        },
-        {
-          id: 5,
-          name: "Node Configuration",
-          status: "update",
-        },
-        {
-          id: 5,
-          name: "Node Configuration",
-          status: "update",
+          name: "Configuration",
+          network: "testNet",
         },
       ],
     };
   },
   methods: {
-    addPlugin() {
-      this.servicePlugins.forEach((item) => {
-        if (item.active) {
-          this.consensusItems.push(item);
-        }
-        item.active = false;
-      });
+    showModal(data) {
+      this.isModalActive = true;
+      this.modalItems = data;
+    },
+    closeModal() {
+      this.isModalActive = false;
     },
     startDrag(event, item) {
       if (event.type === "dragstart") {
@@ -244,10 +279,38 @@ export default {
         this.validatorItems.push(item);
       } else if (item.category === "consensus") {
         this.consensusItems.push(item);
-      } else {
+      } else if (item.category === "execution") {
         this.executionItems.push(item);
+      } else {
+        this.servicePlugins.push(item);
       }
       console.log(item);
+    },
+    serviceItemSelection(item) {
+      this.selectedItemToRemove = item;
+    },
+    clickOnRemoveBtn() {
+      console.log("category", this.selectedItemToRemove.category);
+      if (this.selectedItemToRemove.category == "service") {
+        this.servicePlugins = this.servicePlugins.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "execution") {
+        this.executionItems = this.executionItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "consensus") {
+        this.consensusItems = this.consensusItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "validator") {
+        this.validatorItems = this.validatorItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
     },
   },
 };
@@ -290,6 +353,13 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
 }
+.modal-parent {
+  display: flex;
+  grid-column: 3;
+  grid-row: 1/4;
+  position: absolute;
+  z-index: 1;
+}
 .service {
   grid-column: 4/5;
   grid-row: 1/4;
@@ -297,9 +367,18 @@ export default {
   color: white;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: center;
+  max-height: 100%;
 }
+.service-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+}
+
 .title {
   height: 5%;
   background: #263529;

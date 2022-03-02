@@ -34,11 +34,15 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img src="/Img/icon/manage-node-icons/trash-icon.png" alt="icon" />
+            <img
+              draggable="false"
+              src="/Img/icon/manage-node-icons/trash-icon.png"
+              alt="icon"
+            />
           </div>
         </div>
       </div>
-      <base-button class="trash-btn">DELETE</base-button>
+      <button class="trash-btn" @click="removeSelectedItem">DELETE</button>
     </div>
   </div>
 </template>
@@ -47,6 +51,11 @@ import BaseButton from "../BaseButton.vue";
 export default {
   components: { BaseButton },
   props: ["confirmChanges"],
+  methods: {
+    removeSelectedItem(){
+      this.$emit("clickOnRemove")
+    }
+  }
 };
 </script>
 <style scoped>
@@ -55,6 +64,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  cursor: grab;
 }
 .change-menu .confirm-bg-1 {
   width: 70px;
@@ -108,7 +118,6 @@ export default {
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  
 }
 
 .table-header {
@@ -165,7 +174,6 @@ export default {
   width: 15px;
   height: 15px;
   border-radius: 100%;
-
 }
 .table-item .left-icon img {
   width: 14px;
@@ -175,7 +183,6 @@ export default {
   color: #fff;
   font-size: 8px;
   font-weight: 500;
-  
 }
 .table-footer {
   width: 87%;
@@ -232,13 +239,16 @@ export default {
 }
 .trash-btn {
   font-size: 0.8rem;
-  font-weight: bold;
+  font-weight: 900;
   width: 85px;
   height: 35px;
   outline-style: none;
+  border-radius: 50px;
+  background-color: rgb(42, 42, 42);
+  color: rgb(215, 215, 215);
 }
-::-webkit-scrollbar{
-    width:1px;
-    background-color:transparent;
+::-webkit-scrollbar {
+  width: 1px;
+  background-color: transparent;
 }
 </style>
