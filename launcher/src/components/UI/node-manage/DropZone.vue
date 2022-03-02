@@ -71,6 +71,7 @@ export default {
 }
 .title {
   width: auto;
+  min-width: 70px;
   height: 20px;
   color: white;
   font-size: 12px;
@@ -80,7 +81,11 @@ export default {
   border-radius: 20px;
   position: absolute;
   left: 0;
-  top: -10px;
+  top: -13px;
+  box-shadow: 0 1px 3px rgb(47, 47, 47);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .item-box {
   display: grid;
@@ -132,7 +137,7 @@ export default {
   font-weight: bold;
   color: rgb(65, 65, 65);
   border: 1px solid rgb(67, 67, 67);
-  box-shadow: inset 0 1px 4px 1px rgb(142, 142, 142);
+  box-shadow: inset 0 1px 4px 1px #8e8e8e, 0 1px 5px #3e3e3e;
   cursor: pointer;
 }
 

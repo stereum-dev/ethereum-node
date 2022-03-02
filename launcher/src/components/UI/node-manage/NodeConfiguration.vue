@@ -98,7 +98,7 @@ export default {
 .config-btns .config-priority {
   width: 90%;
   height: 32px;
-  background-color: #323232;
+  background-color: #303030;
   font-size: 9px;
   font-weight: bold;
   color: white;
@@ -109,7 +109,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  box-shadow: inset 0 0 5px 1px #5e5e5e, 1px 1px 5px 1px #242424;
+  box-shadow: inset 0 1px 9px #5e5e5e, 0 1px 4px #373737;
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
@@ -120,8 +120,7 @@ export default {
 .config-btns .config-add:active,
 .config-btns .config-network:active,
 .config-btns .config-priority:active {
-  background-color: #2b2b2b;
-  box-shadow: none;
+  box-shadow: inset 1px 1px 10px 5px #181818;
 }
 .delete-box {
   grid-column: 1/6;
@@ -135,8 +134,8 @@ export default {
   height: 32px;
   border: 1px solid #656565;
   border-radius: 8px;
-  box-shadow: inset 0 0 5px 1px #5e5e5e, 1px 1px 5px 1px #242424;
-  background-color: #323232;
+  box-shadow: inset 0 1px 9px #5e5e5e, 0 1px 4px #373737;
+  background-color: #303030;
   cursor: pointer;
   outline-style: none;
   color: #f46969;
@@ -154,9 +153,9 @@ export default {
   box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
 }
 .delete-box .delete-btn:active {
-  border: 1px solid #a95b5b;
-  background-color: #252525;
-  box-shadow: none;
+  border: 1px solid #f46969;
+  color: #ef5252;
+  box-shadow: inset 1px 1px 10px 5px #181818;
 }
 .btn-icon {
   width: 21px;

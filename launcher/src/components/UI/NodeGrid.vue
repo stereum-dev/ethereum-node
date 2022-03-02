@@ -22,19 +22,13 @@
       </div>
     </div>
     <div class="execution">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <manage-trapezoid> </manage-trapezoid>
     </div>
     <div class="consensus">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <manage-trapezoid> </manage-trapezoid>
     </div>
     <div class="validator">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <manage-trapezoid> </manage-trapezoid>
     </div>
     <div class="nodesetup">
       <node-setup-config></node-setup-config>
@@ -62,17 +56,15 @@
 </template>
 
 <script>
-import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from "../UI/NodeDrag.vue";
+import ManageTrapezoid from "../UI/node-manage/ManageTrapezoid.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 import SidebarParent from "./NodeSidebarParent.vue";
 
 export default {
   components: {
-    TheTrapezium,
-    NodeDrag,
     NodeSetupConfig,
     SidebarParent,
+    ManageTrapezoid,
   },
 };
 </script>
