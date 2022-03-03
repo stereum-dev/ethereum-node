@@ -22,29 +22,22 @@
       </div>
     </div>
     <div class="execution">
-      <manage-trapezoid> </manage-trapezoid>
+      <drop-zone></drop-zone>
     </div>
     <div class="consensus">
-      <manage-trapezoid> </manage-trapezoid>
+      <drop-zone></drop-zone>
     </div>
     <div class="validator">
-      <manage-trapezoid> </manage-trapezoid>
+      <drop-zone></drop-zone>
     </div>
     <div class="nodesetup">
       <node-setup-config></node-setup-config>
     </div>
 
     <div class="service">
-      <!-- <div class="title">SERVICE PLUGIN</div>
-      <div class="service-container">
-        <base-button class="btn">
-          <div class="arrow-up"></div>
-        </base-button>
-        <service-plugin></service-plugin>
-        <base-button class="btn">
-          <div class="arrow-down"></div>
-        </base-button>
-      </div> -->
+      <div class="title-box">
+        <span class="title">SERVICE PLUGINS</span>
+      </div>
       <service-plugin></service-plugin>
     </div>
 
@@ -56,15 +49,29 @@
 </template>
 
 <script>
-import ManageTrapezoid from "../UI/node-manage/ManageTrapezoid.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 import SidebarParent from "./NodeSidebarParent.vue";
+import DropZone from "../UI/node-manage/DropZone.vue";
 
 export default {
   components: {
     NodeSetupConfig,
     SidebarParent,
-    ManageTrapezoid,
+    DropZone,
+  },
+  props: {
+    title: {
+      type: String,
+      required: true,
+      default: "Title",
+    },
+    list: {
+      type: Array,
+      required: true,
+      default: () => {
+        return [];
+      },
+    },
   },
 };
 </script>
@@ -148,31 +155,40 @@ export default {
 }
 .nodesetup {
   background: transparent;
+  height: 85%;
+  width: 96%;
   color: white;
   grid-column-start: 2;
   grid-row: 4/5;
   overflow-x: hidden;
+  margin: 13px auto 0 auto;
+  border: 4px solid rgb(116, 116, 116);
+  border-radius: 15px;
 }
 .service {
-  background: #336666;
-  color: white;
+  background: #2c4030;
+  border: 3px solid gray;
   grid-row-start: 1;
   grid-row-end: 5;
   grid-column-start: 3;
   grid-column-end: 4;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-content: center;
 }
-.title {
-  height: 5%;
-  background: #000;
-  margin: 1rem 0;
-  font-weight: bold;
-  padding: 0.5px;
+.title-box {
+  width: 99%;
+  height: 20px;
+  margin: 10px 0;
+  background-color: #374b3b;
+  padding: 1px;
   text-align: center;
-  font-size: 90%;
+  color: #fff;
+}
+.title {
+  font-size: 15px;
+  font-weight: 800;
 }
 .validator {
   color: white;
@@ -180,19 +196,24 @@ export default {
   grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
+
 }
-.service-container {
-  width: 90%;
-  height: 85%;
-  background: #4f4f4f;
-  align-self: center;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 5%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+.trap-container {
+  background-color: #2c4030;
+  margin: 5px auto 0 auto;
+  width: 95%;
+  height: 95%;
+  padding: 5px;
 }
+.trap-container .trap-box{
+  background-color: #2c4030 !important;
+  height: 1%;
+}
+.trapezoid{
+  background: #000;
+  height: 1% !important;
+}
+
 .btn {
   width: 90%;
   margin: 3%;
