@@ -41,16 +41,6 @@
     </div>
 
     <div class="service">
-      <!-- <div class="title">SERVICE PLUGIN</div>
-      <div class="service-container">
-        <base-button class="btn">
-          <div class="arrow-up"></div>
-        </base-button>
-        <service-plugin></service-plugin>
-        <base-button class="btn">
-          <div class="arrow-down"></div>
-        </base-button>
-      </div> -->
       <service-plugin></service-plugin>
     </div>
 
@@ -95,6 +85,7 @@ export default {
   width: 100%;
   position: relative;
 }
+
 .side-background {
   grid-row: 1/5;
   background-color: #336666;
@@ -102,6 +93,7 @@ export default {
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
   z-index: -1;
 }
+
 .menu-box {
   position: absolute;
   top: 0;
@@ -110,6 +102,7 @@ export default {
   background: #a1c1ad;
   z-index: 0;
 }
+
 .menu {
   position: absolute;
   bottom: 0;
@@ -119,12 +112,14 @@ export default {
   border-bottom-right-radius: 100% 15%;
   border-top-left-radius: 100% 15%;
 }
+
 .menu .home-icon {
   border-radius: 100%;
   outline-style: none;
   width: 25px;
   margin-top: 50px;
 }
+
 .menu .manage-icon {
   border-radius: 100%;
   outline-style: none;
@@ -139,6 +134,7 @@ export default {
   grid-column-end: 3;
   align-self: center;
 }
+
 .consensus {
   color: red;
   grid-column-start: 2;
@@ -146,6 +142,7 @@ export default {
   height: 100%;
   align-self: center;
 }
+
 .validator {
   color: white;
   grid-column-start: 2;
@@ -154,6 +151,7 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
+
 .nodesetup {
   background: transparent;
   color: white;
@@ -161,6 +159,7 @@ export default {
   grid-row: 4/5;
   overflow-x: hidden;
 }
+
 .service {
   background: #336666;
   color: white;
@@ -173,6 +172,7 @@ export default {
   justify-content: center;
   align-content: center;
 }
+
 .title {
   height: 5%;
   background: #000;
@@ -182,6 +182,7 @@ export default {
   text-align: center;
   font-size: 90%;
 }
+
 .validator {
   color: white;
   grid-column-start: 2;
@@ -189,6 +190,7 @@ export default {
   align-self: center;
   box-sizing: border-box;
 }
+
 .service-container {
   width: 90%;
   height: 85%;
@@ -201,6 +203,7 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
 .btn {
   width: 90%;
   margin: 3%;
@@ -210,6 +213,7 @@ export default {
   align-self: center;
   overflow: hidden;
 }
+
 .arrow-up {
   width: 0;
   height: 50%;
@@ -218,6 +222,7 @@ export default {
   border-right: solid 50px transparent;
   resize: both;
 }
+
 .arrow-down {
   width: 0;
   height: 50%;
@@ -225,6 +230,7 @@ export default {
   border-left: solid 50px transparent;
   border-right: solid 50px transparent;
 }
+
 .sidebar {
   display: grid;
   grid-row-start: 1;
@@ -233,6 +239,7 @@ export default {
   background: transparent;
   border-top-right-radius: 40px;
 }
+
 .footer {
   background: #4c4848;
   color: white;

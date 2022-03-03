@@ -18,34 +18,12 @@
 <script>
 export default {
   data() {
-    return {
-      configData: [
-        {
-          id: 1,
-          name: "First Steps!",
-        },
-        {
-          id: 2,
-          name: "Stake with 32 ETH",
-        },
-        {
-          id: 3,
-          name: "Use SSV network",
-        },
-        {
-          id: 4,
-          name: "Alerts on Mobile App",
-        },
-        {
-          id: 5,
-          name: "Switch Clients",
-        },
-        {
-          id: 6,
-          name: "Switch Machine",
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    configData() {
+      return this.$store.state.configData;
+    },
   },
 };
 </script>
@@ -67,7 +45,7 @@ export default {
 .tutorial-table {
   display: flex;
   flex-direction: column;
-  height:300px;
+  height: 300px;
   width: 100%;
   border: 3px solid#3E5757;
   border-radius: 25px;
