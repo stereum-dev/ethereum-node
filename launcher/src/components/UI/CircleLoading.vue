@@ -2,8 +2,8 @@
   <div class="body">
     <div class="progress">
       <div class="color"></div>
-      <p v-if="active" >CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
-      <p v-if="!active" >{{ this.message }}</p>
+      <p v-if="active">CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
+      <p v-if="!active">{{ this.message }}</p>
       <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
     </div>
   </div>
@@ -14,8 +14,8 @@ export default {
   //emits: ["close"],
   props: {
     message: String,
-    open: Boolean
-    },
+    open: Boolean,
+  },
   data() {
     return {
       active: true,
@@ -39,6 +39,7 @@ export default {
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.75);
 }
+
 dialog {
   position: fixed;
   top: 30vh;
@@ -52,11 +53,13 @@ dialog {
   z-index: 100;
   border: none;
 }
+
 .modal {
   animation: modal 5s linear infinite;
   position: relative;
   width: 4%;
 }
+
 @keyframes modal {
   from {
     transform: rotate(0deg);
@@ -65,22 +68,23 @@ dialog {
     transform: rotate(360deg);
   }
 }
+
 /* TEST*/
+
 .body {
-  position: absolute;
-  top: 53%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   max-width: 500vw;
   text-align: right;
+  margin: 5%;
 }
+
 .progress {
   position: relative;
   height: 20px;
   width: 50vw;
-  border: 3px solid grey;
+  border: 3px solid rgb(88, 86, 86);
   border-radius: 15px;
 }
+
 .progress p {
   float: left;
   margin: 0 2%;
@@ -88,6 +92,7 @@ dialog {
   color: #eee;
   position: relative;
 }
+
 .progress .color {
   position: absolute;
   background-color: #1715c4;
@@ -97,6 +102,7 @@ dialog {
   animation: progres 5s linear;
   animation-fill-mode: forwards;
 }
+
 @keyframes progres {
   0% {
     width: 0%;
