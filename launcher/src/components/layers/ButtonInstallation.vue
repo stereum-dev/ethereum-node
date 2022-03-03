@@ -1,10 +1,10 @@
 <template>
-  <section>
+  <section class="BtnInstIcon">
     <div id="title">
       <p>{{ title }}</p>
     </div>
 
-    <div id="img">
+    <div class="imgIcon">
       <img :src="img" />
     </div>
   </section>
@@ -16,31 +16,34 @@ export default {
 };
 </script>
 <style scoped>
+.BtnInstIcon {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+}
+
 #title {
-  border: 3px solid grey;
+  border: 3px solid rgb(88, 86, 86);
   width: 97%;
-  text-align: center;
   border-radius: 50px;
-  padding: 0;
-  height: auto;
   background: #336666;
-  resize: both;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
 
 #title p {
   margin: 1px;
-  font-weight: bold;
   color: #eee;
-  font-size: 10pt;
 }
 
-#img {
-  padding: 5px;
-  height: auto;
-  resize: both;
+.imgIcon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-#img img {
+.imgIcon img {
   width: 95%;
   margin-top: 5pt;
   resize: both;

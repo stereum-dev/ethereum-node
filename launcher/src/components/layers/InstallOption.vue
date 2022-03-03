@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <div class="header">ONE CLICK INSTALLATION</div>
-    <div class="container">
+    <div class="containerOption">
       <div class="text">
         ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER
         CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
@@ -58,13 +58,14 @@ export default {
   font-weight: bold;
 }
 
-.container {
+.containerOption {
   border: 3px solid grey;
   width: 60%;
   height: 55vh;
   margin: 4% auto;
   background: rgba(51, 102, 102, 0.7);
   border-radius: 40px;
+  position: relative;
 }
 
 .row {
