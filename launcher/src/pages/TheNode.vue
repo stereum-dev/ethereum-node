@@ -4,8 +4,8 @@
     <node-bg>
       <div class="node-parent">
         <menu-side onmousedown="return false"></menu-side>
-        <div class="config-box" onmousedown="return false">
-          <node-configuration :configData="configData"></node-configuration>
+        <div class="journal-box" onmousedown="return false">
+          <journal-node></journal-node >
         </div>
         <div class="trapezoid-parent">
           <div class="modal-parent" v-if="isModalActive">
@@ -61,13 +61,13 @@
 </template>
 
 <script>
-import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
+import JournalNode from "../components/UI/node-manage/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
 export default {
   components: {
-    NodeConfiguration,
+    JournalNode,
     DropZone,
     BaseModal,
     NodeSidebar,
@@ -250,27 +250,28 @@ export default {
 .node-parent {
   display: grid;
   height: 92%;
-  grid-template-columns: 15% 47% 22% 16%;
+  grid-template-columns: 19% 45% 20% 16%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: relative;
   top: 9%;
 }
 
-.config-box {
+.journal-box {
   color: white;
-  height: 99%;
+  height: 98.2%;
   grid-column: 1;
-  grid-row: 1/5;
-  align-self: center;
+  grid-row: 1/4;
   background-color: transparent;
+  border: 4px solid rgb(121, 121, 121);
+  border-radius: 4px;
 }
 .trapezoid-parent {
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 .modal-parent {
   display: flex;
@@ -288,12 +289,13 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
+  border: 4px solid rgb(121, 121, 121);
 }
 .service-parent {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
   overflow: hidden;
@@ -301,12 +303,18 @@ export default {
 
 .title {
   height: 5%;
-  background: #263529;
-  margin: 1rem 0;
+  background: #3e4d41;
+  margin-top: 1rem;
   font-weight: bold;
   padding: 0.5px;
   text-align: center;
   font-size: 1rem;
+}
+.trap-container {
+  width: 97%;
+  background: #2c4030;
+  margin: 0 auto;
+  border: 4px solid rgb(121, 121, 121);
 }
 .trap-title {
   color: white;
@@ -336,5 +344,4 @@ export default {
   border-radius: 0 0 1.9rem 1.9rem;
   position: relative;
 }
-
 </style>

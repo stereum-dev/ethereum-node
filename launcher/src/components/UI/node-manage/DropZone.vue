@@ -77,7 +77,7 @@ export default {
   font-size: 12px;
   font-weight: bold;
   padding: 3px 5px;
-  background-color: #334b3f;
+  background-color: #285940;
   border-radius: 20px;
   position: absolute;
   left: 0;
@@ -103,8 +103,7 @@ export default {
   height: 63px;
   width: 230px;
   background-color: transparent;
-  border-top: 1px solid #656565;
-  border-bottom: 1px solid #656565;
+  border-bottom: 5px solid #656565;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
