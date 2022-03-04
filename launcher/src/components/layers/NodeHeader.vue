@@ -87,10 +87,10 @@
 }
 
 .main-header__brand {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  width: 10%;
+  width: 9%;
   z-index: 100;
 }
 

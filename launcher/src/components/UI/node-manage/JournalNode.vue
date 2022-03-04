@@ -11,7 +11,48 @@
           alt=""
         />
       </div>
-      <div class="config-table"></div>
+      <div class="config-table">
+        <div class="okay">
+          <img
+            class="running"
+            src="../../../../public/Img/icon/node-journal-icons/running.png"
+            alt="icon"
+          />
+          <span>Okay</span>
+        </div>
+        <div class="sync">
+          <img
+            class="refresh"
+            src="../../../../public/Img/icon/node-journal-icons/refresh.png"
+            alt="icon"
+          />
+          <span>Full synchronized</span>
+        </div>
+        <div class="storage">
+          <img
+            class="disc"
+            src="../../../../public/Img/icon/node-journal-icons/Disc_Storage_Icon.png"
+            alt="icon"
+          />
+          <span>212 gb</span>
+        </div>
+        <div class="speed">
+          <img
+            class="internet-speed"
+            src="../../../../public/Img/icon/node-journal-icons/Internet_Speed_Icon.png"
+            alt="icon"
+          />
+          <span>24.2 mb</span>
+        </div>
+        <div class="setting">
+          <img
+            class="setting-wrench"
+            src="../../../../public/Img/icon/node-journal-icons/setting-wrench.png"
+            alt="icon"
+          />
+          <span>5</span>
+        </div>
+      </div>
     </div>
     <div class="updates">
       <div class="update-title">
@@ -85,7 +126,18 @@
           <span>002</span>
         </div>
       </div>
-      <div class="status-table"></div>
+      <div class="status-table">
+        <div class="status-table-content">
+          <div
+            class="status-table-row"
+            v-for="item in statusContents"
+            :key="item.id"
+          >
+            <div v-if="item.status == 'yellow'" class="status-yellow"></div>
+            <div else class="status-red"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -109,10 +161,31 @@ export default {
           name: "[NAME]",
           version: "[VERSION]",
         },
+      ],
+      statusContents: [
+        {
+          id: 1,
+          status: "red",
+        },
+        {
+          id: 2,
+          status: "yellow",
+        },
+        {
+          id: 3,
+          status: "red",
+        },
         {
           id: 4,
-          name: "[NAME]",
-          version: "[VERSION]",
+          status: "yellow",
+        },
+        {
+          id: 3,
+          status: "red",
+        },
+        {
+          id: 4,
+          status: "yellow",
         },
       ],
     };
@@ -125,7 +198,7 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: 1;
-  grid-template-rows: 5% 20% 25% 17% 33%;
+  grid-template-rows: 4% 26% 20% 17% 33%;
 }
 .node-title {
   width: 100%;
@@ -137,20 +210,19 @@ export default {
 .node-title span {
   font-size: 13px;
   font-weight: 700;
-  margin-right: 35px;
+  margin-right: 45px;
 }
 .manage-configuration {
   grid-column: 1;
-  grid-row: 2/3;
+  grid-row: 2;
   width: 100%;
-  height: 100%;
   display: grid;
-  grid-template-columns: 25% 60% 15%;
+  grid-template-columns: 1fr;
   grid-template-rows: repeat(6, 1fr);
 }
 .config-title {
   width: 96.5%;
-  grid-column: 1/4;
+  grid-column: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -162,10 +234,70 @@ export default {
   font-size: 7px;
   font-weight: 900;
   text-align: right;
+  margin-right: 5px;
 }
 .config-title img {
-  width: 18px;
+  width: 15px;
 }
+.config-table {
+  grid-column: 1;
+  grid-row: 2/7;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.config-table img {
+  width: 14px;
+  height: 14px;
+}
+.config-table span {
+  width: 70%;
+  font-family: sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  color: rgb(91, 203, 91);
+}
+.config-table .okay {
+  width: 100%;
+  margin-top: 3px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.config-table .sync {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.config-table .storage {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.config-table .storage span {
+  color: rgb(237, 223, 69);
+}
+.config-table .speed {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.config-table .setting {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.config-table .setting span {
+  color: rgb(82, 153, 216);
+}
+
 .updates {
   grid-column: 1;
   grid-row: 3/4;
@@ -183,13 +315,14 @@ export default {
 }
 
 .update-title span {
+  margin-top: 5px;
   font-size: 9px;
   font-weight: 900;
 }
 .update-table {
   width: 98%;
   height: 80%;
-  margin: 7px auto 0 auto;
+  margin:5px auto 0 auto;
   overflow-y: auto;
 }
 .update-table::-webkit-scrollbar {
@@ -333,5 +466,34 @@ export default {
 .status-box .red-warning img,
 .status-box .yellow-warning img {
   width: 25px;
+}
+.status-box .status-table {
+  width: 90%;
+  height: 60%;
+  background-color: #2d2d34;
+  margin: 10px auto;
+  overflow: hidden;
+  padding: 5px;
+}
+.status-table .status-table-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+.status-box .status-table-row {
+  width: 100%;
+  height: 20px;
+}
+.status-box .status-table-row .status-red {
+  width: 100%;
+  height: 100%;
+  background-color: #eb6262;
+  margin-top: 3px;
+}
+.status-box .status-table-row .status-yellow {
+  width: 100%;
+  height: 100%;
+  background-color: #e4bf05;
+  margin-top: 3px;
 }
 </style>
