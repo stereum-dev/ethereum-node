@@ -44,15 +44,12 @@ export default {
     return {
       running: true,
       message: "",
-
     };
   },
   computed: {
     installation() {
       return this.$store.state.installation;
     },
-  },
-    };
   },
   methods: {
     display: async function (response) {
