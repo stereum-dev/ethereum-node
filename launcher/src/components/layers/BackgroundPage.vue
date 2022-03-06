@@ -1,8 +1,9 @@
 <template>
   <div id="main">
-    <section id="container">
+    <section id="containerBg">
       <section>
-        <img src="stereum_logo_extern.png" alt="" />
+        <img class="imgBg" src="stereum_logo_extern.png" alt="" />
+
         <slot></slot>
       </section>
     </section>
@@ -14,7 +15,7 @@ export default {};
 </script>
 
 <style scoped>
-#container {
+#containerBg {
   border-radius: 40px;
   box-sizing: border-box;
   top: 0;
@@ -23,8 +24,8 @@ export default {};
   width: 95%;
   height: 95%;
   background-color: #336666;
-  position: relative;
 }
+
 #main {
   background-color: #000;
   width: 100%;
@@ -34,11 +35,13 @@ export default {};
   top: 0;
   left: 0;
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
 }
 
-img {
+.imgBg {
   display: block;
   position: absolute;
   top: 50%;
@@ -49,6 +52,6 @@ img {
   transform: translate(-50%, -50%);
   resize: both;
   z-index: 0;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 </style>

@@ -42,6 +42,7 @@
     "vue-router": "^4.0.12",
     "vue-toasted": "^1.1.28",
     "vue3-jest": "^27.0.0-alpha.1",
+    "vuex": "^4.0.2",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
