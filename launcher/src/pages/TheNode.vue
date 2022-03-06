@@ -130,7 +130,7 @@ export default {
 }
 .modal-parent {
   width: 44.5vw;
-  height: 100%;
+  height: 88.2vh;
   display: flex;
   grid-column: 2;
   grid-row: 1/4;
