@@ -5,7 +5,7 @@
         <span>EDIT NODES</span>
         <img
           src="../../../../public/Img/icon/node-journal-icons/maintenance3.png"
-          alt=""
+          alt="icon"
         />
       </router-link>
     </div>
