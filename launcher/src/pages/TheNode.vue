@@ -104,12 +104,13 @@ export default {
 }
 .node-parent {
   display: grid;
-  height: 93%;
+  width: 99.2vw;
+  height: 91.5vh;
   grid-template-columns: 19% 45% 20% 16%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
-  position: relative;
-  top:6.9%;
+  position: absolute;
+  top: 1px;
 }
 
 .journal-box {
@@ -119,7 +120,6 @@ export default {
   grid-row: 1/4;
   background-color: transparent;
   border: 4px solid rgb(121, 121, 121);
-  border-radius: 4px;
 }
 .trapezoid-parent {
   grid-column: 2;
@@ -192,10 +192,11 @@ export default {
 }
 
 .footer {
+  width: 99.1vw;
   color: white;
   grid-column: 1/5;
   grid-row: 4;
-  background-color: gray;
+  background-color: rgb(40, 40, 40);
   border-radius: 0 0 1.9rem 1.9rem;
   position: relative;
 }

@@ -326,19 +326,20 @@ export default {
 }
 .manage-parent {
   display: grid;
-  height: 94.5%;
+  width: 100%;
+  height: 92.3vh;
   grid-template-columns: 17% 45% 20% 18%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
-  position: relative;
-  top: 5%;
+  position: absolute;
+  top: -5px;
 }
 
 .config-box {
   color: white;
-  margin-top: 10px;
+  margin-top: 5px;
   width: 100%;
-  height: 98%;
+  height: 98.7%;
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
@@ -362,8 +363,8 @@ export default {
   z-index: 1;
 }
 .service {
-  height: 97%;
-  margin-top: 8px;
+  height: 97.3%;
+  margin-top: 6px;
   grid-column: 3;
   grid-row: 1/4;
   background: #2c4030;
@@ -408,12 +409,12 @@ export default {
 .change-menu {
   width: 93.5%;
   height: 98%;
-  margin-top: 9px;
+  margin-top: 6px;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
   border: solid #1a2620;
-  border-width: 1px 6px;
+  border-width: 6px 6px 0 6px;
   border-top-right-radius: 40px;
   display: flex;
   flex-direction: column;
