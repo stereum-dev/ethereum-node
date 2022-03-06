@@ -1,16 +1,15 @@
 <template>
   <div class="journal-parent">
-    <div class="node-title">
-      <span>Node</span>
-    </div>
-    <div class="manage-configuration">
-      <div class="config-title">
-        <span>MANAGE CONFIGURATION</span>
+    <div class="edit-btn">
+      <router-link to="/manage">
+        <span>EDIT NODES</span>
         <img
-          src="../../../../public/Img/icon/node-journal-icons/Zange.png"
+          src="../../../../public/Img/icon/node-journal-icons/maintenance3.png"
           alt=""
         />
-      </div>
+      </router-link>
+    </div>
+    <div class="manage-configuration">
       <div class="config-table">
         <div class="okay">
           <img
@@ -161,6 +160,16 @@ export default {
           name: "[NAME]",
           version: "[VERSION]",
         },
+        {
+          id: 4,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+        {
+          id: 5,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
       ],
       statusContents: [
         {
@@ -200,7 +209,7 @@ export default {
   grid-template-columns: 1;
   grid-template-rows: 4% 26% 20% 17% 33%;
 }
-.node-title {
+/* .node-title {
   width: 100%;
   grid-column: 1;
   grid-row: 1/2;
@@ -211,7 +220,7 @@ export default {
   font-size: 13px;
   font-weight: 700;
   margin-right: 45px;
-}
+} */
 .manage-configuration {
   grid-column: 1;
   grid-row: 2;
@@ -220,24 +229,42 @@ export default {
   grid-template-columns: 1fr;
   grid-template-rows: repeat(6, 1fr);
 }
-.config-title {
-  width: 96.5%;
-  grid-column: 1;
+.edit-btn {
+  width: 85%;
+  height: 27px;
+  border: 1px solid rgb(38, 38, 38);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #3c3c3c;
+  margin: 5px auto;
+  box-shadow: inset 0 1px 5px 0 rgb(155, 155, 155);
+}
+.edit-btn:hover {
+  box-shadow: none;
+}
+.edit-btn a {
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 3px solid #334b3f;
-  background-color: #313134;
+  padding-top: 1px;
 }
-.config-title span {
-  width: 87%;
-  font-size: 7px;
+.edit-btn span {
+  color: rgb(249, 187, 73);
+  font-size: 11px;
   font-weight: 900;
-  text-align: right;
-  margin-right: 5px;
+  text-align: center;
+  margin-left: 55px;
 }
-.config-title img {
-  width: 15px;
+.edit-btn img {
+  width: 18px;
+  height: 18px;
+  background-color: transparent;
+  margin-right: 10px;
 }
 .config-table {
   grid-column: 1;
@@ -321,8 +348,8 @@ export default {
 }
 .update-table {
   width: 98%;
-  height: 80%;
-  margin:5px auto 0 auto;
+  height: 70%;
+  margin: 5px auto 0 auto;
   overflow-y: auto;
 }
 .update-table::-webkit-scrollbar {
@@ -442,7 +469,7 @@ export default {
 .warning-box .yellow-warning {
   width: 70px;
   height: 30px;
-  background-color: #e4bf05;
+  background-color: #fed506;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -454,7 +481,7 @@ export default {
 .warning-box .red-warning {
   width: 70px;
   height: 30px;
-  background-color: #eb6262;
+  background-color: #f44444;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -480,6 +507,9 @@ export default {
   height: 100%;
   overflow-y: auto;
 }
+.status-table-content::-webkit-scrollbar {
+  width: 1px;
+}
 .status-box .status-table-row {
   width: 100%;
   height: 20px;
@@ -487,13 +517,13 @@ export default {
 .status-box .status-table-row .status-red {
   width: 100%;
   height: 100%;
-  background-color: #eb6262;
+  background-color: #f44444;
   margin-top: 3px;
 }
 .status-box .status-table-row .status-yellow {
   width: 100%;
   height: 100%;
-  background-color: #e4bf05;
+  background-color: #f6ce07;
   margin-top: 3px;
 }
 </style>

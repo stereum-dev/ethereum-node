@@ -29,6 +29,20 @@
           <span class="btn-icon"></span>
         </div>
       </div>
+      <div class="router-box">
+        <router-link to="/node">
+          <div class="home-btn">
+            <div class="btn-text">BACK TO NODE</div>
+            <span class="btn-icon">
+              <img
+                class="home-icon"
+                src="/img/icon/manage-node-icons/home1.png"
+                alt="icon"
+              />
+            </span>
+          </div>
+        </router-link>
+      </div>
       <div class="delete-box">
         <div class="delete-btn">
           <span class="btn-text">DELETE CONFIGS</span>
@@ -47,10 +61,10 @@ export default {
 .config-node {
   grid-column: 1;
   width: 93%;
-  height: 93.7%;
+  height: 98.2%;
   padding: 5px;
   background-color: #33393e;
-  border-radius: 0 30px 30px 30px;
+  border-radius: 0 30px 30px 0;
   display: grid;
   grid-template-rows: repeat(12, 1fr);
   grid-template-columns: repeat(6, 1fr);
@@ -100,8 +114,8 @@ export default {
   height: 32px;
   background-color: #303030;
   font-size: 9px;
-  font-weight: bold;
-  color: white;
+  font-weight: 900;
+  color: rgb(235, 235, 235);
   border: 1px solid #656565;
   margin-top: 5px;
   border-radius: 8px;
@@ -109,18 +123,20 @@ export default {
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  box-shadow: inset 0 1px 9px #5e5e5e, 0 1px 4px #373737;
+  box-shadow: inset 1px 1px 10px 5px #181818, 0 1px 4px #373737;
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
-.config-btns .config-priority:hover {
+.config-btns .config-priority:hover,
+.router-box .home-btn:hover {
   background-color: #2c2c2c;
-  box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
+  box-shadow: none;
 }
 .config-btns .config-add:active,
 .config-btns .config-network:active,
-.config-btns .config-priority:active {
-  box-shadow: inset 1px 1px 10px 5px #181818;
+.config-btns .config-priority:active,
+.router-box .home-btn:active {
+  box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
 }
 .delete-box {
   grid-column: 1/6;
@@ -129,12 +145,27 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.delete-box .delete-btn {
+.router-box {
+  grid-column: 1/6;
+  grid-row: 7;
+  display: flex;
+  align-items: center;
+}
+.router-box a {
+  width: 100%;
+  text-decoration: none;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.delete-box .delete-btn,
+.router-box .home-btn {
   width: 90%;
   height: 32px;
   border: 1px solid #656565;
   border-radius: 8px;
-  box-shadow: inset 0 1px 9px #5e5e5e, 0 1px 4px #373737;
+  box-shadow: inset 1px 1px 10px 5px #181818, 0 1px 4px #373737;
   background-color: #303030;
   cursor: pointer;
   outline-style: none;
@@ -148,6 +179,10 @@ export default {
 .btn-text {
   margin-left: 10px;
 }
+.router-box .btn-text {
+  text-decoration: none;
+  color: #4eb051;
+}
 .delete-box .delete-btn:hover {
   background-color: #2c2c2c;
   box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
@@ -160,9 +195,12 @@ export default {
 .btn-icon {
   width: 21px;
   height: 21px;
-  border: 3px solid #0f5d4e;
   border-radius: 5px;
   margin-right: 5px;
+}
+.btn-icon img {
+  width: 21px;
+  height: 21px;
 }
 
 .config-row {

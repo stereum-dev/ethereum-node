@@ -5,7 +5,7 @@
       <div class="node-parent">
         <menu-side onmousedown="return false"></menu-side>
         <div class="journal-box" onmousedown="return false">
-          <journal-node></journal-node >
+          <journal-node></journal-node>
         </div>
         <div class="trapezoid-parent">
           <div class="modal-parent" v-if="isModalActive">
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import JournalNode from "../components/UI/node-manage/JournalNode.vue";
+import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
@@ -76,152 +76,7 @@ export default {
 
   data() {
     return {
-      dragging: false,
       isModalActive: false,
-      consensusItems: [],
-      executionItems: [],
-      validatorItems: [],
-      selectedItemToRemove: {},
-      modalItems: [],
-      droppedItems: [],
-      confirmChanges: [
-        {
-          id: 1,
-          content: "INSTALL",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/plus.png"),
-        },
-        {
-          id: 2,
-          content: "DELETE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/minus.png"),
-        },
-        {
-          id: 3,
-          content: "ACTIVATE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/green-power-icon.png"),
-        },
-        {
-          id: 4,
-          content: "DEACTIVATE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/red-power-icon.png"),
-        },
-        {
-          id: 5,
-          content: "LINK WITH",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/link-icon.png"),
-        },
-        {
-          id: 6,
-          content: "DELINK FROM",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/delink-icon.png"),
-        },
-      ],
-      servicePlugins: [
-        {
-          id: 1,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 2,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 3,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 4,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 5,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-      ],
-      sidebarPlugins: [
-        {
-          id: 1,
-          source: require("../../public/Img/icon/manage-node-icons/filter-confirm.png"),
-          drag: true,
-          category: "execution",
-          active: false,
-        },
-        {
-          id: 2,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-        {
-          id: 3,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 4,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "validator",
-          active: false,
-        },
-        {
-          id: 5,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "validator",
-          active: false,
-        },
-        {
-          id: 6,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 7,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-        {
-          id: 8,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "execution",
-          active: false,
-        },
-        {
-          id: 9,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 10,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-      ],
-      configData: [
-        {
-          id: 1,
-          name: "Configuration",
-          network: "testNet",
-        },
-      ],
     };
   },
   methods: {
@@ -249,17 +104,17 @@ export default {
 }
 .node-parent {
   display: grid;
-  height: 92%;
+  height: 93%;
   grid-template-columns: 19% 45% 20% 16%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: relative;
-  top: 9%;
+  top:6.9%;
 }
 
 .journal-box {
   color: white;
-  height: 98.2%;
+  height: 98.4%;
   grid-column: 1;
   grid-row: 1/4;
   background-color: transparent;

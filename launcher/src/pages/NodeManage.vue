@@ -3,7 +3,6 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="manage-parent">
-        <menu-side onmousedown="return false"></menu-side>
         <div class="config-box" onmousedown="return false">
           <node-configuration :configData="configData"></node-configuration>
         </div>
@@ -89,7 +88,6 @@
 
 <script>
 import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
-import MenuSide from "../components/UI/node-manage/MenuSide.vue";
 import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
@@ -97,7 +95,6 @@ import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 export default {
   components: {
     SidebarManage,
-    MenuSide,
     NodeConfiguration,
     ChangeConfirm,
     DropZone,
@@ -329,39 +326,45 @@ export default {
 }
 .manage-parent {
   display: grid;
-  height: 92%;
-  grid-template-columns: 3% 17% 45% 20% 15%;
+  height: 94.5%;
+  grid-template-columns: 17% 45% 20% 18%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: relative;
-  top: 9%;
+  top: 5%;
 }
 
 .config-box {
   color: white;
+  margin-top: 10px;
   width: 100%;
-  height: 100%;
-  grid-column: 2/3;
-  grid-row: 1/5;
+  height: 98%;
+  grid-column: 1;
+  grid-row: 1/4;
   align-self: center;
   background-color: transparent;
 }
 .drop-parent {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1/4;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
 .modal-parent {
+  height: 98%;
+  margin-top: 5px;
+  margin-right: 8px;
   display: flex;
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1/4;
   position: absolute;
   z-index: 1;
 }
 .service {
-  grid-column: 4/5;
+  height: 97%;
+  margin-top: 8px;
+  grid-column: 3;
   grid-row: 1/4;
   background: #2c4030;
   color: white;
@@ -369,7 +372,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  max-height: 100%;
+  border: 4px solid rgb(121, 121, 121);
 }
 .service-parent {
   display: flex;
@@ -403,9 +406,11 @@ export default {
 }
 
 .change-menu {
+  width: 93.5%;
+  height: 98%;
+  margin-top: 9px;
   grid-row: 1/4;
-  grid-column: 5/6;
-  margin: 0 5px;
+  grid-column: 4;
   background: #334b3f;
   border: solid #1a2620;
   border-width: 1px 6px;
@@ -418,9 +423,10 @@ export default {
 
 .footer {
   color: white;
-  grid-column: 1/7;
+  width: 100%;
+  grid-column: 1/5;
   grid-row: 4;
-  background-color: gray;
+  background-color: rgb(40, 40, 40);
   border-radius: 0 0 1.9rem 1.9rem;
   position: relative;
 }

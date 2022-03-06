@@ -16,6 +16,7 @@ export default {};
 <style scoped>
 .trap-container {
   width: 98%;
+  margin: 0 auto;
   min-height: 135px;
   background-color: #181818;
   display: flex;

@@ -19,9 +19,9 @@
 }
 .black {
   background: #000;
-  margin: 0 auto;
-  width: 95vw;
-  height: 95vh;
+  margin: 0 0 0 -3px;
+  width: 99vw;
+  height: 97vh;
   border-radius: 30px;
   box-sizing: border-box;
 }

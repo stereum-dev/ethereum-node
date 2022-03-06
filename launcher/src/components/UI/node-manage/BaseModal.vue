@@ -17,8 +17,9 @@ export default {
 </script>
 <style scoped>
 .modal-bg {
-  width: 43vw;
-  height: 84.1vh;
+  width: 42.5vw;
+  height: 85.5vh;
+  margin: 0 auto;
   background-color: #181818;
   display: flex;
   justify-content: center;

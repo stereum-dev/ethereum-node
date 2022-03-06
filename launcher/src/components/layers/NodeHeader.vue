@@ -14,8 +14,9 @@
             <router-link :to="{ path: '/control' }"><a>CONTROL</a></router-link>
           </li>
           <li class="main-nav__item">
-            <router-link :to="{ path: '/manage' }"><a>STAKING</a></router-link>
+            <router-link :to="{ path: '/staking' }"><a>STAKING</a></router-link>
           </li>
+
           <li class="spacer"></li>
           <li class="box__item"></li>
           <li class="box__item"></li>
@@ -24,6 +25,8 @@
           <li class="box__item"></li>
           <li class="box__item"></li>
           <li class="box__item"></li>
+        </ul>
+        <ul class="main-nav__items main-nav__items2">
           <li class="spacer"></li>
           <li class="btn__item">
             <input
@@ -79,7 +82,7 @@
 .main-header {
   width: 100vw;
   background: #336666;
-  padding: 1% 0;
+  padding: 5px 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -90,12 +93,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 9%;
+  width: 8%;
   z-index: 100;
 }
 
 .main-nav1 {
-  text-align: left;
+  display: flex;
+  justify-content: space-between;
   width: calc(100% - 74px);
   vertical-align: middle;
   margin-left: 14%;
@@ -108,6 +112,9 @@
   display: flex;
   justify-content: spa;
   align-items: center;
+}
+.main-nav__items2 {
+  margin-right: 20px;
 }
 
 .main-nav__item {
