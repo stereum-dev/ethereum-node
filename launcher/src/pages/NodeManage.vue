@@ -346,6 +346,8 @@ export default {
   background-color: transparent;
 }
 .drop-parent {
+  height: 88vh;
+  margin: 5px 4px 0 0;
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
@@ -353,14 +355,20 @@ export default {
   justify-content: space-evenly;
 }
 .modal-parent {
-  height: 98%;
-  margin-top: 5px;
-  margin-right: 8px;
-  display: flex;
   grid-column: 2;
   grid-row: 1/4;
+  width: 44.7vw;
+  height: 87.9vh;
+  margin: 2px 7px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   z-index: 1;
+}
+.modal-bg {
+  height: 87.9vh;
+  margin-right: 3px;
 }
 .service {
   height: 97.3%;
