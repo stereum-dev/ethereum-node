@@ -59,6 +59,56 @@
               </div>
             </div>
           </div>
+          <div class="middle-icon">
+            <img
+              class="folder"
+              src="../../public/Img/icon/the-staking/newfolder-icon.png"
+              alt="icon"
+            />
+            <img
+              class="filter"
+              src="../../public/Img/icon/the-staking/staking-filter.png"
+              alt="icon"
+            />
+            <div class="insert-key">
+              <span>CLICK OR DRAG TO INSERT KEY</span>
+              <img
+                class="black-key"
+                src="../../public/Img/icon/the-staking/black-key.png"
+                alt="icon"
+              />
+            </div>
+          </div>
+          <div class="general-box">
+            <div class="general-bg">
+              <div class="general-options-box"></div>
+            </div>
+          </div>
+          <div class="validators-box">
+            <div class="validator-title">
+              <span class="title">ALL VALIDATORS</span>
+            </div>
+            <div class="time-reward-box">
+              <div class="time-reward"></div>
+              <div class="proposed"></div>
+            </div>
+            <div class="validator-table">
+              <div class="validator-table-title">
+                <span>DATE</span>
+                <span>VALIATOR</span>
+                <span>ATTEST.RATE</span>
+                <span>REWARD</span>
+              </div>
+              <div class="validator-table-content">
+                <div class="validator-table-row">
+                  <span>DATE</span>
+                  <span>VALIATOR</span>
+                  <span>ATTEST.RATE</span>
+                  <span>REWARD</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,20 +143,20 @@
   height: 97%;
   background-color: #000000;
   border: 4px solid rgb(121, 121, 121);
-  border-radius: 0 45px 45px 45px;
+  border-radius: 0 40px 40px 40px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: 45% 55%;
 }
 .keys-table-box {
   grid-column: 1/13;
   grid-row: 1/2;
   justify-self: end;
   width: 90%;
-  height: 90%;
-  margin: 20px 10px 0 0;
-  border: 4px solid #a2a2a2;
-  border-radius: 45px;
+  height: 85%;
+  margin: 10px 10px 0 0;
+  border: 4px solid #bfbfbf;
+  border-radius: 35px 35px 10px 35px;
 }
 .keys-table {
   width: 100%;
@@ -114,7 +164,7 @@
 }
 .table-header {
   height: 30px;
-  border-bottom: 7px solid #a2a2a2;
+  border-bottom: 7px solid #bfbfbf;
   display: grid;
   grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
 }
@@ -146,10 +196,12 @@
 }
 .table-content {
   height: 80%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .table-row {
   width: 99%;
-  height: 37px;
+  height: 30px;
   margin: 5px auto 0 auto;
   display: grid;
   justify-content: center;
@@ -205,7 +257,7 @@
   grid-column: 8;
   width: 90%;
   height: 80%;
-  border: 3px solid gray;
+  border: 3px solid #bfbfbf;
   background-color: #000000;
   border-radius: 30px;
   display: flex;
@@ -220,5 +272,161 @@
 }
 .option-box .copy-icon {
   margin-left: 50px;
+}
+.middle-icon {
+  width: 60%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 37%;
+  left: 10%;
+}
+.middle-icon img {
+  width: 30px;
+  height: 30px;
+}
+.middle-icon .folder {
+  margin-right: 10px;
+}
+.middle-icon .filter {
+  margin-right: 20px;
+}
+.middle-icon .insert-key {
+  width: 70%;
+  height: 32px;
+  background-color: #bfbfbf;
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.middle-icon .insert-key span {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 900;
+}
+.middle-icon .insert-key img {
+  width: 28px;
+  height: 28px;
+}
+.general-box {
+  grid-column: 2/10;
+  grid-row: 2;
+  height: 92%;
+  border-radius: 30px;
+  background-color: #383838;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.general-bg {
+  width: 95%;
+  height: 90%;
+  background-color: #676767;
+  border-radius: 30px;
+}
+.general-options-box{
+    width:15%;
+    height: 45%;
+    background-color: #4C4848;
+    border: 4px solid #bfbfbf;
+    border-radius: 20px;
+    position: fixed;
+    bottom: 5%;
+    left: 9%;
+
+
+}
+.validators-box {
+  grid-column: 10/13;
+  grid-row: 2;
+}
+.validators-box .validator-title {
+  width: 232px;
+  height: 32px;
+  background-color: #bfbfbf;
+  border-radius: 30px;
+  position: fixed;
+  top: 42.5%;
+  right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.validator-title .title {
+  width: 80%;
+  height: 26px;
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+}
+.validators-box .time-reward-box {
+  width: 90%;
+  height: 50%;
+  background-color: #bfbfbf;
+  margin: 0 auto;
+  border-radius: 20px;
+  padding: 3px;
+}
+.time-reward-box .time-reward {
+  width: 100%;
+  height: 35%;
+  background-color: #464a44;
+  margin: 0 auto;
+  border-radius: 15px;
+}
+.time-reward-box .proposed {
+  width: 100%;
+  height: 63%;
+  background-color: #464a44;
+  margin: 3px auto 0 auto;
+  border-radius: 20px;
+}
+.validators-box .validator-table {
+  width: 90%;
+  height: 37%;
+  background-color: #bfbfbf;
+  margin: 2px auto 0 auto;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.validator-table .validator-table-title {
+  width: 100%;
+  height: 10%;
+  color: #333;
+  font-size: 8px;
+  font-weight: 900;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.validator-table .validator-table-content {
+  width: 95%;
+  height: 85%;
+  background-color: #000000;
+  margin-bottom: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.validator-table-content .validator-table-row {
+  width: 100%;
+  height: 16px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 2px;
+}
+.validator-table-content .validator-table-row span {
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+}
+.validator-table-content .validator-table-row span:last-child {
+  color: tomato;
 }
 </style>
