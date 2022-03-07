@@ -1,30 +1,9 @@
 <template>
   <div class="config-box">
     <div class="nodeSetupTitle">
-      <span>Node Setup Configuration</span>
+      <span>NODE - JOURNAL</span>
     </div>
-    <div class="config-table">
-      <div class="config-row" v-for="(item, index) in configData" :key="index">
-        <div v-if="item.status === 'online'" class="testnet-icon">
-          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
-        </div>
-        <div v-else-if="item.status === 'serverOff'" class="testnet-icon">
-          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
-        </div>
-        <div v-else-if="item.status === 'offline'" class="testnet-icon">
-          <img src="/img/icon/testnetIcon.png" alt="status-icon" />
-        </div>
-        <div v-else class="testnet-icon">
-          <img src="/img/icon/testnetIcon.png" alt="netStatus-icon" />
-        </div>
-        <div class="mainnet-icon">
-          <img src="/img/icon/mainnetIcon.png" alt="status-icon" />
-        </div>
-        <div class="row-content">
-          <p>{{ item.id }}#{{ item.name }}</p>
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 <script>
@@ -62,12 +41,8 @@ export default {
   box-sizing: border-box;
 }
 .config-box {
-
+  height: 100%;
   max-height: 140px;
-  grid-row: 2/5;
-  border: 10px solid #7f7f7f;
-  border-radius: 10px;
-  padding: 5px 2px;
   overflow-y: auto;
   background-color: transparent;
 }

@@ -168,6 +168,7 @@ export default {
 
 .active-table {
   width: 100%;
+  height: 80%;
   border: 2px solid#747474;
   border-radius: 15px;
   background: #242526;
@@ -175,6 +176,9 @@ export default {
   padding: 10px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.active-table::-webkit-scrollbar {
+  width: 1px;
 }
 
 .table-row {
@@ -217,33 +221,5 @@ export default {
   font-size: 8px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 15px;
-  background-color: transparent;
-}
-
-/* Track */
-
-::-webkit-scrollbar-track {
-  border: 3px solid #676767;
-  border-radius: 100px;
-  margin: 20px;
-  background: #000;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #676767;
-  border: 2px solid rgb(145, 144, 144);
-  border-radius: 100px;
-  background-clip: content-box;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #2d3134;
 }
 </style>
