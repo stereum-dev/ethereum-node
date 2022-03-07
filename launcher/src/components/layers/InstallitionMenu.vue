@@ -28,56 +28,43 @@ import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
 export default {
-  created() {
-    console.log("check OS");
-    let response = ControlService.checkOS()
-      .then((result) => {
-        return result;
-      })
-      .catch((error) => {
-        return error;
-      });
-    this.display(response);
-  },
+created(){
+  this.checkOS()
+},
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
       running: true,
       message: "",
-      installation: [
-        {
-          title: "1CLICK INSTALLATION",
-          img: "/img/icon/one click installer.png",
-          path: "/clickinstall",
-        },
-        {
-          title: "CUSTOM INSTALLATION",
-          img: "/img/icon/custom installer.png",
-          path: "/manage",
-        },
-        {
-          title: "IMPORT CONFIGURATION",
-          img: "/img/icon/IMPORT CONFIGURATIONS.png",
-          path: "/",
-        },
-      ],
+
     };
+  },
+  computed: {
+    installation() {
+      return this.$store.getters.installation_get;
+    },
   },
   methods: {
     display: async function (response) {
       let data = await response;
       console.log(data);
-      if (data == "Ubuntu" || data == "CentOS") {
+      if(data == "Ubuntu" || data == "CentOS"){
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
-      } else if (data.name !== undefined) {
-        this.message =
-          data.name.toUpperCase() + ": " + data.message.toUpperCase();
+      } else if(data.name !== undefined) {
+        this.message = data.name.toUpperCase() + ": " + data.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     },
-  },
+    checkOS : async function() {
+      console.log("check OS");
+      let response = ControlService.checkOS()
+        .then(result => {return result})
+        .catch(error => {return error})
+      this.display(await response);
+    }
+  }
 };
 </script>
 <style scope>

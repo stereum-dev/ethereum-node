@@ -94,6 +94,7 @@ export default {
   width: 100%;
   position: relative;
 }
+
 .side-background {
   grid-row: 1/5;
   background-color: #336666;
@@ -101,6 +102,7 @@ export default {
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
   z-index: -1;
 }
+
 .menu-box {
   position: absolute;
   top: 0;
@@ -109,6 +111,7 @@ export default {
   background: #a1c1ad;
   z-index: 0;
 }
+
 .menu {
   position: absolute;
   bottom: 0;
@@ -118,12 +121,14 @@ export default {
   border-bottom-right-radius: 100% 15%;
   border-top-left-radius: 100% 15%;
 }
+
 .menu .home-icon {
   border-radius: 100%;
   outline-style: none;
   width: 25px;
   margin-top: 50px;
 }
+
 .menu .manage-icon {
   border-radius: 100%;
   outline-style: none;
@@ -138,6 +143,7 @@ export default {
   grid-column-end: 3;
   align-self: center;
 }
+
 .consensus {
   color: red;
   grid-column-start: 2;
@@ -145,6 +151,7 @@ export default {
   height: 100%;
   align-self: center;
 }
+
 .validator {
   color: white;
   grid-column-start: 2;
@@ -153,6 +160,7 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
+
 .nodesetup {
   background: transparent;
   height: 85%;
@@ -165,6 +173,7 @@ export default {
   border: 4px solid rgb(116, 116, 116);
   border-radius: 15px;
 }
+
 .service {
   background: #2c4030;
   border: 3px solid gray;
@@ -190,6 +199,7 @@ export default {
   font-size: 15px;
   font-weight: 800;
 }
+
 .validator {
   color: white;
   grid-column-start: 2;
@@ -223,6 +233,7 @@ export default {
   align-self: center;
   overflow: hidden;
 }
+
 .arrow-up {
   width: 0;
   height: 50%;
@@ -231,6 +242,7 @@ export default {
   border-right: solid 50px transparent;
   resize: both;
 }
+
 .arrow-down {
   width: 0;
   height: 50%;
@@ -238,6 +250,7 @@ export default {
   border-left: solid 50px transparent;
   border-right: solid 50px transparent;
 }
+
 .sidebar {
   display: grid;
   grid-row-start: 1;
@@ -246,6 +259,7 @@ export default {
   background: transparent;
   border-top-right-radius: 40px;
 }
+
 .footer {
   background: #4c4848;
   color: white;
