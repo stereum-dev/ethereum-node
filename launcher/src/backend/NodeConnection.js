@@ -70,8 +70,9 @@ export class NodeConnection {
                 let installPkgResult;
                 try {
                     installPkgResult = await this.sshService.exec(
-                    `sudo apt update &&
-                    sudo apt install -y pip ansible tar gzip wget`);
+                    `sudo apt update &&\
+                    sudo apt install -y pip ansible tar gzip wget &&\
+                    sudo ansible-galaxy collection install community.docker`);
                 } catch (err) {
                     log.error(err);
                     installPkgResult = {rc: 1, stderr: err};
@@ -135,7 +136,7 @@ export class NodeConnection {
 
             log.info("starting playbook " + playbook + " with extra vars", extraVars);
 
-            const playbookRunRef = crypto.randomUUID();
+            const playbookRunRef = await this.createRunRef(36);
 
             log.info("using playbookRunRef: ", playbookRunRef);
 
@@ -181,7 +182,7 @@ export class NodeConnection {
 
             let statusResult;
             try {
-                statusResult = await this.sshService.exec("sudo cat /tmp/" + playbookRunRef + "/localhost");
+                statusResult = await this.sshService.exec("sudo cat /tmp/" + playbookRunRef + "/127.0.0.1");
             } catch (err) {
                 log.error("Can't read playbook status '" + playbookRunRef + "'", err);
                 return reject("Can't read playbook status '" + playbookRunRef + "': " + err);
@@ -248,8 +249,8 @@ export class NodeConnection {
             let configStatus;
             try {
                 configStatus = await this.sshService.exec(
-                    `sudo echo -e ` + StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) + `
-                    > /etc/stereum/services/` + serviceConfiguration.id + `.yaml`);
+                    `sudo echo -e ` + StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) + 
+                    ` > /etc/stereum/services/` + serviceConfiguration.id + `.yaml`);
             } catch (err) {
                 log.error("Can't write service configuration of " + serviceConfiguration.id, err);
                 return reject("Can't write service configuration of " + serviceConfiguration.id + ": " + err);
@@ -280,10 +281,10 @@ export class NodeConnection {
                 return reject("Failed listing services: " + SSHService.extractExecError(serviceJsons));
             }
 
-            return resolve(serviceJsons.stdout.split(/\n/).map(json => {
+            return resolve((serviceJsons.stdout.split(/\n/).slice(0,-1).map(json => {
                 log.debug("parsing json: ", json);
                 return JSON.parse(json);
-            }));
+            })));
         });
     }
 
@@ -308,5 +309,14 @@ export class NodeConnection {
 
             return resolve(JSON.parse(serviceJson.stdout));
         });
+    }
+
+    async createRunRef(length){
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for(let i = 0; i < length; i++){
+            result += characters.charAt(Math.random() * characters.length);
+        }
+        return result;
     }
 }
