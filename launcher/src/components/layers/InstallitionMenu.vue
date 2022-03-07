@@ -36,27 +36,17 @@ created(){
     return {
       running: true,
       message: "",
-      installation: [
-        {
-          title: "1CLICK INSTALLATION",
-          img: "/img/icon/one click installer.png",
-          path: "/clickinstall",
-        },
-        {
-          title: "CUSTOM INSTALLATION",
-          img: "/img/icon/custom installer.png",
-          path: "/manage",
-        },
-        {
-          title: "IMPORT CONFIGURATION",
-          img: "/img/icon/IMPORT CONFIGURATIONS.png",
-          path: "/",
-        },
-      ],
+
     };
   },
-  methods:{
-    display : async function(data){
+  computed: {
+    installation() {
+      return this.$store.getters.installation_get;
+    },
+  },
+  methods: {
+    display: async function (response) {
+      let data = await response;
       console.log(data);
       if(data == "Ubuntu" || data == "CentOS"){
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";

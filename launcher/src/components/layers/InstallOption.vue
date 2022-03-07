@@ -32,15 +32,12 @@
 <script>
 export default {
   data() {
-    return {
-      R1clkInstls: [
-        { clkId: "staking", img: "/img/icon/STAKING.png" },
-        { clkId: "testnet", img: "/img/icon/TESTNET.png" },
-        { clkId: "ssv", img: "/img/icon/BLOX_SSV.png" },
-        { clkId: "blox", img: "/img/icon/OBOL_SSV.png" },
-        { clkId: "blox", img: "/img/icon/ROCKETPOOL_1.png" },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    R1clkInstls() {
+      return this.$store.getters.R1clkInstls_get;
+    },
   },
 };
 </script>

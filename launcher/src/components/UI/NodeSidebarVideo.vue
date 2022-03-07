@@ -18,34 +18,12 @@
 <script>
 export default {
   data() {
-    return {
-      configData: [
-        {
-          id: 1,
-          name: "First Steps!",
-        },
-        {
-          id: 2,
-          name: "Stake with 32 ETH",
-        },
-        {
-          id: 3,
-          name: "Use SSV network",
-        },
-        {
-          id: 4,
-          name: "Alerts on Mobile App",
-        },
-        {
-          id: 5,
-          name: "Switch Clients",
-        },
-        {
-          id: 6,
-          name: "Switch Machine",
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    configData() {
+      return this.$store.getters.nodeSbVideo_get;
+    },
   },
 };
 </script>
