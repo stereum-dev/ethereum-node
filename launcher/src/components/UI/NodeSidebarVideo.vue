@@ -54,6 +54,9 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
+.tutorial-table::-webkit-scrollbar {
+  width: 1px;
+}
 
 .table-row {
   display: flex;
@@ -103,32 +106,8 @@ export default {
   text-align: center;
   margin: 5px auto;
 }
-
-/* width */
-::-webkit-scrollbar {
-  width: 15px !important;
-  margin-left: 5px !important;
-  background-color: transparent;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  border: 3px solid #676767;
-  border-radius: 100px;
-  margin: 30px;
-  background: #000;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #676767;
-  border: 2px solid rgb(145, 144, 144);
-  border-radius: 100px;
-  background-clip: content-box;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #2d3134;
+.round-icon img {
+  width: 40px;
+  height: 40px;
 }
 </style>
