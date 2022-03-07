@@ -29,93 +29,11 @@
 export default {
   data() {
     return {
-      configData: [
-        {
-          id: 1,
-          name: "NONE FUNCTIONAL",
-          status: "deactive",
+      computed: {
+        configData() {
+          return this.$store.getters.nodeSbActive_get;
         },
-        {
-          id: 2,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 3,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 4,
-          name: "INACTIVE",
-          status: "off",
-        },
-        {
-          id: 5,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 6,
-          name: "INACTIVE",
-          status: "off",
-        },
-        {
-          id: 7,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 8,
-          name: "NONE FUNCTIONAL",
-          status: "deactive",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-      ],
+      },
     };
   },
 };

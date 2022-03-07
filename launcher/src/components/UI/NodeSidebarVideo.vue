@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     configData() {
-      return this.$store.state.configData;
+      return this.$store.getters.nodeSbVideo_get;
     },
   },
 };

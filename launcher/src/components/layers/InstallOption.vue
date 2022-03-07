@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     R1clkInstls() {
-      return this.$store.state.R1clkInstls;
+      return this.$store.getters.R1clkInstls_get;
     },
   },
 };

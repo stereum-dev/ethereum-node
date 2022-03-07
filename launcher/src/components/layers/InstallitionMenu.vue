@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     installation() {
-      return this.$store.state.installation;
+      return this.$store.getters.installation_get;
     },
   },
   methods: {
