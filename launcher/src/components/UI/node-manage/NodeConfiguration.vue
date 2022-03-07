@@ -104,7 +104,6 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  margin-top: 10px;
 }
 .config-btns .config-add,
 .config-btns .config-network,
