@@ -74,7 +74,7 @@
     when: stereum_service_configuration.image is match("grafana/grafana:*")
 
   - name: Start service
-    docker_container:
+    community.docker.docker_container:
       command_handling: correct
       hostname: "{{ stereum_service_container_name }}"
       name: "{{ stereum_service_container_name }}"

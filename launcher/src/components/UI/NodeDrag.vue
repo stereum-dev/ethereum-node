@@ -1,10 +1,6 @@
 <template>
   <div class="drag-node">
     <div class="drag_input"></div>
-    <div class="drag_input"></div>
-    <div class="drag_input"></div>
-    <div class="drag_input"></div>
-    <div class="drag_input"></div>
   </div>
 </template>
 

@@ -28,17 +28,9 @@ import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
 export default {
-  created() {
-    console.log("check OS");
-    let response = ControlService.checkOS()
-      .then((result) => {
-        return result;
-      })
-      .catch((error) => {
-        return error;
-      });
-    this.display(response);
-  },
+created(){
+  this.checkOS()
+},
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
@@ -56,17 +48,23 @@ export default {
     display: async function (response) {
       let data = await response;
       console.log(data);
-      if (data == "Ubuntu" || data == "CentOS") {
+      if(data == "Ubuntu" || data == "CentOS"){
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
-      } else if (data.name !== undefined) {
-        this.message =
-          data.name.toUpperCase() + ": " + data.message.toUpperCase();
+      } else if(data.name !== undefined) {
+        this.message = data.name.toUpperCase() + ": " + data.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     },
-  },
+    checkOS : async function() {
+      console.log("check OS");
+      let response = ControlService.checkOS()
+        .then(result => {return result})
+        .catch(error => {return error})
+      this.display(await response);
+    }
+  }
 };
 </script>
 <style scope>
