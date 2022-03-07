@@ -22,19 +22,13 @@
       </div>
     </div>
     <div class="execution">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <drop-zone></drop-zone>
     </div>
     <div class="consensus">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <drop-zone></drop-zone>
     </div>
     <div class="validator">
-      <the-trapezium>
-        <node-drag></node-drag>
-      </the-trapezium>
+      <drop-zone></drop-zone>
     </div>
     <div class="nodesetup">
       <node-setup-config></node-setup-config>
@@ -52,17 +46,29 @@
 </template>
 
 <script>
-import TheTrapezium from "../UI/TheTrapezium.vue";
-import NodeDrag from "../UI/NodeDrag.vue";
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
 import SidebarParent from "./NodeSidebarParent.vue";
+import DropZone from "../UI/node-manage/DropZone.vue";
 
 export default {
   components: {
-    TheTrapezium,
-    NodeDrag,
     NodeSetupConfig,
     SidebarParent,
+    DropZone,
+  },
+  props: {
+    title: {
+      type: String,
+      required: true,
+      default: "Title",
+    },
+    list: {
+      type: Array,
+      required: true,
+      default: () => {
+        return [];
+      },
+    },
   },
 };
 </script>
@@ -154,22 +160,27 @@ export default {
 
 .nodesetup {
   background: transparent;
+  height: 85%;
+  width: 96%;
   color: white;
   grid-column-start: 2;
   grid-row: 4/5;
   overflow-x: hidden;
+  margin: 13px auto 0 auto;
+  border: 4px solid rgb(116, 116, 116);
+  border-radius: 15px;
 }
 
 .service {
-  background: #336666;
-  color: white;
+  background: #2c4030;
+  border: 3px solid gray;
   grid-row-start: 1;
   grid-row-end: 5;
   grid-column-start: 3;
   grid-column-end: 4;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-content: center;
 }
 
@@ -180,7 +191,11 @@ export default {
   font-weight: bold;
   padding: 0.5px;
   text-align: center;
-  font-size: 90%;
+  color: #fff;
+}
+.title {
+  font-size: 15px;
+  font-weight: 800;
 }
 
 .validator {
@@ -189,6 +204,7 @@ export default {
   grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
+
 }
 
 .service-container {
