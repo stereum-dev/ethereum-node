@@ -1,8 +1,12 @@
 import Vue, { createApp } from "vue"; // CHANGE
+
+import store from "./store/index.js";
+
 import App from "./App.vue";
-import i18n from "./includes/i18n";
 
 import router from "./router/index.js";
+
+import i18n from "./includes/i18n";
 import BaseButton from "./components/UI/BaseButton.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from "./components/UI/TheTrapezium.vue";
@@ -24,6 +28,7 @@ app.component("node-bg", NodeBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 
+app.use(store);
 app.use(router);
 app.use(i18n);
 app.mount("#app");

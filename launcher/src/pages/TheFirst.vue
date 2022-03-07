@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import BaseLogo from "../components/layers/BaseLogo.vue";
 import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
@@ -39,40 +40,19 @@ export default {
     return {
       link: "stereum_logo_blinking.gif",
       flag: "SelectLang.png",
-      dialogIsVisible: false,
-      linkFlags: [
-        {
-          langImg: "Img/Flag/ENGLISH.png",
-          langSelect: "Img/Flag/En.png",
-          langName: "english",
-        },
-        {
-          langImg: "Img/Flag/GERMAN.png",
-          langSelect: "Img/Flag/Gr.png",
-          langName: "german",
-        },
-        {
-          langImg: "Img/Flag/FRENCH.png",
-          langSelect: "Img/Flag/Fr.png",
-          langName: "french",
-        },
-        {
-          langImg: "Img/Flag/SPANISH.png",
-          langSelect: "Img/Flag/Sp.png",
-          langName: "spanish",
-        },
-      ],
       language: "",
     };
   },
+  computed: {
+    linkFlags() {
+      return this.$store.getters.linkFlags_get;
+    },
+    dialogIsVisible() {
+      return this.$store.getters.dialogIsVisible_get;
+    },
+  },
   methods: {
-    showDialog() {
-      this.dialogIsVisible = true;
-    },
-
-    hideDialog() {
-      this.dialogIsVisible = false;
-    },
+    ...mapActions(["showDialog", "hideDialog"]),
     setLang(lang, langSelect) {
       this.language = lang;
       this.flag = langSelect;
