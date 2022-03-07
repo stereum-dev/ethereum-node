@@ -6,6 +6,7 @@ import WelcomePage from "../pages/WelcomePage.vue";
 import TheNode from "../pages/TheNode.vue";
 import ControlPanel from "../pages/ControlPanel.vue";
 import NodeManage from "../pages/NodeManage.vue";
+import TheStaking from "../pages/TheStaking.vue";
 
 const routes = [
   {
@@ -37,6 +38,11 @@ const routes = [
     path: "/manage",
     name: "NodeManage",
     component: NodeManage,
+  },
+  {
+    path: "/staking",
+    name: "TheStaking",
+    component: TheStaking,
   },
 ];
 
