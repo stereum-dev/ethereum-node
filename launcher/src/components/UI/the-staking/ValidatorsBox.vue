@@ -102,7 +102,7 @@
   height: 50%;
   background-color: #bfbfbf;
   margin: 0 auto;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 3px;
 }
 .time-reward-box .time-reward {
@@ -110,7 +110,7 @@
   height: 35%;
   background-color: #464a44;
   margin: 0 auto;
-  border-radius: 15px;
+  border-radius: 10px;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -135,7 +135,7 @@
   height: 63%;
   background-color: #464a44;
   margin: 3px auto 0 auto;
-  border-radius: 20px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
