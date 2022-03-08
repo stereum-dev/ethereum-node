@@ -14,12 +14,9 @@ import NodeBg from "./components/UI/NodeBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
 
-//import store from "./store/index.js";
-//import ControlService from "@/store/ControlService";
 Vue.configureCompat({ WATCH_ARRAY: false });
 
 const app = createApp(App);
-//app.use(store);
 
 app.component("base-button", BaseButton);
 app.component("background-page", BackgroundPage);
@@ -31,11 +28,5 @@ app.component("service-plugin", ServicePlugin);
 app.use(store);
 app.use(router);
 app.use(i18n);
-app.mount("#app");
-//Vue.config.productionTip = false;
 
-// new Vue({
-//   router,
-//   store,
-//   render: (h) => h(App),
-// }).$mount("#app");
+app.mount("#app");
