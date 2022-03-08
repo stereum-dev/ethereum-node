@@ -2,34 +2,15 @@ import { createStore } from "vuex";
 import rootMutations from "./mutations.js";
 import rootActions from "./actions.js";
 import rootGetters from "./getters.js";
+import flagDialModule from "./flagDialog/index";
 
 //state vuex
 const store = createStore({
+  modules: {
+    languages: flagDialModule,
+  },
   state() {
     return {
-      dialogIsVisible: false,
-      linkFlags: [
-        {
-          langImg: "Img/Flag/ENGLISH.png",
-          langSelect: "Img/Flag/En.png",
-          langName: "english",
-        },
-        {
-          langImg: "Img/Flag/GERMAN.png",
-          langSelect: "Img/Flag/Gr.png",
-          langName: "german",
-        },
-        {
-          langImg: "Img/Flag/FRENCH.png",
-          langSelect: "Img/Flag/Fr.png",
-          langName: "french",
-        },
-        {
-          langImg: "Img/Flag/SPANISH.png",
-          langSelect: "Img/Flag/Sp.png",
-          langName: "spanish",
-        },
-      ],
       installation: [
         {
           title: "1CLICK INSTALLATION",
