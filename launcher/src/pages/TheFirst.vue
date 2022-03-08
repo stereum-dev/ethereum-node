@@ -30,12 +30,16 @@ import { mapActions } from "vuex";
 import BaseLogo from "../components/layers/BaseLogo.vue";
 import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
+import ControlService from "@/store/ControlService";
 //import SetupServer from "./SetupServer.vue";
 export default {
   name: "TheFirst",
   components: { BaseLogo, LangButton, LangDialog },
 
   emit: ["open", "page"],
+  created(){
+    this.checkSettings();
+  },
   data() {
     return {
       link: "stereum_logo_blinking.gif",
@@ -58,6 +62,7 @@ export default {
       this.flag = langSelect;
       this.hideDialog();
       this.link = "stereum_logo_extern.png";
+      this.updateSettings(lang, langSelect);
     },
     activePage() {
       if (this.language === "") {
@@ -65,6 +70,18 @@ export default {
       } else {
         this.$emit("page", "SetupServer");
       }
+    },
+    checkSettings : async function(){
+      const savedConfig = await ControlService.readConfig()
+      if(savedConfig !== undefined && savedConfig.savedLanguage !== undefined){
+        this.setLang(savedConfig.savedLanguage.language, savedConfig.savedLanguage.flag);
+        this.activePage();
+      }
+    },
+    updateSettings : async function(lang, langSelect){
+      let prevConf = await ControlService.readConfig()
+      const conf = {...prevConf, savedLanguage: {language: lang, flag: langSelect}};
+      await ControlService.writeConfig(conf);
     },
   },
 };
