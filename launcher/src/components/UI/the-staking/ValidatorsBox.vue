@@ -29,15 +29,16 @@
 .validators-box {
   grid-column: 10/13;
   grid-row: 2;
+  height: 100%;
 }
 .validators-box .validator-title {
-  width: 232px;
+  width: 230px;
   height: 32px;
   background-color: #bfbfbf;
-  border-radius: 30px;
+  border-radius: 20px 20px 20px 20px;
   position: fixed;
   top: 41%;
-  right: 30px;
+  right: 21px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,7 +74,7 @@
 }
 .validators-box .validator-table {
   width: 90%;
-  height: 37%;
+  height: 41%;
   background-color: #bfbfbf;
   margin: 2px auto 0 auto;
   padding: 3px;

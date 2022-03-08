@@ -15,6 +15,7 @@ import KeyTable from "../components/UI/the-staking/KeyTable.vue";
 import GeneralBox from "../components/UI/the-staking/GeneralBox.vue";
 import ValidatorsBox from "../components/UI/the-staking/ValidatorsBox.vue";
 import StakingBackground from "../components/UI/the-staking/StakingBackground.vue";
+
 export default {
   components: {
     KeyTable,

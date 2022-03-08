@@ -24,7 +24,7 @@
 .general-box {
   grid-column: 2/10;
   grid-row: 2;
-  height: 92%;
+  height: 97%;
   border-radius: 30px;
   background-color: #383838;
   display: flex;
