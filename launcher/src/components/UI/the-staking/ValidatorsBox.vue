@@ -226,6 +226,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border-radius:3px;
 }
 .validator-table .validator-table-title {
   width: 100%;
