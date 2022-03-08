@@ -17,17 +17,16 @@ export default {
 </script>
 <style scoped>
 .modal-bg {
-  width: 42.5vw;
-  height: 85.5vh;
-  margin: 0 auto;
+  width: 48.5vw;
+  height: 87.6vh;
   background-color: #181818;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .modal-box {
-  width: 95%;
-  height: 95%;
+  width: 94%;
+  height: 94%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,11 +61,12 @@ export default {
 .close-btn {
   position: absolute;
   top: 10px;
-  right: 10px;
+  right: 12px;
   border: 1px solid #ce4f4f;
   border-radius: 50px;
   background-color: #ce4f4f;
   color: #fff;
   outline-style: none;
+  font-weight: bold;
 }
 </style>

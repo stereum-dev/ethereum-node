@@ -11,7 +11,7 @@
 .green {
   width: 100%;
   height: 100%;
-  background: #336666;
+  background: #324b3f;
   position: fixed;
   z-index: -1;
   top: 0;
@@ -22,10 +22,9 @@
   margin: 0 0 0 -3px;
   width: 99vw;
   height: 92%;
-  border-radius:0 44px 30px 30px;
+  border-radius: 0 44px 30px 30px;
   box-sizing: border-box;
   position: fixed;
   bottom: 2px;
-
 }
 </style>
