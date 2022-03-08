@@ -46,6 +46,7 @@
             src="../../../../public/Img/icon/manage-node-icons/bin.png"
             alt="icon"
           />
+
         </div>
       </div>
     </div>
@@ -76,6 +77,7 @@ export default {
   width: 95%;
   height: 98%;
   display: grid;
+
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
   background-color: #606060;
@@ -104,6 +106,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  margin-top: 10px;
 }
 .config-btns .config-add,
 .config-btns .config-network,
@@ -125,7 +128,8 @@ export default {
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
-.config-btns .config-priority:hover {
+.config-btns .config-priority:hover,
+.router-box .home-btn:hover {
   background-color: #2c2c2c;
   box-shadow: none;
 }

@@ -210,6 +210,8 @@ export default {
   grid-template-rows: 4% 26% 20% 17% 33%;
 }
 
+
+
 .manage-configuration {
   grid-column: 1;
   grid-row: 2;
@@ -227,6 +229,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #2C4030;
+
   margin: 5px auto;
   box-shadow: inset 0 1px 5px 0 rgb(155, 155, 155);
 }
@@ -325,6 +328,7 @@ export default {
   height: 15px;
   margin: 0 auto;
   border-bottom: 1px solid #333e33;
+
   display: flex;
   justify-content: center;
   align-items: center;

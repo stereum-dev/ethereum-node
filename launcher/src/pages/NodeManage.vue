@@ -346,8 +346,10 @@ export default {
   background-color: transparent;
 }
 .drop-parent {
+
   height: 88vh;
   margin: 5px 4px 0 0;
+
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
