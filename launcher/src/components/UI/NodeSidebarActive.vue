@@ -43,6 +43,7 @@ export default {
   box-sizing: border-box;
 }
 .active-box {
+  height: 90%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
