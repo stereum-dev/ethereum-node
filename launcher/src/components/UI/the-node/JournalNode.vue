@@ -209,6 +209,9 @@ export default {
   grid-template-columns: 1;
   grid-template-rows: 4% 26% 20% 17% 33%;
 }
+
+
+
 .manage-configuration {
   grid-column: 1;
   grid-row: 2;

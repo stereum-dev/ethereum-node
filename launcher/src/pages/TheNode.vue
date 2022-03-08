@@ -129,8 +129,10 @@ export default {
   justify-content: space-between;
 }
 .modal-parent {
+
   width: 44.5vw;
   height: 88.2vh;
+
   display: flex;
   grid-column: 2;
   grid-row: 1/4;

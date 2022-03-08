@@ -76,6 +76,7 @@ export default {
   width: 95%;
   height: 98%;
   display: grid;
+
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
   background-color: #606060;
