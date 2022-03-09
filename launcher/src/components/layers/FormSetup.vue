@@ -180,9 +180,7 @@ export default {
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
-      ControlService.writeConfig({
-        savedConnections: this.getstorableConnections(),
-      });
+      this.writeSettings();
     },
     getstorableConnections() {
       let storableConnections = [];
@@ -197,15 +195,14 @@ export default {
       });
       return storableConnections;
     },
-    deleteModel() {
+    deleteModel: async function() {
       console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
         return currSelected != conn.name;
       });
-      ControlService.writeConfig({
-        savedConnections: this.getstorableConnections(),
-      });
+      await this.writeSettings();
+      await this.loadStoredConnections();
       this.model.name.value = "";
       this.model.host.value = "";
       this.model.user.value = "";
@@ -213,7 +210,6 @@ export default {
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
       this.keyAuth = false;
-      this.loadStoredConnections();
     },
     createConnection() {
       return {
@@ -237,6 +233,13 @@ export default {
       }
       console.log(savedConnections);
       this.connections = savedConnections;
+    },
+    writeSettings: async function(){
+      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
+      ControlService.writeConfig({
+        savedConnections: this.getstorableConnections(),
+        savedLanguage: savedLanguage,
+      });
     },
     checkInput(model) {
       if (model.value == "") {

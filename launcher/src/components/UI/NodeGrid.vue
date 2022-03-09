@@ -35,6 +35,10 @@
     </div>
 
     <div class="service">
+      <div class="title-box">
+        <span class="title">SERVICE PLUGINS</span>
+      </div>
+
       <service-plugin></service-plugin>
     </div>
 
@@ -183,12 +187,12 @@ export default {
   justify-content: space-around;
   align-content: center;
 }
-.title {
-  height: 5%;
-  background: #000;
-  margin: 1rem 0;
-  font-weight: bold;
-  padding: 0.5px;
+.title-box {
+  width: 99%;
+  height: 20px;
+  margin: 10px 0;
+  background-color: #374b3b;
+  padding: 1px;
   text-align: center;
   color: #fff;
 }
@@ -206,17 +210,20 @@ export default {
 
 }
 
-.service-container {
-  width: 90%;
-  height: 85%;
-  background: #4f4f4f;
-  align-self: center;
-  border-radius: 20px;
-  overflow: hidden;
-  padding: 5%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+.trap-container {
+  background-color: #2c4030;
+  margin: 5px auto 0 auto;
+  width: 95%;
+  height: 95%;
+  padding: 5px;
+}
+.trap-container .trap-box{
+  background-color: #2c4030 !important;
+  height: 1%;
+}
+.trapezoid{
+  background: #000;
+  height: 1% !important;
 }
 
 
