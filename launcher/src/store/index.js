@@ -2,12 +2,26 @@ import { createStore } from "vuex";
 import rootMutations from "./mutations.js";
 import rootActions from "./actions.js";
 import rootGetters from "./getters.js";
-import flagDialModule from "./flagDialog/index";
+import flagDialModule from "./flagDialog/index.js";
+import clickInstallModule from "./clickInstall/index.js";
+import controlPanelModule from "./controlPanel/index.js";
+import nodeManageModule from "./nodeManage/index.js";
+import setupServerModule from "./setupServer/index.js";
+import theNodeModule from "./theNode/index.js";
+import theStakingModule from "./theStaking/index.js";
+import welcomePageModule from "./welcomePage/index.js";
 
 //state vuex
 const store = createStore({
   modules: {
     languages: flagDialModule,
+    installationPage: clickInstallModule,
+    controlpanel: controlPanelModule,
+    managing: nodeManageModule,
+    setupServer: setupServerModule,
+    node: theNodeModule,
+    staking: theStakingModule,
+    welcome: welcomePageModule,
   },
   state() {
     return {
