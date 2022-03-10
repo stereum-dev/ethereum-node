@@ -158,9 +158,9 @@ const store = createStore({
       R1clkInstls: [
         { clkId: "staking", img: "/img/icon/STAKING.png" },
         { clkId: "testnet", img: "/img/icon/TESTNET.png" },
-        { clkId: "ssv", img: "/img/icon/BLOX_SSV.png" },
-        { clkId: "blox", img: "/img/icon/OBOL_SSV.png" },
-        { clkId: "blox", img: "/img/icon/ROCKETPOOL_1.png" },
+        { clkId: "blox", img: "/img/icon/BLOX_SSV.png" },
+        { clkId: "obol", img: "/img/icon/OBOL_SSV.png" },
+        { clkId: "rocket", img: "/img/icon/ROCKETPOOL_1.png" },
       ],
     };
   },
