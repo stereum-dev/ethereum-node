@@ -12,10 +12,10 @@
 .ctrGridParent {
   display: grid;
   width: 98.9%;
-  height:98%;
+  height:97.5%;
   border: 6px solid rgb(165, 165, 165);
   border-radius: 10px 30px 30px 30px;
-  top: 0;
+  top: 1px;
   grid-template-columns: 28% 57% 15%;
   grid-template-rows: repeat(3, 1fr) 5%;
   position: relative;
