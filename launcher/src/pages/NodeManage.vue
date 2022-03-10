@@ -92,6 +92,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     SidebarManage,
@@ -106,151 +107,22 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
-      consensusItems: [],
-      executionItems: [],
-      validatorItems: [],
-      selectedItemToRemove: {},
-      modalItems: [],
+
       droppedItems: [],
-      confirmChanges: [
-        {
-          id: 1,
-          content: "INSTALL",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/plus.png"),
-        },
-        {
-          id: 2,
-          content: "DELETE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/minus.png"),
-        },
-        {
-          id: 3,
-          content: "ACTIVATE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/green-power-icon.png"),
-        },
-        {
-          id: 4,
-          content: "DEACTIVATE",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/red-power-icon.png"),
-        },
-        {
-          id: 5,
-          content: "LINK WITH",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/link-icon.png"),
-        },
-        {
-          id: 6,
-          content: "DELINK FROM",
-          contentIcon: require("../../public/Img/icon/manage-node-icons/delink-icon.png"),
-        },
-      ],
-      servicePlugins: [
-        {
-          id: 1,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 2,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 3,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 4,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 5,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-      ],
-      sidebarPlugins: [
-        {
-          id: 1,
-          source: require("../../public/Img/icon/manage-node-icons/filter-confirm.png"),
-          drag: true,
-          category: "execution",
-          active: false,
-        },
-        {
-          id: 2,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-        {
-          id: 3,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 4,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "validator",
-          active: false,
-        },
-        {
-          id: 5,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "validator",
-          active: false,
-        },
-        {
-          id: 6,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 7,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-        {
-          id: 8,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "execution",
-          active: false,
-        },
-        {
-          id: 9,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "service",
-          active: false,
-        },
-        {
-          id: 10,
-          source: require("../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          drag: true,
-          category: "consensus",
-          active: false,
-        },
-      ],
-      configData: [
-        {
-          id: 1,
-          name: "Configuration",
-          network: "testNet",
-        },
-      ],
     };
+  },
+  computed: {
+    ...mapGetters({
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+      selectedItemToRemove: "getSelectedItemToRemove",
+      modalItems: "getModalItems",
+      confirmChanges: "getConfimrChanges",
+      servicePlugins: "getServicePlugins",
+      sidebarPlugins: "getSidebarPlugins",
+      configData: "getConfigData",
+    }),
   },
   methods: {
     showModal(data) {
@@ -328,7 +200,7 @@ export default {
   display: grid;
   width: 100%;
   height: 92.3vh;
-  grid-template-columns: 17% 45% 20% 18%;
+  grid-template-columns: 17% 45% 22% 16%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: absolute;
@@ -346,10 +218,8 @@ export default {
   background-color: transparent;
 }
 .drop-parent {
-
   height: 88vh;
   margin: 5px 4px 0 0;
-
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
@@ -417,7 +287,7 @@ export default {
 }
 
 .change-menu {
-  width: 93.5%;
+  width: 93%;
   height: 98%;
   margin-top: 6px;
   grid-row: 1/4;

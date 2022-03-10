@@ -46,15 +46,19 @@
             src="../../../../public/Img/icon/manage-node-icons/bin.png"
             alt="icon"
           />
-
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: ["configData"],
+  computed: {
+    ...mapGetters({
+      configData: "getConfigData",
+    }),
+  },
 };
 </script>
 <style scoped>

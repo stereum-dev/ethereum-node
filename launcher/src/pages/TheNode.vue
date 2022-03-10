@@ -142,7 +142,6 @@ export default {
 .modal-bg{
   height: 88.2vh;
 }
-
 .service {
   grid-column: 3;
   grid-row: 1/4;

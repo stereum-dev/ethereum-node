@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="menu-container">
     <div class="confirm-box">
       <div class="confirm-bg-1">
         <div class="confirm-bg-2">
@@ -59,6 +59,11 @@ export default {
 };
 </script>
 <style scoped>
+.menu-container {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
 .confirm-box {
   display: flex;
   flex-direction: column;
@@ -108,8 +113,8 @@ export default {
   outline-style: none;
 }
 .table-container {
-  margin: 5px 10px 0 auto;
-  width: 90%;
+  margin: 5px auto 0 auto;
+  width: 70%;
   height: 200px;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
