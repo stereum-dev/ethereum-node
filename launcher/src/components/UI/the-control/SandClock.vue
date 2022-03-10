@@ -1,11 +1,11 @@
 <template>
-    <div class="hourglass"></div>
+  <div class="hourglass"></div>
 </template>
 
 <script>
 export default {
-    name:"SandClock"
-}
+  name: "SandClock",
+};
 </script>
 
 <style scoped>
@@ -253,5 +253,4 @@ body {
     --fg: #c7cad1;
   }
 }
-
 </style>
