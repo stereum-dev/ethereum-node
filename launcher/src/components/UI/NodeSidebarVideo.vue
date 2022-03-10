@@ -32,6 +32,8 @@ export default {
   box-sizing: border-box;
 }
 .tutorial-box {
+  width: 96%;
+  height: 43%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -49,7 +51,7 @@ export default {
   width: 100%;
   border: 3px solid#3E5757;
   border-radius: 25px;
-  padding: 20px 10px;
+  padding: 10px;
   background: #193232;
   overflow-x: hidden;
   overflow-y: auto;

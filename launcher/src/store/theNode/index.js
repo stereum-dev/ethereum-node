@@ -4,7 +4,9 @@ import theNodeMutations from "./mutations.js";
 
 export default {
   state() {
-    return {};
+    return {
+      
+    };
   },
   mutations: theNodeMutations,
   actions: theNodeActions,

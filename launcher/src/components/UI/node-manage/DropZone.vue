@@ -33,6 +33,7 @@
 </template>
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
+import {mapGetters} from 'vuex'
 export default {
   components: {
     ManageTrapezoid,
@@ -55,6 +56,13 @@ export default {
     return {
       itemsList: [],
     };
+  },
+    computed: {
+    ...mapGetters({
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+    }),
   },
   methods: {
     selectedItem(item) {

@@ -38,7 +38,6 @@
       <div class="title-box">
         <span class="title">SERVICE PLUGINS</span>
       </div>
-
       <service-plugin></service-plugin>
     </div>
 
@@ -209,7 +208,6 @@ export default {
   box-sizing: border-box;
 
 }
-
 .trap-container {
   background-color: #2c4030;
   margin: 5px auto 0 auto;
@@ -225,7 +223,6 @@ export default {
   background: #000;
   height: 1% !important;
 }
-
 
 .btn {
   width: 90%;
