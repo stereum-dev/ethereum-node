@@ -52,8 +52,13 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: ["configData"],
+  computed: {
+    ...mapGetters({
+      configData: "getConfigData",
+    }),
+  },
 };
 </script>
 <style scoped>

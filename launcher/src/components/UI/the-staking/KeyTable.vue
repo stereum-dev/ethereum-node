@@ -77,7 +77,7 @@
 </template>
 <style scoped>
 .keys-parent {
-  width: 90%;
+  width: 91%;
   height: 90%;
   margin-right: 10px;
   grid-column: 1/13;
@@ -89,7 +89,7 @@
   height: 90%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
-  border-radius: 35px 35px 10px 35px;
+  border-radius: 20px 20px 5px 20px;
 }
 .keys-table {
   width: 100%;
