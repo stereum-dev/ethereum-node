@@ -1,8 +1,8 @@
 <template>
   <div class="ctrGridParent">
-    <div class="ctrplugin">PLUGIN</div>
-    <div class="control">CONTROL</div>
-    <div class="comments">COMMENTS</div>
+    <div class="activelist-container">Active Component list</div>
+    <div class="dashboard-container">dashboard-container</div>
+    <div class="control-panel">control-panel</div>
     <div class="alerts">ALERTS</div>
     <div class="ctrlfooter">FOOTER</div>
   </div>
@@ -13,12 +13,12 @@
   display: grid;
   height: 93%;
   top: 7.5%;
-  grid-template-columns: 30% 55% 15%;
+  grid-template-columns: 28% 57% 15%;
   grid-template-rows: repeat(3, 31.5%) 5%;
   position: relative;
 }
 
-.ctrplugin {
+.activelist-container {
   background: red;
   color: white;
   grid-column-start: 1;
@@ -27,7 +27,7 @@
   grid-row-end: 4;
 }
 
-.control {
+.dashboard-container {
   background: blue;
   color: white;
   grid-column-start: 2;
@@ -36,7 +36,7 @@
   grid-row-end: 3;
 }
 
-.comments {
+.control-panel {
   background: yellow;
   color: black;
   grid-column-start: 2;

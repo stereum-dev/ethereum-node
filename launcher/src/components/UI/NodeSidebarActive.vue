@@ -5,7 +5,11 @@
       <div class="installed-badge">INSTALLED</div>
     </div>
     <div class="active-table">
-      <div class="table-row" v-for="(item, index) in configData" :key="index">
+      <div
+        class="table-row"
+        v-for="(item, index) in configData"
+        :key="index"
+      >
         <div v-if="item.status === 'deactive'" class="status-icon">
           <img src="/Img/icon/non-functional-icon.png" alt="status-icon" />
         </div>
@@ -26,15 +30,15 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      computed: {
-        configData() {
-          return this.$store.getters.nodeSbActive_get;
-        },
-      },
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters({
+      configData: "nodeSbActive_get",
+    }),
   },
 };
 </script>
