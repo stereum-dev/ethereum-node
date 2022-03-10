@@ -11,16 +11,20 @@
 <style scoped>
 .ctrGridParent {
   display: grid;
-  height: 93%;
-  top: 7.5%;
+  width: 98.9%;
+  height:98%;
+  border: 6px solid rgb(165, 165, 165);
+  border-radius: 10px 30px 30px 30px;
+  top: 0;
   grid-template-columns: 28% 57% 15%;
-  grid-template-rows: repeat(3, 31.5%) 5%;
+  grid-template-rows: repeat(3, 1fr) 5%;
   position: relative;
 }
 
 .activelist-container {
-  background: red;
   color: white;
+  border: 1px solid red;
+  border-top-left-radius: 10px;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
@@ -28,7 +32,8 @@
 }
 
 .dashboard-container {
-  background: blue;
+  border: 1px solid blue;
+  border-top-right-radius: 30px;
   color: white;
   grid-column-start: 2;
   grid-column-end: 4;
@@ -37,7 +42,7 @@
 }
 
 .control-panel {
-  background: yellow;
+  border: 1px solid yellow;
   color: black;
   grid-column-start: 2;
   grid-column-end: 3;
@@ -46,7 +51,7 @@
 }
 
 .alerts {
-  background: green;
+  border: 1px solid green;
   color: white;
   grid-column-start: 3;
   grid-column-end: 4;
@@ -55,7 +60,7 @@
 }
 
 .ctrlfooter {
-  background: purple;
+  background: rgb(42, 45, 42);
   color: white;
   grid-column-start: 1;
   grid-column-end: 4;
