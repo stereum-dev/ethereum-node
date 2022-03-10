@@ -42,20 +42,53 @@
           </div>
         </div>
       </div>
-      <button class="trash-btn" @click="removeSelectedItem">DELETE</button>
+      <button class="trash-btn" @click="clickOnRemoveBtn">DELETE</button>
     </div>
   </div>
 </template>
 <script>
 import BaseButton from "../BaseButton.vue";
+import { mapGetters } from "vuex";
 export default {
   components: { BaseButton },
   props: ["confirmChanges"],
+  computed: {
+    ...mapGetters({
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+      selectedItemToRemove: "getSelectedItemToRemove",
+      servicePlugins: "getServicePlugins",
+    }),
+  },
   methods: {
-    removeSelectedItem(){
-      this.$emit("clickOnRemove")
-    }
-  }
+    clickOnRemoveBtn() {
+      console.log("category", this.selectedItemToRemove.category);
+      if (this.selectedItemToRemove.category == "service") {
+        this.servicePlugins = this.servicePlugins.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "execution") {
+        this.executionItems = this.executionItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+      if (this.selectedItemToRemove.category == "consensus") {
+        this.$store.commit(
+          "mutatedConsensusItems",
+          this.consensusItems.filter((item) => {
+            return item.id !== this.selectedItemToRemove.id;
+          })
+        );
+      }
+      if (this.selectedItemToRemove.category == "validator") {
+        this.validatorItems = this.validatorItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
+      }
+    },
+  },
 };
 </script>
 <style scoped>

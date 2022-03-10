@@ -107,8 +107,8 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
-
       droppedItems: [],
+      modalItems: [],
     };
   },
   computed: {
@@ -117,7 +117,6 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       selectedItemToRemove: "getSelectedItemToRemove",
-      modalItems: "getModalItems",
       confirmChanges: "getConfimrChanges",
       servicePlugins: "getServicePlugins",
       sidebarPlugins: "getSidebarPlugins",
@@ -148,6 +147,7 @@ export default {
         this.validatorItems.push(item);
       } else if (item.category === "consensus") {
         this.consensusItems.push(item);
+        this.$store.commit("mutatedConsensusItems", this.consensusItems);
       } else if (item.category === "execution") {
         this.executionItems.push(item);
       } else {
@@ -156,31 +156,9 @@ export default {
       console.log(item);
     },
     serviceItemSelection(item) {
-      this.selectedItemToRemove = item;
+      this.$store.commit("selectedItemToRemoveMutation", item);
     },
-    clickOnRemoveBtn() {
-      console.log("category", this.selectedItemToRemove.category);
-      if (this.selectedItemToRemove.category == "service") {
-        this.servicePlugins = this.servicePlugins.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "execution") {
-        this.executionItems = this.executionItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "consensus") {
-        this.consensusItems = this.consensusItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "validator") {
-        this.validatorItems = this.validatorItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-    },
+
   },
 };
 </script>

@@ -65,6 +65,7 @@ import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     JournalNode,
@@ -78,6 +79,18 @@ export default {
     return {
       isModalActive: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      consensusItems: "getConsensusItems",
+      // executionItems: "getExecutionItems",
+      // validatorItems: "getValidatorItems",
+      // selectedItemToRemove: "getSelectedItemToRemove",
+      // confirmChanges: "getConfimrChanges",
+      // servicePlugins: "getServicePlugins",
+      // sidebarPlugins: "getSidebarPlugins",
+      // configData: "getConfigData",
+    }),
   },
   methods: {
     showModal(data) {
@@ -129,7 +142,6 @@ export default {
   justify-content: space-between;
 }
 .modal-parent {
-
   width: 44.5vw;
   height: 88.2vh;
 
@@ -139,7 +151,7 @@ export default {
   position: absolute;
   z-index: 1;
 }
-.modal-bg{
+.modal-bg {
   height: 88.2vh;
 }
 .service {

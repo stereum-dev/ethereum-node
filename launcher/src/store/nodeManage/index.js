@@ -9,7 +9,6 @@ export default {
       executionItems: [],
       validatorItems: [],
       selectedItemToRemove: {},
-      modalItems: [],
       confirmChanges: [
         {
           id: 1,
