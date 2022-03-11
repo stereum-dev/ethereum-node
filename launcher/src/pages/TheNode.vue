@@ -19,7 +19,6 @@
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div>
@@ -27,7 +26,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div>
@@ -35,18 +33,13 @@
               :title="'execution'"
               :list="executionItems"
               @modal-view="showModal"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin
-              :list="servicePlugins"
-              @itemSelect="serviceItemSelection"
-            >
-            </service-plugin>
+            <service-plugin :list="servicePlugins"> </service-plugin>
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
