@@ -107,7 +107,6 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
-      droppedItems: [],
       modalItems: [],
     };
   },
@@ -136,29 +135,32 @@ export default {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("itemId", item.id);
-        console.log("drag", event.type);
-        console.log("category", item.category);
       }
     },
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
       if (item.category === "validator") {
+        if (this.validatorItems.some((item) => item.id == itemId)) return;
         this.validatorItems.push(item);
+        this.$store.commit("mutatedValidatorItems", this.validatorItems);
       } else if (item.category === "consensus") {
+        if (this.consensusItems.some((item) => item.id == itemId)) return;
         this.consensusItems.push(item);
         this.$store.commit("mutatedConsensusItems", this.consensusItems);
       } else if (item.category === "execution") {
+        if (this.executionItems.some((item) => item.id == itemId)) return;
         this.executionItems.push(item);
+        this.$store.commit("mutatedExecutionItems", this.executionItems);
       } else {
+        if (this.servicePlugins.some((item) => item.id == itemId)) return;
         this.servicePlugins.push(item);
+        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
       }
-      console.log(item);
     },
     serviceItemSelection(item) {
       this.$store.commit("selectedItemToRemoveMutation", item);
     },
-
   },
 };
 </script>

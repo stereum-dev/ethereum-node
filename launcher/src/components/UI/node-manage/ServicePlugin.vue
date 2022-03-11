@@ -8,7 +8,7 @@
     />
     <div class="service-bg" ref="serviceBg">
       <div
-        v-for="item in list"
+        v-for="item in servicePlugins"
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
@@ -27,18 +27,15 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: {
-    list: {
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      },
-    },
-  },
   data() {
     return {};
+  },
+  computed: {
+    ...mapGetters({
+      servicePlugins: "getServicePlugins",
+    }),
   },
   methods: {
     selectedItem(item) {
@@ -77,8 +74,8 @@ export default {
 }
 .service-bg {
   display: grid;
-  grid-template-columns: 50% 50%;
-  grid-template-rows: auto;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(10, 1fr);
   align-items: center;
   justify-items: center;
   padding-top: 20px;

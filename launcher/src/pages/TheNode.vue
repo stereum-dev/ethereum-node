@@ -83,13 +83,9 @@ export default {
   computed: {
     ...mapGetters({
       consensusItems: "getConsensusItems",
-      // executionItems: "getExecutionItems",
-      // validatorItems: "getValidatorItems",
-      // selectedItemToRemove: "getSelectedItemToRemove",
-      // confirmChanges: "getConfimrChanges",
-      // servicePlugins: "getServicePlugins",
-      // sidebarPlugins: "getSidebarPlugins",
-      // configData: "getConfigData",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+      servicePlugins: "getServicePlugins",
     }),
   },
   methods: {

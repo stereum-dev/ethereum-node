@@ -8,6 +8,7 @@ export default {
       consensusItems: [],
       executionItems: [],
       validatorItems: [],
+      servicePlugins: [],
       selectedItemToRemove: {},
       confirmChanges: [
         {
@@ -39,33 +40,6 @@ export default {
           id: 6,
           content: "DELINK FROM",
           contentIcon: require("../../../public/Img/icon/manage-node-icons/delink-icon.png"),
-        },
-      ],
-      servicePlugins: [
-        {
-          id: 1,
-          source: require("../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 2,
-          source: require("../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 3,
-          source: require("../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 4,
-          source: require("../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
-        },
-        {
-          id: 5,
-          source: require("../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"),
-          active: false,
         },
       ],
       sidebarPlugins: [

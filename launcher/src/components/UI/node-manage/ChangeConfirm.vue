@@ -65,14 +65,20 @@ export default {
     clickOnRemoveBtn() {
       console.log("category", this.selectedItemToRemove.category);
       if (this.selectedItemToRemove.category == "service") {
-        this.servicePlugins = this.servicePlugins.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
+        this.$store.commit(
+          "mutatedServicePlugins",
+          this.servicePlugins.filter((item) => {
+            return item.id !== this.selectedItemToRemove.id;
+          })
+        );
       }
       if (this.selectedItemToRemove.category == "execution") {
-        this.executionItems = this.executionItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
+        this.$store.commit(
+          "mutatedExecutionItems",
+          this.executionItems.filter((item) => {
+            return item.id !== this.selectedItemToRemove.id;
+          })
+        );
       }
       if (this.selectedItemToRemove.category == "consensus") {
         this.$store.commit(
@@ -83,9 +89,12 @@ export default {
         );
       }
       if (this.selectedItemToRemove.category == "validator") {
-        this.validatorItems = this.validatorItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
+        this.$store.commit(
+          "mutatedValidatorItems",
+          this.validatorItems.filter((item) => {
+            return item.id !== this.selectedItemToRemove.id;
+          })
+        );
       }
     },
   },
