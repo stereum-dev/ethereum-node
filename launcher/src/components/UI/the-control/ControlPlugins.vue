@@ -5,20 +5,30 @@
       <span>PLUG-INs</span>
     </div>
     <div class="plugins-table-bg">
-      <div class="arrow-up"></div>
+      <div class="arrow-up">
+        <img
+          src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+          alt="icon"
+        />
+      </div>
       <div class="plugins-table">
         <div class="plugins-row"></div>
       </div>
-      <div class="arrow-down"></div>
+      <div class="arrow-down">
+        <img
+          src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
+          alt="icon"
+        />
+      </div>
     </div>
   </div>
 </template>
 <style scoped>
 .plugins-parent {
-  width: 95%;
+  width: 90%;
   height: 98%;
   background-color: #2b4035;
-  border-radius: 0 55px 55px 55px;
+  border-radius: 0 45px 45px 45px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -52,6 +62,32 @@
   width: 90%;
   height: 85%;
   background-color: #527162;
-  border-radius: 55px;
+  border-radius:35px 35px 45px 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.arrow-up img,
+.arrow-down img {
+  width: 100%;
+  height: 25px;
+  border-radius: 15px;
+  box-shadow:0 1px 3px 1px #3b4a43;
+}
+.plugins-table {
+  width: 97%;
+  height: 87%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.plugins-row {
+  width: 94%;
+  height: 17%;
+  border: 5px solid #71a489;
+  border-radius: 15px;
+  background-color: #2b4035;
 }
 </style>

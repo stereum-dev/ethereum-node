@@ -6,7 +6,9 @@
     <div class="dashboard-container">
       <control-dashboard></control-dashboard>
     </div>
-    <div class="control-panel"></div>
+    <div class="control-panel">
+      <control-panel></control-panel>
+    </div>
     <div class="alerts">ALERTS</div>
 
     <div class="ctrlfooter">FOOTER</div>
@@ -16,8 +18,9 @@
 <script>
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
+import ControlPanel from "./ControlPanel.vue";
 export default {
-  components: { ControlDashboard, ControlPlugins },
+  components: { ControlDashboard, ControlPlugins, ControlPanel },
 };
 </script>
 
@@ -29,7 +32,7 @@ export default {
   border: 6px solid rgb(165, 165, 165);
   border-radius: 10px 30px 30px 30px;
   top: 1px;
-  grid-template-columns: 28% 57% 15%;
+  grid-template-columns: 26% 59% 15%;
   grid-template-rows: repeat(3, 1fr) 5%;
   position: relative;
 }
@@ -61,8 +64,6 @@ export default {
 }
 
 .control-panel {
-  border: 1px solid yellow;
-  color: black;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 3;
