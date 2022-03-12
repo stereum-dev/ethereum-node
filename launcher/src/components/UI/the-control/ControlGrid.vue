@@ -1,6 +1,8 @@
 <template>
   <div class="ctrGridParent">
-    <div class="activelist-container">Active Component list</div>
+    <div class="plugins-container">
+      <control-plugins></control-plugins>
+    </div>
     <div class="dashboard-container">
       <control-dashboard></control-dashboard>
     </div>
@@ -13,8 +15,9 @@
 
 <script>
 import ControlDashboard from "./ControlDashboard.vue";
+import ControlPlugins from "./ControlPlugins.vue";
 export default {
-  components: { ControlDashboard },
+  components: { ControlDashboard, ControlPlugins },
 };
 </script>
 
@@ -22,7 +25,7 @@ export default {
 .ctrGridParent {
   display: grid;
   width: 98.9%;
-  height:97.5%;
+  height: 97.5%;
   border: 6px solid rgb(165, 165, 165);
   border-radius: 10px 30px 30px 30px;
   top: 1px;
@@ -31,15 +34,16 @@ export default {
   position: relative;
 }
 
-.activelist-container {
+.plugins-container {
+  background-color: transparent;
   color: white;
-  border: 1px solid red;
   border-top-left-radius: 10px;
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 4;
+  grid-column: 1/2;
+  grid-row: 1/4;
   z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .dashboard-container {
