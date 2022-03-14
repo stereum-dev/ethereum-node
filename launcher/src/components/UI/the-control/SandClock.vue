@@ -73,7 +73,7 @@ export default {
 .circle {
   text-align: center;
   background: #83d0f5;
-  width: 20%;
+  width: 18%;
   padding: 5px;
   border-radius: 50%;
   display: flex;
