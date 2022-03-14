@@ -3,7 +3,6 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
-        <menu-side onmousedown="return false"></menu-side>
         <div class="journal-box" onmousedown="return false">
           <journal-node></journal-node>
         </div>

@@ -14,11 +14,10 @@
         class="service-item"
         @click="selectedItem(item)"
       >
-        <img draggable="false" :src="item.source" alt="icon" />
+        <img :src="item.source" alt="icon" />
       </div>
     </div>
     <img
-      draggable="false"
       class="service-arrow"
       src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
       alt="icon"

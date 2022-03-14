@@ -116,7 +116,7 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       selectedItemToRemove: "getSelectedItemToRemove",
-      confirmChanges: "getConfimrChanges",
+      confirmChanges: "getConfirmChanges",
       servicePlugins: "getServicePlugins",
       sidebarPlugins: "getSidebarPlugins",
       configData: "getConfigData",

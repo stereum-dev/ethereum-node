@@ -34,11 +34,7 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img
-              draggable="false"
-              src="/Img/icon/manage-node-icons/trash-icon.png"
-              alt="icon"
-            />
+            <img src="/Img/icon/manage-node-icons/trash-icon.png" alt="icon" />
           </div>
         </div>
       </div>
@@ -63,7 +59,6 @@ export default {
   },
   methods: {
     clickOnRemoveBtn() {
-      console.log("category", this.selectedItemToRemove.category);
       if (this.selectedItemToRemove.category == "service") {
         this.$store.commit(
           "mutatedServicePlugins",
@@ -96,6 +91,7 @@ export default {
           })
         );
       }
+      return;
     },
   },
 };
