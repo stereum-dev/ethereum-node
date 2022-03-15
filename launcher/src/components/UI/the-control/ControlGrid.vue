@@ -47,7 +47,6 @@ export default {
   z-index: 0;
   border: 5px solid grey;
   border-radius: 20px;
-  margin: 0.5rem;
 }
 
 .control-panel {
