@@ -8,7 +8,7 @@
       <div class="arrow-up">
         <img
           src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
-          alt="icon"
+          alt=""
         />
       </div>
       <div class="plugins-table">
