@@ -3,14 +3,31 @@
     <div class="staking-parent">
       <div class="staking-green-bg">
         <div class="staking-black-bg">
-          <slot></slot>
+          <key-table></key-table>
+          <time-reward></time-reward>
+          <selection-options></selection-options>
+          <validators-box></validators-box>
           <div class="footer"></div>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script></script>
+<script>
+import KeyTable from "./KeyTable.vue";
+import SelectionOptions from "./SelectionOptions.vue";
+import ValidatorsBox from "./ValidatorsBox.vue";
+import TimeReward from "./TimeReward.vue";
+
+export default {
+  components: {
+    KeyTable,
+    SelectionOptions,
+    ValidatorsBox,
+    TimeReward,
+  },
+};
+</script>
 <style scoped>
 .staking-parent {
   position: fixed;
@@ -37,14 +54,14 @@
   border-radius: 0 30px 30px 30px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 45% 50% 5%;
+  grid-template-rows: 30% 30% 35% 5%;
 }
 .footer {
   position: relative;
   bottom: 0;
   width: 100%;
   grid-column: 1/13;
-  grid-row: 3;
+  grid-row: 4;
   background-color: rgb(52, 52, 52);
   border-bottom-left-radius: 3rem 3rem;
   border-bottom-right-radius: 3rem 3rem;

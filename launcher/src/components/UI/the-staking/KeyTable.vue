@@ -29,13 +29,13 @@
             <span class="balance">24.000001</span>
             <div class="option-box">
               <img
-                class="exit-icon"
-                src="../../../../public/Img/icon/the-staking/option-exit.png"
+                class="grafiti-icon"
+                src="../../../../public/Img/icon/the-staking/option-graffiti.png"
                 alt="icon"
               />
               <img
-                class="grafiti-icon"
-                src="../../../../public/Img/icon/the-staking/option-graffiti.png"
+                class="copy-icon"
+                src="../../../../public/Img/icon/the-staking/option-copy.png"
                 alt="icon"
               />
               <img
@@ -44,8 +44,8 @@
                 alt="icon"
               />
               <img
-                class="copy-icon"
-                src="../../../../public/Img/icon/the-staking/option-copy.png"
+                class="exit-icon"
+                src="../../../../public/Img/icon/the-staking/redexit-icon.png"
                 alt="icon"
               />
             </div>
@@ -54,6 +54,11 @@
       </div>
     </div>
     <div class="middle-icon">
+      <img
+        class="rename"
+        src="../../../../public/Img/icon/the-staking/rename-icon.png"
+        alt="icon"
+      />
       <img
         class="folder"
         src="../../../../public/Img/icon/the-staking/newfolder-icon.png"
@@ -77,19 +82,21 @@
 </template>
 <style scoped>
 .keys-parent {
-  width: 91%;
-  height: 90%;
-  margin-right: 10px;
-  grid-column: 1/13;
-  grid-row: 1/2;
-  justify-self: end;
+  width: 100%;
+  height: 100%;
+  margin-left: 5px;
+  grid-column: 1/10;
+  grid-row: 1/4;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 .keys-table-box {
-  width: 99%;
-  height: 90%;
+  width: 95%;
+  height: 92%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
-  border-radius: 20px 20px 5px 20px;
+  border-radius: 20px;
 }
 .keys-table {
   width: 100%;
@@ -103,7 +110,7 @@
 }
 .table-header span {
   color: #fff;
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 900;
   display: flex;
   justify-content: center;
@@ -147,8 +154,8 @@
 }
 .table-row span {
   color: #fff;
-  font-size: 15px;
-  font-weight: 900;
+  font-size: 10px;
+  font-weight: 700;
 }
 .table-row .circle {
   grid-column: 1;
@@ -162,24 +169,24 @@
 .table-row .category {
   width: 100%;
   grid-column: 2;
-  font-size: 18px;
+  font-size: 13px;
 }
 .table-row .username {
   width: 100%;
   grid-column: 3;
-  font-size: 12px;
+  font-size: 10px;
 }
 .table-row .service-icon {
-  width: 28px;
+  width: 20px;
   grid-column: 4;
   justify-self: center;
 }
 .table-row .since {
   grid-column: 5;
-  font-size: 13px;
+  font-size: 10px;
 }
 .table-row .state-icon {
-  width: 20px;
+  width: 18px;
   grid-column: 6;
   justify-self: center;
 }
@@ -194,18 +201,41 @@
   border: 3px solid #bfbfbf;
   background-color: #000000;
   border-radius: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: absolute;
   right: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  align-items: center;
 }
 .option-box img {
-  width: 24px;
-  margin-left: 10px;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+}
+.option-box img:hover {
+  width: 23px;
+  height: 23px;
+  box-shadow: 0 0 4px 0 rgb(228, 230, 228);
+}
+.option-box img:active {
+  width: 21px;
+  height: 21px;
+  box-shadow: none;
 }
 .option-box .copy-icon {
-  margin-left: 50px;
+  height: 80%;
+  grid-column: 1/2;
+  grid-row: 1;
+}
+.option-box .grafiti-icon {
+  grid-column: 2;
+}
+.option-box .remove-icon {
+  grid-column: 4;
+}
+.option-box .exit-icon {
+  grid-column: 5;
 }
 .middle-icon {
   width: 60%;
@@ -214,13 +244,14 @@
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 35.5%;
-  left: 10%;
+  bottom: 6%;
+  left: 2%;
 }
 .middle-icon img {
   width: 30px;
   height: 30px;
 }
+.middle-icon .rename,
 .middle-icon .folder {
   margin-right: 10px;
 }
