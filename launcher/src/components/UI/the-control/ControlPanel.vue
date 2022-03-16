@@ -209,7 +209,7 @@ export default {
 .general-title span {
   font-size: 12px;
   font-weight: 800;
-  color: rgb(123, 123, 123);
+  color: rgb(65, 65, 65);
 }
 .expert-description,
 .general-description {
