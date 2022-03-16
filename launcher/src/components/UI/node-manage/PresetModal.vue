@@ -78,6 +78,8 @@ export default {
   height: 80px;
   justify-self: center;
   align-self: center;
+  border-radius: 10px;
+  box-shadow: 0 0 5px 1px rgb(19, 19, 19);
 }
 .modal-content .content {
   width: 50%;
