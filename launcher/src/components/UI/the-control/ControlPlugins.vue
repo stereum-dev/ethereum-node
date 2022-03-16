@@ -15,8 +15,8 @@
         <div class="plugins-row">
           <div class="plugins-status-color"></div>
           <div class="plugins-row-content">
-            <div class="row-xyz">
-              <span>XYZ</span>
+            <div class="row-plugin-name">
+              <span>plugin-name</span>
             </div>
             <div class="row-category">
               <span>Consensus Client</span>
@@ -116,18 +116,22 @@
   width: 0;
 }
 .plugins-row {
-  width: 94%;
+  width: 97%;
   height: 40px;
   justify-self: center;
   margin-top: 5px;
   background-color: #33393e;
   display: flex;
   justify-content: flex-start;
+  border: 1px solid #333;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px 1px #393939;
 }
 .plugins-status-color {
   width: 20%;
   height: 100%;
   background-color: #22b53f;
+  border-radius: 3px;
 }
 .plugins-row-content {
   width: 75%;
@@ -139,7 +143,7 @@
   align-items: center;
   margin-left: 5px;
 }
-.row-xyz,
+.row-plugin-name,
 .row-category {
   width: 90%;
   height: 40%;
@@ -151,7 +155,7 @@
   border-radius: 3px;
 }
 
-.row-xyz span,
+.row-plugin-name span,
 .row-category span {
   font-size: 0.7rem;
   font-weight: 700;
