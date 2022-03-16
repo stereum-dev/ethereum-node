@@ -2,10 +2,18 @@
   <div class="panel-parent">
     <div class="panel-content">
       <div class="level-box">
-        <div class="general-box" @click="generalActive">
+        <div
+          class="general-box"
+          @click="generalActive"
+          :class="{ active: generalBtn }"
+        >
           <span>GENERAL</span>
         </div>
-        <div class="expert-box" @click="expertActive">
+        <div
+          class="expert-box"
+          @click="expertActive"
+          :class="{ active: expertBtn }"
+        >
           <span>EXPERT</span>
         </div>
       </div>
@@ -46,6 +54,8 @@
 export default {
   data() {
     return {
+      generalBtn: false,
+      expertBtn: false,
       isGeneralActive: false,
       isExpertActive: false,
       controlPanelGeneralItems: [
@@ -87,11 +97,15 @@ export default {
   methods: {
     generalActive() {
       this.isGeneralActive = true;
+      this.generalBtn = true;
       this.isExpertActive = false;
+      this.expertBtn = false;
     },
     expertActive() {
       this.isExpertActive = true;
+      this.expertBtn = true;
       this.isGeneralActive = false;
+      this.generalBtn = false;
     },
   },
 };
@@ -122,27 +136,39 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.general-box {
+
+.expert-box {
   width: 80%;
   height: 16%;
+  border: 1px solid rgb(96, 96, 96);
   background-color: #0f3c3f;
   border-radius: 20px;
   margin-top: 5px;
   cursor: pointer;
+  box-shadow: 1px 1px 3px 1px rgb(28, 28, 28);
 }
+.active {
+  box-shadow: none !important;
+  background-color: #10383a !important;
+  border: 1px solid #041313 !important;
+}
+.general-box {
+  width: 80%;
+  height: 16%;
+  border: 1px solid rgb(96, 96, 96);
+  background-color: #0f3c3f;
+  border-radius: 20px;
+  margin-top: 5px;
+  cursor: pointer;
+  box-shadow: 1px 1px 3px 1px rgb(28, 28, 28);
+}
+
 .general-box span {
   font-size: 0.8rem;
   font-weight: 700;
   color: rgb(239, 235, 235);
 }
-.expert-box {
-  width: 80%;
-  height: 16%;
-  background-color: #0f3c3f;
-  border-radius: 20px;
-  margin-top: 5px;
-  cursor: pointer;
-}
+
 .expert-box span {
   font-size: 0.8rem;
   font-weight: 700;
