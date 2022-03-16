@@ -54,6 +54,7 @@ jobs:
           pip install molecule-hetznercloud
           pip install docker
           pip install hcloud
+          ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
