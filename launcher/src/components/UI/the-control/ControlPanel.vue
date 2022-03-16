@@ -151,14 +151,14 @@ export default {
 .description-box {
   width: 80%;
   height: 100%;
-  margin-right: 3px;
+  min-height: 168px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .expert-description-box,
 .general-description-box {
-  width: 97%;
+  width: 95%;
   height: 90%;
   background-color: #686a6c;
   border-radius: 15px;
@@ -168,8 +168,8 @@ export default {
 }
 .expert-items,
 .general-items {
-  width: 90%;
-  height: 80%;
+  width: 85%;
+  height: 60%;
   background-color: #e8e8e8;
   border: 2px solid rgb(42, 42, 42);
   border-radius: 15px;
@@ -181,6 +181,7 @@ export default {
   justify-content: space-evenly;
   align-items: center;
   box-shadow: 0 1px 5px 1px #373737, inset 0 1px 5px 1px #898989;
+  overflow: hidden;
 }
 .expert-items:active,
 .general-items:active {
@@ -188,7 +189,7 @@ export default {
   height: 310px;
   padding: 10px;
   position: fixed;
-  top: 25%;
+  top: 10%;
   left: 40%;
 }
 .expert-items:active > .expert-description p,
@@ -202,12 +203,12 @@ export default {
   height: 20%;
 }
 .expert-title span {
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 800;
   color: rgb(240, 20, 20);
 }
 .general-title span {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 800;
   color: rgb(65, 65, 65);
 }
@@ -218,9 +219,9 @@ export default {
 }
 .expert-description p,
 .general-description p {
-  font-size: 9px;
+  font-size: 6px;
   font-weight: 800;
-  text-align: start;
+  text-align: center;
   color: rgb(135, 135, 135);
 }
 </style>
