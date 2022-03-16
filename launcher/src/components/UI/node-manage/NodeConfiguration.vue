@@ -25,7 +25,10 @@
     </div>
     <div class="config-bg">
       <div class="config-btns">
-        <div class="config-add">
+        <div
+          class="config-add"
+          @click="$emit('modalPreset')"
+        >
           <span class="btn-text">ADD 1 CLICK PRESET</span>
           <span class="btn-icon"></span>
         </div>
@@ -54,10 +57,23 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      modalActive: false,
+    };
+  },
   computed: {
     ...mapGetters({
       configData: "getConfigData",
     }),
+  },
+  methods: {
+    openModal() {
+      this.modalActive = true;
+    },
+    closeModal() {
+      this.modalActive = false;
+    },
   },
 };
 </script>
