@@ -16,20 +16,10 @@
           <div class="plugins-status-color"></div>
           <div class="plugins-row-content">
             <div class="row-xyz">
-              <div class="xyz-text">
-                <span>XYZ</span>
-              </div>
-              <div class="xyz-title">
-                <span>XYZ</span>
-              </div>
+              <span>XYZ</span>
             </div>
             <div class="row-category">
-              <div class="category-text">
-                <span>Consensus Client</span>
-              </div>
-              <div class="category-title">
-                <span>Category</span>
-              </div>
+              <span>Consensus Client</span>
             </div>
           </div>
         </div>
@@ -132,7 +122,7 @@
   margin-top: 5px;
   background-color: #33393e;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .plugins-status-color {
   width: 20%;
@@ -146,46 +136,24 @@
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-  align-items: flex-start;
+  align-items: center;
+  margin-left: 5px;
 }
 .row-xyz,
 .row-category {
-  width: 98%;
+  width: 90%;
   height: 40%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.row-xyz .xyz-text,
-.row-category .category-text {
-  width: 70%;
-  height: 100%;
-  background-color: #fff;
-  border-radius: 3px;
   color: #333;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 3px;
 }
-.xyz-text span,
-.category-text span {
+
+.row-xyz span,
+.row-category span {
   font-size: 0.7rem;
   font-weight: 700;
-}
-.xyz-title,
-.category-title {
-  width: 30%;
-  color: #5d9168;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.xyz-title span {
-  font-size: 0.5rem;
-  font-weight: 900;
-}
-.category-title span {
-  font-size: 0.5rem;
-  font-weight: 900;
 }
 </style>

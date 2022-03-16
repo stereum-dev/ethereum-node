@@ -9,7 +9,9 @@
     <div class="control-panel">
       <control-panel></control-panel>
     </div>
-    <div class="alerts">ALERTS</div>
+    <div class="alerts">
+      <control-alert></control-alert>
+    </div>
 
     <div class="ctrlfooter">FOOTER</div>
   </div>
@@ -19,8 +21,9 @@
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
+import ControlAlert from "./ControlAlert.vue";
 export default {
-  components: { ControlDashboard, ControlPlugins, ControlPanel },
+  components: { ControlDashboard, ControlPlugins, ControlPanel, ControlAlert },
 };
 </script>
 
@@ -32,7 +35,7 @@ export default {
   border: 6px solid rgb(165, 165, 165);
   border-radius: 10px 30px 30px 30px;
   top: 1px;
-  grid-template-columns: 26% 59% 15%;
+  grid-template-columns: 24% 59% 17%;
   grid-template-rows: repeat(3, 1fr) 5%;
   position: relative;
 }
@@ -50,8 +53,9 @@ export default {
 }
 
 .dashboard-container {
-  border: 1px solid blue;
-  border-top-right-radius: 30px;
+  width: 98%;
+  height: 93%;
+  margin-top: 5px;
   color: white;
   grid-column-start: 2;
   grid-column-end: 4;
@@ -70,17 +74,13 @@ export default {
 }
 
 .alerts {
-  border: 1px solid green;
-  color: white;
   grid-column-start: 3;
   grid-column-end: 4;
   grid-row-start: 2;
   grid-row-end: 4;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: orange;
   z-index: 1;
 }
 
