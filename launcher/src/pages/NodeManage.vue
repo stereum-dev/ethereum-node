@@ -180,7 +180,7 @@ export default {
   display: grid;
   width: 100%;
   height: 92.3vh;
-  grid-template-columns: 17% 45% 22% 16%;
+  grid-template-columns: 18% 46% 21% 15%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: absolute;
@@ -223,6 +223,7 @@ export default {
   margin-right: 3px;
 }
 .service {
+  width: 96%;
   height: 97.3%;
   margin-top: 6px;
   grid-column: 3;
@@ -267,7 +268,7 @@ export default {
 }
 
 .change-menu {
-  width: 93%;
+  width: 92%;
   height: 98%;
   margin-top: 6px;
   grid-row: 1/4;

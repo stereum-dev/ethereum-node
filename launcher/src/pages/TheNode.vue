@@ -115,19 +115,20 @@ export default {
 }
 
 .journal-box {
+  height: 100%;
   color: white;
-  height: 98.4%;
   grid-column: 1;
   grid-row: 1/4;
-  background-color: transparent;
-  border: 4px solid rgb(121, 121, 121);
+  margin-top: 1px;
+  background-color: rgb(24, 24, 24);
+  border-radius: 0 25px 25px 0;
 }
 .trapezoid-parent {
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .modal-parent {
   width: 44.5vw;
@@ -174,9 +175,7 @@ export default {
 }
 .trap-container {
   width: 97%;
-  background: #2c4030;
   margin: 0 auto;
-  border: 4px solid rgb(121, 121, 121);
 }
 .trap-title {
   color: white;
