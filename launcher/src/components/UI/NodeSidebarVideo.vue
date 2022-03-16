@@ -1,5 +1,5 @@
 <template>
-  <div class="tutorial-box" :class="mode">
+  <div class="tutorial-box">
     <div class="tutorial-table">
       <div class="table-row" v-for="(item, index) in configData" :key="index">
         <div class="camera-icon">

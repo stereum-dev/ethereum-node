@@ -447,7 +447,7 @@ export default {
   grid-column: 1;
   grid-row: 5/6;
   width: 100%;
-  height: 100%;
+  height: 98%;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -487,9 +487,9 @@ export default {
 }
 .status-box .status-table {
   width: 90%;
-  height: 60%;
+  height: 55%;
   background-color: #2d2d34;
-  margin: 10px auto;
+  margin: 5px auto;
   overflow: hidden;
   padding: 5px;
 }

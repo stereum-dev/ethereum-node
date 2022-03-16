@@ -71,19 +71,19 @@ export default {
 
 <style scoped>
 .circle {
-  text-align: center;
   background: #83d0f5;
   width: 18%;
   padding: 5px;
   border-radius: 50%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
 .clock {
-  margin: 10px;
+  width: 70%;
+  height: 70%;
+
 }
 
 @keyframes top-clip {

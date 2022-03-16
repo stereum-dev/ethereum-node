@@ -3,7 +3,6 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
-        <menu-side onmousedown="return false"></menu-side>
         <div class="journal-box" onmousedown="return false">
           <journal-node></journal-node>
         </div>
@@ -19,7 +18,6 @@
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div>
@@ -27,7 +25,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div>
@@ -35,18 +32,13 @@
               :title="'execution'"
               :list="executionItems"
               @modal-view="showModal"
-              @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin
-              :list="servicePlugins"
-              @itemSelect="serviceItemSelection"
-            >
-            </service-plugin>
+            <service-plugin :list="servicePlugins"> </service-plugin>
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
@@ -65,6 +57,7 @@ import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     JournalNode,
@@ -78,6 +71,14 @@ export default {
     return {
       isModalActive: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+      servicePlugins: "getServicePlugins",
+    }),
   },
   methods: {
     showModal(data) {
@@ -114,22 +115,22 @@ export default {
 }
 
 .journal-box {
+  height: 100%;
   color: white;
-  height: 98.4%;
   grid-column: 1;
   grid-row: 1/4;
-  background-color: transparent;
-  border: 4px solid rgb(121, 121, 121);
+  margin-top: 1px;
+  background-color: rgb(24, 24, 24);
+  border-radius: 0 25px 25px 0;
 }
 .trapezoid-parent {
   grid-column: 2;
   grid-row: 1/4;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .modal-parent {
-
   width: 44.5vw;
   height: 88.2vh;
 
@@ -139,7 +140,7 @@ export default {
   position: absolute;
   z-index: 1;
 }
-.modal-bg{
+.modal-bg {
   height: 88.2vh;
 }
 .service {
@@ -174,9 +175,7 @@ export default {
 }
 .trap-container {
   width: 97%;
-  background: #2c4030;
   margin: 0 auto;
-  border: 4px solid rgb(121, 121, 121);
 }
 .trap-title {
   color: white;
