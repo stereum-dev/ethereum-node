@@ -452,8 +452,9 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
+  margin-top: 10px;
 }
 
 ::-webkit-scrollbar {
