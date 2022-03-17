@@ -48,13 +48,13 @@ export default {
 }
 .active-box {
   width: 96%;
-  height: 56%;
+  height: 55%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   overflow: hidden;
   border: 1px solid #7f7f7f;
-  border-radius: 25px;
+  border-radius: 20px;
   padding: 0 5px 5px 5px;
   background-color: gray;
 }
