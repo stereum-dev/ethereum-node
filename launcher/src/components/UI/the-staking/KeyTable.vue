@@ -28,26 +28,38 @@
             />
             <span class="balance">24.000001</span>
             <div class="option-box">
-              <img
-                class="grafiti-icon"
-                src="../../../../public/Img/icon/the-staking/option-graffiti.png"
-                alt="icon"
-              />
-              <img
-                class="copy-icon"
-                src="../../../../public/Img/icon/the-staking/option-copy.png"
-                alt="icon"
-              />
-              <img
-                class="remove-icon"
-                src="../../../../public/Img/icon/the-staking/option-remove.png"
-                alt="icon"
-              />
-              <img
-                class="exit-icon"
-                src="../../../../public/Img/icon/the-staking/redexit-icon.png"
-                alt="icon"
-              />
+              <div class="grafiti-box">
+                <img
+                  class="grafiti-icon"
+                  src="../../../../public/Img/icon/the-staking/option-graffiti.png"
+                  alt="icon"
+                />
+                <div class="grafiti-text">GRAFITI</div>
+              </div>
+              <div class="copy-box">
+                <img
+                  class="copy-icon"
+                  src="../../../../public/Img/icon/the-staking/option-copy.png"
+                  alt="icon"
+                />
+                <div class="copy-text">COPY</div>
+              </div>
+              <div class="remove-box">
+                <img
+                  class="remove-icon"
+                  src="../../../../public/Img/icon/the-staking/option-remove.png"
+                  alt="icon"
+                />
+                <div class="remove-text">REMOVE</div>
+              </div>
+              <div class="exit-box">
+                <img
+                  class="exit-icon"
+                  src="../../../../public/Img/icon/the-staking/redexit-icon.png"
+                  alt="icon"
+                />
+                <div class="exit-text">EXIT</div>
+              </div>
             </div>
           </div>
         </div>
@@ -223,19 +235,34 @@
   height: 21px;
   box-shadow: none;
 }
-.option-box .copy-icon {
-  height: 80%;
+.option-box .copy-box {
+  height: 100%;
   grid-column: 1/2;
   grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.option-box .grafiti-icon {
+.option-box .grafiti-box {
+  height: 100%;
   grid-column: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.option-box .remove-icon {
+.option-box .remove-box {
+  height: 100%;
   grid-column: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.option-box .exit-icon {
+.option-box .exit-box {
+  height: 100%;
   grid-column: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .middle-icon {
   width: 60%;
@@ -275,5 +302,56 @@
 .middle-icon .insert-key img {
   width: 28px;
   height: 28px;
+}
+
+.grafiti-text {
+  color: #fff;
+  position: absolute;
+  bottom: -20px;
+  left: 50px;
+  font-size: 10px;
+  font-weight: 600;
+  background-color: rgb(23, 22, 22);
+  opacity: 0.7;
+  display: none;
+}
+.copy-text {
+  color: #fff;
+  position: absolute;
+  bottom: -20px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  background-color: rgb(23, 22, 22);
+  opacity: 0.7;
+  display: none;
+}
+.exit-text {
+  color: #fff;
+  position: absolute;
+  bottom: -20px;
+  right: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  background-color: rgb(23, 22, 22);
+  opacity: 0.7;
+  display: none;
+}
+.remove-text {
+  color: #fff;
+  position: absolute;
+  bottom: -20px;
+  right: 49px;
+  font-size: 10px;
+  font-weight: 600;
+  background-color: rgb(23, 22, 22);
+  opacity: 0.7;
+  display: none;
+}
+.option-box div:hover > .grafiti-text,
+.option-box div:hover > .copy-text,
+.option-box div:hover > .exit-text,
+.option-box div:hover > .remove-text {
+  display: block;
 }
 </style>

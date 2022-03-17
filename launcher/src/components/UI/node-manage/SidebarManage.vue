@@ -102,19 +102,19 @@ export default {
 .hidden-icon {
   position: fixed;
   top: 41%;
-  right: 123px;
-  height: 120px;
-  width: 66px;
-  border: 2px solid rgb(183, 176, 176);
+  right: 125px;
+  height: 97px;
+  width: 60px;
+  border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
 }
 .show-icon {
   position: fixed;
   top: 41%;
-  right: -44px;
-  height: 120px;
-  width: 71px;
-  border: 2px solid rgb(183, 176, 176);
+  right: -46px;
+  height: 110px;
+  width: 69px;
+  border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
 }
 

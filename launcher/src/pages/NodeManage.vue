@@ -4,7 +4,10 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box" onmousedown="return false">
-          <node-configuration :configData="configData"></node-configuration>
+          <node-configuration :configData="configData" @modal-preset="openPresetModal"></node-configuration>
+        </div>
+        <div class="preset-modal" v-if="presetModal">
+          <preset-modal @close-preset="closePresetModal"></preset-modal>
         </div>
         <div class="drop-parent">
           <div class="modal-parent" v-if="isModalActive">
@@ -92,6 +95,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
+import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -100,6 +104,7 @@ export default {
     ChangeConfirm,
     DropZone,
     BaseModal,
+    PresetModal,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -107,6 +112,7 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
+      presetModal: false,
       modalItems: [],
     };
   },
@@ -127,8 +133,14 @@ export default {
       this.isModalActive = true;
       this.modalItems = data;
     },
+    openPresetModal() {
+      this.presetModal = true;
+    },
     closeModal() {
       this.isModalActive = false;
+    },
+    closePresetModal() {
+      this.presetModal = false;
     },
     startDrag(event, item) {
       if (event.type === "dragstart") {
@@ -196,6 +208,15 @@ export default {
   grid-row: 1/4;
   align-self: center;
   background-color: transparent;
+}
+.preset-modal {
+  width: 80.6vw;
+  height: 87.7vh;
+  border-radius: 35px;
+  z-index: 5;
+  position: absolute;
+  top: 1.5%;
+  left: 18%;
 }
 .drop-parent {
   height: 88vh;
@@ -281,6 +302,9 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+}
+.sidebar {
+  z-index: 6;
 }
 
 .footer {
