@@ -105,9 +105,9 @@ export default {
 }
 .node-parent {
   display: grid;
-  width: 99.2vw;
+  width: 99.1vw;
   height: 91.5vh;
-  grid-template-columns: 19% 45% 20% 16%;
+  grid-template-columns: 18% 46% 21% 15%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: absolute;

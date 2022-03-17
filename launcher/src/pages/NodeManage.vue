@@ -305,7 +305,7 @@ export default {
   grid-column: 4;
   background: #334b3f;
   border: 5px solid #1a2620;
-  border-top-right-radius: 40px;
+  border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
