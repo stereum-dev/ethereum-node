@@ -146,7 +146,7 @@ export default {
   width: 93%;
   height: 70%;
   background-color: #353535;
-  border-radius: 10px 10px 25px 25px;
+  border-radius: 10px;
   overflow-x: hidden;
   overflow-y: auto;
   margin-top: 10px;
