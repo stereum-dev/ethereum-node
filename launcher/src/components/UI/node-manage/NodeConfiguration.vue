@@ -168,6 +168,7 @@ export default {
 }
 .router-box a {
   width: 100%;
+  height: 100%;
   text-decoration: none;
   display: flex;
   justify-content: space-between;

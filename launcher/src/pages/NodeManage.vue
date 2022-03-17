@@ -107,8 +107,7 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
-
-      droppedItems: [],
+      modalItems: [],
     };
   },
   computed: {
@@ -117,8 +116,7 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       selectedItemToRemove: "getSelectedItemToRemove",
-      modalItems: "getModalItems",
-      confirmChanges: "getConfimrChanges",
+      confirmChanges: "getConfirmChanges",
       servicePlugins: "getServicePlugins",
       sidebarPlugins: "getSidebarPlugins",
       configData: "getConfigData",
@@ -137,49 +135,31 @@ export default {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("itemId", item.id);
-        console.log("drag", event.type);
-        console.log("category", item.category);
       }
     },
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
       if (item.category === "validator") {
+        if (this.validatorItems.some((item) => item.id == itemId)) return;
         this.validatorItems.push(item);
+        this.$store.commit("mutatedValidatorItems", this.validatorItems);
       } else if (item.category === "consensus") {
+        if (this.consensusItems.some((item) => item.id == itemId)) return;
         this.consensusItems.push(item);
+        this.$store.commit("mutatedConsensusItems", this.consensusItems);
       } else if (item.category === "execution") {
+        if (this.executionItems.some((item) => item.id == itemId)) return;
         this.executionItems.push(item);
+        this.$store.commit("mutatedExecutionItems", this.executionItems);
       } else {
+        if (this.servicePlugins.some((item) => item.id == itemId)) return;
         this.servicePlugins.push(item);
+        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
       }
-      console.log(item);
     },
     serviceItemSelection(item) {
-      this.selectedItemToRemove = item;
-    },
-    clickOnRemoveBtn() {
-      console.log("category", this.selectedItemToRemove.category);
-      if (this.selectedItemToRemove.category == "service") {
-        this.servicePlugins = this.servicePlugins.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "execution") {
-        this.executionItems = this.executionItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "consensus") {
-        this.consensusItems = this.consensusItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "validator") {
-        this.validatorItems = this.validatorItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
+      this.$store.commit("selectedItemToRemoveMutation", item);
     },
   },
 };
@@ -200,7 +180,7 @@ export default {
   display: grid;
   width: 100%;
   height: 92.3vh;
-  grid-template-columns: 17% 45% 22% 16%;
+  grid-template-columns: 18% 46% 21% 15%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
   position: absolute;
@@ -243,6 +223,7 @@ export default {
   margin-right: 3px;
 }
 .service {
+  width: 96%;
   height: 97.3%;
   margin-top: 6px;
   grid-column: 3;
@@ -287,7 +268,7 @@ export default {
 }
 
 .change-menu {
-  width: 93%;
+  width: 92%;
   height: 98%;
   margin-top: 6px;
   grid-row: 1/4;

@@ -1,5 +1,5 @@
 <template>
-  <div class="active-box" :class="mode">
+  <div class="active-box">
     <div class="badge">
       <div class="active-badge">ACTIVE</div>
       <div class="installed-badge">INSTALLED</div>
