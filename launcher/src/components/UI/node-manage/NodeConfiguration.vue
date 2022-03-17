@@ -25,10 +25,7 @@
     </div>
     <div class="config-bg">
       <div class="config-btns">
-        <div
-          class="config-add"
-          @click="$emit('modalPreset')"
-        >
+        <div class="config-add" @click="$emit('modalPreset')">
           <span class="btn-text">ADD 1 CLICK PRESET</span>
           <span class="btn-icon"></span>
         </div>
@@ -43,7 +40,7 @@
       </div>
 
       <div class="delete-box">
-        <div class="delete-btn">
+        <div class="delete-btn" @click="removeAllPlugins">
           <span class="btn-text">DELETE CONFIGS</span>
           <img
             src="../../../../public/Img/icon/manage-node-icons/bin.png"
@@ -65,6 +62,10 @@ export default {
   computed: {
     ...mapGetters({
       configData: "getConfigData",
+      servicePlugins: "getServicePlugins",
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
     }),
   },
   methods: {
@@ -73,6 +74,12 @@ export default {
     },
     closeModal() {
       this.modalActive = false;
+    },
+    removeAllPlugins() {
+      this.servicePlugins.length = 0;
+      this.consensusItems.length = 0;
+      this.executionItems.length = 0;
+      this.validatorItems.length = 0;
     },
   },
 };
