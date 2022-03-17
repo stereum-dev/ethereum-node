@@ -249,18 +249,17 @@ export default {
 }
 .service {
   width: 97.7%;
-  height: 97.9%;
+  height: 97%;
   margin-top: 6px;
   grid-column: 3;
   grid-row: 1/4;
-  background: #2c4030;
+  background: #334b3f;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border-top: 5px solid #1a2620;
-  border-left: 5px solid #1a2620;
+  border: 5px solid #1a2620;
 }
 .service-parent {
   display: flex;
@@ -299,14 +298,13 @@ export default {
 }
 
 .change-menu {
-  width: 92%;
-  height: 98%;
+  width: 93.3%;
+  height: 96.9%;
   margin-top: 6px;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
-  border: solid #1a2620;
-  border-width: 6px 6px 0 6px;
+  border: 5px solid #1a2620;
   border-top-right-radius: 40px;
   display: flex;
   flex-direction: column;
