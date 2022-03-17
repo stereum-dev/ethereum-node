@@ -219,15 +219,16 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  overflow: hidden;
 }
 
 .alert-text {
-  font-size: 9px;
-  font-weight: 900;
-  color: rgb(255, 251, 251);
+  font-size: 8px;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
 }
 .alert-title {
-  font-size: 8px;
-  font-weight: 800;
+  font-size: 7px;
+  font-weight: 400;
 }
 </style>
