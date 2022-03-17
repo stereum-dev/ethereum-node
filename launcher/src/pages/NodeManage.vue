@@ -226,7 +226,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  z-index: 4;
 }
 .modal-parent {
   grid-column: 2;
