@@ -133,7 +133,7 @@ export default {
   justify-content: space-evenly;
 }
 .modal-parent {
-  width: 44.5vw;
+  width: 44.6vw;
   height: 88.2vh;
 
   display: flex;

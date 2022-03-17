@@ -235,9 +235,8 @@ export default {
 .modal-parent {
   grid-column: 2;
   grid-row: 1/4;
-  width: 44.7vw;
-  height: 87.9vh;
-  margin: 2px 7px 0 0;
+  width: 45.5vw;
+  height: 88vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -245,8 +244,8 @@ export default {
   z-index: 1;
 }
 .modal-bg {
+  width: 100vw;
   height: 87.9vh;
-  margin-right: 3px;
 }
 .service {
   width: 97.7%;
