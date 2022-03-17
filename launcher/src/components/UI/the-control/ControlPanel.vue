@@ -114,7 +114,7 @@ export default {
 .panel-parent {
   width: 98%;
   height: 91%;
-  border: 5px solid gray;
+  border: 5px solid rgb(55, 55, 55);
   border-radius: 20px;
   background-color: #464a44;
 }
