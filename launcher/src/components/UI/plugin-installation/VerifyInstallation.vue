@@ -77,6 +77,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .verify-title-box {
   width: 95%;
@@ -95,7 +96,7 @@
 
 .content-box {
   width: 95%;
-  height: 50%;
+  height: 53%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -104,11 +105,12 @@
   width: 100%;
   height: 99%;
   background-color: #5b5b5b;
-  border-radius: 10px;
+  border-radius: 15px;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .btn-box {
   width: 95%;
-  height: 15%;
+  height: 12%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

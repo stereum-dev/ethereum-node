@@ -74,6 +74,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .name-title-box {
   width: 95%;
@@ -92,26 +93,28 @@
 
 .content-box {
   width: 95%;
-  height: 50%;
+  height: 53%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 }
 .options-box {
   width: 48%;
-  height: 90%;
+  height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .system-box {
   width: 48%;
-  height: 90%;
+  height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .btn-box {
   width: 95%;
-  height: 15%;
+  height: 12%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
