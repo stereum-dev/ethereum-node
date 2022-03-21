@@ -83,7 +83,6 @@ export default {
 .clock {
   width: 70%;
   height: 70%;
-
 }
 
 @keyframes top-clip {
