@@ -72,7 +72,7 @@ export default {
 <style scoped>
 .circle {
   background: #83d0f5;
-  width: 18%;
+  width: 10%;
   padding: 5px;
   border-radius: 50%;
   display: flex;
