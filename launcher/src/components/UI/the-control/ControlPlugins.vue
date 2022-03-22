@@ -60,7 +60,7 @@
   height: 22px;
   background-color: #29322d;
   padding: 2px;
-  border: 1px solid #71a489;
+  border: 1px solid #3f5b54;
   border-radius: 10px;
 }
 .plugins-title span {

@@ -4,7 +4,10 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box" onmousedown="return false">
-          <node-configuration :configData="configData" @modal-preset="openPresetModal"></node-configuration>
+          <node-configuration
+            :configData="configData"
+            @modal-preset="openPresetModal"
+          ></node-configuration>
         </div>
         <div class="preset-modal" v-if="presetModal">
           <preset-modal @close-preset="closePresetModal"></preset-modal>
@@ -54,7 +57,9 @@
           </div>
         </div>
         <div class="service" onmousedown="return false">
-          <div class="title">SERVICE PLUGIN</div>
+          <div class="title">
+            <span>SERVICE PLUGIN</span>
+          </div>
           <div
             class="service-parent"
             @drop="onDrop($event, sidebarPlugins)"
@@ -230,9 +235,8 @@ export default {
 .modal-parent {
   grid-column: 2;
   grid-row: 1/4;
-  width: 44.7vw;
-  height: 87.9vh;
-  margin: 2px 7px 0 0;
+  width: 45.5vw;
+  height: 88vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -240,22 +244,22 @@ export default {
   z-index: 1;
 }
 .modal-bg {
+  width: 100vw;
   height: 87.9vh;
-  margin-right: 3px;
 }
 .service {
-  width: 96%;
-  height: 97.3%;
+  width: 97.7%;
+  height: 97%;
   margin-top: 6px;
   grid-column: 3;
   grid-row: 1/4;
-  background: #2c4030;
-  color: white;
+  background: #334b3f;
+  color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border: 4px solid rgb(121, 121, 121);
+  border: 5px solid #1a2620;
 }
 .service-parent {
   display: flex;
@@ -266,13 +270,18 @@ export default {
 }
 
 .title {
-  height: 5%;
+  width: 70%;
+  height: 6%;
   background: #263529;
-  margin: 1rem 0;
-  font-weight: bold;
-  padding: 0.5px;
-  text-align: center;
+  border: 1px solid #2d4338;
+  border-radius: 15px;
+  margin: 10px auto;
+  font-weight: 800;
   font-size: 1rem;
+  box-shadow: 1px 1px 3px rgb(26, 26, 26);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .trap-title {
   color: white;
@@ -289,15 +298,14 @@ export default {
 }
 
 .change-menu {
-  width: 92%;
-  height: 98%;
+  width: 93.3%;
+  height: 96.9%;
   margin-top: 6px;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
-  border: solid #1a2620;
-  border-width: 6px 6px 0 6px;
-  border-top-right-radius: 40px;
+  border: 5px solid #1a2620;
+  border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <router-link :to="{ path: '/node' }">
+    <router-link :to="{ path: '/install' }">
       <base-button id="instal">INSTAL</base-button>
     </router-link>
     <router-link :to="{ path: '/welcome' }">
