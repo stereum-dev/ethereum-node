@@ -10,8 +10,9 @@
         </div>
         <div class="needle"></div>
         <div class="gauge-center">
-          <div class="label">625 GB FRER</div>
-          <div class="number">STORAGE</div>
+          <!-- <div class="label">625 GB FRER</div> -->
+          <!-- <div class="number">STORAGE</div> -->
+          <div>69</div>
         </div>
       </div>
     </div>
@@ -19,17 +20,16 @@
 </template>
 
 <style scoped>
-.parentStorage {
-  width: 30%;
-}
 h1 {
   text-align: center;
 }
-
+.parentStorage {
+  display: flex;
+}
 .gauge-wrapper {
-  width: auto;
-  margin: 0 auto;
-  padding: 20px 15px 15px;
+  width: 100%;
+  display: flex;
+  padding: 5px 15px 15px;
 }
 
 .gauge {
@@ -62,18 +62,19 @@ h1 {
 
 .gauge-center .label,
 .gauge-center .number {
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   text-align: center;
   border: 0 !important;
 }
-.gauge-center .label {
-  font-size: 0.75em;
+/*.gauge-center .label {
+  font-size: 50%;
   opacity: 0.6;
   margin: 1.1em 0 0.3em 0;
-}
+}*/
 .gauge-center .number {
-  font-size: 1.2em;
+  font-size: 80%;
 }
 
 .needle {
