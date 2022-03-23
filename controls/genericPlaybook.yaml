@@ -1,6 +1,14 @@
 ---
-- hosts: localhost
+- name: "genericPlaybook"
+  hosts: localhost
   vars_files:
   - defaults/stereum_defaults.yaml
-  roles:
-    - role: "{{ stereum_role }}"   
+
+  tasks:
+    - set_fact:
+        stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+    - name: "Include role"
+      include_role:
+        name: "{{ stereum_role }}"
+
+#EOF

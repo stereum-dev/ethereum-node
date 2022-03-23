@@ -78,8 +78,8 @@ export default {
   border-radius: 0 0 0 15px;
 }
 .validatorComment_cell {
-  grid-column: 2/3;
-  grid-row: 4/5;
+  grid-column: 3/4;
+  grid-row: 2/3;
   background: red;
   display: flex;
 }
