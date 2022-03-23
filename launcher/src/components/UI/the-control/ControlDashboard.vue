@@ -8,7 +8,7 @@
     <div class="sandFull_cell"><sand-clock></sand-clock></div>
     <div class="discSpace_cell"></div>
     <div class="networkSync_cell"></div>
-    <div class="cpuUsage_cell"></div>
+    <div class="cpuUsage_cell"><the-thermometer></the-thermometer></div>
     <div class="peersConect_cell"></div>
     <div class="networkUsage_cell"></div>
     <div class="validatorComment_cell">
@@ -17,11 +17,12 @@
   </div>
 </template>
 <script>
+import TheThermometer from "./TheThermometer.vue";
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter },
+  components: { SandClock, StorageCounter, TheThermometer },
 };
 </script>
 <style scoped>
@@ -47,7 +48,7 @@ export default {
 .sandFull_cell {
   grid-column: 3/4;
   grid-row: 1/2;
-  background: red;
+
   border-radius: 0 15px 0 0;
   display: flex;
 }
@@ -65,6 +66,9 @@ export default {
   grid-column: 1/2;
   grid-row: 3/4;
   background: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .peersConect_cell {
   grid-column: 2/3;
@@ -80,7 +84,7 @@ export default {
 .validatorComment_cell {
   grid-column: 3/4;
   grid-row: 2/3;
-  background: red;
+
   display: flex;
 }
 .validCntr {
