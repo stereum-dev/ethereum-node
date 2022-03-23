@@ -114,7 +114,7 @@ export default {
 .panel-parent {
   width: 98%;
   height: 91%;
-  border: 5px solid gray;
+  border: 5px solid rgb(55, 55, 55);
   border-radius: 20px;
   background-color: #464a44;
 }
@@ -197,7 +197,7 @@ export default {
   width: 85%;
   height: 60%;
   background-color: #e8e8e8;
-  border: 2px solid rgb(42, 42, 42);
+  border: 2px solid rgb(70, 70, 70);
   border-radius: 15px;
   justify-self: center;
   align-self: center;
@@ -206,7 +206,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 0 1px 5px 1px #373737, inset 0 1px 5px 1px #898989;
+  box-shadow: 0 1px 5px 1px #565656, inset 0 1px 5px 1px #898989;
   overflow: hidden;
 }
 .expert-items:active,
@@ -223,6 +223,11 @@ export default {
   font-size: 1rem;
   font-weight: 900;
 }
+.expert-items:active > .expert-title span,
+.general-items:active > .general-title span {
+  font-size: 1rem;
+  font-weight: 900;
+}
 .expert-title,
 .general-title {
   width: 90%;
@@ -236,7 +241,7 @@ export default {
 .general-title span {
   font-size: 10px;
   font-weight: 800;
-  color: rgb(65, 65, 65);
+  color: rgb(82, 82, 82);
 }
 .expert-description,
 .general-description {
@@ -248,6 +253,6 @@ export default {
   font-size: 6px;
   font-weight: 800;
   text-align: center;
-  color: rgb(135, 135, 135);
+  color: rgb(31, 31, 31);
 }
 </style>

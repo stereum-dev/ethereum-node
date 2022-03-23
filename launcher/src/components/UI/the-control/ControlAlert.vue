@@ -18,33 +18,60 @@
       <span>ALERTS</span>
     </div>
     <div class="alert-table">
-      <div class="table-row-yellow">
-        <div class="warning-icon">
-          <img
-            src="../../../../public/Img/icon//node-journal-icons/yellow-warning1.png"
-            alt="icon"
-          />
+      <div class="table-row" v-for="item in systemWarning" :key="item.id">
+        <div class="table-row-yellow" v-if="item.description === 'SYSTEM LOAD'">
+          <div class="warning-icon">
+            <img
+              src="../../../../public/Img/icon//node-journal-icons/yellow-warning1.png"
+              alt="icon"
+            />
+          </div>
+          <div class="warning-content">
+            <span class="alert-text">{{ item.description }}</span>
+            <span class="alert-title">{{ item.title }}</span>
+          </div>
         </div>
-        <div class="warning-content">
-          <span class="alert-text">SYSTEM LOAD</span>
-          <span class="alert-title">WARNING</span>
-        </div>
-      </div>
-      <div class="table-row-red">
-        <div class="warning-icon">
-          <img
-            src="../../../../public/Img/icon//node-journal-icons/red-warning.png"
-            alt="icon"
-          />
-        </div>
-        <div class="warning-content">
-          <span class="alert-text">HEAVY SYSTEM LOAD</span>
-          <span class="alert-title">WARNING</span>
+        <div class="table-row-red" v-else>
+          <div class="warning-icon">
+            <img
+              src="../../../../public/Img/icon//node-journal-icons/red-warning.png"
+              alt="icon"
+            />
+          </div>
+          <div class="warning-content">
+            <span class="alert-text">{{ item.description }}</span>
+            <span class="alert-title">{{ item.title }}</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      systemWarning: [
+        {
+          id: 1,
+          title: "WARNING",
+          description: "SYSTEM LOAD",
+        },
+        {
+          id: 2,
+          title: "WARNING",
+          description: "HEAVY SYSTEM LOAD",
+        },
+        {
+          id: 3,
+          title: "WARNING",
+          description: "SYSTEM LOAD",
+        },
+      ],
+    };
+  },
+};
+</script>
 <style scoped>
 .alert-box {
   width: 88%;
@@ -81,11 +108,12 @@
 .alert-icons .yellow-warning {
   width: 30px;
   height: 30px;
+  background-color: #d5cb5e;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #6d766f;
+  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #f6efaa;
 }
 .alert-icons .yellow-warning img {
   width: 25px;
@@ -95,10 +123,11 @@
   width: 30px;
   height: 30px;
   border-radius: 5px;
+  background-color: #ea5d5d;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #6d766f;
+  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #f28b8b;
 }
 .alert-icons .red-warning img {
   width: 25px;
@@ -112,20 +141,24 @@
   font-size: 12px;
   font-weight: 800;
   color: #fff;
-  box-shadow: 0 1px 3px 1px #4d4d4d,inset 0 1px 3px 1px #6d766f;
 }
 .alert-table {
   width: 93%;
   height: 70%;
   background-color: #353535;
-  border-radius: 10px 10px 25px 25px;
+  border-radius: 10px;
   overflow-x: hidden;
   overflow-y: auto;
   margin-top: 10px;
 }
-.table-row-yellow {
+.table-row {
   width: 95%;
   height: 13%;
+  margin: 0 auto;
+}
+.table-row-yellow {
+  width: 95%;
+  height: 85%;
   background-color: #aea038;
   margin: 5px auto;
   display: flex;
@@ -149,6 +182,7 @@
 .table-row-yellow .warning-content {
   width: 80%;
   height: 100%;
+  margin-right: 7px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -156,7 +190,7 @@
 }
 .table-row-red {
   width: 95%;
-  height: 13%;
+  height: 85%;
   background-color: #ea564e;
   margin: 5px auto;
   display: flex;
@@ -180,19 +214,21 @@
 .table-row-red .warning-content {
   width: 80%;
   height: 100%;
+  margin-right: 7px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  overflow: hidden;
 }
 
 .alert-text {
-  font-size: 9px;
-  font-weight: 900;
-  color: rgb(255, 251, 251);
+  font-size: 8px;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
 }
 .alert-title {
-  font-size: 8px;
-  font-weight: 800;
+  font-size: 7px;
+  font-weight: 400;
 }
 </style>

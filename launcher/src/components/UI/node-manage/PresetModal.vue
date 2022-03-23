@@ -24,6 +24,7 @@
             recommends you a selection. Try them out!
           </p>
         </div>
+        <button class="install-btn">INSTALL</button>
       </div>
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
@@ -109,6 +110,27 @@ export default {
   font-weight: 500;
   text-align: justify;
   overflow: hidden;
+}
+.content .install-btn {
+  width: 30%;
+  height: 11%;
+  border: 3px solid rgb(160, 160, 160);
+  border-radius: 30px;
+  background-color: #254f4c;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 1px 2px 8px #000000, inset 0 0 8px 2px #3e7670;
+}
+.content .install-btn:hover {
+  background-color: rgb(27, 62, 60);
+  font-weight: 800;
+  color: #fff;
+  box-shadow: none;
+}
+.content .install-btn:active {
+  font-size: 1rem;
+  box-shadow: inset 1px 1px 8px 1px #000000;
 }
 .close-preset {
   width: 25px;

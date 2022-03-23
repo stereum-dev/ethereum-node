@@ -7,6 +7,8 @@ import TheNode from "../pages/TheNode.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
+import PluginName from "../components/UI/plugin-installation/PluginName.vue";
+import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 
 const routes = [
   {
@@ -43,6 +45,16 @@ const routes = [
     path: "/staking",
     name: "TheStaking",
     component: TheStaking,
+  },
+  {
+    path: "/install",
+    name: "PluginName",
+    component: PluginName,
+  },
+  {
+    path: "/verify",
+    name: "VerifyInstallation",
+    component: VerifyInstallation,
   },
 ];
 
