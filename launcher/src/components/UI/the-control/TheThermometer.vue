@@ -3,11 +3,7 @@
     <div id="thermometer">
       <div>
         <div id="stem"></div>
-        <div id="marks">
-          <div id="line">
-            --<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--<br />--
-          </div>
-        </div>
+        <div id="marks"></div>
         <div id="merc-stem"><div id="mercury"></div></div>
         <div id="bulb">100</div>
       </div>
@@ -55,10 +51,6 @@
   bottom: 180px;
   left: 36px;
   z-index: 40;
-}
-
-#line {
-  line-height: 0.7em;
 }
 
 #merc-stem {
