@@ -25,6 +25,7 @@ h1 {
 }
 .parentStorage {
   display: flex;
+  box-sizing: border-box;
 }
 .gauge-wrapper {
   width: 100%;
@@ -35,8 +36,8 @@ h1 {
 .gauge {
   background: #e7e7e7;
   box-shadow: 0 -3px 6px 2px rgba(0, 0, 0, 0.5);
-  width: 200px;
-  height: 100px;
+  width: 150px;
+  height: 75px;
   border-radius: 100px 100px 0 0 !important;
   position: relative;
   overflow: hidden;
@@ -78,16 +79,16 @@ h1 {
 }
 
 .needle {
-  width: 80px;
-  height: 7px;
+  width: 65px;
+  height: 2px;
   background: #15222e;
   border-bottom-left-radius: 100% !important;
-  border-bottom-right-radius: 5px !important;
+  border-bottom-right-radius: 20% !important;
   border-top-left-radius: 100% !important;
-  border-top-right-radius: 5px !important;
+  border-top-right-radius: 10px !important;
   position: absolute;
-  bottom: -2px;
-  left: 20px;
+  bottom: 10px;
+  left: 5%;
   transform-origin: 100% 4px;
   transform: rotate(0deg);
   box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.38);
@@ -164,7 +165,7 @@ h1 {
     transform: rotate(0);
   }
   100% {
-    transform: rotate(115deg);
+    transform: rotate(105deg);
   }
 }
 
