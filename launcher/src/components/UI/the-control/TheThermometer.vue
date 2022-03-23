@@ -12,9 +12,6 @@
 </template>
 
 <style scoped>
-.thermoParent {
-  width: 1%;
-}
 #thermometer {
   width: 5%;
 }
