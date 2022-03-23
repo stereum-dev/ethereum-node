@@ -6,7 +6,7 @@
     <div class="machineName_cell"></div>
     <div class="nodeProcess_cell"></div>
     <div class="sandFull_cell"><sand-clock></sand-clock></div>
-    <div class="discSpace_cell"><the-chart></the-chart></div>
+    <div class="discSpace_cell"></div>
     <div class="networkSync_cell"></div>
     <div class="cpuUsage_cell"></div>
     <div class="peersConect_cell"></div>
@@ -20,9 +20,8 @@
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
-import TheChart from "./TheChart.vue";
 export default {
-  components: { SandClock, StorageCounter, TheChart },
+  components: { SandClock, StorageCounter },
 };
 </script>
 <style scoped>
@@ -56,10 +55,6 @@ export default {
   grid-column: 1/2;
   grid-row: 2/3;
   background: yellow;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
 }
 .networkSync_cell {
   grid-column: 2/3;
