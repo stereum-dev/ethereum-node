@@ -11,15 +11,17 @@
     <div class="cpuUsage_cell"></div>
     <div class="peersConect_cell"></div>
     <div class="networkUsage_cell"></div>
-    <div class="validatorComment_cell"></div>
+    <div class="validatorComment_cell">
+      <storage-counter class="validCntr"></storage-counter>
+    </div>
   </div>
 </template>
 <script>
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
-// import StorageCounter from "./StorageCounter.vue";
+import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock },
+  components: { SandClock, StorageCounter },
 };
 </script>
 <style scoped>
@@ -28,7 +30,7 @@ export default {
   width: 100%;
   height: 100%;
   grid-template-columns: repeat(3, 33.3%);
-  grid-template-rows: 10% repeat(3, 30%);
+  grid-template-rows: 12% repeat(3, 29.5%);
   position: relative;
 }
 .machineName_cell {
@@ -47,7 +49,6 @@ export default {
   grid-row: 1/2;
   background: red;
   border-radius: 0 15px 0 0;
-  align-items: center;
   display: flex;
 }
 .discSpace_cell {
@@ -80,5 +81,8 @@ export default {
   grid-column: 2/3;
   grid-row: 4/5;
   background: red;
+  display: flex;
+}
+.validCntr {
 }
 </style>
