@@ -8,6 +8,9 @@
     - set_fact:
         stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
       when: stereum_args is defined
+    - set_fact:
+        stereum: "{{ stereum_static}}"
+      when: stereum_args is undefined
     - name: "Include role"
       include_role:
         name: "{{ stereum_role }}"
