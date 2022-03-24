@@ -16,6 +16,26 @@
               <div class="option-title">
                 <span>OPTION</span>
               </div>
+              <div class="option-content">
+                <div class="network-parent">
+                  <div class="network-box">
+                    <div class="choose">
+                      <span>CHOOSE YOUR NETWORK</span>
+                    </div>
+                    <div class="none">
+                      <span>NONE</span>
+                    </div>
+                  </div>
+                  <div class="circle-box"></div>
+                </div>
+                <div class="fast-sync">
+                  <div class="sync-box">
+                    <span>FAST SYNC</span>
+                    <span></span>
+                  </div>
+                </div>
+                <div class="change-installation"></div>
+              </div>
             </div>
             <div class="system-box">
               <div class="system-title">
@@ -234,6 +254,66 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+}
+.options-box .option-content {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.option-content .network-parent {
+  width: 100%;
+  height: 30%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.network-parent .network-box {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.network-box .choose {
+  width: 90%;
+  height: 50%;
+  border-radius: 8px;
+  background-color: #30483b;
+  color: #fff;
+}
+.network-box .none {
+  width: 70%;
+  height: 45%;
+  border: 2px solid gray;
+  border-radius: 10px;
+  background-color: #1f1f1f;
+  align-self: flex-end;
+  color: #fff;
+}
+.network-parent .circle-box {
+  width: 21%;
+  height: 95%;
+  border: 2px solid #5b5b5b;
+  border-radius: 50%;
+  background-color: #1f1f1f;
+  position: absolute;
+  right: 3%;
+}
+
+.option-content .fast-sync {
+  width: 100%;
+  height: 30%;
+  background-color: rgb(72, 212, 76);
+}
+.option-content .change-installation {
+  width: 100%;
+  height: 30%;
+  background-color: rgb(50, 61, 177);
 }
 
 .system-box {
