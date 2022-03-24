@@ -5,7 +5,9 @@
         <div id="stem"></div>
         <div id="marks"></div>
         <div id="merc-stem"><div id="mercury"></div></div>
+
         <div id="bulb"></div>
+
       </div>
     </div>
   </div>
@@ -26,6 +28,7 @@
 }
 
 #stem {
+
   width: 0.5rem;
   height: 4rem;
   position: relative;
@@ -36,6 +39,7 @@
   border-left: 3px solid white;
   border-top: 3px solid white;
   border-right: 3px solid white;
+
   animation-name: stem;
   animation-duration: 2s;
   animation-iteration-count: infinite;
@@ -43,15 +47,18 @@
 }
 
 #marks {
+
   width: 100%;
   height: 2.6rem;
   position: relative;
   bottom: 180px;
   left: 1rem;
+
   z-index: 40;
 }
 
 #merc-stem {
+
   width: 2px;
   height: 85px;
   position: relative;
@@ -65,6 +72,7 @@
   position: relative;
   bottom: -70%;
   left: -0.1rem;
+
   z-index: 10;
   animation-name: mercury;
   animation-duration: 2s;
@@ -74,6 +82,7 @@
 
 #bulb {
   position: relative;
+
   overflow: hidden;
   bottom: 4.2rem;
   left: 101px;
@@ -83,6 +92,7 @@
   background-color: grey;
   border-radius: 50px;
   border: 2px solid white;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -99,6 +109,7 @@
 @keyframes mercury {
   from {
     background-color: #dd2c00;
+
     height: 4rem;
     bottom: -80%;
   }
@@ -106,6 +117,7 @@
     background-color: #e4f30d;
     height: 1rem;
     bottom: -120%;
+
   }
 }
 </style>

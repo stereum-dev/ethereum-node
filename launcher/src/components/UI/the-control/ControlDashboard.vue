@@ -7,7 +7,9 @@
     <div class="nodeProcess_cell">nodeProcess_cell</div>
     <div class="sandFull_cell"><sand-clock></sand-clock></div>
     <div class="discSpace_cell">discSpace_cell</div>
+
     <div class="networkSync_cell"><the-thermometer></the-thermometer></div>
+
     <div class="cpuUsage_cell"><the-thermometer></the-thermometer></div>
     <div class="peersConect_cell">peersConect_cell</div>
     <div class="networkUsage_cell">networkUsage_cell</div>
@@ -55,7 +57,9 @@ export default {
 .discSpace_cell {
   grid-column: 1/2;
   grid-row: 2/3;
+
   background: violet;
+
 }
 .networkSync_cell {
   grid-column: 2/3;
