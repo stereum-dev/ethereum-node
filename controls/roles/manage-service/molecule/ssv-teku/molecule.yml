@@ -6,7 +6,7 @@ driver:
 platforms:
   - name: "manage-service--ssv-teku--ubuntu-20.04"
     hostname: ubuntu
-    server_type: cpx31
+    server_type: cx51
     image: ubuntu-20.04
     network:
       name: eth2-prater
@@ -14,7 +14,7 @@ platforms:
       ip: 10.10.0.110
   - name: "manage-service--ssv-teku--centos-stream-8"
     hostname: "centos"
-    server_type: cpx31
+    server_type: cx51
     image: centos-stream-8
     network:
       name: eth2-prater
