@@ -107,7 +107,7 @@ export default {
       systemInfos: {
         name: "Macbook",
         cpuCores: 1,
-        memory: 12,
+        memory: 128,
       },
       plugins: {
         name: "Blox",
@@ -249,7 +249,7 @@ export default {
 }
 .info-box {
   width: 90%;
-  height: 35%;
+  height: 45%;
   margin-top: 10px;
   background-color: transparent;
   border: 2px solid rgb(74, 73, 73);
@@ -261,7 +261,7 @@ export default {
 }
 .system-info {
   width: 93%;
-  height: 84%;
+  height: 89%;
   border-radius: 12px;
   background-color: rgb(60, 60, 60);
   display: grid;

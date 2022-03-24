@@ -48,19 +48,19 @@
   z-index: 1;
 }
 .verify-modal-parent {
-  width: 70%;
+  width: 75%;
   height: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 15%;
-  left: 15%;
+  top: 14%;
+  left: 13%;
   z-index: 2;
 }
 .verify-modal {
   width: 70%;
-  height: 100%;
+  height: 90%;
   border: 1px solid rgba(38, 38, 38, 0.5);
   border-radius: 20px;
   background-color: #334b3e;
