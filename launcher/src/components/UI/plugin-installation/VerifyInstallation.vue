@@ -127,19 +127,19 @@
 .back-btn {
   width: 55%;
   height: 60%;
-  border: 2px solid rgb(103, 103, 103);
+  border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 4px 1px rgb(23, 23, 23),
-    inset 1px 1px 3px 1px rgb(147, 159, 147);
+  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
+    inset 1px 1px 3px 1px rgb(92, 114, 92);
 }
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(23, 23, 23),
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
     inset 1px 1px 5px 1px rgb(67, 86, 67);
 }
 .next-btn:active,
