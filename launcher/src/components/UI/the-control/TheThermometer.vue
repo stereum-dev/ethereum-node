@@ -15,27 +15,18 @@
 #thermometer {
   width: 5%;
 }
-#far {
-  border: 4px solid black;
-  height: 400px;
-}
-
-#cel {
-  border: 4px solid black;
-  height: 400px;
-}
 
 #stem {
   width: 0.5rem;
   height: 4rem;
   position: relative;
-  left: 6.5rem;
+  left: 6.6rem;
   bottom: -4.5rem;
   z-index: 1;
   border-radius: 50px 50px 0 0;
-  border-left: 3px solid white;
-  border-top: 3px solid white;
-  border-right: 3px solid white;
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
   animation-name: stem;
   animation-duration: 2s;
   animation-iteration-count: infinite;
@@ -76,13 +67,13 @@
   position: relative;
   overflow: hidden;
   bottom: 4.2rem;
-  left: 101px;
+  left: 102px;
   z-index: 20;
   width: 1rem;
   height: 1rem;
   background-color: grey;
   border-radius: 50px;
-  border: 2px solid white;
+  border: 1px solid white;
   display: flex;
   flex-direction: column;
   justify-content: center;
