@@ -48,19 +48,19 @@
   z-index: 1;
 }
 .verify-modal-parent {
-  width: 75%;
-  height: 70%;
+  width: 80%;
+  height: 75%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 14%;
-  left: 13%;
+  top: 11.2%;
+  left: 10%;
   z-index: 2;
 }
 .verify-modal {
   width: 70%;
-  height: 90%;
+  height: 95%;
   border: 1px solid rgba(38, 38, 38, 0.5);
   border-radius: 20px;
   background-color: #334b3e;
@@ -71,7 +71,7 @@
 }
 .verify-box {
   width: 95%;
-  height: 25%;
+  height: 20%;
   background-color: #c2bebe;
   border-radius: 20px;
   display: flex;
@@ -96,7 +96,7 @@
 
 .content-box {
   width: 95%;
-  height: 53%;
+  height: 63%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

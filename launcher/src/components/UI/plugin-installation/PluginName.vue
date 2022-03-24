@@ -31,7 +31,9 @@
                 <div class="fast-sync">
                   <div class="sync-box">
                     <span>FAST SYNC</span>
-                    <span></span>
+                    <div class="toggle-btn">
+                      <div class="toggle"></div>
+                    </div>
                   </div>
                 </div>
                 <div class="change-installation"></div>
@@ -173,19 +175,19 @@ export default {
   z-index: 1;
 }
 .plugin-modal-parent {
-  width: 75%;
-  height: 70%;
+  width: 80%;
+  height: 75%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 14%;
-  left: 13%;
+  top: 11.2%;
+  left: 10%;
   z-index: 2;
 }
 .plugin-modal {
   width: 70%;
-  height: 90%;
+  height: 95%;
   border: 1px solid rgba(38, 38, 38, 0.5);
   border-radius: 20px;
   background-color: #334b3e;
@@ -196,7 +198,7 @@ export default {
 }
 .name-box {
   width: 95%;
-  height: 25%;
+  height: 20%;
   background-color: #c2bebe;
   border-radius: 20px;
   display: flex;
@@ -239,7 +241,7 @@ export default {
 }
 .content-box {
   width: 95%;
-  height: 53%;
+  height: 63%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -256,7 +258,7 @@ export default {
   align-items: center;
 }
 .options-box .option-content {
-  width: 90%;
+  width: 94%;
   height: 90%;
   display: flex;
   flex-direction: column;
@@ -273,7 +275,7 @@ export default {
   position: relative;
 }
 .network-parent .network-box {
-  width: 80%;
+  width: 85%;
   height: 80%;
   display: flex;
   flex-direction: column;
@@ -282,22 +284,22 @@ export default {
 .network-box .choose {
   width: 90%;
   height: 50%;
-  border-radius: 8px;
+  border-radius: 15px;
   background-color: #30483b;
   color: #fff;
 }
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid gray;
-  border-radius: 10px;
+  border: 2px solid #5b5b5b;
+  border-radius: 30px;
   background-color: #1f1f1f;
   align-self: flex-end;
   color: #fff;
 }
 .network-parent .circle-box {
-  width: 21%;
-  height: 95%;
+  width: 24%;
+  height: 93%;
   border: 2px solid #5b5b5b;
   border-radius: 50%;
   background-color: #1f1f1f;
@@ -307,13 +309,55 @@ export default {
 
 .option-content .fast-sync {
   width: 100%;
-  height: 30%;
-  background-color: rgb(72, 212, 76);
+  height: 25%;
+  background-color: rgb(118, 118, 118);
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+.fast-sync .sync-box {
+  width: 45%;
+  height: 45%;
+  margin: 5px;
+  border: 1px solid gray;
+  border-radius: 15px;
+  background-color: #30483b;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: relative;
+}
+.fast-sync .sync-box span {
+  width: 90%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: left;
+}
+.sync-box .toggle-btn {
+  width: 35%;
+  height: 90%;
+  border-radius: 15px;
+  background-color: #fff;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: absolute;
+  right: 1px;
+}
+.toggle-btn .toggle {
+  width: 52%;
+  height: 93%;
+  border: 1px solid rgb(129, 167, 210);
+  border-radius: 50px;
+  background-color: rgb(11, 97, 201);
+  box-shadow: inset 0 1px 7px #2a9dce;
 }
 .option-content .change-installation {
   width: 100%;
   height: 30%;
-  background-color: rgb(50, 61, 177);
+  border-radius: 10px;
+  background-color: #30483b;
 }
 
 .system-box {
