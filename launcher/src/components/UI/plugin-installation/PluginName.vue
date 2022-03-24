@@ -32,18 +32,16 @@
                     <span class="memory-info">MEMORY:</span>
                   </div>
                   <div class="info-parent">
-                    <div
-                      class="info-content"
-                      v-for="(item, index) in plugins"
-                      :key="index"
-                    >
+                    <div class="info-content">
                       <div class="cpu-cores" v-if="requirementPassed">
                         <span
                           class="cpu-current"
                           :class="{ passedreq: requirementPassed }"
-                          >{{ item.requirements.cpuCores }}</span
+                          >{{ this.systemInfos.cpuCores }}</span
                         >
-                        <span class="cpu-needed">2</span>
+                        <span class="cpu-needed">{{
+                          this.plugins.requirements.cpuCores
+                        }}</span>
                       </div>
                       <div class="cpu-cores" v-if="requirementFailed">
                         <span
@@ -51,9 +49,11 @@
                           :class="{
                             faildreq: requirementFailed,
                           }"
-                          >{{ item.requirements.cpuCores }}</span
+                          >{{ this.systemInfos.cpuCores }}</span
                         >
-                        <span class="cpu-needed">2</span>
+                        <span class="cpu-needed">{{
+                          this.plugins.requirements.cpuCores
+                        }}</span>
                       </div>
                       <div class="memory" v-if="requirementFailed">
                         <span
@@ -61,9 +61,11 @@
                           :class="{
                             faildreq: requirementFailed,
                           }"
-                          >{{ item.requirements.memory }}</span
+                          >{{ this.systemInfos.memory }}</span
                         >
-                        <span class="memory-needed">4Gb</span>
+                        <span class="memory-needed">{{
+                          this.plugins.requirements.memory
+                        }}</span>
                       </div>
                       <div class="memory" v-if="requirementPassed">
                         <span
@@ -71,9 +73,11 @@
                           :class="{
                             passedreq: requirementPassed,
                           }"
-                          >{{ item.requirements.memory }}</span
+                          >{{ this.systemInfos.memory }}</span
                         >
-                        <span class="memory-needed">4Gb</span>
+                        <span class="memory-needed">{{
+                          this.plugins.requirements.memory
+                        }}</span>
                       </div>
                     </div>
                   </div>
@@ -100,42 +104,34 @@ export default {
     return {
       requirementPassed: false,
       requirementFailed: false,
-      plugins: [
-        // {
-        //   name: "Blox",
-        //   category: "execution",
-        //   requirements: {
-        //     cpuCores: 4,
-        //     memory: 64,
-        //   },
-        // },
-        {
-          name: "Obol",
-          category: "validator",
-          requirements: {
-            cpuCores: 1,
-            memory: 2,
-          },
+      systemInfos: {
+        name: "Macbook",
+        cpuCores: 1,
+        memory: 12,
+      },
+      plugins: {
+        name: "Blox",
+        category: "execution",
+        requirements: {
+          cpuCores: 4,
+          memory: 64,
         },
-      ],
+      },
     };
   },
   mounted() {
-    console.log("mount", this.requirementPassed);
-    console.log("mount", this.requirementFailed);
     this.checkRequirement();
   },
   methods: {
     checkRequirement() {
-      this.plugins.forEach((obj) => {
-        if (obj.requirements.cpuCores >= 2 && obj.requirements.memory >= 4) {
-          this.requirementPassed = true;
-        } else {
-          this.requirementFailed = true;
-        }
-      });
-      console.log(this.requirementPassed);
-      console.log(this.requirementFailed);
+      if (
+        this.plugins.requirements.cpuCores <= this.systemInfos.cpuCores &&
+        this.plugins.requirements.memory <= this.systemInfos.memory
+      ) {
+        this.requirementPassed = true;
+      } else {
+        this.requirementFailed = true;
+      }
     },
   },
 };
@@ -258,15 +254,14 @@ export default {
   background-color: transparent;
   border: 2px solid rgb(74, 73, 73);
   border-radius: 16px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42),
-    inset 0 1px 3px 1px rgb(108, 108, 108);
+  box-shadow: 0 1px 3px 1px rgb(42, 42, 42), inset 0 1px 3px 1px rgb(43, 43, 43);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .system-info {
   width: 93%;
-  height: 86%;
+  height: 84%;
   border-radius: 12px;
   background-color: rgb(60, 60, 60);
   display: grid;
@@ -278,10 +273,13 @@ export default {
   width: 100%;
   grid-column: 3/5;
   grid-row: 2/4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .info-parent .info-content {
-  width: 95%;
+  width: 50%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -289,8 +287,9 @@ export default {
 }
 .info-content .cpu-cores,
 .info-content .memory {
+  width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .info-content .cpu-cores span,
@@ -324,6 +323,9 @@ export default {
   font-size: 0.5rem;
   font-weight: 600;
   color: #fff;
+}
+.info-header .min-title {
+  margin-left: 20px;
 }
 .info-titles {
   width: 70%;
