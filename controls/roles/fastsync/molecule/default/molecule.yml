@@ -6,10 +6,10 @@ driver:
 platforms:
   # cpx31 for the storage requirements
   - name: "fastsync--default--ubuntu-2004"
-    server_type: cpx31
+    server_type: cx51
     image: ubuntu-20.04
   - name: "fastsync--default--centos-stream-8"
-    server_type: cpx31
+    server_type: cx51
     image: centos-stream-8
 provisioner:
   name: ansible
