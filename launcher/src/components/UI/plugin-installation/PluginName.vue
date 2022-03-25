@@ -39,7 +39,12 @@
                     </div> -->
                   </div>
                 </div>
-                <div class="change-installation"></div>
+                <div class="change-installation">
+                  <div class="change-title">
+                    <span>CHANGE INSTALLATION</span>
+                  </div>
+                  <div class="change-box"></div>
+                </div>
               </div>
             </div>
             <div class="system-box">
@@ -296,6 +301,12 @@ export default {
   border-radius: 15px;
   background-color: #30483b;
   color: #fff;
+  text-align: left;
+}
+.choose span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 7px;
 }
 .network-box .none {
   width: 70%;
@@ -305,6 +316,14 @@ export default {
   background-color: #1f1f1f;
   align-self: flex-end;
   color: #fff;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.none span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  margin-left: 10px;
 }
 .network-parent .circle-box {
   width: 24%;
@@ -368,8 +387,30 @@ export default {
   height: 30%;
   border-radius: 10px;
   background-color: #30483b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
-
+.change-installation .change-title {
+  width: 90%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.change-title span {
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.change-installation .change-box {
+  width: 90%;
+  height: 50%;
+  background-color: #fff;
+  border: 5px solid rgb(104, 104, 104);
+  border-radius: 10px;
+}
 .system-box {
   width: 48%;
   height: 95%;
