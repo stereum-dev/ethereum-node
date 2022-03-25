@@ -31,9 +31,12 @@
                 <div class="fast-sync">
                   <div class="sync-box">
                     <span>FAST SYNC</span>
-                    <div class="toggle-btn">
+
+                    <toggle-button v-on:change="eventHandler"></toggle-button>
+
+                    <!-- <div class="toggle-btn">
                       <div class="toggle"></div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="change-installation"></div>
@@ -121,9 +124,12 @@
   </div>
 </template>
 <script>
+import ToggleButton from "./toggleButton.vue";
 export default {
+  components: { ToggleButton },
   data() {
     return {
+      toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
       systemInfos: {
@@ -154,6 +160,9 @@ export default {
       } else {
         this.requirementFailed = true;
       }
+    },
+    eventHandler(value) {
+      console.log(value);
     },
   },
 };
@@ -333,6 +342,7 @@ export default {
   font-weight: 700;
   color: #fff;
   text-align: left;
+  margin-left: 5px;
 }
 .sync-box .toggle-btn {
   width: 35%;
