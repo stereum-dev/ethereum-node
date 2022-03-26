@@ -14,7 +14,43 @@
           <div class="content-box">
             <div class="table-box">
               <div class="table">
-                <div class="table-row"></div>
+                <div class="table-header">
+                  <span>TO INSTALL</span>
+                  <span>SELECTION</span>
+                  <span>REQUIREMENTS</span>
+                </div>
+                <div class="table-content">
+                  <div
+                    class="table-row"
+                    v-for="(item, index) in plugins"
+                    :key="index"
+                  >
+                    <div class="plugin-name">
+                      <span>NAME:</span>
+                      <span>{{ item.name }}</span>
+                    </div>
+                    <div class="selection">
+                      <div class="network">
+                        <span>NETWORK:</span>
+                        <span>{{ item.network }}</span>
+                      </div>
+                      <div class="path">
+                        <span>PATH:</span>
+                        <span>{{ item.path }}</span>
+                      </div>
+                    </div>
+                    <div class="requirements">
+                      <div class="cpu">
+                        <span>CPU CORES:</span>
+                        <span>{{ item.requirements.cpuCores }}</span>
+                      </div>
+                      <div class="memory">
+                        <span>MEMORY:</span>
+                        <span>{{ item.requirements.memory }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -31,6 +67,76 @@
     </background-page>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      plugins: [
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+        {
+          name: "blox ssv",
+          category: "execution",
+          network: "Testnet",
+          path: "user/descktop/plugins",
+          requirements: {
+            cpuCores: 4,
+            memory: 64,
+          },
+        },
+      ],
+    };
+  },
+};
+</script>
 <style scoped>
 .verify-parent {
   display: flex;
@@ -107,7 +213,151 @@
   background-color: #5b5b5b;
   border-radius: 15px;
   box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+.table-box .table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.table .table-header {
+  width: 93%;
+  height: 8%;
+  /* background-color: #334b3e; */
+  background-color: #336666;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+}
+.table .table-header span {
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+.table .table-content {
+  width: 95%;
+  height: 70%;
+  border-top: 1px solid gray;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.table-content::-webkit-scrollbar {
+  width: 1px;
+}
+.table-content .table-row {
+  width: 96%;
+  height: 20%;
+  margin-top: 5px;
+  border-bottom: 1px solid gray;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 0 3px 0;
+}
+.table-row .plugin-name {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plugin-name span:first-child {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.plugin-name span:last-child {
+  color: #4ca434;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .selection {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+.network {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.path {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-row .selection .network span:first-child {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .selection .network span:last-child {
+  color: #4ca434;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .selection .path span:first-child {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .selection .path span:last-child {
+  color: #c6ac2a;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.table-row .requirements {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+}
+.requirements .cpu,
+.requirements .memory {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-row .requirements .cpu span:first-child {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .requirements .cpu span:last-child {
+  color: #54a748;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .requirements .memory span:first-child {
+  color: #a7a7a7;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.table-row .requirements .memory span:last-child {
+  color: #54a748;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .btn-box {
   width: 95%;
   height: 12%;
