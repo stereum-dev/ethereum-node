@@ -24,7 +24,10 @@
             recommends you a selection. Try them out!
           </p>
         </div>
-        <button class="install-btn">INSTALL</button>
+
+        <router-link class="install-btn" :to="{ path: '/install' }">
+          <button>INSTALL</button>
+        </router-link>
       </div>
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
@@ -124,13 +127,21 @@ export default {
 }
 .content .install-btn:hover {
   background-color: rgb(27, 62, 60);
-  font-weight: 800;
-  color: #fff;
+
   box-shadow: none;
 }
 .content .install-btn:active {
   font-size: 1rem;
   box-shadow: inset 1px 1px 8px 1px #000000;
+}
+.install-btn button {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
 }
 .close-preset {
   width: 25px;
