@@ -250,7 +250,7 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.table-content::-webkit-scrollbar{
+.table-content::-webkit-scrollbar {
   width: 1px;
 }
 .table-content .table-row {
@@ -264,7 +264,7 @@ export default {
   padding: 1px 0 3px 0;
 }
 .table-row .plugin-name {
-  width: 20%;
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -277,7 +277,7 @@ export default {
   font-weight: 600;
 }
 .plugin-name span:last-child {
-  color: #15ce8d;
+  color: #4ca434;
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -307,7 +307,7 @@ export default {
   font-weight: 600;
 }
 .table-row .selection .network span:last-child {
-  color: #ceaf15;
+  color: #4ca434;
   font-size: 0.8rem;
   font-weight: 600;
 }
@@ -317,8 +317,8 @@ export default {
   font-weight: 600;
 }
 .table-row .selection .path span:last-child {
-  color: #ceaf15;
-  font-size: 1rem;
+  color: #c6ac2a;
+  font-size: 0.7rem;
   font-weight: 600;
 }
 .table-row .requirements {
@@ -343,8 +343,8 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .cpu span:last-child {
-  color: #ceaf15;
-  font-size: 1rem;
+  color: #54a748;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 .table-row .requirements .memory span:first-child {
@@ -353,8 +353,8 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .memory span:last-child {
-  color: #ceaf15;
-  font-size: 1rem;
+  color: #54a748;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 
