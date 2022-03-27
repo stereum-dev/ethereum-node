@@ -5,7 +5,8 @@
         <div id="stem"></div>
         <div id="marks"></div>
         <div id="merc-stem"><div id="mercury"></div></div>
-        <div id="bulb">100</div>
+
+        <div id="bulb"></div>
       </div>
     </div>
   </div>
@@ -15,26 +16,20 @@
 #thermometer {
   width: 5%;
 }
-#far {
-  border: 4px solid black;
-  height: 400px;
-}
-
-#cel {
-  border: 4px solid black;
-  height: 400px;
-}
 
 #stem {
-  width: 20px;
-  height: 215px;
+  width: 0.5rem;
+  height: 4rem;
   position: relative;
-  left: 21px;
+  left: 6.6rem;
+  bottom: -4.5rem;
   z-index: 1;
   border-radius: 50px 50px 0 0;
-  border-left: 4px solid black;
-  border-top: 4px solid black;
-  border-right: 4px solid black;
+
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+
   animation-name: stem;
   animation-duration: 2s;
   animation-iteration-count: infinite;
@@ -42,26 +37,30 @@
 }
 
 #marks {
-  width: 20px;
-  height: 90px;
+  width: 100%;
+  height: 2.6rem;
   position: relative;
   bottom: 180px;
-  left: 36px;
+  left: 1rem;
+
   z-index: 40;
 }
 
 #merc-stem {
-  width: 10px;
+  width: 2px;
   height: 85px;
   position: relative;
   bottom: 175px;
-  left: 25px;
+  left: 6.8rem;
+  bottom: 100px;
 }
 #mercury {
-  width: 20px;
+  width: 0.4rem;
   height: 25px;
   position: relative;
-  bottom: -80%;
+  bottom: -70%;
+  left: -0.1rem;
+
   z-index: 10;
   animation-name: mercury;
   animation-duration: 2s;
@@ -71,14 +70,18 @@
 
 #bulb {
   position: relative;
-  /*   overflow: hidden; */
-  bottom: 190px;
+
+  overflow: hidden;
+  bottom: 4.2rem;
+  left: 102px;
   z-index: 20;
-  width: 60px;
-  height: 60px;
+  width: 1rem;
+  height: 1rem;
   background-color: grey;
   border-radius: 50px;
-  border: 4px solid black;
+
+  border: 1px solid white;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -95,13 +98,14 @@
 @keyframes mercury {
   from {
     background-color: #dd2c00;
-    height: 190px;
-    bottom: 100%;
+
+    height: 4rem;
+    bottom: -80%;
   }
   to {
     background-color: #e4f30d;
-    height: 25px;
-    bottom: -80%;
+    height: 1rem;
+    bottom: -120%;
   }
 }
 </style>
