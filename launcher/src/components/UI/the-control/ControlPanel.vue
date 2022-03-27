@@ -4,29 +4,8 @@
       @close-modal="closeModalHandler"
       :class="{ modalActive: isModalActive }"
       v-if="isModalActive"
+      :item="modalItem"
     >
-      <div class="show-items" v-for="item in modalListItems" :key="item.id">
-        <div class="general-description-box" v-if="isGeneralActive">
-          <div class="modal-general-items">
-            <div class="modal-general-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="modal-general-description">
-              <p>{{ item.description }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="modal-expert-description-box" v-else>
-          <div class="modal-expert-items">
-            <div class="modal-expert-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="modal-expert-description">
-              <p>{{ item.description }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </panel-modal>
     <div class="panel-content">
       <div class="level-box">
@@ -51,9 +30,7 @@
             class="general-items"
             v-for="item in controlPanelGeneralItems"
             :key="item.id"
-            ref="item"
-            @click="openModalHandler(controlPanelGeneralItems)"
-            @mousedown="getItem($event)"
+            @click="openModalHandler(item)"
           >
             <div class="general-title">
               <span>{{ item.title }}</span>
@@ -68,7 +45,7 @@
             class="expert-items"
             v-for="item in controlPanelExpertItems"
             :key="item.id"
-            @click="openModalHandler(controlPanelExpertItems)"
+            @click="openModalHandler(item)"
           >
             <div class="expert-title">
               <span>{{ item.title }}</span>
@@ -128,7 +105,7 @@ export default {
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
         },
       ],
-      modalListItems: [],
+      modalItem: undefined,
     };
   },
   methods: {
@@ -144,18 +121,13 @@ export default {
       this.isGeneralActive = false;
       this.generalBtn = false;
     },
-    getItem(event, item) {
-      // event.dataTransfer.set("itemId", item.id);
-      console.log(event.target.id, item);
-    },
-    openModalHandler(list) {
+    openModalHandler(item) {
       this.isModalActive = true;
-      const item = list.find((obj) => obj);
-      console.log(item);
+      this.modalItem = item;
+      console.log("3", item);
     },
     closeModalHandler() {
       this.isModalActive = false;
-      this.modalListItems.length = 0;
     },
   },
 };
