@@ -8,6 +8,23 @@
     ssv_service: 99e8942a-82e9-11ec-9f76-cbc103131365
 
   tasks:
+    # ssv operator keys
+    - block:
+      - name: Generate SSV network keys
+        command: bash -c "docker run -d --name=ssv_node_op_key -it 'bloxstaking/ssv-node:v0.1.10' /go/bin/ssvnode generate-operator-keys &&
+                          docker logs ssv_node_op_key --follow &&
+                          docker stop ssv_node_op_key &&
+                          docker rm ssv_node_op_key"
+        register: ssv_keys
+        changed_when: false
+        become: yes
+      - name: Parse keys
+        set_fact:
+          ssv:
+            enabled: true
+            pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
+            sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
+
     # ssv service
     - block:
       - set_fact:
@@ -35,7 +52,7 @@
                   eth1:
                     ETH1Addr: "ws://10.10.0.2:8545"
                     RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
-                  OperatorPrivateKey: ""
+                  OperatorPrivateKey: "{{ ssv.sk }}"
                   global:
                     LogLevel: "debug"
                   MetricsAPIPort: 15000
