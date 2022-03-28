@@ -45,7 +45,7 @@
     register: blox_ssv
     until:
       - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is search('at peer limit')
+      - blox_ssv.stdout is search('\"Operator PublicKey\":')
     retries: 360
     delay: 10
   # container's images & ports
