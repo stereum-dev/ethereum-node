@@ -40,34 +40,44 @@
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
-      minutes: 2
+      minutes: 5
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-59827650-8ac6-11ec-81ec-f3dc0fb8f30e"
     register: grafana
+    until:
+      - grafana.stdout is search('HTTP Server Listen')
+      - grafana.stdout is not search("can't read datasource provisioning files from directory")
+      - grafana.stdout is not search("can't read dashboard provisioning files from directory")
+    retries: 60
+    delay: 10
   #  prometheus logs
   - name: Prometheus
-    command: "docker logs --tail=100  stereum-4f260e42-8ac6-11ec-abba-4be6f5fee8db"
+    command: "docker logs --tail=100 stereum-4f260e42-8ac6-11ec-abba-4be6f5fee8db"
     register: prometheus
+    until:
+      - prometheus.stderr is search("Server is ready to receive web requests")
+      - prometheus.stderr is not search("Error loading config")
+    retries: 60
+    delay: 10
   #  node exporter logs
   - name: Node exporter
     command: "docker logs --tail=100 stereum-ef7d66cc-9022-11ec-8bd0-57e35985136a"
     register: node_exporter
+    until:
+      - node_exporter.stderr is search("Listening on")
+    retries: 60
+    delay: 10
   #  lighthouse beacon logs
   - name: Lighthouse beacon
     command: "docker logs --tail=200 stereum-cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86"
     register: lighthouse_beacon
-  - assert:
-      that:
-      - grafana.stdout.find("HTTP Server Listen") != -1
-      - grafana.stdout.find("can't read datasource provisioning files from directory") == -1
-      - grafana.stdout.find("can't read dashboard provisioning files from directory") == -1
-      - prometheus.stderr.find("Server is ready to receive web requests") != -1
-      - prometheus.stderr.find("Error loading config") == -1
-      - node_exporter.stderr.find("Listening on") != -1
-      - lighthouse_beacon.stderr.find("est_time") != -1
-      - lighthouse_beacon.stderr.find("eth1-endpoints contains an invalid URL") == -1
-      - lighthouse_beacon.stderr.find("Error connecting to eth1 node endpoint") == -1
+    until:
+      - lighthouse_beacon.stderr is search("est_time")
+      - lighthouse_beacon.stderr is not search("eth1-endpoints contains an invalid URL")
+      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
+    retries: 60
+    delay: 10
   # container's images & ports
   - shell: docker ps
     register: stereum_docker_ps
