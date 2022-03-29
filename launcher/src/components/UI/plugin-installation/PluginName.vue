@@ -31,12 +31,7 @@
                 <div class="fast-sync">
                   <div class="sync-box">
                     <span>FAST SYNC</span>
-
                     <toggle-button></toggle-button>
-
-                    <!-- <div class="toggle-btn">
-                      <div class="toggle"></div>
-                    </div> -->
                   </div>
                 </div>
                 <div class="change-installation">
@@ -119,6 +114,7 @@ export default {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
+      selectedPlugin: null,
     };
   },
   computed: {

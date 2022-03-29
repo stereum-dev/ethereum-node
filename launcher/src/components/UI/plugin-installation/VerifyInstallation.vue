@@ -59,8 +59,8 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/verify' }">
-              <button class="next-btn">INSTALL</button>
+            <router-link :to="{ path: '/node' }">
+              <button  class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
