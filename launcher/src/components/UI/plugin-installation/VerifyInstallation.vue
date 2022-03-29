@@ -24,6 +24,7 @@
                     class="table-row"
                     v-for="(item, index) in plugins"
                     :key="index"
+                    v-show="index === this.plugins.length - 1"
                   >
                     <div class="plugin-name">
                       <span>NAME:</span>
@@ -42,7 +43,7 @@
                     <div class="requirements">
                       <div class="cpu">
                         <span>CPU CORES:</span>
-                        <span>{{ item.requirements.cpuCores }}</span>
+                        <span>{{ item.requirements.core }}</span>
                       </div>
                       <div class="memory">
                         <span>MEMORY:</span>
@@ -68,72 +69,15 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      plugins: [
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-        {
-          name: "blox ssv",
-          category: "execution",
-          network: "Testnet",
-          path: "user/descktop/plugins",
-          requirements: {
-            cpuCores: 4,
-            memory: 64,
-          },
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters({
+      plugins: "installationPlugins",
+    }),
   },
 };
 </script>
@@ -253,8 +197,9 @@ export default {
 .table-content::-webkit-scrollbar {
   width: 1px;
 }
+
 .table-content .table-row {
-  width: 96%;
+  width: 100%;
   height: 20%;
   margin-top: 5px;
   border-bottom: 1px solid gray;
@@ -263,6 +208,7 @@ export default {
   align-items: center;
   padding: 1px 0 3px 0;
 }
+
 .table-row .plugin-name {
   width: 25%;
   height: 100%;
