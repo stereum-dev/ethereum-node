@@ -59,40 +59,36 @@ export default {
 </script>
 
 <style scoped>
-.perent{
-
+.parent {
+  margin-top:20px;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  align-items:center;
 }
 .header {
   padding: 1%;
-  border: 2px solid grey;
+  border: 4px solid grey;
   width: 30%;
   text-align: center;
-  margin: 1% auto;
   border-radius: 40px;
-  font-size: 14pt;
-  color: #eee;
+  font-size: 1.3rem;
+  color: rgb(252, 252, 252);
   font-weight: bold;
+  background-color: rgb(45, 98, 96);
+  
 }
 
 .containerOption {
   border: 3px solid grey;
   width: 60%;
-  height: 55vh;
-  margin: 4% auto;
+  height: 60vh;
+  margin: 10px auto;
   background: rgba(51, 102, 102, 0.7);
   border-radius: 40px;
   position: relative;
 }
 
-
-
-
-.container hr {
-  width: 80%;
-  color: #494949;
-  height: 2px;
-  background: grey;
-}
 
 .container p {
   text-align: center;

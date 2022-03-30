@@ -1,42 +1,39 @@
 <template>
   <section class="BtnInstIcon">
-    <div id="title">
-      <p>{{ title }}</p>
-    </div>
-
-    <div class="imgIcon">
-      <img :src="img" />
+    <div
+      class="imgIcon"
+      @mouseover="isHovered = true"
+      @mouseleave="isHovered = false"
+    >
+      <img :src="url" v-if="isHovered" />
+      <img :src="img" v-else />
     </div>
   </section>
 </template>
 <script>
 export default {
   name: "ButtonInstallation",
-  props: ["title", "img"],
+  props: ["img", "url"],
+  data() {
+    return {
+      isHovered: false,
+    };
+  },
 };
 </script>
 <style scoped>
 .BtnInstIcon {
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-self: center;
-}
-
-#title {
-  border: 3px solid rgb(88, 86, 86);
-  width: 97%;
-  border-radius: 50px;
-  background: #336666;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-#title p {
-  margin: 1px;
-  color: #eee;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .imgIcon {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,7 +42,13 @@ export default {
 
 .imgIcon img {
   width: 95%;
-  margin-top: 5pt;
   resize: both;
+  border-radius: 50px;
+  border: 4px solid #6e8582;
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
+}
+
+.text-color {
+  color: #333 !important;
 }
 </style>

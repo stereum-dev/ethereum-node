@@ -1,5 +1,5 @@
 <template>
-  <div class="body">
+  <div class="progress-box">
     <div class="progress">
       <div class="color"></div>
       <p v-if="active">CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
@@ -71,31 +71,38 @@ dialog {
 
 /* TEST*/
 
-.body {
-  max-width: 500vw;
-  text-align: right;
-  margin: 5%;
+.progress-box {
+  width: 83%;
+  height: 100%;
+  display: flex;
+  justify-content:flex-end;
+  align-items: flex-start;
+
+  
 }
 
 .progress {
   position: relative;
-  height: 20px;
-  width: 50vw;
-  border: 3px solid rgb(88, 86, 86);
+  height: 40%;
+  width: 81%;
   border-radius: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .progress p {
-  float: left;
-  margin: 0 2%;
-  font-weight: bold;
-  color: #eee;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: rgb(255, 255, 255);
   position: relative;
+  text-align: left;
+  margin: 1px auto 0 5px;
 }
 
 .progress .color {
   position: absolute;
-  background-color: #1715c4;
+  background-color: #2f83c3;
   width: 0px;
   height: 20px;
   border-radius: 15px;

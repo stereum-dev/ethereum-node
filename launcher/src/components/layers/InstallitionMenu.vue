@@ -1,25 +1,29 @@
 <template>
   <section class="Parent_ctnInstal">
     <section id="header">
-      <h2>welcome</h2>
+      <h2>WELCOME</h2>
     </section>
     <div class="containerInstall">
-      <div class="col" v-for="install in installation" :key="install.title">
+      <div class="col" v-for="(install, index) in installation" :key="index">
         <router-link class="lintTtl" :to="install.path"
           ><button-installation
-            :title="install.title"
             :img="install.img"
+            :url="install.img2"
           ></button-installation
         ></router-link>
       </div>
     </div>
-    <circle-loading :message="message" :open="running"></circle-loading>
-    <div id="txt">
-      <p>
-        IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
-        ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU
-        OUT
-      </p>
+    <div class="middle-box">
+      <div id="txt">
+        <p>
+          IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
+          ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU
+          OUT
+        </p>
+      </div>
+      <div class="progress-container">
+        <circle-loading :message="message" :open="running"></circle-loading>
+      </div>
     </div>
   </section>
 </template>
@@ -27,115 +31,161 @@
 import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
+import { mapGetters } from "vuex";
 export default {
-created(){
-  this.checkOS()
-},
+  created() {
+    this.checkOS();
+  },
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
       running: true,
       message: "",
-
     };
   },
   computed: {
-    installation() {
-      return this.$store.getters.installation_get;
-    },
+    ...mapGetters({ installation: "installation_get" }),
   },
   methods: {
     display: async function (response) {
       let data = await response;
       console.log(data);
-      if(data == "Ubuntu" || data == "CentOS"){
+      if (data == "Ubuntu" || data == "CentOS") {
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
-      } else if(data.name !== undefined) {
-        this.message = data.name.toUpperCase() + ": " + data.message.toUpperCase();
+      } else if (data.name !== undefined) {
+        this.message =
+          data.name.toUpperCase() + ": " + data.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     },
-    checkOS : async function() {
+    checkOS: async function () {
       console.log("check OS");
       let response = ControlService.checkOS()
-        .then(result => {return result})
-        .catch(error => {return error})
+        .then((result) => {
+          return result;
+        })
+        .catch((error) => {
+          return error;
+        });
       this.display(await response);
-    }
-  }
+    },
+  },
 };
 </script>
 <style scope>
 .Parent_ctnInstal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 20% 30% 40%;
 }
 .containerInstall {
-  width: 72vw;
-  height: 30vh;
+  grid-column: 1/7;
+  grid-row: 3;
+  width: 80%;
+  height: 90%;
   resize: both;
   margin: 0 auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .col {
-  width: 30%;
+  width: 28%;
   height: 100%;
-  background: rgba(51, 102, 102, 0.4);
   box-sizing: border-box;
-  border: 3px solid rgb(88, 86, 86);
-  margin: 1rem;
   border-radius: 20px;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
+.lintTtl {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
 #header {
-  text-align: center;
-  margin: 1rem auto;
-  margin-top: 1.7rem;
-  max-width: 15rem;
-  border-radius: 40px;
-  padding: 0.1rem;
-  background: #336666;
-  color: #fff;
-  border: 3px solid rgb(88, 86, 86);
+  grid-row: 1/2;
+  grid-column: 2/6;
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
   position: relative;
-  resize: both;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #header h2 {
+  width: 90%;
+  height: 40%;
   margin: 0 auto;
-  font-size: 30pt;
+  font-size: 3rem;
   resize: both;
+  box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
+  background: #2a4243;
+  color: #fff;
+  padding-bottom: 10px;
+  border-radius: 40px;
+  border: 3px solid #6e8582;
+  opacity: 0.7;
+}
+.middle-box {
+  grid-row: 2/3;
+  grid-column: 1/7;
+  width: 90%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.progress-container {
+  width: 70%;
+  height: 40%;
+  justify-self: end;
+  align-self: end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 #txt {
-  width: 70vw;
-  height: auto;
-  border: 3px solid rgb(88, 86, 86);
-  margin: auto;
-  background: #336666;
+  width: 85%;
+  height: 45%;
+  border: 3px solid #6e8582;
+  margin: 0 auto;
+  background: #2a4243;
   border-radius: 40px;
   position: relative;
-  padding: 2%;
+  padding:10px;
   resize: both;
+  opacity: 0.8;
+  box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #txt p {
-  margin-top: -1px;
+  font-size: 0.8rem;
   font-weight: bold;
-  color: #fff;
+  color: rgb(216, 216, 216);
+  text-align: justify;
 }
 .headCol {
   text-align: center;
   width: 98%;
   border: 3px solid red;
   border-radius: 40px;
-}
-.lintTtl {
-  text-decoration: none;
 }
 </style>

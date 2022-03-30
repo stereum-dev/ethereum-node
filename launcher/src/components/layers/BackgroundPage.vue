@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <section id="containerBg">
-      <section>
+      <section class="img-box">
         <img class="imgBg" src="stereum_logo_extern.png" alt="" />
 
         <slot></slot>
@@ -40,6 +40,13 @@ export default {};
   align-content: center;
   flex-direction: column;
 }
+.img-box{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .imgBg {
   display: block;
@@ -51,7 +58,6 @@ export default {};
   min-width: 20%;
   transform: translate(-50%, -50%);
   resize: both;
-  z-index: 0;
-  opacity: 0.4;
+  opacity: 0.2;
 }
 </style>
