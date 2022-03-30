@@ -7,21 +7,17 @@
         CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
         SERVE YOUR USE CASE
       </div>
-      <hr />
-      <div class="row">
-        <div class="list__size">
-          <div
-            class="list"
-            v-for="R1clkInstl in R1clkInstls"
-            :key="R1clkInstl.clkId"
-          >
-            <img :src="R1clkInstl.img" />
-          </div>
+      <div class="plugin-container">
+        <div class="select-box">
+          <v-select></v-select>
+        </div>
+        <div class="plugin-box">
+          <div class="plugin-row"></div>
         </div>
       </div>
     </div>
     <router-link :to="{ path: '/install' }">
-      <base-button id="instal">INSTAL</base-button>
+      <base-button id="instal">INSTALL</base-button>
     </router-link>
     <router-link :to="{ path: '/welcome' }">
       <base-button id="back">BACK</base-button>
@@ -30,19 +26,42 @@
 </template>
 
 <script>
+import "vue-select/dist/vue-select.css";
 export default {
   data() {
-    return {};
+    return {
+      isTestnetActive: false,
+      testnetBtn: false,
+      isMainnetActive: false,
+      mainnetBtn: false,
+    };
   },
   computed: {
     R1clkInstls() {
       return this.$store.getters.R1clkInstls_get;
     },
   },
+  methods: {
+    testnetActive() {
+      this.isTestnetActive = true;
+      this.testnetBtn = true;
+      this.isMainnetActive = false;
+      this.mainnetBtn = false;
+    },
+    mainnetActive() {
+      this.isMainnetActive = true;
+      this.mainnetBtn = true;
+      this.isTestnetActive = false;
+      this.testnetBtn = false;
+    },
+  },
 };
 </script>
 
 <style scoped>
+.perent{
+
+}
 .header {
   padding: 1%;
   border: 2px solid grey;
@@ -65,36 +84,8 @@ export default {
   position: relative;
 }
 
-.row {
-  list-style: none;
-  height: 30%;
-  box-sizing: border-box;
-}
-.list__size {
-  display: flex;
-  flex-wrap: wrap;
-  width: 98%;
-  margin: auto;
-  box-sizing: border-box;
-  text-align: center;
-}
 
-.row .list {
-  display: flex;
-  flex-wrap: wrap;
-  width: 22%;
-  height: 100%;
-  margin: 0 1.5%;
-}
 
-.list img {
-  width: 80%;
-  height: auto;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  cursor: pointer;
-}
 
 .container hr {
   width: 80%;
@@ -121,7 +112,7 @@ export default {
   position: fixed;
   top: 81vh;
   left: 76%;
-  width: 100px;
+  width: auto;
   resize: both;
 }
 

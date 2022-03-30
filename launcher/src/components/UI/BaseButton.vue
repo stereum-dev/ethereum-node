@@ -6,8 +6,9 @@
 
 <style scoped>
 button {
+  width:auto;
   border-radius: 40px;
-  background-color: rgb(43, 42, 40);
+  background-color: rgb(43, 63, 58);
   text-align: center;
   font-weight: bold;
   padding: 10px;
