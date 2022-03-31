@@ -14,6 +14,7 @@ import NodeBg from "./components/UI/NodeBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
 import vSelect from "vue-select";
+import 'vue-select/dist/vue-select.css';
 
 Vue.configureCompat({ WATCH_ARRAY: false });
 

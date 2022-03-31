@@ -177,9 +177,9 @@ export default {
   align-items: center;
 }
 #txt p {
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: bold;
-  color: rgb(216, 216, 216);
+  color: rgb(225, 225, 225);
   text-align: justify;
 }
 .headCol {

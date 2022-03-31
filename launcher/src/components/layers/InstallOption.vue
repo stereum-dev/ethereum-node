@@ -8,12 +8,7 @@
         SERVE YOUR USE CASE
       </div>
       <div class="plugin-container">
-        <div class="select-box">
-          <v-select></v-select>
-        </div>
-        <div class="plugin-box">
-          <div class="plugin-row"></div>
-        </div>
+        <vue-select> </vue-select>
       </div>
     </div>
     <router-link :to="{ path: '/install' }">
@@ -27,7 +22,11 @@
 
 <script>
 import "vue-select/dist/vue-select.css";
+import VueSelect from "../UI/click-installation/VueSelect.vue";
 export default {
+  components: {
+    VueSelect,
+  },
   data() {
     return {
       isTestnetActive: false,
@@ -60,11 +59,12 @@ export default {
 
 <style scoped>
 .parent {
-  margin-top:20px;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content:space-evenly;
-  align-items:center;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .header {
   padding: 1%;
@@ -75,20 +75,28 @@ export default {
   font-size: 1.3rem;
   color: rgb(252, 252, 252);
   font-weight: bold;
-  background-color: rgb(45, 98, 96);
-  
+  background: #2a4243;
+  position: relative;
+  opacity: 0.8;
+  box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
 }
 
 .containerOption {
   border: 3px solid grey;
-  width: 60%;
-  height: 60vh;
+  width: 55%;
+  height: 55%;
   margin: 10px auto;
-  background: rgba(51, 102, 102, 0.7);
+  background: #2a4243;
   border-radius: 40px;
+  opacity: 0.7;
   position: relative;
+  box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
 }
-
+.plugin-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 
 .container p {
   text-align: center;
@@ -100,8 +108,12 @@ export default {
   width: 90%;
   margin: 2% auto;
   font-size: 10pt;
-  color: #eee;
+  color: rgb(255, 255, 255);
   font-weight: bold;
+}
+.select-box {
+  width: 50%;
+  margin: 0 auto;
 }
 
 #instal {
