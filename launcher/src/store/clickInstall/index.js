@@ -7,6 +7,7 @@ export default {
     return {
       plugins: [
         {
+          id: 1,
           name: "blox ssv",
           category: "execution",
           network: "testnet",
@@ -18,6 +19,7 @@ export default {
           },
         },
         {
+          id: 2,
           name: "obol ssv",
           category: "execution",
           network: "mainnet",
@@ -29,6 +31,7 @@ export default {
           },
         },
         {
+          id: 3,
           name: "rocketpool",
           category: "execution",
           network: "testnet",
@@ -40,6 +43,7 @@ export default {
           },
         },
         {
+          id: 4,
           name: "obol ssv",
           category: "validator",
           network: "testnet",
@@ -51,6 +55,7 @@ export default {
           },
         },
         {
+          id: 5,
           name: "blox ssv",
           category: "execution",
           network: "mainnet",
@@ -62,11 +67,36 @@ export default {
           },
         },
         {
+          id: 6,
           name: "rocketpool",
           category: "execution",
           network: "mainnet",
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/ROCKETPOOL.png"),
+          requirements: {
+            core: 8,
+            memory: 64,
+          },
+        },
+        {
+          id: 7,
+          name: "staking",
+          category: "execution",
+          network: "testnet",
+          path: "/opt/stereumnode",
+          icon: require("../../../public/Img/icon/click-installation/staking-icon.png"),
+          requirements: {
+            core: 8,
+            memory: 64,
+          },
+        },
+        {
+          id: 8,
+          name: "staking",
+          category: "execution",
+          network: "mainnet",
+          path: "/opt/stereumnode",
+          icon: require("../../../public/Img/icon/click-installation/staking-icon.png"),
           requirements: {
             core: 8,
             memory: 64,

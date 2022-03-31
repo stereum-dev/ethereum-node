@@ -12,10 +12,10 @@
       </div>
     </div>
     <router-link :to="{ path: '/install' }">
-      <base-button id="instal">INSTALL</base-button>
+      <button id="instal">INSTALL</button>
     </router-link>
     <router-link :to="{ path: '/welcome' }">
-      <base-button id="back">BACK</base-button>
+      <button id="back">BACK</button>
     </router-link>
   </div>
 </template>
@@ -88,7 +88,7 @@ export default {
   margin: 10px auto;
   background: #2a4243;
   border-radius: 40px;
-  opacity: 0.7;
+  opacity: 0.87;
   position: relative;
   box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
 }
@@ -121,14 +121,42 @@ export default {
   top: 81vh;
   left: 76%;
   width: auto;
+  min-width: 120px;
+  height: 8%;
   resize: both;
+  border: 3px solid #545454;
+  border-radius: 40px;
+  background-color: rgb(36, 55, 49);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgb(191, 191, 191);
+  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
 }
 
 #back {
   position: fixed;
   top: 81vh;
   left: 14%;
-  width: 100px;
+  width: auto;
+  height: 8%;
+  min-width: 120px;
   resize: both;
+  border: 3px solid #545454;
+  border-radius: 40px;
+  background-color: rgb(36, 55, 49);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgb(191, 191, 191);
+  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+}
+#instal:hover,
+#back:hover {
+  background-color: rgb(31, 48, 43);
+  box-shadow: none;
+  border: 3px solid rgb(116, 116, 116);
+}
+#instal:active,
+#back:active {
+  box-shadow: inset 1px 1px 3px 1px rgb(14, 19, 17);
 }
 </style>
