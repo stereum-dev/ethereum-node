@@ -31,7 +31,7 @@
     pause:
       minutes: 10
   # prysm beacon & ssv logs
-  - name: prysm beacon node
+  - name: prysm beacon node healthy
     command: "docker logs --tail=150 stereum-995c224c-82e9-11ec-9115-2349bc4566fa"
     register: beacon
     until:
@@ -39,13 +39,19 @@
       - beacon.stderr is search('Synced new block')
     retries: 360
     delay: 10
-  - name: Blox-SSV
+  - name: Blox-SSV connected to beacon node
     command: "docker logs --tail=250 stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: blox_ssv
     until:
       - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is search('\"Operator PublicKey\":')
     retries: 360
+    delay: 10
+  - name: Blox-SSV loaded public keys
+    command: "docker logs stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
+    register: blox_ssv
+    until:
+      - blox_ssv.stdout is search('\"Operator PublicKey\":')
+    retries: 36
     delay: 10
   # container's images & ports
   - shell: docker ps
