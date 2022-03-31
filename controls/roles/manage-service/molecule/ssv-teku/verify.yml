@@ -37,13 +37,19 @@
     until: beacon.stderr.find("Syncing") == -1
     retries: 360
     delay: 10
-  - name: Blox-SSV
-    ansible.builtin.shell: docker logs --tail=100 stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
+  - name: Blox-SSV connected beacon client
+    ansible.builtin.shell: docker logs --tail=250 stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
     register: blox_ssv
     until:
       - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is search('\"Operator PublicKey\":')
     retries: 360
+    delay: 10
+  - name: Blox-SSV loaded public keys
+    ansible.builtin.shell: docker logs stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
+    register: blox_ssv
+    until:
+      - blox_ssv.stdout is search('\"Operator PublicKey\":')
+    retries: 36
     delay: 10
   # container's images & ports
   - shell: docker ps
