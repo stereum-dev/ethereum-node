@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import "vue-select/dist/vue-select.css";
 import VueSelect from "../UI/click-installation/VueSelect.vue";
 export default {
   components: {

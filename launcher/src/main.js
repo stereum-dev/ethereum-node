@@ -13,15 +13,12 @@ import TheTrapezium from "./components/UI/TheTrapezium.vue";
 import NodeBg from "./components/UI/NodeBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
-import vSelect from "vue-select";
-import 'vue-select/dist/vue-select.css';
 
 Vue.configureCompat({ WATCH_ARRAY: false });
 
 const app = createApp(App);
 
 app.component("base-button", BaseButton);
-app.component("v-select", vSelect);
 app.component("background-page", BackgroundPage);
 app.component("the-trapezium", TheTrapezium);
 app.component("node-bg", NodeBg);
