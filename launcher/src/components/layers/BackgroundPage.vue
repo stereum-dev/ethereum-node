@@ -2,7 +2,7 @@
   <div id="main">
     <section id="containerBg">
       <section class="img-box">
-        <img class="imgBg" src="stereum_logo_extern.png" alt="" />
+        <img class="imgBg" src="../../../public/Img/icon/stereum-logo/stereum_logo.png" alt="" />
 
         <slot></slot>
       </section>
@@ -40,7 +40,7 @@ export default {};
   align-content: center;
   flex-direction: column;
 }
-.img-box{
+.img-box {
   width: 100%;
   height: 100%;
   display: flex;
