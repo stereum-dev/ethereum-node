@@ -87,7 +87,7 @@ export default {
   height: 55%;
   margin: 10px auto;
   background: #2a4243;
-  border-radius: 40px;
+  border-radius: 30px;
   opacity: 0.87;
   position: relative;
   box-shadow: 0 1px 3px 1px rgb(25, 33, 32);

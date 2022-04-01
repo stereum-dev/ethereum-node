@@ -11,6 +11,7 @@ export default {
           name: "blox ssv",
           category: "execution",
           network: "testnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/BLOX_SSV.png"),
           requirements: {
@@ -23,6 +24,7 @@ export default {
           name: "obol ssv",
           category: "execution",
           network: "mainnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/OBOL_SSV.png"),
           requirements: {
@@ -35,6 +37,7 @@ export default {
           name: "rocketpool",
           category: "execution",
           network: "testnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/ROCKETPOOL.png"),
           requirements: {
@@ -47,6 +50,7 @@ export default {
           name: "obol ssv",
           category: "validator",
           network: "testnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/OBOL_SSV.png"),
           requirements: {
@@ -59,6 +63,7 @@ export default {
           name: "blox ssv",
           category: "execution",
           network: "mainnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/BLOX_SSV.png"),
           requirements: {
@@ -71,6 +76,7 @@ export default {
           name: "rocketpool",
           category: "execution",
           network: "mainnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/ROCKETPOOL.png"),
           requirements: {
@@ -82,6 +88,7 @@ export default {
           id: 7,
           name: "staking",
           category: "execution",
+          networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           network: "testnet",
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/click-installation/staking-icon.png"),
@@ -95,6 +102,7 @@ export default {
           name: "staking",
           category: "execution",
           network: "mainnet",
+          networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
           icon: require("../../../public/Img/icon/click-installation/staking-icon.png"),
           requirements: {

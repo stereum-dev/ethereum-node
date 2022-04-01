@@ -1,6 +1,20 @@
 <template>
   <div class="plugin-parent">
     <div class="select-box">
+      <div class="icon-box">
+        <img
+          v-if="isTestnetActive"
+          class="textnet-icon"
+          src="../../../../public/Img/icon/click-installation/testnet-icon.png"
+          alt="icon"
+        />
+        <img
+          v-if="isMainnetActive"
+          class="mainnet-icon"
+          src="../../../../public/Img/icon/click-installation/mainnet-icon.png"
+          alt="icon"
+        />
+      </div>
       <select
         id="selector"
         @change="pluginNetworkHandler"
@@ -101,37 +115,53 @@ export default {
 <style scoped>
 .plugin-parent {
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
 }
 .select-box {
-  width: 50%;
-  height: 10%;
-}
-.select-box #selector {
-  width: 70%;
-  height: 80%;
+  width: 35%;
+  height: 12%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: rgb(31, 31, 31) !important;
   border: 2px solid rgb(126, 159, 151);
   border-radius: 5px;
-  background-color: rgb(48, 48, 48) !important;
+  box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
+}
+.select-box #selector {
+  width: 65%;
+  height: 80%;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
   outline: none;
   font-size: 0.9rem;
   font-weight: 700;
   color: rgb(234, 234, 234);
-  box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
-.select-box #selector:hover {
+.select-box:hover {
   border: 2px solid rgb(32, 191, 235);
 }
-
+.icon-box {
+  width: 13%;
+  height: 83%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-box img {
+  width: 88%;
+  height: 100%;
+}
 .plugin-table {
-  width: 95%;
-  height: 55%;
+  width: 94%;
+  height: 77%;
   border-radius: 20px;
   overflow-y: auto;
   box-shadow: 0 1px 2px 1px rgb(21, 45, 41);
