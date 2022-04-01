@@ -5,6 +5,10 @@ import clickInstallMutations from "./mutations.js";
 export default {
   state() {
     return {
+      selectedNetworks: null,
+      selectedPlugin: undefined,
+      testnetPlugins: [],
+      mainnetPlugins: [],
       plugins: [
         {
           id: 1,
