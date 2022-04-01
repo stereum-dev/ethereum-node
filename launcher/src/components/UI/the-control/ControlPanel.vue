@@ -1,5 +1,12 @@
 <template>
   <div class="panel-parent">
+    <panel-modal
+      @close-modal="closeModalHandler"
+      :class="{ modalActive: isModalActive }"
+      v-if="isModalActive"
+      :item="modalItem"
+    >
+    </panel-modal>
     <div class="panel-content">
       <div class="level-box">
         <div
@@ -23,6 +30,7 @@
             class="general-items"
             v-for="item in controlPanelGeneralItems"
             :key="item.id"
+            @click="openModalHandler(item)"
           >
             <div class="general-title">
               <span>{{ item.title }}</span>
@@ -37,6 +45,7 @@
             class="expert-items"
             v-for="item in controlPanelExpertItems"
             :key="item.id"
+            @click="openModalHandler(item)"
           >
             <div class="expert-title">
               <span>{{ item.title }}</span>
@@ -51,13 +60,17 @@
   </div>
 </template>
 <script>
+import panelModal from "./panelModal";
 export default {
+  components: { panelModal },
+  emits: ["close-modal"],
   data() {
     return {
       generalBtn: false,
       expertBtn: false,
       isGeneralActive: false,
       isExpertActive: false,
+      isModalActive: false,
       controlPanelGeneralItems: [
         {
           id: 1,
@@ -92,6 +105,7 @@ export default {
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
         },
       ],
+      modalItem: undefined,
     };
   },
   methods: {
@@ -107,6 +121,14 @@ export default {
       this.isGeneralActive = false;
       this.generalBtn = false;
     },
+    openModalHandler(item) {
+      this.isModalActive = true;
+      this.modalItem = item;
+      console.log("3", item);
+    },
+    closeModalHandler() {
+      this.isModalActive = false;
+    },
   },
 };
 </script>
@@ -117,6 +139,9 @@ export default {
   border: 5px solid rgb(55, 55, 55);
   border-radius: 20px;
   background-color: #464a44;
+}
+.modalActive {
+  display: inline-block;
 }
 .panel-content {
   width: 100%;
@@ -209,25 +234,7 @@ export default {
   box-shadow: 0 1px 5px 1px #565656, inset 0 1px 5px 1px #898989;
   overflow: hidden;
 }
-.expert-items:active,
-.general-items:active {
-  width: 300px;
-  height: 310px;
-  padding: 10px;
-  position: fixed;
-  top: 10%;
-  left: 40%;
-}
-.expert-items:active > .expert-description p,
-.general-items:active > .general-description p {
-  font-size: 1rem;
-  font-weight: 900;
-}
-.expert-items:active > .expert-title span,
-.general-items:active > .general-title span {
-  font-size: 1rem;
-  font-weight: 900;
-}
+
 .expert-title,
 .general-title {
   width: 90%;
