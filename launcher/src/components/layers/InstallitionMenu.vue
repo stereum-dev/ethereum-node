@@ -80,11 +80,11 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 20% 30% 40%;
+  grid-template-rows: 5% 15% 30% 50%;
 }
 .containerInstall {
   grid-column: 1/7;
-  grid-row: 3;
+  grid-row: 4;
   width: 80%;
   height: 90%;
   resize: both;
@@ -115,7 +115,7 @@ export default {
 }
 
 #header {
-  grid-row: 1/2;
+  grid-row: 2/3;
   grid-column: 2/6;
   width: 80%;
   height: 100%;
@@ -126,28 +126,30 @@ export default {
   align-items: center;
 }
 #header h2 {
-  width: 90%;
-  height: 40%;
+  width: 70%;
+  height: 50%;
   margin: 0 auto;
-  font-size: 3rem;
+  font-size: 2.4rem;
   resize: both;
   box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
   background: #2a4243;
   color: #fff;
   padding-bottom: 10px;
   border-radius: 40px;
-  border: 3px solid #6e8582;
-  opacity: 0.7;
+  border: 4px solid #6e8582;
+  opacity: 0.8;
+  text-align: center;
+  padding-top: 5px;
 }
 .middle-box {
-  grid-row: 2/3;
+  grid-row: 3/4;
   grid-column: 1/7;
   width: 90%;
   height: 100%;
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .progress-container {
@@ -158,17 +160,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 #txt {
   width: 85%;
   height: 45%;
-  border: 3px solid #6e8582;
+  border: 4px solid #6e8582;
   margin: 0 auto;
   background: #2a4243;
   border-radius: 40px;
   position: relative;
-  padding:10px;
+  padding: 10px;
   resize: both;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
@@ -180,12 +181,7 @@ export default {
   font-size: 1rem;
   font-weight: bold;
   color: rgb(225, 225, 225);
-  text-align: justify;
-}
-.headCol {
   text-align: center;
-  width: 98%;
-  border: 3px solid red;
-  border-radius: 40px;
 }
+
 </style>
