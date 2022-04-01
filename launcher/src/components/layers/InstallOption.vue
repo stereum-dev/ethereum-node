@@ -151,8 +151,7 @@ export default {
 #instal:hover,
 #back:hover {
   background-color: rgb(31, 48, 43);
-  box-shadow: none;
-  border: 3px solid rgb(116, 116, 116);
+  box-shadow: 0 1px 3px 0 rgb(21, 31, 26);
 }
 #instal:active,
 #back:active {

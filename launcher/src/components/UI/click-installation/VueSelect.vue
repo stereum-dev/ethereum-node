@@ -210,7 +210,5 @@ export default {
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;
   box-shadow: 0px 1px 3px 1px rgb(31, 31, 31) !important;
-  width: 61% !important;
-  height: 91% !important;
 }
 </style>
