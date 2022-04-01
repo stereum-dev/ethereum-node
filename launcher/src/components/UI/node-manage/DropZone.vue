@@ -60,7 +60,6 @@ export default {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("itemSelect", item);
-      console.log(item.active);
     },
   },
 };
