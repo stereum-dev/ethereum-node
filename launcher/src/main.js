@@ -1,10 +1,9 @@
 import Vue, { createApp } from "vue"; // CHANGE
 
 import store from "./store/index.js";
-
 import App from "./App.vue";
-
 import router from "./router/index.js";
+import "./components/UI/the-control/chart.js";
 
 import i18n from "./includes/i18n";
 import BaseButton from "./components/UI/BaseButton.vue";
