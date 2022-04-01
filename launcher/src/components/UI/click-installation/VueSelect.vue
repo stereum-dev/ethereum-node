@@ -198,8 +198,8 @@ export default {
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width: 60%;
-  height: 90%;
+  width: 54%;
+  height: 80%;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
@@ -209,6 +209,7 @@ export default {
 }
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;
-  box-shadow: 0px 1px 3px 1px rgb(31, 31, 31) !important;
+  border-radius: 10px !important;
+  box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
 </style>

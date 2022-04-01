@@ -13,7 +13,7 @@ export default {
           network: "testnet",
           networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/BLOX_SSV.png"),
+          icon: require("../../../public/Img/icon/click-installation/BLOX_SSV.png"),
           requirements: {
             core: 4,
             memory: 64,
@@ -26,7 +26,7 @@ export default {
           network: "mainnet",
           networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/OBOL_SSV.png"),
+          icon: require("../../../public/Img/icon/click-installation/OBOL_SSV.png"),
           requirements: {
             core: 4,
             memory: 64,
@@ -39,7 +39,7 @@ export default {
           network: "testnet",
           networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/ROCKETPOOL.png"),
+          icon: require("../../../public/Img/icon/click-installation/rocketpool.png"),
           requirements: {
             core: 8,
             memory: 128,
@@ -52,7 +52,7 @@ export default {
           network: "testnet",
           networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/OBOL_SSV.png"),
+          icon: require("../../../public/Img/icon/click-installation/OBOL_SSV.png"),
           requirements: {
             core: 4,
             memory: 64,
@@ -65,7 +65,7 @@ export default {
           network: "mainnet",
           networkIcon: require("../../../public/Img/icon/click-installation/testnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/BLOX_SSV.png"),
+          icon: require("../../../public/Img/icon/click-installation/BLOX_SSV.png"),
           requirements: {
             core: 2,
             memory: 32,
@@ -78,7 +78,7 @@ export default {
           network: "mainnet",
           networkIcon: require("../../../public/Img/icon/click-installation/mainnet-icon.png"),
           path: "/opt/stereumnode",
-          icon: require("../../../public/Img/icon/ROCKETPOOL.png"),
+          icon: require("../../../public/Img/icon/click-installation/rocketpool.png"),
           requirements: {
             core: 8,
             memory: 64,
