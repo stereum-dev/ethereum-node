@@ -37,9 +37,9 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === selectedPlugin?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -53,9 +53,9 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === selectedPlugin?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -74,7 +74,7 @@ export default {
       isTestnetActive: false,
       testnetPlugins: [],
       selectedNetworks: null,
-      itemSelectedToInstall: false,
+      selectedPlugin: undefined,
     };
   },
   computed: {
@@ -82,9 +82,13 @@ export default {
       plugins: "installationPlugins",
     }),
   },
+
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
+  },
+  updatetd() {
+    console.log(this.selectedPlugin);
   },
   methods: {
     mainnetNetworkHandler() {
@@ -106,8 +110,8 @@ export default {
         this.isTestnetActive = true;
       }
     },
-    selectItemToInstall() {
-      this.itemSelectedToInstall = !this.itemSelectedToInstall;
+    selectItemToInstall(item) {
+      this.selectedPlugin = item;
     },
   },
 };
