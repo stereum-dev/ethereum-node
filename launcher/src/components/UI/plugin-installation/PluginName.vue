@@ -31,12 +31,7 @@
                 <div class="fast-sync">
                   <div class="sync-box">
                     <span>FAST SYNC</span>
-
-                    <toggle-button v-on:change="eventHandler"></toggle-button>
-
-                    <!-- <div class="toggle-btn">
-                      <div class="toggle"></div>
-                    </div> -->
+                    <toggle-button></toggle-button>
                   </div>
                 </div>
                 <div class="change-installation">
@@ -61,52 +56,33 @@
                     <span class="cpu-info">CPU CORES:</span>
                     <span class="memory-info">MEMORY:</span>
                   </div>
-                  <div class="info-parent">
-                    <div class="info-content">
-                      <div class="cpu-cores" v-if="requirementPassed">
+                  <div
+                    class="info-parent"
+                    v-for="(item, index) in plugins"
+                    :key="index"
+                  >
+                    <div
+                      class="info-content"
+                      v-if="index === this.plugins.length - 1"
+                    >
+                      <div class="cpu-cores">
                         <span
                           class="cpu-current"
-                          :class="{ passedreq: requirementPassed }"
-                          >{{ this.systemInfos.cpuCores }}</span
+                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
+                          >{{ this.systemInfos.cpu }}</span
                         >
                         <span class="cpu-needed">{{
-                          this.plugins.requirements.cpuCores
+                          item.requirements.core
                         }}</span>
                       </div>
-                      <div class="cpu-cores" v-if="requirementFailed">
-                        <span
-                          class="cpu-current"
-                          :class="{
-                            faildreq: requirementFailed,
-                          }"
-                          >{{ this.systemInfos.cpuCores }}</span
-                        >
-                        <span class="cpu-needed">{{
-                          this.plugins.requirements.cpuCores
-                        }}</span>
-                      </div>
-                      <div class="memory" v-if="requirementFailed">
+                      <div class="memory">
                         <span
                           class="memory-current"
-                          :class="{
-                            faildreq: requirementFailed,
-                          }"
+                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
                           >{{ this.systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
-                          this.plugins.requirements.memory
-                        }}</span>
-                      </div>
-                      <div class="memory" v-if="requirementPassed">
-                        <span
-                          class="memory-current"
-                          :class="{
-                            passedreq: requirementPassed,
-                          }"
-                          >{{ this.systemInfos.memory }}</span
-                        >
-                        <span class="memory-needed">{{
-                          this.plugins.requirements.memory
+                          item.requirements.memory
                         }}</span>
                       </div>
                     </div>
@@ -130,6 +106,7 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
+import { mapGetters } from "vuex";
 export default {
   components: { ToggleButton },
   data() {
@@ -137,37 +114,31 @@ export default {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      systemInfos: {
-        name: "Macbook",
-        cpuCores: 1,
-        memory: 128,
-      },
-      plugins: {
-        name: "Blox",
-        category: "execution",
-        requirements: {
-          cpuCores: 4,
-          memory: 64,
-        },
-      },
+      selectedPlugin: null,
     };
+  },
+  computed: {
+    ...mapGetters({
+      plugins: "installationPlugins",
+      systemInfos: "getSystemInformation",
+    }),
   },
   mounted() {
     this.checkRequirement();
   },
   methods: {
     checkRequirement() {
-      if (
-        this.plugins.requirements.cpuCores <= this.systemInfos.cpuCores &&
-        this.plugins.requirements.memory <= this.systemInfos.memory
-      ) {
-        this.requirementPassed = true;
-      } else {
-        this.requirementFailed = true;
-      }
-    },
-    eventHandler(value) {
-      console.log(value);
+      this.plugins.forEach((plugin) => {
+        console.log(plugin.requirements.core);
+        if (
+          plugin.requirements.core <= this.systemInfos.cpu &&
+          plugin.requirements.memory <= this.systemInfos.memory
+        ) {
+          this.requirementPassed = true;
+        } else {
+          this.requirementPassed = false;
+        }
+      });
     },
   },
 };
@@ -564,6 +535,6 @@ export default {
   color: #16d26e !important;
 }
 .faildreq {
-  color: rgb(225, 54, 54);
+  color: rgb(225, 54, 54) !important;
 }
 </style>

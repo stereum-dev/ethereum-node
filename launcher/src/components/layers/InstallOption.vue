@@ -7,100 +7,94 @@
         CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
         SERVE YOUR USE CASE
       </div>
-      <hr />
-      <div class="row">
-        <div class="list__size">
-          <div
-            class="list"
-            v-for="R1clkInstl in R1clkInstls"
-            :key="R1clkInstl.clkId"
-          >
-            <img :src="R1clkInstl.img" />
-          </div>
-        </div>
+      <div class="plugin-container">
+        <vue-select> </vue-select>
       </div>
     </div>
     <router-link :to="{ path: '/install' }">
-      <base-button id="instal">INSTAL</base-button>
+      <button id="instal">INSTALL</button>
     </router-link>
     <router-link :to="{ path: '/welcome' }">
-      <base-button id="back">BACK</base-button>
+      <button id="back">BACK</button>
     </router-link>
   </div>
 </template>
 
 <script>
+import VueSelect from "../UI/click-installation/VueSelect.vue";
 export default {
+  components: {
+    VueSelect,
+  },
   data() {
-    return {};
+    return {
+      isTestnetActive: false,
+      testnetBtn: false,
+      isMainnetActive: false,
+      mainnetBtn: false,
+    };
   },
   computed: {
     R1clkInstls() {
       return this.$store.getters.R1clkInstls_get;
     },
   },
+  methods: {
+    testnetActive() {
+      this.isTestnetActive = true;
+      this.testnetBtn = true;
+      this.isMainnetActive = false;
+      this.mainnetBtn = false;
+    },
+    mainnetActive() {
+      this.isMainnetActive = true;
+      this.mainnetBtn = true;
+      this.isTestnetActive = false;
+      this.testnetBtn = false;
+    },
+  },
 };
 </script>
 
 <style scoped>
+.parent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
 .header {
   padding: 1%;
-  border: 2px solid grey;
+  border: 4px solid grey;
   width: 30%;
   text-align: center;
-  margin: 1% auto;
   border-radius: 40px;
-  font-size: 14pt;
-  color: #eee;
+  font-size: 1.3rem;
+  color: rgb(252, 252, 252);
   font-weight: bold;
+  background: #2a4243;
+  position: relative;
+  opacity: 0.8;
+  box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
 }
 
 .containerOption {
   border: 3px solid grey;
-  width: 60%;
-  height: 55vh;
-  margin: 4% auto;
-  background: rgba(51, 102, 102, 0.7);
-  border-radius: 40px;
+  width: 55%;
+  height: 55%;
+  margin: 10px auto;
+  background: #2a4243;
+  border-radius: 30px;
+  opacity: 0.87;
   position: relative;
+  box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
 }
-
-.row {
-  list-style: none;
-  height: 30%;
-  box-sizing: border-box;
-}
-.list__size {
-  display: flex;
-  flex-wrap: wrap;
-  width: 98%;
-  margin: auto;
-  box-sizing: border-box;
-  text-align: center;
-}
-
-.row .list {
-  display: flex;
-  flex-wrap: wrap;
-  width: 22%;
+.plugin-container {
+  width: 100%;
   height: 100%;
-  margin: 0 1.5%;
-}
-
-.list img {
-  width: 80%;
-  height: auto;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-
-.container hr {
-  width: 80%;
-  color: #494949;
-  height: 2px;
-  background: grey;
+  overflow: hidden;
 }
 
 .container p {
@@ -113,23 +107,54 @@ export default {
   width: 90%;
   margin: 2% auto;
   font-size: 10pt;
-  color: #eee;
+  color: rgb(255, 255, 255);
   font-weight: bold;
+}
+.select-box {
+  width: 50%;
+  margin: 0 auto;
 }
 
 #instal {
   position: fixed;
   top: 81vh;
   left: 76%;
-  width: 100px;
+  width: auto;
+  min-width: 120px;
+  height: 8%;
   resize: both;
+  border: 3px solid #545454;
+  border-radius: 40px;
+  background-color: rgb(36, 55, 49);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgb(191, 191, 191);
+  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
 }
 
 #back {
   position: fixed;
   top: 81vh;
   left: 14%;
-  width: 100px;
+  width: auto;
+  height: 8%;
+  min-width: 120px;
   resize: both;
+  border: 3px solid #545454;
+  border-radius: 40px;
+  background-color: rgb(36, 55, 49);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: rgb(191, 191, 191);
+  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+}
+#instal:hover,
+#back:hover {
+  background-color: rgb(31, 48, 43);
+  box-shadow: 0 1px 3px 0 rgb(21, 31, 26);
+}
+#instal:active,
+#back:active {
+  box-shadow: inset 1px 1px 3px 1px rgb(14, 19, 17);
 }
 </style>

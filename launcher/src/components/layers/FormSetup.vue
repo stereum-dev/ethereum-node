@@ -1,8 +1,6 @@
 <template>
-  <section>
-    <!-- test dovom -->
-
-    <div class="test" style="border-style: none">
+  <div class="server-parent">
+    <div class="server-box" style="border-style: none">
       <section id="header">
         <h2>{{ $t("formsetup.server") }}</h2>
       </section>
@@ -58,7 +56,7 @@
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.host.isFilled }">
-            <label for="host">IP or HOSTNAME</label>
+            <label for="host">IP / HOSTNAME</label>
             <input
               name="host"
               id="iporhostname"
@@ -122,7 +120,7 @@
       </form>
     </div>
     <!-- test dovom -->
-  </section>
+  </div>
 </template>
 
 <script>
@@ -195,7 +193,7 @@ export default {
       });
       return storableConnections;
     },
-    deleteModel: async function() {
+    deleteModel: async function () {
       console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
@@ -234,7 +232,7 @@ export default {
       console.log(savedConnections);
       this.connections = savedConnections;
     },
-    writeSettings: async function(){
+    writeSettings: async function () {
       const savedLanguage = (await ControlService.readConfig()).savedLanguage;
       ControlService.writeConfig({
         savedConnections: this.getstorableConnections(),
@@ -290,6 +288,49 @@ export default {
 };
 </script>
 <style scoped>
+.server-parent {
+  width: 99%;
+  height: 99%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.server-box {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 7% 14% 59% 20%;
+}
+#header {
+  grid-column: 1/4;
+  grid-row: 2/3;
+  border: 5px solid #686868;
+  margin: 0 auto;
+  width: 40%;
+  max-width: 50%;
+  height: 65%;
+  border-radius: 40px;
+  background-color: #234141;
+  color: #fff;
+  opacity: 0.9;
+  box-shadow: 0 1px 3px 1px #1f3737;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#header h2 {
+  width: 95%;
+  max-width: 99%;
+  height: 50%;
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  color: rgb(255, 255, 255) !important;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+}
+
 #dialTitle {
   animation: blink 1s 1000000 alternate;
   font-weight: bold;
@@ -302,18 +343,34 @@ export default {
     background-color: orange;
   }
 }
-#container {
+form {
+  grid-column: 1/4;
+  grid-row: 3/4;
   width: 100%;
-  border: 5px solid #3a3939;
-  height: auto;
-  background-color: #264c4c;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+#container {
+  width: 65%;
+  height: 69%;
+  padding: 10px;
+  border: 5px solid #686868;
+  border-radius: 45px;
+  background-color: #234141;
   opacity: 0.9;
+  box-shadow: 0 1px 3px 1px #1f3737;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 .priority {
   z-index: 200;
 }
 .select-wrapper {
-  width: 80%;
+  width: 82%;
   margin: 0;
   border-radius: 40px;
   border: none;
@@ -332,39 +389,14 @@ select {
   width: 50%;
 }
 
-#header {
-  border: 5px solid rgb(58, 58, 58);
-  text-align: center;
-  margin: 10px auto;
-  width: 25rem;
-  max-width: 30rem;
-  border-radius: 40px;
-  padding: 0.5rem;
-  background-color: #264c4c;
-  color: #fff;
-  opacity: 0.9;
-}
-#header h2 {
-  font-size: 2rem;
-}
-
-div {
-  text-align: center;
-  margin: 1rem auto;
-  max-width: 50rem;
-  border-radius: 20px;
-  padding: 0.3rem;
-  border: 2px solid grey;
-  position: relative;
-  opacity: 95%;
-}
 #one {
+  width: 100%;
   height: 50px;
   margin: 0;
   border: none;
   border-radius: 40px;
   background-color: #1a3a33;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   display: flex;
 }
@@ -451,6 +483,7 @@ select.classic:focus {
   padding: 5px;
   display: flex;
   border: none;
+  align-items: center;
   justify-content: space-between;
   font-weight: bold;
 }
@@ -465,6 +498,7 @@ select.classic:focus {
 .formGroup input {
   width: 60%;
   height: 20px;
+  background-color: #d8e1e1;
   border: 6px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
@@ -475,25 +509,29 @@ select.classic:focus {
   border: 3px solid rgb(190, 242, 190);
 }
 #keyLocation {
-  border: 5px solid #3a3939;
-  border-radius: 40px;
-  max-width: 30rem;
-  background-color: #264c4c;
+  width: 67%;
+  border: 5px solid #686868;
+  border-radius: 29px;
+  background-color: #234141;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  height: 45px;
+  height: 14%;
+  box-shadow: 0 1px 3px 1px #182f2f;
 }
 #keyLocation label {
   clear: both;
   font-size: large;
   font-weight: bold;
   color: #fff;
+  margin-left: 24px;
 }
 #keyLocation input {
-  width: 60%;
+  width: 57%;
+  margin-right: 16px;
   border-radius: 40px;
   padding-left: 10px;
+  background-color: #b6c4c4;
   font-size: large;
   font-weight: bold;
   outline-style: none;
@@ -501,25 +539,26 @@ select.classic:focus {
 }
 
 #login {
-  width: 100px;
-  height: 55px;
+  width: 12%;
+  max-width: 120px;
+  height: 10%;
   outline-style: none;
-  border: 5px solid #3a3939;
+  border: 5px solid #686868;
   cursor: pointer;
   position: absolute;
-  right: 0;
-  top: 97%;
+  right: 8%;
+  bottom: 7%;
   background-color: #264c4c;
-  box-shadow: 0 2px 8px rgba(179, 179, 179, 0.26);
+  box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
+  font-size: 1.5rem;
 }
 #login:hover {
   box-shadow: none;
-  border: none;
+  border: 5px solid #464646;
   background-color: #1b3737;
 }
 #login:active {
-  border: none;
-  box-shadow: inset 0 2px 5px 5px #172424;
+  box-shadow:inset 0 1px 5px 2px rgb(23, 38, 32);
 }
 input {
   cursor: pointer;
@@ -530,13 +569,17 @@ input {
   justify-content: space-between;
   width: 170px;
   min-width: 170px;
-  height: 25px;
+  height: 26px;
   background-color: rgb(48, 47, 47);
   border: none;
+  border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 157px;
-  top: 95%;
+  left: 19%;
+  bottom: 17%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 #lbl {
   align-self: center;
