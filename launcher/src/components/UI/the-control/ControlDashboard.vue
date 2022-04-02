@@ -5,9 +5,11 @@
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
     </div>
-    <div class="discSpace_cell">discSpace_cell</div>
 
-    <div class="networkSync_cell">networkSync_cell</div>
+    <div class="discSpace_cell"></div>
+
+
+    <div class="networkSync_cell"><chart-bar></chart-bar></div>
 
     <div class="cpuUsage_cell">
       <the-thermometer></the-thermometer>
@@ -24,11 +26,12 @@
 
 <script>
 import TheThermometer from "./TheThermometer.vue";
+import ChartBar from "./ChartBar.vue";
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter, TheThermometer },
+  components: { SandClock, StorageCounter, TheThermometer, ChartBar },
 };
 </script>
 
@@ -71,6 +74,8 @@ export default {
 .networkSync_cell {
   grid-column: 2/3;
   grid-row: 2/3;
+  background: white;
+  display: flex;
 }
 
 .cpuUsage_cell {
