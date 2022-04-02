@@ -10,39 +10,33 @@ jobs:
     strategy:
       matrix:
         tests: [
-          {role: "manage-service", test: "start"},
-          {role: "manage-service", test: "start-multiple"},
-          {role: "manage-service", test: "start-stop"},
-          {role: "manage-service", test: "write-start"},
-          {role: "manage-service", test: "ssv-lighthouse"},
-          {role: "manage-service", test: "ssv-nimbus"},
-          {role: "manage-service", test: "ssv-teku"},
-          {role: "manage-service", test: "ssv-prysm"},
-          {role: "manage-service", test: "monitor-lighthouse"},
-          {role: "manage-service", test: "monitor-nimbus"},
-
-          #{role: "configure-firewall", test: "default"}, # tested via manage-service:start-multiple
-
-          {role: "configure-updates", test: "default"},
-
-          {role: "setup", test: "default"},
-
-          {role: "update-services", test: "default"},
-
-          {role: "fastsync", test: "default"},
-
-          {role: "validator-import-lighthouse", test: "default"},
-
-          {role: "validator-import-nimbus", test: "default"},
-
-          {role: "validator-import-prysm", test: "default"},
-
-          {role: "validator-import-teku", test: "default"},
+          {role: "manage-service", test: "start", delay: 1},
+          {role: "manage-service", test: "start-multiple", delay: 1},
+          {role: "manage-service", test: "start-stop", delay: 1},
+          {role: "manage-service", test: "write-start", delay: 1},
+          {role: "manage-service", test: "ssv-lighthouse", delay: 30},
+          {role: "manage-service", test: "ssv-nimbus", delay: 40},
+          {role: "manage-service", test: "ssv-teku", delay: 50},
+          {role: "manage-service", test: "ssv-prysm", delay: 60},
+          {role: "manage-service", test: "monitor-lighthouse", delay: 70},
+          {role: "manage-service", test: "monitor-nimbus", delay: 80},
+          {role: "configure-updates", test: "default", delay: 1},
+          {role: "setup", test: "default", delay: 1},
+          {role: "update-services", test: "default", delay: 1},
+          {role: "fastsync", test: "default", delay: 90},
+          {role: "validator-import-lighthouse", test: "default", delay: 10},
+          {role: "validator-import-nimbus", test: "default", delay: 15},
+          {role: "validator-import-prysm", test: "default", delay: 20},
+          {role: "validator-import-teku", test: "default", delay: 25},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-20.04
     steps:
+      # delay jobs according to settings to prevent hitting the rate limit of Hetzner
+      - name: Delay job if necessary
+        run: sleep ${{ matrix.tests.delay }}s
+        shell: bash
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2

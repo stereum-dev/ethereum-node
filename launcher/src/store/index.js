@@ -27,18 +27,18 @@ const store = createStore({
     return {
       installation: [
         {
-          title: "1CLICK INSTALLATION",
           img: "/img/icon/one click installer.png",
+          img2: "/img/icon/click-installation/click-installer.png",
           path: "/clickinstall",
         },
         {
-          title: "CUSTOM INSTALLATION",
           img: "/img/icon/custom installer.png",
+          img2: "img/icon/click-installation/custom-nstallation.png",
           path: "/manage",
         },
         {
-          title: "IMPORT CONFIGURATION",
           img: "/img/icon/IMPORT CONFIGURATIONS.png",
+          img2: "/img/icon/click-installation/import.png",
           path: "/",
         },
       ],

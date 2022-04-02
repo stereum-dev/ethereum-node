@@ -5,7 +5,9 @@
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
     </div>
+
     <div class="discSpace_cell"></div>
+
 
     <div class="networkSync_cell"><chart-bar></chart-bar></div>
 
