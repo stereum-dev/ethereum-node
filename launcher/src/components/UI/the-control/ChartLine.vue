@@ -24,14 +24,14 @@ Chart.register(
   PointElement,
   LineElement
 );
-const dataValues = ref([12, 14, 16, 18, 11, 13, 15]);
+const dataValues = ref([12, 144, 46, 18]);
 const data = computed(() => ({
-  labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  labels: ["A", "B", "C", "D"],
   datasets: [
     {
-      label: "Foo",
+      label: "CPU Load",
       data: dataValues.value,
-      backgroundColor: "#dc322f",
+      backgroundColor: "#345326",
     },
   ],
 }));
