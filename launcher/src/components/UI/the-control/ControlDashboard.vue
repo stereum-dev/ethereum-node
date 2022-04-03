@@ -73,7 +73,7 @@ export default {
 .networkSync_cell {
   grid-column: 2/3;
   grid-row: 2/3;
-  background: white;
+  background: rgb(50, 48, 48);
   display: flex;
 }
 
