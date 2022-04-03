@@ -8,8 +8,7 @@
 
     <div class="discSpace_cell"></div>
 
-
-    <div class="networkSync_cell"><chart-bar></chart-bar></div>
+    <div class="networkSync_cell"><chart-line></chart-line></div>
 
     <div class="cpuUsage_cell">
       <the-thermometer></the-thermometer>
@@ -26,12 +25,12 @@
 
 <script>
 import TheThermometer from "./TheThermometer.vue";
-import ChartBar from "./ChartBar.vue";
+import ChartLine from "./ChartLine.vue";
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter, TheThermometer, ChartBar },
+  components: { SandClock, StorageCounter, TheThermometer, ChartLine },
 };
 </script>
 
