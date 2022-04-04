@@ -20,13 +20,15 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSE YOUR NETWORK</span>
+                      <span>CHOOSEN NETWORK</span>
                     </div>
                     <div class="none">
-                      <span>NONE</span>
+                      <span>{{ selectedPlugin.network }}</span>
                     </div>
                   </div>
-                  <div class="circle-box"></div>
+                  <div class="circle-box">
+                    <img :src="selectedPlugin.icon" alt="" />
+                  </div>
                 </div>
                 <div class="fast-sync">
                   <div class="sync-box">
@@ -38,7 +40,9 @@
                   <div class="change-title">
                     <span>CHANGE INSTALLATION</span>
                   </div>
-                  <div class="change-box"></div>
+                  <div class="change-box">
+                    <span>{{ selectedPlugin.path }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -56,33 +60,35 @@
                     <span class="cpu-info">CPU CORES:</span>
                     <span class="memory-info">MEMORY:</span>
                   </div>
-                  <div
-                    class="info-parent"
-                    v-for="(item, index) in plugins"
-                    :key="index"
-                  >
-                    <div
-                      class="info-content"
-                      v-if="index === this.plugins.length - 1"
-                    >
+                  <div class="info-parent">
+                    <div class="info-content">
                       <div class="cpu-cores">
                         <span
                           class="cpu-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.cpu }}</span
+                          :class="
+                            selectedPlugin.requirements?.core >= systemInfos.cpu
+                              ? 'passedreq'
+                              : 'faildreq'
+                          "
+                          >{{ systemInfos.cpu }}</span
                         >
                         <span class="cpu-needed">{{
-                          item.requirements.core
+                          selectedPlugin.requirements?.core
                         }}</span>
                       </div>
                       <div class="memory">
                         <span
                           class="memory-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.memory }}</span
+                          :class="
+                            selectedPlugin.requirements?.core <
+                            systemInfos.memory
+                              ? 'passedreq'
+                              : 'faildreq'
+                          "
+                          >{{ systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
-                          item.requirements.memory
+                          selectedPlugin.requirements?.memory
                         }}</span>
                       </div>
                     </div>
@@ -109,38 +115,39 @@ import ToggleButton from "./toggleButton.vue";
 import { mapGetters } from "vuex";
 export default {
   components: { ToggleButton },
+
   data() {
     return {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      selectedPlugin: null,
     };
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
     }),
   },
   mounted() {
-    this.checkRequirement();
+    if (Object.keys(this.selectedPlugin).length === 0) {
+      this.$router.push("/clickinstall");
+    }
   },
-  methods: {
-    checkRequirement() {
-      this.plugins.forEach((plugin) => {
-        console.log(plugin.requirements.core);
-        if (
-          plugin.requirements.core <= this.systemInfos.cpu &&
-          plugin.requirements.memory <= this.systemInfos.memory
-        ) {
-          this.requirementPassed = true;
-        } else {
-          this.requirementPassed = false;
-        }
-      });
-    },
-  },
+  // methods: {
+  //   checkRequirement() {
+  //     this.selectedPlugin.forEach((plugin) => {
+  //       if (
+  //         plugin.requirements.core <= this.systemInfos.cpu &&
+  //         plugin.requirements.memory <= this.systemInfos.memory
+  //       ) {
+  //         this.requirementPassed = true;
+  //       } else {
+  //         this.requirementPassed = false;
+  //       }
+  //     });
+  //   },
+  // },
 };
 </script>
 <style scoped>
@@ -304,6 +311,15 @@ export default {
   background-color: #1f1f1f;
   position: absolute;
   right: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.network-parent .circle-box img {
+  width: 90%;
+  height: 90%;
+  border: 2px solid #5b5b5b;
+  border-radius: 100%;
 }
 
 .option-content .fast-sync {
@@ -378,9 +394,13 @@ export default {
 .change-installation .change-box {
   width: 90%;
   height: 50%;
-  background-color: #fff;
+  background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
+}
+.change-installation .change-box span {
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 .system-box {
   width: 48%;
@@ -425,11 +445,11 @@ export default {
 }
 
 .info-parent .info-content {
-  width: 50%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .info-content .cpu-cores,
@@ -439,10 +459,28 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.info-content .cpu-cores span,
+.info-content .cpu-cores span {
+  width: 50%;
+  height: 20px;
+  border: 2px solid #4a4949;
+  border-radius: 16px;
+  background-color: #222222;
+  text-align: center;
+  box-shadow: 0 1px 3px 1px #1c1d1d;
+  padding-top: 2px;
+  margin-right: 2px;
+  margin-bottom: 7px;
+}
 .info-content .memory span {
-  width: 10%;
-  text-align: left;
+  width: 50%;
+  height: 20px;
+  border: 2px solid rgb(74, 73, 73);
+  border-radius: 16px;
+  background-color: rgb(34, 34, 34);
+  text-align: center;
+  box-shadow: 0 1px 4px 1px rgb(28, 29, 29);
+  padding-top: 2px;
+  margin-right: 2px;
 }
 .info-parent .cpu-current,
 .info-parent .memory-current {

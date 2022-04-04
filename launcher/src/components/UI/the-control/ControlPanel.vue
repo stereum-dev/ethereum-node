@@ -228,7 +228,7 @@ export default {
   width: 85%;
   height: 60%;
   background-color: #e8e8e8;
-  border: 2px solid rgb(70, 70, 70);
+  border: 2px solid #233f3f;
   border-radius: 15px;
   justify-self: center;
   align-self: center;
@@ -237,7 +237,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 0 1px 5px 1px #565656, inset 0 1px 5px 1px #898989;
+  box-shadow: 0 1px 3px 1px #4b4b4b, inset 0 1px 5px 1px #bfbfbf;
   overflow: hidden;
 }
 
@@ -264,8 +264,8 @@ export default {
 .expert-description p,
 .general-description p {
   font-size: .55rem;
-  font-weight: 800;
+  font-weight: 900;
   text-align: center;
-  color: rgb(40, 40, 40);
+  color: #2b6262;
 }
 </style>

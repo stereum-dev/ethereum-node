@@ -37,7 +37,7 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === selectedPlugin?.id,
+                  selectedItem: item.id === this.selectedPlugin?.id,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -53,7 +53,7 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === selectedPlugin?.id,
+                  selectedItem: item.id === this.selectedPlugin?.id,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -62,6 +62,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 <script>
@@ -74,21 +75,21 @@ export default {
       isTestnetActive: false,
       testnetPlugins: [],
       selectedNetworks: null,
-      selectedPlugin: undefined,
     };
+  },
+  provide() {
+    return { pluginToInstall: this.selectedPlugin };
   },
   computed: {
     ...mapGetters({
       plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
   },
 
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
-  },
-  updatetd() {
-    console.log(this.selectedPlugin);
   },
   methods: {
     mainnetNetworkHandler() {
@@ -111,8 +112,9 @@ export default {
       }
     },
     selectItemToInstall(item) {
-      this.selectedPlugin = item;
+      this.$store.commit("mutatedSelectedPlugin", item);
     },
+
   },
 };
 </script>
