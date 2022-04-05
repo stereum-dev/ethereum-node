@@ -22,32 +22,29 @@
                 <div class="table-content">
                   <div
                     class="table-row"
-                    v-for="(item, index) in plugins"
-                    :key="index"
-                    v-show="index === this.plugins.length - 1"
                   >
                     <div class="plugin-name">
                       <span>NAME:</span>
-                      <span>{{ item.name }}</span>
+                      <span>{{ selectedPlugin.name }}</span>
                     </div>
                     <div class="selection">
                       <div class="network">
                         <span>NETWORK:</span>
-                        <span>{{ item.network }}</span>
+                        <span>{{ selectedPlugin.network }}</span>
                       </div>
                       <div class="path">
                         <span>PATH:</span>
-                        <span>{{ item.path }}</span>
+                        <span>{{selectedPlugin.path}}</span>
                       </div>
                     </div>
                     <div class="requirements">
                       <div class="cpu">
                         <span>CPU CORES:</span>
-                        <span>{{ item.requirements.core }}</span>
+                        <span>{{ selectedPlugin.requirements?.core }}</span>
                       </div>
                       <div class="memory">
                         <span>MEMORY:</span>
-                        <span>{{ item.requirements.memory }}</span>
+                        <span>{{ selectedPlugin.requirements?.memory }}</span>
                       </div>
                     </div>
                   </div>
@@ -60,7 +57,7 @@
               <button class="back-btn">BACK</button>
             </router-link>
             <router-link :to="{ path: '/node' }">
-              <button  class="next-btn">INSTALL</button>
+              <button class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
@@ -76,8 +73,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
+  },
+  mounted() {
+    if (Object.keys(this.selectedPlugin).length === 0) {
+      this.$router.push("/clickinstall");
+    }
   },
 };
 </script>
@@ -200,7 +202,7 @@ export default {
 
 .table-content .table-row {
   width: 100%;
-  height: 20%;
+  height: 30%;
   margin-top: 5px;
   border-bottom: 1px solid gray;
   display: flex;
@@ -224,8 +226,9 @@ export default {
 }
 .plugin-name span:last-child {
   color: #4ca434;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 .table-row .selection {
   width: 40%;
@@ -254,8 +257,9 @@ export default {
 }
 .table-row .selection .network span:last-child {
   color: #4ca434;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 .table-row .selection .path span:first-child {
   color: #a7a7a7;
@@ -264,7 +268,7 @@ export default {
 }
 .table-row .selection .path span:last-child {
   color: #c6ac2a;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 .table-row .requirements {
@@ -289,9 +293,10 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .cpu span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
+   color: #4ca434;
+  font-size: 1rem;
   font-weight: 600;
+
 }
 .table-row .requirements .memory span:first-child {
   color: #a7a7a7;
@@ -299,8 +304,8 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .memory span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
+  color: #4ca434;
+  font-size: 1rem;
   font-weight: 600;
 }
 

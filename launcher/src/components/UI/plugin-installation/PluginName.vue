@@ -7,7 +7,7 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span>PLUG IN NAME</span>
+                <span>{{ selectedPlugin.name }}</span>
               </div>
             </div>
           </div>
@@ -27,7 +27,14 @@
                     </div>
                   </div>
                   <div class="circle-box">
-                    <img :src="selectedPlugin.icon" alt="" />
+                    <img
+                      :src="
+                        selectedPlugin.network === 'mainnet'
+                          ? this.mainnetIcon
+                          : this.testnetIcon
+                      "
+                      alt="icon"
+                    />
                   </div>
                 </div>
                 <div class="fast-sync">
@@ -66,9 +73,10 @@
                         <span
                           class="cpu-current"
                           :class="
-                            selectedPlugin.requirements?.core >= systemInfos.cpu
-                              ? 'passedreq'
-                              : 'faildreq'
+                            selectedPlugin.requirements?.core <
+                            systemInfos.memory
+                              ? 'faildreq'
+                              : 'passedreq'
                           "
                           >{{ systemInfos.cpu }}</span
                         >
@@ -121,12 +129,19 @@ export default {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
+      testnetIcon: require("../../../../public/Img/icon/click-installation/testnet-circle.png"),
+      mainnetIcon: require("../../../../public/Img/icon/click-installation/mainnet-circle.png"),
     };
   },
   computed: {
     ...mapGetters({
       selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
+      // getClass() {
+      //   return this.selectedPlugin.requirements?.core <= this.systemInfos.memory
+      //     ? "passedreq"
+      //     : "faildreq";
+      // },
     }),
   },
   mounted() {
@@ -134,20 +149,6 @@ export default {
       this.$router.push("/clickinstall");
     }
   },
-  // methods: {
-  //   checkRequirement() {
-  //     this.selectedPlugin.forEach((plugin) => {
-  //       if (
-  //         plugin.requirements.core <= this.systemInfos.cpu &&
-  //         plugin.requirements.memory <= this.systemInfos.memory
-  //       ) {
-  //         this.requirementPassed = true;
-  //       } else {
-  //         this.requirementPassed = false;
-  //       }
-  //     });
-  //   },
-  // },
 };
 </script>
 <style scoped>
@@ -211,6 +212,7 @@ export default {
   font-size: 2rem;
   font-weight: 900;
   color: #d7d7d7;
+  text-transform: uppercase;
 }
 .option-title,
 .system-title {
@@ -275,23 +277,25 @@ export default {
 }
 .network-box .choose {
   width: 90%;
-  height: 50%;
+  height: 51%;
   border-radius: 15px;
   background-color: #30483b;
   color: #fff;
   text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .choose span {
   font-size: 0.7rem;
   font-weight: 600;
-  margin-left: 7px;
 }
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid #5b5b5b;
+  border: 2px solid #6a6a6a;
   border-radius: 30px;
-  background-color: #1f1f1f;
+  background-color: #2a2a2a;
   align-self: flex-end;
   color: #fff;
   display: flex;
@@ -299,9 +303,11 @@ export default {
   align-items: center;
 }
 .none span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-left: 20px;
+  color: rgba(6, 181, 76, 0.982);
+  text-transform: uppercase;
 }
 .network-parent .circle-box {
   width: 24%;
