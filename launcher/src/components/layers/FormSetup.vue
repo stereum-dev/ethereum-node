@@ -309,7 +309,7 @@ export default {
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
-  height: 65%;
+  height: 60%;
   border-radius: 40px;
   background-color: #234141;
   color: #fff;
@@ -321,14 +321,15 @@ export default {
 }
 #header h2 {
   width: 95%;
-  max-width: 99%;
+  max-width: auto;
   height: 50%;
-  font-size: 1.8rem !important;
+  font-size: 1.4rem !important;
   font-weight: 800 !important;
   color: rgb(255, 255, 255) !important;
   border: none;
   background-color: transparent;
   box-shadow: none;
+  text-transform: uppercase;
 }
 
 #dialTitle {
