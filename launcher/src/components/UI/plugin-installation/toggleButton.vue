@@ -24,7 +24,7 @@ export default {
 <style scoped>
 .toggle-container {
   width: 50%;
-  height: 100%;
+  height: 93%;
   position: relative;
   display: flex;
   justify-content: center;
@@ -44,9 +44,9 @@ export default {
   height: 82%;
   margin-top: 2px;
   margin-right: 3px;
-  margin:2px 3px;
+  margin: 2px 3px;
   cursor: pointer;
-  background-color: rgb(169, 169, 169);
+  background-color: rgb(215, 215, 215);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -54,15 +54,15 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  width: 45%;
-  height: 81%;
-  border: 1px solid rgb(91, 90, 90);
-  left: 0;
-  bottom:6%;
-  background-color: #2f2f2f;
+  width: 40%;
+  height: 74%;
+  border: 1px solid #326aa5;
+  left: 7%;
+  bottom: 7%;
+  background-color: #3183da;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: 0 0 2px 0 rgb(33, 33, 33);
+  box-shadow: inset 1px 1px 5px rgb(164, 195, 239);
 }
 
 input:checked + .slider {
@@ -70,15 +70,17 @@ input:checked + .slider {
 }
 input:checked + .slider:before {
   background-color: #206d4a;
+  border: 1px solid #336f54;
+  box-shadow: inset 1px 1px 8px #6ad0a2;
 }
 input:focus + .slider {
   box-shadow: 0 0 1px #101010;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(17px);
-  -ms-transform: translateX(17px);
-  transform: translateX(17px);
+  -webkit-transform: translateX(15px);
+  -ms-transform: translateX(15px);
+  transform: translateX(16px);
 }
 
 .slider.round {

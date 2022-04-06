@@ -312,7 +312,6 @@ export default {
   height: 60%;
   border-radius: 40px;
   background-color: #234141;
-  color: #fff;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
@@ -325,7 +324,7 @@ export default {
   height: 50%;
   font-size: 1.4rem !important;
   font-weight: 800 !important;
-  color: rgb(255, 255, 255) !important;
+  color: #cecece !important;
   border: none;
   background-color: transparent;
   box-shadow: none;
@@ -491,10 +490,10 @@ select.classic:focus {
 
 .formGroup label {
   clear: both;
-  font-size: large;
-  font-weight: 900;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-left: 10px;
-  color: #fff;
+  color: #cecece !important;
 }
 .formGroup input {
   width: 60%;
@@ -523,9 +522,9 @@ select.classic:focus {
 }
 #keyLocation label {
   clear: both;
-  font-size: large;
-  font-weight: bold;
-  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #cecece !important;
   margin-left: 24px;
 }
 #keyLocation input {
@@ -583,7 +582,8 @@ input {
   align-items: center;
 }
 #lbl {
-  align-self: center;
+  width: 68%;
+  text-align: center;
   clear: both;
   font-weight: bold;
   font-size: 0.8rem;
@@ -595,11 +595,11 @@ input {
   height: 24px;
 }
 
-/* .switch input {
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
-} */
+}
 
 .slider {
   position: absolute;
@@ -608,7 +608,7 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -616,27 +616,28 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  border: 1px solid #228bb1;
+  width: 20px;
   left: 1px;
   bottom: 1px;
-  background-color: white;
+  background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  box-shadow: inset 1px 1px 3px 1px #70bfdc;
 }
 
 input:checked + .slider {
-  background-color: #4ad376;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  background-color: #e6e6e6;
 }
 
 input:checked + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: #51a76e;
+  border: 1px solid #329f55;
+  box-shadow: inset 1px 1px 5px #91d8a9;
 }
 
 /* Rounded sliders */
