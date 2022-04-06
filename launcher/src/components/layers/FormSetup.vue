@@ -566,18 +566,17 @@ input {
 }
 
 .ssh {
-  display: flex;
-  justify-content: space-between;
   width: 170px;
   min-width: 170px;
-  height: 26px;
+  height: 25px;
   background-color: rgb(48, 47, 47);
-  border: none;
+  border:2px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 19%;
-  bottom: 17%;
+  left: 41.5%;
+  bottom: 16%;
+  box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -587,7 +586,7 @@ input {
   padding-left: 10px;
   clear: both;
   font-weight: bold;
-  font-size: 16px;
+  font-size: .8rem;
 }
 .switch {
   position: relative;
