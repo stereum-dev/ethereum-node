@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img :src="link" :class="mode" />
+    <img :src="link" />
   </div>
 </template>
 

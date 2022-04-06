@@ -5,4 +5,16 @@ export default {
   getSystemInformation(state) {
     return state.systemInfos;
   },
+  getMainnetPlugins(state) {
+    return state.mainnetPlugins;
+  },
+  getTestnetPlugins(state) {
+    return state.testnetPlugins;
+  },
+  getSelectedNetworks(state) {
+    return state.selectedNetworks;
+  },
+  getSelectedPlugin(state) {
+    return state.selectedPlugin;
+  },
 };

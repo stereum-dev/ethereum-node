@@ -11,9 +11,9 @@
         <vue-select> </vue-select>
       </div>
     </div>
-    <router-link :to="{ path: '/install' }">
+    <div @click="clickedToInstall">
       <button id="instal">INSTALL</button>
-    </router-link>
+    </div>
     <router-link :to="{ path: '/welcome' }">
       <button id="back">BACK</button>
     </router-link>
@@ -22,6 +22,7 @@
 
 <script>
 import VueSelect from "../UI/click-installation/VueSelect.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
     VueSelect,
@@ -38,6 +39,9 @@ export default {
     R1clkInstls() {
       return this.$store.getters.R1clkInstls_get;
     },
+    ...mapGetters({
+      selectedPlugin: "getSelectedPlugin",
+    }),
   },
   methods: {
     testnetActive() {
@@ -51,6 +55,11 @@ export default {
       this.mainnetBtn = true;
       this.isTestnetActive = false;
       this.testnetBtn = false;
+    },
+    clickedToInstall() {
+      if (Object.keys(this.selectedPlugin).length > 0) {
+        this.$router.push("/install");
+      }
     },
   },
 };
