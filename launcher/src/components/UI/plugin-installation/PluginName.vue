@@ -86,12 +86,7 @@
                       <div class="memory">
                         <span
                           class="memory-current"
-                          :class="
-                            systemInfos.memory >=
-                            selectedPlugin.requirements?.memory
-                              ? 'passedreq'
-                              : 'faildreq'
-                          "
+                          :class="getClass ? 'passedreq' : 'failedreq'"
                           >{{ systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
@@ -136,11 +131,13 @@ export default {
     ...mapGetters({
       selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
-      // getClass() {
-      //   return this.selectedPlugin.requirements?.core <= this.systemInfos.memory
-      //     ? "passedreq"
-      //     : "faildreq";
-      // },
+      getClass() {
+        if(this.selectedPlugin.requirements?.core <= this.systemInfos.memory) {
+          return true
+        }else {
+          return false
+        }
+      },
     }),
   },
   mounted() {

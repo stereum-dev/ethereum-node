@@ -559,7 +559,7 @@ select.classic:focus {
   background-color: #1b3737;
 }
 #login:active {
-  box-shadow:inset 0 1px 5px 2px rgb(23, 38, 32);
+  box-shadow: inset 0 1px 5px 2px rgb(23, 38, 32);
 }
 input {
   cursor: pointer;
@@ -568,13 +568,14 @@ input {
 .ssh {
   width: 170px;
   min-width: 170px;
-  height: 25px;
+  height: 24px;
   background-color: rgb(48, 47, 47);
-  border:2px solid rgb(116, 116, 116);
+  border: 2px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
   left: 41.5%;
+  left: 16%;
   bottom: 16%;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
@@ -586,7 +587,7 @@ input {
   padding-left: 10px;
   clear: both;
   font-weight: bold;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 .switch {
   position: relative;
