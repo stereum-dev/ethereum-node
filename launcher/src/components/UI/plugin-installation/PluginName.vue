@@ -45,7 +45,7 @@
                 </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>CHANGE INSTALLATION</span>
+                    <span>CHANGE INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
                     <span>{{ selectedPlugin.path }}</span>
@@ -73,10 +73,9 @@
                         <span
                           class="cpu-current"
                           :class="
-                            selectedPlugin.requirements?.core <
-                            systemInfos.memory
-                              ? 'faildreq'
-                              : 'passedreq'
+                            systemInfos.cpu >= selectedPlugin.requirements?.core
+                              ? 'passedreq'
+                              : 'faildreq'
                           "
                           >{{ systemInfos.cpu }}</span
                         >
@@ -88,8 +87,8 @@
                         <span
                           class="memory-current"
                           :class="
-                            selectedPlugin.requirements?.core <
-                            systemInfos.memory
+                            systemInfos.memory >=
+                            selectedPlugin.requirements?.memory
                               ? 'passedreq'
                               : 'faildreq'
                           "
@@ -217,7 +216,7 @@ export default {
 .option-title,
 .system-title {
   width: 60%;
-  height: 10%;
+  height: 11%;
   border: 1px solid rgb(98, 98, 98);
   border-radius: 10px;
   display: flex;
@@ -229,8 +228,8 @@ export default {
 }
 .option-title span,
 .system-title span {
-  color: #fff;
-  font-size: 0.8rem;
+  color: #d3d3d3;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 .content-box {
@@ -278,17 +277,20 @@ export default {
 .network-box .choose {
   width: 90%;
   height: 51%;
+  border: 2px solid #6a6a6a;
   border-radius: 15px;
   background-color: #30483b;
-  color: #fff;
+  margin-bottom: 2px;
+  color: #d3d3d3;
   text-align: left;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .choose span {
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 10px;
 }
 .network-box .none {
   width: 70%;
@@ -297,7 +299,7 @@ export default {
   border-radius: 30px;
   background-color: #2a2a2a;
   align-self: flex-end;
-  color: #fff;
+  color: #d3d3d3;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -340,7 +342,7 @@ export default {
   width: 45%;
   height: 45%;
   margin: 5px;
-  border: 1px solid gray;
+  border: 2px solid rgb(93, 92, 92);
   border-radius: 15px;
   background-color: #30483b;
   display: flex;
@@ -352,13 +354,14 @@ export default {
   width: 90%;
   font-size: 0.6rem;
   font-weight: 700;
-  color: #fff;
+  color: #d3d3d3;
   text-align: left;
-  margin-left: 5px;
+  margin-left: 7px;
 }
 .sync-box .toggle-btn {
   width: 35%;
   height: 90%;
+  border: 2px solid rgb(129, 167, 210);
   border-radius: 15px;
   background-color: #fff;
   display: flex;
@@ -387,26 +390,30 @@ export default {
 }
 .change-installation .change-title {
   width: 90%;
-  height: 20%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .change-title span {
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 700;
+  color: #d3d3d3;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .change-installation .change-box {
   width: 90%;
-  height: 50%;
+  height: 40%;
   background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .change-installation .change-box span {
-  font-size: 1.3rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  margin-left: 10px;
 }
 .system-box {
   width: 48%;
@@ -503,7 +510,7 @@ export default {
 
 .info-header {
   width: 70%;
-  margin-left: 10px;
+  margin-left: 5px;
   grid-column: 3/5;
   grid-row: 1/2;
   display: flex;
@@ -511,12 +518,12 @@ export default {
   align-items: center;
 }
 .info-header span {
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  color: #fff;
+  color: #d3d3d3;
 }
 .info-header .min-title {
-  margin-left: 20px;
+  margin-left: 15px;
 }
 .info-titles {
   width: 70%;
@@ -530,9 +537,9 @@ export default {
 .info-titles span {
   width: 100%;
   text-align: left;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #d3d3d3;
 }
 
 .btn-box {
@@ -557,11 +564,10 @@ export default {
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
-  color: #fff;
+  color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
-    inset 1px 1px 3px 1px rgb(92, 114, 92);
+  box-shadow: 0 1px 2px 1px #353e39, inset 1px 1px 3px 1px #546c5f;
 }
 .next-btn:hover,
 .back-btn:hover {
@@ -580,5 +586,6 @@ export default {
 }
 .faildreq {
   color: rgb(225, 54, 54) !important;
+  border: 1px solid rgb(225, 54, 54) !important;
 }
 </style>

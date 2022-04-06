@@ -62,7 +62,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -76,9 +75,6 @@ export default {
       testnetPlugins: [],
       selectedNetworks: null,
     };
-  },
-  provide() {
-    return { pluginToInstall: this.selectedPlugin };
   },
   computed: {
     ...mapGetters({
@@ -114,7 +110,6 @@ export default {
     selectItemToInstall(item) {
       this.$store.commit("mutatedSelectedPlugin", item);
     },
-
   },
 };
 </script>

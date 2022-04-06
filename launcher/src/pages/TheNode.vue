@@ -72,21 +72,45 @@ export default {
       isModalActive: false,
     };
   },
+  updated() {
+    this.pluginCategoryHandler();
+  },
   computed: {
     ...mapGetters({
       consensusItems: "getConsensusItems",
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       servicePlugins: "getServicePlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
   },
   methods: {
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
+      console.log(this.selectedPlugin);
+      console.log(this.executionItems);
+      console.log(this.consensusItems);
+      console.log(this.validatorItems);
     },
     closeModal() {
       this.isModalActive = false;
+    },
+    pluginCategoryHandler() {
+      this.selectedPlugin.forEach((item) => {
+        if (item.category == "execution") {
+          this.$store.commit("executionPluginHandler", item);
+        }
+        if (item.category === "consensus") {
+          this.consensusItems.push(...item);
+        }
+        if (item.category === "validator") {
+          this.validatorItems.push(...item);
+        }
+        if (item.category === "service") {
+          this.servicePlugins.push(...item);
+        }
+      });
     },
   },
 };
