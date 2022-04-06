@@ -2,10 +2,10 @@ import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js';
 import { ServiceVolume } from './ServiceVolume.js';
 
-const image = "stereum/lighthouse";
-
 export class LighthouseBeaconService extends NodeService {
     static buildByUserInput(network, ports, workingDir, executionClients, slasherDbSize) {
+        const image = "stereum/lighthouse";
+        
         const dataDir = "/opt/app/beacon";
         const slasherDir = "/opt/app/slasher";
 

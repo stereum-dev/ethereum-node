@@ -3,7 +3,6 @@ import { StringUtils } from "./StringUtils";
 import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
 import YAML from 'yaml';
-import * as crypto from "crypto";
 const log = require('electron-log');
 
 export class NodeConnection {
@@ -85,6 +84,10 @@ export class NodeConnection {
             }
 
             /**
+             * remove stereum ansible playbooks & roles if exist
+             */
+            await this.sshService.exec(`rm -rf ${installationDirectory}/ansible`);
+            /**
              * install stereum ansible playbooks & roles
              */
             log.info("installing stereum ansible roles");
@@ -136,7 +139,7 @@ export class NodeConnection {
 
             log.info("starting playbook " + playbook + " with extra vars", extraVars);
 
-            const playbookRunRef = await this.createRunRef(36);
+            const playbookRunRef = StringUtils.createRandomString();
 
             log.info("using playbookRunRef: ", playbookRunRef);
 
@@ -299,7 +302,7 @@ export class NodeConnection {
             try {
                 serviceJson = await this.sshService.exec("docker inspect " + serviceId);
             } catch (err) {
-                log.error("Can't get service details of '" + serviceId + "‘: ", err);
+                log.error("Can't get service details of '" + serviceId + "': ", err);
                 return reject("Can't get service details of '" + serviceId + "': " + err);
             }
 
@@ -309,14 +312,5 @@ export class NodeConnection {
 
             return resolve(JSON.parse(serviceJson.stdout));
         });
-    }
-
-    async createRunRef(length){
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = '';
-        for(let i = 0; i < length; i++){
-            result += characters.charAt(Math.random() * characters.length);
-        }
-        return result;
     }
 }

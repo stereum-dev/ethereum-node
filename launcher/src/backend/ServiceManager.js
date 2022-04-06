@@ -2,6 +2,10 @@ import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconSer
 import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
 import { GethService } from "./ethereum-services/GethService";
 import { BloxSSVService } from "./ethereum-services/BloxSSVService";
+import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
+import { PrometheusService } from "./ethereum-services/PrometheusService";
+import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
+import { GrafanaService } from "./ethereum-services/GrafanaService";
 
 const log = require('electron-log');
 
@@ -27,18 +31,22 @@ export class ServiceManager {
      * @param state a string with the desired state, see serivceState
      * @returns an object containing a reference to the ansible process output, usable with NodeConnection.playbookStatus
      */
-    manageServiceState(serviceId, state) {
-        return this.nodeConnection.runPlaybook("manage-service", {
-                // extra args
-                stereum: {
-                    manage_service: {
-                        configuration: {
-                            id: serviceId,
-                            state: state,
-                        },
-                    },
-                },
-            });
+    manageServiceState(serviceId, state, grafana_provisioning) {
+        let extraVars = {
+            stereum_role: "manage-service", 
+            stereum_args: {
+                manage_service: {
+                    state: state,
+                    configuration: {
+                        id: serviceId
+                    }
+                }
+            }
+        };
+        if(grafana_provisioning !== undefined){
+            Object.assign(extraVars,{grafana_provisioning: grafana_provisioning})
+        }
+        return this.nodeConnection.runPlaybook("manage-service", extraVars);
     }
 
     /**
@@ -47,7 +55,7 @@ export class ServiceManager {
      * @returns an array of all service configurations
      */
     readServiceConfigurations() {
-        return this.nodeConnection.listServicesConfigurations().then(services => {
+        return this.nodeConnection.listServicesConfigurations().then(async services => {
             log.debug("found services:");
             log.debug(services);
 
@@ -57,7 +65,7 @@ export class ServiceManager {
 
                 log.debug("reading config of service <" + service + ">");
 
-                this.nodeConnection.readServiceConfiguration(service).then(config => {
+                await this.nodeConnection.readServiceConfiguration(service).then(config => {
                     log.debug("read config:");
                     log.debug(config);
                     serviceConfigurations.push(config);
@@ -77,7 +85,7 @@ export class ServiceManager {
 
                 log.debug("parsing config:");
                 log.debug(config);
-
+                // .service property needs to be implemented into all other classes 
                 if (config.service) {
                     if (config.service == "LighthouseBeaconService") {
                         services.push(LighthouseBeaconService.buildByConfiguration(config));
@@ -87,6 +95,14 @@ export class ServiceManager {
                         services.push(GethService.buildByConfiguration(config));
                     } else if (config.service == "BloxSSVService") {
                         services.push(BloxSSVService.buildByConfiguration(config));
+                    } else if (config.service == "NimbusBeaconService") {
+                        services.push(NimbusBeaconService.buildByConfiguration(config));
+                    } else if (config.service == "PrometheusService") {
+                        services.push(PrometheusService.buildByConfiguration(config));
+                    } else if (config.service == "PrometheusNodeExporterService") {
+                        services.push(PrometheusNodeExporterService.buildByConfiguration(config));
+                    } else if (config.service == "GrafanaService") {
+                        services.push(GrafanaService.buildByConfiguration(config));
                     }
                 } else {
                     log.error("found configuration without service!");
@@ -96,6 +112,7 @@ export class ServiceManager {
             }
 
             return services;
-        });
+        })
+        .catch(err => log.error(err))
     }
 }
