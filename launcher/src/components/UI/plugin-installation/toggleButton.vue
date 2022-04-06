@@ -56,8 +56,8 @@ export default {
   content: "";
   width: 40%;
   height: 74%;
-  border: 1px solid #326aa5;
-  left: 7%;
+  border: 1px solid #36393d;
+  left: 9%;
   bottom: 7%;
   background-color: #3183da;
   -webkit-transition: 0.4s;
@@ -66,11 +66,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #9ac9b1;
+  background-color: #c2ded0;
 }
 input:checked + .slider:before {
   background-color: #206d4a;
-  border: 1px solid #336f54;
+  border: 1px solid #353a38;
   box-shadow: inset 1px 1px 8px #6ad0a2;
 }
 input:focus + .slider {
