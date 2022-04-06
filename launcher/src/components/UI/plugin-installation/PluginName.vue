@@ -72,11 +72,7 @@
                       <div class="cpu-cores">
                         <span
                           class="cpu-current"
-                          :class="
-                            systemInfos.cpu >= selectedPlugin.requirements?.core
-                              ? 'passedreq'
-                              : 'faildreq'
-                          "
+                          :class="getClass ? 'passedreq' : 'faildreq'"
                           >{{ systemInfos.cpu }}</span
                         >
                         <span class="cpu-needed">{{
@@ -86,7 +82,7 @@
                       <div class="memory">
                         <span
                           class="memory-current"
-                          :class="getClass ? 'passedreq' : 'failedreq'"
+                          :class="getClass ? 'passedreq' : 'faildreq'"
                           >{{ systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
@@ -127,15 +123,18 @@ export default {
       mainnetIcon: require("../../../../public/Img/icon/click-installation/mainnet-circle.png"),
     };
   },
+  updated() {
+    console.log(this.getClass());
+  },
   computed: {
     ...mapGetters({
       selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
       getClass() {
-        if(this.selectedPlugin.requirements?.core <= this.systemInfos.memory) {
-          return true
-        }else {
-          return false
+        if (this.systemInfos.memory >= this.selectedPlugin.requirements?.core) {
+          return true;
+        } else {
+          return false;
         }
       },
     }),
