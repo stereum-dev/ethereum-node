@@ -39,8 +39,8 @@
                 </div>
                 <div class="fast-sync">
                   <div class="sync-box">
-                    <span>FAST SYNC</span>
                     <toggle-button></toggle-button>
+                    <span>FAST SYNC</span>
                   </div>
                 </div>
                 <div class="change-installation">
@@ -72,7 +72,7 @@
                       <div class="cpu-cores">
                         <span
                           class="cpu-current"
-                          :class="getClass ? 'passedreq' : 'faildreq'"
+                          :class="getCpuClass ? 'passedreq' : 'faildreq'"
                           >{{ systemInfos.cpu }}</span
                         >
                         <span class="cpu-needed">{{
@@ -82,7 +82,7 @@
                       <div class="memory">
                         <span
                           class="memory-current"
-                          :class="getClass ? 'passedreq' : 'faildreq'"
+                          :class="getMemoryClass ? 'passedreq' : 'faildreq'"
                           >{{ systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
@@ -124,20 +124,28 @@ export default {
     };
   },
   updated() {
-    console.log(this.getClass());
+    console.log(this.getCpuClass);
+    console.log(this.getMemoryClass);
   },
   computed: {
     ...mapGetters({
       selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
-      getClass() {
-        if (this.systemInfos.memory >= this.selectedPlugin.requirements?.core) {
-          return true;
-        } else {
-          return false;
-        }
-      },
     }),
+    getMemoryClass() {
+      if (this.systemInfos.memory >= this.selectedPlugin.requirements?.memory) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    getCpuClass() {
+      if (this.systemInfos.cpu >= this.selectedPlugin.requirements?.core) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   mounted() {
     if (Object.keys(this.selectedPlugin).length === 0) {
@@ -338,42 +346,23 @@ export default {
   width: 45%;
   height: 45%;
   margin: 5px;
-  border: 2px solid rgb(93, 92, 92);
+  border: 3px solid rgb(93, 92, 92);
   border-radius: 15px;
   background-color: #30483b;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   position: relative;
 }
 .fast-sync .sync-box span {
-  width: 90%;
-  font-size: 0.6rem;
+  width: 86%;
+  font-size: 0.65rem;
   font-weight: 700;
   color: #d3d3d3;
-  text-align: left;
-  margin-left: 7px;
+  text-align: center;
+  margin-right: 3px;
 }
-.sync-box .toggle-btn {
-  width: 35%;
-  height: 90%;
-  border: 2px solid rgb(129, 167, 210);
-  border-radius: 15px;
-  background-color: #fff;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: absolute;
-  right: 1px;
-}
-.toggle-btn .toggle {
-  width: 52%;
-  height: 93%;
-  border: 1px solid rgb(129, 167, 210);
-  border-radius: 50px;
-  background-color: rgb(11, 97, 201);
-  box-shadow: inset 0 1px 7px #2a9dce;
-}
+
 .option-content .change-installation {
   width: 100%;
   height: 30%;

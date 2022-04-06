@@ -103,7 +103,6 @@
           />
         </div>
         <div class="ssh">
-          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
             <input
               type="checkbox"
@@ -113,6 +112,7 @@
             />
             <span class="slider round"></span>
           </label>
+          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
         <base-button id="login" @click="login">{{
           $t("formsetup.login")
@@ -359,7 +359,7 @@ form {
   height: 69%;
   padding: 10px;
   border: 5px solid #686868;
-  border-radius: 45px;
+  border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
@@ -512,13 +512,14 @@ select.classic:focus {
 #keyLocation {
   width: 67%;
   border: 5px solid #686868;
-  border-radius: 29px;
+  border-radius: 18px;
   background-color: #234141;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
+  z-index: 99;
 }
 #keyLocation label {
   clear: both;
@@ -566,16 +567,15 @@ input {
 }
 
 .ssh {
-  width: 170px;
-  min-width: 170px;
+  width: 150px;
+  min-width: 100px;
   height: 24px;
-  background-color: rgb(48, 47, 47);
-  border: 2px solid rgb(116, 116, 116);
+  background-color: #234141;
+  border: 3px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 41.5%;
-  left: 16%;
+  left: 18%;
   bottom: 16%;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
@@ -584,7 +584,6 @@ input {
 }
 #lbl {
   align-self: center;
-  padding-left: 10px;
   clear: both;
   font-weight: bold;
   font-size: 0.8rem;
@@ -596,11 +595,11 @@ input {
   height: 24px;
 }
 
-.switch input {
+/* .switch input {
   opacity: 0;
   width: 0;
   height: 0;
-}
+} */
 
 .slider {
   position: absolute;

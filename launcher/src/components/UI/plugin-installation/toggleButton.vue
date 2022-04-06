@@ -23,7 +23,7 @@ export default {
 </script>
 <style scoped>
 .toggle-container {
-  width: 70%;
+  width: 50%;
   height: 100%;
   position: relative;
   display: flex;
@@ -41,9 +41,10 @@ export default {
 }
 
 .slider {
-  height: 80%;
-  margin-top: 3px;
+  height: 82%;
+  margin-top: 2px;
   margin-right: 3px;
+  margin:2px 3px;
   cursor: pointer;
   background-color: rgb(169, 169, 169);
   -webkit-transition: 0.4s;
@@ -54,14 +55,14 @@ export default {
   position: absolute;
   content: "";
   width: 45%;
-  height: 85%;
+  height: 81%;
   border: 1px solid rgb(91, 90, 90);
   left: 0;
-  bottom:3%;
+  bottom:6%;
   background-color: #2f2f2f;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: 0 1px 2px 0 rgb(33, 33, 33);
+  box-shadow: 0 0 2px 0 rgb(33, 33, 33);
 }
 
 input:checked + .slider {
@@ -75,9 +76,9 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(24px);
-  -ms-transform: translateX(24px);
-  transform: translateX(24px);
+  -webkit-transform: translateX(17px);
+  -ms-transform: translateX(17px);
+  transform: translateX(17px);
 }
 
 .slider.round {
