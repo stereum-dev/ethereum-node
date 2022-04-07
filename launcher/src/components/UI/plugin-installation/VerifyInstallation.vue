@@ -20,9 +20,7 @@
                   <span>REQUIREMENTS</span>
                 </div>
                 <div class="table-content">
-                  <div
-                    class="table-row"
-                  >
+                  <div class="table-row">
                     <div class="plugin-name">
                       <span>NAME:</span>
                       <span>{{ selectedPlugin.name }}</span>
@@ -34,7 +32,7 @@
                       </div>
                       <div class="path">
                         <span>PATH:</span>
-                        <span>{{selectedPlugin.path}}</span>
+                        <span>{{ selectedPlugin.path }}</span>
                       </div>
                     </div>
                     <div class="requirements">
@@ -179,12 +177,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5px;
+}
+.table .table-header span:first-child {
+  width: 23% !important;
+  text-align: left !important;
+  padding-left: 30px !important;
 }
 .table .table-header span {
-  color: #fff;
+  width: 32%;
+  color: rgb(213, 213, 213);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 .table .table-content {
   width: 95%;
@@ -215,7 +218,8 @@ export default {
   width: 25%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -226,12 +230,12 @@ export default {
 }
 .plugin-name span:last-child {
   color: #4ca434;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 .table-row .selection {
-  width: 40%;
+  width: 33%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -239,7 +243,7 @@ export default {
   align-items: flex-start;
 }
 .network {
-  width: 80%;
+  width: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -257,7 +261,7 @@ export default {
 }
 .table-row .selection .network span:last-child {
   color: #4ca434;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
 }
@@ -272,7 +276,7 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements {
-  width: 20%;
+  width: 25%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -281,7 +285,7 @@ export default {
 }
 .requirements .cpu,
 .requirements .memory {
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -293,10 +297,10 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .cpu span:last-child {
-   color: #4ca434;
-  font-size: 1rem;
+  color: #4ca434;
+  font-size: 0.9rem;
   font-weight: 600;
-
+  margin-right: 10px;
 }
 .table-row .requirements .memory span:first-child {
   color: #a7a7a7;
@@ -305,8 +309,9 @@ export default {
 }
 .table-row .requirements .memory span:last-child {
   color: #4ca434;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  margin-right: 10px;
 }
 
 .btn-box {

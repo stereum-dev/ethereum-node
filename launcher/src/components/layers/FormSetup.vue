@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="Img/icon/+.png" alt="" />
+              <img src="Img/icon/PLUS_ICON.png" alt="" />
             </div>
             <div
               class="three trash"
@@ -103,7 +103,6 @@
           />
         </div>
         <div class="ssh">
-          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
             <input
               type="checkbox"
@@ -113,6 +112,7 @@
             />
             <span class="slider round"></span>
           </label>
+          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
         <base-button id="login" @click="login">{{
           $t("formsetup.login")
@@ -147,7 +147,7 @@ export default {
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
       },
-      imgTrash: "./Img/icon/TRASH CAN.png",
+      imgTrash: "./Img/icon/TRASH_CAN.png",
     };
   },
   created() {
@@ -249,9 +249,9 @@ export default {
 
     mouseOver(val) {
       if (val === "over") {
-        this.imgTrash = "./Img/icon/Trash Can2.png";
+        this.imgTrash = "./Img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = "./Img/icon/Trash Can.png";
+        this.imgTrash = "./Img/icon/TRASH_CAN.png";
       }
     },
     showBDialog() {
@@ -309,10 +309,9 @@ export default {
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
-  height: 65%;
+  height: 60%;
   border-radius: 40px;
   background-color: #234141;
-  color: #fff;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
@@ -321,14 +320,15 @@ export default {
 }
 #header h2 {
   width: 95%;
-  max-width: 99%;
+  max-width: auto;
   height: 50%;
-  font-size: 1.8rem !important;
+  font-size: 1.4rem !important;
   font-weight: 800 !important;
-  color: rgb(255, 255, 255) !important;
+  color: #cecece !important;
   border: none;
   background-color: transparent;
   box-shadow: none;
+  text-transform: uppercase;
 }
 
 #dialTitle {
@@ -358,7 +358,7 @@ form {
   height: 69%;
   padding: 10px;
   border: 5px solid #686868;
-  border-radius: 45px;
+  border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
@@ -490,10 +490,10 @@ select.classic:focus {
 
 .formGroup label {
   clear: both;
-  font-size: large;
-  font-weight: 900;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-left: 10px;
-  color: #fff;
+  color: #cecece !important;
 }
 .formGroup input {
   width: 60%;
@@ -511,19 +511,20 @@ select.classic:focus {
 #keyLocation {
   width: 67%;
   border: 5px solid #686868;
-  border-radius: 29px;
+  border-radius: 18px;
   background-color: #234141;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
+  z-index: 99;
 }
 #keyLocation label {
   clear: both;
-  font-size: large;
-  font-weight: bold;
-  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #cecece !important;
   margin-left: 24px;
 }
 #keyLocation input {
@@ -558,35 +559,34 @@ select.classic:focus {
   background-color: #1b3737;
 }
 #login:active {
-  box-shadow:inset 0 1px 5px 2px rgb(23, 38, 32);
+  box-shadow: inset 0 1px 5px 2px rgb(23, 38, 32);
 }
 input {
   cursor: pointer;
 }
 
 .ssh {
-  display: flex;
-  justify-content: space-between;
-  width: 170px;
-  min-width: 170px;
-  height: 26px;
-  background-color: rgb(48, 47, 47);
-  border: none;
+  width: 150px;
+  min-width: 100px;
+  height: 24px;
+  background-color: #234141;
+  border: 3px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 19%;
-  bottom: 17%;
+  left: 18%;
+  bottom: 16%;
+  box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 #lbl {
-  align-self: center;
-  padding-left: 10px;
+  width: 68%;
+  text-align: center;
   clear: both;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 0.8rem;
 }
 .switch {
   position: relative;
@@ -608,7 +608,7 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -616,27 +616,28 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  border: 1px solid #228bb1;
+  width: 20px;
   left: 1px;
   bottom: 1px;
-  background-color: white;
+  background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  box-shadow: inset 1px 1px 3px 1px #70bfdc;
 }
 
 input:checked + .slider {
-  background-color: #4ad376;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  background-color: #e6e6e6;
 }
 
 input:checked + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: #51a76e;
+  border: 1px solid #329f55;
+  box-shadow: inset 1px 1px 5px #91d8a9;
 }
 
 /* Rounded sliders */

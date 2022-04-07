@@ -5,6 +5,9 @@ export default {
   mutatedExecutionItems(state, payload) {
     state.executionItems = payload;
   },
+  executionPluginHandler(state, payload) {
+    state.executionItems.push(payload);
+  },
   mutatedValidatorItems(state, payload) {
     state.validatorItems = payload;
   },
