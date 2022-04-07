@@ -20,7 +20,7 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSEN NETWORK</span>
+                      <span>CHOSEN NETWORK</span>
                     </div>
                     <div class="none">
                       <span>{{ selectedPlugin.network }}</span>
