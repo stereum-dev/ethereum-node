@@ -33,7 +33,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/HELP BUTTON.png"
+              src="/img/icon/HELP_BUTTON.png"
             />
           </li>
 
@@ -42,7 +42,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/PHONE ICON.png"
+              src="/img/icon/PHONE_ICON.png"
             />
           </li>
 
@@ -51,7 +51,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/UPDATE ICON.png"
+              src="/img/icon/UPDATE_ICON.png"
             />
           </li>
 
@@ -60,7 +60,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/SETTING ICON.png"
+              src="/img/icon/SETTING_ICON.png"
             />
           </li>
 
@@ -69,7 +69,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/EXIT ICON.png"
+              src="/img/icon/EXIT_ICON.png"
             />
           </li>
         </ul>

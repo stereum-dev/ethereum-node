@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="Img/icon/+.png" alt="" />
+              <img src="Img/icon/PLUS_ICON.png" alt="" />
             </div>
             <div
               class="three trash"
@@ -147,7 +147,7 @@ export default {
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
       },
-      imgTrash: "./Img/icon/TRASH CAN.png",
+      imgTrash: "./Img/icon/TRASH_CAN.png",
     };
   },
   created() {
@@ -249,9 +249,9 @@ export default {
 
     mouseOver(val) {
       if (val === "over") {
-        this.imgTrash = "./Img/icon/Trash Can2.png";
+        this.imgTrash = "./Img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = "./Img/icon/Trash Can.png";
+        this.imgTrash = "./Img/icon/TRASH_CAN.png";
       }
     },
     showBDialog() {

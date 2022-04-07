@@ -44,14 +44,14 @@ export default {
       R1clkInstls: [
         { clkId: "staking", img: "/img/icon/STAKING.png" },
         { clkId: "testnet", img: "/img/icon/TESTNET.png" },
-        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
-        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL_SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX_SSV.png" },
       ],
       R2clkInstls: [
         { clkId: "rocket", img: "/img/icon/ROCKETPOOL.png" },
         { clkId: "staking", img: "/img/icon/STAKING.png" },
-        { clkId: "ssv", img: "/img/icon/OBOL SSV.png" },
-        { clkId: "blox", img: "/img/icon/BLOX SSV.png" },
+        { clkId: "ssv", img: "/img/icon/OBOL_SSV.png" },
+        { clkId: "blox", img: "/img/icon/BLOX_SSV.png" },
       ],
     };
   },
