@@ -20,7 +20,7 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSEN NETWORK</span>
+                      <span>CHOSEN NETWORK</span>
                     </div>
                     <div class="none">
                       <span>{{ selectedPlugin.network }}</span>
@@ -552,7 +552,7 @@ export default {
   color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39, inset 1px 1px 3px 1px #546c5f;
+  box-shadow: 0 1px 2px 1px #353e39;
 }
 .next-btn:hover,
 .back-btn:hover {
