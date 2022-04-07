@@ -6,7 +6,7 @@
         v-if="showSidebar"
         class="hidden-icon"
         width="88"
-        src="../../../../public/Img/icon/manage-node-icons/sidebar-hidden-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-hidden-icon.png"
         alt=""
       />
       <img
@@ -14,7 +14,7 @@
         v-else
         class="show-icon"
         width="88"
-        src="../../../../public/Img/icon/manage-node-icons/sidebar-show-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-show-icon.png"
         alt=""
       />
     </div>
@@ -23,7 +23,7 @@
         <img
           onmousedown="return false"
           class="up-arrow"
-          src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+          src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 0"
         />
@@ -31,7 +31,7 @@
           <div class="plugin-item">
             <div class="cloud-item">
               <img
-                src="../../../../public/Img/icon/manage-node-icons/cloud-1.png"
+                src="../../../../public/img/icon/manage-node-icons/cloud-1.png"
                 alt="icon"
               />
             </div>
@@ -49,7 +49,7 @@
         <img
           onmousedown="return false"
           class="down-arrow"
-          src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
+          src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 1000"
         />
@@ -58,15 +58,15 @@
         <input class="filter-inp" type="text" placeholder="Filter..." />
         <div class="filter-icons">
           <img
-            src="../../../../public/Img/icon/manage-node-icons/filter-icon.png"
+            src="../../../../public/img/icon/manage-node-icons/filter-icon.png"
             alt="icon"
           />
           <img
-            src="../../../../public/Img/icon/manage-node-icons/filter-fav.png"
+            src="../../../../public/img/icon/manage-node-icons/filter-fav.png"
             alt="icon"
           />
           <img
-            src="../../../../public/Img/icon/manage-node-icons/filter-confirm.png"
+            src="../../../../public/img/icon/manage-node-icons/filter-confirm.png"
             alt="icon"
           />
         </div>

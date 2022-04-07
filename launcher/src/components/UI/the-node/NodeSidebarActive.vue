@@ -11,13 +11,13 @@
         :key="index"
       >
         <div v-if="item.status === 'deactive'" class="status-icon">
-          <img src="/Img/icon/non-functional-icon.png" alt="status-icon" />
+          <img src="/img/icon/non-functional-icon.png" alt="status-icon" />
         </div>
         <div v-else-if="item.status === 'off'" class="status-icon">
-          <img src="/Img/icon/inactive-icon.png" alt="status-icon" />
+          <img src="/img/icon/inactive-icon.png" alt="status-icon" />
         </div>
         <div v-else-if="item.status === 'active'" class="status-icon">
-          <img src="/Img/icon/active-icon.png" alt="status-icon" />
+          <img src="/img/icon/active-icon.png" alt="status-icon" />
         </div>
         <div v-else class="status-icon">
           <img src="Img/icon/sync-problem-icon.png" alt="status-icon" />

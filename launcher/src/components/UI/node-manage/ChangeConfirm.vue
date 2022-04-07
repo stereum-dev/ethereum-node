@@ -22,7 +22,7 @@
           <span>{{ item.content }}</span>
           <div class="right-icon">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
+              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
               alt="icon"
             />
           </div>
@@ -34,7 +34,7 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img src="/Img/icon/manage-node-icons/trash-icon.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/trash-icon.png" alt="icon" />
           </div>
         </div>
       </div>

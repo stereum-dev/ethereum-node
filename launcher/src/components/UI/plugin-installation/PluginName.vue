@@ -124,8 +124,8 @@ export default {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      testnetIcon: require("../../../../public/Img/icon/click-installation/testnet-circle.png"),
-      mainnetIcon: require("../../../../public/Img/icon/click-installation/mainnet-circle.png"),
+      testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
+      mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
   },
   computed: {

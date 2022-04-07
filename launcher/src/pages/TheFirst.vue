@@ -61,7 +61,7 @@ export default {
       this.language = lang;
       this.flag = langSelect;
       this.hideDialog();
-      this.link = "stereum_logo_extern.png";
+      this.link = "stereum-logo-extern.png";
       this.updateSettings(lang, langSelect);
     },
     activePage() {

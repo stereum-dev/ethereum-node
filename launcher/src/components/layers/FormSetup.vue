@@ -147,7 +147,7 @@ export default {
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
       },
-      imgTrash: "./Img/icon/TRASH_CAN.png",
+      imgTrash: "./img/icon/TRASH_CAN.png",
     };
   },
   created() {
@@ -244,9 +244,9 @@ export default {
 
     mouseOver(val) {
       if (val === "over") {
-        this.imgTrash = "./Img/icon/TRASH_CAN2.png";
+        this.imgTrash = "./img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = "./Img/icon/TRASH_CAN.png";
+        this.imgTrash = "./img/icon/TRASH_CAN.png";
       }
     },
     showBDialog() {

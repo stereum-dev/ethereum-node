@@ -15,10 +15,10 @@
     <div class="config-row">
       <div class="row-content" v-for="(item, index) in configData" :key="index">
         <div v-if="item.network == 'testNet'" class="testnet-icon">
-          <img src="../../../../public/Img/icon/mainnetIcon.png" alt="icon" />
+          <img src="../../../../public/img/icon/mainnetIcon.png" alt="icon" />
         </div>
         <div v-else class="testnet-icon">
-          <img src="../../../../public/Img/icon/testnetIcon.png" alt="" />
+          <img src="../../../../public/img/icon/testnetIcon.png" alt="" />
         </div>
         <span>{{ item.id }}#{{ item.name }}</span>
       </div>
@@ -42,7 +42,7 @@
         <div class="delete-btn" @click="openRemoveModal">
           <span class="btn-text">DELETE CONFIGS</span>
           <img
-            src="../../../../public/Img/icon/manage-node-icons/bin.png"
+            src="../../../../public/img/icon/manage-node-icons/bin.png"
             alt="icon"
           />
         </div>
@@ -52,7 +52,7 @@
         <div class="remove-modal-content">
           <div class="title-box">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/stop-violence.png"
+              src="../../../../public/img/icon/manage-node-icons/stop-violence.png"
               alt=""
             />
           </div>
