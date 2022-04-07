@@ -85,7 +85,6 @@ export default {
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
-      console.log(this.selectedPlugin);
     },
     closeModal() {
       this.isModalActive = false;

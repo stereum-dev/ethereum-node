@@ -55,7 +55,6 @@ export default {
     },
     display: async function (response) {
       let data = await response;
-      console.log(data);
       if (data == "Ubuntu" || data == "CentOS") {
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
       } else if (data.name !== undefined) {
@@ -67,7 +66,6 @@ export default {
       this.running = false;
     },
     checkOS: async function () {
-      console.log("check OS");
       let response = ControlService.checkOS()
         .then((result) => {
           return result;

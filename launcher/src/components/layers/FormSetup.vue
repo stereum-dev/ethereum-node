@@ -161,7 +161,6 @@ export default {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
       );
-      console.log(this.selectedConnection);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
       this.model.user.value = this.selectedConnection.user;
@@ -172,9 +171,7 @@ export default {
     },
     addModel() {
       const newConnection = this.createConnection();
-      console.log(newConnection);
       this.connections.push(newConnection);
-
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
@@ -194,7 +191,6 @@ export default {
       return storableConnections;
     },
     deleteModel: async function () {
-      console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
         return currSelected != conn.name;
@@ -229,7 +225,6 @@ export default {
           storageSavedConnections.savedConnections
         );
       }
-      console.log(savedConnections);
       this.connections = savedConnections;
     },
     writeSettings: async function () {
@@ -277,7 +272,6 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        console.log(`${err.name} occurred:\n ${err.message}`);
         //stay on page if error occurs
 
         //return;

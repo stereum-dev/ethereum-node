@@ -130,7 +130,6 @@ export default {
     openModalHandler(item) {
       this.isModalActive = true;
       this.modalItem = item;
-      console.log("3", item);
     },
     closeModalHandler() {
       this.isModalActive = false;
