@@ -8,13 +8,14 @@
 
     <div class="discSpace_cell"></div>
 
-
-    <div class="networkSync_cell"><chart-bar></chart-bar></div>
+    <div class="networkSync_cell"></div>
 
     <div class="cpuUsage_cell">
       <the-thermometer></the-thermometer>
     </div>
-    <div class="peersConect_cell">peersConect_cell</div>
+    <div class="peersConect_cell">
+      <router-link to="/cpu"><base-button>test</base-button></router-link>
+    </div>
     <div class="networkUsage_cell">
       <the-thermometer class="netThermo"></the-thermometer>
     </div>
@@ -26,12 +27,13 @@
 
 <script>
 import TheThermometer from "./TheThermometer.vue";
-import ChartBar from "./ChartBar.vue";
+// import ChartBar from "./ChartBar.vue";
+// import ChartLine from "./ChartLine.vue";
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter, TheThermometer, ChartBar },
+  components: { SandClock, StorageCounter, TheThermometer },
 };
 </script>
 
@@ -50,7 +52,6 @@ export default {
   grid-row: 1/2;
   color: aliceblue;
   border-radius: 15px 0 0 0;
-  background: blue;
 }
 
 .nodeProcess_cell {
@@ -68,13 +69,11 @@ export default {
 .discSpace_cell {
   grid-column: 1/2;
   grid-row: 2/3;
-  background: violet;
 }
 
 .networkSync_cell {
   grid-column: 2/3;
   grid-row: 2/3;
-  background: white;
   display: flex;
 }
 
@@ -84,11 +83,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid red;
 }
 
 .peersConect_cell {
   grid-column: 2/3;
   grid-row: 3/4;
+  display: flex;
 }
 
 .networkUsage_cell {
