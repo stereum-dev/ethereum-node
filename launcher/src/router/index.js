@@ -9,6 +9,7 @@ import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
+import CpuChart from "../pages/CpuChart.vue";
 
 const routes = [
   {
@@ -55,6 +56,11 @@ const routes = [
     path: "/verify",
     name: "VerifyInstallation",
     component: VerifyInstallation,
+  },
+  {
+    path: "/cpu",
+    name: "CpuChart",
+    component: CpuChart,
   },
 ];
 
