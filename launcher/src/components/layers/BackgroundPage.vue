@@ -2,7 +2,7 @@
   <div id="main">
     <section id="containerBg">
       <section class="img-box">
-        <img class="imgBg" src="../../../public/img/icon/stereum-logo/stereum_logo.png" alt="" />
+        <img class="imgBg" src="../../../public/img/icon/stereum-logo/stereum-logo.png" alt="icon" />
 
         <slot></slot>
       </section>
