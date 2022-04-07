@@ -20,34 +20,29 @@
                   <span>REQUIREMENTS</span>
                 </div>
                 <div class="table-content">
-                  <div
-                    class="table-row"
-                    v-for="(item, index) in plugins"
-                    :key="index"
-                    v-show="index === this.plugins.length - 1"
-                  >
+                  <div class="table-row">
                     <div class="plugin-name">
                       <span>NAME:</span>
-                      <span>{{ item.name }}</span>
+                      <span>{{ selectedPlugin.name }}</span>
                     </div>
                     <div class="selection">
                       <div class="network">
                         <span>NETWORK:</span>
-                        <span>{{ item.network }}</span>
+                        <span>{{ selectedPlugin.network }}</span>
                       </div>
                       <div class="path">
                         <span>PATH:</span>
-                        <span>{{ item.path }}</span>
+                        <span>{{ selectedPlugin.path }}</span>
                       </div>
                     </div>
                     <div class="requirements">
                       <div class="cpu">
                         <span>CPU CORES:</span>
-                        <span>{{ item.requirements.core }}</span>
+                        <span>{{ selectedPlugin.requirements?.core }}</span>
                       </div>
                       <div class="memory">
                         <span>MEMORY:</span>
-                        <span>{{ item.requirements.memory }}</span>
+                        <span>{{ selectedPlugin.requirements?.memory }}</span>
                       </div>
                     </div>
                   </div>
@@ -60,7 +55,7 @@
               <button class="back-btn">BACK</button>
             </router-link>
             <router-link :to="{ path: '/node' }">
-              <button  class="next-btn">INSTALL</button>
+              <button class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
@@ -76,8 +71,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
+  },
+  mounted() {
+    if (Object.keys(this.selectedPlugin).length === 0) {
+      this.$router.push("/clickinstall");
+    }
   },
 };
 </script>
@@ -177,12 +177,17 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5px;
+}
+.table .table-header span:first-child {
+  width: 23% !important;
+  text-align: left !important;
+  padding-left: 30px !important;
 }
 .table .table-header span {
-  color: #fff;
+  width: 32%;
+  color: rgb(213, 213, 213);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 .table .table-content {
   width: 95%;
@@ -200,7 +205,7 @@ export default {
 
 .table-content .table-row {
   width: 100%;
-  height: 20%;
+  height: 30%;
   margin-top: 5px;
   border-bottom: 1px solid gray;
   display: flex;
@@ -213,7 +218,8 @@ export default {
   width: 25%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
 }
 
@@ -224,11 +230,12 @@ export default {
 }
 .plugin-name span:last-child {
   color: #4ca434;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 .table-row .selection {
-  width: 40%;
+  width: 33%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -236,7 +243,7 @@ export default {
   align-items: flex-start;
 }
 .network {
-  width: 80%;
+  width: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -254,8 +261,9 @@ export default {
 }
 .table-row .selection .network span:last-child {
   color: #4ca434;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
+  text-transform: uppercase;
 }
 .table-row .selection .path span:first-child {
   color: #a7a7a7;
@@ -264,11 +272,11 @@ export default {
 }
 .table-row .selection .path span:last-child {
   color: #c6ac2a;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 .table-row .requirements {
-  width: 20%;
+  width: 25%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -277,7 +285,7 @@ export default {
 }
 .requirements .cpu,
 .requirements .memory {
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   justify-content: space-between;
@@ -289,9 +297,10 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .cpu span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
+  color: #4ca434;
+  font-size: 0.9rem;
   font-weight: 600;
+  margin-right: 10px;
 }
 .table-row .requirements .memory span:first-child {
   color: #a7a7a7;
@@ -299,9 +308,10 @@ export default {
   font-weight: 600;
 }
 .table-row .requirements .memory span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
+  color: #4ca434;
+  font-size: 0.9rem;
   font-weight: 600;
+  margin-right: 10px;
 }
 
 .btn-box {

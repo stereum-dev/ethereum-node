@@ -78,12 +78,14 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       servicePlugins: "getServicePlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
   },
   methods: {
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
+      console.log(this.selectedPlugin);
     },
     closeModal() {
       this.isModalActive = false;

@@ -7,7 +7,7 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span>PLUG IN NAME</span>
+                <span>{{ selectedPlugin.name }}</span>
               </div>
             </div>
           </div>
@@ -20,25 +20,36 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSE YOUR NETWORK</span>
+                      <span>CHOOSEN NETWORK</span>
                     </div>
                     <div class="none">
-                      <span>NONE</span>
+                      <span>{{ selectedPlugin.network }}</span>
                     </div>
                   </div>
-                  <div class="circle-box"></div>
+                  <div class="circle-box">
+                    <img
+                      :src="
+                        selectedPlugin.network === 'mainnet'
+                          ? this.mainnetIcon
+                          : this.testnetIcon
+                      "
+                      alt="icon"
+                    />
+                  </div>
                 </div>
                 <div class="fast-sync">
                   <div class="sync-box">
-                    <span>FAST SYNC</span>
                     <toggle-button></toggle-button>
+                    <span>FAST SYNC</span>
                   </div>
                 </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>CHANGE INSTALLATION</span>
+                    <span>CHANGE INSTALLATION PATH</span>
                   </div>
-                  <div class="change-box"></div>
+                  <div class="change-box">
+                    <span>{{ selectedPlugin.path }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -56,33 +67,26 @@
                     <span class="cpu-info">CPU CORES:</span>
                     <span class="memory-info">MEMORY:</span>
                   </div>
-                  <div
-                    class="info-parent"
-                    v-for="(item, index) in plugins"
-                    :key="index"
-                  >
-                    <div
-                      class="info-content"
-                      v-if="index === this.plugins.length - 1"
-                    >
+                  <div class="info-parent">
+                    <div class="info-content">
                       <div class="cpu-cores">
                         <span
                           class="cpu-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.cpu }}</span
+                          :class="getCpuClass ? 'passedreq' : 'faildreq'"
+                          >{{ systemInfos.cpu }}</span
                         >
                         <span class="cpu-needed">{{
-                          item.requirements.core
+                          selectedPlugin.requirements?.core
                         }}</span>
                       </div>
                       <div class="memory">
                         <span
                           class="memory-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.memory }}</span
+                          :class="getMemoryClass ? 'passedreq' : 'faildreq'"
+                          >{{ systemInfos.memory }}</span
                         >
                         <span class="memory-needed">{{
-                          item.requirements.memory
+                          selectedPlugin.requirements?.memory
                         }}</span>
                       </div>
                     </div>
@@ -109,37 +113,44 @@ import ToggleButton from "./toggleButton.vue";
 import { mapGetters } from "vuex";
 export default {
   components: { ToggleButton },
+
   data() {
     return {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      selectedPlugin: null,
+      testnetIcon: require("../../../../public/Img/icon/click-installation/testnet-circle.png"),
+      mainnetIcon: require("../../../../public/Img/icon/click-installation/mainnet-circle.png"),
     };
+  },
+  updated() {
+    console.log(this.getCpuClass);
+    console.log(this.getMemoryClass);
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
       systemInfos: "getSystemInformation",
     }),
+    getMemoryClass() {
+      if (this.systemInfos.memory >= this.selectedPlugin.requirements?.memory) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    getCpuClass() {
+      if (this.systemInfos.cpu >= this.selectedPlugin.requirements?.core) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   mounted() {
-    this.checkRequirement();
-  },
-  methods: {
-    checkRequirement() {
-      this.plugins.forEach((plugin) => {
-        console.log(plugin.requirements.core);
-        if (
-          plugin.requirements.core <= this.systemInfos.cpu &&
-          plugin.requirements.memory <= this.systemInfos.memory
-        ) {
-          this.requirementPassed = true;
-        } else {
-          this.requirementPassed = false;
-        }
-      });
-    },
+    if (Object.keys(this.selectedPlugin).length === 0) {
+      this.$router.push("/clickinstall");
+    }
   },
 };
 </script>
@@ -204,11 +215,12 @@ export default {
   font-size: 2rem;
   font-weight: 900;
   color: #d7d7d7;
+  text-transform: uppercase;
 }
 .option-title,
 .system-title {
   width: 60%;
-  height: 10%;
+  height: 11%;
   border: 1px solid rgb(98, 98, 98);
   border-radius: 10px;
   display: flex;
@@ -220,8 +232,8 @@ export default {
 }
 .option-title span,
 .system-title span {
-  color: #fff;
-  font-size: 0.8rem;
+  color: #d3d3d3;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 .content-box {
@@ -268,33 +280,40 @@ export default {
 }
 .network-box .choose {
   width: 90%;
-  height: 50%;
+  height: 51%;
+  border: 2px solid #6a6a6a;
   border-radius: 15px;
   background-color: #30483b;
-  color: #fff;
+  margin-bottom: 2px;
+  color: #d3d3d3;
   text-align: left;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .choose span {
   font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 7px;
+  font-weight: 700;
+  margin-left: 10px;
 }
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid #5b5b5b;
+  border: 2px solid #6a6a6a;
   border-radius: 30px;
-  background-color: #1f1f1f;
+  background-color: #2a2a2a;
   align-self: flex-end;
-  color: #fff;
+  color: #d3d3d3;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .none span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-left: 20px;
+  color: rgba(6, 181, 76, 0.982);
+  text-transform: uppercase;
 }
 .network-parent .circle-box {
   width: 24%;
@@ -304,6 +323,15 @@ export default {
   background-color: #1f1f1f;
   position: absolute;
   right: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.network-parent .circle-box img {
+  width: 90%;
+  height: 90%;
+  border: 2px solid #5b5b5b;
+  border-radius: 100%;
 }
 
 .option-content .fast-sync {
@@ -318,41 +346,23 @@ export default {
   width: 45%;
   height: 45%;
   margin: 5px;
-  border: 1px solid gray;
+  border: 3px solid rgb(93, 92, 92);
   border-radius: 15px;
   background-color: #30483b;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   position: relative;
 }
 .fast-sync .sync-box span {
-  width: 90%;
-  font-size: 0.6rem;
+  width: 86%;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: #fff;
-  text-align: left;
-  margin-left: 5px;
+  color: #d3d3d3;
+  text-align: center;
+  margin-right: 3px;
 }
-.sync-box .toggle-btn {
-  width: 35%;
-  height: 90%;
-  border-radius: 15px;
-  background-color: #fff;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: absolute;
-  right: 1px;
-}
-.toggle-btn .toggle {
-  width: 52%;
-  height: 93%;
-  border: 1px solid rgb(129, 167, 210);
-  border-radius: 50px;
-  background-color: rgb(11, 97, 201);
-  box-shadow: inset 0 1px 7px #2a9dce;
-}
+
 .option-content .change-installation {
   width: 100%;
   height: 30%;
@@ -365,22 +375,30 @@ export default {
 }
 .change-installation .change-title {
   width: 90%;
-  height: 20%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .change-title span {
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 700;
+  color: #d3d3d3;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .change-installation .change-box {
   width: 90%;
-  height: 50%;
-  background-color: #fff;
+  height: 40%;
+  background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.change-installation .change-box span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-left: 10px;
 }
 .system-box {
   width: 48%;
@@ -425,11 +443,11 @@ export default {
 }
 
 .info-parent .info-content {
-  width: 50%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .info-content .cpu-cores,
@@ -439,10 +457,28 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.info-content .cpu-cores span,
+.info-content .cpu-cores span {
+  width: 50%;
+  height: 20px;
+  border: 2px solid #4a4949;
+  border-radius: 16px;
+  background-color: #222222;
+  text-align: center;
+  box-shadow: 0 1px 3px 1px #1c1d1d;
+  padding-top: 2px;
+  margin-right: 2px;
+  margin-bottom: 7px;
+}
 .info-content .memory span {
-  width: 10%;
-  text-align: left;
+  width: 50%;
+  height: 20px;
+  border: 2px solid rgb(74, 73, 73);
+  border-radius: 16px;
+  background-color: rgb(34, 34, 34);
+  text-align: center;
+  box-shadow: 0 1px 4px 1px rgb(28, 29, 29);
+  padding-top: 2px;
+  margin-right: 2px;
 }
 .info-parent .cpu-current,
 .info-parent .memory-current {
@@ -459,7 +495,7 @@ export default {
 
 .info-header {
   width: 70%;
-  margin-left: 10px;
+  margin-left: 5px;
   grid-column: 3/5;
   grid-row: 1/2;
   display: flex;
@@ -467,12 +503,12 @@ export default {
   align-items: center;
 }
 .info-header span {
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  color: #fff;
+  color: #d3d3d3;
 }
 .info-header .min-title {
-  margin-left: 20px;
+  margin-left: 15px;
 }
 .info-titles {
   width: 70%;
@@ -486,9 +522,9 @@ export default {
 .info-titles span {
   width: 100%;
   text-align: left;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #d3d3d3;
 }
 
 .btn-box {
@@ -513,11 +549,10 @@ export default {
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
-  color: #fff;
+  color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
-    inset 1px 1px 3px 1px rgb(92, 114, 92);
+  box-shadow: 0 1px 2px 1px #353e39, inset 1px 1px 3px 1px #546c5f;
 }
 .next-btn:hover,
 .back-btn:hover {
@@ -536,5 +571,6 @@ export default {
 }
 .faildreq {
   color: rgb(225, 54, 54) !important;
+  border: 1px solid rgb(225, 54, 54) !important;
 }
 </style>

@@ -37,9 +37,9 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === this.selectedPlugin?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -53,9 +53,9 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === this.selectedPlugin?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -74,14 +74,15 @@ export default {
       isTestnetActive: false,
       testnetPlugins: [],
       selectedNetworks: null,
-      itemSelectedToInstall: false,
     };
   },
   computed: {
     ...mapGetters({
       plugins: "installationPlugins",
+      selectedPlugin: "getSelectedPlugin",
     }),
   },
+
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
@@ -106,8 +107,8 @@ export default {
         this.isTestnetActive = true;
       }
     },
-    selectItemToInstall() {
-      this.itemSelectedToInstall = !this.itemSelectedToInstall;
+    selectItemToInstall(item) {
+      this.$store.commit("mutatedSelectedPlugin", item);
     },
   },
 };
@@ -135,7 +136,7 @@ export default {
   box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
 .select-box #selector {
-  width: 65%;
+  width: 85%;
   height: 80%;
   border: none;
   border-radius: 5px;
@@ -192,19 +193,20 @@ export default {
 .testnet-plugin {
   width: 100%;
   height: 100%;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width: 54%;
-  height: 80%;
+  width: 52%;
+  height: 79%;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
-  width: 58% !important;
-  height: 86% !important;
+  width: 53%;
+  height: 82%;
   transition: 0.2s;
 }
 .selectedItem {
