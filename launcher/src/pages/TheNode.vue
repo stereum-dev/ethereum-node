@@ -56,7 +56,7 @@
 import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
+import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
