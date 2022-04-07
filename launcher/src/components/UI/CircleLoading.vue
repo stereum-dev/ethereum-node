@@ -2,8 +2,10 @@
   <div class="progress-box">
     <div class="progress">
       <div class="color"></div>
-      <p v-if="active">CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
-      <p v-if="!active">{{ this.message }}</p>
+      <span v-if="active"
+        >CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</span
+      >
+      <span v-if="!active">{{ this.message }}</span>
       <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
     </div>
   </div>
@@ -72,40 +74,41 @@ dialog {
 /* TEST*/
 
 .progress-box {
-  width: 83%;
+  width: 70%;
   height: 100%;
   display: flex;
-  justify-content:flex-end;
-  align-items: flex-start;
-
-  
+  justify-content: center;
+  align-items: center;
 }
 
 .progress {
   position: relative;
-  height: 40%;
-  width: 81%;
-  border-radius: 15px;
+  height: 32%;
+  width: 92%;
+  border: 3px solid #6e8582;
+  box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
+  border-radius: 20px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-.progress p {
-  font-size: 0.65rem;
+.progress span {
+  font-size: 0.7rem;
   font-weight: 800;
   color: rgb(255, 255, 255);
   position: relative;
   text-align: left;
-  margin: 1px auto 0 5px;
+  margin-left: 10px;
+  margin: 2px 0 0 10px;
 }
 
 .progress .color {
   position: absolute;
-  background-color: #2f83c3;
+  background-color: #0f558a;
   width: 0px;
-  height: 20px;
-  border-radius: 15px;
+  height: 100%;
+  border-radius: 20px;
   animation: progres 5s linear;
   animation-fill-mode: forwards;
 }
