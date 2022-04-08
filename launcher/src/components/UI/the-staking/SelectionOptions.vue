@@ -4,7 +4,7 @@
       <div class="selection-row">
         <div class="row-content">
           <img
-            src="../../../../public/Img/icon/the-staking/option-graffiti.png"
+            src="../../../../public/img/icon/the-staking/option-graffiti.png"
             alt="icon"
           />
           <span>GRAFITI</span>

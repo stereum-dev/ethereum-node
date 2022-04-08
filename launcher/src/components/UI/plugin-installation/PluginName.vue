@@ -20,7 +20,7 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSEN NETWORK</span>
+                      <span>CHOSEN NETWORK</span>
                     </div>
                     <div class="none">
                       <span>{{ selectedPlugin.network }}</span>
@@ -48,7 +48,11 @@
                     <span>CHANGE INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
-                    <span>{{ selectedPlugin.path }}</span>
+                    <input
+                      type="text"
+                      v-model="inputPath"
+                      
+                    />
                   </div>
                 </div>
               </div>
@@ -116,16 +120,13 @@ export default {
 
   data() {
     return {
+      inputPath: "",
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      testnetIcon: require("../../../../public/Img/icon/click-installation/testnet-circle.png"),
-      mainnetIcon: require("../../../../public/Img/icon/click-installation/mainnet-circle.png"),
+      testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
+      mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
-  },
-  updated() {
-    console.log(this.getCpuClass);
-    console.log(this.getMemoryClass);
   },
   computed: {
     ...mapGetters({
@@ -151,6 +152,15 @@ export default {
     if (Object.keys(this.selectedPlugin).length === 0) {
       this.$router.push("/clickinstall");
     }
+  },
+  methods: {
+    getNewPath() {
+      if (this.inputPath.length === 0) {
+        this.selectedPlugin.path === this.inputPath;
+      } else {
+        this.inputPath;
+      }
+    },
   },
 };
 </script>
@@ -392,13 +402,21 @@ export default {
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
-.change-installation .change-box span {
+.change-box input {
+  width: 100%;
+  height: 85%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-left: 10px;
+  padding-left: 10px;
 }
 .system-box {
   width: 48%;
