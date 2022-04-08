@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="Img/icon/PLUS_ICON.png" alt="" />
+              <img src="../../../public/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -147,7 +147,7 @@ export default {
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
       },
-      imgTrash: "./Img/icon/TRASH_CAN.png",
+      imgTrash: "./img/icon/TRASH_CAN.png",
     };
   },
   created() {
@@ -161,7 +161,6 @@ export default {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
       );
-      console.log(this.selectedConnection);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
       this.model.user.value = this.selectedConnection.user;
@@ -172,9 +171,7 @@ export default {
     },
     addModel() {
       const newConnection = this.createConnection();
-      console.log(newConnection);
       this.connections.push(newConnection);
-
       this.selectedConnection = newConnection;
       this.selectedName = this.selectedConnection.name;
 
@@ -194,7 +191,6 @@ export default {
       return storableConnections;
     },
     deleteModel: async function () {
-      console.log(this.selectedConnection);
       let currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
         return currSelected != conn.name;
@@ -229,7 +225,6 @@ export default {
           storageSavedConnections.savedConnections
         );
       }
-      console.log(savedConnections);
       this.connections = savedConnections;
     },
     writeSettings: async function () {
@@ -249,9 +244,9 @@ export default {
 
     mouseOver(val) {
       if (val === "over") {
-        this.imgTrash = "./Img/icon/TRASH_CAN2.png";
+        this.imgTrash = "./img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = "./Img/icon/TRASH_CAN.png";
+        this.imgTrash = "./img/icon/TRASH_CAN.png";
       }
     },
     showBDialog() {
@@ -277,9 +272,7 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        console.log(`${err.name} occurred:\n ${err.message}`);
         //stay on page if error occurs
-
         //return;
       }
       this.$emit("page", "welcome-page");

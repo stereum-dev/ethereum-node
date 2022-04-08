@@ -50,7 +50,7 @@
 
 <script>
 import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
-import SidebarParent from "./NodeSidebarParent.vue";
+import SidebarParent from "./the-node/NodeSidebarParent.vue";
 import DropZone from "../UI/node-manage/DropZone.vue";
 
 export default {

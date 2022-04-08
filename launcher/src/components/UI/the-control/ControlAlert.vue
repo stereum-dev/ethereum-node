@@ -4,13 +4,13 @@
       <div class="warning">
         <div class="yellow-warning">
           <img
-            src="../../../../public/Img/icon//node-journal-icons/yellow-warning1.png"
+            src="../../../../public/img/icon//node-journal-icons/yellow-warning1.png"
             alt="icon"
           />
         </div>
         <div class="red-warning">
           <img
-            src="../../../../public/Img/icon//node-journal-icons/red-warning.png"
+            src="../../../../public/img/icon//node-journal-icons/red-warning.png"
             alt="icon"
           />
         </div>
@@ -22,7 +22,7 @@
         <div class="table-row-yellow" v-if="item.description === 'SYSTEM LOAD'">
           <div class="warning-icon">
             <img
-              src="../../../../public/Img/icon//node-journal-icons/yellow-warning1.png"
+              src="../../../../public/img/icon//node-journal-icons/yellow-warning1.png"
               alt="icon"
             />
           </div>
@@ -34,7 +34,7 @@
         <div class="table-row-red" v-else>
           <div class="warning-icon">
             <img
-              src="../../../../public/Img/icon//node-journal-icons/red-warning.png"
+              src="../../../../public/img/icon//node-journal-icons/red-warning.png"
               alt="icon"
             />
           </div>

@@ -16,7 +16,7 @@
           </div>
           <div class="cube">
             <img
-              src="../../../../public/Img/icon/the-staking/cube-icon.png"
+              src="../../../../public/img/icon/the-staking/cube-icon.png"
               alt="icon"
             />
             <div class="cube-value">
