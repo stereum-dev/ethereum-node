@@ -5,13 +5,13 @@
         <img
           v-if="isTestnetActive"
           class="textnet-icon"
-          src="../../../../public/Img/icon/click-installation/testnet-icon.png"
+          src="../../../../public/img/icon/click-installation/testnet-icon.png"
           alt="icon"
         />
         <img
           v-if="isMainnetActive"
           class="mainnet-icon"
-          src="../../../../public/Img/icon/click-installation/mainnet-icon.png"
+          src="../../../../public/img/icon/click-installation/mainnet-icon.png"
           alt="icon"
         />
       </div>
@@ -20,7 +20,7 @@
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
       >
-        <option value="mainnet">Mainnet</option>
+        <option value="mainnet" selected>Mainnet</option>
         <option value="testnet">Testnet</option>
       </select>
     </div>
