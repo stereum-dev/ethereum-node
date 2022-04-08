@@ -3,16 +3,6 @@
     <section id="header">
       <h2>WELCOME</h2>
     </section>
-    <div class="containerInstall">
-      <div class="col" v-for="(install, index) in installation" :key="index">
-        <router-link class="lintTtl" :to="install.path"
-          ><button-installation
-            :img="install.img"
-            :url="install.img2"
-          ></button-installation
-        ></router-link>
-      </div>
-    </div>
     <div class="middle-box">
       <div id="txt">
         <p>
@@ -23,6 +13,16 @@
       </div>
       <div class="progress-container">
         <circle-loading :message="message" :open="running"></circle-loading>
+      </div>
+    </div>
+    <div class="containerInstall">
+      <div class="col" v-for="(install, index) in installation" :key="index">
+        <router-link class="lintTtl" :to="install.path"
+          ><button-installation
+            :img="install.img"
+            :url="install.img2"
+          ></button-installation
+        ></router-link>
       </div>
     </div>
   </section>

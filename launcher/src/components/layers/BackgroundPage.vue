@@ -2,7 +2,11 @@
   <div id="main">
     <section id="containerBg">
       <section class="img-box">
-        <img class="imgBg" src="../../../public/img/icon/stereum-logo/stereum-logo.png" alt="icon" />
+        <img
+          class="imgBg"
+          src="../../../public/img/icon/stereum-logo/stereum-logo.png"
+          alt="icon"
+        />
 
         <slot></slot>
       </section>
@@ -21,8 +25,8 @@ export default {};
   top: 0;
   left: 0;
   margin: auto;
-  width: 95%;
-  height: 95%;
+  width: 99%;
+  height: 99%;
   background-color: #336666;
 }
 
@@ -30,6 +34,10 @@ export default {};
   background-color: #000;
   width: 100%;
   height: 100%;
+  min-width: 972;
+  max-width: 1024px;
+  max-height: 576px;
+  min-height: 576px;
   position: fixed;
   z-index: -1;
   top: 0;
