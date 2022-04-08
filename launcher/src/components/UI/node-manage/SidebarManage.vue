@@ -31,6 +31,7 @@
           <div class="plugin-item">
             <div class="cloud-item">
               <img
+                onmousedown="return false"
                 src="../../../../public/img/icon/manage-node-icons/cloud-1.png"
                 alt="icon"
               />
