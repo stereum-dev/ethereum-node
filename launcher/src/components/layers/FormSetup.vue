@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="Img/icon/PLUS_ICON.png" alt="" />
+              <img src="../../../public/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -273,7 +273,6 @@ export default {
         });
       } catch (err) {
         //stay on page if error occurs
-
         //return;
       }
       this.$emit("page", "welcome-page");
