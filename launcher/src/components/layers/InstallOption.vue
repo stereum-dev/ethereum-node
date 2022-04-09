@@ -10,14 +10,6 @@
       <div class="plugin-container">
         <vue-select> </vue-select>
       </div>
-      <div class="btn-container">
-        <div @click="clickedToInstall">
-          <button id="instal">INSTALL</button>
-        </div>
-        <router-link :to="{ path: '/welcome' }">
-          <button id="back">BACK</button>
-        </router-link>
-      </div>
     </div>
     <div class="btn-container">
       <router-link class="back-box" :to="{ path: '/welcome' }">
