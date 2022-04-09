@@ -8,7 +8,7 @@
         <div class="plugins-table-bg">
           <div class="arrow-up">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
               alt=""
             />
           </div>
@@ -27,7 +27,7 @@
           </div>
           <div class="arrow-down">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
               alt="icon"
             />
           </div>

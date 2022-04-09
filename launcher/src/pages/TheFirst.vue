@@ -99,11 +99,11 @@ export default {
 <style scoped>
 #container {
   border-radius: 40px;
-  height: 95%;
-  width: 95%;
+  height: 100%;
+  width: 100%;
   margin: auto;
   position: relative;
-  top: 2%;
+  top:0;
   left: 0;
   box-sizing: border-box;
   background-color: #336666;
@@ -117,6 +117,7 @@ export default {
   background-color: #000;
   width: 100%;
   height: 100%;
+  border-radius:40px;
   left: 0;
   top: 0;
   position: fixed;
