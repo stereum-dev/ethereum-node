@@ -299,7 +299,7 @@ export default {
 
 .change-menu {
   width: 93.3%;
-  height: 96.9%;
+  height: 97%;
   margin-top: 6px;
   grid-row: 1/4;
   grid-column: 4;

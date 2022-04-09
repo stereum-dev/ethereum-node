@@ -192,8 +192,7 @@ export default {
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
-.config-btns .config-priority:hover,
-.router-box .home-btn:hover {
+.config-btns .config-priority:hover {
   background-color: #2c2c2c;
   box-shadow: none;
 }
@@ -237,7 +236,7 @@ export default {
 }
 .router-box .home-btn {
   width: 100%;
-  text-decoration: none;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

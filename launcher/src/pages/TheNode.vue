@@ -205,7 +205,6 @@ export default {
   grid-column: 4;
   grid-row: 1/4;
   height: 99.8%;
-  max-height: 600px;
 }
 
 .footer {

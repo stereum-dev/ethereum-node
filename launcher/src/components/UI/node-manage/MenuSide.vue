@@ -56,9 +56,14 @@ export default {};
   border-bottom-right-radius: 100% 15%;
   border-top-left-radius: 100% 15%;
 }
+.menu a {
+  text-decoration: none;
+  background-color: transparent;
+}
 .menu .home-icon {
   border-radius: 100%;
   outline-style: none;
+  background-color: transparent;
   width: 25px;
   margin-top: 50px;
 }
