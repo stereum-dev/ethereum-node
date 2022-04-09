@@ -2,14 +2,14 @@
   <div class="cpuParent">
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
-      <chart-line></chart-line>
+      <chart-grid></chart-grid>
     </node-bg>
   </div>
 </template>
 <script>
-import ChartLine from "../components/UI/the-control/ChartLine.vue";
+import ChartGrid from "../components/UI/the-chart/ChartGrid.vue";
 export default {
-  components: { ChartLine },
+  components: { ChartGrid },
 };
 </script>
 
