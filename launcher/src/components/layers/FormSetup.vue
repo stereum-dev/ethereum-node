@@ -567,7 +567,7 @@ input {
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 17%;
+  left: 16.5%;
   bottom: 15%;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;

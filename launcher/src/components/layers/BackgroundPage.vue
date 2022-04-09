@@ -25,8 +25,8 @@ export default {};
   top: 0;
   left: 0;
   margin: auto;
-  width: 99%;
-  height: 99%;
+  width: 100%;
+  height: 100%;
   background-color: #336666;
 }
 
@@ -38,6 +38,7 @@ export default {};
   max-width: 1024px;
   max-height: 576px;
   min-height: 576px;
+  border-radius: 40px;
   position: fixed;
   z-index: -1;
   top: 0;
@@ -49,8 +50,11 @@ export default {};
   flex-direction: column;
 }
 .img-box {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,5 +1,5 @@
 <template>
-  <section class="Parent_ctnInstal">
+  <section class="welcome-parent">
     <section id="header">
       <h2>WELCOME</h2>
     </section>
@@ -15,8 +15,12 @@
         <circle-loading :message="message" :open="running"></circle-loading>
       </div>
     </div>
-    <div class="containerInstall">
-      <div class="col" v-for="(install, index) in installation" :key="index">
+    <div class="item-container">
+      <div
+        class="item-column"
+        v-for="(install, index) in installation"
+        :key="index"
+      >
         <router-link class="lintTtl" :to="install.path"
           ><button-installation
             :img="install.img"
@@ -79,14 +83,14 @@ export default {
 };
 </script>
 <style scope>
-.Parent_ctnInstal {
+.welcome-parent {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 5% 15% 30% 50%;
 }
-.containerInstall {
+.item-container {
   grid-column: 1/7;
   grid-row: 4;
   width: 80%;
@@ -97,10 +101,10 @@ export default {
   border-radius: 40px;
   flex-wrap: nowrap;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
-.col {
+.item-item-columnumn {
   width: 28%;
   height: 100%;
   box-sizing: border-box;
@@ -137,7 +141,7 @@ export default {
   resize: both;
   box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
   background: #2a4243;
-  color: #fff;
+  color: rgb(221, 221, 221);
   padding-bottom: 10px;
   border-radius: 40px;
   border: 4px solid #6e8582;
