@@ -10,13 +10,15 @@
       <div class="plugin-container">
         <vue-select> </vue-select>
       </div>
+      <div class="btn-container">
+        <div @click="clickedToInstall">
+          <button id="instal">INSTALL</button>
+        </div>
+        <router-link :to="{ path: '/welcome' }">
+          <button id="back">BACK</button>
+        </router-link>
+      </div>
     </div>
-    <div @click="clickedToInstall">
-      <button id="instal">INSTALL</button>
-    </div>
-    <router-link :to="{ path: '/welcome' }">
-      <button id="back">BACK</button>
-    </router-link>
   </div>
 </template>
 
@@ -69,10 +71,9 @@ export default {
 .parent {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows:10%;
 }
 .header {
   padding: 1%;
@@ -139,6 +140,7 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 
 #back {
@@ -156,6 +158,7 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 #instal:hover,
 #back:hover {

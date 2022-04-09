@@ -56,7 +56,7 @@ export default {
   background: #1c2626;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-top:15px;
+  padding-top: 10px;
 }
 .tutorial-table::-webkit-scrollbar {
   width: 1px;
@@ -64,13 +64,13 @@ export default {
 
 .table-row {
   display: flex;
-  width: 95%;
+  width: 98%;
   height: 16%;
   margin-top: 2px;
   background-color: #3e5757;
   border: 3px solid#3E5757;
   border-radius: 5px;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -78,16 +78,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #3c7474;
-  width: 25px;
-  min-width: 25px;
+  width: 23%;
   text-align: left;
   border-right: 2px solid #3e5757;
 }
 
 .camera-icon img {
-  width: 24px;
-  height: 20px;
+  width: 22px;
+  height: 19px;
 }
 
 .row-content {
@@ -95,8 +93,8 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #272a2d;
-  height: 20px;
-  width: 70%;
+  height: 100%;
+  width: 77%;
 }
 
 .row-content p {
