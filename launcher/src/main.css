@@ -1,32 +1,8 @@
 
-  .tournament{    
-    height: 12px !important;
-    width: 12px !important;    
-    background-image: url('/img/icons/tournament.png') !important;
-    background-size: cover;
-    margin-right: 14px;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');  
 
-  .league{    
-    height: 12px !important;
-    width: 12px !important;    
-    background-image: url('/img/icons/league.png') !important;
-    background-size: cover;
-    margin-right: 14px;
-  }
-
-  .game {    
-    height: 12px !important;
-    width: 12px !important;    
-    background-image: url('/img/icons/game.png') !important;
-    background-size: cover;
-    margin-right: 14px;
-  }
-
-  .switch {    
-    min-width: 40px;
-  }
-  body{
+  html body{
     padding: 0;
     margin: 0;
+    font-family: 'Noto Sans', sans-serif;
   }

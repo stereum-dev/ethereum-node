@@ -172,7 +172,6 @@
   color: #fff;
   font-size: 10px;
   font-weight: 600;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 .attentions-value,
 .missed-value,

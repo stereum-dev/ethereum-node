@@ -14,5 +14,7 @@ export default {
 };
 </script>
 <style scoped>
-
+#app {
+  font-family: "noto sans";
+}
 </style>

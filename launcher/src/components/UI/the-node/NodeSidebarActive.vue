@@ -108,7 +108,6 @@ export default {
 .installed-badge span {
   height: 50%;
   align-self: center;
-  font-family: sans-serif;
   font-size: 9px;
   font-weight: 800;
   color: rgb(19, 47, 43);
