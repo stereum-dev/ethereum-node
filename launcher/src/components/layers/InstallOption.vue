@@ -154,6 +154,7 @@ export default {
   width: 15%;
   height: 100%;
   margin-left: 50px;
+  text-align: right;
 }
 #instal {
   width: auto;
