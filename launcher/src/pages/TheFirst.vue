@@ -1,9 +1,9 @@
 <template>
   <div class="parent">
     <div id="container">
-      <section @click="activePage">
-        <base-logo mode="logo" :link="link"> </base-logo>
-      </section>
+      <div class="baselogo-box" @click="activePage">
+        <base-logo :link="link"> </base-logo>
+      </div>
 
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
       <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
@@ -103,10 +103,14 @@ export default {
   width: 100%;
   margin: auto;
   position: relative;
-  top:0;
+  top: 0;
   left: 0;
   box-sizing: border-box;
   background-color: #336666;
+}
+.baselogo-box {
+  width: 100%;
+  height: 100%;
 }
 .lang {
   position: absolute;
@@ -117,7 +121,7 @@ export default {
   background-color: #000;
   width: 100%;
   height: 100%;
-  border-radius:40px;
+  border-radius: 40px;
   left: 0;
   top: 0;
   position: fixed;
