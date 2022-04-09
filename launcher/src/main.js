@@ -24,8 +24,8 @@ app.component("node-bg", NodeBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 
+
 app.use(store);
 app.use(router);
 app.use(i18n);
-
 app.mount("#app");

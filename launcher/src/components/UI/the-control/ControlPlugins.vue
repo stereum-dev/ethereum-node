@@ -1,7 +1,9 @@
 <template>
   <div class="plugins-parent">
     <div class="shape"></div>
+
     <slot></slot>
+
   </div>
 </template>
 <style scoped>

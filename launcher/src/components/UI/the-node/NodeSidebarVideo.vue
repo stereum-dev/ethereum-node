@@ -3,7 +3,7 @@
     <div class="tutorial-table">
       <div class="table-row" v-for="(item, index) in configData" :key="index">
         <div class="camera-icon">
-          <img src="/Img/icon/cam-icon.png" alt="camera-icon" />
+          <img src="/img/icon/cam-icon.png" alt="camera-icon" />
         </div>
         <div class="row-content">
           <p>{{ item.name }}</p>
@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="round-icon">
-      <img src="/Img/icon/round-icon.png" alt="round-icon" />
+      <img src="/img/icon/round-icon.png" alt="round-icon" />
     </div>
   </div>
 </template>

@@ -37,12 +37,12 @@ export default {
   components: { BaseLogo, LangButton, LangDialog },
 
   emit: ["open", "page"],
-  created(){
+  created() {
     this.checkSettings();
   },
   data() {
     return {
-      link: "stereum_logo_blinking.gif",
+      link: "stereum-logo-blinking.gif",
       flag: "SelectLang.png",
       language: "",
     };
@@ -61,7 +61,7 @@ export default {
       this.language = lang;
       this.flag = langSelect;
       this.hideDialog();
-      this.link = "stereum_logo_extern.png";
+      this.link = "stereum-logo-extern.png";
       this.updateSettings(lang, langSelect);
     },
     activePage() {
@@ -71,16 +71,25 @@ export default {
         this.$emit("page", "SetupServer");
       }
     },
-    checkSettings : async function(){
-      const savedConfig = await ControlService.readConfig()
-      if(savedConfig !== undefined && savedConfig.savedLanguage !== undefined){
-        this.setLang(savedConfig.savedLanguage.language, savedConfig.savedLanguage.flag);
+    checkSettings: async function () {
+      const savedConfig = await ControlService.readConfig();
+      if (
+        savedConfig !== undefined &&
+        savedConfig.savedLanguage !== undefined
+      ) {
+        this.setLang(
+          savedConfig.savedLanguage.language,
+          savedConfig.savedLanguage.flag
+        );
         this.activePage();
       }
     },
-    updateSettings : async function(lang, langSelect){
-      let prevConf = await ControlService.readConfig()
-      const conf = {...prevConf, savedLanguage: {language: lang, flag: langSelect}};
+    updateSettings: async function (lang, langSelect) {
+      let prevConf = await ControlService.readConfig();
+      const conf = {
+        ...prevConf,
+        savedLanguage: { language: lang, flag: langSelect },
+      };
       await ControlService.writeConfig(conf);
     },
   },
