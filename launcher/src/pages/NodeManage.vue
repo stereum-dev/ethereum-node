@@ -214,16 +214,16 @@ export default {
   background-color: transparent;
 }
 .preset-modal {
-  width: 80.6vw;
-  height: 87.7vh;
+  width: 81.5%;
+  height:86.4%;
   border-radius: 35px;
   z-index: 5;
   position: absolute;
-  top: 1.5%;
+  top: 9%;
   left: 18%;
 }
 .drop-parent {
-  height: 88vh;
+  height: 100%;
   margin: 5px 4px 0 0;
   grid-column: 2;
   grid-row: 1/4;
@@ -234,17 +234,21 @@ export default {
 .modal-parent {
   grid-column: 2;
   grid-row: 1/4;
-  width: 45.5vw;
-  height: 88vh;
+  width: 45.5%;
+  height: 99%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 2%;
+  left: 18.5%;
   z-index: 1;
 }
 .modal-bg {
-  width: 100vw;
-  height: 87.9vh;
+  width: 100%;
+  height: 86.7%;
+  position: absolute;
+  top: 7.5%;
 }
 .service {
   width: 98%;

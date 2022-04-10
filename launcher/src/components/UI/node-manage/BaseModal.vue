@@ -17,8 +17,8 @@ export default {
 </script>
 <style scoped>
 .modal-bg {
-  width: 48.5vw;
-  height: 87.6vh;
+  width: 100%;
+  height: 74%;
   background-color: #181818;
   display: flex;
   justify-content: center;
@@ -26,8 +26,8 @@ export default {
   z-index: 99;
 }
 .modal-box {
-  width: 94%;
-  height: 94%;
+  width: 95%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;

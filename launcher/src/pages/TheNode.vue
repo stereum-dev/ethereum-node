@@ -106,7 +106,7 @@ z-index: 49;
   height: 90%;
   border: 4px solid #979797;
   border-radius: 0 35px 35px 35px;
-  grid-template-columns: 18% 46% 21% 15%;
+  grid-template-columns: 18% 46% 20% 16%;
   grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);
@@ -124,7 +124,8 @@ z-index: 49;
   border-radius: 0 25px 25px 10px;
 }
 .trapezoid-parent {
-  height: 88.5vh;
+  width: 100%;
+  height: 100%;
   grid-column: 2;
   grid-row: 1/4;
   background-color: #000000;
@@ -133,8 +134,9 @@ z-index: 49;
   justify-content: space-evenly;
 }
 .modal-parent {
-  width: 44.6vw;
-  height: 88.2vh;
+  width: 45.5%;
+  height: 85.6%;
+  margin: 0 auto;
   display: flex;
   grid-column: 2;
   grid-row: 1/4;
@@ -142,10 +144,10 @@ z-index: 49;
   z-index: 1;
 }
 .modal-bg {
-  height: 88.2vh;
+  height: 100%;
 }
 .service {
-  width: 97.7%;
+  width: 98%;
   height: 98.2%;
   grid-column: 3;
   grid-row: 1/4;
@@ -175,7 +177,7 @@ z-index: 49;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: .9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;

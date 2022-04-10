@@ -220,6 +220,9 @@ export default {
   width: 20px;
   height: 20px;
   background-color: #336666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .table-item .right-icon img {
   width: 15px;

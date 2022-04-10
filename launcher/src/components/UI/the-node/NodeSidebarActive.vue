@@ -83,7 +83,7 @@ export default {
 }
 
 .active-badge {
-  width: 45%;
+  width: 50%;
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 40px 0 0 40px;
@@ -94,7 +94,7 @@ export default {
   cursor: pointer;
 }
 .installed-badge {
-  width: 45%;
+  width: 50%;
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 0 40px 40px 0;
@@ -110,17 +110,17 @@ export default {
   align-self: center;
   font-size: 9px;
   font-weight: 800;
-  color: rgb(19, 47, 43);
+  color: rgb(26, 30, 29);
 }
 .active-badge:hover,
 .installed-badge:hover {
   background-color: #373737;
-  border: 1px solid #212121;
   box-shadow: 0 1px 3px 1px #373737;
 }
 .active-badge:active,
 .installed-badge:active {
   box-shadow: none;
+  border: 1px solid #212121;
 }
 .active-badge:hover span,
 .installed-badge:hover span {
@@ -133,7 +133,7 @@ export default {
   box-shadow: none !important;
 }
 .spanColor {
-  color: rgb(197, 175, 7) !important;
+  color: rgb(205, 205, 204) !important;
 }
 .active-table {
   width: 100%;

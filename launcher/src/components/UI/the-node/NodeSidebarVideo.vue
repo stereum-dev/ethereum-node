@@ -49,14 +49,14 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 80%;
+  height: 70%;
   width: 90%;
   border: 3px solid#232a2a;
-  border-radius: 18px;
-  background: #1c2626;
+  border-radius: 10px;
+  background: #54898a;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-top: 10px;
+  padding: 5px 0;
 }
 .tutorial-table::-webkit-scrollbar {
   width: 1px;
@@ -67,20 +67,26 @@ export default {
   width: 98%;
   height: 16%;
   margin-top: 2px;
-  background-color: #3e5757;
-  border: 3px solid#3E5757;
+  background-color: #314242;
+  border: 3px solid#314242;
   border-radius: 5px;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
-
+.table-row:hover {
+  border: 3px solid#081e34;
+}
+.table-row:hover .camera-icon {
+ border-right: 2px solid #081e34;
+}
 .camera-icon {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 23%;
   text-align: left;
-  border-right: 2px solid #3e5757;
+  border-right: 2px solid #314242;
 }
 
 .camera-icon img {
@@ -108,14 +114,15 @@ export default {
 }
 .round-icon {
   width: 100%;
-  height: 15%;
-  margin: 0 auto;
+  height: 20%;
+  margin: 5px auto 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .round-icon img {
-  width: 30px;
-  height: 30px;
+  width: 35%;
+  height: 35%px;
 }
 </style>
