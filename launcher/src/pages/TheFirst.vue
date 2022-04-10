@@ -107,6 +107,7 @@ export default {
   left: 0;
   box-sizing: border-box;
   background-color: #336666;
+  border:3px solid #989898;
 }
 .baselogo-box {
   width: 100%;

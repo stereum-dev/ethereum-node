@@ -104,7 +104,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.item-item-columnumn {
+.item-column {
   width: 28%;
   height: 100%;
   box-sizing: border-box;

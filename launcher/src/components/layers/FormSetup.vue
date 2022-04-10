@@ -287,6 +287,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .server-box {
   width: 100%;
@@ -294,6 +295,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 7% 14% 59% 20%;
+ 
 }
 #header {
   grid-column: 1/4;
@@ -358,6 +360,7 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+   
 }
 .priority {
   z-index: 200;

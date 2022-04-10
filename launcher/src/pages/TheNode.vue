@@ -1,5 +1,5 @@
 <template>
-  <section id="parent">
+  <div class="router-view">
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
@@ -49,7 +49,7 @@
         </div>
       </div>
     </node-bg>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -94,11 +94,6 @@ export default {
 </script>
 
 <style scoped>
-#parent {
-  box-sizing: border-box;
-  padding: 0;
-}
-
 #head {
   position: fixed;
   top: 0;
@@ -106,13 +101,13 @@ export default {
 }
 .node-parent {
   display: grid;
-  width: 99.1vw;
-  height: 91.5vh;
+  width: 99%;
+  height: 90%;
+  border: 4px solid rgb(165, 165, 165);
+  border-radius: 0 35px 26px 26px;
   grid-template-columns: 18% 46% 21% 15%;
-  grid-template-rows: repeat(3, 32%) 4%;
+  grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
-  position: absolute;
-  top: 1px;
 }
 
 .journal-box {
@@ -208,12 +203,13 @@ export default {
 }
 
 .footer {
-  width: 99.1vw;
+  width: 100%;
+  height: 87%;
   color: white;
   grid-column: 1/5;
   grid-row: 4;
   background-color: rgb(40, 40, 40);
-  border-radius: 0 0 1.9rem 1.9rem;
-  position: relative;
+  border-bottom-left-radius:40px;
+  border-bottom-right-radius:40px;
 }
 </style>

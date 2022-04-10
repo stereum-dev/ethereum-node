@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <div>
     <background-page> <form-setup @page="page"></form-setup></background-page>
-  </section>
+  </div>
 </template>
 <script>
 import FormSetup from "../components/layers/FormSetup.vue";
@@ -15,3 +15,4 @@ export default {
   },
 };
 </script>
+<style scoped></style>

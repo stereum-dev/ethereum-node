@@ -1,27 +1,20 @@
 <template>
-  <div class="ctpParent">
+  <div class="control-parent">
     <node-bg>
-    <control-grid></control-grid>
+      <control-grid></control-grid>
     </node-bg>
-    <node-header id="head">
-    
-    </node-header>
+    <node-header id="head"> </node-header>
   </div>
 </template>
 
 <script>
-import ControlGrid from '../components/UI/the-control/ControlGrid.vue';
+import ControlGrid from "../components/UI/the-control/ControlGrid.vue";
 export default {
-  components:{ControlGrid}
-}
+  components: { ControlGrid },
+};
 </script>
 
 <style scoped>
-#parent {
-  box-sizing: border-box;
-  padding: 0;
-}
-
 #head {
   position: fixed;
   top: 0;

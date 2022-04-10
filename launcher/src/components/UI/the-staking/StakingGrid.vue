@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <div class="staking-parent">
-      <div class="staking-green-bg">
-        <div class="staking-black-bg">
-          <key-table></key-table>
-          <time-reward></time-reward>
-          <selection-options></selection-options>
-          <validators-box></validators-box>
-          <div class="footer"></div>
-        </div>
+  <div class="staking-parent">
+    <div class="staking-green-bg">
+      <div class="staking-black-bg">
+        <key-table></key-table>
+        <time-reward></time-reward>
+        <selection-options></selection-options>
+        <validators-box></validators-box>
+        <div class="footer"></div>
       </div>
     </div>
   </div>
@@ -30,25 +28,25 @@ export default {
 </script>
 <style scoped>
 .staking-parent {
-  position: fixed;
-  left: 0;
-  top: 7.5%;
-  width: 100vw;
-  height: 93vh;
+  width: 100%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-top: 27px;
 }
 .staking-green-bg {
   width: 100%;
-  height: 100vh;
+  height: 97%;
+  border-radius: 0 0 35px 35px;
   background-color: #324b3e;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 .staking-black-bg {
-  position: absolute;
-  top: 2px;
-  width: 98%;
-  height: 97%;
+  width: 99%;
+  height: 97.5%;
   background-color: #000000;
   border: 4px solid rgb(121, 121, 121);
   border-radius: 0 30px 30px 30px;

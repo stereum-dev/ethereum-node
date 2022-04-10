@@ -21,6 +21,7 @@ export default {};
 <style scoped>
 #containerBg {
   border-radius: 40px;
+  border: 3px solid #989898;
   box-sizing: border-box;
   top: 0;
   left: 0;
@@ -34,15 +35,11 @@ export default {};
   background-color: #000;
   width: 100%;
   height: 100%;
-  min-width: 972;
-  max-width: 1024px;
-  max-height: 576px;
-  min-height: 576px;
   border-radius: 40px;
   position: fixed;
   z-index: -1;
   top: 0;
-  left: 0;
+  left:0;
   box-sizing: border-box;
   display: flex;
   justify-content: center;

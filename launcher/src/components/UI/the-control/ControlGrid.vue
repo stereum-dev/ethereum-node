@@ -61,14 +61,15 @@ export default {
 <style scoped>
 .ctrGridParent {
   display: grid;
-  width: 98.9%;
-  height: 97.5%;
-  border: 6px solid rgb(165, 165, 165);
+  width: 99.1%;
+  height: 90%;
+  background-color: rgb(28, 28, 28);
+  border: 4px solid rgb(165, 165, 165);
   border-radius: 10px 30px 30px 30px;
-  top: 1px;
   grid-template-columns: 24% 59% 17%;
   grid-template-rows: repeat(3, 1fr) 5%;
-  position: relative;
+  z-index: 0;
+  text-align: center;
 }
 
 .plugins-container {
