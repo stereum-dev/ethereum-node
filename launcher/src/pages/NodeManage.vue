@@ -196,12 +196,12 @@ export default {
 .manage-parent {
   display: grid;
   width: 100%;
-  height: 92.3vh;
+  height: 91%;
+  border: 4px solid #979797;
+  border-radius: 0 35px 35px 35px;
   grid-template-columns: 18% 46% 21% 15%;
   grid-template-rows: repeat(3, 32%) 4%;
   grid-row-gap: 1px;
-  position: absolute;
-  top: -5px;
 }
 
 .config-box {

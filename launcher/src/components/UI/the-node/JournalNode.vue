@@ -221,16 +221,17 @@ export default {
   grid-template-rows: repeat(6, 1fr);
 }
 .edit-btn {
-  width: 85%;
+  width: 55%;
   height: 27px;
-  border: 1px solid rgb(38, 38, 38);
+  border: 1px solid rgb(83, 121, 100);
+  justify-self: end;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #2C4030;
-  margin: 5px auto;
-  box-shadow: inset 0 1px 5px 0 rgb(155, 155, 155);
+  box-shadow: inset 0 1px 5px 0 rgb(35, 95, 64),0 1px 2px 1px rgb(17, 17, 17);
+  margin: 5px;
 }
 .edit-btn:hover {
   box-shadow: none;
@@ -246,10 +247,10 @@ export default {
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
-  font-size: 11px;
-  font-weight: 900;
+  font-size: .6rem;
+  font-weight: 800;
   text-align: center;
-  margin-left: 55px;
+  margin-left: 5px;
 }
 .edit-btn img {
   width: 18px;

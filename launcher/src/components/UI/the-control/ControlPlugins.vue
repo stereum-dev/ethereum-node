@@ -3,7 +3,6 @@
     <div class="shape"></div>
 
     <slot></slot>
-
   </div>
 </template>
 <style scoped>
@@ -14,13 +13,13 @@
   border-radius: 0 45px 45px 45px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .shape {
-  width: 80px;
-  height: 43px;
-  background-color: black;
+  width: 36.5%;
+  height: 9%;
+  background-color: rgb(28, 28, 28);
   position: absolute;
   top: 0;
   left: 0;

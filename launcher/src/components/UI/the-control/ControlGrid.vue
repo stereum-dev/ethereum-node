@@ -44,7 +44,7 @@
       <control-alert></control-alert>
     </div>
 
-    <div class="ctrlfooter">FOOTER</div>
+    <div class="footer"></div>
   </div>
 </template>
 
@@ -64,10 +64,10 @@ export default {
   width: 99.1%;
   height: 90%;
   background-color: rgb(28, 28, 28);
-  border: 4px solid rgb(165, 165, 165);
-  border-radius: 10px 30px 30px 30px;
+  border: 4px solid #979797;
+  border-radius: 10px 35px 35px 35px;
   grid-template-columns: 24% 59% 17%;
-  grid-template-rows: repeat(3, 1fr) 5%;
+  grid-template-rows:32% 31% 32% 5%;
   z-index: 0;
   text-align: center;
 }
@@ -82,6 +82,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .dashboard-container {
@@ -116,29 +117,35 @@ export default {
   z-index: 1;
 }
 
-.ctrlfooter {
-  background: rgb(42, 45, 42);
-  color: white;
-  grid-column-start: 1;
-  grid-column-end: 4;
-  border-radius: 0 0 25px 25px;
+.footer {
+  width: 99.8%;
+  height: 99%;
+  margin: 0 auto;
+  grid-column: 1/4;
+  grid-row: 4;
+  background-color: rgb(52, 52, 52);
+  border-bottom-left-radius: 67px 51px;
+  border-bottom-right-radius: 67px 51px;
 }
 .plugins-title {
   width: 40%;
-  height: 22px;
-  background-color: #29322d;
+  height: 4.5%;
+  background-color: #1e3b2b;
   padding: 2px;
-  border: 1px solid #3f5b54;
+  border: 1px solid #4a5150;
   border-radius: 10px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  box-shadow: 0 1px 3px 1px rgb(20, 44, 34);
 }
 .plugins-title span {
-  color: rgb(223, 223, 223);
-  font-size: 16px;
-  font-weight: 900;
+  color: rgb(209, 209, 209);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 .plugins-table-bg {
   width: 90%;
-  height: 85%;
+  height: 83%;
   background-color: #527162;
   border-radius: 35px 35px 45px 45px;
   display: flex;

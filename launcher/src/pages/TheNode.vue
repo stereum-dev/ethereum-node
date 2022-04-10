@@ -101,29 +101,32 @@ export default {
 }
 .node-parent {
   display: grid;
-  width: 99%;
+  width: 100%;
   height: 90%;
-  border: 4px solid rgb(165, 165, 165);
-  border-radius: 0 35px 26px 26px;
+  border: 4px solid #979797;
+  border-radius: 0 35px 35px 35px;
   grid-template-columns: 18% 46% 21% 15%;
   grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
+  background-color: rgb(0, 0, 0);
+  z-index: 5;
 }
 
 .journal-box {
+  width: 100%;
   height: 100%;
-  color: white;
+  color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
   margin-top: 1px;
-  background-color: rgb(24, 24, 24);
-  border-radius: 0 25px 25px 0;
+  background-color: #1c1c1c;
+  border-radius: 0 25px 25px 10px;
 }
 .trapezoid-parent {
   height: 88.5vh;
   grid-column: 2;
   grid-row: 1/4;
-  /* background-color: #17241e; */
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -131,7 +134,6 @@ export default {
 .modal-parent {
   width: 44.6vw;
   height: 88.2vh;
-
   display: flex;
   grid-column: 2;
   grid-row: 1/4;
@@ -200,16 +202,17 @@ export default {
   grid-column: 4;
   grid-row: 1/4;
   height: 99.8%;
-}
 
+}
 .footer {
-  width: 100%;
-  height: 87%;
-  color: white;
+  width: 99.7%;
+  height: 88%;
+  margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
-  background-color: rgb(40, 40, 40);
-  border-bottom-left-radius:40px;
-  border-bottom-right-radius:40px;
+  background-color: #343434;
+  border-bottom-left-radius: 87px 55px;
+  border-bottom-right-radius:87px 55px;
 }
+
 </style>

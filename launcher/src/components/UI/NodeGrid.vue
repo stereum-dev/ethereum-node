@@ -79,12 +79,10 @@ export default {
 <style scoped>
 .nodeparent {
   display: grid;
-  height: 94.8%;
+  height: 94%;
   grid-template-columns: 3% 58% 22% 17%;
   grid-template-rows: repeat(3, 21%) 27.5% 4.5%;
   grid-row-gap: 1px;
-  position: relative;
-  top: 9%;
 }
 
 .asside {
