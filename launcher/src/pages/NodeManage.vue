@@ -196,19 +196,18 @@ export default {
 .manage-parent {
   display: grid;
   width: 100%;
-  height: 91%;
+  height: 90%;
   border: 4px solid #979797;
   border-radius: 0 35px 35px 35px;
-  grid-template-columns: 18% 46% 21% 15%;
-  grid-template-rows: repeat(3, 32%) 4%;
+  grid-template-columns: 18% 46% 20% 16%;
+  grid-template-rows:31% 32% 32% 5%;
   grid-row-gap: 1px;
 }
 
 .config-box {
   color: white;
-  margin-top: 5px;
   width: 100%;
-  height: 98.7%;
+  height: 100%;
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
@@ -248,9 +247,8 @@ export default {
   height: 87.9vh;
 }
 .service {
-  width: 97.7%;
-  height: 97%;
-  margin-top: 6px;
+  width: 98%;
+  height: 98.2%;
   grid-column: 3;
   grid-row: 1/4;
   background: #334b3f;
@@ -277,16 +275,16 @@ export default {
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: .9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .trap-title {
-  color: white;
+  color: rgb(210, 210, 210);
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 800;
 }
 .trap-plus-icon {
   width: 50px;
@@ -298,14 +296,14 @@ export default {
 }
 
 .change-menu {
-  width: 93.3%;
-  height: 97%;
-  margin-top: 6px;
+  width: 94%;
+  height: 98.2%;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
   border: 5px solid #1a2620;
   border-top-right-radius: 30px;
+  border-bottom-right-radius:8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -316,13 +314,14 @@ export default {
 }
 
 .footer {
-  color: white;
-  width: 100%;
+  width: 99.7%;
+  height: 88%;
+  margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
-  background-color: rgb(40, 40, 40);
-  border-radius: 0 0 1.9rem 1.9rem;
-  position: relative;
+  background-color: #343434;
+  border-bottom-left-radius: 87px 55px;
+  border-bottom-right-radius:87px 55px;
 }
 
 ::-webkit-scrollbar {

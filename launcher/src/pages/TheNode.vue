@@ -95,9 +95,10 @@ export default {
 
 <style scoped>
 #head {
-  position: fixed;
-  top: 0;
-  z-index: 100;
+width: 100%;
+position: fixed;
+top: 0;
+z-index: 49;
 }
 .node-parent {
   display: grid;
@@ -109,7 +110,7 @@ export default {
   grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);
-  z-index: 5;
+  z-index:1 ;
 }
 
 .journal-box {

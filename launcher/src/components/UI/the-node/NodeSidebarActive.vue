@@ -106,7 +106,7 @@ export default {
 }
 .active-badge span,
 .installed-badge span {
-  height: 50%;
+  height: 70%;
   align-self: center;
   font-size: 9px;
   font-weight: 800;

@@ -210,8 +210,6 @@ export default {
   grid-template-rows: 4% 26% 20% 17% 33%;
 }
 
-
-
 .manage-configuration {
   grid-column: 1;
   grid-row: 2;
@@ -229,12 +227,17 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2C4030;
-  box-shadow: inset 0 1px 5px 0 rgb(35, 95, 64),0 1px 2px 1px rgb(17, 17, 17);
+  background-color: #2c4030;
+  box-shadow: 0 1px 2px 1px rgb(17, 17, 17);
   margin: 5px;
 }
 .edit-btn:hover {
   box-shadow: none;
+  background-color: #1e2920;
+}
+.edit-btn:active {
+  box-shadow: none;
+  border: 1px solid #131413;
 }
 .edit-btn a {
   width: 100%;
@@ -247,7 +250,7 @@ export default {
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
-  font-size: .6rem;
+  font-size: 0.6rem;
   font-weight: 800;
   text-align: center;
   margin-left: 5px;
