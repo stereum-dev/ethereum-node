@@ -87,7 +87,7 @@ export default {
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 40px 0 0 40px;
-  box-shadow: 0 1px 5px 1px rgb(81, 81, 81);
+  box-shadow: 0 1px 3px 1px #393939;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,7 +98,7 @@ export default {
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 0 40px 40px 0;
-  box-shadow: 0 1px 5px 1px rgb(81, 81, 81);
+  box-shadow: 0 1px 3px 1px #393939;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,7 +129,7 @@ export default {
 
 .activated {
   background-color: #373737 !important;
-  border: 1px solid #212121 !important;
+  border: 1px solid #2a2a2a !important;
   box-shadow: none !important;
 }
 .spanColor {

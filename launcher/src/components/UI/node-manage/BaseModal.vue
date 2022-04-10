@@ -69,5 +69,16 @@ export default {
   color: #fff;
   outline-style: none;
   font-weight: bold;
+  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+}
+.close-btn:hover {
+  border: 1px solid #dfdfdf;
+  background-color: #a42424;
+  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+}
+.close-btn:active {
+  border: 1px solid #a42424;
+  background-color: #a42424;
+  box-shadow: none;
 }
 </style>
