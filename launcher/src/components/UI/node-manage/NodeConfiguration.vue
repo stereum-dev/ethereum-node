@@ -4,7 +4,7 @@
       <router-link to="/node">
         <span>NODE</span>
         <img
-          src="../../../../public/img/icon/manage-node-icons/home1.png"
+          src="../../../../public/img/icon/manage-node-icons/undo1.png"
           alt="icon"
         />
       </router-link>

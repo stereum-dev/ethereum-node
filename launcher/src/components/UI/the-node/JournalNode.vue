@@ -2,7 +2,7 @@
   <div class="journal-parent">
     <div class="edit-btn">
       <router-link to="/manage">
-        <span>EDIT NODES</span>
+        <span>EDIT NODE</span>
         <img
           src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
           alt="icon"
@@ -250,14 +250,14 @@ export default {
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
   margin-left: 5px;
 }
 .edit-btn img {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background-color: transparent;
   margin-right: 10px;
 }
