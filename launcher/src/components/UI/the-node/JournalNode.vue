@@ -9,131 +9,133 @@
         />
       </router-link>
     </div>
-    <div class="manage-configuration">
-      <div class="config-table">
-        <div class="okay">
-          <img
-            class="running"
-            src="../../../../public/img/icon/node-journal-icons/running.png"
-            alt="icon"
-          />
-          <span>Okay</span>
-        </div>
-        <div class="sync">
-          <img
-            class="refresh"
-            src="../../../../public/img/icon/node-journal-icons/refresh.png"
-            alt="icon"
-          />
-          <span>Full synchronized</span>
-        </div>
-        <div class="storage">
-          <img
-            class="disc"
-            src="../../../../public/img/icon/node-journal-icons/Disc_Storage_Icon.png"
-            alt="icon"
-          />
-          <span>212 gb</span>
-        </div>
-        <div class="speed">
-          <img
-            class="internet-speed"
-            src="../../../../public/img/icon/node-journal-icons/Internet_Speed_Icon.png"
-            alt="icon"
-          />
-          <span>24.2 mb</span>
-        </div>
-        <div class="setting">
-          <img
-            class="setting-wrench"
-            src="../../../../public/img/icon/node-journal-icons/setting-wrench.png"
-            alt="icon"
-          />
-          <span>5</span>
-        </div>
-      </div>
-    </div>
-    <div class="updates">
-      <div class="update-title">
-        <span>Updates Available</span>
-      </div>
-      <div class="update-table">
-        <div
-          class="update-table-content"
-          v-for="item in newUpdates"
-          :key="item.id"
-        >
-          <div class="update-table-row">
-            <span>{{ item.name }}</span>
-            <span>{{ item.version }}</span>
-            <span>to</span>
-            <span>{{ item.version }}</span>
+    <div class="journal-bg">
+      <div class="manage-configuration">
+        <div class="config-table">
+          <div class="okay">
+            <img
+              class="running"
+              src="../../../../public/img/icon/node-journal-icons/running.png"
+              alt="icon"
+            />
+            <span>Okay</span>
+          </div>
+          <div class="sync">
+            <img
+              class="refresh"
+              src="../../../../public/img/icon/node-journal-icons/refresh.png"
+              alt="icon"
+            />
+            <span>Full synchronized</span>
+          </div>
+          <div class="storage">
+            <img
+              class="disc"
+              src="../../../../public/img/icon/node-journal-icons/Disc_Storage_Icon.png"
+              alt="icon"
+            />
+            <span>212 gb</span>
+          </div>
+          <div class="speed">
+            <img
+              class="internet-speed"
+              src="../../../../public/img/icon/node-journal-icons/Internet_Speed_Icon.png"
+              alt="icon"
+            />
+            <span>24.2 mb</span>
+          </div>
+          <div class="setting">
+            <img
+              class="setting-wrench"
+              src="../../../../public/img/icon/node-journal-icons/setting-wrench.png"
+              alt="icon"
+            />
+            <span>5</span>
           </div>
         </div>
       </div>
-    </div>
-    <div class="validator">
-      <div class="validator-title">
-        <span>Validator</span>
-      </div>
-      <div class="validator-box">
-        <div class="validator-row-1">
-          <img
-            class="key-icon"
-            src="../../../../public/img/icon/node-journal-icons/Key_Icon.png"
-            alt="icon"
-          />
-          <span class="active-text">001 ACTIVE</span>
-          <div class="rating-box">
-            <span class="rating-text">RATING:</span>
-            <span class="monthly-badge">(monthly)</span>
-          </div>
+      <div class="updates">
+        <div class="update-title">
+          <span>Updates Available</span>
         </div>
-        <div class="validator-row-2">
-          <img
-            class="bag-icon"
-            src="../../../../public/img/icon/node-journal-icons/bag_icon.png"
-            alt="icon"
-          />
-          <div class="amount-box">
-            <div class="amount">
-              <span>32.0000001</span>
-            </div>
-            <div class="unit">
-              <span class="price">00000001</span>
-              <span class="gwei">GWEI</span>
-            </div>
-          </div>
-          <span class="level-icon">S</span>
-        </div>
-      </div>
-    </div>
-    <div class="status-box">
-      <div class="warning-box">
-        <div class="yellow-warning">
-          <img
-            src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
-            alt=""
-          />
-          <span>002</span>
-        </div>
-        <div class="red-warning">
-          <img
-            src="../../../../public/img/icon/node-journal-icons/red-warning.png"
-            alt=""
-          />
-          <span>002</span>
-        </div>
-      </div>
-      <div class="status-table">
-        <div class="status-table-content">
+        <div class="update-table">
           <div
-            class="status-table-row"
-            v-for="item in statusContents"
+            class="update-table-content"
+            v-for="item in newUpdates"
             :key="item.id"
           >
-            <div v-if="item.status == 'yellow'" class="status-yellow"></div>
-            <div else class="status-red"></div>
+            <div class="update-table-row">
+              <span>{{ item.name }}</span>
+              <span>{{ item.version }}</span>
+              <span>to</span>
+              <span>{{ item.version }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="validator">
+        <div class="validator-title">
+          <span>Validator</span>
+        </div>
+        <div class="validator-box">
+          <div class="validator-row-1">
+            <img
+              class="key-icon"
+              src="../../../../public/img/icon/node-journal-icons/Key_Icon.png"
+              alt="icon"
+            />
+            <span class="active-text">001 ACTIVE</span>
+            <div class="rating-box">
+              <span class="rating-text">RATING:</span>
+              <span class="monthly-badge">(monthly)</span>
+            </div>
+          </div>
+          <div class="validator-row-2">
+            <img
+              class="bag-icon"
+              src="../../../../public/img/icon/node-journal-icons/bag_icon.png"
+              alt="icon"
+            />
+            <div class="amount-box">
+              <div class="amount">
+                <span>32.0000001</span>
+              </div>
+              <div class="unit">
+                <span class="price">00000001</span>
+                <span class="gwei">GWEI</span>
+              </div>
+            </div>
+            <span class="level-icon">S</span>
+          </div>
+        </div>
+      </div>
+      <div class="status-box">
+        <div class="warning-box">
+          <div class="yellow-warning">
+            <img
+              src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
+              alt=""
+            />
+            <span>002</span>
+          </div>
+          <div class="red-warning">
+            <img
+              src="../../../../public/img/icon/node-journal-icons/red-warning.png"
+              alt=""
+            />
+            <span>002</span>
+          </div>
+        </div>
+        <div class="status-table">
+          <div class="status-table-content">
+            <div
+              class="status-table-row"
+              v-for="item in statusContents"
+              :key="item.id"
+            >
+              <div v-if="item.status == 'yellow'" class="status-yellow"></div>
+              <div else class="status-red"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -205,22 +207,32 @@ export default {
 .journal-parent {
   width: 100%;
   height: 100%;
+  background-color: #3b3b3b;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.journal-bg {
+  width: 90%;
+  height: 90%;
+  background-color: #606060;
+  margin: 0 auto;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: 1;
-  grid-template-rows: 4% 26% 20% 17% 33%;
+  grid-template-rows: 4% 20% 22% 20% 33%;
 }
 
 .manage-configuration {
   grid-column: 1;
-  grid-row: 2;
+  grid-row-start: 1/3;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(6, 1fr);
+  height: 88%;
 }
 .edit-btn {
   width: 55%;
-  height: 27px;
+  height: 5%;
   border: 1px solid rgb(83, 121, 100);
   justify-self: end;
   border-radius: 20px;
@@ -407,21 +419,21 @@ export default {
   margin-top: 3px;
 }
 .validator-box .active-text {
-  width: 60%;
-  font-size: 14px;
+  width: 53%;
+  font-size: .67rem;
 }
 .validator-box .rating-box {
   width: 30%;
   position: relative;
 }
 .validator-box .rating-text {
-  font-size: 13px;
+  font-size: .69rem;
 }
 .validator-box .monthly-badge {
   position: absolute;
-  right: 13px;
+  right: 9px;
   top: 16px;
-  font-size: 8px;
+  font-size: .45rem;
 }
 .validator-box .amount-box {
   width: 70%;

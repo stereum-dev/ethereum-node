@@ -3,7 +3,6 @@
     <div class="nodeSetupTitle">
       <span>NODE - JOURNAL</span>
     </div>
-
   </div>
 </template>
 <script>
@@ -58,7 +57,7 @@ export default {
 }
 .config-table {
   width: auto;
-  border: 2px solid#747474;
+  border: 2px solid #747474;
   background: #33393e;
   color: #fff;
   font-weight: 600;

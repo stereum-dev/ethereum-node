@@ -198,9 +198,9 @@ export default {
   width: 100%;
   height: 90%;
   border: 4px solid #979797;
-  border-radius: 0 35px 35px 35px;
+  border-radius: 10px 35px 10px 10px;
   grid-template-columns: 18% 46% 20% 16%;
-  grid-template-rows:31% 32% 32% 5%;
+  grid-template-rows: 31% 32% 32% 5%;
   grid-row-gap: 1px;
 }
 
@@ -211,11 +211,10 @@ export default {
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
-  background-color: transparent;
 }
 .preset-modal {
   width: 81.5%;
-  height:86.4%;
+  height: 86.4%;
   border-radius: 35px;
   z-index: 5;
   position: absolute;
@@ -223,10 +222,12 @@ export default {
   left: 18%;
 }
 .drop-parent {
+  width: 100%;
   height: 100%;
-  margin: 5px 4px 0 0;
+  margin: 0;
   grid-column: 2;
   grid-row: 1/4;
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -279,7 +280,7 @@ export default {
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: .9rem;
+  font-size: 0.9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;
@@ -307,7 +308,7 @@ export default {
   background: #334b3f;
   border: 5px solid #1a2620;
   border-top-right-radius: 30px;
-  border-bottom-right-radius:8px;
+  border-bottom-right-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -318,14 +319,13 @@ export default {
 }
 
 .footer {
-  width: 99.7%;
+  width: 100%;
   height: 88%;
   margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
   background-color: #343434;
-  border-bottom-left-radius: 87px 55px;
-  border-bottom-right-radius:87px 55px;
+  border-radius: 0 0 7px 7px;
 }
 
 ::-webkit-scrollbar {

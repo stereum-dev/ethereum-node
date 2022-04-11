@@ -67,7 +67,7 @@ export default {
 .footer {
   grid-row: 2/3;
   grid-column: 1/3;
-  border-radius: 0 0 25px 25px;
+  border-radius: 0 0 7px 10px;
   background: rgb(42, 45, 42);
   color: white;
 }

@@ -98,7 +98,7 @@ export default {
 
 <style scoped>
 #container {
-  border-radius: 40px;
+  border-radius: 10px;
   height: 100%;
   width: 100%;
   margin: auto;

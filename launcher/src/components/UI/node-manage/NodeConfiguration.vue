@@ -124,9 +124,8 @@ export default {
   width: 95%;
   height: 98.2%;
   padding: 5px;
-  background-color: #33393e;
-  border-radius: 0 25px 25px 7px;
   display: grid;
+  background-color: #3b3b3b;
   grid-template-rows: 6% 9% 70%;
   grid-template-columns: repeat(6, 1fr);
   justify-content: center;

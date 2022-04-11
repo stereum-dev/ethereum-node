@@ -20,7 +20,7 @@ export default {};
 
 <style scoped>
 #containerBg {
-  border-radius: 40px;
+  border-radius: 10px;
   border: 3px solid #989898;
   box-sizing: border-box;
   top: 0;
@@ -35,7 +35,7 @@ export default {};
   background-color: #000;
   width: 100%;
   height: 100%;
-  border-radius: 40px;
+
   position: fixed;
   z-index: -1;
   top: 0;

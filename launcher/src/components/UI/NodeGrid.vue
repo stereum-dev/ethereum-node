@@ -90,6 +90,7 @@ export default {
   grid-row: 1/5;
   background-color: transparent;
   width: 100%;
+
   position: relative;
 }
 
@@ -97,6 +98,7 @@ export default {
   grid-row: 1/5;
   background-color: #336666;
   height: 100%;
+
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
   z-index: -1;
 }
@@ -107,6 +109,7 @@ export default {
   width: 100%;
   height: 80%;
   background: #a1c1ad;
+
   z-index: 0;
 }
 
@@ -173,7 +176,7 @@ export default {
 }
 
 .service {
-  background: #2c4030;
+  background: black;
   border: 3px solid gray;
   grid-row-start: 1;
   grid-row-end: 5;
@@ -204,7 +207,6 @@ export default {
   grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
-
 }
 .trap-container {
   background-color: #2c4030;
@@ -213,11 +215,10 @@ export default {
   height: 95%;
   padding: 5px;
 }
-.trap-container .trap-box{
-  background-color: #2c4030 !important;
+.trap-container .trap-box {
   height: 1%;
 }
-.trapezoid{
+.trapezoid {
   background: #000;
   height: 1% !important;
 }
@@ -262,6 +263,7 @@ export default {
   background: #4c4848;
   color: white;
   grid-column: 1/6;
-  border-radius: 0 0 25px 25px;
+  grid-row: 5;
+  border-radius: 0 0 7px 7px;
 }
 </style>

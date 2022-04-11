@@ -95,22 +95,22 @@ export default {
 
 <style scoped>
 #head {
-width: 100%;
-position: fixed;
-top: 0;
-z-index: 49;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 49;
 }
 .node-parent {
   display: grid;
   width: 100%;
   height: 90%;
   border: 4px solid #979797;
-  border-radius: 0 35px 35px 35px;
+  border-radius: 0 35px 10px 10px;
   grid-template-columns: 18% 46% 20% 16%;
   grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);
-  z-index:1 ;
+  z-index: 1;
 }
 
 .journal-box {
@@ -120,7 +120,7 @@ z-index: 49;
   grid-column: 1;
   grid-row: 1/4;
   margin-top: 1px;
-  background-color: #1c1c1c;
+  background-color: #606060;
   border-radius: 0 25px 25px 10px;
 }
 .trapezoid-parent {
@@ -151,7 +151,7 @@ z-index: 49;
   height: 98.2%;
   grid-column: 3;
   grid-row: 1/4;
-  background: #2c4030;
+  background: #334b3f;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
@@ -177,7 +177,7 @@ z-index: 49;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: .9rem;
+  font-size: 0.9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;
@@ -185,7 +185,7 @@ z-index: 49;
 }
 
 .trap-container {
-  width: 97%;
+  width: 98%;
   margin: 0 auto;
 }
 .trap-title {
@@ -205,17 +205,14 @@ z-index: 49;
   grid-column: 4;
   grid-row: 1/4;
   height: 99.8%;
-
 }
 .footer {
-  width: 99.7%;
+  width: 100%;
   height: 88%;
   margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
   background-color: #343434;
-  border-bottom-left-radius: 87px 55px;
-  border-bottom-right-radius:87px 55px;
+  border-radius: 0 0 7px 7px;
 }
-
 </style>

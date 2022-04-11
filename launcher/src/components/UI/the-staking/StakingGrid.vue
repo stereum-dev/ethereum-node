@@ -40,7 +40,7 @@ export default {
 .staking-green-bg {
   width: 100%;
   height: 100%;
-  border-radius: 0 0 35px 35px;
+  border-radius: 0 0 10px 10px;
   background-color: #324b3e;
   display: flex;
   flex-wrap: nowrap;
@@ -54,19 +54,18 @@ export default {
   height: 95.5%;
   background-color: #000000;
   border: 4px solid #979797;
-  border-radius: 15px 35px 35px 35px;
+  border-radius: 15px 15px 10px 10px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 30% 32% 33% 5%;
 }
 .footer {
-  width: 99.8%;
+  width: 100%;
   height: 99.9%;
   margin: 0 auto;
   grid-column: 1/13;
   grid-row: 4;
   background-color: rgb(52, 52, 52);
-  border-bottom-left-radius: 65px 45px;
-  border-bottom-right-radius: 65px 45px;
+  border-radius: 0 0 7px 7px;
 }
 </style>

@@ -111,7 +111,7 @@ export default {
 .verify-modal {
   width: 70%;
   height: 95%;
-  border: 1px solid rgba(38, 38, 38, 0.5);
+   border: 1px solid rgba(38, 38, 38, 0.5);
   border-radius: 20px;
   background-color: #334b3e;
   display: flex;
@@ -122,7 +122,8 @@ export default {
 .verify-box {
   width: 95%;
   height: 20%;
-  background-color: #c2bebe;
+  margin-top: 5px;
+  background-color: #8e8e8e;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -130,9 +131,9 @@ export default {
   box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .verify-title-box {
-  width: 95%;
+  width: 96%;
   height: 80%;
-  border-radius: 20px;
+  border-radius: 15px;
   background-color: #5b5b5b;
   display: flex;
   justify-content: center;

@@ -13,7 +13,6 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  border-radius: 0 0 35px 35px;
+  border-radius: 0 0 10px 10px;
 }
-
 </style>

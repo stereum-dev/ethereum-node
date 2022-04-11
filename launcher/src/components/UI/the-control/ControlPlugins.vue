@@ -10,7 +10,7 @@
   width: 90%;
   height: 98%;
   background-color: #2b4035;
-  border-radius: 0 45px 45px 45px;
+  border-radius: 0 35px 35px 35px;
   display: flex;
   flex-direction: column;
   justify-content: center;
