@@ -4,7 +4,7 @@
       <router-link to="/manage">
         <span>EDIT NODES</span>
         <img
-          src="../../../../public/Img/icon/node-journal-icons/maintenance3.png"
+          src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
           alt="icon"
         />
       </router-link>
@@ -14,7 +14,7 @@
         <div class="okay">
           <img
             class="running"
-            src="../../../../public/Img/icon/node-journal-icons/running.png"
+            src="../../../../public/img/icon/node-journal-icons/running.png"
             alt="icon"
           />
           <span>Okay</span>
@@ -22,7 +22,7 @@
         <div class="sync">
           <img
             class="refresh"
-            src="../../../../public/Img/icon/node-journal-icons/refresh.png"
+            src="../../../../public/img/icon/node-journal-icons/refresh.png"
             alt="icon"
           />
           <span>Full synchronized</span>
@@ -30,7 +30,7 @@
         <div class="storage">
           <img
             class="disc"
-            src="../../../../public/Img/icon/node-journal-icons/Disc_Storage_Icon.png"
+            src="../../../../public/img/icon/node-journal-icons/Disc_Storage_Icon.png"
             alt="icon"
           />
           <span>212 gb</span>
@@ -38,7 +38,7 @@
         <div class="speed">
           <img
             class="internet-speed"
-            src="../../../../public/Img/icon/node-journal-icons/Internet_Speed_Icon.png"
+            src="../../../../public/img/icon/node-journal-icons/Internet_Speed_Icon.png"
             alt="icon"
           />
           <span>24.2 mb</span>
@@ -46,7 +46,7 @@
         <div class="setting">
           <img
             class="setting-wrench"
-            src="../../../../public/Img/icon/node-journal-icons/setting-wrench.png"
+            src="../../../../public/img/icon/node-journal-icons/setting-wrench.png"
             alt="icon"
           />
           <span>5</span>
@@ -80,7 +80,7 @@
         <div class="validator-row-1">
           <img
             class="key-icon"
-            src="../../../../public/Img/icon/node-journal-icons/Key_Icon.png"
+            src="../../../../public/img/icon/node-journal-icons/Key_Icon.png"
             alt="icon"
           />
           <span class="active-text">001 ACTIVE</span>
@@ -92,7 +92,7 @@
         <div class="validator-row-2">
           <img
             class="bag-icon"
-            src="../../../../public/Img/icon/node-journal-icons/bag_icon.png"
+            src="../../../../public/img/icon/node-journal-icons/bag_icon.png"
             alt="icon"
           />
           <div class="amount-box">
@@ -112,14 +112,14 @@
       <div class="warning-box">
         <div class="yellow-warning">
           <img
-            src="../../../../public/Img/icon/node-journal-icons/yellow-warning.png"
+            src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
             alt=""
           />
           <span>002</span>
         </div>
         <div class="red-warning">
           <img
-            src="../../../../public/Img/icon/node-journal-icons/red-warning.png"
+            src="../../../../public/img/icon/node-journal-icons/red-warning.png"
             alt=""
           />
           <span>002</span>

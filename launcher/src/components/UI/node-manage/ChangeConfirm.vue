@@ -4,7 +4,10 @@
       <div class="confirm-bg-1">
         <div class="confirm-bg-2">
           <div class="check-icon">
-            <img src="Img/icon/manage-node-icons/check-mark.png" alt="icon" />
+            <img
+              src="../../../../public/img/icon/manage-node-icons/check-mark.png"
+              alt="icon"
+            />
           </div>
         </div>
       </div>
@@ -22,7 +25,7 @@
           <span>{{ item.content }}</span>
           <div class="right-icon">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
+              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
               alt="icon"
             />
           </div>
@@ -34,7 +37,7 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img src="/Img/icon/manage-node-icons/trash-icon.png" alt="icon" />
+            <img src="../../../../public/img/icon/manage-node-icons/trash-icon.png" alt="icon" />
           </div>
         </div>
       </div>

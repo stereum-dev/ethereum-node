@@ -35,21 +35,26 @@ import { mapGetters } from "vuex";
 export default {
   created() {
     this.checkOS();
+    this.randomValue();
   },
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
       running: true,
       message: "",
+      value: 1,
+      max: 100,
     };
   },
   computed: {
     ...mapGetters({ installation: "installation_get" }),
   },
   methods: {
+    randomValue() {
+      this.value = Math.random() * this.max;
+    },
     display: async function (response) {
       let data = await response;
-      console.log(data);
       if (data == "Ubuntu" || data == "CentOS") {
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
       } else if (data.name !== undefined) {
@@ -61,7 +66,6 @@ export default {
       this.running = false;
     },
     checkOS: async function () {
-      console.log("check OS");
       let response = ControlService.checkOS()
         .then((result) => {
           return result;
@@ -153,10 +157,9 @@ export default {
   align-items: center;
 }
 .progress-container {
-  width: 70%;
-  height: 40%;
-  justify-self: end;
-  align-self: end;
+  width: 82%;
+  height: 32%;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,5 +186,4 @@ export default {
   color: rgb(225, 225, 225);
   text-align: center;
 }
-
 </style>
