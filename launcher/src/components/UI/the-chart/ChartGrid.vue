@@ -2,7 +2,18 @@
   <div class="chartGridParent">
     <div class="plugins-control">
       <control-plugins>
-        <div class="box1"></div>
+        <div class="box1">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae dolore
+          debitis exercitationem qui ea est.
+        </div>
+        <div class="box1">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
+          voluptate illum a quisquam? Obcaecati, officia?
+        </div>
+        <div class="box1">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Explicabo
+          obcaecati quae accusamus placeat, veritatis necessitatibus.
+        </div>
       </control-plugins>
     </div>
     <div class="chart-box"><chart-line></chart-line></div>
@@ -53,13 +64,13 @@ export default {
   border: 5px solid grey;
   border-radius: 20px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 .box1 {
   width: 88%;
   height: 25%;
-  border: 1px solid red;
+  border: 3px solid grey;
   border-radius: 8px;
   box-shadow: 3px 5px #434c3a;
   background: #000;
