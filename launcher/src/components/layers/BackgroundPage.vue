@@ -7,9 +7,8 @@
           src="../../../public/img/icon/stereum-logo/stereum-logo.png"
           alt="icon"
         />
-
-        <slot></slot>
       </section>
+      <slot></slot>
     </section>
   </div>
 </template>
@@ -35,11 +34,10 @@ export default {};
   background-color: #000;
   width: 100%;
   height: 100%;
-
-  position: fixed;
+  position: absolute;
   z-index: -1;
   top: 0;
-  left:0;
+  left: 0;
   box-sizing: border-box;
   display: flex;
   justify-content: center;

@@ -51,7 +51,7 @@ export default {
 }
 .staking-black-bg {
   width: 100%;
-  height: 95.5%;
+  height: 95.7%;
   background-color: #000000;
   border: 4px solid #979797;
   border-radius: 15px 15px 10px 10px;

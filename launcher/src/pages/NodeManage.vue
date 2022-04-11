@@ -308,7 +308,6 @@ export default {
   background: #334b3f;
   border: 5px solid #1a2620;
   border-top-right-radius: 30px;
-  border-bottom-right-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
