@@ -29,7 +29,7 @@ export class NodeService {
         }
     }
 
-    init(id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients) {
+    init(id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
         this.setId(id);
         this.image = image;
         this.imageVersion = imageVersion;
@@ -43,7 +43,8 @@ export class NodeService {
 
         this.dependencies = {
             executionClients: executionClients,
-            consensusClients: consensusClients
+            consensusClients: consensusClients,
+            prometheusNodeExporterClients: prometheusNodeExporterClients
         }
     }
 
@@ -65,6 +66,7 @@ export class NodeService {
         this.dependencies = {
             executionClients: config.dependencies ? config.dependencies.executionClients : [],
             consensusClients: config.dependencies ? config.dependencies.consensusClients : [],
+            prometheusNodeExporterClients: config.dependencies ? config.dependencies.prometheusNodeExporterClients : [],
         }
     }
 
@@ -90,6 +92,7 @@ export class NodeService {
             dependencies: {
                 executionClients: (this.dependencies.executionClients || []).map(service => service.buildMinimalConfiguration()),
                 consensusClients: (this.dependencies.consensusClients || []).map(service => service.buildMinimalConfiguration()),
+                prometheusNodeExporterClients: (this.dependencies.prometheusNodeExporterClients || []).map(service => service.buildMinimalConfiguration()),
             }
         };
     }
