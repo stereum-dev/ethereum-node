@@ -81,7 +81,7 @@
 <style scoped>
 .main-header {
   width: 100vw;
-  background: #324B3F;
+  background: #324b3f;
   padding: 5px 0;
   display: flex;
   flex-wrap: wrap;

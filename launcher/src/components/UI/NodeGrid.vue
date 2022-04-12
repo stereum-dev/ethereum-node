@@ -206,7 +206,6 @@ export default {
   grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
-
 }
 .trap-container {
   background-color: #2c4030;
@@ -215,11 +214,11 @@ export default {
   height: 95%;
   padding: 5px;
 }
-.trap-container .trap-box{
+.trap-container .trap-box {
   background-color: #2c4030 !important;
   height: 1%;
 }
-.trapezoid{
+.trapezoid {
   background: #000;
   height: 1% !important;
 }
