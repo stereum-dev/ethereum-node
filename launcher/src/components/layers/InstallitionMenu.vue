@@ -1,8 +1,8 @@
 <template>
-  <section class="welcome-parent">
-    <section id="header">
+  <div class="welcome-parent">
+    <div id="header">
       <h2>WELCOME</h2>
-    </section>
+    </div>
     <div class="middle-box">
       <div id="txt">
         <p>
@@ -29,7 +29,7 @@
         ></router-link>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
