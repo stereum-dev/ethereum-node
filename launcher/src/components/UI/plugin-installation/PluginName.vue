@@ -48,11 +48,7 @@
                     <span>CHANGE INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
-                    <input
-                      type="text"
-                      v-model="inputPath"
-                      
-                    />
+                    <input type="text" v-model="inputPath" />
                   </div>
                 </div>
               </div>

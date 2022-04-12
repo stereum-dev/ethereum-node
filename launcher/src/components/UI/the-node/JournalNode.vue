@@ -242,6 +242,7 @@ export default {
   background-color: #2c4030;
   box-shadow: 0 1px 2px 1px rgb(17, 17, 17);
   margin: 5px;
+
 }
 .edit-btn:hover {
   box-shadow: none;
