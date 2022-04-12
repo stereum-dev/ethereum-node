@@ -3,12 +3,13 @@
     <div id="containerBg">
       <div class="img-box">
         <img
+          onmousedown="return false"
           class="imgBg"
           src="../../../public/img/icon/stereum-logo/stereum-logo.png"
           alt="icon"
         />
+        <slot></slot>
       </div>
-      <slot></slot>
     </div>
   </div>
 </template>
