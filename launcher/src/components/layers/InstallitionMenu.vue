@@ -87,20 +87,15 @@ export default {
 .welcome-parent {
   width: 100%;
   height: 100%;
-  /* display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 5% 15% 30% 50%; */
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 .item-container {
-  /* grid-column: 1/7;
-  grid-row: 4; */
   width: 80%;
   height: 40%;
   resize: both;
-  margin: 0 auto;
+  margin:30px auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
@@ -127,11 +122,9 @@ export default {
 }
 
 #header {
-  /* grid-row: 2/3;
-  grid-column: 2/6; */
   width: 40%;
   height: 20%;
-  margin: 0 auto;
+  margin: 50px auto;
   position: relative;
   display: flex;
   justify-content: center;
@@ -154,11 +147,9 @@ export default {
   padding-top: 5px;
 }
 .middle-box {
-  /* grid-row: 3/4;
-  grid-column: 1/7; */
   width: 90%;
   height: 25%;
-  margin: 20px auto 0 auto;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -167,7 +158,7 @@ export default {
 .progress-container {
   width: 82%;
   height: 32%;
-  margin: 0 auto;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
