@@ -23,6 +23,7 @@
       >
         <router-link class="lintTtl" :to="install.path"
           ><button-installation
+            onmousedown="return false"
             :img="install.img"
             :url="install.img2"
           ></button-installation
@@ -86,15 +87,18 @@ export default {
 .welcome-parent {
   width: 100%;
   height: 100%;
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 5% 15% 30% 50%;
+  grid-template-rows: 5% 15% 30% 50%; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .item-container {
-  grid-column: 1/7;
-  grid-row: 4;
+  /* grid-column: 1/7;
+  grid-row: 4; */
   width: 80%;
-  height: 90%;
+  height: 40%;
   resize: both;
   margin: 0 auto;
   position: relative;
@@ -123,10 +127,10 @@ export default {
 }
 
 #header {
-  grid-row: 2/3;
-  grid-column: 2/6;
-  width: 80%;
-  height: 100%;
+  /* grid-row: 2/3;
+  grid-column: 2/6; */
+  width: 40%;
+  height: 20%;
   margin: 0 auto;
   position: relative;
   display: flex;
@@ -135,7 +139,7 @@ export default {
 }
 #header h2 {
   width: 70%;
-  height: 50%;
+  height: 40%;
   margin: 0 auto;
   font-size: 2.4rem;
   resize: both;
@@ -150,10 +154,10 @@ export default {
   padding-top: 5px;
 }
 .middle-box {
-  grid-row: 3/4;
-  grid-column: 1/7;
+  /* grid-row: 3/4;
+  grid-column: 1/7; */
   width: 90%;
-  height: 100%;
+  height: 25%;
   margin: 20px auto 0 auto;
   display: flex;
   flex-direction: column;

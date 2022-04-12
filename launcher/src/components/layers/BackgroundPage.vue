@@ -41,10 +41,6 @@ export default {};
 .img-box {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 0;
 }
 
 .imgBg {
@@ -58,5 +54,6 @@ export default {};
   transform: translate(-50%, -50%);
   resize: both;
   opacity: 0.2;
+  z-index: 0;
 }
 </style>
