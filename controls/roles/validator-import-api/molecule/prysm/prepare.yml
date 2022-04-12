@@ -1,0 +1,171 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 40a39644-b417-11ec-9917-3f1fbdf72a3a
+    validator_service: 0d4a2d58-b417-11ec-a0f3-0b91f10c3a8c
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install pip, expect (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - python3-pip
+          - expect
+      become: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install pip, expect (CentOS 8)
+      yum:
+        name:
+          - python3-pip
+          - expect
+        state: latest
+      become: true
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: prysmaticlabs/prysm-beacon-chain:HEAD-6903d5-debug
+              ports:
+                - 127.0.0.1:4000:4000/tcp
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --p2p-max-peers=100
+                --http-web3provider=http://10.10.0.3:8545
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/genesis:/opt/app/genesis"
+
+    # prysm validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Generate wallet's password
+        command: uuidgen
+        register: wallet_password
+        changed_when: false
+        become: yes
+      - name: Set wallet password
+        copy:
+          content: "{{ wallet_password.stdout }}"
+          dest: "/opt/app/services/{{ validator_service }}/data/passwords/wallet-password"
+          owner: "2000"
+          group: "2000"
+          mode: 0700
+        become: yes
+      - name: Prysm - Create wallet for account(s)
+        command: bash -c "docker exec stereum-{{ validator_service }}
+                          /app/cmd/validator/validator
+                          wallet create
+                          --wallet-dir=/opt/app/data/wallets
+                          --wallet-password-file=/opt/app/data/passwords/wallet-password
+                          --accept-terms-of-use
+                          --keymanager-kind=direct
+                          --prater"
+        changed_when: false
+        become: yes
+      - name: Prysm - Set wallet permission
+        ansible.builtin.file:
+          path: "/opt/app/services/{{ validator_service }}/data/wallets"
+          state: directory
+          recurse: yes
+          owner: "2000"
+          group: "2000"
+        become: yes
+      - name: Stop beacon & validator service
+        docker_container:
+          name: "{{ item }}"
+          state: stopped
+        become: yes
+        with_items:
+          - "stereum-{{ beacon_service }}"
+          - "stereum-{{ validator_service }}"
+      - name: Restart beacon & validator service
+        command: "docker start {{ item }}"
+        changed_when: false
+        become: yes
+        with_items:
+          - "stereum-{{ beacon_service }}"
+          - "stereum-{{ validator_service }}"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ validator_service }}"
+              image: prysmaticlabs/prysm-validator:HEAD-6903d5-debug
+              ports:
+                - 127.0.0.1:7500:7500/tcp
+              env: {}
+              entrypoint: []
+              command:
+                /app/cmd/validator/validator
+                --accept-terms-of-use=true
+                --beacon-rpc-provider="stereum-{{ beacon_service }}:4000"
+                --beacon-rpc-gateway-provider="stereum-{{ beacon_service }}:3500"
+                --web=true
+                --prater=true
+                --datadir=/opt/app/data/db
+                --wallet-dir=/opt/app/data/wallets
+                --wallet-password-file=/opt/app/data/passwords/wallet-password
+                --monitoring-host=0.0.0.0
+                --grpc-gateway-port=7500
+                --grpc-gateway-host=0.0.0.0
+                --grpc-gateway-corsdomain="*"
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ validator_service }}/data/db:/opt/app/data/db"
+                - "/opt/app/services/{{ validator_service }}/data/wallets:/opt/app/data/wallets"
+                - "/opt/app/services/{{ validator_service }}/data/passwords:/opt/app/data/passwords"
