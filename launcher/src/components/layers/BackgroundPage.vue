@@ -1,12 +1,16 @@
 <template>
   <div id="main">
-    <section id="containerBg">
-      <section class="img-box">
-        <img class="imgBg" src="../../../public/img/icon/stereum-logo/stereum-logo.png" alt="icon" />
-
+    <div id="containerBg">
+      <div class="img-box">
+        <img
+          onmousedown="return false"
+          class="imgBg"
+          src="../../../public/img/icon/stereum-logo/stereum-logo.png"
+          alt="icon"
+        />
         <slot></slot>
-      </section>
-    </section>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,11 +20,9 @@ export default {};
 
 <style scoped>
 #containerBg {
-  border-radius: 40px;
+  border-radius: 10px;
+  border: 3px solid #989898;
   box-sizing: border-box;
-  top: 0;
-  left: 0;
-  margin: auto;
   width: 100%;
   height: 100%;
   background-color: #336666;
@@ -28,13 +30,8 @@ export default {};
 
 #main {
   background-color: #000;
-  width: 100%;
-  height: 100%;
-  border-radius: 40px;
-  position: fixed;
-  z-index: -1;
-  top: 0;
-  left: 0;
+  width: 100vw;
+  height: 100vh;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -42,14 +39,8 @@ export default {};
   flex-direction: column;
 }
 .img-box {
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .imgBg {
@@ -63,5 +54,6 @@ export default {};
   transform: translate(-50%, -50%);
   resize: both;
   opacity: 0.2;
+  z-index: 0;
 }
 </style>

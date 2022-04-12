@@ -29,7 +29,7 @@ export default {};
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #4f4f4f;
+  background-color: #3b3b3b;
   position: relative;
 }
 .trapezoid {

@@ -1,8 +1,8 @@
 <template>
-  <section class="welcome-parent">
-    <section id="header">
+  <div class="welcome-parent">
+    <div id="header">
       <h2>WELCOME</h2>
-    </section>
+    </div>
     <div class="middle-box">
       <div id="txt">
         <p>
@@ -23,13 +23,14 @@
       >
         <router-link class="lintTtl" :to="install.path"
           ><button-installation
+            onmousedown="return false"
             :img="install.img"
             :url="install.img2"
           ></button-installation
         ></router-link>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
@@ -86,17 +87,15 @@ export default {
 .welcome-parent {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 5% 15% 30% 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .item-container {
-  grid-column: 1/7;
-  grid-row: 4;
   width: 80%;
-  height: 90%;
+  height: 40%;
   resize: both;
-  margin: 0 auto;
+  margin:30px auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
@@ -104,7 +103,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.item-item-columnumn {
+.item-column {
   width: 28%;
   height: 100%;
   box-sizing: border-box;
@@ -123,11 +122,9 @@ export default {
 }
 
 #header {
-  grid-row: 2/3;
-  grid-column: 2/6;
-  width: 80%;
-  height: 100%;
-  margin: 0 auto;
+  width: 40%;
+  height: 20%;
+  margin: 50px auto;
   position: relative;
   display: flex;
   justify-content: center;
@@ -135,7 +132,7 @@ export default {
 }
 #header h2 {
   width: 70%;
-  height: 50%;
+  height: 40%;
   margin: 0 auto;
   font-size: 2.4rem;
   resize: both;
@@ -150,11 +147,9 @@ export default {
   padding-top: 5px;
 }
 .middle-box {
-  grid-row: 3/4;
-  grid-column: 1/7;
   width: 90%;
-  height: 100%;
-  margin: 20px auto 0 auto;
+  height: 25%;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -163,7 +158,7 @@ export default {
 .progress-container {
   width: 82%;
   height: 32%;
-  margin: 0 auto;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;

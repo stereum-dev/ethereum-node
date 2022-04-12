@@ -154,6 +154,7 @@ export default {
   width: 15%;
   height: 100%;
   margin-left: 50px;
+  text-align: right;
 }
 #instal {
   width: auto;
@@ -167,6 +168,7 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 
 #back {
@@ -181,6 +183,7 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 #instal:hover,
 #back:hover {

@@ -104,7 +104,7 @@
   align-items: flex-start;
 }
 .keys-table-box {
-  width: 95%;
+  width: 96%;
   height: 92%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;

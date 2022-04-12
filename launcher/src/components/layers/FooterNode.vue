@@ -12,19 +12,14 @@
 
 <style scoped>
 .footerNode {
-  left: 3%;
   position: absolute;
-  bottom: 4.2%;
   width: 94.2%;
-  padding: 0 1rem;
   background: #333;
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin: 0;
   border-bottom: 4px solid rgb(118, 118, 118);
-  border-radius: 0 0 30px 30px;
+  border-radius: 0 0 7px 7px;
   box-sizing: border-box;
 }
 
