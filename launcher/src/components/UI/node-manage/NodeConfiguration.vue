@@ -1,15 +1,12 @@
 <template>
   <div class="config-node">
-    <div class="router-box">
+    <div class="edit-btn">
       <router-link to="/node">
-        <div class="home-btn">
-          <span>NODE</span>
-          <img
-            class="home-icon"
-            src="/img/icon/manage-node-icons/home1.png"
-            alt="icon"
-          />
-        </div>
+        <span>NODE</span>
+        <img
+          src="../../../../public/img/icon/manage-node-icons/undo1.png"
+          alt="icon"
+        />
       </router-link>
     </div>
     <div class="config-row">
@@ -124,13 +121,12 @@ export default {
 <style scoped>
 .config-node {
   grid-column: 1;
-  width: 93%;
+  width: 95%;
   height: 98.2%;
   padding: 5px;
-  background-color: #33393e;
-  border-radius: 0 30px 30px 0;
   display: grid;
-  grid-template-rows: repeat(12, 1fr);
+  background-color: #3b3b3b;
+  grid-template-rows: 6% 9% 70%;
   grid-template-columns: repeat(6, 1fr);
   justify-content: center;
   align-items: center;
@@ -141,7 +137,6 @@ export default {
   width: 95%;
   height: 98%;
   display: grid;
-
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
   background-color: #606060;
@@ -192,8 +187,7 @@ export default {
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
-.config-btns .config-priority:hover,
-.router-box .home-btn:hover {
+.config-btns .config-priority:hover {
   background-color: #2c2c2c;
   box-shadow: none;
 }
@@ -209,24 +203,29 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.router-box {
-  grid-column: 1/7;
+.edit-btn {
+  grid-column: 3/7;
   grid-row: 1;
-  width: 85%;
-  height: 27px;
-  border: 1px solid rgb(38, 38, 38);
+  width: 88%;
+  height: 90%;
+  border: 1px solid rgb(83, 121, 100);
+  justify-self: end;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #2c4030;
-  margin: 2px auto 6px auto;
-  box-shadow: inset 0 1px 5px 0 rgb(155, 155, 155);
+  box-shadow: 0 1px 2px 1px rgb(35, 35, 35);
 }
-.router-box:hover {
+.edit-btn:hover {
   box-shadow: none;
+  background-color: #1e2920;
 }
-.router-box a {
+.edit-btn:active {
+  box-shadow: none;
+  border: 1px solid #131413;
+}
+.edit-btn a {
   width: 100%;
   height: 100%;
   text-decoration: none;
@@ -235,23 +234,16 @@ export default {
   align-items: center;
   padding-top: 1px;
 }
-.router-box .home-btn {
-  width: 100%;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.router-box span {
+.edit-btn span {
   color: rgb(249, 187, 73);
-  font-size: 12px;
-  font-weight: 900;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-align: center;
-  margin-left: 58px;
+  margin-left: 10px;
 }
-.router-box img {
-  width: 16px;
-  height: 16px;
+.edit-btn img {
+  width: 18px;
+  height: 18px;
   background-color: transparent;
   margin-right: 10px;
 }

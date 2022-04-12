@@ -25,7 +25,7 @@
 <style scoped>
 .validators-box {
   width: 100%;
-  height: 95%;
+  height: 100%;
   grid-column: 10/13;
   grid-row: 2/3;
   display: flex;
@@ -34,8 +34,8 @@
   align-items: center;
 }
 .validators-box .validator-title {
-  width: 95%;
-  height: 20px;
+  width: 94%;
+  height:15%;
   background-color: #bfbfbf;
   border-radius: 20px 20px 20px 20px;
   display: flex;
@@ -44,7 +44,7 @@
 }
 .validator-title .title {
   width: 80%;
-  height: 17px;
+  height:80%;
   font-size: 14px;
   font-weight: 900;
   color: rgb(36, 36, 36);

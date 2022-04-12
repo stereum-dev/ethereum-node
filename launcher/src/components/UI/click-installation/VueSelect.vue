@@ -20,7 +20,8 @@
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
       >
-        <option value="mainnet" selected>Mainnet</option>
+        <option value="" selected>CHOOSE A NETWORK</option>
+        <option value="mainnet">Mainnet</option>
         <option value="testnet">Testnet</option>
       </select>
     </div>

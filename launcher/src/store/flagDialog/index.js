@@ -8,8 +8,8 @@ export default {
       dialogIsVisible: false,
       linkFlags: [
         {
-          langImg: "Img/flag/ENGLISH.png",
-          langSelect: "Img/flag/En.png",
+          langImg: "img/flag/ENGLISH.png",
+          langSelect: "img/flag/En.png",
           langName: "english",
         },
         {
@@ -18,13 +18,13 @@ export default {
           langName: "german",
         },
         {
-          langImg: "Img/flag/FRENCH.png",
-          langSelect: "Img/flag/Fr.png",
+          langImg: "img/flag/FRENCH.png",
+          langSelect: "img/flag/Fr.png",
           langName: "french",
         },
         {
-          langImg: "Img/flag/SPANISH.png",
-          langSelect: "Img/flag/Sp.png",
+          langImg: "img/flag/SPANISH.png",
+          langSelect: "img/flag/Sp.png",
           langName: "spanish",
         },
       ],

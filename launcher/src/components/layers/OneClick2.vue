@@ -94,7 +94,6 @@ export default {
   margin: 1em;
   height: 100px;
   background-color: #b200ff;
-  font-family: sans-serif;
   text-align: center;
   line-height: 100px;
   font-size: xx-large;

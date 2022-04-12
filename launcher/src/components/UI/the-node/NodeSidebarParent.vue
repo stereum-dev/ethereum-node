@@ -19,6 +19,7 @@ export default {
   background: #2c4030;
   border: 5px solid #17241e;
   border-top-right-radius: 30px;
+  border-bottom-right-radius: 9px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
