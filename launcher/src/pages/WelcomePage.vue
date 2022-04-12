@@ -1,9 +1,7 @@
 <template>
-  <section>
-    <background-page>
-      <installation-menu></installation-menu>
-    </background-page>
-  </section>
+  <background-page>
+    <installation-menu></installation-menu>
+  </background-page>
 </template>
 <script>
 import BackgroundPage from "../components/layers/BackgroundPage.vue";

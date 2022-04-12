@@ -156,11 +156,11 @@ export default {
   align-items: center;
 }
 .level-box {
-  width: 18%;
+  width: 19%;
   height: 90%;
   background-color: #537263;
-  border-radius: 13px;
-  margin-left: 10px;
+  border-radius: 10px;
+  margin-left: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -206,18 +206,17 @@ export default {
 }
 .description-box {
   width: 80%;
-  height: 100%;
-  min-height: 168px;
+  height: 99%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .expert-description-box,
 .general-description-box {
-  width: 95%;
+  width: 97%;
   height: 90%;
   background-color: #686a6c;
-  border-radius: 15px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr;
@@ -225,7 +224,7 @@ export default {
 .expert-items,
 .general-items {
   width: 85%;
-  height: 60%;
+  height: 68%;
   background-color: #e8e8e8;
   border: 2px solid #233f3f;
   border-radius: 15px;
