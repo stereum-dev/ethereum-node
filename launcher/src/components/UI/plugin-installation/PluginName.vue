@@ -275,7 +275,7 @@ export default {
 .category span {
   font-size: 0.7rem;
   font-weight: 800;
-  color: rgb(177, 176, 175);
+  color: rgb(115, 115, 115);
 }
 .name-box {
   width: 95%;
