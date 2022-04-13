@@ -57,6 +57,9 @@
           dest: /opt/app/services/{{ beacon_service }}/validator/validators/api-token.txt
           force: no
         become: yes
+      - name: Waiting for the services to start properly
+        pause:
+          minutes: 5
       vars:
         stereum_args:
           manage_service:
