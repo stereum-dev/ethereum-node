@@ -13,4 +13,18 @@ export class StringUtils {
 
         return escapedShellCmd;
     }
+
+    static createRandomString(){
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for(let i = 0; i < 36; i++){
+            if(i == 8 || i == 13 || i == 18 || i == 23){
+                result += '-'
+            } else {
+                result += characters.charAt(Math.random() * characters.length);
+            }
+        }
+        return result;
+    }
+    
 }

@@ -26,8 +26,8 @@ test('manageServiceState success', async () => {
     });
 
     expect(mMock.mock.calls[0][0]).toMatch(/manage-service/);
-    expect(mMock.mock.calls[0][1].stereum.manage_service.configuration.id).toMatch(/123/);
-    expect(mMock.mock.calls[0][1].stereum.manage_service.configuration.state).toMatch(serivceState.restarted);
+    expect(mMock.mock.calls[0][1].stereum_args.manage_service.configuration.id).toMatch(/123/);
+    expect(mMock.mock.calls[0][1].stereum_args.manage_service.state).toMatch(serivceState.restarted);
 });
 
 
@@ -50,8 +50,8 @@ test('manageServiceState failure', async () => {
     await expect(sm.manageServiceState("123", serivceState.started)).rejects.toMatch(/error321/);
 
     expect(mMock.mock.calls[0][0]).toMatch(/manage-service/);
-    expect(mMock.mock.calls[0][1].stereum.manage_service.configuration.id).toMatch(/123/);
-    expect(mMock.mock.calls[0][1].stereum.manage_service.configuration.state).toMatch(serivceState.started);
+    expect(mMock.mock.calls[0][1].stereum_args.manage_service.configuration.id).toMatch(/123/);
+    expect(mMock.mock.calls[0][1].stereum_args.manage_service.state).toMatch(serivceState.started);
 });
 
 test('readServiceConfigurations success', async () => {
