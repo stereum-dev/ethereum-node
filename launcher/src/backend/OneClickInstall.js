@@ -67,7 +67,7 @@ export class OneClickInstall {
 
     }
 
-    createServices(choosenClient){
+    createServices(){
         let ports = [];
 
         ports = [
@@ -76,7 +76,7 @@ export class OneClickInstall {
         ]
         this.executionClient = GethService.buildByUserInput("goerli", ports, this.installDir + "/geth")
         
-        switch(choosenClient) {
+        switch(this.choosenClient) {
             case 'Lighthouse':
                 //to be implemented
                 break;
@@ -106,7 +106,7 @@ export class OneClickInstall {
         ports = [
             new ServicePort("127.0.0.1",3000,3000,servicePortProtocol.tcp)
         ]
-        this.grafana = GrafanaService.buildByUserInput("prater",ports,this.installDir + "/grafana",choosenClient.toLowerCase());
+        this.grafana = GrafanaService.buildByUserInput("prater",ports,this.installDir + "/grafana",this.choosenClient.toLowerCase());
     }
     
     async writeConfig(){
@@ -131,32 +131,32 @@ export class OneClickInstall {
         }
     }
 
-    async setupNode(setup, installDir, nodeConnection) {
-        this.installDir = installDir;
-        this.nodeConnection = nodeConnection;
-        this.serviceManager = new ServiceManager(nodeConnection);
-        let choosenClient = await this.chooseClient()
-        choosenClient = choosenClient.charAt(0).toUpperCase() + choosenClient.slice(1);
 
+
+    async getSetupConstellation(setup){
+        let services = ["GETH","GRAFANA","PROMETHEUSNODEEXPORTER","PROMETHEUS"]
+        //make sure API is only called once when implemented
+        if(!this.choosenClient){
+            this.choosenClient = await this.chooseClient()
+            this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1);
+        }
+        services.push(this.choosenClient.toUpperCase());
+
+        //TODO: adapt Validator integration on naming of Validator services if "LIGHTHOUSE" (distinguish by category) then do nothing else "LIGHTHOUSEVALIDATOR" or something else
         switch(setup){
             case 'staking':
-                this.createServices(choosenClient)
                 break;
-            case 'blox':
-                //this.validatorService = BloxSSVService.buildByUserInput() to be implemented
+            case 'blox ssv':
+                services.push("BLOX SSV");
                 break;
-            case 'obol':
-                //To be implemented
+            case 'obol ssv':
+                services.push("OBOL SSV");
                 break;
-            case 'rocket':
-                //To be implemented
+            case 'rocketpool':
+                services.push("ROCKETPOOL");
                 break;
-            default:
-                console.log("Something went wrong");
         }
-        await this.prepareNode(this.installDir)
-        await this.writeConfig();
-        await this.startServices();
-        
+        return services;
     }
+
 }
