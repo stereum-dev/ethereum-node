@@ -1,8 +1,4 @@
 ---
-- name: Waiting for the services to start properly
-  pause:
-    minutes: 5
-
 - block:
   - name: Prysm - Get validator service's api token
     command: "sed -n 2p auth-token"
