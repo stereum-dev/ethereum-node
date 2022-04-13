@@ -62,7 +62,7 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/node' }">
+            <router-link :to="{ path: '/configuration' }">
               <button class="next-btn">INSTALL</button>
             </router-link>
           </div>

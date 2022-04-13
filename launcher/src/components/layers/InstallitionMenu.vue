@@ -12,7 +12,9 @@
         </p>
       </div>
       <div class="progress-container">
-        <circle-loading :message="message" :open="running"></circle-loading>
+        <div class="progress-bg">
+          <circle-loading :message="message" :open="running"></circle-loading>
+        </div>
       </div>
     </div>
     <div class="item-container">
@@ -95,7 +97,7 @@ export default {
   width: 80%;
   height: 40%;
   resize: both;
-  margin:30px auto;
+  margin: 30px auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
@@ -159,6 +161,14 @@ export default {
   width: 82%;
   height: 32%;
   margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.progress-bg{
+  width: 60%;
+  height: 100%;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;

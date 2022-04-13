@@ -523,12 +523,12 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
 }
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
-    inset 1px 1px 5px 1px rgb(67, 86, 67);
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60)
 }
 .next-btn:active,
 .back-btn:active {
