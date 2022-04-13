@@ -1,0 +1,64 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("5052/tcp") != -1
+      - stereum_ufw_status.stdout.find("5062/tcp") != -1
+  # Lighthouse api-token
+  - stat: path=/opt/app/services/0ca56612-998f-11ec-a28d-f71957ab65a0/validator/validators/api-token.txt
+    register: api_token
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Check for api-token
+    assert:
+      that:
+        - api_token.stat.exists
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 3
+  # lh beacon & validator logs
+  - name: Lighthouse beacon node
+    command: "docker logs --tail=150 stereum-7c0b52c4-98a3-11ec-85c7-0735587b56e3"
+    register: beacon
+    until:
+      - beacon.stderr is search('est_time')
+      - beacon.stderr is not search('Failed to start beacon node')
+    retries: 360
+    delay: 10
+  - name: Lighthouse validator
+    command: "docker logs --tail=150 stereum-0ca56612-998f-11ec-a28d-f71957ab65a0"
+    register: validator
+    until:
+      - validator.stderr is search('pubkey:')
+      - validator.stderr is search('Connected to beacon node')
+      - validator.stderr is not search('Offline beacon node')
+    retries: 360
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("5052->5052") != -1
+      - stereum_docker_ps.stdout.find("5062->5062") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+
+# EOF

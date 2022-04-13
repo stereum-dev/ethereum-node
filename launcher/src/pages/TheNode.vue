@@ -78,7 +78,7 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       servicePlugins: "getServicePlugins",
-      selectedPlugin: "getSelectedPlugin",
+      selectedPreset: "getSelectedPreset",
     }),
   },
   methods: {

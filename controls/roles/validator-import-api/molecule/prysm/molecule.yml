@@ -1,0 +1,38 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "validator-import-api--prysm--ubuntu-20.04"
+    hostname: ubuntu
+    server_type: cpx21
+    image: ubuntu-20.04
+    network:
+      name: eth2-prater
+      ip_range: 10.10.0.0/24
+      ip: 10.10.0.145
+  - name: "validator-import-api--prysm--centos-stream-8"
+    hostname: "centos"
+    server_type: cpx21
+    image: centos-stream-8
+    network:
+      name: eth2-prater
+      ip_range: 10.10.0.0/24
+      ip: 10.10.0.146
+provisioner:
+  name: ansible
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - lint
+    - verify
+    - destroy

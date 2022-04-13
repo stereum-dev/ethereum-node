@@ -14,7 +14,7 @@ export default {
   getSelectedNetworks(state) {
     return state.selectedNetworks;
   },
-  getSelectedPlugin(state) {
-    return state.selectedPlugin;
+  getSelectedPreset(state) {
+    return state.selectedPreset;
   },
 };
