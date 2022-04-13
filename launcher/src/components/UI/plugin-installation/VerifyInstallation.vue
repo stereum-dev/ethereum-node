@@ -20,29 +20,33 @@
                   <span>REQUIREMENTS</span>
                 </div>
                 <div class="table-content">
-                  <div class="table-row">
+                  <div
+                    class="table-row"
+                    v-for="plugin in selectedPreset.includedPlugins"
+                    :key="plugin.id"
+                  >
                     <div class="plugin-name">
                       <span>NAME:</span>
-                      <span>{{ selectedPlugin.name }}</span>
+                      <span>{{ plugin.name }}</span>
                     </div>
                     <div class="selection">
-                      <div class="network">
-                        <span>NETWORK:</span>
-                        <span>{{ selectedPlugin.network }}</span>
+                      <div class="category">
+                        <span>CATEGORY:</span>
+                        <span>{{ plugin.category }}</span>
                       </div>
                       <div class="path">
                         <span>PATH:</span>
-                        <span>{{ selectedPlugin.path }}</span>
+                        <span>{{ plugin.path }}</span>
                       </div>
                     </div>
                     <div class="requirements">
                       <div class="cpu">
                         <span>CPU CORES:</span>
-                        <span>{{ selectedPlugin.requirements?.core }}</span>
+                        <span>{{ this.selectedPreset.requirements?.core }}</span>
                       </div>
                       <div class="memory">
                         <span>MEMORY:</span>
-                        <span>{{ selectedPlugin.requirements?.memory }}</span>
+                        <span>{{ this.selectedPreset.requirements?.memory }}</span>
                       </div>
                     </div>
                   </div>
@@ -71,11 +75,11 @@ export default {
   },
   computed: {
     ...mapGetters({
-      selectedPlugin: "getSelectedPlugin",
+      selectedPreset: "getSelectedPreset",
     }),
   },
   mounted() {
-    if (Object.keys(this.selectedPlugin).length === 0) {
+    if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
   },
@@ -111,7 +115,7 @@ export default {
 .verify-modal {
   width: 70%;
   height: 95%;
-   border: 1px solid rgba(38, 38, 38, 0.5);
+  border: 1px solid rgba(38, 38, 38, 0.5);
   border-radius: 20px;
   background-color: #334b3e;
   display: flex;
@@ -243,8 +247,8 @@ export default {
   justify-content: space-evenly;
   align-items: flex-start;
 }
-.network {
-  width: 90%;
+.category {
+  width: 95%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -255,14 +259,14 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.table-row .selection .network span:first-child {
+.table-row .selection .category span:first-child {
   color: #a7a7a7;
   font-size: 0.8rem;
   font-weight: 600;
 }
-.table-row .selection .network span:last-child {
+.table-row .selection .category span:last-child {
   color: #4ca434;
-  font-size: 0.9rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
 }

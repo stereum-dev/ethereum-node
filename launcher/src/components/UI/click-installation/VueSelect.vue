@@ -38,7 +38,7 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === this.selectedPlugin?.id,
+                  selectedItem: item.id === this.selectedPreset?.id,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -51,10 +51,11 @@
               :key="index"
             >
               <img
+                onmousedown="return false"
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === this.selectedPlugin?.id,
+                  selectedItem: item.id === this.selectedPreset?.id,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -80,7 +81,7 @@ export default {
   computed: {
     ...mapGetters({
       plugins: "installationPlugins",
-      selectedPlugin: "getSelectedPlugin",
+      selectedPreset: "getSelectedPreset",
     }),
   },
 
@@ -109,7 +110,7 @@ export default {
       }
     },
     selectItemToInstall(item) {
-      this.$store.commit("mutatedSelectedPlugin", item);
+      this.$store.commit("mutatedSelectedPreset", item);
     },
   },
 };
