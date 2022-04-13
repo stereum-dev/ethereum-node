@@ -94,6 +94,9 @@
       - name: "Include manage-service"
         include_role:
           name: "manage-service"
+      - name: Waiting for the services to start properly
+        pause:
+          minutes: 5
       vars:
         stereum_args:
           manage_service:
