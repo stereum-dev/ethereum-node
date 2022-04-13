@@ -1,16 +1,4 @@
-.tournament {
-  height: 12px !important;
-  width: 12px !important;
-  background-image: url("/img/icons/tournament.png") !important;
-  background-size: cover;
-  margin-right: 14px;
-}
 
-body {
-  padding: 0;
-  margin: 0;
-}
-=======
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');  
 
   html body{
