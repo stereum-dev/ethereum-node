@@ -138,6 +138,9 @@
         with_items:
           - "stereum-{{ beacon_service }}"
           - "stereum-{{ validator_service }}"
+      - name: Waiting for the services to start properly
+        pause:
+          minutes: 5
       vars:
         stereum_args:
           manage_service:
