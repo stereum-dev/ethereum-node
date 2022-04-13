@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="thestaking-parent">
     <div class="header">
       <node-header></node-header>
     </div>
@@ -21,5 +21,14 @@ export default {
   position: fixed;
   top: 0;
   z-index: 10;
+}
+.thestaking-parent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
 }
 </style>

@@ -71,7 +71,7 @@ const store = createStore({
       configData_nodeSidebarActive: [
         {
           id: 1,
-          name: "NONE FUNCTIONAL",
+          name: "NONE FUNC.",
           status: "deactive",
         },
         {
@@ -81,7 +81,7 @@ const store = createStore({
         },
         {
           id: 3,
-          name: "SYNC/PROBLEM REC.",
+          name: "SYNC/PROBLEM",
           status: "notOk",
         },
         {
@@ -101,59 +101,15 @@ const store = createStore({
         },
         {
           id: 7,
-          name: "SYNC/PROBLEM REC.",
+          name: "SYNC/PROBLEM",
           status: "notOk",
         },
         {
           id: 8,
-          name: "NONE FUNCTIONAL",
+          name: "NONE FUNC.",
           status: "deactive",
         },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
+      
       ],
       R1clkInstls: [
         { clkId: "staking", img: "/img/icon/STAKING.png" },

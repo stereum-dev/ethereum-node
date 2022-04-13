@@ -46,19 +46,18 @@ export default {
 </script>
 <style scoped>
 .service-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 95%;
-  height: 95%;
+  width: 96%;
+  height: 98%;
   margin-bottom: 10px;
-  background: #4f4f4f;
-  align-self: center;
+  background-color: #3b3b3b;
   border-radius: 20px;
   overflow: auto;
   padding: 5px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .service-arrow {

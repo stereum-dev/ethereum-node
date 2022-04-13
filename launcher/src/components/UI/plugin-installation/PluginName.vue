@@ -48,11 +48,7 @@
                     <span>CHANGE INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
-                    <input
-                      type="text"
-                      v-model="inputPath"
-                      
-                    />
+                    <input type="text" v-model="inputPath" />
                   </div>
                 </div>
               </div>
@@ -205,7 +201,8 @@ export default {
 .name-box {
   width: 95%;
   height: 20%;
-  background-color: #c2bebe;
+  margin-top: 5px;
+  background-color: #8e8e8e;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -213,9 +210,9 @@ export default {
   box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .name-title-box {
-  width: 95%;
+  width: 96%;
   height: 80%;
-  border-radius: 20px;
+  border-radius: 15px;
   background-color: #5b5b5b;
   display: flex;
   justify-content: center;
@@ -250,11 +247,11 @@ export default {
   width: 95%;
   height: 63%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .options-box {
-  width: 48%;
+  width: 49%;
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
@@ -419,7 +416,7 @@ export default {
   padding-left: 10px;
 }
 .system-box {
-  width: 48%;
+  width: 49%;
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
@@ -570,7 +567,7 @@ export default {
   color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39, inset 1px 1px 3px 1px #546c5f;
+  box-shadow: 0 1px 2px 1px #353e39;
 }
 .next-btn:hover,
 .back-btn:hover {

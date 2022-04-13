@@ -1,17 +1,7 @@
 <template>
-  <section class="Parent_ctnInstal">
-    <section id="header">
+  <div class="welcome-parent">
+    <div id="header">
       <h2>WELCOME</h2>
-    </section>
-    <div class="containerInstall">
-      <div class="col" v-for="(install, index) in installation" :key="index">
-        <router-link class="lintTtl" :to="install.path"
-          ><button-installation
-            :img="install.img"
-            :url="install.img2"
-          ></button-installation
-        ></router-link>
-      </div>
     </div>
     <div class="middle-box">
       <div id="txt">
@@ -25,7 +15,22 @@
         <circle-loading :message="message" :open="running"></circle-loading>
       </div>
     </div>
-  </section>
+    <div class="item-container">
+      <div
+        class="item-column"
+        v-for="(install, index) in installation"
+        :key="index"
+      >
+        <router-link class="lintTtl" :to="install.path"
+          ><button-installation
+            onmousedown="return false"
+            :img="install.img"
+            :url="install.img2"
+          ></button-installation
+        ></router-link>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
@@ -79,28 +84,26 @@ export default {
 };
 </script>
 <style scope>
-.Parent_ctnInstal {
+.welcome-parent {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: 5% 15% 30% 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.containerInstall {
-  grid-column: 1/7;
-  grid-row: 4;
+.item-container {
   width: 80%;
-  height: 90%;
+  height: 40%;
   resize: both;
-  margin: 0 auto;
+  margin:30px auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
-.col {
+.item-column {
   width: 28%;
   height: 100%;
   box-sizing: border-box;
@@ -119,11 +122,9 @@ export default {
 }
 
 #header {
-  grid-row: 2/3;
-  grid-column: 2/6;
-  width: 80%;
-  height: 100%;
-  margin: 0 auto;
+  width: 40%;
+  height: 20%;
+  margin: 50px auto;
   position: relative;
   display: flex;
   justify-content: center;
@@ -131,13 +132,13 @@ export default {
 }
 #header h2 {
   width: 70%;
-  height: 50%;
+  height: 40%;
   margin: 0 auto;
   font-size: 2.4rem;
   resize: both;
   box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
   background: #2a4243;
-  color: #fff;
+  color: rgb(221, 221, 221);
   padding-bottom: 10px;
   border-radius: 40px;
   border: 4px solid #6e8582;
@@ -146,11 +147,9 @@ export default {
   padding-top: 5px;
 }
 .middle-box {
-  grid-row: 3/4;
-  grid-column: 1/7;
   width: 90%;
-  height: 100%;
-  margin: 20px auto 0 auto;
+  height: 25%;
+  margin: 20px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -159,7 +158,7 @@ export default {
 .progress-container {
   width: 82%;
   height: 32%;
-  margin: 0 auto;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -53,7 +53,7 @@
       dest: "{{ 'any' if (item.split(':') | first) == '0.0.0.0' else (item.split(':') | first) }}"
       rule: allow
       port: "{{ item.split(':')[1] }}"
-      proto: "{{ item.split('/')[1] }}"
+      proto: "{{ item.split('/')[1] | default('any') }}"
       delete: "{{ 'yes' if stereum.manage_service.state == 'stopped' else 'no' }}"
     environment:
       PATH: /sbin:{{ ansible_env.PATH }}

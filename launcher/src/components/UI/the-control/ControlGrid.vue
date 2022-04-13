@@ -8,7 +8,7 @@
         <div class="plugins-table-bg">
           <div class="arrow-up">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
               alt=""
             />
           </div>
@@ -27,7 +27,7 @@
           </div>
           <div class="arrow-down">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
               alt="icon"
             />
           </div>
@@ -44,7 +44,7 @@
       <control-alert></control-alert>
     </div>
 
-    <div class="ctrlfooter">FOOTER</div>
+    <div class="footer"></div>
   </div>
 </template>
 
@@ -61,14 +61,15 @@ export default {
 <style scoped>
 .ctrGridParent {
   display: grid;
-  width: 98.9%;
-  height: 97.5%;
-  border: 6px solid rgb(165, 165, 165);
-  border-radius: 10px 30px 30px 30px;
-  top: 1px;
+  width: 99.1%;
+  height: 90%;
+  background-color: rgb(28, 28, 28);
+  border: 4px solid #979797;
+  border-radius: 10px 35px 10px 10px;
   grid-template-columns: 24% 59% 17%;
-  grid-template-rows: repeat(3, 1fr) 5%;
-  position: relative;
+  grid-template-rows: 32% 31% 32% 5%;
+  z-index: 0;
+  text-align: center;
 }
 
 .plugins-container {
@@ -81,20 +82,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .dashboard-container {
   width: 98%;
   height: 93%;
-  margin-top: 5px;
+  margin-top: 7px;
   color: white;
   grid-column-start: 2;
   grid-column-end: 4;
   grid-row-start: 1;
   grid-row-end: 3;
   z-index: 0;
-  border: 5px solid grey;
-  border-radius: 20px;
+  border: 4px solid grey;
+  border-radius: 20px 27px 20px 20px;
 }
 
 .control-panel {
@@ -115,33 +117,38 @@ export default {
   z-index: 1;
 }
 
-.ctrlfooter {
-  background: rgb(42, 45, 42);
-  color: white;
-  grid-column-start: 1;
-  grid-column-end: 4;
-  border-radius: 0 0 25px 25px;
+.footer {
+  width: 100%;
+  height: 99%;
+  margin: 0 auto;
+  grid-column: 1/4;
+  grid-row: 4;
+  background-color: rgb(52, 52, 52);
+  border-radius:0 0 7px 7px;
 }
 .plugins-title {
   width: 40%;
-  height: 22px;
-  background-color: #29322d;
+  height: 4.5%;
+  background-color: #1c3326;
   padding: 2px;
-  border: 1px solid #3f5b54;
+  border: 1px solid #4a5150;
   border-radius: 10px;
+  margin:14px auto 5px auto;
+  box-shadow: 0 1px 3px 1px rgb(20, 44, 34);
 }
 .plugins-title span {
-  color: rgb(223, 223, 223);
-  font-size: 16px;
-  font-weight: 900;
+  color: rgb(209, 209, 209);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 .plugins-table-bg {
   width: 90%;
-  height: 85%;
+  height: 86%;
   background-color: #527162;
-  border-radius: 35px 35px 45px 45px;
+  border-radius: 30px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
 }
 .arrow-down,
