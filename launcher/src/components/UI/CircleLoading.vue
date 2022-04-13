@@ -83,10 +83,8 @@ dialog {
 
 .progress {
   position: relative;
-  height: 32%;
-  width: 92%;
-  border: 3px solid #6e8582;
-  box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
+  height: 82%;
+  width: 100%;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -94,9 +92,9 @@ dialog {
 }
 
 .progress span {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 800;
-  color: rgb(255, 255, 255);
+  color: rgb(206, 206, 206);
   position: relative;
   text-align: left;
   margin-left: 10px;
@@ -105,12 +103,13 @@ dialog {
 
 .progress .color {
   position: absolute;
-  background-color: #0f558a;
+  background-color: rgb(4, 56, 33);
   width: 0px;
   height: 100%;
   border-radius: 20px;
   animation: progres 5s linear;
   animation-fill-mode: forwards;
+  box-shadow: inset 1px 2px 5px rgb(83, 180, 128), 0 1px 3px 1px rgb(52, 52, 52);
 }
 
 @keyframes progres {
@@ -121,13 +120,14 @@ dialog {
     width: 10%;
   }
   25% {
-    width: 50%;
+    width: 25%;
   }
   50% {
-    width: 75%;
+    width: 50%;
   }
   75% {
     width: 85%;
+    
   }
   100% {
     width: 100%;

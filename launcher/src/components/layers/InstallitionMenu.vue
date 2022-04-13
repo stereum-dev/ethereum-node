@@ -167,11 +167,15 @@ export default {
 }
 .progress-bg{
   width: 60%;
-  height: 100%;
-  background-color: #fff;
+  height: 60%;
+  border: 3px solid #272928;
+  background-color: #222020;
+  border-radius: 40px;
+  box-shadow: 0 1px 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 1;
 }
 #txt {
   width: 85%;
