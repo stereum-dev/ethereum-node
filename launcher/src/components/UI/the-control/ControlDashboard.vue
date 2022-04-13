@@ -13,12 +13,17 @@
     <div class="cpuUsage_cell">
       <the-thermometer></the-thermometer>
     </div>
-    <div class="peersConect_cell">
-      <router-link to="/cpu"><base-button>test</base-button></router-link>
-    </div>
-    <!-- <div class="networkUsage_cell">
-      <the-thermometer class="netThermo"></the-thermometer>
-    </div> -->
+    <router-link to="/cpu" class="peersConect_cell">
+      <div class="cpuCounter">
+        {{ No
+        }}<img
+          class="cpuChartAnim"
+          src="../../../../public/img/icon/animChart.svg"
+          alt=""
+        />
+      </div>
+    </router-link>
+
     <div class="validatorComment_cell">
       <storage-counter class="validCntr"></storage-counter>
     </div>
@@ -27,13 +32,17 @@
 
 <script>
 import TheThermometer from "./TheThermometer.vue";
-// import ChartBar from "./ChartBar.vue";
-// import ChartLine from "./ChartLine.vue";
+
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
   components: { SandClock, StorageCounter, TheThermometer },
+  data() {
+    return {
+      No: 100,
+    };
+  },
 };
 </script>
 
@@ -106,7 +115,31 @@ export default {
   border-radius: 10px;
   background: rgba(55, 55, 55, 0.8);
   box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
+  box-shadow: 2px 3px rgb(53, 51, 51);
+  text-decoration: none;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.peersConect_cell:hover {
+  background: rgb(19, 16, 16);
+}
+.peersConect_cell:active {
+  background: rgb(19, 16, 16);
+}
+
+.cpuCounter {
+  color: aquamarine;
+  font-size: 2rem;
+  text-align: left;
+  margin: 5%;
+  display: flex;
+
+  width: 100%;
+}
+.cpuChartAnim {
+  position: relative;
+  left: -70%;
 }
 
 /*.networkUsage_cell {
