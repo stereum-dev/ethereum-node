@@ -60,8 +60,8 @@
               <div class="info-box">
                 <div
                   class="info-row"
-                  v-for="plugin in selectedPreset.includedPlugins"
-                  :key="plugin.id"
+                  v-for="(plugin,index) in selectedPreset.includedPlugins"
+                  :key="index"
                 >
                   <div class="plugin-icon">
                     <img :src="plugin.icon" alt="icon" />
@@ -146,6 +146,9 @@ export default {
       this.$router.push("/clickinstall");
     }
   },
+  methods: {
+
+  }
 };
 </script>
 <style scoped>
@@ -275,7 +278,7 @@ export default {
 .category span {
   font-size: 0.7rem;
   font-weight: 800;
-  color: rgb(177, 176, 175);
+  color: rgb(115, 115, 115);
 }
 .name-box {
   width: 95%;

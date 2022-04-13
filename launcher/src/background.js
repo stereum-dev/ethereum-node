@@ -6,10 +6,12 @@ import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { StereumService } from "./stereumservice.js";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
+import { OneClickInstall } from "./backend/OneClickInstall.js";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
 const nodeConnection = new NodeConnection();
+const oneClickInstall = new OneClickInstall();
 import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
@@ -67,6 +69,10 @@ promiseIpc.on("writeConfig", async (arg) => {
 promiseIpc.on("checkOS", async () => {
   await nodeConnection.findOS();
   return nodeConnection.os;
+});
+
+promiseIpc.on("getOneClickConstellation", async (arg) => {
+  return await oneClickInstall.getSetupConstellation(arg);
 });
 
 // Scheme must be registered before the app is ready

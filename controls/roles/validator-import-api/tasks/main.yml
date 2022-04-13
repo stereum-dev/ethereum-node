@@ -1,20 +1,21 @@
 ---
 - block:
-  - name: Prysm - Get validator service's api token
-    command: "sed -n 2p auth-token"
-    args:
-      chdir: "/opt/app/services/{{ validator_service }}/data/wallets"
-    changed_when: false
-    register: api_token
+  - name: Get validator service's auth-token
+    slurp:
+      src: "/opt/app/services/{{ validator_service }}/data/wallets/auth-token"
+    register: auth_token
     become: yes
+  - name: Get api-token
+    set_fact:
+      api_token: "{{ auth_token['content'] | b64decode | regex_search('(?<=\n).*(?=\n)') }}"
   - debug:
-      msg: "{{ api_token.stdout }}"
+      msg: "{{ api_token }}"
   - name: Prysm import-validator using API
     uri:
       url: http://localhost:7500/eth/v1/keystores
       headers:
         Content-Type: application/json
-        Authorization: "Bearer {{ api_token.stdout }}"
+        Authorization: "Bearer {{ api_token }}"
       method: POST
       body:
         keystores: "{{ item.content }}"

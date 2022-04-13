@@ -132,7 +132,6 @@ export default {
     margin-top: 2px;
     width: 100%;
     box-sizing: border-box;
-    font-family: montserrat;
     color: #2C3E50;
     font-size: 16px;
     letter-spacing: 1px
@@ -229,22 +228,18 @@ select.list-dt:focus {
 }
 
 #progressbar #account:before {
-    font-family: FontAwesome;
     content: "\f023"
 }
 
 #progressbar #personal:before {
-    font-family: FontAwesome;
     content: "\f007"
 }
 
 #progressbar #payment:before {
-    font-family: FontAwesome;
     content: "\f09d"
 }
 
 #progressbar #confirm:before {
-    font-family: FontAwesome;
     content: "\f00c"
 }
 

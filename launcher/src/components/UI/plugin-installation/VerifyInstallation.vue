@@ -22,8 +22,8 @@
                 <div class="table-content">
                   <div
                     class="table-row"
-                    v-for="plugin in selectedPreset.includedPlugins"
-                    :key="plugin.id"
+                    v-for="(plugin, index) in selectedPreset.includedPlugins"
+                    :key="index"
                   >
                     <div class="plugin-name">
                       <span>NAME:</span>
@@ -42,11 +42,15 @@
                     <div class="requirements">
                       <div class="cpu">
                         <span>CPU CORES:</span>
-                        <span>{{ this.selectedPreset.requirements?.core }}</span>
+                        <span>{{
+                          this.selectedPreset.requirements?.core
+                        }}</span>
                       </div>
                       <div class="memory">
                         <span>MEMORY:</span>
-                        <span>{{ this.selectedPreset.requirements?.memory }}</span>
+                        <span>{{
+                          this.selectedPreset.requirements?.memory
+                        }}</span>
                       </div>
                     </div>
                   </div>
