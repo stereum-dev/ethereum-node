@@ -124,7 +124,7 @@ export default {
   grid-column: 1/4;
   grid-row: 4;
   background-color: rgb(52, 52, 52);
-  border-radius:0 0 7px 7px;
+  border-radius: 0 0 7px 7px;
 }
 .plugins-title {
   width: 40%;
@@ -133,7 +133,7 @@ export default {
   padding: 2px;
   border: 1px solid #4a5150;
   border-radius: 10px;
-  margin:14px auto 5px auto;
+  margin: 14px auto 5px auto;
   box-shadow: 0 1px 3px 1px rgb(20, 44, 34);
 }
 .plugins-title span {
