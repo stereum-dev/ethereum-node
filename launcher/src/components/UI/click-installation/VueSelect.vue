@@ -68,6 +68,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -82,6 +83,7 @@ export default {
     ...mapGetters({
       plugins: "installationPlugins",
       selectedPreset: "getSelectedPreset",
+      allPlugins: "getAllPlugins",
     }),
   },
 
@@ -109,7 +111,16 @@ export default {
         this.isTestnetActive = true;
       }
     },
-    selectItemToInstall(item) {
+    selectItemToInstall: async function(item) {
+      let constellation = await ControlService.getOneClickConstellation(item.name)
+
+      let includedPlugins = [];
+      constellation.forEach(plugin => {
+        let buffer = this.allPlugins.filter(element => element.name === plugin);
+        buffer.forEach(element => includedPlugins.push(element));
+        
+      })
+      item.includedPlugins = includedPlugins;
       this.$store.commit("mutatedSelectedPreset", item);
     },
   },
