@@ -1,6 +1,6 @@
 export default {
   installationPlugins(state) {
-    return state.plugins;
+    return state.presets;
   },
   getSystemInformation(state) {
     return state.systemInfos;
@@ -16,5 +16,8 @@ export default {
   },
   getSelectedPreset(state) {
     return state.selectedPreset;
+  },
+  getAllPlugins(state) {
+    return state.plugins;
   },
 };
