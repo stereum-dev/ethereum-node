@@ -1,5 +1,5 @@
 export default {
-  mutatedSelectedPlugin(state, payload) {
-    state.selectedPlugin = payload;
+  mutatedSelectedPreset(state, payload) {
+    state.selectedPreset = payload;
   },
 };

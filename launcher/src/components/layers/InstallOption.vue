@@ -42,7 +42,7 @@ export default {
       return this.$store.getters.R1clkInstls_get;
     },
     ...mapGetters({
-      selectedPlugin: "getSelectedPlugin",
+      selectedPreset: "getSelectedPreset",
     }),
   },
   methods: {
@@ -59,7 +59,7 @@ export default {
       this.testnetBtn = false;
     },
     clickedToInstall() {
-      if (Object.keys(this.selectedPlugin).length > 0) {
+      if (Object.keys(this.selectedPreset).length > 0) {
         this.$router.push("/install");
       }
     },

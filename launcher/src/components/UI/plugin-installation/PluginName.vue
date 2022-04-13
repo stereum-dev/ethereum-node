@@ -7,7 +7,7 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span>{{ selectedPlugin.name }}</span>
+                <span>{{ selectedPreset.name }}</span>
               </div>
             </div>
           </div>
@@ -23,13 +23,13 @@
                       <span>CHOSEN NETWORK</span>
                     </div>
                     <div class="none">
-                      <span>{{ selectedPlugin.network }}</span>
+                      <span>{{ selectedPreset.network }}</span>
                     </div>
                   </div>
                   <div class="circle-box">
                     <img
                       :src="
-                        selectedPlugin.network === 'mainnet'
+                        selectedPreset.network === 'mainnet'
                           ? this.mainnetIcon
                           : this.testnetIcon
                       "
@@ -48,48 +48,29 @@
                     <span>CHANGE INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
-                    <input type="text" v-model="inputPath" />
+                    <input type="text" v-model="installationPath" />
                   </div>
                 </div>
               </div>
             </div>
-            <div class="system-box">
-              <div class="system-title">
-                <span>SYSTEM</span>
+            <div class="included-box">
+              <div class="included-title">
+                <span>PLUGINS</span>
               </div>
               <div class="info-box">
-                <div class="system-info">
-                  <div class="info-header">
-                    <span class="current-title">CURRENT</span>
-                    <span class="min-title">MIN</span>
+                <div
+                  class="info-row"
+                  v-for="plugin in selectedPreset.includedPlugins"
+                  :key="plugin.id"
+                >
+                  <div class="plugin-icon">
+                    <img :src="plugin.icon" alt="icon" />
                   </div>
-                  <div class="info-titles">
-                    <span class="cpu-info">CPU CORES:</span>
-                    <span class="memory-info">MEMORY:</span>
+                  <div class="plugin-name">
+                    <span>{{ plugin.name }}</span>
                   </div>
-                  <div class="info-parent">
-                    <div class="info-content">
-                      <div class="cpu-cores">
-                        <span
-                          class="cpu-current"
-                          :class="getCpuClass ? 'passedreq' : 'faildreq'"
-                          >{{ systemInfos.cpu }}</span
-                        >
-                        <span class="cpu-needed">{{
-                          selectedPlugin.requirements?.core
-                        }}</span>
-                      </div>
-                      <div class="memory">
-                        <span
-                          class="memory-current"
-                          :class="getMemoryClass ? 'passedreq' : 'faildreq'"
-                          >{{ systemInfos.memory }}</span
-                        >
-                        <span class="memory-needed">{{
-                          selectedPlugin.requirements?.memory
-                        }}</span>
-                      </div>
-                    </div>
+                  <div class="category">
+                    <span>{{ plugin.category }}</span>
                   </div>
                 </div>
               </div>
@@ -126,37 +107,44 @@ export default {
   },
   computed: {
     ...mapGetters({
-      selectedPlugin: "getSelectedPlugin",
+      selectedPreset: "getSelectedPreset",
       systemInfos: "getSystemInformation",
     }),
     getMemoryClass() {
-      if (this.systemInfos.memory >= this.selectedPlugin.requirements?.memory) {
+      if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
         return true;
       } else {
         return false;
       }
     },
     getCpuClass() {
-      if (this.systemInfos.cpu >= this.selectedPlugin.requirements?.core) {
+      if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
         return true;
       } else {
         return false;
       }
     },
+    installationPath: {
+      get() {
+        if (this.inputPath === "") {
+          return this.selectedPreset.mainPath;
+        } else {
+          return this.inputPath;
+        }
+      },
+      set(val) {
+        if (this.inputPath === "") {
+          this.selectedPreset.mainPath = val;
+        } else {
+          this.inputPath = val;
+        }
+      },
+    },
   },
   mounted() {
-    if (Object.keys(this.selectedPlugin).length === 0) {
+    if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
-  },
-  methods: {
-    getNewPath() {
-      if (this.inputPath.length === 0) {
-        this.selectedPlugin.path === this.inputPath;
-      } else {
-        this.inputPath;
-      }
-    },
   },
 };
 </script>
@@ -198,6 +186,97 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
+.included-box {
+  width: 49%;
+  height: 95%;
+  background-color: #5b5b5b;
+  border-radius: 20px;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 15% 85%;
+}
+.included-title {
+  width: 61%;
+  height: 71%;
+  border: 1px solid rgb(98, 98, 98);
+  margin: 0 auto;
+  border-radius: 10px;
+  display: flex;
+  background-color: #30483b;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
+}
+.info-box {
+  width: 88%;
+  height: 83%;
+  margin: 10px auto;
+  padding: 5px;
+  border: 2px solid #343434;
+  background-color: #282828;
+  border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
+}
+.info-box::-webkit-scrollbar {
+  width: 1px;
+}
+.info-row {
+  grid-column: 1;
+  width: 100%;
+  height: 90%;
+  margin-top: 5px;
+  background-color: #33393e;
+  box-shadow: 0 1px 3px 1px rgb(35, 35, 35);
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: repeat(2.1fr);
+}
+.plugin-name {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 80%;
+  max-width: auto;
+  height: 90%;
+}
+.plugin-name span {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgb(203, 203, 203);
+}
+.plugin-icon {
+  grid-column: 1;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  width: 67%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plugin-icon img {
+  width: 60%;
+  height: 72%;
+  border: 2px solid gray;
+  border-radius: 40%;
+}
+.category {
+  grid-column: 2;
+  grid-row: 2/3;
+  width: 100%;
+  height: 90%;
+}
+.category span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgb(177, 176, 175);
+}
 .name-box {
   width: 95%;
   height: 20%;
@@ -224,8 +303,7 @@ export default {
   color: #d7d7d7;
   text-transform: uppercase;
 }
-.option-title,
-.system-title {
+.option-title {
   width: 60%;
   height: 11%;
   border: 1px solid rgb(98, 98, 98);
@@ -238,7 +316,7 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 .option-title span,
-.system-title span {
+.included-title span {
   color: #d3d3d3;
   font-size: 0.9rem;
   font-weight: 700;
@@ -414,132 +492,6 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   padding-left: 10px;
-}
-.system-box {
-  width: 49%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.info-box {
-  width: 90%;
-  height: 45%;
-  margin-top: 10px;
-  background-color: transparent;
-  border: 2px solid rgb(74, 73, 73);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42), inset 0 1px 3px 1px rgb(43, 43, 43);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.system-info {
-  width: 93%;
-  height: 89%;
-  border-radius: 12px;
-  background-color: rgb(60, 60, 60);
-  display: grid;
-  grid-template-columns: repeat(4, 24%);
-  grid-template-rows: 20% 40% 40%;
-  padding: 2px 5px;
-}
-.info-parent {
-  width: 100%;
-  grid-column: 3/5;
-  grid-row: 2/4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.info-parent .info-content {
-  width: 90%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.info-content .cpu-cores,
-.info-content .memory {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.info-content .cpu-cores span {
-  width: 50%;
-  height: 20px;
-  border: 2px solid #4a4949;
-  border-radius: 16px;
-  background-color: #222222;
-  text-align: center;
-  box-shadow: 0 1px 3px 1px #1c1d1d;
-  padding-top: 2px;
-  margin-right: 2px;
-  margin-bottom: 7px;
-}
-.info-content .memory span {
-  width: 50%;
-  height: 20px;
-  border: 2px solid rgb(74, 73, 73);
-  border-radius: 16px;
-  background-color: rgb(34, 34, 34);
-  text-align: center;
-  box-shadow: 0 1px 4px 1px rgb(28, 29, 29);
-  padding-top: 2px;
-  margin-right: 2px;
-}
-.info-parent .cpu-current,
-.info-parent .memory-current {
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-.info-parent .cpu-needed,
-.info-parent .memory-needed {
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(215, 195, 42);
-}
-
-.info-header {
-  width: 70%;
-  margin-left: 5px;
-  grid-column: 3/5;
-  grid-row: 1/2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.info-header span {
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #d3d3d3;
-}
-.info-header .min-title {
-  margin-left: 15px;
-}
-.info-titles {
-  width: 70%;
-  grid-column: 1/3;
-  grid-row: 2/4;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.info-titles span {
-  width: 100%;
-  text-align: left;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #d3d3d3;
 }
 
 .btn-box {
