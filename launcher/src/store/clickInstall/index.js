@@ -103,7 +103,7 @@ export default {
           name: "LIGHTHOUSE",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/lighthouse-validator",
+          path: "/opt/stereum/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
         },
         {
@@ -111,7 +111,7 @@ export default {
           name: "LOSESTAR",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/lodestar-validator",
+          path: "/opt/stereum/lodestar",
           icon: require("../../../public/img/icon/plugin-icons/validator/lodestar-validator.png"),
         },
         {
@@ -119,7 +119,7 @@ export default {
           name: "PRYSM",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/prysm-validator",
+          path: "/opt/stereum/prysm",
           icon: require("../../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
         },
         {
@@ -127,7 +127,7 @@ export default {
           name: "NIMBUS",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/prysm-validator",
+          path: "/opt/stereum/prysm",
           icon: require("../../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
         },
         {
@@ -135,7 +135,7 @@ export default {
           name: "TEKU",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/teku-validator",
+          path: "/opt/stereum/teku",
           icon: require("../../../public/img/icon/plugin-icons/validator/teku-validator.png"),
         },
         {
