@@ -265,7 +265,7 @@ export default {
           category: "execution",
           networkIcon: require("../../../public/img/icon/click-installation/testnet-icon.png"),
           network: "testnet",
-          mainPath: "/opt/stereumnode",
+          mainPath: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/staking-icon.png"),
           requirements: {
             core: 8,
@@ -277,7 +277,7 @@ export default {
           id: 8,
           name: "staking",
           network: "mainnet",
-          mainPath: "/opt/stereumnode",
+          mainPath: "/opt/stereum",
           networkIcon: require("../../../public/img/icon/click-installation/mainnet-icon.png"),
           icon: require("../../../public/img/icon/click-installation/staking-icon.png"),
           requirements: {
