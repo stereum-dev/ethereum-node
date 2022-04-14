@@ -6,6 +6,7 @@ export default {
   state() {
     return {
       selectedNetworks: "",
+      installationPath: "/opt/stereum",
       selectedPreset: [],
       testnetPlugins: [],
       mainnetPlugins: [],
@@ -15,7 +16,7 @@ export default {
           name: "GETH",
           network: "testnet",
           category: "execution",
-          path: "/opt/stereum/geth",
+          path: "/geth",
           icon: require("../../../public/img/icon/plugin-icons/execution/Geth.png"),
         },
         {
@@ -23,7 +24,7 @@ export default {
           name: "HYPERLEDGER BESU",
           network: "testnet",
           category: "execution",
-          path: "/opt/stereum/hyperledger",
+          path: "/hyperledger",
           icon: require("../../../public/img/icon/plugin-icons/execution/hyperLedger-besu.png"),
         },
         {
@@ -31,7 +32,7 @@ export default {
           name: "ERIGON",
           network: "testnet",
           category: "execution",
-          path: "/opt/stereum/erigon",
+          path: "/erigon",
           icon: require("../../../public/img/icon/plugin-icons/execution/Erigon.png"),
         },
         {
@@ -39,7 +40,7 @@ export default {
           name: "NETHERMIND",
           network: "testnet",
           category: "execution",
-          path: "/opt/stereum/nethermind",
+          path: "/nethermind",
           icon: require("../../../public/img/icon/plugin-icons/execution/Nethermind.png"),
         },
         {
@@ -47,7 +48,7 @@ export default {
           name: "OPEN ETHEREUM",
           network: "testnet",
           category: "execution",
-          path: "/opt/stereum/open-ethereum",
+          path: "/open-ethereum",
           icon: require("../../../public/img/icon/plugin-icons/execution/OpenEthereum.png"),
         },
         {
@@ -55,7 +56,7 @@ export default {
           name: "GRAFANA",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/grafana",
+          path: "/grafana",
           icon: require("../../../public/img/icon/plugin-icons/Other/grafana-service.png"),
         },
         {
@@ -63,7 +64,7 @@ export default {
           name: "LIGHTHOUSE",
           network: "testnet",
           category: "consensus",
-          path: "/opt/stereum/lighthouse",
+          path: "/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
         },
         {
@@ -71,7 +72,7 @@ export default {
           name: "LODESTAR",
           network: "testnet",
           category: "consensus",
-          path: "/opt/stereum/lodestar",
+          path: "/lodestar",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Lodestar.png"),
         },
         {
@@ -79,7 +80,7 @@ export default {
           name: "NIMBUS",
           network: "testnet",
           category: "consensus",
-          path: "/opt/stereum/nimbus",
+          path: "/nimbus",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Nimbus.png"),
         },
         {
@@ -87,7 +88,7 @@ export default {
           name: "TEKU",
           network: "testnet",
           category: "consensus",
-          path: "/opt/stereum/teku",
+          path: "/teku",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Teku.png"),
         },
         {
@@ -95,7 +96,7 @@ export default {
           name: "PRYSM",
           network: "testnet",
           category: "consensus",
-          path: "/opt/stereum/prysm",
+          path: "/prysm",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Prysm.png"),
         },
         {
@@ -103,7 +104,7 @@ export default {
           name: "LIGHTHOUSE",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/lighthouse-validator",
+          path: "/lighthouse-validator",
           icon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
         },
         {
@@ -111,7 +112,7 @@ export default {
           name: "LOSESTAR",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/lodestar-validator",
+          path: "/lodestar-validator",
           icon: require("../../../public/img/icon/plugin-icons/validator/lodestar-validator.png"),
         },
         {
@@ -119,7 +120,7 @@ export default {
           name: "PRYSM",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/prysm-validator",
+          path: "/prysm-validator",
           icon: require("../../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
         },
         {
@@ -127,7 +128,7 @@ export default {
           name: "NIMBUS",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/prysm-validator",
+          path: "/prysm-validator",
           icon: require("../../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
         },
         {
@@ -135,7 +136,7 @@ export default {
           name: "TEKU",
           network: "testnet",
           category: "validator",
-          path: "/opt/stereum/teku-validator",
+          path: "/teku-validator",
           icon: require("../../../public/img/icon/plugin-icons/validator/teku-validator.png"),
         },
         {
@@ -143,7 +144,7 @@ export default {
           name: "BLOX SSV",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/blox-ssv",
+          path: "/blox-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/blox-ssv.png"),
         },
         {
@@ -151,7 +152,7 @@ export default {
           name: "EY NIGHTFALL",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/ey-nightfall",
+          path: "/ey-nightfall",
           icon: require("../../../public/img/icon/plugin-icons/Other/ey-nightfall.png"),
         },
         {
@@ -159,7 +160,7 @@ export default {
           name: "OBOL SSV",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/obol-ssv",
+          path: "/obol-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/obol-ssv.png"),
         },
         {
@@ -167,7 +168,7 @@ export default {
           name: "PROMETHEUS",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/prometheus",
+          path: "/prometheus",
           icon: require("../../../public/img/icon/plugin-icons/Other/prometheus.png"),
         },
         {
@@ -175,7 +176,7 @@ export default {
           name: "ROCKETPOOL",
           network: "testnet",
           category: "service",
-          path: "/opt/stereum/rocketpool",
+          path: "/rocketpool",
           icon: require("../../../public/img/icon/plugin-icons/Other/rocketpool.png"),
         },
       ],
@@ -186,7 +187,6 @@ export default {
           category: "execution",
           network: "testnet",
           networkIcon: require("../../../public/img/icon/click-installation/testnet-icon.png"),
-
           icon: require("../../../public/img/icon/click-installation/BLOX_SSV.png"),
           requirements: {
             core: 4,
@@ -200,7 +200,7 @@ export default {
           category: "execution",
           network: "mainnet",
           networkIcon: require("../../../public/img/icon/click-installation/mainnet-icon.png"),
-          path: "/opt/stereumnode",
+          path: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/OBOL_SSV.png"),
           requirements: {
             core: 4,
@@ -213,7 +213,7 @@ export default {
           category: "execution",
           network: "testnet",
           networkIcon: require("../../../public/img/icon/click-installation/testnet-icon.png"),
-          path: "/opt/stereumnode",
+          path: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/rocketpool.png"),
           requirements: {
             core: 8,
@@ -226,7 +226,7 @@ export default {
           category: "validator",
           network: "testnet",
           networkIcon: require("../../../public/img/icon/click-installation/mainnet-icon.png"),
-          path: "/opt/stereumnode",
+          path: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/OBOL_SSV.png"),
           requirements: {
             core: 4,
@@ -265,7 +265,7 @@ export default {
           category: "execution",
           networkIcon: require("../../../public/img/icon/click-installation/testnet-icon.png"),
           network: "testnet",
-          mainPath: "/opt/stereumnode",
+          mainPath: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/staking-icon.png"),
           requirements: {
             core: 8,
@@ -277,7 +277,7 @@ export default {
           id: 8,
           name: "staking",
           network: "mainnet",
-          mainPath: "/opt/stereumnode",
+          mainPath: "/opt/stereum",
           networkIcon: require("../../../public/img/icon/click-installation/mainnet-icon.png"),
           icon: require("../../../public/img/icon/click-installation/staking-icon.png"),
           requirements: {

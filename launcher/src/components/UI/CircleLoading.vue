@@ -94,7 +94,7 @@ dialog {
 .progress span {
   font-size: 0.6rem;
   font-weight: 800;
-  color: rgb(206, 206, 206);
+  color: rgb(47, 46, 46);
   position: relative;
   text-align: left;
   margin-left: 10px;
@@ -103,13 +103,13 @@ dialog {
 
 .progress .color {
   position: absolute;
-  background-color: rgb(4, 56, 33);
+  background-color: #237fd5;
   width: 0px;
   height: 100%;
   border-radius: 20px;
   animation: progres 5s linear;
   animation-fill-mode: forwards;
-  box-shadow: inset 1px 2px 5px rgb(83, 180, 128), 0 1px 3px 1px rgb(52, 52, 52);
+  box-shadow: inset 1px 2px 5px #acd5fc, 0 1px 3px 1px rgb(52, 52, 52);
 }
 
 @keyframes progres {

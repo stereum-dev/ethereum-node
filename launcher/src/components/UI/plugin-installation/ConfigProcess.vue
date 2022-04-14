@@ -15,11 +15,8 @@
             <span>LOADING . . .</span>
           </div>
           <div class="btn-box">
-            <router-link :to="{ path: '/install' }">
-              <button class="back-btn">BACK</button>
-            </router-link>
             <router-link :to="{ path: '/node' }">
-              <button class="next-btn">INSTALL</button>
+              <button class="next-btn">DONE</button>
             </router-link>
           </div>
         </div>
@@ -27,9 +24,7 @@
     </background-page>
   </div>
 </template>
-<script>
-
-</script>
+<script></script>
 <style scoped>
 .config-parent {
   display: flex;

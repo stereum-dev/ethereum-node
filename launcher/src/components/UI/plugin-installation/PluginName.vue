@@ -101,7 +101,6 @@ export default {
 
   data() {
     return {
-      inputPath: "",
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
@@ -112,8 +111,10 @@ export default {
   computed: {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
-      systemInfos: "getSystemInformation",
+      plugins: "getAllPlugins",
+      installationPath: "getInstallationPath",
     }),
+
     getMemoryClass() {
       if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
         return true;
@@ -128,29 +129,12 @@ export default {
         return false;
       }
     },
-    installationPath: {
-      get() {
-        if (this.inputPath === "") {
-          return this.selectedPreset.mainPath;
-        } else {
-          return this.inputPath;
-        }
-      },
-      set(val) {
-        if (this.inputPath === "") {
-          this.selectedPreset.mainPath = val;
-        } else {
-          this.inputPath = val;
-        }
-      },
-    },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
   },
-  methods: {},
 };
 </script>
 <style scoped>
@@ -237,7 +221,7 @@ export default {
   height: 90%;
   margin-top: 5px;
   background-color: #33393e;
-  border:1px solid rgb(81, 80, 80);
+  border: 1px solid rgb(81, 80, 80);
   box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
   display: flex;
