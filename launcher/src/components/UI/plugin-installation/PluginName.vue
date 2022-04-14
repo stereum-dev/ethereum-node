@@ -123,20 +123,20 @@ export default {
       },
     },
 
-    getMemoryClass() {
-      if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    getCpuClass() {
-      if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+    // getMemoryClass() {
+    //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    // getCpuClass() {
+    //   if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
