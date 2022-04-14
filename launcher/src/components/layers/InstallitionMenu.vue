@@ -168,8 +168,8 @@ export default {
 .progress-bg{
   width: 60%;
   height: 60%;
-  border: 3px solid #272928;
-  background-color: #222020;
+  border: 4px solid #6e8582;
+  background-color: #6e8582;
   border-radius: 40px;
   box-shadow: 0 1px 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
   display: flex;

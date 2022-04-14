@@ -20,4 +20,7 @@ export default {
   getAllPlugins(state) {
     return state.plugins;
   },
+  getInstallationPath(state) {
+    return state.installationPath;
+  },
 };
