@@ -60,17 +60,21 @@
               <div class="info-box">
                 <div
                   class="info-row"
-                  v-for="(plugin,index) in selectedPreset.includedPlugins"
+                  v-for="(plugin, index) in selectedPreset.includedPlugins"
                   :key="index"
                 >
-                  <div class="plugin-icon">
-                    <img :src="plugin.icon" alt="icon" />
+                  <div class="icon-box">
+                    <div class="plugin-icon">
+                      <img :src="plugin.icon" alt="icon" />
+                    </div>
                   </div>
-                  <div class="plugin-name">
-                    <span>{{ plugin.name }}</span>
-                  </div>
-                  <div class="category">
-                    <span>{{ plugin.category }}</span>
+                  <div class="content">
+                    <div class="plugin-name">
+                      <span>{{ plugin.name }}</span>
+                    </div>
+                    <div class="category">
+                      <span>{{ plugin.category }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -146,9 +150,7 @@ export default {
       this.$router.push("/clickinstall");
     }
   },
-  methods: {
-
-  }
+  methods: {},
 };
 </script>
 <style scoped>
@@ -235,50 +237,68 @@ export default {
   height: 90%;
   margin-top: 5px;
   background-color: #33393e;
-  box-shadow: 0 1px 3px 1px rgb(35, 35, 35);
-  border-radius: 5px;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-template-rows: repeat(2.1fr);
+  border:1px solid rgb(81, 80, 80);
+  box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+}
+.content {
+  width: 75%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .plugin-name {
-  grid-column: 2;
-  grid-row: 1;
-  min-width: 80%;
+  width: 100%;
   max-width: auto;
   height: 90%;
+  text-align: left;
 }
 .plugin-name span {
   font-size: 0.8rem;
   font-weight: 800;
   color: rgb(203, 203, 203);
+  margin-left: 10px;
 }
-.plugin-icon {
-  grid-column: 1;
-  grid-row-start: 1;
-  grid-row-end: 3;
-  width: 67%;
+.icon-box {
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.plugin-icon {
+  width: 61%;
+  height: 79%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .plugin-icon img {
-  width: 60%;
-  height: 72%;
-  border: 2px solid gray;
-  border-radius: 40%;
+  width: 98%;
+  height: 98%;
+  border-radius: 50%;
+  border: 2px solid rgb(84, 84, 84);
+  box-shadow: 0 1px 3px 1px rgb(23, 23, 23);
 }
 .category {
-  grid-column: 2;
-  grid-row: 2/3;
   width: 100%;
+  max-width: auto;
   height: 90%;
+  text-align: left;
 }
 .category span {
   font-size: 0.7rem;
   font-weight: 800;
   color: rgb(115, 115, 115);
+  text-transform: uppercase;
+  margin-left: 10px;
 }
 .name-box {
   width: 95%;
@@ -523,12 +543,13 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
+  cursor: pointer;
 }
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
-    inset 1px 1px 5px 1px rgb(67, 86, 67);
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
 .next-btn:active,
 .back-btn:active {
