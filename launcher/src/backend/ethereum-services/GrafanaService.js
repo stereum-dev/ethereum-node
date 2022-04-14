@@ -11,9 +11,9 @@ export class GrafanaService extends NodeService {
         const grafanaDir = "/etc/grafana"
 
         const volumes = [
-            new ServiceVolume(workingDir + "/grafana/provisioning", provisioningDir),
-            new ServiceVolume(workingDir + "/grafana/data", dataDir),
-            new ServiceVolume(workingDir + "/grafana", grafanaDir)
+            new ServiceVolume(workingDir + "/provisioning", provisioningDir),
+            new ServiceVolume(workingDir + "/data", dataDir),
+            new ServiceVolume(workingDir, grafanaDir)
         ];
 
         const service = new GrafanaService()
