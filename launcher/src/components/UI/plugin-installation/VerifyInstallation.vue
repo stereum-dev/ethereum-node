@@ -33,7 +33,7 @@
                       <span>{{ plugin.category }}</span>
                     </div>
                     <div class="path">
-                      <span>{{ plugin.path }}</span>
+                      <span>{{ installationPath + plugin.path }}</span>
                     </div>
                   </div>
                 </div>
@@ -62,6 +62,7 @@ export default {
   computed: {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
     }),
   },
   mounted() {

@@ -112,8 +112,16 @@ export default {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
       plugins: "getAllPlugins",
-      installationPath: "getInstallationPath",
+      getInstallationPath: "getInstallationPath",
     }),
+    installationPath: {
+      get() {
+          return this.getInstallationPath;
+      },
+      set(val) {
+        this.$store.commit("mutatedInstallationPath", val);
+      },
+    },
 
     getMemoryClass() {
       if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
