@@ -24,7 +24,7 @@ export default {
           network: "testnet",
           category: "execution",
           path: "/opt/stereum/hyperledger",
-          icon: require("../../../public/img/icon/plugin-icons/execution/hyperledger-besu.png"),
+          icon: require("../../../public/img/icon/plugin-icons/execution/hyperLedger-besu.png"),
         },
         {
           id: 1008,
