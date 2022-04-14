@@ -15,6 +15,12 @@
           <div class="content-box">
             <div class="loading-container" v-if="isLoading">
               <div class="loading-opacity"></div>
+              <div class="preparation-node" v-if="isNodePreparing">
+                <span>Preparing Node</span><span class="dot-flashing"></span>
+              </div>
+              <div class="prepared-node" v-if="isNodePrepared">
+                <span>Preparing Node Done!</span><span class="dot-flashing"></span>
+              </div>
               <div class="writing-config" v-if="isConfigWriting">
                 <span>writing configuration</span
                 ><span class="dot-flashing"></span>
@@ -62,10 +68,12 @@ export default {
     return {
       isInstalled: false,
       isLoading: true,
-      isConfigWriting: true,
+      isConfigWriting: false,
       isConfigDone: false,
       isContStarting: false,
       isContStarted: false,
+      isNodePreparing: true,
+      isNodePrepared: false,
     };
   },
 };
@@ -137,7 +145,7 @@ export default {
 }
 
 .content-box {
-  grid-column:1/4;
+  grid-column: 1/4;
   grid-row: 2/5;
   width: 60%;
   height: 90%;
@@ -172,7 +180,8 @@ export default {
 .writing-config,
 .config-done,
 .starting-container,
-.started {
+.started,
+.prepration-node {
   width: 100%;
   height: 100%;
   display: flex;
@@ -182,7 +191,8 @@ export default {
 .writing-config span,
 .config-done span,
 .starting-container span,
-.started span {
+.started span,
+.prepration-node span {
   font-size: 1.2rem;
   font-weight: bold;
   color: rgb(73, 73, 77);
