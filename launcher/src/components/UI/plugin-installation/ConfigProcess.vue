@@ -19,6 +19,10 @@
                 <span>Preparing Node</span><span class="dot-flashing"></span>
               </div>
               <div class="prepared-node" v-if="isNodePrepared">
+                <img
+                  src="../../../../public/img/icon/check-mark/check-mark5.png"
+                  alt="icon"
+                />
                 <span>Preparing Node Done!</span><span class="dot-flashing"></span>
               </div>
               <div class="writing-config" v-if="isConfigWriting">
@@ -63,6 +67,8 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -75,6 +81,33 @@ export default {
       isNodePreparing: true,
       isNodePrepared: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
+    }),
+  },
+  methods: {
+    installation: async function () {
+      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      this.isNodePreparing = false;
+      this.isNodePrepared = true;
+      this.isConfigWriting = true;
+      console.log(await ControlService.writeOneClickConfiguration());
+      await new Promise(r => setTimeout(r, 1000));
+      this.isConfigWriting = false;
+      this.isConfigDone = true;
+      this.isContStarting = true;
+      console.log(await ControlService.startOneClickServices());
+      this.isContStarting = false;
+      this.isContStarted = true;
+      this.isLoading = false;
+      this.isInstalled = true
+    }
+  },
+  mounted() {
+    this.installation();
   },
 };
 </script>
@@ -181,7 +214,7 @@ export default {
 .config-done,
 .starting-container,
 .started,
-.prepration-node {
+.prepared-node {
   width: 100%;
   height: 100%;
   display: flex;
@@ -192,7 +225,7 @@ export default {
 .config-done span,
 .starting-container span,
 .started span,
-.prepration-node span {
+.prepared-node span {
   font-size: 1.2rem;
   font-weight: bold;
   color: rgb(73, 73, 77);
