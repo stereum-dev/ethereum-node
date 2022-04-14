@@ -409,11 +409,11 @@ export default {
   align-items: center;
 }
 .none span {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  margin-left: 20px;
-  color: rgba(6, 181, 76, 0.982);
-  text-transform: uppercase;
+  margin-left: 25px;
+  color: rgba(171, 180, 92, 0.982);
+  text-transform: capitalize;
 }
 .network-parent .circle-box {
   width: 24%;
