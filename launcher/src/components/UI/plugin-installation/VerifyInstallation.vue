@@ -15,39 +15,25 @@
             <div class="table-box">
               <div class="table">
                 <div class="table-header">
-                  <span>TO INSTALL</span>
-                  <span>SELECTION</span>
-                  <span>REQUIREMENTS</span>
+                  <span>NAME</span>
+                  <span>CATEGORY</span>
+                  <span>PATH</span>
                 </div>
                 <div class="table-content">
                   <div
                     class="table-row"
-                    v-for="plugin in selectedPreset.includedPlugins"
-                    :key="plugin.id"
+                    v-for="(plugin, index) in selectedPreset.includedPlugins"
+                    :key="index"
                   >
                     <div class="plugin-name">
-                      <span>NAME:</span>
+                      <img :src="plugin.icon" alt="icon">
                       <span>{{ plugin.name }}</span>
                     </div>
-                    <div class="selection">
-                      <div class="category">
-                        <span>CATEGORY:</span>
-                        <span>{{ plugin.category }}</span>
-                      </div>
-                      <div class="path">
-                        <span>PATH:</span>
-                        <span>{{ plugin.path }}</span>
-                      </div>
+                    <div class="category">
+                      <span>{{ plugin.category }}</span>
                     </div>
-                    <div class="requirements">
-                      <div class="cpu">
-                        <span>CPU CORES:</span>
-                        <span>{{ this.selectedPreset.requirements?.core }}</span>
-                      </div>
-                      <div class="memory">
-                        <span>MEMORY:</span>
-                        <span>{{ this.selectedPreset.requirements?.memory }}</span>
-                      </div>
+                    <div class="path">
+                      <span>{{ plugin.path }}</span>
                     </div>
                   </div>
                 </div>
@@ -58,7 +44,7 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/node' }">
+            <router-link :to="{ path: '/configuration' }">
               <button class="next-btn">INSTALL</button>
             </router-link>
           </div>
@@ -175,148 +161,109 @@ export default {
   align-items: center;
 }
 .table .table-header {
-  width: 93%;
+  width: 89%;
   height: 8%;
   /* background-color: #334b3e; */
   background-color: #336666;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 32% 32% 36%;
   align-items: center;
 }
 .table .table-header span:first-child {
-  width: 23% !important;
-  text-align: left !important;
-  padding-left: 30px !important;
-}
-.table .table-header span {
-  width: 32%;
+  width: 100%;
   color: rgb(213, 213, 213);
   font-size: 0.7rem;
   font-weight: 600;
+  padding-left: 15px;
+  text-align: left;
+}
+.table .table-header span {
+  width: 100%;
+  color: rgb(213, 213, 213);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: left;
 }
 .table .table-content {
   width: 95%;
   height: 70%;
   border-top: 1px solid gray;
+  /* background-color: rgb(27, 27, 27); */
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: 100%;
+  align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .table-content::-webkit-scrollbar {
   width: 1px;
 }
 
 .table-content .table-row {
-  width: 100%;
-  height: 30%;
-  margin-top: 5px;
-  border-bottom: 1px solid gray;
+  width: 95%;
+  height: 100%;
+  margin-top: 15px auto;
+  background-color: #33393e;
+  box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
+  border:1px solid rgb(81, 80, 80);
+  border-radius: 10px;
+  justify-self: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   padding: 1px 0 3px 0;
+  cursor: pointer;
 }
 
 .table-row .plugin-name {
-  width: 25%;
+  width: 30%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
+.plugin-name img{
+  width:12%;
+  height: 50%;
+}
 
-.plugin-name span:first-child {
-  color: #a7a7a7;
+.plugin-name span {
+  width: 90%;
+  height: 56%;
+  color: #929292;
   font-size: 0.8rem;
   font-weight: 600;
+  margin-left: 10px;
 }
-.plugin-name span:last-child {
-  color: #4ca434;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-.table-row .selection {
-  width: 33%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
+
 .category {
-  width: 95%;
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .path {
-  width: 100%;
+  width: 35%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
-.table-row .selection .category span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection .category span:last-child {
-  color: #4ca434;
-  font-size: 0.6rem;
-  font-weight: 600;
+.table-row .category span {
+  width: 100%;
+  height: 100%;
+  color: #4f9a71;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
 }
-.table-row .selection .path span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection .path span:last-child {
-  color: #c6ac2a;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-.table-row .requirements {
-  width: 25%;
+.table-row .path span {
+  width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-.requirements .cpu,
-.requirements .memory {
-  width: 90%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.table-row .requirements .cpu span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .requirements .cpu span:last-child {
-  color: #4ca434;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-right: 10px;
-}
-.table-row .requirements .memory span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .requirements .memory span:last-child {
-  color: #4ca434;
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-right: 10px;
+  color: #a9a064;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: left;
 }
 
 .btn-box {
@@ -325,6 +272,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
 }
 .btn-box a {
   width: 95%;
@@ -333,6 +281,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
 }
 .next-btn,
 .back-btn {
@@ -344,8 +293,8 @@ export default {
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
-    inset 1px 1px 3px 1px rgb(92, 114, 92);
+  box-shadow: 0 1px 2px 1px rgb(49, 61, 54);
+  cursor: pointer;
 }
 .next-btn:hover,
 .back-btn:hover {

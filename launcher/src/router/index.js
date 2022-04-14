@@ -9,6 +9,7 @@ import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
+import ConfigProcess from "../components/UI/plugin-installation/ConfigProcess.vue";
 import CpuChart from "../pages/CpuChart.vue";
 
 const routes = [
@@ -56,6 +57,11 @@ const routes = [
     path: "/verify",
     name: "VerifyInstallation",
     component: VerifyInstallation,
+  },
+  {
+    path: "/configuration",
+    name: "ConfigProcess",
+    component: ConfigProcess,
   },
   {
     path: "/cpu",

@@ -12,7 +12,9 @@
         </p>
       </div>
       <div class="progress-container">
-        <circle-loading :message="message" :open="running"></circle-loading>
+        <div class="progress-bg">
+          <circle-loading :message="message" :open="running"></circle-loading>
+        </div>
       </div>
     </div>
     <div class="item-container">
@@ -95,7 +97,7 @@ export default {
   width: 80%;
   height: 40%;
   resize: both;
-  margin:30px auto;
+  margin: 30px auto;
   position: relative;
   border-radius: 40px;
   flex-wrap: nowrap;
@@ -162,6 +164,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.progress-bg{
+  width: 60%;
+  height: 60%;
+  border: 4px solid #6e8582;
+  background-color: #6e8582;
+  border-radius: 40px;
+  box-shadow: 0 1px 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
 }
 #txt {
   width: 85%;

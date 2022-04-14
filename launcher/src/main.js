@@ -4,6 +4,7 @@ import store from "./store/index.js";
 import App from "./App.vue";
 import router from "./router/index.js";
 import "./components/UI/the-control/chart.js";
+import "./main.css";
 
 import i18n from "./includes/i18n";
 import BaseButton from "./components/UI/BaseButton.vue";
@@ -23,7 +24,6 @@ app.component("the-trapezium", TheTrapezium);
 app.component("node-bg", NodeBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
-
 
 app.use(store);
 app.use(router);

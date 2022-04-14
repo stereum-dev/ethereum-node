@@ -139,7 +139,7 @@
   align-self: flex-end;
 }
 .btn__item:hover {
-  border-radius: 40%;
+  outline: none;
 }
 .spacer {
   margin: 0 0.8rem;
