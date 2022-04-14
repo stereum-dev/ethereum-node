@@ -15,6 +15,16 @@
           <div class="content-box">
             <div class="loading-container" v-if="isLoading">
               <div class="loading-opacity"></div>
+              <div class="preparation-node" v-if="isNodePreparing">
+                <span>Preparing Node</span><span class="dot-flashing"></span>
+              </div>
+              <div class="prepared-node" v-if="isNodePrepared">
+                <img
+                  src="../../../../public/img/icon/check-mark/check-mark5.png"
+                  alt="icon"
+                />
+                <span>Preparing Node Done!</span><span class="dot-flashing"></span>
+              </div>
               <div class="writing-config" v-if="isConfigWriting">
                 <span>writing configuration</span
                 ><span class="dot-flashing"></span>
@@ -57,16 +67,47 @@
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
       isInstalled: false,
       isLoading: true,
-      isConfigWriting: true,
+      isConfigWriting: false,
       isConfigDone: false,
       isContStarting: false,
       isContStarted: false,
+      isNodePreparing: true,
+      isNodePrepared: false,
     };
+  },
+  computed: {
+    ...mapGetters({
+      selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
+    }),
+  },
+  methods: {
+    installation: async function () {
+      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      this.isNodePreparing = false;
+      this.isNodePrepared = true;
+      this.isConfigWriting = true;
+      console.log(await ControlService.writeOneClickConfiguration());
+      await new Promise(r => setTimeout(r, 1000));
+      this.isConfigWriting = false;
+      this.isConfigDone = true;
+      this.isContStarting = true;
+      console.log(await ControlService.startOneClickServices());
+      this.isContStarting = false;
+      this.isContStarted = true;
+      this.isLoading = false;
+      this.isInstalled = true
+    }
+  },
+  mounted() {
+    this.installation();
   },
 };
 </script>
@@ -137,7 +178,7 @@ export default {
 }
 
 .content-box {
-  grid-column:1/4;
+  grid-column: 1/4;
   grid-row: 2/5;
   width: 60%;
   height: 90%;
@@ -172,7 +213,8 @@ export default {
 .writing-config,
 .config-done,
 .starting-container,
-.started {
+.started,
+.prepared-node {
   width: 100%;
   height: 100%;
   display: flex;
@@ -182,7 +224,8 @@ export default {
 .writing-config span,
 .config-done span,
 .starting-container span,
-.started span {
+.started span,
+.prepared-node span {
   font-size: 1.2rem;
   font-weight: bold;
   color: rgb(73, 73, 77);
