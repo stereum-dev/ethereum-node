@@ -75,6 +75,20 @@ promiseIpc.on("getOneClickConstellation", async (arg) => {
   return await oneClickInstall.getSetupConstellation(arg);
 });
 
+promiseIpc.on("prepareOneClickInstallation", async (arg) => {
+  return await oneClickInstall.prepareNode(arg,nodeConnection);
+});
+
+promiseIpc.on("writeOneClickConfiguration", async () => {
+  oneClickInstall.createServices();
+  await oneClickInstall.writeConfig();
+  return "done writing configuration";
+});
+
+promiseIpc.on("startOneClickServices", async () => {
+  return await oneClickInstall.startServices();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

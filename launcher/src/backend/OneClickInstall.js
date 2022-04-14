@@ -8,7 +8,10 @@ import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePor
 import { ServiceManager } from "./ServiceManager";
 
 export class OneClickInstall {
-    async prepareNode(installationDirectory) {
+    async prepareNode(installDir,nodeConnection) {
+        this.installDir = installDir
+        this.nodeConnection = nodeConnection;
+        this.serviceManager = new ServiceManager(nodeConnection);
         await this.nodeConnection.findStereumSettings();
         if (this.nodeConnection.settings === undefined) {
             this.nodeConnection.settings = {
@@ -25,7 +28,7 @@ export class OneClickInstall {
                 }
             };
         }
-        this.nodeConnection.settings.stereum.settings.controls_install_path = installationDirectory || '/opt/stereum'
+        this.nodeConnection.settings.stereum.settings.controls_install_path = this.installDir || '/opt/stereum'
         return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
     }
 
@@ -120,15 +123,17 @@ export class OneClickInstall {
 
     async startServices(){
         let services = this.getConfigurations();
+        let runRefs = [];
         if (services[0] !== undefined) {
             await Promise.all(services.map(async (service) => {
                 if(service.service === "GrafanaService"){
-                    await this.serviceManager.manageServiceState(service.id, "started",service.env.GRAFANA_PROVISIONING);
+                    runRefs.push(await this.serviceManager.manageServiceState(service.id, "started",service.env.GRAFANA_PROVISIONING));
                 }else{
-                    await this.serviceManager.manageServiceState(service.id, "started");
+                    runRefs.push(await this.serviceManager.manageServiceState(service.id, "started"));
                 }
             }));
         }
+        return runRefs;
     }
 
 
