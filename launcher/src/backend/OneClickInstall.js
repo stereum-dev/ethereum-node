@@ -6,6 +6,8 @@ import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNod
 import { GrafanaService } from "./ethereum-services/GrafanaService";
 import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
 import { ServiceManager } from "./ServiceManager";
+import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
+import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
 
 export class OneClickInstall {
     async prepareNode(installDir,nodeConnection) {
@@ -33,7 +35,8 @@ export class OneClickInstall {
     }
 
     async chooseClient(clients){
-        clients = {NIMBUS: 100}
+        clients = {NIMBUS: 55,
+        LIGHTHOUSE: 45};
         let buffer = {};
         let sum = 0;
         Object.keys(clients).forEach(key => {
@@ -81,7 +84,13 @@ export class OneClickInstall {
         
         switch(this.choosenClient) {
             case 'Lighthouse':
-                //to be implemented
+                ports = [
+                    new ServicePort(null,9000,9000,servicePortProtocol.tcp),
+                    new ServicePort(null,9000,9000,servicePortProtocol.udp),
+                    new ServicePort("127.0.0.1",5052,5052,servicePortProtocol.tcp)
+                ]
+                this.beaconService = LighthouseBeaconService.buildByUserInput("prater",ports,this.installDir + "/lighthouse",[this.executionClient],"16");
+                this.validatorService = LighthouseValidatorService.buildByUserInput("prater",this.installDir + "/lighthouse",[this.beaconService], "stereum.net")
                 break;
             case 'Prysm':
                 //to be implemented
