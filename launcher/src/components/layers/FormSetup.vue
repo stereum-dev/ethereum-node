@@ -273,7 +273,7 @@ export default {
         });
       } catch (err) {
         //stay on page if error occurs
-        //return;
+        return;
       }
       this.$emit("page", "welcome-page");
     },
