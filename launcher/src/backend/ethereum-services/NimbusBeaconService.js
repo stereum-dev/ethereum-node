@@ -22,6 +22,7 @@ export class NimbusBeaconService extends NodeService {
 
         const service = new NimbusBeaconService();
         service.init(
+            "NimbusBeaconService",
             null,       //id,
             image,      //image,
             "v1.6.0-55", //imageVersion,

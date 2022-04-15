@@ -17,7 +17,9 @@ export class LighthouseValidatorService extends NodeService {
 
         // build service
         const service = new LighthouseValidatorService();
-        service.init(null,
+        service.init(
+            "LighthouseValidatorService",
+            null,
             image,
             "v2.0.1-47",
             null,
