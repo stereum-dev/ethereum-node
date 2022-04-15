@@ -18,6 +18,7 @@ export class GrafanaService extends NodeService {
 
         const service = new GrafanaService()
         service.init(
+            "GrafanaService",
             null,       //id
             image,      //image
             "8.4.0",   //imageVersion
