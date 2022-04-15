@@ -14,7 +14,7 @@
         class="service-item"
         @click="selectedItem(item)"
       >
-        <img :src="item.source" alt="icon" />
+        <img :src="item.sIcon" alt="icon" />
       </div>
     </div>
     <img
