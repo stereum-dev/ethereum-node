@@ -41,17 +41,12 @@
 </template>
 
 <script>
-
-// import TheThermometer from "./TheThermometer.vue";
-
 import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
 // import BusyRam from "./BusyRam.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-
   components: { SandClock, StorageCounter, HddLoading },
-
   data() {
     return {
       No: 100,
