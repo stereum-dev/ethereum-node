@@ -65,7 +65,7 @@ export default {
           category: "consensus",
           path: "/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
-          sIcon: require("../../../public/img/icon/plugin-icons/consensus/LightHouse-s.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Lighthouse-s.png"),
         },
         {
           id: 1004,
@@ -105,7 +105,7 @@ export default {
           category: "validator",
           path: "/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
-          sIcon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-s.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
         },
         {
           id: 1013,
