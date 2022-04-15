@@ -33,7 +33,7 @@
                       <span>{{ plugin.category }}</span>
                     </div>
                     <div class="path">
-                      <span>{{ plugin.path }}</span>
+                      <span>{{ installationPath + plugin.path }}</span>
                     </div>
                   </div>
                 </div>
@@ -62,6 +62,7 @@ export default {
   computed: {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
     }),
   },
   mounted() {
@@ -291,6 +292,7 @@ export default {
   border-radius: 20px;
   background-color: #336666;
   color: #fff;
+  outline-style: none;
   font-size: 0.9rem;
   font-weight: 600;
   box-shadow: 0 1px 2px 1px rgb(49, 61, 54);
@@ -299,8 +301,7 @@ export default {
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
-    inset 1px 1px 5px 1px rgb(67, 86, 67);
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
 .next-btn:active,
 .back-btn:active {

@@ -84,7 +84,7 @@ dialog {
 .progress {
   position: relative;
   height: 82%;
-  width: 100%;
+  width: 99%;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;

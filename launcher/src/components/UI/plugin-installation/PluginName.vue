@@ -112,23 +112,31 @@ export default {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
       plugins: "getAllPlugins",
-      installationPath: "getInstallationPath",
+      getInstallationPath: "getInstallationPath",
     }),
+    installationPath: {
+      get() {
+          return this.getInstallationPath;
+      },
+      set(val) {
+        this.$store.commit("mutatedInstallationPath", val);
+      },
+    },
 
-    getMemoryClass() {
-      if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    getCpuClass() {
-      if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+    // getMemoryClass() {
+    //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    // getCpuClass() {
+    //   if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
@@ -401,11 +409,11 @@ export default {
   align-items: center;
 }
 .none span {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  margin-left: 20px;
-  color: rgba(6, 181, 76, 0.982);
-  text-transform: uppercase;
+  margin-left: 25px;
+  color: rgba(171, 180, 92, 0.982);
+  text-transform: capitalize;
 }
 .network-parent .circle-box {
   width: 24%;

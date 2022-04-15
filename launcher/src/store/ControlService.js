@@ -61,6 +61,15 @@ class ControlService extends EventEmitter {
   async getOneClickConstellation(args){
     return await this.promiseIpc.send("getOneClickConstellation", args);
   }
+  async prepareOneClickInstallation(args){
+    return await this.promiseIpc.send("prepareOneClickInstallation", args);
+  }
+  async writeOneClickConfiguration(){
+    return await this.promiseIpc.send("writeOneClickConfiguration");
+  }
+  async startOneClickServices(){
+    return await this.promiseIpc.send("startOneClickServices");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

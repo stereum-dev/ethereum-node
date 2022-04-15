@@ -1,6 +1,6 @@
 stereum_static:
   defaults:
-    controls_install_path: /opt/stereumnode
+    controls_install_path: /opt/stereum
     os_user: stereum
     updates:
       in_progress:
