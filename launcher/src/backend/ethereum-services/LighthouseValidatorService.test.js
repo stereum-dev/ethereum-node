@@ -15,7 +15,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
 
     const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [new LighthouseBeaconService.LighthouseBeaconService()], "foobar").buildConfiguration();
 
-    expect(lhService.env.BEACON_NODES).toHaveLength(1);
+    expect(typeof lhService.env.BEACON_NODES).toBe('string')
     expect(lhService.env.BEACON_NODES).toContain("http-endpoint-string");
     expect(lhService.env.GRAFFITI).toMatch(/foobar/);
     expect(lhService.volumes).toHaveLength(2);
