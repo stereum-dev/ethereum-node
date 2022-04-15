@@ -16,7 +16,7 @@
           ref="itemsList"
         >
           <img
-            :src="item.source"
+            :src="item.sIcon"
             alt="icon"
             @click="selectedItem(item)"
             :class="{ 'chosen-plugin': item.active }"

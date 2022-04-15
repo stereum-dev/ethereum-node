@@ -49,6 +49,7 @@ export class NodeConnection {
      * Prepare a fresh server to run stereum services on it
      */
     async prepareStereumNode(installationDirectory) {
+        this.installationDirectory = installationDirectory
         return new Promise(async (resolve, reject) => {
             if (!this.os) {
                 log.debug("os not found yet")
@@ -86,7 +87,7 @@ export class NodeConnection {
             /**
              * remove stereum ansible playbooks & roles if exist
              */
-            await this.sshService.exec(`rm -rf ${installationDirectory}/ansible`);
+            await this.sshService.exec(`rm -rf ${this.installationDirectory}/ansible`);
             /**
              * install stereum ansible playbooks & roles
              */
@@ -95,8 +96,8 @@ export class NodeConnection {
             let installResult;
             try {
                 installResult = await this.sshService.exec(`
-                sudo mkdir -p "` + installationDirectory + `/ansible" &&
-                cd "` + installationDirectory + `/ansible" &&
+                sudo mkdir -p "` + this.installationDirectory + `/ansible" &&
+                cd "` + this.installationDirectory + `/ansible" &&
                 sudo git init &&
                 sudo git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
                 sudo git config core.sparseCheckout true &&
@@ -312,5 +313,16 @@ export class NodeConnection {
 
             return resolve(JSON.parse(serviceJson.stdout));
         });
+    }
+
+    async destroyNode(){
+        await this.sshService.exec("docker rm -vf $(docker ps -aq)");
+        await this.sshService.exec("docker rmi -f $(docker images -aq)");
+        await this.sshService.exec(`\
+                docker volume prune -f &&\
+                docker system prune -a -f &&\
+                rm -rf ${this.installationDirectory} &&\
+                rm -rf /etc/stereum`);
+        return "Node destroyed";
     }
 }
