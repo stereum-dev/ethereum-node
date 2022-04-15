@@ -25,6 +25,7 @@ export class PrometheusService extends NodeService {
 
         const service = new PrometheusService()
         service.init(
+            "PrometheusService",
             null,                       //id
             image,                      //image
             "v2.33.1",                   //imageVersion

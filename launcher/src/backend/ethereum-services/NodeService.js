@@ -29,7 +29,8 @@ export class NodeService {
         }
     }
 
-    init(id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
+    init(service, id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
+        this.service = service;
         this.setId(id);
         this.image = image;
         this.imageVersion = imageVersion;
@@ -76,7 +77,7 @@ export class NodeService {
 
     buildConfiguration() {
         return {
-            service: this.constructor.name,
+            service: this.service,
             id: this.id,
             command: this.command,
             entrypoint: this.entrypoint,

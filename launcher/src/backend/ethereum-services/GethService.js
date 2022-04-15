@@ -8,7 +8,9 @@ export class GethService extends NodeService {
         ];
 
         const service = new GethService();
-        service.init(null,
+        service.init(
+            "GethService",
+            null,
             "ethereum/client-go",
             "v1.10.11",
             "geth --" + network + " --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts='*' --allow-insecure-unlock --http.api='db,eth,net,web3,personal' --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api='db,eth,net,web3' --ws.origins='*'",

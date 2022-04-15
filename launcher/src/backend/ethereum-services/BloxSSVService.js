@@ -48,7 +48,9 @@ MetricsAPIPort: 15000
 
         // build service
         const service = new BloxSSVService();
-        service.init(null,
+        service.init(
+            "BloxSSVService",
+            null,
             "bloxstaking/ssv-node",
             "ubuntu-latest",
             null,
