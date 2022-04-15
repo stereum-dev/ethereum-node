@@ -68,7 +68,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-//import ControlService from "@/store/ControlService";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
