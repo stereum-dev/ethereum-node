@@ -12,9 +12,6 @@
     "build-themes": "node-sass src/styles/themes -o public/themes",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
-    "modernizr": "modernizr -c modernizr-config.json -d node_modules/modernizr/modernizr.custom.js",
-    "postinstall": "npm run modernizr && electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },
@@ -67,7 +64,6 @@
     "flush-promises": "^1.0.2",
     "imports-loader": "0.8.0",
     "jest": "^27.4.7",
-    "modernizr": "^3.11.7",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.6.14"
