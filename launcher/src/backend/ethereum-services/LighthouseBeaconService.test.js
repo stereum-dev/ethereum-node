@@ -21,7 +21,7 @@ test('buildConfiguration', () => {
 
     const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, "/opt/stereum/lh", [new GethService.GethService()], 16).buildConfiguration();
 
-    expect(lhService.env.ETH1_NODES).toHaveLength(1);
+    expect(typeof lhService.env.ETH1_NODES).toBe('string')
     expect(lhService.env.ETH1_NODES).toContain("http-endpoint-string");
     expect(lhService.volumes).toHaveLength(2);
     expect(lhService.volumes).toContain("/opt/stereum/lh/beacon:/opt/app/beacon");

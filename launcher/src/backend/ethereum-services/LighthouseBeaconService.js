@@ -16,7 +16,7 @@ export class LighthouseBeaconService extends NodeService {
         ];
 
         // eth1 nodes
-        const eth1Nodes = executionClients.map(client => {return client.buildExecutionClientHttpEndpointUrl()});
+        const eth1Nodes = (executionClients.map(client => {return client.buildExecutionClientHttpEndpointUrl()})).join();
 
         const service = new LighthouseBeaconService()
         service.init(null,
