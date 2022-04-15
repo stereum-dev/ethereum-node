@@ -140,21 +140,7 @@
           - "stereum-{{ validator_service }}"
       - name: Waiting for the services to start properly
         pause:
-          minutes: 15
-      - name: Beacon logs
-        command: "docker logs --tail=150 stereum-{{ beacon_service }}"
-        register: beacon_log
-        changed_when: false
-        become: yes
-      - debug:
-          msg: "{{ beacon_log }}"
-      - name: Validator logs
-        command: "docker logs --tail=150 stereum-{{ validator_service }}"
-        register: validator_log
-        changed_when: false
-        become: yes
-      - debug:
-          msg: "{{ validator_log }}"
+          minutes: 5
       vars:
         stereum_args:
           manage_service:

@@ -30,14 +30,13 @@ h1 {
 .gauge-wrapper {
   width: 100%;
   display: flex;
-  padding: 5px 15px 15px;
 }
 
 .gauge {
   background: #e7e7e7;
   box-shadow: 0 -3px 6px 2px rgba(0, 0, 0, 0.5);
-  width: 150px;
-  height: 75px;
+  width: 90px;
+  height: 45px;
   border-radius: 100px 100px 0 0 !important;
   position: relative;
   overflow: hidden;
@@ -79,7 +78,7 @@ h1 {
 }
 
 .needle {
-  width: 65px;
+  width: 40px;
   height: 2px;
   background: #15222e;
   border-bottom-left-radius: 100% !important;
