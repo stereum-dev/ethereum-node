@@ -81,6 +81,27 @@ export default {
       selectedPreset: "getSelectedPreset",
     }),
   },
+    mounted(){
+    this.selectedPreset.includedPlugins.map(item => {
+      if (item.category === "validator") {
+        if (this.validatorItems.some((oitem) => oitem.id == item.id)) return;
+        this.validatorItems.push(item);
+        this.$store.commit("mutatedValidatorItems", this.validatorItems);
+      } else if (item.category === "consensus") {
+        if (this.consensusItems.some((oitem) => oitem.id == item.id)) return;
+        this.consensusItems.push(item);
+        this.$store.commit("mutatedConsensusItems", this.consensusItems);
+      } else if (item.category === "execution") {
+        if (this.executionItems.some((oitem) => oitem.id == item.id)) return;
+        this.executionItems.push(item);
+        this.$store.commit("mutatedExecutionItems", this.executionItems);
+      } else {
+        if (this.servicePlugins.some((item) => item.id == item.id)) return;
+        this.servicePlugins.push(item);
+        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
+      }
+    })
+  },
   methods: {
     showModal(data) {
       this.isModalActive = true;
