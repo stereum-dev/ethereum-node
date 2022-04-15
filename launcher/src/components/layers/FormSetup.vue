@@ -272,7 +272,6 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        //stay on page if error occurs
         return;
       }
       this.$emit("page", "welcome-page");
