@@ -53,6 +53,7 @@
               type="text"
               v-model="model.name.value"
               @blur="checkInput(model.name)"
+              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.host.isFilled }">
@@ -63,6 +64,7 @@
               type="text"
               v-model="model.host.value"
               @blur="checkInput(model.host)"
+              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.user.isFilled }">
@@ -72,6 +74,7 @@
               id="username"
               v-model="model.user.value"
               @blur="checkInput(model.user)"
+              required
             />
           </div>
         </div>
@@ -92,6 +95,7 @@
             id="keylocation"
             v-model="model.keylocation.value"
             @blur="checkInput(model.keylocation)"
+            required
           />
           <input
             v-show="!keyAuth"
@@ -100,6 +104,7 @@
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
+            required
           />
         </div>
         <div class="ssh">
@@ -272,8 +277,7 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        //stay on page if error occurs
-        //return;
+        return;
       }
       this.$emit("page", "welcome-page");
     },
@@ -287,7 +291,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 .server-box {
   width: 100%;
@@ -295,7 +298,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 7% 14% 59% 20%;
- 
 }
 #header {
   grid-column: 1/4;
@@ -360,7 +362,6 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-   
 }
 .priority {
   z-index: 200;
