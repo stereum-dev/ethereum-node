@@ -14,16 +14,16 @@
           </div>
           <div class="content-box">
             <div class="loading-container" v-if="isLoading">
-              <div class="loading-opacity"></div>
               <div class="preparation-node" v-if="isNodePreparing">
-                <span>Preparing Node</span><span class="dot-flashing"></span>
+                <span>Preparing Node</span>
+                <span class="dot-flashing"></span>
               </div>
               <div class="prepared-node" v-if="isNodePrepared">
                 <img
                   src="../../../../public/img/icon/check-mark/check-mark5.png"
                   alt="icon"
                 />
-                <span>Preparing Node Done!</span><span class="dot-flashing"></span>
+                <span>Preparing Node Done!</span>
               </div>
               <div class="writing-config" v-if="isConfigWriting">
                 <span>writing configuration</span
@@ -37,7 +37,7 @@
                 <span>configuration done!</span>
               </div>
               <div class="starting-container" v-if="isContStarting">
-                <span>starting containers . . .</span>
+                <span>starting containers</span>
                 <span class="dot-flashing"></span>
               </div>
               <div class="started" v-if="isContStarted">
@@ -68,7 +68,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import ControlService from "@/store/ControlService";
+//import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -90,21 +90,24 @@ export default {
   },
   methods: {
     installation: async function () {
-      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      //console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      await new Promise((r) => setTimeout(r, 5000));
       this.isNodePreparing = false;
       this.isNodePrepared = true;
       this.isConfigWriting = true;
-      console.log(await ControlService.writeOneClickConfiguration());
-      await new Promise(r => setTimeout(r, 1000));
+      //console.log(await ControlService.writeOneClickConfiguration());
+      await new Promise((r) => setTimeout(r, 5000));
       this.isConfigWriting = false;
       this.isConfigDone = true;
       this.isContStarting = true;
-      console.log(await ControlService.startOneClickServices());
+      //console.log(await ControlService.startOneClickServices());
+      await new Promise((r) => setTimeout(r, 5000));
       this.isContStarting = false;
       this.isContStarted = true;
+      await new Promise((r) => setTimeout(r, 3000));
       this.isLoading = false;
-      this.isInstalled = true
-    }
+      this.isInstalled = true;
+    },
   },
   mounted() {
     this.installation();
@@ -189,11 +192,10 @@ export default {
   align-items: center;
 }
 
-.setup,
-.loading-container {
+.setup {
   width: 90%;
   height: 90%;
-  background-color: rgb(189, 189, 189);
+  background-color: rgb(217, 217, 217);
   border: 4px solid rgb(106, 106, 106);
   border-radius: 30px;
   box-shadow: 0 1px 3px 1px rgb(26, 42, 36);
@@ -201,6 +203,17 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+}
+.loading-container {
+  width: 90%;
+  height: 90%;
+  background-color: rgb(217, 217, 217);
+  border: 4px solid rgb(106, 106, 106);
+  border-radius: 30px;
+  box-shadow: 0 1px 3px 1px rgb(26, 42, 36);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
 }
 .setup span {
   font-size: 1.2rem;
@@ -210,25 +223,88 @@ export default {
 .setup img {
   width: 20%;
 }
-.writing-config,
-.config-done,
-.starting-container,
-.started,
-.prepared-node {
-  width: 100%;
+.preparation-node {
+  grid-column: 1/7;
+  grid-row: 2/3;
+  margin: 0 auto;
+  width: 70%;
   height: 100%;
+  padding-left: 20px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
+.prepared-node {
+  width: 70%;
+  grid-column: 1/7;
+  grid-row: 2/3;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.writing-config {
+  grid-column: 1/7;
+  grid-row: 3/4;
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  padding-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.config-done {
+  grid-column: 1/7;
+  grid-row: 3/4;
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.starting-container {
+  grid-column: 1/7;
+  grid-row: 4/5;
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  padding-left: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.started {
+  grid-column: 1/7;
+  grid-row: 4/5;
+  width: 70%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .writing-config span,
 .config-done span,
 .starting-container span,
 .started span,
+.preparation-node span,
 .prepared-node span {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
   color: rgb(73, 73, 77);
+  text-transform: capitalize;
+}
+.writing-config img,
+.config-done img,
+.starting-container img,
+.started img,
+.preparation-node img,
+.prepared-node img {
+  width: 10%;
 }
 .table-content::-webkit-scrollbar {
   width: 1px;
@@ -281,7 +357,7 @@ export default {
 }
 .dot-flashing {
   position: relative;
-  left: -20px;
+  left: 15px;
   width: 5px;
   height: 5px;
   top: 4px;
