@@ -77,14 +77,14 @@ dialog {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .progress {
   position: relative;
   height: 82%;
-  width: 99.2%;
+  width: 99.3%;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -102,13 +102,15 @@ dialog {
 
 .progress .color {
   position: absolute;
+  left: 0;
   background-color: #237fd5;
   width: 0px;
   height: 100%;
   border-radius: 20px;
+  border: 1px solid rgb(37, 89, 113);
   animation: progres 5s linear;
   animation-fill-mode: forwards;
-  box-shadow: inset 1px 2px 5px #acd5fc, 0 1px 3px 1px rgb(52, 52, 52);
+  box-shadow: inset 1px 2px 5px #acd5fc, 0 0 1px 1px rgb(52, 52, 52);
 }
 
 @keyframes progres {
