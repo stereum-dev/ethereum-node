@@ -6,51 +6,58 @@
       <sand-clock></sand-clock>
     </div>
 
-    <div class="discSpace_cell">
-      <div class="sddimg">
-        <img class="hddSvg" src="../../../../public/img/icon/hdd.svg" />
-      </div>
-      <div class="infHdd">
-        <div class="infoHdd">{{ No }} GB FREE</div>
-        <hdd-loading></hdd-loading>
-      </div>
-    </div>
+    <dashboard-card class="discSpace_cell">
+      <router-link to="">
+        <div class="sddimg">
+          <img class="hddSvg" src="../../../../public/img/icon/hdd.svg" />
+        </div>
+        <div class="infHdd">
+          <div class="infoHdd">{{ No }} GB FREE</div>
+          <hdd-loading></hdd-loading>
+        </div>
+      </router-link>
+    </dashboard-card>
 
     <!-- <div class="networkSync_cell"></div> -->
-
-    <div class="cpuUsage_cell">
-      <!-- <the-thermometer></the-thermometer> -->
-    </div>
-    <router-link to="/cpu" class="peersConect_cell">
-      <div class="cpuCounter">
-        <div class="circleCounter">
-          <span class="textCounter">{{ No }}</span>
+    <dashboard-card class="networkSync_cell"></dashboard-card>
+    <dashboard-card class="cpuUsage_cell">
+      <router-link to="/cpu">
+        <div class="cpuCounter">
+          <div class="circleCounter">
+            <span class="textCounter">{{ No }}</span>
+          </div>
         </div>
-      </div>
-      <div class="chart-img">
-        <img
-          class="cpuChartAnim"
-          src="../../../../public/img/icon/animChart.svg"
-          alt=""
-        />
-      </div>
-    </router-link>
-    <div class="networkCheck"></div>
+        <div class="chart-img">
+          <img
+            class="cpuChartAnim"
+            src="../../../../public/img/icon/animChart.svg"
+            alt=""
+          />
+        </div>
+      </router-link>
+    </dashboard-card>
+    <!-- <div class="networkCheck"></div> -->
+    <dashboard-card class="networkCheck"></dashboard-card>
 
-    <div class="validatorComment_cell">
+    <!-- <div class="validatorComment_cell">
       <storage-counter class="validCntr"></storage-counter>
-    </div>
-    <div class="nodeStart"></div>
+    </div> -->
+    <dashboard-card class="validatorComment_cell">
+      <storage-counter class="validCntr"></storage-counter>
+    </dashboard-card>
+
+    <!-- <div class="nodeStart"></div> -->
+    <dashboard-card class="nodeStart"></dashboard-card>
   </div>
 </template>
 
 <script>
 import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
-// import BusyRam from "./BusyRam.vue";
+import DashboardCard from "./DashboardCard.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter, HddLoading },
+  components: { SandClock, StorageCounter, HddLoading, DashboardCard },
   data() {
     return {
       No: 100,
@@ -71,7 +78,14 @@ export default {
   margin: 1%;
   box-sizing: border-box;
 }
-
+.card a {
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .machineName_cell {
   grid-column: 1/2;
   grid-row: 1/2;
@@ -94,14 +108,6 @@ export default {
 .discSpace_cell {
   grid-column: 1/2;
   grid-row: 2/3;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
-  display: flex;
-  justify-content: left;
-  align-items: center;
 }
 .hddSvg {
   width: 60%;
@@ -113,6 +119,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.loading-container {
+  width: 100%;
+  height: 100%;
+}
 /*.networkSync_cell {
   grid-column: 2/3;
   grid-row: 2/3;
@@ -122,47 +132,12 @@ export default {
 .networkCheck {
   grid-row: 2/3;
   grid-column: 2/3;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgb(55, 55, 55);
-  box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
 }
 .cpuUsage_cell {
   grid-column: 1/2;
   grid-row: 3/4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgb(55, 55, 55);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
 }
 
-.peersConect_cell {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  margin: 2%;
-  border-radius: 10px;
-  border: 1px solid rgb(52, 52, 52);
-  background: rgb(42, 42, 42);
-  box-sizing: border-box;
-  box-shadow: 0 0 10px 1px rgb(23, 23, 23);
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1;
-}
-
-.peersConect_cell:hover {
-  background: rgb(19, 16, 16);
-}
-.peersConect_cell:active {
-  background: rgb(19, 16, 16);
-}
 .chart-img {
   width: 60%;
   height: 100%;
@@ -249,27 +224,14 @@ export default {
   }
 }
 
-/*.networkUsage_cell {
+.networkUsage_cell {
   grid-column: 1/2;
   grid-row: 4/5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0 0 0 15px;
-  border: 3px dotted red;
-}*/
+}
 
 .validatorComment_cell {
   grid-column: 3/4;
   grid-row: 2/3;
-  display: flex;
-
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
-  align-items: center;
-  justify-content: left;
 }
 
 .netThermo {
@@ -279,10 +241,9 @@ export default {
 .nodeStart {
   grid-column: 1/2;
   grid-row: 4/5;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
-  margin: 2%;
+}
+.slice-colors .slice-item {
+  width: 100%;
+  height: 100%;
 }
 </style>
