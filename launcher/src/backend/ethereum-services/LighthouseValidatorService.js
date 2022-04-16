@@ -13,11 +13,13 @@ export class LighthouseValidatorService extends NodeService {
             new ServiceVolume(workingDir + "/launchpad", launchpadDir)
         ];
 
-        const eth2Nodes = consensusClients.map(client => {return client.buildConsensusClientHttpEntpointUrl()});
+        const eth2Nodes = (consensusClients.map(client => {return client.buildConsensusClientHttpEntpointUrl()})).join();
 
         // build service
         const service = new LighthouseValidatorService();
-        service.init(null,
+        service.init(
+            "LighthouseValidatorService",
+            null,
             image,
             "v2.0.1-47",
             null,

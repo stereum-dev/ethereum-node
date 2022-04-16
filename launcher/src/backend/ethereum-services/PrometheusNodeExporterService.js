@@ -7,6 +7,7 @@ export class PrometheusNodeExporterService extends NodeService {
         const image = "prom/node-exporter";
         const service = new PrometheusNodeExporterService();
         service.init(
+            "PrometheusNodeExporterService",
             null,                       //id
             image,                      //image
             "v1.3.1",                   //imageVersion

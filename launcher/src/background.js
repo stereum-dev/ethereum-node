@@ -49,6 +49,11 @@ promiseIpc.on("setup", async (arg) => {
 });
 
 // called via promiseIpc as an async function
+promiseIpc.on("destroy", async () => {
+  return nodeConnection.destroyNode();
+});
+
+// called via promiseIpc as an async function
 promiseIpc.on("tunnel", async (arg) => {
   return stereumService.openTunnels(arg);
 });

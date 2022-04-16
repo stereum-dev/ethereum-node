@@ -31,9 +31,13 @@ class ControlService extends EventEmitter {
   async inquire(args) {
     return this.promiseIpc.send("inquire", args);
   }
-
+  
   async setup(args) {
     return this.promiseIpc.send("setup", args);
+  }
+  
+  async destroy(){
+    return await this.promiseIpc.send("destroy");
   }
 
   async openTunnels(args) {

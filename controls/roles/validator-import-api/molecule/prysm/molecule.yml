@@ -22,6 +22,9 @@ platforms:
       ip: 10.10.0.146
 provisioner:
   name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
 lint: |
   set -e
   yamllint .

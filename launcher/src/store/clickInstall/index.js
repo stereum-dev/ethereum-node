@@ -17,6 +17,7 @@ export default {
           category: "execution",
           path: "/geth",
           icon: require("../../../public/img/icon/plugin-icons/execution/Geth.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/execution/Geth-s.png"),
         },
         {
           id: 1009,
@@ -24,6 +25,7 @@ export default {
           category: "execution",
           path: "/hyperledger",
           icon: require("../../../public/img/icon/plugin-icons/execution/hyperLedger-besu.png"),
+          SIcon: require("../../../public/img/icon/plugin-icons/execution/HyperLedger-besu-s.png"),
         },
         {
           id: 1008,
@@ -31,6 +33,7 @@ export default {
           category: "execution",
           path: "/erigon",
           icon: require("../../../public/img/icon/plugin-icons/execution/Erigon.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/execution/Erigon-s.png"),
         },
         {
           id: 1010,
@@ -38,6 +41,7 @@ export default {
           category: "execution",
           path: "/nethermind",
           icon: require("../../../public/img/icon/plugin-icons/execution/Nethermind.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/execution/Nethermind-s.png"),
         },
         {
           id: 1011,
@@ -45,6 +49,7 @@ export default {
           category: "execution",
           path: "/open-ethereum",
           icon: require("../../../public/img/icon/plugin-icons/execution/OpenEthereum.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/execution/Open-ethereum-s.png"),
         },
         {
           id: 1002,
@@ -52,6 +57,7 @@ export default {
           category: "service",
           path: "/grafana",
           icon: require("../../../public/img/icon/plugin-icons/Other/grafana-service.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/Grafana-s.png"),
         },
         {
           id: 1003,
@@ -59,6 +65,7 @@ export default {
           category: "consensus",
           path: "/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Lighthouse-s.png"),
         },
         {
           id: 1004,
@@ -66,6 +73,7 @@ export default {
           category: "consensus",
           path: "/lodestar",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Lodestar.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Lodestar-s.png"),
         },
         {
           id: 1005,
@@ -73,6 +81,7 @@ export default {
           category: "consensus",
           path: "/nimbus",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Nimbus.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
         },
         {
           id: 1006,
@@ -80,6 +89,7 @@ export default {
           category: "consensus",
           path: "/teku",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Teku.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Teku-s.png"),
         },
         {
           id: 1007,
@@ -87,6 +97,7 @@ export default {
           category: "consensus",
           path: "/prysm",
           icon: require("../../../public/img/icon/plugin-icons/consensus/Prysm.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/consensus/Prysm-s.png"),
         },
         {
           id: 1012,
@@ -94,6 +105,7 @@ export default {
           category: "validator",
           path: "/lighthouse",
           icon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
         },
         {
           id: 1013,
@@ -101,6 +113,7 @@ export default {
           category: "validator",
           path: "/lodestar",
           icon: require("../../../public/img/icon/plugin-icons/validator/lodestar-validator.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Lodestar-s.png"),
         },
         {
           id: 1014,
@@ -108,6 +121,7 @@ export default {
           category: "validator",
           path: "/prysm",
           icon: require("../../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
         },
         {
           id: 1015,
@@ -115,6 +129,7 @@ export default {
           category: "validator",
           path: "/nimbus",
           icon: require("../../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
         },
         {
           id: 1016,
@@ -122,6 +137,7 @@ export default {
           category: "validator",
           path: "/teku",
           icon: require("../../../public/img/icon/plugin-icons/validator/teku-validator.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/validator/Teku-s.png"),
         },
         {
           id: 1017,
@@ -129,6 +145,7 @@ export default {
           category: "service",
           path: "/blox-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/blox-ssv.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/Blox-ssv-s.png"),
         },
         {
           id: 1018,
@@ -136,6 +153,7 @@ export default {
           category: "service",
           path: "/ey-nightfall",
           icon: require("../../../public/img/icon/plugin-icons/Other/ey-nightfall.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/EY-nightfall-s.png"),
         },
         {
           id: 1019,
@@ -143,6 +161,7 @@ export default {
           category: "service",
           path: "/obol-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/obol-ssv.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/Obol-ssv-s.png"),
         },
         {
           id: 1020,
@@ -150,6 +169,7 @@ export default {
           category: "service",
           path: "/prometheus",
           icon: require("../../../public/img/icon/plugin-icons/Other/prometheus.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/Prometheus-s.png"),
         },
         {
           id: 1021,
@@ -157,6 +177,7 @@ export default {
           category: "service",
           path: "/rocketpool",
           icon: require("../../../public/img/icon/plugin-icons/Other/rocketpool.png"),
+          sIcon: require("../../../public/img/icon/plugin-icons/Other/Rocketpool-s.png"),
         },
       ],
       presets: [

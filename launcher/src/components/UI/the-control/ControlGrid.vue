@@ -63,7 +63,7 @@ export default {
   display: grid;
   width: 99.1%;
   height: 90%;
-  background-color: rgb(28, 28, 28);
+  background-color: #232323;
   border: 4px solid #979797;
   border-radius: 10px 35px 10px 10px;
   grid-template-columns: 24% 59% 17%;

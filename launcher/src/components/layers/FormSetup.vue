@@ -53,6 +53,7 @@
               type="text"
               v-model="model.name.value"
               @blur="checkInput(model.name)"
+              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.host.isFilled }">
@@ -63,6 +64,7 @@
               type="text"
               v-model="model.host.value"
               @blur="checkInput(model.host)"
+              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.user.isFilled }">
@@ -72,6 +74,7 @@
               id="username"
               v-model="model.user.value"
               @blur="checkInput(model.user)"
+              required
             />
           </div>
         </div>
@@ -83,10 +86,10 @@
               : !model.pass.isFilled,
           }"
         >
-          <label v-show="keyAuth">KEYLOCATION</label>
-          <label v-show="!keyAuth">PASSWORD</label>
+          <label v-if="keyAuth">KEYLOCATION</label>
+          <label v-if="!keyAuth">PASSWORD</label>
           <input
-            v-show="keyAuth"
+            v-if="keyAuth"
             type="text"
             name="keylocation"
             id="keylocation"
@@ -94,7 +97,7 @@
             @blur="checkInput(model.keylocation)"
           />
           <input
-            v-show="!keyAuth"
+            v-if="!keyAuth"
             type="password"
             name="keylocation"
             id="keylocation"
@@ -272,8 +275,7 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        //stay on page if error occurs
-        //return;
+        return;
       }
       this.$emit("page", "welcome-page");
     },
@@ -287,7 +289,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 .server-box {
   width: 100%;
@@ -295,7 +296,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 7% 14% 59% 20%;
- 
 }
 #header {
   grid-column: 1/4;
@@ -360,7 +360,6 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-   
 }
 .priority {
   z-index: 200;
@@ -495,14 +494,14 @@ select.classic:focus {
   width: 60%;
   height: 20px;
   background-color: #d8e1e1;
-  border: 6px solid #3a3939;
+  border: 4px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
   font-weight: bold;
   outline-style: none;
 }
 .formGroup input:hover {
-  border: 3px solid rgb(190, 242, 190);
+  border: 4px solid gray;
 }
 #keyLocation {
   width: 67%;
@@ -532,7 +531,7 @@ select.classic:focus {
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 5px solid #3a3939;
+  border: 4px solid #363535;
 }
 
 #login {
@@ -645,7 +644,13 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.errors input {
-  border-color: red;
+input:optional {
+  border-color: gray;
+}
+input:required {
+  border-color: rgb(38, 38, 38);
+}
+input:invalid {
+  border-color: rgb(233, 100, 100);
 }
 </style>

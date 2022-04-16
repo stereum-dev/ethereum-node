@@ -6,52 +6,58 @@
       <sand-clock></sand-clock>
     </div>
 
-    <div class="discSpace_cell">
-      <div class="sddimg">
-        <img class="hddSvg" src="../../../../public/img/icon/hdd.svg" />
-      </div>
-      <div class="infHdd">
-        <div class="infoHdd">{{ No }} GB FREE</div>
-        <hdd-loading></hdd-loading>
-      </div>
-    </div>
+    <dashboard-card class="discSpace_cell">
+      <router-link to="">
+        <div class="sddimg">
+          <img class="hddSvg" src="../../../../public/img/icon/hdd.svg" />
+        </div>
+        <div class="infHdd">
+          <div class="infoHdd">{{ No }} GB FREE</div>
+          <hdd-loading></hdd-loading>
+        </div>
+      </router-link>
+    </dashboard-card>
 
     <!-- <div class="networkSync_cell"></div> -->
+    <dashboard-card class="networkSync_cell"></dashboard-card>
+    <dashboard-card class="cpuUsage_cell">
+      <router-link to="/cpu">
+        <div class="cpuCounter">
+          <div class="circleCounter">
+            <span class="textCounter">{{ No }}</span>
+          </div>
+        </div>
+        <div class="chart-img">
+          <img
+            class="cpuChartAnim"
+            src="../../../../public/img/icon/animChart.svg"
+            alt=""
+          />
+        </div>
+      </router-link>
+    </dashboard-card>
+    <!-- <div class="networkCheck"></div> -->
+    <dashboard-card class="networkCheck"></dashboard-card>
 
-    <div class="cpuUsage_cell">
-      <!-- <the-thermometer></the-thermometer> -->
-    </div>
-    <router-link to="/cpu" class="peersConect_cell">
-      <div class="cpuCounter">
-        <div class="circleCounter">{{ No }}</div>
-      </div>
-      <img
-        class="cpuChartAnim"
-        src="../../../../public/img/icon/animChart.svg"
-        alt=""
-      />
-    </router-link>
-    <div class="networkCheck"></div>
-
-    <div class="validatorComment_cell">
+    <!-- <div class="validatorComment_cell">
       <storage-counter class="validCntr"></storage-counter>
-    </div>
-    <div class="nodeStart"></div>
+    </div> -->
+    <dashboard-card class="validatorComment_cell">
+      <storage-counter class="validCntr"></storage-counter>
+    </dashboard-card>
+
+    <!-- <div class="nodeStart"></div> -->
+    <dashboard-card class="nodeStart"></dashboard-card>
   </div>
 </template>
 
 <script>
-
-// import TheThermometer from "./TheThermometer.vue";
-
 import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
-// import BusyRam from "./BusyRam.vue";
+import DashboardCard from "./DashboardCard.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-
-  components: { SandClock, StorageCounter, HddLoading },
-
+  components: { SandClock, StorageCounter, HddLoading, DashboardCard },
   data() {
     return {
       No: 100,
@@ -72,7 +78,14 @@ export default {
   margin: 1%;
   box-sizing: border-box;
 }
-
+.card a {
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .machineName_cell {
   grid-column: 1/2;
   grid-row: 1/2;
@@ -95,14 +108,6 @@ export default {
 .discSpace_cell {
   grid-column: 1/2;
   grid-row: 2/3;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
-  display: flex;
-  justify-content: left;
-  align-items: center;
 }
 .hddSvg {
   width: 60%;
@@ -114,6 +119,10 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.loading-container {
+  width: 100%;
+  height: 100%;
+}
 /*.networkSync_cell {
   grid-column: 2/3;
   grid-row: 2/3;
@@ -123,87 +132,106 @@ export default {
 .networkCheck {
   grid-row: 2/3;
   grid-column: 2/3;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
 }
 .cpuUsage_cell {
   grid-column: 1/2;
   grid-row: 3/4;
+}
+
+.chart-img {
+  width: 60%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
 }
-
-.peersConect_cell {
-  grid-column: 2/3;
-  grid-row: 3/4;
-  margin: 2%;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
-  text-decoration: none;
-  display: flex;
+.chart-img img {
+  width: 80%;
+  height: 90%;
 }
-
-.peersConect_cell:hover {
-  background: rgb(19, 16, 16);
+.textCounter {
+  color: rgb(146, 146, 146);
+  font-size: 1rem;
+  font-weight: 600;
+  z-index: 20;
 }
-.peersConect_cell:active {
-  background: rgb(19, 16, 16);
-}
-
 .cpuCounter {
-  color: aquamarine;
-  font-size: 2rem;
-  text-align: left;
-  margin: 5%;
-
-  width: 100%;
-}
-.circleCounter {
-  width: 4rem;
-  height: 3rem;
-  border: 3px solid aquamarine;
+  width: 40%;
+  height: 100%;
   display: flex;
-  border-radius: 50%;
   justify-content: center;
-  align-content: center;
-}
-.cpuChartAnim {
-  position: relative;
-  left: -70%;
+  align-items: center;
 }
 
-/*.networkUsage_cell {
+.circleCounter {
+  width: 51%;
+  height: 70%;
+  border: 4px solid rgb(77, 77, 77);
+  box-shadow: 0 1px 5px 1px rgb(18, 18, 18);
+  position: relative;
+  background: #000;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circleCounter::before {
+  content: "";
+  /* box-shadow: inset 1px 1px 5px 1px rgb(227, 198, 141); */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  animation: wipe 10s cubic-bezier(0.2, 0.6, 0.8, 0.4) forwards;
+}
+@keyframes wipe {
+  0% {
+    height: 0;
+    background: rgb(13, 84, 13);
+  }
+  5% {
+    height: 5%;
+    background: linear-gradient(rgb(13, 84, 13), rgb(12, 114, 12), #138a13);
+  }
+  10% {
+    height: 10%;
+    background: linear-gradient(#158e11, #1da018, #1fb11a, #6bab17);
+  }
+  25% {
+    height: 30%;
+    background: linear-gradient(#5e9b0f, #6fa519, #69ae10, #7da105);
+  }
+  50% {
+    height: 50%;
+    background: linear-gradient(#90ce25, #abdf1c, #a7bc20, #c0cf1b);
+  }
+  75% {
+    height: 75%;
+    background: linear-gradient(#efa418, #fcd616, #eae728, #c0cf1b);
+  }
+  100% {
+    height: 100%;
+    background: linear-gradient(
+      #c81a07,
+      #f63f0d,
+      #f85c08,
+      #f18214,
+      #efa418,
+      #fcd616
+    );
+  }
+}
+
+.networkUsage_cell {
   grid-column: 1/2;
   grid-row: 4/5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 0 0 0 15px;
-  border: 3px dotted red;
-}*/
+}
 
 .validatorComment_cell {
   grid-column: 3/4;
   grid-row: 2/3;
-  display: flex;
-
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 1px rgb(24, 23, 23);
-  align-items: center;
-  justify-content: left;
 }
 
 .netThermo {
@@ -213,10 +241,9 @@ export default {
 .nodeStart {
   grid-column: 1/2;
   grid-row: 4/5;
-  border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
-  box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
-  margin: 2%;
+}
+.slice-colors .slice-item {
+  width: 100%;
+  height: 100%;
 }
 </style>

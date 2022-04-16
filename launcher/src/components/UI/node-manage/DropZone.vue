@@ -16,7 +16,7 @@
           ref="itemsList"
         >
           <img
-            :src="item.source"
+            :src="item.sIcon"
             alt="icon"
             @click="selectedItem(item)"
             :class="{ 'chosen-plugin': item.active }"
@@ -100,9 +100,9 @@ export default {
   top: 21%;
   left: 21.6%;
   height: 63px;
-  width: 230px;
+  width: 56%;
   background-color: transparent;
-  border-bottom: 5px solid #656565;
+  border-bottom: 3px solid #656565;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
@@ -114,15 +114,18 @@ export default {
   width: 50px;
   height: 50px;
   border: 1px solid rgb(96, 95, 95);
+  /* box-shadow:0 1px 3px 1px #2a2a2a; */
   border-radius: 10px;
   margin: 0 auto;
 }
 .item-box .items img {
   width: 50px;
   height: 50px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px 1px #2a2a2a;
 }
 .plus-icon-box {
-  background-color: rgb(237, 237, 237);
+  background-color: rgb(171, 171, 171);
   width: 30px;
   height: 20px;
   border-radius: 50px;
@@ -133,27 +136,29 @@ export default {
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  font-size: 1.1rem;
   color: rgb(65, 65, 65);
-  border: 1px solid rgb(67, 67, 67);
-  box-shadow: inset 0 1px 4px 1px #8e8e8e, 0 1px 5px #3e3e3e;
+  border: 1px solid rgb(229, 229, 229);
+  box-shadow: inset 0 1px 4px 1px #cecece, 0 1px 3px 1px #2d2d2d;
   cursor: pointer;
 }
 
 .plus-icon-box:hover {
-  border: 1px solid green;
-  /* box-shadow: 0 1px 4px 1px rgb(142, 142, 142); */
+  border: 1px solid rgb(46, 46, 46);
+  box-shadow: none;
+  font-size: 0.9rem;
 }
 .plus-icon-box:active {
-  background-color: #fff;
+  background-color: rgb(126, 126, 126);
   border: 1px solid rgb(159, 159, 159);
   box-shadow: none;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 .items img:active {
   box-shadow: none;
 }
 .chosen-plugin {
-  border: 2px solid rgb(86, 172, 138);
-  border-radius: 13px;
+  border: 2px solid rgb(68, 168, 240);
+  border-radius: 8px;
 }
 </style>

@@ -81,6 +81,26 @@ export default {
       selectedPreset: "getSelectedPreset",
     }),
   },
+  mounted(){
+    if(Object.keys(this.selectedPreset).length !== 0){
+      this.selectedPreset.includedPlugins.map(item => {
+      if (item.category === "validator") {
+        if (this.validatorItems.some((plugin) => plugin.id == item.id)) return;
+        this.validatorItems.push(item);
+      } else if (item.category === "consensus") {
+        if (this.consensusItems.some((plugin) => plugin.id == item.id)) return;
+        this.consensusItems.push(item);
+      } else if (item.category === "execution") {
+        if (this.executionItems.some((plugin) => plugin.id == item.id)) return;
+        this.executionItems.push(item);
+      } else if (item.category === "service") {
+        if (this.servicePlugins.some((plugin) => plugin.id == item.id)) return;
+        this.servicePlugins.push(item);
+      }
+      })
+      this.$store.commit("mutatedSelectedPreset", []);
+    }
+  },
   methods: {
     showModal(data) {
       this.isModalActive = true;

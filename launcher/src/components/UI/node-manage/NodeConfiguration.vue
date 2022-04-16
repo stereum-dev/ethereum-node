@@ -72,6 +72,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -106,6 +107,7 @@ export default {
       this.removeModal = false;
       this.removeIsConfirmed = true;
       this.removeAllPlugins();
+      this.destroyNode();
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
@@ -115,6 +117,9 @@ export default {
         this.validatorItems.length = 0;
       }
     },
+    destroyNode: async function(){
+      console.log(await ControlService.destroy());
+    }
   },
 };
 </script>

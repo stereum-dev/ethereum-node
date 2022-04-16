@@ -159,7 +159,7 @@ export default {
 }
 .progress-container {
   width: 82%;
-  height: 32%;
+  height: 40%;
   margin: 10px auto;
   display: flex;
   justify-content: center;
@@ -171,7 +171,7 @@ export default {
   border: 4px solid #6e8582;
   background-color: #6e8582;
   border-radius: 40px;
-  box-shadow: 0 1px 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
+  box-shadow: 0 0 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -179,13 +179,12 @@ export default {
 }
 #txt {
   width: 85%;
-  height: 45%;
+  height: 65%;
   border: 4px solid #6e8582;
   margin: 0 auto;
   background: #2a4243;
-  border-radius: 40px;
+  border-radius: 20px;
   position: relative;
-  padding: 10px;
   resize: both;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
