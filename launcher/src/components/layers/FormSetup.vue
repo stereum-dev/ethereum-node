@@ -95,7 +95,6 @@
             id="keylocation"
             v-model="model.keylocation.value"
             @blur="checkInput(model.keylocation)"
-            required
           />
           <input
             v-if="!keyAuth"
@@ -104,7 +103,6 @@
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
-            required
           />
         </div>
         <div class="ssh">
