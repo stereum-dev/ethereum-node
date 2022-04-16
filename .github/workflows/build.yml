@@ -3,8 +3,11 @@ name: Build/release
 on: push
 
 jobs:
-  release:
+  release_launcher:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: launcher
 
     strategy:
       matrix:
@@ -17,13 +20,11 @@ jobs:
 
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
-        working-directory: launcher
         with:
           node-version: 15
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
-        working-directory: launcher
         with:
           github_token: ${{ secrets.github_token }}
           package_root: electron-launcher
