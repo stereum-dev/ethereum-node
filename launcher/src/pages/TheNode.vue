@@ -81,26 +81,25 @@ export default {
       selectedPreset: "getSelectedPreset",
     }),
   },
-    mounted(){
-    this.selectedPreset.includedPlugins.map(item => {
+  mounted(){
+    if(Object.keys(this.selectedPreset).length !== 0){
+      this.selectedPreset.includedPlugins.map(item => {
       if (item.category === "validator") {
         if (this.validatorItems.some((plugin) => plugin.id == item.id)) return;
         this.validatorItems.push(item);
-        this.$store.commit("mutatedValidatorItems", this.validatorItems);
       } else if (item.category === "consensus") {
         if (this.consensusItems.some((plugin) => plugin.id == item.id)) return;
         this.consensusItems.push(item);
-        this.$store.commit("mutatedConsensusItems", this.consensusItems);
       } else if (item.category === "execution") {
         if (this.executionItems.some((plugin) => plugin.id == item.id)) return;
         this.executionItems.push(item);
-        this.$store.commit("mutatedExecutionItems", this.executionItems);
-      } else {
+      } else if (item.category === "service") {
         if (this.servicePlugins.some((plugin) => plugin.id == item.id)) return;
         this.servicePlugins.push(item);
-        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
       }
-    })
+      })
+      this.$store.commit("mutatedSelectedPreset", []);
+    }
   },
   methods: {
     showModal(data) {
