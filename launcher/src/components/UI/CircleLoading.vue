@@ -59,7 +59,7 @@ dialog {
   animation: gear 5s linear infinite;
   position: absolute;
   right: 1px;
-  width: 3%;
+  width: 2.5%;
   float: right;
 }
 

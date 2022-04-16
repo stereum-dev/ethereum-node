@@ -153,14 +153,14 @@ export default {
 }
 .progress-container {
   width: 82% !important;
-  height: 35% !important;
+  height: 38% !important;
   margin: 10px auto !important;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .progress-bg {
-  width: 60% !important;
+  width: 59% !important;
   height: 65% !important;
   border: 4px solid #6e8582;
   background-color: #6e8582;
