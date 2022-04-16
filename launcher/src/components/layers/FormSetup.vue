@@ -86,25 +86,23 @@
               : !model.pass.isFilled,
           }"
         >
-          <label v-show="keyAuth">KEYLOCATION</label>
-          <label v-show="!keyAuth">PASSWORD</label>
+          <label v-if="keyAuth">KEYLOCATION</label>
+          <label v-if="!keyAuth">PASSWORD</label>
           <input
-            v-show="keyAuth"
+            v-if="keyAuth"
             type="text"
             name="keylocation"
             id="keylocation"
             v-model="model.keylocation.value"
             @blur="checkInput(model.keylocation)"
-            required
           />
           <input
-            v-show="!keyAuth"
+            v-if="!keyAuth"
             type="password"
             name="keylocation"
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
-            required
           />
         </div>
         <div class="ssh">
@@ -496,14 +494,14 @@ select.classic:focus {
   width: 60%;
   height: 20px;
   background-color: #d8e1e1;
-  border: 6px solid #3a3939;
+  border: 4px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
   font-weight: bold;
   outline-style: none;
 }
 .formGroup input:hover {
-  border: 3px solid rgb(190, 242, 190);
+  border: 4px solid gray;
 }
 #keyLocation {
   width: 67%;
@@ -533,7 +531,7 @@ select.classic:focus {
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 5px solid #3a3939;
+  border: 4px solid #363535;
 }
 
 #login {
@@ -646,7 +644,13 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.errors input {
-  border-color: red;
+input:optional {
+  border-color: gray;
+}
+input:required {
+  border-color: rgb(38, 38, 38);
+}
+input:invalid {
+  border-color: rgb(233, 100, 100);
 }
 </style>

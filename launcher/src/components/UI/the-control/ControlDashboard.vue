@@ -23,13 +23,17 @@
     </div>
     <router-link to="/cpu" class="peersConect_cell">
       <div class="cpuCounter">
-        <div class="circleCounter">{{ No }}</div>
+        <div class="circleCounter">
+          <span class="textCounter">{{ No }}</span>
+        </div>
       </div>
-      <img
-        class="cpuChartAnim"
-        src="../../../../public/img/icon/animChart.svg"
-        alt=""
-      />
+      <div class="chart-img">
+        <img
+          class="cpuChartAnim"
+          src="../../../../public/img/icon/animChart.svg"
+          alt=""
+        />
+      </div>
     </router-link>
     <div class="networkCheck"></div>
 
@@ -120,7 +124,7 @@ export default {
   grid-column: 2/3;
   margin: 2%;
   border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
+  background: rgb(55, 55, 55);
   box-sizing: border-box;
   box-shadow: 2px 3px rgb(53, 51, 51);
 }
@@ -132,7 +136,7 @@ export default {
   align-items: center;
   margin: 2%;
   border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
+  background: rgb(55, 55, 55);
   box-sizing: border-box;
   box-shadow: 2px 1px rgb(24, 23, 23);
 }
@@ -142,11 +146,15 @@ export default {
   grid-row: 3/4;
   margin: 2%;
   border-radius: 10px;
-  background: rgba(55, 55, 55, 0.8);
+  border: 1px solid rgb(52, 52, 52);
+  background: rgb(42, 42, 42);
   box-sizing: border-box;
-  box-shadow: 2px 3px rgb(53, 51, 51);
+  box-shadow: 0 0 10px 1px rgb(23, 23, 23);
   text-decoration: none;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
 }
 
 .peersConect_cell:hover {
@@ -155,27 +163,90 @@ export default {
 .peersConect_cell:active {
   background: rgb(19, 16, 16);
 }
-
-.cpuCounter {
-  color: aquamarine;
-  font-size: 2rem;
-  text-align: left;
-  margin: 5%;
-
-  width: 100%;
-}
-.circleCounter {
-  width: 4rem;
-  height: 3rem;
-  border: 3px solid aquamarine;
+.chart-img {
+  width: 60%;
+  height: 100%;
   display: flex;
-  border-radius: 50%;
   justify-content: center;
-  align-content: center;
+  align-items: center;
 }
-.cpuChartAnim {
+.chart-img img {
+  width: 80%;
+  height: 90%;
+}
+.textCounter {
+  color: rgb(146, 146, 146);
+  font-size: 1rem;
+  font-weight: 600;
+  z-index: 20;
+}
+.cpuCounter {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circleCounter {
+  width: 51%;
+  height: 70%;
+  border: 4px solid rgb(77, 77, 77);
+  box-shadow: 0 1px 5px 1px rgb(18, 18, 18);
   position: relative;
-  left: -70%;
+  background: #000;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circleCounter::before {
+  content: "";
+  /* box-shadow: inset 1px 1px 5px 1px rgb(227, 198, 141); */
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  left: 0;
+  animation: wipe 10s cubic-bezier(0.2, 0.6, 0.8, 0.4) forwards;
+}
+@keyframes wipe {
+  0% {
+    height: 0;
+    background: rgb(13, 84, 13);
+  }
+  5% {
+    height: 5%;
+    background: linear-gradient(rgb(13, 84, 13), rgb(12, 114, 12), #138a13);
+  }
+  10% {
+    height: 10%;
+    background: linear-gradient(#158e11, #1da018, #1fb11a, #6bab17);
+  }
+  25% {
+    height: 30%;
+    background: linear-gradient(#5e9b0f, #6fa519, #69ae10, #7da105);
+  }
+  50% {
+    height: 50%;
+    background: linear-gradient(#90ce25, #abdf1c, #a7bc20, #c0cf1b);
+  }
+  75% {
+    height: 75%;
+    background: linear-gradient(#efa418, #fcd616, #eae728, #c0cf1b);
+  }
+  100% {
+    height: 100%;
+    background: linear-gradient(
+      #c81a07,
+      #f63f0d,
+      #f85c08,
+      #f18214,
+      #efa418,
+      #fcd616
+    );
+  }
 }
 
 /*.networkUsage_cell {
