@@ -74,8 +74,8 @@ dialog {
 /* TEST*/
 
 .progress-box {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -83,8 +83,8 @@ dialog {
 
 .progress {
   position: relative;
-  height: 82%;
-  width: 99.3%;
+  height: 82% !important;
+  width: 99.3% !important;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -95,7 +95,6 @@ dialog {
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(17, 68, 43);
-  position: relative;
   text-align: left;
   margin-left: 10px;
 }
@@ -104,7 +103,6 @@ dialog {
   position: absolute;
   left: 0;
   background-color: #237fd5;
-  width: 0px;
   height: 100%;
   border-radius: 20px;
   border: 1px solid rgb(37, 89, 113);

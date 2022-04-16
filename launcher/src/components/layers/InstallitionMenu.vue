@@ -1,7 +1,7 @@
 <template>
   <div class="welcome-parent">
-    <div id="header">
-      <h2>WELCOME</h2>
+    <div id="welcome-header">
+      <h2 class="welcome-title">WELCOME</h2>
     </div>
     <div class="middle-box">
       <div id="txt">
@@ -94,13 +94,10 @@ export default {
   justify-content: center;
 }
 .item-container {
-  width: 80%;
-  height: 40%;
-  resize: both;
-  margin: 30px auto;
-  position: relative;
+  width: 80% !important;
+  height: 40% !important;
+  margin: 30px auto !important;
   border-radius: 40px;
-  flex-wrap: nowrap;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -123,69 +120,63 @@ export default {
   text-decoration: none;
 }
 
-#header {
+#welcome-header {
   width: 40%;
-  height: 20%;
-  margin: 50px auto;
-  position: relative;
+  height: 18% !important;
+  margin: 50px auto !important;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-#header h2 {
-  width: 70%;
-  height: 40%;
-  margin: 0 auto;
-  font-size: 2.4rem;
-  resize: both;
+#welcome-header .welcome-title {
+  width: 70% !important;
+  height: 70% !important;
+  margin: 0 auto !important;
+  font-size: 2.4rem !important;
   box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
   background: #2a4243;
   color: rgb(221, 221, 221);
-  padding-bottom: 10px;
   border-radius: 40px;
   border: 4px solid #6e8582;
   opacity: 0.8;
   text-align: center;
-  padding-top: 5px;
 }
 .middle-box {
-  width: 90%;
-  height: 25%;
-  margin: 20px auto;
+  width: 90% !important;
+  height: 35% !important;
+  margin: 10px auto !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 .progress-container {
-  width: 82%;
-  height: 40%;
-  margin: 10px auto;
+  width: 82% !important;
+  height: 35% !important;
+  margin: 10px auto !important;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.progress-bg{
-  width: 60%;
-  height: 63%;
+.progress-bg {
+  width: 60% !important;
+  height: 65% !important;
   border: 4px solid #6e8582;
   background-color: #6e8582;
   border-radius: 40px;
-  box-shadow: 0 0 3px 1px rgb(18, 20, 20),inset 1px 1px 5px rgb(0, 0, 0);
+  box-shadow: 0 0 3px 1px rgb(18, 20, 20), inset 1px 1px 5px rgb(0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 1;
 }
 #txt {
-  width: 85%;
-  height: 65%;
+  width: 85% !important;
+  height: 95% !important;
   border: 4px solid #6e8582;
-  margin: 0 auto;
+  margin: 0 auto !important;
   background: #2a4243;
   border-radius: 20px;
-  position: relative;
-  resize: both;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
   display: flex;
@@ -193,7 +184,7 @@ export default {
   align-items: center;
 }
 #txt p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   color: rgb(225, 225, 225);
   text-align: center;
