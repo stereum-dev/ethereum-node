@@ -97,6 +97,7 @@ export default {
   width: 80% !important;
   height: 40% !important;
   margin: 30px auto !important;
+  position: relative;
   border-radius: 40px;
   display: flex;
   justify-content: space-between;
