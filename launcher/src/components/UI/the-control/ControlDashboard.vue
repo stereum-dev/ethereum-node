@@ -31,7 +31,6 @@
           <img
             class="cpuChartAnim"
             src="../../../../public/img/icon/animChart.svg"
-            alt=""
           />
         </div>
       </router-link>
@@ -47,17 +46,34 @@
     </dashboard-card>
 
     <!-- <div class="nodeStart"></div> -->
-    <dashboard-card class="nodeStart"></dashboard-card>
+    <dashboard-card class="nodeStart"
+      ><div class="imgCpu">
+        <img class="cpuImg" src="../../../../public/img/icon/cpuIcon.svg" />
+      </div>
+      <div class="colorBar">
+        <color-bar class="colorBarComp"></color-bar>
+        <loli-bar class="loli"></loli-bar>
+      </div>
+    </dashboard-card>
   </div>
 </template>
 
 <script>
+import ColorBar from "./ColorBar.vue";
+import LoliBar from "./LoliBar.vue";
 import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
 import DashboardCard from "./DashboardCard.vue";
 import StorageCounter from "./StorageCounter.vue";
 export default {
-  components: { SandClock, StorageCounter, HddLoading, DashboardCard },
+  components: {
+    SandClock,
+    StorageCounter,
+    HddLoading,
+    DashboardCard,
+    ColorBar,
+    LoliBar,
+  },
   data() {
     return {
       No: 100,
@@ -241,7 +257,27 @@ export default {
 .nodeStart {
   grid-column: 1/2;
   grid-row: 4/5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
+.colorBar {
+  width: 60%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+.loli {
+  width: 80%;
+}
+.cpuImg {
+  width: 50%;
+}
+
 .slice-colors .slice-item {
   width: 100%;
   height: 100%;
