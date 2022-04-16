@@ -84,7 +84,7 @@ dialog {
 .progress {
   position: relative;
   height: 82%;
-  width: 99%;
+  width: 99.2%;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -94,11 +94,10 @@ dialog {
 .progress span {
   font-size: 0.6rem;
   font-weight: 800;
-  color: rgb(47, 46, 46);
+  color: rgb(17, 68, 43);
   position: relative;
   text-align: left;
   margin-left: 10px;
-  margin: 2px 0 0 10px;
 }
 
 .progress .color {
@@ -127,7 +126,6 @@ dialog {
   }
   75% {
     width: 85%;
-    
   }
   100% {
     width: 100%;
