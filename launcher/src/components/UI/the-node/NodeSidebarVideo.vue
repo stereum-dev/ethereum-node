@@ -3,7 +3,7 @@
     <div class="tutorial-table">
       <div class="table-row" v-for="(item, index) in configData" :key="index">
         <div class="camera-icon">
-          <img src="/img/icon/cam-icon.png" alt="camera-icon" />
+          <img src="../../../../public/img/icon/manage-node-icons/QuestionMark.png" alt="camera-icon" />
         </div>
         <div class="row-content">
           <p>{{ item.name }}</p>
@@ -51,9 +51,9 @@ export default {
   align-items: center;
   height: 70%;
   width: 90%;
-  border: 3px solid#232a2a;
+  border: 3px solid #232a2a;
   border-radius: 10px;
-  background: #54898a;
+  background: #161b1b;
   overflow-x: hidden;
   overflow-y: auto;
   padding: 5px 0;
@@ -67,18 +67,18 @@ export default {
   width: 98%;
   height: 16%;
   margin-top: 2px;
-  background-color: #314242;
-  border: 3px solid#314242;
-  border-radius: 5px;
+  background-color: #222c2c;
+  border: 2px solid #314242;
+  border-radius: 3px;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
 }
 .table-row:hover {
-  border: 3px solid#081e34;
+  border: 2px solid #45d1ae;
 }
 .table-row:hover .camera-icon {
- border-right: 2px solid #081e34;
+ border-right: 2px solid #45d1ae;
 }
 .camera-icon {
   display: flex;
@@ -90,8 +90,8 @@ export default {
 }
 
 .camera-icon img {
-  width: 22px;
-  height: 19px;
+  width: 60%;
+  height: 70%;
 }
 
 .row-content {

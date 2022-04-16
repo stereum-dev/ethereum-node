@@ -3,7 +3,7 @@
     <div class="modal-box">
       <div class="modal-items">
         <div class="item" v-for="item in modalItems" :key="item.id">
-          <img :src="item.source" alt="icon" />
+          <img :src="item.sIcon" alt="icon" />
         </div>
       </div>
       <button class="close-btn" @click="$emit('closeMe')">Close</button>
