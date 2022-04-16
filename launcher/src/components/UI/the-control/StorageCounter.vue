@@ -30,6 +30,9 @@ h1 {
 .gauge-wrapper {
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 10px;
 }
 
 .gauge {
@@ -47,7 +50,6 @@ h1 {
 
 .gauge-center {
   content: "";
-  color: #fff;
   width: 60%;
   height: 60%;
   background: #15222e;
@@ -56,8 +58,11 @@ h1 {
   box-shadow: 0 -13px 15px -10px rgba(0, 0, 0, 0.28);
   right: 21%;
   bottom: 0;
-  color: #fff;
+  color: rgb(183, 182, 182);
   z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gauge-center .label,
@@ -93,6 +98,7 @@ h1 {
   box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.38);
   display: none;
   z-index: 9;
+  
 }
 
 .four.rischio1 .needle {
@@ -114,17 +120,21 @@ h1 {
   animation: fourspeed4 2s 1 both;
   animation-delay: 2s;
   display: block;
+   
 }
 
 .slice-colors {
   height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ 
 }
 
 .slice-colors .st {
   position: absolute;
   bottom: 0;
-  width: 0;
-  height: 0;
   border: 50px solid transparent;
 }
 
