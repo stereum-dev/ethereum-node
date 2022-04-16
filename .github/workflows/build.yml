@@ -24,7 +24,7 @@ jobs:
           node-version: 15
 
       - name: see directory
-          run: ls
+        run: ls
 
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
