@@ -67,7 +67,7 @@
       mode: 0644
     become: yes
     when: >
-      (stereum_service_configuration.image is match("prysmaticlabs/prysm-beacon-chain:*") or 
+      (stereum_service_configuration.image is match("prysmaticlabs/prysm-beacon-chain:*") or
       stereum_service_configuration.image is match("gcr.io/prysmaticlabs/prysm/beacon-chain:*")) and
       stereum_service_configuration.command.find("prater") != -1
 
