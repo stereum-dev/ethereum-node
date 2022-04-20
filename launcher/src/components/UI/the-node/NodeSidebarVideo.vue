@@ -3,7 +3,10 @@
     <div class="tutorial-table">
       <div class="table-row" v-for="(item, index) in configData" :key="index">
         <div class="camera-icon">
-          <img src="../../../../public/img/icon/manage-node-icons/QuestionMark.png" alt="camera-icon" />
+          <img
+            src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
+            alt="camera-icon"
+          />
         </div>
         <div class="row-content">
           <p>{{ item.name }}</p>
@@ -78,7 +81,7 @@ export default {
   border: 2px solid #45d1ae;
 }
 .table-row:hover .camera-icon {
- border-right: 2px solid #45d1ae;
+  border-right: 2px solid #45d1ae;
 }
 .camera-icon {
   display: flex;
@@ -119,10 +122,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 .round-icon img {
   width: 35%;
-  height: 35%px;
+  height: 35%;
 }
 </style>
