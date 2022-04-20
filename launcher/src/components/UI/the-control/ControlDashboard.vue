@@ -36,7 +36,37 @@
       </router-link>
     </dashboard-card>
     <!-- <div class="networkCheck"></div> -->
-    <dashboard-card class="networkCheck"></dashboard-card>
+    <dashboard-card class="networkCheck">
+      <div class="wifiIco">
+        <img
+          class="wifiImg"
+          src="../../../../public/img/icon/wifiIcon.svg"
+          alt=""
+        />
+      </div>
+      <div class="recive">
+        <span class="rec">{{ rec }}</span>
+        <span class="lblMbit">mbit</span>
+        <small>Total Received</small>
+        <div class="arrowPart">
+          <div class="arrowIco">
+            <img src="../../../../public/img/icon/arrows/arrowOrange.png" />
+          </div>
+          {{ ttlRec }} <span class="ttlRec">GB</span>
+        </div>
+      </div>
+      <div class="transmit">
+        <span class="tran">{{ tran }}</span>
+        <span class="lblMbit">mbit</span>
+        <small>Total Transmietted</small>
+        <div class="arrowPart">
+          <div class="arrowIco">
+            <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
+          </div>
+          {{ ttlTrn }} <span class="ttlRec">GB</span>
+        </div>
+      </div>
+    </dashboard-card>
 
     <!-- <div class="validatorComment_cell">
       <storage-counter class="validCntr"></storage-counter>
@@ -77,12 +107,44 @@ export default {
   data() {
     return {
       No: 100,
+      rec: 1.12,
+      tran: 1.12,
+      ttlRec: 44.6,
+      ttlTrn: 44.6,
     };
   },
 };
 </script>
 
 <style scoped>
+.recive {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+.rec {
+  color: #ec590a;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.transmit {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+small {
+  font-size: 0.3rem;
+}
+.tran {
+  color: #336666;
+  font-weight: bold;
+  font-size: 1rem;
+}
+.lblMbit {
+  color: #eee;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
 .ctrlParent {
   display: grid;
   width: 100%;
@@ -125,8 +187,11 @@ export default {
   grid-column: 1/2;
   grid-row: 2/3;
 }
+.sddimg {
+  width: 30%;
+}
 .hddSvg {
-  width: 60%;
+  width: 80%;
 }
 .infoHdd {
   width: 80%;
@@ -148,6 +213,10 @@ export default {
 .networkCheck {
   grid-row: 2/3;
   grid-column: 2/3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 .cpuUsage_cell {
   grid-column: 1/2;
@@ -274,12 +343,37 @@ export default {
 .loli {
   width: 80%;
 }
+.imgCpu {
+  width: 30%;
+}
 .cpuImg {
-  width: 50%;
+  width: 80%;
+}
+.wifiIco {
+  width: 30%;
+}
+.wifiImg {
+  width: 80%;
 }
 
 .slice-colors .slice-item {
   width: 100%;
   height: 100%;
+}
+.arrowPart {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.arrowIco {
+  width: 20%;
+}
+.arrowIco img {
+  width: 100%;
+}
+.ttlRec {
+  font-weight: bold;
+  color: #eee;
 }
 </style>
