@@ -5,15 +5,14 @@
       <span v-if="active"
         >CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</span
       >
-      <span v-if="!active">{{ this.message }}</span>
-      <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
+      <span class="check-msg" v-if="!active">{{ this.message }}</span>
+      <img src="/img/icon/welcome-page/gear.png" class="gear" v-if="active" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  //emits: ["close"],
   props: {
     message: String,
     open: Boolean,
@@ -56,13 +55,15 @@ dialog {
   border: none;
 }
 
-.modal {
-  animation: modal 5s linear infinite;
-  position: relative;
-  width: 4%;
+.progress .gear {
+  animation: gear 5s linear infinite;
+  position: absolute;
+  right: 1px;
+  width: 2.5%;
+  float: right;
 }
 
-@keyframes modal {
+@keyframes gear {
   from {
     transform: rotate(0deg);
   }
@@ -74,8 +75,8 @@ dialog {
 /* TEST*/
 
 .progress-box {
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -83,8 +84,8 @@ dialog {
 
 .progress {
   position: relative;
-  height: 82%;
-  width: 99.3%;
+  height: 82% !important;
+  width: 99.3% !important;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -92,19 +93,19 @@ dialog {
 }
 
 .progress span {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: rgb(17, 68, 43);
-  position: relative;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgb(44, 44, 44);
   text-align: left;
   margin-left: 10px;
+  z-index: 100;
 }
 
 .progress .color {
   position: absolute;
   left: 0;
+  width: 0;
   background-color: #237fd5;
-  width: 0px;
   height: 100%;
   border-radius: 20px;
   border: 1px solid rgb(37, 89, 113);
@@ -112,7 +113,9 @@ dialog {
   animation-fill-mode: forwards;
   box-shadow: inset 1px 2px 5px #acd5fc, 0 0 1px 1px rgb(52, 52, 52);
 }
-
+.check-msg {
+  text-align: center;
+}
 @keyframes progres {
   0% {
     width: 0%;
