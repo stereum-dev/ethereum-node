@@ -53,7 +53,6 @@
               type="text"
               v-model="model.name.value"
               @blur="checkInput(model.name)"
-              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.host.isFilled }">
@@ -64,7 +63,6 @@
               type="text"
               v-model="model.host.value"
               @blur="checkInput(model.host)"
-              required
             />
           </div>
           <div class="formGroup" :class="{ errors: !model.user.isFilled }">
@@ -74,7 +72,6 @@
               id="username"
               v-model="model.user.value"
               @blur="checkInput(model.user)"
-              required
             />
           </div>
         </div>
@@ -275,7 +272,7 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        return;
+        // return;
       }
       this.$emit("page", "welcome-page");
     },
