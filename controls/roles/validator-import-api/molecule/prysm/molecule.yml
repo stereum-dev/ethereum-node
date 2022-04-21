@@ -23,8 +23,9 @@ platforms:
 provisioner:
   name: ansible
   config_options:
+    defaults: timeout = 120
     ssh_connection:
-      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+      ssh_args: -o ProxyCommand=none -o ServerAliveInterval=300
 lint: |
   set -e
   yamllint .
