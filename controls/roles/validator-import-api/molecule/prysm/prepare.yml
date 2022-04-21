@@ -58,7 +58,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: prysmaticlabs/prysm-beacon-chain:HEAD-6903d5-debug
+              image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
               ports:
                 - 127.0.0.1:4000:4000/tcp
                 - 0.0.0.0:12000:12000/udp
@@ -148,7 +148,7 @@
             state: started
             configuration:
               id: "{{ validator_service }}"
-              image: prysmaticlabs/prysm-validator:HEAD-6903d5-debug
+              image: prysmaticlabs/prysm-validator:HEAD-c8a7f6-debug
               ports:
                 - 127.0.0.1:7500:7500/tcp
               env: {}
