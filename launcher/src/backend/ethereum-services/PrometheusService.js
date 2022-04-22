@@ -4,10 +4,9 @@ import { ServiceVolume } from "./ServiceVolume";
 
 export class PrometheusService extends NodeService {
     static getServiceConfiguration(consensusClients, prometheusNodeExporterClients){
-        const consensusEndPoints = consensusClients.map(client => {return client.buildConsensusClientHttpEntpointUrl().replace("http://","")});
-        const prometheusNodeExporterEndPoints = prometheusNodeExporterClients.map(client => {return client.buildPrometheusNodeExporterClientHttpEndpointUrl().replace("http://","")})
-        //http endpoints do not work
-        return {CONFIG: `global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: 'ConsensusClients'\n    static_configs:\n      - targets: ['${consensusEndPoints}']\n  - job_name: 'PrometheusNodeExporterService'\n    static_configs:\n      - targets: ['${prometheusNodeExporterEndPoints}']\n`}
+        const consensusEndPoints = (consensusClients.map(client => {return "'" + client.buildConsensusClientHttpEndpointUrl().replace("http://","") + "'"})).join();
+        const prometheusNodeExporterEndPoints = (prometheusNodeExporterClients.map(client => {return "'" + client.buildPrometheusNodeExporterClientHttpEndpointUrl().replace("http://","") + "'"})).join();
+        return {CONFIG: `global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: 'ConsensusClients'\n    static_configs:\n      - targets: [${consensusEndPoints}]\n  - job_name: 'PrometheusNodeExporterService'\n    static_configs:\n      - targets: [${prometheusNodeExporterEndPoints}]\n`}
     }
     
     static buildByUserInput(network, ports, workingDir, consensusClients, prometheusNodeExporterClients){
