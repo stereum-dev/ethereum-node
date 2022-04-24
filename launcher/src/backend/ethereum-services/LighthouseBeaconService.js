@@ -50,7 +50,7 @@ export class LighthouseBeaconService extends NodeService {
         return service;
     }
 
-    buildConsensusClientHttpEntpointUrl() {
+    buildConsensusClientHttpEndpointUrl() {
         return "http://stereum-" + this.id + ":5052";
     }
 

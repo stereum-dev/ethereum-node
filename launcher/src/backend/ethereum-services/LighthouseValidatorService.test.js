@@ -9,7 +9,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
     const mMock = jest.fn(() => { return "http-endpoint-string" });
     LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
-            buildConsensusClientHttpEntpointUrl: mMock,
+            buildConsensusClientHttpEndpointUrl: mMock,
         };
     });
 

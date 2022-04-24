@@ -27,7 +27,7 @@ test('buildConfiguration', () => {
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
     LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
-            buildConsensusClientHttpEntpointUrl: mMockLh,
+            buildConsensusClientHttpEndpointUrl: mMockLh,
             buildMinimalConfiguration: jest.fn(() => {return {
                 id: "lh-beacon-id",
                 service: "LighthouseBeaconService",
@@ -63,7 +63,7 @@ test('getServiceConfiguration', () => {
     const mMockLh = jest.fn(() => { return "http-lh-endpoint-string" });
     LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
         return {
-            buildConsensusClientHttpEntpointUrl: mMockLh,
+            buildConsensusClientHttpEndpointUrl: mMockLh,
         };
     });
 
