@@ -211,16 +211,16 @@ export default {
 .edit-btn {
   grid-column: 3/7;
   grid-row: 1;
-  width: 88%;
+  width: 74%;
   height: 90%;
-  border: 1px solid rgb(83, 121, 100);
+  border: 1px solid rgb(64, 89, 75);
   justify-self: end;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #2c4030;
-  box-shadow: 0 1px 2px 1px rgb(35, 35, 35);
+  box-shadow: 0 1px 2px 1px rgb(46, 45, 45);
 }
 .edit-btn:hover {
   box-shadow: none;

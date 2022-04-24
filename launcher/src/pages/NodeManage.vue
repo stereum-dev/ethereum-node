@@ -25,6 +25,18 @@
             @dragover.prevent
           >
             <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
@@ -40,18 +52,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-              @itemSelect="serviceItemSelection"
-            ></drop-zone>
-          </div>
-          <div
-            @drop="onDrop($event, sidebarPlugins)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
-            <drop-zone
-              :title="'execution'"
-              :list="executionItems"
-              @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>

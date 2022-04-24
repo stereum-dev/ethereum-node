@@ -2,7 +2,7 @@
   <div class="journal-parent">
     <div class="edit-btn">
       <router-link to="/manage">
-        <span>EDIT NODE</span>
+        <span>EDIT</span>
         <img
           src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
           alt="icon"
@@ -231,18 +231,18 @@ export default {
   height: 88%;
 }
 .edit-btn {
-  width: 55%;
-  height: 5%;
-  border: 1px solid rgb(83, 121, 100);
+  width: 46%;
+  height: 5.2%;
+  border: 1px solid rgb(59, 81, 69);
   justify-self: end;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #2c4030;
-  box-shadow: 0 1px 2px 1px rgb(17, 17, 17);
-  margin: 5px;
-
+  box-shadow: 0 1px 2px 1px rgb(43, 46, 46);
+  margin: 4px;
+  padding: 1px 0;
 }
 .edit-btn:hover {
   box-shadow: none;
@@ -263,10 +263,10 @@ export default {
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 800;
   text-align: center;
-  margin-left: 5px;
+  margin-left: 10px;
 }
 .edit-btn img {
   width: 16px;
@@ -421,20 +421,20 @@ export default {
 }
 .validator-box .active-text {
   width: 53%;
-  font-size: .67rem;
+  font-size: 0.67rem;
 }
 .validator-box .rating-box {
   width: 30%;
   position: relative;
 }
 .validator-box .rating-text {
-  font-size: .69rem;
+  font-size: 0.69rem;
 }
 .validator-box .monthly-badge {
   position: absolute;
   right: 9px;
   top: 16px;
-  font-size: .45rem;
+  font-size: 0.45rem;
 }
 .validator-box .amount-box {
   width: 70%;
