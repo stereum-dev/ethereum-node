@@ -32,7 +32,7 @@ test('buildConfiguration', () => {
     expect(lhService.image).toMatch(/stereum\/lighthouse/);
 });
 
-test('buildConsensusClientHttpEntpointUrl', () => {
+test('buildConsensusClientHttpEndpointUrl', () => {
     const ports = [
         new ServicePort(null, 100, 200, servicePortProtocol.tcp),
         new ServicePort(null, 101, 202, servicePortProtocol.udp),
@@ -48,7 +48,7 @@ test('buildConsensusClientHttpEntpointUrl', () => {
         };
     });
 
-    const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, "/opt/stereum/lh", [], 16).buildConsensusClientHttpEntpointUrl();
+    const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, "/opt/stereum/lh", [], 16).buildConsensusClientHttpEndpointUrl();
 
     expect(lhService).toMatch(/http:\/\/stereum-.{36}:5052/);
 });
