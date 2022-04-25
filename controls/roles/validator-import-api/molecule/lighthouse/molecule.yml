@@ -12,14 +12,14 @@ platforms:
       name: eth2-prater
       ip_range: 10.10.0.0/24
       ip: 10.10.0.135
-  - name: "validator-import-api--lighthouse--centos-stream-8"
-    hostname: "centos"
-    server_type: cpx21
-    image: centos-stream-8
-    network:
-      name: eth2-prater
-      ip_range: 10.10.0.0/24
-      ip: 10.10.0.136
+#  - name: "validator-import-api--lighthouse--centos-stream-8"
+#    hostname: "centos"
+#    server_type: cpx21
+#    image: centos-stream-8
+#    network:
+#      name: eth2-prater
+#      ip_range: 10.10.0.0/24
+#      ip: 10.10.0.136
 provisioner:
   name: ansible
 lint: |
