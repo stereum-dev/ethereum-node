@@ -89,6 +89,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager></task-manager>
       </div>
     </node-bg>
   </section>
@@ -102,6 +103,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapGetters } from "vuex";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
     SidebarManage,
@@ -110,7 +112,8 @@ export default {
     DropZone,
     BaseModal,
     PresetModal,
-  },
+    TaskManager
+},
   emits: ["startDrag", "closeMe", "modalView"],
 
   data() {

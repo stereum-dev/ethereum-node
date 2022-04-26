@@ -1,3 +1,5 @@
+import '@babel/polyfill'
+import 'mutationobserver-shim'
 import Vue, { createApp } from "vue"; // CHANGE
 
 import store from "./store/index.js";
