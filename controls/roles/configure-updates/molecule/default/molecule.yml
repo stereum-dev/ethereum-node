@@ -6,8 +6,8 @@ driver:
 platforms:
   - name: "configure-updates--default--ubuntu-20.04"
     image: ubuntu:focal
-  - name: "configure-updates--default--centos-8"
-    image: geerlingguy/docker-centos8-ansible
+ # - name: "configure-updates--default--centos-8"
+ #   image: geerlingguy/docker-centos8-ansible
 provisioner:
   name: ansible
 lint: |
