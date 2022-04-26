@@ -149,10 +149,10 @@ small {
   display: grid;
   width: 100%;
   height: 100%;
-  grid-template-columns: repeat(3, 31%);
-  grid-template-rows: 12% repeat(3, 25%);
+  grid-template-columns: repeat(3, 32%);
+  grid-template-rows: 13% repeat(3, 26%);
   position: relative;
-  gap: 2%;
+  gap: 1%;
   margin: 1%;
   box-sizing: border-box;
 }
