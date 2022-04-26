@@ -47,6 +47,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager class="node-task__manager"></task-manager>
       </div>
     </node-bg>
   </div>
@@ -57,6 +58,7 @@ import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -64,6 +66,7 @@ export default {
     DropZone,
     BaseModal,
     NodeSidebar,
+    TaskManager
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -238,5 +241,10 @@ export default {
   grid-row: 4;
   background-color: #343434;
   border-radius: 0 0 7px 7px;
+}
+.node-task__manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>

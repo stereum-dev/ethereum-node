@@ -89,7 +89,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
-        <task-manager></task-manager>
+        <task-manager class="edit-task__manager"></task-manager>
       </div>
     </node-bg>
   </section>
@@ -112,8 +112,8 @@ export default {
     DropZone,
     BaseModal,
     PresetModal,
-    TaskManager
-},
+    TaskManager,
+  },
   emits: ["startDrag", "closeMe", "modalView"],
 
   data() {
@@ -341,5 +341,11 @@ export default {
 ::-webkit-scrollbar-track {
   background-color: transparent;
   margin: 10px;
+}
+
+.edit-task__manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>
