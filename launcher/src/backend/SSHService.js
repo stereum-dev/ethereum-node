@@ -81,11 +81,11 @@ export class SSHService {
                     })
                     .on('data', (stdout) => {
                         log.info('stdout got data', stdout.toString('utf8'));
-                        data.stdout = stdout.toString('utf8');
+                        data.stdout += stdout.toString('utf8');
                     })
                     .stderr.on('data', (stderr) => {
                         log.info('stderr got data', stderr.toString('utf8'));
-                        data.stderr = stderr.toString('utf8');
+                        data.stderr += stderr.toString('utf8');
                     });
                 
             })

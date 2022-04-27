@@ -12,19 +12,21 @@ platforms:
       name: eth2-prater
       ip_range: 10.10.0.0/24
       ip: 10.10.0.145
-  - name: "validator-import-api--prysm--centos-stream-8"
-    hostname: "centos"
-    server_type: cpx21
-    image: centos-stream-8
-    network:
-      name: eth2-prater
-      ip_range: 10.10.0.0/24
-      ip: 10.10.0.146
+#  - name: "validator-import-api--prysm--centos-stream-8"
+#    hostname: "centos"
+#    server_type: cpx21
+#    image: centos-stream-8
+#    network:
+#      name: eth2-prater
+#      ip_range: 10.10.0.0/24
+#      ip: 10.10.0.146
 provisioner:
   name: ansible
   config_options:
+    defaults:
+      timeout: 120
     ssh_connection:
-      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+      ssh_args: -o ProxyCommand=none -o ServerAliveInterval=300
 lint: |
   set -e
   yamllint .
