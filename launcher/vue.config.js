@@ -10,7 +10,7 @@ module.exports = {
 
     config.module
       .rule("vue")
-      .use("vue-loader", "css-loader")
+      .use("vue-loader", "css-loader",'stats.children: true')
       .tap((options) => {
         return {
           ...options,

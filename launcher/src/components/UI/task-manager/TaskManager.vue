@@ -6,17 +6,33 @@
         alt=""
       />
     </div>
-    <div class="bg-neutral-900 task-modal-box" v-if="isTaskModalActive">
+    <div class="task-modal-box" v-if="isTaskModalActive">
       <div class="task-table">
         <div class="table-content">
-          <div class="table-row-faild">
-            <div class="process-icon">
-              <svg class="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-                <!-- ... -->
-              </svg>
+          <div class="table-row-faild bg-red-600 p-10">
+            <div class="faild-icon">
+              <img
+                src="../../../../public/img/icon/task-manager-icons/close2.png"
+                alt=""
+              />
             </div>
             <span>Task #13</span>
-            
+
+            <div class="drop-icon">
+              <img
+                src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="table-row-success">
+            <div class="success-icon">
+              <img
+                src="../../../../public/img/icon/task-manager-icons/check1.png"
+                alt=""
+              />
+            </div>
+            <span>Task #13</span>
 
             <div class="drop-icon">
               <img
@@ -68,7 +84,7 @@ export default {
 .task-modal-box {
   width: 25%;
   height: 40%;
-  border: 5px solid rgb(105, 105, 105);
+  border: 5px solid #444444;
   background-color: #33393e;
   border-bottom: none;
   border-left: none;
@@ -86,7 +102,7 @@ export default {
 .task-table {
   width: 100%;
   height: 80%;
-  opacity: 0.9;
+  opacity: 0.99;
 }
 .table-content::webkit-scrollbar {
   width: 1px;
@@ -104,42 +120,50 @@ export default {
 .table-content .table-row-faild {
   width: 95%;
   height: 15%;
-  border: 2px solid rgb(147, 145, 145);
+  border: 2px solid #444444;
   border-radius: 15px;
-  background-color: rgb(245, 59, 59);
+  /* background-color:#EB5353; */
   box-shadow: 0 0 3px 1px rgb(36, 36, 36);
   margin-top: 5px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .table-content .table-row-success {
   width: 95%;
   height: 15%;
-  border: 2px solid rgb(147, 145, 145);
+  border: 2px solid #444444;
   border-radius: 15px;
   background-color: rgb(126, 190, 24);
   box-shadow: 0 0 3px 1px rgb(36, 36, 36);
   margin-top: 5px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
-.table-row-faild .process-icon,
-.table-row-success .process-icon,
-.table-row-progress .process-icon {
-  width: 7%;
-  height: 64%;
+.table-row-faild .faild-icon,
+.table-row-success .success-icon,
+.table-row-progress .progress-icon {
+  width: 9%;
+  height: 77%;
   background-color: #2c4030;
-  border: 2px solid rgb(46, 46, 46);
-  border-radius: 50%;
+  border: 1px solid #444444;
+  border-radius: 100%;
+  margin-left: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1;
 }
-.process-icon svg {
-  z-index: 2;
+.faild-icon img {
+  width: 72%;
+}
+.success-icon img {
+  width: 87%;
+  height: 97%;
+}
+.progress-icon img {
+  width: 60%;
 }
 .drop-icon {
   width: 15%;
@@ -149,8 +173,8 @@ export default {
   align-items: center;
 }
 .drop-icon img {
-  width: 60%;
-  height: 95%;
+  width: 53%;
+  height: 86%;
 }
 .table-row-faild span,
 .table-row-success span {
@@ -161,13 +185,10 @@ export default {
   color: rgb(53, 53, 53);
 }
 .list-cleaner {
-  width: 99%;
+  width: 100%;
   height: 16%;
-  border: 4px solid rgb(86, 84, 84);
-  border-bottom: none;
-  border-left: none;
-  border-top-right-radius: 10px;
-  background-color: rgb(131, 131, 131);
+  border-top: 4px solid rgb(86, 84, 84);
+  background-color: rgb(49, 49, 49);
   display: flex;
   justify-content: flex-end;
   align-items: center;
