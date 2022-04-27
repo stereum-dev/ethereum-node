@@ -19,7 +19,9 @@
     </dashboard-card>
 
     <!-- <div class="networkSync_cell"></div> -->
-    <dashboard-card class="networkSync_cell"></dashboard-card>
+    <dashboard-card class="nodeStart_cell"
+      ><amsterdam-component></amsterdam-component
+    ></dashboard-card>
     <dashboard-card class="cpuUsage_cell">
       <router-link to="/cpu">
         <div class="cpuCounter">
@@ -95,6 +97,7 @@ import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
 import DashboardCard from "./DashboardCard.vue";
 import StorageCounter from "./StorageCounter.vue";
+import AmsterdamComponent from "./AmsterdamComponent.vue";
 export default {
   components: {
     SandClock,
@@ -103,6 +106,7 @@ export default {
     DashboardCard,
     ColorBar,
     LoliBar,
+    AmsterdamComponent,
   },
   data() {
     return {
