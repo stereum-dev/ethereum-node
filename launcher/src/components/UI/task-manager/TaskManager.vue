@@ -9,7 +9,7 @@
     <div class="task-modal-box" v-if="isTaskModalActive">
       <div class="task-table">
         <div class="table-content">
-          <div class="table-row-faild bg-red-600 p-10">
+          <div class="table-row-faild">
             <div class="faild-icon">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close2.png"
@@ -28,9 +28,25 @@
           <div class="table-row-success">
             <div class="success-icon">
               <img
-                src="../../../../public/img/icon/task-manager-icons/check1.png"
+                src="../../../../public/img/icon/task-manager-icons/checkf.png"
                 alt=""
               />
+            </div>
+            <span>Task #13</span>
+            <div class="drop-icon">
+              <img
+                src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
+                alt=""
+              />
+            </div>
+          </div>
+          <div class="table-row-progress">
+            <div class="progress-icon">
+              <!-- <img
+                src="../../../../public/img/icon/task-manager-icons/loading5.png"
+                alt=""
+              /> -->
+              <span class="loader"></span>
             </div>
             <span>Task #13</span>
 
@@ -89,7 +105,8 @@ export default {
   border-bottom: none;
   border-left: none;
   border-top-right-radius: 10px;
-  opacity: 0.9;
+  /* opacity: 0.9; */
+  opacity: 0.99;
   position: fixed;
   left: 5px;
   bottom: 4px;
@@ -119,11 +136,11 @@ export default {
 }
 .table-content .table-row-faild {
   width: 95%;
-  height: 15%;
-  border: 2px solid #444444;
+  height: 12%;
+  border: 2px solid #535353;
   border-radius: 15px;
-  /* background-color:#EB5353; */
-  box-shadow: 0 0 3px 1px rgb(36, 36, 36);
+  background-color: #de2727;
+  box-shadow: 0 0 3px 1px rgb(11, 11, 11);
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -131,11 +148,23 @@ export default {
 }
 .table-content .table-row-success {
   width: 95%;
-  height: 15%;
-  border: 2px solid #444444;
+  height: 12%;
+  border: 2px solid #535353;
   border-radius: 15px;
   background-color: rgb(126, 190, 24);
-  box-shadow: 0 0 3px 1px rgb(36, 36, 36);
+  box-shadow: 0 0 3px 1px rgb(18, 18, 18);
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-content .table-row-progress {
+  width: 95%;
+  height: 12%;
+  border: 2px solid #535353;
+  border-radius: 15px;
+  background-color: rgb(104, 104, 104);
+  box-shadow: 0 0 3px 1px rgb(18, 18, 18);
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -144,40 +173,66 @@ export default {
 .table-row-faild .faild-icon,
 .table-row-success .success-icon,
 .table-row-progress .progress-icon {
-  width: 9%;
-  height: 77%;
-  background-color: #2c4030;
-  border: 1px solid #444444;
-  border-radius: 100%;
+  width: 5%;
+  height: 63%;
+  /* background-color: #292929; */
+  background-color: #444444;
+  border: 2px solid #444444;
+  border-radius: 50%;
   margin-left: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
 }
 .faild-icon img {
-  width: 72%;
+  width: 64%;
+  height: 59%;
 }
 .success-icon img {
-  width: 87%;
-  height: 97%;
+  width: 69%;
+  height: 69%;
 }
-.progress-icon img {
-  width: 60%;
+.progress-icon .loader {
+  border: 2px solid transparent;
+  border-radius: 100px;
+  border-top: 2px solid #348fff;
+  border-right: 2px solid #348fff;
+  border-bottom: 2px solid #348fff;
+  /* border-top: 3px solid #eba817;
+  border-right: 3px solid #eba817;
+  border-bottom: 3px solid #eba817; */
+  /* border-top: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  border-bottom: 2px solid #ffffff; */
+  width: 63%;
+  height: 60%;
+  animation: spin 4s linear infinite;
 }
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .drop-icon {
-  width: 15%;
+  width: 7%;
   height: 70%;
+  margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .drop-icon img {
-  width: 53%;
-  height: 86%;
+  width: 100%;
+  height: 100%;
 }
 .table-row-faild span,
-.table-row-success span {
+.table-row-success span,
+.table-row-progress span {
   width: 70%;
   text-align: center;
   font-size: 1rem;
