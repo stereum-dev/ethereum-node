@@ -38,6 +38,11 @@
                 src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
                 alt=""
               />
+              <img
+                v-if="openTaskActive"
+                src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
+                alt=""
+              />
             </div>
           </div>
           <div class="table-row-progress">
@@ -73,6 +78,7 @@ export default {
   data() {
     return {
       isTaskModalActive: false,
+      openTaskActive: false,
     };
   },
   methods: {
@@ -137,10 +143,10 @@ export default {
 .table-content .table-row-faild {
   width: 95%;
   height: 12%;
-  border: 2px solid #535353;
-  border-radius: 15px;
+  border: 2px solid #888888;
+  border-radius: 20px;
   background-color: #de2727;
-  box-shadow: 0 0 3px 1px rgb(11, 11, 11);
+  box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -149,10 +155,10 @@ export default {
 .table-content .table-row-success {
   width: 95%;
   height: 12%;
-  border: 2px solid #535353;
+  border: 2px solid #888888;
   border-radius: 15px;
   background-color: rgb(126, 190, 24);
-  box-shadow: 0 0 3px 1px rgb(18, 18, 18);
+  box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -161,10 +167,10 @@ export default {
 .table-content .table-row-progress {
   width: 95%;
   height: 12%;
-  border: 2px solid #535353;
+  border: 2px solid #888888;
   border-radius: 15px;
   background-color: rgb(104, 104, 104);
-  box-shadow: 0 0 3px 1px rgb(18, 18, 18);
+  box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
@@ -176,7 +182,7 @@ export default {
   width: 5%;
   height: 63%;
   /* background-color: #292929; */
-  background-color: #444444;
+  background-color: #323232;
   border: 2px solid #444444;
   border-radius: 50%;
   margin-left: 2px;
@@ -185,28 +191,28 @@ export default {
   align-items: center;
 }
 .faild-icon img {
-  width: 64%;
-  height: 59%;
+  width: 84%;
+  height: 84%;
 }
 .success-icon img {
-  width: 69%;
-  height: 69%;
+  width: 84%;
+  height: 84%;
 }
 .progress-icon .loader {
   border: 2px solid transparent;
   border-radius: 100px;
-  border-top: 2px solid #348fff;
+  /* border-top: 2px solid #348fff;
   border-right: 2px solid #348fff;
-  border-bottom: 2px solid #348fff;
+  border-bottom: 2px solid #348fff; */
   /* border-top: 3px solid #eba817;
   border-right: 3px solid #eba817;
   border-bottom: 3px solid #eba817; */
-  /* border-top: 2px solid #ffffff;
+  border-top: 2px solid #ffffff;
   border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff; */
+  border-bottom: 2px solid #ffffff;
   width: 63%;
   height: 60%;
-  animation: spin 4s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {

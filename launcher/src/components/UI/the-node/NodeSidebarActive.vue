@@ -79,11 +79,11 @@ export default {
   width: 100%;
   height: 8%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .active-badge {
-  width: 50%;
+  width: 49%;
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 40px 0 0 40px;
@@ -94,7 +94,7 @@ export default {
   cursor: pointer;
 }
 .installed-badge {
-  width: 50%;
+  width: 49%;
   height: 100%;
   border: 1px solid rgb(171, 169, 169);
   border-radius: 0 40px 40px 0;
@@ -120,7 +120,6 @@ export default {
 .active-badge:active,
 .installed-badge:active {
   box-shadow: none;
-  border: 1px solid #212121;
 }
 .active-badge:hover span,
 .installed-badge:hover span {
@@ -138,7 +137,7 @@ export default {
 .active-table {
   width: 100%;
   height: 80%;
-  border: 2px solid#747474;
+  border: 2px solid #747474;
   border-radius: 15px;
   background: #242526;
   color: rgb(41, 41, 41);
@@ -157,14 +156,14 @@ export default {
 
 .table-row {
   display: flex;
-  width: 90%;
-  height: 11%;
+  width: 96%;
+  height: 10%;
   background-color: white;
   border: 1px solid gray;
   border-radius: 45px;
   justify-content: center;
   align-items: center;
-  margin-top: 3px;
+  margin-top: 1px;
 }
 
 .status-icon {
@@ -177,28 +176,28 @@ export default {
 }
 
 .status-icon .red {
-  width: 78%;
+  width: 65%;
   height: 90%;
   background-color: rgb(216, 37, 37);
   border-radius: 50%;
   margin-left: 1px;
 }
 .status-icon .yellow {
-  width: 78%;
+  width: 65%;
   height: 90%;
   background-color: rgb(212, 159, 25);
   border-radius: 50%;
   margin-left: 1px;
 }
 .status-icon .green {
-  width: 78%;
+  width: 65%;
   height: 90%;
   background-color: rgb(55, 135, 77);
   border-radius: 50%;
   margin-left: 1px;
 }
 .status-icon .blue {
-  width: 78%;
+  width: 65%;
   height: 90%;
   background-color: rgb(35, 116, 229);
   border-radius: 50%;

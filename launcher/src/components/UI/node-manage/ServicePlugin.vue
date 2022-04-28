@@ -48,7 +48,6 @@ export default {
 .service-container {
   width: 96%;
   height: 98%;
-  margin-bottom: 10px;
   background-color: #3b3b3b;
   border-radius: 20px;
   overflow: auto;
