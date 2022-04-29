@@ -244,6 +244,10 @@ small {
   font-weight: 600;
   z-index: 20;
 }
+.nodeStart_cell {
+  width: 140%;
+  height: 140%;
+}
 .cpuCounter {
   width: 40%;
   height: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-      <slot></slot>
+    <slot></slot>
   </div>
 </template>
 <style scoped>
@@ -18,9 +18,7 @@
   z-index: 1;
 }
 
-.card:hover {
-  background: rgb(19, 16, 16);
-}
+.card:hover,
 .card:active {
   background: rgb(19, 16, 16);
 }

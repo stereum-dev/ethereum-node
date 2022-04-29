@@ -25,6 +25,7 @@
       </div>
       <div class="epoch">
         <div class="synTtl"><span>EPOCH</span></div>
+        <input type="text" class="epInp" />
       </div>
     </div>
   </div>
@@ -49,9 +50,10 @@ export default {
   align-items: center;
 }
 .ttlLine {
-  width: 100%;
+  width: 95%;
   height: 1rem;
   display: flex;
+  margin: 0 auto 5%;
 }
 .ttl {
   width: 30%;
@@ -92,6 +94,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  gap: 5%;
 }
 .icoPart {
   display: flex;
@@ -99,9 +102,10 @@ export default {
   justify-content: center;
   align-content: center;
   width: 20%;
+  height: 100%;
 }
 .icoPart img {
-  width: 40%;
+  width: 80%;
   justify-self: center;
   align-self: center;
 }
@@ -116,13 +120,20 @@ export default {
   background-color: #33393e;
   padding: 1px;
   width: 90%;
+  margin-bottom: 10%;
 }
 .synTtl span {
 }
 .syncItems {
   width: 40%;
   border-radius: 10px;
-  background-color: rgb(41, 39, 39);
+  background-color: rgb(26, 26, 26);
+  padding: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1%;
 }
 .syncCont {
   width: 100%;
@@ -132,6 +143,7 @@ export default {
   border-radius: 10px;
   align-items: center;
   padding: 1px;
+  margin: 2%;
 }
 
 .syncCont span {
@@ -139,5 +151,15 @@ export default {
 }
 .epoch {
   width: 20%;
+  background: red;
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+  gap: 5px;
+  border-radius: 5px;
+}
+.epInp {
+  background: #000;
+  height: 10px;
 }
 </style>
