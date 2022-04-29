@@ -7,7 +7,18 @@
     - ../../../../defaults/stereum_defaults.yaml
   vars:
     beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
-
+    ssv_service: 1ce654a0-7162-11ec-91f3-8fdbc286367e
+    ssv_config: |
+      eth2:
+        Network: "prater"
+        BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
+      eth1:
+        ETH1Addr: "ws://10.10.0.2:8545"
+        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+      OperatorPrivateKey: ""
+      global:
+        LogLevel: "debug"
+      MetricsAPIPort: 15000
   tasks:
     - name: Install python for Ansible (Ubuntu)
       raw: apt update && apt install -y pip
@@ -26,6 +37,24 @@
 
     - include_role:
         name: "configure-firewall"
+
+    - name: Create SSV config file
+      file:
+        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv"
+        state: directory
+        recurse: yes
+        owner: "2000"
+        group: "2000"
+      become: yes
+
+    - name: Write SSV configuration
+      ansible.builtin.copy:
+        content: "{{ ssv_config }}"
+        dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        owner: "2000"
+        group: "2000"
+        mode: 0644
+      become: yes
 
     - block:
       - name: Set fastsync params

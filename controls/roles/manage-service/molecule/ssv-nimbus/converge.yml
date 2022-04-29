@@ -9,21 +9,8 @@
 
   tasks:
     # ssv operator keys
-    - block:
-      - name: Generate SSV network keys
-        command: bash -c "docker run -d --name=ssv_node_op_key -it 'bloxstaking/ssv-node:alpine-dns' /go/bin/ssvnode generate-operator-keys &&
-                          docker logs ssv_node_op_key --follow &&
-                          docker stop ssv_node_op_key &&
-                          docker rm ssv_node_op_key"
-        register: ssv_keys
-        changed_when: false
-        become: yes
-      - name: Parse keys
-        set_fact:
-          ssv:
-            enabled: true
-            pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
-            sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
+    - include_role:
+        name: "ssv-key-generator"
 
     # ssv service
     - block:
@@ -45,20 +32,7 @@
                 - 0.0.0.0:13000:13000/tcp
               env:
                 CONFIG_PATH: /data/config.yaml
-                CONFIG: |
-                  eth2:
-                    Network: "prater"
-                    BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
-                  eth1:
-                    ETH1Addr: "ws://10.10.0.2:8545"
-                    RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
-                  OperatorPrivateKey: "{{ ssv.sk }}"
-                  global:
-                    LogLevel: "debug"
-                  MetricsAPIPort: 15000
-              command: bash -c "touch /data/config.yaml &&
-                                echo \"$CONFIG\" > /data/config.yaml &&
-                                make BUILD_PATH=/go/bin/ssvnode start-node &&
+              command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node &&
                                 docker logs ssv_node"
               entrypoint: []
               user: "2000"
