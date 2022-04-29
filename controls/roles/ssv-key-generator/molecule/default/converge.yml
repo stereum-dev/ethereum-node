@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ssv-key-generator"
+      include_role:
+        name: "ssv-key-generator"

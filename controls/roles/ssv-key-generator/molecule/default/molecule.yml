@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "ssv-key-generator--default--ubuntu-20.04"
+    hostname: ubuntu
+    server_type: cpx21
+    image: ubuntu-20.04
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
