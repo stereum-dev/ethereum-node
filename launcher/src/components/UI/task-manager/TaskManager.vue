@@ -109,12 +109,12 @@ export default {
   border: 5px solid #444444;
   background-color: #33393e;
   border-bottom: none;
-  border-left: none;
   border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
   /* opacity: 0.9; */
   opacity: 0.99;
   position: fixed;
-  left: 5px;
+  left:0;
   bottom: 4px;
   z-index: -1;
   display: flex;
@@ -248,8 +248,7 @@ export default {
 .list-cleaner {
   width: 100%;
   height: 16%;
-  border-top: 4px solid rgb(86, 84, 84);
-  background-color: rgb(49, 49, 49);
+  background-color: rgb(29, 29, 29);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -257,6 +256,6 @@ export default {
 .list-cleaner img {
   width: 12%;
   height: 90%;
-  margin-right: 5px;
+  margin-right: 1px;
 }
 </style>
