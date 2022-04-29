@@ -90,17 +90,17 @@ export default {
   },
   methods: {
     installation: async function () {
-      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      // console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
       await new Promise((r) => setTimeout(r, 5000));
       this.isNodePreparing = false;
       this.isNodePrepared = true;
       this.isConfigWriting = true;
-      console.log(await ControlService.writeOneClickConfiguration());
+      // console.log(await ControlService.writeOneClickConfiguration());
       await new Promise((r) => setTimeout(r, 5000));
       this.isConfigWriting = false;
       this.isConfigDone = true;
       this.isContStarting = true;
-      console.log(await ControlService.startOneClickServices());
+      // console.log(await ControlService.startOneClickServices());
       await new Promise((r) => setTimeout(r, 5000));
       this.isContStarting = false;
       this.isContStarted = true;

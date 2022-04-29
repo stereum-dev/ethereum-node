@@ -118,7 +118,7 @@ export default {
       }
     },
     destroyNode: async function(){
-      console.log(await ControlService.destroy());
+      // console.log(await ControlService.destroy());
     }
   },
 };
