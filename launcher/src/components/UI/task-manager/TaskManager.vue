@@ -111,6 +111,7 @@ export default {
   border-bottom: none;
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
   /* opacity: 0.9; */
   opacity: 0.99;
   position: fixed;
