@@ -38,7 +38,6 @@
             </div>
           </div>
           <div
-            draggable="true"
             @dragstart="startDrag($event, item)"
             class="plugin-item"
             v-for="item in sidebarPlugins"

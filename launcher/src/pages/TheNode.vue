@@ -15,6 +15,13 @@
           </div>
           <div>
             <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+            ></drop-zone>
+          </div>
+          <div>
+            <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
@@ -25,13 +32,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-            ></drop-zone>
-          </div>
-          <div>
-            <drop-zone
-              :title="'execution'"
-              :list="executionItems"
-              @modal-view="showModal"
             ></drop-zone>
           </div>
         </div>
@@ -47,6 +47,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager class="node-task__manager"></task-manager>
       </div>
     </node-bg>
   </div>
@@ -57,6 +58,7 @@ import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -64,6 +66,7 @@ export default {
     DropZone,
     BaseModal,
     NodeSidebar,
+    TaskManager
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -81,23 +84,27 @@ export default {
       selectedPreset: "getSelectedPreset",
     }),
   },
-  mounted(){
-    if(Object.keys(this.selectedPreset).length !== 0){
-      this.selectedPreset.includedPlugins.map(item => {
-      if (item.category === "validator") {
-        if (this.validatorItems.some((plugin) => plugin.id == item.id)) return;
-        this.validatorItems.push(item);
-      } else if (item.category === "consensus") {
-        if (this.consensusItems.some((plugin) => plugin.id == item.id)) return;
-        this.consensusItems.push(item);
-      } else if (item.category === "execution") {
-        if (this.executionItems.some((plugin) => plugin.id == item.id)) return;
-        this.executionItems.push(item);
-      } else if (item.category === "service") {
-        if (this.servicePlugins.some((plugin) => plugin.id == item.id)) return;
-        this.servicePlugins.push(item);
-      }
-      })
+  mounted() {
+    if (Object.keys(this.selectedPreset).length !== 0) {
+      this.selectedPreset.includedPlugins.map((item) => {
+        if (item.category === "validator") {
+          if (this.validatorItems.some((plugin) => plugin.id == item.id))
+            return;
+          this.validatorItems.push(item);
+        } else if (item.category === "consensus") {
+          if (this.consensusItems.some((plugin) => plugin.id == item.id))
+            return;
+          this.consensusItems.push(item);
+        } else if (item.category === "execution") {
+          if (this.executionItems.some((plugin) => plugin.id == item.id))
+            return;
+          this.executionItems.push(item);
+        } else if (item.category === "service") {
+          if (this.servicePlugins.some((plugin) => plugin.id == item.id))
+            return;
+          this.servicePlugins.push(item);
+        }
+      });
       this.$store.commit("mutatedSelectedPreset", []);
     }
   },
@@ -234,5 +241,10 @@ export default {
   grid-row: 4;
   background-color: #343434;
   border-radius: 0 0 7px 7px;
+}
+.node-task__manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>

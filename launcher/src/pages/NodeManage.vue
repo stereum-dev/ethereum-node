@@ -25,6 +25,18 @@
             @dragover.prevent
           >
             <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
@@ -40,18 +52,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-              @itemSelect="serviceItemSelection"
-            ></drop-zone>
-          </div>
-          <div
-            @drop="onDrop($event, sidebarPlugins)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
-            <drop-zone
-              :title="'execution'"
-              :list="executionItems"
-              @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -89,6 +89,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager class="edit-task__manager"></task-manager>
       </div>
     </node-bg>
   </section>
@@ -102,6 +103,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapGetters } from "vuex";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
     SidebarManage,
@@ -110,6 +112,7 @@ export default {
     DropZone,
     BaseModal,
     PresetModal,
+    TaskManager,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -338,5 +341,11 @@ export default {
 ::-webkit-scrollbar-track {
   background-color: transparent;
   margin: 10px;
+}
+
+.edit-task__manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>

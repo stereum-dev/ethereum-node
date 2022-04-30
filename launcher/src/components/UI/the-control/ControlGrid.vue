@@ -43,8 +43,8 @@
     <div class="alerts">
       <control-alert></control-alert>
     </div>
-
     <div class="footer"></div>
+    <task-manager class="control-task__manager"></task-manager>
   </div>
 </template>
 
@@ -53,8 +53,15 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
+import TaskManager from "../task-manager/TaskManager.vue";
 export default {
-  components: { ControlDashboard, ControlPlugins, ControlPanel, ControlAlert },
+  components: {
+    ControlDashboard,
+    ControlPlugins,
+    ControlPanel,
+    ControlAlert,
+    TaskManager,
+  },
 };
 </script>
 
@@ -233,5 +240,11 @@ export default {
 .row-category span {
   font-size: 0.7rem;
   font-weight: 700;
+}
+.control-task__manager {
+  position: fixed;
+  left: -3px;
+  bottom: -1px;
+  z-index: 1;
 }
 </style>

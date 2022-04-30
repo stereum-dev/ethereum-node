@@ -4,6 +4,7 @@
       <node-header></node-header>
     </div>
     <staking-grid> </staking-grid>
+    
   </div>
 </template>
 <script>
