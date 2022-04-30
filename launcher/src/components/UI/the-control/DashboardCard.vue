@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-      <slot></slot>
+    <slot></slot>
   </div>
 </template>
 <style scoped>
@@ -19,9 +19,11 @@
   cursor: pointer;
 }
 
+
 .card:hover {
   background: #313131;
 }
+
 .card:active {
   background: #313131;
 }
