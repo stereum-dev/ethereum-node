@@ -13,8 +13,8 @@ export default {
           langName: "english",
         },
         {
-          langImg: "Img/flag/GERMAN.png",
-          langSelect: "Img/flag/Gr.png",
+          langImg: "img/flag/GERMAN.png",
+          langSelect: "img/flag/Gr.png",
           langName: "german",
         },
         {
