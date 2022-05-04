@@ -32,37 +32,37 @@
   </manage-trapezoid>
 </template>
 <script>
-import ManageTrapezoid from "./ManageTrapezoid.vue";
+import ManageTrapezoid from './ManageTrapezoid.vue'
 export default {
   components: {
-    ManageTrapezoid,
+    ManageTrapezoid
   },
   props: {
     title: {
       type: String,
       required: true,
-      default: "Title",
+      default: 'Title'
     },
     list: {
       type: Array,
       required: true,
       default: () => {
-        return [];
-      },
-    },
+        return []
+      }
+    }
   },
-  data() {
+  data () {
     return {
-      itemsList: [],
-    };
+      itemsList: []
+    }
   },
   methods: {
-    selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("itemSelect", item);
-    },
-  },
-};
+    selectedItem (item) {
+      item.active = !item.active
+      this.$emit('itemSelect', item)
+    }
+  }
+}
 </script>
 <style scoped>
 .showModal {

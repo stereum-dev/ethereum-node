@@ -24,33 +24,33 @@
 </template>
 <script>
 export default {
-  name: "addDialog",
-  emits: ["pass", "dialogDis"],
-  data() {
+  name: 'addDialog',
+  emits: ['pass', 'dialogDis'],
+  data () {
     return {
-      logError: false,
-    };
+      logError: false
+    }
   },
   methods: {
-    addServer() {
-      const serverName = this.$refs["serverName"].value;
-      const localPort = this.$refs["localPort"].value;
+    addServer () {
+      const serverName = this.$refs.serverName.value
+      const localPort = this.$refs.localPort.value
 
-      const dstPort = this.$refs["dstPort"].value;
-      if (serverName != "" && localPort != "" && dstPort != "") {
+      const dstPort = this.$refs.dstPort.value
+      if (serverName != '' && localPort != '' && dstPort != '') {
         const obj = {
           name: serverName,
           localPort: localPort,
-          dstPort: dstPort,
-        };
+          dstPort: dstPort
+        }
 
-        this.$emit("pass", obj);
+        this.$emit('pass', obj)
       } else {
-        this.logError = true;
+        this.logError = true
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style scoped>
 dialog {

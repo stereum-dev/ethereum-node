@@ -76,13 +76,13 @@
 </template>
 <script>
 export default {
-  props: ["startDrag", "sidebarPlugins"],
-  data() {
+  props: ['startDrag', 'sidebarPlugins'],
+  data () {
     return {
-      showSidebar: false,
-    };
-  },
-};
+      showSidebar: false
+    }
+  }
+}
 </script>
 <style scoped>
 .manage-sidebar {

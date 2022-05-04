@@ -49,20 +49,20 @@
 </template>
 
 <script>
-import ControlDashboard from "./ControlDashboard.vue";
-import ControlPlugins from "./ControlPlugins.vue";
-import ControlPanel from "./ControlPanel.vue";
-import ControlAlert from "./ControlAlert.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
+import ControlDashboard from './ControlDashboard.vue'
+import ControlPlugins from './ControlPlugins.vue'
+import ControlPanel from './ControlPanel.vue'
+import ControlAlert from './ControlAlert.vue'
+import TaskManager from '../task-manager/TaskManager.vue'
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlPanel,
     ControlAlert,
-    TaskManager,
-  },
-};
+    TaskManager
+  }
+}
 </script>
 
 <style scoped>

@@ -1,1 +1,9 @@
-export default {};
+export default {
+    showDialog (state) {
+      state.dialogIsVisible = true
+    },
+    hideDialog (state) {
+      state.dialogIsVisible = false
+    }
+  }
+  

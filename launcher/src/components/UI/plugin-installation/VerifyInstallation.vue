@@ -54,23 +54,23 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      installationPath: "getInstallationPath",
-    }),
+      selectedPreset: 'getSelectedPreset',
+      installationPath: 'getInstallationPath'
+    })
   },
-  mounted() {
+  mounted () {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push("/clickinstall");
+      this.$router.push('/clickinstall')
     }
-  },
-};
+  }
+}
 </script>
 <style scoped>
 .verify-parent {

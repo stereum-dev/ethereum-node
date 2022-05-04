@@ -1,17 +1,20 @@
 export default {
-  // linkFlags_get(state) {
-  //   return state.linkFlags;
-  // },
-  installation_get(state) {
-    return state.installation;
+  linkFlags_get (state) {
+    return state.linkFlags
   },
-  R1clkInstls_get(state) {
-    return state.R1clkInstls;
+  installation_get (state) {
+    return state.installation
   },
-  nodeSbActive_get(state) {
-    return state.configData_nodeSidebarActive;
+  R1clkInstls_get (state) {
+    return state.R1clkInstls
   },
-  nodeSbVideo_get(state) {
-    return state.configData_nodeSidebarVideo;
+  nodeSbActive_get (state) {
+    return state.configData_nodeSidebarActive
   },
-};
+  nodeSbVideo_get (state) {
+    return state.configData_nodeSidebarVideo
+  },
+  dialogIsVisible_get (state) {
+    return state.dialogIsVisible
+  }
+}

@@ -12,8 +12,8 @@
 </template>
 <script>
 export default {
-  props: ["modalItems"],
-};
+  props: ['modalItems']
+}
 </script>
 <style scoped>
 .modal-bg {

@@ -49,31 +49,31 @@
 </template>
 
 <script>
-import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
-import SidebarParent from "./the-node/NodeSidebarParent.vue";
-import DropZone from "../UI/node-manage/DropZone.vue";
+import NodeSetupConfig from '../layers/NodeSetupConfig.vue'
+import SidebarParent from './the-node/NodeSidebarParent.vue'
+import DropZone from '../UI/node-manage/DropZone.vue'
 
 export default {
   components: {
     NodeSetupConfig,
     SidebarParent,
-    DropZone,
+    DropZone
   },
   props: {
     title: {
       type: String,
       required: true,
-      default: "Title",
+      default: 'Title'
     },
     list: {
       type: Array,
       required: true,
       default: () => {
-        return [];
-      },
-    },
-  },
-};
+        return []
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>

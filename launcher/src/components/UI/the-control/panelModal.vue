@@ -20,8 +20,8 @@
 </template>
 <script>
 export default {
-  props: ["item"],
-};
+  props: ['item']
+}
 </script>
 <style scoped>
 .modal-parent {

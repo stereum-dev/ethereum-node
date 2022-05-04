@@ -13,11 +13,11 @@
   </div>
 </template>
 <script>
-import KeyTable from "./KeyTable.vue";
-import SelectionOptions from "./SelectionOptions.vue";
-import ValidatorsBox from "./ValidatorsBox.vue";
-import TimeReward from "./TimeReward.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
+import KeyTable from './KeyTable.vue'
+import SelectionOptions from './SelectionOptions.vue'
+import ValidatorsBox from './ValidatorsBox.vue'
+import TimeReward from './TimeReward.vue'
+import TaskManager from '../task-manager/TaskManager.vue'
 
 export default {
   components: {
@@ -26,8 +26,8 @@ export default {
     ValidatorsBox,
     TimeReward,
     TaskManager
-  },
-};
+  }
+}
 </script>
 <style scoped>
 .staking-parent {

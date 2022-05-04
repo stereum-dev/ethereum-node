@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import ControlGrid from "../components/UI/the-control/ControlGrid.vue";
+import ControlGrid from '../components/UI/the-control/ControlGrid.vue'
 export default {
-  components: { ControlGrid },
-};
+  components: { ControlGrid }
+}
 </script>
 
 <style scoped>

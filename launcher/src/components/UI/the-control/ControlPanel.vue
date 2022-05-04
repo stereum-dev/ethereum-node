@@ -60,11 +60,11 @@
   </div>
 </template>
 <script>
-import panelModal from "./panelModal";
+import panelModal from './panelModal'
 export default {
   components: { panelModal },
-  emits: ["close-modal"],
-  data() {
+  emits: ['close-modal'],
+  data () {
     return {
       generalBtn: false,
       expertBtn: false,
@@ -74,68 +74,68 @@ export default {
       controlPanelGeneralItems: [
         {
           id: 1,
-          title: "PRUNNING",
+          title: 'PRUNNING',
           summary:
-            "Initiates the prunning of your execution client to free up storage",
+            'Initiates the prunning of your execution client to free up storage',
           description:
-            "Geth as execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space",
+            'Geth as execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space'
         },
         {
           id: 2,
-          title: "OS UPDATES",
-          summary: "Updates your OS to the newest available version",
+          title: 'OS UPDATES',
+          summary: 'Updates your OS to the newest available version',
           description:
-            "Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!",
+            'Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!'
         },
         {
           id: 3,
-          title: "CONFIG EXPORT",
-          summary: "Export your configuration to import it on a new device",
+          title: 'CONFIG EXPORT',
+          summary: 'Export your configuration to import it on a new device',
           description:
-            'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.',
+            'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.'
         },
         {
           id: 4,
-          title: "RESTART HOST",
-          summary: "Restarts the host of your node",
+          title: 'RESTART HOST',
+          summary: 'Restarts the host of your node',
           description:
-            "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
-        },
+            'Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.'
+        }
       ],
       controlPanelExpertItems: [
         {
           id: 1,
-          title: "API BINDING",
-          summary: "Configure an IP you can access from the outside",
+          title: 'API BINDING',
+          summary: 'Configure an IP you can access from the outside',
           description:
-            "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
-        },
+            'If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.'
+        }
       ],
-      modalItem: undefined,
-    };
+      modalItem: undefined
+    }
   },
   methods: {
-    generalActive() {
-      this.isGeneralActive = true;
-      this.generalBtn = true;
-      this.isExpertActive = false;
-      this.expertBtn = false;
+    generalActive () {
+      this.isGeneralActive = true
+      this.generalBtn = true
+      this.isExpertActive = false
+      this.expertBtn = false
     },
-    expertActive() {
-      this.isExpertActive = true;
-      this.expertBtn = true;
-      this.isGeneralActive = false;
-      this.generalBtn = false;
+    expertActive () {
+      this.isExpertActive = true
+      this.expertBtn = true
+      this.isGeneralActive = false
+      this.generalBtn = false
     },
-    openModalHandler(item) {
-      this.isModalActive = true;
-      this.modalItem = item;
+    openModalHandler (item) {
+      this.isModalActive = true
+      this.modalItem = item
     },
-    closeModalHandler() {
-      this.isModalActive = false;
-    },
-  },
-};
+    closeModalHandler () {
+      this.isModalActive = false
+    }
+  }
+}
 </script>
 <style scoped>
 .panel-parent {

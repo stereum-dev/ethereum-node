@@ -1,13 +1,13 @@
 module.exports = {
-  "presets": [
+  presets: [
     [
-      "@vue/cli-plugin-babel/preset",
+      '@vue/cli-plugin-babel/preset',
       {
-        "polyfills": [
-          "es.promise",
-          "es.symbol",
-          "es.object.entries",
-          "es.array.includes"
+        polyfills: [
+          'es.promise',
+          'es.symbol',
+          'es.object.entries',
+          'es.array.includes'
         ]
       }
     ]

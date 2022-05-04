@@ -124,143 +124,143 @@
 </template>
 
 <script>
-import BaseDialog from "./BaseDialog.vue";
-import ControlService from "@/store/ControlService";
+import BaseDialog from './BaseDialog.vue'
+import ControlService from '@/store/ControlService'
 
 export default {
   components: { BaseDialog },
-  name: "FormSetup",
-  emits: ["page"],
-  data() {
+  name: 'FormSetup',
+  emits: ['page'],
+  data () {
     return {
       keyAuth: false,
-      link: "stereumLogoExtern.png",
+      link: 'stereumLogoExtern.png',
       stereumVersions: {},
       connections: [],
-      selectedName: "",
+      selectedName: '',
       bDialogVisible: false,
       model: {
-        name: { value: "", isFilled: true },
-        host: { value: "", isFilled: true },
-        user: { value: "", isFilled: true },
-        pass: { value: "", isFilled: true },
-        keylocation: { value: "", isFilled: true },
-        useAuthKey: false,
+        name: { value: '', isFilled: true },
+        host: { value: '', isFilled: true },
+        user: { value: '', isFilled: true },
+        pass: { value: '', isFilled: true },
+        keylocation: { value: '', isFilled: true },
+        useAuthKey: false
       },
-      imgTrash: "./img/icon/TRASH_CAN.png",
-    };
+      imgTrash: './img/icon/TRASH_CAN.png'
+    }
   },
-  created() {
-    this.loadStoredConnections();
+  created () {
+    this.loadStoredConnections()
   },
   methods: {
-    changeLabel() {
-      this.keyAuth = !this.keyAuth;
+    changeLabel () {
+      this.keyAuth = !this.keyAuth
     },
-    setSelectedConnection(event) {
+    setSelectedConnection (event) {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
-      );
-      this.model.name.value = this.selectedConnection.name;
-      this.model.host.value = this.selectedConnection.host;
-      this.model.user.value = this.selectedConnection.user;
-      this.model.keylocation.value = this.selectedConnection.keylocation;
-      this.model.useAuthKey = this.selectedConnection.useAuthKey;
-      this.keyAuth = this.selectedConnection.useAuthKey;
-      this.model.pass.value = "";
+      )
+      this.model.name.value = this.selectedConnection.name
+      this.model.host.value = this.selectedConnection.host
+      this.model.user.value = this.selectedConnection.user
+      this.model.keylocation.value = this.selectedConnection.keylocation
+      this.model.useAuthKey = this.selectedConnection.useAuthKey
+      this.keyAuth = this.selectedConnection.useAuthKey
+      this.model.pass.value = ''
     },
-    addModel() {
-      const newConnection = this.createConnection();
-      this.connections.push(newConnection);
-      this.selectedConnection = newConnection;
-      this.selectedName = this.selectedConnection.name;
+    addModel () {
+      const newConnection = this.createConnection()
+      this.connections.push(newConnection)
+      this.selectedConnection = newConnection
+      this.selectedName = this.selectedConnection.name
 
-      this.writeSettings();
+      this.writeSettings()
     },
-    getstorableConnections() {
-      let storableConnections = [];
+    getstorableConnections () {
+      const storableConnections = []
       this.connections.forEach((e) => {
         storableConnections.push({
           name: e.name,
           host: e.host,
           user: e.user,
           keylocation: e.keylocation,
-          useAuthKey: e.useAuthKey,
-        });
-      });
-      return storableConnections;
+          useAuthKey: e.useAuthKey
+        })
+      })
+      return storableConnections
     },
     deleteModel: async function () {
-      let currSelected = this.selectedConnection.name;
+      const currSelected = this.selectedConnection.name
       this.connections = this.connections.filter(function (conn) {
-        return currSelected != conn.name;
-      });
-      await this.writeSettings();
-      await this.loadStoredConnections();
-      this.model.name.value = "";
-      this.model.host.value = "";
-      this.model.user.value = "";
-      this.model.pass.value = "";
-      this.model.keylocation.value = "";
-      this.model.useAuthKey = false;
-      this.keyAuth = false;
+        return currSelected != conn.name
+      })
+      await this.writeSettings()
+      await this.loadStoredConnections()
+      this.model.name.value = ''
+      this.model.host.value = ''
+      this.model.user.value = ''
+      this.model.pass.value = ''
+      this.model.keylocation.value = ''
+      this.model.useAuthKey = false
+      this.keyAuth = false
     },
-    createConnection() {
+    createConnection () {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey,
-      };
+        useAuthKey: this.model.useAuthKey
+      }
     },
     loadStoredConnections: async function () {
-      const storageSavedConnections = await ControlService.readConfig();
-      let savedConnections = [];
+      const storageSavedConnections = await ControlService.readConfig()
+      let savedConnections = []
       if (
         storageSavedConnections !== undefined &&
         storageSavedConnections.savedConnections !== undefined
       ) {
         savedConnections = savedConnections.concat(
           storageSavedConnections.savedConnections
-        );
+        )
       }
-      this.connections = savedConnections;
+      this.connections = savedConnections
     },
     writeSettings: async function () {
-      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
+      const savedLanguage = (await ControlService.readConfig()).savedLanguage
       ControlService.writeConfig({
         savedConnections: this.getstorableConnections(),
-        savedLanguage: savedLanguage,
-      });
+        savedLanguage: savedLanguage
+      })
     },
-    checkInput(model) {
-      if (model.value == "") {
-        model.isFilled = false;
+    checkInput (model) {
+      if (model.value == '') {
+        model.isFilled = false
       } else {
-        model.isFilled = true;
+        model.isFilled = true
       }
     },
 
-    mouseOver(val) {
-      if (val === "over") {
-        this.imgTrash = "./img/icon/TRASH_CAN2.png";
+    mouseOver (val) {
+      if (val === 'over') {
+        this.imgTrash = './img/icon/TRASH_CAN2.png'
       } else {
-        this.imgTrash = "./img/icon/TRASH_CAN.png";
+        this.imgTrash = './img/icon/TRASH_CAN.png'
       }
     },
-    showBDialog() {
-      this.bDialogVisible = true;
+    showBDialog () {
+      this.bDialogVisible = true
     },
-    hideBDialog() {
-      this.bDialogVisible = false;
+    hideBDialog () {
+      this.bDialogVisible = false
     },
-    hideDialog() {
-      this.dialogVisible = false;
+    hideDialog () {
+      this.dialogVisible = false
     },
-    baseDialogDelete() {
-      this.bDialogVisible = false;
-      this.deleteModel();
+    baseDialogDelete () {
+      this.bDialogVisible = false
+      this.deleteModel()
     },
     login: async function () {
       try {
@@ -269,15 +269,15 @@ export default {
           user: this.model.user.value,
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
-          keyfileLocation: this.model.keylocation.value,
-        });
+          keyfileLocation: this.model.keylocation.value
+        })
       } catch (err) {
         // return;
       }
-      this.$emit("page", "welcome-page");
-    },
-  },
-};
+      this.$emit('page', 'welcome-page')
+    }
+  }
+}
 </script>
 <style scoped>
 .server-parent {

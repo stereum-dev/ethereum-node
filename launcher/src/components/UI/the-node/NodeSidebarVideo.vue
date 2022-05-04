@@ -20,15 +20,15 @@
 </template>
 <script>
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
-    configData() {
-      return this.$store.getters.nodeSbVideo_get;
-    },
-  },
-};
+    configData () {
+      return this.$store.getters.nodeSbVideo_get
+    }
+  }
+}
 </script>
 <style scoped>
 * {

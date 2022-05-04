@@ -75,18 +75,18 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       isTaskModalActive: false,
-      openTaskActive: false,
-    };
+      openTaskActive: false
+    }
   },
   methods: {
-    taskModalHandler() {
-      this.isTaskModalActive = !this.isTaskModalActive;
-    },
-  },
-};
+    taskModalHandler () {
+      this.isTaskModalActive = !this.isTaskModalActive
+    }
+  }
+}
 </script>
 <style scoped>
 .task-parent {

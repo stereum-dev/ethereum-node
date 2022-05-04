@@ -144,64 +144,64 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       newUpdates: [
         {
           id: 1,
-          name: "[NAME]",
-          version: "[VERSION]",
+          name: '[NAME]',
+          version: '[VERSION]'
         },
         {
           id: 2,
-          name: "[NAME]",
-          version: "[VERSION]",
+          name: '[NAME]',
+          version: '[VERSION]'
         },
         {
           id: 3,
-          name: "[NAME]",
-          version: "[VERSION]",
+          name: '[NAME]',
+          version: '[VERSION]'
         },
         {
           id: 4,
-          name: "[NAME]",
-          version: "[VERSION]",
+          name: '[NAME]',
+          version: '[VERSION]'
         },
         {
           id: 5,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
+          name: '[NAME]',
+          version: '[VERSION]'
+        }
       ],
       statusContents: [
         {
           id: 1,
-          status: "red",
+          status: 'red'
         },
         {
           id: 2,
-          status: "yellow",
+          status: 'yellow'
         },
         {
           id: 3,
-          status: "red",
+          status: 'red'
         },
         {
           id: 4,
-          status: "yellow",
+          status: 'yellow'
         },
         {
           id: 3,
-          status: "red",
+          status: 'red'
         },
         {
           id: 4,
-          status: "yellow",
-        },
-      ],
-    };
-  },
-};
+          status: 'yellow'
+        }
+      ]
+    }
+  }
+}
 </script>
 <style scoped>
 .journal-parent {

@@ -49,58 +49,57 @@
   </div>
 </template>
 <script>
-import BaseButton from "../BaseButton.vue";
-import { mapGetters } from "vuex";
+import BaseButton from '../BaseButton.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { BaseButton },
-  props: ["confirmChanges"],
+  props: ['confirmChanges'],
   computed: {
     ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      selectedItemToRemove: "getSelectedItemToRemove",
-      servicePlugins: "getServicePlugins",
-    }),
+      consensusItems: 'getConsensusItems',
+      executionItems: 'getExecutionItems',
+      validatorItems: 'getValidatorItems',
+      selectedItemToRemove: 'getSelectedItemToRemove',
+      servicePlugins: 'getServicePlugins'
+    })
   },
   methods: {
-    clickOnRemoveBtn() {
-      if (this.selectedItemToRemove.category == "service") {
+    clickOnRemoveBtn () {
+      if (this.selectedItemToRemove.category == 'service') {
         this.$store.commit(
-          "mutatedServicePlugins",
+          'mutatedServicePlugins',
           this.servicePlugins.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "execution") {
+      if (this.selectedItemToRemove.category == 'execution') {
         this.$store.commit(
-          "mutatedExecutionItems",
+          'mutatedExecutionItems',
           this.executionItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "consensus") {
+      if (this.selectedItemToRemove.category == 'consensus') {
         this.$store.commit(
-          "mutatedConsensusItems",
+          'mutatedConsensusItems',
           this.consensusItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "validator") {
+      if (this.selectedItemToRemove.category == 'validator') {
         this.$store.commit(
-          "mutatedValidatorItems",
+          'mutatedValidatorItems',
           this.validatorItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      return;
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style scoped>
 .menu-container {

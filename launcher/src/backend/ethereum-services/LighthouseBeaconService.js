@@ -1,66 +1,66 @@
 import { NodeService } from './NodeService.js'
-import { ServicePortDefinition } from './SerivcePortDefinition.js';
-import { ServiceVolume } from './ServiceVolume.js';
+import { ServicePortDefinition } from './SerivcePortDefinition.js'
+import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-    static buildByUserInput(network, ports, workingDir, executionClients, slasherDbSize) {
-        const image = "stereum/lighthouse";
-        
-        const dataDir = "/opt/app/beacon";
-        const slasherDir = "/opt/app/slasher";
+  static buildByUserInput (network, ports, workingDir, executionClients, slasherDbSize) {
+    const image = 'stereum/lighthouse'
 
-        // volumes
-        const volumes = [
-            new ServiceVolume(workingDir + "/beacon", dataDir),
-            new ServiceVolume(workingDir + "/slasher", slasherDir)
-        ];
+    const dataDir = '/opt/app/beacon'
+    const slasherDir = '/opt/app/slasher'
 
-        // eth1 nodes
-        const eth1Nodes = (executionClients.map(client => {return client.buildExecutionClientHttpEndpointUrl()})).join();
+    // volumes
+    const volumes = [
+      new ServiceVolume(workingDir + '/beacon', dataDir),
+      new ServiceVolume(workingDir + '/slasher', slasherDir)
+    ]
 
-        const service = new LighthouseBeaconService()
-        service.init(
-            "LighthouseBeaconService",
-            null,
-            image,
-            "v2.0.1-47",
-            null,
-            ["/opt/app/start/beacon.sh"],
-            {
-                DATADIR: dataDir,
-                DEBUG_LEVEL: "info",
-                ETH1_NODES: eth1Nodes,
-                NETWORK: network,
-                SLASHERDIR: slasherDir,
-                SLASHER_DB_SIZE: slasherDbSize,
-            },
-            ports,
-            volumes,
-            null,
-            network);
+    // eth1 nodes
+    const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
 
-        return service;
-    }
+    const service = new LighthouseBeaconService()
+    service.init(
+      'LighthouseBeaconService',
+      null,
+      image,
+      'v2.0.1-47',
+      null,
+      ['/opt/app/start/beacon.sh'],
+      {
+        DATADIR: dataDir,
+        DEBUG_LEVEL: 'info',
+        ETH1_NODES: eth1Nodes,
+        NETWORK: network,
+        SLASHERDIR: slasherDir,
+        SLASHER_DB_SIZE: slasherDbSize
+      },
+      ports,
+      volumes,
+      null,
+      network)
 
-    static buildByConfiguration(config) {
-        const service = new LighthouseBeaconService();
+    return service
+  }
 
-        service.initByConfig(config);
+  static buildByConfiguration (config) {
+    const service = new LighthouseBeaconService()
 
-        return service;
-    }
+    service.initByConfig(config)
 
-    buildConsensusClientHttpEndpointUrl() {
-        return "http://stereum-" + this.id + ":5052";
-    }
+    return service
+  }
 
-    getAvailablePorts() {
-        return [
-            new ServicePortDefinition(9000, "tcp", "P2P connections"),
-            new ServicePortDefinition(9000, "udp", "P2P connections"),
-            new ServicePortDefinition(5052, "tcp", "Consensus Client API"),
-        ];
-    }
+  buildConsensusClientHttpEndpointUrl () {
+    return 'http://stereum-' + this.id + ':5052'
+  }
+
+  getAvailablePorts () {
+    return [
+      new ServicePortDefinition(9000, 'tcp', 'P2P connections'),
+      new ServicePortDefinition(9000, 'udp', 'P2P connections'),
+      new ServicePortDefinition(5052, 'tcp', 'Consensus Client API')
+    ]
+  }
 }
 
 // EOF

@@ -19,7 +19,6 @@
   cursor: pointer;
 }
 
-
 .card:hover {
   background: #313131;
 }

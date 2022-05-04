@@ -4,15 +4,15 @@
   </div>
 </template>
 <script>
-import FormSetup from "../components/layers/FormSetup.vue";
+import FormSetup from '../components/layers/FormSetup.vue'
 export default {
-  emits: ["page"],
+  emits: ['page'],
   components: { FormSetup },
   methods: {
-    page() {
-      this.$emit("page", "welcome-page");
-    },
-  },
-};
+    page () {
+      this.$emit('page', 'welcome-page')
+    }
+  }
+}
 </script>
 <style scoped></style>
