@@ -8,18 +8,18 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
-      checkbox: false,
-    };
+      checkbox: false
+    }
   },
   methods: {
-    toggleCheckbox() {
-      this.checkbox = !this.checkbox;
-      this.$emit("setCheckboxVal", this.checkbox);
-    },
-  },
-};
+    toggleCheckbox () {
+      this.checkbox = !this.checkbox
+      this.$emit('setCheckboxVal', this.checkbox)
+    }
+  }
+}
 </script>
 <style scoped>
 .toggle-container {

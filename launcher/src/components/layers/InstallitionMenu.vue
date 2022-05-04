@@ -35,55 +35,55 @@
   </div>
 </template>
 <script>
-import ButtonInstallation from "./ButtonInstallation.vue";
-import CircleLoading from "../UI/CircleLoading.vue";
-import ControlService from "@/store/ControlService";
-import { mapGetters } from "vuex";
+import ButtonInstallation from './ButtonInstallation.vue'
+import CircleLoading from '../UI/CircleLoading.vue'
+import ControlService from '@/store/ControlService'
+import { mapGetters } from 'vuex'
 export default {
-  created() {
-    this.checkOS();
-    this.randomValue();
+  created () {
+    this.checkOS()
+    this.randomValue()
   },
   components: { ButtonInstallation, CircleLoading },
-  data() {
+  data () {
     return {
       running: true,
-      message: "",
+      message: '',
       value: 1,
-      max: 100,
-    };
+      max: 100
+    }
   },
   computed: {
-    ...mapGetters({ installation: "installation_get" }),
+    ...mapGetters({ installation: 'installation_get' })
   },
   methods: {
-    randomValue() {
-      this.value = Math.random() * this.max;
+    randomValue () {
+      this.value = Math.random() * this.max
     },
     display: async function (response) {
-      let data = await response;
-      if (data == "Ubuntu" || data == "CentOS") {
-        this.message = data.toUpperCase() + " IS A SUPPORTED OS";
+      const data = await response
+      if (data == 'Ubuntu' || data == 'CentOS') {
+        this.message = data.toUpperCase() + ' IS A SUPPORTED OS'
       } else if (data.name !== undefined) {
         this.message =
-          data.name.toUpperCase() + ": " + data.message.toUpperCase();
+          data.name.toUpperCase() + ': ' + data.message.toUpperCase()
       } else {
-        this.message = "UNSUPPORTED OS";
+        this.message = 'UNSUPPORTED OS'
       }
-      this.running = false;
+      this.running = false
     },
     checkOS: async function () {
-      let response = ControlService.checkOS()
+      const response = ControlService.checkOS()
         .then((result) => {
-          return result;
+          return result
         })
         .catch((error) => {
-          return error;
-        });
-      this.display(await response);
-    },
-  },
-};
+          return error
+        })
+      this.display(await response)
+    }
+  }
+}
 </script>
 <style scope>
 .welcome-parent {

@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import JournalNode from "../components/UI/the-node/JournalNode.vue";
-import DropZone from "../components/UI/node-manage/DropZone.vue";
-import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
-import TaskManager from "../components/UI/task-manager/TaskManager.vue";
-import { mapGetters } from "vuex";
+import JournalNode from '../components/UI/the-node/JournalNode.vue'
+import DropZone from '../components/UI/node-manage/DropZone.vue'
+import BaseModal from '../components/UI/node-manage/BaseModal.vue'
+import NodeSidebar from '../components/UI/the-node/NodeSidebarParent.vue'
+import TaskManager from '../components/UI/task-manager/TaskManager.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     JournalNode,
@@ -68,56 +68,52 @@ export default {
     NodeSidebar,
     TaskManager
   },
-  emits: ["startDrag", "closeMe", "modalView"],
+  emits: ['startDrag', 'closeMe', 'modalView'],
 
-  data() {
+  data () {
     return {
-      isModalActive: false,
-    };
+      isModalActive: false
+    }
   },
   computed: {
     ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      servicePlugins: "getServicePlugins",
-      selectedPreset: "getSelectedPreset",
-    }),
+      consensusItems: 'getConsensusItems',
+      executionItems: 'getExecutionItems',
+      validatorItems: 'getValidatorItems',
+      servicePlugins: 'getServicePlugins',
+      selectedPreset: 'getSelectedPreset'
+    })
   },
-  mounted() {
+  mounted () {
     if (Object.keys(this.selectedPreset).length !== 0) {
       this.selectedPreset.includedPlugins.map((item) => {
-        if (item.category === "validator") {
-          if (this.validatorItems.some((plugin) => plugin.id == item.id))
-            return;
-          this.validatorItems.push(item);
-        } else if (item.category === "consensus") {
-          if (this.consensusItems.some((plugin) => plugin.id == item.id))
-            return;
-          this.consensusItems.push(item);
-        } else if (item.category === "execution") {
-          if (this.executionItems.some((plugin) => plugin.id == item.id))
-            return;
-          this.executionItems.push(item);
-        } else if (item.category === "service") {
-          if (this.servicePlugins.some((plugin) => plugin.id == item.id))
-            return;
-          this.servicePlugins.push(item);
+        if (item.category === 'validator') {
+          if (this.validatorItems.some((plugin) => plugin.id == item.id)) { return }
+          this.validatorItems.push(item)
+        } else if (item.category === 'consensus') {
+          if (this.consensusItems.some((plugin) => plugin.id == item.id)) { return }
+          this.consensusItems.push(item)
+        } else if (item.category === 'execution') {
+          if (this.executionItems.some((plugin) => plugin.id == item.id)) { return }
+          this.executionItems.push(item)
+        } else if (item.category === 'service') {
+          if (this.servicePlugins.some((plugin) => plugin.id == item.id)) { return }
+          this.servicePlugins.push(item)
         }
-      });
-      this.$store.commit("mutatedSelectedPreset", []);
+      })
+      this.$store.commit('mutatedSelectedPreset', [])
     }
   },
   methods: {
-    showModal(data) {
-      this.isModalActive = true;
-      this.modalItems = data;
+    showModal (data) {
+      this.isModalActive = true
+      this.modalItems = data
     },
-    closeModal() {
-      this.isModalActive = false;
-    },
-  },
-};
+    closeModal () {
+      this.isModalActive = false
+    }
+  }
+}
 </script>
 
 <style scoped>

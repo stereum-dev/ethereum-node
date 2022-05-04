@@ -1,12 +1,12 @@
-import controlPanelActions from "./actions.js";
-import controlPanelGetters from "./getters.js";
-import controlPanelMutations from "./mutations.js";
+import controlPanelActions from './actions.js'
+import controlPanelGetters from './getters.js'
+import controlPanelMutations from './mutations.js'
 
 export default {
-  state() {
-    return {};
+  state () {
+    return {}
   },
   mutations: controlPanelMutations,
   actions: controlPanelActions,
-  getters: controlPanelGetters,
-};
+  getters: controlPanelGetters
+}

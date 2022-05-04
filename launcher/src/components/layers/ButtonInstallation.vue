@@ -12,14 +12,14 @@
 </template>
 <script>
 export default {
-  name: "ButtonInstallation",
-  props: ["img", "url"],
-  data() {
+  name: 'ButtonInstallation',
+  props: ['img', 'url'],
+  data () {
     return {
-      isHovered: false,
-    };
-  },
-};
+      isHovered: false
+    }
+  }
+}
 </script>
 <style scoped>
 .BtnInstIcon {

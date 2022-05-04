@@ -15,19 +15,19 @@
 export default {
   props: {
     message: String,
-    open: Boolean,
+    open: Boolean
   },
-  data() {
+  data () {
     return {
-      active: true,
-    };
+      active: true
+    }
   },
-  created() {
+  created () {
     setTimeout(() => {
-      this.active = false;
-    }, 5000);
-  },
-};
+      this.active = false
+    }, 5000)
+  }
+}
 </script>
 
 <style scoped>

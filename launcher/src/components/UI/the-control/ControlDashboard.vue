@@ -91,13 +91,13 @@
 </template>
 
 <script>
-import ColorBar from "./ColorBar.vue";
-import LoliBar from "./LoliBar.vue";
-import HddLoading from "./HddLoading.vue";
-import SandClock from "./SandClock.vue";
-import DashboardCard from "./DashboardCard.vue";
-import StorageCounter from "./StorageCounter.vue";
-import AmsterdamComponent from "./AmsterdamComponent.vue";
+import ColorBar from './ColorBar.vue'
+import LoliBar from './LoliBar.vue'
+import HddLoading from './HddLoading.vue'
+import SandClock from './SandClock.vue'
+import DashboardCard from './DashboardCard.vue'
+import StorageCounter from './StorageCounter.vue'
+import AmsterdamComponent from './AmsterdamComponent.vue'
 export default {
   components: {
     SandClock,
@@ -106,18 +106,18 @@ export default {
     DashboardCard,
     ColorBar,
     LoliBar,
-    AmsterdamComponent,
+    AmsterdamComponent
   },
-  data() {
+  data () {
     return {
       No: 100,
       rec: 1.12,
       tran: 1.12,
       ttlRec: 44.6,
-      ttlTrn: 44.6,
-    };
-  },
-};
+      ttlTrn: 44.6
+    }
+  }
+}
 </script>
 
 <style scoped>

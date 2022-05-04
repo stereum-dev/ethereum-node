@@ -7,10 +7,10 @@
   </div>
 </template>
 <script>
-import ChartGrid from "../components/UI/the-chart/ChartGrid.vue";
+import ChartGrid from '../components/UI/the-chart/ChartGrid.vue'
 export default {
-  components: { ChartGrid },
-};
+  components: { ChartGrid }
+}
 </script>
 
 <style scoped>

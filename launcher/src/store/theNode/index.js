@@ -1,14 +1,14 @@
-import theNodeActions from "./actions.js";
-import theNodeGetters from "./getters.js";
-import theNodeMutations from "./mutations.js";
+import theNodeActions from './actions.js'
+import theNodeGetters from './getters.js'
+import theNodeMutations from './mutations.js'
 
 export default {
-  state() {
+  state () {
     return {
-      
-    };
+
+    }
   },
   mutations: theNodeMutations,
   actions: theNodeActions,
-  getters: theNodeGetters,
-};
+  getters: theNodeGetters
+}

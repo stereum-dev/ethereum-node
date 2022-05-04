@@ -1,5 +1,5 @@
 <template>
-  <div class="home">    
+  <div class="home">
     <!--<installation-parameters :model="connectionParms" />-->
     <setup-wizard :model="connectionParms"></setup-wizard>
   </div>
@@ -7,16 +7,16 @@
 
 <script>
 // @ is an alias to /src
-import InstallationParameters from "@/components/InstallationParameters.vue";
-import SetupWizard from "@/components/SetupWizard.vue";
+import InstallationParameters from '@/components/InstallationParameters.vue'
+import SetupWizard from '@/components/SetupWizard.vue'
 
 export default {
-  name: "Setup",
+  name: 'Setup',
   components: {
     InstallationParameters,
-    SetupWizard,
+    SetupWizard
   },
-  data() {
+  data () {
     return {
       connectionParms: {
         host: '',
@@ -24,7 +24,7 @@ export default {
         keyfileLocation: '',
         sshKeyAuth: false,
         port: 22,
-        stereumRelease: '',
+        stereumRelease: ''
       }
       /*
       connectionParms: {
@@ -33,8 +33,8 @@ export default {
         keyfileLocation: '/Users/stefa2k/.ssh/id_rsa',
         sshKeyAuth: false,
         port: 22,
-      }*/
-    };
-  },  
-};
+      } */
+    }
+  }
+}
 </script>

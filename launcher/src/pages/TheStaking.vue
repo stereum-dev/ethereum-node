@@ -4,17 +4,17 @@
       <node-header></node-header>
     </div>
     <staking-grid> </staking-grid>
-    
+
   </div>
 </template>
 <script>
-import StakingGrid from "../components/UI/the-staking/StakingGrid.vue";
+import StakingGrid from '../components/UI/the-staking/StakingGrid.vue'
 
 export default {
   components: {
-    StakingGrid,
-  },
-};
+    StakingGrid
+  }
+}
 </script>
 <style scoped>
 .header {

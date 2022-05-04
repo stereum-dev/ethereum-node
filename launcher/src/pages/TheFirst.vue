@@ -26,53 +26,53 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import BaseLogo from "../components/layers/BaseLogo.vue";
-import LangButton from "../components/UI/LangButton.vue";
-import LangDialog from "../components/UI/LangDialog.vue";
-import ControlService from "@/store/ControlService";
-//import SetupServer from "./SetupServer.vue";
+import { mapActions } from 'vuex'
+import BaseLogo from '../components/layers/BaseLogo.vue'
+import LangButton from '../components/UI/LangButton.vue'
+import LangDialog from '../components/UI/LangDialog.vue'
+import ControlService from '@/store/ControlService'
+// import SetupServer from "./SetupServer.vue";
 export default {
-  name: "TheFirst",
+  name: 'TheFirst',
   components: { BaseLogo, LangButton, LangDialog },
 
-  emit: ["open", "page"],
-  created() {
-    this.checkSettings();
+  emit: ['open', 'page'],
+  created () {
+    this.checkSettings()
   },
-  data() {
+  data () {
     return {
-      link: "stereum-logo-blinking.gif",
-      flag: "SelectLang.png",
-      language: "",
-    };
+      link: 'stereum-logo-blinking.gif',
+      flag: 'SelectLang.png',
+      language: ''
+    }
   },
   computed: {
-    linkFlags() {
-      return this.$store.getters.linkFlags_get;
+    linkFlags () {
+      return this.$store.getters.linkFlags_get
     },
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible_get;
-    },
+    dialogIsVisible () {
+      return this.$store.getters.dialogIsVisible_get
+    }
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
-    setLang(lang, langSelect) {
-      this.language = lang;
-      this.flag = langSelect;
-      this.hideDialog();
-      this.link = "stereum-logo-extern.png";
-      this.updateSettings(lang, langSelect);
+    ...mapActions(['showDialog', 'hideDialog']),
+    setLang (lang, langSelect) {
+      this.language = lang
+      this.flag = langSelect
+      this.hideDialog()
+      this.link = 'stereum-logo-extern.png'
+      this.updateSettings(lang, langSelect)
     },
-    activePage() {
-      if (this.language === "") {
+    activePage () {
+      if (this.language === '') {
         ///
       } else {
-        this.$emit("page", "SetupServer");
+        this.$emit('page', 'SetupServer')
       }
     },
     checkSettings: async function () {
-      const savedConfig = await ControlService.readConfig();
+      const savedConfig = await ControlService.readConfig()
       if (
         savedConfig !== undefined &&
         savedConfig.savedLanguage !== undefined
@@ -80,20 +80,20 @@ export default {
         this.setLang(
           savedConfig.savedLanguage.language,
           savedConfig.savedLanguage.flag
-        );
-        this.activePage();
+        )
+        this.activePage()
       }
     },
     updateSettings: async function (lang, langSelect) {
-      let prevConf = await ControlService.readConfig();
+      const prevConf = await ControlService.readConfig()
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect },
-      };
-      await ControlService.writeConfig(conf);
-    },
-  },
-};
+        savedLanguage: { language: lang, flag: langSelect }
+      }
+      await ControlService.writeConfig(conf)
+    }
+  }
+}
 </script>
 
 <style scoped>

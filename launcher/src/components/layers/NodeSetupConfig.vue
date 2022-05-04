@@ -7,33 +7,33 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       configData: [
         {
           id: 1,
-          name: "Node Configuration",
-          status: "online",
+          name: 'Node Configuration',
+          status: 'online'
         },
         {
           id: 2,
-          name: "Node Configuration",
-          status: "offline",
+          name: 'Node Configuration',
+          status: 'offline'
         },
         {
           id: 3,
-          name: "Node Configuration",
-          status: "notOk",
+          name: 'Node Configuration',
+          status: 'notOk'
         },
         {
           id: 4,
-          name: "Node Configuration",
-          status: "serverOff",
-        },
-      ],
-    };
-  },
-};
+          name: 'Node Configuration',
+          status: 'serverOff'
+        }
+      ]
+    }
+  }
+}
 </script>
 <style scoped>
 * {

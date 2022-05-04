@@ -4,10 +4,10 @@
   </background-page>
 </template>
 <script>
-import BackgroundPage from "../components/layers/BackgroundPage.vue";
-import InstallationMenu from "../components/layers/InstallitionMenu.vue";
+import BackgroundPage from '../components/layers/BackgroundPage.vue'
+import InstallationMenu from '../components/layers/InstallitionMenu.vue'
 export default {
-  components: { BackgroundPage, InstallationMenu },
-};
+  components: { BackgroundPage, InstallationMenu }
+}
 </script>
 <style scoped></style>

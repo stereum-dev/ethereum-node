@@ -26,23 +26,23 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     ...mapGetters({
-      servicePlugins: "getServicePlugins",
-    }),
+      servicePlugins: 'getServicePlugins'
+    })
   },
   methods: {
-    selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("itemSelect", item);
-    },
-  },
-};
+    selectedItem (item) {
+      item.active = !item.active
+      this.$emit('itemSelect', item)
+    }
+  }
+}
 </script>
 <style scoped>
 .service-container {

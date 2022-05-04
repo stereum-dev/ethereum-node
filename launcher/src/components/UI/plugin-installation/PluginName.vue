@@ -94,34 +94,34 @@
   </div>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
-import { mapGetters } from "vuex";
+import ToggleButton from './toggleButton.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { ToggleButton },
 
-  data() {
+  data () {
     return {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
-      mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
-    };
+      testnetIcon: require('../../../../public/img/icon/click-installation/testnet-circle.png'),
+      mainnetIcon: require('../../../../public/img/icon/click-installation/mainnet-circle.png')
+    }
   },
   computed: {
     ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      plugins: "getAllPlugins",
-      getInstallationPath: "getInstallationPath",
+      selectedPreset: 'getSelectedPreset',
+      plugins: 'getAllPlugins',
+      getInstallationPath: 'getInstallationPath'
     }),
     installationPath: {
-      get() {
-          return this.getInstallationPath;
+      get () {
+        return this.getInstallationPath
       },
-      set(val) {
-        this.$store.commit("mutatedInstallationPath", val);
-      },
-    },
+      set (val) {
+        this.$store.commit('mutatedInstallationPath', val)
+      }
+    }
 
     // getMemoryClass() {
     //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
@@ -138,12 +138,12 @@ export default {
     //   }
     // },
   },
-  mounted() {
+  mounted () {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push("/clickinstall");
+      this.$router.push('/clickinstall')
     }
-  },
-};
+  }
+}
 </script>
 <style scoped>
 .plugin-parent {

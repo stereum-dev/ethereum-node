@@ -68,126 +68,126 @@
 </template>
 
 <script>
-import ControlService from "@/store/ControlService";
+import ControlService from '@/store/ControlService'
 
 export default {
-  name: "ConnectionTab",
+  name: 'ConnectionTab',
   components: {
 
   },
-  data() {
+  data () {
     const unselectedConnection = {
-          value: null,
-          text: "-- none --",
-        };
+      value: null,
+      text: '-- none --'
+    }
 
     return {
       selectedConnection: unselectedConnection.value,
       unselectedConnection: unselectedConnection,
       savedConnections: [unselectedConnection],
-      selectionInProgress: false,
-    };
+      selectionInProgress: false
+    }
   },
   props: {
-    model: Object,
+    model: Object
   },
   watch: {
-    "selectedConnection": function() {
+    selectedConnection: function () {
       if (!this.selectionInProgress && this.selectedConnection !== this.unselectedConnection.value) {
-        this.selectionInProgress = true;
+        this.selectionInProgress = true
 
-        this.model.host = this.selectedConnection.host;
-        this.model.user = this.selectedConnection.user;
-        this.model.keyfileLocation = this.selectedConnection.keyfileLocation;
-        this.model.sshKeyAuth = this.selectedConnection.sshKeyAuth;
-        this.model.port = this.selectedConnection.port;
+        this.model.host = this.selectedConnection.host
+        this.model.user = this.selectedConnection.user
+        this.model.keyfileLocation = this.selectedConnection.keyfileLocation
+        this.model.sshKeyAuth = this.selectedConnection.sshKeyAuth
+        this.model.port = this.selectedConnection.port
 
-        this.selectionInProgress = false;
+        this.selectionInProgress = false
       }
-    },
+    }
   },
-  created() {
-    this.loadStoredConnections();
+  created () {
+    this.loadStoredConnections()
   },
   methods: {
-    removeItem() {
-      console.log("selected: ");
-      console.log(this.selectedConnection);
+    removeItem () {
+      console.log('selected: ')
+      console.log(this.selectedConnection)
 
       if (this.selectedConnection !== this.unselectedConnection.value) {
-        this.selectionInProgress = true;
+        this.selectionInProgress = true
 
-        const selectedConn = this.selectedConnection;
+        const selectedConn = this.selectedConnection
 
-        this.savedConnections = this.savedConnections.filter(function(conn) {
-          console.log("conn: ");
-          console.log(conn);
-          return selectedConn != conn.value;
-        });
+        this.savedConnections = this.savedConnections.filter(function (conn) {
+          console.log('conn: ')
+          console.log(conn)
+          return selectedConn != conn.value
+        })
 
-        this.selectedConnection = this.unselectedConnection.value;
+        this.selectedConnection = this.unselectedConnection.value
 
-        this.selectionInProgress = false;
+        this.selectionInProgress = false
 
-        ControlService.writeConfig({ savedConnections: this.storableConnections() });
+        ControlService.writeConfig({ savedConnections: this.storableConnections() })
       }
 
-      this.model.host = "";
-      this.model.user = "";
-      this.model.keyfileLocation = "";
-      this.model.sshKeyAuth = false;
-      this.model.port = 22;
+      this.model.host = ''
+      this.model.user = ''
+      this.model.keyfileLocation = ''
+      this.model.sshKeyAuth = false
+      this.model.port = 22
     },
-    addItem() {
-      this.selectionInProgress = true;
+    addItem () {
+      this.selectionInProgress = true
 
-      const newConn = this.createConnectionModel(this.model.host, this.model.port, this.model.user, this.model.sshKeyAuth, this.model.keyfileLocation);
+      const newConn = this.createConnectionModel(this.model.host, this.model.port, this.model.user, this.model.sshKeyAuth, this.model.keyfileLocation)
 
       this.savedConnections.push({
         value: newConn,
-        text: newConn.host + " (" + newConn.user + ")",
-      });
+        text: newConn.host + ' (' + newConn.user + ')'
+      })
 
-      this.selectedConnection = newConn;
+      this.selectedConnection = newConn
 
-      this.selectionInProgress = false;
+      this.selectionInProgress = false
 
-      ControlService.writeConfig({ savedConnections: this.storableConnections() });
+      ControlService.writeConfig({ savedConnections: this.storableConnections() })
     },
 
-    createConnectionModel(host, port, user, sshKeyAuth, keyfileLocation) {
+    createConnectionModel (host, port, user, sshKeyAuth, keyfileLocation) {
       return {
         host: host,
         port: port,
         user: user,
         sshKeyAuth: sshKeyAuth,
-        keyfileLocation: keyfileLocation,
-      };
+        keyfileLocation: keyfileLocation
+      }
     },
 
-    storableConnections() {
-      return this.savedConnections.filter(function(conn) {
-          return conn.value != null;
-      });
+    storableConnections () {
+      return this.savedConnections.filter(function (conn) {
+        return conn.value != null
+      })
     },
 
-    loadStoredConnections: async function() {
-      const storageSavedConnections = await ControlService.readConfig();
+    loadStoredConnections: async function () {
+      const storageSavedConnections = await ControlService.readConfig()
 
-      console.log(storageSavedConnections);
+      console.log(storageSavedConnections)
 
-      let savedConnections = [this.unselectedConnection];
+      let savedConnections = [this.unselectedConnection]
 
       if (storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
-        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
+        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections)
       }
 
-      console.log(savedConnections);
+      console.log(savedConnections)
 
-      this.savedConnections = savedConnections;
-    },
+      this.savedConnections = savedConnections
+    }
   }
-};
+}
 </script>
 
 <style scoped></style>

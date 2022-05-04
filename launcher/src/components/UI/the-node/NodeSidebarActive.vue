@@ -34,30 +34,30 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  data() {
+  data () {
     return {
       installedBtn: false,
-      activeBtn: false,
-    };
+      activeBtn: false
+    }
   },
   computed: {
     ...mapGetters({
-      configData: "nodeSbActive_get",
-    }),
+      configData: 'nodeSbActive_get'
+    })
   },
   methods: {
-    installedBtnHandler() {
-      this.installedBtn = true;
-      this.activeBtn = false;
+    installedBtnHandler () {
+      this.installedBtn = true
+      this.activeBtn = false
     },
-    activeBtnHandler() {
-      this.activeBtn = true;
-      this.installedBtn = false;
-    },
-  },
-};
+    activeBtnHandler () {
+      this.activeBtn = true
+      this.installedBtn = false
+    }
+  }
+}
 </script>
 <style scoped>
 * {

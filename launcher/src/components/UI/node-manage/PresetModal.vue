@@ -40,8 +40,8 @@
 </template>
 <script>
 export default {
-  props: ["modalStatus"],
-};
+  props: ['modalStatus']
+}
 </script>
 <style scoped>
 .modal-container {

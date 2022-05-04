@@ -32,13 +32,13 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
-      StopWatch: "00:00",
-      net: "NETWORK",
-    };
-  },
-};
+      StopWatch: '00:00',
+      net: 'NETWORK'
+    }
+  }
+}
 </script>
 
 <style scoped>

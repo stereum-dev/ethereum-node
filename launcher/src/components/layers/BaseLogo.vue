@@ -6,9 +6,9 @@
 
 <script>
 export default {
-  name: "BaseLogo",
-  props: ["link"],
-};
+  name: 'BaseLogo',
+  props: ['link']
+}
 </script>
 
 <style scoped>

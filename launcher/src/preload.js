@@ -1,2 +1,2 @@
 // src/preload.js
-require('electron-promise-ipc/preload');
+require('electron-promise-ipc/preload')

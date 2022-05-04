@@ -22,11 +22,11 @@
 </template>
 
 <script>
-import ChartLine from "../the-control/ChartLine.vue";
-import ControlPlugins from "../the-control/ControlPlugins.vue";
+import ChartLine from '../the-control/ChartLine.vue'
+import ControlPlugins from '../the-control/ControlPlugins.vue'
 export default {
-  components: { ChartLine, ControlPlugins },
-};
+  components: { ChartLine, ControlPlugins }
+}
 </script>
 
 <style scoped>

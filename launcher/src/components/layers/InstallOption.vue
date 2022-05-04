@@ -23,48 +23,48 @@
 </template>
 
 <script>
-import VueSelect from "../UI/click-installation/VueSelect.vue";
-import { mapGetters } from "vuex";
+import VueSelect from '../UI/click-installation/VueSelect.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: {
-    VueSelect,
+    VueSelect
   },
-  data() {
+  data () {
     return {
       isTestnetActive: false,
       testnetBtn: false,
       isMainnetActive: false,
-      mainnetBtn: false,
-    };
+      mainnetBtn: false
+    }
   },
   computed: {
-    R1clkInstls() {
-      return this.$store.getters.R1clkInstls_get;
+    R1clkInstls () {
+      return this.$store.getters.R1clkInstls_get
     },
     ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-    }),
+      selectedPreset: 'getSelectedPreset'
+    })
   },
   methods: {
-    testnetActive() {
-      this.isTestnetActive = true;
-      this.testnetBtn = true;
-      this.isMainnetActive = false;
-      this.mainnetBtn = false;
+    testnetActive () {
+      this.isTestnetActive = true
+      this.testnetBtn = true
+      this.isMainnetActive = false
+      this.mainnetBtn = false
     },
-    mainnetActive() {
-      this.isMainnetActive = true;
-      this.mainnetBtn = true;
-      this.isTestnetActive = false;
-      this.testnetBtn = false;
+    mainnetActive () {
+      this.isMainnetActive = true
+      this.mainnetBtn = true
+      this.isTestnetActive = false
+      this.testnetBtn = false
     },
-    clickedToInstall() {
+    clickedToInstall () {
       if (Object.keys(this.selectedPreset).length > 0) {
-        this.$router.push("/install");
+        this.$router.push('/install')
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style scoped>

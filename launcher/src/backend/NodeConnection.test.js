@@ -1,52 +1,53 @@
-import { NodeConnection } from "./NodeConnection";
-import { nodeOS } from "./NodeOS";
-const log = require('electron-log');
+import { NodeConnection } from './NodeConnection'
+import { nodeOS } from './NodeOS'
+const log = require('electron-log')
 
 test('findOS Ubuntu', () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn(() => {
-        return {rc: 0, stdout: "DISTRIB_ID=Ubuntu"};
-    });
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn(() => {
+    return { rc: 0, stdout: 'DISTRIB_ID=Ubuntu' }
+  })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    nodeConnection.findOS();
+  nodeConnection.findOS()
 
-    expect(nodeConnection.os == nodeOS.ubuntu);
-});
+  expect(nodeConnection.os == nodeOS.ubuntu)
+})
 
 test('findOS CentOS', () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn(() => {
-        return {rc: 0, stdout: "NAME=\"CentOS Linux\""};
-    });
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn(() => {
+    return { rc: 0, stdout: 'NAME="CentOS Linux"' }
+  })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    nodeConnection.findOS();
+  nodeConnection.findOS()
 
-    expect(nodeConnection.os == nodeOS.centos);
-});
+  expect(nodeConnection.os == nodeOS.centos)
+})
 
 test('findStereumSettings', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn(() => {
-        return {rc: 0, stdout: `stereum:
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn(() => {
+    return {
+      rc: 0, stdout: `stereum:
   settings:
     controls_install_path: /opt/stereum/mock
     os_user: stereum_mock
@@ -57,28 +58,30 @@ test('findStereumSettings', async () => {
       unattended:
         check: true
         install: false
-        `};
-    });
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+        `
+    }
+  })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.findStereumSettings();
+  await nodeConnection.findStereumSettings()
 
-    expect(nodeConnection.settings.stereum.settings.controls_install_path).toMatch(/\/opt\/stereum\/mock/);
-    expect(nodeConnection.settings.stereum.settings.os_user).toMatch(/stereum_mock/);
-});
+  expect(nodeConnection.settings.stereum.settings.controls_install_path).toMatch(/\/opt\/stereum\/mock/)
+  expect(nodeConnection.settings.stereum.settings.os_user).toMatch(/stereum_mock/)
+})
 
 test('findStereumSettings failure', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn(() => {
-        return {rc: 1, stdout: `stereum:
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn(() => {
+    return {
+      rc: 1, stdout: `stereum:
   settings:
     controls_install_path: /opt/stereum/mock
     os_user: stereum_mock
@@ -88,485 +91,485 @@ test('findStereumSettings failure', async () => {
       available:
       unattended:
         check: true
-        install: false`};
-    });
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+        install: false`
+    }
+  })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.findStereumSettings();
+  await nodeConnection.findStereumSettings()
 
-    expect(nodeConnection.settings).toBeUndefined();
-});
+  expect(nodeConnection.settings).toBeUndefined()
+})
 
 test('prepareStereumNode failure ubuntu installpkg', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "ubuntu"}).mockReturnValueOnce({rc: 1, stderr: "error1234"});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }).mockReturnValueOnce({ rc: 1, stderr: 'error1234' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't install os packages: error1234");
-    });
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't install os packages: error1234")
+  })
 
-    expect(mMock.mock.calls.length).toBe(2);
-    expect(mMock.mock.calls[1][0]).toMatch(/apt/);
-});
+  expect(mMock.mock.calls.length).toBe(2)
+  expect(mMock.mock.calls[1][0]).toMatch(/apt/)
+})
 
 test('prepareStereumNode error ubuntu installpkg', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "ubuntu"}).mockRejectedValue("foobar");
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }).mockRejectedValue('foobar')
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't install os packages: foobar");
-    });
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't install os packages: foobar")
+  })
 
-    expect(mMock.mock.calls.length).toBe(2);
-    expect(mMock.mock.calls[1][0]).toMatch(/apt/);
-});
+  expect(mMock.mock.calls.length).toBe(2)
+  expect(mMock.mock.calls[1][0]).toMatch(/apt/)
+})
 
 test('prepareStereumNode failure ubuntu unsupported os', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "blah"});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'blah' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("unsupported OS");
-    });
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch('unsupported OS')
+  })
 
-    expect(mMock.mock.calls.length).toBe(1);
-});
+  expect(mMock.mock.calls.length).toBe(1)
+})
 
 test('prepareStereumNode failure ubuntu install', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "ubuntu"}) // find OS
-        .mockReturnValueOnce({rc: 0}) // install pkg
-        .mockReturnValueOnce({rc: 1, stderr: ""}); // install
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
+    .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 1, stderr: '' }) // install
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't install ansible role: <stderr empty>");
-    });
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't install ansible role: <stderr empty>")
+  })
 
-    expect(mMock.mock.calls.length).toBe(4);
-});
+  expect(mMock.mock.calls.length).toBe(4)
+})
 
 test('prepareStereumNode error ubuntu install', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "ubuntu"}) // find OS
-        .mockReturnValueOnce({rc: 0}) // delete ansible roles if exist
-        .mockReturnValueOnce({rc: 0}) // install pkg
-        .mockRejectedValue("connection lost"); // install
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
+    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
+    .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockRejectedValue('connection lost') // install
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't install ansible roles: connection lost");
-    });
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't install ansible roles: connection lost")
+  })
 
-    expect(mMock.mock.calls.length).toBe(4);
-});
+  expect(mMock.mock.calls.length).toBe(4)
+})
 
 test('prepareStereumNode success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock
-        .mockReturnValueOnce({rc: 0, stdout: "stereum:\n  settings:\n    controls_install_path: /opt/tests"}) // find settings
-        .mockReturnValueOnce({rc: 0, stdout: "ubuntu"}) // find OS
-        .mockReturnValueOnce({rc: 0}) // delete ansible roles if exist
-        .mockReturnValueOnce({rc: 0}) // install pkg
-        .mockReturnValueOnce({rc: 0}) // install
-        .mockReturnValueOnce({rc: 0}); // playbook ansible
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
+    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
+    .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0 }) // install
+    .mockReturnValueOnce({ rc: 0 }) // playbook ansible
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.findStereumSettings();
-    const playbookRun = await nodeConnection.prepareStereumNode("/opt/stereum/bar");
-    expect(playbookRun).toBeDefined();
-    expect(playbookRun).toMatchObject({
-            playbook: expect.stringMatching(/setup/),
-            playbookRunRef: expect.any(String),
-        });
+  await nodeConnection.findStereumSettings()
+  const playbookRun = await nodeConnection.prepareStereumNode('/opt/stereum/bar')
+  expect(playbookRun).toBeDefined()
+  expect(playbookRun).toMatchObject({
+    playbook: expect.stringMatching(/setup/),
+    playbookRunRef: expect.any(String)
+  })
 
-    expect(mMock.mock.calls.length).toBe(6);
+  expect(mMock.mock.calls.length).toBe(6)
 
-    let i = 0;
-    expect(mMock.mock.calls[0][0]).toMatch(/cat/);
-    expect(mMock.mock.calls[0][0]).toMatch(/stereum.yaml/);
+  const i = 0
+  expect(mMock.mock.calls[0][0]).toMatch(/cat/)
+  expect(mMock.mock.calls[0][0]).toMatch(/stereum.yaml/)
 
-    expect(mMock.mock.calls[1][0]).toMatch(/cat/);
-    expect(mMock.mock.calls[1][0]).toMatch(/release/);
+  expect(mMock.mock.calls[1][0]).toMatch(/cat/)
+  expect(mMock.mock.calls[1][0]).toMatch(/release/)
 
-    expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
+  expect(mMock.mock.calls[2][0]).toMatch(/apt install/)
 
-    expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/)
 
-    expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
-});
+  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/)
+})
 
 test('prepareStereumNode error playbook', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock
-        .mockReturnValueOnce({rc: 0, stdout: "stereum:\n  settings:\n    controls_install_path: /opt/tests"}) // find settings
-        .mockReturnValueOnce({rc: 0, stdout: "ubuntu"}) // find OS
-        .mockReturnValueOnce({rc: 0}) // delete ansible roles if exist
-        .mockReturnValueOnce({rc: 0}) // install pkg
-        .mockReturnValueOnce({rc: 0}) // install
-        .mockRejectedValue("connection interrupted"); // playbook ansible
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
+    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
+    .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0 }) // install
+    .mockRejectedValue('connection interrupted') // playbook ansible
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.findStereumSettings();
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't run setup playbook: Can't run playbook: connection interrupted");
-    });
+  await nodeConnection.findStereumSettings()
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't run setup playbook: Can't run playbook: connection interrupted")
+  })
 
-    expect(mMock.mock.calls.length).toBe(6);
+  expect(mMock.mock.calls.length).toBe(6)
 
-    expect(mMock.mock.calls[1][0]).toMatch(/cat/);
-    expect(mMock.mock.calls[1][0]).toMatch(/release/);
+  expect(mMock.mock.calls[1][0]).toMatch(/cat/)
+  expect(mMock.mock.calls[1][0]).toMatch(/release/)
 
-    expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
+  expect(mMock.mock.calls[2][0]).toMatch(/apt install/)
 
-    expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/)
 
-    expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
-});
+  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/)
+})
 
 test('prepareStereumNode failure playbook', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock
-    .mockReturnValueOnce({rc: 0, stdout: "stereum:\n  settings:\n    controls_install_path: /opt/tests"}) // find settings
-        .mockReturnValueOnce({rc: 0, stdout: "ubuntu"}) // find OS
-        .mockReturnValueOnce({rc: 0}) // delete ansible roles if exist
-        .mockReturnValueOnce({rc: 0}) // install pkg
-        .mockReturnValueOnce({rc: 0}) // install
-        .mockReturnValueOnce({rc: 1, stderr: "asdf"}); // playbook ansible
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
+    .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
+    .mockReturnValueOnce({ rc: 0 }) // install pkg
+    .mockReturnValueOnce({ rc: 0 }) // install
+    .mockReturnValueOnce({ rc: 1, stderr: 'asdf' }) // playbook ansible
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.findStereumSettings();
-    await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch(e => {
-        expect(e).toMatch("Can't run setup playbook: Failed running 'setup': asdf");
-    });
+  await nodeConnection.findStereumSettings()
+  await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
+    expect(e).toMatch("Can't run setup playbook: Failed running 'setup': asdf")
+  })
 
-    expect(mMock.mock.calls.length).toBe(6);
+  expect(mMock.mock.calls.length).toBe(6)
 
-    expect(mMock.mock.calls[1][0]).toMatch(/cat/);
-    expect(mMock.mock.calls[1][0]).toMatch(/release/);
+  expect(mMock.mock.calls[1][0]).toMatch(/cat/)
+  expect(mMock.mock.calls[1][0]).toMatch(/release/)
 
-    expect(mMock.mock.calls[2][0]).toMatch(/apt install/);
+  expect(mMock.mock.calls[2][0]).toMatch(/apt install/)
 
-    expect(mMock.mock.calls[4][0]).toMatch(/git checkout/);
+  expect(mMock.mock.calls[4][0]).toMatch(/git checkout/)
 
-    expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/);
-});
+  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/)
+})
 
 test('playbookStatus error', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockRejectedValue("error123");
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockRejectedValue('error123')
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    expect.assertions(1);
+  expect.assertions(1)
 
-    await nodeConnection.playbookStatus("ref-123").catch(e => {
-        expect(e).toMatch("Can't read playbook status 'ref-123': error123");
-    });
-});
+  await nodeConnection.playbookStatus('ref-123').catch(e => {
+    expect(e).toMatch("Can't read playbook status 'ref-123': error123")
+  })
+})
 
 test('playbookStatus failure', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({rc: 1, stderr: "err-1"})));
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 1, stderr: 'err-1' })))
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    expect.assertions(1);
+  expect.assertions(1)
 
-    await nodeConnection.playbookStatus("ref-123").catch(e => {
-        log.debug("playbookStatus failure:", e);
-        expect(e).toMatch("Failed reading status of ref 'ref-123': err-1");
-    });
-});
+  await nodeConnection.playbookStatus('ref-123').catch(e => {
+    log.debug('playbookStatus failure:', e)
+    expect(e).toMatch("Failed reading status of ref 'ref-123': err-1")
+  })
+})
 
 test('playbookStatus success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({rc: 0, stdout: "playbook-output"})));
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 0, stdout: 'playbook-output' })))
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    expect(await nodeConnection.playbookStatus("ref-123")).toMatch("playbook-output");
-});
+  expect(await nodeConnection.playbookStatus('ref-123')).toMatch('playbook-output')
+})
 
 test('runPlaybook extravars success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "playbook-output"});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'playbook-output' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    nodeConnection.settings = {
-        stereum: {
-            settings: {
-                controls_install_path: "/some/path",
-            },
-        },
-    };
+  nodeConnection.settings = {
+    stereum: {
+      settings: {
+        controls_install_path: '/some/path'
+      }
+    }
+  }
 
-    const playbookRunRef = await nodeConnection.runPlaybook("ref-abc", {stereum_var: "sowow"});
+  const playbookRunRef = await nodeConnection.runPlaybook('ref-abc', { stereum_var: 'sowow' })
 
-    expect(playbookRunRef.playbook).toMatch("ref-abc");
-    expect(playbookRunRef.playbookRunRef).toBeDefined();
-    expect(playbookRunRef.playbookRunRef).toHaveLength(36);
-    expect(mMock.mock.calls).toHaveLength(1);
-    expect(mMock.mock.calls[0][0]).toMatch(/sowow/);
+  expect(playbookRunRef.playbook).toMatch('ref-abc')
+  expect(playbookRunRef.playbookRunRef).toBeDefined()
+  expect(playbookRunRef.playbookRunRef).toHaveLength(36)
+  expect(mMock.mock.calls).toHaveLength(1)
+  expect(mMock.mock.calls[0][0]).toMatch(/sowow/)
 
-    log.info("call: ", mMock.mock.calls[0][0]);
-});
+  log.info('call: ', mMock.mock.calls[0][0])
+})
 
 test('runPlaybook error no settings', async () => {
-    const nodeConnection = new NodeConnection(null);
+  const nodeConnection = new NodeConnection(null)
 
-    await nodeConnection.runPlaybook("ref-abc", {stereum_var: "sowow"}).catch(e => {
-        expect(e).toMatch(/Settings not loaded/);
-    });
-});
+  await nodeConnection.runPlaybook('ref-abc', { stereum_var: 'sowow' }).catch(e => {
+    expect(e).toMatch(/Settings not loaded/)
+  })
+})
 
 test('listServicesConfigurations success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "foo.yaml\nbar.yaml\nxyz.yaml"});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'foo.yaml\nbar.yaml\nxyz.yaml' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    const list = await nodeConnection.listServicesConfigurations();
+  const list = await nodeConnection.listServicesConfigurations()
 
-    expect(list.length).toBe(3);
-    expect(list).toContain("foo.yaml");
-    expect(list).toContain("bar.yaml");
-    expect(list).toContain("xyz.yaml");
+  expect(list.length).toBe(3)
+  expect(list).toContain('foo.yaml')
+  expect(list).toContain('bar.yaml')
+  expect(list).toContain('xyz.yaml')
 
-    expect(mMock.mock.calls.length).toBe(1);
+  expect(mMock.mock.calls.length).toBe(1)
 
-    expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/);
-});
+  expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/)
+})
 
 test('listServicesConfigurations success empty', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: ""});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: '' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    const list = await nodeConnection.listServicesConfigurations();
+  const list = await nodeConnection.listServicesConfigurations()
 
-    expect(list.length).toBe(0);
+  expect(list.length).toBe(0)
 
-    expect(mMock.mock.calls.length).toBe(1);
+  expect(mMock.mock.calls.length).toBe(1)
 
-    expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/);
-});
+  expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/)
+})
 
 test('readServiceConfiguration success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: "id: foo-bar\nimage: stereum/lighthouse:0.0.1-123"});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: 'id: foo-bar\nimage: stereum/lighthouse:0.0.1-123' })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    const config = await nodeConnection.readServiceConfiguration("foo-bar");
+  const config = await nodeConnection.readServiceConfiguration('foo-bar')
 
-    expect(config).toBeDefined();
-    expect(config.id).toMatch(/foo-bar/);
-    expect(config.image).toMatch(/stereum\/lighthouse:0.0.1-123/);
+  expect(config).toBeDefined()
+  expect(config.id).toMatch(/foo-bar/)
+  expect(config.image).toMatch(/stereum\/lighthouse:0.0.1-123/)
 
-    expect(mMock.mock.calls.length).toBe(1);
+  expect(mMock.mock.calls.length).toBe(1)
 
-    expect(mMock.mock.calls[0][0]).toMatch(/sudo cat \/etc\/stereum\/services\/foo-bar.yaml/);
-});
+  expect(mMock.mock.calls[0][0]).toMatch(/sudo cat \/etc\/stereum\/services\/foo-bar.yaml/)
+})
 
 test('writeServiceConfiguration success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0 })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    await nodeConnection.writeServiceConfiguration({
-        id: "some-id",
-        user: "2000",
-        ports: ["0.0.0.0:9000:9000/tcp", "0.0.0.0:9000:9000/udp"]
-    });
+  await nodeConnection.writeServiceConfiguration({
+    id: 'some-id',
+    user: '2000',
+    ports: ['0.0.0.0:9000:9000/tcp', '0.0.0.0:9000:9000/udp']
+  })
 
-    expect(mMock.mock.calls.length).toBe(1);
+  expect(mMock.mock.calls.length).toBe(1)
 
-    expect(mMock.mock.calls[0][0]).toMatch(/2000/);
-    expect(mMock.mock.calls[0][0]).toMatch(/id: some-id/);
-    expect(mMock.mock.calls[0][0]).toMatch("/etc/stereum/services/some-id");
-    expect(mMock.mock.calls[0][0]).toMatch("- 0.0.0.0:9000:9000/tcp");
-    log.debug(mMock.mock.calls[0][0]);
-});
+  expect(mMock.mock.calls[0][0]).toMatch(/2000/)
+  expect(mMock.mock.calls[0][0]).toMatch(/id: some-id/)
+  expect(mMock.mock.calls[0][0]).toMatch('/etc/stereum/services/some-id')
+  expect(mMock.mock.calls[0][0]).toMatch('- 0.0.0.0:9000:9000/tcp')
+  log.debug(mMock.mock.calls[0][0])
+})
 
 const service_json = `{"Command":"\\"/opt/app/start/validator.sh\\"","CreatedAt":"2021-11-13 13:37:32 +0100 CET","ID":"fe70855b294617c9fc2bc927acdf3489d3a2d4fe866e3ad2733e61f73591cf2c","Image":"stereum/lighthouse:v2.0.1-47","Labels":"com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=stereum,com.docker.compose.project.working_dir=/opt/stereum/ethereum2-docker-compose,docker-slim.version=linux|Transformer|1.33.0|da7983050b8bf326c6f8e73ddce43a5b8d54da4b|2020-12-12_08:18:23PM,com.docker.compose.config-hash=42f09503e86b5e3fa084baa02eace7a86877f64f7a8650949f317c31491019de,com.docker.compose.service=validator,com.docker.compose.version=1.25.0,maintainer=theguys@stereum.net,com.docker.compose.project.config_files=docker-compose.yaml,docker-compose.override.yaml","LocalVolumes":"0","Mounts":"/opt/stereum/ethereum2-docker-compose/launchpad,/opt/stereum/ethereum2-docker-compose/wallets","Names":"stereum_validator_1","Networks":"stereum_default","Ports":"","RunningFor":"5 hours ago","Size":"0B (virtual 126MB)","State":"running","Status":"Up 5 hours"}
 {"Command":"\\"/run.sh\\"","CreatedAt":"2021-11-13 13:37:32 +0100 CET","ID":"57db4c9753023ab1b4236297b8498dbb602aa69fdec8c8424f2f80405e2292f0","Image":"grafana/grafana:7.3.10","Labels":"com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project=stereum,com.docker.compose.project.config_files=docker-compose.yaml,docker-compose.override.yaml,com.docker.compose.project.working_dir=/opt/stereum/ethereum2-docker-compose,com.docker.compose.service=grafana,com.docker.compose.version=1.25.0,com.docker.compose.config-hash=c3c9e29b4b9543b242ebcc705a703b01281381b5b3f21712aec2ea3a5e78a010","LocalVolumes":"0","Mounts":"/opt/stereum/ethereum2-docker-compose/config/grafana/grafana.ini,/opt/stereum/ethereum2-docker-compose/config/grafana/provisioning-lh,/opt/stereum/ethereum2-docker-compose/qrcode,/opt/stereum/ethereum2-docker-compose/data/grafana","Names":"stereum_grafana_1","Networks":"stereum_default","Ports":"127.0.0.1:3000-\\u003e3000/tcp","RunningFor":"5 hours ago","Size":"0B (virtual 187MB)","State":"running","Status":"Up 5 hours"}
 {"Command":"\\"/bin/prometheus --storage.tsdb.retention.time=7d --config.file=/etc/prometheus/prometheus.yml\\"","CreatedAt":"2021-11-13 13:37:30 +0100 CET","ID":"8de840a040fd2d8b504a09d87e962e61dfea0b8f8ab534c73c0c9bb412bd0d7b","Image":"prom/prometheus:v2.22.2","Labels":"com.docker.compose.container-number=1,com.docker.compose.oneoff=False,com.docker.compose.project.config_files=docker-compose.yaml,docker-compose.override.yaml,com.docker.compose.project.working_dir=/opt/stereum/ethereum2-docker-compose,com.docker.compose.service=prometheus,com.docker.compose.config-hash=8be7d1a61dbda6995e86a6ed5dfc6569b84f52630ae6011f77aa45b885aba214,com.docker.compose.project=stereum,com.docker.compose.version=1.25.0,maintainer=The Prometheus Authors \\u003cprometheus-developers@googlegroups.com\\u003e","LocalVolumes":"0","Mounts":"/opt/stereum/ethereum2-docker-compose/data/prometheus,/opt/stereum/ethereum2-docker-compose/config/prometheus/prometheus-lh.yaml","Names":"stereum_prometheus_1","Networks":"stereum_default","Ports":"127.0.0.1:9090-\\u003e9090/tcp","RunningFor":"5 hours ago","Size":"0B (virtual 168MB)","State":"running","Status":"Up 5 hours"}
-{"Command":"\\"/opt/app/start/beacon.sh\\"","CreatedAt":"2021-11-13 13:37:30 +0100 CET","ID":"a6556815714e6e5b7665554900bf5191d4a2e5c0622a192fa2b4791cef421e41","Image":"stereum/lighthouse:v2.0.1-47","Labels":"com.docker.compose.project.config_files=docker-compose.yaml,docker-compose.override.yaml,com.docker.compose.service=beacon,com.docker.compose.version=1.25.0,docker-slim.version=linux|Transformer|1.33.0|da7983050b8bf326c6f8e73ddce43a5b8d54da4b|2020-12-12_08:18:23PM,maintainer=theguys@stereum.net,com.docker.compose.config-hash=b1f8212fa43d8599971a8cc6d751dcff3537076cf01a0c62f7d5e7303701f8d4,com.docker.compose.project=stereum,com.docker.compose.project.working_dir=/opt/stereum/ethereum2-docker-compose,com.docker.compose.container-number=1,com.docker.compose.oneoff=False","LocalVolumes":"0","Mounts":"/opt/stereum/ethereum2-docker-compose/data/sigmaprime/lighthouse,/opt/stereum/ethereum2-docker-compose/data/sigmaprime/slasher","Names":"stereum_beacon_1","Networks":"stereum_default,stereum_stereum-admin","Ports":"127.0.0.1:5052-\\u003e5052/tcp, 0.0.0.0:9000-\\u003e9000/tcp, 0.0.0.0:9000-\\u003e9000/udp, :::9000-\\u003e9000/tcp, :::9000-\\u003e9000/udp","RunningFor":"5 hours ago","Size":"0B (virtual 126MB)","State":"running","Status":"Up 5 hours"}\n`;
+{"Command":"\\"/opt/app/start/beacon.sh\\"","CreatedAt":"2021-11-13 13:37:30 +0100 CET","ID":"a6556815714e6e5b7665554900bf5191d4a2e5c0622a192fa2b4791cef421e41","Image":"stereum/lighthouse:v2.0.1-47","Labels":"com.docker.compose.project.config_files=docker-compose.yaml,docker-compose.override.yaml,com.docker.compose.service=beacon,com.docker.compose.version=1.25.0,docker-slim.version=linux|Transformer|1.33.0|da7983050b8bf326c6f8e73ddce43a5b8d54da4b|2020-12-12_08:18:23PM,maintainer=theguys@stereum.net,com.docker.compose.config-hash=b1f8212fa43d8599971a8cc6d751dcff3537076cf01a0c62f7d5e7303701f8d4,com.docker.compose.project=stereum,com.docker.compose.project.working_dir=/opt/stereum/ethereum2-docker-compose,com.docker.compose.container-number=1,com.docker.compose.oneoff=False","LocalVolumes":"0","Mounts":"/opt/stereum/ethereum2-docker-compose/data/sigmaprime/lighthouse,/opt/stereum/ethereum2-docker-compose/data/sigmaprime/slasher","Names":"stereum_beacon_1","Networks":"stereum_default,stereum_stereum-admin","Ports":"127.0.0.1:5052-\\u003e5052/tcp, 0.0.0.0:9000-\\u003e9000/tcp, 0.0.0.0:9000-\\u003e9000/udp, :::9000-\\u003e9000/tcp, :::9000-\\u003e9000/udp","RunningFor":"5 hours ago","Size":"0B (virtual 126MB)","State":"running","Status":"Up 5 hours"}\n`
 
 test('listServices success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: service_json});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: service_json })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    const services = await nodeConnection.listServices();
+  const services = await nodeConnection.listServices()
 
-    expect(services).toHaveLength(4);
-    expect(services[0].ID).toMatch("fe70855b294617c9fc2bc927acdf3489d3a2d4fe866e3ad2733e61f73591cf2c");
-    expect(services[3].Names).toMatch("stereum_beacon_1");
+  expect(services).toHaveLength(4)
+  expect(services[0].ID).toMatch('fe70855b294617c9fc2bc927acdf3489d3a2d4fe866e3ad2733e61f73591cf2c')
+  expect(services[3].Names).toMatch('stereum_beacon_1')
 
-
-    expect(mMock.mock.calls.length).toBe(1);
-    expect(mMock.mock.calls[0][0]).toMatch(/docker ps/);
-});
+  expect(mMock.mock.calls.length).toBe(1)
+  expect(mMock.mock.calls[0][0]).toMatch(/docker ps/)
+})
 
 const service_details_json = `[
     {
@@ -880,31 +883,31 @@ const service_details_json = `[
             }
         }
     }
-]`;
+]`
 
 test('getServiceDetails success', async () => {
-    jest.mock('./SSHService');
-    const SSHService = require('./SSHService');
-    const mMock = jest.fn();
-    mMock.mockReturnValueOnce({rc: 0, stdout: service_details_json});
-    SSHService.SSHService.mockImplementation(() => {
-        return {
-            exec: mMock,
-        };
-    });
+  jest.mock('./SSHService')
+  const SSHService = require('./SSHService')
+  const mMock = jest.fn()
+  mMock.mockReturnValueOnce({ rc: 0, stdout: service_details_json })
+  SSHService.SSHService.mockImplementation(() => {
+    return {
+      exec: mMock
+    }
+  })
 
-    const nodeConnection = new NodeConnection(null);
-    nodeConnection.sshService = new SSHService.SSHService();
+  const nodeConnection = new NodeConnection(null)
+  nodeConnection.sshService = new SSHService.SSHService()
 
-    const details = await nodeConnection.getServiceDetails("a655");
+  const details = await nodeConnection.getServiceDetails('a655')
 
-    expect(details).toHaveLength(1);
-    expect(details[0].Id).toMatch("a6556815714e6e5b7665554900bf5191d4a2e5c0622a192fa2b4791cef421e41");
-    expect(details[0].Name).toMatch("stereum_beacon_1");
-    expect(details[0].NetworkSettings.Ports['9000/udp']).toHaveLength(2);
+  expect(details).toHaveLength(1)
+  expect(details[0].Id).toMatch('a6556815714e6e5b7665554900bf5191d4a2e5c0622a192fa2b4791cef421e41')
+  expect(details[0].Name).toMatch('stereum_beacon_1')
+  expect(details[0].NetworkSettings.Ports['9000/udp']).toHaveLength(2)
 
-    expect(mMock.mock.calls.length).toBe(1);
-    expect(mMock.mock.calls[0][0]).toMatch(/docker inspect a655/);
-});
+  expect(mMock.mock.calls.length).toBe(1)
+  expect(mMock.mock.calls[0][0]).toMatch(/docker inspect a655/)
+})
 
 // EOF

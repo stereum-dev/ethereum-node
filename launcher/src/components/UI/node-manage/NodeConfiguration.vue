@@ -71,57 +71,57 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import ControlService from "@/store/ControlService";
+import { mapGetters } from 'vuex'
+import ControlService from '@/store/ControlService'
 export default {
-  data() {
+  data () {
     return {
       modalActive: false,
       removeModal: false,
-      removeIsConfirmed: false,
-    };
+      removeIsConfirmed: false
+    }
   },
   computed: {
     ...mapGetters({
-      configData: "getConfigData",
-      servicePlugins: "getServicePlugins",
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-    }),
+      configData: 'getConfigData',
+      servicePlugins: 'getServicePlugins',
+      consensusItems: 'getConsensusItems',
+      executionItems: 'getExecutionItems',
+      validatorItems: 'getValidatorItems'
+    })
   },
   methods: {
-    openModal() {
-      this.modalActive = true;
+    openModal () {
+      this.modalActive = true
     },
-    closeModal() {
-      this.modalActive = false;
+    closeModal () {
+      this.modalActive = false
     },
-    openRemoveModal() {
-      this.removeModal = true;
+    openRemoveModal () {
+      this.removeModal = true
     },
-    cancelRemove() {
-      this.removeModal = false;
+    cancelRemove () {
+      this.removeModal = false
     },
-    removeConfirmation() {
-      this.removeModal = false;
-      this.removeIsConfirmed = true;
-      this.removeAllPlugins();
-      this.destroyNode();
+    removeConfirmation () {
+      this.removeModal = false
+      this.removeIsConfirmed = true
+      this.removeAllPlugins()
+      this.destroyNode()
     },
-    removeAllPlugins() {
+    removeAllPlugins () {
       if (this.removeIsConfirmed) {
-        this.servicePlugins.length = 0;
-        this.consensusItems.length = 0;
-        this.executionItems.length = 0;
-        this.validatorItems.length = 0;
+        this.servicePlugins.length = 0
+        this.consensusItems.length = 0
+        this.executionItems.length = 0
+        this.validatorItems.length = 0
       }
     },
-    destroyNode: async function(){
+    destroyNode: async function () {
       // console.log(await ControlService.destroy());
     }
-  },
-};
+  }
+}
 </script>
 <style scoped>
 .config-node {

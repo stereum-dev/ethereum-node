@@ -8,19 +8,19 @@
 export default {
   watch: {
     items: {
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
-    mainWindow() {
+    mainWindow () {
       window({
         width: 1024,
         height: 576,
-        resizable: false,
-      });
-    },
-  },
-};
+        resizable: false
+      })
+    }
+  }
+}
 </script>
 <style>
 body {

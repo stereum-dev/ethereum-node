@@ -6,9 +6,9 @@
 
 <script>
 export default {
-  name: "LangDialog",
-  props: ["open"],
-};
+  name: 'LangDialog',
+  props: ['open']
+}
 </script>
 
 <style scoped>

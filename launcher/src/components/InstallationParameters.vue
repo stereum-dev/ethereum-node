@@ -4,10 +4,10 @@
         <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
                 <h2><strong>Go Stereum!</strong></h2>
-                <p>Please enter the required parameters</p>                
+                <p>Please enter the required parameters</p>
                 <div class="row">
                     <div class="col-md-12 mx-0">
-                        <div id="msform">                                                        
+                        <div id="msform">
                             <fieldset>
                                 <div class="form-card">
                                     <h2 class="fs-title">Connection Information</h2>
@@ -18,17 +18,17 @@
                                     </b-form-checkbox>
                                     <input type="password" name="user" v-model="model.password" placeholder="Password" v-if="model.sshKeyAuth == false" />
                                     <input type="text" name="sshKeyAuthFile" v-model="model.keyfileLocation" placeholder="Keyfile Location" v-if="model.sshKeyAuth" />
-                                    <input type="text" name="stereum-release" v-model="model.stereumRelease"  placeholder="Stereum Release" />                                    
-                                </div>                                 
+                                    <input type="text" name="stereum-release" v-model="model.stereumRelease"  placeholder="Stereum Release" />
+                                </div>
                                 <div class="col-md-6">
                                   <button @click="connect" class="btn btn-xl btn-primary">Start Setup</button>
-                                </div>                                
+                                </div>
                                 <ul class="list-unstyled">
                                     <li v-for="tunnel in tunnels" :key="tunnel.name">
                                             <a :href="`http://localhost:${tunnel.localPort}/`">{{ tunnel.name }}</a>
                                     </li>
                                 </ul>
-                            </fieldset>                            
+                            </fieldset>
                         </div>
                     </div>
                 </div>
@@ -39,51 +39,47 @@
 </template>
 
 <script>
-import ControlService from '@/store/ControlService';
+import ControlService from '@/store/ControlService'
 
 export default {
-  name: "InstallationParameters",
-  data() {
-      return {
-        stereumVersions: {},
-        tunnels: [],
-      }      
+  name: 'InstallationParameters',
+  data () {
+    return {
+      stereumVersions: {},
+      tunnels: []
+    }
   },
   props: {
-    model: Object,
+    model: Object
   },
   methods: {
-      async connect(e) {
-        this.tunnels = [{ name: 'web-cc', localPort: 9081, dstPort: 8000 }];
-        try {
-            await ControlService.connect(this.model);
-        } catch (ex) {
-            console.log(ex);
-            this.$toasted.show('Error connecting to server! Level: ' + ex.level + " Message: " + ex.message);
-            return;
-        }
-        
-        const stereumStatus = await ControlService.inquire(this.model);
-
-        if (!stereumStatus.exists)
-            await ControlService.setup(stereumStatus.latestRelease);
-        else {
-            this.$toasted.show('Multiple Stereum Versions found!');
-            this.stereumVersions = stereumStatus;
-        }
-        
-        await ControlService.openTunnels(this.tunnels);
-        await ControlService.disconnect();
-        e.preventDefault();
+    async connect (e) {
+      this.tunnels = [{ name: 'web-cc', localPort: 9081, dstPort: 8000 }]
+      try {
+        await ControlService.connect(this.model)
+      } catch (ex) {
+        console.log(ex)
+        this.$toasted.show('Error connecting to server! Level: ' + ex.level + ' Message: ' + ex.message)
+        return
       }
+
+      const stereumStatus = await ControlService.inquire(this.model)
+
+      if (!stereumStatus.exists) { await ControlService.setup(stereumStatus.latestRelease) } else {
+        this.$toasted.show('Multiple Stereum Versions found!')
+        this.stereumVersions = stereumStatus
+      }
+
+      await ControlService.openTunnels(this.tunnels)
+      await ControlService.disconnect()
+      e.preventDefault()
+    }
   }
-};
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-
 
 #msform {
     text-align: center;
@@ -94,7 +90,7 @@ export default {
 #msform fieldset .form-card {
     background: white;
     border: 0 none;
-    border-radius: 0px;    
+    border-radius: 0px;
     padding: 20px 40px 30px 40px;
     box-sizing: border-box;
     width: 94%;
