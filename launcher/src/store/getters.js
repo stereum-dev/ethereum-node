@@ -1,7 +1,4 @@
 export default {
-  linkFlags_get (state) {
-    return state.linkFlags
-  },
   installation_get (state) {
     return state.installation
   },
@@ -14,7 +11,4 @@ export default {
   nodeSbVideo_get (state) {
     return state.configData_nodeSidebarVideo
   },
-  dialogIsVisible_get (state) {
-    return state.dialogIsVisible
-  }
 }
