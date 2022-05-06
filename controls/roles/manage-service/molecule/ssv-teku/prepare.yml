@@ -68,7 +68,7 @@
       - include_role:
           name: "fastsync"
 
-    # teku beacon & validator service
+    # teku beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"

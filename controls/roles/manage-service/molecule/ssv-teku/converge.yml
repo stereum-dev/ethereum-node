@@ -8,10 +8,6 @@
     ssv_service: f6a89270-7fa4-11ec-9378-fbd364d02350
 
   tasks:
-    # ssv operator keys
-    - include_role:
-        name: "ssv-key-generator"
-
     # ssv service
     - block:
       - set_fact:
@@ -38,3 +34,26 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
+
+    # ssv operator keys
+    - name: "Include ssv-key-generator"
+      include_role:
+        name: "ssv-key-generator"
+
+    - name: Get configuration's content in variable
+      slurp:
+        src: "/etc/stereum/services/{{ ssv_service }}.yaml"
+      register: config
+      become: yes
+
+    - name: Read service's configuration
+      set_fact:
+        config_content: "{{ config.content | b64decode | from_yaml }}"
+
+    - name: Write "sk" into SSV-Service's config
+      ansible.builtin.lineinfile:
+        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        regexp: '^OperatorPrivateKey:*'
+        insertafter: '^OperatorPrivateKey:*'
+        line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
+      become: yes

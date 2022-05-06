@@ -7,11 +7,26 @@
   register: ssv_keys
   changed_when: false
   become: yes
+
 - name: Parse keys
   set_fact:
     ssv:
       enabled: true
       pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
       sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
+
+- name: write ssv-sk
+  ansible.builtin.lineinfile:
+    path: "/etc/stereum/services/{{ ssv_service }}.yaml"
+    insertafter: '^- /opt/app*'
+    line: 'ssv_sk: "{{ ssv.sk }}"'
+  become: yes
+
+- name: write ssv-pk
+  ansible.builtin.lineinfile:
+    path: "/etc/stereum/services/{{ ssv_service }}.yaml"
+    insertafter: '^ssv_sk*'
+    line: 'ssv_pk: "{{ ssv.pk }}"'
+  become: yes
 
 # EOF
