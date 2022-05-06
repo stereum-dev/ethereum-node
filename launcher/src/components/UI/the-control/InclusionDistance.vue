@@ -1,6 +1,8 @@
 <template>
   <div class="parentStorage">
+  
     <div class="gauge-wrapper">
+    <div class="incTtl"><small>INCLUSION DISTANCE</small></div>
       <div class="gauge four rischio3">
         <div class="slice-colors">
           <div class="st slice-item"></div>
@@ -12,14 +14,33 @@
         <div class="gauge-center">
           <!-- <div class="label">625 GB FRER</div> -->
           <!-- <div class="number">STORAGE</div> -->
-          <div>69</div>
+          <div class="str">{{ strIns }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      strIns: 79,
+    };
+  },
+};
+</script>
+
 <style scoped>
+.str {
+  
+  border-radius: 5px;
+  font-size: 85%;
+  padding:2%;
+  font-weight: bold;
+  background: #33393E;
+}
+
 h1 {
   text-align: center;
 }
@@ -30,9 +51,20 @@ h1 {
 .gauge-wrapper {
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-left: 10px;
+  background: rgb(18, 18, 18); 
+  border-radius: 5px;
+  padding: 5%;
+  gap: 1%;
+}
+.incTtl{
+  background: #33393E;
+ width: 90%;
+  font-size: 50%;
+  border-radius: 5px;
 }
 
 .gauge {
@@ -52,7 +84,7 @@ h1 {
   content: "";
   width: 60%;
   height: 60%;
-  background: #15222e;
+  background: #336666;
   border-radius: 100px 100px 0 0 !important;
   position: absolute;
   box-shadow: 0 -13px 15px -10px rgba(0, 0, 0, 0.28);
@@ -62,7 +94,7 @@ h1 {
   z-index: 10;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .gauge-center .label,
@@ -98,7 +130,6 @@ h1 {
   box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.38);
   display: none;
   z-index: 9;
-
 }
 
 .four.rischio1 .needle {
@@ -120,7 +151,6 @@ h1 {
   animation: fourspeed4 2s 1 both;
   animation-delay: 2s;
   display: block;
-
 }
 
 .slice-colors {
@@ -129,7 +159,6 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .slice-colors .st {
