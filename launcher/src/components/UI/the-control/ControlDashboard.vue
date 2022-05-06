@@ -74,7 +74,8 @@
       <storage-counter class="validCntr"></storage-counter>
     </div> -->
     <dashboard-card class="validatorComment_cell">
-      <storage-counter class="validCntr"></storage-counter>
+      <inclusion-distance class="validCntr"></inclusion-distance>
+      <the-validator></the-validator>
     </dashboard-card>
 
     <!-- <div class="nodeStart"></div> -->
@@ -91,36 +92,41 @@
 </template>
 
 <script>
-import ColorBar from './ColorBar.vue'
-import LoliBar from './LoliBar.vue'
-import HddLoading from './HddLoading.vue'
-import SandClock from './SandClock.vue'
-import DashboardCard from './DashboardCard.vue'
-import StorageCounter from './StorageCounter.vue'
-import AmsterdamComponent from './AmsterdamComponent.vue'
+import ColorBar from "./ColorBar.vue";
+import LoliBar from "./LoliBar.vue";
+import HddLoading from "./HddLoading.vue";
+import SandClock from "./SandClock.vue";
+import DashboardCard from "./DashboardCard.vue";
+import InclusionDistance from "./InclusionDistance.vue";
+import AmsterdamComponent from "./AmsterdamComponent.vue";
+import TheValidator from "./TheValidator.vue";
 export default {
   components: {
     SandClock,
-    StorageCounter,
+    InclusionDistance,
     HddLoading,
     DashboardCard,
     ColorBar,
     LoliBar,
-    AmsterdamComponent
+    AmsterdamComponent,
+    TheValidator,
   },
-  data () {
+  data() {
     return {
       No: 100,
       rec: 1.12,
       tran: 1.12,
       ttlRec: 44.6,
-      ttlTrn: 44.6
-    }
-  }
-}
+      ttlTrn: 44.6,
+    };
+  },
+};
 </script>
 
 <style scoped>
+.validCntr {
+  width: 40%;
+}
 .recive {
   width: 30%;
   display: flex;
@@ -245,7 +251,7 @@ small {
   z-index: 20;
 }
 .nodeStart_cell {
-  width: 140%;
+  width: 135%;
   height: 140%;
 }
 .cpuCounter {
