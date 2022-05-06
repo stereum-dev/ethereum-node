@@ -36,9 +36,12 @@
                 - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
 
     # ssv operator keys
-    - name: "Include ssv-key-generator"
-      include_role:
-        name: "ssv-key-generator"
+    - block:
+      - name: "Include ssv-key-generator"
+        include_role:
+          name: "ssv-key-generator"
+      vars:
+        ssv_key_service: "{{ ssv_service }}"
 
     - name: Get configuration's content in variable
       slurp:
