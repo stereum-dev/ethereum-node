@@ -27,6 +27,17 @@
     assert:
       that:
         - ssv_config_file.stat.exists
+  - name: Check SSV keys
+    lineinfile:
+      dest: /etc/stereum/services/f6a89270-7fa4-11ec-9378-fbd364d02350.yaml
+      line: "{{ item }}"
+    register: ssv_keys
+    with_items:
+      - 'ssv_sk'
+      - 'ssv_pk'
+    failed_when: ssv_keys is not changed
+  - debug:
+      msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
     pause:
       minutes: 10
