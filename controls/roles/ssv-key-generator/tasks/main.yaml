@@ -16,7 +16,7 @@
 
 - name: Write ssv-secret/public key
   blockinfile:
-    path: "/etc/stereum/services/{{ ssv_service }}.yaml"
+    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
     block: |
         ssv_sk: "{{ ssv.sk }}"
         ssv_pk: "{{ ssv.pk }}"
