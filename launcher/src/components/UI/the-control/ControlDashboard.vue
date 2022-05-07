@@ -22,19 +22,9 @@
     <dashboard-card class="nodeStart_cell"
       ><amsterdam-component></amsterdam-component
     ></dashboard-card>
-    <dashboard-card class="cpuUsage_cell">
-      <router-link to="/cpu">
-        <div class="cpuCounter">
-          <div class="circleCounter">
-            <span class="textCounter">{{ No }}</span>
-          </div>
-        </div>
-        <div class="chart-img">
-          <img
-            class="cpuChartAnim"
-            src="../../../../public/img/icon/animChart.svg"
-          />
-        </div>
+    <dashboard-card class="peerConnection_cell">
+      <router-link class="link" to="/cpu">
+        <peer-to-peer></peer-to-peer>
       </router-link>
     </dashboard-card>
     <!-- <div class="networkCheck"></div> -->
@@ -102,6 +92,7 @@ import InclusionDistance from "./InclusionDistance.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheValidator from "./TheValidator.vue";
 import TheRam from "./TheRam.vue";
+import PeerToPeer from "./PeerToPeer.vue";
 export default {
   components: {
     SandClock,
@@ -114,6 +105,7 @@ export default {
     TheValidator,
     MachineName,
     TheRam,
+    PeerToPeer,
   },
   data() {
     return {
@@ -128,6 +120,11 @@ export default {
 </script>
 
 <style scoped>
+.link {
+  text-decoration: none;
+  color: #eee;
+  font-size: 20%;
+}
 .validCntr {
   width: 40%;
 }
@@ -232,99 +229,14 @@ small {
   align-items: center;
   box-sizing: border-box;
 }
-.cpuUsage_cell {
+.peerConnection_cell {
   grid-column: 1/2;
   grid-row: 3/4;
 }
 
-.chart-img {
-  width: 60%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.chart-img img {
-  width: 80%;
-  height: 90%;
-}
-.textCounter {
-  color: rgb(146, 146, 146);
-  font-size: 1rem;
-  font-weight: 600;
-  z-index: 20;
-}
 .nodeStart_cell {
   width: 135%;
   height: 140%;
-}
-.cpuCounter {
-  width: 40%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.circleCounter {
-  width: 51%;
-  height: 70%;
-  border: 4px solid rgb(77, 77, 77);
-  box-shadow: 0 1px 5px 1px rgb(18, 18, 18);
-  position: relative;
-  background: #000;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.circleCounter::before {
-  content: "";
-  /* box-shadow: inset 1px 1px 5px 1px rgb(227, 198, 141); */
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  bottom: 0;
-  left: 0;
-  animation: wipe 10s cubic-bezier(0.2, 0.6, 0.8, 0.4) forwards;
-}
-@keyframes wipe {
-  0% {
-    height: 0;
-    background: rgb(13, 84, 13);
-  }
-  5% {
-    height: 5%;
-    background: linear-gradient(rgb(13, 84, 13), rgb(12, 114, 12), #138a13);
-  }
-  10% {
-    height: 10%;
-    background: linear-gradient(#158e11, #1da018, #1fb11a, #6bab17);
-  }
-  25% {
-    height: 30%;
-    background: linear-gradient(#5e9b0f, #6fa519, #69ae10, #7da105);
-  }
-  50% {
-    height: 50%;
-    background: linear-gradient(#90ce25, #abdf1c, #a7bc20, #c0cf1b);
-  }
-  75% {
-    height: 75%;
-    background: linear-gradient(#efa418, #fcd616, #eae728, #c0cf1b);
-  }
-  100% {
-    height: 100%;
-    background: linear-gradient(
-      #c81a07,
-      #f63f0d,
-      #f85c08,
-      #f18214,
-      #efa418,
-      #fcd616
-    );
-  }
 }
 
 .networkUsage_cell {
