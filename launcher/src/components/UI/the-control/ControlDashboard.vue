@@ -1,7 +1,7 @@
 <template>
   <div class="ctrlParent">
-    <div class="machineName_cell">machineName_cell</div>
-    <div class="nodeProcess_cell">nodeProcess_cell</div>
+    <div class="machineName_cell"><machine-name></machine-name></div>
+    <div class="the-ram"><the-ram></the-ram></div>
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
     </div>
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import MachineName from "./MachineName.vue";
 import ColorBar from "./ColorBar.vue";
 import LoliBar from "./LoliBar.vue";
 import HddLoading from "./HddLoading.vue";
@@ -100,6 +101,7 @@ import DashboardCard from "./DashboardCard.vue";
 import InclusionDistance from "./InclusionDistance.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheValidator from "./TheValidator.vue";
+import TheRam from "./TheRam.vue";
 export default {
   components: {
     SandClock,
@@ -110,6 +112,8 @@ export default {
     LoliBar,
     AmsterdamComponent,
     TheValidator,
+    MachineName,
+    TheRam,
   },
   data() {
     return {
