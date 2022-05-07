@@ -1,6 +1,6 @@
 <template>
   <div class="ctrlParent">
-    <div class="machineName_cell">machineName_cell</div>
+    <div class="machineName_cell"><machine-name></machine-name></div>
     <div class="nodeProcess_cell">nodeProcess_cell</div>
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
@@ -92,6 +92,7 @@
 </template>
 
 <script>
+import MachineName from "./MachineName.vue";
 import ColorBar from "./ColorBar.vue";
 import LoliBar from "./LoliBar.vue";
 import HddLoading from "./HddLoading.vue";
@@ -110,6 +111,7 @@ export default {
     LoliBar,
     AmsterdamComponent,
     TheValidator,
+    MachineName,
   },
   data() {
     return {
