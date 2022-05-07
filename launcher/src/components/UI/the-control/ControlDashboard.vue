@@ -1,7 +1,7 @@
 <template>
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
-    <div class="nodeProcess_cell">nodeProcess_cell</div>
+    <div class="the-ram"><the-ram></the-ram></div>
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
     </div>
@@ -101,6 +101,7 @@ import DashboardCard from "./DashboardCard.vue";
 import InclusionDistance from "./InclusionDistance.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheValidator from "./TheValidator.vue";
+import TheRam from "./TheRam.vue";
 export default {
   components: {
     SandClock,
@@ -112,6 +113,7 @@ export default {
     AmsterdamComponent,
     TheValidator,
     MachineName,
+    TheRam,
   },
   data() {
     return {

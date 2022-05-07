@@ -23,6 +23,12 @@
   position: relative;
   z-index: 2;
   width: 80%;
+  padding-left: 6%;
+  outline: none;
+}
+.machineNam:hover,
+.machineNam:active {
+  outline: none;
 }
 .ubuntuIcon {
   display: flex;
