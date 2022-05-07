@@ -1,90 +1,58 @@
 <template>
   <div class="task-parent">
     <div class="task-icon" @click="taskModalHandler">
-      <img
-        v-if="installIsActive || installInProgress"
-        src="../../../../public/img/icon/task-manager-icons/task-manager-icon.png"
-        alt=""
-      />
-      <img
-        v-if="installFailed"
-        src="../../../../public/img/icon/task-manager-icons/task-red-icon.png"
-        alt=""
-      />
-      <img
-        v-if="installedSuccessfully"
-        src="../../../../public/img/icon/task-manager-icons/task-green-icon.png"
-        alt=""
-      />
+      <img :src="mainTaskIcon" alt="icon" />
     </div>
     <div class="task-modal-box" v-if="isTaskModalActive">
       <div class="task-table">
-        <div class="table-content">
+        <div class="table-content" id="table-content">
           <div
             class="table-row"
             v-for="(item, index) in pluginsInstalling"
             :key="index"
           >
-            <div class="table-row-active" v-if="installIsActive">
-              <div class="active-icon">
-                <span class="loader"></span>
-              </div>
-              <span>{{ item.name }}</span>
-
-              <div class="drop-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                  alt=""
-                />
-              </div>
-            </div>
-            <div class="table-row-progress" v-if="installInProgress">
+            <div class="table-row-progress" v-if="item.status == 'progress'">
               <div class="progress-icon"></div>
               <span>{{ item.name }}</span>
 
-              <div class="drop-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                  alt=""
-                />
-              </div>
+              <drop-subtasks
+                :openSubTasks="openSubTasksHandler"
+              ></drop-subtasks>
             </div>
-            <div class="table-row-success" v-if="installedSuccessfully">
-              <div class="success-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/checkf.png"
-                  alt=""
-                />
-              </div>
-              <span>{{ item.name }}</span>
-              <div class="drop-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                  alt=""
-                />
-                <img
-                  v-if="openTaskActive"
-                  src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
-                  alt=""
-                />
-              </div>
-            </div>
-            <div class="table-row-faild" v-if="installFailed">
-              <div class="faild-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/close2.png"
-                  alt=""
-                />
+            <div class="table-row-active" v-if="item.status == 'active'">
+              <div class="active-icon">
+                <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
 
-              <div class="drop-icon">
-                <img
-                  src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                  alt=""
-                />
-              </div>
+              <drop-subtasks
+                :openSubTasks="openSubTasksHandler"
+              ></drop-subtasks>
             </div>
+            <div class="table-row-success" v-if="item.status == 'success'">
+              <div class="success-icon">
+                <img :src="installIconSrc" alt="icon" />
+              </div>
+              <span>{{ item.name }}</span>
+
+              <drop-subtasks
+                :openSubTasks="openSubTasksHandler"
+              ></drop-subtasks>
+            </div>
+            <div class="table-row-failed" v-if="item.status == 'failed'">
+              <div class="failed-icon">
+                <img :src="installIconSrc" alt="icon" />
+              </div>
+              <span>{{ item.name }}</span>
+
+              <drop-subtasks
+                :openSubTasks="openSubTasksHandler"
+              ></drop-subtasks>
+            </div>
+            <sub-tasks
+              :subTasks="item?.subTasks"
+              v-if="isSubTasksActive"
+            ></sub-tasks>
           </div>
         </div>
       </div>
@@ -98,49 +66,111 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
+import SubTasks from "./SubTasks.vue";
+import DropSubtasks from "./DropTasks.vue";
 export default {
+  components: { SubTasks, DropSubtasks },
   data() {
     return {
-      installIsActive: true,
-      installInProgress: false,
-      installedSuccessfully: false,
-      installFailed: false,
       isTaskModalActive: false,
-      openTaskActive: false,
-      closeTaskActive: false,
+      isSubTasksActive: false,
       pluginsInstalling: [
         {
           name: "Geth",
-          installingTask: "TASK ACTIVE",
-          queueTask: "TASK IN QUE",
-          successfullTask: "TASK SUCCEEDED",
-          failedTask: "TASK FAILED",
-          subTasks: {
-            installingSubTask: "SUB TASK ACTIVE",
-            queueSubTask: "SUB TASK IN QUE",
-            successfullSubTask: "SUB TASK SUCCEEDED",
-            failedSubTask: "SUB TASK FAILED",
-          },
+          status: "active",
+          statusLabel: "TASK ACTIVE",
+          subTasks: [
+            {
+              status: "active",
+              statusLabel: "SUB TASK ACTIVE",
+            },
+          ],
         },
         {
           name: "Nimbus",
-          installingTask: "TASK ACTIVE",
-          queueTask: "TASK IN QUE",
-          successfullTask: "TASK SUCCEEDED",
-          failedTask: "TASK FAILED",
-          subTasks: {
-            installingSubTask: "SUB TASK ACTIVE",
-            queueSubTask: "SUB TASK IN QUE",
-            successfullSubTask: "SUB TASK SUCCEEDED",
-            failedSubTask: "SUB TASK FAILED",
-          },
+          status: "success",
+          statusLabel: "TASK SUCCEEDED",
+          subTasks: [
+            {
+              status: "success",
+              statusLabel: "SUB TASK SUCCEEDED",
+            },
+          ],
+        },
+        {
+          name: "Lighthouse",
+          status: "failed",
+          statusLabel: "TASK FAILED",
+          subTasks: [
+            {
+              status: "failed",
+              statusLabel: "SUB TASK FAILED",
+            },
+          ],
+        },
+        {
+          name: "Grafana",
+          status: "progress",
+          statusLabel: "TASK IN QUEUE",
+          subTasks: [
+            {
+              status: "progress",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
+          ],
         },
       ],
+      taskManagerIcons: [
+        {
+          progressIcon: require("../../../../public/img/icon/task-manager-icons/task-manager-icon.png"),
+        },
+        {
+          activeIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
+        },
+        {
+          successIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
+        },
+        {
+          failedIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
+        },
+      ],
+      installIconSrc: {
+        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
+
+        successInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
+
+        failedInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
+      },
     };
   },
   mounted() {
     this.installationfailedHandler();
+  },
+  computed: {
+    mainTaskIcon() {
+      this.pluginsInstalling.forEach((plugin) => {
+        if (plugin.status == "failed") {
+          return this.taskManagerIcons.failedIcon;
+        } else if (plugin.status == "active") {
+          return this.taskManagerIcons.activeIcon;
+        } else if (plugin.status == "success") {
+          return this.taskManagerIcons.successIcon;
+        } else {
+          return this.taskManagerIcons.progressIcon;
+        }
+      });
+    },
+    // installImgSrc(item) {
+    //   if (item.status == "failed") {
+    //     return this.installIconSrc.failedInstallIcon;
+    //   } else if (item.status == "active") {
+    //     return this.installIconSrc.activeInstallIcon;
+    //   } else if (item.status == "success") {
+    //     return this.installIconSrc.successInstallIcon;
+    //   } else {
+    //     return;
+    //   }
+    // },
   },
   methods: {
     taskModalHandler() {
@@ -157,6 +187,9 @@ export default {
         this.installedSuccessfully = true;
       }, 10000);
     },
+    openSubTasksHandler() {
+      this.isSubTasksActive = !this.isSubTasksActive;
+    },
   },
 };
 </script>
@@ -167,6 +200,7 @@ export default {
   position: fixed;
   left: 4px;
   bottom: 0;
+  z-index: 99;
 }
 .task-icon {
   width: 100%;
@@ -174,7 +208,7 @@ export default {
   cursor: pointer;
 }
 .task-icon img {
-  width: 70%;
+  width: 50%;
 }
 .task-modal-box {
   width: 25%;
@@ -201,9 +235,12 @@ export default {
   height: 80%;
   opacity: 0.99;
 }
-.table-content::webkit-scrollbar {
+.task-table .table-content::webkit-scrollbar {
+  visibility: hidden;
+  display: none;
   width: 1px;
 }
+
 .task-table .table-content {
   width: 100%;
   height: 100%;
@@ -222,7 +259,7 @@ export default {
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
 }
-.table-content .table-row-faild {
+.table-content .table-row-failed {
   width: 100%;
   height: 100%;
   border-radius: 20px;
@@ -258,7 +295,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.table-row-faild .faild-icon,
+.table-row-failed .failed-icon,
 .table-row-success .success-icon,
 .table-row-active .active-icon,
 .table-row-progress .progress-icon {
@@ -273,54 +310,38 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.faild-icon img {
-  width: 84%;
-  height: 84%;
-}
+.failed-icon img,
+.active-icon img,
 .success-icon img {
   width: 84%;
   height: 84%;
 }
-.active-icon .loader {
+/* .active-icon img {
   border: 2px solid transparent;
   border-radius: 50%;
   border-top: 2px solid #ffffff;
   border-right: 2px solid #ffffff;
-  /* border-bottom: 2px solid #ffffff; */
-  /* border-left: 2px solid #ffffff; */
   width: 68%;
   height: 64%;
   animation: spin 2s linear infinite;
-}
+} */
 
-@keyframes spin {
+/* @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
-}
+} */
 
-.drop-icon {
-  width: 7%;
-  height: 70%;
-  margin-right: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.drop-icon img {
-  width: 100%;
-  height: 100%;
-}
-.table-row-faild span,
+.table-row-failed span,
 .table-row-active span,
 .table-row-success span,
 .table-row-progress span {
   width: 70%;
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: rgb(53, 53, 53);
 }
