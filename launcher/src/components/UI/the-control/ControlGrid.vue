@@ -44,31 +44,31 @@
       <control-alert></control-alert>
     </div>
     <div class="footer"></div>
-    <task-manager class="control-task__manager"></task-manager>
+    <task-manager></task-manager>
   </div>
 </template>
 
 <script>
-import ControlDashboard from './ControlDashboard.vue'
-import ControlPlugins from './ControlPlugins.vue'
-import ControlPanel from './ControlPanel.vue'
-import ControlAlert from './ControlAlert.vue'
-import TaskManager from '../task-manager/TaskManager.vue'
+import ControlDashboard from "./ControlDashboard.vue";
+import ControlPlugins from "./ControlPlugins.vue";
+import ControlPanel from "./ControlPanel.vue";
+import ControlAlert from "./ControlAlert.vue";
+import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     ControlDashboard,
     ControlPlugins,
     ControlPanel,
     ControlAlert,
-    TaskManager
-  }
-}
+    TaskManager,
+  },
+};
 </script>
 
 <style scoped>
 .ctrGridParent {
   display: grid;
-  width: 99.1%;
+  width: 99.2%;
   height: 90%;
   background-color: #232323;
   border: 4px solid #979797;

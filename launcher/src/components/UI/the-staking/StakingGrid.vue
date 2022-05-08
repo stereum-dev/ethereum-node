@@ -32,7 +32,7 @@ export default {
 <style scoped>
 .staking-parent {
   width: 100%;
-  height: 95%;
+  height: 95.2%;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -53,11 +53,13 @@ export default {
   overflow: hidden;
 }
 .staking-black-bg {
-  width: 100%;
-  height: 95.7%;
+  width: 99.2%;
+  height: 96%;
   background-color: #000000;
   border: 4px solid #979797;
   border-radius: 15px 15px 10px 10px;
+  position: absolute;
+  bottom: 0px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 30% 32% 33% 5%;

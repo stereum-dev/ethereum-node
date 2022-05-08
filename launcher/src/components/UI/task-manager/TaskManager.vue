@@ -1,65 +1,61 @@
 <template>
   <div class="task-parent">
     <div class="task-icon" @click="taskModalHandler">
-      <img
-        src="../../../../public/img/icon/task-manager-icons/task-manager-icon.png"
-        alt=""
-      />
+      <img :src="mainTaskIcon" alt="icon" />
     </div>
     <div class="task-modal-box" v-if="isTaskModalActive">
       <div class="task-table">
         <div class="table-content">
-          <div class="table-row-faild">
-            <div class="faild-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/close2.png"
-                alt=""
-              />
-            </div>
-            <span>Task #13</span>
+          <div
+            class="table-row"
+            v-for="(item, index) in pluginsInstalling"
+            :key="index"
+          >
+            <sub-tasks
+              v-if="item.showDropDown"
+              :subTasks="item?.subTasks"
+            ></sub-tasks>
+            <div class="table-row-progress" v-if="item.status == 'progress'">
+              <div class="progress-icon"></div>
+              <span>{{ item.name }}</span>
 
-            <div class="drop-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                alt=""
-              />
+              <drop-subtasks
+                :item="item"
+                @droptaskActive="openDropDown"
+              ></drop-subtasks>
             </div>
-          </div>
-          <div class="table-row-success">
-            <div class="success-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/checkf.png"
-                alt=""
-              />
-            </div>
-            <span>Task #13</span>
-            <div class="drop-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                alt=""
-              />
-              <img
-                v-if="openTaskActive"
-                src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
-                alt=""
-              />
-            </div>
-          </div>
-          <div class="table-row-progress">
-            <div class="progress-icon">
-              <!-- <img
-                src="../../../../public/img/icon/task-manager-icons/loading5.png"
-                alt=""
-              /> -->
-              <span class="loader"></span>
-            </div>
-            <span>Task #13</span>
+            <div class="table-row-active" v-if="item.status == 'active'">
+              <div class="active-icon">
+                <img :src="installIconSrc.activeInstallIcon" alt="icon" />
+              </div>
+              <span>{{ item.name }}</span>
 
-            <div class="drop-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
-                alt=""
-              />
+              <drop-subtasks
+                :item="item"
+                @droptaskActive="openDropDown"
+              ></drop-subtasks>
+            </div>
+            <div class="table-row-success" v-if="item.status == 'success'">
+              <div class="success-icon">
+                <img :src="installIconSrc.successInstallIcon" alt="icon" />
+              </div>
+              <span>{{ item.name }}</span>
+
+              <drop-subtasks
+                :item="item"
+                @droptaskActive="openDropDown"
+              ></drop-subtasks>
+            </div>
+            <div class="table-row-failed" v-if="item.status == 'failed'">
+              <div class="failed-icon">
+                <img :src="installIconSrc.failedInstallIcon" alt="icon" />
+              </div>
+              <span>{{ item.name }}</span>
+
+              <drop-subtasks
+                :item="item"
+                @droptaskActive="openDropDown"
+              ></drop-subtasks>
             </div>
           </div>
         </div>
@@ -74,19 +70,118 @@
   </div>
 </template>
 <script>
+import SubTasks from "./SubTasks.vue";
+import DropSubtasks from "./DropTasks.vue";
 export default {
-  data () {
+  components: { SubTasks, DropSubtasks },
+  data() {
     return {
       isTaskModalActive: false,
-      openTaskActive: false
-    }
+      showDropDownList: false,
+      pluginsInstalling: [
+        {
+          name: "Geth",
+          status: "active",
+          statusLabel: "TASK ACTIVE",
+          showDropDown: false,
+          subTasks: [
+            {
+              status: "progress",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
+            {
+              status: "active",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
+            {
+              status: "success",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
+          ],
+        },
+        // {
+        //   name: "Nimbus",
+        //   status: "success",
+        //   statusLabel: "TASK SUCCEEDED",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "success",
+        //       statusLabel: "SUB TASK SUCCEEDED",
+        //     },
+        //   ],
+        // },
+        // {
+        //   name: "Lighthouse",
+        //   status: "failed",
+        //   statusLabel: "TASK FAILED",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "failed",
+        //       statusLabel: "SUB TASK FAILED",
+        //     },
+        //   ],
+        // },
+        // {
+        //   name: "Grafana",
+        //   status: "progress",
+        //   statusLabel: "TASK IN QUEUE",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "progress",
+        //       statusLabel: "SUB TASK IN QUEUE",
+        //     },
+        //   ],
+        // },
+      ],
+      taskManagerIcons: {
+        progressIcon: require("../../../../public/img/icon/task-manager-icons/task-manager-icon.png"),
+        activeIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
+        successIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
+        failedIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
+      },
+      installIconSrc: {
+        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"),
+        successInstallIcon: require("../../../../public/img/icon/task-manager-icons/check3.png"),
+        failedInstallIcon: require("../../../../public/img/icon/task-manager-icons/close3.png"),
+      },
+    };
+  },
+  mounted() {
+    // this.installationfailedHandler();
+  },
+  computed: {
+    mainTaskIcon(item) {
+      if (item.status == "failed") {
+        return this.taskManagerIcons.failedIcon;
+      } else if (item.status == "active") {
+        return this.taskManagerIcons.activeIcon;
+      } else if (item.status == "success") {
+        return this.taskManagerIcons.successIcon;
+      } else {
+        return this.taskManagerIcons.progressIcon;
+      }
+    },
   },
   methods: {
-    taskModalHandler () {
-      this.isTaskModalActive = !this.isTaskModalActive
-    }
-  }
-}
+    taskModalHandler() {
+      this.isTaskModalActive = !this.isTaskModalActive;
+    },
+    openDropDown(item) {
+      item.showDropDown = !item.showDropDown;
+    },
+    // installationfailedHandler(item) {
+    //   setTimeout(() => {
+    //     item.status = "progress";
+    //   }, 5000);
+    //   setTimeout(() => {
+    //     item.status = "active";
+    //   }, 10000);
+    // },
+  },
+};
 </script>
 <style scoped>
 .task-parent {
@@ -94,14 +189,19 @@ export default {
   max-height: 55px;
   position: fixed;
   left: 4px;
-  bottom: 0;
+  bottom: 4px;
+  z-index: 99;
 }
 .task-icon {
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
 }
 .task-icon img {
-  width: 70%;
+  width: 60%;
+  height: 65%;
 }
 .task-modal-box {
   width: 25%;
@@ -112,10 +212,9 @@ export default {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  /* opacity: 0.9; */
   opacity: 0.99;
   position: fixed;
-  left:0;
+  left: 4px;
   bottom: 4px;
   z-index: -1;
   display: flex;
@@ -128,9 +227,12 @@ export default {
   height: 80%;
   opacity: 0.99;
 }
-.table-content::webkit-scrollbar {
+.task-table .table-content::webkit-scrollbar {
+  visibility: hidden;
+  display: none;
   width: 1px;
 }
+
 .task-table .table-content {
   width: 100%;
   height: 100%;
@@ -141,47 +243,57 @@ export default {
   align-items: center;
   padding-top: 5px;
 }
-.table-content .table-row-faild {
+.table-content .table-row {
   width: 95%;
   height: 12%;
   border: 2px solid #888888;
   border-radius: 20px;
-  background-color: #de2727;
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
+  position: relative;
+}
+.table-content .table-row-failed {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: #de2727;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .table-content .table-row-success {
-  width: 95%;
-  height: 12%;
-  border: 2px solid #888888;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   background-color: rgb(126, 190, 24);
-  box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .table-content .table-row-progress {
-  width: 95%;
-  height: 12%;
-  border: 2px solid #888888;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   background-color: rgb(104, 104, 104);
-  box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
-  margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.table-row-faild .faild-icon,
+.table-content .table-row-active {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  background-color: rgb(92, 182, 251);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-row-failed .failed-icon,
 .table-row-success .success-icon,
+.table-row-active .active-icon,
 .table-row-progress .progress-icon {
-  width: 5%;
-  height: 63%;
+  width: 6%;
+  height: 70%;
   /* background-color: #292929; */
   background-color: #323232;
   border: 2px solid #444444;
@@ -191,72 +303,58 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.faild-icon img {
-  width: 84%;
-  height: 84%;
-}
+.failed-icon img,
 .success-icon img {
   width: 84%;
   height: 84%;
 }
-.progress-icon .loader {
+.active-icon img {
+  width: 118%;
+  height: 104%;
+}
+/* .active-icon img {
   border: 2px solid transparent;
-  border-radius: 100px;
-  /* border-top: 2px solid #348fff;
-  border-right: 2px solid #348fff;
-  border-bottom: 2px solid #348fff; */
-  /* border-top: 3px solid #eba817;
-  border-right: 3px solid #eba817;
-  border-bottom: 3px solid #eba817; */
+  border-radius: 50%;
   border-top: 2px solid #ffffff;
   border-right: 2px solid #ffffff;
-  border-bottom: 2px solid #ffffff;
-  width: 63%;
-  height: 60%;
+  width: 68%;
+  height: 64%;
   animation: spin 2s linear infinite;
-}
+} */
 
-@keyframes spin {
+/* @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
-}
+} */
 
-.drop-icon {
-  width: 7%;
-  height: 70%;
-  margin-right: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.drop-icon img {
-  width: 100%;
-  height: 100%;
-}
-.table-row-faild span,
+.table-row-failed span,
+.table-row-active span,
 .table-row-success span,
 .table-row-progress span {
   width: 70%;
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: rgb(53, 53, 53);
 }
 .list-cleaner {
-  width: 100%;
-  height: 16%;
-  background-color: rgb(29, 29, 29);
+  width: 97%;
+  height: 12%;
+  border: 3px solid #444444;
+  border-radius: 7px;
+  background-color: rgb(97, 97, 97);
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 .list-cleaner img {
-  width: 12%;
-  height: 90%;
+  width: 10%;
+  height: 97%;
   margin-right: 1px;
+  cursor: pointer;
 }
 </style>
