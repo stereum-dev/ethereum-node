@@ -69,19 +69,12 @@
     </dashboard-card>
 
     <!-- <div class="nodeStart"></div> -->
-    <dashboard-card class="nodeStart"
-      ><div class="imgCpu">
-        <img class="cpuImg" src="../../../../public/img/icon/cpuIcon.svg" />
-      </div>
-      <div class="colorBar">
-        <color-bar class="colorBarComp"></color-bar>
-        <loli-bar class="loli"></loli-bar>
-      </div>
-    </dashboard-card>
+    <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
   </div>
 </template>
 
 <script>
+import TheCpu from "./TheCpu.vue";
 import MachineName from "./MachineName.vue";
 import ColorBar from "./ColorBar.vue";
 import LoliBar from "./LoliBar.vue";
@@ -106,6 +99,7 @@ export default {
     MachineName,
     TheRam,
     PeerToPeer,
+    TheCpu,
   },
   data() {
     return {
