@@ -20,36 +20,8 @@
       </router-link>
     </dashboard-card>
     <!-- <div class="networkCheck"></div> -->
-    <dashboard-card class="networkCheck">
-      <div class="wifiIco">
-        <img
-          class="wifiImg"
-          src="../../../../public/img/icon/wifiIcon.svg"
-          alt=""
-        />
-      </div>
-      <div class="recive">
-        <span class="rec">{{ rec }}</span>
-        <span class="lblMbit">mbit</span>
-        <small>Total Received</small>
-        <div class="arrowPart">
-          <div class="arrowIco">
-            <img src="../../../../public/img/icon/arrows/arrowOrange.png" />
-          </div>
-          {{ ttlRec }} <span class="ttlRec">GB</span>
-        </div>
-      </div>
-      <div class="transmit">
-        <span class="tran">{{ tran }}</span>
-        <span class="lblMbit">mbit</span>
-        <small>Total Transmietted</small>
-        <div class="arrowPart">
-          <div class="arrowIco">
-            <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
-          </div>
-          {{ ttlTrn }} <span class="ttlRec">GB</span>
-        </div>
-      </div>
+    <dashboard-card class="networkCheck"> 
+    <the-network></the-network>
     </dashboard-card>
 
     <!-- <div class="validatorComment_cell">
@@ -76,6 +48,7 @@ import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheValidator from "./TheValidator.vue";
 import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
+import TheNetwork from "./TheNetwork.vue";
 export default {
   components: {
     SandClock,
@@ -88,15 +61,7 @@ export default {
     TheRam,
     PeerToPeer,
     TheCpu,
-  },
-  data() {
-    return {
-      No: 100,
-      rec: 1.12,
-      tran: 1.12,
-      ttlRec: 44.6,
-      ttlTrn: 44.6,
-    };
+    TheNetwork,
   },
 };
 </script>
@@ -180,29 +145,7 @@ small {
   grid-column: 1/2;
   grid-row: 2/3;
 }
-.sddimg {
-  width: 30%;
-}
-.hddSvg {
-  width: 80%;
-}
-.infoHdd {
-  width: 80%;
-}
-.infHdd {
-  display: flex;
-  flex-direction: column;
-}
-.loading-container {
-  width: 100%;
-  height: 100%;
-}
-/*.networkSync_cell {
-  grid-column: 2/3;
-  grid-row: 2/3;
-  display: flex;
-  border: 1px solid orange;
-}*/
+
 .networkCheck {
   grid-row: 2/3;
   grid-column: 2/3;
