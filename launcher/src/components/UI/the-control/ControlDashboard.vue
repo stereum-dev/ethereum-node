@@ -67,7 +67,9 @@
 
 <script>
 import TheCpu from "./TheCpu.vue";
+
 import TheStorage from "./TheStorage.vue";
+
 import MachineName from "./MachineName.vue";
 import SandClock from "./SandClock.vue";
 import DashboardCard from "./DashboardCard.vue";
