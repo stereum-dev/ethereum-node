@@ -5,12 +5,9 @@
     <div class="sandFull_cell">
       <sand-clock></sand-clock>
     </div>
-
     <dashboard-card class="discSpace_cell">
       <the-storage></the-storage>
     </dashboard-card>
-
-    <!-- <div class="networkSync_cell"></div> -->
     <dashboard-card class="nodeStart_cell"
       ><amsterdam-component></amsterdam-component
     ></dashboard-card>
@@ -19,20 +16,13 @@
         <peer-to-peer></peer-to-peer>
       </router-link>
     </dashboard-card>
-    <!-- <div class="networkCheck"></div> -->
-    <dashboard-card class="networkCheck"> 
-    <the-network></the-network>
+    <dashboard-card class="networkCheck">
+      <the-network></the-network>
     </dashboard-card>
-
-    <!-- <div class="validatorComment_cell">
-      <storage-counter class="validCntr"></storage-counter>
-    </div> -->
     <dashboard-card class="validatorComment_cell">
       <inclusion-distance class="validCntr"></inclusion-distance>
       <the-validator></the-validator>
     </dashboard-card>
-
-    <!-- <div class="nodeStart"></div> -->
     <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
   </div>
 </template>
@@ -75,33 +65,9 @@ export default {
 .validCntr {
   width: 40%;
 }
-.recive {
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-}
-.rec {
-  color: #ec590a;
-  font-weight: bold;
-  font-size: 1rem;
-}
-.transmit {
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-}
+
 small {
   font-size: 0.3rem;
-}
-.tran {
-  color: #336666;
-  font-weight: bold;
-  font-size: 1rem;
-}
-.lblMbit {
-  color: #eee;
-  font-weight: bold;
-  font-size: 0.9rem;
 }
 .ctrlParent {
   display: grid;
@@ -159,11 +125,6 @@ small {
   grid-row: 3/4;
 }
 
-.nodeStart_cell {
-  width: 135%;
-  height: 140%;
-}
-
 .networkUsage_cell {
   grid-column: 1/2;
   grid-row: 4/5;
@@ -174,10 +135,6 @@ small {
   grid-row: 2/3;
 }
 
-.netThermo {
-  position: relative;
-  top: 0rem;
-}
 .nodeStart {
   grid-column: 1/2;
   grid-row: 4/5;
@@ -185,50 +142,5 @@ small {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-}
-.colorBar {
-  width: 60%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-}
-.loli {
-  width: 80%;
-}
-.imgCpu {
-  width: 30%;
-}
-.cpuImg {
-  width: 80%;
-}
-.wifiIco {
-  width: 30%;
-}
-.wifiImg {
-  width: 80%;
-}
-
-.slice-colors .slice-item {
-  width: 100%;
-  height: 100%;
-}
-.arrowPart {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.arrowIco {
-  width: 20%;
-}
-.arrowIco img {
-  width: 100%;
-}
-.ttlRec {
-  font-weight: bold;
-  color: #eee;
 }
 </style>
