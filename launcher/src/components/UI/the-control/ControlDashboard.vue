@@ -7,15 +7,7 @@
     </div>
 
     <dashboard-card class="discSpace_cell">
-      <router-link to="">
-        <div class="sddimg">
-          <img class="hddSvg" src="../../../../public/img/icon/hdd.svg" />
-        </div>
-        <div class="infHdd">
-          <div class="infoHdd">{{ No }} GB FREE</div>
-          <hdd-loading></hdd-loading>
-        </div>
-      </router-link>
+      <the-storage></the-storage>
     </dashboard-card>
 
     <!-- <div class="networkSync_cell"></div> -->
@@ -75,10 +67,8 @@
 
 <script>
 import TheCpu from "./TheCpu.vue";
+import TheStorage from "./TheStorage.vue";
 import MachineName from "./MachineName.vue";
-import ColorBar from "./ColorBar.vue";
-import LoliBar from "./LoliBar.vue";
-import HddLoading from "./HddLoading.vue";
 import SandClock from "./SandClock.vue";
 import DashboardCard from "./DashboardCard.vue";
 import InclusionDistance from "./InclusionDistance.vue";
@@ -90,10 +80,8 @@ export default {
   components: {
     SandClock,
     InclusionDistance,
-    HddLoading,
+    TheStorage,
     DashboardCard,
-    ColorBar,
-    LoliBar,
     AmsterdamComponent,
     TheValidator,
     MachineName,
@@ -117,7 +105,7 @@ export default {
 .link {
   text-decoration: none;
   color: #eee;
-  font-size: 20%;
+  font-size: 50%;
 }
 .validCntr {
   width: 40%;
