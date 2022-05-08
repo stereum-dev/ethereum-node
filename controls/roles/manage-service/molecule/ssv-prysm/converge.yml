@@ -57,6 +57,5 @@
       ansible.builtin.lineinfile:
         path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
         regexp: '^OperatorPrivateKey:*'
-        insertafter: '^OperatorPrivateKey:*'
         line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
       become: yes
