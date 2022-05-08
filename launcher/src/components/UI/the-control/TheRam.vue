@@ -2,7 +2,6 @@
   <div class="theRamParent">
     <div class="inputBox">
       <div class="ramTtl"><span>RAM</span></div>
-      <input type="text" />
     </div>
     <div class="valueBoxes">
       <div class="vlaueR">
@@ -50,7 +49,7 @@ export default {
 .valueBoxes {
   display: flex;
   width: 85%;
-
+  height: 80%;
   justify-content: flex-start;
   align-items: center;
 }
@@ -98,22 +97,25 @@ export default {
   padding-left: 3%;
   outline: none;
 }
-.inputBox input:active,
-.inputBox input:hover {
-  outline: none;
-}
+
 .ramTtl {
-  width: 40%;
-  z-index: 5;
+  width: 98%;
+  height: 20%;
   background: #33393e;
-  border-radius: 20px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+  border-radius: 10px;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
 }
 .ramTtl span {
-  font-size: 90%;
-  font-weight: bold;
+  font-size: 50%;
+  color: #eee;
+  border: 1px solid rgb(27, 26, 26);
+  width: 20%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
