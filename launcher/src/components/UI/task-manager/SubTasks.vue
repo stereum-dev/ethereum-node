@@ -8,7 +8,7 @@
           :key="index"
           :class="{
             'active-installation': item.status == 'active',
-            'progress-installation': item.status == 'success',
+            'progress-installation': item.status == 'progress',
             'success-installation': item.status == 'success',
             'failed-installation': item.status == 'failed',
           }"
@@ -17,7 +17,7 @@
             <span>{{ item.statusLabel }}</span>
             <div class="loading-box">
               <img
-                src="../../../../public/img/icon/task-manager-icons/loading4.png"
+                src="../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"
                 alt=""
               />
             </div>
@@ -58,35 +58,26 @@ export default {
 <style scoped>
 .subTask_parent {
   width: 92%;
-  height: 80%;
+  padding: 8px 0;
   position: absolute;
   left: 4%;
-  top: 15%;
+  top: 15px;
+  z-index: 99;
 }
 .subTask-table {
   width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
 .subTask-content {
   width: 98%;
-  height: 9%;
-  margin-top: 5px;
-  border: 2px solid #b7b7b7;
   border-radius: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .subTask-row {
   width: 100%;
-  height: 100%;
+  padding: 2px;
+  margin: 5px 0;
   border-radius: 15px;
   display: flex;
   justify-content: center;
@@ -104,8 +95,8 @@ export default {
   align-items: center;
 }
 .loading-box {
-  width: 6%;
-  height: 82%;
+  width: 16px;
+  height: 16px;
   border-radius: 15px;
   margin-right: 2px;
   background-color: rgb(59, 59, 59);
@@ -121,16 +112,9 @@ export default {
 .subTask-row .active-box img {
   width: 80%;
   height: 80%;
-  animation: spin 2s linear infinite;
+  margin-top: 1px;
 }
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+
 .subTask-row .active-box span,
 .subTask-row .progress-box span,
 .subTask-row .success-box span,

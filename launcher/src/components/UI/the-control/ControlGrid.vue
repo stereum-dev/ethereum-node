@@ -68,7 +68,7 @@ export default {
 <style scoped>
 .ctrGridParent {
   display: grid;
-  width: 99.1%;
+  width: 99.2%;
   height: 90%;
   background-color: #232323;
   border: 4px solid #979797;

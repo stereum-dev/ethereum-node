@@ -1,5 +1,5 @@
 <template>
-  <div class="drop-icon" @click="openSubTasks">
+  <div class="drop-icon" @click="openSubTasksHandler">
     <img
       v-if="isSubTasksActive"
       src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
@@ -14,9 +14,17 @@
 </template>
 <script>
 export default {
-  props: ["openSubTasks"],
+  props: ["item"],
   data() {
-    return {};
+    return {
+      isSubTasksActive: false,
+    };
+  },
+  methods: {
+    openSubTasksHandler() {
+      this.isSubTasksActive = !this.isSubTasksActive;
+      this.$emit("droptaskActive", this.item);
+    },
   },
 };
 </script>
@@ -32,5 +40,6 @@ export default {
 .drop-icon img {
   width: 100%;
   height: 100%;
+  cursor: pointer;
 }
 </style>

@@ -5,18 +5,23 @@
     </div>
     <div class="task-modal-box" v-if="isTaskModalActive">
       <div class="task-table">
-        <div class="table-content" id="table-content">
+        <div class="table-content">
           <div
             class="table-row"
             v-for="(item, index) in pluginsInstalling"
             :key="index"
           >
+            <sub-tasks
+              v-if="item.showDropDown"
+              :subTasks="item?.subTasks"
+            ></sub-tasks>
             <div class="table-row-progress" v-if="item.status == 'progress'">
               <div class="progress-icon"></div>
               <span>{{ item.name }}</span>
 
               <drop-subtasks
-                :openSubTasks="openSubTasksHandler"
+                :item="item"
+                @droptaskActive="openDropDown"
               ></drop-subtasks>
             </div>
             <div class="table-row-active" v-if="item.status == 'active'">
@@ -26,33 +31,32 @@
               <span>{{ item.name }}</span>
 
               <drop-subtasks
-                :openSubTasks="openSubTasksHandler"
+                :item="item"
+                @droptaskActive="openDropDown"
               ></drop-subtasks>
             </div>
             <div class="table-row-success" v-if="item.status == 'success'">
               <div class="success-icon">
-                <img :src="installIconSrc" alt="icon" />
+                <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
 
               <drop-subtasks
-                :openSubTasks="openSubTasksHandler"
+                :item="item"
+                @droptaskActive="openDropDown"
               ></drop-subtasks>
             </div>
             <div class="table-row-failed" v-if="item.status == 'failed'">
               <div class="failed-icon">
-                <img :src="installIconSrc" alt="icon" />
+                <img :src="installIconSrc.failedInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
 
               <drop-subtasks
-                :openSubTasks="openSubTasksHandler"
+                :item="item"
+                @droptaskActive="openDropDown"
               ></drop-subtasks>
             </div>
-            <sub-tasks
-              :subTasks="item?.subTasks"
-              v-if="isSubTasksActive"
-            ></sub-tasks>
           </div>
         </div>
       </div>
@@ -73,123 +77,109 @@ export default {
   data() {
     return {
       isTaskModalActive: false,
-      isSubTasksActive: false,
+      showDropDownList: false,
       pluginsInstalling: [
         {
           name: "Geth",
           status: "active",
           statusLabel: "TASK ACTIVE",
-          subTasks: [
-            {
-              status: "active",
-              statusLabel: "SUB TASK ACTIVE",
-            },
-          ],
-        },
-        {
-          name: "Nimbus",
-          status: "success",
-          statusLabel: "TASK SUCCEEDED",
-          subTasks: [
-            {
-              status: "success",
-              statusLabel: "SUB TASK SUCCEEDED",
-            },
-          ],
-        },
-        {
-          name: "Lighthouse",
-          status: "failed",
-          statusLabel: "TASK FAILED",
-          subTasks: [
-            {
-              status: "failed",
-              statusLabel: "SUB TASK FAILED",
-            },
-          ],
-        },
-        {
-          name: "Grafana",
-          status: "progress",
-          statusLabel: "TASK IN QUEUE",
+          showDropDown: false,
           subTasks: [
             {
               status: "progress",
               statusLabel: "SUB TASK IN QUEUE",
             },
+            {
+              status: "active",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
+            {
+              status: "success",
+              statusLabel: "SUB TASK IN QUEUE",
+            },
           ],
         },
+        // {
+        //   name: "Nimbus",
+        //   status: "success",
+        //   statusLabel: "TASK SUCCEEDED",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "success",
+        //       statusLabel: "SUB TASK SUCCEEDED",
+        //     },
+        //   ],
+        // },
+        // {
+        //   name: "Lighthouse",
+        //   status: "failed",
+        //   statusLabel: "TASK FAILED",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "failed",
+        //       statusLabel: "SUB TASK FAILED",
+        //     },
+        //   ],
+        // },
+        // {
+        //   name: "Grafana",
+        //   status: "progress",
+        //   statusLabel: "TASK IN QUEUE",
+        //   showDropDown: false,
+        //   subTasks: [
+        //     {
+        //       status: "progress",
+        //       statusLabel: "SUB TASK IN QUEUE",
+        //     },
+        //   ],
+        // },
       ],
-      taskManagerIcons: [
-        {
-          progressIcon: require("../../../../public/img/icon/task-manager-icons/task-manager-icon.png"),
-        },
-        {
-          activeIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
-        },
-        {
-          successIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
-        },
-        {
-          failedIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
-        },
-      ],
+      taskManagerIcons: {
+        progressIcon: require("../../../../public/img/icon/task-manager-icons/task-manager-icon.png"),
+        activeIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
+        successIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
+        failedIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
+      },
       installIconSrc: {
-        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-blue-icon.png"),
-
-        successInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-green-icon.png"),
-
-        failedInstallIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
+        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"),
+        successInstallIcon: require("../../../../public/img/icon/task-manager-icons/check3.png"),
+        failedInstallIcon: require("../../../../public/img/icon/task-manager-icons/close3.png"),
       },
     };
   },
   mounted() {
-    this.installationfailedHandler();
+    // this.installationfailedHandler();
   },
   computed: {
-    mainTaskIcon() {
-      this.pluginsInstalling.forEach((plugin) => {
-        if (plugin.status == "failed") {
-          return this.taskManagerIcons.failedIcon;
-        } else if (plugin.status == "active") {
-          return this.taskManagerIcons.activeIcon;
-        } else if (plugin.status == "success") {
-          return this.taskManagerIcons.successIcon;
-        } else {
-          return this.taskManagerIcons.progressIcon;
-        }
-      });
+    mainTaskIcon(item) {
+      if (item.status == "failed") {
+        return this.taskManagerIcons.failedIcon;
+      } else if (item.status == "active") {
+        return this.taskManagerIcons.activeIcon;
+      } else if (item.status == "success") {
+        return this.taskManagerIcons.successIcon;
+      } else {
+        return this.taskManagerIcons.progressIcon;
+      }
     },
-    // installImgSrc(item) {
-    //   if (item.status == "failed") {
-    //     return this.installIconSrc.failedInstallIcon;
-    //   } else if (item.status == "active") {
-    //     return this.installIconSrc.activeInstallIcon;
-    //   } else if (item.status == "success") {
-    //     return this.installIconSrc.successInstallIcon;
-    //   } else {
-    //     return;
-    //   }
-    // },
   },
   methods: {
     taskModalHandler() {
       this.isTaskModalActive = !this.isTaskModalActive;
     },
-    installationfailedHandler() {
-      setTimeout(() => {
-        this.installIsActive = false;
-        this.installFailed = true;
-      }, 5000);
-      setTimeout(() => {
-        this.installIsActive = false;
-        this.installFailed = false;
-        this.installedSuccessfully = true;
-      }, 10000);
+    openDropDown(item) {
+      item.showDropDown = !item.showDropDown;
     },
-    openSubTasksHandler() {
-      this.isSubTasksActive = !this.isSubTasksActive;
-    },
+    // installationfailedHandler(item) {
+    //   setTimeout(() => {
+    //     item.status = "progress";
+    //   }, 5000);
+    //   setTimeout(() => {
+    //     item.status = "active";
+    //   }, 10000);
+    // },
   },
 };
 </script>
@@ -199,16 +189,19 @@ export default {
   max-height: 55px;
   position: fixed;
   left: 4px;
-  bottom: 0;
+  bottom: 4px;
   z-index: 99;
 }
 .task-icon {
   width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: flex-start;
   cursor: pointer;
 }
 .task-icon img {
-  width: 50%;
+  width: 60%;
+  height: 65%;
 }
 .task-modal-box {
   width: 25%;
@@ -219,7 +212,6 @@ export default {
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  /* opacity: 0.9; */
   opacity: 0.99;
   position: fixed;
   left: 4px;
@@ -258,6 +250,7 @@ export default {
   border-radius: 20px;
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
+  position: relative;
 }
 .table-content .table-row-failed {
   width: 100%;
@@ -311,10 +304,13 @@ export default {
   align-items: center;
 }
 .failed-icon img,
-.active-icon img,
 .success-icon img {
   width: 84%;
   height: 84%;
+}
+.active-icon img {
+  width: 118%;
+  height: 104%;
 }
 /* .active-icon img {
   border: 2px solid transparent;
