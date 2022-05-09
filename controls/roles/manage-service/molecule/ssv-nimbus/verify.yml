@@ -29,13 +29,15 @@
         - ssv_config_file.stat.exists
   - name: Check SSV keys
     lineinfile:
-      dest: /etc/stereum/services/52d77bd0-7e13-11ec-a95e-bb669ccf3e66.yaml
-      line: "{{ item }}"
+      path: /etc/stereum/services/52d77bd0-7e13-11ec-a95e-bb669ccf3e66.yaml
+      regexp: "{{ item }}"
+      state: absent
+    check_mode: yes
     register: ssv_keys
     with_items:
-      - 'ssv_sk'
-      - 'ssv_pk'
-    failed_when: ssv_keys is not changed
+      - '(^ssv_sk: ).*(?=)'
+      - '(^ssv_pk: ).*(?=)'
+    failed_when: not ssv_keys.changed
   - debug:
       msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
