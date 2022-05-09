@@ -1,9 +1,5 @@
 <template>
   <div class="sandParent">
-    <div class="inpBox">
-      <input type="text" class="cube" />
-      <input type="text" class="ti" />
-    </div>
     <div class="circle">
       <svg
         class="clock"
@@ -69,43 +65,20 @@
 
 <script>
 export default {
-  name: 'SandClock'
-}
+  name: "SandClock",
+};
 </script>
 
 <style scoped>
 .sandParent {
-  width: 50%;
-  z-index: 0;
-  box-sizing: border-box;
-}
-.inpBox {
-  display: flex;
-  flex-direction: column;
-
-  box-sizing: border-box;
   width: 100%;
-  margin: 4% 5%;
-}
-.cube {
-  width: 80%;
-  height: 0.8rem;
-  border: 1px solid grey;
-  box-sizing: border-box;
-  align-self: center;
-}
-.ti {
   z-index: 0;
-
-  width: 50%;
-  height: 0.8rem;
-  align-self: flex-end;
-  border: 1px solid grey;
   box-sizing: border-box;
 }
+
 .circle {
   background: #83d0f5;
-  width: 24%;
+  width: 50%;
   padding: 5px;
   border-radius: 50%;
   display: flex;
@@ -115,7 +88,6 @@ export default {
   box-sizing: border-box;
   border: 2px solid grey;
   z-index: 1;
-  top: -35px;
 }
 .clock {
   width: 100%;

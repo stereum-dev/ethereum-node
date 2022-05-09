@@ -2,9 +2,7 @@
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
     <div class="the-ram"><the-ram></the-ram></div>
-    <div class="sandFull_cell">
-      <sand-clock></sand-clock>
-    </div>
+    <div class="sandFull_cell"><block-time></block-time></div>
     <dashboard-card class="discSpace_cell">
       <the-storage></the-storage>
     </dashboard-card>
@@ -31,7 +29,7 @@
 import TheCpu from "./TheCpu.vue";
 import TheStorage from "./TheStorage.vue";
 import MachineName from "./MachineName.vue";
-import SandClock from "./SandClock.vue";
+
 import DashboardCard from "./DashboardCard.vue";
 import InclusionDistance from "./InclusionDistance.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
@@ -39,9 +37,9 @@ import TheValidator from "./TheValidator.vue";
 import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
+import BlockTime from "./BlockTime.vue";
 export default {
   components: {
-    SandClock,
     InclusionDistance,
     TheStorage,
     DashboardCard,
@@ -52,6 +50,11 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
+<<<<<<< Updated upstream
+=======
+    ValidatorContainer,
+    BlockTime,
+>>>>>>> Stashed changes
   },
 };
 </script>
@@ -105,6 +108,10 @@ small {
   grid-row: 1/2;
   border-radius: 0 15px 0 0;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 95%;
 }
 
 .discSpace_cell {
