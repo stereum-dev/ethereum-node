@@ -1,165 +1,234 @@
 <template>
-  <div class="AmsParent">
-    <div class="ttlLine">
-      <div class="ttl"><span>NODE STARTED</span></div>
-      <div class="dateLine">
-        <span>{{ StopWatch }}</span>
-      </div>
-      <div class="icoByc">
-        <img src="../../../../public/img/icon/amsterdam.png" />
+  <div class="amsterdamParent">
+    <div class="amsTitle">
+      <div class="amsTitle_name"><span>NODE STARTED</span></div>
+      <div class="amsTitle_R">
+        <div class="amsTitle_timer">{{ dateTime }}</div>
+        <div class="amsTitle_runingIco">
+          <img src="../../../../public/img/icon/Control/amsterdam.png" />
+        </div>
       </div>
     </div>
-    <div class="syncPart">
-      <div class="icoPart">
-        <img src="../../../../public/img/icon/testnetIconControl.png" />
-        <span>{{ net }}</span>
-      </div>
-      <div class="syncItems">
-        <div class="synTtl"><span>SYNCHRONISATION</span></div>
-        <div class="syncCont">
-          <span>Execution Client</span>
+    <div class="amsBox">
+      <div class="syncAndIco">
+        <div class="syncIco">
+          <div class="syncIco_img">
+            <img
+              src="../../../../public/img/icon/Control/testnetIconControl.png"
+            />
+          </div>
+          <div class="syncNetTitle"><span>NETWORK</span></div>
         </div>
-        <div class="syncCont">
-          <span>Consensus Client</span>
+        <div class="syncBox">
+          <div class="syncBoxTitle"><span>SYNCHRONISATION</span></div>
+          <div class="syncItems">
+            <div class="procItems"><span>Execution Client</span></div>
+            <div class="procItems"><span>Consensus Client</span></div>
+          </div>
         </div>
       </div>
-      <div class="epoch">
-        <div class="synTtl"><span>EPOCH</span></div>
-        <input type="text" class="epInp" />
+      <div class="epochBox">
+        <div class="epochBox_title"><span>EPOCH</span></div>
+        <div class="epochBox_input"><input type="text" /></div>
+        <div class="epochBox_footer"><span>CONFIRMED</span></div>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
-      StopWatch: '00:00',
-      net: 'NETWORK'
-    }
-  }
-}
+      dateTime: "00:00",
+    };
+  },
+};
 </script>
-
 <style scoped>
-.amsParent {
-  width: 100%;
+.amsterdamParent {
   display: flex;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
+  height: 100%;
 }
-.ttlLine {
-  width: 95%;
-  height: 1rem;
+.amsTitle {
+  width: 98%;
+  height: 20%;
+  background: #33393e;
+  border-radius: 10px;
   display: flex;
-  margin: 0 auto 5%;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
 }
-.ttl {
+.amsTitle_name {
+  font-size: 50%;
+  color: #eee;
+  border: 1px solid rgb(27, 26, 26);
   width: 30%;
-  background-color: #33393e;
-  border-radius: 10px 0 0 10px;
-  border-radius: 0.2px solid grey;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
-.ttl span {
-  font-size: 50%;
-}
-.dateLine {
-  width: 50%;
-  background-color: #33393e;
+.amsTitle_R {
+  width: 70%;
+  height: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
-.dateLine span {
-  font-size: 80%;
-}
-.icoByc {
-  width: 20%;
-  background-color: #33393e;
-  border-radius: 0 10px 10px 0;
-  border-radius: 0.2px solid grey;
+.amsTitle_timer {
+  width: 60%;
+  height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  font-size: 60%;
+  padding-right: 5%;
 }
-.icoByc img {
+.amsTitle_runingIco {
   width: 40%;
-}
-.syncPart {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  gap: 5%;
+  border: 1px solid rgb(27, 26, 26);
+  border-radius: 10px;
 }
-.icoPart {
+.amsTitle_runingIco img {
+  width: 30%;
+}
+.amsBox {
   display: flex;
+  width: 100%;
+  height: 80%;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
+}
+.syncAndIco {
+  display: flex;
+  width: 100%;
+  height: 60%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.syncIco {
+  width: 30%;
+  height: 80%;
   justify-content: center;
   align-content: center;
-  width: 20%;
+  display: flex;
+  flex-direction: column;
+}
+.syncIco_img {
+  width: 100%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
-.icoPart img {
-  width: 80%;
-  justify-self: center;
-  align-self: center;
+.syncIco_img img {
+  width: 40%;
 }
-.icoPart span {
-  font-size: 7px;
+.syncNetTitle {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40%;
+}
+.syncNetTitle span {
+  width: 70%;
+  background: #33393e;
   border-radius: 10px;
-  background-color: #33393e;
 }
-.synTtl {
-  font-size: 8px;
+.syncBox {
+  width: 100%;
+  display: flex;
+  background: #33393e;
+  height: 60%;
   border-radius: 10px;
-  background-color: #33393e;
-  padding: 1px;
-  width: 90%;
-  margin-bottom: 10%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-.synTtl span {
+.syncBoxTitle {
+  display: flex;
+  width: 98%;
+  height: 30%;
+  font-size: 50%;
+  justify-content: center;
+  align-items: center;
+  background: #464a44;
+  border-radius: 5px;
 }
 .syncItems {
-  width: 40%;
+  display: flex;
+  width: 100%;
+  height: 90%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
+  flex-direction: column;
+  gap: 5%;
+}
+.procItems {
+  height: 40%;
+  width: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #2f3031;
+  font-size: 100%;
+  padding-left: 5%;
   border-radius: 10px;
-  background-color: rgb(26, 26, 26);
-  padding: 2%;
+}
+.epochBox {
+  width: 99%;
+  height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1%;
-}
-.syncCont {
-  width: 100%;
-  background-color: grey;
-  height: 40%;
-  display: flex;
-  border-radius: 10px;
-  align-items: center;
-  padding: 1px;
-  margin: 2%;
-}
-
-.syncCont span {
-  font-size: 8px;
-}
-.epoch {
-  width: 20%;
-  background: red;
-  display: flex;
-  flex-direction: column;
-  padding: 2px;
-  gap: 5px;
+  background: #33393e;
   border-radius: 5px;
 }
-.epInp {
+.epochBox_title {
+  width: 90%;
+  height: 15%;
+  display: flex;
+  justify-content: flex-start;
+  font-size: 20%;
+  align-items: center;
+}
+.epochBox_input {
+  width: 90%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.epochBox_input input {
+  width: 100%;
+  height: 60%;
   background: #000;
-  height: 10px;
+  color: #eee;
+  border: 0.5px solid #eee;
+}
+.epochBox_footer {
+  width: 90%;
+  height: 15%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 25%;
 }
 </style>
