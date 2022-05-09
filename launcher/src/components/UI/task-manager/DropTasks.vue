@@ -30,12 +30,13 @@ export default {
 </script>
 <style scoped>
 .drop-icon {
-  width: 7%;
-  height: 70%;
+  width: 8%;
+  height: 72%;
   margin-right: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .drop-icon img {
   width: 100%;

@@ -61,7 +61,7 @@ export default {
   padding: 8px 0;
   position: absolute;
   left: 4%;
-  top: 15px;
+  top: 17px;
   z-index: 99;
 }
 .subTask-table {
@@ -134,7 +134,7 @@ export default {
   border-radius: 15px;
 }
 .success-installation {
-  background-color: rgb(94, 210, 133);
+  background-color: #5ed285;
   border-radius: 15px;
 }
 .failed-installation {

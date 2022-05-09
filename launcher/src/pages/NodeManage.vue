@@ -89,21 +89,21 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
-        <task-manager class="edit-task__manager"></task-manager>
+        <task-manager></task-manager>
       </div>
     </node-bg>
   </section>
 </template>
 
 <script>
-import SidebarManage from '../components/UI/node-manage/SidebarManage.vue'
-import NodeConfiguration from '../components/UI/node-manage/NodeConfiguration.vue'
-import ChangeConfirm from '../components/UI/node-manage/ChangeConfirm.vue'
-import DropZone from '../components/UI/node-manage/DropZone.vue'
-import BaseModal from '../components/UI/node-manage/BaseModal.vue'
-import PresetModal from '../components/UI/node-manage/PresetModal.vue'
-import { mapGetters } from 'vuex'
-import TaskManager from '../components/UI/task-manager/TaskManager.vue'
+import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
+import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
+import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
+import DropZone from "../components/UI/node-manage/DropZone.vue";
+import BaseModal from "../components/UI/node-manage/BaseModal.vue";
+import PresetModal from "../components/UI/node-manage/PresetModal.vue";
+import { mapGetters } from "vuex";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
     SidebarManage,
@@ -112,77 +112,77 @@ export default {
     DropZone,
     BaseModal,
     PresetModal,
-    TaskManager
+    TaskManager,
   },
-  emits: ['startDrag', 'closeMe', 'modalView'],
+  emits: ["startDrag", "closeMe", "modalView"],
 
-  data () {
+  data() {
     return {
       dragging: false,
       isModalActive: false,
       presetModal: false,
-      modalItems: []
-    }
+      modalItems: [],
+    };
   },
   computed: {
     ...mapGetters({
-      consensusItems: 'getConsensusItems',
-      executionItems: 'getExecutionItems',
-      validatorItems: 'getValidatorItems',
-      selectedItemToRemove: 'getSelectedItemToRemove',
-      confirmChanges: 'getConfirmChanges',
-      servicePlugins: 'getServicePlugins',
-      sidebarPlugins: 'getSidebarPlugins',
-      configData: 'getConfigData'
-    })
+      consensusItems: "getConsensusItems",
+      executionItems: "getExecutionItems",
+      validatorItems: "getValidatorItems",
+      selectedItemToRemove: "getSelectedItemToRemove",
+      confirmChanges: "getConfirmChanges",
+      servicePlugins: "getServicePlugins",
+      sidebarPlugins: "getSidebarPlugins",
+      configData: "getConfigData",
+    }),
   },
   methods: {
-    showModal (data) {
-      this.isModalActive = true
-      this.modalItems = data
+    showModal(data) {
+      this.isModalActive = true;
+      this.modalItems = data;
     },
-    openPresetModal () {
-      this.presetModal = true
+    openPresetModal() {
+      this.presetModal = true;
     },
-    closeModal () {
-      this.isModalActive = false
+    closeModal() {
+      this.isModalActive = false;
     },
-    closePresetModal () {
-      this.presetModal = false
+    closePresetModal() {
+      this.presetModal = false;
     },
-    startDrag (event, item) {
-      if (event.type === 'dragstart') {
-        event.dataTransfer.dropEffect = 'move'
-        event.dataTransfer.effectAllowed = 'move'
-        event.dataTransfer.setData('itemId', item.id)
+    startDrag(event, item) {
+      if (event.type === "dragstart") {
+        event.dataTransfer.dropEffect = "move";
+        event.dataTransfer.effectAllowed = "move";
+        event.dataTransfer.setData("itemId", item.id);
       }
     },
-    onDrop (event, list) {
-      const itemId = event.dataTransfer.getData('itemId')
-      const item = { ...list.find((item) => item.id == itemId) }
-      if (item.category === 'validator') {
-        if (this.validatorItems.some((item) => item.id == itemId)) return
-        this.validatorItems.push(item)
-        this.$store.commit('mutatedValidatorItems', this.validatorItems)
-      } else if (item.category === 'consensus') {
-        if (this.consensusItems.some((item) => item.id == itemId)) return
-        this.consensusItems.push(item)
-        this.$store.commit('mutatedConsensusItems', this.consensusItems)
-      } else if (item.category === 'execution') {
-        if (this.executionItems.some((item) => item.id == itemId)) return
-        this.executionItems.push(item)
-        this.$store.commit('mutatedExecutionItems', this.executionItems)
+    onDrop(event, list) {
+      const itemId = event.dataTransfer.getData("itemId");
+      const item = { ...list.find((item) => item.id == itemId) };
+      if (item.category === "validator") {
+        if (this.validatorItems.some((item) => item.id == itemId)) return;
+        this.validatorItems.push(item);
+        this.$store.commit("mutatedValidatorItems", this.validatorItems);
+      } else if (item.category === "consensus") {
+        if (this.consensusItems.some((item) => item.id == itemId)) return;
+        this.consensusItems.push(item);
+        this.$store.commit("mutatedConsensusItems", this.consensusItems);
+      } else if (item.category === "execution") {
+        if (this.executionItems.some((item) => item.id == itemId)) return;
+        this.executionItems.push(item);
+        this.$store.commit("mutatedExecutionItems", this.executionItems);
       } else {
-        if (this.servicePlugins.some((item) => item.id == itemId)) return
-        this.servicePlugins.push(item)
-        this.$store.commit('mutatedServiceplugins', this.servicePlugins)
+        if (this.servicePlugins.some((item) => item.id == itemId)) return;
+        this.servicePlugins.push(item);
+        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
       }
     },
-    serviceItemSelection (item) {
-      this.$store.commit('selectedItemToRemoveMutation', item)
-    }
-  }
-}
+    serviceItemSelection(item) {
+      this.$store.commit("selectedItemToRemoveMutation", item);
+    },
+  },
+};
 </script>
 
 <style scoped>

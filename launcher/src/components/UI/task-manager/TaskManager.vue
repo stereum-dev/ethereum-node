@@ -60,7 +60,7 @@
           </div>
         </div>
       </div>
-      <div class="list-cleaner">
+      <div class="list-cleaner" @click="listCleanerHandler">
         <img
           src="../../../../public/img/icon/task-manager-icons/read-empty-list-icon.png"
           alt=""
@@ -80,26 +80,28 @@ export default {
       showDropDownList: false,
       pluginsInstalling: [
         {
+          id: 1,
           name: "Geth",
           status: "active",
           statusLabel: "TASK ACTIVE",
           showDropDown: false,
           subTasks: [
             {
-              status: "progress",
-              statusLabel: "SUB TASK IN QUEUE",
+              status: "success",
+              statusLabel: "SUB TASK SUCCEEDED",
             },
             {
               status: "active",
-              statusLabel: "SUB TASK IN QUEUE",
+              statusLabel: "SUB TASK ACTIVE",
             },
             {
-              status: "success",
+              status: "progress",
               statusLabel: "SUB TASK IN QUEUE",
             },
           ],
         },
         // {
+        //   id: 2,
         //   name: "Nimbus",
         //   status: "success",
         //   statusLabel: "TASK SUCCEEDED",
@@ -109,9 +111,18 @@ export default {
         //       status: "success",
         //       statusLabel: "SUB TASK SUCCEEDED",
         //     },
+        //     {
+        //       status: "success",
+        //       statusLabel: "SUB TASK SUCCEEDED",
+        //     },
+        //     {
+        //       status: "success",
+        //       statusLabel: "SUB TASK SUCCEEDED",
+        //     },
         //   ],
         // },
         // {
+        //   id: 3,
         //   name: "Lighthouse",
         //   status: "failed",
         //   statusLabel: "TASK FAILED",
@@ -124,6 +135,7 @@ export default {
         //   ],
         // },
         // {
+        // id: 4,
         //   name: "Grafana",
         //   status: "progress",
         //   statusLabel: "TASK IN QUEUE",
@@ -149,9 +161,6 @@ export default {
       },
     };
   },
-  mounted() {
-    // this.installationfailedHandler();
-  },
   computed: {
     mainTaskIcon(item) {
       if (item.status == "failed") {
@@ -172,14 +181,9 @@ export default {
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
     },
-    // installationfailedHandler(item) {
-    //   setTimeout(() => {
-    //     item.status = "progress";
-    //   }, 5000);
-    //   setTimeout(() => {
-    //     item.status = "active";
-    //   }, 10000);
-    // },
+    listCleanerHandler() {
+      this.pluginsInstalling = [];
+    },
   },
 };
 </script>
@@ -256,7 +260,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  background-color: #de2727;
+  background-color: #df5656;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -265,7 +269,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: rgb(126, 190, 24);
+  background-color: #5ed285;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -292,8 +296,8 @@ export default {
 .table-row-success .success-icon,
 .table-row-active .active-icon,
 .table-row-progress .progress-icon {
-  width: 6%;
-  height: 70%;
+  width: 16px;
+  height: 16px;
   /* background-color: #292929; */
   background-color: #323232;
   border: 2px solid #444444;
@@ -303,33 +307,19 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.failed-icon img,
+.failed-icon img {
+  width: 12px;
+  height: 11px;
+}
 .success-icon img {
-  width: 84%;
-  height: 84%;
+  width: 13px;
+  height: 14px;
 }
 .active-icon img {
-  width: 118%;
-  height: 104%;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
 }
-/* .active-icon img {
-  border: 2px solid transparent;
-  border-radius: 50%;
-  border-top: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  width: 68%;
-  height: 64%;
-  animation: spin 2s linear infinite;
-} */
-
-/* @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-} */
 
 .table-row-failed span,
 .table-row-active span,
