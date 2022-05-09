@@ -41,7 +41,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.75);
 }
 
-dialog {
+.dialog {
   position: fixed;
   top: 30vh;
   width: 30rem;

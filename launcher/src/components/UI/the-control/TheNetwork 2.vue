@@ -87,8 +87,6 @@ export default {
   height: 79%;
   display: flex;
   box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
 }
 .networkIco {
   box-sizing: border-box;

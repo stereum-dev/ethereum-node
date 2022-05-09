@@ -1,20 +1,21 @@
 <template>
   <div class="parentStorage">
-  
     <div class="gauge-wrapper">
-    <div class="incTtl"><small>INCLUSION DISTANCE</small></div>
-      <div class="gauge four rischio3">
-        <div class="slice-colors">
-          <div class="st slice-item"></div>
-          <div class="st slice-item"></div>
-          <div class="st slice-item"></div>
-          <div class="st slice-item"></div>
-        </div>
-        <div class="needle"></div>
-        <div class="gauge-center">
-          <!-- <div class="label">625 GB FRER</div> -->
-          <!-- <div class="number">STORAGE</div> -->
-          <div class="str">{{ strIns }}</div>
+      <div class="incTtl"><span>INCLUSION DISTANCE</span></div>
+      <div class="guageParent">
+        <div class="gauge four rischio3">
+          <div class="slice-colors">
+            <div class="st slice-item"></div>
+            <div class="st slice-item"></div>
+            <div class="st slice-item"></div>
+            <div class="st slice-item"></div>
+          </div>
+          <div class="needle"></div>
+          <div class="gauge-center">
+            <!-- <div class="label">625 GB FRER</div> -->
+            <!-- <div class="number">STORAGE</div> -->
+            <div class="str">{{ strIns }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -33,12 +34,11 @@ export default {
 
 <style scoped>
 .str {
-  
   border-radius: 5px;
   font-size: 85%;
-  padding:2%;
+  padding: 2%;
   font-weight: bold;
-  background: #33393E;
+  background: #33393e;
 }
 
 h1 {
@@ -47,6 +47,11 @@ h1 {
 .parentStorage {
   display: flex;
   box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
 }
 .gauge-wrapper {
   width: 100%;
@@ -54,17 +59,33 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
-  background: rgb(18, 18, 18); 
+
+  background: rgb(18, 18, 18);
   border-radius: 5px;
-  padding: 5%;
-  gap: 1%;
+  height: 90%;
 }
-.incTtl{
-  background: #33393E;
- width: 90%;
-  font-size: 50%;
+.incTtl {
+  background: #33393e;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 5px;
+  height: 10%;
+}
+.incTtl span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10%;
+}
+.guageParent {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .gauge {

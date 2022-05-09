@@ -20,14 +20,17 @@
       <the-network></the-network>
     </dashboard-card>
     <dashboard-card class="validatorComment_cell">
-      <inclusion-distance class="validCntr"></inclusion-distance>
-      <the-validator></the-validator>
+      <validator-container
+        ><inclusion-distance class="validCntr"></inclusion-distance>
+        <the-validator></the-validator
+      ></validator-container>
     </dashboard-card>
     <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
   </div>
 </template>
 
 <script>
+import ValidatorContainer from "./ValidatorContainer.vue";
 import TheCpu from "./TheCpu.vue";
 import TheStorage from "./TheStorage.vue";
 import MachineName from "./MachineName.vue";
@@ -52,6 +55,7 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
+    ValidatorContainer,
   },
 };
 </script>
@@ -63,7 +67,8 @@ export default {
   font-size: 50%;
 }
 .validCntr {
-  width: 40%;
+  width: 50%;
+  height: 100%;
 }
 
 small {

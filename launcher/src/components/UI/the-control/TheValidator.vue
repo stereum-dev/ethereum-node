@@ -1,36 +1,40 @@
 <template>
-  <div class="parentVal">
-    <div class="vldTtl"><span>Validator</span></div>
-    <div class="bParts">
-      <div class="lSide">
-        <div class="lCont">
-          <img src="../../../../public/img/icon/Control/keyEth.svg" /><span
-            class="vldCnt"
-            >{{ vldCnt }}</span
-          ><span>ACTIVE</span>
+  <div class="validatorParent">
+    <div class="validatorTitle"><span>Validator</span></div>
+    <hr />
+    <div class="validatorBox">
+      <div class="leftSide">
+        <div class="keyPart">
+          <div class="keyIco">
+            <img src="../../../../public/img/icon/Control/keyEth.svg" />
+          </div>
+          <div class="keyValuePart">
+            <span>{{ activeValue }} ACTIVE</span>
+          </div>
         </div>
-        <div class="gewiParent">
-          <div class="vldcontIn">
-            <div class="vldIco">
-              <img src="../../../../public/img/icon/Control/ethBag.svg" />
+        <div class="ethBagPart">
+          <div class="ethBagPart_ico">
+            <img src="../../../../public/img/icon/Control/ethBag.svg" />
+          </div>
+          <div class="gewiPart">
+            <div class="gewiGreenValue">
+              <span>{{ ValidatorVal }}</span>
             </div>
-            <div class="contVldNo">
-              <div class="vldNo">
-                <span>{{ vldIndex }}</span>
+            <div class="gewiValueBox">
+              <div class="gewiValue">
+                <span>{{ gewiValue }}</span>
               </div>
-              <div class="gewiNo">
-                <span class="cnt">{{ gewiNo }}</span
-                ><span>GEWI</span>
-              </div>
+              <div class="gewiTitle"><span>GEWI</span></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="rSide">
-        <div class="rTtl"><span>RATING</span></div>
-        <div class="val">
-          <span>{{ rateVal1 }}</span>
+
+      <div class="rightSide">
+        <div class="rightSideTitle">
+          <span>RATING</span>
         </div>
+        <div class="rightSideValue">{{ RSightValue }}</div>
       </div>
     </div>
   </div>
@@ -39,113 +43,208 @@
 export default {
   data() {
     return {
-      vldCnt: 1,
-      vldIndex: 32.00000001,
-      gewiNo: 1,
-      rateVal1: "S",
+      activeValue: 1,
+      ValidatorVal: 32.00000001,
+      gewiValue: 1,
+      RSightValue: "S",
     };
   },
 };
 </script>
 
 <style scoped>
-.bParts {
-  display: flex;
-  width: 80%;
-  box-sizing: border-box;
-  justify-content: center;
-  align-content: center;
-  gap: 20%;
-}
-.rSide {
-  display: flex;
-  width: 40%;
-  flex-direction: column;
-  box-sizing: border-box;
-  box-sizing: border-box;
-  justify-content: center;
-  align-content: center;
-}
-.rTtl {
-  width: 100%;
-  text-align: center;
+.validatorParent {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 50%;
+  height: 60%;
 }
-.rTtl span {
+.validatorParent hr {
+  width: 80%;
+  color: #4e5059;
+}
+.validatorTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 15%;
   font-size: 50%;
+  color: #5d5e64;
 }
-.val {
-  text-align: center;
-  font-size: 150% !important;
-  color: #4dfff3;
+.validatorTitle span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 90%;
+}
+.validatorBox {
+  width: 95%;
+  height: 78%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.leftSide {
+  width: 65%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+.keyPart {
   width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.keyIco {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.keyIco img {
+  width: 50%;
+}
+.keyValuePart {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.keyValuePart span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  font-size: 50%;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-.lSide {
-  width: 70%;
+.ethBagPart {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-.parentVal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.vldTtl {
   width: 100%;
-  font-size: 60%;
-  color: grey;
+  height: 65%;
 }
-.lCont {
+.ethBagPart_ico {
+  width: 30%;
+  height: 100%;
   display: flex;
-  gap: 5%;
+  justify-content: center;
+  align-items: center;
 }
-.lCont img {
-  width: 20%;
+.ethBagPart_ico img {
+  width: 50%;
 }
-.lCont span {
-  font-size: 80%;
-}
-
-.vldcontIn {
-  display: flex;
-}
-.vldIco {
-  width: 40%;
-  box-sizing: border-box;
-}
-.vldIco img {
-  width: 80%;
-}
-.contVldNo {
-  width: 70%;
+.gewiPart {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 65%;
+  height: 100%;
 }
-.vldNo span {
+.gewiGreenValue {
+  display: flex;
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+  align-items: center;
   color: #74fa65;
-  font-size: 70%;
+  font-size: 50%;
+  font-weight: bold;
 }
-.gewiNo {
+.gewiGreenValue span {
+  width: 90%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10%;
 }
-.gewiNo span {
-  font-size: 80%;
+.gewiValueBox {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gewiValue {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30%;
+}
+.gewiValue span {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gewiTitle {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
   font-weight: bold;
 }
-.cnt {
-  font-size: 70% !important;
-  margin: 5%;
+.gewiTitle span {
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rightSide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 33%;
+}
+.rightSideTitle {
+  display: flex;
+  width: 100%;
+  height: 35%;
+  justify-content: center;
+  align-items: center;
+  font-size: 30%;
+}
+.rightSideTitle span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.rightSideValue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 65%;
+  font-size: 100%;
+  color: #4dfff3;
+}
+.rightSideValue span {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
