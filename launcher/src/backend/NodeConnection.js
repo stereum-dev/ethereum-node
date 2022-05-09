@@ -151,7 +151,8 @@ export class NodeConnection {
       try {
         ansibleResult = await this.sshService.exec(
           'sudo\
-                        ANSIBLE_STDOUT_CALLBACK=log_plays\
+                        ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
+                        ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/' + playbookRunRef + '\
                         ansible-playbook\
                         --connection=local\
