@@ -1,6 +1,28 @@
 ---
-# This is an example playbook to execute Ansible tests.
-
 - name: Verify
   hosts: all
   gather_facts: false
+  tasks:
+    - stat: path=/etc/stereum/services
+      register: stereum_services_dir
+    - debug:
+        msg: "{{ stereum_services_dir }}"
+    - stat: path=/etc/stereum/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e.yaml
+      register: stereum_service_yaml
+    - debug:
+        msg: "{{ stereum_service_yaml }}"
+    - name: Check for Service-ID.yaml
+      assert:
+        that:
+          - stereum_service_yaml.stat.exists
+    - name: Check SSV keys
+      lineinfile:
+        dest: /etc/stereum/services/c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e.yaml
+        line: "{{ item }}"
+      register: ssv_keys
+      with_items:
+        - 'ssv_sk'
+        - 'ssv_pk'
+      failed_when: ssv_keys is not changed
+    - debug:
+        msg: "{{ ssv_keys }}"
