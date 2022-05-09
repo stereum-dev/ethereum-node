@@ -96,7 +96,10 @@ export class OneClickInstall {
           new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
         ]
         this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
-        this.validatorService = LighthouseValidatorService.buildByUserInput('prater', this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
+        ports = [
+          new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
+        ]
+        this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
         break
       case 'Prysm':
         // to be implemented
@@ -105,9 +108,10 @@ export class OneClickInstall {
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp)
+          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
         ]
-        this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient])
+        this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
         break
       case 'Teku':
         // to be implemented
