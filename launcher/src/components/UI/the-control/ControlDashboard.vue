@@ -50,11 +50,6 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
-<<<<<<< Updated upstream
-=======
-    ValidatorContainer,
-    BlockTime,
->>>>>>> Stashed changes
   },
 };
 </script>
