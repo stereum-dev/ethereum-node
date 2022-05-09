@@ -1,8 +1,41 @@
 ---
 - name: Converge
   hosts: all
+  vars:
+    ssv_key_service: c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e
+    ssv_container_config: |
+      command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node"
+      entrypoint: []
+      env:
+        CONFIG_PATH: /data/config.yaml
+      id: {{ ssv_key_service }}
+      image: bloxstaking/ssv-node:alpine-dns
+      ports:
+      - 0.0.0.0:12000:12000/udp
+      - 0.0.0.0:13000:13000/tcp
+      user: '2000'
+      volumes:
+      - /opt/app/services/{{ ssv_key_service }}/data/blox/ssv:/data
 
   tasks:
+    - name: Create directory for Service-ID.yaml
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        recurse: yes
+        owner: "2000"
+        group: "2000"
+      become: yes
+
+    - name: Write SSV service configuration
+      ansible.builtin.copy:
+        content: "{{ ssv_container_config }}"
+        dest: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
+        owner: "2000"
+        group: "2000"
+        mode: 0644
+      become: yes
+
     - name: "Include ssv-key-generator"
       include_role:
         name: "ssv-key-generator"
