@@ -1,16 +1,17 @@
 import { NodeService } from './NodeService.js'
+import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
-const image = 'stereum/lighthouse'
 
 export class LighthouseValidatorService extends NodeService {
-  static buildByUserInput (network, workingDir, consensusClients, graffiti) {
+  static buildByUserInput (network, ports, workingDir, consensusClients, graffiti) {
+    
+    const image = 'sigp/lighthouse'
+    
     const dataDir = '/opt/app/validator'
-    const launchpadDir = '/opt/app/launchpad'
 
     const volumes = [
-      new ServiceVolume(workingDir + '/wallets', dataDir),
-      new ServiceVolume(workingDir + '/launchpad', launchpadDir)
+      new ServiceVolume(workingDir + '/validator', dataDir)
     ]
 
     const eth2Nodes = (consensusClients.map(client => { return client.buildConsensusClientHttpEndpointUrl() })).join()
@@ -18,24 +19,34 @@ export class LighthouseValidatorService extends NodeService {
     // build service
     const service = new LighthouseValidatorService()
     service.init(
-      'LighthouseValidatorService',
-      null,
-      image,
-      'v2.0.1-47',
-      null,
-      ['/opt/app/start/validator.sh'],
-      {
-        DATADIR: dataDir,
-        DEBUG_LEVEL: 'info',
-        BEACON_NODES: eth2Nodes,
-        NETWORK: network,
-        GRAFFITI: graffiti,
-        LAUNCHPADDIR: launchpadDir
-      },
-      null,
-      volumes,
-      null,
-      network)
+      'LighthouseValidatorService', //service
+      null, //id
+      image,  //image
+      'v2.1.2', //imageVersion
+      [
+        'lighthouse',
+        'vc',
+        '--debug-level=debug',
+        `--network=${network}`,
+        `--beacon-nodes=${eth2Nodes}`,
+        `--datadir=${dataDir}`,
+        '--init-slashing-protection',
+        `--graffiti=${graffiti}`,
+        '--metrics',
+        '--metrics-address=0.0.0.0',
+        '--http',
+        '--http-address=0.0.0.0',
+        '--unencrypted-http-transport'
+      ],  //command
+      null, // entrypoint
+      null, // env
+      ports, //ports
+      volumes,  //volumes
+      null, //user
+      network, //network
+      null, //executionClients
+      consensusClients //consensusClients
+      )
 
     return service
   }
@@ -49,7 +60,9 @@ export class LighthouseValidatorService extends NodeService {
   }
 
   getAvailablePorts () {
-    return []
+    return [
+      new ServicePortDefinition(5062, 'tcp', 'Validator Client API')
+    ]
   }
 }
 

@@ -3,54 +3,55 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, executionClients) {
-    const image = 'stereum/nimbus'
+  static buildByUserInput (network, ports, workingDir, executionClients, graffiti) {
+    const image = 'statusim/nimbus-eth2'
 
-    const gethServices = executionClients.map(client => { return client.buildExecutionClientWsEndpointUrl() })
+    const gethServices = (executionClients.map(client => { return client.buildExecutionClientWsEndpointUrl() })).join()
 
     const dataDir = '/opt/app/beacon'
     const validatorsDir = '/opt/app/validators'
     const secretsDir = '/opt/app/secrets'
-    const launchpadDir = '/opt/app/launchpad'
     const volumes = [
       new ServiceVolume(workingDir + '/beacon', dataDir),
       new ServiceVolume(workingDir + '/validator/validators', validatorsDir),
-      new ServiceVolume(workingDir + '/validator/secrets', secretsDir),
-      new ServiceVolume(workingDir + '/launchpad', launchpadDir),
-      new ServiceVolume('/opt/app/import', '/opt/app/import')
+      new ServiceVolume(workingDir + '/validator/secrets', secretsDir)
     ]
 
     const service = new NimbusBeaconService()
     service.init(
-      'NimbusBeaconService',
+      'NimbusBeaconService',  //service
       null, // id,
       image, // image,
-      'v1.6.0-55', // imageVersion,
+      'multiarch-v22.3.0', // imageVersion,
       [
-                `--network=${network}`,
-                '--data-dir=/opt/app/beacon',
-                '--validators-dir=/opt/app/validators',
-                '--secrets-dir=/opt/app/secrets',
-                `--web3-url=${gethServices}`,
-                '--tcp-port=9000',
-                '--udp-port=9000',
-                '--rpc',
-                '--rpc-port=9190',
-                '--metrics',
-                '--metrics-port=8008',
-                '--metrics-address=0.0.0.0',
-                '--rest',
-                '--rest-address=0.0.0.0',
-                '--graffiti="stereum.net"'
+        `--network=${network}`,
+        `--data-dir=${dataDir}`,
+        `--validators-dir=${validatorsDir}`,
+        `--secrets-dir=${secretsDir}`,
+        `--web3-url=${gethServices}`,
+        '--tcp-port=9000',
+        '--udp-port=9000',
+        '--rpc',
+        '--rpc-port=9190',  //should this be a variable? (more than one service)
+        '--rpc-address=0.0.0.0',
+        '--metrics',
+        '--metrics-port=8008',
+        '--metrics-address=0.0.0.0',
+        '--rest',
+        '--rest-address=0.0.0.0',
+        '--rest-port=5052',
+        `--graffiti=${graffiti}`,
+        '--keymanager',
+        '--keymanager-address=0.0.0.0',
+        '--keymanager-token-file=/opt/app/validators/api-token.txt'
       ], // command,
-      ['/opt/app/build/nimbus_beacon_node'], // entrypoint,
+      ["/home/user/nimbus-eth2/build/nimbus_beacon_node"], // entrypoint,
       null, // env,
       ports, // ports,
       volumes, // volumes,
       null, // user,
       network, // network,
       executionClients // executionClients,
-      // consensusClients
     )
 
     return service
@@ -72,7 +73,8 @@ export class NimbusBeaconService extends NodeService {
     return [
       new ServicePortDefinition(9000, 'tcp', 'P2P connections'),
       new ServicePortDefinition(9000, 'udp', 'P2P connections'),
-      new ServicePortDefinition(9190, 'tcp', 'Consensus Client API')
+      new ServicePortDefinition(9190, 'tcp', 'RPC Port'),
+      new ServicePortDefinition(5052, 'tcp', 'REST Port')
     ]
   }
 }

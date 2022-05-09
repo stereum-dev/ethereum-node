@@ -4,7 +4,7 @@ import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
   static buildByUserInput (network, ports, workingDir, executionClients, slasherDbSize) {
-    const image = 'stereum/lighthouse'
+    const image = 'sigp/lighthouse'
 
     const dataDir = '/opt/app/beacon'
     const slasherDir = '/opt/app/slasher'
@@ -20,24 +20,36 @@ export class LighthouseBeaconService extends NodeService {
 
     const service = new LighthouseBeaconService()
     service.init(
-      'LighthouseBeaconService',
-      null,
-      image,
-      'v2.0.1-47',
-      null,
-      ['/opt/app/start/beacon.sh'],
-      {
-        DATADIR: dataDir,
-        DEBUG_LEVEL: 'info',
-        ETH1_NODES: eth1Nodes,
-        NETWORK: network,
-        SLASHERDIR: slasherDir,
-        SLASHER_DB_SIZE: slasherDbSize
-      },
-      ports,
-      volumes,
-      null,
-      network)
+      'LighthouseBeaconService',  //service
+      null, //id
+      image,  //image
+      'v2.1.2', //imageVersion
+      [
+        'lighthouse',
+        'bn',
+        '--debug-level=debug',
+        `--network=${network}`,
+        `--eth1-endpoints=${eth1Nodes}`,
+        '--eth1-blocks-per-log-query=150',
+        `--datadir=${dataDir}`,
+        '--http',
+        '--http-address=0.0.0.0',
+        '--metrics',
+        '--metrics-address=0.0.0.0',
+        '--disable-upnp',
+        '--validator-monitor-auto',
+        '--slasher',
+        `--slasher-dir=${slasherDir}`,
+        `--slasher-max-db-size=${slasherDbSize}`
+      ],  //command
+      null, //entrypoint
+      null, //env
+      ports,  //ports
+      volumes,  //volumes
+      null, //user
+      network,  //network
+      executionClients  //executionClients
+      )
 
     return service
   }

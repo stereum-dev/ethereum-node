@@ -29,16 +29,14 @@ test('buildConfiguration', () => {
 
   expect(nimbusService.command).toContain('--web3-url=Ws-endpoint-string')
   expect(nimbusService.command).toContain('--network=prater')
-  expect(nimbusService.volumes).toHaveLength(5)
+  expect(nimbusService.volumes).toHaveLength(3)
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus/beacon:/opt/app/beacon')
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus/validator/validators:/opt/app/validators')
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus/validator/secrets:/opt/app/secrets')
-  expect(nimbusService.volumes).toContain('/opt/stereum/nimbus/launchpad:/opt/app/launchpad')
-  expect(nimbusService.volumes).toContain('/opt/app/import:/opt/app/import')
   expect(nimbusService.ports).toHaveLength(3)
   expect(nimbusService.id).toHaveLength(36)
   expect(nimbusService.user).toMatch(/2000/)
-  expect(nimbusService.image).toMatch(/stereum\/nimbus/)
+  expect(nimbusService.image).toMatch(/statusim\/nimbus-eth2/)
 })
 
 test('buildConsensusClientHttpEndpointUrl', () => {
@@ -65,7 +63,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
 test('getAvailablePorts', () => {
   const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/nimbus', []).getAvailablePorts()
 
-  expect(nimbusServicePorts).toHaveLength(3)
+  expect(nimbusServicePorts).toHaveLength(4)
 })
 
 test('network', () => {
