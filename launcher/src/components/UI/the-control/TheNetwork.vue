@@ -3,7 +3,7 @@
     <div class="networkTtl"><span>NETWORK</span></div>
     <div class="networkBox">
       <div class="networkIco">
-        <img src="../../../../public/img/icon/Control/wifiIcon.svg" />
+        <img src="../../../../public/img/icon/control/wifiIcon.svg" />
       </div>
       <div class="totalReceived">
         <div class="receivePerSecond">

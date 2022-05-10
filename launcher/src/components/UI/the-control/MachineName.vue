@@ -1,7 +1,7 @@
 <template>
   <div class="MachineNameParent">
     <div class="ubuntuIcon">
-      <img src="../../../../public/img/icon/Control/ubuntuIco.svg" />
+      <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
     </div>
     <input type="text" class="machineNam" />
   </div>
