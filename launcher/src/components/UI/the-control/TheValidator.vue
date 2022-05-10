@@ -1,35 +1,39 @@
 <template>
-  <div class="parentVal">
-    <div class="vldTtl"><span>Validator</span></div>
-    <div class="bParts">
-      <div class="lSide">
-        <div class="lCont">
-          <img src="../../../../public/img/icon/Control/keyEth.svg" /><span
-            class="vldCnt"
-            >{{ vldCnt }}</span
-          ><span>ACTIVE</span>
+  <div class="theValidatorParent">
+    <div class="theValidatorTitle"><span>Validator</span></div>
+    <hr />
+    <div class="theValidatorBox">
+      <div class="theValidatorBox_left">
+        <div class="activePart">
+          <div class="activeIco">
+            <img src="../../../../public/img/icon/control/keyEth.svg" />
+          </div>
+          <div class="activeValue">
+            <span>{{ activeVal }} ACTIVE</span>
+          </div>
         </div>
-        <div class="gewiParent">
-          <div class="vldcontIn">
-            <div class="vldIco">
-              <img src="../../../../public/img/icon/Control/ethBag.svg" />
+        <div class="gewiPart">
+          <div class="gewiIco">
+            <img src="../../../../public/img/icon/control/ethBag.svg" />
+          </div>
+          <div class="gewiValuePart">
+            <div class="green">
+              <span>{{ incomVal }}</span>
             </div>
-            <div class="contVldNo">
-              <div class="vldNo">
-                <span>{{ vldIndex }}</span>
+            <div class="gewiCount">
+              <div class="gewiCountValue">
+                <span>{{ gewiCount }}</span>
               </div>
-              <div class="gewiNo">
-                <span class="cnt">{{ gewiNo }}</span
-                ><span>GEWI</span>
-              </div>
+              <div class="gewiLabel"><span>GEWI</span></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="rSide">
-        <div class="rTtl"><span>RATING</span></div>
-        <div class="val">
-          <span>{{ rateVal1 }}</span>
+
+      <div class="theValidatorBox_right">
+        <div class="ratingLabel"><span>RATING</span></div>
+        <div class="ratingValue">
+          <span>{{ ratingVal }}</span>
         </div>
       </div>
     </div>
@@ -39,113 +43,162 @@
 export default {
   data() {
     return {
-      vldCnt: 1,
-      vldIndex: 32.00000001,
-      gewiNo: 1,
-      rateVal1: "S",
+      activeVal: 1,
+      incomVal: 32.000000001,
+      gewiCount: 1,
+      ratingVal: "S",
     };
   },
 };
 </script>
-
 <style scoped>
-.bParts {
+.theValidatorParent {
   display: flex;
-  width: 80%;
-  box-sizing: border-box;
   justify-content: center;
-  align-content: center;
-  gap: 20%;
-}
-.rSide {
-  display: flex;
-  width: 40%;
+  align-items: center;
   flex-direction: column;
+  width: 100%;
+  height: 60%;
   box-sizing: border-box;
-  box-sizing: border-box;
-  justify-content: center;
-  align-content: center;
 }
-.rTtl {
+.theValidatorTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20%;
   width: 100%;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
-.rTtl span {
-  font-size: 50%;
-}
-.val {
-  text-align: center;
-  font-size: 150% !important;
-  color: #4dfff3;
-  width: 100%;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.lSide {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.parentVal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.vldTtl {
-  width: 100%;
+.theValidatorTitle span {
   font-size: 60%;
-  color: grey;
+  color: gray;
 }
-.lCont {
+hr {
+  width: 80%;
+}
+.theValidatorBox {
+  width: 90%;
+  height: 80%;
   display: flex;
-  gap: 5%;
+  justify-content: center;
+  align-items: center;
 }
-.lCont img {
+.theValidatorBox_left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+  flex-direction: column;
+}
+.activePart {
+  width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.activeIco {
   width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
-.lCont span {
-  font-size: 80%;
+.activeIco img {
+  width: 75%;
+}
+.activeValue {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60%;
+  font-weight: bold;
+}
+.gewiPart {
+  width: 100%;
+  height: 65%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.gewiIco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 100%;
+}
+.gewiIco img {
+  width: 80%;
+}
+.gewiValuePart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  height: 100%;
+}
+.green {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  font-size: 50%;
+  font-weight: bold;
+  color: #74fa65;
+}
+.gewiCount {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+}
+.gewiCountValue {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 100%;
+  font-size: 40%;
+}
+.gewiLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 100%;
+  font-size: 50%;
+  font-weight: bold;
+}
+.theValidatorBox_right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  height: 100%;
+}
+.ratingLabel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 25%;
+  font-size: 40%;
 }
 
-.vldcontIn {
+.ratingValue {
   display: flex;
-}
-.vldIco {
-  width: 40%;
-  box-sizing: border-box;
-}
-.vldIco img {
-  width: 80%;
-}
-.contVldNo {
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-}
-.vldNo span {
-  color: #74fa65;
-  font-size: 70%;
-}
-.gewiNo {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 10%;
-}
-.gewiNo span {
-  font-size: 80%;
-  font-weight: bold;
-}
-.cnt {
-  font-size: 70% !important;
-  margin: 5%;
+  justify-content: center;
+  width: 100%;
+  height: 75%;
+  font-size: 100%;
+  color: #4dfff3;
 }
 </style>

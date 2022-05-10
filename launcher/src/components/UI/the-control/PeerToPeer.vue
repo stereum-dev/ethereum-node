@@ -3,7 +3,7 @@
     <div class="p2pTtl">PEER CONNECTION</div>
     <div class="p2pBox">
       <div class="p2pIco">
-        <img src="../../../../public/img/icon/Control/PeerToPeerIcon.svg" />
+        <img src="../../../../public/img/icon/control/PeerToPeerIcon.svg" />
       </div>
       <div class="circBarCont">
         <div class="circleProc">

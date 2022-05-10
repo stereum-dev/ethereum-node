@@ -3,7 +3,7 @@
     <div class="theCpuTtl"><span>CPU</span></div>
     <div class="cpuContentBox">
       <div class="cpuIco">
-        <img src="../../../../public/img/icon/Control/cpuIcon.svg" />
+        <img src="../../../../public/img/icon/control/cpuIcon.svg" />
       </div>
       <div class="cpuCountPart">
         <div class="cpuUsage">

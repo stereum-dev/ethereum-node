@@ -5,7 +5,7 @@
       <div class="amsTitle_R">
         <div class="amsTitle_timer">{{ dateTime }}</div>
         <div class="amsTitle_runingIco">
-          <img src="../../../../public/img/icon/Control/amsterdam.png" />
+          <img src="../../../../public/img/icon/control/amsterdam.png" />
         </div>
       </div>
     </div>
@@ -14,7 +14,7 @@
         <div class="syncIco">
           <div class="syncIco_img">
             <img
-              src="../../../../public/img/icon/Control/testnetIconControl.png"
+              src="../../../../public/img/icon/control/testnetIconControl.png"
             />
           </div>
           <div class="syncNetTitle"><span>NETWORK</span></div>
