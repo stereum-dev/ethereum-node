@@ -4,11 +4,11 @@
       <div class="plugins">
         <div class="plugin-item">
           <img
-            src="../../../../public/Img/icon/manage-node-icons/obol-ssv-icon.png"
+            src="../../../../public/img/icon/manage-node-icons/obol-ssv-icon.png"
             alt="icon"
           />
           <img
-            src="../../../../public/Img/icon/manage-node-icons/obol-ssv-icon.png"
+            src="../../../../public/img/icon/manage-node-icons/obol-ssv-icon.png"
             alt="icon"
           />
         </div>
@@ -32,7 +32,7 @@
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
       <img
-        src="../../../../public/Img/icon/manage-node-icons/close.png"
+        src="../../../../public/img/icon/manage-node-icons/close.png"
         alt="icon"
       />
     </div>
@@ -40,8 +40,8 @@
 </template>
 <script>
 export default {
-  props: ["modalStatus"],
-};
+  props: ['modalStatus']
+}
 </script>
 <style scoped>
 .modal-container {

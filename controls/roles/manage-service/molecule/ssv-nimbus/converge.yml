@@ -8,23 +8,6 @@
     ssv_service: 52d77bd0-7e13-11ec-a95e-bb669ccf3e66
 
   tasks:
-    # ssv operator keys
-    - block:
-      - name: Generate SSV network keys
-        command: bash -c "docker run -d --name=ssv_node_op_key -it 'bloxstaking/ssv-node:alpine-dns' /go/bin/ssvnode generate-operator-keys &&
-                          docker logs ssv_node_op_key --follow &&
-                          docker stop ssv_node_op_key &&
-                          docker rm ssv_node_op_key"
-        register: ssv_keys
-        changed_when: false
-        become: yes
-      - name: Parse keys
-        set_fact:
-          ssv:
-            enabled: true
-            pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
-            sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
-
     # ssv service
     - block:
       - set_fact:
@@ -39,28 +22,40 @@
             state: started
             configuration:
               id: "{{ ssv_service }}"
-              image: bloxstaking/ssv-node:alpine-dns
+              image: bloxstaking/ssv-node:v0.1.12
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp
               env:
                 CONFIG_PATH: /data/config.yaml
-                CONFIG: |
-                  eth2:
-                    Network: "prater"
-                    BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
-                  eth1:
-                    ETH1Addr: "ws://10.10.0.2:8545"
-                    RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
-                  OperatorPrivateKey: "{{ ssv.sk }}"
-                  global:
-                    LogLevel: "debug"
-                  MetricsAPIPort: 15000
-              command: bash -c "touch /data/config.yaml &&
-                                echo \"$CONFIG\" > /data/config.yaml &&
-                                make BUILD_PATH=/go/bin/ssvnode start-node &&
+              command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node &&
                                 docker logs ssv_node"
               entrypoint: []
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
+
+    # ssv operator keys
+    - block:
+      - name: "Include ssv-key-generator"
+        include_role:
+          name: "ssv-key-generator"
+      vars:
+        ssv_key_service: "{{ ssv_service }}"
+
+    - name: Get configuration's content in variable
+      slurp:
+        src: "/etc/stereum/services/{{ ssv_service }}.yaml"
+      register: config
+      become: yes
+
+    - name: Read service's configuration
+      set_fact:
+        config_content: "{{ config.content | b64decode | from_yaml }}"
+
+    - name: Write "sk" into SSV-Service's config
+      ansible.builtin.lineinfile:
+        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        regexp: '^OperatorPrivateKey:*'
+        line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
+      become: yes

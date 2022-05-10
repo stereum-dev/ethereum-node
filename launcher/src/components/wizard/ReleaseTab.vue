@@ -17,7 +17,7 @@
           value-field="value"
           v-if="showAdvanced"
         >
-        </b-form-radio-group>      
+        </b-form-radio-group>
       </div>
     </div>
 
@@ -38,19 +38,19 @@
         <div class="alert alert-danger" role="alert">
           Unfortunately the preparations failed, please consult logs for details.
         </div>
-      </div>        
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "ReleaseTab",
+  name: 'ReleaseTab',
   components: {},
-  data() {
+  data () {
     return {
-      showAdvanced: false,
-    };
+      showAdvanced: false
+    }
   },
   props: {
     releases: Array,
@@ -59,9 +59,9 @@ export default {
     success: Boolean,
     done: Boolean,
     progress: Number,
-    logs: Array,
-  },
-};
+    logs: Array
+  }
+}
 </script>
 
 <style scoped></style>

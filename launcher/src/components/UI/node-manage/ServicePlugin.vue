@@ -2,7 +2,7 @@
   <div class="service-container" onmousedown="return false">
     <img
       class="service-arrow"
-      src="../../../../public/Img/icon/manage-node-icons/up-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -14,51 +14,49 @@
         class="service-item"
         @click="selectedItem(item)"
       >
-        <img :src="item.source" alt="icon" />
+        <img :src="item.sIcon" alt="icon" />
       </div>
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/Img/icon/manage-node-icons/down-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     ...mapGetters({
-      servicePlugins: "getServicePlugins",
-    }),
+      servicePlugins: 'getServicePlugins'
+    })
   },
   methods: {
-    selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("itemSelect", item);
-    },
-  },
-};
+    selectedItem (item) {
+      item.active = !item.active
+      this.$emit('itemSelect', item)
+    }
+  }
+}
 </script>
 <style scoped>
 .service-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 95%;
-  height: 95%;
-  margin-bottom: 10px;
-  background: #4f4f4f;
-  align-self: center;
+  width: 96%;
+  height: 98%;
+  background-color: #3b3b3b;
   border-radius: 20px;
   overflow: auto;
   padding: 5px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .service-arrow {

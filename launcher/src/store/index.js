@@ -11,7 +11,7 @@ import theNodeModule from "./theNode/index.js";
 import theStakingModule from "./theStaking/index.js";
 import welcomePageModule from "./welcomePage/index.js";
 
-//state vuex
+// state vuex
 const store = createStore({
   modules: {
     languages: flagDialModule,
@@ -27,17 +27,17 @@ const store = createStore({
     return {
       installation: [
         {
-          img: "/img/icon/one click installer.png",
+          img: "/img/icon/one-click-installer.png",
           img2: "/img/icon/click-installation/click-installer.png",
           path: "/clickinstall",
         },
         {
-          img: "/img/icon/custom installer.png",
+          img: "/img/icon/custom_installer.png",
           img2: "img/icon/click-installation/custom-nstallation.png",
           path: "/manage",
         },
         {
-          img: "/img/icon/IMPORT CONFIGURATIONS.png",
+          img: "/img/icon/IMPORT_CONFIGURATIONS.png",
           img2: "/img/icon/click-installation/import.png",
           path: "/",
         },
@@ -71,7 +71,7 @@ const store = createStore({
       configData_nodeSidebarActive: [
         {
           id: 1,
-          name: "NONE FUNCTIONAL",
+          name: "NONE FUNC.",
           status: "deactive",
         },
         {
@@ -81,7 +81,7 @@ const store = createStore({
         },
         {
           id: 3,
-          name: "SYNC/PROBLEM REC.",
+          name: "SYNC/PROBLEM",
           status: "notOk",
         },
         {
@@ -101,58 +101,13 @@ const store = createStore({
         },
         {
           id: 7,
-          name: "SYNC/PROBLEM REC.",
+          name: "SYNC/PROBLEM",
           status: "notOk",
         },
         {
           id: 8,
-          name: "NONE FUNCTIONAL",
+          name: "NONE FUNC.",
           status: "deactive",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 9,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
-        },
-        {
-          id: 10,
-          name: "SYNC/PROBLEM REC.",
-          status: "notOk",
         },
       ],
       R1clkInstls: [
@@ -162,11 +117,25 @@ const store = createStore({
         { clkId: "obol", img: "/img/icon/OBOL_SSV.png" },
         { clkId: "rocket", img: "/img/icon/ROCKETPOOL_1.png" },
       ],
+      taskManagerIcons: [
+        {
+          progressIcon: require("./../../public/img/icon/task-manager-icons/task-manager-icon.png"),
+        },
+        {
+          activeIcon: require("./../../public/img/icon/task-manager-icons/task-blue-icon.png"),
+        },
+        {
+          successIcon: require("./../../public/img/icon/task-manager-icons/task-green-icon.png"),
+        },
+        {
+          failedIcon: require("./../../public/img/icon/task-manager-icons/task-red-icon.png"),
+        },
+      ],
     };
   },
   mutations: rootMutations,
   actions: rootActions,
   getters: rootGetters,
 });
-//end of state
+// end of state
 export default store;

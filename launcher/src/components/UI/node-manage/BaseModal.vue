@@ -3,7 +3,7 @@
     <div class="modal-box">
       <div class="modal-items">
         <div class="item" v-for="item in modalItems" :key="item.id">
-          <img :src="item.source" alt="icon" />
+          <img :src="item.sIcon" alt="icon" />
         </div>
       </div>
       <button class="close-btn" @click="$emit('closeMe')">Close</button>
@@ -12,13 +12,13 @@
 </template>
 <script>
 export default {
-  props: ["modalItems"],
-};
+  props: ['modalItems']
+}
 </script>
 <style scoped>
 .modal-bg {
-  width: 48.5vw;
-  height: 87.6vh;
+  width: 100%;
+  height: 74%;
   background-color: #181818;
   display: flex;
   justify-content: center;
@@ -26,8 +26,8 @@ export default {
   z-index: 99;
 }
 .modal-box {
-  width: 94%;
-  height: 94%;
+  width: 95%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,5 +69,16 @@ export default {
   color: #fff;
   outline-style: none;
   font-weight: bold;
+  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+}
+.close-btn:hover {
+  border: 1px solid #dfdfdf;
+  background-color: #a42424;
+  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+}
+.close-btn:active {
+  border: 1px solid #a42424;
+  background-color: #a42424;
+  box-shadow: none;
 }
 </style>

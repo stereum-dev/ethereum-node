@@ -4,80 +4,103 @@ import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 
 test('LighthouseValidatorService buildConfiguration', () => {
-    jest.mock('./LighthouseBeaconService');
-    const LighthouseBeaconService = require('./LighthouseBeaconService');
-    const mMock = jest.fn(() => { return "http-endpoint-string" });
-    LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
+  jest.mock('./LighthouseBeaconService')
+  const LighthouseBeaconService = require('./LighthouseBeaconService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  LighthouseBeaconService.LighthouseBeaconService.mockImplementation(() => {
+    return {
+      buildConsensusClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
         return {
-            buildConsensusClientHttpEntpointUrl: mMock,
-        };
-    });
+          id: 'lh_bc-id',
+          service: 'LighthouseBeaconService'
+        }
+      })
+    }
+  })
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
 
-    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [new LighthouseBeaconService.LighthouseBeaconService()], "foobar").buildConfiguration();
+  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new LighthouseBeaconService.LighthouseBeaconService()], 'foobar').buildConfiguration()
 
-    expect(lhService.env.BEACON_NODES).toHaveLength(1);
-    expect(lhService.env.BEACON_NODES).toContain("http-endpoint-string");
-    expect(lhService.env.GRAFFITI).toMatch(/foobar/);
-    expect(lhService.volumes).toHaveLength(2);
-    expect(lhService.volumes).toContain("/opt/stereum/lh/wallets:/opt/app/validator");
-    expect(lhService.volumes).toContain("/opt/stereum/lh/launchpad:/opt/app/launchpad");
-    expect(lhService.ports).toHaveLength(0);
-    expect(lhService.id).toHaveLength(36);
-    expect(lhService.user).toMatch(/2000/);
-    expect(lhService.image).toMatch(/stereum\/lighthouse/);
 
-    expect(lhService.service).toMatch(/LighthouseValidatorService/);
-});
+
+  expect(lhService.command).toContain('--beacon-nodes=http-endpoint-string')
+  expect(lhService.command).toContain('--graffiti=foobar')
+  expect(lhService.volumes).toHaveLength(1)
+  expect(lhService.volumes).toContain('/opt/stereum/lh/validator:/opt/app/validator')
+  expect(lhService.ports).toHaveLength(1)
+  expect(lhService.id).toHaveLength(36)
+  expect(lhService.user).toMatch(/2000/)
+  expect(lhService.image).toMatch(/sigp\/lighthouse/)
+
+  expect(lhService.service).toMatch(/LighthouseValidatorService/)
+})
 
 test('LighthouseValidatorService getAvailablePorts', () => {
-    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [], "foobar").getAvailablePorts();
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [], 'foobar').getAvailablePorts()
 
-    expect(lhService).toHaveLength(0);
-});
+  expect(lhService).toHaveLength(1)
+})
 
 test('LighthouseValidatorService autoupdate', () => {
-    const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [], 'foobar').buildConfiguration()
 
-    expect(lhService.autoupdate).toBe(true);
-});
+  expect(lhService.autoupdate).toBe(true)
+})
 
 test('LighthouseValidatorService network', () => {
-    const lhService = LighthouseValidatorService.buildByUserInput(networks.mainnet, "/opt/stereum/lh", [], "foobar").buildConfiguration();
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lhService = LighthouseValidatorService.buildByUserInput(networks.mainnet, ports, '/opt/stereum/lh', [], 'foobar').buildConfiguration()
 
-    expect(lhService.network).toBe(networks.mainnet);
-});
+  expect(lhService.network).toBe(networks.mainnet)
+})
 
 test('buildByConfiguration', () => {
-    const bn1 = "http://node1:5052";
-    const bn2 = "https://node2:999";
+  const bn1 = 'http://node1:5052'
+  const bn2 = 'https://node2:999'
 
-    const lh = LighthouseValidatorService.buildByConfiguration({
-        id: "123",
-        service: "LighthouseValidatorService",
-        image: "lhval:v0.0.1",
-        env: {
-            DATADIR: "/data",
-            DEBUG_LEVEL: "info",
-            BEACON_NODES: [bn1, bn2],
-            NETWORK: "mainnet",
-            GRAFFITI: "stereum.net",
-            LAUNCHPADDIR: "/launchpad",
-        },
-    });
+  const lh = LighthouseValidatorService.buildByConfiguration({
+    id: '123',
+    service: 'LighthouseValidatorService',
+    image: 'lhval:v0.0.1',
+    command:[
+      'lighthouse',
+      'vc',
+      '--debug-level=debug',
+      '--network=prater',
+      `--beacon-nodes=${bn1},${bn2}`,
+      `--datadir=/opt/app/validator`,
+      '--init-slashing-protection',
+      '--graffiti="stereum.net"',
+      '--metrics',
+      '--metrics-address=0.0.0.0',
+      '--http',
+      '--http-address=0.0.0.0',
+      '--unencrypted-http-transport'
+    ]
+  })
 
-    expect(lh.id).toBe("123");
-    expect(lh.service).toBe("LighthouseValidatorService");
-    expect(lh.image).toBe("lhval");
-    expect(lh.imageVersion).toBe("v0.0.1");
-    expect(lh.ports).toHaveLength(0);
+  expect(lh.id).toBe('123')
+  expect(lh.service).toBe('LighthouseValidatorService')
+  expect(lh.image).toBe('lhval')
+  expect(lh.imageVersion).toBe('v0.0.1')
+  expect(lh.ports).toHaveLength(0)
 
-    expect(lh.volumes).toHaveLength(0);
+  expect(lh.volumes).toHaveLength(0)
 
-    expect(lh.env).toBeDefined();
-    expect(lh.env.DEBUG_LEVEL).toMatch(/info/);
-    expect(lh.env.BEACON_NODES).toHaveLength(2);
-    expect(lh.env.BEACON_NODES[0]).toBe(bn1);
-    expect(lh.env.BEACON_NODES[1]).toBe(bn2);
-});
+  expect(lh.command).toBeDefined()
+  expect(lh.command).toContain('--debug-level=debug')
+  expect(lh.command).toContain('--beacon-nodes=http://node1:5052,https://node2:999')
+})
 
 // EOF

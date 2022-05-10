@@ -1,5 +1,5 @@
 <template>
-  <section id="parent">
+  <div class="router-view">
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
@@ -15,6 +15,13 @@
           </div>
           <div>
             <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+            ></drop-zone>
+          </div>
+          <div>
+            <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
@@ -25,13 +32,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-            ></drop-zone>
-          </div>
-          <div>
-            <drop-zone
-              :title="'execution'"
-              :list="executionItems"
-              @modal-view="showModal"
             ></drop-zone>
           </div>
         </div>
@@ -47,16 +47,18 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager></task-manager>
       </div>
     </node-bg>
-  </section>
+  </div>
 </template>
 
 <script>
 import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import NodeSidebar from "../components/UI/NodeSidebarParent.vue";
+import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapGetters } from "vuex";
 export default {
   components: {
@@ -64,6 +66,7 @@ export default {
     DropZone,
     BaseModal,
     NodeSidebar,
+    TaskManager,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -78,7 +81,36 @@ export default {
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
       servicePlugins: "getServicePlugins",
+      selectedPreset: "getSelectedPreset",
     }),
+  },
+  mounted() {
+    if (Object.keys(this.selectedPreset).length !== 0) {
+      this.selectedPreset.includedPlugins.map((item) => {
+        if (item.category === "validator") {
+          if (this.validatorItems.some((plugin) => plugin.id == item.id)) {
+            return;
+          }
+          this.validatorItems.push(item);
+        } else if (item.category === "consensus") {
+          if (this.consensusItems.some((plugin) => plugin.id == item.id)) {
+            return;
+          }
+          this.consensusItems.push(item);
+        } else if (item.category === "execution") {
+          if (this.executionItems.some((plugin) => plugin.id == item.id)) {
+            return;
+          }
+          this.executionItems.push(item);
+        } else if (item.category === "service") {
+          if (this.servicePlugins.some((plugin) => plugin.id == item.id)) {
+            return;
+          }
+          this.servicePlugins.push(item);
+        }
+      });
+      this.$store.commit("mutatedSelectedPreset", []);
+    }
   },
   methods: {
     showModal(data) {
@@ -93,49 +125,49 @@ export default {
 </script>
 
 <style scoped>
-#parent {
-  box-sizing: border-box;
-  padding: 0;
-}
-
 #head {
+  width: 100%;
   position: fixed;
   top: 0;
-  z-index: 100;
+  z-index: 49;
 }
 .node-parent {
   display: grid;
-  width: 99.1vw;
-  height: 91.5vh;
-  grid-template-columns: 18% 46% 21% 15%;
-  grid-template-rows: repeat(3, 32%) 4%;
+  width: 100%;
+  height: 90%;
+  border: 4px solid #979797;
+  border-radius: 0 35px 10px 10px;
+  grid-template-columns: 18% 46% 20% 16%;
+  grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
-  position: absolute;
-  top: 1px;
+  background-color: rgb(0, 0, 0);
+  z-index: 1;
 }
 
 .journal-box {
+  width: 100%;
   height: 100%;
-  color: white;
+  color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
   margin-top: 1px;
-  background-color: rgb(24, 24, 24);
-  border-radius: 0 25px 25px 0;
+  background-color: #606060;
+  border-radius: 0 25px 25px 10px;
 }
 .trapezoid-parent {
-  height: 88.5vh;
+  width: 100%;
+  height: 100%;
   grid-column: 2;
   grid-row: 1/4;
-  /* background-color: #17241e; */
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
 .modal-parent {
-  width: 44.6vw;
-  height: 88.2vh;
-
+  width: 45.5%;
+  height: 85.6%;
+  margin: 0 auto;
   display: flex;
   grid-column: 2;
   grid-row: 1/4;
@@ -143,14 +175,14 @@ export default {
   z-index: 1;
 }
 .modal-bg {
-  height: 88.2vh;
+  height: 100%;
 }
 .service {
-  width: 97.7%;
+  width: 98%;
   height: 98.2%;
   grid-column: 3;
   grid-row: 1/4;
-  background: #2c4030;
+  background: #334b3f;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
@@ -176,7 +208,7 @@ export default {
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;
@@ -184,7 +216,7 @@ export default {
 }
 
 .trap-container {
-  width: 97%;
+  width: 98%;
   margin: 0 auto;
 }
 .trap-title {
@@ -204,16 +236,19 @@ export default {
   grid-column: 4;
   grid-row: 1/4;
   height: 99.8%;
-  max-height: 600px;
 }
-
 .footer {
-  width: 99.1vw;
-  color: white;
+  width: 100%;
+  height: 88%;
+  margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
-  background-color: rgb(40, 40, 40);
-  border-radius: 0 0 1.9rem 1.9rem;
-  position: relative;
+  background-color: #343434;
+  border-radius: 0 0 7px 7px;
+}
+.node-task-manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>

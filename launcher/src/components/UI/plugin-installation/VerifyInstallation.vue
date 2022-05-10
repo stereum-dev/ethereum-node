@@ -15,40 +15,25 @@
             <div class="table-box">
               <div class="table">
                 <div class="table-header">
-                  <span>TO INSTALL</span>
-                  <span>SELECTION</span>
-                  <span>REQUIREMENTS</span>
+                  <span>NAME</span>
+                  <span>CATEGORY</span>
+                  <span>PATH</span>
                 </div>
                 <div class="table-content">
                   <div
                     class="table-row"
-                    v-for="(item, index) in plugins"
+                    v-for="(plugin, index) in selectedPreset.includedPlugins"
                     :key="index"
-                    v-show="index === this.plugins.length - 1"
                   >
                     <div class="plugin-name">
-                      <span>NAME:</span>
-                      <span>{{ item.name }}</span>
+                      <img :src="plugin.icon" alt="icon">
+                      <span>{{ plugin.name }}</span>
                     </div>
-                    <div class="selection">
-                      <div class="network">
-                        <span>NETWORK:</span>
-                        <span>{{ item.network }}</span>
-                      </div>
-                      <div class="path">
-                        <span>PATH:</span>
-                        <span>{{ item.path }}</span>
-                      </div>
+                    <div class="category">
+                      <span>{{ plugin.category }}</span>
                     </div>
-                    <div class="requirements">
-                      <div class="cpu">
-                        <span>CPU CORES:</span>
-                        <span>{{ item.requirements.core }}</span>
-                      </div>
-                      <div class="memory">
-                        <span>MEMORY:</span>
-                        <span>{{ item.requirements.memory }}</span>
-                      </div>
+                    <div class="path">
+                      <span>{{ installationPath + plugin.path }}</span>
                     </div>
                   </div>
                 </div>
@@ -59,8 +44,8 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/node' }">
-              <button  class="next-btn">INSTALL</button>
+            <router-link :to="{ path: '/configuration' }">
+              <button class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
@@ -69,17 +54,23 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
-    }),
+      selectedPreset: 'getSelectedPreset',
+      installationPath: 'getInstallationPath'
+    })
   },
-};
+  mounted () {
+    if (Object.keys(this.selectedPreset).length === 0) {
+      this.$router.push('/clickinstall')
+    }
+  }
+}
 </script>
 <style scoped>
 .verify-parent {
@@ -122,7 +113,8 @@ export default {
 .verify-box {
   width: 95%;
   height: 20%;
-  background-color: #c2bebe;
+  margin-top: 5px;
+  background-color: #8e8e8e;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -130,9 +122,9 @@ export default {
   box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .verify-title-box {
-  width: 95%;
+  width: 96%;
   height: 80%;
-  border-radius: 20px;
+  border-radius: 15px;
   background-color: #5b5b5b;
   display: flex;
   justify-content: center;
@@ -170,138 +162,109 @@ export default {
   align-items: center;
 }
 .table .table-header {
-  width: 93%;
+  width: 89%;
   height: 8%;
   /* background-color: #334b3e; */
   background-color: #336666;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 32% 32% 36%;
   align-items: center;
-  padding: 0 5px;
+}
+.table .table-header span:first-child {
+  width: 100%;
+  color: rgb(213, 213, 213);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding-left: 15px;
+  text-align: left;
 }
 .table .table-header span {
-  color: #fff;
+  width: 100%;
+  color: rgb(213, 213, 213);
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-align: left;
 }
 .table .table-content {
   width: 95%;
   height: 70%;
   border-top: 1px solid gray;
+  /* background-color: rgb(27, 27, 27); */
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: 100%;
+  align-items: center;
   overflow-x: hidden;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 .table-content::-webkit-scrollbar {
   width: 1px;
 }
 
 .table-content .table-row {
-  width: 100%;
-  height: 20%;
-  margin-top: 5px;
-  border-bottom: 1px solid gray;
+  width: 95%;
+  height: 100%;
+  margin-top: 15px auto;
+  background-color: #33393e;
+  box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
+  border:1px solid rgb(81, 80, 80);
+  border-radius: 10px;
+  justify-self: center;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   padding: 1px 0 3px 0;
+  cursor: pointer;
 }
 
 .table-row .plugin-name {
-  width: 25%;
+  width: 30%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
+.plugin-name img{
+  width:12%;
+  height: 50%;
+}
 
-.plugin-name span:first-child {
-  color: #a7a7a7;
+.plugin-name span {
+  width: 90%;
+  height: 56%;
+  color: #929292;
   font-size: 0.8rem;
   font-weight: 600;
+  margin-left: 10px;
 }
-.plugin-name span:last-child {
-  color: #4ca434;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection {
-  width: 40%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-.network {
-  width: 80%;
+
+.category {
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .path {
-  width: 100%;
+  width: 35%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
-.table-row .selection .network span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection .network span:last-child {
-  color: #4ca434;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection .path span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .selection .path span:last-child {
-  color: #c6ac2a;
+.table-row .category span {
+  width: 100%;
+  height: 100%;
+  color: #4f9a71;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 800;
+  text-transform: uppercase;
 }
-.table-row .requirements {
-  width: 20%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-.requirements .cpu,
-.requirements .memory {
+.table-row .path span {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.table-row .requirements .cpu span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .requirements .cpu span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .requirements .memory span:first-child {
-  color: #a7a7a7;
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-.table-row .requirements .memory span:last-child {
-  color: #54a748;
-  font-size: 0.8rem;
-  font-weight: 600;
+  color: #a9a064;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: left;
 }
 
 .btn-box {
@@ -310,6 +273,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
 }
 .btn-box a {
   width: 95%;
@@ -318,6 +282,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+
 }
 .next-btn,
 .back-btn {
@@ -327,16 +292,16 @@ export default {
   border-radius: 20px;
   background-color: #336666;
   color: #fff;
+  outline-style: none;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
-    inset 1px 1px 3px 1px rgb(92, 114, 92);
+  box-shadow: 0 1px 2px 1px rgb(49, 61, 54);
+  cursor: pointer;
 }
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
-    inset 1px 1px 5px 1px rgb(67, 86, 67);
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
 .next-btn:active,
 .back-btn:active {

@@ -5,13 +5,13 @@
         <img
           v-if="isTestnetActive"
           class="textnet-icon"
-          src="../../../../public/Img/icon/click-installation/testnet-icon.png"
+          src="../../../../public/img/icon/click-installation/testnet-icon.png"
           alt="icon"
         />
         <img
           v-if="isMainnetActive"
           class="mainnet-icon"
-          src="../../../../public/Img/icon/click-installation/mainnet-icon.png"
+          src="../../../../public/img/icon/click-installation/mainnet-icon.png"
           alt="icon"
         />
       </div>
@@ -20,6 +20,7 @@
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
       >
+        <option value="" selected>CHOOSE A NETWORK</option>
         <option value="mainnet">Mainnet</option>
         <option value="testnet">Testnet</option>
       </select>
@@ -37,9 +38,9 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === this.selectedPreset?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -50,12 +51,13 @@
               :key="index"
             >
               <img
+                onmousedown="return false"
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: itemSelectedToInstall,
+                  selectedItem: item.id === this.selectedPreset?.id,
                 }"
-                @click="selectItemToInstall"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>
@@ -65,52 +67,63 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
+import ControlService from '@/store/ControlService'
 export default {
-  data() {
+  data () {
     return {
       isMainnetActive: false,
       mainnetPlugins: [],
       isTestnetActive: false,
       testnetPlugins: [],
-      selectedNetworks: null,
-      itemSelectedToInstall: false,
-    };
+      selectedNetworks: null
+    }
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
-    }),
+      plugins: 'installationPlugins',
+      selectedPreset: 'getSelectedPreset',
+      allPlugins: 'getAllPlugins'
+    })
   },
-  beforeUpdate() {
-    this.mainnetNetworkHandler();
-    this.testnetNetworkHandler();
+
+  beforeUpdate () {
+    this.mainnetNetworkHandler()
+    this.testnetNetworkHandler()
   },
   methods: {
-    mainnetNetworkHandler() {
-      if (this.selectedNetworks == "mainnet") {
+    mainnetNetworkHandler () {
+      if (this.selectedNetworks == 'mainnet') {
         this.mainnetPlugins = this.plugins.filter(
-          (item) => item.network == "mainnet"
-        );
-        this.isMainnetActive = true;
-        this.isTestnetActive = false;
+          (item) => item.network == 'mainnet'
+        )
+        this.isMainnetActive = true
+        this.isTestnetActive = false
       }
     },
 
-    testnetNetworkHandler() {
-      if (this.selectedNetworks == "testnet") {
+    testnetNetworkHandler () {
+      if (this.selectedNetworks == 'testnet') {
         this.testnetPlugins = this.plugins.filter(
-          (item) => item.network == "testnet"
-        );
-        this.isMainnetActive = false;
-        this.isTestnetActive = true;
+          (item) => item.network == 'testnet'
+        )
+        this.isMainnetActive = false
+        this.isTestnetActive = true
       }
     },
-    selectItemToInstall() {
-      this.itemSelectedToInstall = !this.itemSelectedToInstall;
-    },
-  },
-};
+    selectItemToInstall: async function (item) {
+      const constellation = await ControlService.getOneClickConstellation(item.name)
+
+      const includedPlugins = []
+      constellation.forEach(plugin => {
+        const buffer = this.allPlugins.filter(element => element.name === plugin)
+        buffer.forEach(element => includedPlugins.push(element))
+      })
+      item.includedPlugins = includedPlugins
+      this.$store.commit('mutatedSelectedPreset', item)
+    }
+  }
+}
 </script>
 <style scoped>
 .plugin-parent {
@@ -135,7 +148,7 @@ export default {
   box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
 .select-box #selector {
-  width: 65%;
+  width: 85%;
   height: 80%;
   border: none;
   border-radius: 5px;
@@ -192,19 +205,20 @@ export default {
 .testnet-plugin {
   width: 100%;
   height: 100%;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width: 54%;
-  height: 80%;
+  width: 52%;
+  height: 79%;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
-  width: 58% !important;
-  height: 86% !important;
+  width: 53%;
+  height: 82%;
   transition: 0.2s;
 }
 .selectedItem {

@@ -1,31 +1,31 @@
 export const servicePortProtocol = {
-    tcp: "tcp",
-    udp: "udp",
-};
+  tcp: 'tcp',
+  udp: 'udp'
+}
 
 export class ServicePort {
-    constructor(destinationIp, destinationPort, servicePort, servicePortProtocol) {
-        this.destinationIp = destinationIp;
-        this.destinationPort = destinationPort;
-        this.servicePort = servicePort;
-        this.servicePortProtocol = servicePortProtocol;
+  constructor (destinationIp, destinationPort, servicePort, servicePortProtocol) {
+    this.destinationIp = destinationIp
+    this.destinationPort = destinationPort
+    this.servicePort = servicePort
+    this.servicePortProtocol = servicePortProtocol
+  }
+
+  static buildByConfig (portString) {
+    const portSettings = portString.split(':')
+    const servicePortSettings = portSettings[2].split('/')
+
+    return new ServicePort(portSettings[0], portSettings[1], servicePortSettings[0], servicePortSettings[1])
+  }
+
+  buildPortMapping () {
+    let destination
+    if (this.destinationIp) { // https://stackoverflow.com/a/5515349
+      destination = this.destinationIp
+    } else {
+      destination = '0.0.0.0' // use any network address on the server
     }
 
-    static buildByConfig(portString) {
-        const portSettings = portString.split(":");
-        const servicePortSettings = portSettings[2].split("/");
-
-        return new ServicePort(portSettings[0], portSettings[1], servicePortSettings[0], servicePortSettings[1]);
-    }
-
-    buildPortMapping() {
-        let destination;
-        if (this.destinationIp) { // https://stackoverflow.com/a/5515349
-            destination = this.destinationIp;
-        } else {
-            destination = "0.0.0.0"; // use any network address on the server
-        }
-
-        return destination + ":" + this.destinationPort  + ":" + this.servicePort + "/" + this.servicePortProtocol;
-    }
+    return destination + ':' + this.destinationPort + ':' + this.servicePort + '/' + this.servicePortProtocol
+  }
 }

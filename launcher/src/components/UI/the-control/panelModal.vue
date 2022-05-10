@@ -20,8 +20,8 @@
 </template>
 <script>
 export default {
-  props: ["item"],
-};
+  props: ['item']
+}
 </script>
 <style scoped>
 .modal-parent {
@@ -42,12 +42,12 @@ export default {
 
 .modal-box {
   width: 45%;
-  height: 65%;
+  height: 68%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 10%;
+  top: 16%;
   left: 28%;
   z-index: 7;
 }

@@ -4,7 +4,10 @@
       <div class="confirm-bg-1">
         <div class="confirm-bg-2">
           <div class="check-icon">
-            <img src="Img/icon/manage-node-icons/check-mark.png" alt="icon" />
+            <img
+              src="../../../../public/img/icon/manage-node-icons/check-mark.png"
+              alt="icon"
+            />
           </div>
         </div>
       </div>
@@ -22,7 +25,7 @@
           <span>{{ item.content }}</span>
           <div class="right-icon">
             <img
-              src="../../../../public/Img/icon/manage-node-icons/plugin-item-icon.png"
+              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
               alt="icon"
             />
           </div>
@@ -34,7 +37,10 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img src="/Img/icon/manage-node-icons/trash-icon.png" alt="icon" />
+            <img
+              src="../../../../public/img/icon/manage-node-icons/trash-icon.png"
+              alt="icon"
+            />
           </div>
         </div>
       </div>
@@ -43,71 +49,74 @@
   </div>
 </template>
 <script>
-import BaseButton from "../BaseButton.vue";
-import { mapGetters } from "vuex";
+import BaseButton from '../BaseButton.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { BaseButton },
-  props: ["confirmChanges"],
+  props: ['confirmChanges'],
   computed: {
     ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      selectedItemToRemove: "getSelectedItemToRemove",
-      servicePlugins: "getServicePlugins",
-    }),
+      consensusItems: 'getConsensusItems',
+      executionItems: 'getExecutionItems',
+      validatorItems: 'getValidatorItems',
+      selectedItemToRemove: 'getSelectedItemToRemove',
+      servicePlugins: 'getServicePlugins'
+    })
   },
   methods: {
-    clickOnRemoveBtn() {
-      if (this.selectedItemToRemove.category == "service") {
+    clickOnRemoveBtn () {
+      if (this.selectedItemToRemove.category == 'service') {
         this.$store.commit(
-          "mutatedServicePlugins",
+          'mutatedServicePlugins',
           this.servicePlugins.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "execution") {
+      if (this.selectedItemToRemove.category == 'execution') {
         this.$store.commit(
-          "mutatedExecutionItems",
+          'mutatedExecutionItems',
           this.executionItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "consensus") {
+      if (this.selectedItemToRemove.category == 'consensus') {
         this.$store.commit(
-          "mutatedConsensusItems",
+          'mutatedConsensusItems',
           this.consensusItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      if (this.selectedItemToRemove.category == "validator") {
+      if (this.selectedItemToRemove.category == 'validator') {
         this.$store.commit(
-          "mutatedValidatorItems",
+          'mutatedValidatorItems',
           this.validatorItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id;
+            return item.id !== this.selectedItemToRemove.id
           })
-        );
+        )
       }
-      return;
-    },
-  },
-};
+    }
+  }
+}
 </script>
 <style scoped>
 .menu-container {
   width: 100%;
   height: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  align-items: center;
 }
 .confirm-box {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  cursor: grab;
+  cursor: pointer;
 }
 .change-menu .confirm-bg-1 {
   width: 70px;
@@ -152,11 +161,11 @@ export default {
 }
 .table-container {
   margin: 5px auto 0 auto;
-  width: 70%;
-  height: 200px;
+  width: 80%;
+  height: 43%;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
-  border-radius: 25px;
+  border-radius: 18px;
   padding: 5px;
   position: relative;
   overflow-x: hidden;
@@ -168,29 +177,30 @@ export default {
   justify-content: center;
   align-items: center;
   width: 90%;
-  height: 23px;
+  height: 10%;
   background-color: #707070;
-  border: 1px solid rgb(63, 63, 63);
+  border: 1px solid rgb(84, 84, 84);
+  box-shadow: 0 1px 4px 1px rgb(33, 33, 33);
   border-radius: 50px;
   margin: 0 auto;
   position: absolute;
-  top: 4px;
+  top: 3px;
   right: 4px;
 }
 .table-header span {
-  color: #fff;
-  font-size: 7px;
-  font-weight: 600;
+  color: rgb(180, 193, 193);
+  font-size: 8px;
+  font-weight: 900;
 }
 .table-box {
   width: 95%;
-  height: 85%;
+  height: 83%;
   margin: 0 auto;
   background-color: #3b3a3a;
   border-left: 2px solid gray;
   border-right: 2px solid gray;
   border-radius: 10px;
-  padding-top: 30px;
+  padding-top: 22px;
   overflow-x: hidden;
   overflow-y: scroll;
 }
@@ -212,6 +222,9 @@ export default {
   width: 20px;
   height: 20px;
   background-color: #336666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .table-item .right-icon img {
   width: 15px;
@@ -223,21 +236,11 @@ export default {
   height: 14px;
 }
 .table-item span {
-  color: #fff;
+  color: rgb(194, 191, 191);
   font-size: 8px;
-  font-weight: 500;
+  font-weight: 700;
 }
-.table-footer {
-  width: 87%;
-  height: 20px;
-  background-color: #707070;
-  border: 1px solid rgb(63, 63, 63);
-  border-radius: 50px;
-  margin: 0 auto;
-  position: absolute;
-  bottom: 4px;
-  right: 7px;
-}
+
 .table-box img {
   width: 90%;
   height: 200px;

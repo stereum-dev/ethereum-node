@@ -1,9 +1,9 @@
 <template>
   <div class="parent">
     <div id="container">
-      <section @click="activePage">
-        <base-logo mode="logo" :link="link"> </base-logo>
-      </section>
+      <div class="baselogo-box" @click="activePage">
+        <base-logo :link="link"> </base-logo>
+      </div>
 
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
       <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
@@ -26,78 +26,92 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-import BaseLogo from "../components/layers/BaseLogo.vue";
-import LangButton from "../components/UI/LangButton.vue";
-import LangDialog from "../components/UI/LangDialog.vue";
-import ControlService from "@/store/ControlService";
-//import SetupServer from "./SetupServer.vue";
+import { mapActions } from 'vuex'
+import BaseLogo from '../components/layers/BaseLogo.vue'
+import LangButton from '../components/UI/LangButton.vue'
+import LangDialog from '../components/UI/LangDialog.vue'
+import ControlService from '@/store/ControlService'
+// import SetupServer from "./SetupServer.vue";
 export default {
-  name: "TheFirst",
+  name: 'TheFirst',
   components: { BaseLogo, LangButton, LangDialog },
 
-  emit: ["open", "page"],
-  created(){
-    this.checkSettings();
+  emit: ['open', 'page'],
+  created () {
+    this.checkSettings()
   },
-  data() {
+  data () {
     return {
-      link: "stereum_logo_blinking.gif",
-      flag: "SelectLang.png",
-      language: "",
-    };
+      link: 'stereum-logo-blinking.gif',
+      flag: 'SelectLang.png',
+      language: ''
+    }
   },
   computed: {
-    linkFlags() {
-      return this.$store.getters.linkFlags_get;
+    linkFlags () {
+      return this.$store.getters.linkFlags_get
     },
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible_get;
-    },
+    dialogIsVisible () {
+      return this.$store.getters.dialogIsVisible_get
+    }
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
-    setLang(lang, langSelect) {
-      this.language = lang;
-      this.flag = langSelect;
-      this.hideDialog();
-      this.link = "stereum_logo_extern.png";
-      this.updateSettings(lang, langSelect);
+    ...mapActions(['showDialog', 'hideDialog']),
+    setLang (lang, langSelect) {
+      this.language = lang
+      this.flag = langSelect
+      this.hideDialog()
+      this.link = 'stereum-logo-extern.png'
+      this.updateSettings(lang, langSelect)
     },
-    activePage() {
-      if (this.language === "") {
+    activePage () {
+      if (this.language === '') {
         ///
       } else {
-        this.$emit("page", "SetupServer");
+        this.$emit('page', 'SetupServer')
       }
     },
-    checkSettings : async function(){
+    checkSettings: async function () {
       const savedConfig = await ControlService.readConfig()
-      if(savedConfig !== undefined && savedConfig.savedLanguage !== undefined){
-        this.setLang(savedConfig.savedLanguage.language, savedConfig.savedLanguage.flag);
-        this.activePage();
+      if (
+        savedConfig !== undefined &&
+        savedConfig.savedLanguage !== undefined
+      ) {
+        this.setLang(
+          savedConfig.savedLanguage.language,
+          savedConfig.savedLanguage.flag
+        )
+        this.activePage()
       }
     },
-    updateSettings : async function(lang, langSelect){
-      let prevConf = await ControlService.readConfig()
-      const conf = {...prevConf, savedLanguage: {language: lang, flag: langSelect}};
-      await ControlService.writeConfig(conf);
-    },
-  },
-};
+    updateSettings: async function (lang, langSelect) {
+      const prevConf = await ControlService.readConfig()
+      const conf = {
+        ...prevConf,
+        savedLanguage: { language: lang, flag: langSelect }
+      }
+      await ControlService.writeConfig(conf)
+    }
+  }
+}
 </script>
 
 <style scoped>
 #container {
-  border-radius: 40px;
-  height: 95%;
-  width: 95%;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
   margin: auto;
   position: relative;
-  top: 2%;
+  top: 0;
   left: 0;
   box-sizing: border-box;
   background-color: #336666;
+  border:3px solid #989898;
+}
+.baselogo-box {
+  width: 100%;
+  height: 100%;
 }
 .lang {
   position: absolute;
@@ -108,6 +122,7 @@ export default {
   background-color: #000;
   width: 100%;
   height: 100%;
+  border-radius: 40px;
   left: 0;
   top: 0;
   position: fixed;

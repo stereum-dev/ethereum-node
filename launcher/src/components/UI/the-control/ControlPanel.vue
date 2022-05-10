@@ -36,7 +36,7 @@
               <span>{{ item.title }}</span>
             </div>
             <div class="general-description">
-              <p>{{ item.description }}</p>
+              <p>{{ item.summary }}</p>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@
               <span>{{ item.title }}</span>
             </div>
             <div class="expert-description">
-              <p>{{ item.description }}</p>
+              <p>{{ item.summary }}</p>
             </div>
           </div>
         </div>
@@ -60,11 +60,11 @@
   </div>
 </template>
 <script>
-import panelModal from "./panelModal";
+import panelModal from './panelModal'
 export default {
   components: { panelModal },
-  emits: ["close-modal"],
-  data() {
+  emits: ['close-modal'],
+  data () {
     return {
       generalBtn: false,
       expertBtn: false,
@@ -74,63 +74,68 @@ export default {
       controlPanelGeneralItems: [
         {
           id: 1,
-          title: "GETH RUNNING",
+          title: 'PRUNNING',
+          summary:
+            'Initiates the prunning of your execution client to free up storage',
           description:
-            "Geth as execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space",
+            'Geth as execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space'
         },
         {
           id: 2,
-          title: "OS UPDATES",
+          title: 'OS UPDATES',
+          summary: 'Updates your OS to the newest available version',
           description:
-            "Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!",
+            'Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!'
         },
         {
           id: 3,
-          title: "CONFIG EXPORT",
+          title: 'CONFIG EXPORT',
+          summary: 'Export your configuration to import it on a new device',
           description:
-            'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.',
+            'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.'
         },
         {
           id: 4,
-          title: "RESTART HOST",
+          title: 'RESTART HOST',
+          summary: 'Restarts the host of your node',
           description:
-            "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
-        },
+            'Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.'
+        }
       ],
       controlPanelExpertItems: [
         {
           id: 1,
-          title: "API BINDING",
+          title: 'API BINDING',
+          summary: 'Configure an IP you can access from the outside',
           description:
-            "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
-        },
+            'If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.'
+        }
       ],
-      modalItem: undefined,
-    };
+      modalItem: undefined
+    }
   },
   methods: {
-    generalActive() {
-      this.isGeneralActive = true;
-      this.generalBtn = true;
-      this.isExpertActive = false;
-      this.expertBtn = false;
+    generalActive () {
+      this.isGeneralActive = true
+      this.generalBtn = true
+      this.isExpertActive = false
+      this.expertBtn = false
     },
-    expertActive() {
-      this.isExpertActive = true;
-      this.expertBtn = true;
-      this.isGeneralActive = false;
-      this.generalBtn = false;
+    expertActive () {
+      this.isExpertActive = true
+      this.expertBtn = true
+      this.isGeneralActive = false
+      this.generalBtn = false
     },
-    openModalHandler(item) {
-      this.isModalActive = true;
-      this.modalItem = item;
-      console.log("3", item);
+    openModalHandler (item) {
+      this.isModalActive = true
+      this.modalItem = item
     },
-    closeModalHandler() {
-      this.isModalActive = false;
-    },
-  },
-};
+    closeModalHandler () {
+      this.isModalActive = false
+    }
+  }
+}
 </script>
 <style scoped>
 .panel-parent {
@@ -151,11 +156,11 @@ export default {
   align-items: center;
 }
 .level-box {
-  width: 18%;
+  width: 19%;
   height: 90%;
   background-color: #537263;
-  border-radius: 13px;
-  margin-left: 10px;
+  border-radius: 10px;
+  margin-left: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -201,18 +206,17 @@ export default {
 }
 .description-box {
   width: 80%;
-  height: 100%;
-  min-height: 168px;
+  height: 99%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .expert-description-box,
 .general-description-box {
-  width: 95%;
+  width: 97%;
   height: 90%;
   background-color: #686a6c;
-  border-radius: 15px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr;
@@ -220,9 +224,9 @@ export default {
 .expert-items,
 .general-items {
   width: 85%;
-  height: 60%;
+  height: 68%;
   background-color: #e8e8e8;
-  border: 2px solid rgb(70, 70, 70);
+  border: 2px solid #233f3f;
   border-radius: 15px;
   justify-self: center;
   align-self: center;
@@ -231,7 +235,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 0 1px 5px 1px #565656, inset 0 1px 5px 1px #898989;
+  box-shadow: 0 1px 3px 1px #4b4b4b, inset 0 1px 5px 1px #bfbfbf;
   overflow: hidden;
 }
 
@@ -241,12 +245,12 @@ export default {
   height: 20%;
 }
 .expert-title span {
-  font-size: 10px;
+  font-size: 0.6rem;
   font-weight: 800;
   color: rgb(240, 20, 20);
 }
 .general-title span {
-  font-size: 10px;
+  font-size: 0.6rem;
   font-weight: 800;
   color: rgb(82, 82, 82);
 }
@@ -257,9 +261,9 @@ export default {
 }
 .expert-description p,
 .general-description p {
-  font-size: 6px;
-  font-weight: 800;
+  font-size: .55rem;
+  font-weight: 900;
   text-align: center;
-  color: rgb(31, 31, 31);
+  color: #2b6262;
 }
 </style>

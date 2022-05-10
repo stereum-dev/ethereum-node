@@ -3,38 +3,37 @@
     <div class="nodeSetupTitle">
       <span>NODE - JOURNAL</span>
     </div>
-
   </div>
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       configData: [
         {
           id: 1,
-          name: "Node Configuration",
-          status: "online",
+          name: 'Node Configuration',
+          status: 'online'
         },
         {
           id: 2,
-          name: "Node Configuration",
-          status: "offline",
+          name: 'Node Configuration',
+          status: 'offline'
         },
         {
           id: 3,
-          name: "Node Configuration",
-          status: "notOk",
+          name: 'Node Configuration',
+          status: 'notOk'
         },
         {
           id: 4,
-          name: "Node Configuration",
-          status: "serverOff",
-        },
-      ],
-    };
-  },
-};
+          name: 'Node Configuration',
+          status: 'serverOff'
+        }
+      ]
+    }
+  }
+}
 </script>
 <style scoped>
 * {
@@ -58,7 +57,7 @@ export default {
 }
 .config-table {
   width: auto;
-  border: 2px solid#747474;
+  border: 2px solid #747474;
   background: #33393e;
   color: #fff;
   font-weight: 600;

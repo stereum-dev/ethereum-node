@@ -1,0 +1,52 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Prepare apt
+      raw: apt update
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Remove conflicting docker packages
+      apt:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - docker-engine
+        - docker.io
+        - docker-registry
+
+    - name: Install required system packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+        - python3-docker
+        - virtualenv
+        - python3-setuptools
+        - gnupg2
+        - pass
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        update_cache: yes
+        name:
+          - docker-ce
+        state: present

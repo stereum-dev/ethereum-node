@@ -13,7 +13,7 @@
   right: 2.8%;
   box-sizing: border-box;
   position: absolute;
-  
+
   top: 8.2%;
   margin: 0;
   resize: both;

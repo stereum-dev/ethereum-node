@@ -34,7 +34,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="Img/icon/+.png" alt="" />
+              <img src="../../../public/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -83,10 +83,10 @@
               : !model.pass.isFilled,
           }"
         >
-          <label v-show="keyAuth">KEYLOCATION</label>
-          <label v-show="!keyAuth">PASSWORD</label>
+          <label v-if="keyAuth">KEYLOCATION</label>
+          <label v-if="!keyAuth">PASSWORD</label>
           <input
-            v-show="keyAuth"
+            v-if="keyAuth"
             type="text"
             name="keylocation"
             id="keylocation"
@@ -94,7 +94,7 @@
             @blur="checkInput(model.keylocation)"
           />
           <input
-            v-show="!keyAuth"
+            v-if="!keyAuth"
             type="password"
             name="keylocation"
             id="keylocation"
@@ -103,7 +103,6 @@
           />
         </div>
         <div class="ssh">
-          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
           <label class="switch">
             <input
               type="checkbox"
@@ -113,6 +112,7 @@
             />
             <span class="slider round"></span>
           </label>
+          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
         <base-button id="login" @click="login">{{
           $t("formsetup.login")
@@ -124,148 +124,143 @@
 </template>
 
 <script>
-import BaseDialog from "./BaseDialog.vue";
-import ControlService from "@/store/ControlService";
+import BaseDialog from './BaseDialog.vue'
+import ControlService from '@/store/ControlService'
 
 export default {
   components: { BaseDialog },
-  name: "FormSetup",
-  emits: ["page"],
-  data() {
+  name: 'FormSetup',
+  emits: ['page'],
+  data () {
     return {
       keyAuth: false,
-      link: "stereumLogoExtern.png",
+      link: 'stereumLogoExtern.png',
       stereumVersions: {},
       connections: [],
-      selectedName: "",
+      selectedName: '',
       bDialogVisible: false,
       model: {
-        name: { value: "", isFilled: true },
-        host: { value: "", isFilled: true },
-        user: { value: "", isFilled: true },
-        pass: { value: "", isFilled: true },
-        keylocation: { value: "", isFilled: true },
-        useAuthKey: false,
+        name: { value: '', isFilled: true },
+        host: { value: '', isFilled: true },
+        user: { value: '', isFilled: true },
+        pass: { value: '', isFilled: true },
+        keylocation: { value: '', isFilled: true },
+        useAuthKey: false
       },
-      imgTrash: "./Img/icon/TRASH CAN.png",
-    };
+      imgTrash: './img/icon/TRASH_CAN.png'
+    }
   },
-  created() {
-    this.loadStoredConnections();
+  created () {
+    this.loadStoredConnections()
   },
   methods: {
-    changeLabel() {
-      this.keyAuth = !this.keyAuth;
+    changeLabel () {
+      this.keyAuth = !this.keyAuth
     },
-    setSelectedConnection(event) {
+    setSelectedConnection (event) {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
-      );
-      console.log(this.selectedConnection);
-      this.model.name.value = this.selectedConnection.name;
-      this.model.host.value = this.selectedConnection.host;
-      this.model.user.value = this.selectedConnection.user;
-      this.model.keylocation.value = this.selectedConnection.keylocation;
-      this.model.useAuthKey = this.selectedConnection.useAuthKey;
-      this.keyAuth = this.selectedConnection.useAuthKey;
-      this.model.pass.value = "";
+      )
+      this.model.name.value = this.selectedConnection.name
+      this.model.host.value = this.selectedConnection.host
+      this.model.user.value = this.selectedConnection.user
+      this.model.keylocation.value = this.selectedConnection.keylocation
+      this.model.useAuthKey = this.selectedConnection.useAuthKey
+      this.keyAuth = this.selectedConnection.useAuthKey
+      this.model.pass.value = ''
     },
-    addModel() {
-      const newConnection = this.createConnection();
-      console.log(newConnection);
-      this.connections.push(newConnection);
+    addModel () {
+      const newConnection = this.createConnection()
+      this.connections.push(newConnection)
+      this.selectedConnection = newConnection
+      this.selectedName = this.selectedConnection.name
 
-      this.selectedConnection = newConnection;
-      this.selectedName = this.selectedConnection.name;
-
-      this.writeSettings();
+      this.writeSettings()
     },
-    getstorableConnections() {
-      let storableConnections = [];
+    getstorableConnections () {
+      const storableConnections = []
       this.connections.forEach((e) => {
         storableConnections.push({
           name: e.name,
           host: e.host,
           user: e.user,
           keylocation: e.keylocation,
-          useAuthKey: e.useAuthKey,
-        });
-      });
-      return storableConnections;
+          useAuthKey: e.useAuthKey
+        })
+      })
+      return storableConnections
     },
     deleteModel: async function () {
-      console.log(this.selectedConnection);
-      let currSelected = this.selectedConnection.name;
+      const currSelected = this.selectedConnection.name
       this.connections = this.connections.filter(function (conn) {
-        return currSelected != conn.name;
-      });
-      await this.writeSettings();
-      await this.loadStoredConnections();
-      this.model.name.value = "";
-      this.model.host.value = "";
-      this.model.user.value = "";
-      this.model.pass.value = "";
-      this.model.keylocation.value = "";
-      this.model.useAuthKey = false;
-      this.keyAuth = false;
+        return currSelected != conn.name
+      })
+      await this.writeSettings()
+      await this.loadStoredConnections()
+      this.model.name.value = ''
+      this.model.host.value = ''
+      this.model.user.value = ''
+      this.model.pass.value = ''
+      this.model.keylocation.value = ''
+      this.model.useAuthKey = false
+      this.keyAuth = false
     },
-    createConnection() {
+    createConnection () {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey,
-      };
+        useAuthKey: this.model.useAuthKey
+      }
     },
     loadStoredConnections: async function () {
-      const storageSavedConnections = await ControlService.readConfig();
-      let savedConnections = [];
+      const storageSavedConnections = await ControlService.readConfig()
+      let savedConnections = []
       if (
         storageSavedConnections !== undefined &&
         storageSavedConnections.savedConnections !== undefined
       ) {
         savedConnections = savedConnections.concat(
           storageSavedConnections.savedConnections
-        );
+        )
       }
-      console.log(savedConnections);
-      this.connections = savedConnections;
+      this.connections = savedConnections
     },
     writeSettings: async function () {
-      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
+      const savedLanguage = (await ControlService.readConfig()).savedLanguage
       ControlService.writeConfig({
         savedConnections: this.getstorableConnections(),
-        savedLanguage: savedLanguage,
-      });
+        savedLanguage: savedLanguage
+      })
     },
-    checkInput(model) {
-      if (model.value == "") {
-        model.isFilled = false;
+    checkInput (model) {
+      if (model.value == '') {
+        model.isFilled = false
       } else {
-        model.isFilled = true;
+        model.isFilled = true
       }
     },
 
-    mouseOver(val) {
-      if (val === "over") {
-        this.imgTrash = "./Img/icon/Trash Can2.png";
+    mouseOver (val) {
+      if (val === 'over') {
+        this.imgTrash = './img/icon/TRASH_CAN2.png'
       } else {
-        this.imgTrash = "./Img/icon/Trash Can.png";
+        this.imgTrash = './img/icon/TRASH_CAN.png'
       }
     },
-    showBDialog() {
-      this.bDialogVisible = true;
+    showBDialog () {
+      this.bDialogVisible = true
     },
-    hideBDialog() {
-      this.bDialogVisible = false;
+    hideBDialog () {
+      this.bDialogVisible = false
     },
-    hideDialog() {
-      this.dialogVisible = false;
+    hideDialog () {
+      this.dialogVisible = false
     },
-    baseDialogDelete() {
-      this.bDialogVisible = false;
-      this.deleteModel();
+    baseDialogDelete () {
+      this.bDialogVisible = false
+      this.deleteModel()
     },
     login: async function () {
       try {
@@ -274,18 +269,15 @@ export default {
           user: this.model.user.value,
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
-          keyfileLocation: this.model.keylocation.value,
-        });
+          keyfileLocation: this.model.keylocation.value
+        })
       } catch (err) {
-        console.log(`${err.name} occurred:\n ${err.message}`);
-        //stay on page if error occurs
-
-        //return;
+        // return;
       }
-      this.$emit("page", "welcome-page");
-    },
-  },
-};
+      this.$emit('page', 'welcome-page')
+    }
+  }
+}
 </script>
 <style scoped>
 .server-parent {
@@ -309,26 +301,27 @@ export default {
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
-  height: 65%;
+  height: 60%;
   border-radius: 40px;
   background-color: #234141;
-  color: #fff;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 #header h2 {
   width: 95%;
-  max-width: 99%;
+  max-width: auto;
   height: 50%;
-  font-size: 1.8rem !important;
+  font-size: 1.4rem !important;
   font-weight: 800 !important;
-  color: rgb(255, 255, 255) !important;
+  color: #cecece !important;
   border: none;
   background-color: transparent;
   box-shadow: none;
+  text-transform: uppercase;
 }
 
 #dialTitle {
@@ -358,7 +351,7 @@ form {
   height: 69%;
   padding: 10px;
   border: 5px solid #686868;
-  border-radius: 45px;
+  border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
@@ -490,40 +483,41 @@ select.classic:focus {
 
 .formGroup label {
   clear: both;
-  font-size: large;
-  font-weight: 900;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-left: 10px;
-  color: #fff;
+  color: #cecece !important;
 }
 .formGroup input {
   width: 60%;
   height: 20px;
   background-color: #d8e1e1;
-  border: 6px solid #3a3939;
+  border: 4px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
   font-weight: bold;
   outline-style: none;
 }
 .formGroup input:hover {
-  border: 3px solid rgb(190, 242, 190);
+  border: 4px solid gray;
 }
 #keyLocation {
   width: 67%;
   border: 5px solid #686868;
-  border-radius: 29px;
+  border-radius: 18px;
   background-color: #234141;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
+  z-index: 99;
 }
 #keyLocation label {
   clear: both;
-  font-size: large;
-  font-weight: bold;
-  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #cecece !important;
   margin-left: 24px;
 }
 #keyLocation input {
@@ -535,7 +529,7 @@ select.classic:focus {
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 5px solid #3a3939;
+  border: 4px solid #363535;
 }
 
 #login {
@@ -558,35 +552,34 @@ select.classic:focus {
   background-color: #1b3737;
 }
 #login:active {
-  box-shadow:inset 0 1px 5px 2px rgb(23, 38, 32);
+  box-shadow: inset 0 1px 5px 2px rgb(23, 38, 32);
 }
 input {
   cursor: pointer;
 }
 
 .ssh {
-  display: flex;
-  justify-content: space-between;
-  width: 170px;
-  min-width: 170px;
-  height: 26px;
-  background-color: rgb(48, 47, 47);
-  border: none;
+  width: 150px;
+  min-width: 100px;
+  height: 24px;
+  background-color: #234141;
+  border: 3px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 19%;
-  bottom: 17%;
+  left: 16.5%;
+  bottom: 15%;
+  box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 #lbl {
-  align-self: center;
-  padding-left: 10px;
+  width: 68%;
+  text-align: center;
   clear: both;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 0.8rem;
 }
 .switch {
   position: relative;
@@ -608,7 +601,7 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -616,27 +609,28 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 22px;
-  width: 22px;
+  height: 20px;
+  border: 1px solid #228bb1;
+  width: 20px;
   left: 1px;
   bottom: 1px;
-  background-color: white;
+  background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  box-shadow: inset 1px 1px 3px 1px #70bfdc;
 }
 
 input:checked + .slider {
-  background-color: #4ad376;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
+  background-color: #e6e6e6;
 }
 
 input:checked + .slider:before {
   -webkit-transform: translateX(16px);
   -ms-transform: translateX(16px);
   transform: translateX(16px);
+  background-color: #51a76e;
+  border: 1px solid #329f55;
+  box-shadow: inset 1px 1px 5px #91d8a9;
 }
 
 /* Rounded sliders */
@@ -648,7 +642,13 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.errors input {
-  border-color: red;
+input:optional {
+  border-color: gray;
+}
+input:required {
+  border-color: rgb(38, 38, 38);
+}
+input:invalid {
+  border-color: rgb(233, 100, 100);
 }
 </style>

@@ -1,36 +1,36 @@
-import flagDialMutations from "./mutations.js";
-import flagDialActions from "./actions";
-import flagDialGetters from "./getters";
+import flagDialMutations from './mutations.js'
+import flagDialActions from './actions'
+import flagDialGetters from './getters'
 
 export default {
-  state() {
+  state () {
     return {
       dialogIsVisible: false,
       linkFlags: [
         {
-          langImg: "Img/Flag/ENGLISH.png",
-          langSelect: "Img/Flag/En.png",
-          langName: "english",
+          langImg: 'img/flag/ENGLISH.png',
+          langSelect: 'img/flag/En.png',
+          langName: 'english'
         },
         {
-          langImg: "Img/Flag/GERMAN.png",
-          langSelect: "Img/Flag/Gr.png",
-          langName: "german",
+          langImg: 'img/flag/GERMAN.png',
+          langSelect: 'img/flag/Gr.png',
+          langName: 'german'
         },
         {
-          langImg: "Img/Flag/FRENCH.png",
-          langSelect: "Img/Flag/Fr.png",
-          langName: "french",
+          langImg: 'img/flag/FRENCH.png',
+          langSelect: 'img/flag/Fr.png',
+          langName: 'french'
         },
         {
-          langImg: "Img/Flag/SPANISH.png",
-          langSelect: "Img/Flag/Sp.png",
-          langName: "spanish",
-        },
-      ],
-    };
+          langImg: 'img/flag/SPANISH.png',
+          langSelect: 'img/flag/Sp.png',
+          langName: 'spanish'
+        }
+      ]
+    }
   },
   mutations: flagDialMutations,
   actions: flagDialActions,
-  getters: flagDialGetters,
-};
+  getters: flagDialGetters
+}

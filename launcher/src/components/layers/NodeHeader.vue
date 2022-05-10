@@ -33,7 +33,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/HELP BUTTON.png"
+              src="/img/icon/HELP_BUTTON.png"
             />
           </li>
 
@@ -42,7 +42,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/PHONE ICON.png"
+              src="/img/icon/PHONE_ICON.png"
             />
           </li>
 
@@ -51,7 +51,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/UPDATE ICON.png"
+              src="/img/icon/UPDATE_ICON.png"
             />
           </li>
 
@@ -60,7 +60,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/SETTING ICON.png"
+              src="/img/icon/SETTING_ICON.png"
             />
           </li>
 
@@ -69,7 +69,7 @@
               type="image"
               id="image"
               alt="Login"
-              src="/img/icon/EXIT ICON.png"
+              src="/img/icon/EXIT_ICON.png"
             />
           </li>
         </ul>
@@ -81,20 +81,24 @@
 <style scoped>
 .main-header {
   width: 100vw;
-  background: #324B3F;
+  background: #324b3f;
   padding: 5px 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-content: space-between;
 }
-
-.main-header__brand {
+.logo-box {
   position: fixed;
   top: 0;
   left: 0;
   width: 8%;
-  z-index: 100;
+  height: 15%;
+  z-index: 50;
+}
+.main-header__brand {
+  width: 100%;
+  z-index: 51;
 }
 
 .main-nav1 {
@@ -135,8 +139,7 @@
   align-self: flex-end;
 }
 .btn__item:hover {
-  border: 1px solid #eee;
-  border-radius: 40%;
+  outline: none;
 }
 .spacer {
   margin: 0 0.8rem;

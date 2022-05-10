@@ -25,6 +25,18 @@
             @dragover.prevent
           >
             <drop-zone
+              :title="'execution'"
+              :list="executionItems"
+              @modal-view="showModal"
+              @itemSelect="serviceItemSelection"
+            ></drop-zone>
+          </div>
+          <div
+            @drop="onDrop($event, sidebarPlugins)"
+            @dragenter.prevent
+            @dragover.prevent
+          >
+            <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="consensusItems"
@@ -40,18 +52,6 @@
               @modal-view="showModal"
               :title="'validator'"
               :list="validatorItems"
-              @itemSelect="serviceItemSelection"
-            ></drop-zone>
-          </div>
-          <div
-            @drop="onDrop($event, sidebarPlugins)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
-            <drop-zone
-              :title="'execution'"
-              :list="executionItems"
-              @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -89,6 +89,7 @@
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
         </div>
+        <task-manager></task-manager>
       </div>
     </node-bg>
   </section>
@@ -102,6 +103,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapGetters } from "vuex";
+import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
     SidebarManage,
@@ -110,6 +112,7 @@ export default {
     DropZone,
     BaseModal,
     PresetModal,
+    TaskManager,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -196,38 +199,38 @@ export default {
 .manage-parent {
   display: grid;
   width: 100%;
-  height: 92.3vh;
-  grid-template-columns: 18% 46% 21% 15%;
-  grid-template-rows: repeat(3, 32%) 4%;
+  height: 90%;
+  border: 4px solid #979797;
+  border-radius: 10px 35px 10px 10px;
+  grid-template-columns: 18% 46% 20% 16%;
+  grid-template-rows: 31% 32% 32% 5%;
   grid-row-gap: 1px;
-  position: absolute;
-  top: -5px;
 }
 
 .config-box {
   color: white;
-  margin-top: 5px;
   width: 100%;
-  height: 98.7%;
+  height: 100%;
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
-  background-color: transparent;
 }
 .preset-modal {
-  width: 80.6vw;
-  height: 87.7vh;
+  width: 81.5%;
+  height: 86.4%;
   border-radius: 35px;
   z-index: 5;
   position: absolute;
-  top: 1.5%;
+  top: 9%;
   left: 18%;
 }
 .drop-parent {
-  height: 88vh;
-  margin: 5px 4px 0 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   grid-column: 2;
   grid-row: 1/4;
+  background-color: #000000;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -235,22 +238,25 @@ export default {
 .modal-parent {
   grid-column: 2;
   grid-row: 1/4;
-  width: 45.5vw;
-  height: 88vh;
+  width: 45.5%;
+  height: 99%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
+  top: 2%;
+  left: 18.5%;
   z-index: 1;
 }
 .modal-bg {
-  width: 100vw;
-  height: 87.9vh;
+  width: 100%;
+  height: 86.7%;
+  position: absolute;
+  top: 7.5%;
 }
 .service {
-  width: 97.7%;
-  height: 97%;
-  margin-top: 6px;
+  width: 98%;
+  height: 98.2%;
   grid-column: 3;
   grid-row: 1/4;
   background: #334b3f;
@@ -277,16 +283,16 @@ export default {
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 0.9rem;
   box-shadow: 1px 1px 3px rgb(26, 26, 26);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .trap-title {
-  color: white;
+  color: rgb(210, 210, 210);
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 800;
 }
 .trap-plus-icon {
   width: 50px;
@@ -298,9 +304,8 @@ export default {
 }
 
 .change-menu {
-  width: 93.3%;
-  height: 96.9%;
-  margin-top: 6px;
+  width: 94%;
+  height: 98.2%;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
@@ -316,13 +321,13 @@ export default {
 }
 
 .footer {
-  color: white;
   width: 100%;
+  height: 88%;
+  margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
-  background-color: rgb(40, 40, 40);
-  border-radius: 0 0 1.9rem 1.9rem;
-  position: relative;
+  background-color: #343434;
+  border-radius: 0 0 7px 7px;
 }
 
 ::-webkit-scrollbar {
@@ -336,5 +341,11 @@ export default {
 ::-webkit-scrollbar-track {
   background-color: transparent;
   margin: 10px;
+}
+
+.edit-task__manager {
+  position: fixed;
+  left: 4px;
+  bottom: -1px;
 }
 </style>

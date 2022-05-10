@@ -2,31 +2,32 @@
   <div class="progress-box">
     <div class="progress">
       <div class="color"></div>
-      <p v-if="active">CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</p>
-      <p v-if="!active">{{ this.message }}</p>
-      <img src="/img/icon/icon-settings.svg" class="modal" v-if="open" />
+      <span v-if="active"
+        >CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED...</span
+      >
+      <span class="check-msg" v-if="!active">{{ this.message }}</span>
+      <img src="/img/icon/welcome-page/gear.png" class="gear" v-if="active" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  //emits: ["close"],
   props: {
     message: String,
-    open: Boolean,
+    open: Boolean
   },
-  data() {
+  data () {
     return {
-      active: true,
-    };
+      active: true
+    }
   },
-  created() {
+  created () {
     setTimeout(() => {
-      this.active = false;
-    }, 5000);
-  },
-};
+      this.active = false
+    }, 5000)
+  }
+}
 </script>
 
 <style scoped>
@@ -54,13 +55,15 @@ dialog {
   border: none;
 }
 
-.modal {
-  animation: modal 5s linear infinite;
-  position: relative;
-  width: 4%;
+.progress .gear {
+  animation: gear 5s linear infinite;
+  position: absolute;
+  right: 1px;
+  width: 2.5%;
+  float: right;
 }
 
-@keyframes modal {
+@keyframes gear {
   from {
     transform: rotate(0deg);
   }
@@ -72,44 +75,47 @@ dialog {
 /* TEST*/
 
 .progress-box {
-  width: 83%;
-  height: 100%;
-  display: flex;
-  justify-content:flex-end;
-  align-items: flex-start;
-
-  
-}
-
-.progress {
-  position: relative;
-  height: 40%;
-  width: 81%;
-  border-radius: 15px;
+  width: 100% !important;
+  height: 100% !important;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-.progress p {
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: rgb(255, 255, 255);
+.progress {
   position: relative;
+  height: 82% !important;
+  width: 99.3% !important;
+  border-radius: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.progress span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgb(44, 44, 44);
   text-align: left;
-  margin: 1px auto 0 5px;
+  margin-left: 10px;
+  z-index: 100;
 }
 
 .progress .color {
   position: absolute;
-  background-color: #2f83c3;
-  width: 0px;
-  height: 20px;
-  border-radius: 15px;
+  left: 0;
+  width: 0;
+  background-color: #237fd5;
+  height: 100%;
+  border-radius: 20px;
+  border: 1px solid rgb(37, 89, 113);
   animation: progres 5s linear;
   animation-fill-mode: forwards;
+  box-shadow: inset 1px 2px 5px #acd5fc, 0 0 1px 1px rgb(52, 52, 52);
 }
-
+.check-msg {
+  text-align: center;
+}
 @keyframes progres {
   0% {
     width: 0%;
@@ -118,10 +124,10 @@ dialog {
     width: 10%;
   }
   25% {
-    width: 50%;
+    width: 25%;
   }
   50% {
-    width: 75%;
+    width: 50%;
   }
   75% {
     width: 85%;

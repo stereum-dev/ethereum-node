@@ -7,10 +7,10 @@
 <script>
 export default {
 
-    name: "LangButton",
-    props: ["flag"],
+  name: 'LangButton',
+  props: ['flag']
 
-};
+}
 </script>
 
 <style scoped>

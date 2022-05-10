@@ -17,13 +17,13 @@
             <span class="username">Max Behzadi</span>
             <img
               class="service-icon"
-              src="../../../../public/Img/icon/the-staking/blox-service.png"
+              src="../../../../public/img/icon/the-staking/blox-service.png"
               alt="icon"
             />
             <span class="since">12d 11h 20m</span>
             <img
               class="state-icon"
-              src="../../../../public/Img/icon/the-staking/state-icon.png"
+              src="../../../../public/img/icon/the-staking/state-icon.png"
               alt="icon"
             />
             <span class="balance">24.000001</span>
@@ -31,7 +31,7 @@
               <div class="grafiti-box">
                 <img
                   class="grafiti-icon"
-                  src="../../../../public/Img/icon/the-staking/option-graffiti.png"
+                  src="../../../../public/img/icon/the-staking/option-graffiti.png"
                   alt="icon"
                 />
                 <div class="grafiti-text">GRAFITI</div>
@@ -39,7 +39,7 @@
               <div class="copy-box">
                 <img
                   class="copy-icon"
-                  src="../../../../public/Img/icon/the-staking/option-copy.png"
+                  src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
                 <div class="copy-text">COPY</div>
@@ -47,7 +47,7 @@
               <div class="remove-box">
                 <img
                   class="remove-icon"
-                  src="../../../../public/Img/icon/the-staking/option-remove.png"
+                  src="../../../../public/img/icon/the-staking/option-remove.png"
                   alt="icon"
                 />
                 <div class="remove-text">REMOVE</div>
@@ -55,7 +55,7 @@
               <div class="exit-box">
                 <img
                   class="exit-icon"
-                  src="../../../../public/Img/icon/the-staking/redexit-icon.png"
+                  src="../../../../public/img/icon/the-staking/redexit-icon.png"
                   alt="icon"
                 />
                 <div class="exit-text">EXIT</div>
@@ -68,24 +68,24 @@
     <div class="middle-icon">
       <img
         class="rename"
-        src="../../../../public/Img/icon/the-staking/rename-icon.png"
+        src="../../../../public/img/icon/the-staking/rename-icon.png"
         alt="icon"
       />
       <img
         class="folder"
-        src="../../../../public/Img/icon/the-staking/newfolder-icon.png"
+        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
         alt="icon"
       />
       <img
         class="filter"
-        src="../../../../public/Img/icon/the-staking/staking-filter.png"
+        src="../../../../public/img/icon/the-staking/staking-filter.png"
         alt="icon"
       />
       <div class="insert-key">
         <span>CLICK OR DRAG TO INSERT KEY</span>
         <img
           class="black-key"
-          src="../../../../public/Img/icon/the-staking/black-key.png"
+          src="../../../../public/img/icon/the-staking/black-key.png"
           alt="icon"
         />
       </div>
@@ -104,7 +104,7 @@
   align-items: flex-start;
 }
 .keys-table-box {
-  width: 95%;
+  width: 96%;
   height: 92%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;

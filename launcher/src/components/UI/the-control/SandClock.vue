@@ -69,8 +69,8 @@
 
 <script>
 export default {
-  name: "SandClock",
-};
+  name: 'SandClock'
+}
 </script>
 
 <style scoped>

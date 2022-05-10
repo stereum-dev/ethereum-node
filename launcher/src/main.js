@@ -1,31 +1,33 @@
-import Vue, { createApp } from "vue"; // CHANGE
 
-import store from "./store/index.js";
-import App from "./App.vue";
-import router from "./router/index.js";
-import "./components/UI/the-control/chart.js";
+import 'mutationobserver-shim'
+import Vue, { createApp } from 'vue' // CHANGE
 
-import i18n from "./includes/i18n";
-import BaseButton from "./components/UI/BaseButton.vue";
-import BackgroundPage from "./components/layers/BackgroundPage.vue";
-import TheTrapezium from "./components/UI/TheTrapezium.vue";
-import NodeBg from "./components/UI/NodeBg.vue";
-import NodeHeader from "./components/layers/NodeHeader";
-import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
+import store from './store/index.js'
+import App from './App.vue'
+import router from './router/index.js'
+import './components/UI/the-control/chart.js'
+import './main.css'
 
-Vue.configureCompat({ WATCH_ARRAY: false });
+import i18n from './includes/i18n'
+import BaseButton from './components/UI/BaseButton.vue'
+import BackgroundPage from './components/layers/BackgroundPage.vue'
+import TheTrapezium from './components/UI/TheTrapezium.vue'
+import NodeBg from './components/UI/NodeBg.vue'
+import NodeHeader from './components/layers/NodeHeader'
+import ServicePlugin from './components/UI/node-manage/ServicePlugin.vue'
 
-const app = createApp(App);
+Vue.configureCompat({ WATCH_ARRAY: false })
 
-app.component("base-button", BaseButton);
-app.component("background-page", BackgroundPage);
-app.component("the-trapezium", TheTrapezium);
-app.component("node-bg", NodeBg);
-app.component("node-header", NodeHeader);
-app.component("service-plugin", ServicePlugin);
+const app = createApp(App)
 
-app.use(store);
-app.use(router);
-app.use(i18n);
+app.component('base-button', BaseButton)
+app.component('background-page', BackgroundPage)
+app.component('the-trapezium', TheTrapezium)
+app.component('node-bg', NodeBg)
+app.component('node-header', NodeHeader)
+app.component('service-plugin', ServicePlugin)
 
-app.mount("#app");
+app.use(store)
+app.use(router)
+app.use(i18n)
+app.mount('#app')

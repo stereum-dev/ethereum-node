@@ -1,0 +1,72 @@
+---
+- block:
+  - name: Get validator service's auth-token
+    slurp:
+      src: "/opt/app/services/{{ validator_service }}/data/wallets/auth-token"
+    register: auth_token
+    become: yes
+  - name: Get api-token
+    set_fact:
+      api_token: "{{ auth_token['content'] | b64decode | regex_search('(?<=\n).*(?=\n)') }}"
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Prysm import-validator using API
+    uri:
+      url: http://localhost:7500/eth/v1/keystores
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer {{ api_token }}"
+      method: POST
+      body:
+        keystores: "{{ item.content }}"
+        passwords: ["{{ validator_password | quote }}"]
+      body_format: json
+    become: yes
+    with_items: "{{ validator_keys }}"
+  when: consClient == "prysm"
+
+- block:
+  - name: Lighthouse - Get validator service's api token
+    command: "docker exec -u 0 -w /opt/app/validator/validators stereum-{{ validator_service }} cat api-token.txt"
+    changed_when: false
+    register: api_token
+    become: yes
+  - debug:
+      msg: "{{ api_token.stdout }}"
+  - name: Lighthouse import-validator using API
+    uri:
+      url: http://localhost:5062/eth/v1/keystores
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer {{ api_token.stdout }}"
+      method: POST
+      body:
+        keystores: "{{ item.content }}"
+        passwords: ["{{ validator_password | quote }}"]
+      body_format: json
+    become: yes
+    with_items: "{{ validator_keys }}"
+  when: consClient == "lighthouse"
+
+- block:
+  - name: Nimbus - Get validator service's api token
+    command: "docker exec -u 0 -w /opt/app/validators stereum-{{ beacon_service }} cat api-token.txt"
+    changed_when: false
+    register: api_token
+    become: yes
+  - debug:
+      msg: "{{ api_token.stdout }}"
+  - name: Nimbus import-validator using API
+    uri:
+      url: http://localhost:5052/eth/v1/keystores
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer {{ api_token.stdout }}"
+      method: POST
+      body:
+        keystores: ["{{ item.content }}"]
+        passwords: ["{{ validator_password | quote }}"]
+      body_format: json
+    become: yes
+    with_items: "{{ validator_keys }}"
+  when: consClient == "nimbus"

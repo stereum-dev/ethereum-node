@@ -49,42 +49,40 @@
 </template>
 
 <script>
-import NodeSetupConfig from "../layers/NodeSetupConfig.vue";
-import SidebarParent from "./NodeSidebarParent.vue";
-import DropZone from "../UI/node-manage/DropZone.vue";
+import NodeSetupConfig from '../layers/NodeSetupConfig.vue'
+import SidebarParent from './the-node/NodeSidebarParent.vue'
+import DropZone from '../UI/node-manage/DropZone.vue'
 
 export default {
   components: {
     NodeSetupConfig,
     SidebarParent,
-    DropZone,
+    DropZone
   },
   props: {
     title: {
       type: String,
       required: true,
-      default: "Title",
+      default: 'Title'
     },
     list: {
       type: Array,
       required: true,
       default: () => {
-        return [];
-      },
-    },
-  },
-};
+        return []
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
 .nodeparent {
   display: grid;
-  height: 94.8%;
+  height: 94%;
   grid-template-columns: 3% 58% 22% 17%;
   grid-template-rows: repeat(3, 21%) 27.5% 4.5%;
   grid-row-gap: 1px;
-  position: relative;
-  top: 9%;
 }
 
 .asside {
@@ -92,6 +90,7 @@ export default {
   grid-row: 1/5;
   background-color: transparent;
   width: 100%;
+
   position: relative;
 }
 
@@ -99,6 +98,7 @@ export default {
   grid-row: 1/5;
   background-color: #336666;
   height: 100%;
+
   clip-path: polygon(0 0, 100% 0%, 40% 100%, 0% 100%);
   z-index: -1;
 }
@@ -109,6 +109,7 @@ export default {
   width: 100%;
   height: 80%;
   background: #a1c1ad;
+
   z-index: 0;
 }
 
@@ -175,7 +176,7 @@ export default {
 }
 
 .service {
-  background: #2c4030;
+  background: black;
   border: 3px solid gray;
   grid-row-start: 1;
   grid-row-end: 5;
@@ -206,7 +207,6 @@ export default {
   grid-column-end: 3;
   align-self: center;
   box-sizing: border-box;
-
 }
 .trap-container {
   background-color: #2c4030;
@@ -215,11 +215,10 @@ export default {
   height: 95%;
   padding: 5px;
 }
-.trap-container .trap-box{
-  background-color: #2c4030 !important;
+.trap-container .trap-box {
   height: 1%;
 }
-.trapezoid{
+.trapezoid {
   background: #000;
   height: 1% !important;
 }
@@ -264,6 +263,7 @@ export default {
   background: #4c4848;
   color: white;
   grid-column: 1/6;
-  border-radius: 0 0 25px 25px;
+  grid-row: 5;
+  border-radius: 0 0 7px 7px;
 }
 </style>

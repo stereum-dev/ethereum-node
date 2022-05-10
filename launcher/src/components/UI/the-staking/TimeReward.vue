@@ -16,7 +16,7 @@
           </div>
           <div class="cube">
             <img
-              src="../../../../public/Img/icon/the-staking/cube-icon.png"
+              src="../../../../public/img/icon/the-staking/cube-icon.png"
               alt="icon"
             />
             <div class="cube-value">
@@ -172,7 +172,6 @@
   color: #fff;
   font-size: 10px;
   font-weight: 600;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 .attentions-value,
 .missed-value,

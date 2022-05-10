@@ -7,7 +7,7 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span>PLUG IN NAME</span>
+                <span>{{ selectedPreset.name }}</span>
               </div>
             </div>
           </div>
@@ -20,71 +20,60 @@
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOOSE YOUR NETWORK</span>
+                      <span>CHOSEN NETWORK</span>
                     </div>
                     <div class="none">
-                      <span>NONE</span>
+                      <span>{{ selectedPreset.network }}</span>
                     </div>
                   </div>
-                  <div class="circle-box"></div>
+                  <div class="circle-box">
+                    <img
+                      :src="
+                        selectedPreset.network === 'mainnet'
+                          ? this.mainnetIcon
+                          : this.testnetIcon
+                      "
+                      alt="icon"
+                    />
+                  </div>
                 </div>
                 <div class="fast-sync">
                   <div class="sync-box">
-                    <span>FAST SYNC</span>
                     <toggle-button></toggle-button>
+                    <span>FAST SYNC</span>
                   </div>
                 </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>CHANGE INSTALLATION</span>
+                    <span>CHANGE INSTALLATION PATH</span>
                   </div>
-                  <div class="change-box"></div>
+                  <div class="change-box">
+                    <input type="text" v-model="installationPath" />
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="system-box">
-              <div class="system-title">
-                <span>SYSTEM</span>
+            <div class="included-box">
+              <div class="included-title">
+                <span>PLUGINS</span>
               </div>
               <div class="info-box">
-                <div class="system-info">
-                  <div class="info-header">
-                    <span class="current-title">CURRENT</span>
-                    <span class="min-title">MIN</span>
+                <div
+                  class="info-row"
+                  v-for="(plugin, index) in selectedPreset.includedPlugins"
+                  :key="index"
+                >
+                  <div class="icon-box">
+                    <div class="plugin-icon">
+                      <img :src="plugin.icon" alt="icon" />
+                    </div>
                   </div>
-                  <div class="info-titles">
-                    <span class="cpu-info">CPU CORES:</span>
-                    <span class="memory-info">MEMORY:</span>
-                  </div>
-                  <div
-                    class="info-parent"
-                    v-for="(item, index) in plugins"
-                    :key="index"
-                  >
-                    <div
-                      class="info-content"
-                      v-if="index === this.plugins.length - 1"
-                    >
-                      <div class="cpu-cores">
-                        <span
-                          class="cpu-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.cpu }}</span
-                        >
-                        <span class="cpu-needed">{{
-                          item.requirements.core
-                        }}</span>
-                      </div>
-                      <div class="memory">
-                        <span
-                          class="memory-current"
-                          :class="requirementPassed ? 'passedreq' : 'faildreq'"
-                          >{{ this.systemInfos.memory }}</span
-                        >
-                        <span class="memory-needed">{{
-                          item.requirements.memory
-                        }}</span>
-                      </div>
+                  <div class="content">
+                    <div class="plugin-name">
+                      <span>{{ plugin.name }}</span>
+                    </div>
+                    <div class="category">
+                      <span>{{ plugin.category }}</span>
                     </div>
                   </div>
                 </div>
@@ -105,43 +94,56 @@
   </div>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
-import { mapGetters } from "vuex";
+import ToggleButton from './toggleButton.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { ToggleButton },
-  data() {
+
+  data () {
     return {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
-      selectedPlugin: null,
-    };
+      testnetIcon: require('../../../../public/img/icon/click-installation/testnet-circle.png'),
+      mainnetIcon: require('../../../../public/img/icon/click-installation/mainnet-circle.png')
+    }
   },
   computed: {
     ...mapGetters({
-      plugins: "installationPlugins",
-      systemInfos: "getSystemInformation",
+      selectedPreset: 'getSelectedPreset',
+      plugins: 'getAllPlugins',
+      getInstallationPath: 'getInstallationPath'
     }),
+    installationPath: {
+      get () {
+        return this.getInstallationPath
+      },
+      set (val) {
+        this.$store.commit('mutatedInstallationPath', val)
+      }
+    }
+
+    // getMemoryClass() {
+    //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
+    // getCpuClass() {
+    //   if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // },
   },
-  mounted() {
-    this.checkRequirement();
-  },
-  methods: {
-    checkRequirement() {
-      this.plugins.forEach((plugin) => {
-        console.log(plugin.requirements.core);
-        if (
-          plugin.requirements.core <= this.systemInfos.cpu &&
-          plugin.requirements.memory <= this.systemInfos.memory
-        ) {
-          this.requirementPassed = true;
-        } else {
-          this.requirementPassed = false;
-        }
-      });
-    },
-  },
-};
+  mounted () {
+    if (Object.keys(this.selectedPreset).length === 0) {
+      this.$router.push('/clickinstall')
+    }
+  }
+}
 </script>
 <style scoped>
 .plugin-parent {
@@ -181,10 +183,120 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
+.included-box {
+  width: 49%;
+  height: 95%;
+  background-color: #5b5b5b;
+  border-radius: 20px;
+  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 15% 85%;
+}
+.included-title {
+  width: 61%;
+  height: 71%;
+  border: 1px solid rgb(98, 98, 98);
+  margin: 0 auto;
+  border-radius: 10px;
+  display: flex;
+  background-color: #30483b;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
+}
+.info-box {
+  width: 88%;
+  height: 83%;
+  margin: 10px auto;
+  padding: 5px;
+  border: 2px solid #343434;
+  background-color: #282828;
+  border-radius: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
+}
+.info-box::-webkit-scrollbar {
+  width: 1px;
+}
+.info-row {
+  grid-column: 1;
+  width: 100%;
+  height: 90%;
+  margin-top: 5px;
+  background-color: #33393e;
+  border: 1px solid rgb(81, 80, 80);
+  box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+}
+.content {
+  width: 75%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.plugin-name {
+  width: 100%;
+  max-width: auto;
+  height: 90%;
+  text-align: left;
+}
+.plugin-name span {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: rgb(203, 203, 203);
+  margin-left: 10px;
+}
+.icon-box {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plugin-icon {
+  width: 61%;
+  height: 79%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.plugin-icon img {
+  width: 98%;
+  height: 98%;
+  border-radius: 50%;
+  border: 2px solid rgb(84, 84, 84);
+  box-shadow: 0 1px 3px 1px rgb(23, 23, 23);
+}
+.category {
+  width: 100%;
+  max-width: auto;
+  height: 90%;
+  text-align: left;
+}
+.category span {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgb(115, 115, 115);
+  text-transform: uppercase;
+  margin-left: 10px;
+}
 .name-box {
   width: 95%;
   height: 20%;
-  background-color: #c2bebe;
+  margin-top: 5px;
+  background-color: #8e8e8e;
   border-radius: 20px;
   display: flex;
   justify-content: center;
@@ -192,9 +304,9 @@ export default {
   box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
 }
 .name-title-box {
-  width: 95%;
+  width: 96%;
   height: 80%;
-  border-radius: 20px;
+  border-radius: 15px;
   background-color: #5b5b5b;
   display: flex;
   justify-content: center;
@@ -204,11 +316,11 @@ export default {
   font-size: 2rem;
   font-weight: 900;
   color: #d7d7d7;
+  text-transform: uppercase;
 }
-.option-title,
-.system-title {
+.option-title {
   width: 60%;
-  height: 10%;
+  height: 11%;
   border: 1px solid rgb(98, 98, 98);
   border-radius: 10px;
   display: flex;
@@ -219,20 +331,20 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 .option-title span,
-.system-title span {
-  color: #fff;
-  font-size: 0.8rem;
+.included-title span {
+  color: #d3d3d3;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 .content-box {
   width: 95%;
   height: 63%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .options-box {
-  width: 48%;
+  width: 49%;
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
@@ -268,33 +380,40 @@ export default {
 }
 .network-box .choose {
   width: 90%;
-  height: 50%;
+  height: 51%;
+  border: 2px solid #6a6a6a;
   border-radius: 15px;
   background-color: #30483b;
-  color: #fff;
+  margin-bottom: 2px;
+  color: #d3d3d3;
   text-align: left;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .choose span {
   font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 7px;
+  font-weight: 700;
+  margin-left: 10px;
 }
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid #5b5b5b;
+  border: 2px solid #6a6a6a;
   border-radius: 30px;
-  background-color: #1f1f1f;
+  background-color: #2a2a2a;
   align-self: flex-end;
-  color: #fff;
+  color: #d3d3d3;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .none span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  margin-left: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: 25px;
+  color: rgba(171, 180, 92, 0.982);
+  text-transform: capitalize;
 }
 .network-parent .circle-box {
   width: 24%;
@@ -304,6 +423,15 @@ export default {
   background-color: #1f1f1f;
   position: absolute;
   right: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.network-parent .circle-box img {
+  width: 90%;
+  height: 90%;
+  border: 2px solid #5b5b5b;
+  border-radius: 100%;
 }
 
 .option-content .fast-sync {
@@ -318,41 +446,23 @@ export default {
   width: 45%;
   height: 45%;
   margin: 5px;
-  border: 1px solid gray;
+  border: 3px solid rgb(93, 92, 92);
   border-radius: 15px;
   background-color: #30483b;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   position: relative;
 }
 .fast-sync .sync-box span {
-  width: 90%;
-  font-size: 0.6rem;
+  width: 86%;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: #fff;
-  text-align: left;
-  margin-left: 5px;
+  color: #d3d3d3;
+  text-align: center;
+  margin-right: 3px;
 }
-.sync-box .toggle-btn {
-  width: 35%;
-  height: 90%;
-  border-radius: 15px;
-  background-color: #fff;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  position: absolute;
-  right: 1px;
-}
-.toggle-btn .toggle {
-  width: 52%;
-  height: 93%;
-  border: 1px solid rgb(129, 167, 210);
-  border-radius: 50px;
-  background-color: rgb(11, 97, 201);
-  box-shadow: inset 0 1px 7px #2a9dce;
-}
+
 .option-content .change-installation {
   width: 100%;
   height: 30%;
@@ -365,130 +475,38 @@ export default {
 }
 .change-installation .change-title {
   width: 90%;
-  height: 20%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .change-title span {
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 700;
+  color: #d3d3d3;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .change-installation .change-box {
   width: 90%;
-  height: 50%;
-  background-color: #fff;
+  height: 40%;
+  background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
-}
-.system-box {
-  width: 48%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.change-box input {
+  width: 100%;
+  height: 85%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 10px;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
-}
-.info-box {
-  width: 90%;
-  height: 45%;
-  margin-top: 10px;
-  background-color: transparent;
-  border: 2px solid rgb(74, 73, 73);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42), inset 0 1px 3px 1px rgb(43, 43, 43);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.system-info {
-  width: 93%;
-  height: 89%;
-  border-radius: 12px;
-  background-color: rgb(60, 60, 60);
-  display: grid;
-  grid-template-columns: repeat(4, 24%);
-  grid-template-rows: 20% 40% 40%;
-  padding: 2px 5px;
-}
-.info-parent {
-  width: 100%;
-  grid-column: 3/5;
-  grid-row: 2/4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.info-parent .info-content {
-  width: 50%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.info-content .cpu-cores,
-.info-content .memory {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.info-content .cpu-cores span,
-.info-content .memory span {
-  width: 10%;
-  text-align: left;
-}
-.info-parent .cpu-current,
-.info-parent .memory-current {
   font-size: 0.9rem;
-  font-weight: 700;
-}
-.info-parent .cpu-needed,
-.info-parent .memory-needed {
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(215, 195, 42);
-}
-
-.info-header {
-  width: 70%;
-  margin-left: 10px;
-  grid-column: 3/5;
-  grid-row: 1/2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.info-header span {
-  font-size: 0.5rem;
   font-weight: 600;
-  color: #fff;
-}
-.info-header .min-title {
-  margin-left: 20px;
-}
-.info-titles {
-  width: 70%;
-  grid-column: 1/3;
-  grid-row: 2/4;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.info-titles span {
-  width: 100%;
-  text-align: left;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #fff;
+  padding-left: 10px;
 }
 
 .btn-box {
@@ -513,17 +531,17 @@ export default {
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
-  color: #fff;
+  color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(53, 62, 57),
-    inset 1px 1px 3px 1px rgb(92, 114, 92);
+  box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
+  cursor: pointer;
 }
 .next-btn:hover,
 .back-btn:hover {
   background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60),
-    inset 1px 1px 5px 1px rgb(67, 86, 67);
+  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
 .next-btn:active,
 .back-btn:active {
@@ -536,5 +554,6 @@ export default {
 }
 .faildreq {
   color: rgb(225, 54, 54) !important;
+  border: 1px solid rgb(225, 54, 54) !important;
 }
 </style>

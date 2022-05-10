@@ -9,8 +9,8 @@
 </template>
 <script>
 export default {
-    name:'baseDialog',
-    emits:['bDialogDis','bDialogOk']
+  name: 'baseDialog',
+  emits: ['bDialogDis', 'bDialogOk']
 }
 </script>
 <style scoped>
@@ -27,8 +27,7 @@ dialog{
     background-color: rgb(124, 119, 119);
     font-weight: bold;
     color: #fff;
-    
-    
+
 }
 #canc{
     border-radius: 0 15px 15px 0;

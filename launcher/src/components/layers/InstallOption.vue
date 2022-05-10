@@ -11,64 +11,81 @@
         <vue-select> </vue-select>
       </div>
     </div>
-    <router-link :to="{ path: '/install' }">
-      <button id="instal">INSTALL</button>
-    </router-link>
-    <router-link :to="{ path: '/welcome' }">
-      <button id="back">BACK</button>
-    </router-link>
+    <div class="btn-container">
+      <router-link class="back-box" :to="{ path: '/welcome' }">
+        <button id="back">BACK</button>
+      </router-link>
+      <div @click="clickedToInstall" class="install-box">
+        <button id="instal">INSTALL</button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import VueSelect from "../UI/click-installation/VueSelect.vue";
+import VueSelect from '../UI/click-installation/VueSelect.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: {
-    VueSelect,
+    VueSelect
   },
-  data() {
+  data () {
     return {
       isTestnetActive: false,
       testnetBtn: false,
       isMainnetActive: false,
-      mainnetBtn: false,
-    };
+      mainnetBtn: false
+    }
   },
   computed: {
-    R1clkInstls() {
-      return this.$store.getters.R1clkInstls_get;
+    R1clkInstls () {
+      return this.$store.getters.R1clkInstls_get
     },
+    ...mapGetters({
+      selectedPreset: 'getSelectedPreset'
+    })
   },
   methods: {
-    testnetActive() {
-      this.isTestnetActive = true;
-      this.testnetBtn = true;
-      this.isMainnetActive = false;
-      this.mainnetBtn = false;
+    testnetActive () {
+      this.isTestnetActive = true
+      this.testnetBtn = true
+      this.isMainnetActive = false
+      this.mainnetBtn = false
     },
-    mainnetActive() {
-      this.isMainnetActive = true;
-      this.mainnetBtn = true;
-      this.isTestnetActive = false;
-      this.testnetBtn = false;
+    mainnetActive () {
+      this.isMainnetActive = true
+      this.mainnetBtn = true
+      this.isTestnetActive = false
+      this.testnetBtn = false
     },
-  },
-};
+    clickedToInstall () {
+      if (Object.keys(this.selectedPreset).length > 0) {
+        this.$router.push('/install')
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
 .parent {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 10% 15% 60% 25%;
 }
 .header {
+  grid-column: 2/4;
+  grid-row: 2/3;
   padding: 1%;
+  margin: 0 auto;
   border: 4px solid grey;
-  width: 30%;
+  width: 60%;
+  height: 50%;
   text-align: center;
   border-radius: 40px;
   font-size: 1.3rem;
@@ -78,12 +95,17 @@ export default {
   position: relative;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .containerOption {
+  grid-column: 1/5;
+  grid-row: 3/4;
   border: 3px solid grey;
   width: 55%;
-  height: 55%;
+  height: 90%;
   margin: 10px auto;
   background: #2a4243;
   border-radius: 30px;
@@ -114,14 +136,30 @@ export default {
   width: 50%;
   margin: 0 auto;
 }
-
+.btn-container {
+  grid-column: 1/5;
+  grid-row: 4/5;
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.install-box {
+  width: 15%;
+  height: 100%;
+  margin-right: 50px;
+}
+.btn-container a {
+  width: 15%;
+  height: 100%;
+  margin-left: 50px;
+  text-align: right;
+}
 #instal {
-  position: fixed;
-  top: 81vh;
-  left: 76%;
   width: auto;
   min-width: 120px;
-  height: 8%;
+  height: 70%;
   resize: both;
   border: 3px solid #545454;
   border-radius: 40px;
@@ -130,14 +168,12 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 
 #back {
-  position: fixed;
-  top: 81vh;
-  left: 14%;
   width: auto;
-  height: 8%;
+  height: 70%;
   min-width: 120px;
   resize: both;
   border: 3px solid #545454;
@@ -147,6 +183,7 @@ export default {
   font-weight: 800;
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  outline-style: none;
 }
 #instal:hover,
 #back:hover {

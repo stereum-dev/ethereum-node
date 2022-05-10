@@ -53,7 +53,7 @@
       dest: "{{ 'any' if (item.split(':') | first) == '0.0.0.0' else (item.split(':') | first) }}"
       rule: allow
       port: "{{ item.split(':')[1] }}"
-      proto: "{{ item.split('/')[1] }}"
+      proto: "{{ item.split('/')[1] | default('any') }}"
       delete: "{{ 'yes' if stereum.manage_service.state == 'stopped' else 'no' }}"
     environment:
       PATH: /sbin:{{ ansible_env.PATH }}
@@ -63,11 +63,12 @@
   - name: Copy ssz files
     copy:
       src: "{{ role_path }}/files/prysm-prater-genesis.ssz"
-      dest: /opt/app/services/995c224c-82e9-11ec-9115-2349bc4566fa/genesis/prysm-prater-genesis.ssz
+      dest: "/opt/app/services/{{ stereum_service_configuration.id }}/genesis/prysm-prater-genesis.ssz"
       mode: 0644
     become: yes
     when: >
-      stereum_service_configuration.image is match("gcr.io/prysmaticlabs/prysm/beacon-chain:*") and
+      (stereum_service_configuration.image is match("prysmaticlabs/prysm-beacon-chain:*") or
+      stereum_service_configuration.image is match("gcr.io/prysmaticlabs/prysm/beacon-chain:*")) and
       stereum_service_configuration.command.find("prater") != -1
 
   - include_tasks: write-grafana-configuration.yml

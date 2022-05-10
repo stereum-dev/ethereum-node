@@ -1,64 +1,84 @@
-import EventEmitter from "events";
+import EventEmitter from 'events'
 
-let instance = null;
+let instance = null
 class ControlService extends EventEmitter {
-  constructor() {
-    super();
-    this.promiseIpc = window.promiseIpc;
+  constructor () {
+    super()
+    this.promiseIpc = window.promiseIpc
   }
 
-  init(store) {
-    this.promiseIpc.send("ready", "OK");
-    instance.$store = store;
+  init (store) {
+    this.promiseIpc.send('ready', 'OK')
+    instance.$store = store
   }
 
-  async connect(args) {
-    return this.promiseIpc.send("connect", {
+  async connect (args) {
+    return this.promiseIpc.send('connect', {
       host: args.host,
       port: args.port,
       user: args.user,
       password: args.password,
       sshKeyAuth: args.sshKeyAuth,
       keyfileLocation: args.keyfileLocation,
-      stereumRelease: args.stereumRelease,
-    });
+      stereumRelease: args.stereumRelease
+    })
   }
 
-  async disconnect(args) {
-    return this.promiseIpc.send("disconnect", args);
+  async disconnect (args) {
+    return this.promiseIpc.send('disconnect', args)
   }
 
-  async inquire(args) {
-    return this.promiseIpc.send("inquire", args);
+  async inquire (args) {
+    return this.promiseIpc.send('inquire', args)
   }
 
-  async setup(args) {
-    return this.promiseIpc.send("setup", args);
+  async setup (args) {
+    return this.promiseIpc.send('setup', args)
   }
 
-  async openTunnels(args) {
-    await this.promiseIpc.send("tunnel", args);
-    return args;
+  async destroy () {
+    return await this.promiseIpc.send('destroy')
   }
 
-  async setApikey(args) {
-    await this.promiseIpc.send("setApikey", args);
+  async openTunnels (args) {
+    await this.promiseIpc.send('tunnel', args)
+    return args
   }
 
-  async readConfig() {
-    return await this.promiseIpc.send("readConfig");
+  async setApikey (args) {
+    await this.promiseIpc.send('setApikey', args)
   }
 
-  async writeConfig(args) {
-    await this.promiseIpc.send("writeConfig", args);
-    return args;
+  async readConfig () {
+    return await this.promiseIpc.send('readConfig')
   }
 
-  async checkOS() {
-    return await this.promiseIpc.send("checkOS");
+  async writeConfig (args) {
+    await this.promiseIpc.send('writeConfig', args)
+    return args
+  }
+
+  async checkOS () {
+    return await this.promiseIpc.send('checkOS')
+  }
+
+  async getOneClickConstellation (args) {
+    return await this.promiseIpc.send('getOneClickConstellation', args)
+  }
+
+  async prepareOneClickInstallation (args) {
+    return await this.promiseIpc.send('prepareOneClickInstallation', args)
+  }
+
+  async writeOneClickConfiguration () {
+    return await this.promiseIpc.send('writeOneClickConfiguration')
+  }
+
+  async startOneClickServices () {
+    return await this.promiseIpc.send('startOneClickServices')
   }
 }
 if (!instance) {
-  instance = new ControlService(window.electron);
+  instance = new ControlService(window.electron)
 }
-export default instance;
+export default instance
