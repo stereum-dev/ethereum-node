@@ -115,15 +115,28 @@ export class NodeConnection {
              * run stereum ansible playbook "setup"
              */
       log.info("run stereum ansible playbook 'setup'")
-
+      let playbookRuns = []
       try {
-        const playbookRun = await this.runPlaybook('setup', { stereum_role: 'setup' })
-
-        return resolve(playbookRun)
+        playbookRuns.push(await this.runPlaybook('setup', { stereum_role: 'setup' }))
       } catch (err) {
         log.error('foo', err)
         reject("Can't run setup playbook: " + err)
       }
+
+      
+      /*
+      *  run stereum ansible playbook "configure-firewall" 
+      */
+      log.info("run stereum ansible playbook 'configure-firewall'")
+      try {
+        playbookRuns.push(await this.runPlaybook('configure-firewall', { stereum_role: 'configure-firewall' }))
+      } catch (err) {
+        log.error('foo', err)
+        reject("Can't run configure-firewall playbook: " + err)
+      }
+      
+      return resolve(playbookRuns)
+
     })
   }
 
