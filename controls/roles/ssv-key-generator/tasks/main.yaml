@@ -1,0 +1,25 @@
+---
+- name: Generate SSV network keys
+  command: bash -c "docker run -d --name=ssv_node_op_key -it 'bloxstaking/ssv-node:alpine-dns' /go/bin/ssvnode generate-operator-keys &&
+                    docker logs ssv_node_op_key --follow &&
+                    docker stop ssv_node_op_key &&
+                    docker rm ssv_node_op_key"
+  register: ssv_keys
+  changed_when: false
+  become: yes
+
+- name: Parse keys
+  set_fact:
+    ssv:
+      pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
+      sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
+
+- name: Write ssv-secret/public key
+  blockinfile:
+    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
+    block: |
+        ssv_sk: "{{ ssv.sk }}"
+        ssv_pk: "{{ ssv.pk }}"
+  become: yes
+
+# EOF

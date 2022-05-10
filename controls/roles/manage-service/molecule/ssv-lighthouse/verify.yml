@@ -18,6 +18,7 @@
       - stereum_ufw_status.stdout.find("9000/udp") != -1
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
+      - stereum_ufw_status.stdout.find("5052/tcp") != -1
   # ssv config file
   - stat: path=/opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/data/blox/ssv/config.yaml
     register: ssv_config_file
@@ -27,6 +28,19 @@
     assert:
       that:
         - ssv_config_file.stat.exists
+  - name: Check SSV keys
+    lineinfile:
+      path: /etc/stereum/services/1ce654a0-7162-11ec-91f3-8fdbc286367e.yaml
+      regexp: "{{ item }}"
+      state: absent
+    check_mode: yes
+    register: ssv_keys
+    with_items:
+      - '(^ssv_sk: ).*(?=)'
+      - '(^ssv_pk: ).*(?=)'
+    failed_when: not ssv_keys.changed
+  - debug:
+      msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
     pause:
       minutes: 10
@@ -61,11 +75,12 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("stereum/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
       - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
+      - stereum_docker_ps.stdout.find("5052->5052") != -1
       - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
 
 # EOF

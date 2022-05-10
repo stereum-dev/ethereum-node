@@ -7,7 +7,18 @@
     - ../../../../defaults/stereum_defaults.yaml
   vars:
     beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
-
+    ssv_service: 1ce654a0-7162-11ec-91f3-8fdbc286367e
+    ssv_config: |
+      eth2:
+        Network: "prater"
+        BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
+      eth1:
+        ETH1Addr: "ws://10.10.0.2:8545"
+        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+      OperatorPrivateKey: ""
+      global:
+        LogLevel: "debug"
+      MetricsAPIPort: 15000
   tasks:
     - name: Install python for Ansible (Ubuntu)
       raw: apt update && apt install -y pip
@@ -26,6 +37,24 @@
 
     - include_role:
         name: "configure-firewall"
+
+    - name: Create SSV config file
+      file:
+        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv"
+        state: directory
+        recurse: yes
+        owner: "2000"
+        group: "2000"
+      become: yes
+
+    - name: Write SSV configuration
+      ansible.builtin.copy:
+        content: "{{ ssv_config }}"
+        dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        owner: "2000"
+        group: "2000"
+        mode: 0644
+      become: yes
 
     - block:
       - name: Set fastsync params
@@ -52,20 +81,30 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/lighthouse:v2.1.2-50
-              env:
-                DEBUG_LEVEL: debug
-                NETWORK: prater
-                ETH1_NODES: http://10.10.0.3:8545
-                DATADIR: /opt/app/beacon
-                SLASHERDIR: /opt/app/slasher
-                SLASHER_DB_SIZE: "16"
+              image: sigp/lighthouse:v2.1.2
+              env: {}
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
                 - 127.0.0.1:5052:5052/tcp
-              command: []
-              entrypoint: ["/opt/app/start/beacon.sh"]
+              command:
+                - lighthouse
+                - bn
+                - --debug-level=debug
+                - --network=prater
+                - --eth1-endpoints=ws://10.10.0.2:8545
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+              entrypoint: []
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/beacon/lighthouse:/opt/app/beacon"
