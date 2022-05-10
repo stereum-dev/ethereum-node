@@ -8,13 +8,12 @@
           :key="index"
           :class="{
             'active-installation': item.status == 'active',
-            'progress-installation': item.status == 'progress',
             'success-installation': item.status == 'success',
             'failed-installation': item.status == 'failed',
           }"
         >
           <div class="active-box" v-if="item.status == 'active'">
-            <span>{{ item.statusLabel }}</span>
+            <span>ACTIVE</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"
@@ -22,12 +21,8 @@
               />
             </div>
           </div>
-          <div class="progress-box" v-if="item.status == 'progress'">
-            <span>{{ item.statusLabel }}</span>
-            <div class="loading-box"></div>
-          </div>
           <div class="success-box" v-if="item.status == 'success'">
-            <span>{{ item.statusLabel }}</span>
+            <span>{{ item.label }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/check3.png"
@@ -36,7 +31,7 @@
             </div>
           </div>
           <div class="failed-box" v-if="item.status == 'failed'">
-            <span>{{ item.statusLabel }}</span>
+            <span>{{ item.label }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close3.png"
