@@ -55,9 +55,11 @@ test('prepareStereumNode on ubuntu', async () => {
   expect(nodeConnection.settings).toBeDefined()
 
   // check if playbook setup was run
-  expect(playbookRun).toHaveProperty('playbook', 'setup')
-  expect(playbookRun).toHaveProperty('playbookRunRef')
-
+  expect(playbookRun[0]).toHaveProperty('playbook', 'setup')
+  expect(playbookRun[0]).toHaveProperty('playbookRunRef')
+  expect(playbookRun[1]).toHaveProperty('playbook', 'configure-firewall')
+  expect(playbookRun[1]).toHaveProperty('playbookRunRef')
+  
   // check if ansible roles got pulled from repo
   expect(ansibleRoles.stdout).toMatch(/roles/)
 

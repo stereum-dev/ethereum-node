@@ -21,11 +21,12 @@ export class HetznerServer {
      * @param serverID {string} - Used to specify which server to target (optional)
      * @returns https options with given method and path
      */
-  async createHTTPOptions (method, serverID) {
+  async createHTTPOptions (method, option, serverID, action) {
     serverID === undefined ? serverID = '' : serverID = '/' + serverID
+    action === undefined ? action = '' : action = '/actions/' + action
     const options = {
       hostname: 'api.hetzner.cloud',
-      path: `/v1/servers${serverID}`,
+      path: `/v1/${option}${serverID}${action}`,
       method: method,
       headers: {
         'Content-Type': 'application/json',
@@ -117,7 +118,7 @@ export class HetznerServer {
       await this.destroy()
     }
 
-    const data = await this.makeRequest(await this.createHTTPOptions('POST'), JSON.stringify(serverSettings))
+    const data = await this.makeRequest(await this.createHTTPOptions('POST', 'servers'), JSON.stringify(serverSettings))
     const responseData = JSON.parse(data)
 
     if (responseData.error !== undefined) {
@@ -165,7 +166,7 @@ export class HetznerServer {
      * Destroys Server via API call
      */
   async destroy () {
-    const data = await this.makeRequest(await this.createHTTPOptions('DELETE', this.serverID))
+    const data = await this.makeRequest(await this.createHTTPOptions('DELETE', 'servers', this.serverID))
     const responseData = JSON.parse(data)
     if (responseData.action.status == 'success' && responseData.action.progress == 100) {
       log.info('Server with ID ' + this.serverID + ' was destroyed successfully')
@@ -179,14 +180,34 @@ export class HetznerServer {
      * @returns object containing server information
      */
   async getStatus () {
-    const data = await this.makeRequest(await this.createHTTPOptions('GET', this.serverID))
+    const data = await this.makeRequest(await this.createHTTPOptions('GET', 'servers', this.serverID))
     const responseData = JSON.parse(data)
     return responseData
   }
 
   async getStatusAll () {
-    const data = await this.makeRequest(await this.createHTTPOptions('GET'))
+    const data = await this.makeRequest(await this.createHTTPOptions('GET', 'servers'))
     const responseData = JSON.parse(data)
     return responseData
+  }
+
+  async getAllNetworks () {
+    const data = await this.makeRequest(await this.createHTTPOptions('GET', 'networks'))
+    const responseData = JSON.parse(data)
+    return responseData
+  }
+
+  async getNetworkID (name) {
+    const networks = await this.getAllNetworks()
+    return (networks.networks.find(network => network.name === name)).id
+  }
+
+  async attachToNetwork (network, ip){
+    let networkID = await this.getNetworkID(network)
+    let settings = {
+      ip: ip,
+      network: networkID
+    }
+    console.log(await this.makeRequest(await this.createHTTPOptions('POST', 'servers', this.serverID, 'attach_to_network'),JSON.stringify(settings)))
   }
 }
