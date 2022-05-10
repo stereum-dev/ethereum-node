@@ -3,7 +3,7 @@
     <div class="storageTtl"><span>storage</span></div>
     <div class="storageBox">
       <div class="storageIco">
-        <img src="../../../../public/img/icon/Control/hdd.svg" />
+        <img src="../../../../public/img/icon/control/hdd.svg" />
       </div>
       <div class="storageProcPart">
         <div class="freePart">

@@ -20,14 +20,14 @@
       <the-network></the-network>
     </dashboard-card>
     <dashboard-card class="validatorComment_cell">
-      <inclusion-distance class="validCntr"></inclusion-distance>
-      <the-validator></the-validator>
+     <validator-container-box></validator-container-box>
     </dashboard-card>
     <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
   </div>
 </template>
 
 <script>
+import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
 import TheStorage from "./TheStorage.vue";
 import MachineName from "./MachineName.vue";
@@ -42,16 +42,17 @@ import TheNetwork from "./TheNetwork.vue";
 export default {
   components: {
     SandClock,
-    InclusionDistance,
+  
     TheStorage,
     DashboardCard,
     AmsterdamComponent,
-    TheValidator,
+    
     MachineName,
     TheRam,
     PeerToPeer,
     TheCpu,
     TheNetwork,
+    ValidatorContainerBox
   },
 };
 </script>
@@ -62,13 +63,8 @@ export default {
   color: #eee;
   font-size: 50%;
 }
-.validCntr {
-  width: 40%;
-}
 
-small {
-  font-size: 0.3rem;
-}
+
 .ctrlParent {
   display: grid;
   width: 100%;

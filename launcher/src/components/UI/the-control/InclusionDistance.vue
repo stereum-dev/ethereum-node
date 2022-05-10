@@ -1,9 +1,8 @@
 <template>
-  <div class="parentStorage">
-  
-    <div class="gauge-wrapper">
-    <div class="incTtl"><small>INCLUSION DISTANCE</small></div>
-      <div class="gauge four rischio3">
+  <div class="parentGuage">
+    <div class="guageTitle"><span>INCLUSION DISTANCE</span></div>
+    <div class="guageBox">
+      <div class="gauge four rischio4">
         <div class="slice-colors">
           <div class="st slice-item"></div>
           <div class="st slice-item"></div>
@@ -12,8 +11,6 @@
         </div>
         <div class="needle"></div>
         <div class="gauge-center">
-          <!-- <div class="label">625 GB FRER</div> -->
-          <!-- <div class="number">STORAGE</div> -->
           <div class="str">{{ strIns }}</div>
         </div>
       </div>
@@ -32,46 +29,61 @@ export default {
 </script>
 
 <style scoped>
-.str {
-  
-  border-radius: 5px;
-  font-size: 85%;
-  padding:2%;
-  font-weight: bold;
-  background: #33393E;
-}
-
-h1 {
-  text-align: center;
-}
-.parentStorage {
+.parentGuage {
   display: flex;
-  box-sizing: border-box;
-}
-.gauge-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
-  background: rgb(18, 18, 18); 
-  border-radius: 5px;
-  padding: 5%;
-  gap: 1%;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
-.incTtl{
-  background: #33393E;
- width: 90%;
-  font-size: 50%;
+.guageTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  height: 20%;
+  font-size: 30%;
+  background: #191c1d;
+  border: 2px solid #2a2a2a;
+}
+.guageBox {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100%;
+  background: #191c1d;
+}
+.str {
   border-radius: 5px;
+  font-size: 85%;
+  padding: 2%;
+  font-weight: bold;
+  background: #33393e;
 }
 
+.parentGuage {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+}
+
+.incTtl {
+  background: #33393e;
+  width: 90%;
+  font-size: 50%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .gauge {
   background: #e7e7e7;
   box-shadow: 0 -3px 6px 2px rgba(0, 0, 0, 0.5);
-  width: 90px;
-  height: 45px;
+  width: 75%;
+  height: 92%;
   border-radius: 100px 100px 0 0 !important;
   position: relative;
   overflow: hidden;
