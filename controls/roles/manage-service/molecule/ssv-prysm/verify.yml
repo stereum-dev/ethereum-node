@@ -57,6 +57,7 @@
     register: blox_ssv
     until:
       - blox_ssv.stdout is search('discovered node is connected')
+      - blox_ssv.stdout is search('no indices\, duties won\'t be fetched')
       - blox_ssv.stdout is not search('beacon node is not healthy')
       - blox_ssv.stdout is not search('errors')
     retries: 360
