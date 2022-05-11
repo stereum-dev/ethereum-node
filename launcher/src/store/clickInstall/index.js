@@ -18,6 +18,7 @@ export default {
           path: "/geth",
           icon: require("../../../public/img/icon/plugin-icons/execution/Geth.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/execution/Geth-s.png"),
+          showDropDown:false,
           status: "success",
           subTasks: [
             {
@@ -49,6 +50,7 @@ export default {
           path: "/hyperledger",
           icon: require("../../../public/img/icon/plugin-icons/execution/hyperLedger-besu.png"),
           SIcon: require("../../../public/img/icon/plugin-icons/execution/HyperLedger-besu-s.png"),
+          showDropDown:false,
           status: "success",
           subTasks: [
             {
@@ -65,6 +67,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/execution/Erigon.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/execution/Erigon-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -80,6 +83,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/execution/Nethermind.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/execution/Nethermind-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -95,6 +99,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/execution/OpenEthereum.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/execution/Open-ethereum-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -110,6 +115,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/Other/grafana-service.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/Other/Grafana-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -125,6 +131,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/consensus/Lighthouse-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -140,6 +147,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/consensus/Lodestar.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/consensus/Lodestar-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -155,6 +163,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/consensus/Nimbus.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -170,6 +179,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/consensus/Teku.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/consensus/Teku-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -185,6 +195,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/consensus/Prysm.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/consensus/Prysm-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -200,6 +211,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -215,6 +227,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/validator/lodestar-validator.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/validator/Lodestar-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -230,6 +243,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -245,6 +259,7 @@ export default {
           icon: require("../../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
           status: "success",
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -275,6 +290,7 @@ export default {
           path: "/teku",
           icon: require("../../../public/img/icon/plugin-icons/validator/teku-validator.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/validator/Teku-s.png"),
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -289,6 +305,7 @@ export default {
           path: "/blox-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/blox-ssv.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/Other/Blox-ssv-s.png"),
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -303,6 +320,7 @@ export default {
           path: "/ey-nightfall",
           icon: require("../../../public/img/icon/plugin-icons/Other/ey-nightfall.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/Other/EY-nightfall-s.png"),
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -317,6 +335,7 @@ export default {
           path: "/obol-ssv",
           icon: require("../../../public/img/icon/plugin-icons/Other/obol-ssv.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/Other/Obol-ssv-s.png"),
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -331,6 +350,7 @@ export default {
           path: "/prometheus",
           icon: require("../../../public/img/icon/plugin-icons/Other/prometheus.png"),
           sIcon: require("../../../public/img/icon/plugin-icons/Other/Prometheus-s.png"),
+          showDropDown:false,
           subTasks: [
             {
               label: "Creating Server ...",
@@ -366,7 +386,7 @@ export default {
             core: 4,
             memory: 64,
           },
-          includedPlugins: [{ id: 1, name: "Geth", status: "success" }],
+          includedPlugins: [],
         },
         {
           id: 2,
@@ -441,6 +461,7 @@ export default {
           network: "testnet",
           defaultPath: "/opt/stereum",
           icon: require("../../../public/img/icon/click-installation/staking-icon.png"),
+          showDropDown: false,
           requirements: {
             core: 8,
             memory: 64,
@@ -458,6 +479,7 @@ export default {
             core: 8,
             memory: 64,
           },
+          showDropDown: false,
           includedPlugins: [],
         },
       ],

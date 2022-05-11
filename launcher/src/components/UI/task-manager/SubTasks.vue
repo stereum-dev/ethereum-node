@@ -7,13 +7,14 @@
           v-for="(item, index) in subTasks"
           :key="index"
           :class="{
-            'active-installation': item.status == 'active',
+            'active-installation': item.status == 'changed',
             'success-installation': item.status == 'success',
             'failed-installation': item.status == 'failed',
           }"
         >
-          <div class="active-box" v-if="item.status == 'active'">
-            <span>ACTIVE</span>
+          <div class="active-box" v-if="item.status == 'changed'">
+            <span v-if="displayTaskResult">{{ item.action }}</span>
+            <span v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"
@@ -22,7 +23,8 @@
             </div>
           </div>
           <div class="success-box" v-if="item.status == 'success'">
-            <span>{{ item.label }}</span>
+            <span v-if="displayTaskResult">{{ item.action }}</span>
+            <span v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/check3.png"
@@ -31,7 +33,8 @@
             </div>
           </div>
           <div class="failed-box" v-if="item.status == 'failed'">
-            <span>{{ item.label }}</span>
+            <span v-if="displayTaskResult">{{ item.action }}</span>
+            <span v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close3.png"
@@ -47,6 +50,21 @@
 <script>
 export default {
   props: ["subTasks"],
+  data() {
+    return {
+      displayTaskResult: false,
+    };
+  },
+  mounted() {
+    this.taskResultHandler();
+  },
+  methods: {
+    taskResultHandler() {
+      setTimeout(() => {
+        this.displayTaskResult = true;
+      }, 5000);
+    },
+  },
 };
 </script>
 

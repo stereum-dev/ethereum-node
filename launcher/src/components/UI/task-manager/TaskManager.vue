@@ -8,55 +8,44 @@
         <div class="table-content">
           <div
             class="table-row"
-            v-for="(item, index) in pluginsInstalling"
+            v-for="(item, index) in playbookTasks"
             :key="index"
           >
-            <sub-tasks
-              v-if="item.showDropDown"
-              :subTasks="item?.subTasks"
-            ></sub-tasks>
-            <div class="table-row-progress" v-if="item.status == 'progress'">
-              <div class="progress-icon"></div>
-              <span>{{ item.name }}</span>
-
-              <drop-subtasks
-                :item="item"
-                @droptaskActive="openDropDown"
-              ></drop-subtasks>
-            </div>
-            <div class="table-row-active" v-if="item.status == 'active'">
+            <div class="table-row-active" v-if="item.status === 'changed'">
               <div class="active-icon">
                 <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.name }}</span>
-
-              <drop-subtasks
+              <span>{{ item.playbook }}</span>
+              <drop-tasks
                 :item="item"
                 @droptaskActive="openDropDown"
-              ></drop-subtasks>
+              ></drop-tasks>
             </div>
-            <div class="table-row-success" v-if="item.status == 'success'">
+            <div class="table-row-success" v-if="item.status === 'success'">
               <div class="success-icon">
                 <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.name }}</span>
+              <span>{{ item.playbook }}</span>
 
-              <drop-subtasks
+              <drop-tasks
                 :item="item"
                 @droptaskActive="openDropDown"
-              ></drop-subtasks>
+              ></drop-tasks>
             </div>
-            <div class="table-row-failed" v-if="item.status == 'failed'">
+            <div class="table-row-failed" v-if="item.status === 'failed'">
               <div class="failed-icon">
                 <img :src="installIconSrc.failedInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.name }}</span>
-
-              <drop-subtasks
+              <span>{{ item.playbook }}</span>
+              <drop-tasks
                 :item="item"
                 @droptaskActive="openDropDown"
-              ></drop-subtasks>
+              ></drop-tasks>
             </div>
+            <sub-tasks
+              v-if="item.showDropDown"
+              :subTasks="item?.tasks"
+            ></sub-tasks>
           </div>
         </div>
       </div>
@@ -71,82 +60,99 @@
 </template>
 <script>
 import SubTasks from "./SubTasks.vue";
-import DropSubtasks from "./DropTasks.vue";
+import DropTasks from "./DropTasks.vue";
+import { mapGetters } from "vuex";
 export default {
-  components: { SubTasks, DropSubtasks },
+  components: { SubTasks, DropTasks },
   data() {
     return {
       isTaskModalActive: false,
       showDropDownList: false,
-      pluginsInstalling: [
+      playbookTasks: [
         {
           id: 1,
-          name: "Geth",
-          status: "active",
-          statusLabel: "TASK ACTIVE",
+          playbook: "Geth",
+          status: "success",
           showDropDown: false,
-          subTasks: [
+          tasks: [
             {
+              name: "Preparing node",
+              action: "SUB TASK SUCCEEDED",
               status: "success",
-              statusLabel: "SUB TASK SUCCEEDED",
             },
             {
-              status: "active",
-              statusLabel: "SUB TASK ACTIVE",
+              name: "Writing service configs",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
             },
             {
-              status: "progress",
-              statusLabel: "SUB TASK IN QUEUE",
+              name: "Set firewall rules",
+              action: "SUB TASK SUCCEEDED",
+              status: "changed",
+            },
+            {
+              name: "Enable service docker",
+              action: "SUB TASK SUCCEEDED",
+              status: "skipped",
             },
           ],
         },
-        // {
-        //   id: 2,
-        //   name: "Nimbus",
-        //   status: "success",
-        //   statusLabel: "TASK SUCCEEDED",
-        //   showDropDown: false,
-        //   subTasks: [
-        //     {
-        //       status: "success",
-        //       statusLabel: "SUB TASK SUCCEEDED",
-        //     },
-        //     {
-        //       status: "success",
-        //       statusLabel: "SUB TASK SUCCEEDED",
-        //     },
-        //     {
-        //       status: "success",
-        //       statusLabel: "SUB TASK SUCCEEDED",
-        //     },
-        //   ],
-        // },
-        // {
-        //   id: 3,
-        //   name: "Lighthouse",
-        //   status: "failed",
-        //   statusLabel: "TASK FAILED",
-        //   showDropDown: false,
-        //   subTasks: [
-        //     {
-        //       status: "failed",
-        //       statusLabel: "SUB TASK FAILED",
-        //     },
-        //   ],
-        // },
-        // {
-        // id: 4,
-        //   name: "Grafana",
-        //   status: "progress",
-        //   statusLabel: "TASK IN QUEUE",
-        //   showDropDown: false,
-        //   subTasks: [
-        //     {
-        //       status: "progress",
-        //       statusLabel: "SUB TASK IN QUEUE",
-        //     },
-        //   ],
-        // },
+        {
+          id: 2,
+          playbook: "Nimbus",
+          status: "failed",
+          showDropDown: false,
+          tasks: [
+            {
+              name: "Removing conflicts",
+              action: "SUB TASK FAILED",
+              status: "failed",
+            },
+            {
+              name: "Writing service configs",
+              action: "SUB TASK FAILED",
+              status: "failed",
+            },
+            {
+              name: "Set firewall rules",
+              action: "SUB TASK CHANGED",
+              status: "changed",
+            },
+            {
+              name: "Install docker",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
+            },
+          ],
+        },
+        {
+          id: 3,
+          playbook: "Lighthouse",
+          status: "changed",
+          showDropDown: false,
+          tasks: [
+            {
+              name: "Removing conflicts",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
+            },
+            {
+              name: "Writing service configs",
+              action: "SUB TASK SUCCEEDED",
+              status: "changed",
+            },
+            {
+              name: "Set firewall rules",
+              action: "SUB TASK CHANGED",
+              status: "changed",
+            },
+            {
+              name: "Install docker",
+              action: "SUB TASK SUCCEEDED",
+              status: "changed",
+            },
+          ],
+        },
       ],
       taskManagerIcons: {
         progressIcon: require("../../../../public/img/icon/task-manager-icons/task-manager-icon.png"),
@@ -161,7 +167,11 @@ export default {
       },
     };
   },
+  mounted() {},
   computed: {
+    ...mapGetters({
+      includedPlugins: "getIncludedPlugins",
+    }),
     mainTaskIcon(item) {
       if (item.status == "failed") {
         return this.taskManagerIcons.failedIcon;
@@ -182,7 +192,15 @@ export default {
       item.showDropDown = !item.showDropDown;
     },
     listCleanerHandler() {
-      this.pluginsInstalling = [];
+      this.playbookTasks = [];
+    },
+    pluginSubTasksHandler() {
+      let subTasks = [];
+      for (var i = 0; i < this.includedPlugins.length; i++) {
+        subTasks.push(this.includedPlugins[i].subTasks);
+      }
+      this.tasksToDo = subTasks;
+      console.log(this.tasksToDo);
     },
   },
 };
@@ -255,6 +273,10 @@ export default {
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
   position: relative;
+}
+.plugin-row {
+  width: 100%;
+  height: 100%;
 }
 .table-content .table-row-failed {
   width: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="drop-icon" @click="openSubTasksHandler">
+  <div class="drop-icon" @click="openSubTasksHandler(item)">
     <img
       v-if="isSubTasksActive"
       src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
