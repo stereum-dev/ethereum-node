@@ -42,3 +42,4 @@ jobs:
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: 'true'

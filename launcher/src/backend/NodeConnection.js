@@ -4,6 +4,14 @@ import { NodeConnectionParams } from './NodeConnectionParams'
 import { nodeOS } from './NodeOS'
 import YAML from 'yaml'
 const log = require('electron-log')
+if(process.env.IS_DEV === 'true'){
+  global.branch = 'main'
+  log.info('pulling from main branch')
+}else{
+  global.branch = 'stable'
+  log.info('pulling from stable branch')
+}
+
 
 export class NodeConnection {
   constructor (nodeConnectionParams) {
@@ -100,7 +108,7 @@ export class NodeConnection {
                 sudo git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
                 sudo git config core.sparseCheckout true &&
                 sudo echo 'controls' >> .git/info/sparse-checkout &&
-                sudo git checkout stable
+                sudo git checkout ${branch}
                 `)
       } catch (err) {
         log.error("can't install ansible roles", err)
