@@ -58,15 +58,11 @@
     command: "docker logs --tail=250 stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
     register: blox_ssv
     until:
+      - blox_ssv.stdout is search('discovered node is connected')
+      - blox_ssv.stdout is search('no indices\, duties won\'t be fetched')
       - blox_ssv.stdout is not search('beacon node is not healthy')
+      - blox_ssv.stdout is not search('errors')
     retries: 360
-    delay: 10
-  - name: Blox-SSV loaded public keys
-    command: "docker logs stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
-    register: blox_ssv
-    until:
-      - blox_ssv.stdout is search('\"Operator PublicKey\":')
-    retries: 36
     delay: 10
   # container's images & ports
   - shell: docker ps
