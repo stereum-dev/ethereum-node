@@ -27,7 +27,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
 
 
   expect(lhService.command).toContain('--beacon-nodes=http-endpoint-string')
-  expect(lhService.command).toContain('--graffiti=foobar')
+  expect(lhService.command).toContain('--graffiti=\"foobar\"')
   expect(lhService.volumes).toHaveLength(1)
   expect(lhService.volumes).toContain('/opt/stereum/lh/validator:/opt/app/validator')
   expect(lhService.ports).toHaveLength(1)

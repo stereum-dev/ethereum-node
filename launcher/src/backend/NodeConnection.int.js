@@ -7,8 +7,8 @@ jest.setTimeout(500000)
 
 test('prepareStereumNode on ubuntu', async () => {
   const serverSettings = {
-    name: 'NodeConnection--integration-test--ubuntu-2004',
-    image: 'ubuntu-20.04',
+    name: 'NodeConnection--integration-test--ubuntu-2204',
+    image: 'ubuntu-22.04',
     location: 'fsn1',
     server_type: 'cx11',
     start_after_create: true
