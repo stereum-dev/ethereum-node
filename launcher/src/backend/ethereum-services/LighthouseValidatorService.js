@@ -31,7 +31,7 @@ export class LighthouseValidatorService extends NodeService {
         `--beacon-nodes=${eth2Nodes}`,
         `--datadir=${dataDir}`,
         '--init-slashing-protection',
-        `--graffiti=${graffiti}`,
+        `--graffiti=\"${graffiti}\"`,
         '--metrics',
         '--metrics-address=0.0.0.0',
         '--http',

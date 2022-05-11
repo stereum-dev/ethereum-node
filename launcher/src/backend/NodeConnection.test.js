@@ -231,6 +231,7 @@ test('prepareStereumNode success', async () => {
     .mockReturnValueOnce({ rc: 0 }) // install pkg
     .mockReturnValueOnce({ rc: 0 }) // install
     .mockReturnValueOnce({ rc: 0 }) // playbook ansible
+    .mockReturnValueOnce({ rc: 0 }) // playbook ansible
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock
@@ -242,13 +243,18 @@ test('prepareStereumNode success', async () => {
 
   await nodeConnection.findStereumSettings()
   const playbookRun = await nodeConnection.prepareStereumNode('/opt/stereum/bar')
-  expect(playbookRun).toBeDefined()
-  expect(playbookRun).toMatchObject({
+  expect(playbookRun[0]).toBeDefined()
+  expect(playbookRun[0]).toMatchObject({
     playbook: expect.stringMatching(/setup/),
     playbookRunRef: expect.any(String)
   })
+  expect(playbookRun[1]).toBeDefined()
+  expect(playbookRun[1]).toMatchObject({
+    playbook: expect.stringMatching(/configure-firewall/),
+    playbookRunRef: expect.any(String)
+  })
 
-  expect(mMock.mock.calls.length).toBe(6)
+  expect(mMock.mock.calls.length).toBe(7)
 
   const i = 0
   expect(mMock.mock.calls[0][0]).toMatch(/cat/)
@@ -261,6 +267,7 @@ test('prepareStereumNode success', async () => {
 
   expect(mMock.mock.calls[4][0]).toMatch(/git checkout/)
 
+  expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/)
   expect(mMock.mock.calls[5][0]).toMatch(/ansible-playbook/)
 })
 
@@ -289,7 +296,7 @@ test('prepareStereumNode error playbook', async () => {
     expect(e).toMatch("Can't run setup playbook: Can't run playbook: connection interrupted")
   })
 
-  expect(mMock.mock.calls.length).toBe(6)
+  expect(mMock.mock.calls.length).toBe(7)
 
   expect(mMock.mock.calls[1][0]).toMatch(/cat/)
   expect(mMock.mock.calls[1][0]).toMatch(/release/)
@@ -326,7 +333,7 @@ test('prepareStereumNode failure playbook', async () => {
     expect(e).toMatch("Can't run setup playbook: Failed running 'setup': asdf")
   })
 
-  expect(mMock.mock.calls.length).toBe(6)
+  expect(mMock.mock.calls.length).toBe(7)
 
   expect(mMock.mock.calls[1][0]).toMatch(/cat/)
   expect(mMock.mock.calls[1][0]).toMatch(/release/)

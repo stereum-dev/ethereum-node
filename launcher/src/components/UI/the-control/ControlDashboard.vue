@@ -2,9 +2,7 @@
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
     <div class="the-ram"><the-ram></the-ram></div>
-    <div class="sandFull_cell">
-      <sand-clock></sand-clock>
-    </div>
+    <div class="sandFull_cell"><time-gas></time-gas></div>
     <dashboard-card class="discSpace_cell">
       <the-storage></the-storage>
     </dashboard-card>
@@ -20,7 +18,7 @@
       <the-network></the-network>
     </dashboard-card>
     <dashboard-card class="validatorComment_cell">
-     <validator-container-box></validator-container-box>
+      <validator-container-box></validator-container-box>
     </dashboard-card>
     <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
   </div>
@@ -31,28 +29,24 @@ import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
 import TheStorage from "./TheStorage.vue";
 import MachineName from "./MachineName.vue";
-import SandClock from "./SandClock.vue";
 import DashboardCard from "./DashboardCard.vue";
-import InclusionDistance from "./InclusionDistance.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
-import TheValidator from "./TheValidator.vue";
 import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
+import TimeGas from "./TimeGas.vue";
 export default {
   components: {
-    SandClock,
-  
     TheStorage,
     DashboardCard,
     AmsterdamComponent,
-    
     MachineName,
     TheRam,
     PeerToPeer,
     TheCpu,
     TheNetwork,
-    ValidatorContainerBox
+    ValidatorContainerBox,
+    TimeGas,
   },
 };
 </script>
@@ -63,7 +57,6 @@ export default {
   color: #eee;
   font-size: 50%;
 }
-
 
 .ctrlParent {
   display: grid;
