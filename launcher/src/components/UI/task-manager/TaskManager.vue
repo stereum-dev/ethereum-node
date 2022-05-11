@@ -61,7 +61,6 @@
 <script>
 import SubTasks from "./SubTasks.vue";
 import DropTasks from "./DropTasks.vue";
-import { mapGetters } from "vuex";
 export default {
   components: { SubTasks, DropTasks },
   data() {
@@ -167,20 +166,17 @@ export default {
       },
     };
   },
-  mounted() {},
+
   computed: {
-    ...mapGetters({
-      includedPlugins: "getIncludedPlugins",
-    }),
     mainTaskIcon(item) {
       if (item.status == "failed") {
         return this.taskManagerIcons.failedIcon;
-      } else if (item.status == "active") {
-        return this.taskManagerIcons.activeIcon;
+      } else if (item.status == "changed") {
+        return this.taskManagerIcons.successIcon;
       } else if (item.status == "success") {
         return this.taskManagerIcons.successIcon;
       } else {
-        return this.taskManagerIcons.progressIcon;
+        return this.taskManagerIcons.activeIcon;
       }
     },
   },
@@ -190,17 +186,12 @@ export default {
     },
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
+      this.playbookTasks = this.playbookTasks.filter(
+        (task) => task.playbook == item.playbook
+      );
     },
     listCleanerHandler() {
       this.playbookTasks = [];
-    },
-    pluginSubTasksHandler() {
-      let subTasks = [];
-      for (var i = 0; i < this.includedPlugins.length; i++) {
-        subTasks.push(this.includedPlugins[i].subTasks);
-      }
-      this.tasksToDo = subTasks;
-      console.log(this.tasksToDo);
     },
   },
 };
