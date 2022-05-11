@@ -11,17 +11,16 @@
             v-for="(item, index) in playbookTasks"
             :key="index"
           >
-            <div class="table-row-active" v-if="item.status === 'changed'">
+            <!-- <div class="table-row-active">
               <div class="active-icon">
                 <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.playbook }}</span>
-              <drop-tasks
-                :item="item"
-                @droptaskActive="openDropDown"
-              ></drop-tasks>
-            </div>
-            <div class="table-row-success" v-if="item.status === 'success'">
+              <span>AKTIVE TASK</span>
+            </div> -->
+            <div
+              class="table-row-success"
+              v-if="item.status === 'success' || item.status === 'changed'"
+            >
               <div class="success-icon">
                 <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
@@ -67,7 +66,8 @@ export default {
     return {
       isTaskModalActive: false,
       showDropDownList: false,
-      playbookTasks: [
+      playbookTasks: [],
+      dataTasks: [
         {
           id: 1,
           playbook: "Geth",
@@ -77,7 +77,7 @@ export default {
             {
               name: "Preparing node",
               action: "SUB TASK SUCCEEDED",
-              status: "success",
+              status: "failed",
             },
             {
               name: "Writing service configs",
@@ -87,35 +87,35 @@ export default {
             {
               name: "Set firewall rules",
               action: "SUB TASK SUCCEEDED",
-              status: "changed",
+              status: "success",
             },
             {
               name: "Enable service docker",
               action: "SUB TASK SUCCEEDED",
-              status: "skipped",
+              status: "success",
             },
           ],
         },
         {
           id: 2,
           playbook: "Nimbus",
-          status: "failed",
+          status: "success",
           showDropDown: false,
           tasks: [
             {
               name: "Removing conflicts",
-              action: "SUB TASK FAILED",
-              status: "failed",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
             },
             {
               name: "Writing service configs",
-              action: "SUB TASK FAILED",
-              status: "failed",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
             },
             {
               name: "Set firewall rules",
-              action: "SUB TASK CHANGED",
-              status: "changed",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
             },
             {
               name: "Install docker",
@@ -127,7 +127,7 @@ export default {
         {
           id: 3,
           playbook: "Lighthouse",
-          status: "changed",
+          status: "failed",
           showDropDown: false,
           tasks: [
             {
@@ -137,18 +137,18 @@ export default {
             },
             {
               name: "Writing service configs",
-              action: "SUB TASK SUCCEEDED",
-              status: "changed",
+              action: "SUB TASK FAILED",
+              status: "failed",
             },
             {
               name: "Set firewall rules",
-              action: "SUB TASK CHANGED",
-              status: "changed",
+              action: "SUB TASK SUCCEEDED",
+              status: "success",
             },
             {
               name: "Install docker",
               action: "SUB TASK SUCCEEDED",
-              status: "changed",
+              status: "success",
             },
           ],
         },
@@ -166,17 +166,29 @@ export default {
       },
     };
   },
+  mounted() {
+    this.playbookTasks = this.dataTasks;
+  },
 
   computed: {
-    mainTaskIcon(item) {
-      if (item.status == "failed") {
+    checkTaskStatus() {
+      this.playbookTasks.map((el) => {
+        let taskStatus = el.tasks.some((task) => {
+          return task.status === "failed";
+        });
+        if (taskStatus) {
+          el.status === "failed";
+        }
+      });
+    },
+    mainTaskIcon() {
+      let mainIconColor = this.playbookTasks.some(
+        (el) => el.status === "failed"
+      );
+      if (mainIconColor) {
         return this.taskManagerIcons.failedIcon;
-      } else if (item.status == "changed") {
-        return this.taskManagerIcons.successIcon;
-      } else if (item.status == "success") {
-        return this.taskManagerIcons.successIcon;
       } else {
-        return this.taskManagerIcons.activeIcon;
+        return this.taskManagerIcons.successIcon;
       }
     },
   },
@@ -184,11 +196,16 @@ export default {
     taskModalHandler() {
       this.isTaskModalActive = !this.isTaskModalActive;
     },
+
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
-      this.playbookTasks = this.playbookTasks.filter(
-        (task) => task.playbook == item.playbook
-      );
+      if (item.showDropDown) {
+        this.playbookTasks = this.dataTasks.filter((task) => {
+          return task.playbook == item.playbook;
+        });
+      } else {
+        this.playbookTasks = this.dataTasks;
+      }
     },
     listCleanerHandler() {
       this.playbookTasks = [];
@@ -306,9 +323,7 @@ export default {
   align-items: center;
 }
 .table-row-failed .failed-icon,
-.table-row-success .success-icon,
-.table-row-active .active-icon,
-.table-row-progress .progress-icon {
+.table-row-success .success-icon {
   width: 16px;
   height: 16px;
   /* background-color: #292929; */

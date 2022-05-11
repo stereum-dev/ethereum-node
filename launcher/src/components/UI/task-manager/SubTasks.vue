@@ -7,21 +7,10 @@
           v-for="(item, index) in subTasks"
           :key="index"
           :class="{
-            'active-installation': item.status == 'changed',
             'success-installation': item.status == 'success',
             'failed-installation': item.status == 'failed',
           }"
         >
-          <div class="active-box" v-if="item.status == 'changed'">
-            <span v-if="displayTaskResult">{{ item.action }}</span>
-            <span v-else>{{ item.name }}</span>
-            <div class="loading-box">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"
-                alt=""
-              />
-            </div>
-          </div>
           <div class="success-box" v-if="item.status == 'success'">
             <span v-if="displayTaskResult">{{ item.action }}</span>
             <span v-else>{{ item.name }}</span>
@@ -96,8 +85,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.subTask-row .active-box,
-.subTask-row .progress-box,
+
 .subTask-row .success-box,
 .subTask-row .failed-box {
   width: 100%;
@@ -122,14 +110,7 @@ export default {
   width: 70%;
   height: 70%;
 }
-.subTask-row .active-box img {
-  width: 80%;
-  height: 80%;
-  margin-top: 1px;
-}
 
-.subTask-row .active-box span,
-.subTask-row .progress-box span,
 .subTask-row .success-box span,
 .subTask-row .failed-box span {
   font-size: 0.7rem;
@@ -138,14 +119,6 @@ export default {
   margin-left: 10px;
 }
 
-.active-installation {
-  background-color: rgb(141, 215, 255);
-  border-radius: 15px;
-}
-.progress-installation {
-  background-color: rgb(125, 125, 125);
-  border-radius: 15px;
-}
 .success-installation {
   background-color: #5ed285;
   border-radius: 15px;
