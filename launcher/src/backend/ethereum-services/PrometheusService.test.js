@@ -86,7 +86,7 @@ test('buildByConfiguration', () => {
 
   expect(prometheus.id).toBe('123')
   expect(prometheus.service).toBe('PrometheusService')
-  expect(prometheus.configVersion).toBe(1)
+  expect(prometheus.configVersion).toBe(876)
   expect(prometheus.image).toBe('prometheus')
   expect(prometheus.imageVersion).toBe('v0.0.1')
   expect(prometheus.ports).toHaveLength(2)
