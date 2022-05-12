@@ -101,7 +101,6 @@
                 --metrics-interface=0.0.0.0
                 --metrics-host-allowlist="*"
                 --data-path=/opt/app/data
-                --data-storage-mode=archive
                 --rest-api-port=5051
                 --rest-api-host-allowlist="*"
                 --rest-api-interface=0.0.0.0
