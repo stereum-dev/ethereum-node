@@ -15,18 +15,18 @@
 - name: Fetch repository information
   shell: git fetch --all
   args:
-    chdir: "{{ stereum.settings.controls_install_path }}"
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
 
 - name: Checkout commit of latest version
   shell: "git checkout {{ (update_data.json['stereum'] | last)['commit'] }}"
   args:
-    chdir: "{{ stereum.settings.controls_install_path }}"
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
   when: stereum.override_gitcommit is undefined
 
 - name: Checkout commit of specific version
   shell: "git checkout {{ stereum.override_gitcommit }}"
   args:
-    chdir: "{{ stereum.settings.controls_install_path }}"
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
   when: stereum.override_gitcommit is defined
 
 # EOF

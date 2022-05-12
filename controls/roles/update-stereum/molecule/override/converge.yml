@@ -38,7 +38,7 @@
     - set_fact:
         stereum:
           settings:
-            controls_install_path: "/opt/stereum/ansible"
+            controls_install_path: "/opt/stereum"
           override_gitcommit: "aae4cce8ad8a93c74b4aeb2f1692171a7d01b106"
     - debug:
         msg: "{{ stereum }}"
