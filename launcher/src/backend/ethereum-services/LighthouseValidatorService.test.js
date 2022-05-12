@@ -34,6 +34,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)
   expect(lhService.image).toMatch(/sigp\/lighthouse/)
+  expect(lhService.configVersion).toBe(1)
 
   expect(lhService.service).toMatch(/LighthouseValidatorService/)
 })
@@ -72,6 +73,7 @@ test('buildByConfiguration', () => {
   const lh = LighthouseValidatorService.buildByConfiguration({
     id: '123',
     service: 'LighthouseValidatorService',
+    configVersion: 333,
     image: 'lhval:v0.0.1',
     command:[
       'lighthouse',
@@ -92,6 +94,7 @@ test('buildByConfiguration', () => {
 
   expect(lh.id).toBe('123')
   expect(lh.service).toBe('LighthouseValidatorService')
+  expect(lh.configVersion).toBe(333)
   expect(lh.image).toBe('lhval')
   expect(lh.imageVersion).toBe('v0.0.1')
   expect(lh.ports).toHaveLength(0)

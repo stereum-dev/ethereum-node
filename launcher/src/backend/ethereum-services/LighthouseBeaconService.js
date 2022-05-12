@@ -22,6 +22,7 @@ export class LighthouseBeaconService extends NodeService {
     service.init(
       'LighthouseBeaconService',  //service
       null, //id
+      1, // configVersion
       image,  //image
       'v2.1.2', //imageVersion
       [

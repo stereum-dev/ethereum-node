@@ -5,9 +5,9 @@ import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseValidatorService extends NodeService {
   static buildByUserInput (network, ports, workingDir, consensusClients, graffiti) {
-    
+
     const image = 'sigp/lighthouse'
-    
+
     const dataDir = '/opt/app/validator'
 
     const volumes = [
@@ -21,6 +21,7 @@ export class LighthouseValidatorService extends NodeService {
     service.init(
       'LighthouseValidatorService', //service
       null, //id
+      1, //configVersion
       image,  //image
       'v2.1.2', //imageVersion
       [

@@ -16,6 +16,7 @@ test('buildByConfiguration', () => {
   const pne = PrometheusNodeExporterService.buildByConfiguration({
     id: '123',
     service: 'PrometheusNodeExporterService',
+    configVersion: 654,
     image: 'prom/node-exporter:v0.0.1',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -23,6 +24,7 @@ test('buildByConfiguration', () => {
 
   expect(pne.id).toBe('123')
   expect(pne.service).toBe('PrometheusNodeExporterService')
+  expect(pne.configVersion).toBe(654)
   expect(pne.image).toBe('prom/node-exporter')
   expect(pne.imageVersion).toBe('v0.0.1')
   expect(pne.ports).toHaveLength(2)
