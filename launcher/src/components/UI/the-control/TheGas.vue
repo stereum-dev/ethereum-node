@@ -80,6 +80,6 @@ export default {
   align-items: center;
 }
 .ethIco img {
-  width: 100%;
+  width: 10 0%;
 }
 </style>
