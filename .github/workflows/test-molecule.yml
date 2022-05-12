@@ -26,6 +26,8 @@ jobs:
           {role: "configure-updates", test: "default", delay: 1},
           {role: "setup", test: "default", delay: 1},
           {role: "update-services", test: "default", delay: 1},
+          {role: "update-stereum", test: "default", delay: 1},
+          {role: "update-stereum", test: "override", delay: 1},
           {role: "ssv-key-generator", test: "default", delay: 1},
           {role: "fastsync", test: "default", delay: 90},
           {role: "validator-import-lighthouse", test: "default", delay: 10},
