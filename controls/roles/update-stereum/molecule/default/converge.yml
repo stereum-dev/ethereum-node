@@ -1,0 +1,46 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    json_update_data: |
+      {
+          "prater": {
+              "LighthouseBeaconService": [
+                  "v1.5.2-45",
+                  "v2.0.0-46",
+                  "v2.0.1-48"
+              ],
+              "LighthouseValidatorService": [
+                  "v1.5.2-45",
+                  "v2.0.0-46",
+                  "v2.0.1-48"
+              ]
+          },
+          "stereum": [
+              {
+                  "name": "alhpa2.0",
+                  "commit": "b26a614f2983f677fb29af4acd72472aadc1f2f1"
+              },
+              {
+                  "name": "test123",
+                  "commit": "de04f527b5de44ab6feb127d810238240fcc33be"
+              }
+          ]
+      }
+
+
+  tasks:
+    - set_fact:
+        update_data_test:
+          json: "{{ json_update_data | from_json }}"
+    - set_fact:
+        stereum:
+          settings:
+            controls_install_path: "/opt/stereum/ansible"
+    - debug:
+        msg: "{{ stereum }}"
+    - name: "Include update-stereum"
+      include_role:
+        name: "update-stereum"
