@@ -50,6 +50,7 @@ test('buildConfiguration', () => {
   expect(bloxService.id).toHaveLength(36)
   expect(bloxService.user).toMatch(/root/)
   expect(bloxService.image).toMatch(/bloxstaking\/ssv-node/)
+  expect(bloxService.configVersion).toBe(1)
 })
 
 test('getServiceConfiguration', () => {

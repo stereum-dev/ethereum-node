@@ -20,6 +20,7 @@ test('buildConfiguration', () => {
   expect(grafanaService.id).toHaveLength(36)
   expect(grafanaService.user).toMatch(/2000/)
   expect(grafanaService.image).toMatch(/grafana\/grafana/)
+  expect(grafanaService.configVersion).toBe(1)
 })
 
 test('getAvailablePorts', () => {
@@ -32,6 +33,7 @@ test('buildByConfiguration', () => {
   const grafana = GrafanaService.buildByConfiguration({
     id: '123',
     service: 'GrafanaService',
+    configVersion: 999,
     image: 'grafana:v8.4.0',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -39,6 +41,7 @@ test('buildByConfiguration', () => {
 
   expect(grafana.id).toBe('123')
   expect(grafana.service).toBe('GrafanaService')
+  expect(grafana.configVersion).toBe(999)
   expect(grafana.image).toBe('grafana')
   expect(grafana.imageVersion).toBe('v8.4.0')
   expect(grafana.ports).toHaveLength(2)

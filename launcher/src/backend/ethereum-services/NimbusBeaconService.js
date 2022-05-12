@@ -21,6 +21,7 @@ export class NimbusBeaconService extends NodeService {
     service.init(
       'NimbusBeaconService',  //service
       null, // id,
+      1, // configVersion
       image, // image,
       'multiarch-v22.3.0', // imageVersion,
       [

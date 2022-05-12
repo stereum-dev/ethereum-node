@@ -9,6 +9,7 @@ export class PrometheusNodeExporterService extends NodeService {
     service.init(
       'PrometheusNodeExporterService',
       null, // id
+      1, // configVersion
       image, // image
       'v1.3.1', // imageVersion
       null, // command

@@ -70,11 +70,13 @@ test('buildByConfiguration', () => {
   const gethConfig = GethService.buildByConfiguration({
     id: '987',
     service: 'GethService',
+    configVersion: 1,
     image: 'geth:v0.0.1'
   }).buildConfiguration()
 
   expect(gethConfig.id).toBe('987')
   expect(gethConfig.service).toBe('GethService')
+  expect(gethConfig.configVersion).toBe(1)
 })
 
 // EOF
