@@ -23,4 +23,12 @@ export default {
   getInstallationPath(state) {
     return state.installationPath;
   },
+  getIncludedPlugins(state) {
+    return state.selectedPreset.includedPlugins;
+  },
+  getSubTasks(state) {
+    return state.selectedPreset.includedPlugins.forEach((task) => {
+      task.subTasks;
+    });
+  },
 };

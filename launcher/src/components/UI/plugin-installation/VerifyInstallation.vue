@@ -26,7 +26,7 @@
                     :key="index"
                   >
                     <div class="plugin-name">
-                      <img :src="plugin.icon" alt="icon">
+                      <img :src="plugin.icon" alt="icon" />
                       <span>{{ plugin.name }}</span>
                     </div>
                     <div class="category">
@@ -44,7 +44,7 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/configuration' }">
+            <router-link :to="{ path: '/node' }">
               <button class="next-btn">INSTALL</button>
             </router-link>
           </div>
@@ -54,23 +54,23 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
     ...mapGetters({
-      selectedPreset: 'getSelectedPreset',
-      installationPath: 'getInstallationPath'
-    })
+      selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
+    }),
   },
-  mounted () {
+  mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push('/clickinstall')
+      this.$router.push("/clickinstall");
     }
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .verify-parent {
@@ -207,7 +207,7 @@ export default {
   margin-top: 15px auto;
   background-color: #33393e;
   box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
-  border:1px solid rgb(81, 80, 80);
+  border: 1px solid rgb(81, 80, 80);
   border-radius: 10px;
   justify-self: center;
   display: flex;
@@ -224,8 +224,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.plugin-name img{
-  width:12%;
+.plugin-name img {
+  width: 12%;
   height: 50%;
 }
 
@@ -273,7 +273,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
 }
 .btn-box a {
   width: 95%;
@@ -282,7 +281,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
 }
 .next-btn,
 .back-btn {
