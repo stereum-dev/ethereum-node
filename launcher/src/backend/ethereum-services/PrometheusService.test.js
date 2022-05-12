@@ -65,6 +65,7 @@ test('buildConfiguration', () => {
   expect(prometheus.id).toHaveLength(36)
   expect(prometheus.user).toMatch(/2000/)
   expect(prometheus.image).toMatch(/prom\/prometheus/)
+  expect(prometheus.configVersion).toBe(1)
 })
 
 test('getAvailablePorts', () => {
@@ -77,6 +78,7 @@ test('buildByConfiguration', () => {
   const prometheus = PrometheusService.buildByConfiguration({
     id: '123',
     service: 'PrometheusService',
+    configVersion: 876,
     image: 'prometheus:v0.0.1',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -84,6 +86,7 @@ test('buildByConfiguration', () => {
 
   expect(prometheus.id).toBe('123')
   expect(prometheus.service).toBe('PrometheusService')
+  expect(prometheus.configVersion).toBe(1)
   expect(prometheus.image).toBe('prometheus')
   expect(prometheus.imageVersion).toBe('v0.0.1')
   expect(prometheus.ports).toHaveLength(2)

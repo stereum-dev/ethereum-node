@@ -51,6 +51,7 @@ MetricsAPIPort: 15000
     service.init(
       'BloxSSVService',
       null,
+      1,
       'bloxstaking/ssv-node',
       'ubuntu-latest',
       null,

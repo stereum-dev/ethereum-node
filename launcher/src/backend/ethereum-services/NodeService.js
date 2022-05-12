@@ -29,9 +29,10 @@ export class NodeService {
     }
   }
 
-  init (service, id, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
+  init (service, id, configVersion, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
     this.service = service
     this.setId(id)
+    this.configVersion = configVersion
     this.image = image
     this.imageVersion = imageVersion
     this.command = (command === undefined || command === null) ? [] : command
@@ -54,6 +55,7 @@ export class NodeService {
 
     this.setId(config.id)
     this.service = config.service
+    this.configVersion = config.configVersion
     this.image = imageInformation.image
     this.imageVersion = imageInformation.version
     this.command = config.command
@@ -79,6 +81,7 @@ export class NodeService {
     return {
       service: this.service,
       id: this.id,
+      configVersion: this.configVersion,
       command: this.command,
       entrypoint: this.entrypoint,
       env: this.env,

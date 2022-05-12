@@ -23,6 +23,7 @@ test('buildByConfiguration', () => {
 
   expect(pne.id).toBe('123')
   expect(pne.service).toBe('PrometheusNodeExporterService')
+  expect(pne.configVersion).toBe(1)
   expect(pne.image).toBe('prom/node-exporter')
   expect(pne.imageVersion).toBe('v0.0.1')
   expect(pne.ports).toHaveLength(2)

@@ -37,6 +37,7 @@ test('buildConfiguration', () => {
   expect(nimbusService.id).toHaveLength(36)
   expect(nimbusService.user).toMatch(/2000/)
   expect(nimbusService.image).toMatch(/statusim\/nimbus-eth2/)
+  expect(nimbusService.configVersion).toBe(1)
 })
 
 test('buildConsensusClientHttpEndpointUrl', () => {
@@ -76,6 +77,7 @@ test('buildByConfiguration', () => {
   const nimbus = NimbusBeaconService.buildByConfiguration({
     id: '123',
     service: 'NimbusBeaconService',
+    configVersion: 234,
     image: 'nimbusbeacon:v0.0.1',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -83,6 +85,7 @@ test('buildByConfiguration', () => {
 
   expect(nimbus.id).toBe('123')
   expect(nimbus.service).toBe('NimbusBeaconService')
+  expect(nimbus.configVersion).toBe(234)
   expect(nimbus.image).toBe('nimbusbeacon')
   expect(nimbus.imageVersion).toBe('v0.0.1')
   expect(nimbus.ports).toHaveLength(2)
