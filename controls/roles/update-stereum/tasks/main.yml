@@ -1,0 +1,32 @@
+---
+- name: Download update metadata
+  uri:
+    url: https://stereum.net/downloads/updates.json
+    method: GET
+    return_content: true
+    status_code: 200
+    body_format: json
+  register: update_data_download
+
+- name: Set update data
+  set_fact:
+    update_data: "{{ update_data_test | default(update_data_download) }}"
+
+- name: Fetch repository information
+  shell: git fetch --all
+  args:
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
+
+- name: Checkout commit of latest version
+  shell: "git checkout {{ (update_data.json['stereum'] | last)['commit'] }}"
+  args:
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
+  when: stereum.override_gitcommit is undefined
+
+- name: Checkout commit of specific version
+  shell: "git checkout {{ stereum.override_gitcommit }}"
+  args:
+    chdir: "{{ stereum.settings.controls_install_path }}/ansible"
+  when: stereum.override_gitcommit is defined
+
+# EOF
