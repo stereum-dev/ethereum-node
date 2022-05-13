@@ -1,6 +1,6 @@
 ---
 - name: Download update metadata
-  ansible.builtin.uri:
+  uri:
     url: https://stereum.net/downloads/updates.json
     method: GET
     return_content: true
@@ -9,22 +9,22 @@
   register: update_data_download
 
 - name: Set update data
-  ansible.builtin.set_fact:
+  set_fact:
     update_data: "{{ update_data_test | default(update_data_download) }}"
 
 - name: Fetch repository information
-  ansible.builtin.command: git fetch --all
+  command: "git fetch --all"
   args:
     chdir: "{{ stereum.settings.controls_install_path }}/ansible"
 
 - name: Checkout commit of latest version
-  ansible.builtin.command: "git checkout {{ (update_data.json['stereum'] | last)['commit'] }}"
+  command: "git checkout {{ (update_data.json['stereum'] | last)['commit'] }}"
   args:
     chdir: "{{ stereum.settings.controls_install_path }}/ansible"
   when: stereum.override_gitcommit is undefined
 
 - name: Checkout commit of specific version
-  ansible.builtin.command: "git checkout {{ stereum.override_gitcommit }}"
+  command: "git checkout {{ stereum.override_gitcommit }}"
   args:
     chdir: "{{ stereum.settings.controls_install_path }}/ansible"
   when: stereum.override_gitcommit is defined
