@@ -10,7 +10,7 @@
       ><amsterdam-component></amsterdam-component
     ></dashboard-card>
     <dashboard-card class="peerConnection_cell">
-      <router-link class="link" to="/cpu">
+      <router-link class="link" to="/storage">
         <peer-to-peer></peer-to-peer>
       </router-link>
     </dashboard-card>
