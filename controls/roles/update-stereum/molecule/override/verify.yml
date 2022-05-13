@@ -22,7 +22,7 @@
 
   # check for correct version of repository
   - name: Get git hash
-    shell: git show --format="%H" --no-patch
+    ansible.builtin.command: git show --format="%H" --no-patch
     args:
       chdir: "/opt/stereum/ansible"
     register: git_hash
