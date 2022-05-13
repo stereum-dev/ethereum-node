@@ -48,10 +48,10 @@
     retries: 360
     delay: 10
   - name: prysm validator
-    command: "docker logs stereum-0d4a2d58-b417-11ec-a0f3-0b91f10c3a8c"
+    command: "docker logs --tail=70 stereum-0d4a2d58-b417-11ec-a0f3-0b91f10c3a8c"
     register: validator
     until:
-      - validator.stderr is search('Reloaded validator keys into keymanager')
+      - validator.stderr is search('Validating for public key')
       - validator.stderr is search('Beacon chain started')
       - validator.stderr is not search('Could not determine if beacon chain started')
     retries: 360

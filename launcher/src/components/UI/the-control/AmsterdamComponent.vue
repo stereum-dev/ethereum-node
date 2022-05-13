@@ -29,7 +29,9 @@
       </div>
       <div class="epochBox">
         <div class="epochBox_title"><span>EPOCH</span></div>
-        <div class="epochBox_input"><input type="text" /></div>
+        <div class="epochBox_input">
+          <span>#{{ epochValue }}</span>
+        </div>
         <div class="epochBox_footer"><span>CONFIRMED</span></div>
       </div>
     </div>
@@ -40,6 +42,7 @@ export default {
   data() {
     return {
       dateTime: "00:00",
+      epochValue: "123455",
     };
   },
 };
@@ -215,13 +218,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 60%;
 }
-.epochBox_input input {
+.epochBox_input span {
   width: 100%;
   height: 60%;
   background: #000;
   color: #eee;
   border: 0.5px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 5%;
+  align-items: center;
 }
 .epochBox_footer {
   width: 90%;
