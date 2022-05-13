@@ -4,7 +4,7 @@
       <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
     </div>
     <div class="machineNam">
-      <span>{{ maschinName }}</span>
+      <span>{{ this.maschinName }}</span>
     </div>
   </div>
 </template>

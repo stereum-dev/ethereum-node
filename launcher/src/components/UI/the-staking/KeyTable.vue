@@ -10,10 +10,20 @@
           <span id="balance">BALANCE</span>
           <span id="option">OPTTIONS</span>
         </div>
-        <div class="table-content">
-          <div class="table-row">
+        <div
+          class="table-content"
+          :class="{ 'drop-active': isDragOver }"
+          @drag.prevent.stop
+          @dragstart.prevent.stop
+          @dragend.prevent.stop="isDragOver = false"
+          @dragover.prevent.stop="isDragOver = true"
+          @dragenter.prevent.stop="isDragOver = true"
+          @dragleave.prevent.stop="isDragOver = false"
+          @drop.prevent.stop="dropFileHandler"
+        >
+          <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
             <span class="circle"></span>
-            <span class="category">PUBLIC KEY</span>
+            <span class="category">{{ item.version }}</span>
             <span class="username">Max Behzadi</span>
             <img
               class="service-icon"
@@ -81,7 +91,14 @@
         src="../../../../public/img/icon/the-staking/staking-filter.png"
         alt="icon"
       />
-      <div class="insert-key">
+      <div class="insert-key" @click="openUploader">
+        <input
+          type="file"
+          @change="uploadFileHandler"
+          style="display: none"
+          ref="fileInput"
+          accept="application/json"
+        />
         <span>CLICK OR DRAG TO INSERT KEY</span>
         <img
           class="black-key"
@@ -92,6 +109,34 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      isDragOver: false,
+      keyFiles: [],
+      keyList: null,
+    };
+  },
+  mounted() {},
+  methods: {
+    openUploader() {
+      this.$refs.fileInput.click();
+    },
+    uploadFileHandler(event) {
+      const uploadedFiles = event.target.files;
+      this.keyFiles.push(uploadedFiles);
+      this.isDragOver = false;
+      console.log(this.keyFiles);
+    },
+    dropFileHandler(event) {
+      const droppedFiles = event.dataTransfer.files;
+      this.keyFiles.push(droppedFiles);
+      this.isDragOver = false;
+    },
+  },
+};
+</script>
 <style scoped>
 .keys-parent {
   width: 100%;
@@ -114,6 +159,7 @@
   width: 100%;
   height: 100%;
 }
+
 .table-header {
   height: 30px;
   border-bottom: 7px solid #bfbfbf;
@@ -147,9 +193,16 @@
   grid-column: 8;
 }
 .table-content {
-  height: 80%;
+  height: 92%;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.drop-active {
+  width: 100%;
+  height: 92%;
+  background-color: rgb(44, 151, 128);
+  opacity: 0.2;
+  border-radius: 20px;
 }
 .table-row {
   width: 99%;
@@ -293,6 +346,7 @@
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  cursor: pointer;
 }
 .middle-icon .insert-key span {
   color: #fff;
