@@ -4,15 +4,15 @@
     <div class="the-ram"><the-ram></the-ram></div>
     <div class="sandFull_cell"><time-gas></time-gas></div>
     <dashboard-card class="discSpace_cell">
-      <the-storage></the-storage>
+      <router-link class="link" to="/storage">
+        <the-storage></the-storage
+      ></router-link>
     </dashboard-card>
     <dashboard-card class="nodeStart_cell"
       ><amsterdam-component></amsterdam-component
     ></dashboard-card>
     <dashboard-card class="peerConnection_cell">
-      <router-link class="link" to="/cpu">
-        <peer-to-peer></peer-to-peer>
-      </router-link>
+      <peer-to-peer></peer-to-peer>
     </dashboard-card>
     <dashboard-card class="networkCheck">
       <the-network></the-network>
@@ -55,7 +55,6 @@ export default {
 .link {
   text-decoration: none;
   color: #eee;
-  font-size: 50%;
 }
 
 .ctrlParent {

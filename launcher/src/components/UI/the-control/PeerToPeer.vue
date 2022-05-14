@@ -53,12 +53,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 50%;
 }
-.p2pTtl span {
-  font-size: 10%;
-  color: #eee;
-  text-decoration: none !important;
-}
+
 .p2pBox {
   width: 100%;
   height: 79%;
