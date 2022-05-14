@@ -1,16 +1,16 @@
 <template>
   <div class="cpuParent">
     <node-header id="head" onmousedown="return false"></node-header>
-    <node-bg>
-      <chart-grid></chart-grid>
-    </node-bg>
+    <chart-bg>
+      <chart-grid-storage></chart-grid-storage>
+    </chart-bg>
   </div>
 </template>
 <script>
-import ChartGrid from '../components/UI/the-chart/ChartGrid.vue'
+import ChartGridStorage from "../components/UI/the-chart/ChartGridStorage.vue";
 export default {
-  components: { ChartGrid }
-}
+  components: { ChartGridStorage },
+};
 </script>
 
 <style scoped>

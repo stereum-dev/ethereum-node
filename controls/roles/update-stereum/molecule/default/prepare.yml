@@ -53,7 +53,7 @@
         group: "root"
         mode: 0644
       become: yes
-    - shell: "{{ item }}"
+    - ansible.builtin.command: "{{ item }}"
       args:
         chdir: "/opt/stereum/ansible"
       with_items:
