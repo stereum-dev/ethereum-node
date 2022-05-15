@@ -23,7 +23,7 @@ For development, automated tests running for each commit and merge.
 - [![Tests: Integration](https://github.com/stereum-dev/ethereum-node/actions/workflows/test-integration.yml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/test-integration.yml) JEST system integration tests
 
 #### Build
-- [![Build/release](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml) Building Stereum Launcher
+- [![Build: Release](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml) Building Stereum Launcher
 
 ### `stable`
 ~~released code~~ not yet in use
