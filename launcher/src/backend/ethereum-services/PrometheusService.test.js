@@ -59,8 +59,8 @@ test('buildConfiguration', () => {
   const prometheus = PrometheusService.buildByUserInput(networks.prater, ports, '/opt/stereum/prometheus', [new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService()]).buildConfiguration()
 
   expect(prometheus.volumes).toHaveLength(2)
-  expect(prometheus.volumes).toContain('/opt/stereum/prometheus/data/prometheus:/prometheus')
-  expect(prometheus.volumes).toContain('/opt/stereum/prometheus/config:/etc/prometheus')
+  expect(prometheus.volumes).toContain('/opt/stereum/prometheus-' + prometheus.id + '/data/prometheus:/prometheus')
+  expect(prometheus.volumes).toContain('/opt/stereum/prometheus-' + prometheus.id + '/config:/etc/prometheus')
   expect(prometheus.ports).toHaveLength(1)
   expect(prometheus.id).toHaveLength(36)
   expect(prometheus.user).toMatch(/2000/)

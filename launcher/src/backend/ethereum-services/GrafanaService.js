@@ -4,6 +4,10 @@ import { ServiceVolume } from './ServiceVolume'
 
 export class GrafanaService extends NodeService {
   static buildByUserInput (network, ports, workingDir, grafanaProvisioning) {
+    const service = new GrafanaService()
+    service.setId()
+    workingDir = workingDir + '-' + service.id
+    
     const image = 'grafana/grafana'
 
     const provisioningDir = '/etc/grafana/provisioning'
@@ -16,10 +20,9 @@ export class GrafanaService extends NodeService {
       new ServiceVolume(workingDir, grafanaDir)
     ]
 
-    const service = new GrafanaService()
     service.init(
-      'GrafanaService',
-      null, // id
+      'GrafanaService', //service
+      service.id, // id
       1, // configVersion
       image, // image
       '8.4.0', // imageVersion

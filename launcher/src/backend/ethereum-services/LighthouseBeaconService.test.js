@@ -29,8 +29,8 @@ test('buildConfiguration', () => {
 
   expect(lhService.command).toContain('--eth1-endpoints=http-endpoint-string')
   expect(lhService.volumes).toHaveLength(2)
-  expect(lhService.volumes).toContain('/opt/stereum/lh/beacon:/opt/app/beacon')
-  expect(lhService.volumes).toContain('/opt/stereum/lh/slasher:/opt/app/slasher')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/beacon:/opt/app/beacon')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/slasher:/opt/app/slasher')
   expect(lhService.ports).toHaveLength(3)
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)

@@ -7,6 +7,7 @@ export class PrysmValidatorService extends NodeService {
         const service = new PrysmValidatorService()
         service.setId()
         workingDir = workingDir + '-' + service.id
+        
         const image = 'prysmaticlabs/prysm-validator'
 
         network = 'prater'

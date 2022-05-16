@@ -4,6 +4,10 @@ import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
   static buildByUserInput (network, ports, workingDir, executionClients, graffiti) {
+    const service = new NimbusBeaconService()
+    service.setId()
+    workingDir = workingDir + '-' + service.id
+    
     const image = 'statusim/nimbus-eth2'
 
     const gethServices = (executionClients.map(client => { return client.buildExecutionClientWsEndpointUrl() })).join()
@@ -17,10 +21,9 @@ export class NimbusBeaconService extends NodeService {
       new ServiceVolume(workingDir + '/validator/secrets', secretsDir)
     ]
 
-    const service = new NimbusBeaconService()
     service.init(
       'NimbusBeaconService',  //service
-      null, // id,
+      service.id, // id,
       1, // configVersion
       image, // image,
       'multiarch-v22.3.0', // imageVersion,

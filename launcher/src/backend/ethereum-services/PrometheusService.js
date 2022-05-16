@@ -10,6 +10,10 @@ export class PrometheusService extends NodeService {
   }
 
   static buildByUserInput (network, ports, workingDir, consensusClients, prometheusNodeExporterClients) {
+    const service = new PrometheusService()
+    service.setId()
+    workingDir = workingDir + '-' + service.id
+    
     const image = 'prom/prometheus'
     const config = this.getServiceConfiguration(consensusClients, prometheusNodeExporterClients)
 
@@ -21,10 +25,9 @@ export class PrometheusService extends NodeService {
       new ServiceVolume(workingDir + '/config', configDir)
     ]
 
-    const service = new PrometheusService()
     service.init(
       'PrometheusService',
-      null, // id
+      service.id, // id
       1, // configVersion
       image, // image
       'v2.33.1', // imageVersion

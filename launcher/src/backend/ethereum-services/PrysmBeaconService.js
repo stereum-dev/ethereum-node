@@ -7,6 +7,7 @@ export class PrysmBeaconService extends NodeService {
         const service = new PrysmBeaconService()
         service.setId()
         workingDir = workingDir + '-' + service.id
+        
         const image = 'prysmaticlabs/prysm-beacon-chain'
 
         network = 'prater'
