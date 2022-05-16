@@ -54,7 +54,7 @@ export class PrysmValidatorService extends NodeService {
 
     getAvailablePorts() {
         return [
-            new ServicePortDefinition(7500, 'tcp', 'Validator Client API')
+            new ServicePortDefinition(7500, 'tcp', 'Validator Client API and Web Interface')
         ]
     }
 }
