@@ -3,9 +3,6 @@ stereum_static:
     controls_install_path: /opt/stereum
     os_user: stereum
     updates:
-      in_progress:
       lane: stable
-      available:
       unattended:
-        check: true
         install: false
