@@ -86,8 +86,8 @@ test('lighthouse validator import', async () => {
     await testServer.Sleep(180000)
 
     //get logs
-    const BCstatus = await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${lhBC.id}`)
-    const VCstatus = await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${lhVC.id}`)
+    const BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhBC.id}`)
+    const VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhVC.id}`)
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
     const api_token = await nodeConnection.sshService.exec('cat /opt/stereum/lighthouse/validator/validators/api-token.txt')

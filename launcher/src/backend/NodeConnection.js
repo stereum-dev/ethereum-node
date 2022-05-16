@@ -206,7 +206,7 @@ export class NodeConnection {
 
       let statusResult
       try {
-        statusResult = await this.sshService.exec('sudo cat /tmp/' + playbookRunRef + '/127.0.0.1')
+        statusResult = await this.sshService.exec('sudo cat /tmp/' + playbookRunRef + '/localhost')
       } catch (err) {
         log.error("Can't read playbook status '" + playbookRunRef + "'", err)
         return reject("Can't read playbook status '" + playbookRunRef + "': " + err)

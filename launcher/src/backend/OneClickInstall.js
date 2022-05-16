@@ -8,9 +8,11 @@ import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePor
 import { ServiceManager } from './ServiceManager'
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
+import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 
 export class OneClickInstall {
-  async prepareNode (installDir, nodeConnection) {
+  async prepareNode(installDir, nodeConnection) {
     this.installDir = installDir
     this.nodeConnection = nodeConnection
     this.serviceManager = new ServiceManager(nodeConnection)
@@ -18,31 +20,31 @@ export class OneClickInstall {
     if (this.nodeConnection.settings === undefined) {
       this.nodeConnection.settings = {
         stereum:
-                {
-                  settings:
-                    {
-                      controls_install_path: '/opt/stereum',
-                      os_user: 'stereum',
-                      updates:
-                        {
-                          in_progress: '',
-                          lane: 'stable',
-                          available: '',
-                          unattended:
-                                { check: true, install: false }
-                        }
-                    }
-                }
+        {
+          settings:
+          {
+            controls_install_path: '/opt/stereum',
+            os_user: 'stereum',
+            updates:
+            {
+              in_progress: '',
+              lane: 'stable',
+              available: '',
+              unattended:
+                { check: true, install: false }
+            }
+          }
+        }
       }
     }
     this.nodeConnection.settings.stereum.settings.controls_install_path = this.installDir || '/opt/stereum'
     return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path)
   }
 
-  async chooseClient (clients) {
+  //this is broken
+  async chooseClient(clients) {
     clients = {
-      NIMBUS: 55,
-      LIGHTHOUSE: 45
+      PRYSM: 33
     }
     const buffer = {}
     let sum = 0
@@ -66,7 +68,7 @@ export class OneClickInstall {
     return result.toLowerCase()
   }
 
-  getConfigurations () {
+  getConfigurations() {
     const beacon = this.beaconService.buildConfiguration()
     const geth = this.executionClient.buildConfiguration()
     const prometheusNodeExporter = this.prometheusNodeExporter.buildConfiguration()
@@ -79,7 +81,7 @@ export class OneClickInstall {
     return [beacon, validator, geth, prometheusNodeExporter, prometheus, grafana]
   }
 
-  createServices () {
+  createServices() {
     let ports = []
 
     ports = [
@@ -90,21 +92,40 @@ export class OneClickInstall {
 
     switch (this.choosenClient) {
       case 'Lighthouse':
+        //LighthouseBeaconService   
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
         ]
         this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
+
+        //LighthouseValidatorService
         ports = [
           new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
         ]
         this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
         break
+
+
       case 'Prysm':
-        // to be implemented
+        //PrysmBeaconService
+        ports = [
+          new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
+          new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
+        ]
+        this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
+        //PrysmValidatorService
+        ports = [
+          new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
+        ]
+        this.validatorService = PrysmValidatorService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
         break
+
+
       case 'Nimbus':
+        //NimbusBeaconService
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
@@ -113,6 +134,8 @@ export class OneClickInstall {
         ]
         this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
         break
+
+
       case 'Teku':
         // to be implemented
         break
@@ -131,7 +154,7 @@ export class OneClickInstall {
     this.grafana = GrafanaService.buildByUserInput('prater', ports, this.installDir + '/grafana', this.choosenClient.toLowerCase())
   }
 
-  async writeConfig () {
+  async writeConfig() {
     const configs = this.getConfigurations()
     if (configs[0] !== undefined) {
       await Promise.all(configs.map(async (config) => {
@@ -140,7 +163,7 @@ export class OneClickInstall {
     }
   }
 
-  async startServices () {
+  async startServices() {
     const services = this.getConfigurations()
     const runRefs = []
     if (services[0] !== undefined) {
@@ -155,7 +178,7 @@ export class OneClickInstall {
     return runRefs
   }
 
-  async getSetupConstellation (setup) {
+  async getSetupConstellation(setup) {
     const services = ['GETH', 'GRAFANA', 'PROMETHEUSNODEEXPORTER', 'PROMETHEUS']
     // make sure API is only called once when implemented
     if (!this.choosenClient) {

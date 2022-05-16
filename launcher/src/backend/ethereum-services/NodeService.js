@@ -100,7 +100,7 @@ export class NodeService {
 
   buildMinimalConfiguration () {
     return {
-      service: this.constructor.name,
+      service: this.service,
       id: this.id
     }
   }
