@@ -3,10 +3,10 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, executionClients, slasherDbSize) {
+  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize) {
     const service = new LighthouseBeaconService()
     service.setId()
-    workingDir = workingDir + '-' + service.id
+    const workingDir = service.buildWorkingDir(dir)
     
     const image = 'sigp/lighthouse'
 

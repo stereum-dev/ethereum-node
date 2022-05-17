@@ -107,6 +107,12 @@ export class NodeService {
       id: this.id
     }
   }
+
+  buildWorkingDir (dir) {
+    if(dir && dir[dir.length-1] === '/') 
+       return dir.slice(1,-1,'') + '-' + this.id
+    return dir + '-' + this.id
+  }
 }
 
 // EOF

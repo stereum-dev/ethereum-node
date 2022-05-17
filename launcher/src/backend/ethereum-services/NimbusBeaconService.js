@@ -3,10 +3,10 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, executionClients, graffiti) {
+  static buildByUserInput (network, ports, dir, executionClients, graffiti) {
     const service = new NimbusBeaconService()
     service.setId()
-    workingDir = workingDir + '-' + service.id
+    const workingDir = service.buildWorkingDir(dir)
     
     const image = 'statusim/nimbus-eth2'
 

@@ -2,11 +2,11 @@ import { NodeService } from './NodeService.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class GethService extends NodeService {
-  static buildByUserInput (network, ports, workingDir) {
+  static buildByUserInput (network, ports, dir) {
     const service = new GethService()
     service.setId()
-    workingDir = workingDir + '-' + service.id
-    
+    const workingDir = service.buildWorkingDir(dir)
+        
     const volumes = [
       new ServiceVolume(workingDir + '/data', '/root/.ethereum')
     ]

@@ -3,10 +3,10 @@ import { ServicePortDefinition } from './SerivcePortDefinition'
 import { ServiceVolume } from './ServiceVolume'
 
 export class GrafanaService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, grafanaProvisioning) {
+  static buildByUserInput (network, ports, dir, grafanaProvisioning) {
     const service = new GrafanaService()
     service.setId()
-    workingDir = workingDir + '-' + service.id
+    const workingDir = service.buildWorkingDir(dir)
     
     const image = 'grafana/grafana'
 
