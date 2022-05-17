@@ -3,10 +3,11 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmBeaconService extends NodeService {
-    static buildByUserInput(network, ports, workingDir, executionClients) {
+    static buildByUserInput(network, ports, dir, executionClients) {
         const service = new PrysmBeaconService()
         service.setId()
-        workingDir = workingDir + '-' + service.id
+        const workingDir = service.buildWorkingDir(dir)
+        
         const image = 'prysmaticlabs/prysm-beacon-chain'
 
         network = 'prater'

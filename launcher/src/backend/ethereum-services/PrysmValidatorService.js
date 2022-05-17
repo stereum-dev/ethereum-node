@@ -3,10 +3,11 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmValidatorService extends NodeService {
-    static buildByUserInput(network, ports, workingDir, consensusClients, graffiti) {
+    static buildByUserInput(network, ports, dir, consensusClients, graffiti) {
         const service = new PrysmValidatorService()
         service.setId()
-        workingDir = workingDir + '-' + service.id
+        const workingDir = service.buildWorkingDir(dir)
+        
         const image = 'prysmaticlabs/prysm-validator'
 
         network = 'prater'
