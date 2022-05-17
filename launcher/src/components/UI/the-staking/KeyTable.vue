@@ -23,7 +23,7 @@
         >
           <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.version }}</span>
+            <span class="category">{{ item.pubkey }}</span>
             <span class="username">Max Behzadi</span>
             <img
               class="service-icon"
@@ -97,6 +97,7 @@
           @change="uploadFileHandler"
           style="display: none"
           ref="fileInput"
+          multiple="multiple"
           accept="application/json"
         />
         <span>CLICK OR DRAG TO INSERT KEY</span>
@@ -115,7 +116,6 @@ export default {
     return {
       isDragOver: false,
       keyFiles: [],
-      keyList: null,
     };
   },
   mounted() {},
@@ -124,15 +124,17 @@ export default {
       this.$refs.fileInput.click();
     },
     uploadFileHandler(event) {
-      const uploadedFiles = event.target.files;
+      let uploadedFiles = event.target.files;
       this.keyFiles.push(uploadedFiles);
       this.isDragOver = false;
-      console.log(this.keyFiles);
+      console.log(uploadedFiles);
     },
     dropFileHandler(event) {
-      const droppedFiles = event.dataTransfer.files;
+      console.log("drop", event);
+      let droppedFiles = event.dataTransfer.files;
       this.keyFiles.push(droppedFiles);
       this.isDragOver = false;
+      console.log(droppedFiles);
     },
   },
 };
