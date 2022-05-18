@@ -46,7 +46,7 @@
         chdir: "/opt/stereum/ansible"
       with_items:
       - "git init"
-      - "git remote add -f ethereum-node https://github.com/stefa2k/ethereum-node.git" # FIXME
+      - "git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git" # FIXME
       - "git config core.sparseCheckout true"
       - "echo 'controls' >> .git/info/sparse-checkout"
       - "git checkout 888c129fab8ea1315ead15fcb7a05d4377286ff2"

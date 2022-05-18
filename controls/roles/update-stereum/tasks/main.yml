@@ -14,7 +14,7 @@
 
 - name: Checkout commit of latest version
   git:
-    repo: https://github.com/stefa2k/ethereum-node.git # FIXME
+    repo: https://github.com/stereum-dev/ethereum-node.git
     remote: ethereum-node
     dest: "{{ stereum.settings.controls_install_path }}/ansible"
     version: "{{ (update_data.json['stereum'] | last)['commit'] }}"
@@ -22,7 +22,7 @@
 
 - name: Checkout commit of specific version
   git:
-    repo: https://github.com/stefa2k/ethereum-node.git # FIXME
+    repo: https://github.com/stereum-dev/ethereum-node.git
     remote: ethereum-node
     dest: "{{ stereum.settings.controls_install_path }}/ansible"
     version: "{{ stereum.override_gitcommit }}"
