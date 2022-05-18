@@ -45,15 +45,6 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
 
-  jest.mock('./GethService')
-  const GethService = require('./GethService')
-  const mMock = jest.fn(() => { return 'http-endpoint-string' })
-  GethService.GethService.mockImplementation(() => {
-    return {
-      buildExecutionClientHttpEndpointUrl: mMock
-    }
-  })
-
   const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [], 16).buildConsensusClientHttpEndpointUrl()
 
   expect(lhService).toMatch(/http:\/\/stereum-.{36}:5052/)

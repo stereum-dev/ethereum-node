@@ -17,7 +17,7 @@ export class PrysmBeaconService extends NodeService {
 
         //volumes
         const volumes = [
-            new ServiceVolume(workingDir + '/prysm/beacon', dataDir),
+            new ServiceVolume(workingDir + '/beacon', dataDir),
             new ServiceVolume(workingDir + '/genesis', genesisDir)
         ]
 

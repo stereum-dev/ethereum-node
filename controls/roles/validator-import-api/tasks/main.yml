@@ -2,7 +2,7 @@
 - block:
   - name: Get validator service's auth-token
     slurp:
-      src: "/opt/app/services/{{ validator_service }}/data/wallets/auth-token"
+      src: "{{ auth_token_path }}"
     register: auth_token
     become: yes
   - name: Get api-token
