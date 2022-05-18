@@ -1,5 +1,5 @@
 # Stereum system settings
-stereum:
+stereum_settings:
   settings:
     controls_install_path: {{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}
     os_user: {{ stereum.settings.os_user | default(stereum.defaults.os_user) }}
