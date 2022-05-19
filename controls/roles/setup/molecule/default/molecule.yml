@@ -4,7 +4,7 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "setup--default--ubuntu-2204"
+  - name: "setup--default--ubuntu-22.04"
     server_type: cx21
     image: ubuntu-22.04
 #  - name: "setup--default--centos-stream-8"

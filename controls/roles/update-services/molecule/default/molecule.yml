@@ -5,7 +5,7 @@ driver:
   name: hetznercloud
 platforms:
   # cpx31 for the storage requirements
-  - name: "update-services--default--ubuntu-2204"
+  - name: "update-services--default--ubuntu-22.04"
     server_type: cpx31
     image: ubuntu-22.04
 #  - name: "update-services--default--centos-stream-8"

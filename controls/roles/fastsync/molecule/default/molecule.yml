@@ -4,7 +4,7 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "fastsync--default--ubuntu-2204"
+  - name: "fastsync--default--ubuntu-22.04"
     server_type: cx51
     image: ubuntu-22.04
   # - name: "fastsync--default--centos-stream-8"
