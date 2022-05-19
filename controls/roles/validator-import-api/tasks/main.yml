@@ -80,3 +80,30 @@
     become: yes
     with_items: "{{ validator_keys }}"
   when: consClient == "nimbus"
+
+- block:
+  - name: Teku - Get validator service's api token
+    slurp:
+      src: "/opt/app/services/{{ beacon_service }}/data/validator/key-manager/validator-api-bearer"
+    register: teku_api_token
+    become: yes
+  - name: Set variable
+    set_fact:
+      api_token: "{{ teku_api_token.content | b64decode | trim }}"
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Teku import-validator using API
+    uri:
+      url: https://localhost:5052/eth/v1/keystores
+      validate_certs: no
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer {{ api_token }}"
+      method: POST
+      body:
+        keystores: "{{ item.content }}"
+        passwords: ["{{ validator_password | quote }}"]
+      body_format: json
+    become: yes
+    with_items: "{{ validator_keys }}"
+  when: consClient == "teku"  
