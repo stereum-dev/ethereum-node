@@ -4,10 +4,10 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "ssv-key-generator--default--ubuntu-20.04"
+  - name: "ssv-key-generator--default--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx21
-    image: ubuntu-20.04
+    image: ubuntu-22.04
 provisioner:
   name: ansible
 verifier:
@@ -21,4 +21,4 @@ scenario:
     #- idempotence
     - lint
     - verify
-    - destroy  
+    - destroy
