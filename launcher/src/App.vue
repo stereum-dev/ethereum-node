@@ -4,20 +4,13 @@
   </div>
 </template>
 <script>
-
-export default {
-
-}
+export default {};
 </script>
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background-color: rgb(31, 31, 31);
-  resize: none;
-}
+
 #app {
+  min-width: 1024px;
+  min-height: 576px;
   width: 100%;
   height: 100%;
   position: absolute;
