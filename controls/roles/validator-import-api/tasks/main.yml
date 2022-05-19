@@ -1,26 +1,15 @@
 ---
 - block:
-  - name: Looking up service configuration
-    slurp:
-      src: "/etc/stereum/services/{{ validator_service }}.yaml"
-    register: validator_service_config_raw
-  - name: Decode serivce configuration
-    set_fact:
-      validator_service_config: "{{ validator_service_config_raw.content | b64decode | from_yaml }}"
-  - name: Extract service volumes
-    set_fact:
-      wallet_image: "{{ validator_service_config.volumes | select('search', ':/opt/app/data/wallets') | first}}"
-  - name: Build token path
-    set_fact:
-      auth_token_path: "{{ wallet_image.split(':') | first }}/auth-token"
-  - name: Get validator service's auth-token
-    slurp:
-      src: "{{ auth_token_path }}"
+  - name: Prysm - Get validator service's api token
+    command: "docker exec -u 0 -w /opt/app/data/wallets stereum-{{ validator_service }} cat auth-token"
+    changed_when: false
     register: auth_token
     become: yes
+  - debug:
+      msg: "{{ auth_token.stdout_lines[1] }}"
   - name: Get api-token
     set_fact:
-      api_token: "{{ auth_token['content'] | b64decode | regex_search('(?<=\n).*(?=\n)') }}"
+      api_token: "{{ auth_token.stdout_lines[1] }}"
   - debug:
       msg: "{{ api_token }}"
   - name: Prysm import-validator using API
