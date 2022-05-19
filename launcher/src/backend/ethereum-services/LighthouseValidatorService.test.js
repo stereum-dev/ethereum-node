@@ -1,4 +1,3 @@
-import { LighthouseBeaconService } from './LighthouseBeaconService.js'
 import { LighthouseValidatorService } from './LighthouseValidatorService.js'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'

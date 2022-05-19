@@ -31,7 +31,7 @@ export class PrysmValidatorService extends NodeService {
             1, // configVersion 
             image,  //image
             'HEAD-c8a7f6-debug', //imageVersion
-            '/app/cmd/validator/validator --accept-terms-of-use=true --beacon-rpc-provider="' + provider + '" --beacon-rpc-gateway-provider="' + providerGateway + '" --web=true --' + network + '=true --datadir=' + dataDir + ' --wallet-dir=' + walletDir + ' --wallet-password-file=' + passwordDir + '/wallet-password --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0 --grpc-gateway-corsdomain="*"',  //command
+            '/app/cmd/validator/validator --accept-terms-of-use=true --beacon-rpc-provider="' + provider + '" --beacon-rpc-gateway-provider="' + providerGateway + '" --web --' + network + '=true --datadir=' + dataDir + ' --wallet-dir=' + walletDir + ' --wallet-password-file=' + passwordDir + '/wallet-password --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0 --grpc-gateway-corsdomain="*"',  //command
             null, // entrypoint
             null, // env
             ports, //ports
