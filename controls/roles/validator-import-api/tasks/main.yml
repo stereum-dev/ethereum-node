@@ -7,11 +7,12 @@
   - name: Decode serivce configuration
     set_fact:
       validator_service_config: "{{ validator_service_config_raw.content | b64decode | from_yaml }}"
-  - name: Build api token path
-    - set_fact:
-        wallet_image: "{{ validator_service_config.volumes | select('search', ':/opt/app/data/wallets') | first}}"
-    - set_fact:
-        auth_token_path: "{{ wallet_image.split(':') | first }}/auth-token"
+  - name: Extract service volumes
+    set_fact:
+      wallet_image: "{{ validator_service_config.volumes | select('search', ':/opt/app/data/wallets') | first}}"
+  - name: Build token path
+    set_fact:
+      auth_token_path: "{{ wallet_image.split(':') | first }}/auth-token"
   - name: Get validator service's auth-token
     slurp:
       src: "{{ auth_token_path }}"
