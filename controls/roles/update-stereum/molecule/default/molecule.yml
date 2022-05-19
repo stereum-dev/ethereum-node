@@ -4,7 +4,7 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "update-stereum--default--ubuntu-2204"
+  - name: "update-stereum--default--ubuntu-22.04"
     server_type: cx21
     image: ubuntu-22.04
 #  - name: "update-stereum--default--centos-stream-8"

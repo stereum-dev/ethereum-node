@@ -4,9 +4,9 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "setup--default--ubuntu-2004"
+  - name: "setup--default--ubuntu-22.04"
     server_type: cx21
-    image: ubuntu-20.04
+    image: ubuntu-22.04
 #  - name: "setup--default--centos-stream-8"
 #    server_type: cx21
 #    image: centos-stream-8
