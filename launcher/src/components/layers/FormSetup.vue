@@ -170,12 +170,22 @@ export default {
       this.model.pass.value = ''
     },
     addModel () {
+      //console.log(this.connections,this.model.name.value)
+      if(!this.connections.find(connection => connection.name == this.model.name.value)){
       const newConnection = this.createConnection()
       this.connections.push(newConnection)
       this.selectedConnection = newConnection
       this.selectedName = this.selectedConnection.name
-
       this.writeSettings()
+      }else if(this.connections.find(connection => connection.name == this.model.name.value)){
+        const newConnection = this.createConnection()
+        const index = this.connections.findIndex(connection => connection.name == this.model.name.value)
+        this.connections[index] = newConnection
+        this.selectedConnection = newConnection
+        this.selectedName = this.selectedConnection.name
+        this.writeSettings()
+      }
+
     },
     getstorableConnections () {
       const storableConnections = []
