@@ -138,7 +138,7 @@ export default {
 
 .content-box {
   width: 95%;
-  height: 63%;
+  height: 53%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -156,14 +156,17 @@ export default {
 .table-box .table {
   width: 100%;
   height: 100%;
+  border: 9px solid #8e8e8e;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
 }
 .table .table-header {
-  width: 89%;
-  height: 8%;
+  width: 90%;
+  height: 10%;
+  margin-top: 10px;
   /* background-color: #334b3e; */
   background-color: #336666;
   display: grid;
@@ -180,17 +183,16 @@ export default {
 }
 .table .table-header span {
   width: 100%;
-  color: rgb(213, 213, 213);
+  color: #d5d5d5;
   font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
 }
 .table .table-content {
   width: 95%;
-  height: 70%;
-  border-top: 1px solid gray;
-  /* background-color: rgb(27, 27, 27); */
-  padding-top: 10px;
+  height: 85%;
+  border-top: 1px solid #8e8e8e;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: 100%;
   align-items: center;
@@ -203,8 +205,8 @@ export default {
 
 .table-content .table-row {
   width: 95%;
-  height: 100%;
-  margin-top: 15px auto;
+  height: 31px;
+  margin-top: 5px;
   background-color: #33393e;
   box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
   border: 1px solid rgb(81, 80, 80);
@@ -213,7 +215,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  padding: 1px 0 3px 0;
   cursor: pointer;
 }
 
@@ -225,8 +226,8 @@ export default {
   align-items: center;
 }
 .plugin-name img {
-  width: 12%;
-  height: 50%;
+  width: 14%;
+  height: 65%;
 }
 
 .plugin-name span {
