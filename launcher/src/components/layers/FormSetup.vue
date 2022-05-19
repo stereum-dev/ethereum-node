@@ -171,11 +171,19 @@ export default {
     },
     addModel () {
       const newConnection = this.createConnection()
-      this.connections.push(newConnection)
-      this.selectedConnection = newConnection
-      this.selectedName = this.selectedConnection.name
+      if(!this.connections.find(connection => connection.name == this.model.name.value)){
+        this.connections.push(newConnection)
+        this.selectedConnection = newConnection
+        this.selectedName = this.selectedConnection.name
+        this.writeSettings()
+      }else if(this.connections.find(connection => connection.name == this.model.name.value)){
+        const index = this.connections.findIndex(connection => connection.name == this.model.name.value)
+        this.connections[index] = newConnection
+        this.selectedConnection = newConnection
+        this.selectedName = this.selectedConnection.name
+        this.writeSettings()
+      }
 
-      this.writeSettings()
     },
     getstorableConnections () {
       const storableConnections = []

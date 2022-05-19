@@ -35,7 +35,18 @@ test('prepareStereumNode on ubuntu', async () => {
 
   // create stereum settings
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
-    echo "{stereum: {settings: {controls_install_path: /opt/stereum, os_user: stereum, updates: {in_progress: null, lane: stable, available: null, unattended: {check: true, install: false}}}}}" > /etc/stereum/stereum.yaml`)
+    echo "stereum:
+    settings:
+      controls_install_path: /opt/stereum
+      os_user: stereum
+      updates:
+        in_progress:
+        lane: stable
+        available:
+        unattended:
+          check: true
+          install: false
+  " > /etc/stereum/stereum.yaml`)
   await nodeConnection.findStereumSettings()
 
   const playbookRun = await nodeConnection.prepareStereumNode('/opt/stereum')
