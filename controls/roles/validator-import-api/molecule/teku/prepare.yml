@@ -1,0 +1,142 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    consClient: "teku"
+    beacon_service: c3d37b1a-b51b-11ec-849b-6375f2b3a630
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install keytool for creating Keystore (Ubuntu)
+      raw: apt install -y openjdk-8-jre-headless
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install keytool for creating Keystore (CentOS 8)
+      raw: yum install -y java-1.8.0-openjdk
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install pip, expect (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - python3-pip
+          - expect
+      become: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install pip, expect (CentOS 8)
+      yum:
+        name:
+          - python3-pip
+          - expect
+        state: latest
+      become: true
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # teku beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+
+      - name: Create keystore password
+        copy:
+          content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
+          dest: /opt/app/services/{{ beacon_service }}/data/teku_api_password.txt
+          force: no
+        become: yes
+
+      - name: Get teku-api password
+        slurp:
+          src: "/opt/app/services/{{ beacon_service }}/data/teku_api_password.txt"
+        register: teku_api_password
+        become: yes
+
+      - name: Set variable
+        set_fact:
+          api_password: "{{ teku_api_password.content | b64decode | trim }}"
+
+      - name: Create keystore file
+        command: bash -c "keytool -genkeypair
+                          -keystore teku_api_keystore
+                          -storetype PKCS12
+                          -storepass '{{ api_password }}'
+                          -keyalg RSA
+                          -keysize 2048
+                          -validity 109500
+                          -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU'
+                          -ext san=dns:localhost,ip:127.0.0.1"
+        args:
+          chdir: /opt/app/services/{{ beacon_service }}/data
+        changed_when: false
+        become: yes
+
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: consensys/teku:22.5.0
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+                - 127.0.0.1:5052:5052/tcp
+              env:
+                JAVA_OPTS: -Xmx4g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=prater
+                - --p2p-enabled=true
+                - --p2p-port=9001
+                - --validators-keystore-locking-enabled=false
+                - --validators-graffiti="stereum.net"
+                - --eth1-endpoints=http://10.10.0.3:8545
+                - --metrics-enabled=true
+                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                - --metrics-port=8008
+                - --metrics-interface=0.0.0.0
+                - --metrics-host-allowlist="*"
+                - --data-path=/opt/app/data
+                - --data-storage-mode=archive
+                - --rest-api-port=5051
+                - --rest-api-host-allowlist="*"
+                - --rest-api-interface=0.0.0.0
+                - --rest-api-docs-enabled=true
+                - --rest-api-enabled=true
+                - --log-destination=CONSOLE
+                - --validator-api-enabled=true
+                - --validator-api-port=5052
+                - --validator-api-host-allowlist=*
+                - --validator-api-cors-origins=*
+                - --validator-api-keystore-file=/opt/app/data/teku_api_keystore
+                - --validator-api-keystore-password-file=/opt/app/data/teku_api_password.txt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/data:/opt/app/data"
