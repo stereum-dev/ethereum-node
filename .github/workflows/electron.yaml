@@ -57,6 +57,7 @@ jobs:
         uses: 'phips28/gh-action-bump-version@master'
         with:
           skip-tag: 'true'
+          skip-commit: 'true'
           #tag-prefix: 'v'
           commit-message: 'bump to {{version}} [skip ci]'
         env:
