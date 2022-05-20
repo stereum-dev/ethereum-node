@@ -89,7 +89,7 @@
       - stereum_docker_ps.stdout.find("grafana/grafana") != -1
       - stereum_docker_ps.stdout.find("prom/node-exporter") != -1
       - stereum_docker_ps.stdout.find("prom/prometheus") != -1
-      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
+      - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
       - stereum_docker_ps.stdout.find("3000->3000") != -1
       - stereum_docker_ps.stdout.find("9100/tcp") != -1
       - stereum_docker_ps.stdout.find("9090->9090") != -1
