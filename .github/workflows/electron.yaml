@@ -56,11 +56,10 @@ jobs:
         uses: 'phips28/gh-action-bump-version@master'
         with:
           skip-tag: 'true'
-          skip-commit: 'true'
-          tag-prefix: 'v'
+          #tag-prefix: 'v'
           commit-message: 'bump to {{version}} [skip ci]'
         env:
           PACKAGEJSON_DIR: 'launcher'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github_token }}
       - name: 'cat package.json'
         run: cat ./launcher/package.json
