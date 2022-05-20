@@ -50,7 +50,7 @@ jobs:
         with:
           ref: ${{ github.ref }}
       - name: 'cat package.json'
-        run: cat ./package.json
+        run: cat ./launcher/package.json
       - name: 'Automated Version Bump'
         id: version-bump
         uses: 'phips28/gh-action-bump-version@master'
@@ -62,9 +62,4 @@ jobs:
           PACKAGEJSON_DIR: 'launcher'
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'cat package.json'
-        run: cat ./package.json
-      - name: 'Output Step'
-        env:
-          NEW_TAG: ${{ steps.version-bump.outputs.newTag }}
-        run: echo "new tag $NEW_TAG"
-
+        run: cat ./launcher/package.json
