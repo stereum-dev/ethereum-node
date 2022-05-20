@@ -31,7 +31,7 @@ jobs:
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:
-          args: "--publish onTag"
+          # args: "--publish onTag"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           package_root: launcher
           use_vue_cli: true
