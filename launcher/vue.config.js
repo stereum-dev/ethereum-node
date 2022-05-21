@@ -9,6 +9,9 @@ module.exports = {
         nodeGypRebuild: false,
         npmRebuild: false,
         //npmArgs: "--no-optional",
+	linux: {
+	  target: "AppImage"
+	}
       }
     }
   },
