@@ -41,13 +41,13 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/nimbus:v1.6.0-55
+              image: statusim/nimbus-eth2:multiarch-v22.3.0
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
                 - 127.0.0.1:9190:9190/tcp
               env: {}
-              entrypoint: ["/opt/app/build/nimbus_beacon_node"]
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon

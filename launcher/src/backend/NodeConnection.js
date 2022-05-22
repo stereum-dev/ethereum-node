@@ -345,4 +345,21 @@ export class NodeConnection {
                 rm -rf /etc/stereum`)
     return 'Node destroyed'
   }
+
+
+    // cpuUsage return values:
+    // rc: 0 if everything went fine
+    // stdout: console output normally CPU-Usage
+    // stderr: console error output empty when rc is 0 else the occured error
+
+    // use "import ControlService from '@/store/ControlService'"" in the file you need the data
+    // you then can call it with "await ControlService.getServerVitals()"
+    // use await or handle the promise with .then and .catch
+    // the function needs to be async
+  async getServerVitals(){
+    let response = {}
+    const cpuUsage = await this.sshService.exec(`sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`)  //CPU usage
+    response.cpuUsage = cpuUsage;
+    return response
+  }
 }

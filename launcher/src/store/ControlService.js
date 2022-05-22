@@ -77,6 +77,10 @@ class ControlService extends EventEmitter {
   async startOneClickServices () {
     return await this.promiseIpc.send('startOneClickServices')
   }
+  
+  async getServerVitals(){
+    return await this.promiseIpc.send('getServerVitals')
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron)

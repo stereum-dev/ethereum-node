@@ -95,6 +95,10 @@ promiseIpc.on("startOneClickServices", async () => {
   return await oneClickInstall.startServices();
 });
 
+promiseIpc.on("getServerVitals", async () => {
+  return await nodeConnection.getServerVitals();
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
