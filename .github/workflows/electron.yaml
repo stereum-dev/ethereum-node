@@ -40,27 +40,30 @@ jobs:
           # release the app after building
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-  bump-version:
-    name: 'Bump Version in package.json'
-    needs: release_launcher
-    runs-on: ubuntu-latest
+          # @see https://github.com/electron-userland/electron-builder/issues/3559
 
-    steps:
-      - name: 'Checkout source code'
-        uses: 'actions/checkout@v2'
-        with:
-          ref: ${{ github.ref }}
-      - name: 'cat package.json'
-        run: cat ./launcher/package.json
-      - name: 'Automated Version Bump'
-        id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
-        with:
-          skip-tag: 'true'
-          #tag-prefix: 'v'
-          commit-message: 'bump to {{version}} [skip ci]'
-        env:
-          PACKAGEJSON_DIR: 'launcher'
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
-      - name: 'cat package.json'
-        run: cat ./launcher/package.json
+          #  bump-version:
+          #    name: 'Bump Version in package.json'
+          #    needs: release_launcher
+          #    runs-on: ubuntu-latest
+          #
+          #    steps:
+          #      - name: 'Checkout source code'
+          #        uses: 'actions/checkout@v2'
+          #        with:
+          #          ref: ${{ github.ref }}
+          #      - name: 'cat package.json'
+          #        run: cat ./launcher/package.json
+          #      - name: 'Automated Version Bump'
+          #        id: version-bump
+          #        uses: 'phips28/gh-action-bump-version@master'
+          #        with:
+          #          skip-tag: 'true'
+          #          skip-commit: 'true'
+          #          #tag-prefix: 'v'
+          #          commit-message: 'bump to {{version}} [skip ci]'
+          #        env:
+          #          PACKAGEJSON_DIR: 'launcher'
+          #          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
+          #      - name: 'cat package.json'
+          #        run: cat ./launcher/package.json

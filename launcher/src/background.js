@@ -95,21 +95,9 @@ promiseIpc.on("startOneClickServices", async () => {
   return await oneClickInstall.startServices();
 });
 
-// //electron drag&drop codes
-// promiseIpc.on('ondragstart', (event, filePath) => {
-//   readFile(filePath);
-//   function readFile(filepath) {
-//     fs.readFile(filepath, 'utf-8', (err, data) => {
-//        if(err){
-//           alert("An error ocurred reading the file :" + err.message)
-//           return
-//        }
-//        // handle the file content
-//        event.sender.send('fileData', data)
-//     })
-//  }
-
-// })
+promiseIpc.on("getServerVitals", async () => {
+  return await nodeConnection.getServerVitals();
+})
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
