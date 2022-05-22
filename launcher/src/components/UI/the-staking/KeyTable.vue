@@ -128,7 +128,7 @@
         />
       </div>
     </div>
-    <div class="password-icon" v-if="enterPasswordPage">
+    <div class="password-box" v-if="enterPasswordPage">
       <img
         class="rename"
         src="../../../../public/img/icon/the-staking/rename-icon.png"
@@ -144,14 +144,10 @@
         src="../../../../public/img/icon/the-staking/staking-filter.png"
         alt="icon"
       />
-      <div class="enter-password" @click="openUploadHandler">
-        <input
-          type="password"
-          @change="addPasswordHandler"
-          style="display: none"
-          ref="passwordInput"
-        />
-        <span>ENTER PASSWORD & IMPORT</span>
+      <div class="enter-password" @click="confirmPasswordHandler">
+        <input v-if="passwordInputActive" type="password" />
+        <button v-if="passwordInputActive">CONFIRM</button>
+        <span v-else>ENTER PASSWORD & IMPORT</span>
       </div>
     </div>
   </div>
@@ -167,6 +163,7 @@ export default {
       keyFiles: [],
       insertFilePage: true,
       enterPasswordPage: false,
+      passwordInputActive: false,
     };
   },
   methods: {
@@ -192,6 +189,9 @@ export default {
     },
     openUploadHandler() {
       this.$refs.fileInput.click();
+    },
+    confirmPasswordHandler() {
+      this.passwordInputActive = true;
     },
   },
 };
@@ -357,7 +357,7 @@ export default {
 .table-header span {
   color: #fff;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -381,7 +381,7 @@ export default {
   grid-column: 8;
 }
 
-.password-icon,
+.password-box,
 .middle-icon {
   width: 60%;
   height: 40px;
@@ -392,18 +392,18 @@ export default {
   bottom: 6%;
   left: 2%;
 }
-.password-icon img,
+.password-box img,
 .middle-icon img {
   width: 30px;
   height: 30px;
 }
-.password-icon .rename,
-.password-icon .folder,
+.password-box .rename,
+.password-box .folder,
 .middle-icon .rename,
 .middle-icon .folder {
   margin-right: 10px;
 }
-.password-icon .filter,
+.password-box .filter,
 .middle-icon .filter {
   margin-right: 20px;
 }
@@ -417,22 +417,65 @@ export default {
   align-items: center;
   cursor: pointer;
 }
-.password-icon .enter-password {
+.password-box .enter-password {
   width: 70%;
   height: 32px;
   border: 1px solid #bfbfbf;
   background-color: #336666;
   border-radius: 40px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
+  position: relative;
 }
-.password-icon .enter-password span {
+.password-box .enter-password span {
   color: rgb(227, 227, 227);
   font-size: 1.1rem;
   font-weight: 500;
 }
+.password-box .enter-password input {
+  width: 80%;
+  height: 60%;
+  border: 1px solid rgb(135, 135, 135);
+  border-radius: 35px 0 0 35px;
+  background-color: #002828;
+  outline-style: none;
+  padding-left: 10px;
+  position: absolute;
+  left: 5px;
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: 300;
+  padding-top: 2px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.password-box .enter-password button {
+  width: 20%;
+  height: 100%;
+  border: none;
+  border-radius: 0 35px 35px 0;
+  background-color: #3f4449;
+  outline-style: none;
+  position: absolute;
+  right: 0;
+  font-size: 0.7rem;
+  color: #fff;
+  font-weight: 400;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 10px #33393e;
+}
+.password-box .enter-password button:hover {
+  background-color: #23272a;
+  box-shadow: none;
+}
+.password-box .enter-password button:active {
+  background-color: #181b1d;
+  box-shadow: inset 1px 1px 3px #070708;
+}
+
 .middle-icon .insert-key span {
   color: #336666;
   font-size: 1.1rem;
@@ -446,39 +489,41 @@ export default {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
-  display: grid;
-  grid-template-columns: 5% 90% 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
   padding: 1px;
 }
-.table-key-row span {
-  grid-column: 2 !important;
+.key-table-row .file-name {
+  width: 90%;
   color: #fff !important;
   font-size: 1rem !important;
   font-weight: 400 !important;
 }
-.table-key-row .key-remove-icon {
-  grid-column: 3 !important;
+.key-table-row .key-remove-icon {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  border: 1px solid #bfbfbf !important;
+  border: 1px solid #4a4a4a !important;
   border-radius: 50px !important;
-  width: 90% !important;
-  height: 90% !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin-right: 4px;
+  padding: 1px;
+  background-color: #343434;
+  box-shadow: 0 0 3px 1px rgb(0, 0, 0);
 }
-.table-key-row .key-remove-icon img{
-  width: 90% !important;
-  height: 90% !important;
+.key-table-row .key-remove-icon img {
+  width: 70% !important;
+  height: 70% !important;
 }
-.table-key-row .key-circle {
-  grid-column: 1 !important;
-  width: 15px !important;
-  height: 15px !important;
+.key-table-row .key-circle {
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 50% !important;
   background-color: #fff !important;
-  margin: 0 auto !important;
-  align-self: center !important;
+  margin-left: 5px;
 }
 </style>
