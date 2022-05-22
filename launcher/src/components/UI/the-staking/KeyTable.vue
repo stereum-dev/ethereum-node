@@ -166,6 +166,9 @@ export default {
       passwordInputActive: false,
     };
   },
+  updated() {
+    this.checkKeyExists();
+  },
   methods: {
     uploadFileHandler(event) {
       console.log("upload", event);
@@ -192,6 +195,13 @@ export default {
     },
     confirmPasswordHandler() {
       this.passwordInputActive = true;
+    },
+    checkKeyExists() {
+      if (this.keyFiles.length <= 0) {
+        this.insertFilePage = true;
+        this.enterPasswordPage = false;
+        this.passwordInputActive = false;
+      }
     },
   },
 };
@@ -437,7 +447,7 @@ export default {
 .password-box .enter-password input {
   width: 80%;
   height: 60%;
-  border: 1px solid rgb(135, 135, 135);
+  border: 1px solid #878787;
   border-radius: 35px 0 0 35px;
   background-color: #002828;
   outline-style: none;
@@ -456,6 +466,8 @@ export default {
   width: 20%;
   height: 100%;
   border: none;
+  border-right: 1px solid #bfbfbf;
+  border-left: 1px solid #bfbfbf;
   border-radius: 0 35px 35px 0;
   background-color: #3f4449;
   outline-style: none;
