@@ -2,7 +2,7 @@
   <div class="keys-parent">
     <div class="keys-table-box">
       <div class="keys-table">
-        <div class="table-header">
+        <div class="table-header" v-if="insertFilePage">
           <span id="name">NAME</span>
           <span id="service">SERVICE</span>
           <span id="active">ACTIVE SINCE</span>
@@ -12,9 +12,10 @@
         </div>
         <div
           class="table-content"
-          :class="{ 'drop-active': isDragOver }"
-          @drag.prevent.stop
-          @dragstart.prevent.stop
+          v-if="insertFilePage"
+          :class="{ dropActive: isDragOver }"
+          @drag.prevent.stop=""
+          @dragstart.prevent.stop=""
           @dragend.prevent.stop="isDragOver = false"
           @dragover.prevent.stop="isDragOver = true"
           @dragenter.prevent.stop="isDragOver = true"
@@ -23,8 +24,8 @@
         >
           <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.pubkey }}</span>
-            <span class="username">Max Behzadi</span>
+            <span class="category">{{ item.name }}</span>
+            <span class="username"></span>
             <img
               class="service-icon"
               src="../../../../public/img/icon/the-staking/blox-service.png"
@@ -73,9 +74,28 @@
             </div>
           </div>
         </div>
+        <div class="table-header" v-if="enterPasswordPage">
+          <span id="active">FILE NAME</span>
+        </div>
+        <div class="table-content" v-if="enterPasswordPage">
+          <div
+            class="key-table-row"
+            v-for="(item, index) in keyFiles"
+            :key="index"
+          >
+            <span class="key-circle"></span>
+            <span class="file-name">{{ item.name }}</span>
+            <div @click="removeKeyHandler(item.uuid)" class="key-remove-icon">
+              <img
+                src="../../../../public/img/icon/task-manager-icons/close3.png"
+                alt="icon"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="middle-icon">
+    <div class="middle-icon" v-if="insertFilePage">
       <img
         class="rename"
         src="../../../../public/img/icon/the-staking/rename-icon.png"
@@ -91,7 +111,7 @@
         src="../../../../public/img/icon/the-staking/staking-filter.png"
         alt="icon"
       />
-      <div class="insert-key" @click="openUploader">
+      <div class="insert-key" @click="openUploadHandler">
         <input
           type="file"
           @change="uploadFileHandler"
@@ -108,33 +128,70 @@
         />
       </div>
     </div>
+    <div class="password-icon" v-if="enterPasswordPage">
+      <img
+        class="rename"
+        src="../../../../public/img/icon/the-staking/rename-icon.png"
+        alt="icon"
+      />
+      <img
+        class="folder"
+        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
+        alt="icon"
+      />
+      <img
+        class="filter"
+        src="../../../../public/img/icon/the-staking/staking-filter.png"
+        alt="icon"
+      />
+      <div class="enter-password" @click="openUploadHandler">
+        <input
+          type="password"
+          @change="addPasswordHandler"
+          style="display: none"
+          ref="passwordInput"
+        />
+        <span>ENTER PASSWORD & IMPORT</span>
+      </div>
+    </div>
   </div>
 </template>
 <script>
+import ShowKey from "./DropZone.vue";
+import DropZone from "./ShowKey.vue";
 export default {
+  components: { ShowKey, DropZone },
   data() {
     return {
       isDragOver: false,
       keyFiles: [],
+      insertFilePage: true,
+      enterPasswordPage: false,
     };
   },
-  mounted() {},
   methods: {
-    openUploader() {
-      this.$refs.fileInput.click();
-    },
     uploadFileHandler(event) {
+      console.log("upload", event);
       let uploadedFiles = event.target.files;
-      this.keyFiles.push(uploadedFiles);
+      this.keyFiles.push(...uploadedFiles);
+      this.insertFilePage = false;
+      this.enterPasswordPage = true;
       this.isDragOver = false;
-      console.log(uploadedFiles);
     },
     dropFileHandler(event) {
       console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
-      this.keyFiles.push(droppedFiles);
+      this.keyFiles.push(...droppedFiles);
+      this.insertFilePage = false;
+      this.enterPasswordPage = true;
       this.isDragOver = false;
-      console.log(droppedFiles);
+    },
+    removeKeyHandler(id) {
+      this.keyFiles = this.keyFiles.filter((item) => item.uuid !== id);
+      console.log(this.keyFiles);
+    },
+    openUploadHandler() {
+      this.$refs.fileInput.click();
     },
   },
 };
@@ -156,56 +213,23 @@ export default {
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
-}
-.keys-table {
-  width: 100%;
-  height: 100%;
-}
-
-.table-header {
-  height: 30px;
-  border-bottom: 7px solid #bfbfbf;
-  display: grid;
-  grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
-}
-.table-header span {
-  color: #fff;
-  font-size: 10px;
-  font-weight: 900;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
 }
-.table-header #name {
-  grid-column: 3;
-}
-.table-header #service {
-  grid-column: 4;
-}
-.table-header #active {
-  grid-column: 5;
-}
-.table-header #state {
-  grid-column: 6;
-}
-.table-header #balance {
-  grid-column: 7;
-}
-.table-header #option {
-  grid-column: 8;
-}
-.table-content {
-  height: 92%;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-.drop-active {
+.dropActive {
   width: 100%;
   height: 92%;
   background-color: rgb(44, 151, 128);
   opacity: 0.2;
   border-radius: 20px;
 }
+.table-content {
+  height: 92%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 .table-row {
   width: 99%;
   height: 30px;
@@ -319,6 +343,45 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.keys-table {
+  width: 100%;
+  height: 100%;
+}
+
+.table-header {
+  height: 30px;
+  border-bottom: 7px solid #bfbfbf;
+  display: grid;
+  grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
+}
+.table-header span {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.table-header #name {
+  grid-column: 3;
+}
+.table-header #service {
+  grid-column: 4;
+}
+.table-header #active {
+  grid-column: 5;
+}
+.table-header #state {
+  grid-column: 6;
+}
+.table-header #balance {
+  grid-column: 7;
+}
+.table-header #option {
+  grid-column: 8;
+}
+
+.password-icon,
 .middle-icon {
   width: 60%;
   height: 40px;
@@ -329,14 +392,18 @@ export default {
   bottom: 6%;
   left: 2%;
 }
+.password-icon img,
 .middle-icon img {
   width: 30px;
   height: 30px;
 }
+.password-icon .rename,
+.password-icon .folder,
 .middle-icon .rename,
 .middle-icon .folder {
   margin-right: 10px;
 }
+.password-icon .filter,
 .middle-icon .filter {
   margin-right: 20px;
 }
@@ -350,64 +417,68 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+.password-icon .enter-password {
+  width: 70%;
+  height: 32px;
+  border: 1px solid #bfbfbf;
+  background-color: #336666;
+  border-radius: 40px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+}
+.password-icon .enter-password span {
+  color: rgb(227, 227, 227);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
 .middle-icon .insert-key span {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 900;
+  color: #336666;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 .middle-icon .insert-key img {
   width: 28px;
   height: 28px;
 }
-
-.grafiti-text {
-  color: #fff;
-  position: absolute;
-  bottom: -20px;
-  left: 50px;
-  font-size: 10px;
-  font-weight: 600;
-  background-color: rgb(23, 22, 22);
-  opacity: 0.7;
-  display: none;
+.key-table-row {
+  width: 99%;
+  height: 30px;
+  margin: 5px auto 0 auto;
+  display: grid;
+  grid-template-columns: 5% 90% 5%;
+  background-color: rgb(89, 89, 89);
+  border-radius: 30px;
+  padding: 1px;
 }
-.copy-text {
-  color: #fff;
-  position: absolute;
-  bottom: -20px;
-  left: 10px;
-  font-size: 10px;
-  font-weight: 600;
-  background-color: rgb(23, 22, 22);
-  opacity: 0.7;
-  display: none;
+.table-key-row span {
+  grid-column: 2 !important;
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
 }
-.exit-text {
-  color: #fff;
-  position: absolute;
-  bottom: -20px;
-  right: 12px;
-  font-size: 10px;
-  font-weight: 600;
-  background-color: rgb(23, 22, 22);
-  opacity: 0.7;
-  display: none;
+.table-key-row .key-remove-icon {
+  grid-column: 3 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: 1px solid #bfbfbf !important;
+  border-radius: 50px !important;
+  width: 90% !important;
+  height: 90% !important;
 }
-.remove-text {
-  color: #fff;
-  position: absolute;
-  bottom: -20px;
-  right: 49px;
-  font-size: 10px;
-  font-weight: 600;
-  background-color: rgb(23, 22, 22);
-  opacity: 0.7;
-  display: none;
+.table-key-row .key-remove-icon img{
+  width: 90% !important;
+  height: 90% !important;
 }
-.option-box div:hover > .grafiti-text,
-.option-box div:hover > .copy-text,
-.option-box div:hover > .exit-text,
-.option-box div:hover > .remove-text {
-  display: block;
+.table-key-row .key-circle {
+  grid-column: 1 !important;
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 50% !important;
+  background-color: #fff !important;
+  margin: 0 auto !important;
+  align-self: center !important;
 }
 </style>
