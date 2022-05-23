@@ -85,7 +85,7 @@
           >
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
-            <div @click="removeKeyHandler(item.uuid)" class="key-remove-icon">
+            <div @click="removeKeyHandler(item.pubkey)" class="key-remove-icon">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close3.png"
                 alt="icon"
@@ -186,8 +186,8 @@ export default {
       this.enterPasswordPage = true;
       this.isDragOver = false;
     },
-    removeKeyHandler(id) {
-      this.keyFiles = this.keyFiles.filter((item) => item.uuid !== id);
+    removeKeyHandler(pubkey) {
+      this.keyFiles = this.keyFiles.filter((item) => item.pubkey !== pubkey);
       console.log(this.keyFiles);
     },
     openUploadHandler() {
