@@ -151,21 +151,7 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
-// //electron drag&drop codes
-// promiseIpc.on('ondragstart', (event, filePath) => {
-//   readFile(filePath);
-//   function readFile(filepath) {
-//     fs.readFile(filepath, 'utf-8', (err, data) => {
-//        if(err){
-//           alert("An error ocurred reading the file :" + err.message)
-//           return
-//        }
-//        // handle the file content
-//        event.sender.send('fileData', data)
-//     })
-//  }
 
-// })
 
 app.on("web-contents-created", (event, contents) => {
   // open every new window in the OS's default browser instead of a
