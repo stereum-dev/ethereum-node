@@ -2,15 +2,22 @@
 - name: "genericPlaybook"
   hosts: localhost
   vars_files:
-  - defaults/stereum_defaults.yaml
+  - defaults/stereum_defaults.yaml # stereum_static
+  - /etc/stereum/stereum.yaml # stereum_settings
 
   tasks:
+    # merge with stereum_args (extra vars via ansible command line)
     - set_fact:
-        stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        stereum_input: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
       when: stereum_args is defined
     - set_fact:
-        stereum: "{{ stereum_static}}"
+        stereum_input: "{{ stereum_static }}"
       when: stereum_args is undefined
+
+    # merge stereum_settings
+    - set_fact:
+        stereum: "{{ stereum_settings | combine(stereum_input, recursive=True) }}"
+
     - name: "Include role"
       include_role:
         name: "{{ stereum_role }}"
