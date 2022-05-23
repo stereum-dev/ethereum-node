@@ -2,6 +2,7 @@ import { SSHService } from './SSHService'
 import { StringUtils } from './StringUtils'
 import { NodeConnectionParams } from './NodeConnectionParams'
 import { nodeOS } from './NodeOS'
+import net from 'net'
 import YAML from 'yaml'
 const log = require('electron-log')
 if(process.env.IS_DEV === 'true'){
@@ -361,5 +362,40 @@ export class NodeConnection {
     const cpuUsage = await this.sshService.exec(`sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`)  //CPU usage
     response.cpuUsage = cpuUsage;
     return response
+  }
+  
+  async openTunnels(tunnels){
+    if (tunnels[0] !== undefined) {
+        await Promise.all(tunnels.map(async (tunnel) => {
+          await this.sshService.tunnel(tunnel)
+        }))
+    }
+  }
+
+  async checkPort(port){
+    return new Promise((resolve, reject) => {
+      const connection = net.connect(port);
+      connection.on('error', error => {
+        if (error.code === 'ECONNREFUSED') {
+          return resolve(true);
+        }
+        return reject(error);
+      });
+      connection.on('connect', () => {
+        connection.destroy();
+        return resolve(false);
+      });
+    });
+  }
+
+  async checkAvailablePorts(option) {
+    let available = false;
+    let port = option.min
+    while(!available && port < option.max){
+      available = await this.checkPort(port)
+      if(!available){port ++}
+    }
+    log.info(`Port ${port} is the next available in range ${option.min} - ${option.max}`)
+    return port
   }
 }
