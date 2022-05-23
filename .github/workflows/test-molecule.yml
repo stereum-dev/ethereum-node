@@ -34,7 +34,7 @@ jobs:
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # delay jobs according to settings to prevent hitting the rate limit of Hetzner
       - name: Delay job if necessary
