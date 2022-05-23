@@ -282,6 +282,15 @@ export default {
       } catch (err) {
         // return;
       }
+      let services = undefined
+      try{
+        services = await ControlService.listServicesConfigurations()
+      }catch (err) {
+        services = []
+      }
+      if(services.length !== 0){
+        this.$router.push("/node");
+      }
       this.$emit('page', 'welcome-page')
     }
   }

@@ -11,6 +11,7 @@ import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import { PromiseIpcMain } from "electron-promise-ipc/build/mainProcess";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
@@ -101,6 +102,10 @@ promiseIpc.on("getServerVitals", async () => {
 
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
+})
+
+promiseIpc.on("listServicesConfigurations", async () => {
+  return await nodeConnection.listServicesConfigurations();
 })
 
 // Scheme must be registered before the app is ready
