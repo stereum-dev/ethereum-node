@@ -3,17 +3,11 @@
   hosts: all
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
-  vars:
-    stereum_args:
-      settings:
-        updates:
-          unattended:
-            install: true
 
   tasks:
     - name: Apply default stereum settings
       set_fact:
-        stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        stereum: "{{ stereum_static }}"
     - name: "Include configure-updates"
       include_role:
         name: "configure-updates"

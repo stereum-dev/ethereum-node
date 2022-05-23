@@ -12,11 +12,6 @@
   set_fact:
     update_data: "{{ update_data_test | default(update_data_download) }}"
 
-# - name: Fetch repository information
-#   command: "git fetch --all"
-#   args:
-#     chdir: "{{ stereum.settings.controls_install_path }}/ansible"
-
 - name: Checkout commit of latest version
   git:
     repo: https://github.com/stereum-dev/ethereum-node.git

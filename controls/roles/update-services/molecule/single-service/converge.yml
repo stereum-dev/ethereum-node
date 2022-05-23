@@ -2,6 +2,7 @@
 - name: Converge
   hosts: all
   vars:
+    services_to_update: "9024aec6-12a8-456a-8096-ee7ef6f67167"
     json_update_data: |
       {
           "prater": {
