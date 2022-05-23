@@ -56,7 +56,7 @@ promiseIpc.on("destroy", async () => {
 
 // called via promiseIpc as an async function
 promiseIpc.on("tunnel", async (arg) => {
-  return stereumService.openTunnels(arg);
+  return nodeConnection.openTunnels(arg);
 });
 
 // called via promiseIpc as an async function
@@ -97,6 +97,10 @@ promiseIpc.on("startOneClickServices", async () => {
 
 promiseIpc.on("getServerVitals", async () => {
   return await nodeConnection.getServerVitals();
+})
+
+promiseIpc.on("getAvailablePort", async (args) => {
+  return await nodeConnection.checkAvailablePorts(args);
 })
 
 // Scheme must be registered before the app is ready
