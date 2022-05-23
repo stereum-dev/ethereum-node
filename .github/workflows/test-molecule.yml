@@ -31,10 +31,6 @@ jobs:
           {role: "update-stereum", test: "override", delay: 1},
           {role: "ssv-key-generator", test: "default", delay: 1},
           {role: "fastsync", test: "default", delay: 90},
-          {role: "validator-import-lighthouse", test: "default", delay: 10},
-          {role: "validator-import-nimbus", test: "default", delay: 15},
-          {role: "validator-import-prysm", test: "default", delay: 20},
-          {role: "validator-import-teku", test: "default", delay: 25},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
