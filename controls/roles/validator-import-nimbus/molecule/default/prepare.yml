@@ -57,19 +57,19 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/nimbus:v1.5.5-54
+              image: statusim/nimbus-eth2:multiarch-v22.3.0
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
                 - 127.0.0.1:9190:9190/tcp
               env: {}
-              entrypoint: ["/opt/app/build/nimbus_beacon_node"]
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon
                 - --validators-dir=/opt/app/validators
                 - --secrets-dir=/opt/app/secrets
-                - --web3-url=MyEth1Node
+                - --web3-url=ws://10.10.0.2:8545
                 - --tcp-port=9000
                 - --udp-port=9000
                 - --rpc
@@ -83,7 +83,7 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
-                - "/opt/app/services/{{ beacon_service }}/validator/validators:/opt/app/validators"
+                - "/opt/app/services/{{ beacon_service }}/validator:/opt/app/validators"
                 - "/opt/app/services/{{ beacon_service }}/validator/secrets:/opt/app/secrets"
                 - "/opt/app/services/{{ beacon_service }}/launchpad:/opt/app/launchpad"
                 - /opt/app/import:/opt/app/import

@@ -45,7 +45,7 @@ test('buildConfiguration', () => {
 
   expect(bloxService.env.CONFIG_PATH).toMatch(/\/config.yaml/)
   expect(bloxService.volumes).toHaveLength(1)
-  expect(bloxService.volumes).toContain('/opt/stereum/ssv/data:/data')
+  expect(bloxService.volumes).toContain('/opt/stereum/ssv-' + bloxService.id + '/data:/data')
   expect(bloxService.ports).toHaveLength(2)
   expect(bloxService.id).toHaveLength(36)
   expect(bloxService.user).toMatch(/root/)

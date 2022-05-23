@@ -63,7 +63,7 @@ test('nimbus validator import', async () => {
 
     //generate validator api-token
     const token = StringUtils.createRandomString();
-    await nodeConnection.sshService.exec(`sudo echo ${token} > /opt/stereum/nimbus/validator/validators/api-token.txt`)
+    await nodeConnection.sshService.exec(`sudo echo ${token} > /opt/stereum/nimbus-${nimbusClient.id}/validator/validators/api-token.txt`)
 
     //Waiting for the service to start properly
     await testServer.Sleep(60000)

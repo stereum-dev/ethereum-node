@@ -1,4 +1,3 @@
-import { LighthouseBeaconService } from './LighthouseBeaconService.js'
 import { LighthouseValidatorService } from './LighthouseValidatorService.js'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -29,7 +28,7 @@ test('LighthouseValidatorService buildConfiguration', () => {
   expect(lhService.command).toContain('--beacon-nodes=http-endpoint-string')
   expect(lhService.command).toContain('--graffiti=\"foobar\"')
   expect(lhService.volumes).toHaveLength(1)
-  expect(lhService.volumes).toContain('/opt/stereum/lh/validator:/opt/app/validator')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/validator:/opt/app/validator')
   expect(lhService.ports).toHaveLength(1)
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)

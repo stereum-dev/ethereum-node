@@ -113,7 +113,7 @@
                 - vc
                 - --debug-level=debug
                 - --network=prater
-                - --beacon-nodes=http://stereum-7c0b52c4-98a3-11ec-85c7-0735587b56e3:5052
+                - --beacon-nodes=http://stereum-{{ beacon_service }}:5052
                 - --datadir=/opt/app/validator
                 - --init-slashing-protection
                 - --graffiti="stereum.net"

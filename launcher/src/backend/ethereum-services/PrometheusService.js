@@ -9,7 +9,11 @@ export class PrometheusService extends NodeService {
     return { CONFIG: `global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: 'ConsensusClients'\n    static_configs:\n      - targets: [${consensusEndPoints}]\n  - job_name: 'PrometheusNodeExporterService'\n    static_configs:\n      - targets: [${prometheusNodeExporterEndPoints}]\n` }
   }
 
-  static buildByUserInput (network, ports, workingDir, consensusClients, prometheusNodeExporterClients) {
+  static buildByUserInput (network, ports, dir, consensusClients, prometheusNodeExporterClients) {
+    const service = new PrometheusService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+    
     const image = 'prom/prometheus'
     const config = this.getServiceConfiguration(consensusClients, prometheusNodeExporterClients)
 
@@ -21,10 +25,9 @@ export class PrometheusService extends NodeService {
       new ServiceVolume(workingDir + '/config', configDir)
     ]
 
-    const service = new PrometheusService()
     service.init(
       'PrometheusService',
-      null, // id
+      service.id, // id
       1, // configVersion
       image, // image
       'v2.33.1', // imageVersion

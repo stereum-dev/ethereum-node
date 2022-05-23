@@ -103,9 +103,15 @@ export class NodeService {
 
   buildMinimalConfiguration () {
     return {
-      service: this.constructor.name,
+      service: this.service,
       id: this.id
     }
+  }
+
+  buildWorkingDir (dir) {
+    if(dir && dir[dir.length-1] === '/') 
+       return dir.slice(0,-1,'') + '-' + this.id
+    return dir + '-' + this.id
   }
 }
 

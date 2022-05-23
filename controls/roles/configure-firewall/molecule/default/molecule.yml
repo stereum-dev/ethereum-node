@@ -11,6 +11,13 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
       - /lib/modules:/lib/modules:ro
+  - name: "role-configure-updates-ubuntu-22.04"
+    image: geerlingguy/docker-ubuntu2204-ansible
+    privileged: true
+    pre_build_image: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /lib/modules:/lib/modules:ro
   #### centos docker image doesn't support ufw right now
   # - name: "role-configure-updates-centos-7"
   #   image: geerlingguy/docker-centos7-ansible:python3

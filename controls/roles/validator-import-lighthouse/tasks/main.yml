@@ -23,16 +23,17 @@
       }
 
       spawn sh -c { sudo docker run --rm -it \
-                     -e DEBUG_LEVEL=debug \
-                     -e NETWORK=prater \
-                     -e DATADIR="/opt/app/validator" \
-                     -e DIRECTORY="/opt/app/launchpad" \
-                     -v "/opt/app/services/{{ validator_service_name }}/validator":"/opt/app/validator" \
-                     -v "/opt/app/services/{{ validator_service_name }}/launchpad":"/opt/app/launchpad" \
+                     -v $HOME/.lighthouse:/root/.lighthouse \
+                     -v "/opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/validator":"/opt/app/validator" \
+                     -v "/opt/app/services/2e83d610-48b8-11ec-802a-330dee8e6b2e/launchpad":"/opt/app/launchpad" \
                      --user "2000":"2000" \
                      --net "stereum" \
-                     --entrypoint "/opt/app/start/import-launchpad-wallet.sh" \
-                     validator_image
+                     validator_image \
+                     lighthouse \
+                     --network "prater" \
+                     --datadir "/opt/app/validator" \
+                     account validator import \
+                     --directory "/opt/app/launchpad"
                   }
 
       expect {
@@ -69,4 +70,10 @@
   args:
     chdir: /opt/app/import
   changed_when: false
+  become: yes
+
+- name: Start validator service
+  docker_container:
+    name: "stereum-{{ validator_service_name }}"
+    state: started
   become: yes

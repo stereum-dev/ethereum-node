@@ -13,7 +13,7 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("stereum/nimbus") != -1
+      - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
   # Check import expect script
   - name: Check nimbus_validator_import.sh
     stat:

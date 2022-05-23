@@ -3,11 +3,9 @@
   hosts: all
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
-
   vars:
     consClient: "prysm"
     validator_password: "MyTestPassword"
-    beacon_service: 40a39644-b417-11ec-9917-3f1fbdf72a3a
     validator_service: 0d4a2d58-b417-11ec-a0f3-0b91f10c3a8c
     validator_keys:
        - name: keystore-m_12381_3600_0_0_0-1637577658.json

@@ -99,5 +99,5 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
-                - "/opt/app/services/{{ beacon_service }}/validator/validators:/opt/app/validators"
+                - "/opt/app/services/{{ beacon_service }}/validator:/opt/app/validators"
                 - "/opt/app/services/{{ beacon_service }}/validator/secrets:/opt/app/secrets"

@@ -4,37 +4,13 @@
   </div>
 </template>
 <script>
-
-export default {
-  watch: {
-    items: {
-      deep: true
-    }
-  },
-  methods: {
-    mainWindow () {
-      window({
-        width: 1024,
-        height: 576,
-        resizable: false
-      })
-    }
-  }
-}
+export default {};
 </script>
 <style>
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+#app {
   min-width: 1024px;
   min-height: 576px;
-  max-width: 1024px;
-  max-height: 576px;
-  background-color: rgb(31, 31, 31);
-  resize: none;
-}
-#app {
   width: 100%;
   height: 100%;
   position: absolute;
