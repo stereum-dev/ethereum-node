@@ -33,18 +33,27 @@
         mode: 0644
         content: |
           service: LighthouseBeaconService
-          command: []
-          entrypoint:
-          - /opt/app/start/beacon.sh
-          env:
-            DATADIR: /opt/app/beacon
-            DEBUG_LEVEL: info
-            ETH1_NODES: http://stereum-25df0439-80e6-4afe-8876-72d7718035c3:8545
-            NETWORK: prater
-            SLASHERDIR: /opt/app/slasher
-            SLASHER_DB_SIZE: '16'
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=debug
+            - --network=prater
+            - --eth1-endpoints=http://10.10.0.3:8545
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+          entrypoint: []
+          env: {}
           id: 9024aec6-12a8-456a-8096-ee7ef6f67167
-          image: stereum/lighthouse:v2.0.0-46
+          image: sigp/lighthouse:v2.0.0
           ports:
           - 0.0.0.0:9000:9000/tcp
           - 0.0.0.0:9000:9000/udp
@@ -64,18 +73,20 @@
         mode: 0644
         content: |
           service: LighthouseValidatorService
-          command: []
-          entrypoint:
-          - /opt/app/start/validator.sh
-          env:
-            DEBUG_LEVEL: info
-            NETWORK: prater
-            DATADIR: /opt/app/validator
-            LAUNCHPADDIR: /opt/app/launchpad
-            GRAFFITI: stereum.net
-            BEACON_NODES: "http://stereum-9024aec6-12a8-456a-8096-ee7ef6f67167:5052"
+          command:
+            - lighthouse
+            - vc
+            - --debug-level=debug
+            - --network=prater
+            - --beacon-nodes=http://stereum-9024aec6-12a8-456a-8096-ee7ef6f67167:5052
+            - --datadir=/opt/app/validator
+            - --init-slashing-protection
+            - --metrics
+            - --metrics-address=0.0.0.0
+          entrypoint: []
           id: f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
-          image: stereum/lighthouse:v2.0.1-48
+          image: sigp/lighthouse:v2.0.0
+          env: {}
           ports: []
           volumes:
           - /opt/stereum/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379/validator:/opt/app/validator
