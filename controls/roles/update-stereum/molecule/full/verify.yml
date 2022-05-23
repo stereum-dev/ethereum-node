@@ -1,0 +1,53 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Stereum config files
+  - stat: path=/etc/stereum/stereum.yaml
+    register: stereum_config_file
+  - stat: path=/opt/stereum/ansible
+    register: stereum_ansible_dir
+  - debug:
+      msg: "{{ stereum_ansible_dir }}"
+  - name: Check for config
+    assert:
+      that:
+        - stereum_config_file.stat.exists
+        - stereum_ansible_dir.stat.isdir is defined
+        - stereum_ansible_dir.stat.isdir
+
+  # check for correct version of repository
+  - name: Get git hash
+    ansible.builtin.command: git show --format="%H" --no-patch
+    args:
+      chdir: "/opt/stereum/ansible"
+    register: git_hash
+  - debug:
+      msg: "{{ git_hash }}"
+  - name: Check for correct git hash
+    assert:
+      that:
+        - git_hash.stdout != "888c129fab8ea1315ead15fcb7a05d4377286ff2"
+
+  # check for new version of docker container beacon
+  - raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
+    register: docker_container_tag
+  - name: check container tag version
+    assert:
+      that:
+        - docker_container_tag.stdout.startswith("sigp/lighthouse:")
+
+  - raw: docker inspect --format={% raw %}'{{ .Config.Image }}'{% endraw %} stereum-9024aec6-12a8-456a-8096-ee7ef6f67167
+    register: docker_container_tag
+  - name: check container tag version
+    assert:
+      that:
+        - docker_container_tag.stdout.startswith("sigp/lighthouse:")
+        - '"v2.0.0" not in docker_container_tag.stdout'
+
+
+# EOF

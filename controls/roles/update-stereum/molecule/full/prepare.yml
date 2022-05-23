@@ -8,13 +8,19 @@
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip
+      raw: apt update && apt install -y pip ansible
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install community.docker
+      raw: ansible-galaxy collection install community.docker
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
-      raw: yum install -y python38 tar && yum remove -y python36
+      raw: yum install -y python38 tar ansible && yum remove -y python36
       become: true
       changed_when: false
       when: ansible_distribution == "CentOS"
@@ -25,6 +31,27 @@
     - include_role:
         name: "configure-firewall"
 
+    # now let's setup the repo same way as with
+    # launcher/src/backend/NodeConnection.js#prepareStereumNode()
+    # only with an old tag, then update to new tag
+    - file:
+        path: "/opt/stereum/ansible"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+    - ansible.builtin.command: "{{ item }}"
+      args:
+        chdir: "/opt/stereum/ansible"
+      with_items:
+      - "git init"
+      - "git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git" # FIXME
+      - "git config core.sparseCheckout true"
+      - "echo 'controls' >> .git/info/sparse-checkout"
+      - "git checkout 888c129fab8ea1315ead15fcb7a05d4377286ff2"
+
+    # spin up some services to update
     - name: Write service configuration lighthouse beacon
       copy:
         dest: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
@@ -34,22 +61,18 @@
         content: |
           service: LighthouseBeaconService
           command:
-            - lighthouse
-            - bn
-            - --debug-level=debug
-            - --network=prater
-            - --eth1-endpoints=http://10.10.0.3:8545
-            - --eth1-blocks-per-log-query=150
-            - --datadir=/opt/app/beacon
-            - --http
-            - --http-address=0.0.0.0
-            - --metrics
-            - --metrics-address=0.0.0.0
-            - --disable-upnp
-            - --validator-monitor-auto
-            - --slasher
-            - --slasher-dir=/opt/app/slasher
-            - --slasher-max-db-size=16
+          - lighthouse
+          - bn
+          - --network=prater
+          - --eth1-endpoints=ws://10.10.0.2:8545
+          - --eth1-blocks-per-log-query=150
+          - --datadir=/opt/app/beacon
+          - --http
+          - --http-address=0.0.0.0
+          - --metrics
+          - --metrics-address=0.0.0.0
+          - --disable-upnp
+          - --validator-monitor-auto
           entrypoint: []
           env: {}
           id: 9024aec6-12a8-456a-8096-ee7ef6f67167
@@ -59,7 +82,6 @@
           - 0.0.0.0:9000:9000/udp
           volumes:
           - /opt/stereum/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon:/opt/app/beacon
-          - /opt/stereum/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher:/opt/app/slasher
           user: 2000
           autoupdate: true
           network: prater
@@ -74,19 +96,18 @@
         content: |
           service: LighthouseValidatorService
           command:
-            - lighthouse
-            - vc
-            - --debug-level=debug
-            - --network=prater
-            - --beacon-nodes=http://stereum-9024aec6-12a8-456a-8096-ee7ef6f67167:5052
-            - --datadir=/opt/app/validator
-            - --init-slashing-protection
-            - --metrics
-            - --metrics-address=0.0.0.0
+          - lighthouse
+          - vc
+          - --debug-level=debug
+          - --network=prater
+          - --beacon-nodes="http://stereum-9024aec6-12a8-456a-8096-ee7ef6f67167:5052"
+          - --datadir=/opt/app/validator
+          - --init-slashing-protection
+          - --unencrypted-http-transport
           entrypoint: []
-          id: f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
-          image: sigp/lighthouse:v2.0.0
           env: {}
+          id: f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
+          image: sigp/lighthouse:v2.0.1
           ports: []
           volumes:
           - /opt/stereum/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379/validator:/opt/app/validator
