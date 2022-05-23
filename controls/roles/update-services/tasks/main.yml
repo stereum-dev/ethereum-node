@@ -18,12 +18,17 @@
   register: services_data
   become: yes
 
+- name: Define services in scope
+  set_fact:
+    services_to_update: "{{ services_data.files | map(attribute='path') | map('split', '/') | map('last') | map('split', '.') | map('first') }}"
+  when: services_to_update is undefined
+
 - name: Update services
   include_tasks: update-service.yml
-  with_items: "{{ services_data.files }}"
+  with_items: "{{ services_to_update }}"
 
 - name: Restart services
   include_tasks: restart-service.yml
-  with_items: "{{ services_data.files }}"
+  with_items: "{{ services_to_update }}"
 
 # EOF

@@ -1,0 +1,127 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - name: Write service configuration lighthouse beacon
+      copy:
+        dest: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=debug
+            - --network=prater
+            - --eth1-endpoints=http://10.10.0.3:8545
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+          entrypoint: []
+          env: {}
+          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+          image: sigp/lighthouse:v2.0.0
+          ports:
+          - 0.0.0.0:9000:9000/tcp
+          - 0.0.0.0:9000:9000/udp
+          volumes:
+          - /opt/stereum/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon:/opt/app/beacon
+          - /opt/stereum/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher:/opt/app/slasher
+          user: 2000
+          autoupdate: true
+          network: prater
+      become: yes
+
+    - name: Write service configuration lighthouse validator
+      copy:
+        dest: "/etc/stereum/services/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseValidatorService
+          command:
+            - lighthouse
+            - vc
+            - --debug-level=debug
+            - --network=prater
+            - --beacon-nodes=http://stereum-9024aec6-12a8-456a-8096-ee7ef6f67167:5052
+            - --datadir=/opt/app/validator
+            - --init-slashing-protection
+            - --metrics
+            - --metrics-address=0.0.0.0
+          entrypoint: []
+          id: f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
+          image: sigp/lighthouse:v2.0.0
+          env: {}
+          ports: []
+          volumes:
+          - /opt/stereum/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379/validator:/opt/app/validator
+          - /opt/stereum/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379/launchpad:/opt/app/launchpad
+          user: 2000
+          autoupdate: true
+          network: prater
+      become: yes
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379
+
+# EOF
