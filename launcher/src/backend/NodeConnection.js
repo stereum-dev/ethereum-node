@@ -48,7 +48,7 @@ export class NodeConnection {
     const stereumConfig = await this.sshService.exec('sudo cat /etc/stereum/stereum.yaml')
 
     if (stereumConfig.rc == 0) {
-      this.settings = YAML.parse(stereumConfig.stdout)
+      this.settings = {stereum: ((YAML.parse(stereumConfig.stdout)).stereum_settings)}
     }
   }
 
@@ -343,7 +343,7 @@ export class NodeConnection {
                 docker volume prune -f &&\
                 docker system prune -a -f &&\
                 rm -rf ${this.installationDirectory} &&\
-                rm -rf /etc/stereum`)
+                rm -rf /etc/stereum/services`)
     return 'Node destroyed'
   }
 

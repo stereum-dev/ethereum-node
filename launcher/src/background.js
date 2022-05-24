@@ -103,8 +103,19 @@ promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 })
 
-promiseIpc.on("listServicesConfigurations", async () => {
-  return await nodeConnection.listServicesConfigurations();
+promiseIpc.on("checkStereumInstallation", async () => {
+  let services
+  let settings
+  try{
+    settings = await nodeConnection.sshService.exec('sudo ls /etc/stereum')
+    services = await nodeConnection.listServicesConfigurations()
+  }catch{
+    services = []
+  }
+  console.log(settings)
+  if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
+    return true
+  return false
 })
 
 // Scheme must be registered before the app is ready
