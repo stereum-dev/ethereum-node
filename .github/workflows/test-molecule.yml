@@ -25,16 +25,19 @@ jobs:
           {role: "validator-import-api", test: "prysm", delay: 105},
           {role: "validator-import-api", test: "teku", delay: 110},
           {role: "configure-updates", test: "default", delay: 1},
+          {role: "configure-updates", test: "no-unattended-updates", delay: 1},
           {role: "setup", test: "default", delay: 1},
           {role: "update-services", test: "default", delay: 1},
-          {role: "update-stereum", test: "default", delay: 1},
-          {role: "update-stereum", test: "override", delay: 1},
+          {role: "update-services", test: "single-service", delay: 1},
+          {role: "update-stereum", test: "default", delay: 120},
+          {role: "update-stereum", test: "full", delay: 120},
+          {role: "update-stereum", test: "override", delay: 120},
           {role: "ssv-key-generator", test: "default", delay: 1},
           {role: "fastsync", test: "default", delay: 90},
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       # delay jobs according to settings to prevent hitting the rate limit of Hetzner
       - name: Delay job if necessary

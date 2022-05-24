@@ -1,7 +1,7 @@
 ---
 - name: Read service's configuration
   slurp:
-    src: "{{ item.path }}"
+    src: "/etc/stereum/services/{{ item }}.yaml"
   register: service_configuration_raw
   become: yes
 
@@ -34,7 +34,7 @@
 - name: Write configuration
   copy:
     content: '{{ new_service_configuration | to_nice_yaml }}'
-    dest: "{{ item.path }}"
+    dest: "/etc/stereum/services/{{ item }}.yaml"
     owner: "root"
     group: "root"
     mode: 0644

@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+  - shell: "./unattended-update.sh"
+    args:
+      chdir: "/opt/stereum/ansible/controls"
+    register: unattended_update_output
+  - debug:
+      msg: "{{ unattended_update_output }}"
+
+# EOF

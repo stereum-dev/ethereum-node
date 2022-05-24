@@ -1,0 +1,15 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y cron
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y crontabs
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"

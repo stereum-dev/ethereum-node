@@ -6,7 +6,7 @@
   - cron:
       name: "stereum auto unattended update"
       job: "cd \"/opt/stereum\" && ./unattended-update.sh"
-      state: absent
+      state: present
       user: root
     check_mode: yes
     register: crontab_unattended_update
