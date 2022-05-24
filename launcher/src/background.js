@@ -99,6 +99,10 @@ promiseIpc.on("getServerVitals", async () => {
   return await nodeConnection.getServerVitals();
 })
 
+promiseIpc.on("getHostName", async () => {
+  return await nodeConnection.getHostName();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
