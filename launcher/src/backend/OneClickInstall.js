@@ -36,7 +36,9 @@ export class OneClickInstall {
   //this is broken
   async chooseClient(clients) {
     clients = {
-      PRYSM: 33
+      NIMBUS: 50,
+      PRYSM: 20,
+      LIGHTHOUSE: 30
     }
     const buffer = {}
     let sum = 0
