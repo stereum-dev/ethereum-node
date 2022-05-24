@@ -282,6 +282,10 @@ export default {
       } catch (err) {
         // return;
       }
+
+      if(await ControlService.checkStereumInstallation()){
+        this.$router.push("/node");
+      }
       this.$emit('page', 'welcome-page')
     }
   }

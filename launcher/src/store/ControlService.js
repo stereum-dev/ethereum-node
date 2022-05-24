@@ -85,6 +85,10 @@ class ControlService extends EventEmitter {
   async getAvailablePort(args){
     return await this.promiseIpc.send('getAvailablePort', args)
   }
+
+  async checkStereumInstallation(){
+    return await this.promiseIpc.send('checkStereumInstallation')
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron)

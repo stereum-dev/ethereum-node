@@ -18,26 +18,18 @@ export class OneClickInstall {
     this.serviceManager = new ServiceManager(nodeConnection)
     await this.nodeConnection.findStereumSettings()
     if (this.nodeConnection.settings === undefined) {
-      this.nodeConnection.settings = {
-        stereum:
-        {
-          settings:
-          {
-            controls_install_path: '/opt/stereum',
-            os_user: 'stereum',
-            updates:
-            {
-              in_progress: '',
-              lane: 'stable',
-              available: '',
-              unattended:
-                { check: true, install: false }
-            }
-          }
-        }
-      }
+      await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
+      echo "stereum_settings:
+      settings:
+        controls_install_path: ${this.installDir || '/opt/stereum'}
+        os_user: stereum
+        updates:
+          lane: stable
+          unattended:
+            install: false
+    " > /etc/stereum/stereum.yaml`)
+    await this.nodeConnection.findStereumSettings()
     }
-    this.nodeConnection.settings.stereum.settings.controls_install_path = this.installDir || '/opt/stereum'
     return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path)
   }
 
