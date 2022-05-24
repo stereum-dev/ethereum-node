@@ -182,6 +182,7 @@ export default {
     dropFileHandler(event) {
       console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
+      console.log(droppedFiles);
       this.keyFiles.push(...droppedFiles);
       this.insertFilePage = false;
       this.enterPasswordPage = true;

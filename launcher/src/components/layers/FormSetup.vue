@@ -114,9 +114,9 @@
           </label>
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
-        <base-button id="login" @click="login">{{
+        <button id="login" @click="login">{{
           $t("formsetup.login")
-        }}</base-button>
+        }}</button>
       </form>
     </div>
     <!-- test dovom -->
@@ -541,18 +541,21 @@ select.classic:focus {
 }
 
 #login {
-  width: 12%;
-  max-width: 120px;
-  height: 10%;
+  min-width: 120px;
+  min-height:50px;
   outline-style: none;
+  padding: 10px;
   border: 5px solid #686868;
+  border-radius: 35px;
   cursor: pointer;
   position: absolute;
   right: 8%;
   bottom: 7%;
   background-color: #264c4c;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #cecece;
 }
 #login:hover {
   box-shadow: none;
@@ -659,4 +662,48 @@ input:required {
 input:invalid {
   border-color: rgb(233, 100, 100);
 }
+
+/* @keyframes rotate {
+	100% {
+		transform: rotate(1turn);
+	}
+}
+
+.rainbow {
+	position: relative;
+	z-index: 0;
+	width: 400px;
+	height: 300px;
+	border-radius: 10px;
+	overflow: hidden;
+	padding: 2rem;
+	
+	&::before {
+		content: '';
+		position: absolute;
+		z-index: -2;
+		left: -50%;
+		top: -50%;
+		width: 200%;
+		height: 200%;
+		background-color: #399953;
+		background-repeat: no-repeat;
+		background-size: 50% 50%, 50% 50%;
+		background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+		background-image: linear-gradient(#399953, #399953), linear-gradient(#fbb300, #fbb300), linear-gradient(#d53e33, #d53e33), linear-gradient(#377af5, #377af5);
+		animation: rotate 4s linear infinite;
+	}
+	
+	&::after {
+		content: '';
+		position: absolute;
+		z-index: -1;
+		left: 6px;
+		top: 6px;
+		width: calc(100% - 12px);
+		height: calc(100% - 12px);
+		background: white;
+		border-radius: 5px;
+	}
+} */
 </style>
