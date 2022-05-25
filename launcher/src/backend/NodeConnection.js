@@ -1,18 +1,17 @@
-import { SSHService } from './SSHService'
-import { StringUtils } from './StringUtils'
-import { NodeConnectionParams } from './NodeConnectionParams'
-import { nodeOS } from './NodeOS'
-import net from 'net'
-import YAML from 'yaml'
-const log = require('electron-log')
-if(process.env.IS_DEV === 'true'){
-  global.branch = 'main'
-  log.info('pulling from main branch')
-}else{
-  global.branch = 'stable'
-  log.info('pulling from stable branch')
+import { SSHService } from "./SSHService";
+import { StringUtils } from "./StringUtils";
+import { NodeConnectionParams } from "./NodeConnectionParams";
+import { nodeOS } from "./NodeOS";
+import net from "net";
+import YAML from "yaml";
+const log = require("electron-log");
+if (process.env.IS_DEV === "true") {
+  global.branch = "main";
+  log.info("pulling from main branch");
+} else {
+  global.branch = "stable";
+  log.info("pulling from stable branch");
 }
-
 
 export class NodeConnection {
   constructor(nodeConnectionParams) {
@@ -441,7 +440,7 @@ export class NodeConnection {
                 docker system prune -a -f &&\
                 rm -rf ${this.installationDirectory} &&\
 
-                rm -rf /etc/stereum`);
+                rm -rf /etc/stereum/services`);
     return "Node destroyed";
   }
 
