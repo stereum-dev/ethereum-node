@@ -115,7 +115,6 @@ promiseIpc.on("checkStereumInstallation", async () => {
     }catch{
       services = []
     }
-    console.log(nodeConnection.sshService.connected)
     if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
       return true
   }
