@@ -11,7 +11,7 @@ platforms:
     network:
       name: eth2-prater
       ip_range: 10.10.0.0/24
-      ip: 10.10.0.150
+      ip: 10.10.0.151
   # - name: "validator-import-api--teku--centos-stream-8"
   #   hostname: "centos"
   #   server_type: cpx21

@@ -19,7 +19,7 @@
       - stereum_ufw_status.stdout.find("5052/tcp") != -1
       - stereum_ufw_status.stdout.find("9190/tcp") != -1
   # Nimbus api-token
-  - stat: path=/opt/app/services/96d0bd64-b40b-11ec-9748-ef3d97c5f568/validator/validators/api-token.txt
+  - stat: path=/opt/app/services/96d0bd64-b40b-11ec-9748-ef3d97c5f568/validator/api-token.txt
     register: api_token
   - debug:
       msg: "{{ api_token }}"

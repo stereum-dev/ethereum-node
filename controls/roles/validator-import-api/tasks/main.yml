@@ -5,12 +5,14 @@
     changed_when: false
     register: auth_token
     become: yes
-  - debug:
+  - name: Print out auth_token
+    debug:
       msg: "{{ auth_token.stdout_lines[1] }}"
   - name: Get api-token
     set_fact:
       api_token: "{{ auth_token.stdout_lines[1] }}"
-  - debug:
+  - name: Print out api_token
+    debug:
       msg: "{{ api_token }}"
   - name: Prysm import-validator using API
     uri:
@@ -33,7 +35,8 @@
     changed_when: false
     register: api_token
     become: yes
-  - debug:
+  - name: Print out api_token
+    debug:
       msg: "{{ api_token.stdout }}"
   - name: Lighthouse import-validator using API
     uri:
@@ -56,7 +59,8 @@
     changed_when: false
     register: api_token
     become: yes
-  - debug:
+  - name: Print out api_token
+    debug:
       msg: "{{ api_token.stdout }}"
   - name: Nimbus import-validator using API
     uri:
@@ -79,7 +83,8 @@
     changed_when: false
     register: api_token
     become: yes
-  - debug:
+  - name: Print out api_token
+    debug:
       msg: "{{ api_token.stdout }}"
   - name: Teku import-validator using API
     uri:

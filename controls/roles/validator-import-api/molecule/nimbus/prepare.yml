@@ -54,7 +54,7 @@
       - name: Create api-token file
         copy:
           content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
-          dest: /opt/app/services/{{ beacon_service }}/validator/validators/api-token.txt
+          dest: /opt/app/services/{{ beacon_service }}/validator/api-token.txt
           force: no
         become: yes
       - name: Waiting for the services to start properly
