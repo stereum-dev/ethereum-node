@@ -9,11 +9,17 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      maschinName: "[maschinName]",
+      maschinName: "",
     };
+  },
+  async created() {
+    const response = await ControlService.getHostName();
+    const { data: maschinName } = await response.json();
+    this.maschinName = maschinName;
   },
 };
 </script>

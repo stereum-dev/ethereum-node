@@ -43,7 +43,18 @@ test('prysm validator import', async () => {
     log.info('server attached to network')
 
     //prepare node
-    nodeConnection.settings = { stereum: { settings: { controls_install_path: '/opt/stereum', os_user: 'stereum', updates: { in_progress: '', lane: 'stable', available: '', unattended: { check: true, install: false } } } } }
+    // create stereum settings
+    await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
+      echo "stereum_settings:
+      settings:
+        controls_install_path: /opt/stereum
+        os_user: stereum
+        updates:
+          lane: stable
+          unattended:
+            install: false
+    " > /etc/stereum/stereum.yaml`)
+    await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
     let ports = [
