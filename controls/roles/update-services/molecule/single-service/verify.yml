@@ -32,3 +32,21 @@
       that:
         - service_container.exists
         - service_container.container.Config.Image == 'sigp/lighthouse:v2.0.1'
+
+  # other service needs to stay untouched
+  - name: Read untouched service's configuration
+    slurp:
+      src: "/etc/stereum/services/f3a6cbe4-5e4b-4ba4-a0f2-2504b6750379.yaml"
+    register: service_configuration_untouched_raw
+    become: yes
+
+  - name: Parse untouched service's configuration
+    set_fact:
+      service_configuration_untouched: "{{ service_configuration_untouched_raw['content'] | b64decode | from_yaml }}"
+
+  - name: Check untouched service's configuration
+    assert:
+      that:
+        - service_configuration_untouched.image == 'sigp/lighthouse:v2.0.0'
+
+# EOF

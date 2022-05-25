@@ -126,6 +126,7 @@
 <script>
 import BaseDialog from './BaseDialog.vue'
 import ControlService from '@/store/ControlService'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { BaseDialog },
@@ -152,6 +153,13 @@ export default {
   },
   created () {
     this.loadStoredConnections()
+  },
+  computed: {
+    ...mapGetters({
+      plugins: 'installationPlugins',
+      selectedPreset: 'getSelectedPreset',
+      allPlugins: 'getAllPlugins'
+    })
   },
   methods: {
     changeLabel () {
@@ -281,6 +289,20 @@ export default {
         })
       } catch (err) {
         // return;
+      }
+
+      if(await ControlService.checkStereumInstallation()){
+        let services = await ControlService.getServices()
+        let constellation = services.map(service => {
+          return (service.service.replace(/(Beacon|Validator|Service)/gm,'')).toUpperCase()
+        })
+        const includedPlugins = []
+        constellation.forEach(plugin => {
+          const buffer = this.allPlugins.filter(element => element.name === plugin)
+          buffer.forEach(element => includedPlugins.push(element))
+        })
+        this.$store.commit('mutatedSelectedPreset', {includedPlugins: includedPlugins})
+        this.$router.push("/node");
       }
       this.$emit('page', 'welcome-page')
     }

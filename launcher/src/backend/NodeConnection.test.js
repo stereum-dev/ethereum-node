@@ -47,7 +47,7 @@ test('findStereumSettings', async () => {
   const SSHService = require('./SSHService')
   const mMock = jest.fn(() => {
     return {
-      rc: 0, stdout: `stereum:
+      rc: 0, stdout: `stereum_settings:
   settings:
     controls_install_path: /opt/stereum/mock
     os_user: stereum_mock
@@ -225,7 +225,7 @@ test('prepareStereumNode success', async () => {
   const SSHService = require('./SSHService')
   const mMock = jest.fn()
   mMock
-    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum_settings:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
     .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
@@ -276,7 +276,7 @@ test('prepareStereumNode error playbook', async () => {
   const SSHService = require('./SSHService')
   const mMock = jest.fn()
   mMock
-    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum_settings:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
     .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
@@ -313,7 +313,7 @@ test('prepareStereumNode failure playbook', async () => {
   const SSHService = require('./SSHService')
   const mMock = jest.fn()
   mMock
-    .mockReturnValueOnce({ rc: 0, stdout: 'stereum:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
+    .mockReturnValueOnce({ rc: 0, stdout: 'stereum_settings:\n  settings:\n    controls_install_path: /opt/tests' }) // find settings
     .mockReturnValueOnce({ rc: 0, stdout: 'ubuntu' }) // find OS
     .mockReturnValueOnce({ rc: 0 }) // delete ansible roles if exist
     .mockReturnValueOnce({ rc: 0 }) // install pkg
