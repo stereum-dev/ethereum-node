@@ -7,9 +7,9 @@
       </div>
       <div class="cpuCountPart">
         <div class="cpuUsage">
-          <div class="circle">
+          <!-- <div class="circle">
             <span>{{ cpuValue }}%</span>
-          </div>
+          </div> -->
           <div class="cpuProccessBarCont">
             <div class="cpuProccessBar">
               <div class="cpuProccessBar_value_bg">
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="cpuTemp">
-          <div class="circle">
+          <!-- <div class="circle">
             <span>{{ temp }}°</span>
           </div>
           <div class="cpuTempCont">
@@ -28,7 +28,8 @@
                 <div class="cpuTemp_value" :style="verticalBar"></div>
               </div>
             </div>
-          </div>
+          </div> -->
+          <span>Proccess: %{{ cpuValue }}</span>
         </div>
       </div>
     </div>
@@ -36,10 +37,11 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      cpuValue: 100,
+      cpuValue: [],
       temp: 100,
     };
   },
@@ -60,6 +62,11 @@ export default {
       const cVal = 100 - this.cpuValue;
       return cVal;
     },
+  },
+  async created() {
+    const response = await ControlService.getServerVitals();
+    const { data: cpuValue } = await response.json();
+    this.cpuValue = cpuValue;
   },
 };
 </script>
@@ -122,12 +129,16 @@ export default {
 .cpuUsage,
 .cpuTemp {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 50%;
 
   box-sizing: border-box;
+
+  font-size: 70%;
+  font-weight: bold;
+  color: #eee;
 }
 .circle {
   width: 15%;
@@ -169,7 +180,7 @@ export default {
   background: #33393e;
 }
 .cpuProccessBarCont {
-  width: 79%;
+  width: 90%;
 
   display: flex;
   height: 100%;

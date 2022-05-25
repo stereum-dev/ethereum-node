@@ -101,6 +101,11 @@ promiseIpc.on("getServerVitals", async () => {
   return await nodeConnection.getServerVitals();
 })
 
+
+promiseIpc.on("getHostName", async () => {
+  return await nodeConnection.getHostName();
+});
+
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 })
@@ -122,6 +127,7 @@ promiseIpc.on("checkStereumInstallation", async () => {
 promiseIpc.on("getServices", async () => {
   return await serviceManager.readServiceConfigurations()
 })
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
