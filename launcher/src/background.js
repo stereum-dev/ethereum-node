@@ -7,6 +7,7 @@ import { StereumService } from "./stereumservice.js";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
+import { ServiceManager } from "./backend/ServiceManager.js";
 import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
@@ -16,6 +17,7 @@ const stereumService = new StereumService();
 const storageService = new StorageService();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
+const serviceManager = new ServiceManager(nodeConnection);
 
 const log = require("electron-log");
 
@@ -112,10 +114,13 @@ promiseIpc.on("checkStereumInstallation", async () => {
   }catch{
     services = []
   }
-  console.log(settings)
   if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
     return true
   return false
+})
+
+promiseIpc.on("getServices", async () => {
+  return await serviceManager.readServiceConfigurations()
 })
 
 // Scheme must be registered before the app is ready
