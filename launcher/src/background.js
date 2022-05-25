@@ -106,17 +106,20 @@ promiseIpc.on("getAvailablePort", async (args) => {
 })
 
 promiseIpc.on("checkStereumInstallation", async () => {
-  let services
-  let settings
-  try{
-    settings = await nodeConnection.sshService.exec('sudo ls /etc/stereum')
-    services = await nodeConnection.listServicesConfigurations()
-  }catch{
-    services = []
+  if(nodeConnection.sshService.connected){
+    let services
+    let settings
+    try{
+      settings = await nodeConnection.sshService.exec('sudo ls /etc/stereum')
+      services = await nodeConnection.listServicesConfigurations()
+    }catch{
+      services = []
+    }
+    console.log(nodeConnection.sshService.connected)
+    if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
+      return true
   }
-  if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
-    return true
-  return false
+return false
 })
 
 promiseIpc.on("getServices", async () => {
