@@ -28,7 +28,7 @@ export class OneClickInstall {
           unattended:
             install: false
     " > /etc/stereum/stereum.yaml`)
-    await this.nodeConnection.findStereumSettings()
+      await this.nodeConnection.findStereumSettings()
     }
     return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path)
   }
@@ -36,30 +36,35 @@ export class OneClickInstall {
   //this is broken
   async chooseClient(clients) {
     clients = {
-      NIMBUS: 50,
-      PRYSM: 20,
-      LIGHTHOUSE: 30
+      PRYSM: 24,
+      LIGHTHOUSE: 24,
+      NIMBUS: 24,
     }
-    const buffer = {}
+    let buffer = []
+    let clientDistribution = []
     let sum = 0
+    let range = 0
+    
     Object.keys(clients).forEach(key => {
-      sum += (100 / clients[key])
+      buffer.push({ name: key, coverage: clients[key] })
     })
-    Object.keys(clients).forEach(key => {
-      buffer[key] = ((100 / clients[key]) / sum) * 100
+
+    buffer.forEach(client => { sum += (100 / client.coverage) })
+
+    buffer.forEach(client => {
+      clientDistribution.push({ name: client.name, percentage: (((100 / client.coverage) / sum) * 100) })
     })
+
+    clientDistribution.forEach(client => {
+      client.min = range
+      range = range + client.percentage
+      client.max = range
+    })
+
     const ran = Math.random() * 100
-    let smallestDiff = Number.MAX_VALUE
-    let result = ''
-    console.log(ran, buffer)
-    Object.keys(buffer).forEach(key => {
-      const diff = Math.abs(buffer[key] - ran)
-      if (diff < smallestDiff) {
-        result = key
-        smallestDiff = diff
-      }
-    })
-    return result.toLowerCase()
+    const winner = clientDistribution.find(client => (client.min <= ran && client.max >= ran))
+    console.log(winner,ran)
+    return winner.name.toLowerCase()
   }
 
   getConfigurations() {
@@ -175,10 +180,8 @@ export class OneClickInstall {
   async getSetupConstellation(setup) {
     const services = ['GETH', 'GRAFANA', 'PROMETHEUSNODEEXPORTER', 'PROMETHEUS']
     // make sure API is only called once when implemented
-    if (!this.choosenClient) {
       this.choosenClient = await this.chooseClient()
       this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1)
-    }
     services.push(this.choosenClient.toUpperCase())
 
     // TODO: adapt Validator integration on naming of Validator services if "LIGHTHOUSE" (distinguish by category) then do nothing else "LIGHTHOUSEVALIDATOR" or something else
