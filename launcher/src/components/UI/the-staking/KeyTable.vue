@@ -85,7 +85,7 @@
           >
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
-            <div @click="removeKeyHandler(item.uuid)" class="key-remove-icon">
+            <div @click="removeKeyHandler(item.name)" class="key-remove-icon">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close3.png"
                 alt="icon"
@@ -153,6 +153,7 @@
   </div>
 </template>
 <script>
+import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
 export default {
@@ -181,14 +182,14 @@ export default {
     dropFileHandler(event) {
       console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
+      console.log(droppedFiles);
       this.keyFiles.push(...droppedFiles);
       this.insertFilePage = false;
       this.enterPasswordPage = true;
       this.isDragOver = false;
     },
-    removeKeyHandler(id) {
-      this.keyFiles = this.keyFiles.filter((item) => item.uuid !== id);
-      console.log(this.keyFiles);
+    removeKeyHandler(key_name) {
+      this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
     },
     openUploadHandler() {
       this.$refs.fileInput.click();

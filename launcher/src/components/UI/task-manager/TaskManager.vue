@@ -11,16 +11,17 @@
             v-for="(item, index) in playbookTasks"
             :key="index"
           >
-            <!-- <div class="table-row-active">
+            <div class="table-row-active" v-if="item.status == null">
               <div class="active-icon">
                 <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
-              <span>AKTIVE TASK</span>
-            </div> -->
-            <div
-              class="table-row-success"
-              v-if="item.status === 'success' || item.status === 'changed'"
-            >
+              <span>{{ item.playbook }}</span>
+              <drop-tasks
+                :item="item"
+                @droptaskActive="openDropDown"
+              ></drop-tasks>
+            </div>
+            <div class="table-row-success" v-if="item.status === 'success'">
               <div class="success-icon">
                 <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
@@ -66,40 +67,42 @@ export default {
     return {
       isTaskModalActive: false,
       showDropDownList: false,
+      isTaskFailed: false,
+      isTaskSuccess: false,
       playbookTasks: [],
       dataTasks: [
-        {
-          id: 1,
-          playbook: "Geth",
-          status: "success",
-          showDropDown: false,
-          tasks: [
-            {
-              name: "Preparing node",
-              action: "SUB TASK SUCCEEDED",
-              status: "failed",
-            },
-            {
-              name: "Writing service configs",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-            {
-              name: "Set firewall rules",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-            {
-              name: "Enable service docker",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-          ],
-        },
+        // {
+        //   id: 1,
+        //   playbook: "Geth",
+        //   status: null,
+        //   showDropDown: false,
+        //   tasks: [
+        //     {
+        //       name: "Preparing node",
+        //       action: "SUB TASK SUCCEEDED",
+        //       status: "failed",
+        //     },
+        //     {
+        //       name: "Writing service configs",
+        //       action: "SUB TASK SUCCEEDED",
+        //       status: "success",
+        //     },
+        //     {
+        //       name: "Set firewall rules",
+        //       action: "SUB TASK SUCCEEDED",
+        //       status: "success",
+        //     },
+        //     {
+        //       name: "Enable service docker",
+        //       action: "SUB TASK SUCCEEDED",
+        //       status: "success",
+        //     },
+        //   ],
+        // },
         {
           id: 2,
           playbook: "Nimbus",
-          status: "success",
+          status: null,
           showDropDown: false,
           tasks: [
             {
@@ -111,34 +114,6 @@ export default {
               name: "Writing service configs",
               action: "SUB TASK SUCCEEDED",
               status: "success",
-            },
-            {
-              name: "Set firewall rules",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-            {
-              name: "Install docker",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-          ],
-        },
-        {
-          id: 3,
-          playbook: "Lighthouse",
-          status: "failed",
-          showDropDown: false,
-          tasks: [
-            {
-              name: "Removing conflicts",
-              action: "SUB TASK SUCCEEDED",
-              status: "success",
-            },
-            {
-              name: "Writing service configs",
-              action: "SUB TASK FAILED",
-              status: "failed",
             },
             {
               name: "Set firewall rules",
@@ -160,39 +135,51 @@ export default {
         failedIcon: require("../../../../public/img/icon/task-manager-icons/task-red-icon.png"),
       },
       installIconSrc: {
-        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/turning_circle_alt2.gif"),
+        activeInstallIcon: require("../../../../public/img/icon/task-manager-icons/turning_circle.gif"),
         successInstallIcon: require("../../../../public/img/icon/task-manager-icons/check3.png"),
         failedInstallIcon: require("../../../../public/img/icon/task-manager-icons/close3.png"),
       },
     };
+  },
+  beforeUpdate() {
+    this.checkTaskStatus();
   },
   mounted() {
     this.playbookTasks = this.dataTasks;
   },
 
   computed: {
-    checkTaskStatus() {
-      this.playbookTasks.map((el) => {
-        let taskStatus = el.tasks.some((task) => {
-          return task.status === "failed";
-        });
-        if (taskStatus) {
-          el.status === "failed";
-        }
-      });
-    },
     mainTaskIcon() {
       let mainIconColor = this.playbookTasks.some(
         (el) => el.status === "failed"
       );
+      let mainIconColorActive = this.playbookTasks.some(
+        (el) => el.status == null
+      );
       if (mainIconColor) {
         return this.taskManagerIcons.failedIcon;
+      } else if (mainIconColorActive) {
+        return this.taskManagerIcons.activeIcon;
       } else {
         return this.taskManagerIcons.successIcon;
       }
     },
   },
   methods: {
+    checkTaskStatus() {
+      setTimeout(() => {
+        this.playbookTasks.map((el) => {
+          let taskStatus = el.tasks.every((task) => {
+            return task.status == "success";
+          });
+          if (taskStatus) {
+            el.status = "success";
+          } else {
+            el.status = "failed";
+          }
+        });
+      }, 3000);
+    },
     taskModalHandler() {
       this.isTaskModalActive = !this.isTaskModalActive;
     },
@@ -304,15 +291,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.table-content .table-row-progress {
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-  background-color: rgb(104, 104, 104);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+
 .table-content .table-row-active {
   width: 100%;
   height: 100%;
@@ -323,6 +302,7 @@ export default {
   align-items: center;
 }
 .table-row-failed .failed-icon,
+.table-row-active .active-icon,
 .table-row-success .success-icon {
   width: 16px;
   height: 16px;
@@ -346,7 +326,6 @@ export default {
 .active-icon img {
   width: 20px;
   height: 20px;
-  margin-top: 2px;
 }
 
 .table-row-failed span,

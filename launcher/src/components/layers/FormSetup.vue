@@ -1,5 +1,20 @@
 <template>
   <div class="server-parent">
+    <div class="anim" v-if="connectingAnimActive">
+      <p>C</p>
+      <p>O</p>
+      <p>N</p>
+      <p>N</p>
+      <p>E</p>
+      <p>C</p>
+      <p>T</p>
+      <p>I</p>
+      <p>N</p>
+      <p>G</p>
+      <p>.</p>
+      <p>.</p>
+      <p>.</p>
+    </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
         <h2>{{ $t("formsetup.server") }}</h2>
@@ -114,9 +129,9 @@
           </label>
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
-        <base-button id="login" @click="login">{{
-          $t("formsetup.login")
-        }}</base-button>
+        <button id="login" @click="login">
+          {{ $t("formsetup.login") }}
+        </button>
       </form>
     </div>
     <!-- test dovom -->
@@ -124,159 +139,169 @@
 </template>
 
 <script>
-import BaseDialog from './BaseDialog.vue'
-import ControlService from '@/store/ControlService'
-import { mapGetters } from 'vuex'
+import BaseDialog from "./BaseDialog.vue";
+import ControlService from "@/store/ControlService";
+import { mapGetters } from "vuex";
 
 export default {
   components: { BaseDialog },
-  name: 'FormSetup',
-  emits: ['page'],
-  data () {
+  name: "FormSetup",
+  emits: ["page"],
+  data() {
     return {
       keyAuth: false,
-      link: 'stereumLogoExtern.png',
+      link: "stereumLogoExtern.png",
+      connectingAnimActive: false,
       stereumVersions: {},
       connections: [],
-      selectedName: '',
+      selectedName: "",
       bDialogVisible: false,
       model: {
-        name: { value: '', isFilled: true },
-        host: { value: '', isFilled: true },
-        user: { value: '', isFilled: true },
-        pass: { value: '', isFilled: true },
-        keylocation: { value: '', isFilled: true },
-        useAuthKey: false
+        name: { value: "", isFilled: true },
+        host: { value: "", isFilled: true },
+        user: { value: "", isFilled: true },
+        pass: { value: "", isFilled: true },
+        keylocation: { value: "", isFilled: true },
+        useAuthKey: false,
       },
-      imgTrash: './img/icon/TRASH_CAN.png'
-    }
+      imgTrash: "./img/icon/TRASH_CAN.png",
+    };
   },
-  created () {
-    this.loadStoredConnections()
+  created() {
+    this.loadStoredConnections();
   },
   computed: {
     ...mapGetters({
-      plugins: 'installationPlugins',
-      selectedPreset: 'getSelectedPreset',
-      allPlugins: 'getAllPlugins'
-    })
+      plugins: "installationPlugins",
+      selectedPreset: "getSelectedPreset",
+      allPlugins: "getAllPlugins",
+    }),
   },
   methods: {
-    changeLabel () {
-      this.keyAuth = !this.keyAuth
+    changeLabel() {
+      this.keyAuth = !this.keyAuth;
     },
-    setSelectedConnection (event) {
+    setSelectedConnection(event) {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
-      )
-      this.model.name.value = this.selectedConnection.name
-      this.model.host.value = this.selectedConnection.host
-      this.model.user.value = this.selectedConnection.user
-      this.model.keylocation.value = this.selectedConnection.keylocation
-      this.model.useAuthKey = this.selectedConnection.useAuthKey
-      this.keyAuth = this.selectedConnection.useAuthKey
-      this.model.pass.value = ''
+      );
+      this.model.name.value = this.selectedConnection.name;
+      this.model.host.value = this.selectedConnection.host;
+      this.model.user.value = this.selectedConnection.user;
+      this.model.keylocation.value = this.selectedConnection.keylocation;
+      this.model.useAuthKey = this.selectedConnection.useAuthKey;
+      this.keyAuth = this.selectedConnection.useAuthKey;
+      this.model.pass.value = "";
     },
-    addModel () {
-      const newConnection = this.createConnection()
-      if(!this.connections.find(connection => connection.name == this.model.name.value)){
-        this.connections.push(newConnection)
-        this.selectedConnection = newConnection
-        this.selectedName = this.selectedConnection.name
-        this.writeSettings()
-      }else if(this.connections.find(connection => connection.name == this.model.name.value)){
-        const index = this.connections.findIndex(connection => connection.name == this.model.name.value)
-        this.connections[index] = newConnection
-        this.selectedConnection = newConnection
-        this.selectedName = this.selectedConnection.name
-        this.writeSettings()
+    addModel() {
+      const newConnection = this.createConnection();
+      if (
+        !this.connections.find(
+          (connection) => connection.name == this.model.name.value
+        )
+      ) {
+        this.connections.push(newConnection);
+        this.selectedConnection = newConnection;
+        this.selectedName = this.selectedConnection.name;
+        this.writeSettings();
+      } else if (
+        this.connections.find(
+          (connection) => connection.name == this.model.name.value
+        )
+      ) {
+        const index = this.connections.findIndex(
+          (connection) => connection.name == this.model.name.value
+        );
+        this.connections[index] = newConnection;
+        this.selectedConnection = newConnection;
+        this.selectedName = this.selectedConnection.name;
+        this.writeSettings();
       }
-
     },
-    getstorableConnections () {
-      const storableConnections = []
+    getstorableConnections() {
+      const storableConnections = [];
       this.connections.forEach((e) => {
         storableConnections.push({
           name: e.name,
           host: e.host,
           user: e.user,
           keylocation: e.keylocation,
-          useAuthKey: e.useAuthKey
-        })
-      })
-      return storableConnections
+          useAuthKey: e.useAuthKey,
+        });
+      });
+      return storableConnections;
     },
     deleteModel: async function () {
-      const currSelected = this.selectedConnection.name
+      const currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
-        return currSelected != conn.name
-      })
-      await this.writeSettings()
-      await this.loadStoredConnections()
-      this.model.name.value = ''
-      this.model.host.value = ''
-      this.model.user.value = ''
-      this.model.pass.value = ''
-      this.model.keylocation.value = ''
-      this.model.useAuthKey = false
-      this.keyAuth = false
+        return currSelected != conn.name;
+      });
+      await this.writeSettings();
+      await this.loadStoredConnections();
+      this.model.name.value = "";
+      this.model.host.value = "";
+      this.model.user.value = "";
+      this.model.pass.value = "";
+      this.model.keylocation.value = "";
+      this.model.useAuthKey = false;
+      this.keyAuth = false;
     },
-    createConnection () {
+    createConnection() {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey
-      }
+        useAuthKey: this.model.useAuthKey,
+      };
     },
     loadStoredConnections: async function () {
-      const storageSavedConnections = await ControlService.readConfig()
-      let savedConnections = []
+      const storageSavedConnections = await ControlService.readConfig();
+      let savedConnections = [];
       if (
         storageSavedConnections !== undefined &&
         storageSavedConnections.savedConnections !== undefined
       ) {
         savedConnections = savedConnections.concat(
           storageSavedConnections.savedConnections
-        )
+        );
       }
-      this.connections = savedConnections
+      this.connections = savedConnections;
     },
     writeSettings: async function () {
-      const savedLanguage = (await ControlService.readConfig()).savedLanguage
+      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
       ControlService.writeConfig({
         savedConnections: this.getstorableConnections(),
-        savedLanguage: savedLanguage
-      })
+        savedLanguage: savedLanguage,
+      });
     },
-    checkInput (model) {
-      if (model.value == '') {
-        model.isFilled = false
+    checkInput(model) {
+      if (model.value == "") {
+        model.isFilled = false;
       } else {
-        model.isFilled = true
+        model.isFilled = true;
       }
     },
 
-    mouseOver (val) {
-      if (val === 'over') {
-        this.imgTrash = './img/icon/TRASH_CAN2.png'
+    mouseOver(val) {
+      if (val === "over") {
+        this.imgTrash = "./img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = './img/icon/TRASH_CAN.png'
+        this.imgTrash = "./img/icon/TRASH_CAN.png";
       }
     },
-    showBDialog () {
-      this.bDialogVisible = true
+    showBDialog() {
+      this.bDialogVisible = true;
     },
-    hideBDialog () {
-      this.bDialogVisible = false
+    hideBDialog() {
+      this.bDialogVisible = false;
     },
-    hideDialog () {
-      this.dialogVisible = false
+    hideDialog() {
+      this.dialogVisible = false;
     },
-    baseDialogDelete () {
-      this.bDialogVisible = false
-      this.deleteModel()
+    baseDialogDelete() {
+      this.bDialogVisible = false;
+      this.deleteModel();
     },
     login: async function () {
       try {
@@ -285,29 +310,38 @@ export default {
           user: this.model.user.value,
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
-          keyfileLocation: this.model.keylocation.value
-        })
+          keyfileLocation: this.model.keylocation.value,
+        });
       } catch (err) {
         // return;
       }
 
-      if(await ControlService.checkStereumInstallation()){
-        let services = await ControlService.getServices()
-        let constellation = services.map(service => {
-          return (service.service.replace(/(Beacon|Validator|Service)/gm,'')).toUpperCase()
-        })
-        const includedPlugins = []
-        constellation.forEach(plugin => {
-          const buffer = this.allPlugins.filter(element => element.name === plugin)
-          buffer.forEach(element => includedPlugins.push(element))
-        })
-        this.$store.commit('mutatedSelectedPreset', {includedPlugins: includedPlugins})
+      if (await ControlService.checkStereumInstallation()) {
+        let services = await ControlService.getServices();
+        let constellation = services.map((service) => {
+          return service.service
+            .replace(/(Beacon|Validator|Service)/gm, "")
+            .toUpperCase();
+        });
+        const includedPlugins = [];
+        constellation.forEach((plugin) => {
+          const buffer = this.allPlugins.filter(
+            (element) => element.name === plugin
+          );
+          buffer.forEach((element) => includedPlugins.push(element));
+        });
+        this.$store.commit("mutatedSelectedPreset", {
+          includedPlugins: includedPlugins,
+        });
         this.$router.push("/node");
       }
-      this.$emit('page', 'welcome-page')
-    }
-  }
-}
+      this.connectingAnimActive = true;
+      setTimeout(() => {
+        this.$emit("page", "welcome-page");
+      }, 5000);
+    },
+  },
+};
 </script>
 <style scoped>
 .server-parent {
@@ -541,7 +575,7 @@ select.classic:focus {
   align-items: center;
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
-  z-index: 99;
+  z-index: 95;
 }
 #keyLocation label {
   clear: both;
@@ -563,18 +597,21 @@ select.classic:focus {
 }
 
 #login {
-  width: 12%;
-  max-width: 120px;
-  height: 10%;
+  min-width: 120px;
+  min-height: 50px;
   outline-style: none;
+  padding: 10px;
   border: 5px solid #686868;
+  border-radius: 35px;
   cursor: pointer;
   position: absolute;
   right: 8%;
   bottom: 7%;
   background-color: #264c4c;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #cecece;
 }
 #login:hover {
   box-shadow: none;
@@ -680,5 +717,109 @@ input:required {
 }
 input:invalid {
   border-color: rgb(233, 100, 100);
+}
+
+.anim {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(8, 8, 8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.7;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+p {
+  display: inline-block;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 4em;
+  font-family: arial;
+  font-weight: 600;
+  transform: scale(0.5);
+  color: #121212;
+  -webkit-text-stroke: 2px gray;
+}
+p:nth-child(1) {
+  animation: hover 2s linear infinite;
+  color: #44f2f2;
+}
+
+p:nth-child(2) {
+  animation: hover 2s linear infinite 0.125s;
+  color: #44f2f2;
+}
+
+p:nth-child(3) {
+  animation: hover 2s linear infinite 0.25s;
+  color: #44f2f2;
+}
+
+p:nth-child(4) {
+  animation: hover 2s linear infinite 0.375s;
+  color: #44f2f2;
+}
+
+p:nth-child(5) {
+  animation: hover 2s linear infinite 0.5s;
+  color: #44f2f2;
+}
+
+p:nth-child(6) {
+  animation: hover 2s linear infinite 0.675s;
+  color: #44f2f2;
+}
+
+p:nth-child(7) {
+  animation: hover 2s linear infinite 0.75s;
+  color: #44f2f2;
+}
+
+p:nth-child(8) {
+  animation: hover 2s linear infinite 0.825s;
+  color: #44f2f2;
+}
+p:nth-child(9) {
+  animation: hover 2s linear infinite 0.9s;
+  color: #44f2f2;
+}
+p:nth-child(10) {
+  animation: hover 2s linear infinite 0.975s;
+  color: #44f2f2;
+}
+p:nth-child(11) {
+  animation: hover 2s linear infinite 1.125s;
+  color: #44f2f2;
+}
+p:nth-child(12) {
+  animation: hover 2s linear infinite 1.2s;
+  color: #44f2f2;
+}
+p:nth-child(13) {
+  animation: hover 2s linear infinite 1.275s;
+  color: #44f2f2;
+}
+
+@keyframes hover {
+  0% {
+    transform: scale(0.5);
+    color: #121212;
+    -webkit-text-stroke: 2px #44f2f2;
+  }
+
+  20% {
+    transform: scale(1);
+    color: #121212;
+    -webkit-text-stroke: 2px #e7da67;
+  }
+
+  50% {
+    transform: scale(0.5);
+    color: #121212;
+    -webkit-text-stroke: 2px #60fbbb;
+  }
 }
 </style>
