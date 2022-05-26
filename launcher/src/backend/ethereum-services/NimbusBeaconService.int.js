@@ -89,10 +89,10 @@ test('nimbus validator import', async () => {
     await nodeConnection.runPlaybook('validator-import-api', extraVars)
 
     //Waiting for the service to start properly
-    await testServer.Sleep(120000)
+    await testServer.Sleep(60000)
 
     //get logs
-    const status = await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${nimbusClient.id}`)
+    const status = await nodeConnection.sshService.exec(`docker logs --tail=200 stereum-${nimbusClient.id}`)
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
 
