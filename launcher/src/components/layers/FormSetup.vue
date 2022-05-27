@@ -1,5 +1,17 @@
 <template>
   <div class="server-parent">
+    <div class="error-box" v-if="errorMsgExisting"></div>
+    <div class="error-modal" v-if="errorMsgExisting">
+      <div class="title-box">
+        <img src="../../../public/img/icon/no-connection.png" alt="icon" />
+      </div>
+      <div class="description">
+        <span>{{ this.error }}</span>
+      </div>
+      <div class="btn-box">
+        <button>OK</button>
+      </div>
+    </div>
     <div class="anim" v-if="connectingAnimActive">
       <p>C</p>
       <p>O</p>
@@ -154,6 +166,8 @@ export default {
       connectingAnimActive: false,
       stereumVersions: {},
       connections: [],
+      error: "",
+      errorMsgExisting: false,
       selectedName: "",
       bDialogVisible: false,
       model: {
@@ -303,6 +317,11 @@ export default {
       this.bDialogVisible = false;
       this.deleteModel();
     },
+    checkErrorMessage() {
+      if (this.error.length > 0) {
+        return true;
+      }
+    },
     login: async function () {
       try {
         await ControlService.connect({
@@ -313,7 +332,10 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
-        // return;
+        this.errorMsgExisting = true;
+        this.error = "Connection refused, please try again.";
+        console.log(this.error);
+        return;
       }
 
       if (await ControlService.checkStereumInstallation()) {
@@ -718,7 +740,85 @@ input:required {
 input:invalid {
   border-color: rgb(233, 100, 100);
 }
+.error-box {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(8, 8, 8);
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 96;
+}
+.error-modal {
+  width: 30%;
+  height: 40%;
+  background-color: rgb(235, 235, 235);
+  box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
+  border-radius: 10px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 101;
+}
+.error-modal .title-box {
+  width: 100%;
+  height: 30%;
+  background-color: rgb(213, 102, 102);
+  border-radius: 9px 9px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title-box img {
+  width: 19%;
+  height: 80%;
+}
+.error-modal .description {
+  width: 80%;
+  margin-top: 20px;
+  text-align: center;
+}
+.error-modal .description span {
+  width: 50%;
+  color: rgb(55, 55, 55);
+  font-size: 1.2rem;
+  font-weight: 800;
+  word-break: break-word;
+  text-align: center;
+}
 
+.error-modal .btn-box {
+  width: 100%;
+  height: 30%;
+  border-radius: 0 0 9px 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-box button {
+  width: 30%;
+  height: 60%;
+  outline-style: none;
+  border: 2px solid rgb(235, 115, 115);
+  border-radius: 10px;
+  color: #de897f;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0px 1px 5px 1px rgb(97, 97, 97);
+}
+.btn-box button:hover {
+  border: 2px solid rgb(235, 115, 115);
+  box-shadow: 0px 0px 2px 1px rgb(97, 97, 97);
+  color: #dd6456;
+}
+.btn-box button:active {
+  box-shadow: none;
+  background-color: #eb7373;
+  color: #f7f7f7;
+}
 .anim {
   width: 100%;
   height: 100%;
