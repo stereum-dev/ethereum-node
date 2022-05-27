@@ -9,7 +9,7 @@
         <span>{{ this.error }}</span>
       </div>
       <div class="btn-box">
-        <button>OK</button>
+        <button @click="closeErrorDialog">OK</button>
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
@@ -42,7 +42,7 @@
         <template v-slot:cancel>Cancel</template>
         <template v-slot:ok>Delete</template>
       </base-dialog>
-      <form @submit.prevent="login">
+      <form @submit="login">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
@@ -317,12 +317,18 @@ export default {
       this.bDialogVisible = false;
       this.deleteModel();
     },
+    closeErrorDialog() {
+      this.error = "";
+      this.errorMsgExisting = false;
+      this.$router.go();
+    },
     checkErrorMessage() {
       if (this.error.length > 0) {
         return true;
       }
     },
     login: async function () {
+      this.connectingAnimActive = true;
       try {
         await ControlService.connect({
           host: this.model.host.value,
@@ -332,9 +338,9 @@ export default {
           keyfileLocation: this.model.keylocation.value,
         });
       } catch (err) {
+        this.connectingAnimActive = false;
         this.errorMsgExisting = true;
         this.error = "Connection refused, please try again.";
-        console.log(this.error);
         return;
       }
 
@@ -357,10 +363,8 @@ export default {
         });
         this.$router.push("/node");
       }
-      this.connectingAnimActive = true;
-      setTimeout(() => {
-        this.$emit("page", "welcome-page");
-      }, 5000);
+
+      this.$emit("page", "welcome-page");
     },
   },
 };
