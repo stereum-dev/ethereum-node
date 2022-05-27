@@ -80,7 +80,7 @@ test('lighthouse validator import', async () => {
     await serviceManager.manageServiceState(lhVC.id, 'started')
 
     //Waiting for the service to start properly
-    await testServer.Sleep(300000)
+    await testServer.Sleep(60000)
 
     //import validator
     const extraVars = {
@@ -93,7 +93,7 @@ test('lighthouse validator import', async () => {
     await nodeConnection.runPlaybook('validator-import-api', extraVars)
 
     //Waiting for the service to start properly
-    await testServer.Sleep(180000)
+    await testServer.Sleep(60000)
 
     //get logs
     const BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhBC.id}`)

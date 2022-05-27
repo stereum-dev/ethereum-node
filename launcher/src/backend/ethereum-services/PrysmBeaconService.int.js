@@ -161,10 +161,10 @@ test('prysm validator import', async () => {
 
     //check prysm BC logs
     expect(BCstatus.stderr).toMatch(/estimated time remaining/)
-    //expect(BCstatus.stderr).not.toMatch(/Could not connect to execution endpoint/)
+    expect(BCstatus.stderr).not.toMatch(/Could not connect to execution endpoint/)
 
     //check prysm VC logs
     expect(VCstatus.stderr).toMatch(/Beacon chain started/)
     expect(runningValidator).toMatch(/Showing 3 validator accounts/)
-    //expect(VCstatus.stderr).not.toMatch(/Could not determine if beacon chain started/)
+    expect(VCstatus.stderr).not.toMatch(/Could not determine if beacon chain started/)
 })
