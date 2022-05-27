@@ -59,11 +59,6 @@ const routes = [
     component: VerifyInstallation,
   },
   {
-    path: "/configuration",
-    name: "ConfigProcess",
-    component: ConfigProcess,
-  },
-  {
     path: "/storage",
     name: "StorageChartPage",
     component: StorageChartPage,

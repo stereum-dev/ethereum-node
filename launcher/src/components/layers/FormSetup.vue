@@ -42,7 +42,7 @@
         <template v-slot:cancel>Cancel</template>
         <template v-slot:ok>Delete</template>
       </base-dialog>
-      <form @submit="login">
+      <form @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
@@ -320,7 +320,7 @@ export default {
     closeErrorDialog() {
       this.error = "";
       this.errorMsgExisting = false;
-      this.$router.go();
+      this.$router.push("/");
     },
     checkErrorMessage() {
       if (this.error.length > 0) {
