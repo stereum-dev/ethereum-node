@@ -8,14 +8,14 @@
       {
           "prater": {
               "LighthouseBeaconService": [
-                  "v1.5.2-45",
-                  "v2.0.0-46",
-                  "v2.0.1-48"
+                  "v1.5.2",
+                  "v2.0.0",
+                  "v2.0.1"
               ],
               "LighthouseValidatorService": [
-                  "v1.5.2-45",
-                  "v2.0.0-46",
-                  "v2.0.1-48"
+                  "v1.5.2",
+                  "v2.0.0",
+                  "v2.0.1"
               ]
           },
           "stereum": [
