@@ -84,8 +84,9 @@ export class NodeConnection {
         try {
           installPkgResult = await this.sshService.exec(
             "sudo apt update &&\
-                    sudo apt install -y pip ansible tar gzip wget &&\
-                    sudo ansible-galaxy collection install community.docker"
+                    sudo apt install -y software-properties-common &&\
+                    sudo add-apt-repository --yes --update ppa:ansible/ansible &&\
+                    sudo apt install -y pip ansible tar gzip wget"
           );
         } catch (err) {
           log.error(err);

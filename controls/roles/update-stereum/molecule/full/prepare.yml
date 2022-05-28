@@ -7,17 +7,23 @@
     - ../../../../defaults/stereum_defaults.yaml
 
   tasks:
-    - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip ansible
-      become: true
-      changed_when: false
-      when: ansible_distribution == "Ubuntu"
+    # - name: Install python for Ansible (Ubuntu)
+    #   raw: apt update && apt install -y pip ansible
+    #   become: true
+    #   changed_when: false
+    #   when: ansible_distribution == "Ubuntu"
 
-    - name: Install community.docker
-      raw: ansible-galaxy collection install community.docker
+    - name: Install community.docker, ansible latest
+      raw: "{{ item }}"
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
+      with_items:
+        - apt update
+        - apt install -y software-properties-common
+        - add-apt-repository --yes --update ppa:ansible/ansible
+        - apt install -y pip ansible
+        # - ansible-galaxy collection install community.docker
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar ansible && yum remove -y python36
@@ -49,7 +55,7 @@
       - "git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git" # FIXME
       - "git config core.sparseCheckout true"
       - "echo 'controls' >> .git/info/sparse-checkout"
-      - "git checkout 888c129fab8ea1315ead15fcb7a05d4377286ff2"
+      - "git checkout 8544bf99fb62b44d0efe4cd8f981c31663335c21"
 
     # spin up some services to update
     - name: Write service configuration lighthouse beacon
