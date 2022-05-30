@@ -16,12 +16,7 @@
         <button id="back">BACK</button>
       </router-link>
       <div class="install-box">
-        <button
-          @click="clickedToInstall"
-          class="instal"
-          :disabled="isButtonDisabled"
-          :class="{ disabledBtn: isButtonDisabled }"
-        >
+        <button v-if="isButtonEnabled" @click="clickedToInstall" class="instal">
           INSTALL
         </button>
       </div>
@@ -39,7 +34,7 @@ export default {
   data() {
     return {
       isTestnetActive: false,
-      isButtonDisabled: true,
+      isButtonEnabled: false,
       testnetBtn: false,
       isMainnetActive: false,
       mainnetBtn: false,
@@ -55,7 +50,7 @@ export default {
   },
   methods: {
     enableButtonHandler() {
-      this.isButtonDisabled = false;
+      this.isButtonEnabled = true;
     },
     testnetActive() {
       this.isTestnetActive = true;
@@ -100,7 +95,7 @@ export default {
   text-align: center;
   border-radius: 40px;
   font-size: 1.3rem;
-  color: rgb(252, 252, 252);
+  color: rgb(207, 207, 207);
   font-weight: bold;
   background: #2a4243;
   position: relative;
@@ -139,9 +134,10 @@ export default {
   text-align: center;
   width: 90%;
   margin: 2% auto;
-  font-size: 10pt;
-  color: rgb(255, 255, 255);
-  font-weight: bold;
+  font-size: 0.8rem;
+  color: rgb(200, 200, 200);
+  font-weight: 500;
+  text-align: justify;
 }
 .select-box {
   width: 50%;
