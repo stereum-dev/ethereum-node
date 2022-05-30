@@ -8,63 +8,74 @@
         SERVE YOUR USE CASE
       </div>
       <div class="plugin-container">
-        <vue-select> </vue-select>
+        <vue-select @disable-btn="enableButtonHandler"> </vue-select>
       </div>
     </div>
     <div class="btn-container">
       <router-link class="back-box" :to="{ path: '/welcome' }">
         <button id="back">BACK</button>
       </router-link>
-      <div @click="clickedToInstall" class="install-box">
-        <button id="instal">INSTALL</button>
+      <div class="install-box">
+        <button
+          @click="clickedToInstall"
+          class="instal"
+          :disabled="isButtonDisabled"
+          :class="{ disabledBtn: isButtonDisabled }"
+        >
+          INSTALL
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import VueSelect from '../UI/click-installation/VueSelect.vue'
-import { mapGetters } from 'vuex'
+import VueSelect from "../UI/click-installation/VueSelect.vue";
+import { mapGetters } from "vuex";
 export default {
   components: {
-    VueSelect
+    VueSelect,
   },
-  data () {
+  data() {
     return {
       isTestnetActive: false,
+      isButtonDisabled: true,
       testnetBtn: false,
       isMainnetActive: false,
-      mainnetBtn: false
-    }
+      mainnetBtn: false,
+    };
   },
   computed: {
-    R1clkInstls () {
-      return this.$store.getters.R1clkInstls_get
+    R1clkInstls() {
+      return this.$store.getters.R1clkInstls_get;
     },
     ...mapGetters({
-      selectedPreset: 'getSelectedPreset'
-    })
+      selectedPreset: "getSelectedPreset",
+    }),
   },
   methods: {
-    testnetActive () {
-      this.isTestnetActive = true
-      this.testnetBtn = true
-      this.isMainnetActive = false
-      this.mainnetBtn = false
+    enableButtonHandler() {
+      this.isButtonDisabled = false;
     },
-    mainnetActive () {
-      this.isMainnetActive = true
-      this.mainnetBtn = true
-      this.isTestnetActive = false
-      this.testnetBtn = false
+    testnetActive() {
+      this.isTestnetActive = true;
+      this.testnetBtn = true;
+      this.isMainnetActive = false;
+      this.mainnetBtn = false;
     },
-    clickedToInstall () {
+    mainnetActive() {
+      this.isMainnetActive = true;
+      this.mainnetBtn = true;
+      this.isTestnetActive = false;
+      this.testnetBtn = false;
+    },
+    clickedToInstall() {
       if (Object.keys(this.selectedPreset).length > 0) {
-        this.$router.push('/install')
+        this.$router.push("/install");
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -156,7 +167,7 @@ export default {
   margin-left: 50px;
   text-align: right;
 }
-#instal {
+.instal {
   width: auto;
   min-width: 120px;
   height: 70%;
@@ -169,6 +180,7 @@ export default {
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
   outline-style: none;
+  cursor: pointer;
 }
 
 #back {
@@ -184,14 +196,29 @@ export default {
   color: rgb(191, 191, 191);
   box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
   outline-style: none;
+  cursor: pointer;
 }
-#instal:hover,
+.instal:hover,
 #back:hover {
   background-color: rgb(31, 48, 43);
   box-shadow: 0 1px 3px 0 rgb(21, 31, 26);
 }
-#instal:active,
+.instal:active,
 #back:active {
   box-shadow: inset 1px 1px 3px 1px rgb(14, 19, 17);
+}
+.disabledBtn {
+  width: auto;
+  min-width: 120px;
+  height: 70%;
+  resize: both;
+  border: 3px solid #545454;
+  border-radius: 40px;
+  background-color: rgb(50, 71, 65) !important;
+  font-size: 1.3rem;
+  box-shadow: none !important;
+  font-weight: 800;
+  color: rgb(135, 135, 135) !important;
+  outline-style: none;
 }
 </style>
