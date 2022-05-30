@@ -5,6 +5,8 @@
     - role: '../'
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 9024aec6-12a8-456a-8096-ee7ef6f67167
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -24,26 +26,38 @@
 
     - name: Write service configuration
       copy:
-        dest: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
+        dest: "/etc/stereum/services/{{ beacon_service }}.yaml"
         owner: "root"
         group: "root"
         mode: 0644
         content: |
-          command: []
-          entrypoint:
-          - /opt/app/start/beacon.sh
-          env:
-            DATADIR: /opt/app/beacon
-            DEBUG_LEVEL: debug
-            ETH1_NODES: http://geth:8545
-            NETWORK: mainnet
-            SLASHERDIR: /opt/app/slasher
-            SLASHER_DB_SIZE: '16'
-          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
-          image: stereum/lighthouse:v2.0.1-47
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=debug
+            - --network=prater
+            - --eth1-endpoints=ws://10.10.0.2:8545
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+          entrypoint: []
+          env: {}
+          id: {{ beacon_service }}
+          image: sigp/lighthouse:v2.1.2
           ports:
-          - 0.0.0.0:9000:9000/tcp
-          - 0.0.0.0:9000:9000/udp
-          volumes: []
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+            - 127.0.0.1:5052:5052/tcp
+          volumes:
+            - "/opt/stereum/lighthouse/beacon:/opt/app/beacon"
+            - "/opt/stereum/lighthouse/slasher:/opt/app/slasher"
           user: 2000
       become: yes
