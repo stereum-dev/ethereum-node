@@ -6,7 +6,7 @@
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
-    beacon_service: 9024aec6-12a8-456a-8096-ee7ef6f67167
+    beacon_service: 11bf77ec-e01a-11ec-9e44-fbfbee39c56b
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
