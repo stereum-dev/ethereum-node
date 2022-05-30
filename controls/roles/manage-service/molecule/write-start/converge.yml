@@ -38,8 +38,8 @@
           entrypoint: []
           user: "2000"
           volumes:
-            - "/opt/app/services/{{ beacon_service }}/beacon/lighthouse:/opt/app/beacon"
-            - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
+            - "/opt/stereum/services/{{ beacon_service }}/beacon:/opt/app/beacon"
+            - "/opt/stereum/services/{{ beacon_service }}/slasher:/opt/app/slasher"
 
   tasks:
     - set_fact:
