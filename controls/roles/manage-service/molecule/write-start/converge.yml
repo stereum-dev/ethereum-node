@@ -4,29 +4,43 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    stereum_args:
-      manage_service:
-        save: true
-        state: started
-        configuration:
-          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
-          image: stereum/lighthouse:v2.0.1-47
-          env:
-            DEBUG_LEVEL: debug
-            NETWORK: mainnet
-            ETH1_NODES: http://geth:8545
-            DATADIR: /opt/app/beacon
-            SLASHERDIR: /opt/app/slasher
-            SLASHER_DB_SIZE: "16"
-          command: []
-          entrypoint: ["/opt/app/start/beacon.sh"]
-          ports:
-            - 0.0.0.0:9000:9000/tcp
-            - 0.0.0.0:9000:9000/udp
-          user: "2000"
-          volumes:
-            - /opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon:/opt/app/beacon
-            - /opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher:/opt/app/slasher
+    beacon_service: 9024aec6-12a8-456a-8096-ee7ef6f67167
+
+  vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: sigp/lighthouse:v2.1.2
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+                - 127.0.0.1:5052:5052/tcp
+              command:
+                - lighthouse
+                - bn
+                - --debug-level=debug
+                - --network=prater
+                - --eth1-endpoints=ws://10.10.0.2:8545
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
 
   tasks:
     - set_fact:
