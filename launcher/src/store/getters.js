@@ -14,4 +14,7 @@ export default {
   getTaskManagerIcons(state) {
     return state.taskManagerIcons;
   },
+  getServiceIcons(state) {
+    return state.services;
+  },
 };

@@ -11,6 +11,7 @@
 </template>
 <script>
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
+
 export default {
   components: {MainNavbar}
 };
@@ -18,12 +19,11 @@ export default {
 <style scoped>
 .main-header {
   width: 100vw;
+  height: 50px;
   background: #324b3f;
-  padding: 5px 0;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
-  align-content: space-between;
+  align-content: center;
 }
 .logo-box {
   position: fixed;
