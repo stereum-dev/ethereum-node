@@ -10,6 +10,7 @@ import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconSer
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
 import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
+import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 
 export class OneClickInstall {
   async prepareNode(installDir, nodeConnection) {
@@ -39,6 +40,7 @@ export class OneClickInstall {
       PRYSM: 24,
       LIGHTHOUSE: 24,
       NIMBUS: 24,
+      TEKU: 20,
     }
     let buffer = []
     let clientDistribution = []
@@ -136,7 +138,15 @@ export class OneClickInstall {
 
 
       case 'Teku':
-        // to be implemented
+        //TekuBeaconService
+        ports = [
+          new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
+        ]
+        this.beaconService = TekuBeaconService.buildByUserInput('prater', ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
         break
     }
 
