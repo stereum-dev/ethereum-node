@@ -67,63 +67,68 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import ControlService from '@/store/ControlService'
+import { mapGetters } from "vuex";
+import ControlService from "@/store/ControlService";
 export default {
-  data () {
+  data() {
     return {
       isMainnetActive: false,
       mainnetPlugins: [],
       isTestnetActive: false,
       testnetPlugins: [],
-      selectedNetworks: null
-    }
+      selectedNetworks: null,
+    };
   },
   computed: {
     ...mapGetters({
-      plugins: 'installationPlugins',
-      selectedPreset: 'getSelectedPreset',
-      allPlugins: 'getAllPlugins'
-    })
+      plugins: "installationPlugins",
+      selectedPreset: "getSelectedPreset",
+      allPlugins: "getAllPlugins",
+    }),
   },
 
-  beforeUpdate () {
-    this.mainnetNetworkHandler()
-    this.testnetNetworkHandler()
+  beforeUpdate() {
+    this.mainnetNetworkHandler();
+    this.testnetNetworkHandler();
   },
   methods: {
-    mainnetNetworkHandler () {
-      if (this.selectedNetworks == 'mainnet') {
+    mainnetNetworkHandler() {
+      if (this.selectedNetworks == "mainnet") {
         this.mainnetPlugins = this.plugins.filter(
-          (item) => item.network == 'mainnet'
-        )
-        this.isMainnetActive = true
-        this.isTestnetActive = false
+          (item) => item.network == "mainnet"
+        );
+        this.isMainnetActive = true;
+        this.isTestnetActive = false;
       }
     },
 
-    testnetNetworkHandler () {
-      if (this.selectedNetworks == 'testnet') {
+    testnetNetworkHandler() {
+      if (this.selectedNetworks == "testnet") {
         this.testnetPlugins = this.plugins.filter(
-          (item) => item.network == 'testnet'
-        )
-        this.isMainnetActive = false
-        this.isTestnetActive = true
+          (item) => item.network == "testnet"
+        );
+        this.isMainnetActive = false;
+        this.isTestnetActive = true;
       }
     },
     selectItemToInstall: async function (item) {
-      const constellation = await ControlService.getOneClickConstellation(item.name)
+      const constellation = await ControlService.getOneClickConstellation(
+        item.name
+      );
 
-      const includedPlugins = []
-      constellation.forEach(plugin => {
-        const buffer = this.allPlugins.filter(element => element.name === plugin)
-        buffer.forEach(element => includedPlugins.push(element))
-      })
-      item.includedPlugins = includedPlugins
-      this.$store.commit('mutatedSelectedPreset', item)
-    }
-  }
-}
+      const includedPlugins = [];
+      constellation.forEach((plugin) => {
+        const buffer = this.allPlugins.filter(
+          (element) => element.name === plugin
+        );
+        buffer.forEach((element) => includedPlugins.push(element));
+      });
+      item.includedPlugins = includedPlugins;
+      this.$store.commit("mutatedSelectedPreset", item);
+      this.$emit('disableBtn')
+    },
+  },
+};
 </script>
 <style scoped>
 .plugin-parent {

@@ -1,7 +1,7 @@
 <template>
   <div class="server-parent">
-    <div class="error-box" v-if="errorMsgExisting"></div>
-    <div class="error-modal" v-if="errorMsgExisting">
+    <div class="error-box" v-if="errorMsgExists"></div>
+    <div class="error-modal" v-if="errorMsgExists">
       <div class="title-box">
         <img src="../../../public/img/icon/no-connection.png" alt="icon" />
       </div>
@@ -167,7 +167,7 @@ export default {
       stereumVersions: {},
       connections: [],
       error: "",
-      errorMsgExisting: false,
+      errorMsgExists: false,
       selectedName: "",
       bDialogVisible: false,
       model: {
@@ -319,14 +319,14 @@ export default {
     },
     closeErrorDialog() {
       this.error = "";
-      this.errorMsgExisting = false;
+      this.errorMsgExists = false;
       this.$router.push("/");
     },
-    checkErrorMessage() {
-      if (this.error.length > 0) {
-        return true;
-      }
-    },
+    // checkErrorMessage() {
+    //   if (this.error.length > 0) {
+    //     return true;
+    //   }
+    // },
     login: async function () {
       this.connectingAnimActive = true;
       try {
@@ -339,7 +339,7 @@ export default {
         });
       } catch (err) {
         this.connectingAnimActive = false;
-        this.errorMsgExisting = true;
+        this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
         return;
       }

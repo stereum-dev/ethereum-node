@@ -131,6 +131,63 @@ const store = createStore({
           failedIcon: require("./../../public/img/icon/task-manager-icons/task-red-icon.png"),
         },
       ],
+      services: [
+        {
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+      ],
     };
   },
   mutations: rootMutations,
