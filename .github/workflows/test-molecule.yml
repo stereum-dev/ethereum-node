@@ -20,6 +20,8 @@ jobs:
           {role: "manage-service", test: "ssv-prysm", delay: 60},
           {role: "manage-service", test: "monitor-lighthouse", delay: 70},
           {role: "manage-service", test: "monitor-nimbus", delay: 80},
+          {role: "manage-service", test: "monitor-prysm", delay: 85},
+          {role: "manage-service", test: "monitor-teku", delay: 90},
           {role: "validator-import-api", test: "lighthouse", delay: 95},
           {role: "validator-import-api", test: "nimbus", delay: 100},
           {role: "validator-import-api", test: "prysm", delay: 105},
