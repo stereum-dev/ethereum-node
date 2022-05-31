@@ -1,0 +1,3959 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "limit": 100,
+        "name": "Annotations & Alerts",
+        "showIn": 0,
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1603898575427,
+  "links": [],
+  "panels": [
+    {
+      "content": "\n## Presentation\n-----\nWelcome to my dashboard!\n\nEnsure to update your grafana to the version 7.0.1 or more. Previous version won't have everything working properly.\n\nIf you face any issue to understand a panel or to know what to do, make sure to read the small note on the corner top left of the panel if there is one!\n\n\n## Fiat converter\n-----\nThe currency converter allow you to see the earning for one of the currency in the dropdown list.\nThe value `All` equals to `ETH`. To have access to the currency converter, you can find how in this [guide](https://docs.prylabs.network/docs/prysm-usage/monitoring/currency-converter/)\n\n&nbsp;  \nYou can get the currencies you want, but the currency correctly displayed in the earning panels are:\n`BTC, CHF, CAD, EUR, USD, JPY, GBP`  \nIf you want to display correctly another currency that the one in the previous list, you can create a [git issue](https://github.com/GuillaumeMiralles/prysm-grafana-dashboard/issues) or you can DM me on discord (**Ocaa/grums** in prysm discord)\n\n## Earning panels exceptions\n-----\nThe earning panels are supposing that you have done deposits of 32 ETH exactly. If you see some incoherence in this values it's probably because you have deposited more than 32 ETH.\nIf so, you can fix the total earning panel by adding at the end of the query the substraction of your excedend 32 ETH. For the others earning panels (hourly daily weekly monthly),\nit will be fixed by itself with time, but you can still fix it temporarily by doing the same job than on the total earning panel (then don't forget to remove your temporarily fix once it has been fixed automatically)\n\n##### Total earning fix\n-----\nIf you sent 32.5 ETH on each validator and you have 5 validators, the total earning query will look like\n```\nsum(validator_balance) - count(validator_balance > 16 and validator_statuses == 3)*32 - 0.5*5\n```\n\nTo edit a panel, left click on the panel title then chose edit, then ensure to save the dashboard !\n\n\n## Support\n-----\nIf you enjoy the dashboard and you want to tip me for the work, you can send ETH and ERC20 token at this address **0xbDf75af14F356c381eC63329a4aB1C55D5c13fc5**\n\n\n\n## Bug\n-----\nIf you find a bug, please report it to me. You can create a [git issue](https://github.com/GuillaumeMiralles/prysm-grafana-dashboard/issues) or you can DM me on discord (Ocaa/grums in prysm discord)\nThanks for all the reports\n\n&nbsp;\n\nAfter reading it, you can now delete me. And don't forget to save the dashboard after deleting me! (button on the upper right) :)\n\nEnjoy\n\n\n\n",
+      "datasource": "Prometheus",
+      "description": "To delete this panel: left click on the title, then chose remove",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 28,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 63,
+      "mode": "markdown",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "README",
+      "type": "text"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "#FA6400",
+        "rgb(176, 83, 5)"
+      ],
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      },
+      "id": 42,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "1",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0,0",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "VALIDATOR",
+      "type": "singlestat",
+      "valueFontSize": "20%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "",
+          "value": "1"
+        }
+      ],
+      "valueName": "avg"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "This panel shows the earning during the last hour, and the annualized % of the hourly earning.\n\nThose data won't be shown until the first validator is at least one hour old, or that you started prometheus at least one hour ago.\n\nAlso, the annualized % might be wrong if you have downtime while new validators are getting validated",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "#299c46",
+                "value": 0.000001
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Annualized %"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 0
+                    },
+                    {
+                      "color": "#299c46",
+                      "value": 5
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "unit",
+                "value": " Ξ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "btc"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 6
+              },
+              {
+                "id": "unit",
+                "value": "currencyBTC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cad"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "C$"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chf"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "CHf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "eur"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gbp"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jpy"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyJPY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 0,
+        "y": 29
+      },
+      "id": 80,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1h) - count(validator_balance > 16)*32 + count(validator_balance offset 1h > 0)*32)*absent(crypto_currency{pair=~\"eth$fiat\"})",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ETH",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1h) - count(validator_balance > 16)*32 + count(validator_balance offset 1h > 0)*32)*sum(crypto_currency{pair=\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "$fiat",
+          "refId": "C"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1h) - count(validator_balance > 16)*32 + count(validator_balance offset 1h > 0)*32)/(avg_over_time(count(validator_balance > 16)[1h:30s])*32/24/365)*100",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "Annualized %",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Hourly earning",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "This panel shows the earning during the last day, and the annualized % of the daily earning.\n\nThose data won't be shown until the first validator is at least one day old, or that you started prometheus at least one day ago.\n\nAlso, the annualized % might be wrong if you have downtime while new validators are getting validated",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "#299c46",
+                "value": 0.000001
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Annualized %"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 0
+                    },
+                    {
+                      "color": "#299c46",
+                      "value": 5
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "unit",
+                "value": "Ξ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "btc"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 6
+              },
+              {
+                "id": "unit",
+                "value": "currencyBTC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cad"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "C$"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chf"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "CHf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "eur"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gbp"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jpy"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyJPY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 29
+      },
+      "id": 79,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1d) - count(validator_balance > 16)*32 + count(validator_balance offset 1d > 0)*32)*absent(crypto_currency{pair=~\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ETH",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1d) - count(validator_balance > 16)*32 + count(validator_balance offset 1d > 0)*32)*sum(crypto_currency{pair=\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "$fiat",
+          "refId": "C"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1d) - count(validator_balance > 16)*32 + count(validator_balance offset 1d > 0)*32)/(avg_over_time(count(validator_balance > 16)[1d:12m])*32/365)*100",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "Annualized %",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Daily earning",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "This panel shows the earning during the last week, and the annualized % of the weekly earning.\n\nThose data won't be shown until the first validator is at least one week old, or that you started prometheus at least one week ago.\n\nAlso, the annualized % might be wrong if you have downtime while new validators are getting validated",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "#299c46",
+                "value": 0.000001
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Annualized %"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 0
+                    },
+                    {
+                      "color": "#299c46",
+                      "value": 5
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "unit",
+                "value": "Ξ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "btc"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 6
+              },
+              {
+                "id": "unit",
+                "value": "currencyBTC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cad"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "C$"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chf"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "CHf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "eur"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gbp"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jpy"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyJPY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 29
+      },
+      "id": 78,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1w) - count(validator_balance > 16)*32 + count(validator_balance offset 1w > 0)*32)*absent(crypto_currency{pair=~\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ETH",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1w) - count(validator_balance > 16)*32 + count(validator_balance offset 1w > 0)*32)*sum(crypto_currency{pair=\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "$fiat",
+          "refId": "C"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 1w) - count(validator_balance > 16)*32 + count(validator_balance offset 1w > 0)*32)/(avg_over_time(count(validator_balance > 16)[1w:84m])*32*7/365)*100",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "Annualized %",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Weekly earning",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "This panel shows the earning during the last month, and the annualized % of the monthly earning.\n\nThose data won't be shown until the first validator is at least one month old, or that you started prometheus at least one month ago. Ensure to run Prometheus with the flag `--storage.tsdb.retention.time=31d` if you want this panel to get enough data\n\nAlso, the annualized % might be wrong if you have downtime while new validators are getting validated",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 0
+              },
+              {
+                "color": "#299c46",
+                "value": 0.000001
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Annualized %"
+            },
+            "properties": [
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "red",
+                      "value": null
+                    },
+                    {
+                      "color": "#EAB839",
+                      "value": 0
+                    },
+                    {
+                      "color": "#299c46",
+                      "value": 5
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "unit",
+                "value": "Ξ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "btc"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 6
+              },
+              {
+                "id": "unit",
+                "value": "currencyBTC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cad"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "C$"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chf"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "CHf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "eur"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gbp"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jpy"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyJPY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 29
+      },
+      "id": 77,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 30d) - count(validator_balance > 16)*32 + count(validator_balance offset 30d > 0)*32)*absent(crypto_currency{pair=~\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ETH",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 30d) - count(validator_balance > 16)*32 + count(validator_balance offset 30d > 0)*32)*sum(crypto_currency{pair=\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "$fiat",
+          "refId": "C"
+        },
+        {
+          "expr": "(sum(validator_balance) - sum(validator_balance offset 30d) - count(validator_balance > 16)*32 + count(validator_balance offset 30d > 0)*32)/(avg_over_time(count(validator_balance > 16)[30d:6h])*32/12)*100",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "Annualized %",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Monthly earning",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#fade2a",
+                "value": 0
+              },
+              {
+                "color": "#299c46",
+                "value": 0.000001
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "btc"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 6
+              },
+              {
+                "id": "unit",
+                "value": "currencyBTC"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ROI"
+            },
+            "properties": [
+              {
+                "id": "decimals",
+                "value": 4
+              },
+              {
+                "id": "unit",
+                "value": "percent"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cad"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "C$"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "ETH"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Ξ"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "chf"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "CHf"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "eur"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "gbp"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyGBP"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "jpy"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyJPY"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "usd"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyUSD"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 16,
+        "y": 29
+      },
+      "id": 69,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(validator_balance) - count(validator_balance > 16 and validator_statuses == 3)*32*absent(crypto_currency{pair=~\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ETH",
+          "refId": "A"
+        },
+        {
+          "expr": "(sum(validator_balance) - count(validator_balance > 16 and validator_statuses == 3)*32)*sum(crypto_currency{pair=\"eth$fiat\"})",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "$fiat",
+          "refId": "C"
+        },
+        {
+          "expr": "(sum(validator_balance) - count(validator_balance > 16 and validator_statuses == 3)*32)*100/(count(validator_balance > 16 and validator_statuses == 3)*32)",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "ROI",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Total earning",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#FADE2A",
+                "value": 0.17
+              },
+              {
+                "color": "#299c46",
+                "value": 11.9
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 3,
+        "x": 21,
+        "y": 29
+      },
+      "id": 54,
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(time()-process_start_time_seconds{job=\"$validator_job\"})/3600",
+          "hide": false,
+          "instant": true,
+          "interval": "",
+          "legendFormat": "launchpad",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Validator process started",
+      "type": "stat"
+    },
+    {
+      "aliasColors": {
+        "Total balance": "purple"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 32
+      },
+      "hiddenSeries": false,
+      "id": 4,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(validator_balance > 16)",
+          "interval": "",
+          "legendFormat": "Total balance",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Total balance",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 4,
+          "format": "short",
+          "label": "ETH",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "0x8926562b": "blue",
+        "0xa92dcbcf": "orange",
+        "0xafafbadf": "rgb(189, 181, 0)",
+        "0xb96135dd": "purple"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 32
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "label_replace(validator_balance > 16, \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "time_series",
+          "instant": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "{{pubkey}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Validator balance",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 4,
+          "format": "short",
+          "label": "ETH",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "columns": [],
+      "datasource": "Prometheus",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 32
+      },
+      "id": 22,
+      "pageSize": 100,
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Time",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "pubkey",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        },
+        {
+          "alias": "balance",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 9,
+          "mappingType": 1,
+          "pattern": "Value #A",
+          "thresholds": [
+            "32",
+            "32.000000001"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "status",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "#F2CC0C",
+            "#37872D",
+            "#E02F44"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Value #B",
+          "thresholds": [
+            "3",
+            "4"
+          ],
+          "type": "string",
+          "unit": "short",
+          "valueMaps": [
+            {
+              "text": "UNKNOWN",
+              "value": "0"
+            },
+            {
+              "text": "DEPOSITED",
+              "value": "1"
+            },
+            {
+              "text": "PENDING",
+              "value": "2"
+            },
+            {
+              "text": "ACTIVE",
+              "value": "3"
+            },
+            {
+              "text": "EXITING",
+              "value": "4"
+            },
+            {
+              "text": "SLASHING",
+              "value": "5"
+            },
+            {
+              "text": "EXITED",
+              "value": "6"
+            }
+          ]
+        }
+      ],
+      "targets": [
+        {
+          "expr": "label_replace(max by(pubkey) (validator_balance), \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "expr": "label_replace(max by(pubkey) (validator_statuses), \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Validator main info",
+      "transform": "table",
+      "transparent": true,
+      "type": "table-old"
+    },
+    {
+      "columns": [],
+      "datasource": "Prometheus",
+      "description": "This panel will count only the votes done since your validator process started",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 5,
+        "w": 8,
+        "x": 16,
+        "y": 37
+      },
+      "id": 20,
+      "pageSize": null,
+      "pluginVersion": "6.7.2",
+      "showHeader": true,
+      "sort": {
+        "col": null,
+        "desc": false
+      },
+      "styles": [
+        {
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "Time",
+          "thresholds": [],
+          "type": "hidden",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "align": "auto",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "pubkey",
+          "thresholds": [],
+          "type": "string",
+          "unit": "short"
+        },
+        {
+          "alias": "att",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #A",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "att fail",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #B",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "agg",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #C",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "agg fail",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #D",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "prop",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #E",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "prop fail",
+          "align": "auto",
+          "colorMode": "value",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "Value #F",
+          "thresholds": [
+            "0",
+            "0"
+          ],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "expr": "label_replace(max by(pubkey) (validator_successful_attestations) , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "",
+          "refId": "A"
+        },
+        {
+          "expr": "label_replace(max by (pubkey)(validator_failed_attestations)  , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        },
+        {
+          "expr": "label_replace(max by (pubkey)(validator_successful_aggregations)    , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "C"
+        },
+        {
+          "expr": "label_replace(max by (pubkey) (validator_failed_aggregations) , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "D"
+        },
+        {
+          "expr": "label_replace(max by (pubkey) (validator_successful_proposals) , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "E"
+        },
+        {
+          "expr": "label_replace(max by (pubkey) (validator_failed_proposals) , \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "format": "table",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "F"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Validator vote summary",
+      "transform": "table",
+      "transparent": true,
+      "type": "table-old"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "rgb(99, 99, 99)"
+      ],
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 8,
+        "x": 0,
+        "y": 42
+      },
+      "id": 59,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "NODE",
+      "targets": [
+        {
+          "expr": "1",
+          "interval": "",
+          "legendFormat": "NODE",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0,0",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "BOTH",
+      "type": "singlestat",
+      "valueFontSize": "20%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "",
+          "value": "1"
+        }
+      ],
+      "valueName": "avg"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#1F60C4"
+      ],
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 11,
+        "x": 8,
+        "y": 42
+      },
+      "id": 30,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "postfix": "",
+      "postfixFontSize": "50%",
+      "prefix": "",
+      "prefixFontSize": "50%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "NODE",
+      "targets": [
+        {
+          "expr": "1",
+          "interval": "",
+          "legendFormat": "NODE",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0,0",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "NODE",
+      "type": "singlestat",
+      "valueFontSize": "20%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "",
+          "value": "1"
+        }
+      ],
+      "valueName": "avg"
+    },
+    {
+      "cacheTimeout": null,
+      "colorBackground": true,
+      "colorValue": false,
+      "colors": [
+        "#299c46",
+        "rgba(237, 129, 40, 0.89)",
+        "#8F3BB8"
+      ],
+      "datasource": "Prometheus",
+      "decimals": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "format": "none",
+      "gauge": {
+        "maxValue": 100,
+        "minValue": 0,
+        "show": false,
+        "thresholdLabels": false,
+        "thresholdMarkers": true
+      },
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 42
+      },
+      "id": 41,
+      "interval": null,
+      "links": [],
+      "mappingType": 1,
+      "mappingTypes": [
+        {
+          "name": "value to text",
+          "value": 1
+        },
+        {
+          "name": "range to text",
+          "value": 2
+        }
+      ],
+      "maxDataPoints": 100,
+      "nullPointMode": "connected",
+      "nullText": null,
+      "pluginVersion": "6.7.2",
+      "postfix": "",
+      "postfixFontSize": "20%",
+      "prefix": "",
+      "prefixFontSize": "20%",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "sparkline": {
+        "fillColor": "rgba(31, 118, 189, 0.18)",
+        "full": false,
+        "lineColor": "rgb(31, 120, 193)",
+        "show": false,
+        "ymax": null,
+        "ymin": null
+      },
+      "tableColumn": "",
+      "targets": [
+        {
+          "expr": "1",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": "0,0",
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "ALERTS",
+      "type": "singlestat",
+      "valueFontSize": "20%",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "",
+          "value": "1"
+        }
+      ],
+      "valueName": "avg"
+    },
+    {
+      "aliasColors": {
+        "CPU beacon node": "red",
+        "CPU validator": "purple",
+        "CPU validator localhost:8079": "orange",
+        "CPU validator localhost:8081": "green",
+        "beacon node": "rgb(68, 218, 252)",
+        "memory beacon node": "rgb(96, 252, 255)",
+        "memory validator": "rgb(255, 255, 160)",
+        "memory validator localhost:8081": "purple",
+        "test": "green",
+        "test beacon node": "orange",
+        "test validator": "green",
+        "validator": "yellow"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 5,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 43
+      },
+      "hiddenSeries": false,
+      "id": 32,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": true,
+      "pluginVersion": "6.7.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "CPU beacon node",
+          "fill": 0,
+          "linewidth": 1,
+          "yaxis": 2
+        },
+        {
+          "alias": "CPU validator localhost:8079",
+          "fill": 0,
+          "linewidth": 1,
+          "nullPointMode": "null as zero",
+          "yaxis": 2
+        },
+        {
+          "alias": "CPU validator localhost:8081",
+          "fill": 0,
+          "linewidth": 1,
+          "nullPointMode": "null as zero",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "avg_over_time(process_resident_memory_bytes{job=\"$node_job\"}[1m:5s])",
+          "interval": "",
+          "legendFormat": "memory {{job}}",
+          "refId": "A"
+        },
+        {
+          "expr": "avg_over_time(process_resident_memory_bytes{job=\"$validator_job\"}[1m:5s])",
+          "interval": "",
+          "legendFormat": "memory {{job}} {{instance}}",
+          "refId": "C"
+        },
+        {
+          "expr": "((process_cpu_seconds_total{job=\"$node_job\"} - process_cpu_seconds_total{job=\"$node_job\"} offset 2m) > 0)*100/120/go_maxprocs{job=\"$node_job\"}",
+          "interval": "",
+          "legendFormat": "CPU {{job}}",
+          "refId": "B"
+        },
+        {
+          "expr": "((process_cpu_seconds_total{job=\"$validator_job\"} - process_cpu_seconds_total{job=\"$validator_job\"} offset 2m) > 0)*100/120/go_maxprocs{job=\"$validator_job\"}",
+          "interval": "",
+          "legendFormat": "CPU {{job}} {{instance}}",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 4000000000,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Hardware usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": null,
+          "format": "decbytes",
+          "label": "mem usage",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": 1,
+          "format": "percent",
+          "label": "CPU usage rate",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "Active": "light-green",
+        "Exiting": "red",
+        "Participation rate": "purple",
+        "Pending": "yellow"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "This graph is made for trading purpose mostly.\nSupposing that if a lot of validators are exiting, price is gonna dump.\n\nAlso this can prevent to exit while exiting queue is too long, same for depositing while pending queue is too long.\n\n",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 43
+      },
+      "hiddenSeries": false,
+      "hideTimeOverride": false,
+      "id": 46,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "Participation rate",
+          "fill": 0,
+          "linewidth": 2,
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "validators_total_balance{state=\"Active\"} / 10e8",
+          "interval": "",
+          "legendFormat": "Active",
+          "refId": "A"
+        },
+        {
+          "expr": "validators_total_balance{state=\"Pending\"} / 10e8",
+          "interval": "",
+          "legendFormat": "Pending",
+          "refId": "B"
+        },
+        {
+          "expr": "validators_total_balance{state=\"Exiting\"} / 10e8",
+          "interval": "",
+          "legendFormat": "Exiting",
+          "refId": "C"
+        },
+        {
+          "expr": "beacon_prev_epoch_target_gwei/beacon_prev_epoch_active_gwei*100",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "Participation rate",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": "30d",
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Balance validators status and participation rate",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "ETH",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 1,
+          "mappings": [],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#FADE2A",
+                "value": 0.17
+              },
+              {
+                "color": "#299c46",
+                "value": 11.9
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 16,
+        "y": 43
+      },
+      "id": 56,
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "(time()-process_start_time_seconds{job=\"$node_job\"})/3600",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Node process started",
+      "type": "stat"
+    },
+    {
+      "dashboardFilter": "",
+      "dashboardTags": [],
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "folderId": null,
+      "gridPos": {
+        "h": 10,
+        "w": 5,
+        "x": 19,
+        "y": 43
+      },
+      "id": 24,
+      "limit": 10,
+      "nameFilter": "",
+      "onlyAlertsOnDashboard": true,
+      "show": "current",
+      "sortOrder": 3,
+      "stateFilter": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "All alerts",
+      "type": "alertlist"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#299c46",
+                "value": null
+              },
+              {
+                "color": "#eab839",
+                "value": 5
+              },
+              {
+                "color": "red",
+                "value": 20
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 16,
+        "y": 45
+      },
+      "id": 26,
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "beacon_clock_time_slot-beacon_head_slot",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "Slots behind",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Slots behind",
+      "type": "stat"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "mappings": [],
+          "nullValueMode": "connected",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "#F2CC0C",
+                "value": 5
+              },
+              {
+                "color": "#299c46",
+                "value": 10
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 3,
+        "x": 16,
+        "y": 47
+      },
+      "id": 34,
+      "links": [],
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "values": false
+        }
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "p2p_peer_count{state=\"Connected\"}",
+          "instant": true,
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Peers connected",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "description": "This panel won't have consistant values during the first hour of the node started process",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {},
+          "decimals": 0,
+          "displayName": "",
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "operator": "",
+              "text": "0",
+              "to": "",
+              "type": 1,
+              "value": "null"
+            }
+          ],
+          "max": 100,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "#EAB839",
+                "value": 25
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 3,
+        "x": 16,
+        "y": 49
+      },
+      "id": 40,
+      "options": {
+        "displayMode": "lcd",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "7.0.1",
+      "targets": [
+        {
+          "expr": "sum(delta(log_entries_total{job=\"$node_job\", level=\"error\"}[1h]) > 0)",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "error",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(delta(log_entries_total{job=\"$node_job\", level=\"warning\"}[1h]) > 0)",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "warning",
+          "refId": "B"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Hourly log type counter",
+      "type": "bargauge"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.1
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "One of the two process just restarted.",
+        "name": "WARN NODE/VALIDATOR: The process just restarted",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "This alert is useful only for people who has automatic restart of the process after crash. \nThis can be made for example by using the prysm.bat file on windows with \"set PRYSM_AUTORESTART=true&\", or with docker with \"--restart always\"",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 53
+      },
+      "hiddenSeries": false,
+      "id": 61,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "(time()-process_start_time_seconds{job=\"beacon node\"})/3600",
+          "interval": "",
+          "legendFormat": "{{job}}",
+          "refId": "A"
+        },
+        {
+          "expr": "(time()-process_start_time_seconds{job=\"validator\"})/3600",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "lt",
+          "value": 0.1
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Warn: The process just restarted",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 1,
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                50
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "NODE ALERT: MORE THAN 50 SLOTS BEHIND THAN THE CHAIN",
+        "name": "NODE: 50 slots behind",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 54
+      },
+      "hiddenSeries": false,
+      "id": 28,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "beacon_clock_time_slot-beacon_head_slot",
+          "interval": "",
+          "legendFormat": "node slots behind",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 50
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: 50 slots behind",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.9
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                0.9
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "B",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "NODE/VALIDATOR: THE NODE OR VALIDATOR IS DOWN FOR MORE THAN 1 MINUTE",
+        "name": "NODE/VALIDATOR: Process down",
+        "noDataState": "no_data",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 55
+      },
+      "hiddenSeries": false,
+      "id": 44,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "up{job=\"beacon node\"}",
+          "hide": false,
+          "interval": "",
+          "intervalFactor": 1,
+          "legendFormat": "beacon node",
+          "refId": "A"
+        },
+        {
+          "expr": "up{job=\"validator\"}",
+          "interval": "",
+          "legendFormat": "validator",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "lt",
+          "value": 0.9
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: Process down",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0.000001
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                -10
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "VALIDATOR ALERT: THE EARNING IN THE LAST HOUR IS LESS THAN 0",
+        "name": "VALIDATOR: Hourly earning <= 0",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 56
+      },
+      "hiddenSeries": false,
+      "id": 48,
+      "interval": "",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(validator_balance) - sum(validator_balance offset 1h) - count(validator_balance > 16)*32 + count(validator_balance offset 1h > 0)*32",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "validators earning on 1h",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "lt",
+          "value": 0.000001
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: Hourly earning <= 0",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "decimals": 8,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                50
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          },
+          {
+            "evaluator": {
+              "params": [
+                100
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "or"
+            },
+            "query": {
+              "params": [
+                "B",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "NODE ALERT: MORE THAN 50 ERRORS OR 100 WARNINGS IN THE LAST HOUR",
+        "name": "NODE: 50 errors  or 100 warns in 1h",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 57
+      },
+      "hiddenSeries": false,
+      "id": 52,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pluginVersion": "6.7.2",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "sum(delta(log_entries_total{job=\"beacon node\", level=\"error\"}[1h]) > 0) ",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "errors",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(delta(log_entries_total{job=\"beacon node\", level=\"warning\"}[1h]) > 0)",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "warnings",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 50
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: 50 errors  or 100 warns  in 1h",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                4.9,
+                5.1
+              ],
+              "type": "within_range"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "VALIDATOR ALERT: YOUR VALIDATOR HAS BEEN SLASHED",
+        "name": "VALIDATOR: Validator has been slashed",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 58
+      },
+      "hiddenSeries": false,
+      "id": 50,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "label_replace(validator_statuses, \"pubkey\", \"$1\", \"pubkey\", \"(.{10}).*\")",
+          "interval": "",
+          "legendFormat": "{{pubkey}}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 4.9
+        },
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "lt",
+          "value": 5.1
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: Validator has been slashed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                66
+              ],
+              "type": "lt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "10s",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "last"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "0m",
+        "frequency": "1m",
+        "handler": 1,
+        "message": "NETWORK ALERT: THE PARTICIPATION RATE IS BELOW 66%! You won't get any reward until the participation rate rise up above 66% again. This alert doesn't require any action from you",
+        "name": "NETWORK: Participation rate below 66%",
+        "noDataState": "ok",
+        "notifications": [
+          {
+            "uid": "USY-LmRGz"
+          }
+        ]
+      },
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 1,
+        "w": 5,
+        "x": 19,
+        "y": 59
+      },
+      "hiddenSeries": false,
+      "id": 65,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "beacon_prev_epoch_target_gwei/beacon_prev_epoch_active_gwei*100",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "lt",
+          "value": 66
+        }
+      ],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Alert: Participation rate < 66%",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 25,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "beacon node",
+          "value": "beacon node"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "node_job",
+        "options": [
+          {
+            "selected": true,
+            "text": "beacon node",
+            "value": "beacon node"
+          }
+        ],
+        "query": "beacon node",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "validator",
+          "value": "validator"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "validator_job",
+        "options": [
+          {
+            "selected": true,
+            "text": "validator",
+            "value": "validator"
+          }
+        ],
+        "query": "validator",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "allValue": "ETH",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
+        "definition": "label_values(crypto_currency, pair)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Currency converter",
+        "multi": false,
+        "name": "fiat",
+        "options": [],
+        "query": "label_values(crypto_currency, pair)",
+        "refresh": 1,
+        "regex": "eth([a-z]*)",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "localhost:8081",
+          "value": "localhost:8081"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "validator_launchpad",
+        "options": [
+          {
+            "selected": true,
+            "text": "localhost:8081",
+            "value": "localhost:8081"
+          }
+        ],
+        "query": "localhost:8081",
+        "skipUrlSync": false,
+        "type": "constant"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "localhost:8079",
+          "value": "localhost:8079"
+        },
+        "hide": 2,
+        "label": null,
+        "name": "validator_ethdo",
+        "options": [
+          {
+            "selected": true,
+            "text": "localhost:8079",
+            "value": "localhost:8079"
+          }
+        ],
+        "query": "localhost:8079",
+        "skipUrlSync": false,
+        "type": "constant"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "ETH staking dashboard",
+  "uid": "t2yHaa3Zz",
+  "version": 116
+}

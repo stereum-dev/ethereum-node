@@ -1,0 +1,68 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: aba073ae-e068-11ec-8b8a-ab1197e06ccd
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
+              ports:
+                - 127.0.0.1:4000:4000/tcp
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --p2p-max-peers=100
+                --http-web3provider=http://10.10.0.3:8545
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/genesis:/opt/app/genesis"
