@@ -439,8 +439,7 @@ export class NodeConnection {
     await this.sshService.exec(`\
                 docker volume prune -f &&\
                 docker system prune -a -f &&\
-                rm -rf ${this.installationDirectory} &&\
-
+                rm -rf ${this.settings.stereum.settings.controls_install_path} &&\
                 rm -rf /etc/stereum/services`);
     return "Node destroyed";
   }

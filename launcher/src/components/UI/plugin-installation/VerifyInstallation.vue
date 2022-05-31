@@ -45,7 +45,7 @@
               <button class="back-btn">BACK</button>
             </router-link>
             <router-link :to="{ path: '/node' }">
-              <button class="next-btn">INSTALL</button>
+              <button @click="runInstalltion" class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
@@ -55,6 +55,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import ControlService from '@/store/ControlService'
 export default {
   data() {
     return {};
@@ -70,6 +71,13 @@ export default {
       this.$router.push("/clickinstall");
     }
   },
+  methods: {
+    runInstalltion: async function(){
+      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      console.log(await ControlService.writeOneClickConfiguration());
+      console.log(await ControlService.startOneClickServices());
+    }
+  }
 };
 </script>
 <style scoped>

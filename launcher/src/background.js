@@ -8,6 +8,7 @@ import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
 import { ServiceManager } from "./backend/ServiceManager.js";
+import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
@@ -18,6 +19,7 @@ const storageService = new StorageService();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
+const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 
 const log = require("electron-log");
 
@@ -75,6 +77,7 @@ promiseIpc.on("writeConfig", async (arg) => {
 });
 
 promiseIpc.on("checkOS", async () => {
+  await nodeConnection.findStereumSettings();
   await nodeConnection.findOS();
   return nodeConnection.os;
 });
@@ -128,6 +131,10 @@ return false
 
 promiseIpc.on("getServices", async () => {
   return await serviceManager.readServiceConfigurations()
+})
+
+promiseIpc.on("importKey", async (args) => {
+  return await validatorAccountManager.importKey(args.files, args.password)
 })
 
 
