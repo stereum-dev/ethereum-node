@@ -145,8 +145,8 @@
         alt="icon"
       />
       <div class="enter-password" @click="confirmPasswordHandler">
-        <input v-if="passwordInputActive" type="password" />
-        <button v-if="passwordInputActive">CONFIRM</button>
+        <input v-model="password" v-if="passwordInputActive" type="password" />
+        <button @click="importKey" v-if="passwordInputActive">CONFIRM</button>
         <span v-else>ENTER PASSWORD & IMPORT</span>
       </div>
     </div>
@@ -156,6 +156,7 @@
 import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
+import ControlService from '@/store/ControlService'
 export default {
   components: { ShowKey, DropZone },
   data() {
@@ -165,12 +166,17 @@ export default {
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
+      password: "",
     };
   },
   updated() {
     this.checkKeyExists();
   },
   methods: {
+    importKey: async function(){
+      await ControlService.importKey({files: this.keyFiles, password: this.password})
+      this.password = ""
+    },
     uploadFileHandler(event) {
       console.log("upload", event);
       let uploadedFiles = event.target.files;

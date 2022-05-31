@@ -114,7 +114,24 @@ export class ServiceManager {
           throw 'configuration without service specified'
         }
       }
-
+      //retrieve full service out of minimal config
+      services.forEach(service => {
+        if(service.dependencies.executionClients.length > 0){
+          service.dependencies.executionClients = service.dependencies.executionClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+        if(service.dependencies.consensusClients.length > 0){
+          service.dependencies.consensusClients = service.dependencies.consensusClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+        if(service.dependencies.prometheusNodeExporterClients.length > 0){
+          service.dependencies.prometheusNodeExporterClients = service.dependencies.prometheusNodeExporterClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+      })
       return services
     })
       .catch(err => log.error(err))

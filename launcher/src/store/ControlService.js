@@ -97,6 +97,15 @@ class ControlService extends EventEmitter {
   async getServices(){
     return await this.promiseIpc.send('getServices')
   }
+
+  async importKey(args){
+    //resolve proxy
+    let files = []
+    args.files.forEach(file => {
+      files.push({name: file.name, path: file.path})
+    })
+    return await this.promiseIpc.send('importKey', {files: files, password: args.password})
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron)
