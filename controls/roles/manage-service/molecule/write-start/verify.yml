@@ -18,10 +18,10 @@
       - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
   # data dir
-  - stat: path=/opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/beacon
+  - stat: path=/opt/stereum/services/587c7432-e01a-11ec-8d93-6b4ba42e911c/beacon
     register: service_beacon_dir
     become: yes
-  - stat: path=/opt/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167/slasher
+  - stat: path=/opt/stereum/services/587c7432-e01a-11ec-8d93-6b4ba42e911c/slasher
     register: service_slasher_dir
     become: yes
   - debug:

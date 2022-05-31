@@ -6,7 +6,7 @@
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
-    beacon_service: 9024aec6-12a8-456a-8096-ee7ef6f67167
+    beacon_service: c006e296-e019-11ec-8c83-b730a7f95d3d
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -24,7 +24,7 @@
     - include_role:
         name: "setup"
 
-    - name: Write service configuration
+    - name: Write service configuration lighthouse
       copy:
         dest: "/etc/stereum/services/{{ beacon_service }}.yaml"
         owner: "root"
