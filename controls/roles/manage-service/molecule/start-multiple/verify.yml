@@ -12,7 +12,7 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("stereum/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
   - shell: ufw status
     register: stereum_ufw_status
@@ -26,9 +26,9 @@
       - stereum_ufw_status.stdout.find("30303/udp") != -1
   - assert:
       that:
-      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 10
+      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 11
     when: ansible_distribution == "Ubuntu"
   - assert:
       that:
-      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 14
+      - stereum_ufw_status.stdout | regex_findall("ALLOW") | length == 15
     when: ansible_distribution == "CentOS"

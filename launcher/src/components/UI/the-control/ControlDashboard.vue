@@ -1,30 +1,34 @@
 <template>
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
-    <div class="the-ram"><the-ram></the-ram></div>
+    <div class="the-ram"><node-server-response></node-server-response></div>
     <div class="sandFull_cell"><time-gas></time-gas></div>
     <dashboard-card class="discSpace_cell">
       <router-link class="link" to="/storage">
         <the-storage></the-storage
       ></router-link>
     </dashboard-card>
-    <dashboard-card class="nodeStart_cell"
-      ><amsterdam-component></amsterdam-component
+    <dashboard-card class="nodeStart_cell">
+      <peer-to-peer></peer-to-peer
     ></dashboard-card>
     <dashboard-card class="peerConnection_cell">
-      <peer-to-peer></peer-to-peer>
+      <the-cpu></the-cpu>
     </dashboard-card>
-    <dashboard-card class="networkCheck">
-      <the-network></the-network>
+    <dashboard-card class="networkCheck"
+      ><amsterdam-component></amsterdam-component>
     </dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <validator-container-box></validator-container-box>
     </dashboard-card>
-    <dashboard-card class="nodeStart"><the-cpu></the-cpu> </dashboard-card>
+    <dashboard-card class="nodeStart"> <the-ram></the-ram></dashboard-card>
+    <dashboard-card class="third_cell"
+      ><the-network></the-network
+    ></dashboard-card>
   </div>
 </template>
 
 <script>
+import NodeServerResponse from "./NodeServerResponse.vue";
 import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
 import TheStorage from "./TheStorage.vue";
@@ -47,6 +51,7 @@ export default {
     TheNetwork,
     ValidatorContainerBox,
     TimeGas,
+    NodeServerResponse,
   },
 };
 </script>
@@ -130,5 +135,9 @@ export default {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+}
+.third_cell {
+  grid-row: 4/5;
+  grid-column: 2/3;
 }
 </style>

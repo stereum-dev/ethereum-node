@@ -13,5 +13,5 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("stereum/lighthouse") == -1
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") == -1
       - stereum_docker_ps.stdout.find("9000->9000") == -1
