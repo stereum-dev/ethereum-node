@@ -8,10 +8,10 @@
       </div>
     </div>
     <div class="arrow-box">
-      <div class="right-arrow left-paddle paddle" @click="rightPaddle">
+      <div class="right-arrow left-paddle paddle" @click="scrollRight">
         <img alt="update-icon" src="/img/icon/header-icons/right.png" />
       </div>
-      <div class="left-arrow" @click="leftPaddle">
+      <div class="left-arrow" @click="scrollLeft">
         <img alt="update-icon" src="/img/icon/header-icons/left.png" />
       </div>
     </div>
@@ -24,6 +24,7 @@ export default {
     return {
       isServiceAvailable: true,
       isImgExists: true,
+      service: null,
       scrollAmount: 0,
     };
   },
@@ -43,31 +44,32 @@ export default {
       });
     },
     scrollLeft() {
-      const service = this.$refs.service;
-      this.scrollTo(service, 300, 800);
+      let position = this.$refs.services;
+      position.scrollLeft += 150;
     },
-
     scrollRight() {
-      const service = this.$refs.service;
-      this.scrollTo(service, -300, 800);
+      let position = this.$refs.services;
+      position.scrollLeft -= 150;
     },
   },
 };
 </script>
 <style scoped>
 .links-box {
-  width: 35%;
+  width: max-content;
+  max-width: 250px;
   height: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .arrow-box {
-  width: 5%;
+  width: 20px;
   height: 90%;
   padding: 0 3px;
   border-left: 2px solid #a5a5a5;
   border-right: 2px solid #a5a5a5;
+  margin-left: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -76,6 +78,7 @@ export default {
 .right-arrow {
   width: 90%;
   height: 40%;
+  background-color: #336666;
   box-shadow: 0 1px 3px 1px rgb(20, 53, 44);
   border: 1px solid #a5a5a5;
   border-radius: 5px;
@@ -88,6 +91,7 @@ export default {
 .left-arrow {
   width: 90%;
   height: 40%;
+  background-color: #336666;
   box-shadow: 0 1px 3px 1px rgb(20, 53, 44);
   border: 1px solid #a5a5a5;
   border-radius: 5px;
@@ -108,9 +112,11 @@ export default {
   box-shadow: none;
 }
 .arrow-box img {
-  width: 60%;
+  width: 70%;
 }
 .services {
+  width: max-content;
+  max-width: 213px;
   height: 90%;
   border-left: 2px solid #a5a5a5;
   overflow-x: auto;
@@ -121,18 +127,22 @@ export default {
   align-items: center;
 }
 .services::-webkit-scrollbar {
-  width: 1px;
   height: 1px;
 }
 .service-icon {
   width: 35px;
   height: 35px;
   border: 1px solid #a5a5a5;
+  box-shadow: 0 1px 5px 1px rgb(22, 42, 37);
   border-radius: 5px;
   margin-left: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.service-icon:hover {
+  border: 1px solid #7ed6fc;
+  box-shadow: none;
 }
 .service-icon a {
   width: 100%;
@@ -145,5 +155,4 @@ export default {
   width: 35px;
   height: 35px;
 }
-
 </style>

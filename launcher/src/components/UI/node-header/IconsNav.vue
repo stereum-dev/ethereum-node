@@ -73,6 +73,7 @@ export default {
 <style scoped>
 .icons-box {
   width: 25%;
+  max-width: 250px;
   height: 80%;
   display: flex;
   justify-content: space-evenly;
