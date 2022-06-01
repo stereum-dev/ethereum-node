@@ -155,6 +155,26 @@ const store = createStore({
           icon: "/img/icon/service-icons/ssv.png",
           linkUrl: "https://google.com",
         },
+        {
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
+          linkUrl: "https://google.com",
+        },
+        {
+          name: "ssv",
+          icon: "/img/icon/service-icons/ssv.png",
+          linkUrl: "https://google.com",
+        },
       ],
     };
   },

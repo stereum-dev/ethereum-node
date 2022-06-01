@@ -1,7 +1,11 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
+      <div
+        class="service-icon"
+        v-for="(service, idx) in runningServices"
+        :key="idx"
+      >
         <a :href="service.linkUrl" target="_blank">
           <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
         </a>
@@ -43,12 +47,12 @@ export default {
         }
       });
     },
-    scrollLeft() {
-      let position = this.$refs.services;
+    scrollRight() {
+      let position = this.$refs.service;
       position.scrollLeft += 150;
     },
-    scrollRight() {
-      let position = this.$refs.services;
+    scrollLeft() {
+      let position = this.$refs.service;
       position.scrollLeft -= 150;
     },
   },
@@ -56,11 +60,11 @@ export default {
 </script>
 <style scoped>
 .links-box {
-  width: max-content;
-  max-width: 250px;
+  width: 29%;
+  max-width: 300px;
   height: 90%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 .arrow-box {
@@ -118,7 +122,6 @@ export default {
   width: max-content;
   max-width: 213px;
   height: 90%;
-  border-left: 2px solid #a5a5a5;
   overflow-x: auto;
   overflow-y: hidden;
   box-sizing: border-box;
