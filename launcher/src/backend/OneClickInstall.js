@@ -169,6 +169,7 @@ export class OneClickInstall {
       await Promise.all(configs.map(async (config) => {
         await this.nodeConnection.writeServiceConfiguration(config)
       }))
+      return configs
     }
   }
 

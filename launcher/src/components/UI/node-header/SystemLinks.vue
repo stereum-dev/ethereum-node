@@ -1,7 +1,7 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in services" :key="idx">
+      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
         <a :href="service.linkUrl" target="_blank">
           <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
         </a>
@@ -31,6 +31,7 @@ export default {
   computed: {
     ...mapGetters({
       services: "getServiceIcons",
+      runningServices: "getRunningServices",
     }),
   },
   methods: {

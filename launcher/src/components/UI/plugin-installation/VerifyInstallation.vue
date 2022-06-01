@@ -64,6 +64,7 @@ export default {
     ...mapGetters({
       selectedPreset: "getSelectedPreset",
       installationPath: "getInstallationPath",
+      pluginServices: "getServiceIcons",
     }),
   },
   mounted() {
@@ -74,8 +75,14 @@ export default {
   methods: {
     runInstalltion: async function(){
       console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
-      console.log(await ControlService.writeOneClickConfiguration());
+      let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
+      let grafana = services.find(service => service.service.includes('Grafana'))
+      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+      let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
+      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2], localPort: freePort}])
+      grafanaStats.linkUrl = 'http://localhost:' + freePort
+      this.$store.commit("updateRunningServices", [grafanaStats]);
     }
   }
 };
