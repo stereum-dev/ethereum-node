@@ -17,4 +17,7 @@ export default {
   getServiceIcons(state) {
     return state.services;
   },
+  getRunningServices(state) {
+    return state.runningServices;
+  },
 };

@@ -40,7 +40,7 @@ test('buildConfiguration', () => {
   expect(nimbusService.configVersion).toBe(1)
 })
 
-test('buildConsensusClientHttpEndpointUrl', () => {
+test('buildConsensusClientWsEndpointUrl', () => {
   const ports = [
     new ServicePort(null, 100, 200, servicePortProtocol.tcp),
     new ServicePort(null, 101, 202, servicePortProtocol.udp),
@@ -56,9 +56,9 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     }
   })
 
-  const nimbusService = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', []).buildConsensusClientHttpEndpointUrl()
+  const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', []).buildConsensusClientHttpEndpointUrl()
 
-  expect(nimbusService).toMatch(/http:\/\/stereum-.{36}:9190/)
+  expect(nimbusEndpoint).toMatch(/http:\/\/stereum-.{36}:9190/)
 })
 
 test('getAvailablePorts', () => {
@@ -68,9 +68,9 @@ test('getAvailablePorts', () => {
 })
 
 test('network', () => {
-  const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', []).buildConfiguration()
+  const nimbusService = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', []).buildConfiguration()
 
-  expect(nimbusServicePorts.network).toMatch(/goerli/)
+  expect(nimbusService.network).toMatch(/goerli/)
 })
 
 test('buildByConfiguration', () => {

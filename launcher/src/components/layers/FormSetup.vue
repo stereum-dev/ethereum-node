@@ -141,7 +141,7 @@
           </label>
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
-        <button id="login" @click="login">
+        <button id="login">
           {{ $t("formsetup.login") }}
         </button>
       </form>
@@ -189,6 +189,7 @@ export default {
       plugins: "installationPlugins",
       selectedPreset: "getSelectedPreset",
       allPlugins: "getAllPlugins",
+      pluginServices: "getServiceIcons",
     }),
   },
   methods: {
@@ -359,9 +360,14 @@ export default {
             );
             buffer.forEach((element) => includedPlugins.push(element));
           });
-          this.$store.commit("mutatedSelectedPreset", {
-            includedPlugins: includedPlugins,
-          });
+
+          let grafana = services.find(service => service.service.includes('Grafana'))
+          let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+          let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
+          await ControlService.openTunnels([{dstPort: grafana.ports[0].servicePort, localPort: freePort}])
+          grafanaStats.linkUrl = 'http://localhost:' + freePort
+          this.$store.commit("updateRunningServices", [grafanaStats]);
+          this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
         }
 
         this.$router.push("/node");
