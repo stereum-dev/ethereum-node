@@ -132,11 +132,16 @@ export default {
   width: 35px;
   height: 35px;
   border: 1px solid #a5a5a5;
+  box-shadow: 0 1px 5px 1px rgb(22, 42, 37);
   border-radius: 5px;
   margin-left: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.service-icon:hover {
+  border: 1px solid #7ed6fc;
+  box-shadow: none;
 }
 .service-icon a {
   width: 100%;
