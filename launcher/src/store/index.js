@@ -131,11 +131,14 @@ const store = createStore({
           failedIcon: require("./../../public/img/icon/task-manager-icons/task-red-icon.png"),
         },
       ],
+      runningServices: [],
       services: [
         {
           name: "grafana",
           icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://google.com",
+          minPort: 9000,
+          maxPort: 9999,
         },
         {
           name: "ssv",

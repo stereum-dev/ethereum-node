@@ -92,8 +92,7 @@ promiseIpc.on("prepareOneClickInstallation", async (arg) => {
 
 promiseIpc.on("writeOneClickConfiguration", async () => {
   oneClickInstall.createServices();
-  await oneClickInstall.writeConfig();
-  return "done writing configuration";
+  return await oneClickInstall.writeConfig();
 });
 
 promiseIpc.on("startOneClickServices", async () => {
