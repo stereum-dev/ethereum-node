@@ -143,8 +143,8 @@ const store = createStore({
           linkUrl: "https://google.com",
         },
         {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://google.com",
         },
         {
@@ -153,8 +153,8 @@ const store = createStore({
           linkUrl: "https://google.com",
         },
         {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://google.com",
         },
         {
@@ -163,8 +163,8 @@ const store = createStore({
           linkUrl: "https://google.com",
         },
         {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://google.com",
         },
         {
@@ -173,13 +173,8 @@ const store = createStore({
           linkUrl: "https://google.com",
         },
         {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
+          name: "grafana",
+          icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://google.com",
         },
         {

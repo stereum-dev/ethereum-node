@@ -55,18 +55,20 @@ export default {
 </script>
 <style scoped>
 .links-box {
-  width: 35%;
+  width: max-content;
+  max-width: 235px;
   height: 90%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .arrow-box {
-  width: 5%;
+  width: 20px;
   height: 90%;
   padding: 0 3px;
   border-left: 2px solid #a5a5a5;
   border-right: 2px solid #a5a5a5;
+  margin-left: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -75,6 +77,7 @@ export default {
 .right-arrow {
   width: 90%;
   height: 40%;
+  background-color: #336666;
   box-shadow: 0 1px 3px 1px rgb(20, 53, 44);
   border: 1px solid #a5a5a5;
   border-radius: 5px;
@@ -87,6 +90,7 @@ export default {
 .left-arrow {
   width: 90%;
   height: 40%;
+  background-color: #336666;
   box-shadow: 0 1px 3px 1px rgb(20, 53, 44);
   border: 1px solid #a5a5a5;
   border-radius: 5px;
@@ -107,9 +111,11 @@ export default {
   box-shadow: none;
 }
 .arrow-box img {
-  width: 60%;
+  width: 70%;
 }
 .services {
+  width: max-content;
+  max-width: 235px;
   height: 90%;
   border-left: 2px solid #a5a5a5;
   overflow-x: auto;
@@ -144,5 +150,4 @@ export default {
   width: 35px;
   height: 35px;
 }
-
 </style>

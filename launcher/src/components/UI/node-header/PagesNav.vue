@@ -14,6 +14,7 @@
 <style scoped>
 .router__items {
   width: 40%;
+  max-width: 450px;
   height: 100%;
   display: flex;
   justify-content: center;

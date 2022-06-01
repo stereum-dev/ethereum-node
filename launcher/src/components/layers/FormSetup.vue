@@ -341,31 +341,31 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
-        return;
+        // return;
       }
 
-      if (await ControlService.checkStereumInstallation()) {
-        let services = await ControlService.getServices();
-        if (services && services.length > 0) {
-          let constellation = services.map((service) => {
-            return service.service
-              .replace(/(Beacon|Validator|Service)/gm, "")
-              .toUpperCase();
-          });
-          const includedPlugins = [];
-          constellation.forEach((plugin) => {
-            const buffer = this.allPlugins.filter(
-              (element) => element.name === plugin
-            );
-            buffer.forEach((element) => includedPlugins.push(element));
-          });
-          this.$store.commit("mutatedSelectedPreset", {
-            includedPlugins: includedPlugins,
-          });
-        }
+      // if (await ControlService.checkStereumInstallation()) {
+      //   let services = await ControlService.getServices();
+      //   if (services && services.length > 0) {
+      //     let constellation = services.map((service) => {
+      //       return service.service
+      //         .replace(/(Beacon|Validator|Service)/gm, "")
+      //         .toUpperCase();
+      //     });
+      //     const includedPlugins = [];
+      //     constellation.forEach((plugin) => {
+      //       const buffer = this.allPlugins.filter(
+      //         (element) => element.name === plugin
+      //       );
+      //       buffer.forEach((element) => includedPlugins.push(element));
+      //     });
+      //     this.$store.commit("mutatedSelectedPreset", {
+      //       includedPlugins: includedPlugins,
+      //     });
+      //   }
 
-        this.$router.push("/node");
-      }
+      //   this.$router.push("/node");
+      // }
 
       this.$emit("page", "welcome-page");
     },
