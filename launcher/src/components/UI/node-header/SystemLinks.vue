@@ -1,6 +1,6 @@
 <template>
   <div class="links-box">
-    <div class="services" ref="service">
+    <div class="services" ref="services">
       <div class="service-icon" v-for="(service, idx) in services" :key="idx">
         <a :href="service.linkUrl" target="_blank">
           <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
@@ -8,10 +8,10 @@
       </div>
     </div>
     <div class="arrow-box">
-      <div class="right-arrow left-paddle paddle" @click="rightPaddle">
+      <div class="right-arrow left-paddle paddle" @click="scrollRight">
         <img alt="update-icon" src="/img/icon/header-icons/right.png" />
       </div>
-      <div class="left-arrow" @click="leftPaddle">
+      <div class="left-arrow" @click="scrollLeft">
         <img alt="update-icon" src="/img/icon/header-icons/left.png" />
       </div>
     </div>
@@ -24,6 +24,7 @@ export default {
     return {
       isServiceAvailable: true,
       isImgExists: true,
+      service: null,
       scrollAmount: 0,
     };
   },
@@ -42,13 +43,12 @@ export default {
       });
     },
     scrollLeft() {
-      const service = this.$refs.service;
-      this.scrollTo(service, 300, 800);
+      let position = this.$refs.services;
+      position.scrollLeft += 150;
     },
-
     scrollRight() {
-      const service = this.$refs.service;
-      this.scrollTo(service, -300, 800);
+      let position = this.$refs.services;
+      position.scrollLeft -= 150;
     },
   },
 };
@@ -56,7 +56,7 @@ export default {
 <style scoped>
 .links-box {
   width: max-content;
-  max-width: 235px;
+  max-width: 250px;
   height: 90%;
   display: flex;
   justify-content: space-between;
@@ -115,7 +115,7 @@ export default {
 }
 .services {
   width: max-content;
-  max-width: 235px;
+  max-width: 213px;
   height: 90%;
   border-left: 2px solid #a5a5a5;
   overflow-x: auto;
@@ -126,7 +126,6 @@ export default {
   align-items: center;
 }
 .services::-webkit-scrollbar {
-  width: 1px;
   height: 1px;
 }
 .service-icon {
