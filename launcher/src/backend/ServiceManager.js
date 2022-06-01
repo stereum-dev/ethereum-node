@@ -8,6 +8,7 @@ import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNod
 import { GrafanaService } from './ethereum-services/GrafanaService'
 import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
+import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 
 const log = require('electron-log')
 
@@ -107,6 +108,8 @@ export class ServiceManager {
             services.push(PrysmBeaconService.buildByConfiguration(config))
           } else if (config.service == 'PrysmValidatorService') {
             services.push(PrysmValidatorService.buildByConfiguration(config))
+          }else if (config.service == 'TekuBeaconService') {
+            services.push(TekuBeaconService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')

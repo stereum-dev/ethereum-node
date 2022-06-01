@@ -440,7 +440,8 @@ export class NodeConnection {
                 docker volume prune -f &&\
                 docker system prune -a -f &&\
                 rm -rf ${this.settings.stereum.settings.controls_install_path} &&\
-                rm -rf /etc/stereum/services`);
+                rm -rf /etc/stereum`);
+    this.settings = undefined
     return "Node destroyed";
   }
 
