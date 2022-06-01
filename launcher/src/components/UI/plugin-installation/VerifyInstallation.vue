@@ -80,7 +80,7 @@ export default {
       let grafana = services.find(service => service.service.includes('Grafana'))
       let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
       let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
-      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2], localPort: freePort}])
+      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: freePort}])
       grafanaStats.linkUrl = 'http://localhost:' + freePort
       this.$store.commit("updateRunningServices", [grafanaStats]);
     }
