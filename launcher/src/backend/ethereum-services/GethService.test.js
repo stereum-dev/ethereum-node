@@ -63,18 +63,20 @@ test('workingDir', () => {
   const gethConfig = GethService.buildByUserInput(networks.goerli, null, '/opt/stereum/geth').buildConfiguration()
 
   expect(gethConfig.volumes).toHaveLength(1)
-  expect(gethConfig.volumes).toContain('/opt/stereum/geth/data:/root/.ethereum')
+  expect(gethConfig.volumes).toContain('/opt/stereum/geth-' + gethConfig.id + '/data:/root/.ethereum')
 })
 
 test('buildByConfiguration', () => {
   const gethConfig = GethService.buildByConfiguration({
     id: '987',
     service: 'GethService',
+    configVersion: 1,
     image: 'geth:v0.0.1'
   }).buildConfiguration()
 
   expect(gethConfig.id).toBe('987')
   expect(gethConfig.service).toBe('GethService')
+  expect(gethConfig.configVersion).toBe(1)
 })
 
 // EOF

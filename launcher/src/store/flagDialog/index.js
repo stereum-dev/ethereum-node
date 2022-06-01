@@ -1,36 +1,56 @@
-import flagDialMutations from './mutations.js'
-import flagDialActions from './actions'
-import flagDialGetters from './getters'
+import flagDialMutations from "./mutations.js";
+import flagDialActions from "./actions";
+import flagDialGetters from "./getters";
 
 export default {
-  state () {
+  state() {
     return {
       dialogIsVisible: false,
       linkFlags: [
         {
-          langImg: 'img/flag/ENGLISH.png',
-          langSelect: 'img/flag/En.png',
-          langName: 'english'
+          langImg: "img/flag/united-kingdom.png",
+          langSelect: "img/flag/united-kingdom.png",
+          langName: "english",
         },
         {
-          langImg: 'img/flag/GERMAN.png',
-          langSelect: 'img/flag/Gr.png',
-          langName: 'german'
+          langImg: "img/flag/germany.png",
+          langSelect: "img/flag/germany.png",
+          langName: "german",
         },
         {
-          langImg: 'img/flag/FRENCH.png',
-          langSelect: 'img/flag/Fr.png',
-          langName: 'french'
+          langImg: "img/flag/france.png",
+          langSelect: "img/flag/france.png",
+          langName: "french",
         },
         {
-          langImg: 'img/flag/SPANISH.png',
-          langSelect: 'img/flag/Sp.png',
-          langName: 'spanish'
-        }
-      ]
-    }
+          langImg: "img/flag/spain.png",
+          langSelect: "img/flag/spain.png",
+          langName: "spanish",
+        },
+        {
+          langImg: "img/flag/iran.png",
+          langSelect: "img/flag/iran.png",
+          langName: "persian",
+        },
+        {
+          langImg: "img/flag/saudi-arabia.png",
+          langSelect: "img/flag/saudi-arabia.png",
+          langName: "arabic",
+        },
+        {
+          langImg: "img/flag/turkey.png",
+          langSelect: "img/flag/turkey.png",
+          langName: "turkish",
+        },
+        {
+          langImg: "img/flag/netherlands.png",
+          langSelect: "img/flag/netherlands.png",
+          langName: "dutch",
+        },
+      ],
+    };
   },
   mutations: flagDialMutations,
   actions: flagDialActions,
-  getters: flagDialGetters
-}
+  getters: flagDialGetters,
+};

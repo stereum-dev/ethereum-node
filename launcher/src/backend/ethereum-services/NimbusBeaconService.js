@@ -3,7 +3,11 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, executionClients, graffiti) {
+  static buildByUserInput (network, ports, dir, executionClients, graffiti) {
+    const service = new NimbusBeaconService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+    
     const image = 'statusim/nimbus-eth2'
 
     const gethServices = (executionClients.map(client => { return client.buildExecutionClientWsEndpointUrl() })).join()
@@ -17,10 +21,10 @@ export class NimbusBeaconService extends NodeService {
       new ServiceVolume(workingDir + '/validator/secrets', secretsDir)
     ]
 
-    const service = new NimbusBeaconService()
     service.init(
       'NimbusBeaconService',  //service
-      null, // id,
+      service.id, // id,
+      1, // configVersion
       image, // image,
       'multiarch-v22.3.0', // imageVersion,
       [
@@ -40,7 +44,7 @@ export class NimbusBeaconService extends NodeService {
         '--rest',
         '--rest-address=0.0.0.0',
         '--rest-port=5052',
-        `--graffiti="${graffiti}"`,
+        `--graffiti=\"${graffiti}\"`,
         '--keymanager',
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt'

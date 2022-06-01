@@ -1,4 +1,3 @@
-import { LighthouseBeaconService } from './LighthouseBeaconService.js'
 import { LighthouseValidatorService } from './LighthouseValidatorService.js'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -27,13 +26,14 @@ test('LighthouseValidatorService buildConfiguration', () => {
 
 
   expect(lhService.command).toContain('--beacon-nodes=http-endpoint-string')
-  expect(lhService.command).toContain('--graffiti=foobar')
+  expect(lhService.command).toContain('--graffiti=\"foobar\"')
   expect(lhService.volumes).toHaveLength(1)
-  expect(lhService.volumes).toContain('/opt/stereum/lh/validator:/opt/app/validator')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/validator:/opt/app/validator')
   expect(lhService.ports).toHaveLength(1)
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)
   expect(lhService.image).toMatch(/sigp\/lighthouse/)
+  expect(lhService.configVersion).toBe(1)
 
   expect(lhService.service).toMatch(/LighthouseValidatorService/)
 })
@@ -72,6 +72,7 @@ test('buildByConfiguration', () => {
   const lh = LighthouseValidatorService.buildByConfiguration({
     id: '123',
     service: 'LighthouseValidatorService',
+    configVersion: 333,
     image: 'lhval:v0.0.1',
     command:[
       'lighthouse',
@@ -92,6 +93,7 @@ test('buildByConfiguration', () => {
 
   expect(lh.id).toBe('123')
   expect(lh.service).toBe('LighthouseValidatorService')
+  expect(lh.configVersion).toBe(333)
   expect(lh.image).toBe('lhval')
   expect(lh.imageVersion).toBe('v0.0.1')
   expect(lh.ports).toHaveLength(0)

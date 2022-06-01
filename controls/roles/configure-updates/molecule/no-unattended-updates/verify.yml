@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - cron:
+      name: "stereum auto unattended update"
+      job: "cd \"/opt/stereum\" && ./unattended-update.sh"
+      state: present
+      user: root
+    check_mode: yes
+    register: crontab_unattended_update
+    failed_when: not crontab_unattended_update.changed
+
+# EOF

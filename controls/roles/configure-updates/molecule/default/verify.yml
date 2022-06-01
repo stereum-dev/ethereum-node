@@ -3,11 +3,13 @@
   hosts: all
   gather_facts: false
   tasks:
-  # Updates (cron)
-  - shell: crontab -l
-    register: stereum_crontab
-  - name: Check cron for update check
-    assert:
-      that:
-      - stereum_crontab.stdout.find("update-check.yaml") != -1 # there should be update checks
-      - stereum_crontab.stdout.find("unattended-update.sh") == -1 # there shouldn't be unatteded updates
+  - cron:
+      name: "stereum auto unattended update"
+      job: "cd \"/opt/stereum\" && ./unattended-update.sh"
+      state: absent
+      user: root
+    check_mode: yes
+    register: crontab_unattended_update
+    failed_when: not crontab_unattended_update.changed
+
+# EOF

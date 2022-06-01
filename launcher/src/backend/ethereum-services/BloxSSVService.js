@@ -36,7 +36,12 @@ MetricsAPIPort: 15000
     }
   }
 
-  static buildByUserInput (network, ports, workingDir, executionClients, consensusClients) {
+  static buildByUserInput (network, ports, dir, executionClients, consensusClients) {
+    const service = new BloxSSVService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+
+
     const volumes = [
       new ServiceVolume(workingDir + '/data', '/data')
     ]
@@ -47,24 +52,25 @@ MetricsAPIPort: 15000
     const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
 
     // build service
-    const service = new BloxSSVService()
     service.init(
-      'BloxSSVService',
-      null,
-      'bloxstaking/ssv-node',
-      'ubuntu-latest',
-      null,
-      'echo "$SSV_CONFIG_CONTENT" > /data/config.yaml && make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node',
+      'BloxSSVService', // service
+      service.id, // id
+      1,  // configVersion
+      'bloxstaking/ssv-node', //image
+      'ubuntu-latest',  //imageVersion
+      'echo "$SSV_CONFIG_CONTENT" > /data/config.yaml && make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node', // command
+      null, // entrypoint
       {
         CONFIG_PATH: '/data/config.yaml',
         SSV_CONFIG_CONTENT: escapedConfigFile
-      },
-      ports,
-      volumes,
-      'root',
-      network,
-      executionClients,
-      consensusClients)
+      },  // env
+      ports,  // ports
+      volumes,  // volumes
+      'root', // user
+      network,  // network
+      executionClients, // executionClients
+      consensusClients  // consensusClients
+      )
 
     return service
   }

@@ -19,8 +19,8 @@ test('getServiceConfiguration', () => {
     }
   })
 
-  const config = PrometheusService.getServiceConfiguration([new NimbusBeaconService.NimbusBeaconService(), new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService(), new PrometheusNodeExporterService.PrometheusNodeExporterService()])
-  expect(config).toStrictEqual({ CONFIG: 'global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: \'ConsensusClients\'\n    static_configs:\n      - targets: [\'stereum-someID:9190\',\'stereum-someID:9190\']\n  - job_name: \'PrometheusNodeExporterService\'\n    static_configs:\n      - targets: [\'stereum-someOtherID:9100\',\'stereum-someOtherID:9100\']\n' })
+  const config = PrometheusService.getServiceConfiguration([new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService()])
+  expect(config).toStrictEqual({ CONFIG: 'global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: stereum-someID\n    static_configs:\n      - targets: [stereum-someID:9190]\n  - job_name: stereum-someOtherID\n    static_configs:\n      - targets: [stereum-someOtherID:9100]\n' })
 })
 
 test('buildConfiguration', () => {
@@ -59,12 +59,13 @@ test('buildConfiguration', () => {
   const prometheus = PrometheusService.buildByUserInput(networks.prater, ports, '/opt/stereum/prometheus', [new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService()]).buildConfiguration()
 
   expect(prometheus.volumes).toHaveLength(2)
-  expect(prometheus.volumes).toContain('/opt/stereum/prometheus/data/prometheus:/prometheus')
-  expect(prometheus.volumes).toContain('/opt/stereum/prometheus/config:/etc/prometheus')
+  expect(prometheus.volumes).toContain('/opt/stereum/prometheus-' + prometheus.id + '/data/prometheus:/prometheus')
+  expect(prometheus.volumes).toContain('/opt/stereum/prometheus-' + prometheus.id + '/config:/etc/prometheus')
   expect(prometheus.ports).toHaveLength(1)
   expect(prometheus.id).toHaveLength(36)
   expect(prometheus.user).toMatch(/2000/)
   expect(prometheus.image).toMatch(/prom\/prometheus/)
+  expect(prometheus.configVersion).toBe(1)
 })
 
 test('getAvailablePorts', () => {
@@ -77,6 +78,7 @@ test('buildByConfiguration', () => {
   const prometheus = PrometheusService.buildByConfiguration({
     id: '123',
     service: 'PrometheusService',
+    configVersion: 876,
     image: 'prometheus:v0.0.1',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -84,6 +86,7 @@ test('buildByConfiguration', () => {
 
   expect(prometheus.id).toBe('123')
   expect(prometheus.service).toBe('PrometheusService')
+  expect(prometheus.configVersion).toBe(876)
   expect(prometheus.image).toBe('prometheus')
   expect(prometheus.imageVersion).toBe('v0.0.1')
   expect(prometheus.ports).toHaveLength(2)

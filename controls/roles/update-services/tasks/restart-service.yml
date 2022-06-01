@@ -1,7 +1,7 @@
 ---
 - name: Read service's configuration
   slurp:
-    src: "{{ item.path }}"
+    src: "/etc/stereum/services/{{ item }}.yaml"
   register: service_configuration_raw
   become: yes
 

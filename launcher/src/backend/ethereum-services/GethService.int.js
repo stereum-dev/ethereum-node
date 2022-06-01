@@ -9,10 +9,10 @@ jest.setTimeout(500000)
 
 test('geth installation', async () => {
   const serverSettings = {
-    name: 'Geth--integration-test--ubuntu-2004',
-    image: 'ubuntu-20.04',
+    name: 'Geth--integration-test--ubuntu-2204',
+    image: 'ubuntu-22.04',
     location: 'fsn1',
-    server_type: 'cx11',
+    server_type: 'cpx21',
     start_after_create: true
   }
 
@@ -34,7 +34,17 @@ test('geth installation', async () => {
   await testServer.passwordAuthentication(testServer.serverRootPassword)
 
   //prepare node
-  nodeConnection.settings = {stereum:{settings:{controls_install_path: '/opt/stereum',os_user: 'stereum',updates:{in_progress: '',lane: 'stable',available: '',unattended:{ check: true, install: false }}}}}
+  await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
+  echo "stereum_settings:
+  settings:
+    controls_install_path: /opt/stereum
+    os_user: stereum
+    updates:
+      lane: stable
+      unattended:
+        install: false
+  " > /etc/stereum/stereum.yaml`)
+  await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
   
   //install geth

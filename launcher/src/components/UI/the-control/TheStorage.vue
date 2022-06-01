@@ -40,16 +40,18 @@
 export default {
   data() {
     return {
-      free: 652,
+      free: 300,
       total: 1024,
       writeValue: 134.24,
       readValue: 1.05,
-      loadBarValue: 60,
     };
   },
   computed: {
     valuBarLoader() {
-      return { width: this.loadBarValue + "%" };
+      let totalValue = this.total / 10;
+      let freeValue = this.free / 10;
+      let loadValueSize = totalValue - freeValue;
+      return { width: loadValueSize + "%" };
     },
   },
 };

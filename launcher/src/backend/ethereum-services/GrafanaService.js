@@ -3,7 +3,11 @@ import { ServicePortDefinition } from './SerivcePortDefinition'
 import { ServiceVolume } from './ServiceVolume'
 
 export class GrafanaService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, grafanaProvisioning) {
+  static buildByUserInput (network, ports, dir, grafanaProvisioning) {
+    const service = new GrafanaService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+    
     const image = 'grafana/grafana'
 
     const provisioningDir = '/etc/grafana/provisioning'
@@ -16,10 +20,10 @@ export class GrafanaService extends NodeService {
       new ServiceVolume(workingDir, grafanaDir)
     ]
 
-    const service = new GrafanaService()
     service.init(
-      'GrafanaService',
-      null, // id
+      'GrafanaService', //service
+      service.id, // id
+      1, // configVersion
       image, // image
       '8.4.0', // imageVersion
       'bash -c "touch /etc/grafana/grafana.ini && echo \\"$GRAFANA_INI\\" > /etc/grafana/grafana.ini && /run.sh"', // command

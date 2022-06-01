@@ -2,24 +2,31 @@ import { NodeService } from './NodeService.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class GethService extends NodeService {
-  static buildByUserInput (network, ports, workingDir) {
+  static buildByUserInput (network, ports, dir) {
+    const service = new GethService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+        
     const volumes = [
       new ServiceVolume(workingDir + '/data', '/root/.ethereum')
     ]
 
-    const service = new GethService()
     service.init(
-      'GethService',
-      null,
-      'ethereum/client-go',
-      'v1.10.11',
-      'geth --' + network + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="db,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="db,eth,net,web3" --ws.origins="*"',
-      null,
-      null,
-      ports,
-      volumes,
-      'root',
-      network)
+      'GethService',  // service
+      service.id, // id
+      1,  // configVersion
+      'ethereum/client-go', // image
+      'v1.10.11', // imageVersion
+      'geth --' + network + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*"', // command
+      null, // entrypoint
+      null, // env
+      ports,  // ports
+      volumes,  // volumes
+      'root', // user
+      network // network
+      // executionClients
+      // consensusClients
+    )
 
     return service
   }

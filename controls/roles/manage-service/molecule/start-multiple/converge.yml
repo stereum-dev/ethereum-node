@@ -3,7 +3,9 @@
   hosts: all
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
-
+  vars:
+    beacon_service: e3ae009e-e019-11ec-8d7a-a36ff73c89bf
+    geth_service: 007af7fe-e01a-11ec-ab78-37ce2b265e8b
 
   tasks:
     # geth
@@ -19,7 +21,7 @@
             save: false
             state: started
             configuration:
-              id: 25df0439-80e6-4afe-8876-72d7718035c3
+              id: "{{ geth_service }}"
     #lh
     - block:
       - set_fact:
@@ -33,4 +35,4 @@
             save: false
             state: started
             configuration:
-              id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+              id: "{{ beacon_service }}"

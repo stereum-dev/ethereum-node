@@ -7,8 +7,8 @@ jest.setTimeout(500000)
 
 test('prepareStereumNode on ubuntu', async () => {
   const serverSettings = {
-    name: 'NodeConnection--integration-test--ubuntu-2004',
-    image: 'ubuntu-20.04',
+    name: 'NodeConnection--integration-test--ubuntu-2204',
+    image: 'ubuntu-22.04',
     location: 'fsn1',
     server_type: 'cx11',
     start_after_create: true
@@ -35,18 +35,25 @@ test('prepareStereumNode on ubuntu', async () => {
 
   // create stereum settings
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
-    echo "{stereum: {settings: {controls_install_path: /opt/stereum, os_user: stereum, updates: {in_progress: null, lane: stable, available: null, unattended: {check: true, install: false}}}}}" > /etc/stereum/stereum.yaml`)
+    echo "stereum_settings:
+    settings:
+      controls_install_path: /opt/stereum
+      os_user: stereum
+      updates:
+        lane: stable
+        unattended:
+          install: false
+  " > /etc/stereum/stereum.yaml`)
   await nodeConnection.findStereumSettings()
 
   const playbookRun = await nodeConnection.prepareStereumNode('/opt/stereum')
   const ansibleRoles = await nodeConnection.sshService.exec('ls /opt/stereum/ansible/controls')
-  const collections = await nodeConnection.sshService.exec('ansible-galaxy collection install community.docker')
   const ansibleVersion = await nodeConnection.sshService.exec('ansible --version')
   await nodeConnection.sshService.disconnect()
   await testServer.destroy()
 
   const ansible = (ansibleVersion.stdout.split('\n'))[0].split(' ')
-  ansible[1] = ansible[1].split('.')
+  ansible[2] = ansible[2].split('.')
 
   // check if findOS() works
   expect(nodeConnection.os).toBe(nodeOS.ubuntu)
@@ -63,14 +70,12 @@ test('prepareStereumNode on ubuntu', async () => {
   // check if ansible roles got pulled from repo
   expect(ansibleRoles.stdout).toMatch(/roles/)
 
-  // check if community.docker was installed
-  expect(collections.stdout).toMatch("Skipping 'community.docker' as it is already installed")
-
   // check ansible version
   expect(ansible[0]).toBe('ansible')
-  expect(ansible[1][0]).toMatch(/[0-9]+/)
-  expect(ansible[1][1]).toMatch(/[0-9]+/)
-  expect(ansible[1][2]).toMatch(/[0-9]+/)
+  expect(ansible[1]).toMatch(/core/)
+  expect(ansible[2][0]).toMatch(/[0-9]+/)
+  expect(ansible[2][1]).toMatch(/[0-9]+/)
+  expect(ansible[2][2]).toMatch(/[0-9]+/)
 })
 
 // EOF

@@ -83,7 +83,7 @@ export default {
   background: #e7e7e7;
   box-shadow: 0 -3px 6px 2px rgba(0, 0, 0, 0.5);
   width: 75%;
-  height: 92%;
+  height: 80%;
   border-radius: 100px 100px 0 0 !important;
   position: relative;
   overflow: hidden;

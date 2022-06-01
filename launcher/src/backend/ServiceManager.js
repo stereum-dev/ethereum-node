@@ -6,6 +6,9 @@ import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
 import { PrometheusService } from './ethereum-services/PrometheusService'
 import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
 import { GrafanaService } from './ethereum-services/GrafanaService'
+import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
+import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 
 const log = require('electron-log')
 
@@ -84,7 +87,6 @@ export class ServiceManager {
 
         log.debug('parsing config:')
         log.debug(config)
-        // .service property needs to be implemented into all other classes
         if (config.service) {
           if (config.service == 'LighthouseBeaconService') {
             services.push(LighthouseBeaconService.buildByConfiguration(config))
@@ -102,6 +104,12 @@ export class ServiceManager {
             services.push(PrometheusNodeExporterService.buildByConfiguration(config))
           } else if (config.service == 'GrafanaService') {
             services.push(GrafanaService.buildByConfiguration(config))
+          } else if (config.service == 'PrysmBeaconService') {
+            services.push(PrysmBeaconService.buildByConfiguration(config))
+          } else if (config.service == 'PrysmValidatorService') {
+            services.push(PrysmValidatorService.buildByConfiguration(config))
+          }else if (config.service == 'TekuBeaconService') {
+            services.push(TekuBeaconService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')
@@ -109,7 +117,24 @@ export class ServiceManager {
           throw 'configuration without service specified'
         }
       }
-
+      //retrieve full service out of minimal config
+      services.forEach(service => {
+        if(service.dependencies.executionClients.length > 0){
+          service.dependencies.executionClients = service.dependencies.executionClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+        if(service.dependencies.consensusClients.length > 0){
+          service.dependencies.consensusClients = service.dependencies.consensusClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+        if(service.dependencies.prometheusNodeExporterClients.length > 0){
+          service.dependencies.prometheusNodeExporterClients = service.dependencies.prometheusNodeExporterClients.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
+      })
       return services
     })
       .catch(err => log.error(err))

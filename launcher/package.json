@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.0",
+  "version": "2.0.0-betasolo",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
@@ -28,6 +28,7 @@
     "babel-jest": "^27.4.6",
     "chart.js": "^3.7.1",
     "core-js": "^3.22.2",
+    "electron-builder": "^23.0.9",
     "electron-log": "^4.4.1",
     "electron-promise-ipc": "^2.2.4",
     "electron-store": "^8.0.0",

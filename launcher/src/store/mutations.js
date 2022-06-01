@@ -4,6 +4,9 @@ export default {
     },
     hideDialog (state) {
       state.dialogIsVisible = false
-    }
+    },
+    updateRunningServices (state, payload) {
+      state.runningServices = payload
+    },
   }
   

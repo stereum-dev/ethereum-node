@@ -20,7 +20,7 @@
   - name: Check service's configuration
     assert:
       that:
-        - service_configuration.image == 'stereum/lighthouse:v2.0.1-48'
+        - service_configuration.image == 'sigp/lighthouse:v2.0.1'
 
   - name: Get information of running updated service
     community.docker.docker_container_info:
@@ -31,4 +31,4 @@
     assert:
       that:
         - service_container.exists
-        - service_container.container.Config.Image == 'stereum/lighthouse:v2.0.1-48'
+        - service_container.container.Config.Image == 'sigp/lighthouse:v2.0.1'

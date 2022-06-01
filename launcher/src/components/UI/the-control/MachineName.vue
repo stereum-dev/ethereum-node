@@ -3,9 +3,26 @@
     <div class="ubuntuIcon">
       <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
     </div>
-    <input type="text" class="machineNam" />
+    <div class="machineNam">
+      <span>{{ this.maschinName }}</span>
+    </div>
   </div>
 </template>
+<script>
+import ControlService from "@/store/ControlService";
+export default {
+  data() {
+    return {
+      maschinName: "",
+    };
+  },
+  async created() {
+    const response = await ControlService.getHostName();
+    const { data: maschinName } = await response.json();
+    this.maschinName = maschinName;
+  },
+};
+</script>
 
 <style scoped>
 .MachineNameParent {
@@ -25,6 +42,7 @@
   width: 80%;
   padding-left: 6%;
   outline: none;
+  font-size: 70%;
 }
 .machineNam:hover,
 .machineNam:active {

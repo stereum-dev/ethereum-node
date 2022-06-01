@@ -29,12 +29,13 @@ test('buildConfiguration', () => {
 
   expect(lhService.command).toContain('--eth1-endpoints=http-endpoint-string')
   expect(lhService.volumes).toHaveLength(2)
-  expect(lhService.volumes).toContain('/opt/stereum/lh/beacon:/opt/app/beacon')
-  expect(lhService.volumes).toContain('/opt/stereum/lh/slasher:/opt/app/slasher')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/beacon:/opt/app/beacon')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/slasher:/opt/app/slasher')
   expect(lhService.ports).toHaveLength(3)
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)
   expect(lhService.image).toMatch(/sigp\/lighthouse/)
+  expect(lhService.configVersion).toBe(1)
 })
 
 test('buildConsensusClientHttpEndpointUrl', () => {
@@ -43,15 +44,6 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     new ServicePort(null, 101, 202, servicePortProtocol.udp),
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
-
-  jest.mock('./GethService')
-  const GethService = require('./GethService')
-  const mMock = jest.fn(() => { return 'http-endpoint-string' })
-  GethService.GethService.mockImplementation(() => {
-    return {
-      buildExecutionClientHttpEndpointUrl: mMock
-    }
-  })
 
   const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [], 16).buildConsensusClientHttpEndpointUrl()
 
@@ -80,6 +72,7 @@ test('buildByConfiguration', () => {
   const lh = LighthouseBeaconService.buildByConfiguration({
     id: '123',
     service: 'LighthouseBeaconService',
+    configVersion: 678,
     image: 'lhbeacon:v0.0.1',
     ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
     volumes: ['/opt/stereum/foo:/opt/app/data']
@@ -87,6 +80,7 @@ test('buildByConfiguration', () => {
 
   expect(lh.id).toBe('123')
   expect(lh.service).toBe('LighthouseBeaconService')
+  expect(lh.configVersion).toBe(678)
   expect(lh.image).toBe('lhbeacon')
   expect(lh.imageVersion).toBe('v0.0.1')
   expect(lh.ports).toHaveLength(2)

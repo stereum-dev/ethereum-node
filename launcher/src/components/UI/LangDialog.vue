@@ -6,23 +6,30 @@
 
 <script>
 export default {
-  name: 'LangDialog',
-  props: ['open']
-}
+  name: "LangDialog",
+  props: ["open"],
+};
 </script>
 
 <style scoped>
 dialog {
   position: fixed;
-  top: 40%;
-  min-width: 20rem;
-  margin: auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  top: 30%;
+  width: 60%;
+  height: 35%;
+  margin: 0 auto;
+  box-shadow: 1px 1px 5px 1px rgba(31, 31, 31, 0.26);
+  border: 5px solid #7e7777;
   border-radius: 20px;
   padding: 1rem;
-  background-color: white;
-  border: solid 5px rgba(15, 15, 15, 0.5);
-  background-color: rgba(76, 72, 72, 0.5);
-  resize: both;
+  background-color: #33393ed7;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+dialog::-webkit-scrollbar {
+  width: 1px;
 }
 </style>

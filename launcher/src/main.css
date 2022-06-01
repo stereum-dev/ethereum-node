@@ -1,7 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 html body {
+  min-width: 1024px;
+  min-height: 576px;
   padding: 0;
   margin: 0;
   font-family: "Noto Sans", sans-serif;
+  box-sizing: border-box;
+  background-color: rgb(31, 31, 31);
 }

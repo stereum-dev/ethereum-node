@@ -8,65 +8,68 @@ import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePor
 import { ServiceManager } from './ServiceManager'
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
+import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
+import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 
 export class OneClickInstall {
-  async prepareNode (installDir, nodeConnection) {
+  async prepareNode(installDir, nodeConnection) {
     this.installDir = installDir
     this.nodeConnection = nodeConnection
     this.serviceManager = new ServiceManager(nodeConnection)
     await this.nodeConnection.findStereumSettings()
     if (this.nodeConnection.settings === undefined) {
-      this.nodeConnection.settings = {
-        stereum:
-                {
-                  settings:
-                    {
-                      controls_install_path: '/opt/stereum',
-                      os_user: 'stereum',
-                      updates:
-                        {
-                          in_progress: '',
-                          lane: 'stable',
-                          available: '',
-                          unattended:
-                                { check: true, install: false }
-                        }
-                    }
-                }
-      }
+      await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
+      echo "stereum_settings:
+      settings:
+        controls_install_path: ${this.installDir || '/opt/stereum'}
+        os_user: stereum
+        updates:
+          lane: stable
+          unattended:
+            install: false
+    " > /etc/stereum/stereum.yaml`)
+      await this.nodeConnection.findStereumSettings()
     }
-    this.nodeConnection.settings.stereum.settings.controls_install_path = this.installDir || '/opt/stereum'
     return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path)
   }
 
-  async chooseClient (clients) {
+  //this is broken
+  async chooseClient(clients) {
     clients = {
-      NIMBUS: 55,
-      LIGHTHOUSE: 45
+      PRYSM: 24,
+      LIGHTHOUSE: 24,
+      NIMBUS: 24,
+      TEKU: 20,
     }
-    const buffer = {}
+    let buffer = []
+    let clientDistribution = []
     let sum = 0
+    let range = 0
+    
     Object.keys(clients).forEach(key => {
-      sum += (100 / clients[key])
+      buffer.push({ name: key, coverage: clients[key] })
     })
-    Object.keys(clients).forEach(key => {
-      buffer[key] = ((100 / clients[key]) / sum) * 100
+
+    buffer.forEach(client => { sum += (100 / client.coverage) })
+
+    buffer.forEach(client => {
+      clientDistribution.push({ name: client.name, percentage: (((100 / client.coverage) / sum) * 100) })
     })
+
+    clientDistribution.forEach(client => {
+      client.min = range
+      range = range + client.percentage
+      client.max = range
+    })
+
     const ran = Math.random() * 100
-    let smallestDiff = Number.MAX_VALUE
-    let result = ''
-    console.log(ran, buffer)
-    Object.keys(buffer).forEach(key => {
-      const diff = Math.abs(buffer[key] - ran)
-      if (diff < smallestDiff) {
-        result = key
-        smallestDiff = diff
-      }
-    })
-    return result.toLowerCase()
+    const winner = clientDistribution.find(client => (client.min <= ran && client.max >= ran))
+    console.log(winner,ran)
+    return winner.name.toLowerCase()
   }
 
-  getConfigurations () {
+  getConfigurations() {
     const beacon = this.beaconService.buildConfiguration()
     const geth = this.executionClient.buildConfiguration()
     const prometheusNodeExporter = this.prometheusNodeExporter.buildConfiguration()
@@ -79,7 +82,7 @@ export class OneClickInstall {
     return [beacon, validator, geth, prometheusNodeExporter, prometheus, grafana]
   }
 
-  createServices () {
+  createServices() {
     let ports = []
 
     ports = [
@@ -90,21 +93,40 @@ export class OneClickInstall {
 
     switch (this.choosenClient) {
       case 'Lighthouse':
+        //LighthouseBeaconService   
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
         ]
         this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
+
+        //LighthouseValidatorService
         ports = [
           new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
         ]
         this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
         break
+
+
       case 'Prysm':
-        // to be implemented
+        //PrysmBeaconService
+        ports = [
+          new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
+          new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
+        ]
+        this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
+        //PrysmValidatorService
+        ports = [
+          new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
+        ]
+        this.validatorService = PrysmValidatorService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
         break
+
+
       case 'Nimbus':
+        //NimbusBeaconService
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
@@ -113,8 +135,18 @@ export class OneClickInstall {
         ]
         this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
         break
+
+
       case 'Teku':
-        // to be implemented
+        //TekuBeaconService
+        ports = [
+          new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
+        ]
+        this.beaconService = TekuBeaconService.buildByUserInput('prater', ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
         break
     }
 
@@ -131,16 +163,17 @@ export class OneClickInstall {
     this.grafana = GrafanaService.buildByUserInput('prater', ports, this.installDir + '/grafana', this.choosenClient.toLowerCase())
   }
 
-  async writeConfig () {
+  async writeConfig() {
     const configs = this.getConfigurations()
     if (configs[0] !== undefined) {
       await Promise.all(configs.map(async (config) => {
         await this.nodeConnection.writeServiceConfiguration(config)
       }))
+      return configs
     }
   }
 
-  async startServices () {
+  async startServices() {
     const services = this.getConfigurations()
     const runRefs = []
     if (services[0] !== undefined) {
@@ -155,13 +188,11 @@ export class OneClickInstall {
     return runRefs
   }
 
-  async getSetupConstellation (setup) {
+  async getSetupConstellation(setup) {
     const services = ['GETH', 'GRAFANA', 'PROMETHEUSNODEEXPORTER', 'PROMETHEUS']
     // make sure API is only called once when implemented
-    if (!this.choosenClient) {
       this.choosenClient = await this.chooseClient()
       this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1)
-    }
     services.push(this.choosenClient.toUpperCase())
 
     // TODO: adapt Validator integration on naming of Validator services if "LIGHTHOUSE" (distinguish by category) then do nothing else "LIGHTHOUSEVALIDATOR" or something else

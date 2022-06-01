@@ -1,5 +1,32 @@
 <template>
   <div class="server-parent">
+    <div class="error-box" v-if="errorMsgExists"></div>
+    <div class="error-modal" v-if="errorMsgExists">
+      <div class="title-box">
+        <img src="../../../public/img/icon/no-connection.png" alt="icon" />
+      </div>
+      <div class="description">
+        <span>{{ this.error }}</span>
+      </div>
+      <div class="btn-box">
+        <button @click="closeErrorDialog">OK</button>
+      </div>
+    </div>
+    <div class="anim" v-if="connectingAnimActive">
+      <p>C</p>
+      <p>O</p>
+      <p>N</p>
+      <p>N</p>
+      <p>E</p>
+      <p>C</p>
+      <p>T</p>
+      <p>I</p>
+      <p>N</p>
+      <p>G</p>
+      <p>.</p>
+      <p>.</p>
+      <p>.</p>
+    </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
         <h2>{{ $t("formsetup.server") }}</h2>
@@ -15,7 +42,7 @@
         <template v-slot:cancel>Cancel</template>
         <template v-slot:ok>Delete</template>
       </base-dialog>
-      <form @submit.prevent="login">
+      <form @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
@@ -114,9 +141,9 @@
           </label>
           <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
         </div>
-        <base-button id="login" @click="login">{{
-          $t("formsetup.login")
-        }}</base-button>
+        <button id="login">
+          {{ $t("formsetup.login") }}
+        </button>
       </form>
     </div>
     <!-- test dovom -->
@@ -124,160 +151,232 @@
 </template>
 
 <script>
-import BaseDialog from './BaseDialog.vue'
-import ControlService from '@/store/ControlService'
+import BaseDialog from "./BaseDialog.vue";
+import ControlService from "@/store/ControlService";
+import { mapGetters } from "vuex";
 
 export default {
   components: { BaseDialog },
-  name: 'FormSetup',
-  emits: ['page'],
-  data () {
+  name: "FormSetup",
+  emits: ["page"],
+  data() {
     return {
       keyAuth: false,
-      link: 'stereumLogoExtern.png',
+      link: "stereumLogoExtern.png",
+      connectingAnimActive: false,
       stereumVersions: {},
       connections: [],
-      selectedName: '',
+      error: "",
+      errorMsgExists: false,
+      selectedName: "",
       bDialogVisible: false,
       model: {
-        name: { value: '', isFilled: true },
-        host: { value: '', isFilled: true },
-        user: { value: '', isFilled: true },
-        pass: { value: '', isFilled: true },
-        keylocation: { value: '', isFilled: true },
-        useAuthKey: false
+        name: { value: "", isFilled: true },
+        host: { value: "", isFilled: true },
+        user: { value: "", isFilled: true },
+        pass: { value: "", isFilled: true },
+        keylocation: { value: "", isFilled: true },
+        useAuthKey: false,
       },
-      imgTrash: './img/icon/TRASH_CAN.png'
-    }
+      imgTrash: "./img/icon/TRASH_CAN.png",
+    };
   },
-  created () {
-    this.loadStoredConnections()
+  created() {
+    this.loadStoredConnections();
+  },
+  computed: {
+    ...mapGetters({
+      plugins: "installationPlugins",
+      selectedPreset: "getSelectedPreset",
+      allPlugins: "getAllPlugins",
+      pluginServices: "getServiceIcons",
+    }),
   },
   methods: {
-    changeLabel () {
-      this.keyAuth = !this.keyAuth
+    changeLabel() {
+      this.keyAuth = !this.keyAuth;
     },
-    setSelectedConnection (event) {
+    setSelectedConnection(event) {
       this.selectedConnection = this.connections.find(
         (obj) => obj.name === event.target.value
-      )
-      this.model.name.value = this.selectedConnection.name
-      this.model.host.value = this.selectedConnection.host
-      this.model.user.value = this.selectedConnection.user
-      this.model.keylocation.value = this.selectedConnection.keylocation
-      this.model.useAuthKey = this.selectedConnection.useAuthKey
-      this.keyAuth = this.selectedConnection.useAuthKey
-      this.model.pass.value = ''
+      );
+      this.model.name.value = this.selectedConnection.name;
+      this.model.host.value = this.selectedConnection.host;
+      this.model.user.value = this.selectedConnection.user;
+      this.model.keylocation.value = this.selectedConnection.keylocation;
+      this.model.useAuthKey = this.selectedConnection.useAuthKey;
+      this.keyAuth = this.selectedConnection.useAuthKey;
+      this.model.pass.value = "";
     },
-    addModel () {
-      const newConnection = this.createConnection()
-      this.connections.push(newConnection)
-      this.selectedConnection = newConnection
-      this.selectedName = this.selectedConnection.name
-
-      this.writeSettings()
+    addModel() {
+      const newConnection = this.createConnection();
+      if (
+        !this.connections.find(
+          (connection) => connection.name == this.model.name.value
+        )
+      ) {
+        this.connections.push(newConnection);
+        this.selectedConnection = newConnection;
+        this.selectedName = this.selectedConnection.name;
+        this.writeSettings();
+      } else if (
+        this.connections.find(
+          (connection) => connection.name == this.model.name.value
+        )
+      ) {
+        const index = this.connections.findIndex(
+          (connection) => connection.name == this.model.name.value
+        );
+        this.connections[index] = newConnection;
+        this.selectedConnection = newConnection;
+        this.selectedName = this.selectedConnection.name;
+        this.writeSettings();
+      }
     },
-    getstorableConnections () {
-      const storableConnections = []
+    getstorableConnections() {
+      const storableConnections = [];
       this.connections.forEach((e) => {
         storableConnections.push({
           name: e.name,
           host: e.host,
           user: e.user,
           keylocation: e.keylocation,
-          useAuthKey: e.useAuthKey
-        })
-      })
-      return storableConnections
+          useAuthKey: e.useAuthKey,
+        });
+      });
+      return storableConnections;
     },
     deleteModel: async function () {
-      const currSelected = this.selectedConnection.name
+      const currSelected = this.selectedConnection.name;
       this.connections = this.connections.filter(function (conn) {
-        return currSelected != conn.name
-      })
-      await this.writeSettings()
-      await this.loadStoredConnections()
-      this.model.name.value = ''
-      this.model.host.value = ''
-      this.model.user.value = ''
-      this.model.pass.value = ''
-      this.model.keylocation.value = ''
-      this.model.useAuthKey = false
-      this.keyAuth = false
+        return currSelected != conn.name;
+      });
+      await this.writeSettings();
+      await this.loadStoredConnections();
+      this.model.name.value = "";
+      this.model.host.value = "";
+      this.model.user.value = "";
+      this.model.pass.value = "";
+      this.model.keylocation.value = "";
+      this.model.useAuthKey = false;
+      this.keyAuth = false;
     },
-    createConnection () {
+    createConnection() {
       return {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey
-      }
+        useAuthKey: this.model.useAuthKey,
+      };
     },
     loadStoredConnections: async function () {
-      const storageSavedConnections = await ControlService.readConfig()
-      let savedConnections = []
+      const storageSavedConnections = await ControlService.readConfig();
+      let savedConnections = [];
       if (
         storageSavedConnections !== undefined &&
         storageSavedConnections.savedConnections !== undefined
       ) {
         savedConnections = savedConnections.concat(
           storageSavedConnections.savedConnections
-        )
+        );
       }
-      this.connections = savedConnections
+      this.connections = savedConnections;
     },
     writeSettings: async function () {
-      const savedLanguage = (await ControlService.readConfig()).savedLanguage
+      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
       ControlService.writeConfig({
         savedConnections: this.getstorableConnections(),
-        savedLanguage: savedLanguage
-      })
+        savedLanguage: savedLanguage,
+      });
     },
-    checkInput (model) {
-      if (model.value == '') {
-        model.isFilled = false
+    checkInput(model) {
+      if (model.value == "") {
+        model.isFilled = false;
       } else {
-        model.isFilled = true
+        model.isFilled = true;
       }
     },
 
-    mouseOver (val) {
-      if (val === 'over') {
-        this.imgTrash = './img/icon/TRASH_CAN2.png'
+    mouseOver(val) {
+      if (val === "over") {
+        this.imgTrash = "./img/icon/TRASH_CAN2.png";
       } else {
-        this.imgTrash = './img/icon/TRASH_CAN.png'
+        this.imgTrash = "./img/icon/TRASH_CAN.png";
       }
     },
-    showBDialog () {
-      this.bDialogVisible = true
+    showBDialog() {
+      this.bDialogVisible = true;
     },
-    hideBDialog () {
-      this.bDialogVisible = false
+    hideBDialog() {
+      this.bDialogVisible = false;
     },
-    hideDialog () {
-      this.dialogVisible = false
+    hideDialog() {
+      this.dialogVisible = false;
     },
-    baseDialogDelete () {
-      this.bDialogVisible = false
-      this.deleteModel()
+    baseDialogDelete() {
+      this.bDialogVisible = false;
+      this.deleteModel();
     },
+    closeErrorDialog() {
+      this.error = "";
+      this.errorMsgExists = false;
+      this.$router.push("/");
+    },
+    // checkErrorMessage() {
+    //   if (this.error.length > 0) {
+    //     return true;
+    //   }
+    // },
     login: async function () {
+      this.connectingAnimActive = true;
       try {
         await ControlService.connect({
           host: this.model.host.value,
           user: this.model.user.value,
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
-          keyfileLocation: this.model.keylocation.value
-        })
+          keyfileLocation: this.model.keylocation.value,
+        });
       } catch (err) {
-        // return;
+        this.connectingAnimActive = false;
+        this.errorMsgExists = true;
+        this.error = "Connection refused, please try again.";
+        return;
       }
-      this.$emit('page', 'welcome-page')
-    }
-  }
-}
+
+      if (await ControlService.checkStereumInstallation()) {
+        let services = await ControlService.getServices();
+        if (services && services.length > 0) {
+          let constellation = services.map((service) => {
+            return service.service
+              .replace(/(Beacon|Validator|Service)/gm, "")
+              .toUpperCase();
+          });
+          const includedPlugins = [];
+          constellation.forEach((plugin) => {
+            const buffer = this.allPlugins.filter(
+              (element) => element.name === plugin
+            );
+            buffer.forEach((element) => includedPlugins.push(element));
+          });
+
+          let grafana = services.find(service => service.service.includes('Grafana'))
+          let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+          let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
+          await ControlService.openTunnels([{dstPort: grafana.ports[0].servicePort, localPort: freePort}])
+          grafanaStats.linkUrl = 'http://localhost:' + freePort
+          this.$store.commit("updateRunningServices", [grafanaStats]);
+          this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
+        }
+
+        this.$router.push("/node");
+      }
+
+      this.$emit("page", "welcome-page");
+    },
+  },
+};
 </script>
 <style scoped>
 .server-parent {
@@ -511,7 +610,7 @@ select.classic:focus {
   align-items: center;
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
-  z-index: 99;
+  z-index: 95;
 }
 #keyLocation label {
   clear: both;
@@ -533,18 +632,21 @@ select.classic:focus {
 }
 
 #login {
-  width: 12%;
-  max-width: 120px;
-  height: 10%;
+  min-width: 120px;
+  min-height: 50px;
   outline-style: none;
+  padding: 10px;
   border: 5px solid #686868;
+  border-radius: 35px;
   cursor: pointer;
   position: absolute;
   right: 8%;
   bottom: 7%;
   background-color: #264c4c;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
-  font-size: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #cecece;
 }
 #login:hover {
   box-shadow: none;
@@ -650,5 +752,187 @@ input:required {
 }
 input:invalid {
   border-color: rgb(233, 100, 100);
+}
+.error-box {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(8, 8, 8);
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 96;
+}
+.error-modal {
+  width: 30%;
+  height: 40%;
+  background-color: rgb(235, 235, 235);
+  box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
+  border-radius: 10px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 101;
+}
+.error-modal .title-box {
+  width: 100%;
+  height: 30%;
+  background-color: rgb(213, 102, 102);
+  border-radius: 9px 9px 0 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title-box img {
+  width: 19%;
+  height: 80%;
+}
+.error-modal .description {
+  width: 80%;
+  margin-top: 20px;
+  text-align: center;
+}
+.error-modal .description span {
+  width: 50%;
+  color: rgb(55, 55, 55);
+  font-size: 1.2rem;
+  font-weight: 800;
+  word-break: break-word;
+  text-align: center;
+}
+
+.error-modal .btn-box {
+  width: 100%;
+  height: 30%;
+  border-radius: 0 0 9px 9px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-box button {
+  width: 30%;
+  height: 60%;
+  outline-style: none;
+  border: 2px solid rgb(235, 115, 115);
+  border-radius: 10px;
+  color: #de897f;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0px 1px 5px 1px rgb(97, 97, 97);
+}
+.btn-box button:hover {
+  border: 2px solid rgb(235, 115, 115);
+  box-shadow: 0px 0px 2px 1px rgb(97, 97, 97);
+  color: #dd6456;
+}
+.btn-box button:active {
+  box-shadow: none;
+  background-color: #eb7373;
+  color: #f7f7f7;
+}
+.anim {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(8, 8, 8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.7;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+p {
+  display: inline-block;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 4em;
+  font-family: arial;
+  font-weight: 600;
+  transform: scale(0.5);
+  color: #121212;
+  -webkit-text-stroke: 2px gray;
+}
+p:nth-child(1) {
+  animation: hover 2s linear infinite;
+  color: #44f2f2;
+}
+
+p:nth-child(2) {
+  animation: hover 2s linear infinite 0.125s;
+  color: #44f2f2;
+}
+
+p:nth-child(3) {
+  animation: hover 2s linear infinite 0.25s;
+  color: #44f2f2;
+}
+
+p:nth-child(4) {
+  animation: hover 2s linear infinite 0.375s;
+  color: #44f2f2;
+}
+
+p:nth-child(5) {
+  animation: hover 2s linear infinite 0.5s;
+  color: #44f2f2;
+}
+
+p:nth-child(6) {
+  animation: hover 2s linear infinite 0.675s;
+  color: #44f2f2;
+}
+
+p:nth-child(7) {
+  animation: hover 2s linear infinite 0.75s;
+  color: #44f2f2;
+}
+
+p:nth-child(8) {
+  animation: hover 2s linear infinite 0.825s;
+  color: #44f2f2;
+}
+p:nth-child(9) {
+  animation: hover 2s linear infinite 0.9s;
+  color: #44f2f2;
+}
+p:nth-child(10) {
+  animation: hover 2s linear infinite 0.975s;
+  color: #44f2f2;
+}
+p:nth-child(11) {
+  animation: hover 2s linear infinite 1.125s;
+  color: #44f2f2;
+}
+p:nth-child(12) {
+  animation: hover 2s linear infinite 1.2s;
+  color: #44f2f2;
+}
+p:nth-child(13) {
+  animation: hover 2s linear infinite 1.275s;
+  color: #44f2f2;
+}
+
+@keyframes hover {
+  0% {
+    transform: scale(0.5);
+    color: #121212;
+    -webkit-text-stroke: 2px #44f2f2;
+  }
+
+  20% {
+    transform: scale(1);
+    color: #121212;
+    -webkit-text-stroke: 2px #e7da67;
+  }
+
+  50% {
+    transform: scale(0.5);
+    color: #121212;
+    -webkit-text-stroke: 2px #60fbbb;
+  }
 }
 </style>

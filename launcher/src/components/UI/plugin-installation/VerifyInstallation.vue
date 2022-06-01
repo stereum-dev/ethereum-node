@@ -26,7 +26,7 @@
                     :key="index"
                   >
                     <div class="plugin-name">
-                      <img :src="plugin.icon" alt="icon">
+                      <img :src="plugin.icon" alt="icon" />
                       <span>{{ plugin.name }}</span>
                     </div>
                     <div class="category">
@@ -44,8 +44,8 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/configuration' }">
-              <button class="next-btn">INSTALL</button>
+            <router-link :to="{ path: '/node' }">
+              <button @click="runInstalltion" class="next-btn">INSTALL</button>
             </router-link>
           </div>
         </div>
@@ -54,23 +54,38 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
+import ControlService from '@/store/ControlService'
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
     ...mapGetters({
-      selectedPreset: 'getSelectedPreset',
-      installationPath: 'getInstallationPath'
-    })
+      selectedPreset: "getSelectedPreset",
+      installationPath: "getInstallationPath",
+      pluginServices: "getServiceIcons",
+    }),
   },
-  mounted () {
+  mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push('/clickinstall')
+      this.$router.push("/clickinstall");
+    }
+  },
+  methods: {
+    runInstalltion: async function(){
+      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      let services = await ControlService.writeOneClickConfiguration();
+      console.log(await ControlService.startOneClickServices());
+      let grafana = services.find(service => service.service.includes('Grafana'))
+      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+      let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
+      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: freePort}])
+      grafanaStats.linkUrl = 'http://localhost:' + freePort
+      this.$store.commit("updateRunningServices", [grafanaStats]);
     }
   }
-}
+};
 </script>
 <style scoped>
 .verify-parent {
@@ -138,7 +153,7 @@ export default {
 
 .content-box {
   width: 95%;
-  height: 63%;
+  height: 53%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -156,14 +171,17 @@ export default {
 .table-box .table {
   width: 100%;
   height: 100%;
+  border: 9px solid #8e8e8e;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
 }
 .table .table-header {
-  width: 89%;
-  height: 8%;
+  width: 90%;
+  height: 10%;
+  margin-top: 10px;
   /* background-color: #334b3e; */
   background-color: #336666;
   display: grid;
@@ -180,17 +198,16 @@ export default {
 }
 .table .table-header span {
   width: 100%;
-  color: rgb(213, 213, 213);
+  color: #d5d5d5;
   font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
 }
 .table .table-content {
   width: 95%;
-  height: 70%;
-  border-top: 1px solid gray;
-  /* background-color: rgb(27, 27, 27); */
-  padding-top: 10px;
+  height: 85%;
+  border-top: 1px solid #8e8e8e;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: 100%;
   align-items: center;
@@ -203,17 +220,16 @@ export default {
 
 .table-content .table-row {
   width: 95%;
-  height: 100%;
-  margin-top: 15px auto;
+  height: 31px;
+  margin-top: 5px;
   background-color: #33393e;
   box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
-  border:1px solid rgb(81, 80, 80);
+  border: 1px solid rgb(81, 80, 80);
   border-radius: 10px;
   justify-self: center;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  padding: 1px 0 3px 0;
   cursor: pointer;
 }
 
@@ -224,9 +240,9 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.plugin-name img{
-  width:12%;
-  height: 50%;
+.plugin-name img {
+  width: 14%;
+  height: 65%;
 }
 
 .plugin-name span {
@@ -273,7 +289,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
 }
 .btn-box a {
   width: 95%;
@@ -282,7 +297,6 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
 }
 .next-btn,
 .back-btn {

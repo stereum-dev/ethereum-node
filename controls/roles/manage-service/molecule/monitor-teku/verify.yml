@@ -1,0 +1,99 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9001/tcp") != -1
+      - stereum_ufw_status.stdout.find("9001/udp") != -1
+      - stereum_ufw_status.stdout.find("5052/tcp") != -1
+      - stereum_ufw_status.stdout.find("9090/tcp") != -1
+      - stereum_ufw_status.stdout.find("3000/tcp") != -1
+  # grafana config files
+  - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/grafana.ini
+    register: grafana_ini
+  - debug:
+      msg: "{{ grafana_ini }}"
+  - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/dashboards/multiple_teku_instance.json
+    register: grafana_dashboard
+  - debug:
+      msg: "{{ grafana_dashboard }}"
+  - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/datasources/datasource.yml
+    register: grafana_datasource
+  - debug:
+      msg: "{{ grafana_datasource }}"
+  - name: Check for grafana config files
+    assert:
+      that:
+        - grafana_ini.stat.exists
+        - grafana_dashboard.stat.exists
+        - grafana_datasource.stat.exists
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 5
+  #  grafana logs
+  - name: Grafana
+    command: "docker logs --tail=100 stereum-0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1"
+    register: grafana
+    until:
+      - grafana.stdout is search('HTTP Server Listen')
+      - grafana.stdout is not search("can't read datasource provisioning files from directory")
+      - grafana.stdout is not search("can't read dashboard provisioning files from directory")
+    retries: 60
+    delay: 10
+  #  prometheus logs
+  - name: Prometheus
+    command: "docker logs --tail=100  stereum-f52b6dcc-e0d5-11ec-8e8d-87f977a4cd88"
+    register: prometheus
+    until:
+      - prometheus.stderr is search("Server is ready to receive web requests")
+      - prometheus.stderr is not search("Error loading config")
+    retries: 60
+    delay: 10
+  #  node exporter logs
+  - name: Node exporter
+    command: "docker logs --tail=100 stereum-ffd332e6-e0d5-11ec-a82b-9b01f3fb02d7"
+    register: node_exporter
+    until:
+      - node_exporter.stderr is search("Listening on")
+    retries: 60
+    delay: 10
+  #  teku beacon logs
+  - name: teku beacon
+    command: "docker logs --tail=200 stereum-1929168e-e0d6-11ec-9183-97daacc21ea6"
+    register: teku_beacon
+    until:
+      - teku_beacon.stdout is search("Syncing")
+      - teku_beacon.stdout is not search("Eth1 service down")
+    retries: 60
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("grafana/grafana") != -1
+      - stereum_docker_ps.stdout.find("prom/node-exporter") != -1
+      - stereum_docker_ps.stdout.find("prom/prometheus") != -1
+      - stereum_docker_ps.stdout.find("consensys/teku") != -1
+      - stereum_docker_ps.stdout.find("3000->3000") != -1
+      - stereum_docker_ps.stdout.find("9100/tcp") != -1
+      - stereum_docker_ps.stdout.find("5052->5052") != -1
+      - stereum_docker_ps.stdout.find("9001->9001") != -1
+      - stereum_docker_ps.stdout.find("5051/tcp") != -1
+      - stereum_docker_ps.stdout.find("8008/tcp") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 4
+
+# EOF

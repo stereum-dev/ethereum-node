@@ -38,4 +38,6 @@ npm run electron:build
 ### Test (run locally) electron
 ```
 npm run electron:serve
+
 ```
+

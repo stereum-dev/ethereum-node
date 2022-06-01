@@ -6,73 +6,94 @@
       </div>
 
       <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
-      <lang-dialog @close="hideDialog" :open="dialogIsVisible" class="lDialog">
-        <ul id="flag">
-          <li
-            v-for="link in linkFlags"
-            :key="link.langImg"
+      <div class="text-box">
+        <span v-if="hiddenDialogActive">choose your language</span>
+        <span v-else>Click to continue</span>
+      </div>
+      <lang-dialog @close="hideDialog" :open="dialogIsVisible">
+        <div id="flag" v-for="link in linkFlags" :key="link.langImg">
+          <div
+            class="content-box"
             @click="setLang(link.langName, link.langSelect)"
           >
             <img :src="link.langImg" id="flagId" />
-          </li>
-        </ul>
+            <span>{{ link.langName }}</span>
+          </div>
+        </div>
       </lang-dialog>
 
-      <section @click="showDialog">
-        <lang-button :flag="flag" class="lang"></lang-button>
-      </section>
+      <div class="selected-flag" v-if="isLanguageSelected">
+        <div class="flag-box">
+          <img :src="selectedLanguage.flag" class="selected-icon" />
+        </div>
+        <div class="lang-name">
+          <span>{{ selectedLanguage.lang }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import BaseLogo from '../components/layers/BaseLogo.vue'
-import LangButton from '../components/UI/LangButton.vue'
-import LangDialog from '../components/UI/LangDialog.vue'
-import ControlService from '@/store/ControlService'
+import { mapActions } from "vuex";
+import BaseLogo from "../components/layers/BaseLogo.vue";
+import LangButton from "../components/UI/LangButton.vue";
+import LangDialog from "../components/UI/LangDialog.vue";
+import ControlService from "@/store/ControlService";
 // import SetupServer from "./SetupServer.vue";
 export default {
-  name: 'TheFirst',
+  name: "TheFirst",
   components: { BaseLogo, LangButton, LangDialog },
 
-  emit: ['open', 'page'],
-  created () {
-    this.checkSettings()
+  emit: ["open", "page"],
+  created() {
+    this.checkSettings();
   },
-  data () {
+  data() {
     return {
-      link: 'stereum-logo-blinking.gif',
-      flag: 'SelectLang.png',
-      language: ''
-    }
+      link: "stereum-logo-blinking.gif",
+      isLanguageSelected: false,
+      hiddenDialogActive: true,
+      selectedLanguage: {
+        lang: "",
+        flag: "",
+      },
+    };
+  },
+  mounted() {
+    this.showDialog();
   },
   computed: {
-    linkFlags () {
-      return this.$store.getters.linkFlags_get
+    linkFlags() {
+      return this.$store.getters.linkFlags_get;
     },
-    dialogIsVisible () {
-      return this.$store.getters.dialogIsVisible_get
-    }
+    dialogIsVisible() {
+      return this.$store.getters.dialogIsVisible_get;
+    },
   },
   methods: {
-    ...mapActions(['showDialog', 'hideDialog']),
-    setLang (lang, langSelect) {
-      this.language = lang
-      this.flag = langSelect
-      this.hideDialog()
-      this.link = 'stereum-logo-extern.png'
-      this.updateSettings(lang, langSelect)
+    ...mapActions(["showDialog", "hideDialog"]),
+    setLang(lang, langSelect) {
+      this.selectedLanguage.lang = lang;
+      this.selectedLanguage.flag = langSelect;
+      this.isLanguageSelected = true;
+      this.hideDialog();
+      this.hiddenDialogActive = false;
+      this.link = "stereum-logo-extern.png";
+      this.updateSettings(lang, langSelect);
     },
-    activePage () {
-      if (this.language === '') {
-        ///
+    activePage() {
+      if (
+        this.selectedLanguage.flag == "" ||
+        this.selectedLanguage.lang == ""
+      ) {
+        // return
       } else {
-        this.$emit('page', 'SetupServer')
+        this.$emit("page", "SetupServer");
       }
     },
     checkSettings: async function () {
-      const savedConfig = await ControlService.readConfig()
+      const savedConfig = await ControlService.readConfig();
       if (
         savedConfig !== undefined &&
         savedConfig.savedLanguage !== undefined
@@ -80,20 +101,20 @@ export default {
         this.setLang(
           savedConfig.savedLanguage.language,
           savedConfig.savedLanguage.flag
-        )
-        this.activePage()
+        );
+        this.activePage();
       }
     },
     updateSettings: async function (lang, langSelect) {
-      const prevConf = await ControlService.readConfig()
+      const prevConf = await ControlService.readConfig();
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect }
-      }
-      await ControlService.writeConfig(conf)
-    }
-  }
-}
+        savedLanguage: { language: lang, flag: langSelect },
+      };
+      await ControlService.writeConfig(conf);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -107,16 +128,76 @@ export default {
   left: 0;
   box-sizing: border-box;
   background-color: #336666;
-  border:3px solid #989898;
+  border: 3px solid #989898;
 }
 .baselogo-box {
   width: 100%;
   height: 100%;
 }
-.lang {
+.text-box {
+  width: 50%;
+  height: 30px;
   position: absolute;
-  top: 5%;
-  right: 5%;
+  top: 27%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.text-box span {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #b5cdcd;
+  text-transform: uppercase;
+}
+.selected-flag {
+  width: 15%;
+  height: 30%;
+  position: absolute;
+  top: 3%;
+  right: 2%;
+}
+.flag-box {
+  width: 58%;
+  height: 50%;
+  background-color: #383838;
+  border: 5px solid #7e7777;
+  border-radius: 100%;
+  box-shadow: 0 1px 8px 2px rgb(21, 21, 21);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lang-name {
+  min-width: 90px;
+  width: fit-content;
+  height: 20%;
+  background-color: #383838;
+  border: 5px solid #7e7777;
+  border-radius: 35px;
+  margin: 5px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 10px;
+}
+.lang-name span {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgb(233, 233, 233);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.selected-flag span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(204, 204, 204);
+  text-transform: uppercase;
+}
+.selected-flag img {
+  width: 100%;
+  height: 100%;
 }
 .parent {
   background-color: #000;
@@ -132,22 +213,32 @@ export default {
 }
 
 #flag {
-  display: inline-flex;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  float: left;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#flag li {
-  list-style: none;
-  display: inline-block;
+#flag .content-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   padding: 10px;
+  margin: 0 auto;
   cursor: pointer;
 }
-
+.content-box span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgb(200, 200, 200);
+  text-transform: uppercase;
+}
 #flagId {
-  width: 120px;
-  resize: both;
+  width: 50px;
+  height: 50px;
 }
 </style>

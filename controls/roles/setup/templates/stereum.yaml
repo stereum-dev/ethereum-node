@@ -1,12 +1,9 @@
 # Stereum system settings
-stereum:
+stereum_settings:
   settings:
     controls_install_path: {{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}
     os_user: {{ stereum.settings.os_user | default(stereum.defaults.os_user) }}
     updates:
-      in_progress:
       lane: {{ stereum.settings.updates.lane | default(stereum.defaults.updates.lane) }}
-      available:
       unattended:
-        check: {{ stereum.settings.updates.unattended.check | default(stereum.defaults.updates.unattended.check) }}
         install: {{ stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.install) }}

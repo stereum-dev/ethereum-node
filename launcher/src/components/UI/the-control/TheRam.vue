@@ -1,15 +1,20 @@
 <template>
   <div class="theRamParent">
-    <div class="inputBox">
-      <div class="ramTtl"><span>RAM</span></div>
+    <div class="ramTtl">
+      <span>RAM</span>
     </div>
-    <div class="valueBoxes">
-      <div class="vlaueR">
-        <span>{{ usedR }} / {{ totalR }}</span>
+    <div class="ramBox">
+      <div class="ramIco">
+        <img src="../../../../public/img/icon/control/ramStick.svg" />
       </div>
-      <span class="lblVal">GB</span>
-      <div class="loadingVal">
-        <div class="loadingVal_value" :style="verticalBar"></div>
+      <div class="ramValue">
+        <div class="valDigits">
+          <div class="digits">
+            <span>{{ usedR }} / {{ totalR }}</span>
+          </div>
+          <span>GB</span>
+        </div>
+        <div class="valLbl"><span>used</span><span>total</span></div>
       </div>
     </div>
   </div>
@@ -20,84 +25,21 @@ export default {
     return {
       usedR: 13.2,
       totalR: 45.2,
-      loadingValueBar: 70,
     };
-  },
-  computed: {
-    verticalBar() {
-      return { height: this.loadingValueBar + "%" };
-    },
   },
 };
 </script>
 
 <style scoped>
-.loadingVal_value {
-  width: 98%;
-  background: #568d50;
-  height: 50%;
-}
-.loadingVal {
-  width: 45%;
-  background: #282828;
-  height: 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-}
-.valueBoxes {
-  display: flex;
-  width: 85%;
-  height: 80%;
-  justify-content: flex-start;
-  align-items: center;
-}
-.lblVal {
-  width: 20%;
-  font-weight: bold;
-  background: #181f1c;
-}
-.vlaueR {
-  width: 35%;
-  background: #33393e;
-  font-size: 80%;
-  font-weight: bold;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .theRamParent {
   display: flex;
-  flex-direction: column;
   width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
 }
-.inputBox {
-  display: flex;
-  width: 99%;
-  background: #171a1c;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  height: 30%;
-}
-.inputBox input {
-  width: 150%;
-  background: #171a1c;
-  color: #eee;
-  z-index: 1;
-  position: relative;
-  left: -2%;
-  border: 2px solid #171a1c;
-  border-radius: 10px;
-  padding-left: 3%;
-  outline: none;
-}
-
 .ramTtl {
   width: 98%;
   height: 20%;
@@ -109,7 +51,7 @@ export default {
   box-sizing: border-box;
 }
 .ramTtl span {
-  font-size: 50%;
+  font-size: 55%;
   color: #eee;
   border: 1px solid rgb(27, 26, 26);
   width: 20%;
@@ -117,5 +59,56 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.ramBox {
+  width: 100%;
+  height: 79%;
+  display: flex;
+  box-sizing: border-box;
+}
+.ramIco {
+  box-sizing: border-box;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.ramIco img {
+  width: 75%;
+}
+.ramValue {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.valDigits {
+  display: flex;
+  width: 100%;
+  height: 70%;
+  justify-content: center;
+  align-items: center;
+}
+.digits {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+}
+.valDigits,
+.digits span {
+  font-size: 100%;
+  font-weight: bold;
+}
+.valLbl {
+  display: flex;
+  width: 40%;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 60%;
 }
 </style>

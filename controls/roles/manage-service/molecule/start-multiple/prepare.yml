@@ -5,6 +5,9 @@
     - role: '../'
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: e3ae009e-e019-11ec-8d7a-a36ff73c89bf
+    geth_service: 007af7fe-e01a-11ec-ab78-37ce2b265e8b
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -25,38 +28,47 @@
     - include_role:
         name: "configure-firewall"
 
-    - name: Write service configuration lighthouse
+    - name: Write service configuration
       copy:
-        dest: "/etc/stereum/services/9024aec6-12a8-456a-8096-ee7ef6f67167.yaml"
+        dest: "/etc/stereum/services/{{ beacon_service }}.yaml"
         owner: "root"
         group: "root"
         mode: 0644
         content: |
-          command: []
-          entrypoint:
-          - /opt/app/start/beacon.sh
-          env:
-            DATADIR: /opt/app/beacon
-            DEBUG_LEVEL: info
-            ETH1_NODES: http://stereum-geth-25df0439-80e6-4afe-8876-72d7718035c3:8545
-            NETWORK: prater
-            SLASHERDIR: /opt/app/slasher
-            SLASHER_DB_SIZE: '16'
-          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
-          image: stereum/lighthouse:v2.0.1-47
-          name: lighthouse
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=debug
+            - --network=prater
+            - --eth1-endpoints=http://stereum-"{{ geth_service }}":8545
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+          entrypoint: []
+          env: {}
+          id: {{ beacon_service }}
+          image: sigp/lighthouse:v2.1.2
           ports:
-          - 0.0.0.0:9000:9000/tcp
-          - 0.0.0.0:9000:9000/udp
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+            - 127.0.0.1:5052:5052/tcp
           volumes:
-          - /opt/stereum/lighthouse/beacon:/opt/app/beacon
-          - /opt/stereum/lighthouse/slasher:/opt/app/slasher
+            - "/opt/stereum/lighthouse/beacon:/opt/app/beacon"
+            - "/opt/stereum/lighthouse/slasher:/opt/app/slasher"
           user: 2000
       become: yes
 
     - name: Write service configuration geth
       copy:
-        dest: "/etc/stereum/services/25df0439-80e6-4afe-8876-72d7718035c3.yaml"
+        dest: "/etc/stereum/services/{{ geth_service }}.yaml"
         owner: "root"
         group: "root"
         mode: 0644
@@ -65,7 +77,7 @@
           entrypoint: []
           env:
             STEREUM_DUMMY: foobar
-          id: 25df0439-80e6-4afe-8876-72d7718035c3
+          id: {{ geth_service }}
           image: ethereum/client-go:v1.10.11
           name: geth
           ports:

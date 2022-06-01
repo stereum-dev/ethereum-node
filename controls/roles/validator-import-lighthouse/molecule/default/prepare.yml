@@ -58,20 +58,30 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: stereum/lighthouse:v2.0.1-48
-              env:
-                DEBUG_LEVEL: debug
-                NETWORK: prater
-                ETH1_NODES: MyEth1Node
-                DATADIR: /opt/app/beacon
-                SLASHERDIR: /opt/app/slasher
-                SLASHER_DB_SIZE: "16"
+              image: sigp/lighthouse:v2.1.2
+              env: {}
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
                 - 127.0.0.1:5052:5052/tcp
-              command: []
-              entrypoint: ["/opt/app/start/beacon.sh"]
+              command:
+                - lighthouse
+                - bn
+                - --debug-level=debug
+                - --network=prater
+                - --eth1-endpoints=http://10.10.0.3:8545
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+              entrypoint: []
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
@@ -91,17 +101,22 @@
             state: started
             configuration:
               id: "{{ validator_service }}"
-              image: stereum/lighthouse:v2.0.1-48
-              env:
-                DEBUG_LEVEL: info
-                NETWORK: prater
-                DATADIR: /opt/app/validator
-                LAUNCHPADDIR: /opt/app/launchpad
-                GRAFFITI: stereum.net
-                BEACON_NODES: "http://stereum-{{ beacon_service }}:5052"
-              ports: []
-              command: []
-              entrypoint: ["/opt/app/start/validator-stereum2.sh"]
+              image: sigp/lighthouse:v2.2.1
+              env: {}
+              ports:
+                - 127.0.0.1:5062:5062/tcp
+              command:
+                - lighthouse
+                - vc
+                - --debug-level=debug
+                - --network=prater
+                - --beacon-nodes=http://stereum-{{ beacon_service }}:5052
+                - --datadir=/opt/app/validator
+                - --init-slashing-protection
+                - --graffiti="stereum.net"
+                - --metrics
+                - --metrics-address=0.0.0.0
+              entrypoint: []
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ validator_service }}/validator:/opt/app/validator"

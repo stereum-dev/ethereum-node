@@ -4,12 +4,13 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
+    beacon_service: c006e296-e019-11ec-8c83-b730a7f95d3d
     stereum_args:
       manage_service:
         save: false
         state: started
         configuration:
-          id: 9024aec6-12a8-456a-8096-ee7ef6f67167
+          id: "{{ beacon_service }}"
 
   tasks:
     - set_fact:

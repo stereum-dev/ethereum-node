@@ -1,0 +1,36 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # Stereum config files
+  - stat: path=/etc/stereum/stereum.yaml
+    register: stereum_config_file
+  - stat: path=/opt/stereum/ansible
+    register: stereum_ansible_dir
+  - debug:
+      msg: "{{ stereum_ansible_dir }}"
+  - name: Check for config
+    assert:
+      that:
+        - stereum_config_file.stat.exists
+        - stereum_ansible_dir.stat.isdir is defined
+        - stereum_ansible_dir.stat.isdir
+
+  # check for correct version of repository
+  - name: Get git hash
+    ansible.builtin.command: git show --format="%H" --no-patch
+    args:
+      chdir: "/opt/stereum/ansible"
+    register: git_hash
+  - debug:
+      msg: "{{ git_hash }}"
+  - name: Check for correct git hash
+    assert:
+      that:
+        - git_hash.stdout == "aae4cce8ad8a93c74b4aeb2f1692171a7d01b106"
+
+# EOF

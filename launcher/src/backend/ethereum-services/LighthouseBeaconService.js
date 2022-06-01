@@ -3,7 +3,11 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, workingDir, executionClients, slasherDbSize) {
+  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize) {
+    const service = new LighthouseBeaconService()
+    service.setId()
+    const workingDir = service.buildWorkingDir(dir)
+    
     const image = 'sigp/lighthouse'
 
     const dataDir = '/opt/app/beacon'
@@ -18,10 +22,10 @@ export class LighthouseBeaconService extends NodeService {
     // eth1 nodes
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
 
-    const service = new LighthouseBeaconService()
     service.init(
       'LighthouseBeaconService',  //service
-      null, //id
+      service.id, //id
+      1, // configVersion
       image,  //image
       'v2.1.2', //imageVersion
       [

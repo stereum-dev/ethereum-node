@@ -3,12 +3,12 @@ name: Tests Integration
 on:
   push:
     branches: [main]
-  
+
   workflow_dispatch:
 
 jobs:
   setup:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     outputs:
       tests: ${{ steps.get-tests.outputs.tests }}
     steps:
@@ -19,12 +19,12 @@ jobs:
       - run: npm install
         working-directory: ./launcher
       - id: get-tests
-        name: Get Tests 
+        name: Get Tests
         run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int")) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
         working-directory: ./launcher
 
   integration-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     name: test ${{ matrix.test.name }}
     needs:
       - setup
@@ -42,3 +42,4 @@ jobs:
         working-directory: ./launcher
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: 'true'

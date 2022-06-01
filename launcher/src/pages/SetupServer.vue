@@ -6,7 +6,6 @@
 <script>
 import FormSetup from '../components/layers/FormSetup.vue'
 export default {
-  emits: ['page'],
   components: { FormSetup },
   methods: {
     page () {
