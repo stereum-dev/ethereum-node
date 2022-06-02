@@ -40,7 +40,7 @@ export class ValidatorAccountManager {
                     await this.nodeConnection.sshService.exec(`sudo chmod 700 ${passwords_path}/wallet-password`)
                     await this.nodeConnection.sshService.exec(`sudo chown 2000:2000 ${passwords_path}/wallet-password`)
                     //Prysm - Create wallet for account(s)
-                    await this.nodeConnection.sshService.exec(`bash -c "docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater"`)
+                    await this.nodeConnection.sshService.exec(`sudo bash -c "docker exec stereum-${client.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater"`)
 
                     await this.nodeConnection.sshService.exec(`sudo chown -R 2000:2000 ${wallet_path}`)
 
@@ -81,7 +81,7 @@ export class ValidatorAccountManager {
                     log.error("Couldn't read API-Token")
                     log.info("Generating one")
                     const password = StringUtils.createRandomString()
-                    await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
+                    await this.nodeConnection.sshService.exec('sudo apt install -y openjdk-8-jre-headless')
                     await this.nodeConnection.sshService.exec(`sudo echo ${password} > ${dataDir}/teku_api_password.txt`)
                     await this.nodeConnection.sshService.exec(`sudo bash -c "cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1"`)
                     await Sleep(30000)
