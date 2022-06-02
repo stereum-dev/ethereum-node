@@ -156,7 +156,7 @@
 import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
-import ControlService from '@/store/ControlService'
+import ControlService from "@/store/ControlService";
 export default {
   components: { ShowKey, DropZone },
   data() {
@@ -173,26 +173,30 @@ export default {
     this.checkKeyExists();
   },
   methods: {
-    importKey: async function(){
-      await ControlService.importKey({files: this.keyFiles, password: this.password})
-      this.password = ""
+    importKey: async function () {
+      await ControlService.importKey({
+        files: this.keyFiles,
+        password: this.password,
+      });
+      this.password = "";
     },
     uploadFileHandler(event) {
-      console.log("upload", event);
       let uploadedFiles = event.target.files;
-      this.keyFiles.push(...uploadedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (droppedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...uploadedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     dropFileHandler(event) {
-      console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
-      console.log(droppedFiles);
-      this.keyFiles.push(...droppedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (droppedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...droppedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     removeKeyHandler(key_name) {
       this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
