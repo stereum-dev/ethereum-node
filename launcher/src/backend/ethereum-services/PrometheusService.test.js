@@ -7,7 +7,7 @@ test('getServiceConfiguration', () => {
   const NimbusBeaconService = require('./NimbusBeaconService')
   NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
     return {
-      buildConsensusClientHttpEndpointUrl: jest.fn(() => { return 'http://stereum-someID:9190' })
+      buildConsensusClientMetricsEndpoint: jest.fn(() => { return 'stereum-someID:9190' })
     }
   })
 
@@ -32,7 +32,7 @@ test('buildConfiguration', () => {
   const NimbusBeaconService = require('./NimbusBeaconService')
   NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
     return {
-      buildConsensusClientHttpEndpointUrl: jest.fn(() => { return 'http://stereum-someID:9190' }),
+      buildConsensusClientMetricsEndpoint: jest.fn(() => { return 'stereum-someID:9190' }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'nimbus-id',
