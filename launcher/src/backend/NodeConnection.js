@@ -497,17 +497,22 @@ export class NodeConnection {
   }
 
   async checkAvailablePorts(option) {
-    let available = false;
-    let port = option.min;
-    while (!available && port < option.max) {
-      available = await this.checkPort(port);
-      if (!available) {
-        port++;
+    const ports = []
+    for(let i = 0; i < option.amount; i++){
+      let available = false;
+      let port = option.min;
+      while ((!available && port < option.max) || ports.includes(port)) {
+        available = await this.checkPort(port);
+        if (!available || ports.includes(port)) {
+          available = false;
+          port++;
+        }
       }
+      log.info(
+        `Port ${port} is the next available in range ${option.min} - ${option.max}`
+      );
+      ports.push(port)
     }
-    log.info(
-      `Port ${port} is the next available in range ${option.min} - ${option.max}`
-    );
-    return port;
+    return ports;
   }
 }

@@ -34,7 +34,7 @@ export class TekuBeaconService extends NodeService {
                 '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',
                 '--metrics-interface=0.0.0.0',
-                '--metrics-host-allowlist="*"',
+                '--metrics-host-allowlist=*',
                 `--data-path=${dataDir}`,
                 '--data-storage-mode=archive',
                 '--rest-api-port=5051',
@@ -74,6 +74,10 @@ export class TekuBeaconService extends NodeService {
 
     buildConsensusClientHttpEndpointUrl() {
         return 'http://stereum-' + this.id + ':5051'
+    }
+
+    buildConsensusClientMetricsEndpoint () {
+        return 'stereum-' + this.id + ':8008'
     }
 
     getAvailablePorts() {

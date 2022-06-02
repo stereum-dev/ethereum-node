@@ -62,6 +62,10 @@ export class LighthouseValidatorService extends NodeService {
     return service
   }
 
+  buildValidatorClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':5064'
+  }
+
   getAvailablePorts () {
     return [
       new ServicePortDefinition(5062, 'tcp', 'Validator Client API')

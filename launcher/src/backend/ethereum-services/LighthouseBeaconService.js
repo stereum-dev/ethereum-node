@@ -70,6 +70,10 @@ export class LighthouseBeaconService extends NodeService {
     return 'http://stereum-' + this.id + ':5052'
   }
 
+  buildConsensusClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':5054'
+  }
+
   getAvailablePorts () {
     return [
       new ServicePortDefinition(9000, 'tcp', 'P2P connections'),
