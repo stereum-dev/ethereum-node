@@ -3,7 +3,7 @@
     <div class="keys-table-box">
       <div class="keys-table">
         <div class="table-header" v-if="insertFilePage">
-          <span id="name">NAME</span>
+          <span id="name">Public Key</span>
           <span id="service">SERVICE</span>
           <span id="active">ACTIVE SINCE</span>
           <span id="state">STATE</span>
@@ -39,37 +39,53 @@
             />
             <span class="balance">24.000001</span>
             <div class="option-box">
-              <div class="grafiti-box">
+              <div
+                class="grafiti-box"
+                @mouseover="showGrafitiText = true"
+                @mouseleave="showGrafitiText = false"
+              >
                 <img
                   class="grafiti-icon"
                   src="../../../../public/img/icon/the-staking/option-graffiti.png"
                   alt="icon"
                 />
-                <div class="grafiti-text">GRAFITI</div>
+                <span v-if="showGrafitiText" class="grafiti-text">GRAFITI</span>
               </div>
-              <div class="copy-box">
+              <div
+                class="copy-box"
+                @mouseover="showCopyText = true"
+                @mouseleave="showCopyText = false"
+              >
                 <img
                   class="copy-icon"
                   src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
-                <div class="copy-text">COPY</div>
+                <span v-if="showCopyText" class="copy-text">COPY</span>
               </div>
-              <div class="remove-box">
+              <div
+                class="remove-box"
+                @mouseover="showRemoveText = true"
+                @mouseleave="showRemoveText = false"
+              >
                 <img
                   class="remove-icon"
                   src="../../../../public/img/icon/the-staking/option-remove.png"
                   alt="icon"
                 />
-                <div class="remove-text">REMOVE</div>
+                <span v-if="showRemoveText" class="remove-text">REMOVE</span>
               </div>
-              <div class="exit-box">
+              <div
+                class="exit-box"
+                @mouseover="showExitText = true"
+                @mouseleave="showExitText = false"
+              >
                 <img
                   class="exit-icon"
                   src="../../../../public/img/icon/the-staking/redexit-icon.png"
                   alt="icon"
                 />
-                <div class="exit-text">EXIT</div>
+                <span v-if="showExitText" class="exit-text">EXIT</span>
               </div>
             </div>
           </div>
@@ -156,7 +172,7 @@
 import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
-import ControlService from '@/store/ControlService'
+import ControlService from "@/store/ControlService";
 export default {
   components: { ShowKey, DropZone },
   data() {
@@ -166,6 +182,10 @@ export default {
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
+      showCopyText: false,
+      showGrafitiText: false,
+      showRemoveText: false,
+      showExitText: false,
       password: "",
     };
   },
@@ -173,26 +193,33 @@ export default {
     this.checkKeyExists();
   },
   methods: {
-    importKey: async function(){
-      await ControlService.importKey({files: this.keyFiles, password: this.password})
-      this.password = ""
+    importKey: async function () {
+      // await ControlService.importKey({
+      //   files: this.keyFiles,
+      //   password: this.password,
+      // });
+      this.password = "";
+      this.insertFilePage = true;
+      this.enterPasswordPage = false;
+      this.passwordInputActive = false;
     },
     uploadFileHandler(event) {
-      console.log("upload", event);
       let uploadedFiles = event.target.files;
-      this.keyFiles.push(...uploadedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (uploadedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...uploadedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     dropFileHandler(event) {
-      console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
-      console.log(droppedFiles);
-      this.keyFiles.push(...droppedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (droppedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...droppedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     removeKeyHandler(key_name) {
       this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
@@ -324,8 +351,8 @@ export default {
 .option-box img:hover {
   width: 23px;
   height: 23px;
-  box-shadow: 0 0 4px 0 rgb(228, 230, 228);
 }
+
 .option-box img:active {
   width: 21px;
   height: 21px;
@@ -338,13 +365,28 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
+.copy-box .copy-text {
+  position: absolute;
+  bottom: -17px;
+  left: 6px;
+  transition-duration: 500ms;
+}
+
 .option-box .grafiti-box {
   height: 100%;
   grid-column: 2;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.grafiti-box .grafiti-text {
+  position: absolute;
+  bottom: -17px;
+  left: 0;
+  transition-duration: 500ms;
 }
 .option-box .remove-box {
   height: 100%;
@@ -352,6 +394,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.remove-box .remove-text {
+  position: absolute;
+  bottom: -17px;
+  left: -1px;
+  transition-duration: 500ms;
 }
 .option-box .exit-box {
   height: 100%;
@@ -359,6 +408,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.exit-box .exit-text {
+  position: absolute;
+  bottom: -17px;
+  right: 9px;
+  transition-duration: 500ms;
 }
 .keys-table {
   width: 100%;
@@ -380,7 +436,8 @@ export default {
   align-items: flex-end;
 }
 .table-header #name {
-  grid-column: 3;
+  grid-column: 2;
+  text-transform: uppercase;
 }
 .table-header #service {
   grid-column: 4;
