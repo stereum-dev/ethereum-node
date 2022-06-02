@@ -74,15 +74,30 @@ export default {
   },
   methods: {
     runInstalltion: async function(){
-      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
+      await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
+
       let grafana = services.find(service => service.service.includes('Grafana'))
+      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+
       let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-      let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
-      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: freePort}])
-      grafanaStats.linkUrl = 'http://localhost:' + freePort
-      this.$store.commit("updateRunningServices", [grafanaStats]);
+      let prometheusStats = this.pluginServices.find(e => e.name === 'prometheus')
+
+      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+
+      let grafanaPort = localPorts.pop()
+      let prometheusPort = localPorts.pop()
+
+      localPorts = await ControlService.openTunnels([
+        {dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: grafanaPort},
+        {dstPort: prometheus.ports[0].split(":")[2].replace('/tcp',''), localPort: prometheusPort}
+      ])
+      
+      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
+      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
+      
+      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
     }
   }
 };

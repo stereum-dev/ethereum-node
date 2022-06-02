@@ -136,24 +136,27 @@ const store = createStore({
         {
           name: "grafana",
           icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
-          minPort: 9000,
-          maxPort: 9999,
+          linkUrl: "https://stereum.net",
+        },
+        {
+          name: "prometheus",
+          icon: "/img/icon/service-icons/prometheus.png",
+          linkUrl: "https://stereum.net",
         },
         {
           name: "ssv",
           icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
+          linkUrl: "https://stereum.net",
         },
         {
           name: "grafana",
           icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
+          linkUrl: "https://stereum.net",
         },
         {
           name: "ssv",
           icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
+          linkUrl: "https://stereum.net",
         },
         {
           name: "grafana",

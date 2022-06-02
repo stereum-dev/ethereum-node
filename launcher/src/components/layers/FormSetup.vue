@@ -361,12 +361,26 @@ export default {
             buffer.forEach((element) => includedPlugins.push(element));
           });
 
-          let grafana = services.find(service => service.service.includes('Grafana'))
-          let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-          let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
-          await ControlService.openTunnels([{dstPort: grafana.ports[0].servicePort, localPort: freePort}])
-          grafanaStats.linkUrl = 'http://localhost:' + freePort
-          this.$store.commit("updateRunningServices", [grafanaStats]);
+      let grafana = services.find(service => service.service.includes('Grafana'))
+      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+
+      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+      let prometheusStats = this.pluginServices.find(e => e.name === 'prometheus')
+
+      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+
+      let grafanaPort = localPorts.pop()
+      let prometheusPort = localPorts.pop()
+
+      localPorts = await ControlService.openTunnels([
+        {dstPort: grafana.ports[0].servicePort, localPort: grafanaPort},
+        {dstPort: prometheus.ports[0].servicePort, localPort: prometheusPort},
+      ])
+      
+      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
+      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
+      
+      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
           this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
         }
 
