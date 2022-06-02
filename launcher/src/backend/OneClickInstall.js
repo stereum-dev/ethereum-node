@@ -5,6 +5,7 @@ import { PrometheusService } from './ethereum-services/PrometheusService'
 import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
 import { GrafanaService } from './ethereum-services/GrafanaService'
 import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
+import { StringUtils } from './StringUtils.js'
 import { ServiceManager } from './ServiceManager'
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
@@ -16,10 +17,10 @@ export class OneClickInstall {
   async prepareNode(installDir, nodeConnection) {
     this.installDir = installDir
     this.nodeConnection = nodeConnection
-    this.serviceManager = new ServiceManager(nodeConnection)
+    this.serviceManager = new ServiceManager(this.nodeConnection)
     await this.nodeConnection.findStereumSettings()
     if (this.nodeConnection.settings === undefined) {
-      await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
+      await this.nodeConnection.sshService.exec(` mkdir /etc/stereum &&
       echo "stereum_settings:
       settings:
         controls_install_path: ${this.installDir || '/opt/stereum'}
@@ -82,8 +83,10 @@ export class OneClickInstall {
     return [beacon, validator, geth, prometheusNodeExporter, prometheus, grafana]
   }
 
-  createServices() {
+  async createServices() {
     let ports = []
+    this.beaconService = undefined
+    this.validatorService = undefined
 
     ports = [
       new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
@@ -134,6 +137,12 @@ export class OneClickInstall {
           new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
         ]
         this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
+        
+        //generate validator api-token
+        const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
+        const token = StringUtils.createRandomString()
+        await this.nodeConnection.sshService.exec(`sudo mkdir -p ${valDir}`)
+        await this.nodeConnection.sshService.exec(`sudo echo ${token} > ${valDir}/api-token.txt`)
         break
 
 
@@ -144,9 +153,16 @@ export class OneClickInstall {
           new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
           new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
-          new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
         ]
         this.beaconService = TekuBeaconService.buildByUserInput('prater', ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
+        
+        //keystore
+        const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
+        const password = StringUtils.createRandomString()
+        await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
+        await this.nodeConnection.sshService.exec(`sudo mkdir -p ${dataDir}`)
+        await this.nodeConnection.sshService.exec(`sudo echo ${password} > ${dataDir}/teku_api_password.txt`)
+        await this.nodeConnection.sshService.exec(`sudo bash -c "cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1"`)
         break
     }
 

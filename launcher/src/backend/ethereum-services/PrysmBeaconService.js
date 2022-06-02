@@ -35,7 +35,7 @@ export class PrysmBeaconService extends NodeService {
             1, // configVersion 
             image,  //image
             'HEAD-c8a7f6-debug', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider,  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080',  //command
             null, //entrypoint
             null, //env
             ports,  //ports
@@ -66,6 +66,10 @@ export class PrysmBeaconService extends NodeService {
 
     buildConsensusClientHttpEndpointUrl() {
         return 'http://stereum-' + this.id + ':4000'
+    }
+
+    buildConsensusClientMetricsEndpoint () {
+        return 'stereum-' + this.id + ':8080'
     }
 
     getAvailablePorts() {

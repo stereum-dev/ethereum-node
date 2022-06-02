@@ -108,6 +108,7 @@ export default {
       this.removeIsConfirmed = true
       this.removeAllPlugins()
       this.destroyNode()
+      this.$store.commit("updateRunningServices", []);
     },
     removeAllPlugins () {
       if (this.removeIsConfirmed) {

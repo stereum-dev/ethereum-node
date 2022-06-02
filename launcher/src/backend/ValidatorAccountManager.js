@@ -76,6 +76,18 @@ export class ValidatorAccountManager {
                 break;
 
             case 'teku':
+                const dataDir = (client.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
+                if((await this.nodeConnection.sshService.exec(`sudo cat ${dataDir}/teku_api_password.txt`)).rc === 1){
+                    log.error("Couldn't read API-Token")
+                    log.info("Generating one")
+                    const password = StringUtils.createRandomString()
+                    await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
+                    await this.nodeConnection.sshService.exec(`sudo echo ${password} > ${dataDir}/teku_api_password.txt`)
+                    await this.nodeConnection.sshService.exec(`sudo bash -c "cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1"`)
+                    await Sleep(30000)
+                }
+
+                await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', consClient: service, validator_password: password, beacon_service: client.id, validator_keys: (files.map(file => { return { name: file.name, content: [readFileSync(file.path, { encoding: "utf8", })] } })) })
                 break;
         }
 
