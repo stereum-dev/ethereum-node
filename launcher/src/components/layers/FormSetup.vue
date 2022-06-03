@@ -342,50 +342,50 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
-        return;
+        // return;
       }
 
-      if (await ControlService.checkStereumInstallation()) {
-        let services = await ControlService.getServices();
-        if (services && services.length > 0) {
-          let constellation = services.map((service) => {
-            return service.service
-              .replace(/(Beacon|Validator|Service)/gm, "")
-              .toUpperCase();
-          });
-          const includedPlugins = [];
-          constellation.forEach((plugin) => {
-            const buffer = this.allPlugins.filter(
-              (element) => element.name === plugin
-            );
-            buffer.forEach((element) => includedPlugins.push(element));
-          });
+      // if (await ControlService.checkStereumInstallation()) {
+      //   let services = await ControlService.getServices();
+      //   if (services && services.length > 0) {
+      //     let constellation = services.map((service) => {
+      //       return service.service
+      //         .replace(/(Beacon|Validator|Service)/gm, "")
+      //         .toUpperCase();
+      //     });
+      //     const includedPlugins = [];
+      //     constellation.forEach((plugin) => {
+      //       const buffer = this.allPlugins.filter(
+      //         (element) => element.name === plugin
+      //       );
+      //       buffer.forEach((element) => includedPlugins.push(element));
+      //     });
 
-      let grafana = services.find(service => service.service.includes('Grafana'))
-      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+      // let grafana = services.find(service => service.service.includes('Grafana'))
+      // let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
 
-      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-      let prometheusStats = this.pluginServices.find(e => e.name === 'prometheus')
+      // let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
+      // let prometheusStats = this.pluginServices.find(e => e.name === 'prometheus')
 
-      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+      // let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
 
-      let grafanaPort = localPorts.pop()
-      let prometheusPort = localPorts.pop()
+      // let grafanaPort = localPorts.pop()
+      // let prometheusPort = localPorts.pop()
 
-      localPorts = await ControlService.openTunnels([
-        {dstPort: grafana.ports[0].servicePort, localPort: grafanaPort},
-        {dstPort: prometheus.ports[0].servicePort, localPort: prometheusPort},
-      ])
+      // localPorts = await ControlService.openTunnels([
+      //   {dstPort: grafana.ports[0].servicePort, localPort: grafanaPort},
+      //   {dstPort: prometheus.ports[0].servicePort, localPort: prometheusPort},
+      // ])
       
-      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
-      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
+      // grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
+      // prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
       
-      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
-          this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
-        }
+      // this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
+      //     this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
+      //   }
 
-        this.$router.push("/node");
-      }
+      //   this.$router.push("/node");
+      // }
 
       this.$emit("page", "welcome-page");
     },

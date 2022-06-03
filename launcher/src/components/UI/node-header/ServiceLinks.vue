@@ -1,7 +1,7 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
+      <div class="service-icon" v-for="(service, idx) in services" :key="idx">
         <div class="icon-box" onmousedown="return false">
           <img
             @click="openServiceBrowser(service.serviceName)"
@@ -45,8 +45,6 @@ export default {
     return {
       isServiceAvailable: true,
       isImgExists: true,
-      service: null,
-      scrollAmount: 0,
       showGrafanaWindow: false,
       showSsvWindow: false,
       showPrometheusWindow: false,
@@ -61,7 +59,7 @@ export default {
   },
   methods: {
     checkImgExists() {
-      this.runningServices.forEach((item) => {
+      this.services.forEach((item) => {
         if (item.icon.length > 0) {
           this.isImgExists = true;
         }
@@ -77,7 +75,7 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
-      this.runningServices.filter((item) => {
+      this.services.filter((item) => {
         item.serviceName == serviceName;
         if (serviceName == "grafana") {
           this.showGrafanaWindow = true;
