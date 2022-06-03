@@ -1,14 +1,20 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div
-        class="service-icon"
-        v-for="(service, idx) in runningServices"
-        :key="idx"
-      >
-        <a :href="service.linkUrl" target="_blank">
-          <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
-        </a>
+      <div class="service-icon" v-for="(service, idx) in services" :key="idx">
+        <div class="icon-box" onmousedown="return false">
+          <img
+            @click="openServiceBrowser"
+            v-show="isImgExists"
+            :src="service.icon"
+            alt="service-icon"
+          />
+        </div>
+        <service-modal
+          v-if="ShowServiceWindow"
+          :service="service"
+          @close-window="closeServiceBrowser"
+        ></service-modal>
       </div>
     </div>
     <div class="arrow-box">
@@ -23,13 +29,16 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import ServiceModal from "../services-modal/ServiceModal.vue";
 export default {
+  components: { ServiceModal },
   data() {
     return {
       isServiceAvailable: true,
       isImgExists: true,
       service: null,
       scrollAmount: 0,
+      ShowServiceWindow: false,
     };
   },
   mounted() {},
@@ -54,6 +63,12 @@ export default {
     scrollLeft() {
       let position = this.$refs.service;
       position.scrollLeft -= 150;
+    },
+    openServiceBrowser() {
+      this.ShowServiceWindow = true;
+    },
+    closeServiceBrowser() {
+      this.ShowServiceWindow = false;
     },
   },
 };
@@ -142,12 +157,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .service-icon:hover {
   border: 1px solid #7ed6fc;
   box-shadow: none;
 }
-.service-icon a {
+.service-icon .icon-box {
   width: 100%;
   height: 100%;
   display: flex;

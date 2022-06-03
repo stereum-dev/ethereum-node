@@ -207,7 +207,7 @@ export default {
   position: fixed;
   left: 4px;
   bottom: 4px;
-  z-index: 99;
+  z-index: 100;
 }
 .task-icon {
   width: 100%;
