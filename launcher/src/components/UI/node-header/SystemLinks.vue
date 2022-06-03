@@ -3,7 +3,7 @@
     <div class="services" ref="service">
       <div
         class="service-icon"
-        v-for="(service, idx) in runningServices"
+        v-for="(service, idx) in services"
         :key="idx"
       >
         <a :href="service.linkUrl" target="_blank">
