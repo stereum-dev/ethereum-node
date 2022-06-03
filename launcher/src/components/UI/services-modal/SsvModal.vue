@@ -47,10 +47,9 @@ export default {
   },
   methods: {
     filterSsvService() {
-      this.services.forEach((service) => {
+      this.runningServices.forEach((service) => {
         if (service.serviceName.toLowerCase() == "ssv") {
           this.ssvService.push(service);
-          console.log(this.ssvService);
         }
       });
       this.isSsvAvailable = true;

@@ -1,7 +1,7 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in services" :key="idx">
+      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
         <div class="icon-box" onmousedown="return false">
           <img
             @click="openServiceBrowser(service.serviceName)"
@@ -18,6 +18,10 @@
           @close-window="closeServiceBrowser"
           v-if="showSsvWindow"
         ></ssv-modal>
+        <prometheus-modal
+          @close-window="closeServiceBrowser"
+          v-if="showPrometheusWindow"
+        ></prometheus-modal>
       </div>
     </div>
     <div class="arrow-box">
@@ -34,8 +38,9 @@
 import { mapGetters } from "vuex";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
+import PrometheusModal from "../services-modal/PrometheusModal.vue";
 export default {
-  components: { GrafanaModal, SsvModal },
+  components: { GrafanaModal, SsvModal, PrometheusModal },
   data() {
     return {
       isServiceAvailable: true,
@@ -44,6 +49,7 @@ export default {
       scrollAmount: 0,
       showGrafanaWindow: false,
       showSsvWindow: false,
+      showPrometheusWindow: false,
     };
   },
   mounted() {},
@@ -55,7 +61,7 @@ export default {
   },
   methods: {
     checkImgExists() {
-      this.services.forEach((item) => {
+      this.runningServices.forEach((item) => {
         if (item.icon.length > 0) {
           this.isImgExists = true;
         }
@@ -71,12 +77,14 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
-      this.services.filter((item) => {
+      this.runningServices.filter((item) => {
         item.serviceName == serviceName;
         if (serviceName == "grafana") {
           this.showGrafanaWindow = true;
         } else if (serviceName == "ssv") {
           this.showSsvWindow = true;
+        } else if (serviceName == "prometheus") {
+          this.showPrometheusWindow = true;
         } else {
           return;
         }
@@ -85,6 +93,7 @@ export default {
     closeServiceBrowser() {
       this.showGrafanaWindow = false;
       this.showSsvWindow = false;
+      this.showPrometheusWindow = false;
     },
   },
 };

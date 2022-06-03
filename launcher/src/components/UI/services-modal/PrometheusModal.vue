@@ -3,15 +3,15 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div
-        class="grafana-container"
-        v-for="(service, idx) in grafanaService"
+        class="prometheus-container"
+        v-for="(service, idx) in prometheusService"
         :key="idx"
       >
         <div class="icon-box">
           <img :src="service.icon" alt="icon" />
         </div>
         <div class="title-box">
-          <span class="service-name">GRAFANA</span>
+          <span class="service-name">{{ service.serviceName }}</span>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />
@@ -19,9 +19,10 @@
           </div>
         </div>
         <div class="btn-box">
-          <a class="btn" :href="service.linkUrl" target="_blank"
+          <!-- <a class="btn" :href="service.linkUrl" target="_blank"
             >open default browser</a
-          >
+          > -->
+          <span>AT the moment the service is not available</span>
         </div>
       </div>
     </div>
@@ -32,12 +33,12 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      grafanaService: [],
-      isGrafanaAvailable: false,
+      prometheusService: [],
+      isPrometheusAvailable: false,
     };
   },
   created() {
-    this.filterGrafanaService();
+    this.filterPrometheusService();
   },
   computed: {
     ...mapGetters({
@@ -46,13 +47,13 @@ export default {
     }),
   },
   methods: {
-    filterGrafanaService() {
+    filterPrometheusService() {
       this.runningServices.forEach((service) => {
-        if (service.serviceName.toLowerCase() === "grafana") {
-          this.grafanaService.push(service);
+        if (service.serviceName.toLowerCase() === "prometheus") {
+          this.prometheusService.push(service);
         }
       });
-      this.isGrafanaAvailable = true;
+      this.isPrometheusAvailable = true;
     },
   },
 };
@@ -93,10 +94,8 @@ export default {
   align-items: center;
   z-index: 103;
 }
-grafana-modal {
-  z-index: 105;
-}
-.grafana-container {
+
+.prometheus-container {
   width: 100%;
   height: 100%;
   display: grid;
@@ -157,6 +156,19 @@ grafana-modal {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.btn-box span {
+  width: 70%;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: rgb(231, 122, 21);
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
 }
 .btn-box .btn {
   width: 70%;
