@@ -4,17 +4,20 @@
       <div class="service-icon" v-for="(service, idx) in services" :key="idx">
         <div class="icon-box" onmousedown="return false">
           <img
-            @click="openServiceBrowser"
+            @click="openServiceBrowser(service.serviceName)"
             v-show="isImgExists"
             :src="service.icon"
             alt="service-icon"
           />
         </div>
-        <service-modal
-          v-if="ShowServiceWindow"
-          :service="service"
+        <grafana-modal
+          v-if="showGrafanaWindow"
           @close-window="closeServiceBrowser"
-        ></service-modal>
+        ></grafana-modal>
+        <ssv-modal
+          @close-window="closeServiceBrowser"
+          v-if="showSsvWindow"
+        ></ssv-modal>
       </div>
     </div>
     <div class="arrow-box">
@@ -29,16 +32,18 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import ServiceModal from "../services-modal/ServiceModal.vue";
+import GrafanaModal from "../services-modal/GrafanaModal.vue";
+import SsvModal from "../services-modal/SsvModal.vue";
 export default {
-  components: { ServiceModal },
+  components: { GrafanaModal, SsvModal },
   data() {
     return {
       isServiceAvailable: true,
       isImgExists: true,
       service: null,
       scrollAmount: 0,
-      ShowServiceWindow: false,
+      showGrafanaWindow: false,
+      showSsvWindow: false,
     };
   },
   mounted() {},
@@ -64,11 +69,22 @@ export default {
       let position = this.$refs.service;
       position.scrollLeft -= 150;
     },
-    openServiceBrowser() {
-      this.ShowServiceWindow = true;
+    //open & close modal for each service
+    openServiceBrowser(serviceName) {
+      this.services.filter((item) => {
+        item.serviceName == serviceName;
+        if (serviceName == "grafana") {
+          this.showGrafanaWindow = true;
+        } else if (serviceName == "ssv") {
+          this.showSsvWindow = true;
+        } else {
+          return;
+        }
+      });
     },
     closeServiceBrowser() {
-      this.ShowServiceWindow = false;
+      this.showGrafanaWindow = false;
+      this.showSsvWindow = false;
     },
   },
 };

@@ -1,30 +1,102 @@
 <template>
-  <div class="grafana-container">
-    <div class="icon-box">
-      <img src="/img/icon/service-icons/grafana.png" alt="icon" />
-    </div>
-    <div class="title-box">
-      <span class="service-name">GRAFANA</span>
-      <div class="service-option">
-        <img src="/img/icon/service-icons/internet.png" alt="icon" />
-        <img src="/img/icon/service-icons/github1.png" alt="icon" />
-        <img src="/img/icon/service-icons/discord.png" alt="icon" />
+  <div class="service-modal_parent">
+    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+    <div class="browser-modal">
+      <div
+        class="grafana-container"
+        v-for="(service, idx) in grafanaService"
+        :key="idx"
+      >
+        <div class="icon-box">
+          <img :src="service.icon" alt="icon" />
+        </div>
+        <div class="title-box">
+          <span class="service-name">GRAFANA</span>
+          <div class="service-option">
+            <img src="/img/icon/service-icons/internet.png" alt="icon" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" />
+            <img src="/img/icon/service-icons/discord.png" alt="icon" />
+          </div>
+        </div>
+        <div class="btn-box">
+          <a class="btn" :href="service.linkUrl" target="_blank"
+            >open default browser</a
+          >
+        </div>
       </div>
-    </div>
-    <div class="btn-box">
-      <a class="btn" :href="link" target="_blank">open default browser</a>
     </div>
   </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 export default {
-  props: ["link"],
   data() {
-    return {};
+    return {
+      grafanaService: [],
+      isGrafanaAvailable: false,
+    };
+  },
+  created() {
+    this.filterGrafanaService();
+  },
+  computed: {
+    ...mapGetters({
+      services: "getServiceIcons",
+      runningServices: "getRunningServices",
+    }),
+  },
+  methods: {
+    filterGrafanaService() {
+      this.services.forEach((service) => {
+        if (service.serviceName.toLowerCase() === "grafana") {
+          this.grafanaService.push(service);
+          console.log(this.grafanaService);
+        }
+      });
+      this.isGrafanaAvailable = true;
+    },
   },
 };
 </script>
 <style scoped>
+.service-modal_parent {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.bg-dark {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(0, 0, 0);
+  opacity: 0.5;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 102;
+}
+.browser-modal {
+  width: 60%;
+  height: 80%;
+  background-color: #1b1b1b;
+  border: 5px solid rgb(161, 161, 161);
+  box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
+  border-radius: 35px;
+  position: absolute;
+  top: 11%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 103;
+}
+grafana-modal {
+  z-index: 105;
+}
 .grafana-container {
   width: 100%;
   height: 100%;

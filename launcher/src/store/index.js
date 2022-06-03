@@ -148,36 +148,6 @@ const store = createStore({
           icon: "/img/icon/service-icons/ssv.png",
           linkUrl: "https://stereum.net",
         },
-        {
-          serviceName: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          serviceName: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          serviceName: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          serviceName: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          serviceName: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          serviceName: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
-        },
       ],
     };
   },
