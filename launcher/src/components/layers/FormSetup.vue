@@ -342,6 +342,9 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
+        if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(err.toLowerCase())){
+          this.error = "You need to change your password first";
+        }
         return;
       }
 

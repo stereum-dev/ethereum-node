@@ -28,6 +28,11 @@ export class SSHService {
         this.conn.end()
         reject(error)
       })
+      this.conn.on('banner', (msg) => {
+        if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())){
+          reject(msg)
+        }
+      })
       this.conn.on('ready', () => {
         this.connected = true
         resolve(this.conn)
