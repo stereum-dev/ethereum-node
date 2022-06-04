@@ -24,51 +24,75 @@
             <img src="/img/icon/service-icons/discord.png" alt="icon" />
           </div>
         </div>
-        <div class="registration-box">
-          <div class="operator-box">
-            <span class="op-title">pick an operator name</span>
-            <div
-              class="operator"
-              v-for="(operator, index) in operators"
-              :key="index"
+      </div>
+      <div class="registration-box">
+        <div class="operator-box">
+          <span class="op-title">pick an operator name</span>
+          <div
+            class="operator"
+            v-for="(operator, index) in operators"
+            :key="index"
+          >
+            <b-form-select
+              v-model="selected"
+              :options="operator"
+              size="sm"
+              class="w-100"
+            ></b-form-select>
+          </div>
+          <span class="op-warning"
+            >*Choose wisely! This can't be changed later!</span
+          >
+        </div>
+        <div class="public-box">
+          <span class="pub-title">OPERATOR PUBLIC KEY</span>
+          <div class="pub-key">
+            <input
+              :readonly="false"
+              @click="logInput"
+              type="password"
+              placeholder="Public Key"
+            />
+
+            <div class="copy-icon">
+              <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+              <span>copied!</span>
+            </div>
+          </div>
+        </div>
+        <div class="secret-box">
+          <label class="secret-title">OPERATOR SECRET KEY</label>
+          <div class="secret-key">
+            <input
+              @click="logInput"
+              type="password"
+              v-model="enteredText"
+              ref="input"
+              placeholder="Secret Key"
+            />
+            <div class="copy-icon">
+              <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+              <span>copied!</span>
+            </div>
+          </div>
+          <span class="secret-warning"
+            >*Please make sure to store and backup your operator secret key in a
+            safe place.Do not share this key with anyone.</span
+          >
+        </div>
+        <div class="btn-box">
+          <div class="check-box">
+            <b-form-checkbox
+              id="checkbox-1"
+              v-model="status"
+              name="checkbox-1"
+              value="accepted"
+              unchecked-value="not_accepted"
             >
-              <span class="op-name">{{ operator.name }}</span>
-            </div>
-            <span class="op-warning"
-              >*Choose wisely! This can't be changed later!</span
-            >
+              I have stored my private key
+            </b-form-checkbox>
           </div>
-          <div class="public-box">
-            <span class="pub-title">OPERATOR PUBLIC KEY</span>
-            <div class="pub-key">
-              <input @click="logInput" type="text" :ref="pubKey" />
-              <div class="copy-icon">
-                <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-              </div>
-            </div>
-          </div>
-          <div class="secret-box">
-            <la class="secret-title">OPERATOR SECRET KEY</la>
-            <div class="secret-key">
-              <input @click="logInput" type="text" :ref="secretKey" />
-              <div class="copy-icon">
-                <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-              </div>
-            </div>
-            <span class="secret-warning"
-              >*Please make sure to store and backup your operator secret key in
-              a safe place.Do not share this key with anyone.</span
-            >
-          </div>
-          <div class="btn-box">
-            <div class="check-box">
-              <label for="stored">
-                <input type="checkbox" name="check" id="stored" />
-                I have stored my private key
-              </label>
-            </div>
-            <button class="register-btn">register</button>
-          </div>
+          <button class="register-btn">register</button>
         </div>
       </div>
     </div>
@@ -81,6 +105,7 @@ export default {
     return {
       ssvService: [],
       isSsvAvailable: false,
+      enteredText: "",
     };
   },
   created() {
@@ -103,7 +128,8 @@ export default {
       this.isSsvAvailable = true;
     },
     logInput() {
-      console.log(this.$refs);
+      this.shouldDisable = false;
+      console.log(this.$refs.input);
     },
   },
 };
@@ -135,7 +161,7 @@ export default {
   background-color: #1b1b1b;
   border: 5px solid rgb(161, 161, 161);
   box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
-  border-radius: 35px;
+  border-radius: 30px;
   position: absolute;
   top: 11%;
   display: flex;
@@ -147,7 +173,7 @@ export default {
 
 .ssv-container {
   width: 100%;
-  height: 100%;
+  height: 30%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
@@ -164,6 +190,7 @@ export default {
   align-items: center;
 }
 .icon-box img {
+  margin-top: 5px;
   width: 80%;
   height: 93%;
 }
@@ -201,8 +228,8 @@ export default {
   margin-left: 8px;
 }
 .registration-box {
-  grid-column: 1/5;
-  grid-row: 2/7;
+  width: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -212,7 +239,7 @@ export default {
 .public-box,
 .secret-box {
   width: 100%;
-  height: 19%;
+  height: 20%;
   margin-top: 4px;
   display: flex;
   flex-direction: column;
@@ -229,64 +256,103 @@ export default {
 }
 .operator-box .operator {
   width: 90%;
-  height: 30px;
-  background-color: #c3c2c2;
-  border: 2px solid #f9f9f9;
+  height: 63%;
+  background-color: #313131;
   border-radius: 10px;
+  padding: 10px 5px;
   margin: 5px auto 3px auto;
-  box-shadow: inset 2px 2px 10px #ebebeb, 1px 1px 3px 1px rgb(19, 19, 19);
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  transition-duration: all 200ms;
+}
+.operator select{
+  width: 100%;
+  border-radius: 8px;
 }
 .public-box .pub-key,
 .secret-box .secret-key {
   width: 90%;
-  height: 30px;
+  height: 37px;
   background-color: #313131;
-  border: 2px solid #e1e1e1;
   border-radius: 10px;
   margin: 5px auto 3px auto;
   box-shadow: 1px 1px 3px 1px rgb(19, 19, 19);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
   transition-duration: all 200ms;
 }
 .pub-key input,
 .secret-key input {
-  width: 95%;
-  height: 30px;
+  width: 93%;
+  height: 29px;
   padding-left: 10px;
-  border: none;
+  border: 2px solid #e1e1e1;
   background-color: #e1e1e1;
   outline-style: none;
   border-radius: 8px 0 0 8px;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #1b1b1b;
+  margin-left: 4px;
+}
+.pub-key input:hover,
+.secret-key input:hover {
+  border: 2px solid #1e9ffa;
 }
 .pub-key .copy-icon,
 .secret-key .copy-icon {
   width: 5%;
   height: 100%;
-  border-radius: 0 10px 10px 0;
+  border-radius: 0 8px 8px 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  transition-duration: 200ms;
+}
+.pub-key .copy-icon span,
+.secret-key .copy-icon span {
+  width: 35px;
+  height: 13px;
+  border-radius: 2px;
+  border: 1px solid gray;
+  background-color: #0a4d38;
+  color: #e2e2e2;
+  font-size: 8px;
+  font-weight: 600;
+  position: absolute;
+  top: -24px;
+  right: -27px;
+  display: none;
+  transition-duration: 200ms;
+  text-align: center;
+}
+.pub-key .copy-icon:hover,
+.secret-key .copy-icon:hover {
+  background-color: rgb(73, 73, 73);
+}
+.pub-key .copy-icon:active,
+.secret-key .copy-icon:active {
+  background-color: rgb(22, 22, 22);
+}
+.pub-key .copy-icon:active span {
+  display: block;
+}
+.secret-key .copy-icon:active span {
+  display: block;
+  transition-duration: 200ms;
 }
 .pub-key .copy-icon img,
 .secret-key .copy-icon img {
   width: 20px;
   height: 20px;
+  margin-right: 3px;
 }
 .operator-box .op-name {
   font-size: 1.3rem;
   font-weight: 800;
-  color: rgb(33, 59, 56);
+  color: rgb(39, 101, 94);
   text-transform: capitalize;
 }
 .operator-box .op-warning,
@@ -305,24 +371,25 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.btn-box label {
+.check-box {
   width: 100%;
-  height: 100%;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 0.7rem;
-  font-weight: 400;
-  color: rgb(237, 70, 70);
+  font-weight: 500;
+  color: rgb(230, 98, 98);
 }
+
 .btn-box button {
   width: 30%;
   height: 40px;
   margin-top: 10px;
   outline-style: none;
   border-radius: 10px;
-  box-shadow: inset 2px 2px 10px #ebebeb, 1px 1px 3px 1px rgb(19, 19, 19);
-  border: 2px solid #60bcee;
+  box-shadow: 1px 1px 3px 1px rgb(19, 19, 19);
+  border: 2px solid #0b81c0;
   background-color: #d6dde1;
   color: #0b81c0;
   font-size: 1.2rem;
@@ -332,15 +399,16 @@ export default {
   transition-duration: 200ms;
 }
 .btn-box button:hover {
-  color: rgb(50, 50, 50);
-  border: 1px solid #d6dde1;
-  background-color: #60bcee;
+  color: rgb(253, 253, 253);
+  border: 2px solid #d6dde1;
+  background-color: #0e8fd4;
   transition-duration: 200ms;
 }
 .btn-box button:active {
   font-size: 1.18rem;
-  border: 1px solid #0f7db8;
-  box-shadow: inset 2px 2px 10px #10232d;
+  border: 2px solid #0f7db8;
+  background-color: #0b82c3;
+  box-shadow: none;
   transition-duration: 200ms;
 }
 .network-icon {
