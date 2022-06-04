@@ -23,8 +23,7 @@ export default {
     async maschinNameMet() {
       try {
         const response = await ControlService.getHostName();
-        //const maschinName = await response.json();
-        this.maschinName = await response.cpuUsage.stdout;
+        this.maschinName = await response.hostname.stdout;
       } catch (error) {
         console.log(error);
       }

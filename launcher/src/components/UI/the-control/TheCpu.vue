@@ -59,7 +59,6 @@ export default {
       try {
         const response = await ControlService.getServerVitals();
         this.cpuValue = await response.cpuUsage.stdout;
-        console.log(this.cpuValue);
       } catch (error) {
         console.log(error);
       }

@@ -19,7 +19,10 @@ const storageService = new StorageService();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
-const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const validatorAccountManager = new ValidatorAccountManager(
+  nodeConnection,
+  serviceManager
+);
 
 const log = require("electron-log");
 
@@ -101,41 +104,47 @@ promiseIpc.on("startOneClickServices", async () => {
 
 promiseIpc.on("getServerVitals", async () => {
   return await nodeConnection.getServerVitals();
-})
-
+});
 
 promiseIpc.on("getHostName", async () => {
   return await nodeConnection.getHostName();
 });
 
+promiseIpc.on("getEntireRam", async () => {
+  return await nodeConnection.getEntireRam();
+});
+
+promiseIpc.on("getUsedRam", async () => {
+  return await nodeConnection.getUsedRam();
+});
+
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
-})
+});
 
 promiseIpc.on("checkStereumInstallation", async () => {
-  if(nodeConnection.sshService.connected){
-    let services
-    let settings
-    try{
-      settings = await nodeConnection.sshService.exec('sudo ls /etc/stereum')
-      services = await nodeConnection.listServicesConfigurations()
-    }catch{
-      services = []
+  if (nodeConnection.sshService.connected) {
+    let services;
+    let settings;
+    try {
+      settings = await nodeConnection.sshService.exec("sudo ls /etc/stereum");
+      services = await nodeConnection.listServicesConfigurations();
+    } catch {
+      services = [];
     }
-    if(services.length != 0 || settings.stdout.includes('stereum.yaml'))
-      return true
+    if (services.length != 0 || settings.stdout.includes("stereum.yaml"))
+      return true;
   }
-return false
-})
+  return false;
+});
 
 promiseIpc.on("getServices", async () => {
-  return await serviceManager.readServiceConfigurations()
-})
+  return await serviceManager.readServiceConfigurations();
+});
 
 promiseIpc.on("importKey", async (args) => {
-  return await validatorAccountManager.importKey(args.files, args.password)
-})
-
+  return await validatorAccountManager.importKey(args.files, args.password);
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -172,8 +181,6 @@ async function createWindow() {
   }
 }
 
-
-
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
@@ -188,8 +195,6 @@ app.on("activate", () => {
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
-
-
 
 app.on("web-contents-created", (event, contents) => {
   // open every new window in the OS's default browser instead of a
