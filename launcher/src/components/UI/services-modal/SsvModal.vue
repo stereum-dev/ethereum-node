@@ -60,6 +60,15 @@
               a safe place.Do not share this key with anyone.</span
             >
           </div>
+          <div class="btn-box">
+            <div class="check-box">
+              <label for="stored">
+                <input type="checkbox" name="check" id="stored" />
+                I have stored my private key
+              </label>
+            </div>
+            <button class="register-btn">register</button>
+          </div>
         </div>
       </div>
     </div>
@@ -282,7 +291,52 @@ grafana-modal {
   color: rgb(208, 208, 208);
   text-transform: capitalize;
 }
-
+.btn-box {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.btn-box label {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgb(237, 70, 70);
+}
+.btn-box button {
+  width: 30%;
+  height: 40px;
+  margin-top: 10px;
+  outline-style: none;
+  border-radius: 10px;
+  box-shadow: inset 2px 2px 10px #ebebeb, 1px 1px 3px 1px rgb(19, 19, 19);
+  border: 2px solid #60bcee;
+  background-color: #d6dde1;
+  color: #0b81c0;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition-duration: 200ms;
+}
+.btn-box button:hover {
+  color: rgb(50, 50, 50);
+  border: 1px solid #d6dde1;
+  background-color: #60bcee;
+  transition-duration: 200ms;
+}
+.btn-box button:active {
+  font-size: 1.18rem;
+  border: 1px solid #0f7db8;
+  box-shadow: inset 2px 2px 10px #10232d;
+  transition-duration: 200ms;
+}
 .network-icon {
   grid-column: 1/2;
   grid-row: 1/2;
