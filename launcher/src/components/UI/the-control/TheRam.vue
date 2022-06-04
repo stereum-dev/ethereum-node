@@ -10,7 +10,7 @@
       <div class="ramValue">
         <div class="valDigits">
           <div class="digits">
-            <span>{{ usedR }} / {{ totalR }}</span>
+            <span>{{ usedRam }} / {{ entireRam }}</span>
           </div>
           <span>GB</span>
         </div>
@@ -20,12 +20,39 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      usedR: 13.2,
-      totalR: 45.2,
+      usedRam: null,
+      entireRam: null,
     };
+  },
+  beforeUpdate() {
+    this.usedRamMet();
+  },
+  created() {
+    this.entireRamMet();
+    this.usedRamMet();
+  },
+
+  methods: {
+    async entireRamMet() {
+      try {
+        const response = await ControlService.getEntireRam();
+        this.entireRam = await response.entireRam.stdout;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async usedRamMet() {
+      try {
+        const response = await ControlService.getUsedRam();
+        this.usedRam = await response.usedRam.stdout;
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>

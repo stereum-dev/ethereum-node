@@ -441,7 +441,7 @@ export class NodeConnection {
                 docker system prune -a -f &&\
                 rm -rf ${this.settings.stereum.settings.controls_install_path} &&\
                 rm -rf /etc/stereum`);
-    this.settings = undefined
+    this.settings = undefined;
     return "Node destroyed";
   }
 
@@ -465,8 +465,26 @@ export class NodeConnection {
 
   async getHostName() {
     let response = {};
-    const cpuUsage = await this.sshService.exec(`hostname`); //CPU usage
-    response.cpuUsage = cpuUsage;
+    const hostname = await this.sshService.exec(`hostname`); //machine name
+    response.hostname = hostname;
+    return response;
+  }
+
+  async getEntireRam() {
+    let response = {};
+    const entireRam = await this.sshService.exec(
+      `free -m | sed -n '2p' | awk '{print $2}'`
+    ); //Entire Ram
+    response.entireRam = entireRam;
+    return response;
+  }
+
+  async getUsedRam() {
+    let response = {};
+    const usedRam = await this.sshService.exec(
+      `free -m | sed -n '2p' | awk '{print $3}'`
+    ); //Used Ram
+    response.usedRam = usedRam;
     return response;
   }
 
@@ -497,8 +515,8 @@ export class NodeConnection {
   }
 
   async checkAvailablePorts(option) {
-    const ports = []
-    for(let i = 0; i < option.amount; i++){
+    const ports = [];
+    for (let i = 0; i < option.amount; i++) {
       let available = false;
       let port = option.min;
       while ((!available && port < option.max) || ports.includes(port)) {
@@ -511,7 +529,7 @@ export class NodeConnection {
       log.info(
         `Port ${port} is the next available in range ${option.min} - ${option.max}`
       );
-      ports.push(port)
+      ports.push(port);
     }
     return ports;
   }
