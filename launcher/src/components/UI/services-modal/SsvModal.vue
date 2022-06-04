@@ -17,7 +17,7 @@
           />
         </div>
         <div class="title-box">
-          <span class="service-name">{{ service.serviceName }}</span>
+          <span class="service-name">{{ service.serviceName }} NETWORK</span>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />
@@ -35,28 +35,28 @@
               <span class="op-name">{{ operator.name }}</span>
             </div>
             <span class="op-warning"
-              >Choose wisely! This can't be changed later!</span
+              >*Choose wisely! This can't be changed later!</span
             >
           </div>
           <div class="public-box">
             <span class="pub-title">OPERATOR PUBLIC KEY</span>
             <div class="pub-key">
-              <input type="text" />
+              <input @click="logInput" type="text" :ref="pubKey" />
               <div class="copy-icon">
-                <img src="/img/icon/service-icons/copy2.png" alt="icon" />
+                <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               </div>
             </div>
           </div>
           <div class="secret-box">
-            <span class="secret-title">OPERATOR SECRET KEY</span>
+            <la class="secret-title">OPERATOR SECRET KEY</la>
             <div class="secret-key">
-              <input type="text" />
+              <input @click="logInput" type="text" :ref="secretKey" />
               <div class="copy-icon">
                 <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               </div>
             </div>
             <span class="secret-warning"
-              >Please make sure to store and backup your operator secret key in
+              >*Please make sure to store and backup your operator secret key in
               a safe place.Do not share this key with anyone.</span
             >
           </div>
@@ -102,6 +102,9 @@ export default {
       });
       this.isSsvAvailable = true;
     },
+    logInput() {
+      console.log(this.$refs);
+    },
   },
 };
 </script>
@@ -141,16 +144,13 @@ export default {
   align-items: center;
   z-index: 103;
 }
-grafana-modal {
-  z-index: 105;
-}
+
 .ssv-container {
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
-  z-index: 106;
   position: relative;
 }
 .icon-box {
@@ -166,7 +166,6 @@ grafana-modal {
 .icon-box img {
   width: 80%;
   height: 93%;
-  z-index: 110;
 }
 .title-box {
   grid-column: 2/4;
@@ -176,26 +175,30 @@ grafana-modal {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
 }
 .title-box span {
+  width: 70%;
+  height: 35%;
+  text-align: center;
   color: rgb(226, 226, 226);
   text-transform: uppercase;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
 }
 .service-option {
-  width: 90%;
-  height: 50%;
+  width: 70%;
+  height: 35%;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
 }
 .service-option img {
-  width: 20%;
+  width: 13%;
   height: 70%;
+  margin-left: 8px;
 }
 .registration-box {
   grid-column: 1/5;
@@ -242,8 +245,8 @@ grafana-modal {
 .secret-box .secret-key {
   width: 90%;
   height: 30px;
-  background-color: #c3c2c2;
-  border: 2px solid #f9f9f9;
+  background-color: #313131;
+  border: 2px solid #e1e1e1;
   border-radius: 10px;
   margin: 5px auto 3px auto;
   box-shadow: 1px 1px 3px 1px rgb(19, 19, 19);
@@ -253,29 +256,32 @@ grafana-modal {
   cursor: pointer;
   transition-duration: all 200ms;
 }
-.public-box .pub-key input,
-.secret-box .secret-key input {
+.pub-key input,
+.secret-key input {
   width: 95%;
-  height: 100%;
+  height: 30px;
   padding-left: 10px;
   border: none;
+  background-color: #e1e1e1;
   outline-style: none;
-  border-radius: 10px 0 0 10px;
-  font-size: 0.8rem;
+  border-radius: 8px 0 0 8px;
+  font-size: 0.5rem;
   font-weight: 500;
   color: #1b1b1b;
 }
 .pub-key .copy-icon,
 .secret-key .copy-icon {
   width: 5%;
-  height: 38px;
-  background-color: #1b1b1b;
+  height: 100%;
   border-radius: 0 10px 10px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .pub-key .copy-icon img,
 .secret-key .copy-icon img {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
 }
 .operator-box .op-name {
   font-size: 1.3rem;
@@ -348,7 +354,6 @@ grafana-modal {
   position: absolute;
   left: 54%;
   top: 68%;
-  z-index: 110;
 }
 
 .network-icon img {
