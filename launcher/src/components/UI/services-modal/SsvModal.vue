@@ -37,7 +37,7 @@
               v-model="selected"
               :options="operator"
               size="sm"
-              class="w-100"
+              class="w-100 text-center text-success font-weight-bold"
             ></b-form-select>
           </div>
           <span class="op-warning"
@@ -83,6 +83,7 @@
         <div class="btn-box">
           <div class="check-box">
             <b-form-checkbox
+              class="text-danger font-weight-bold"
               id="checkbox-1"
               v-model="status"
               name="checkbox-1"
@@ -173,31 +174,30 @@ export default {
 
 .ssv-container {
   width: 100%;
-  height: 30%;
+  height: 15%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   position: relative;
 }
 .icon-box {
   grid-column: 1;
   grid-row: 1;
-  width: 85%;
-  margin-top: 6px;
-  height: 100%;
+  width: 100%;
+  margin-top: 5px;
+  height: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .icon-box img {
-  margin-top: 5px;
-  width: 80%;
-  height: 93%;
+  margin: 8px 10px;
+  width: 58%;
+  height: 86%;
 }
 .title-box {
-  grid-column: 2/4;
+  grid-column: 2/5;
   grid-row: 1;
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -210,7 +210,7 @@ export default {
   text-align: center;
   color: rgb(226, 226, 226);
   text-transform: uppercase;
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   font-weight: 600;
 }
 .service-option {
@@ -219,17 +219,18 @@ export default {
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .service-option img {
-  width: 13%;
+  width: 10%;
   height: 70%;
-  margin-left: 8px;
+  margin-right: 20px;
 }
 .registration-box {
   width: 100%;
   height: 70%;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -260,12 +261,11 @@ export default {
   background-color: #313131;
   border-radius: 10px;
   padding: 10px 5px;
-  margin: 5px auto 3px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.operator select{
+.operator select {
   width: 100%;
   border-radius: 8px;
 }
@@ -275,7 +275,6 @@ export default {
   height: 37px;
   background-color: #313131;
   border-radius: 10px;
-  margin: 5px auto 3px auto;
   box-shadow: 1px 1px 3px 1px rgb(19, 19, 19);
   display: flex;
   justify-content: space-between;
@@ -377,9 +376,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: rgb(230, 98, 98);
+}
+.form-check {
+  width: 40%;
+  padding: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .btn-box button {
@@ -420,12 +423,12 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 54%;
-  top: 68%;
+  left: 41%;
+  top: 52%;
 }
 
 .network-icon img {
-  width: 90%;
-  height: 90%;
+  width: 73%;
+  height: 73%;
 }
 </style>
