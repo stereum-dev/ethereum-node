@@ -134,7 +134,7 @@ export default {
 .node-parent {
   display: grid;
   width: 100%;
-  height: 90%;
+  height: 91%;
   border: 4px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 18% 46% 20% 16%;
@@ -157,6 +157,7 @@ export default {
 .trapezoid-parent {
   width: 100%;
   height: 100%;
+  margin-top: 1px;
   grid-column: 2;
   grid-row: 1/4;
   background-color: #000000;
@@ -178,8 +179,8 @@ export default {
   height: 100%;
 }
 .service {
-  width: 98%;
-  height: 98.2%;
+  width: 99%;
+  height: 100%;
   grid-column: 3;
   grid-row: 1/4;
   background: #334b3f;

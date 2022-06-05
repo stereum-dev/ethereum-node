@@ -91,7 +91,7 @@ export default {
   cursor: pointer;
 }
 .icon-btn {
-  width: 14.5%;
+  width: 14%;
   height: 85%;
   border: 2px solid #a5a5a5;
   border-radius: 100%;
@@ -113,11 +113,11 @@ export default {
   box-shadow: none;
   background-color: #274f4f;
   transition-duration:200ms;
+  transform: scale(0.92);
 }
 .icon-btn:active img {
   /* width: 65%;
   height: 65%; */
-  transform: scale(0.92);
   box-shadow: none;
 }
 .icon-btn img {
@@ -133,7 +133,7 @@ export default {
   font-weight: 500;
   position: absolute;
   bottom: -10px;
-  left: 6px;
+  left: 3px;
   transition-duration: 500ms;
 }
 .notif-text {

@@ -106,7 +106,7 @@ export default {
   align-items: center;
 }
 .arrow-box {
-  width: 20px;
+  width: 25px;
   height: 90%;
   padding: 0 3px;
   border-left: 2px solid #a5a5a5;
@@ -171,8 +171,8 @@ export default {
   height: 1px;
 }
 .service-icon {
-  width: 35px;
-  height: 35px;
+  width: 37px;
+  height: 37px;
   border: 1px solid #a5a5a5;
   box-shadow: 0 1px 5px 1px rgb(22, 42, 37);
   border-radius: 5px;
@@ -187,8 +187,8 @@ export default {
   box-shadow: none;
 }
 .service-icon .icon-box {
-  width: 100%;
-  height: 100%;
+  width: 35px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;

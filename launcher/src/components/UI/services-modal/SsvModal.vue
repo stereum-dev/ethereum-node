@@ -47,12 +47,7 @@
         <div class="public-box">
           <span class="pub-title">OPERATOR PUBLIC KEY</span>
           <div class="pub-key">
-            <input
-              :readonly="false"
-              @click="logInput"
-              type="password"
-              placeholder="Public Key"
-            />
+            <input type="password" placeholder="Public Key" ref="pubkey" />
 
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -63,13 +58,7 @@
         <div class="secret-box">
           <label class="secret-title">OPERATOR SECRET KEY</label>
           <div class="secret-key">
-            <input
-              @click="logInput"
-              type="password"
-              v-model="enteredText"
-              ref="input"
-              placeholder="Secret Key"
-            />
+            <input type="password" ref="secretkey" placeholder="Secret Key" />
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               <span>copied!</span>
@@ -86,6 +75,7 @@
               class="text-danger font-weight-bold"
               id="checkbox-1"
               v-model="status"
+              ref="status"
               name="checkbox-1"
               value="accepted"
               unchecked-value="not_accepted"
@@ -93,7 +83,9 @@
               I have stored my private key
             </b-form-checkbox>
           </div>
-          <button class="register-btn">register</button>
+          <button class="register-btn" @click="registerHandler">
+            register
+          </button>
         </div>
       </div>
     </div>
@@ -107,6 +99,7 @@ export default {
       ssvService: [],
       isSsvAvailable: false,
       enteredText: "",
+      selected: null,
     };
   },
   created() {
@@ -128,9 +121,11 @@ export default {
       });
       this.isSsvAvailable = true;
     },
-    logInput() {
-      this.shouldDisable = false;
-      console.log(this.$refs.input);
+    registerHandler() {
+      console.log(this.$refs.secretkey.value);
+      console.log(this.$refs.pubkey.value);
+      console.log(this.selected);
+      console.log(this.$refs.status.value);
     },
   },
 };
@@ -268,7 +263,10 @@ export default {
 .operator select {
   width: 100%;
   border-radius: 8px;
+  text-transform: uppercase;
+  font-weight: 800;
 }
+
 .public-box .pub-key,
 .secret-box .secret-key {
   width: 90%;

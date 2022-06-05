@@ -27,14 +27,14 @@ export default {}
   width: 95%;
   /* height: 70%; */
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: #3b3b3b;
   position: relative;
 }
 .trapezoid {
   height: 0;
-  width: 80%;
+  width: 90%;
   margin: 10px;
   padding-top: 5px;
   border-bottom: 5rem solid #828282;
