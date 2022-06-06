@@ -40,7 +40,7 @@
   font-weight: 800;
   color: #c2c2c2;
   text-shadow: 2px 2px #192c27;
-  transition-duration:150ms;
+  transition-duration:100ms;
 }
 .router__items .router__item a:hover {
   width: 90%;

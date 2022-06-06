@@ -72,7 +72,7 @@
               <img :src="imgTrash" alt="" />
             </div>
           </div>
-          <div class="formGroup" :class="{ errors: !model.name.isFilled }">
+          <div class="server-group" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
             <input
               name="servername"
@@ -82,7 +82,7 @@
               @blur="checkInput(model.name)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !model.host.isFilled }">
+          <div class="server-group" :class="{ errors: !model.host.isFilled }">
             <label for="host">IP / HOSTNAME</label>
             <input
               name="host"
@@ -92,7 +92,7 @@
               @blur="checkInput(model.host)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !model.user.isFilled }">
+          <div class="server-group" :class="{ errors: !model.user.isFilled }">
             <label for="user">USERNAME</label>
             <input
               name="user"
@@ -376,10 +376,10 @@ export default {
       //   {dstPort: grafana.ports[0].servicePort, localPort: grafanaPort},
       //   {dstPort: prometheus.ports[0].servicePort, localPort: prometheusPort},
       // ])
-      
+
       // grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
       // prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
-      
+
       // this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
       //     this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
       //   }
@@ -414,7 +414,7 @@ export default {
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
-  height: 60%;
+  height: 59%;
   border-radius: 40px;
   background-color: #234141;
   opacity: 0.9;
@@ -428,6 +428,7 @@ export default {
   width: 95%;
   max-width: auto;
   height: 50%;
+  margin-top: 2px;
   font-size: 1.4rem !important;
   font-weight: 800 !important;
   color: #cecece !important;
@@ -515,7 +516,6 @@ select {
   font-size: 14px;
   font-weight: bold;
   line-height: 1.5em;
-  padding: 0.5em 3.5em 0.5em 1em;
   /* reset */
   margin: 0;
   -webkit-box-sizing: border-box;
@@ -523,6 +523,9 @@ select {
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
+  color: #393939;
+  font-weight: 800;
+  font-size: 1rem;
 }
 
 /* arrows */
@@ -583,7 +586,7 @@ select.classic:focus {
   width: 30px;
   height: 30px;
 }
-.formGroup {
+.server-group {
   margin: 0;
   height: 50px;
   padding: 5px;
@@ -594,28 +597,30 @@ select.classic:focus {
   font-weight: bold;
 }
 
-.formGroup label {
+.server-group label {
   clear: both;
   font-size: 1.1rem;
   font-weight: 700;
   margin-left: 10px;
   color: #cecece !important;
 }
-.formGroup input {
+.server-group input {
   width: 60%;
-  height: 20px;
+  height: 35px;
   background-color: #d8e1e1;
   border: 4px solid #3a3939;
   border-radius: 40px;
   padding-left: 10px;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 0.8rem;
   outline-style: none;
+  color: #242424;
 }
-.formGroup input:hover {
+.server-group input:hover {
   border: 4px solid gray;
 }
 #keyLocation {
-  width: 67%;
+  width: 65%;
   border: 5px solid #686868;
   border-radius: 18px;
   background-color: #234141;
@@ -635,6 +640,7 @@ select.classic:focus {
 }
 #keyLocation input {
   width: 57%;
+  height: 90%;
   margin-right: 16px;
   border-radius: 40px;
   padding-left: 10px;
@@ -642,14 +648,16 @@ select.classic:focus {
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 4px solid #363535;
+  border: 4px solid #7a7a7a;
 }
 
 #login {
+  width: 120px;
   min-width: 120px;
-  min-height: 50px;
+  height: 48px;
+  min-height: 45px;
   outline-style: none;
-  padding: 10px;
+  padding: 5px;
   border: 5px solid #686868;
   border-radius: 35px;
   cursor: pointer;
@@ -661,6 +669,9 @@ select.classic:focus {
   font-size: 1.4rem;
   font-weight: 800;
   color: #cecece;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #login:hover {
   box-shadow: none;
@@ -677,13 +688,13 @@ input {
 .ssh {
   width: 150px;
   min-width: 100px;
-  height: 24px;
+  height: 33px;
   background-color: #234141;
   border: 3px solid rgb(116, 116, 116);
   border-radius: 40px;
   color: #fff;
   position: absolute;
-  left: 16.5%;
+  left: 17.5%;
   bottom: 15%;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
@@ -700,8 +711,10 @@ input {
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 24px;
+  width: 29%;
+  height: 89%;
+  margin-left: 2px;
+  margin-top: 3px;
 }
 
 .switch input {
@@ -711,12 +724,14 @@ input {
 }
 
 .slider {
+  height: 90%;
   position: absolute;
   cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
   background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -725,9 +740,9 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 20px;
+  height: 19px;
   border: 1px solid #228bb1;
-  width: 20px;
+  width: 19px;
   left: 1px;
   bottom: 1px;
   background-color: #25acde;
@@ -741,9 +756,9 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
-  transform: translateX(16px);
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
   background-color: #51a76e;
   border: 1px solid #329f55;
   box-shadow: inset 1px 1px 5px #91d8a9;

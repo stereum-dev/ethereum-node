@@ -44,7 +44,6 @@ export default {
   width: 80%;
   height: 20%;
   font-size: 30%;
-  background: #191c1d;
   border: 2px solid #2a2a2a;
 }
 .guageBox {
@@ -53,7 +52,6 @@ export default {
   align-items: center;
   display: flex;
   height: 100%;
-  background: #191c1d;
 }
 .str {
   border-radius: 5px;

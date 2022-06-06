@@ -149,7 +149,10 @@ const store = createStore({
           linkUrl: "https://stereum.net",
         },
       ],
-      operators: [{ name: "stereum", companyName: "Rocklogic GmbH" }],
+      operators: [
+        { operatorName: "stereum" },
+        { operatorName: "Rocklogic GmbH" },
+      ],
     };
   },
   mutations: rootMutations,

@@ -28,16 +28,13 @@
       <div class="registration-box">
         <div class="operator-box">
           <span class="op-title">pick an operator name</span>
-          <div
-            class="operator"
-            v-for="(operator, index) in operators"
-            :key="index"
-          >
+          <div class="operator" >
             <b-form-select
-              v-model="selected"
-              :options="operator"
+              v-model="selectedOperator"
+              :options="operators"
               size="sm"
-              class="w-100 text-center text-success font-weight-bold"
+              value-field="operatorName"
+              text-field="operatorName"
             ></b-form-select>
           </div>
           <span class="op-warning"
@@ -47,7 +44,7 @@
         <div class="public-box">
           <span class="pub-title">OPERATOR PUBLIC KEY</span>
           <div class="pub-key">
-            <input type="password" placeholder="Public Key" ref="pubkey" />
+            <input type="password" placeholder="Public Key" v-model="pubkey" />
 
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -58,7 +55,7 @@
         <div class="secret-box">
           <label class="secret-title">OPERATOR SECRET KEY</label>
           <div class="secret-key">
-            <input type="password" ref="secretkey" placeholder="Secret Key" />
+            <input type="password" v-model="secretkey" placeholder="Secret Key" />
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               <span>copied!</span>
@@ -72,13 +69,10 @@
         <div class="btn-box">
           <div class="check-box">
             <b-form-checkbox
-              class="text-danger font-weight-bold"
               id="checkbox-1"
-              v-model="status"
-              ref="status"
               name="checkbox-1"
-              value="accepted"
-              unchecked-value="not_accepted"
+              v-model="accepted"
+              modelValue="accepted"
             >
               I have stored my private key
             </b-form-checkbox>
@@ -99,7 +93,10 @@ export default {
       ssvService: [],
       isSsvAvailable: false,
       enteredText: "",
-      selected: null,
+      selectedOperator: null,
+      accepted: "",
+      secretkey: "",
+      pubkey: "",
     };
   },
   created() {
@@ -122,10 +119,13 @@ export default {
       this.isSsvAvailable = true;
     },
     registerHandler() {
-      console.log(this.$refs.secretkey.value);
-      console.log(this.$refs.pubkey.value);
-      console.log(this.selected);
-      console.log(this.$refs.status.value);
+      console.log(this.secretkey);
+      console.log(this.pubkey);
+      // console.log(this.selected);
+      // console.log(this.$refs.status.value);
+    },
+    logItem(event) {
+      console.log(event.target);
     },
   },
 };
@@ -149,7 +149,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 102;
+  z-index: 100;
 }
 .browser-modal {
   width: 60%;
@@ -164,15 +164,16 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 103;
+  z-index: 101;
 }
 
 .ssv-container {
   width: 100%;
-  height: 15%;
+  height: 20%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   position: relative;
+  z-index: 102;
 }
 .icon-box {
   grid-column: 1;
@@ -209,18 +210,20 @@ export default {
   font-weight: 600;
 }
 .service-option {
-  width: 70%;
+  width: 60%;
   height: 35%;
+  margin-left: 16px;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-left: 10px;
 }
 .service-option img {
-  width: 10%;
+  width: 11%;
   height: 70%;
-  margin-right: 20px;
+  margin-right: 15px;
 }
 .registration-box {
   width: 100%;
@@ -230,6 +233,8 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  z-index: 103;
+  
 }
 .operator-box,
 .public-box,
@@ -241,6 +246,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  z-index: 1000;
 }
 .operator-box .op-title,
 .public-box .pub-title,
@@ -255,16 +261,18 @@ export default {
   height: 63%;
   background-color: #313131;
   border-radius: 10px;
-  padding: 10px 5px;
+  padding:5px;
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 .operator select {
   width: 100%;
   border-radius: 8px;
   text-transform: uppercase;
   font-weight: 800;
+  color: #0a4d38;
 }
 
 .public-box .pub-key,
@@ -278,6 +286,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   transition-duration: all 200ms;
+
 }
 .pub-key input,
 .secret-key input {
@@ -293,6 +302,7 @@ export default {
   color: #1b1b1b;
   margin-left: 4px;
 }
+
 .pub-key input:hover,
 .secret-key input:hover {
   border: 2px solid #1e9ffa;
@@ -370,17 +380,26 @@ export default {
 }
 .check-box {
   width: 100%;
-  height: 20px;
+  height: 25px;
+  padding-bottom: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.form-check-input {
+  margin-bottom: 3px;
+  cursor: pointer;
+}
 .form-check {
   width: 40%;
-  padding: 0;
+  height: 20px;
+  padding-bottom: 5px;
+  font-size: 0.9rem;
+  margin-top: 2px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  color: rgb(226, 102, 102);
 }
 
 .btn-box button {
