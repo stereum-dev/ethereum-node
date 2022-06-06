@@ -1,7 +1,7 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in services" :key="idx">
+      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
         <div class="icon-box" onmousedown="return false">
           <img
             @click="openServiceBrowser(service.serviceName)"
