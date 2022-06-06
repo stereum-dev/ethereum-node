@@ -1,27 +1,14 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
-        <div class="icon-box" onmousedown="return false">
-          <img
-            @click="openServiceBrowser(service.serviceName)"
-            v-show="isImgExists"
-            :src="service.icon"
-            alt="service-icon"
-          />
-        </div>
-        <grafana-modal
-          v-if="showGrafanaWindow"
-          @close-window="closeServiceBrowser"
-        ></grafana-modal>
-        <ssv-modal
-          @close-window="closeServiceBrowser"
-          v-if="showSsvWindow"
-        ></ssv-modal>
-        <prometheus-modal
-          @close-window="closeServiceBrowser"
-          v-if="showPrometheusWindow"
-        ></prometheus-modal>
+      <div
+        class="service-icon"
+        v-for="(service, idx) in services"
+        :key="idx"
+      >
+        <a :href="service.linkUrl" target="_blank">
+          <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
+        </a>
       </div>
     </div>
     <div class="arrow-box">

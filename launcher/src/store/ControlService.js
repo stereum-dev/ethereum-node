@@ -1,6 +1,6 @@
-import EventEmitter from 'events'
+import EventEmitter from "events";
 
-let instance = null
+let instance = null;
 class ControlService extends EventEmitter {
   constructor() {
     super();
@@ -86,28 +86,39 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getHostName");
   }
 
-  async getAvailablePort(args){
-    return await this.promiseIpc.send('getAvailablePort', args)
+  async getEntireRam() {
+    return await this.promiseIpc.send("getEntireRam");
   }
 
-  async checkStereumInstallation(){
-    return await this.promiseIpc.send('checkStereumInstallation')
+  async getUsedRam() {
+    return await this.promiseIpc.send("getUsedRam");
   }
 
-  async getServices(){
-    return await this.promiseIpc.send('getServices')
+  async getAvailablePort(args) {
+    return await this.promiseIpc.send("getAvailablePort", args);
   }
 
-  async importKey(args){
+  async checkStereumInstallation() {
+    return await this.promiseIpc.send("checkStereumInstallation");
+  }
+
+  async getServices() {
+    return await this.promiseIpc.send("getServices");
+  }
+
+  async importKey(args) {
     //resolve proxy
-    let files = []
-    args.files.forEach(file => {
-      files.push({name: file.name, path: file.path})
-    })
-    return await this.promiseIpc.send('importKey', {files: files, password: args.password})
+    let files = [];
+    args.files.forEach((file) => {
+      files.push({ name: file.name, path: file.path });
+    });
+    return await this.promiseIpc.send("importKey", {
+      files: files,
+      password: args.password,
+    });
   }
 }
 if (!instance) {
-  instance = new ControlService(window.electron)
+  instance = new ControlService(window.electron);
 }
-export default instance
+export default instance;
