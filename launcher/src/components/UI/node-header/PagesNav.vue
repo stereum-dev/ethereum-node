@@ -1,13 +1,13 @@
 <template>
   <ul class="router__items">
     <li class="router__item">
-      <router-link :to="{ path: '/node' }">NODE</router-link>
+      <router-link to="/node">NODE</router-link>
     </li>
     <li class="router__item">
-      <router-link :to="{ path: '/control' }">CONTROL</router-link>
+      <router-link to="/control">CONTROL</router-link>
     </li>
     <li class="router__item">
-      <router-link :to="{ path: '/staking' }">STAKING</router-link>
+      <router-link to="/staking">STAKING</router-link>
     </li>
   </ul>
 </template>
@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 0 0 70px;
+  margin: 0 80px 0 50px;
 }
 .router__items .router__item {
   width: 30%;
