@@ -1,8 +1,9 @@
 <template>
   <div class="service-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
+
     <div class="browser-modal">
-      <div
+      <!-- <div
         class="prometheus-container"
         v-for="(service, idx) in prometheusService"
         :key="idx"
@@ -19,12 +20,14 @@
           </div>
         </div>
         <div class="btn-box">
-          <!-- <a class="btn" :href="service.linkUrl" target="_blank"
+          <a class="btn" :href="service.linkUrl" target="_blank"
             >open default browser</a
-          > -->
+          >
+          <input @click="logItem" type="text" />
           <span>AT the moment the service is not available</span>
         </div>
-      </div>
+      </div> -->
+      <input type="text" />
     </div>
   </div>
 </template>
@@ -48,12 +51,15 @@ export default {
   },
   methods: {
     filterPrometheusService() {
-      this.runningServices.forEach((service) => {
+      this.services.forEach((service) => {
         if (service.serviceName.toLowerCase() === "prometheus") {
           this.prometheusService.push(service);
         }
       });
       this.isPrometheusAvailable = true;
+    },
+    logItem(event) {
+      console.log(event.target);
     },
   },
 };

@@ -30,6 +30,7 @@
     "bootstrap-vue-3": "^0.1.13",
     "chart.js": "^3.7.1",
     "core-js": "^3.22.2",
+    "daisyui": "^2.15.2",
     "electron-builder": "^23.0.9",
     "electron-log": "^4.4.1",
     "electron-promise-ipc": "^2.2.4",

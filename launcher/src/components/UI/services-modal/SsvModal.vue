@@ -1,7 +1,7 @@
 <template>
   <div class="service-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
-    <div class="browser-modal">
+    <div class="browser-modal" @click="logItem">
       <div
         class="ssv-container"
         v-for="(service, idx) in ssvService"
@@ -17,9 +17,9 @@
           />
         </div>
         <div class="title-box">
-          <span class="service-name">{{ service.serviceName }} NETWORK</span>
-          <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" />
+          <span class="service-name" @click="logItem">{{ service.serviceName }} NETWORK</span>
+          <div class="service-option" @click="logItem">
+            <img @click="logItem" src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />
             <img src="/img/icon/service-icons/discord.png" alt="icon" />
           </div>
@@ -28,7 +28,7 @@
       <div class="registration-box">
         <div class="operator-box">
           <span class="op-title">pick an operator name</span>
-          <div class="operator" >
+          <div class="operator">
             <b-form-select
               v-model="selectedOperator"
               :options="operators"
@@ -44,7 +44,11 @@
         <div class="public-box">
           <span class="pub-title">OPERATOR PUBLIC KEY</span>
           <div class="pub-key">
-            <input type="password" placeholder="Public Key" v-model="pubkey" />
+            <input
+              type="password"
+             
+      
+            />
 
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -55,7 +59,12 @@
         <div class="secret-box">
           <label class="secret-title">OPERATOR SECRET KEY</label>
           <div class="secret-key">
-            <input type="password" v-model="secretkey" placeholder="Secret Key" />
+            <input
+            @click="logItem"
+              type="password"
+              v-model="secretkey"
+              placeholder="Secret Key"
+            />
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               <span>copied!</span>
@@ -95,8 +104,8 @@ export default {
       enteredText: "",
       selectedOperator: null,
       accepted: "",
-      secretkey: "",
-      pubkey: "",
+      secretkey: "123",
+      pubkey: "123",
     };
   },
   created() {
@@ -234,7 +243,6 @@ export default {
   justify-content: flex-start;
   align-items: center;
   z-index: 103;
-  
 }
 .operator-box,
 .public-box,
@@ -261,11 +269,10 @@ export default {
   height: 63%;
   background-color: #313131;
   border-radius: 10px;
-  padding:5px;
+  padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 .operator select {
   width: 100%;
@@ -286,7 +293,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   transition-duration: all 200ms;
-
 }
 .pub-key input,
 .secret-key input {
