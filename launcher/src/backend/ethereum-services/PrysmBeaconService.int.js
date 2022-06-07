@@ -35,8 +35,6 @@ test('prysm validator import', async () => {
     const serviceManager = new ServiceManager(nodeConnection)
     await testServer.connect(nodeConnection)
 
-    //change password
-    await testServer.passwordAuthentication(testServer.serverRootPassword)
 
     //attach to subnetwork
     await testServer.attachToNetwork('eth2-prater', '10.10.0.147')
@@ -124,13 +122,14 @@ test('prysm validator import', async () => {
 
     //Waiting for the service to start properly
     await testServer.Sleep(60000)
+    const VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmVC.id}`)
+    await testServer.Sleep(120000)
 
     //get logs
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const validatorAccounts = await nodeConnection.sshService.exec(`cat ${wallet_path}/direct/accounts/all-accounts.keystore.json`)
     const auth_token = await nodeConnection.sshService.exec(`cat ${wallet_path}/auth-token`)
-    const BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmBC.id}`)
-    const VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmVC.id}`)
+    const BCstatus = await nodeConnection.sshService.exec(`docker logs --tail=100 stereum-${prysmBC.id}`)
     const docker = await nodeConnection.sshService.exec('docker ps')
     let responseValidator = await nodeConnection.sshService.exec('docker exec stereum-'+ prysmVC.id +' /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --prater')
     const runningValidator = responseValidator.stdout.replace('\x1B[93m3\x1B[0m','3')   //remove yellow color coding 

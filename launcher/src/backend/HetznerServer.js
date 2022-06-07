@@ -157,6 +157,9 @@ export class HetznerServer {
       } catch (e) {
         if (++retry.counter == retry.maxTries) throw e
         log.info(' Could not connect.\n' + (retry.maxTries - retry.counter) + ' tries left.')
+        if(typeof e === 'string' && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(e.toLowerCase())){
+          this.passwordAuthentication(this.serverRootPassword)
+        }
         await this.Sleep(2000)
       }
     }

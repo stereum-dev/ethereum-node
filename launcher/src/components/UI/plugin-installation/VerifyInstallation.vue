@@ -81,8 +81,8 @@ export default {
       let grafana = services.find(service => service.service.includes('Grafana'))
       let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
 
-      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-      let prometheusStats = this.pluginServices.find(e => e.name === 'prometheus')
+      let grafanaStats = this.pluginServices.find(e => e.serviceName === 'grafana')
+      let prometheusStats = this.pluginServices.find(e => e.serviceName === 'prometheus')
 
       let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
 

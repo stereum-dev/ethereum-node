@@ -18,6 +18,13 @@
     mode: 0655
   become: yes
 
+- name: Copy Grafana's dashboard.yml
+  copy:
+    src: "{{ role_path }}/files/grafana/dashboard.yml"
+    dest: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
+    mode: 0655
+  become: yes
+
 - name: Copy Grafana's dashboard(s)
   copy:
     src: "{{ item }}"

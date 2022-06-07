@@ -29,8 +29,6 @@ test('prepareStereumNode on ubuntu', async () => {
   const nodeConnection = new NodeConnection(connectionParams)
   await testServer.connect(nodeConnection)
 
-  await testServer.passwordAuthentication(testServer.serverRootPassword)
-
   await nodeConnection.findOS()
 
   // create stereum settings
