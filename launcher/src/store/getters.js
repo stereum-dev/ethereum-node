@@ -20,4 +20,7 @@ export default {
   getRunningServices(state) {
     return state.runningServices;
   },
+  getTheOperators(state) {
+    return state.operators;
+  },
 };

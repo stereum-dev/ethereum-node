@@ -102,7 +102,6 @@ export default {
   height: 63px;
   width: 56%;
   background-color: transparent;
-  border-bottom: 3px solid #656565;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
@@ -115,14 +114,14 @@ export default {
   height: 50px;
   border: 1px solid rgb(96, 95, 95);
   /* box-shadow:0 1px 3px 1px #2a2a2a; */
-  border-radius: 10px;
+  border-radius: 7px;
   margin: 0 auto;
 }
 .item-box .items img {
   width: 50px;
   height: 50px;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px 1px #2a2a2a;
+  border-radius: 8px;
+
 }
 .plus-icon-box {
   background-color: rgb(171, 171, 171);

@@ -2,7 +2,7 @@
   <div class="modal-parent">
     <div class="modal-opacity" @click="$emit('close-modal')"></div>
     <div class="modal-box">
-      <div class="modal">
+      <div class="modal-item">
         <div class="show-item">
           <div class="items-container">
             <div class="item-title">
@@ -51,19 +51,18 @@ export default {
   left: 28%;
   z-index: 7;
 }
-.modal {
+.modal-item {
   width: 100%;
   height: 100%;
   border-radius: 34px;
-  background-color: #23392e;
   display: flex;
   justify-content: center;
   align-items: center;
   box-shadow: 0 1px 5px 1px rgb(6, 6, 6), inset 1px 1px 5px rgb(88, 114, 91);
 }
 .show-item {
-  width: 94%;
-  height: 92%;
+  width: 100%;
+  height: 100%;
   background-color: rgb(186, 186, 186);
   border: 1px solid rgb(35, 47, 38);
   border-radius: 23px;

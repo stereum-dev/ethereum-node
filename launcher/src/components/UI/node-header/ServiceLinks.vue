@@ -1,16 +1,28 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div
-        class="service-icon"
-        v-for="(service, idx) in services"
-        :key="idx"
-      >
-        <a :href="service.linkUrl" target="_blank">
-          <img v-show="isImgExists" :src="service.icon" alt="service-icon" />
-        </a>
+          <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
+        <div class="icon-box" onmousedown="return false">
+          <img
+            @click="openServiceBrowser(service.serviceName)"
+            v-show="isImgExists"
+            :src="service.icon"
+            alt="service-icon"
+          />
+        </div>
+        <grafana-modal
+          v-if="showGrafanaWindow"
+          @close-window="closeServiceBrowser"
+        ></grafana-modal>
+        <ssv-modal
+          @close-window="closeServiceBrowser"
+          v-if="showSsvWindow"
+        ></ssv-modal>
+        <prometheus-modal
+          @close-window="closeServiceBrowser"
+          v-if="showPrometheusWindow"
+        ></prometheus-modal>
       </div>
-    </div>
     <div class="arrow-box">
       <div class="right-arrow left-paddle paddle" @click="scrollRight">
         <img alt="update-icon" src="/img/icon/header-icons/right.png" />
@@ -20,16 +32,22 @@
       </div>
     </div>
   </div>
+  </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
+import GrafanaModal from "../services-modal/GrafanaModal.vue";
+import SsvModal from "../services-modal/SsvModal.vue";
+import PrometheusModal from "../services-modal/PrometheusModal.vue";
 export default {
+  components: { GrafanaModal, SsvModal, PrometheusModal },
   data() {
     return {
       isServiceAvailable: true,
       isImgExists: true,
-      service: null,
-      scrollAmount: 0,
+      showGrafanaWindow: false,
+      showSsvWindow: false,
+      showPrometheusWindow: false,
     };
   },
   mounted() {},
@@ -55,6 +73,26 @@ export default {
       let position = this.$refs.service;
       position.scrollLeft -= 150;
     },
+    //open & close modal for each service
+    openServiceBrowser(serviceName) {
+      this.services.filter((item) => {
+        item.serviceName == serviceName;
+        if (serviceName == "grafana") {
+          this.showGrafanaWindow = true;
+        } else if (serviceName == "ssv") {
+          this.showSsvWindow = true;
+        } else if (serviceName == "prometheus") {
+          this.showPrometheusWindow = true;
+        } else {
+          return;
+        }
+      });
+    },
+    closeServiceBrowser() {
+      this.showGrafanaWindow = false;
+      this.showSsvWindow = false;
+      this.showPrometheusWindow = false;
+    },
   },
 };
 </script>
@@ -68,7 +106,7 @@ export default {
   align-items: center;
 }
 .arrow-box {
-  width: 20px;
+  width: 25px;
   height: 90%;
   padding: 0 3px;
   border-left: 2px solid #a5a5a5;
@@ -133,8 +171,8 @@ export default {
   height: 1px;
 }
 .service-icon {
-  width: 35px;
-  height: 35px;
+  width: 37px;
+  height: 37px;
   border: 1px solid #a5a5a5;
   box-shadow: 0 1px 5px 1px rgb(22, 42, 37);
   border-radius: 5px;
@@ -142,14 +180,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .service-icon:hover {
   border: 1px solid #7ed6fc;
   box-shadow: none;
 }
-.service-icon a {
-  width: 100%;
-  height: 100%;
+.service-icon .icon-box {
+  width: 35px;
+  height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;

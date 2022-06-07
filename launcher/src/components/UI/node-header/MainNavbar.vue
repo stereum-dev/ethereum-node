@@ -1,22 +1,22 @@
 <template>
   <nav class="main-nav1">
     <pages-nav></pages-nav>
-    <system-links></system-links>
+    <service-links></service-links>
     <icons-nav></icons-nav>
   </nav>
 </template>
 <script>
 import PagesNav from "./PagesNav.vue";
 import IconsNav from "./IconsNav.vue";
-import SystemLinks from "./SystemLinks.vue";
+import ServiceLinks from "./ServiceLinks.vue";
 export default {
-  components: { PagesNav, IconsNav, SystemLinks },
+  components: { PagesNav, IconsNav, ServiceLinks },
 };
 </script>
 <style scoped>
 .main-nav1 {
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;

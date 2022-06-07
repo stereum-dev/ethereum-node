@@ -174,7 +174,7 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  width: 88%;
+  width: 77%;
   height: 100%;
 }
 .plugin-table {

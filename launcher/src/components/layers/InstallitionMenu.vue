@@ -161,7 +161,7 @@ export default {
 }
 .progress-bg {
   width: 59% !important;
-  height: 65% !important;
+  height: 70% !important;
   border: 4px solid #6e8582;
   background-color: #6e8582;
   border-radius: 40px;

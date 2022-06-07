@@ -68,8 +68,8 @@ export default {
 <style scoped>
 .ctrGridParent {
   display: grid;
-  width: 99.2%;
-  height: 90%;
+  width: 99.95%;
+  height: 91%;
   background-color: #232323;
   border: 4px solid #979797;
   border-radius: 10px 35px 10px 10px;
@@ -93,7 +93,7 @@ export default {
 }
 
 .dashboard-container {
-  width: 98%;
+  width: 99.1%;
   height: 93%;
   margin-top: 7px;
   color: white;

@@ -134,50 +134,24 @@ const store = createStore({
       runningServices: [],
       services: [
         {
-          name: "grafana",
+          serviceName: "grafana",
           icon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://stereum.net",
         },
         {
-          name: "prometheus",
+          serviceName: "prometheus",
           icon: "/img/icon/service-icons/prometheus.png",
           linkUrl: "https://stereum.net",
         },
         {
-          name: "ssv",
+          serviceName: "ssv",
           icon: "/img/icon/service-icons/ssv.png",
           linkUrl: "https://stereum.net",
         },
-        {
-          name: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          name: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          name: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://google.com",
-        },
-        {
-          name: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://google.com",
-        },
+      ],
+      operators: [
+        { operatorName: "stereum" },
+        { operatorName: "Rocklogic GmbH" },
       ],
     };
   },
