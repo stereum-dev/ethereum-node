@@ -194,10 +194,10 @@ export default {
   },
   methods: {
     importKey: async function () {
-      // await ControlService.importKey({
-      //   files: this.keyFiles,
-      //   password: this.password,
-      // });
+      await ControlService.importKey({
+        files: this.keyFiles,
+        password: this.password,
+      });
       this.password = "";
       this.insertFilePage = true;
       this.enterPasswordPage = false;
