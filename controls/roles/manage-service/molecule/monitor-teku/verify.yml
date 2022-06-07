@@ -24,10 +24,14 @@
     register: grafana_ini
   - debug:
       msg: "{{ grafana_ini }}"
-  - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/dashboards/multiple_teku_instance.json
+  - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/dashboards/teku_single.json
     register: grafana_dashboard
   - debug:
       msg: "{{ grafana_dashboard }}"
+      - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/dashboards/dashboard.yml
+    register: dashboard_yml
+  - debug:
+      msg: "{{ dashboard_yml }}"
   - stat: path=/opt/app/services/0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1/grafana/provisioning/datasources/datasource.yml
     register: grafana_datasource
   - debug:
@@ -37,6 +41,7 @@
       that:
         - grafana_ini.stat.exists
         - grafana_dashboard.stat.exists
+        - dashboard_yml.stat.exists
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
