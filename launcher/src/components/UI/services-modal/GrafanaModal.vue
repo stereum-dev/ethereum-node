@@ -116,7 +116,8 @@ grafana-modal {
 }
 .icon-box img {
   width: 90%;
-  height: 90%;
+  height: 98%;
+  margin-top: 6px;
   z-index: 110;
 }
 .title-box {
@@ -145,7 +146,7 @@ grafana-modal {
   align-items: center;
 }
 .service-option img {
-  width: 20%;
+  width: 18%;
   height: 70%;
 }
 
