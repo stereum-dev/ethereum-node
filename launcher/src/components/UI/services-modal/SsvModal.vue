@@ -1,7 +1,7 @@
 <template>
   <div class="service-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
-    <div class="browser-modal" @click="logItem">
+    <div class="browser-modal">
       <div
         class="ssv-container"
         v-for="(service, idx) in ssvService"
@@ -17,9 +17,9 @@
           />
         </div>
         <div class="title-box">
-          <span class="service-name" @click="logItem">{{ service.serviceName }} NETWORK</span>
-          <div class="service-option" @click="logItem">
-            <img @click="logItem" src="/img/icon/service-icons/internet.png" alt="icon" />
+          <span class="service-name">{{ service.serviceName }} NETWORK</span>
+          <div class="service-option">
+            <img src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />
             <img src="/img/icon/service-icons/discord.png" alt="icon" />
           </div>
@@ -29,13 +29,11 @@
         <div class="operator-box">
           <span class="op-title">pick an operator name</span>
           <div class="operator">
-            <b-form-select
-              v-model="selectedOperator"
-              :options="operators"
-              size="sm"
-              value-field="operatorName"
-              text-field="operatorName"
-            ></b-form-select>
+            <select class="select select-bordered">
+              <option disabled selected>Pick one</option>
+              <option>Stereum</option>
+              <option>Stereum 2.0</option>
+            </select>
           </div>
           <span class="op-warning"
             >*Choose wisely! This can't be changed later!</span
@@ -44,12 +42,7 @@
         <div class="public-box">
           <span class="pub-title">OPERATOR PUBLIC KEY</span>
           <div class="pub-key">
-            <input
-              type="password"
-             
-      
-            />
-
+            <input type="password" v-model="pubkey" disabled />
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               <span>copied!</span>
@@ -59,12 +52,7 @@
         <div class="secret-box">
           <label class="secret-title">OPERATOR SECRET KEY</label>
           <div class="secret-key">
-            <input
-            @click="logItem"
-              type="password"
-              v-model="secretkey"
-              placeholder="Secret Key"
-            />
+            <input type="password" v-model="secretkey" disabled />
             <div class="copy-icon">
               <img src="/img/icon/service-icons/copy1.png" alt="icon" />
               <span>copied!</span>
@@ -77,14 +65,18 @@
         </div>
         <div class="btn-box">
           <div class="check-box">
-            <b-form-checkbox
-              id="checkbox-1"
-              name="checkbox-1"
-              v-model="accepted"
-              modelValue="accepted"
-            >
-              I have stored my private key
-            </b-form-checkbox>
+            <div class="form-control">
+              <label class="label cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked="checked"
+                  class="checkbox checkbox-primary"
+                />
+                <span class="text-rose-500 text-sm ml-3"
+                  >I have stored my private key</span
+                >
+              </label>
+            </div>
           </div>
           <button class="register-btn" @click="registerHandler">
             register
@@ -120,7 +112,7 @@ export default {
   },
   methods: {
     filterSsvService() {
-      this.services.forEach((service) => {
+      this.runningServices.forEach((service) => {
         if (service.serviceName.toLowerCase() == "ssv") {
           this.ssvService.push(service);
         }

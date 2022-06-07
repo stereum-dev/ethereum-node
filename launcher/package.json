@@ -5,13 +5,14 @@
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
   "scripts": {
-    "serve": "vue-cli-service serve --port 8081",
+    "build:style":"tailwindcss -i ./src/main.css -o ./public/output.css --watch",
+    "serve": "vue-cli-service build:style serve --port 8081",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
     "build-themes": "node-sass src/styles/themes -o public/themes",
     "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
+    "electron:serve": "vue-cli-service  electron:serve",
     "test": "jest",
     "test-coverage": "jest --coverage"
   },
@@ -26,8 +27,6 @@
     "autoprefixer": "^10.4.5",
     "axios": "^0.21.1",
     "babel-jest": "^27.4.6",
-    "bootstrap": "^5.1.3",
-    "bootstrap-vue-3": "^0.1.13",
     "chart.js": "^3.7.1",
     "core-js": "^3.22.2",
     "daisyui": "^2.15.2",
@@ -56,6 +55,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@tailwindcss/forms": "^0.5.2",
     "@vue/cli-plugin-babel": "~5.0.4",
     "@vue/cli-plugin-router": "~5.0.4",
     "@vue/cli-plugin-unit-jest": "~5.0.4",
@@ -70,6 +70,7 @@
     "flush-promises": "^1.0.2",
     "imports-loader": "0.8.0",
     "jest": "^27.4.7",
+    "tailwindcss": "^3.0.24",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.6.14"

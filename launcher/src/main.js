@@ -4,11 +4,9 @@ import Vue, { createApp } from "vue"; // CHANGE
 import store from "./store/index.js";
 import App from "./App.vue";
 import router from "./router/index.js";
-import BootstrapVue3 from 'bootstrap-vue-3'
 import "./components/UI/the-control/chart.js";
 import "./main.css";
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
+
 
 import i18n from "./includes/i18n";
 import BaseButton from "./components/UI/BaseButton.vue";
@@ -32,7 +30,7 @@ app.component("chart-bg", ChartBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 
-app.use(BootstrapVue3)
+
 app.use(store);
 app.use(router);
 app.use(i18n);
