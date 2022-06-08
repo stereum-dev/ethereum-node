@@ -28,12 +28,23 @@ export class SSHService {
         this.conn.end()
         reject(error)
       })
+      //only works for ubuntu 22.04
       this.conn.on('banner', (msg) => {
         if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())){
+          if (process.env.IS_DEV === "true") {
+            resolve(this.conn)
+          }
           reject(msg)
         }
       })
-      this.conn.on('ready', () => {
+      this.conn.on('ready', async () => {
+        let test = await this.exec('sudo ls')
+        if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())){
+          if (process.env.IS_DEV === "true") {
+            resolve(this.conn)
+          }
+          reject(test.stderr)
+        }
         this.connected = true
         resolve(this.conn)
       }).connect({
