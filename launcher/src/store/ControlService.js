@@ -94,6 +94,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getUsedRam");
   }
 
+  async getUsedStoragePer() {
+    return await this.promiseIpc.send("getUsedStoragePer");
+  }
+
   async getAvailablePort(args) {
     return await this.promiseIpc.send("getAvailablePort", args);
   }

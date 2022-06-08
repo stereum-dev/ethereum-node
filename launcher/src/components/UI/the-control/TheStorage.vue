@@ -14,7 +14,10 @@
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
-            <div class="valueBarPart_loader-value" :style="valuBarLoader"></div>
+            <div
+              class="valueBarPart_loader-value"
+              :style="valueStoragePer"
+            ></div>
           </div>
         </div>
         <div class="latencyCounter">
@@ -37,21 +40,35 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      free: 300,
-      total: 1024,
+      free: 22,
+      total: 40,
       writeValue: 134.24,
       readValue: 1.05,
+      usedStotagePer: null,
     };
   },
+  created() {
+    this.storageUsedPerMet();
+  },
+
   computed: {
-    valuBarLoader() {
-      let totalValue = this.total / 10;
-      let freeValue = this.free / 10;
-      let loadValueSize = totalValue - freeValue;
-      return { width: loadValueSize + "%" };
+    valueStoragePer() {
+      return { width: this.usedStotagePer + "%" };
+    },
+  },
+
+  methods: {
+    async storageUsedPerMet() {
+      try {
+        const response = await ControlService.getUsedStoragePer();
+        this.usedStotagePer = Math.floor(await response.usedStoragePer.stdout);
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

@@ -488,6 +488,15 @@ export class NodeConnection {
     return response;
   }
 
+  async getUsedStoragePer() {
+    let response = {};
+    const usedStoragePer = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print 100-$3/$2*100}'`
+    );//used storage per %
+    response.usedStoragePer = usedStoragePer;
+    return response;
+  }
+
   async openTunnels(tunnels) {
     if (tunnels[0] !== undefined) {
       await Promise.all(
