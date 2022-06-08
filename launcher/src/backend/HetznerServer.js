@@ -122,6 +122,7 @@ export class HetznerServer {
     const responseData = JSON.parse(data)
 
     if (responseData.error !== undefined) {
+      console.log(responseData)
       throw responseData.error
     }
 

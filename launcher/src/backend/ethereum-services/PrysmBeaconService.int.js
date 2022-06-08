@@ -36,6 +36,7 @@ test('prysm validator import', async () => {
     await testServer.connect(nodeConnection)
 
 
+
     //attach to subnetwork
     await testServer.attachToNetwork('eth2-prater', '10.10.0.147')
     log.info('server attached to network')
