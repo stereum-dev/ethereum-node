@@ -35,6 +35,9 @@ test('lighthouse validator import', async () => {
     const serviceManager = new ServiceManager(nodeConnection)
     await testServer.connect(nodeConnection)
 
+    //change password
+    await testServer.passwordAuthentication(testServer.serverRootPassword)
+
     //attach to subnetwork
     await testServer.attachToNetwork('eth2-prater', '10.10.0.137')
     log.info('server attached to network')
