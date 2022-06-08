@@ -55,7 +55,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
-import ControlService from '@/store/ControlService'
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {};
@@ -65,6 +65,7 @@ export default {
       selectedPreset: "getSelectedPreset",
       installationPath: "getInstallationPath",
       pluginServices: "getServiceIcons",
+      installingServices: "getInstallingServices",
     }),
   },
   mounted() {
@@ -73,33 +74,57 @@ export default {
     }
   },
   methods: {
-    runInstalltion: async function(){
+    runInstalltion: async function () {
+      this.installingService = true;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
 
-      let grafana = services.find(service => service.service.includes('Grafana'))
-      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+      let grafana = services.find((service) =>
+        service.service.includes("Grafana")
+      );
+      let prometheus = services.find(
+        (service) =>
+          service.service.includes("Prometheus") &&
+          !service.service.includes("NodeExporter")
+      );
 
-      let grafanaStats = this.pluginServices.find(e => e.serviceName === 'grafana')
-      let prometheusStats = this.pluginServices.find(e => e.serviceName === 'prometheus')
+      let grafanaStats = this.pluginServices.find(
+        (e) => e.serviceName === "grafana"
+      );
+      let prometheusStats = this.pluginServices.find(
+        (e) => e.serviceName === "prometheus"
+      );
 
-      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+      let localPorts = await ControlService.getAvailablePort({
+        min: 9000,
+        max: 9999,
+        amount: 2,
+      });
 
-      let grafanaPort = localPorts.pop()
-      let prometheusPort = localPorts.pop()
+      let grafanaPort = localPorts.pop();
+      let prometheusPort = localPorts.pop();
 
       localPorts = await ControlService.openTunnels([
-        {dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: grafanaPort},
-        {dstPort: prometheus.ports[0].split(":")[2].replace('/tcp',''), localPort: prometheusPort}
-      ])
-      
-      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
-      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
-      
-      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
-    }
-  }
+        {
+          dstPort: grafana.ports[0].split(":")[2].replace("/tcp", ""),
+          localPort: grafanaPort,
+        },
+        {
+          dstPort: prometheus.ports[0].split(":")[2].replace("/tcp", ""),
+          localPort: prometheusPort,
+        },
+      ]);
+
+      grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
+      prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
+      this.installingService = false;
+      this.$store.commit("updateRunningServices", [
+        grafanaStats,
+        prometheusStats,
+      ]);
+    },
+  },
 };
 </script>
 <style scoped>
