@@ -33,7 +33,7 @@ test('geth installation', async () => {
 
   //change password
   await testServer.passwordAuthentication(testServer.serverRootPassword)
-
+  
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
   echo "stereum_settings:

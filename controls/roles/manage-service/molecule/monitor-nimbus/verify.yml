@@ -24,10 +24,14 @@
     register: grafana_ini
   - debug:
       msg: "{{ grafana_ini }}"
-  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/beacon_nodes_Grafana_dashboard.json
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/multiple_source.json
     register: grafana_dashboard
   - debug:
       msg: "{{ grafana_dashboard }}"
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/dashboard.yml
+    register: dashboard_yml
+  - debug:
+      msg: "{{ dashboard_yml }}"
   - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/datasources/datasource.yml
     register: grafana_datasource
   - debug:
@@ -37,10 +41,11 @@
       that:
         - grafana_ini.stat.exists
         - grafana_dashboard.stat.exists
+        - dashboard_yml.stat.exists
         - grafana_datasource.stat.exists
-  # - name: Waiting for the services to start properly
-  #   pause:
-  #     minutes: 5
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 5
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-52134fcc-9744-11ec-b5ca-572497326b43"

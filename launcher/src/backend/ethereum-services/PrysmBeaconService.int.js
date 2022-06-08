@@ -35,8 +35,6 @@ test('prysm validator import', async () => {
     const serviceManager = new ServiceManager(nodeConnection)
     await testServer.connect(nodeConnection)
 
-    //change password
-    await testServer.passwordAuthentication(testServer.serverRootPassword)
 
 
     //attach to subnetwork

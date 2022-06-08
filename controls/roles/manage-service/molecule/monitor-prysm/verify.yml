@@ -28,6 +28,10 @@
     register: grafana_dashboard
   - debug:
       msg: "{{ grafana_dashboard }}"
+  - stat: path=/opt/app/services/a5657b06-e068-11ec-8e1c-2f728e608caa/grafana/provisioning/dashboards/dashboard.yml
+    register: dashboard_yml
+  - debug:
+      msg: "{{ dashboard_yml }}"
   - stat: path=/opt/app/services/a5657b06-e068-11ec-8e1c-2f728e608caa/grafana/provisioning/datasources/datasource.yml
     register: grafana_datasource
   - debug:
@@ -37,6 +41,7 @@
       that:
         - grafana_ini.stat.exists
         - grafana_dashboard.stat.exists
+        - dashboard_yml.stat.exists
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
