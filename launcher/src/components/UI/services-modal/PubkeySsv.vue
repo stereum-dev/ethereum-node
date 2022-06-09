@@ -2,27 +2,12 @@
   <div class="pubkey-parent" @click="$emit('openPubkey')">
     <div class="operator-box">
       <div class="operator-btn">
-        <span> Register Operator</span>
-      </div>
-    </div>
-    <div class="public-box">
-      <div class="pub-key">
-        <input
-          type="password"
-          placeholder="Public Key"
-          class="pubkey-input"
-          v-model="pubkey"
-          disabled
-        />
-        <div class="copy-icon">
-          <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-          <span>copied!</span>
-        </div>
+        <span> Register New Operator</span>
       </div>
     </div>
     <div class="dashboard-box">
       <div class="dashboard-btn">
-        <span>SSV Node Grafana Dashboard</span>
+        <span>Insert Operator Key</span>
       </div>
     </div>
   </div>
@@ -42,7 +27,6 @@ export default {
   align-items: center;
 }
 .operator-box,
-.public-box,
 .dashboard-box {
   width: 90%;
   height: 42px;
@@ -66,7 +50,7 @@ export default {
 .operator-btn span,
 .dashboard-btn span {
   width: max-content;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   color: rgb(57, 57, 57);
   transition-duration: 50ms;

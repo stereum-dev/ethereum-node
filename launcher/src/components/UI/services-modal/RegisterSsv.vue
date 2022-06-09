@@ -78,12 +78,16 @@ export default {
       isBtnDisabled: true,
     };
   },
-  methods: {
+  computed: {
     getPubkeyHandler() {
       if (this.$refs.copyPub.value.length > 0) {
         this.isBtnDisabled = false;
+      } else {
+        this.$router.push("/node");
       }
     },
+  },
+  methods: {
     copyPubKey() {},
     copySecretKey() {},
   },
