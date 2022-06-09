@@ -1,5 +1,5 @@
 <template>
-  <div class="pubkey-parent">
+  <div class="pubkey-parent" @click="$emit('openPubkey')">
     <div class="operator-box">
       <div class="operator-btn">
         <span> Register Operator</span>
@@ -61,22 +61,23 @@ export default {
   align-items: center;
   background-color: #20a9f8;
   box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
-  transition-duration: 100ms;
+  transition-duration: 50ms;
 }
 .operator-btn span,
 .dashboard-btn span {
   width: max-content;
   font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: 600;
   color: rgb(57, 57, 57);
-  transition-duration: 100ms;
+  transition-duration: 50ms;
 }
 .operator-btn:hover,
 .dashboard-btn:hover {
-  border: 1px solid #69c3f7;
+  transform: scale(1.01);
   background-color: rgb(9, 140, 216);
+  border: 1px solid #91caf3;
   border-radius: 10px;
-  transition-duration: 100ms;
+  transition-duration: 50ms;
 }
 .operator-btn:hover span,
 .dashboard-btn:hover span {
@@ -84,13 +85,13 @@ export default {
 }
 .operator-btn:active,
 .dashboard-btn:active {
+  transform: scale(1);
   background-color: rgb(6, 116, 180);
   box-shadow: none;
   border: none;
 }
 .operator-btn:active span,
 .dashboard-btn:active span {
-  transform: scale(0.98);
   color: rgb(222, 222, 222);
 }
 
@@ -126,5 +127,8 @@ export default {
   border-radius: 8px 0 0 8px;
   background-color: rgb(212, 212, 212);
   padding-left: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgb(51, 129, 239);
 }
 </style>

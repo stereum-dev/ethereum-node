@@ -21,26 +21,37 @@
           </div>
         </div>
       </div>
-      <div class="registration-box">
-        <pubkey-ssv :pubkey="pubkey"></pubkey-ssv>
+      <div class="content-box">
+        <pubkey-ssv
+          v-if="pubkeyModalActive"
+          @open-pubkey="registerModalHandler"
+          :pubkey="pubkey"
+        ></pubkey-ssv>
+        <register-ssv
+          v-if="registerModalActive"
+          :pubkey="pubkey"
+        ></register-ssv>
       </div>
     </div>
   </div>
 </template>
 <script>
 import PubkeySsv from "./PubkeySsv.vue";
+import RegisterSsv from "./RegisterSsv.vue";
 import { mapGetters } from "vuex";
 export default {
-  components: { PubkeySsv },
+  components: { PubkeySsv, RegisterSsv },
   data() {
     return {
       ssvService: [],
       isSsvAvailable: false,
+      pubkeyModalActive: true,
+      registerModalActive: false,
       enteredText: "",
       selectedOperator: null,
       accepted: "",
       secretkey: null,
-      pubkey: null,
+      pubkey: "112gf1hj2fjh1f24jkhf4fhgfhad444",
     };
   },
   created() {
@@ -62,11 +73,9 @@ export default {
       });
       this.isSsvAvailable = true;
     },
-    registerHandler() {
-      console.log(this.secretkey);
-      console.log(this.pubkey);
-      // console.log(this.selected);
-      // console.log(this.$refs.status.value);
+    registerModalHandler() {
+      this.pubkeyModalActive = false;
+      this.registerModalActive = true;
     },
     logItem(event) {
       console.log(event.target);
@@ -169,10 +178,10 @@ export default {
   height: 70%;
   margin-right: 15px;
 }
-.registration-box {
+.content-box {
   width: 100%;
   height: 70%;
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
