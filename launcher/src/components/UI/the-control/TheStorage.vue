@@ -7,10 +7,10 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ free }} GB FREE</span>
+          <span>{{ free }} MiB FREE</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ total }} GB TOTAL</span>
+          <span> {{ total }} MiB TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       free: 22,
-      total: 40,
+      total: null,
       writeValue: 134.24,
       readValue: 1.05,
       usedStotagePer: null,
@@ -53,6 +53,7 @@ export default {
   },
   created() {
     this.storageUsedPerMet();
+    this.entireStorageMet();
   },
 
   computed: {
@@ -66,6 +67,14 @@ export default {
       try {
         const response = await ControlService.getUsedStoragePer();
         this.usedStotagePer = Math.floor(await response.usedStoragePer.stdout);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async entireStorageMet() {
+      try {
+        const response = await ControlService.getEntireStorage();
+        this.total= Math.floor(await response.entireStorage.stdout);
       } catch (error) {
         console.log(error);
       }
