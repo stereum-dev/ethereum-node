@@ -501,8 +501,17 @@ export class NodeConnection {
     let response = {};
     const entireStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $2}'`
-    );//Entire storage
+    );//Entire storage per MiB
     response.entireStorage = entireStorage;
+    return response;
+  }
+
+  async getUsedStorage() {
+    let response = {};
+    const usedStorage = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print $3}'`
+    );//Used storage per MiB
+    response.usedStorage = usedStorage;
     return response;
   }
 

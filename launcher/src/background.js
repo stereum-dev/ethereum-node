@@ -127,6 +127,10 @@ promiseIpc.on("getEntireStorage", async () => {
   return await nodeConnection.getEntireStorage();
 });
 
+promiseIpc.on("getUsedStorage", async () => {
+  return await nodeConnection.getUsedStorage();
+});
+
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 });
