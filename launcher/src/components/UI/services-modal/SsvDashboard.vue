@@ -5,6 +5,15 @@
         <span> Register New Operator</span>
       </div>
     </div>
+    <div class="pubkey-box">
+      <div class="pub-key">
+        <input type="password" class="pubkey-input" v-model="pubkey" disabled />
+        <div class="copy-icon" @click="copyPubKey">
+          <img src="/img/icon/service-icons/copy1.png" alt="icon" />
+          <span>copied!</span>
+        </div>
+      </div>
+    </div>
     <div class="insert-box">
       <div class="insert-btn">
         <span>Insert Operator Key</span>
@@ -27,6 +36,7 @@ export default {
   align-items: center;
 }
 .operator-box,
+.pubkey-box,
 .insert-box {
   width: 90%;
   height: 42px;
@@ -34,6 +44,57 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.pub-key {
+  width: 100%;
+  height: 65%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #373737;
+  border: 1px solid #c3c3c3;
+  box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
+}
+.pubkey-input {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px 0 0 8px;
+  background-color: rgb(212, 212, 212);
+  padding-left: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: rgb(51, 129, 239);
+}
+.pub-key .copy-icon {
+  width: 5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.copy-icon img {
+  width: 20px;
+  height: 20px;
+}
+.copy-icon:active img {
+  transform: scale(0.95);
+}
+.pub-key .copy-icon:active span {
+  display: block;
+}
+.secret-key .copy-icon:active span {
+  display: block;
+}
+
+.copy-icon span {
+  display: none;
+  background-color: transparent;
+  color: rgb(96, 150, 120);
+  font-size: 0.5rem;
+  position: absolute;
+  top: 0;
+  right: -4%;
 }
 .operator-btn,
 .insert-btn {

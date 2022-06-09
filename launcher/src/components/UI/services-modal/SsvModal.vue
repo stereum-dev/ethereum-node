@@ -24,13 +24,18 @@
       <div class="content-box">
         <pubkey-ssv
           v-if="pubkeyModalActive"
-          @open-pubkey="registerModalHandler"
+          @open-pubkey="operatorModalHandler"
           :pubkey="pubkey"
         ></pubkey-ssv>
         <register-ssv
           v-if="registerModalActive"
           :pubkey="pubkey"
+          @register-pubkey="registerSsvPubkeyHandler"
         ></register-ssv>
+        <ssv-dashboard
+          :pubkey="pubkey"
+          v-if="ssvDashboardActive"
+        ></ssv-dashboard>
       </div>
     </div>
   </div>
@@ -38,15 +43,17 @@
 <script>
 import PubkeySsv from "./PubkeySsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
+import SsvDashboard from "./SsvDashboard.vue";
 import { mapGetters } from "vuex";
 export default {
-  components: { PubkeySsv, RegisterSsv },
+  components: { PubkeySsv, RegisterSsv, SsvDashboard },
   data() {
     return {
       ssvService: [],
       isSsvAvailable: false,
       pubkeyModalActive: true,
       registerModalActive: false,
+      ssvDashboardActive: false,
       enteredText: "",
       selectedOperator: null,
       accepted: "",
@@ -73,9 +80,14 @@ export default {
       });
       this.isSsvAvailable = true;
     },
-    registerModalHandler() {
+    operatorModalHandler() {
       this.pubkeyModalActive = false;
       this.registerModalActive = true;
+    },
+    registerSsvPubkeyHandler() {
+      this.registerModalActive = false;
+      this.pubkeyModalActive = false;
+      this.ssvDashboardActive = true;
     },
     logItem(event) {
       console.log(event.target);

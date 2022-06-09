@@ -7,10 +7,12 @@
         </div>
         <div class="pub-key">
           <input
+            v-on:focus="$event.target.select()"
             type="password"
             class="pubkey-input"
+            ref="pubkeyRef"
             v-model="pubkey"
-            disabled
+            readonly
           />
           <div class="copy-icon" @click="copyPubKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -29,7 +31,7 @@
             v-model="pubkey"
             disabled
           />
-          <div class="copy-icon" @click="copySecretKey">
+          <div class="copy-icon">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
             <span>copied!</span>
           </div>
@@ -60,6 +62,7 @@
       </div>
       <div class="btn-box">
         <button
+          @click="$emit('registerPubkey')"
           :class="{ 'btn-disabled': isBtnDisabled }"
           :disabled="isBtnDisabled"
         >
@@ -88,8 +91,16 @@ export default {
     },
   },
   methods: {
-    copyPubKey() {},
-    copySecretKey() {},
+    copyPubKey() {
+      let pubkeyToCopy = this.$refs.pubkeyRef.value;
+      this.$copyText(pubkeyToCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
   },
 };
 </script>
