@@ -30,6 +30,7 @@
         <register-ssv
           v-if="registerModalActive"
           :pubkey="pubkey"
+          :secretkey="secretkey"
           @register-pubkey="registerSsvPubkeyHandler"
         ></register-ssv>
         <ssv-dashboard
@@ -57,7 +58,7 @@ export default {
       enteredText: "",
       selectedOperator: null,
       accepted: "",
-      secretkey: null,
+      secretkey: "127635123hg1j23769152376",
       pubkey: "112gf1hj2fjh1f24jkhf4fhgfhad444",
     };
   },

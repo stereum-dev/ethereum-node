@@ -28,7 +28,7 @@
           <input
             type="password"
             class="secretkey-input"
-            v-model="pubkey"
+            v-model="secretkey"
             disabled
           />
           <div class="copy-icon">
@@ -54,10 +54,9 @@
       <div class="copy-pubkey">
         <input
           type="password"
-          class="pubkey-input bg-red-500"
+          class="pubkey-input"
           ref="copyPub"
-          @change="getPubkeyHandler"
-          v-model="pubkeyCopy"
+          v-model="copiedPubkey"
         />
       </div>
       <div class="btn-box">
@@ -74,10 +73,10 @@
 </template>
 <script>
 export default {
-  props: ["pubkey"],
+  props: ["pubkey", "secretkey"],
   data() {
     return {
-      pubkeyCopy: null,
+      copiedPubkey: null,
       isBtnDisabled: true,
     };
   },
@@ -92,7 +91,7 @@ export default {
   },
   methods: {
     copyPubKey() {
-      let pubkeyToCopy = this.$refs.pubkeyRef.value;
+      let pubkeyToCopy = this.pubkey;
       this.$copyText(pubkeyToCopy)
         .then(() => {
           console.log("copied!");
@@ -249,9 +248,20 @@ export default {
   border-radius: 8px;
   background-color: rgb(212, 212, 212);
   padding-left: 10px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 600;
   outline-color: #3294c5;
+}
+.copy-pubkey .copy-icon {
+  width: 5%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.copy-pubkey img {
+  width: 16px;
+  height: 22px;
 }
 .btn-box {
   width: 100%;

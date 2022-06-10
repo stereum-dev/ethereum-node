@@ -360,7 +360,7 @@ export default {
   height: 40%;
   border-radius: 1rem;
   background-color: #263f3a;
-  border: 4px solid rgb(96, 42, 42);
+  border: 4px solid rgb(171, 170, 170);
   z-index: 99;
   opacity: 1;
   position: fixed;
