@@ -2,9 +2,6 @@ import { createStore } from "vuex";
 import rootMutations from "./mutations.js";
 import rootActions from "./actions.js";
 import rootGetters from "./getters.js";
-import flagDialModule from "./flagDialog/index.js";
-import clickInstallModule from "./clickInstall/index.js";
-import controlPanelModule from "./controlPanel/index.js";
 import nodeManageModule from "./nodeManage/index.js";
 import setupServerModule from "./setupServer/index.js";
 import theNodeModule from "./theNode/index.js";
@@ -14,9 +11,6 @@ import welcomePageModule from "./welcomePage/index.js";
 // state vuex
 const store = createStore({
   modules: {
-    languages: flagDialModule,
-    installationPage: clickInstallModule,
-    controlpanel: controlPanelModule,
     managing: nodeManageModule,
     setupServer: setupServerModule,
     node: theNodeModule,
@@ -132,23 +126,7 @@ const store = createStore({
         },
       ],
       runningServices: [],
-      services: [
-        {
-          serviceName: "grafana",
-          icon: "/img/icon/service-icons/grafana.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          serviceName: "prometheus",
-          icon: "/img/icon/service-icons/prometheus.png",
-          linkUrl: "https://stereum.net",
-        },
-        {
-          serviceName: "ssv",
-          icon: "/img/icon/service-icons/ssv.png",
-          linkUrl: "https://stereum.net",
-        },
-      ],
+
       operators: [
         { operatorName: "stereum" },
         { operatorName: "Rocklogic GmbH" },

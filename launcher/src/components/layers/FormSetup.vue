@@ -13,11 +13,11 @@
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
-      <img src="../../../public/img/icon/form-setup/anim1.gif" alt="anim" />
+      <img src="../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
-        <h2>{{ $t("formsetup.server") }}</h2>
+        <span>{{ $t("formsetup.server") }}</span>
       </section>
 
       <base-dialog
@@ -141,7 +141,8 @@
 <script>
 import BaseDialog from "./BaseDialog.vue";
 import ControlService from "@/store/ControlService";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 
 export default {
   components: { BaseDialog },
@@ -173,11 +174,11 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
-    ...mapGetters({
-      plugins: "installationPlugins",
-      selectedPreset: "getSelectedPreset",
-      allPlugins: "getAllPlugins",
-      pluginServices: "getServiceIcons",
+    ...mapState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPrese",
+      allPlugins: "plugins",
+      pluginServices: "services",
     }),
   },
   methods: {
@@ -442,11 +443,10 @@ export default {
   align-items: center;
   text-align: center;
 }
-#header h2 {
+#header span {
   width: 95%;
   max-width: auto;
-  height: 50%;
-  margin-top: 2px;
+  height: 89%;
   font-size: 1.4rem !important;
   font-weight: 800 !important;
   color: #cecece !important;
@@ -894,6 +894,6 @@ input:invalid {
 }
 .anim img {
   width: 35%;
-  height: 35%;
+  height: 45%;
 }
 </style>

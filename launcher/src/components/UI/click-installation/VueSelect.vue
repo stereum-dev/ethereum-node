@@ -67,8 +67,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import ControlService from "@/store/ControlService";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   data() {
     return {
@@ -80,13 +81,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      plugins: "installationPlugins",
-      selectedPreset: "getSelectedPreset",
-      allPlugins: "getAllPlugins",
+    ...mapState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      allPlugins: "plugins",
     }),
   },
-
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
@@ -125,7 +125,7 @@ export default {
       });
       item.includedPlugins = includedPlugins;
       this.$store.commit("mutatedSelectedPreset", item);
-      this.$emit('disableBtn')
+      this.$emit("disableBtn");
     },
   },
 };

@@ -1,9 +1,7 @@
-import flagDialMutations from "./mutations.js";
-import flagDialActions from "./actions";
-import flagDialGetters from "./getters";
+import { defineStore } from "pinia";
 
-export default {
-  state() {
+export const useFlagDialog = defineStore("flagDialog", {
+  state: () => {
     return {
       dialogIsVisible: false,
       linkFlags: [
@@ -50,7 +48,12 @@ export default {
       ],
     };
   },
-  mutations: flagDialMutations,
-  actions: flagDialActions,
-  getters: flagDialGetters,
-};
+  actions: {
+    showDialog() {
+      this.dialogIsVisible = true;
+    },
+    hideDialog() {
+      this.dialogIsVisible = false;
+    },
+  },
+});

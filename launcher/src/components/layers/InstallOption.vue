@@ -26,7 +26,8 @@
 
 <script>
 import VueSelect from "../UI/click-installation/VueSelect.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: {
     VueSelect,
@@ -41,11 +42,8 @@ export default {
     };
   },
   computed: {
-    R1clkInstls() {
-      return this.$store.getters.R1clkInstls_get;
-    },
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
     }),
   },
   methods: {
