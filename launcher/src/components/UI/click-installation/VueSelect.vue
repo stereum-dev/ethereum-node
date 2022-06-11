@@ -68,7 +68,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
   data() {
@@ -81,7 +81,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useClickInstall, {
+    ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
       allPlugins: "plugins",
@@ -124,7 +124,7 @@ export default {
         buffer.forEach((element) => includedPlugins.push(element));
       });
       item.includedPlugins = includedPlugins;
-      this.$store.commit("mutatedSelectedPreset", item);
+      this.selectedPreset = item;
       this.$emit("disableBtn");
     },
   },
@@ -143,25 +143,31 @@ export default {
 }
 .select-box {
   width: 35%;
-  height: 12%;
+  height: 13%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  background-color: rgb(31, 31, 31) !important;
+  background-color: rgb(31, 31, 31);
   border: 2px solid rgb(126, 159, 151);
   border-radius: 5px;
   box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
 .select-box #selector {
   width: 85%;
-  height: 80%;
+  height: 90%;
   border: none;
   border-radius: 5px;
   background-color: transparent;
-  outline: none;
+  padding: 0 0 0 30px;
   font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(234, 234, 234);
+  font-weight: 600;
+  color: rgb(39, 186, 134);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.select-box #selector option {
+  width: 100%;
+  height: 100%;
 }
 .select-box:hover {
   border: 2px solid rgb(32, 191, 235);
@@ -219,12 +225,12 @@ export default {
 .testnet-plugin img {
   width: 52%;
   height: 79%;
+  cursor: pointer;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
-  width: 53%;
-  height: 82%;
-  transition: 0.2s;
+  transform: scale(1.1);
+  transition-duration: 0.2s;
 }
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;

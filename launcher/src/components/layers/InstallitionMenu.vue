@@ -35,55 +35,55 @@
   </div>
 </template>
 <script>
-import ButtonInstallation from './ButtonInstallation.vue'
-import CircleLoading from '../UI/CircleLoading.vue'
-import ControlService from '@/store/ControlService'
-import { mapGetters } from 'vuex'
+import ButtonInstallation from "./ButtonInstallation.vue";
+import CircleLoading from "../UI/CircleLoading.vue";
+import ControlService from "@/store/ControlService";
+import { mapGetters } from "vuex";
 export default {
-  created () {
-    this.checkOS()
-    this.randomValue()
+  created() {
+    this.checkOS();
+    this.randomValue();
   },
   components: { ButtonInstallation, CircleLoading },
-  data () {
+  data() {
     return {
       running: true,
-      message: '',
+      message: "",
       value: 1,
-      max: 100
-    }
+      max: 100,
+    };
   },
   computed: {
-    ...mapGetters({ installation: 'installation_get' })
+    ...mapGetters({ installation: "installation_get" }),
   },
   methods: {
-    randomValue () {
-      this.value = Math.random() * this.max
+    randomValue() {
+      this.value = Math.random() * this.max;
     },
     display: async function (response) {
-      const data = await response
-      if (data == 'Ubuntu' || data == 'CentOS') {
-        this.message = data.toUpperCase() + ' IS A SUPPORTED OS'
+      const data = await response;
+      if (data == "Ubuntu" || data == "CentOS") {
+        this.message = data.toUpperCase() + " IS A SUPPORTED OS";
       } else if (data.name !== undefined) {
         this.message =
-          data.name.toUpperCase() + ': ' + data.message.toUpperCase()
+          data.name.toUpperCase() + ": " + data.message.toUpperCase();
       } else {
-        this.message = 'UNSUPPORTED OS'
+        this.message = "UNSUPPORTED OS";
       }
-      this.running = false
+      this.running = false;
     },
     checkOS: async function () {
       const response = ControlService.checkOS()
         .then((result) => {
-          return result
+          return result;
         })
         .catch((error) => {
-          return error
-        })
-      this.display(await response)
-    }
-  }
-}
+          return error;
+        });
+      this.display(await response);
+    },
+  },
+};
 </script>
 <style scope>
 .welcome-parent {
@@ -122,25 +122,31 @@ export default {
 }
 
 #welcome-header {
+  border: 5px solid #929292;
+  margin: 6% auto 2% auto;
   width: 40%;
-  height: 18% !important;
-  margin: 50px auto !important;
+  max-width: 50%;
+  height: 50px;
+  border-radius: 40px;
+  background-color: #194747;
+  opacity: 0.88;
+  box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 #welcome-header .welcome-title {
-  width: 70% !important;
-  height: 70% !important;
-  margin: 0 auto !important;
-  font-size: 2.4rem !important;
-  box-shadow: 0 1px 3px 1px rgb(35, 60, 56);
-  background: #2a4243;
-  color: rgb(221, 221, 221);
-  border-radius: 40px;
-  border: 4px solid #6e8582;
-  opacity: 0.8;
-  text-align: center;
+  width: 95%;
+  max-width: auto;
+  height: 100%;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: #cecece !important;
+  border: none;
+  background-color: transparent;
+  box-shadow: none;
+  text-transform: uppercase;
 }
 .middle-box {
   width: 90% !important;
@@ -153,7 +159,7 @@ export default {
 }
 .progress-container {
   width: 82% !important;
-  height: 38% !important;
+  height: 30% !important;
   margin: 10px auto !important;
   display: flex;
   justify-content: center;
@@ -162,7 +168,7 @@ export default {
 .progress-bg {
   width: 59% !important;
   height: 70% !important;
-  border: 4px solid #6e8582;
+  border: 3px solid #929292;
   background-color: #6e8582;
   border-radius: 40px;
   box-shadow: 0 0 3px 1px rgb(18, 20, 20), inset 1px 1px 5px rgb(0, 0, 0);
@@ -174,9 +180,9 @@ export default {
 #txt {
   width: 85% !important;
   height: 95% !important;
-  border: 4px solid #6e8582;
+  border: 5px solid #929292;
   margin: 0 auto !important;
-  background: #2a4243;
+  background-color: #194747;
   border-radius: 20px;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
@@ -185,8 +191,8 @@ export default {
   align-items: center;
 }
 #txt p {
-  font-size: 0.9rem;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
   color: rgb(225, 225, 225);
   text-align: center;
 }

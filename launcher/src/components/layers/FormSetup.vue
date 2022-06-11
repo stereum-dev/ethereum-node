@@ -83,6 +83,7 @@
           <div class="server-group" :class="{ errors: !model.user.isFilled }">
             <label for="user">USERNAME</label>
             <input
+              type="text"
               name="user"
               id="username"
               v-model="model.user.value"
@@ -429,13 +430,13 @@ export default {
 #header {
   grid-column: 1/4;
   grid-row: 2/3;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
   height: 59%;
   border-radius: 40px;
-  background-color: #234141;
+  background-color: #194747;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
@@ -448,7 +449,7 @@ export default {
   max-width: auto;
   height: 89%;
   font-size: 1.4rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   color: #cecece !important;
   border: none;
   background-color: transparent;
@@ -482,7 +483,7 @@ form {
   width: 65%;
   height: 69%;
   padding: 10px;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
@@ -496,21 +497,31 @@ form {
 }
 .select-wrapper {
   width: 82%;
-  margin: 0;
+  height: 100%;
   border-radius: 40px;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-wrapper::after {
+  width: 50%;
+  height: 100%;
 }
 
 select {
   width: 100%;
-  height: 35px;
+  height: 65%;
   border-radius: 40px;
+  outline-style: none;
   cursor: pointer;
   text-align-last: center;
   font-weight: bold;
+  padding: 0;
 }
-.select-wrapper::after {
+.select::after {
   position: absolute;
+  top: -5px;
   width: 50%;
 }
 
@@ -546,37 +557,6 @@ select {
   font-size: 1rem;
 }
 
-/* arrows */
-#one select {
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      rgb(254, 254, 255) 50%
-    ),
-    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
-    linear-gradient(to right, #5d5d5d, #5d5d5d);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 15px) calc(1em + 2px), 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-}
-
-select.classic:focus {
-  background-image: linear-gradient(45deg, white 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, white 50%),
-    linear-gradient(to right, gray, gray);
-  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-  border-color: grey;
-  outline: 0;
-}
-/* #one select {
-  outline-style: none;
-  font-size: 20px;
-  text-align: center;
-  padding: 0 auto;
-} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -603,6 +583,15 @@ select.classic:focus {
 .three img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
+}
+.three:hover img {
+  transform: scale(1.1);
+  transition-duration: 100ms;
+}
+.three:active img {
+  transform: scale(1);
+  transition-duration: 100ms;
 }
 .server-group {
   margin: 0;
@@ -620,26 +609,26 @@ select.classic:focus {
   font-size: 1.1rem;
   font-weight: 700;
   margin-left: 10px;
-  color: #cecece !important;
+  color: #dfdfdf !important;
 }
 .server-group input {
   width: 60%;
-  height: 35px;
-  background-color: #d8e1e1;
-  border: 4px solid #3a3939;
+  height: 30px;
+  background-color: #eaeaea;
+  border: 2px solid #979797;
   border-radius: 40px;
   padding-left: 10px;
-  font-weight: 500;
-  font-size: 0.8rem;
-  outline-style: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  outline-style: none !important;
   color: #242424;
 }
 .server-group input:hover {
-  border: 4px solid gray;
+  border: 2px solid rgb(54, 54, 54);
 }
 #keyLocation {
   width: 65%;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 18px;
   background-color: #234141;
   display: flex;
@@ -658,15 +647,15 @@ select.classic:focus {
 }
 #keyLocation input {
   width: 57%;
-  height: 90%;
+  height: 80%;
   margin-right: 16px;
   border-radius: 40px;
   padding-left: 10px;
-  background-color: #b6c4c4;
+  background-color: #dbdbdb;
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 4px solid #7a7a7a;
+  border: 2px solid #929292;
 }
 
 #login {
@@ -676,7 +665,7 @@ select.classic:focus {
   min-height: 45px;
   outline-style: none;
   padding: 5px;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 35px;
   cursor: pointer;
   position: absolute;
@@ -708,9 +697,9 @@ input {
   min-width: 100px;
   height: 33px;
   background-color: #234141;
-  border: 3px solid rgb(116, 116, 116);
+  border: 3px solid #929292;
   border-radius: 40px;
-  color: #fff;
+  color: rgb(235, 235, 235);
   position: absolute;
   left: 17.5%;
   bottom: 15%;

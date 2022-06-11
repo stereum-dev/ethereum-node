@@ -8,18 +8,18 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
-      checkbox: false
-    }
+      checkbox: false,
+    };
   },
   methods: {
-    toggleCheckbox () {
-      this.checkbox = !this.checkbox
-      this.$emit('setCheckboxVal', this.checkbox)
-    }
-  }
-}
+    toggleCheckbox() {
+      this.checkbox = !this.checkbox;
+      this.$emit("setCheckboxVal", this.checkbox);
+    },
+  },
+};
 </script>
 <style scoped>
 .toggle-container {
@@ -41,7 +41,8 @@ export default {
 }
 
 .slider {
-  height: 82%;
+  width: 80%;
+  height: 80%;
   margin-top: 2px;
   margin-right: 3px;
   margin: 2px 3px;
@@ -54,33 +55,31 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  width: 40%;
-  height: 74%;
-  border: 1px solid #36393d;
-  left: 9%;
-  bottom: 7%;
+  width: 43%;
+  height: 90%;
+  border: 2px solid #0686bd;
+  left: 7%;
+  bottom: 7.5%;
   background-color: #3183da;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: inset 1px 1px 5px rgb(164, 195, 239);
 }
 
 input:checked + .slider {
-  background-color: #c2ded0;
+  background-color: #e9e9e9;
 }
 input:checked + .slider:before {
-  background-color: #206d4a;
-  border: 1px solid #353a38;
-  box-shadow: inset 1px 1px 8px #6ad0a2;
-}
-input:focus + .slider {
-  box-shadow: 0 0 1px #101010;
+  width: 45%;
+  height: 84%;
+  border: 1px solid #157ca8;
+  background-color: #488f63;
+  border: 1px solid #09794c;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(15px);
-  -ms-transform: translateX(15px);
-  transform: translateX(16px);
+  -webkit-transform: translateX(14px);
+  -ms-transform: translateX(14px);
+  transform: translateX(15px);
 }
 
 .slider.round {

@@ -95,7 +95,8 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: { ToggleButton },
 
@@ -109,19 +110,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      plugins: "getAllPlugins",
-      getInstallationPath: "getInstallationPath",
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      plugins: "presets",
+      installationPath: "installationPath",
     }),
-    installationPath: {
-      get() {
-        return this.getInstallationPath;
-      },
-      set(val) {
-        this.$store.commit("mutatedInstallationPath", val);
-      },
-    },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
@@ -429,11 +422,11 @@ export default {
 }
 .fast-sync .sync-box {
   width: 45%;
-  height: 45%;
+  height: 52%;
   margin: 5px;
   border: 3px solid rgb(93, 92, 92);
   border-radius: 15px;
-  background-color: #30483b;
+  background-color: #1a5443;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -472,26 +465,30 @@ export default {
 }
 .change-installation .change-box {
   width: 90%;
-  height: 40%;
+  height: 50%;
   background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0;
 }
 .change-box input {
   width: 100%;
-  height: 85%;
+  height: 100%;
   background-color: rgb(209, 209, 209);
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: .8rem;
   font-weight: 600;
-  padding-left: 10px;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 
 .btn-box {

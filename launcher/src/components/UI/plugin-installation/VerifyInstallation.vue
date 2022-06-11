@@ -54,18 +54,20 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      installationPath: "getInstallationPath",
-      pluginServices: "getServiceIcons",
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      installationPath: "installationPath",
+      pluginServices: "pluginServices",
       installingServices: "getInstallingServices",
+      runningServices: "runningServices",
     }),
   },
   mounted() {
@@ -119,10 +121,7 @@ export default {
       grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
       prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
       this.installingService = false;
-      this.$store.commit("updateRunningServices", [
-        grafanaStats,
-        prometheusStats,
-      ]);
+      this.runningServices = [grafanaStats, prometheusStats];
     },
   },
 };

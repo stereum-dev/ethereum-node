@@ -8,6 +8,23 @@ export const useClickInstall = defineStore("clickInstallation", {
       selectedPreset: [],
       testnetPlugins: [],
       mainnetPlugins: [],
+      installation: [
+        {
+          img: "/img/icon/one-click-installer.png",
+          img2: "/img/icon/click-installation/click-installer.png",
+          path: "/clickinstall",
+        },
+        {
+          img: "/img/icon/custom_installer.png",
+          img2: "img/icon/click-installation/custom-nstallation.png",
+          path: "/manage",
+        },
+        {
+          img: "/img/icon/IMPORT_CONFIGURATIONS.png",
+          img2: "/img/icon/click-installation/import.png",
+          path: "/",
+        },
+      ],
       R1clkInstls: [
         { clkId: "staking", img: "/img/icon/STAKING.png" },
         { clkId: "testnet", img: "/img/icon/TESTNET.png" },
@@ -505,6 +522,12 @@ export const useClickInstall = defineStore("clickInstallation", {
           linkUrl: "https://stereum.net",
         },
       ],
+      runningServices: [],
     };
+  },
+  actions: {
+    updatePresets() {
+      this.selectedPreset = item;
+    },
   },
 });
