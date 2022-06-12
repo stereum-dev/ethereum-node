@@ -1,18 +1,18 @@
 ---
-- name: Read ssh port
-  shell: "grep ^Port /etc/ssh/sshd_config | tr -dc '0-9'"
-  register: grep_ssh_port
-  changed_when: false
+- name: read ssh ports
+  shell: /usr/sbin/sshd -T|awk '/^port|listenaddress\s/ {num = split($2, arr, ":"); print arr[num]}'|sort -u
+  register: ssh_ports_config
 
-- name: Find ssh port
+- name: set fact ssh ports
   set_fact:
-    common_ssh_port: "{{ grep_ssh_port.stdout }}"
-  when: grep_ssh_port.stdout|length > 0
+    common_ssh_ports: "{{ ssh_ports_config.stdout_lines }}"
+  when: ssh_ports_config.stdout_lines | length > 0
 
-- name: Set default ssh port
+- name: set fact ssh ports
   set_fact:
-    common_ssh_port: 22
-  when: grep_ssh_port.stdout|length == 0
+    common_ssh_ports:
+      - "22"
+  when: ssh_ports_config.stdout | length == 0
 
 - name: Firewall enable & deny incoming
   ufw:
@@ -22,12 +22,13 @@
   environment:
     PATH: /sbin:{{ ansible_env.PATH }}
 
-- name: Firewall allow ssh
+- name: Firewall allow ssh ports
   ufw:
     direction: in
     rule: allow
-    port: "{{ common_ssh_port | string }}"
+    port: "{{ item }}"
     proto: tcp
+  with_items: "{{ common_ssh_ports }}"
   environment:
     PATH: /sbin:{{ ansible_env.PATH }}
 
