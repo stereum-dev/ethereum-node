@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "8.3.5"
+      "version": "8.4.0"
     },
     {
       "type": "panel",
@@ -65,7 +65,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1646860585647,
+  "iteration": 1654771220986,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -191,7 +191,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -294,7 +295,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -389,7 +391,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -472,6 +475,18 @@
                 "value": "auto"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "auto"
+              }
+            ]
           }
         ]
       },
@@ -489,7 +504,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -577,7 +593,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -707,7 +724,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -821,7 +839,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -914,7 +933,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1028,7 +1048,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1121,7 +1142,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1228,7 +1250,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "targets": [
@@ -1321,7 +1344,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1450,7 +1474,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1563,7 +1588,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1697,7 +1723,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1816,6 +1843,18 @@
                 "value": "auto"
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byType",
+              "options": "time"
+            },
+            "properties": [
+              {
+                "id": "custom.axisPlacement",
+                "value": "auto"
+              }
+            ]
           }
         ]
       },
@@ -1833,7 +1872,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -1968,7 +2008,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -2096,7 +2137,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -2184,7 +2226,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -2292,7 +2335,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -2423,7 +2467,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "process_resident_memory_bytes{instance=\"${instance}\"}",
@@ -2496,7 +2540,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "rate(process_cpu_seconds_total{instance=\"${instance}\"}[$__rate_interval]) * 100",
@@ -2569,7 +2613,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "beacon_slot{instance=\"${instance}\"}",
@@ -2643,7 +2687,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "sum(beacon_attestations_sent_total)",
@@ -2718,7 +2762,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "beacon_attestations_received_total{instance=\"${instance}\"}",
@@ -2791,7 +2835,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "beacon_current_epoch{instance=\"${instance}\"}",
@@ -2866,7 +2910,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "beacon_current_justified_epoch{instance=\"${instance}\"}",
@@ -2941,7 +2985,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "time() - process_start_time_seconds{instance=\"${instance}\"}",
@@ -3016,7 +3060,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "nbc_peers{instance=\"${instance}\"}",
@@ -3091,7 +3135,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.0",
       "targets": [
         {
           "expr": "beacon_finalized_epoch{instance=\"${instance}\"}",
@@ -3433,7 +3477,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -3530,7 +3575,8 @@
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi"
+          "mode": "multi",
+          "sort": "none"
         }
       },
       "pluginVersion": "8.1.6",
@@ -3620,7 +3666,7 @@
     }
   ],
   "refresh": false,
-  "schemaVersion": 34,
+  "schemaVersion": 35,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -3672,7 +3718,7 @@
   },
   "timezone": "",
   "title": "NBC local testnet/sim (all nodes)",
-  "uid": "pgeNfj2Wz2a",
-  "version": 14,
+  "uid": "-ZviQVjnz",
+  "version": 1,
   "weekStart": ""
 }
