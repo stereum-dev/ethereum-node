@@ -39,7 +39,7 @@ test('lighthouse validator import', async () => {
     await testServer.passwordAuthentication(testServer.serverRootPassword)
 
     //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.137')
+    await testServer.attachToNetwork('eth2-prater', '10.10.0.140')
     log.info('server attached to network')
 
     //prepare node
