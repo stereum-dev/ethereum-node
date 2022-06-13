@@ -59,7 +59,9 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeStore } from "@/store/theNode";
 export default {
   components: {
     JournalNode,
@@ -76,12 +78,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      servicePlugins: "getServicePlugins",
-      selectedPreset: "getSelectedPreset",
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+    }),
+    ...mapState(useNodeStore, {
+      consensusItems: "consensusItems",
+      executionItems: "executionItems",
+      validatorItems: "validatorItems",
+      servicePlugins: "servicePlugins",
     }),
   },
   mounted() {
@@ -109,7 +113,7 @@ export default {
           this.servicePlugins.push(item);
         }
       });
-      this.$store.commit("mutatedSelectedPreset", []);
+      this.selectedPreset = [];
     }
   },
   methods: {

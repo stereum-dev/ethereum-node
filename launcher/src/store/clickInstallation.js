@@ -523,6 +523,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
       ],
       runningServices: [],
+     
     };
   },
   actions: {

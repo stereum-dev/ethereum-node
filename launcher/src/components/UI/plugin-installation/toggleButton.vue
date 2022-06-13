@@ -55,11 +55,11 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  width: 43%;
-  height: 90%;
+  width: 18px;
+  height: 18px;
   border: 2px solid #0686bd;
   left: 7%;
-  bottom: 7.5%;
+  bottom: 8.4%;
   background-color: #3183da;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -69,8 +69,8 @@ input:checked + .slider {
   background-color: #e9e9e9;
 }
 input:checked + .slider:before {
-  width: 45%;
-  height: 84%;
+  width: 18px;
+  height: 18px;
   border: 1px solid #157ca8;
   background-color: #488f63;
   border: 1px solid #09794c;
