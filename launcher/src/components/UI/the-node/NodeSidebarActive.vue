@@ -45,7 +45,7 @@ export default {
   },
   computed: {
     ...mapState(useNodeStore,{
-      configData: 'configData'
+      configData: 'configData_nodeSidebarActive'
     })
   },
   methods: {
