@@ -61,7 +61,7 @@
 <script>
 import SubTasks from "./SubTasks.vue";
 import DropTasks from "./DropTasks.vue";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useTaskManager } from "@/store/taskManager";
 export default {
   components: { SubTasks, DropTasks },
@@ -81,7 +81,7 @@ export default {
   },
 
   computed: {
-    ...mapState(useTaskManager, {
+    ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
       dataTasks: "dataTasks",
       taskManagerIcons: "taskManagerIcons",

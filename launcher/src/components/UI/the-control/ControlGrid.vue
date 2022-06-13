@@ -23,6 +23,30 @@
                   <span>Consensus Client</span>
                 </div>
               </div>
+              <div class="service-edit">
+                <div class="edit-box">
+                  <div class="icon-bg">
+                    <div class="power-icon">
+                      <img src="/img/icon/control/power.png" alt="icon" />
+                    </div>
+                  </div>
+                  <div class="icon-bg">
+                    <div class="book-icon">
+                      <img src="/img/icon/control/book.png" alt="icon" />
+                    </div>
+                  </div>
+                  <div class="icon-bg">
+                    <div class="refresh-icon">
+                      <img src="/img/icon/control/refresh.png" alt="icon" />
+                    </div>
+                  </div>
+                  <div class="icon-bg">
+                    <div class="seting-icon">
+                      <img src="/img/icon/control/setting.png" alt="icon" />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="arrow-down">
@@ -135,17 +159,20 @@ export default {
 }
 .plugins-title {
   width: 40%;
-  height: 4.5%;
+  height: 25px;
   background-color: #1c3326;
   padding: 2px;
   border: 1px solid #4a5150;
-  border-radius: 10px;
+  border-radius: 7px;
   margin: 14px auto 5px auto;
   box-shadow: 0 1px 3px 1px rgb(20, 44, 34);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .plugins-title span {
-  color: rgb(209, 209, 209);
-  font-size: 0.9rem;
+  color: rgb(194, 194, 194);
+  font-size: 0.8rem;
   font-weight: 600;
 }
 .plugins-table-bg {
@@ -215,13 +242,13 @@ export default {
   border-radius: 3px;
 }
 .plugins-row-content {
-  width: 75%;
+  width: 60%;
   height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
   margin-left: 5px;
 }
 .row-plugin-name,
@@ -238,10 +265,77 @@ export default {
 
 .row-plugin-name span,
 .row-category span {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.6rem;
+  font-weight: 800;
 }
-.control-task__manager {
+.service-edit {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.service-edit .edit-box {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.edit-box .icon-bg {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #1e2929;
+  border-radius: 4px;
+  background-color: #336666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.power-icon,
+.book-icon,
+.refresh-icon,
+.seting-icon {
+  width: 90%;
+  height: 89%;
+  background-color: rgb(11, 11, 11);
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.power-icon:hover,
+.book-icon:hover,
+.refresh-icon:hover,
+.seting-icon:hover {
+  transform: scale(1.07);
+  background-color: rgb(31, 31, 32);
+}
+.power-icon:active,
+.book-icon:active,
+.refresh-icon:active,
+.seting-icon:active {
+  transform: scale(1);
+}
+.power-icon img {
+  width: 13px;
+  height: 12px;
+}
+.book-icon img {
+  width: 12px;
+  height: 10px;
+}
+.refresh-icon img {
+  width: 11px;
+  height: 12px;
+}
+.seting-icon img {
+  width: 10px;
+  height: 12px;
+}
+
+.service-options .control-task__manager {
   position: fixed;
   left: -3px;
   bottom: -1px;
