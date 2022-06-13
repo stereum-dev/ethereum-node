@@ -39,7 +39,7 @@ test('nimbus validator import', async () => {
     await testServer.passwordAuthentication(testServer.serverRootPassword)    
 
     //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.142')
+    await testServer.attachToNetwork('eth2-prater', '10.10.0.145')
     log.info('server attached to network')
 
     //prepare node
