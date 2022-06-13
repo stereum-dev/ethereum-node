@@ -2,20 +2,11 @@ import { createStore } from "vuex";
 import rootMutations from "./mutations.js";
 import rootActions from "./actions.js";
 import rootGetters from "./getters.js";
-import nodeManageModule from "./nodeManage/index.js";
-import setupServerModule from "./setupServer/index.js";
-import theNodeModule from "./theNode/index.js";
-import theStakingModule from "./theStaking/index.js";
-import welcomePageModule from "./welcomePage/index.js";
 
 // state vuex
 const store = createStore({
   modules: {
-    managing: nodeManageModule,
-    setupServer: setupServerModule,
-    node: theNodeModule,
-    staking: theStakingModule,
-    welcome: welcomePageModule,
+
   },
   state() {
     return {
@@ -110,20 +101,6 @@ const store = createStore({
         { clkId: "blox", img: "/img/icon/BLOX_SSV.png" },
         { clkId: "obol", img: "/img/icon/OBOL_SSV.png" },
         { clkId: "rocket", img: "/img/icon/ROCKETPOOL_1.png" },
-      ],
-      taskManagerIcons: [
-        {
-          progressIcon: require("./../../public/img/icon/task-manager-icons/task-manager-icon.png"),
-        },
-        {
-          activeIcon: require("./../../public/img/icon/task-manager-icons/task-blue-icon.png"),
-        },
-        {
-          successIcon: require("./../../public/img/icon/task-manager-icons/task-green-icon.png"),
-        },
-        {
-          failedIcon: require("./../../public/img/icon/task-manager-icons/task-red-icon.png"),
-        },
       ],
       runningServices: [],
 

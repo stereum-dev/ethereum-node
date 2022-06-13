@@ -72,6 +72,49 @@ export const useTaskManager = defineStore("taskManager", {
         successInstallIcon: require("../../public/img/icon/task-manager-icons/check3.png"),
         failedInstallIcon: require("../../public/img/icon/task-manager-icons/close3.png"),
       },
+      pluginsInstalling: [
+        {
+          name: "Geth",
+          status: "active",
+          statusLabel: "TASK ACTIVE",
+          subTasks: [
+            {
+              status: "active",
+              statusLabel: "TASK ACTIVE",
+            },
+            {
+              status: "success",
+              statusLabel: "TASK SUCCEEDED",
+            },
+            {
+              status: "failed",
+              statusLabel: "TASK FAILED",
+            },
+          ],
+        },
+        {
+          name: "Nimbus",
+          status: "success",
+          statusLabel: "TASK SUCCEEDED",
+          subTasks: [
+            {
+              status: "success",
+              statusLabel: "TASK SUCCEEDED",
+            },
+          ],
+        },
+        {
+          name: "Lighthouse",
+          status: "failed",
+          statusLabel: "TASK FAILED",
+          subTasks: [
+            {
+              status: "failed",
+              statusLabel: "TASK FAILED",
+            },
+          ],
+        },
+      ],
     };
   },
   getters: {},

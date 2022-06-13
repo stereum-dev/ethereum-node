@@ -140,7 +140,7 @@ export default {
 <style scoped>
 .panel-parent {
   width: 100%;
-  height: 91%;
+  height: 97%;
   border: 5px solid rgb(55, 55, 55);
   border-radius: 20px;
   background-color: #464a44;
@@ -174,6 +174,7 @@ export default {
   background-color: #0f3c3f;
   border-radius: 20px;
   margin-top: 5px;
+  padding-top: 2px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(62, 61, 61);
   display: flex;
@@ -192,6 +193,7 @@ export default {
   background-color: #0f3c3f;
   border-radius: 20px;
   margin-top: 5px;
+  padding-top: 2px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(62, 61, 61);
   display: flex;
@@ -201,13 +203,13 @@ export default {
 
 .general-box span {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(239, 235, 235);
 }
 
 .expert-box span {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(244, 57, 57);
 }
 .description-box {

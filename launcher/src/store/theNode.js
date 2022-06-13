@@ -171,6 +171,74 @@ export const useNodeStore = defineStore("theNode", {
           status: "yellow",
         },
       ],
+      configData_nodeSidebarVideo: [
+        {
+          id: 1,
+          name: "First Steps!",
+        },
+        {
+          id: 2,
+          name: "Stake with 32 ETH",
+        },
+        {
+          id: 3,
+          name: "Use SSV network",
+        },
+        {
+          id: 4,
+          name: "Alerts on Mobile App",
+        },
+        {
+          id: 5,
+          name: "Switch Clients",
+        },
+        {
+          id: 6,
+          name: "Switch Machine",
+        },
+      ],
+      configData_nodeSidebarActive: [
+        {
+          id: 1,
+          name: "NONE FUNC.",
+          status: "deactive",
+        },
+        {
+          id: 2,
+          name: "ACTIVE",
+          status: "active",
+        },
+        {
+          id: 3,
+          name: "SYNC/PROBLEM",
+          status: "notOk",
+        },
+        {
+          id: 4,
+          name: "INACTIVE",
+          status: "off",
+        },
+        {
+          id: 5,
+          name: "ACTIVE",
+          status: "active",
+        },
+        {
+          id: 6,
+          name: "INACTIVE",
+          status: "off",
+        },
+        {
+          id: 7,
+          name: "SYNC/PROBLEM",
+          status: "notOk",
+        },
+        {
+          id: 8,
+          name: "NONE FUNC.",
+          status: "deactive",
+        },
+      ],
     };
   },
   getters: {},
