@@ -1,0 +1,43 @@
+---
+- name: Generate POST data
+  set_fact:
+    validator_import_post_data: |
+      {
+        "keystores": {{ item.content | to_json }},
+        "passwords": ["{{ validator_password | quote }}"]
+      }
+- name: Log POST data
+  debug:
+    msg: "{{ validator_import_post_data }}"
+- name: copy
+  copy:
+    dest: "/tmp/validator-import-api-data"
+    content: "{{ validator_import_post_data }}"
+  become: yes
+- name: Prysm import validator using API
+  community.docker.docker_container:
+    command_handling: correct
+    name: "validator-import-api-curl"
+    user: "{{ stereum_service_configuration.user }}"
+    image: "curlimages/curl:7.83.1"
+    detach: false
+    command: |
+      curl -X POST {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/keystores
+      -H "Content-Type: application/json"
+      -H "Authorization: Bearer {{ api_token }}"
+      -d "@/validator-import-api-data"
+    networks:
+      - name: stereum
+    volumes:
+      - "/tmp/validator-import-api-data:/validator-import-api-data"
+  become: yes
+  register: validator_import_api_result
+- name: Log result
+  debug:
+    msg: "{{ validator_import_api_result }}"
+# - name: Remove docker container
+#   community.docker.docker_container:
+#     name: "validator-import-api-curl"
+#     state: absent
+
+# EOF
