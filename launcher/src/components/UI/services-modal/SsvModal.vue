@@ -45,7 +45,8 @@
 import PubkeySsv from "./PubkeySsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
 import SsvDashboard from "./SsvDashboard.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   components: { PubkeySsv, RegisterSsv, SsvDashboard },
   data() {
@@ -66,10 +67,10 @@ export default {
     this.filterSsvService();
   },
   computed: {
-    ...mapGetters({
-      services: "getServiceIcons",
-      runningServices: "getRunningServices",
-      operators: "getTheOperators",
+    ...mapState(useNodeHeader, {
+      services: "services",
+      runningServices: "runningServices",
+      operators: "operators",
     }),
   },
   methods: {

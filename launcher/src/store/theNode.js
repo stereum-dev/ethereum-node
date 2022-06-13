@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-export const useNodeStore = defineStore('theNode',{
+export const useNodeStore = defineStore("theNode", {
   state: () => {
     return {
       consensusItems: [],
@@ -116,6 +116,59 @@ export const useNodeStore = defineStore('theNode',{
           id: 1,
           name: "Configuration",
           network: "testNet",
+        },
+      ],
+      newUpdates: [
+        {
+          id: 1,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+        {
+          id: 2,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+        {
+          id: 3,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+        {
+          id: 4,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+        {
+          id: 5,
+          name: "[NAME]",
+          version: "[VERSION]",
+        },
+      ],
+      statusContents: [
+        {
+          id: 1,
+          status: "red",
+        },
+        {
+          id: 2,
+          status: "yellow",
+        },
+        {
+          id: 3,
+          status: "red",
+        },
+        {
+          id: 4,
+          status: "yellow",
+        },
+        {
+          id: 3,
+          status: "red",
+        },
+        {
+          id: 4,
+          status: "yellow",
         },
       ],
     };

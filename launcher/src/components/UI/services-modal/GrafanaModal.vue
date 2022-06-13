@@ -28,7 +28,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
@@ -40,9 +41,9 @@ export default {
     this.filterGrafanaService();
   },
   computed: {
-    ...mapGetters({
-      services: "getServiceIcons",
-      runningServices: "getRunningServices",
+    ...mapState(useNodeHeader,{
+      services: "services",
+      runningServices: "runningServices",
     }),
   },
   methods: {

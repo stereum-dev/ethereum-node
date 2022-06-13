@@ -99,63 +99,17 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   data() {
-    return {
-      newUpdates: [
-        {
-          id: 1,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 2,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 3,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 4,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-        {
-          id: 5,
-          name: "[NAME]",
-          version: "[VERSION]",
-        },
-      ],
-      statusContents: [
-        {
-          id: 1,
-          status: "red",
-        },
-        {
-          id: 2,
-          status: "yellow",
-        },
-        {
-          id: 3,
-          status: "red",
-        },
-        {
-          id: 4,
-          status: "yellow",
-        },
-        {
-          id: 3,
-          status: "red",
-        },
-        {
-          id: 4,
-          status: "yellow",
-        },
-      ],
-    };
+    return {};
+  },
+  computed: {
+    ...mapState(useNodeStore, {
+      newUpdates: "newUpdates",
+      statusContents: "statusContents",
+    }),
   },
 };
 </script>
@@ -254,7 +208,7 @@ export default {
 .update-table {
   width: 100%;
   height: 70%;
-  border:2px solid #505250;
+  border: 2px solid #505250;
   margin: 5px auto 0 auto;
   overflow-y: auto;
 }
