@@ -521,9 +521,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           icon: "/img/icon/service-icons/ssv.png",
           linkUrl: "https://stereum.net",
         },
-      ],
-      runningServices: [],
-     
+      ], 
     };
   },
   actions: {

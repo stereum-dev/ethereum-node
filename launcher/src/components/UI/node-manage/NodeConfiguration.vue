@@ -71,7 +71,9 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
+import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
@@ -82,12 +84,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
+    ...mapState(useNodeStore, useNodeHeader, {
       configData: "getConfigData",
       servicePlugins: "getServicePlugins",
       consensusItems: "getConsensusItems",
       executionItems: "getExecutionItems",
       validatorItems: "getValidatorItems",
+      runningServices: "runningServices",
+      configData_nodeSidebarVideo: "configData_nodeSidebarVideo",
     }),
   },
   methods: {
@@ -108,7 +112,7 @@ export default {
       this.removeIsConfirmed = true;
       this.removeAllPlugins();
       this.destroyNode();
-      this.$store.commit("updateRunningServices", []);
+      this.runningServices = [];
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {

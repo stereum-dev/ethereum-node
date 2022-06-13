@@ -38,7 +38,8 @@
 import ButtonInstallation from "./ButtonInstallation.vue";
 import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useWelcomeStore } from "@/store/welcomePage";
 export default {
   created() {
     this.checkOS();
@@ -54,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ installation: "installation_get" }),
+    ...mapState(useWelcomeStore, { installation: "installationt" }),
   },
   methods: {
     randomValue() {

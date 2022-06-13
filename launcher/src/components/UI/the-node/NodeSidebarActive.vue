@@ -34,7 +34,8 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'pinia'
+import { useNodeStore } from '@/store/theNode'
 export default {
   data () {
     return {
@@ -43,8 +44,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      configData: 'nodeSbActive_get'
+    ...mapState(useNodeStore,{
+      configData: 'configData'
     })
   },
   methods: {

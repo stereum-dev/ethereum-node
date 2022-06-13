@@ -56,13 +56,14 @@
 <script>
 import { mapState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapState(useClickInstall, {
+    ...mapState(useClickInstall, useNodeHeader, {
       selectedPreset: "selectedPreset",
       installationPath: "installationPath",
       pluginServices: "pluginServices",

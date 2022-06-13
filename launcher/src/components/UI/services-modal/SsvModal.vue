@@ -68,7 +68,6 @@ export default {
   },
   computed: {
     ...mapState(useNodeHeader, {
-      services: "services",
       runningServices: "runningServices",
       operators: "operators",
     }),

@@ -1,7 +1,6 @@
 import "mutationobserver-shim";
 import Vue, { createApp } from "vue"; // CHANGE
 
-import store from "./store";
 import App from "./App.vue";
 import router from "./router/index.js";
 import "./components/UI/the-control/chart.js";
@@ -30,7 +29,6 @@ app.component("chart-bg", ChartBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 
-app.use(store);
 app.use(createPinia());
 app.use(copyText);
 app.use(router);

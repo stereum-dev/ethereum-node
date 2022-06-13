@@ -67,10 +67,11 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import ControlService from '@/store/ControlService'
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
 export default {
-  data () {
+  data() {
     return {
       isInstalled: false,
       isLoading: true,
@@ -79,40 +80,40 @@ export default {
       isContStarting: false,
       isContStarted: false,
       isNodePreparing: true,
-      isNodePrepared: false
-    }
+      isNodePrepared: false,
+    };
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: 'getSelectedPreset',
-      installationPath: 'getInstallationPath'
-    })
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      installationPath: "installationPath",
+    }),
   },
   methods: {
     installation: async function () {
       // console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
-      await new Promise((r) => setTimeout(r, 5000))
-      this.isNodePreparing = false
-      this.isNodePrepared = true
-      this.isConfigWriting = true
+      await new Promise((r) => setTimeout(r, 5000));
+      this.isNodePreparing = false;
+      this.isNodePrepared = true;
+      this.isConfigWriting = true;
       // console.log(await ControlService.writeOneClickConfiguration());
-      await new Promise((r) => setTimeout(r, 5000))
-      this.isConfigWriting = false
-      this.isConfigDone = true
-      this.isContStarting = true
+      await new Promise((r) => setTimeout(r, 5000));
+      this.isConfigWriting = false;
+      this.isConfigDone = true;
+      this.isContStarting = true;
       // console.log(await ControlService.startOneClickServices());
-      await new Promise((r) => setTimeout(r, 5000))
-      this.isContStarting = false
-      this.isContStarted = true
-      await new Promise((r) => setTimeout(r, 3000))
-      this.isLoading = false
-      this.isInstalled = true
-    }
+      await new Promise((r) => setTimeout(r, 5000));
+      this.isContStarting = false;
+      this.isContStarted = true;
+      await new Promise((r) => setTimeout(r, 3000));
+      this.isLoading = false;
+      this.isInstalled = true;
+    },
   },
-  mounted () {
-    this.installation()
-  }
-}
+  mounted() {
+    this.installation();
+  },
+};
 </script>
 <style scoped>
 .config-parent {

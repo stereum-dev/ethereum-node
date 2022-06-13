@@ -102,7 +102,9 @@ import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
+import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
@@ -125,15 +127,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      selectedItemToRemove: "getSelectedItemToRemove",
-      confirmChanges: "getConfirmChanges",
-      servicePlugins: "getServicePlugins",
-      sidebarPlugins: "getSidebarPlugins",
-      configData: "getConfigData",
+    ...mapState(useNodeManage, useNodeStore, {
+      consensusItems: "consensusItems",
+      executionItems: "executionItems",
+      validatorItems: "validatorItems",
+      selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      servicePlugins: "servicePlugins",
+      sidebarPlugins: "sidebarPlugins",
+      configData: "configData",
     }),
   },
   methods: {

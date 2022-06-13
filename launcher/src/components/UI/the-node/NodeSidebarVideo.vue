@@ -19,14 +19,16 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   data() {
     return {};
   },
   computed: {
-    configData() {
-      return this.$store.getters.nodeSbVideo_get;
-    },
+    ...mapState(useNodeStore, {
+      configData: "configData_nodeSidebarVideo",
+    }),
   },
 };
 </script>

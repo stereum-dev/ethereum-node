@@ -144,6 +144,7 @@ import BaseDialog from "./BaseDialog.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeHeader } from "@/store/nodeHeader";
 
 export default {
   components: { BaseDialog },
@@ -175,11 +176,12 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
-    ...mapState(useClickInstall, {
+    ...mapState(useClickInstall, useNodeHeader, {
       plugins: "presets",
-      selectedPreset: "selectedPrese",
+      selectedPreset: "selectedPreset",
       allPlugins: "plugins",
       pluginServices: "services",
+      runningServices: "runningServices",
     }),
   },
   methods: {
@@ -395,11 +397,11 @@ export default {
       //     grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
       //     prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
 
-      //     this.$store.commit("updateRunningServices", [
+      //     this.runningServices = [
       //       grafanaStats,
       //       prometheusStats,
-      //     ]);
-      //     this.$store.commit("mutatedSelectedPreset", {
+      //     ];
+      //     this.selectedPreset = {
       //       includedPlugins: includedPlugins,
       //     });
       //   }
