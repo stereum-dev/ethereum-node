@@ -127,9 +127,10 @@ export default {
 <style scoped>
 .config-node {
   grid-column: 1;
-  width: 95%;
-  height: 98.2%;
+  width: 100%;
+  height: 100%;
   padding: 5px;
+  margin-top: 1px;
   display: grid;
   background-color: #3b3b3b;
   grid-template-rows: 6% 9% 70%;
@@ -362,7 +363,7 @@ export default {
   width: 50%;
   height: 40%;
   border-radius: 1rem;
-  background-color: #263f3a;
+  background-color: #324844;
   border: 4px solid rgb(171, 170, 170);
   z-index: 99;
   opacity: 1;
@@ -384,9 +385,9 @@ export default {
   align-items: center;
 }
 .remove-message span {
-  color: rgb(172, 172, 172);
-  font-size: 1.5rem;
-  font-weight: 900;
+  color: rgb(195, 195, 195);
+  font-size: 1.3rem;
+  font-weight: 800;
 }
 .remove-btn {
   width: 80%;
@@ -399,50 +400,53 @@ export default {
   width: 20%;
   height: 50%;
   border-radius: 30px;
-  border: 2px solid #242622;
-  background-color: #384131;
-  box-shadow: inset 0 0 8px 2px #1c1f18, 1px 1px 2px 1px rgb(26, 26, 26);
+  border: 3px solid #8f8f8f;
+  background-color: #32564d;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 900;
+  font-size: 1rem;
+  font-weight: 700;
   color: rgb(210, 210, 210);
 }
 .cancel-box {
   width: 20%;
   height: 50%;
-  border: 2px solid #343434;
   border-radius: 30px;
-  background-color: #e8e8e8;
-  box-shadow: inset 0 0 8px 2px #525450, 1px 1px 3px 1px rgb(36, 36, 36);
+  border: 3px solid #8f8f8f;
+  background-color: #32564d;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: rgb(201, 97, 97);
 }
 .cancel-box:hover {
   color: rgb(240, 82, 82);
-  box-shadow: inset 0 0 8px 2px #1c1f18;
+  background-color: #2c433d;
+  transform: scale(1.1);
+  transition: all 100ms;
 }
 .yes-box:hover {
-  color: #fff;
-  background-color: #384131;
-  box-shadow: inset 0 0 8px 2px #1c1f18;
+  color: #dadada;
+  background-color: #2c433d;
+  transform: scale(1.1);
+  transition: all 100ms;
 }
 .cancel-box:active {
-  color: #fff;
+  color: #dadada;
   font-size: 1rem;
-  background-color: #802a2a;
+  transform: scale(1);
   box-shadow: none;
 }
 .yes-box:active {
   font-size: 1rem;
-  background-color: #384131;
+  transform: scale(1);
   box-shadow: none;
 }
 .title-box {
@@ -453,8 +457,8 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   margin-top: 10px;
 }
 

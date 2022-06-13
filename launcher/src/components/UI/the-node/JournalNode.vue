@@ -172,7 +172,6 @@ export default {
 .journal-bg {
   width: 90%;
   height: 90%;
-  background-color: #606060;
   margin: 0 auto;
   border-radius: 10px;
   display: grid;
@@ -253,8 +252,9 @@ export default {
   font-weight: 900;
 }
 .update-table {
-  width: 98%;
+  width: 100%;
   height: 70%;
+  border:2px solid #505250;
   margin: 5px auto 0 auto;
   overflow-y: auto;
 }

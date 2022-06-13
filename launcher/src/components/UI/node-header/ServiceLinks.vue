@@ -1,7 +1,7 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-          <div class="service-icon" v-for="(service, idx) in services" :key="idx">
+      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
         <div class="icon-box" onmousedown="return false">
           <img
             @click="openServiceBrowser(service.serviceName)"
@@ -23,19 +23,20 @@
           v-if="showPrometheusWindow"
         ></prometheus-modal>
       </div>
-    <div class="arrow-box">
-      <div class="right-arrow left-paddle paddle" @click="scrollRight">
-        <img alt="update-icon" src="/img/icon/header-icons/right.png" />
-      </div>
-      <div class="left-arrow" @click="scrollLeft">
-        <img alt="update-icon" src="/img/icon/header-icons/left.png" />
+      <div class="arrow-box">
+        <div class="right-arrow left-paddle paddle" @click="scrollRight">
+          <img alt="update-icon" src="/img/icon/header-icons/right.png" />
+        </div>
+        <div class="left-arrow" @click="scrollLeft">
+          <img alt="update-icon" src="/img/icon/header-icons/left.png" />
+        </div>
       </div>
     </div>
   </div>
-  </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
@@ -52,9 +53,9 @@ export default {
   },
   mounted() {},
   computed: {
-    ...mapGetters({
-      services: "getServiceIcons",
-      runningServices: "getRunningServices",
+    ...mapState(useNodeHeader, {
+      services: "services",
+      runningServices: "runningServices",
     }),
   },
   methods: {

@@ -49,57 +49,46 @@
   </div>
 </template>
 <script>
-import BaseButton from '../BaseButton.vue'
-import { mapGetters } from 'vuex'
+import BaseButton from "../BaseButton.vue";
+import { mapState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   components: { BaseButton },
-  props: ['confirmChanges'],
+  props: ["confirmChanges"],
   computed: {
-    ...mapGetters({
-      consensusItems: 'getConsensusItems',
-      executionItems: 'getExecutionItems',
-      validatorItems: 'getValidatorItems',
-      selectedItemToRemove: 'getSelectedItemToRemove',
-      servicePlugins: 'getServicePlugins'
-    })
+    ...mapState(useNodeManage, {
+      consensusItems: "consensusItems",
+      executionItems: "executionItems",
+      validatorItems: "validatorItems",
+      selectedItemToRemove: "selectedItemToRemove",
+      servicePlugins: "servicePlugins",
+    }),
   },
   methods: {
-    clickOnRemoveBtn () {
-      if (this.selectedItemToRemove.category == 'service') {
-        this.$store.commit(
-          'mutatedServicePlugins',
-          this.servicePlugins.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id
-          })
-        )
+    clickOnRemoveBtn() {
+      if (this.selectedItemToRemove.category == "service") {
+        this.servicePlugins = this.servicePlugins.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
       }
-      if (this.selectedItemToRemove.category == 'execution') {
-        this.$store.commit(
-          'mutatedExecutionItems',
-          this.executionItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id
-          })
-        )
+      if (this.selectedItemToRemove.category == "execution") {
+        this.executionItems = this.executionItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
       }
-      if (this.selectedItemToRemove.category == 'consensus') {
-        this.$store.commit(
-          'mutatedConsensusItems',
-          this.consensusItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id
-          })
-        )
+      if (this.selectedItemToRemove.category == "consensus") {
+        this.consensusItems = this.consensusItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
       }
-      if (this.selectedItemToRemove.category == 'validator') {
-        this.$store.commit(
-          'mutatedValidatorItems',
-          this.validatorItems.filter((item) => {
-            return item.id !== this.selectedItemToRemove.id
-          })
-        )
+      if (this.selectedItemToRemove.category == "validator") {
+        this.validatorItems = this.validatorItems.filter((item) => {
+          return item.id !== this.selectedItemToRemove.id;
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped>
 .menu-container {
@@ -107,7 +96,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content:space-evenly;
+  justify-content: space-evenly;
   align-items: center;
 }
 .confirm-box {

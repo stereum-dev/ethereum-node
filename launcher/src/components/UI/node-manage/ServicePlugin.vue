@@ -26,23 +26,25 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
+
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
-    ...mapGetters({
-      servicePlugins: 'getServicePlugins'
-    })
+    ...mapState(useNodeManage,{
+      servicePlugins: "servicePlugins",
+    }),
   },
   methods: {
-    selectedItem (item) {
-      item.active = !item.active
-      this.$emit('itemSelect', item)
-    }
-  }
-}
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
+  },
+};
 </script>
 <style scoped>
 .service-container {
