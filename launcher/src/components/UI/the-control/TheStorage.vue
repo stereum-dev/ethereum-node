@@ -7,18 +7,21 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ free }} GB FREE</span>
+          <span>{{ countFreeVal }} MiB FREE</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ total }} GB TOTAL</span>
+          <span> {{ total }} MiB TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
-            <div class="valueBarPart_loader-value" :style="valuBarLoader"></div>
+            <div
+              class="valueBarPart_loader-value"
+              :style="valueStoragePer"
+            ></div>
           </div>
         </div>
         <div class="latencyCounter">
-          <div class="latencyCounterTtl"><span>SSD LATENCY</span></div>
+          <!-- <div class="latencyCounterTtl"><span>SSD LATENCY</span></div>
           <div class="write">
             <span>write</span>
             <div class="writeBox">
@@ -30,28 +33,69 @@
             <div class="readBox">
               <span>{{ readValue }} mb</span>
             </div>
-          </div>
+            css have to change to the right height 35%
+          </div> -->
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      free: 300,
-      total: 1024,
+      free: null,
+      used: null,
+      total: null,
       writeValue: 134.24,
       readValue: 1.05,
+      usedStotagePer: null,
     };
   },
+  created() {
+    this.storageUsedPerMet();
+    this.entireStorageMet();
+    this.usedStorageMet();
+  },
+
   computed: {
-    valuBarLoader() {
-      let totalValue = this.total / 10;
-      let freeValue = this.free / 10;
-      let loadValueSize = totalValue - freeValue;
-      return { width: loadValueSize + "%" };
+    valueStoragePer() {
+      return { width: this.usedStotagePer + "%" };
+    },
+    countFreeVal() {
+      return this.freeVall();
+    },
+  },
+
+  methods: {
+    async storageUsedPerMet() {
+      try {
+        const response = await ControlService.getUsedStoragePer();
+        this.usedStotagePer = Math.floor(await response.usedStoragePer.stdout);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async entireStorageMet() {
+      try {
+        const response = await ControlService.getEntireStorage();
+        this.total = Math.floor(await response.entireStorage.stdout);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async usedStorageMet() {
+      try {
+        const response = await ControlService.getUsedStorage();
+        this.used = Math.floor(await response.usedStorage.stdout);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    freeVall() {
+      const free = this.total - this.used;
+      return free;
     },
   },
 };
@@ -150,7 +194,7 @@ export default {
 }
 .latencyCounter {
   width: 100%;
-  height: 35%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;

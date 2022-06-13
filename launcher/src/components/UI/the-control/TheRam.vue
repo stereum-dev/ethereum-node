@@ -12,7 +12,7 @@
           <div class="digits">
             <span>{{ usedRam }} / {{ entireRam }}</span>
           </div>
-          <span>GB</span>
+          <span>MiB</span>
         </div>
         <div class="valLbl"><span>used</span><span>total</span></div>
       </div>

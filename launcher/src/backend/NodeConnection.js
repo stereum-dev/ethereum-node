@@ -488,6 +488,33 @@ export class NodeConnection {
     return response;
   }
 
+  async getUsedStoragePer() {
+    let response = {};
+    const usedStoragePer = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print 100-$3/$2*100}'`
+    ); //used storage per %
+    response.usedStoragePer = usedStoragePer;
+    return response;
+  }
+
+  async getEntireStorage() {
+    let response = {};
+    const entireStorage = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print $2}'`
+    );//Entire storage per MiB
+    response.entireStorage = entireStorage;
+    return response;
+  }
+
+  async getUsedStorage() {
+    let response = {};
+    const usedStorage = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print $3}'`
+    );//Used storage per MiB
+    response.usedStorage = usedStorage;
+    return response;
+  }
+
   async openTunnels(tunnels) {
     if (tunnels[0] !== undefined) {
       await Promise.all(
