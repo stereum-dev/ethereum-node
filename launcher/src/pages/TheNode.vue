@@ -59,7 +59,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeStore } from "@/store/theNode";
 export default {
@@ -78,10 +78,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(useClickInstall, {
+    ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
     }),
-    ...mapState(useNodeStore, {
+    ...mapWritableState(useNodeStore, {
       consensusItems: "consensusItems",
       executionItems: "executionItems",
       validatorItems: "validatorItems",

@@ -54,7 +54,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
@@ -63,11 +63,14 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(useClickInstall, useNodeHeader, {
+    ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       installationPath: "installationPath",
       pluginServices: "pluginServices",
-      installingServices: "getInstallingServices",
+      installingServices: "installingServices",
+      runningServices: "runningServices",
+    }),
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
     }),
   },
@@ -75,10 +78,13 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.log();
   },
   methods: {
+    log() {
+      console.log(this.selectedPreset);
+    },
     runInstalltion: async function () {
-      this.installingService = true;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
@@ -121,7 +127,6 @@ export default {
 
       grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
       prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
-      this.installingService = false;
       this.runningServices = [grafanaStats, prometheusStats];
     },
   },

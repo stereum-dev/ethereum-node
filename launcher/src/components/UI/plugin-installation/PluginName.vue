@@ -115,7 +115,7 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: { ToggleButton },
@@ -133,16 +133,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(useClickInstall, {
+    ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       plugins: "presets",
       installationPath: "installationPath",
     }),
-    selectedCategoryActive(){
-      if(this.activeExecutionClient){
-        
+    selectedCategoryActive() {
+      if (this.activeExecutionClient) {
       }
-    }
+    },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {

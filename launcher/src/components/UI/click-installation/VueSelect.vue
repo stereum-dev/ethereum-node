@@ -77,7 +77,6 @@ export default {
       mainnetPlugins: [],
       isTestnetActive: false,
       testnetPlugins: [],
-      selectedNetworks: null,
     };
   },
   computed: {
@@ -85,6 +84,7 @@ export default {
       plugins: "presets",
       selectedPreset: "selectedPreset",
       allPlugins: "plugins",
+      selectedNetworks:"selectedNetworks"
     }),
   },
   beforeUpdate() {
