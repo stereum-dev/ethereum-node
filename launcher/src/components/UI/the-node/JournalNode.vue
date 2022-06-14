@@ -10,50 +10,6 @@
       </router-link>
     </div>
     <div class="journal-bg">
-      <div class="manage-configuration">
-        <div class="config-table">
-          <div class="okay">
-            <img
-              class="running"
-              src="../../../../public/img/icon/node-journal-icons/running.png"
-              alt="icon"
-            />
-            <span>Okay</span>
-          </div>
-          <div class="sync">
-            <img
-              class="refresh"
-              src="../../../../public/img/icon/node-journal-icons/refresh.png"
-              alt="icon"
-            />
-            <span>Full synchronized</span>
-          </div>
-          <div class="storage">
-            <img
-              class="disc"
-              src="../../../../public/img/icon/node-journal-icons/Disc_Storage_Icon.png"
-              alt="icon"
-            />
-            <span>212 gb</span>
-          </div>
-          <div class="speed">
-            <img
-              class="internet-speed"
-              src="../../../../public/img/icon/node-journal-icons/Internet_Speed_Icon.png"
-              alt="icon"
-            />
-            <span>24.2 mb</span>
-          </div>
-          <div class="setting">
-            <img
-              class="setting-wrench"
-              src="../../../../public/img/icon/node-journal-icons/setting-wrench.png"
-              alt="icon"
-            />
-            <span>5</span>
-          </div>
-        </div>
-      </div>
       <div class="updates">
         <div class="update-title">
           <span>Updates Available</span>
@@ -143,65 +99,19 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
-  data () {
-    return {
-      newUpdates: [
-        {
-          id: 1,
-          name: '[NAME]',
-          version: '[VERSION]'
-        },
-        {
-          id: 2,
-          name: '[NAME]',
-          version: '[VERSION]'
-        },
-        {
-          id: 3,
-          name: '[NAME]',
-          version: '[VERSION]'
-        },
-        {
-          id: 4,
-          name: '[NAME]',
-          version: '[VERSION]'
-        },
-        {
-          id: 5,
-          name: '[NAME]',
-          version: '[VERSION]'
-        }
-      ],
-      statusContents: [
-        {
-          id: 1,
-          status: 'red'
-        },
-        {
-          id: 2,
-          status: 'yellow'
-        },
-        {
-          id: 3,
-          status: 'red'
-        },
-        {
-          id: 4,
-          status: 'yellow'
-        },
-        {
-          id: 3,
-          status: 'red'
-        },
-        {
-          id: 4,
-          status: 'yellow'
-        }
-      ]
-    }
-  }
-}
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapState(useNodeStore, {
+      newUpdates: "newUpdates",
+      statusContents: "statusContents",
+    }),
+  },
+};
 </script>
 <style scoped>
 .journal-parent {
@@ -216,12 +126,11 @@ export default {
 .journal-bg {
   width: 90%;
   height: 90%;
-  background-color: #606060;
   margin: 0 auto;
   border-radius: 10px;
   display: grid;
   grid-template-columns: 1;
-  grid-template-rows: 4% 20% 22% 20% 33%;
+  grid-template-rows: repeat(4, 1fr);
 }
 
 .manage-configuration {
@@ -274,89 +183,32 @@ export default {
   background-color: transparent;
   margin-right: 10px;
 }
-.config-table {
-  grid-column: 1;
-  grid-row: 2/7;
-  font-size: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-.config-table img {
-  width: 14px;
-  height: 14px;
-}
-.config-table span {
-  width: 70%;
-  font-family: sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  color: rgb(91, 203, 91);
-}
-.config-table .okay {
-  width: 100%;
-  margin-top: 3px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-.config-table .sync {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.config-table .storage {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.config-table .storage span {
-  color: rgb(237, 223, 69);
-}
-.config-table .speed {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.config-table .setting {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.config-table .setting span {
-  color: rgb(82, 153, 216);
-}
 
 .updates {
   grid-column: 1;
-  grid-row: 3/4;
+  grid-row: 1/2;
   width: 100%;
   height: 100%;
 }
 .update-title {
-  width: 80%;
+  width: 90%;
   height: 15px;
-  margin: 0 auto;
-  border-bottom: 1px solid #333e33;
+  margin: 5px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .update-title span {
-  margin-top: 5px;
-  font-size: 9px;
+  border-bottom: 1px solid #333e33;
+  margin-top: 1px;
+  font-size: 0.7rem;
   font-weight: 900;
 }
 .update-table {
-  width: 98%;
+  width: 100%;
   height: 70%;
+  border: 2px solid #505250;
   margin: 5px auto 0 auto;
   overflow-y: auto;
 }
@@ -367,7 +219,7 @@ export default {
   width: 100%;
 }
 .update-table-row {
-  width: 95%;
+  width: 100%;
   display: flex;
   background-color: #303030;
   justify-content: space-between;
@@ -384,7 +236,7 @@ export default {
 }
 .validator {
   grid-column: 1;
-  grid-row: 4/5;
+  grid-row: 2/3;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -393,13 +245,14 @@ export default {
   width: 80%;
   height: 15px;
   margin: 0 auto;
-  border-bottom: 1px solid rgb(51, 62, 51);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .validator-title span {
-  font-size: 10px;
+  border-bottom: 1px solid #333e33;
+  margin-top: 1px;
+  font-size: 0.7rem;
   font-weight: 900;
 }
 .validator-box {
@@ -413,11 +266,11 @@ export default {
 }
 .validator-row-1,
 .validator-row-2 {
-  width: 99%;
+  width: 98%;
   display: flex;
   align-items: center;
   font-weight: 900;
-  margin-top: 3px;
+  margin: 3px auto;
 }
 .validator-box .active-text {
   width: 53%;
@@ -462,9 +315,9 @@ export default {
 
 .status-box {
   grid-column: 1;
-  grid-row: 5/6;
+  grid-row: 3/6;
   width: 100%;
-  height: 98%;
+  height: 100%;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -503,7 +356,7 @@ export default {
   width: 25px;
 }
 .status-box .status-table {
-  width: 90%;
+  width: 95%;
   height: 55%;
   background-color: #2d2d34;
   margin: 5px auto;

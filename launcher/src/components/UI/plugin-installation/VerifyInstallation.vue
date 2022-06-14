@@ -54,52 +54,81 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import ControlService from '@/store/ControlService'
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      installationPath: "getInstallationPath",
-      pluginServices: "getServiceIcons",
+    ...mapWritableState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      installationPath: "installationPath",
+      services: "services",
+      installingServices: "installingServices",
+    }),
+    ...mapWritableState(useNodeHeader, {
+      runningServices: "runningServices",
     }),
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.log();
   },
   methods: {
-    runInstalltion: async function(){
+    log() {
+      console.log(this.selectedPreset);
+    },
+    runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
 
-      let grafana = services.find(service => service.service.includes('Grafana'))
-      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+      let grafana = services.find((service) =>
+        service.service.includes("Grafana")
+      );
+      let prometheus = services.find(
+        (service) =>
+          service.service.includes("Prometheus") &&
+          !service.service.includes("NodeExporter")
+      );
 
-      let grafanaStats = this.pluginServices.find(e => e.serviceName === 'grafana')
-      let prometheusStats = this.pluginServices.find(e => e.serviceName === 'prometheus')
+      let grafanaStats = this.services.find(
+        (e) => e.serviceName === "grafana"
+      );
+      let prometheusStats = this.services.find(
+        (e) => e.serviceName === "prometheus"
+      );
 
-      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+      let localPorts = await ControlService.getAvailablePort({
+        min: 9000,
+        max: 9999,
+        amount: 2,
+      });
 
-      let grafanaPort = localPorts.pop()
-      let prometheusPort = localPorts.pop()
+      let grafanaPort = localPorts.pop();
+      let prometheusPort = localPorts.pop();
 
       localPorts = await ControlService.openTunnels([
-        {dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: grafanaPort},
-        {dstPort: prometheus.ports[0].split(":")[2].replace('/tcp',''), localPort: prometheusPort}
-      ])
-      
-      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
-      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
-      
-      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
-    }
-  }
+        {
+          dstPort: grafana.ports[0].split(":")[2].replace("/tcp", ""),
+          localPort: grafanaPort,
+        },
+        {
+          dstPort: prometheus.ports[0].split(":")[2].replace("/tcp", ""),
+          localPort: prometheusPort,
+        },
+      ]);
+
+      grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
+      prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
+      this.runningServices = [grafanaStats, prometheusStats];
+    },
+  },
 };
 </script>
 <style scoped>

@@ -35,7 +35,9 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+// import { mapActions } from "vuex";
+import { mapWritableState, mapActions } from "pinia";
+import { useFlagDialog } from "../store/flagDialog";
 import BaseLogo from "../components/layers/BaseLogo.vue";
 import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
@@ -64,15 +66,16 @@ export default {
     this.showDialog();
   },
   computed: {
-    linkFlags() {
-      return this.$store.getters.linkFlags_get;
-    },
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible_get;
-    },
+    ...mapWritableState(useFlagDialog, {
+      linkFlags: "linkFlags",
+      dialogIsVisible: "dialogIsVisible",
+    }),
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
+    ...mapActions(useFlagDialog, {
+      showDialog: "showDialog",
+      hideDialog: "hideDialog",
+    }),
     setLang(lang, langSelect) {
       this.selectedLanguage.lang = lang;
       this.selectedLanguage.flag = langSelect;
@@ -158,7 +161,7 @@ export default {
 }
 .flag-box {
   width: 58%;
-  height: 50%;
+  height: 52%;
   background-color: #383838;
   border: 5px solid #7e7777;
   border-radius: 100%;
@@ -240,5 +243,15 @@ export default {
 #flagId {
   width: 50px;
   height: 50px;
+  border-radius: 100%;
+  box-shadow: 0 1px 3px 1px rgb(14, 37, 34);
+}
+.content-box:hover #flagId {
+  transform: scale(1.1);
+  transition-duration: 100ms;
+}
+.content-box:hover span {
+  color: #27706e;
+  transition-duration: 150ms;
 }
 </style>

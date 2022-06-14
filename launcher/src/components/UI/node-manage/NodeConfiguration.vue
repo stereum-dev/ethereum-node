@@ -17,7 +17,7 @@
         <div v-else class="testnet-icon">
           <img src="../../../../public/img/icon/testnetIcon.png" alt="" />
         </div>
-        <span>{{ item.id }}#{{ item.name }}</span>
+        <span>Ethereum-Mainnet</span>
       </div>
     </div>
     <div class="config-bg">
@@ -71,65 +71,74 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import ControlService from '@/store/ControlService'
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
-  data () {
+  data() {
     return {
       modalActive: false,
       removeModal: false,
-      removeIsConfirmed: false
-    }
+      removeIsConfirmed: false,
+    };
   },
   computed: {
-    ...mapGetters({
-      configData: 'getConfigData',
-      servicePlugins: 'getServicePlugins',
-      consensusItems: 'getConsensusItems',
-      executionItems: 'getExecutionItems',
-      validatorItems: 'getValidatorItems'
-    })
+    ...mapWritableState(useNodeHeader, {
+      configData: "getConfigData",
+      runningServices: "runningServices",
+      configData_nodeSidebarVideo: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useNodeManage, {
+      consensusItems: "consensusItems",
+      executionItems: "executionItems",
+      validatorItems: "validatorItems",
+      servicePlugins: "servicePlugins",
+    }),
   },
   methods: {
-    openModal () {
-      this.modalActive = true
+    openModal() {
+      this.modalActive = true;
     },
-    closeModal () {
-      this.modalActive = false
+    closeModal() {
+      this.modalActive = false;
     },
-    openRemoveModal () {
-      this.removeModal = true
+    openRemoveModal() {
+      this.removeModal = true;
     },
-    cancelRemove () {
-      this.removeModal = false
+    cancelRemove() {
+      this.removeModal = false;
     },
-    removeConfirmation () {
-      this.removeModal = false
-      this.removeIsConfirmed = true
-      this.removeAllPlugins()
-      this.destroyNode()
-      this.$store.commit("updateRunningServices", []);
+    removeConfirmation() {
+      this.removeModal = false;
+      this.removeIsConfirmed = true;
+      this.removeAllPlugins();
+      this.destroyNode();
+      
     },
-    removeAllPlugins () {
+    removeAllPlugins() {
       if (this.removeIsConfirmed) {
-        this.servicePlugins.length = 0
-        this.consensusItems.length = 0
-        this.executionItems.length = 0
-        this.validatorItems.length = 0
+        this.runningServices = [];
+        this.servicePlugins = [];
+        this.consensusItems = [];
+        this.executionItems = [];
+        this.validatorItems = [];
       }
+      this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
       console.log(await ControlService.destroy());
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped>
 .config-node {
   grid-column: 1;
-  width: 95%;
-  height: 98.2%;
+  width: 100%;
+  height: 100%;
   padding: 5px;
+  margin-top: 1px;
   display: grid;
   background-color: #3b3b3b;
   grid-template-rows: 6% 9% 70%;
@@ -139,7 +148,7 @@ export default {
 }
 .config-bg {
   grid-column: 1/7;
-  grid-row: 3/13;
+  grid-row: 3/6;
   width: 95%;
   height: 98%;
   display: grid;
@@ -178,29 +187,30 @@ export default {
 .config-btns .config-priority {
   width: 90%;
   height: 32px;
-  background-color: #303030;
-  font-size: 9px;
-  font-weight: 900;
-  color: rgb(235, 235, 235);
-  border: 1px solid #656565;
+  background-color: #292929;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgb(194, 194, 194);
+  border: 1px solid #787878;
   margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  box-shadow: inset 1px 1px 10px 5px #181818, 0 1px 4px #373737;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
 .config-btns .config-priority:hover {
   background-color: #2c2c2c;
-  box-shadow: none;
+  transform: scale(1.02);
 }
 .config-btns .config-add:active,
 .config-btns .config-network:active,
 .config-btns .config-priority:active {
-  box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
+  box-shadow: none;
+  transform: scale(1);
 }
 .delete-box {
   grid-column: 1/6;
@@ -258,12 +268,12 @@ export default {
   height: 32px;
   border: 1px solid #656565;
   border-radius: 8px;
-  box-shadow: inset 1px 1px 10px 5px #181818, 0 1px 4px #373737;
+  box-shadow: 0 1px 4px #373737;
   background-color: #303030;
   cursor: pointer;
   outline-style: none;
-  color: #f46969;
-  font-size: 10px;
+  color: #d25353;
+  font-size: 0.7rem;
   font-weight: 800;
   display: flex;
   justify-content: space-between;
@@ -278,12 +288,13 @@ export default {
 }
 .delete-box .delete-btn:hover {
   background-color: #2c2c2c;
-  box-shadow: inset 0 0 5px 1px rgb(82, 81, 81);
+  transform: scale(1.02);
 }
 .delete-box .delete-btn:active {
+  transform: scale(1);
   border: 1px solid #f46969;
   color: #ef5252;
-  box-shadow: inset 1px 1px 10px 5px #181818;
+  box-shadow: none;
 }
 .delete-btn img {
   width: 24px;
@@ -305,13 +316,13 @@ export default {
   grid-column: 1/7;
   grid-row: 2;
   width: 95%;
-  height: 25px;
-  border: 2px solid rgb(118, 194, 226);
+  height: 30px;
+  border: 2px solid rgb(155, 212, 236);
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.1rem;
+  padding: 3px;
   margin: 0 auto;
 }
 
@@ -323,19 +334,20 @@ export default {
   height: 25px;
 }
 .config-row .row-content span {
-  font-size: 14px;
-  font-weight: bold;
+  width: 80%;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 .testnet-icon {
-  width: 25px;
-  min-width: 25px;
+  width: 20%;
+  min-width: 23px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .testnet-icon img {
-  width: 25px;
-  height: 25px;
+  width: 23px;
+  height: 23px;
 }
 .remove-modal-parent {
   width: 100%;
@@ -359,8 +371,8 @@ export default {
   width: 50%;
   height: 40%;
   border-radius: 1rem;
-  background-color: #263f3a;
-  border: 4px solid rgb(96, 42, 42);
+  background-color: #324844;
+  border: 4px solid rgb(171, 170, 170);
   z-index: 99;
   opacity: 1;
   position: fixed;
@@ -381,9 +393,9 @@ export default {
   align-items: center;
 }
 .remove-message span {
-  color: rgb(172, 172, 172);
-  font-size: 1.5rem;
-  font-weight: 900;
+  color: rgb(195, 195, 195);
+  font-size: 1.3rem;
+  font-weight: 800;
 }
 .remove-btn {
   width: 80%;
@@ -396,50 +408,53 @@ export default {
   width: 20%;
   height: 50%;
   border-radius: 30px;
-  border: 2px solid #242622;
-  background-color: #384131;
-  box-shadow: inset 0 0 8px 2px #1c1f18, 1px 1px 2px 1px rgb(26, 26, 26);
+  border: 3px solid #8f8f8f;
+  background-color: #32564d;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 900;
+  font-size: 1rem;
+  font-weight: 700;
   color: rgb(210, 210, 210);
 }
 .cancel-box {
   width: 20%;
   height: 50%;
-  border: 2px solid #343434;
   border-radius: 30px;
-  background-color: #e8e8e8;
-  box-shadow: inset 0 0 8px 2px #525450, 1px 1px 3px 1px rgb(36, 36, 36);
+  border: 3px solid #8f8f8f;
+  background-color: #32564d;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: rgb(201, 97, 97);
 }
 .cancel-box:hover {
   color: rgb(240, 82, 82);
-  box-shadow: inset 0 0 8px 2px #1c1f18;
+  background-color: #2c433d;
+  transform: scale(1.1);
+  transition: all 100ms;
 }
 .yes-box:hover {
-  color: #fff;
-  background-color: #384131;
-  box-shadow: inset 0 0 8px 2px #1c1f18;
+  color: #dadada;
+  background-color: #2c433d;
+  transform: scale(1.1);
+  transition: all 100ms;
 }
 .cancel-box:active {
-  color: #fff;
+  color: #dadada;
   font-size: 1rem;
-  background-color: #802a2a;
+  transform: scale(1);
   box-shadow: none;
 }
 .yes-box:active {
   font-size: 1rem;
-  background-color: #384131;
+  transform: scale(1);
   box-shadow: none;
 }
 .title-box {
@@ -450,8 +465,8 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   margin-top: 10px;
 }
 
