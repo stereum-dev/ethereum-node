@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 html body {
   min-width: 1024px;
   min-height: 576px;

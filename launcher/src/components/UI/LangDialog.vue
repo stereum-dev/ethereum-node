@@ -16,13 +16,13 @@ dialog {
   position: fixed;
   top: 30%;
   width: 60%;
-  height: 35%;
+  height: 45%;
   margin: 0 auto;
   box-shadow: 1px 1px 5px 1px rgba(31, 31, 31, 0.26);
-  border: 5px solid #7e7777;
+  border: 5px solid #919191;
   border-radius: 20px;
   padding: 1rem;
-  background-color: #33393ed7;
+  background-color: #1d3d3ad7;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: auto;

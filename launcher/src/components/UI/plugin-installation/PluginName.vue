@@ -73,7 +73,27 @@
                       <span>{{ plugin.name }}</span>
                     </div>
                     <div class="category">
-                      <span>{{ plugin.category }}</span>
+                      <div
+                        class="ec"
+                        @click="selectExecution(plugin.id)"
+                        :class="{ active: activeExecutionClient }"
+                      >
+                        <span>EC</span>
+                      </div>
+                      <div
+                        class="cc"
+                        @click="selectConsensus"
+                        :class="{ active: activeConsensusClient }"
+                      >
+                        <span>CC</span>
+                      </div>
+                      <div
+                        class="vc"
+                        @click="selectValidator"
+                        :class="{ active: activeValidatorClient }"
+                      >
+                        <span>VC</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -95,7 +115,8 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
-import { mapGetters } from "vuex";
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: { ToggleButton },
 
@@ -104,44 +125,60 @@ export default {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
+      activeExecutionClient: false,
+      activeConsensusClient: false,
+      activeValidatorClient: false,
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      plugins: "getAllPlugins",
-      getInstallationPath: "getInstallationPath",
+    ...mapWritableState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      plugins: "presets",
+      installationPath: "installationPath",
     }),
-    installationPath: {
-      get() {
-        return this.getInstallationPath;
-      },
-      set(val) {
-        this.$store.commit("mutatedInstallationPath", val);
-      },
+    selectedCategoryActive() {
+      if (this.activeExecutionClient) {
+      }
     },
-
-    // getMemoryClass() {
-    //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
-    // getCpuClass() {
-    //   if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
+  },
+  methods: {
+    selectExecution(id) {
+      this.activeExecutionClient = true;
+      this.selectedPreset.includedPlugins
+        .filter((plugin) => {
+          plugin.id == id;
+        })
+        .map((plugin) => {
+          plugin.category === "execution";
+        });
+    },
+    selectConsensus(id) {
+      this.activeConsensusClient = true;
+      this.selectedPreset.includedPlugins
+        .filter((plugin) => {
+          plugin.id == id;
+        })
+        .map((plugin) => {
+          plugin.category === "consensus";
+        });
+    },
+    selectValidator(id) {
+      this.selectedPreset.includedPlugins
+        .filter((plugin) => {
+          plugin.id == id;
+          this.activeValidatorClient = true;
+        })
+        .map((plugin) => {
+          plugin.category === "validator";
+        });
+    },
   },
 };
 </script>
@@ -188,7 +225,7 @@ export default {
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 15% 85%;
@@ -207,10 +244,10 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 .info-box {
-  width: 88%;
-  height: 83%;
+  width: 94%;
+  height: 91%;
   margin: 10px auto;
-  padding: 5px;
+  padding: 2px;
   border: 2px solid #343434;
   background-color: #282828;
   border-radius: 10px;
@@ -229,68 +266,94 @@ export default {
   height: 45px;
   margin-top: 5px;
   background-color: #33393e;
-  border: 1px solid rgb(81, 80, 80);
   box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   cursor: pointer;
 }
 .content {
-  width: 75%;
+  width: 85%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
 .plugin-name {
-  width: 100%;
-  max-width: auto;
+  width: 46%;
   height: 90%;
   text-align: left;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .plugin-name span {
   font-size: 0.8rem;
-  font-weight: 800;
+  font-weight: 700;
+  text-align: center;
   color: rgb(203, 203, 203);
-  margin-left: 10px;
+  margin-left: 2px;
 }
 .icon-box {
-  width: 25%;
+  width: 15%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  margin-left: 3px;
 }
 .plugin-icon {
-  width: 61%;
-  height: 79%;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .plugin-icon img {
-  width: 98%;
-  height: 98%;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  border: 2px solid rgb(84, 84, 84);
-  box-shadow: 0 1px 3px 1px rgb(23, 23, 23);
+  border: 2px solid rgb(133, 133, 133);
 }
 .category {
-  width: 100%;
-  max-width: auto;
-  height: 90%;
-  text-align: left;
+  width: 54%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
-.category span {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: rgb(115, 115, 115);
+.category div {
+  width: 27px;
+  height: 27px;
+  border: 2px solid #6c6c6c;
+  box-shadow: 0 1px 3px 1px #242424;
+  border-radius: 100%;
+  background-color: rgb(46, 82, 68);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgb(206, 206, 206);
   text-transform: uppercase;
-  margin-left: 10px;
+  margin-left: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.category div:hover {
+  border: 2px solid #a1d1c9;
+  color: #a1d1c9;
+  transform: scale(1.1);
+  transition: all 100ms;
+}
+.category div:active {
+  transform: scale(1);
+  transition: all 100ms;
+}
+.active {
+  border: 2px solid #a1d1c9 !important;
+  color: #a1d1c9 !important;
+  transform: scale(1.1);
 }
 .name-box {
   width: 95%;
@@ -348,7 +411,7 @@ export default {
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  box-shadow: 0 1px 3px 1px rgb(35, 56, 50);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -381,7 +444,7 @@ export default {
 .network-box .choose {
   width: 90%;
   height: 51%;
-  border: 2px solid #6a6a6a;
+  border: 2px solid #7f7d7d;
   border-radius: 15px;
   background-color: #30483b;
   margin-bottom: 2px;
@@ -399,7 +462,7 @@ export default {
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid #6a6a6a;
+  border: 2px solid #838383;
   border-radius: 30px;
   background-color: #2a2a2a;
   align-self: flex-end;
@@ -444,11 +507,11 @@ export default {
 }
 .fast-sync .sync-box {
   width: 45%;
-  height: 45%;
+  height: 52%;
   margin: 5px;
-  border: 3px solid rgb(93, 92, 92);
+  border: 3px solid #8f8f8f;
   border-radius: 15px;
-  background-color: #30483b;
+  background-color: #1a5443;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -487,26 +550,30 @@ export default {
 }
 .change-installation .change-box {
   width: 90%;
-  height: 40%;
+  height: 50%;
   background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0;
 }
 .change-box input {
   width: 100%;
-  height: 85%;
+  height: 100%;
   background-color: rgb(209, 209, 209);
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding-left: 10px;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 
 .btn-box {

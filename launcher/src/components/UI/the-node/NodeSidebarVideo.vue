@@ -9,7 +9,7 @@
           />
         </div>
         <div class="row-content">
-          <p>{{ item.name }}</p>
+          <span>{{ item.name }}</span>
         </div>
       </div>
     </div>
@@ -19,16 +19,18 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
-    configData () {
-      return this.$store.getters.nodeSbVideo_get
-    }
-  }
-}
+    ...mapState(useNodeStore, {
+      configData: "configData_nodeSidebarVideo",
+    }),
+  },
+};
 </script>
 <style scoped>
 * {
@@ -59,7 +61,7 @@ export default {
   background: #161b1b;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 5px 0;
+  padding-top: 5px;
 }
 .tutorial-table::-webkit-scrollbar {
   width: 1px;
@@ -68,7 +70,7 @@ export default {
 .table-row {
   display: flex;
   width: 98%;
-  height: 16%;
+  height: 22px;
   margin-top: 2px;
   background-color: #222c2c;
   border: 2px solid #314242;
@@ -104,13 +106,14 @@ export default {
   background-color: #272a2d;
   height: 100%;
   width: 77%;
+  padding-top: 2px;
 }
 
-.row-content p {
+.row-content span {
   text-align: center;
   width: 100%;
   color: rgb(208, 208, 208);
-  font-size: 8px;
+  font-size: 0.5rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 800;
   overflow-x: hidden;

@@ -13,23 +13,11 @@
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
-      <p>C</p>
-      <p>O</p>
-      <p>N</p>
-      <p>N</p>
-      <p>E</p>
-      <p>C</p>
-      <p>T</p>
-      <p>I</p>
-      <p>N</p>
-      <p>G</p>
-      <p>.</p>
-      <p>.</p>
-      <p>.</p>
+      <img src="../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
-        <h2>{{ $t("formsetup.server") }}</h2>
+        <span>{{ $t("formsetup.server") }}</span>
       </section>
 
       <base-dialog
@@ -95,6 +83,7 @@
           <div class="server-group" :class="{ errors: !model.user.isFilled }">
             <label for="user">USERNAME</label>
             <input
+              type="text"
               name="user"
               id="username"
               v-model="model.user.value"
@@ -153,7 +142,9 @@
 <script>
 import BaseDialog from "./BaseDialog.vue";
 import ControlService from "@/store/ControlService";
-import { mapGetters } from "vuex";
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeHeader } from "@/store/nodeHeader";
 
 export default {
   components: { BaseDialog },
@@ -185,11 +176,14 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
-    ...mapGetters({
-      plugins: "installationPlugins",
-      selectedPreset: "getSelectedPreset",
-      allPlugins: "getAllPlugins",
-      pluginServices: "getServiceIcons",
+    ...mapWritableState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      allPlugins: "plugins",
+      services: "services",
+    }),
+    ...mapWritableState(useNodeHeader, {
+      runningServices: "runningServices",
     }),
   },
   methods: {
@@ -342,7 +336,12 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
-        if(typeof err === 'string' && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(err.toLowerCase())){
+        if (
+          typeof err === "string" &&
+          new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(
+            err.toLowerCase()
+          )
+        ) {
           this.error = "You need to change your password first";
         }
         return;
@@ -364,27 +363,49 @@ export default {
             buffer.forEach((element) => includedPlugins.push(element));
           });
 
-      let grafana = services.find(service => service.service.includes('Grafana'))
-      let prometheus = services.find(service => service.service.includes('Prometheus') && !service.service.includes('NodeExporter'))
+          let grafana = services.find((service) =>
+            service.service.includes("Grafana")
+          );
+          let prometheus = services.find(
+            (service) =>
+              service.service.includes("Prometheus") &&
+              !service.service.includes("NodeExporter")
+          );
 
-      let grafanaStats = this.pluginServices.find(e => e.serviceName === 'grafana')
-      let prometheusStats = this.pluginServices.find(e => e.serviceName === 'prometheus')
+          let grafanaStats = this.services.find(
+            (e) => e.serviceName === "grafana"
+          );
+          let prometheusStats = this.services.find(
+            (e) => e.serviceName === "prometheus"
+          );
 
-      let localPorts = await ControlService.getAvailablePort({min: 9000, max: 9999, amount: 2})
+          let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: 2,
+          });
 
-      let grafanaPort = localPorts.pop()
-      let prometheusPort = localPorts.pop()
+          let grafanaPort = localPorts.pop();
+          let prometheusPort = localPorts.pop();
 
-      localPorts = await ControlService.openTunnels([
-        {dstPort: grafana.ports[0].servicePort, localPort: grafanaPort},
-        {dstPort: prometheus.ports[0].servicePort, localPort: prometheusPort},
-      ])
-      
-      grafanaStats.linkUrl = 'http://localhost:' + grafanaPort
-      prometheusStats.linkUrl = 'http://localhost:' + prometheusPort
-      
-      this.$store.commit("updateRunningServices", [grafanaStats,prometheusStats]);
-          this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
+          localPorts = await ControlService.openTunnels([
+            { dstPort: grafana.ports[0].servicePort, localPort: grafanaPort },
+            {
+              dstPort: prometheus.ports[0].servicePort,
+              localPort: prometheusPort,
+            },
+          ]);
+
+          grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
+          prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
+
+          this.runningServices = [
+            grafanaStats,
+            prometheusStats,
+          ];
+          this.selectedPreset = {
+            includedPlugins: includedPlugins,
+          }
         }
 
         this.$router.push("/node");
@@ -413,13 +434,13 @@ export default {
 #header {
   grid-column: 1/4;
   grid-row: 2/3;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
   height: 59%;
   border-radius: 40px;
-  background-color: #234141;
+  background-color: #194747;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
@@ -427,13 +448,12 @@ export default {
   align-items: center;
   text-align: center;
 }
-#header h2 {
+#header span {
   width: 95%;
   max-width: auto;
-  height: 50%;
-  margin-top: 2px;
+  height: 89%;
   font-size: 1.4rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   color: #cecece !important;
   border: none;
   background-color: transparent;
@@ -467,7 +487,7 @@ form {
   width: 65%;
   height: 69%;
   padding: 10px;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
@@ -481,21 +501,31 @@ form {
 }
 .select-wrapper {
   width: 82%;
-  margin: 0;
+  height: 100%;
   border-radius: 40px;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-wrapper::after {
+  width: 50%;
+  height: 100%;
 }
 
 select {
   width: 100%;
-  height: 35px;
+  height: 65%;
   border-radius: 40px;
+  outline-style: none;
   cursor: pointer;
   text-align-last: center;
   font-weight: bold;
+  padding: 0;
 }
-.select-wrapper::after {
+.select::after {
   position: absolute;
+  top: -5px;
   width: 50%;
 }
 
@@ -531,37 +561,6 @@ select {
   font-size: 1rem;
 }
 
-/* arrows */
-#one select {
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      rgb(254, 254, 255) 50%
-    ),
-    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
-    linear-gradient(to right, #5d5d5d, #5d5d5d);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 15px) calc(1em + 2px), 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-}
-
-select.classic:focus {
-  background-image: linear-gradient(45deg, white 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, white 50%),
-    linear-gradient(to right, gray, gray);
-  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-  border-color: grey;
-  outline: 0;
-}
-/* #one select {
-  outline-style: none;
-  font-size: 20px;
-  text-align: center;
-  padding: 0 auto;
-} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -588,6 +587,15 @@ select.classic:focus {
 .three img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
+}
+.three:hover img {
+  transform: scale(1.1);
+  transition-duration: 100ms;
+}
+.three:active img {
+  transform: scale(1);
+  transition-duration: 100ms;
 }
 .server-group {
   margin: 0;
@@ -605,26 +613,26 @@ select.classic:focus {
   font-size: 1.1rem;
   font-weight: 700;
   margin-left: 10px;
-  color: #cecece !important;
+  color: #dfdfdf !important;
 }
 .server-group input {
   width: 60%;
-  height: 35px;
-  background-color: #d8e1e1;
-  border: 4px solid #3a3939;
+  height: 30px;
+  background-color: #eaeaea;
+  border: 2px solid #979797;
   border-radius: 40px;
   padding-left: 10px;
-  font-weight: 500;
-  font-size: 0.8rem;
-  outline-style: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  outline-style: none !important;
   color: #242424;
 }
 .server-group input:hover {
-  border: 4px solid gray;
+  border: 2px solid rgb(54, 54, 54);
 }
 #keyLocation {
   width: 65%;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 18px;
   background-color: #234141;
   display: flex;
@@ -643,15 +651,15 @@ select.classic:focus {
 }
 #keyLocation input {
   width: 57%;
-  height: 90%;
+  height: 80%;
   margin-right: 16px;
   border-radius: 40px;
   padding-left: 10px;
-  background-color: #b6c4c4;
+  background-color: #dbdbdb;
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 4px solid #7a7a7a;
+  border: 2px solid #929292;
 }
 
 #login {
@@ -661,7 +669,7 @@ select.classic:focus {
   min-height: 45px;
   outline-style: none;
   padding: 5px;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 35px;
   cursor: pointer;
   position: absolute;
@@ -693,9 +701,9 @@ input {
   min-width: 100px;
   height: 33px;
   background-color: #234141;
-  border: 3px solid rgb(116, 116, 116);
+  border: 3px solid #929292;
   border-radius: 40px;
-  color: #fff;
+  color: rgb(235, 235, 235);
   position: absolute;
   left: 17.5%;
   bottom: 15%;
@@ -871,100 +879,14 @@ input:invalid {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.9;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 99;
 }
-p {
-  display: inline-block;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 4em;
-  font-family: arial;
-  font-weight: 600;
-  transform: scale(0.5);
-  color: #121212;
-  -webkit-text-stroke: 2px gray;
-}
-p:nth-child(1) {
-  animation: hover 2s linear infinite;
-  color: #44f2f2;
-}
-
-p:nth-child(2) {
-  animation: hover 2s linear infinite 0.125s;
-  color: #44f2f2;
-}
-
-p:nth-child(3) {
-  animation: hover 2s linear infinite 0.25s;
-  color: #44f2f2;
-}
-
-p:nth-child(4) {
-  animation: hover 2s linear infinite 0.375s;
-  color: #44f2f2;
-}
-
-p:nth-child(5) {
-  animation: hover 2s linear infinite 0.5s;
-  color: #44f2f2;
-}
-
-p:nth-child(6) {
-  animation: hover 2s linear infinite 0.675s;
-  color: #44f2f2;
-}
-
-p:nth-child(7) {
-  animation: hover 2s linear infinite 0.75s;
-  color: #44f2f2;
-}
-
-p:nth-child(8) {
-  animation: hover 2s linear infinite 0.825s;
-  color: #44f2f2;
-}
-p:nth-child(9) {
-  animation: hover 2s linear infinite 0.9s;
-  color: #44f2f2;
-}
-p:nth-child(10) {
-  animation: hover 2s linear infinite 0.975s;
-  color: #44f2f2;
-}
-p:nth-child(11) {
-  animation: hover 2s linear infinite 1.125s;
-  color: #44f2f2;
-}
-p:nth-child(12) {
-  animation: hover 2s linear infinite 1.2s;
-  color: #44f2f2;
-}
-p:nth-child(13) {
-  animation: hover 2s linear infinite 1.275s;
-  color: #44f2f2;
-}
-
-@keyframes hover {
-  0% {
-    transform: scale(0.5);
-    color: #121212;
-    -webkit-text-stroke: 2px #44f2f2;
-  }
-
-  20% {
-    transform: scale(1);
-    color: #121212;
-    -webkit-text-stroke: 2px #e7da67;
-  }
-
-  50% {
-    transform: scale(0.5);
-    color: #121212;
-    -webkit-text-stroke: 2px #60fbbb;
-  }
+.anim img {
+  width: 35%;
+  height: 45%;
 }
 </style>

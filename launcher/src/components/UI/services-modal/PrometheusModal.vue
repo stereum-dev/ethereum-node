@@ -1,6 +1,7 @@
 <template>
   <div class="service-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
+
     <div class="browser-modal">
       <div
         class="prometheus-container"
@@ -19,17 +20,17 @@
           </div>
         </div>
         <div class="btn-box">
-          <!-- <a class="btn" :href="service.linkUrl" target="_blank"
+          <a class="btn" :href="service.linkUrl" target="_blank"
             >open default browser</a
-          > -->
-          <span>AT the moment the service is not available</span>
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
@@ -41,9 +42,9 @@ export default {
     this.filterPrometheusService();
   },
   computed: {
-    ...mapGetters({
-      services: "getServiceIcons",
-      runningServices: "getRunningServices",
+    ...mapState(useNodeHeader, {
+      services: "services",
+      runningServices: "runningServices",
     }),
   },
   methods: {
@@ -115,7 +116,8 @@ export default {
 }
 .icon-box img {
   width: 90%;
-  height: 90%;
+  height: 98%;
+  margin-top: 6px;
   z-index: 110;
 }
 .title-box {
@@ -144,7 +146,7 @@ export default {
   align-items: center;
 }
 .service-option img {
-  width: 20%;
+  width: 18%;
   height: 70%;
 }
 

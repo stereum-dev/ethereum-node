@@ -26,23 +26,25 @@
   </div>
 </template>
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
+
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
   },
   computed: {
-    ...mapGetters({
-      servicePlugins: 'getServicePlugins'
-    })
+    ...mapState(useNodeManage,{
+      servicePlugins: "servicePlugins",
+    }),
   },
   methods: {
-    selectedItem (item) {
-      item.active = !item.active
-      this.$emit('itemSelect', item)
-    }
-  }
-}
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
+  },
+};
 </script>
 <style scoped>
 .service-container {
@@ -66,8 +68,6 @@ export default {
 .service-item {
   width: 60px;
   height: 60px;
-  border: 2px solid gray;
-  border-radius: 13px;
 }
 .service-bg {
   display: grid;
@@ -93,16 +93,14 @@ export default {
 
 .service-item img {
   width: 60px;
-  height: 60px;
-  border-radius: 13px;
-  box-shadow: 1px 1px 5px 1px rgb(132, 130, 130);
+  height: 56px;
 }
 .service-item img:active {
   box-shadow: none;
 }
 .chosen-plugin {
-  border: 2px solid rgb(86, 172, 138);
-  border-radius: 13px;
+  border: 2px solid rgb(64, 168, 243);
+  border-radius: 7px;
 }
 .service-arrow {
   border-radius: 50px;
