@@ -18,7 +18,7 @@
   community.docker.docker_container:
     command_handling: correct
     name: "validator-import-api-curl"
-    user: "{{ stereum_service_configuration.user }}"
+    user: "2000"
     image: "curlimages/curl:7.83.1"
     detach: false
     command: |

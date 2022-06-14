@@ -5,8 +5,6 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    stereum_service_configuration:
-      user: "root"
     consClient: "nimbus"
     validator_password: "MyTestPassword"
     beacon_service: 96d0bd64-b40b-11ec-9748-ef3d97c5f568

@@ -5,8 +5,6 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    stereum_service_configuration:
-      user: "root"
     consClient: "lighthouse"
     validator_password: "MyTestPassword"
     validator_service: 0ca56612-998f-11ec-a28d-f71957ab65a0

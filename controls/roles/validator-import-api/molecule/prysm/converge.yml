@@ -5,8 +5,6 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    stereum_service_configuration:
-      user: "root"
     consClient: "prysm"
     validator_password: "MyTestPassword"
     validator_service: 0d4a2d58-b417-11ec-a0f3-0b91f10c3a8c
