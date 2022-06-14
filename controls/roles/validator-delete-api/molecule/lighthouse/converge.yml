@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  vars:
+    consClient: "lighthouse"
+    validator_service: 957fd49a-e63d-11ec-8d13-8f5d1bf7c1ca
+    validator_public_keys:
+      - key: ["0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"]
+
+  tasks:
+    - name: "Include validator-delete-api"
+      include_role:
+        name: "validator-delete-api"

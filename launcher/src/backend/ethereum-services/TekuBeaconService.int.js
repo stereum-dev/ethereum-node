@@ -39,7 +39,7 @@ test('teku validator import', async () => {
     await testServer.passwordAuthentication(testServer.serverRootPassword)
     
     //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.153')
+    await testServer.attachToNetwork('eth2-prater', '10.10.0.155')
     log.info('server attached to network')
 
     //prepare node
