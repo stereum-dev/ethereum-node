@@ -501,7 +501,7 @@ export class NodeConnection {
     let response = {};
     const entireStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $2}'`
-    );//Entire storage per MiB
+    ); //Entire storage per MiB
     response.entireStorage = entireStorage;
     return response;
   }
@@ -510,8 +510,26 @@ export class NodeConnection {
     let response = {};
     const usedStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $3}'`
-    );//Used storage per MiB
+    ); //Used storage per MiB
     response.usedStorage = usedStorage;
+    return response;
+  }
+
+  async getReceivedData() {
+    let response = {};
+    const recievedData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p'`
+    );
+    response.recievedData = recievedData;
+    return response;
+  }
+
+  async getTransmitData() {
+    let response = {};
+    const transmitData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
+    );
+    response.transmitData = transmitData;
     return response;
   }
 
