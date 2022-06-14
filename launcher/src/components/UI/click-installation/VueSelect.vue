@@ -230,7 +230,12 @@ export default {
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
   transform: scale(1.1);
-  transition-duration: 0.2s;
+  transition-duration: 0.1s;
+}
+.mainnet-plugin img:active,
+.testnet-plugin img:active {
+  transform: scale(1);
+  transition-duration: 0.1s;
 }
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;

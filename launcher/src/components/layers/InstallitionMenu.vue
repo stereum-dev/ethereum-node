@@ -55,7 +55,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useWelcomeStore, { installation: "installationt" }),
+    ...mapState(useWelcomeStore, { installation: "installation" }),
   },
   methods: {
     randomValue() {
