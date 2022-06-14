@@ -24,16 +24,16 @@
         <div class="transPerSecond">
           <span>{{ transmitValue }}</span>
         </div>
-        <div class="mbit"><span>mbit</span></div>
+        <div class="mbit"><span>kB/s</span></div>
         <div class="transmitTitle">Total Transmiied</div>
-        <div class="totalTransmitValue">
+        <!-- <div class="totalTransmitValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
           </div>
           <div class="totalTransmitValue_data">
             <span>{{ totalTransmit }} GB</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -45,23 +45,33 @@ export default {
   data() {
     return {
       receiveValue: null,
-      transmitValue: 1.12,
+      transmitValue: null,
       totalReceive: 44.1,
       totalTransmit: 44.1,
     };
   },
   created() {
     this.recieivedValueMet();
+    this.transmitValueMet();
   },
 
   beforeUpdate() {
     this.recieivedValueMet();
+    this.transmitValueMet();
   },
   methods: {
     async recieivedValueMet() {
       try {
         const response = await ControlService.getReceivedData();
-        this.receiveValue = response.recievedData.stdout;
+        this.receiveValue = await response.recievedData.stdout;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async transmitValueMet() {
+      try {
+        const response = await ControlService.getTransmitData();
+        this.transmitValue = await response.transmitData.stdout;
       } catch (error) {
         console.log(error);
       }
@@ -182,8 +192,8 @@ export default {
 }
 .transPerSecond {
   width: 100%;
-  height: 30%;
-  font-size: 90%;
+  height: 50%;
+  font-size: 100%;
   font-weight: bold;
   color: #336666;
 }

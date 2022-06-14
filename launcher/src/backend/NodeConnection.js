@@ -524,6 +524,15 @@ export class NodeConnection {
     return response;
   }
 
+  async getTransmitData() {
+    let response = {};
+    const transmitData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
+    );
+    response.transmitData = transmitData;
+    return response;
+  }
+
   async openTunnels(tunnels) {
     if (tunnels[0] !== undefined) {
       await Promise.all(

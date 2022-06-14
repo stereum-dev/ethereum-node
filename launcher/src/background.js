@@ -135,6 +135,10 @@ promiseIpc.on("getReceivedData", async () => {
   return await nodeConnection.getReceivedData();
 });
 
+promiseIpc.on("getTransmitData", async () => {
+  return await nodeConnection.getTransmitData();
+});
+
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 });
