@@ -77,8 +77,12 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.log();
   },
   methods: {
+    log() {
+      console.log(this.selectedPreset);
+    },
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();

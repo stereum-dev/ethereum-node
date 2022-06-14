@@ -25,13 +25,6 @@ export const useClickInstall = defineStore("clickInstallation", {
           path: "/",
         },
       ],
-      R1clkInstls: [
-        { clkId: "staking", img: "/img/icon/STAKING.png" },
-        { clkId: "testnet", img: "/img/icon/TESTNET.png" },
-        { clkId: "blox", img: "/img/icon/BLOX_SSV.png" },
-        { clkId: "obol", img: "/img/icon/OBOL_SSV.png" },
-        { clkId: "rocket", img: "/img/icon/ROCKETPOOL_1.png" },
-      ],
       plugins: [
         {
           id: 1001,
@@ -422,6 +415,7 @@ export const useClickInstall = defineStore("clickInstallation", {
             core: 4,
             memory: 64,
           },
+          includedPlugins: [],
         },
         {
           id: 3,
@@ -435,6 +429,7 @@ export const useClickInstall = defineStore("clickInstallation", {
             core: 8,
             memory: 128,
           },
+          includedPlugins: [],
         },
         {
           id: 4,
@@ -448,6 +443,7 @@ export const useClickInstall = defineStore("clickInstallation", {
             core: 4,
             memory: 64,
           },
+          includedPlugins: [],
         },
         {
           id: 5,
@@ -461,6 +457,7 @@ export const useClickInstall = defineStore("clickInstallation", {
             core: 2,
             memory: 32,
           },
+          includedPlugins: [],
         },
         {
           id: 6,
@@ -474,6 +471,7 @@ export const useClickInstall = defineStore("clickInstallation", {
             core: 8,
             memory: 64,
           },
+          includedPlugins: [],
         },
         {
           id: 7,
@@ -525,8 +523,6 @@ export const useClickInstall = defineStore("clickInstallation", {
     };
   },
   actions: {
-    updatePresets() {
-      this.selectedPreset = item;
-    },
+
   },
 });

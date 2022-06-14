@@ -138,11 +138,10 @@ export default {
       plugins: "presets",
       installationPath: "installationPath",
     }),
-    selectedCategoryActive(){
-      if(this.activeExecutionClient){
-        
+    selectedCategoryActive() {
+      if (this.activeExecutionClient) {
       }
-    }
+    },
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
