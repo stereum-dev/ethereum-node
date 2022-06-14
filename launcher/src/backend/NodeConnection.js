@@ -459,6 +459,14 @@ export class NodeConnection {
     const cpuUsage = await this.sshService.exec(
       `sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`
     ); //CPU usage
+    const recievedData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p'`
+    );
+    const transmitData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
+    );
+    response.recievedData = recievedData;
+    response.transmitData = transmitData;
     response.cpuUsage = cpuUsage;
     return response;
   }
@@ -503,24 +511,6 @@ export class NodeConnection {
       `df --total -m | tail -1 | awk '{print $2}'`
     ); //Entire storage per MiB
     response.entireStorage = entireStorage;
-    return response;
-  }
-
-  async getUsedStorage() {
-    let response = {};
-    const usedStorage = await this.sshService.exec(
-      `df --total -m | tail -1 | awk '{print $3}'`
-    ); //Used storage per MiB
-    response.usedStorage = usedStorage;
-    return response;
-  }
-
-  async getReceivedData() {
-    let response = {};
-    const recievedData = await this.sshService.exec(
-      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p'`
-    );
-    response.recievedData = recievedData;
     return response;
   }
 

@@ -55,25 +55,25 @@ export default {
     this.transmitValueMet();
   },
 
-  beforeUpdate() {
+  updated() {
     this.recieivedValueMet();
     this.transmitValueMet();
   },
   methods: {
     async recieivedValueMet() {
       try {
-        const response = await ControlService.getReceivedData();
+        const response = await ControlService.getServerVitals();
         this.receiveValue = await response.recievedData.stdout;
       } catch (error) {
-        console.log(error);
+        return error;
       }
     },
     async transmitValueMet() {
       try {
-        const response = await ControlService.getTransmitData();
+        const response = await ControlService.getServerVitals();
         this.transmitValue = await response.transmitData.stdout;
       } catch (error) {
-        console.log(error);
+        return error;
       }
     },
   },
