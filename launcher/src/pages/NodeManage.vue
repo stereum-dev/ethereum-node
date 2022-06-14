@@ -102,7 +102,7 @@ import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
@@ -127,15 +127,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(useNodeManage, useNodeStore, {
+    ...mapWritableState(useNodeStore, {
+      selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      sidebarPlugins: "sidebarPlugins",
+      configData: "configData",
+    }),
+    ...mapWritableState(useNodeManage, {
       consensusItems: "consensusItems",
       executionItems: "executionItems",
       validatorItems: "validatorItems",
-      selectedItemToRemove: "selectedItemToRemove",
-      confirmChanges: "confirmChanges",
       servicePlugins: "servicePlugins",
-      sidebarPlugins: "sidebarPlugins",
-      configData: "configData",
     }),
   },
   methods: {
@@ -165,23 +167,19 @@ export default {
       if (item.category === "validator") {
         if (this.validatorItems.some((item) => item.id == itemId)) return;
         this.validatorItems.push(item);
-        this.$store.commit("mutatedValidatorItems", this.validatorItems);
       } else if (item.category === "consensus") {
         if (this.consensusItems.some((item) => item.id == itemId)) return;
         this.consensusItems.push(item);
-        this.$store.commit("mutatedConsensusItems", this.consensusItems);
       } else if (item.category === "execution") {
         if (this.executionItems.some((item) => item.id == itemId)) return;
         this.executionItems.push(item);
-        this.$store.commit("mutatedExecutionItems", this.executionItems);
       } else {
         if (this.servicePlugins.some((item) => item.id == itemId)) return;
         this.servicePlugins.push(item);
-        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
       }
     },
     serviceItemSelection(item) {
-      this.$store.commit("selectedItemToRemoveMutation", item);
+      this.selectedItemToRemove = item
     },
   },
 };

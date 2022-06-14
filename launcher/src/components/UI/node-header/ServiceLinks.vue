@@ -37,6 +37,7 @@
 <script>
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useClickInstall } from "@/store/clickInstallation";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
@@ -54,8 +55,10 @@ export default {
   mounted() {},
   computed: {
     ...mapState(useNodeHeader, {
-      services: "services",
       runningServices: "runningServices",
+    }),
+    ...mapState(useClickInstall, {
+      services: "services",
     }),
   },
   methods: {

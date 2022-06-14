@@ -54,7 +54,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
@@ -63,11 +63,13 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(useClickInstall, useNodeHeader, {
+    ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       installationPath: "installationPath",
-      pluginServices: "pluginServices",
-      installingServices: "getInstallingServices",
+      services: "services",
+      installingServices: "installingServices",
+    }),
+    ...mapWritableState(useNodeHeader, {
       runningServices: "runningServices",
     }),
   },
@@ -78,7 +80,6 @@ export default {
   },
   methods: {
     runInstalltion: async function () {
-      this.installingService = true;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
       console.log(await ControlService.startOneClickServices());
@@ -92,10 +93,10 @@ export default {
           !service.service.includes("NodeExporter")
       );
 
-      let grafanaStats = this.pluginServices.find(
+      let grafanaStats = this.services.find(
         (e) => e.serviceName === "grafana"
       );
-      let prometheusStats = this.pluginServices.find(
+      let prometheusStats = this.services.find(
         (e) => e.serviceName === "prometheus"
       );
 
@@ -121,7 +122,6 @@ export default {
 
       grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
       prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
-      this.installingService = false;
       this.runningServices = [grafanaStats, prometheusStats];
     },
   },

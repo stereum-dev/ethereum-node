@@ -71,10 +71,10 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   data() {
     return {
@@ -84,14 +84,16 @@ export default {
     };
   },
   computed: {
-    ...mapState(useNodeStore, useNodeHeader, {
+    ...mapWritableState(useNodeHeader, {
       configData: "getConfigData",
-      servicePlugins: "getServicePlugins",
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
       runningServices: "runningServices",
       configData_nodeSidebarVideo: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useNodeManage, {
+      consensusItems: "consensusItems",
+      executionItems: "executionItems",
+      validatorItems: "validatorItems",
+      servicePlugins: "servicePlugins",
     }),
   },
   methods: {
@@ -112,15 +114,17 @@ export default {
       this.removeIsConfirmed = true;
       this.removeAllPlugins();
       this.destroyNode();
-      this.runningServices = [];
+      
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
-        this.servicePlugins.length = 0;
-        this.consensusItems.length = 0;
-        this.executionItems.length = 0;
-        this.validatorItems.length = 0;
+        this.runningServices = [];
+        this.servicePlugins = [];
+        this.consensusItems = [];
+        this.executionItems = [];
+        this.validatorItems = [];
       }
+      this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
       console.log(await ControlService.destroy());
