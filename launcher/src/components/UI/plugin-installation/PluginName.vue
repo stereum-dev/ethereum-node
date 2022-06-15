@@ -58,35 +58,50 @@
                 <span>PLUGINS</span>
               </div>
               <div class="info-box">
-                <div
-                  class="info-row"
-                  v-for="(plugin, index) in selectedPreset.includedPlugins"
-                  :key="index"
-                >
-                  <div class="icon-box">
-                    <div class="plugin-icon">
-                      <img :src="plugin.icon" alt="icon" />
+                <div class="info-row">
+                  <div
+                    class="row"
+                    v-for="(plugin, index) in selectedPreset.includedPlugins"
+                    :key="index"
+                  >
+                    <div class="icon-box">
+                      <div
+                        class="plugin-icon"
+                        @click="
+                          pluginExChange(
+                            plugin.name,
+                            plugin.id,
+                            plugin.category
+                          )
+                        "
+                      >
+                        <img :src="plugin.icon" alt="icon" />
+                      </div>
+                    </div>
+                    <div class="content">
+                      <div class="plugin-name">
+                        <span>{{ plugin.name }}</span>
+                      </div>
+                      <div class="category">
+                        <span>{{ plugin.displayCategory }}</span>
+                      </div>
                     </div>
                   </div>
-                  <div class="content">
-                    <div class="plugin-name">
-                      <span>{{ plugin.name }}</span>
-                    </div>
-                    <div class="category">
-                      <div class="change-category" @click="pluginExChange">
+                  <exchange-modal v-if="exchangeModalActive">
+                    <div class="replaced-plugins">
+                      <div
+                        class="item"
+                        v-for="(item, idx) in filteredPluginsToChange"
+                        :key="idx"
+                      >
                         <img
-                          src="../../../../public/img/icon/click-installation/edit.png"
+                          :src="item.icon"
                           alt="icon"
+                          @mousedown.prevent.stop
                         />
                       </div>
-                      <exchange-modal v-if="exchangeModalActive">
-                        <div class="replaced-plugins"></div>
-                        <div class="confirm" @click="confirmReplacedPlugin">
-                          <span>confirm</span>
-                        </div>
-                      </exchange-modal>
                     </div>
-                  </div>
+                  </exchange-modal>
                 </div>
               </div>
             </div>
@@ -121,6 +136,8 @@ export default {
       activeConsensusClient: false,
       activeValidatorClient: false,
       exchangeModalActive: false,
+      filteredPluginsToChange: [],
+      categoryDisplayName: "",
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
@@ -129,13 +146,11 @@ export default {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       plugins: "presets",
+      allPlugins: "plugins",
       installationPath: "installationPath",
     }),
-    selectedCategoryActive() {
-      if (this.activeExecutionClient) {
-      }
-    },
   },
+  beforeUpdate() {},
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
@@ -145,38 +160,19 @@ export default {
     confirmReplacedPlugin() {
       this.exchangeModalActive = false;
     },
-    pluginExChange() {
-      this.exchangeModalActive = true;
+    pluginExChange(name, id) {
+      this.selectedPreset.includedPlugins.filter((item) => {
+        if (item.name.toLowerCase() == name.toLowerCase() && item.id == id) {
+          this.exchangeModalActive = true;
+          this.checkPluginCategory(item);
+          return item;
+        }
+      });
     },
-    selectExecution(id) {
-      this.activeExecutionClient = true;
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-        })
-        .map((plugin) => {
-          plugin.category === "execution";
-        });
-    },
-    selectConsensus(id) {
-      this.activeConsensusClient = true;
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-        })
-        .map((plugin) => {
-          plugin.category === "consensus";
-        });
-    },
-    selectValidator(id) {
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-          this.activeValidatorClient = true;
-        })
-        .map((plugin) => {
-          plugin.category === "validator";
-        });
+    checkPluginCategory(element) {
+      this.filteredPluginsToChange = this.allPlugins.filter(
+        (item) => item.category == element.category
+      );
     },
   },
 };
@@ -250,6 +246,17 @@ export default {
   border: 2px solid #343434;
   background-color: #282828;
   border-radius: 10px;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto;
+}
+.info-row::-webkit-scrollbar {
+  width: 1px;
+}
+.info-row {
+  grid-column: 1;
+  width: 100%;
+  height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;
@@ -257,10 +264,7 @@ export default {
   grid-template-rows: auto;
   position: relative;
 }
-.info-box::-webkit-scrollbar {
-  width: 1px;
-}
-.info-row {
+.row {
   grid-column: 1;
   width: 100%;
   height: 45px;
@@ -301,8 +305,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 3px;
+  margin-left: 4px;
 }
+
 .plugin-icon {
   width: 100%;
   height: 100%;
@@ -317,79 +322,58 @@ export default {
   border-radius: 50%;
   border: 2px solid rgb(133, 133, 133);
 }
+.plugin-icon:hover img {
+  transform: scale(1.03);
+  border: 2px solid rgb(52, 187, 249);
+}
+.plugin-icon:active img {
+  transform: scale(1);
+  border: none;
+}
 .category {
   width: 25%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.category .change-category {
-  width: 80%;
-  height: 80%;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgb(206, 206, 206);
-  text-transform: uppercase;
-  margin-left: 5px;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
-.change-category img {
-  width: 55%;
-  height: 72%;
+.category span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgb(89, 136, 101);
+  border-radius: 100%;
+  text-transform: uppercase;
 }
-.category .change-category:hover img {
-  transform: scale(1.1);
-}
-.category .change-category:active img {
-  transform: scale(1);
-}
+
 .replaced-plugins {
-  grid-column: 1/6;
-  grid-row: 1/4;
-  background-color: rgb(181, 181, 181);
-  border-radius: 10px 10px 0 0;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-}
-.confirm {
-  grid-column: 1/6;
-  grid-row: 4/5;
   width: 100%;
   height: 100%;
-  border: 1px solid rgb(250, 250, 250);
-  border-radius: 0 0 15px 15px;
+  border-radius: 10px;
+  background-color: rgba(236, 236, 236, 0.935);
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.confirm span {
-  width: 39%;
-  height: 58%;
-  background-color: #c9cdcd;
-  border: 2px solid #467578;
-  border-radius: 7px;
-  font-size: 1rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: rgb(39, 80, 80);
-  text-align: center;
+.replaced-plugins .item {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.confirm span:hover {
-  background-color: rgb(46, 79, 81);
-  border: 2px solid rgb(141, 141, 141);
-  color: rgb(205, 205, 205);
-  transform: scale(1.05);
-  box-shadow: 0 1px 3px 1px rgb(52, 52, 52);
-  transition-duration: 50ms;
+.replaced-plugins .item img {
+  width: 34px;
+  height: 34px;
+  border: 2px solid rgb(175, 175, 175);
+  box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
+  border-radius: 100%;
 }
-.confirm span:active {
+.replaced-plugins .item img:hover {
+  transform: scale(1.07);
+  border: 2px solid rgb(20, 127, 181);
+}
+.replaced-plugins .item img:active {
   transform: scale(1);
-  box-shadow:none;
-  transition-duration: 50ms;
 }
 .name-box {
   width: 95%;
