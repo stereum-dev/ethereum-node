@@ -5,7 +5,6 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    consClient: "teku"
     validator_password: "MyTestPassword"
     beacon_service: c3d37b1a-b51b-11ec-849b-6375f2b3a630
     validator_keys:

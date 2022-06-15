@@ -4,7 +4,7 @@
     validator_import_post_data: |
       {
         "keystores": {{ item.content | to_json }},
-        "passwords": ["{{ validator_password | quote }}"]
+        "passwords": {{ item.passwords | to_json }}
       }
 
 - name: Write API data to file
@@ -32,18 +32,18 @@
   become: yes
   register: validator_import_api_result
 
-- name: Log result
+- name: Log import result
   debug:
-    msg: "{{ validator_import_api_result }}"
+    msg: "{{ validator_import_api_result.container.Output }}"
 
 - name: Remove AIP data file
   ansible.builtin.file:
     path: "/tmp/validator-import-api-data"
     state: absent
 
-# - name: Remove docker container
-#   community.docker.docker_container:
-#     name: "validator-import-api-curl"
-#     state: absent
+- name: Remove docker container
+  community.docker.docker_container:
+    name: "validator-import-api-curl"
+    state: absent
 
 # EOF
