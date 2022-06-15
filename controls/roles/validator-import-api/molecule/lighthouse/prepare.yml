@@ -58,7 +58,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: sigp/lighthouse:v2.1.2
+              image: "sigp/lighthouse:{{ stereum.defaults.versions.lighthouse }}"
               env: {}
               ports:
                 - 0.0.0.0:9000:9000/tcp
@@ -103,11 +103,10 @@
             save: true
             state: started
             configuration:
+              service: LighthouseValidatorService
               id: "{{ validator_service }}"
-              image: sigp/lighthouse:v2.1.2
+              image: "sigp/lighthouse:{{ stereum.defaults.versions.lighthouse }}"
               env: {}
-              ports:
-                - 127.0.0.1:5062:5062/tcp
               command:
                 - lighthouse
                 - vc
