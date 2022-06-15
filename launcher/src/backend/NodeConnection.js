@@ -465,61 +465,31 @@ export class NodeConnection {
     const transmitData = await this.sshService.exec(
       `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
     );
-    response.recievedData = recievedData;
-    response.transmitData = transmitData;
-    response.cpuUsage = cpuUsage;
-    return response;
-  }
-
-  async getHostName() {
-    let response = {};
     const hostname = await this.sshService.exec(`hostname`); //machine name
-    response.hostname = hostname;
-    return response;
-  }
-
-  async getEntireRam() {
-    let response = {};
     const entireRam = await this.sshService.exec(
       `free -m | sed -n '2p' | awk '{print $2}'`
     ); //Entire Ram
-    response.entireRam = entireRam;
-    return response;
-  }
-
-  async getUsedRam() {
-    let response = {};
     const usedRam = await this.sshService.exec(
       `free -m | sed -n '2p' | awk '{print $3}'`
     ); //Used Ram
-    response.usedRam = usedRam;
-    return response;
-  }
-
-  async getUsedStoragePer() {
-    let response = {};
     const usedStoragePer = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print 100-$3/$2*100}'`
     ); //used storage per %
-    response.usedStoragePer = usedStoragePer;
-    return response;
-  }
-
-  async getEntireStorage() {
-    let response = {};
     const entireStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $2}'`
     ); //Entire storage per MiB
+    const usedStorage = await this.sshService.exec(
+      `df --total -m | tail -1 | awk '{print $3}'`
+    ); //used storage per MiB
+    response.usedStorage = usedStorage;
     response.entireStorage = entireStorage;
-    return response;
-  }
-
-  async getTransmitData() {
-    let response = {};
-    const transmitData = await this.sshService.exec(
-      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
-    );
+    response.usedStoragePer = usedStoragePer;
+    response.usedRam = usedRam;
+    response.entireRam = entireRam;
+    response.hostname = hostname;
+    response.recievedData = recievedData;
     response.transmitData = transmitData;
+    response.cpuUsage = cpuUsage;
     return response;
   }
 
