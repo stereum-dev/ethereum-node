@@ -73,27 +73,18 @@
                       <span>{{ plugin.name }}</span>
                     </div>
                     <div class="category">
-                      <div
-                        class="ec"
-                        @click="selectExecution(plugin.id)"
-                        :class="{ active: activeExecutionClient }"
-                      >
-                        <span>EC</span>
+                      <div class="change-category" @click="pluginExChange">
+                        <img
+                          src="../../../../public/img/icon/click-installation/edit.png"
+                          alt="icon"
+                        />
                       </div>
-                      <div
-                        class="cc"
-                        @click="selectConsensus"
-                        :class="{ active: activeConsensusClient }"
-                      >
-                        <span>CC</span>
-                      </div>
-                      <div
-                        class="vc"
-                        @click="selectValidator"
-                        :class="{ active: activeValidatorClient }"
-                      >
-                        <span>VC</span>
-                      </div>
+                      <exchange-modal v-if="exchangeModalActive">
+                        <div class="replaced-plugins"></div>
+                        <div class="confirm" @click="confirmReplacedPlugin">
+                          <span>confirm</span>
+                        </div>
+                      </exchange-modal>
                     </div>
                   </div>
                 </div>
@@ -115,10 +106,11 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
+import ExchangeModal from "./ExchangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
-  components: { ToggleButton },
+  components: { ToggleButton, ExchangeModal },
 
   data() {
     return {
@@ -128,6 +120,7 @@ export default {
       activeExecutionClient: false,
       activeConsensusClient: false,
       activeValidatorClient: false,
+      exchangeModalActive: false,
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
@@ -149,6 +142,12 @@ export default {
     }
   },
   methods: {
+    confirmReplacedPlugin() {
+      this.exchangeModalActive = false;
+    },
+    pluginExChange() {
+      this.exchangeModalActive = true;
+    },
     selectExecution(id) {
       this.activeExecutionClient = true;
       this.selectedPreset.includedPlugins
@@ -256,6 +255,7 @@ export default {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: auto;
+  position: relative;
 }
 .info-box::-webkit-scrollbar {
   width: 1px;
@@ -277,19 +277,19 @@ export default {
   width: 85%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 .plugin-name {
-  width: 46%;
+  width: 60%;
   height: 90%;
-  text-align: left;
+  margin-left: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .plugin-name span {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-align: center;
   color: rgb(203, 203, 203);
@@ -318,19 +318,15 @@ export default {
   border: 2px solid rgb(133, 133, 133);
 }
 .category {
-  width: 54%;
+  width: 25%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.category div {
-  width: 27px;
-  height: 27px;
-  border: 2px solid #6c6c6c;
-  box-shadow: 0 1px 3px 1px #242424;
-  border-radius: 100%;
-  background-color: rgb(46, 82, 68);
+.category .change-category {
+  width: 80%;
+  height: 80%;
   font-size: 0.8rem;
   font-weight: 500;
   color: rgb(206, 206, 206);
@@ -340,20 +336,60 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.category div:hover {
-  border: 2px solid #a1d1c9;
-  color: #a1d1c9;
-  transform: scale(1.1);
-  transition: all 100ms;
+.change-category img {
+  width: 55%;
+  height: 72%;
 }
-.category div:active {
+.category .change-category:hover img {
+  transform: scale(1.1);
+}
+.category .change-category:active img {
   transform: scale(1);
-  transition: all 100ms;
 }
-.active {
-  border: 2px solid #a1d1c9 !important;
-  color: #a1d1c9 !important;
-  transform: scale(1.1);
+.replaced-plugins {
+  grid-column: 1/6;
+  grid-row: 1/4;
+  background-color: rgb(181, 181, 181);
+  border-radius: 10px 10px 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.confirm {
+  grid-column: 1/6;
+  grid-row: 4/5;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(250, 250, 250);
+  border-radius: 0 0 15px 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.confirm span {
+  width: 39%;
+  height: 58%;
+  background-color: #c9cdcd;
+  border: 2px solid #467578;
+  border-radius: 7px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgb(39, 80, 80);
+  text-align: center;
+}
+.confirm span:hover {
+  background-color: rgb(46, 79, 81);
+  border: 2px solid rgb(141, 141, 141);
+  color: rgb(205, 205, 205);
+  transform: scale(1.05);
+  box-shadow: 0 1px 3px 1px rgb(52, 52, 52);
+  transition-duration: 50ms;
+}
+.confirm span:active {
+  transform: scale(1);
+  box-shadow:none;
+  transition-duration: 50ms;
 }
 .name-box {
   width: 95%;
