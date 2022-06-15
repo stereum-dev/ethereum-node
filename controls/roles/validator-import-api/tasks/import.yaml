@@ -1,16 +1,11 @@
 ---
-- name: Generate POST data
-  set_fact:
-    validator_import_post_data: |
-      {
-        "keystores": {{ item.content | to_json }},
-        "passwords": {{ item.passwords | to_json }}
-      }
-
-- name: Write API data to file
-  copy:
+- name: Write API data
+  template:
+    src: "validator-import-api-data.json"
     dest: "/tmp/validator-import-api-data"
-    content: "{{ validator_import_post_data }}"
+    owner: "2000"
+    group: "2000"
+    mode: 0600
   become: yes
 
 - name: Import validator using API
