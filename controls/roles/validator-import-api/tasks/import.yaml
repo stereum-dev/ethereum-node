@@ -6,20 +6,19 @@
         "keystores": {{ item.content | to_json }},
         "passwords": ["{{ validator_password | quote }}"]
       }
-- name: Log POST data
-  debug:
-    msg: "{{ validator_import_post_data }}"
-- name: copy
+
+- name: Write API data to file
   copy:
     dest: "/tmp/validator-import-api-data"
     content: "{{ validator_import_post_data }}"
   become: yes
-- name: Prysm import validator using API
+
+- name: Import validator using API
   community.docker.docker_container:
     command_handling: correct
     name: "validator-import-api-curl"
     user: "2000"
-    image: "curlimages/curl:7.83.1"
+    image: "curlimages/curl:{{ stereum.defaults.versions.curl }}"
     detach: false
     command: |
       curl -X POST {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/keystores
@@ -32,9 +31,16 @@
       - "/tmp/validator-import-api-data:/validator-import-api-data"
   become: yes
   register: validator_import_api_result
+
 - name: Log result
   debug:
     msg: "{{ validator_import_api_result }}"
+
+- name: Remove AIP data file
+  ansible.builtin.file:
+    path: "/tmp/validator-import-api-data"
+    state: absent
+
 # - name: Remove docker container
 #   community.docker.docker_container:
 #     name: "validator-import-api-curl"

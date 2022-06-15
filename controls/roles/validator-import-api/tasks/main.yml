@@ -5,15 +5,9 @@
     changed_when: false
     register: auth_token
     become: yes
-  - name: Print out auth_token
-    debug:
-      msg: "{{ auth_token.stdout_lines[1] }}"
   - name: Get api-token
     set_fact:
       api_token: "{{ auth_token.stdout_lines[1] }}"
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token }}"
   - include_tasks: import.yaml
     vars:
       validator_port: 7500
@@ -26,9 +20,6 @@
     changed_when: false
     register: api_token_lh
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token_lh.stdout }}"
   - include_tasks: import.yaml
     vars:
       validator_port: 5062
@@ -42,9 +33,6 @@
     changed_when: false
     register: api_token_n
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token_n.stdout }}"
   - include_tasks: import.yaml
     vars:
       validator_port: 5052
@@ -59,9 +47,6 @@
     changed_when: false
     register: api_token_t
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token_t.stdout }}"
   - include_tasks: import.yaml
     vars:
       validator_port: 5052
