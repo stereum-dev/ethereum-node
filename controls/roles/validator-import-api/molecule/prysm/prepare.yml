@@ -149,8 +149,6 @@
               service: PrysmValidatorService
               id: "{{ validator_service }}"
               image: "prysmaticlabs/prysm-validator:{{ stereum.defaults.versions.prysm }}"
-              ports:
-                - 127.0.0.1:7500:7500/tcp
               env: {}
               entrypoint: []
               command:
