@@ -9,6 +9,6 @@ stereum_static:
     versions:
       lighthouse: v2.3.1
       nimbus: multiarch-v22.5.2
-      teku: v22.5.2
+      teku: "22.5.2"
       prysm: v2.1.2
       curl: "7.83.1"
