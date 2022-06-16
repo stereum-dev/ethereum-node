@@ -6,7 +6,7 @@ driver:
 platforms:
   - name: "validator-import-api--teku--ubuntu-20.04"
     hostname: ubuntu
-    server_type: cpx21
+    server_type: cpx31
     image: ubuntu-20.04
     network:
       name: eth2-prater
