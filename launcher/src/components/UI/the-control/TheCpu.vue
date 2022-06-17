@@ -62,8 +62,8 @@ export default {
     async cpuValueMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.cpuValue = await response.cpuUsage.stdout;
-        console.log(response.cpuUsage);
+        this.cpuValue = Math.floor(await response.cpuUsage.stdout);
+        console.log(this.cpuVal);
       } catch (error) {
         console.log(error);
       }

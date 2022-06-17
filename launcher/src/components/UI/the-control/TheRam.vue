@@ -28,9 +28,6 @@ export default {
       entireRam: null,
     };
   },
-  beforeUpdate() {
-    this.usedRamMet();
-  },
   created() {
     this.entireRamMet();
     this.usedRamMet();
@@ -39,7 +36,7 @@ export default {
   methods: {
     async entireRamMet() {
       try {
-        const response = await ControlService.getEntireRam();
+        const response = await ControlService.getServerVitals();
         this.entireRam = await response.entireRam.stdout;
       } catch (error) {
         console.log(error);
@@ -47,7 +44,7 @@ export default {
     },
     async usedRamMet() {
       try {
-        const response = await ControlService.getUsedRam();
+        const response = await ControlService.getServerVitals();
         this.usedRam = await response.usedRam.stdout;
       } catch (error) {
         console.log(error);
