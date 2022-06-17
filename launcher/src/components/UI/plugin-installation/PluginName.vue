@@ -345,14 +345,7 @@ export default {
   border-radius: 50%;
   border: 2px solid rgb(133, 133, 133);
 }
-.plugin-icon:hover img {
-  transform: scale(1.03);
-  border: 2px solid rgb(52, 187, 249);
-}
-.plugin-icon:active img {
-  transform: scale(1);
-  border: none;
-}
+
 .category {
   width: 17%;
   height: 100%;
