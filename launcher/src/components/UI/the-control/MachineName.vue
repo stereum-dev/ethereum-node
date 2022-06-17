@@ -22,7 +22,7 @@ export default {
   methods: {
     async maschinNameMet() {
       try {
-        const response = await ControlService.getHostName();
+        const response = await ControlService.getServerVitals();
         this.maschinName = await response.hostname.stdout;
       } catch (error) {
         console.log(error);

@@ -107,30 +107,6 @@ promiseIpc.on("getServerVitals", async () => {
   return await nodeConnection.getServerVitals();
 });
 
-promiseIpc.on("getHostName", async () => {
-  return await nodeConnection.getHostName();
-});
-
-promiseIpc.on("getEntireRam", async () => {
-  return await nodeConnection.getEntireRam();
-});
-
-promiseIpc.on("getUsedRam", async () => {
-  return await nodeConnection.getUsedRam();
-});
-
-promiseIpc.on("getUsedStoragePer", async () => {
-  return await nodeConnection.getUsedStoragePer();
-});
-
-promiseIpc.on("getEntireStorage", async () => {
-  return await nodeConnection.getEntireStorage();
-});
-
-promiseIpc.on("getUsedStorage", async () => {
-  return await nodeConnection.getUsedStorage();
-});
-
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 });

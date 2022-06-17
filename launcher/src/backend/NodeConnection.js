@@ -459,59 +459,37 @@ export class NodeConnection {
     const cpuUsage = await this.sshService.exec(
       `sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`
     ); //CPU usage
-    response.cpuUsage = cpuUsage;
-    return response;
-  }
-
-  async getHostName() {
-    let response = {};
+    const recievedData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p'`
+    );
+    const transmitData = await this.sshService.exec(
+      `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'`
+    );
     const hostname = await this.sshService.exec(`hostname`); //machine name
-    response.hostname = hostname;
-    return response;
-  }
-
-  async getEntireRam() {
-    let response = {};
     const entireRam = await this.sshService.exec(
       `free -m | sed -n '2p' | awk '{print $2}'`
     ); //Entire Ram
-    response.entireRam = entireRam;
-    return response;
-  }
-
-  async getUsedRam() {
-    let response = {};
     const usedRam = await this.sshService.exec(
       `free -m | sed -n '2p' | awk '{print $3}'`
     ); //Used Ram
-    response.usedRam = usedRam;
-    return response;
-  }
-
-  async getUsedStoragePer() {
-    let response = {};
     const usedStoragePer = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print 100-$3/$2*100}'`
     ); //used storage per %
-    response.usedStoragePer = usedStoragePer;
-    return response;
-  }
-
-  async getEntireStorage() {
-    let response = {};
     const entireStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $2}'`
-    );//Entire storage per MiB
-    response.entireStorage = entireStorage;
-    return response;
-  }
-
-  async getUsedStorage() {
-    let response = {};
+    ); //Entire storage per MiB
     const usedStorage = await this.sshService.exec(
       `df --total -m | tail -1 | awk '{print $3}'`
-    );//Used storage per MiB
+    ); //used storage per MiB
     response.usedStorage = usedStorage;
+    response.entireStorage = entireStorage;
+    response.usedStoragePer = usedStoragePer;
+    response.usedRam = usedRam;
+    response.entireRam = entireRam;
+    response.hostname = hostname;
+    response.recievedData = recievedData;
+    response.transmitData = transmitData;
+    response.cpuUsage = cpuUsage;
     return response;
   }
 

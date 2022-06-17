@@ -9,45 +9,73 @@
         <div class="receivePerSecond">
           <span>{{ receiveValue }}</span>
         </div>
-        <div class="mbit"><span>mbit</span></div>
-        <div class="receiveTitle">Total Received</div>
-        <div class="totalReceiveValue">
+        <div class="mbit"><span>kB/s</span></div>
+        <div class="receiveTitle">Receiving Data</div>
+        <!-- <div class="totalReceiveValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowOrange.png" />
           </div>
           <div class="totalReceiveValue_data">
             <span>{{ totalReceive }} GB</span>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="totalTransmitted">
         <div class="transPerSecond">
           <span>{{ transmitValue }}</span>
         </div>
-        <div class="mbit"><span>mbit</span></div>
+        <div class="mbit"><span>kB/s</span></div>
         <div class="transmitTitle">Total Transmiied</div>
-        <div class="totalTransmitValue">
+        <!-- <div class="totalTransmitValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
           </div>
           <div class="totalTransmitValue_data">
             <span>{{ totalTransmit }} GB</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      receiveValue: 1.12,
-      transmitValue: 1.12,
+      receiveValue: null,
+      transmitValue: null,
       totalReceive: 44.1,
       totalTransmit: 44.1,
     };
+  },
+  created() {
+    this.recieivedValueMet();
+    this.transmitValueMet();
+  },
+
+  updated() {
+    this.recieivedValueMet();
+    this.transmitValueMet();
+  },
+  methods: {
+    async recieivedValueMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        this.receiveValue = await response.recievedData.stdout;
+      } catch (error) {
+        return error;
+      }
+    },
+    async transmitValueMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        this.transmitValue = await response.transmitData.stdout;
+      } catch (error) {
+        return error;
+      }
+    },
   },
 };
 </script>
@@ -110,8 +138,8 @@ export default {
 }
 .receivePerSecond {
   width: 100%;
-  height: 30%;
-  font-size: 90%;
+  height: 50%;
+  font-size: 100%;
   font-weight: bold;
   color: #ec590a;
 }
@@ -164,8 +192,8 @@ export default {
 }
 .transPerSecond {
   width: 100%;
-  height: 30%;
-  font-size: 90%;
+  height: 50%;
+  font-size: 100%;
   font-weight: bold;
   color: #336666;
 }
