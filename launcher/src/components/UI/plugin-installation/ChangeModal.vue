@@ -10,13 +10,9 @@ export default {};
 </script>
 <style scoped>
 .exchange-box {
-  grid-column: 1;
   width: 100%;
-  height: 45px;
-  margin-top: 5px;
-  background-color: #2a2e31;
-  opacity: 0.9;
-  border-radius: 10px;
+  height: 43px;
+  border-radius: 10px 10px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;

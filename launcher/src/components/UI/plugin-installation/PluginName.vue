@@ -58,23 +58,30 @@
                 <span>PLUGINS</span>
               </div>
               <div class="info-box">
-                <div class="info-row">
-                  <div
-                    class="row"
-                    v-for="(plugin, index) in selectedPreset.includedPlugins"
-                    :key="index"
-                  >
-                    <div class="icon-box">
+                <div
+                  class="info-row"
+                  v-for="(plugin, index) in selectedPreset.includedPlugins"
+                  :key="index"
+                >
+                  <change-modal v-if="plugin.showChangeModal">
+                    <div class="replaced-plugins">
                       <div
-                        class="plugin-icon"
-                        @click="
-                          pluginExChange(
-                            plugin.name,
-                            plugin.id,
-                            plugin.category
-                          )
-                        "
+                        class="item"
+                        v-for="(item, idx) in filteredPluginsOnCategory"
+                        :key="idx"
+                        @click="pluginChangeHandler(plugin, item, index)"
                       >
+                        <img
+                          :src="item.icon"
+                          alt="icon"
+                          @mousedown.prevent.stop
+                        />
+                      </div>
+                    </div>
+                  </change-modal>
+                  <div class="row" @click="pluginExChange(plugin)">
+                    <div class="icon-box">
+                      <div class="plugin-icon">
                         <img :src="plugin.icon" alt="icon" />
                       </div>
                     </div>
@@ -87,21 +94,6 @@
                       </div>
                     </div>
                   </div>
-                  <exchange-modal v-if="exchangeModalActive">
-                    <div class="replaced-plugins">
-                      <div
-                        class="item"
-                        v-for="(item, idx) in filteredPluginsToChange"
-                        :key="idx"
-                      >
-                        <img
-                          :src="item.icon"
-                          alt="icon"
-                          @mousedown.prevent.stop
-                        />
-                      </div>
-                    </div>
-                  </exchange-modal>
                 </div>
               </div>
             </div>
@@ -121,11 +113,11 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
-import ExchangeModal from "./ExchangeModal.vue";
+import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
-  components: { ToggleButton, ExchangeModal },
+  components: { ToggleButton, ChangeModal },
 
   data() {
     return {
@@ -136,7 +128,8 @@ export default {
       activeConsensusClient: false,
       activeValidatorClient: false,
       exchangeModalActive: false,
-      filteredPluginsToChange: [],
+      filteredPluginsOnCategory: [],
+      filteredPluginsOnName: [],
       categoryDisplayName: "",
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
@@ -152,26 +145,50 @@ export default {
   },
   beforeUpdate() {},
   mounted() {
-    if (Object.keys(this.selectedPreset).length === 0) {
+    if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.selectedPreset.includedPlugins =
+      this.selectedPreset.includedPlugins.map((item) => {
+        return {
+          showChangeModal: false,
+          ...item,
+        };
+      });
   },
   methods: {
-    confirmReplacedPlugin() {
-      this.exchangeModalActive = false;
+    pluginChangeHandler(el, item, idx) {
+      el.showChangeModal = false;
+      if (el.category === "execution") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
+      if (el.category === "validator" || el.category === "consensus") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
     },
-    pluginExChange(name, id) {
+    // validatorAndConsensusHandler(el, item, idx) {
+    //   this.selectedPreset.includedPlugins.map((param) => {
+    //     if (
+    //       param.name === this.selectedPreset.includedPlugins[idx].name &&
+    //       (param.category === "validator" || param.category === "consensus")
+    //     ) {
+    //       // this.filteredPluginsOnName.push(param);
+    //       param = item;
+    //     }
+    //   });
+    // },
+    pluginExChange(el) {
       this.selectedPreset.includedPlugins.filter((item) => {
-        if (item.name.toLowerCase() == name.toLowerCase() && item.id == id) {
-          this.exchangeModalActive = true;
+        item.showChangeModal = false;
+        if (item?.name === el.name && item?.id === el.id) {
           this.checkPluginCategory(item);
-          return item;
         }
       });
+      el.showChangeModal = true;
     },
     checkPluginCategory(element) {
-      this.filteredPluginsToChange = this.allPlugins.filter(
-        (item) => item.category == element.category
+      this.filteredPluginsOnCategory = this.allPlugins.filter(
+        (item) => item.category === element.category
       );
     },
   },
@@ -224,6 +241,7 @@ export default {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 15% 85%;
+  position: relative;
 }
 .included-title {
   width: 61%;
@@ -243,39 +261,44 @@ export default {
   height: 91%;
   margin: 10px auto;
   padding: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: 2px solid #343434;
   background-color: #282828;
   border-radius: 10px;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.info-row::-webkit-scrollbar {
+.info-box::-webkit-scrollbar {
   width: 1px;
 }
 .info-row {
-  grid-column: 1;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto;
-  position: relative;
-}
-.row {
-  grid-column: 1;
   width: 100%;
   height: 45px;
   margin-top: 5px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.row {
+  width: 100%;
+  height: 100%;
   background-color: #33393e;
   box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
+  border: 2px solid #33393e;
   border-radius: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  transition-duration: 50ms;
+}
+.row:hover {
+  border: 2px solid #1d7ecd;
+  transition-duration: 50ms;
 }
 .content {
   width: 85%;
@@ -285,15 +308,15 @@ export default {
   align-items: center;
 }
 .plugin-name {
-  width: 60%;
+  width: 83%;
   height: 90%;
-  margin-left: 10px;
+  margin-left: 5px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .plugin-name span {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-align: center;
   color: rgb(203, 203, 203);
@@ -331,10 +354,10 @@ export default {
   border: none;
 }
 .category {
-  width: 25%;
+  width: 17%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .category span {
@@ -347,9 +370,9 @@ export default {
 
 .replaced-plugins {
   width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background-color: rgba(236, 236, 236, 0.935);
+  height: 43px;
+  border-radius: 10px 10px 0 0;
+  background-color: #2b3034;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -362,16 +385,17 @@ export default {
   align-items: center;
 }
 .replaced-plugins .item img {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   border: 2px solid rgb(175, 175, 175);
   box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
   border-radius: 100%;
 }
 .replaced-plugins .item img:hover {
   transform: scale(1.07);
-  border: 2px solid rgb(20, 127, 181);
+  border: 2px solid rgb(123, 208, 251);
 }
+
 .replaced-plugins .item img:active {
   transform: scale(1);
 }
