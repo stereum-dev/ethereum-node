@@ -51,29 +51,20 @@ export default {
     };
   },
   created() {
-    this.recieivedValueMet();
-    this.transmitValueMet();
+    this.networkMet();
   },
 
-  updated() {
-    this.recieivedValueMet();
-    this.transmitValueMet();
+  beforeUpdate() {
+    this.networkMet();
   },
   methods: {
-    async recieivedValueMet() {
+    async networkMet() {
       try {
         const response = await ControlService.getServerVitals();
         this.receiveValue = await response.recievedData.stdout;
-      } catch (error) {
-        return error;
-      }
-    },
-    async transmitValueMet() {
-      try {
-        const response = await ControlService.getServerVitals();
         this.transmitValue = await response.transmitData.stdout;
       } catch (error) {
-        return error;
+        console.log("Error");
       }
     },
   },
