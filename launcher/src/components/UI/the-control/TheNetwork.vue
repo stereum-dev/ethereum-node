@@ -54,7 +54,7 @@ export default {
     this.networkMet();
   },
 
-  updated() {
+  beforeUpdate() {
     this.networkMet();
   },
   methods: {
@@ -64,7 +64,7 @@ export default {
         this.receiveValue = await response.recievedData.stdout;
         this.transmitValue = await response.transmitData.stdout;
       } catch (error) {
-        return error;
+        console.log("Error");
       }
     },
   },
