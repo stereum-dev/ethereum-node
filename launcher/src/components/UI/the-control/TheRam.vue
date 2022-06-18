@@ -29,22 +29,14 @@ export default {
     };
   },
   created() {
-    this.entireRamMet();
-    this.usedRamMet();
+    this.ramMet();
   },
 
   methods: {
-    async entireRamMet() {
+    async ramMet() {
       try {
         const response = await ControlService.getServerVitals();
         this.entireRam = await response.entireRam.stdout;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async usedRamMet() {
-      try {
-        const response = await ControlService.getServerVitals();
         this.usedRam = await response.usedRam.stdout;
       } catch (error) {
         console.log(error);

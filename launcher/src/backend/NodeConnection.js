@@ -458,7 +458,7 @@ export class NodeConnection {
     let response = {};
     const cpuUsage = await this.sshService.exec(
       `sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`
-    ); //CPU usage
+    ); //CPU
     const recievedData = await this.sshService.exec(
       `sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p'`
     );

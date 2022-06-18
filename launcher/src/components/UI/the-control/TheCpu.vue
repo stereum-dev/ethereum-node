@@ -45,10 +45,6 @@ export default {
   beforeUpdate() {
     this.cpuValueMet();
   },
-
-  beforeUnmount() {
-    this.cpuValueMet();
-  },
   methods: {
     tVal() {
       const SVal = 100 - this.temp;
