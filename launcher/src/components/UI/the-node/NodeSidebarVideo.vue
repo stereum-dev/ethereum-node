@@ -1,7 +1,16 @@
 <template>
   <div class="tutorial-box">
     <div class="tutorial-table">
-      <div class="table-row" v-for="(item, index) in configData" :key="index">
+      <tutorial-modal
+        @hide-modal="hideFirstStep"
+        v-if="modalIsVisible"
+      ></tutorial-modal>
+      <div
+        class="table-row"
+        v-for="(item, index) in configData"
+        :key="index"
+        @click="showFirstStep"
+      >
         <div class="camera-icon">
           <img
             src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
@@ -19,16 +28,29 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState, mapActions } from "pinia";
 import { useNodeStore } from "@/store/theNode";
+import { useTutorialStore } from "@/store/tutorialSteps";
+import TutorialModal from "../tutorial-steps/TutorialModal.vue";
 export default {
+  components: { TutorialModal },
   data() {
-    return {};
+    return {
+      modalIsVisible: false,
+    };
   },
   computed: {
     ...mapState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
     }),
+  },
+  methods: {
+    showFirstStep() {
+      this.modalIsVisible = true;
+    },
+    hideFirstStep() {
+      this.modalIsVisible = false;
+    },
   },
 };
 </script>

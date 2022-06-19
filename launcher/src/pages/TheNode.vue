@@ -3,6 +3,7 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
+        <the-videos v-if="playTutorialVideo"></the-videos>
         <div class="journal-box" onmousedown="return false">
           <journal-node></journal-node>
         </div>
@@ -63,6 +64,7 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
+import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 export default {
   components: {
     JournalNode,
@@ -70,6 +72,7 @@ export default {
     BaseModal,
     NodeSidebar,
     TaskManager,
+    TheVideos,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 

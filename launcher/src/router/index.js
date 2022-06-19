@@ -9,8 +9,8 @@ import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
-import ConfigProcess from "../components/UI/plugin-installation/ConfigProcess.vue";
 import StorageChartPage from "../pages/StorageChartPage.vue";
+import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 
 const routes = [
   {
@@ -62,6 +62,11 @@ const routes = [
     path: "/storage",
     name: "StorageChartPage",
     component: StorageChartPage,
+  },
+  {
+    path: "/videos",
+    name: "TheVideos",
+    component: TheVideos,
   },
 ];
 
