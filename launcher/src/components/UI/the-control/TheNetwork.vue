@@ -61,10 +61,10 @@ export default {
     async networkMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.receiveValue = await response.recievedData.stdout;
-        this.transmitValue = await response.transmitData.stdout;
+        this.receiveValue = Math.floor(await response.recievedData.stdout);
+        this.transmitValue = Math.floor(await response.transmitData.stdout);
       } catch (error) {
-        console.log("Error");
+        console.log("Loading...");
       }
     },
   },
