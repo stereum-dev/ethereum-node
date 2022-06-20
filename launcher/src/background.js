@@ -155,6 +155,10 @@ promiseIpc.on("getServices", async () => {
   return await serviceManager.readServiceConfigurations();
 });
 
+promiseIpc.on("getServiceConfig", async (args) => {
+  return await nodeConnection.readServiceConfiguration(args);
+})
+
 promiseIpc.on("importKey", async (args) => {
   return await validatorAccountManager.importKey(args.files, args.password);
 });

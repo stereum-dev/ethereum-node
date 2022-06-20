@@ -315,8 +315,8 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 1017,
-          name: "BLOX SSV",
-          category: "service",
+          name: "BLOXSSV",
+          category: "validator",
           path: "/blox-ssv",
           icon: require("../../public/img/icon/plugin-icons/Other/blox-ssv.png"),
           sIcon: require("../../public/img/icon/plugin-icons/Other/Blox-ssv-s.png"),
@@ -345,7 +345,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 1019,
-          name: "OBOL SSV",
+          name: "OBOLSSV",
           category: "service",
           path: "/obol-ssv",
           icon: require("../../public/img/icon/plugin-icons/Other/obol-ssv.png"),
@@ -376,7 +376,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1021,
           name: "ROCKETPOOL",
-          category: "service",
+          category: "validator",
           path: "/rocketpool",
           icon: require("../../public/img/icon/plugin-icons/Other/rocketpool.png"),
           sIcon: require("../../public/img/icon/plugin-icons/Other/Rocketpool-s.png"),

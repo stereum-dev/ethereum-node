@@ -47,7 +47,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
 
     const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', []).buildConsensusClientHttpEndpointUrl()
   
-    expect(prysm).toMatch(/http:\/\/stereum-.{36}:4000/)
+    expect(prysm).toMatch(/http:\/\/stereum-.{36}:3500/)
   })
 
   test('buildConsensusClientGateway', () => {
