@@ -1,0 +1,44 @@
+---
+- name: Write API data
+  template:
+    src: "validator-delete-api-data.json"
+    dest: "/tmp/validator-delete-api-data"
+    owner: "2000"
+    group: "2000"
+    mode: 0600
+  become: yes
+
+- name: Delete validator using API
+  community.docker.docker_container:
+    command_handling: correct
+    name: "validator-delete-api-curl"
+    user: "2000"
+    image: "curlimages/curl:{{ stereum.defaults.versions.curl }}"
+    detach: false
+    command: |
+      curl -X DELETE {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/keystores
+      -H "Content-Type: application/json"
+      -H "Authorization: Bearer {{ api_token }}"
+      -d "@/validator-delete-api-data"
+    networks:
+      - name: stereum
+    volumes:
+      - "/tmp/validator-delete-api-data:/validator-delete-api-data"
+  become: yes
+  register: validator_delete_api_result
+
+- name: Log delete result
+  debug:
+    msg: "{{ validator_delete_api_result.container.Output }}"
+
+- name: Remove AIP data file
+  ansible.builtin.file:
+    path: "/tmp/validator-delete-api-data"
+    state: absent
+
+- name: Remove docker container
+  community.docker.docker_container:
+    name: "validator-delete-api-curl"
+    state: absent
+
+# EOF
