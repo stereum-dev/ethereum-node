@@ -38,7 +38,7 @@ export class TekuBeaconService extends NodeService {
                 `--data-path=${dataDir}`,
                 '--data-storage-mode=archive',
                 '--rest-api-port=5051',
-                '--rest-api-host-allowlist="*"',
+                '--rest-api-host-allowlist=*',
                 '--rest-api-interface=0.0.0.0',
                 '--rest-api-docs-enabled=true',
                 '--rest-api-enabled=true',

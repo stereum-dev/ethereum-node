@@ -322,6 +322,9 @@ export default {
     //     return true;
     //   }
     // },
+    includesSSV(array) {
+      return array.includes("BLOXSSV") || array.includes("ROCKETPOOL");
+    },
     login: async function () {
       this.connectingAnimActive = true;
       try {
@@ -356,10 +359,13 @@ export default {
               .toUpperCase();
           });
           const includedPlugins = [];
-          constellation.forEach((plugin) => {
-            const buffer = this.allPlugins.filter(
+          constellation.forEach((plugin, index, array) => {
+            let buffer = this.allPlugins.filter(
               (element) => element.name === plugin
             );
+            if (buffer.length > 1 && this.includesSSV(array)) {
+              buffer.splice(buffer.findIndex((e) => e.category === "validator"),1);
+            }
             buffer.forEach((element) => includedPlugins.push(element));
           });
 
@@ -371,6 +377,9 @@ export default {
               service.service.includes("Prometheus") &&
               !service.service.includes("NodeExporter")
           );
+          if(this.includesSSV(constellation)){
+            this.runningServices.push(this.services.find((e) => e.serviceName === "ssv"));
+          }
 
           let grafanaStats = this.services.find(
             (e) => e.serviceName === "grafana"
@@ -399,13 +408,10 @@ export default {
           grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
           prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
 
-          this.runningServices = [
-            grafanaStats,
-            prometheusStats,
-          ];
+          this.runningServices.push(grafanaStats, prometheusStats);
           this.selectedPreset = {
             includedPlugins: includedPlugins,
-          }
+          };
         }
 
         this.$router.push("/node");

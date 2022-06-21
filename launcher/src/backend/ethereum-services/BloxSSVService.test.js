@@ -45,10 +45,10 @@ test('buildConfiguration', () => {
 
   expect(bloxService.env.CONFIG_PATH).toMatch(/\/config.yaml/)
   expect(bloxService.volumes).toHaveLength(1)
-  expect(bloxService.volumes).toContain('/opt/stereum/ssv-' + bloxService.id + '/data:/data')
+  expect(bloxService.volumes).toContain('/opt/stereum/ssv-' + bloxService.id + '/data/blox/ssv:/data')
   expect(bloxService.ports).toHaveLength(2)
   expect(bloxService.id).toHaveLength(36)
-  expect(bloxService.user).toMatch(/root/)
+  expect(bloxService.user).toMatch(/2000/)
   expect(bloxService.image).toMatch(/bloxstaking\/ssv-node/)
   expect(bloxService.configVersion).toBe(1)
 })
@@ -72,20 +72,19 @@ test('getServiceConfiguration', () => {
     }
   })
 
-  const bloxService = BloxSSVService.getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()])
+  const bloxService = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()])
 
   expect(bloxService.MetricsAPIPort).toBeDefined()
   expect(bloxService.eth2.Network).toMatch(/prater/)
   expect(bloxService.eth2.BeaconNodeAddr).toMatch(/http-lh-endpoint-string/)
   expect(bloxService.eth1.ETH1Addr).toMatch(/http-endpoint-string/)
-  expect(bloxService.eth1.RegistryContractAddr).toHaveLength(42)
   expect(bloxService.OperatorPrivateKey).toBeDefined()
 })
 
 test('getAvailablePorts', () => {
   const service = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).getAvailablePorts()
 
-  expect(service).toHaveLength(2)
+  expect(service).toHaveLength(3)
 })
 
 test('service name', () => {

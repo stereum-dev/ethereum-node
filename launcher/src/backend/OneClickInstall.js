@@ -13,6 +13,8 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 
+const YAML = require('yaml')
+
 export class OneClickInstall {
   async prepareNode(installDir, nodeConnection) {
     this.installDir = installDir
@@ -104,27 +106,32 @@ export class OneClickInstall {
         ]
         this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
 
-        //LighthouseValidatorService
-        ports = [
-          new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
-        ]
-        this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
+        if(this.setup === 'staking' || this.setup === 'obol ssv'){
+          //LighthouseValidatorService
+          ports = [
+            new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
+          ]
+          this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
+        }
         break
 
 
       case 'Prysm':
         //PrysmBeaconService
         ports = [
-          new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
-          new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
+          new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
+          new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
         ]
         this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
-        //PrysmValidatorService
-        ports = [
-          new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
-        ]
-        this.validatorService = PrysmValidatorService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
+        
+        if(this.setup === 'staking' || this.setup === 'obol ssv'){
+          //PrysmValidatorService
+          ports = [
+            new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
+          ]
+          this.validatorService = PrysmValidatorService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
+        }
         break
 
 
@@ -166,6 +173,23 @@ export class OneClickInstall {
         break
     }
 
+    switch(this.setup){
+      case 'blox ssv':
+        ports = [
+          new ServicePort(null,12000,12000,servicePortProtocol.udp),
+          new ServicePort(null,13000,13000,servicePortProtocol.tcp),
+        ]
+        this.validatorService = BloxSSVService.buildByUserInput('prater', ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
+
+        break
+      case 'rocketpool':
+        // this.validatorService = .....
+        break
+      default:
+        break
+    }
+
+
     this.prometheusNodeExporter = PrometheusNodeExporterService.buildByUserInput()
 
     ports = [
@@ -200,11 +224,27 @@ export class OneClickInstall {
           runRefs.push(await this.serviceManager.manageServiceState(service.id, 'started'))
         }
       }))
+      if(this.validatorService.service === 'BloxSSVService'){
+        runRefs.push(await this.nodeConnection.runPlaybook('ssv-key-generator', {stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id}))
+        const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
+        console.log(config)
+        console.log(config.ssv_sk)
+        console.log(config.ssv_pk)
+        let ssvConfig = this.validatorService.getServiceConfiguration('prater', [this.executionClient], [this.beaconService])
+        ssvConfig.OperatorPrivateKey = config.ssv_sk
+        const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
+        // prepare service's config file
+        const configFile = new YAML.Document()
+        configFile.contents = ssvConfig
+        const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
+        this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
+      }
     }
     return runRefs
   }
 
   async getSetupConstellation(setup) {
+    this.setup = setup
     const services = ['GETH', 'GRAFANA', 'PROMETHEUSNODEEXPORTER', 'PROMETHEUS']
     // make sure API is only called once when implemented
       this.choosenClient = await this.chooseClient()
@@ -216,10 +256,10 @@ export class OneClickInstall {
       case 'staking':
         break
       case 'blox ssv':
-        services.push('BLOX SSV')
+        services.push('BLOXSSV')
         break
       case 'obol ssv':
-        services.push('OBOL SSV')
+        services.push('OBOLSSV')
         break
       case 'rocketpool':
         services.push('ROCKETPOOL')

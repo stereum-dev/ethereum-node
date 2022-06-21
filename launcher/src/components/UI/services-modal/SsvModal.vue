@@ -45,6 +45,7 @@
 import PubkeySsv from "./PubkeySsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
 import SsvDashboard from "./SsvDashboard.vue";
+import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
@@ -63,8 +64,8 @@ export default {
       pubkey: "112gf1hj2fjh1f24jkhf4fhgfhad444",
     };
   },
-  created() {
-    this.filterSsvService();
+  mounted(){
+    this.getKeys()
   },
   computed: {
     ...mapState(useNodeHeader, {
@@ -73,17 +74,16 @@ export default {
     }),
   },
   methods: {
-    filterSsvService() {
-      this.services.forEach((service) => {
-        if (service.serviceName.toLowerCase() == "ssv") {
-          this.ssvService.push(service);
-        }
-      });
-      this.isSsvAvailable = true;
-    },
     operatorModalHandler() {
       this.pubkeyModalActive = false;
       this.registerModalActive = true;
+    },
+    getKeys: async function () {
+      let services = await ControlService.getServices();
+      let blox = services.find(service => service.service === "BloxSSVService")
+      let bloxConfig = await ControlService.getServiceConfig(blox.id)
+      //this.secretkey = bloxConfig.ssv_sk
+      this.pubkey = bloxConfig.ssv_pk
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;
