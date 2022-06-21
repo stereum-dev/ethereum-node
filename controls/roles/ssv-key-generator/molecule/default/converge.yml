@@ -9,7 +9,7 @@
       env:
         CONFIG_PATH: /data/config.yaml
       id: {{ ssv_key_service }}
-      image: "bloxstaking/ssv-node:{{ stereum.defaults.versions.blox_ssv }}"
+      image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
       ports:
       - 0.0.0.0:12000:12000/udp
       - 0.0.0.0:13000:13000/tcp

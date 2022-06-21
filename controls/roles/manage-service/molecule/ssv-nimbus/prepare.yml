@@ -82,7 +82,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: "statusim/nimbus-eth2:{{ stereum.defaults.versions.nimbus }}"
+              image: "statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}"
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp

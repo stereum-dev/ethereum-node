@@ -58,7 +58,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum.defaults.versions.prysm }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp
@@ -148,7 +148,7 @@
             configuration:
               service: PrysmValidatorService
               id: "{{ validator_service }}"
-              image: "prysmaticlabs/prysm-validator:{{ stereum.defaults.versions.prysm }}"
+              image: "prysmaticlabs/prysm-validator:{{ stereum_static.defaults.versions.prysm }}"
               env: {}
               entrypoint: []
               command:
