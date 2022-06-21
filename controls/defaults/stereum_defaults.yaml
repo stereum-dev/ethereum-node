@@ -6,3 +6,9 @@ stereum_static:
       lane: stable
       unattended:
         install: false
+    versions:
+      lighthouse: v2.3.1
+      nimbus: multiarch-v22.6.0
+      teku: "22.6.0"
+      prysm: v2.1.2
+      curl: "7.83.1"

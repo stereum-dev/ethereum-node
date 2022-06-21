@@ -5,12 +5,14 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    consClient: "nimbus"
-    beacon_service: 9ffc35c2-e7ef-11ec-bea9-7795f6ff7cd2
+    validator_service: 9ffc35c2-e7ef-11ec-bea9-7795f6ff7cd2
     validator_public_keys:
-      - key: "0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"
+      - pubkeys: ["0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"]
 
   tasks:
+    - set_fact:
+        stereum: "{{ stereum_static }}"
+
     - name: "Include validator-delete-api"
       include_role:
         name: "validator-delete-api"
