@@ -16,8 +16,6 @@
       that:
       - stereum_ufw_status.stdout.find("9000/tcp") != -1
       - stereum_ufw_status.stdout.find("9000/udp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
-      - stereum_ufw_status.stdout.find("5062/tcp") != -1
   # Lighthouse api-token
   - stat: path=/opt/app/services/957fd49a-e63d-11ec-8d13-8f5d1bf7c1ca/validator/validators/api-token.txt
     register: api_token
@@ -56,8 +54,6 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
-      - stereum_docker_ps.stdout.find("5062->5062") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
 
