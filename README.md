@@ -45,8 +45,14 @@ Milestones build on top of the features of previous milestones.
   - Fix Grafana dashboards
   - Besu support
   - Nethermind support
-  - UI for update settings
+  - Update button
+- [![beta2.0-stack](https://img.shields.io/badge/milestone-beta2.0--stack-inactive?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/4): Suitable for testnet, adding e. g. use cases & features:
+  - Advanced service configuration by user ("Expert Mode")
+  - Install latest versions
+  - Update services
   - Validator account stats
+  - Technical documentation (preparation for security audit)
+  - Enhanced plugin actions via mouse over menu
 - ![unnamed](https://img.shields.io/badge/milestone-unnamed-inactive?style=flat-square): Suitable for testnet, adding use cases & features:
   - tba
 
