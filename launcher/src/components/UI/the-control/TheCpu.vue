@@ -62,7 +62,9 @@ export default {
         const arr = data.split(/\r?\n/);
         this.cpuValue = parseInt(arr[6]);
       } catch (error) {
+
         console.log(error);
+
       }
     },
   },

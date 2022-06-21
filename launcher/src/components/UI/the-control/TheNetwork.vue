@@ -66,7 +66,7 @@ export default {
         this.receiveValue = parseInt(arr[7]);
         this.transmitValue = parseInt(arr[8]);
       } catch (error) {
-        console.log("Error");
+        console.log("Loading...");
       }
     },
   },

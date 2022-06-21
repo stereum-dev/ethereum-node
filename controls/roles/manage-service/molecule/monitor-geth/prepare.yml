@@ -1,0 +1,60 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --datadir=/opt/app/geth
+                - --metrics
+                - --metrics.expensive
+                - --metrics.port=6060
+                - --metrics.addr=0.0.0.0
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+
+# EOF

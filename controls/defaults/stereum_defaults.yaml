@@ -6,3 +6,21 @@ stereum_static:
       lane: stable
       unattended:
         install: false
+    versions:
+      # consensus clients
+      lighthouse: v2.3.1
+      nimbus: multiarch-v22.6.0
+      teku: "22.6.0"
+      prysm: v2.1.2
+
+      # execution clients
+      geth: v1.10.19
+
+      # ssv
+      blox_ssv: v0.2.0
+
+      # tools
+      curl: "7.83.1"
+      grafana: "8.5.6"
+      node_exporter: v1.3.1
+      prometheus: v2.36.2

@@ -16,7 +16,6 @@
       that:
       - stereum_ufw_status.stdout.find("9001/tcp") != -1
       - stereum_ufw_status.stdout.find("9001/udp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
   # teku API keystore, password & api bearer
   - stat: path=/opt/app/services/b5312c38-e8dd-11ec-9ddc-f331ef501d8f/data/teku_api_keystore
     register: teku_api_keystore
@@ -53,6 +52,5 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("consensys/teku") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
       - stereum_docker_ps.stdout.find("9001->9001") != -1
       - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 1
