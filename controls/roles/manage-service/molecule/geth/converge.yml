@@ -21,7 +21,7 @@
             state: started
             configuration:
               id: "{{ geth_service }}"
-              image: ethereum/client-go:v1.10.18
+              image: "ethereum/client-go:{{ stereum.defaults.versions.geth }}"
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp

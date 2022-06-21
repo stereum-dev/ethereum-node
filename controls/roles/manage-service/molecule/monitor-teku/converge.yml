@@ -25,7 +25,7 @@
             state: started
             configuration:
               id: "{{ prometheus_service }}"
-              image: prom/prometheus:v2.33.1
+              image: "prom/prometheus:{{ stereum.defaults.versions.prometheus }}"
               ports:
                 - 127.0.0.1:9090:9090/tcp
               env:
@@ -73,7 +73,7 @@
             state: started
             configuration:
               id: "{{ prometheus_node_exporter_service }}"
-              image: prom/node-exporter:v1.3.1
+              image: "prom/node-exporter:{{ stereum.defaults.versions.node_exporter }}"
               ports: []
               env: {}
               command: []
@@ -94,7 +94,7 @@
             state: started
             configuration:
               id: "{{ grafana_service }}"
-              image: grafana/grafana:8.4.0
+              image: "grafana/grafana:{{ stereum.defaults.versions.grafana }}"
               ports:
                 - 127.0.0.1:3000:3000/tcp
               env:
