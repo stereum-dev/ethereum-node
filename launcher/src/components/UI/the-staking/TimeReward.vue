@@ -58,7 +58,7 @@
 .reward-parent {
   width: 100%;
   height: 95%;
-  margin-top: 10px;
+  margin-top: 8px;
   grid-column: 10/13;
   grid-row: 1;
   display: flex;

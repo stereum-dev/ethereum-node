@@ -1,7 +1,12 @@
 <template>
   <div class="tutorial-box">
     <div class="tutorial-table">
-      <div class="table-row" v-for="(item, index) in configData" :key="index">
+      <div
+        class="table-row"
+        v-for="(item, index) in configData"
+        :key="index"
+        @click="$emit('showModal')"
+      >
         <div class="camera-icon">
           <img
             src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
@@ -19,16 +24,32 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
+import { useTutorialStore } from "@/store/tutorialSteps";
+
 export default {
   data() {
     return {};
   },
+  mounted() {
+    this.configData = this.configData.map((item) => {
+      return {
+        showPlayModal: false,
+        ...item,
+      };
+    });
+  },
   computed: {
-    ...mapState(useNodeStore, {
+    ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
     }),
+    ...mapWritableState(useTutorialStore, {
+      showTutorialModal: "showTutorialModal",
+    }),
+  },
+  methods: {
+
   },
 };
 </script>

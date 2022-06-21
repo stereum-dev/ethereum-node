@@ -1,16 +1,16 @@
 <template>
   <div class="sidebar-container">
     <sidebar-active></sidebar-active>
-    <sidebar-video></sidebar-video>
+    <sidebar-video @show-modal="$emit('showModal')"></sidebar-video>
   </div>
 </template>
 <script>
-import SidebarActive from './NodeSidebarActive.vue'
-import SidebarVideo from './NodeSidebarVideo.vue'
+import SidebarActive from "./NodeSidebarActive.vue";
+import SidebarVideo from "./NodeSidebarVideo.vue";
 
 export default {
-  components: { SidebarActive, SidebarVideo }
-}
+  components: { SidebarActive, SidebarVideo },
+};
 </script>
 <style scoped>
 .sidebar-container {
