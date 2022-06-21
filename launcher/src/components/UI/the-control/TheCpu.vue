@@ -58,10 +58,11 @@ export default {
     async cpuValueMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.cpuValue = Math.floor(await response.cpuUsage.stdout);
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.cpuValue = parseInt(arr[6]);
       } catch (error) {
         console.log(error);
-        this.cpuValueMet();
       }
     },
   },
