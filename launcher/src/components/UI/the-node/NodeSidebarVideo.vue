@@ -1,15 +1,11 @@
 <template>
   <div class="tutorial-box">
     <div class="tutorial-table">
-      <tutorial-modal
-        @hide-modal="hideFirstStep"
-        v-if="modalIsVisible"
-      ></tutorial-modal>
       <div
         class="table-row"
         v-for="(item, index) in configData"
         :key="index"
-        @click="showFirstStep"
+        @click="$emit('showModal')"
       >
         <div class="camera-icon">
           <img
@@ -28,29 +24,32 @@
   </div>
 </template>
 <script>
-import { mapState, mapWritableState, mapActions } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
-import TutorialModal from "../tutorial-steps/TutorialModal.vue";
+
 export default {
-  components: { TutorialModal },
   data() {
-    return {
-      modalIsVisible: false,
-    };
+    return {};
+  },
+  mounted() {
+    this.configData = this.configData.map((item) => {
+      return {
+        showPlayModal: false,
+        ...item,
+      };
+    });
   },
   computed: {
-    ...mapState(useNodeStore, {
+    ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useTutorialStore, {
+      showTutorialModal: "showTutorialModal",
     }),
   },
   methods: {
-    showFirstStep() {
-      this.modalIsVisible = true;
-    },
-    hideFirstStep() {
-      this.modalIsVisible = false;
-    },
+
   },
 };
 </script>

@@ -5,11 +5,9 @@
         <span>INTRODUCTION</span>
       </div>
       <div class="modal-items">
-        <div class="item" v-for="(item, index) in steps" :key="index">
+        <div class="item" v-for="(item, index) in steps" :key="index" @click="$emit('showItem')">
           <div class="icon-box">
-            <router-link :to="item.route">
-              <img :src="item.icon" alt="icon" />
-            </router-link>
+            <img :src="item.icon" alt="icon" />
           </div>
           <div class="item-text">
             <span>{{ item.title }}</span>
@@ -30,7 +28,9 @@ export default {
       steps: "steps",
     }),
   },
-  methods: {},
+  methods: {
+
+  },
 };
 </script>
 <style scoped>
@@ -41,6 +41,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius:0 35px 5px 5px;
+
   z-index: 200;
   position: absolute;
   top: 0;

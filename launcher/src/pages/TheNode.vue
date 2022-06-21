@@ -3,7 +3,17 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
-        <the-videos v-if="playTutorialVideo"></the-videos>
+        <div class="play-box" v-if="playFirstVideo">
+          <div class="close-video">
+            <span>Close</span>
+          </div>
+          <the-videos></the-videos>
+        </div>
+        <tutorial-modal
+          @hide-modal="hideFirstStepModal"
+          @show-item="displaySingleModal(steps)"
+          v-if="isTutorialModalActive"
+        ></tutorial-modal>
         <div class="journal-box" onmousedown="return false">
           <journal-node></journal-node>
         </div>
@@ -43,7 +53,7 @@
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
-          <node-sidebar></node-sidebar>
+          <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
@@ -64,7 +74,9 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
+import { useTutorialStore } from "@/store/tutorialSteps";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
+import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 export default {
   components: {
     JournalNode,
@@ -73,23 +85,32 @@ export default {
     NodeSidebar,
     TaskManager,
     TheVideos,
+    TutorialModal,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
   data() {
     return {
       isModalActive: false,
+      isTutorialModalActive: false,
+      playFirstVideo: false,
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
     }),
+    ...mapWritableState(useNodeStore, {
+      configData: "configData_nodeSidebarVideo",
+    }),
     ...mapWritableState(useNodeManage, {
       consensusItems: "consensusItems",
       executionItems: "executionItems",
       validatorItems: "validatorItems",
       servicePlugins: "servicePlugins",
+    }),
+    ...mapWritableState(useTutorialStore, {
+      steps: "steps",
     }),
   },
   mounted() {
@@ -128,6 +149,21 @@ export default {
     closeModal() {
       this.isModalActive = false;
     },
+    showFirstStepModal() {
+      this.isTutorialModalActive = true;
+    },
+    hideFirstStepModal() {
+      this.isTutorialModalActive = false;
+    },
+    displaySingleModal(el) {
+      this.steps.filter((item) => {
+        item.displayModal = false;
+        item?.id === el.id;
+      });
+      this.playFirstVideo = true;
+      this.isTutorialModalActive = false;
+      el.displayModal = true;
+    },
   },
 };
 </script>
@@ -150,8 +186,55 @@ export default {
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);
   z-index: 1;
+  position: relative;
 }
-
+.play-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000000d9;
+  border-radius: 0 35px 5px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 301;
+}
+.play-box .close-video {
+  width: 70px;
+  height: 30px;
+  border: 2px solid rgb(183, 48, 48);
+  border-radius: 5px;
+  background-color: rgb(183, 48, 48);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 302;
+  cursor: pointer;
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+}
+.close-video span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #eee;
+}
+.close-video:hover {
+  border: 2px solid #b73030;
+  background-color: rgb(218, 218, 218);
+}
+.close-video:hover span {
+  color: #b73030;
+}
+.close-video:active {
+  border: 2px solid rgb(183, 48, 48);
+  background-color: rgb(151, 36, 36);
+}
+.close-video:active span {
+  color: #eee;
+}
 .journal-box {
   width: 100%;
   height: 100%;

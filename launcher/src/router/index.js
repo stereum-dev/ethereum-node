@@ -11,6 +11,8 @@ import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import StorageChartPage from "../pages/StorageChartPage.vue";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
+import WalkThrough from "../components/UI/tutorial-steps/WalkThrough.vue";
+import WrittenGuide from "../components/UI/tutorial-steps/WrittenGuide.vue";
 
 const routes = [
   {
@@ -63,11 +65,21 @@ const routes = [
     name: "StorageChartPage",
     component: StorageChartPage,
   },
-  {
-    path: "/videos",
-    name: "TheVideos",
-    component: TheVideos,
-  },
+  // {
+  //   path: "/videos",
+  //   name: "TheVideos",
+  //   component: TheVideos,
+  // },
+  // {
+  //   path: "/walkthrough",
+  //   name: "Walkthrough",
+  //   component: WalkThrough,
+  // },
+  // {
+  //   path: "/guide",
+  //   name: "Written Guide",
+  //   component: WrittenGuide,
+  // },
 ];
 
 const router = createRouter({ history: createWebHashHistory(), routes });
