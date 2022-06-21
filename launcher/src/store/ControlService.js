@@ -94,6 +94,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServices");
   }
 
+  async getServiceConfig(args) {
+    return await this.promiseIpc.send("getServiceConfig", args)
+  }
+
   async importKey(args) {
     //resolve proxy
     let files = [];

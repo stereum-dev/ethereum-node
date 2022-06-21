@@ -79,7 +79,7 @@ export default {
     },
     //open & close modal for each service
     openServiceBrowser(serviceName) {
-      this.services.filter((item) => {
+      this.runningServices.filter((item) => {
         item.serviceName == serviceName;
         if (serviceName == "grafana") {
           this.showGrafanaWindow = true;

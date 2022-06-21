@@ -77,12 +77,8 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/clickinstall");
     }
-    this.log();
   },
   methods: {
-    log() {
-      console.log(this.selectedPreset);
-    },
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
       let services = await ControlService.writeOneClickConfiguration();
@@ -96,6 +92,10 @@ export default {
           service.service.includes("Prometheus") &&
           !service.service.includes("NodeExporter")
       );
+
+      if(this.selectedPreset.name === "blox ssv"){
+        this.runningServices.push(this.services.find((e) => e.serviceName === "ssv"));
+      }
 
       let grafanaStats = this.services.find(
         (e) => e.serviceName === "grafana"
@@ -126,7 +126,7 @@ export default {
 
       grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
       prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
-      this.runningServices = [grafanaStats, prometheusStats];
+      this.runningServices.push(grafanaStats, prometheusStats);
     },
   },
 };
