@@ -16,8 +16,6 @@
       that:
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
-      - stereum_ufw_status.stdout.find("4000/tcp") != -1
-      - stereum_ufw_status.stdout.find("7500/tcp") != -1
   # Wallet & auth-token
   - stat: path=/opt/app/services/076e91e2-e8bc-11ec-84c1-37b5fd5ea8e1/data/wallets/direct/accounts/all-accounts.keystore.json
     register: validator_all_accounts
@@ -65,8 +63,6 @@
       that:
       - stereum_docker_ps.stdout.find("prysmaticlabs/prysm-validator") != -1
       - stereum_docker_ps.stdout.find("prysmaticlabs/prysm-beacon-chain") != -1
-      - stereum_docker_ps.stdout.find("7500->7500") != -1
-      - stereum_docker_ps.stdout.find("4000->4000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
       - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
