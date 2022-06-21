@@ -10,6 +10,9 @@
     beacon_service: 9024aec6-12a8-456a-8096-ee7ef6f67167
 
   tasks:
+    - set_fact:
+        stereum: "{{ stereum_static }}"
+
     - name: Install python for Ansible (Ubuntu)
       raw: apt update && apt install -y pip
       become: true
@@ -34,7 +37,7 @@
         content: |
           name: lighthouse
           id: "{{ beacon_service }}"
-          image: sigp/lighthouse:v2.1.2
+          image: "sigp/lighthouse:{{ stereum.defaults.versions.lighthouse }}"
           env: {}
           ports:
           - 0.0.0.0:9000:9000/tcp
