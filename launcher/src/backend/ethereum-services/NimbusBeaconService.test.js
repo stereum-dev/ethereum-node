@@ -58,7 +58,7 @@ test('buildConsensusClientWsEndpointUrl', () => {
 
   const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', []).buildConsensusClientHttpEndpointUrl()
 
-  expect(nimbusEndpoint).toMatch(/http:\/\/stereum-.{36}:9190/)
+  expect(nimbusEndpoint).toMatch(/http:\/\/stereum-.{36}:5052/)
 })
 
 test('getAvailablePorts', () => {

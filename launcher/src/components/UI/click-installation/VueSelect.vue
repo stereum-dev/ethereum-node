@@ -112,17 +112,24 @@ export default {
         this.isTestnetActive = true;
       }
     },
+    includesSSV(array){
+      return (array.includes('BLOXSSV') || array.includes('ROCKETPOOL'))
+    },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation(
         item.name
       );
-
       const includedPlugins = [];
-      constellation.forEach((plugin) => {
-        const buffer = this.allPlugins.filter(
+      constellation.forEach((plugin, index, array) => {
+        let buffer = this.allPlugins.filter(
           (element) => element.name === plugin
         );
-        buffer.forEach((element) => includedPlugins.push(element));
+        if(buffer.length > 1 && this.includesSSV(array)){
+          buffer.splice(buffer.findIndex(e => e.category === 'validator'), 1)
+        }
+        buffer.forEach((element) => {
+          includedPlugins.push(element)
+        });
       });
       item.includedPlugins = includedPlugins;
       this.selectedPreset = item;

@@ -41,7 +41,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum.defaults.versions.prysm }}"
               ports:
                 - 127.0.0.1:4000:4000/tcp
                 - 0.0.0.0:12000:12000/udp

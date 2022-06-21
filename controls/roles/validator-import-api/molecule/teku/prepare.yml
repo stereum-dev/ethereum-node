@@ -60,6 +60,7 @@
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
       - name: "Include manage-service"
         include_role:
           name: "manage-service"
@@ -96,18 +97,22 @@
         changed_when: false
         become: yes
 
+      - name: Waiting for the services to start properly
+        pause:
+          minutes: 5
+
       vars:
         stereum_args:
           manage_service:
             save: true
             state: started
             configuration:
+              service: TekuBeaconService
               id: "{{ beacon_service }}"
-              image: consensys/teku:22.5.0
+              image: "consensys/teku:{{ stereum.defaults.versions.teku }}"
               ports:
                 - 0.0.0.0:9001:9001/tcp
                 - 0.0.0.0:9001:9001/udp
-                - 127.0.0.1:5052:5052/tcp
               env:
                 JAVA_OPTS: -Xmx4g
               entrypoint: ["/opt/teku/bin/teku"]

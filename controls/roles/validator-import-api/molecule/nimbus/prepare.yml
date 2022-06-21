@@ -66,13 +66,12 @@
             save: true
             state: started
             configuration:
+              service: NimbusBeaconService
               id: "{{ beacon_service }}"
-              image: statusim/nimbus-eth2:multiarch-v22.3.0
+              image: "statusim/nimbus-eth2:{{ stereum.defaults.versions.nimbus }}"
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
-                - 127.0.0.1:9190:9190/tcp
-                - 127.0.0.1:5052:5052/tcp
               env: {}
               entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
