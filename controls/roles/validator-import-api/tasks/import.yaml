@@ -20,6 +20,7 @@
       -H "Content-Type: application/json"
       -H "Authorization: Bearer {{ api_token }}"
       -d "@/validator-import-api-data"
+      -s
     networks:
       - name: stereum
     volumes:
