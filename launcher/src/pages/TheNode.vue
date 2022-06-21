@@ -4,7 +4,7 @@
     <node-bg>
       <div class="node-parent">
         <div class="play-box" v-if="playFirstVideo">
-          <div class="close-video">
+          <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
           <the-videos></the-videos>
@@ -164,6 +164,10 @@ export default {
       this.isTutorialModalActive = false;
       el.displayModal = true;
     },
+    hideVideoDisplay() {
+      this.playFirstVideo = false;
+      this.isTutorialModalActive = false;
+    },
   },
 };
 </script>
@@ -213,8 +217,8 @@ export default {
   z-index: 302;
   cursor: pointer;
   position: fixed;
-  bottom: 5px;
-  right: 5px;
+  bottom: 15px;
+  right: 45%;
 }
 .close-video span {
   font-size: 1rem;
