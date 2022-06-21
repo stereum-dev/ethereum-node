@@ -102,7 +102,6 @@
                   [auth.anonymous]
                   enabled = true
                   org_role = Admin
-                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
               command: bash -c "touch /etc/grafana/grafana.ini &&
                                 echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
                                 /run.sh"
