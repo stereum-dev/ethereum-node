@@ -13,7 +13,7 @@
     command_handling: correct
     name: "validator-delete-api-curl"
     user: "2000"
-    image: "curlimages/curl:{{ stereum.defaults.versions.curl }}"
+    image: "curlimages/curl:{{ stereum_static.defaults.versions.curl }}"
     detach: false
     command: |
       curl -X DELETE {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/keystores

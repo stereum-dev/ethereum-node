@@ -41,7 +41,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: "consensys/teku:{{ stereum.defaults.versions.teku }}"
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
               ports:
                 - 0.0.0.0:9001:9001/tcp
                 - 0.0.0.0:9001:9001/udp

@@ -1,13 +1,32 @@
 ---
-- name: Converge
+- name: Prepare
   hosts: all
+  roles:
+    - role: '../'
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
   vars:
-    geth_service: d6358d80-ea76-11ec-94b3-2fb45dfeb66a
+    geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
 
   tasks:
-    # geth service
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -25,18 +44,17 @@
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
-                - 127.0.0.1:8545:8545
               entrypoint: ["geth"]
               env: {}
               command:
                 - --goerli
-                - --http
                 - --datadir=/opt/app/geth
-                - --http.port=8545
-                - --http.addr=0.0.0.0
-                - --http.vhosts="*"
-                - --allow-insecure-unlock
-                - --http.api="db,eth,net,web3,personal"
+                - --metrics
+                - --metrics.expensive
+                - --metrics.port=6060
+                - --metrics.addr=0.0.0.0
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+
+# EOF

@@ -4,11 +4,10 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    prometheus_service: f52b6dcc-e0d5-11ec-8e8d-87f977a4cd88
-    prometheus_node_exporter_service: ffd332e6-e0d5-11ec-a82b-9b01f3fb02d7
-    grafana_service: 0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1
-    beacon_service: 1929168e-e0d6-11ec-9183-97daacc21ea6
-    grafana_provisioning: ["teku"]
+    prometheus_service: 4e647253-8c7c-4d79-a0c3-1e670f2b6638
+    geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
+    grafana_service: 0af126fa-c881-456f-9388-e977fb1537bf
+    grafana_provisioning: ["geth"]
 
   tasks:
     # prometheus service
@@ -34,23 +33,11 @@
                     scrape_interval:     15s
                     evaluation_interval: 15s
 
-                  alerting:
-                    alertmanagers:
-                    - static_configs:
-                      - targets:
-                        # - alertmanager:9093
-
-                  rule_files:
-                    # - "first_rules.yml"
-                    # - "second_rules.yml"
-
                   scrape_configs:
-                    - job_name: 'stereum-{{ beacon_service }}'
+                    - job_name: 'stereum-{{ geth_service }}'
+                      metrics_path: /debug/metrics/prometheus
                       static_configs:
-                        - targets: ['stereum-{{ beacon_service }}:5054']
-                    - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
-                      static_configs:
-                        - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
+                        - targets: ['stereum-{{ geth_service }}:6060']
               command: sh -c "touch /etc/prometheus/prometheus.yml &&
                               echo \"$CONFIG\" > /etc/prometheus/prometheus.yml &&
                               /bin/prometheus --config.file=/etc/prometheus/prometheus.yml"
@@ -59,27 +46,6 @@
               volumes:
                 - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
                 - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
-    # prometheus node-exporter service
-    - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
-      vars:
-        stereum_args:
-          manage_service:
-            save: true
-            state: started
-            configuration:
-              id: "{{ prometheus_node_exporter_service }}"
-              image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
-              ports: []
-              env: {}
-              command: []
-              entrypoint: ["/bin/node_exporter"]
-              user: "2000"
-              volumes: []
     # grafana service
     - block:
       - set_fact:
@@ -102,7 +68,6 @@
                   [auth.anonymous]
                   enabled = true
                   org_role = Admin
-                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
               command: bash -c "touch /etc/grafana/grafana.ini &&
                                 echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
                                 /run.sh"

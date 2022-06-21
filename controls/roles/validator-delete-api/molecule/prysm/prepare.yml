@@ -148,7 +148,7 @@
             configuration:
               service: PrysmValidatorService
               id: "{{ validator_service }}"
-              image: "prysmaticlabs/prysm-validator:{{ stereum.defaults.versions.prysm }}"
+              image: "prysmaticlabs/prysm-validator:{{ stereum_static.defaults.versions.prysm }}"
               env: {}
               entrypoint: []
               command:

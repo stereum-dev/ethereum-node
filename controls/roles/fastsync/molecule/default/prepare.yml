@@ -37,7 +37,7 @@
         content: |
           name: lighthouse
           id: "{{ beacon_service }}"
-          image: "sigp/lighthouse:{{ stereum.defaults.versions.lighthouse }}"
+          image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
           env: {}
           ports:
           - 0.0.0.0:9000:9000/tcp
