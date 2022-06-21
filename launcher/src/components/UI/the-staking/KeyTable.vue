@@ -253,7 +253,7 @@ export default {
 }
 .keys-table-box {
   width: 96%;
-  height: 92%;
+  height: 93%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
@@ -553,12 +553,12 @@ export default {
 }
 
 .middle-icon .insert-key span {
-  color: #336666;
+  color: #3a3a3a;
   font-size: 1.1rem;
   font-weight: 700;
 }
 .middle-icon .insert-key img {
-  width: 28px;
+  width: 26px;
   height: 28px;
 }
 .key-table-row {
