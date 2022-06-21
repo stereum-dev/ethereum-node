@@ -14,10 +14,7 @@
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
-            <div
-              class="valueBarPart_loader-value"
-              :style="valueStoragePer"
-            ></div>
+            <div class="valueBarPart_loader-value" :style="valueStoragePer"></div>
           </div>
         </div>
         <div class="latencyCounter">
@@ -54,9 +51,7 @@ export default {
     };
   },
   created() {
-    this.storageUsedPerMet();
-    this.entireStorageMet();
-    this.usedStorageMet();
+    this.storageMet();
   },
 
   computed: {
@@ -69,30 +64,17 @@ export default {
   },
 
   methods: {
-    async storageUsedPerMet() {
+    async storageMet() {
       try {
-        const response = await ControlService.getUsedStoragePer();
+        const response = await ControlService.getServerVitals();
+        this.total = Math.floor(await response.entireStorage.stdout);
+        this.used = Math.floor(await response.usedStorage.stdout);
         this.usedStotagePer = Math.floor(await response.usedStoragePer.stdout);
       } catch (error) {
         console.log(error);
       }
     },
-    async entireStorageMet() {
-      try {
-        const response = await ControlService.getEntireStorage();
-        this.total = Math.floor(await response.entireStorage.stdout);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async usedStorageMet() {
-      try {
-        const response = await ControlService.getUsedStorage();
-        this.used = Math.floor(await response.usedStorage.stdout);
-      } catch (error) {
-        console.log(error);
-      }
-    },
+
     freeVall() {
       const free = this.total - this.used;
       return free;

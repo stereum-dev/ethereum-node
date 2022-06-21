@@ -45,10 +45,6 @@ export default {
   beforeUpdate() {
     this.cpuValueMet();
   },
-
-  beforeUnmount() {
-    this.cpuValueMet();
-  },
   methods: {
     tVal() {
       const SVal = 100 - this.temp;
@@ -62,10 +58,9 @@ export default {
     async cpuValueMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.cpuValue = await response.cpuUsage.stdout;
-        console.log(response.cpuUsage);
+        this.cpuValue = Math.floor(await response.cpuUsage.stdout);
       } catch (error) {
-        console.log(error);
+        this.cpuValueMet();
       }
     },
   },

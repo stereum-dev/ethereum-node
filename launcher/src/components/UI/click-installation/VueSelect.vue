@@ -16,13 +16,14 @@
         />
       </div>
       <select
+        class="ring-0"
         id="selector"
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
       >
-        <option value="" selected>CHOOSE A NETWORK</option>
-        <option value="mainnet">Mainnet</option>
-        <option value="testnet">Testnet</option>
+        <option class="ring-0" value="" selected>CHOOSE A NETWORK</option>
+        <option class="ring-0" value="mainnet">Mainnet</option>
+        <option class="ring-0" value="testnet">Testnet</option>
       </select>
     </div>
     <div class="plugin-table">
@@ -84,7 +85,7 @@ export default {
       plugins: "presets",
       selectedPreset: "selectedPreset",
       allPlugins: "plugins",
-      selectedNetworks:"selectedNetworks"
+      selectedNetworks: "selectedNetworks",
     }),
   },
   beforeUpdate() {
@@ -155,19 +156,24 @@ export default {
 .select-box #selector {
   width: 85%;
   height: 90%;
-  border: none;
+  border: none !important;
   border-radius: 5px;
   background-color: transparent;
-  padding: 0 0 0 30px;
-  font-size: 0.9rem;
+  padding: 0;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(39, 186, 134);
+  color: rgb(97, 194, 255);
   text-transform: uppercase;
   cursor: pointer;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
+    var(--tw-ring-color);
 }
 .select-box #selector option {
   width: 100%;
   height: 100%;
+  border: none !important;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
+    var(--tw-ring-color);
 }
 .select-box:hover {
   border: 2px solid rgb(32, 191, 235);

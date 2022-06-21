@@ -63,36 +63,34 @@
                   v-for="(plugin, index) in selectedPreset.includedPlugins"
                   :key="index"
                 >
-                  <div class="icon-box">
-                    <div class="plugin-icon">
-                      <img :src="plugin.icon" alt="icon" />
-                    </div>
-                  </div>
-                  <div class="content">
-                    <div class="plugin-name">
-                      <span>{{ plugin.name }}</span>
-                    </div>
-                    <div class="category">
+                  <change-modal v-if="plugin.showChangeModal">
+                    <div class="replaced-plugins">
                       <div
-                        class="ec"
-                        @click="selectExecution(plugin.id)"
-                        :class="{ active: activeExecutionClient }"
+                        class="item"
+                        v-for="(item, idx) in filteredPluginsOnCategory"
+                        :key="idx"
+                        @click="pluginChangeHandler(plugin, item, index)"
                       >
-                        <span>EC</span>
+                        <img
+                          :src="item.icon"
+                          alt="icon"
+                          @mousedown.prevent.stop
+                        />
                       </div>
-                      <div
-                        class="cc"
-                        @click="selectConsensus"
-                        :class="{ active: activeConsensusClient }"
-                      >
-                        <span>CC</span>
+                    </div>
+                  </change-modal>
+                  <div class="row" @click="pluginExChange(plugin)">
+                    <div class="icon-box">
+                      <div class="plugin-icon">
+                        <img :src="plugin.icon" alt="icon" />
                       </div>
-                      <div
-                        class="vc"
-                        @click="selectValidator"
-                        :class="{ active: activeValidatorClient }"
-                      >
-                        <span>VC</span>
+                    </div>
+                    <div class="content">
+                      <div class="plugin-name">
+                        <span>{{ plugin.name }}</span>
+                      </div>
+                      <div class="category">
+                        <span>{{ plugin.displayCategory }}</span>
                       </div>
                     </div>
                   </div>
@@ -115,10 +113,11 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
+import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
-  components: { ToggleButton },
+  components: { ToggleButton, ChangeModal },
 
   data() {
     return {
@@ -128,6 +127,10 @@ export default {
       activeExecutionClient: false,
       activeConsensusClient: false,
       activeValidatorClient: false,
+      exchangeModalActive: false,
+      filteredPluginsOnCategory: [],
+      filteredPluginsOnName: [],
+      categoryDisplayName: "",
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
@@ -136,48 +139,57 @@ export default {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       plugins: "presets",
+      allPlugins: "plugins",
       installationPath: "installationPath",
     }),
-    selectedCategoryActive() {
-      if (this.activeExecutionClient) {
-      }
-    },
   },
+  beforeUpdate() {},
   mounted() {
-    if (Object.keys(this.selectedPreset).length === 0) {
+    if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.selectedPreset.includedPlugins =
+      this.selectedPreset.includedPlugins.map((item) => {
+        return {
+          showChangeModal: false,
+          ...item,
+        };
+      });
   },
   methods: {
-    selectExecution(id) {
-      this.activeExecutionClient = true;
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-        })
-        .map((plugin) => {
-          plugin.category === "execution";
-        });
+    pluginChangeHandler(el, item, idx) {
+      el.showChangeModal = false;
+      if (el.category === "execution") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
+      if (el.category === "validator" || el.category === "consensus") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
     },
-    selectConsensus(id) {
-      this.activeConsensusClient = true;
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-        })
-        .map((plugin) => {
-          plugin.category === "consensus";
-        });
+    // validatorAndConsensusHandler(el, item, idx) {
+    //   this.selectedPreset.includedPlugins.map((param) => {
+    //     if (
+    //       param.name === this.selectedPreset.includedPlugins[idx].name &&
+    //       (param.category === "validator" || param.category === "consensus")
+    //     ) {
+    //       // this.filteredPluginsOnName.push(param);
+    //       param = item;
+    //     }
+    //   });
+    // },
+    pluginExChange(el) {
+      this.selectedPreset.includedPlugins.filter((item) => {
+        item.showChangeModal = false;
+        if (item?.name === el.name && item?.id === el.id) {
+          this.checkPluginCategory(item);
+        }
+      });
+      el.showChangeModal = true;
     },
-    selectValidator(id) {
-      this.selectedPreset.includedPlugins
-        .filter((plugin) => {
-          plugin.id == id;
-          this.activeValidatorClient = true;
-        })
-        .map((plugin) => {
-          plugin.category === "validator";
-        });
+    checkPluginCategory(element) {
+      this.filteredPluginsOnCategory = this.allPlugins.filter(
+        (item) => item.category === element.category
+      );
     },
   },
 };
@@ -229,6 +241,7 @@ export default {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 15% 85%;
+  position: relative;
 }
 .included-title {
   width: 61%;
@@ -248,48 +261,62 @@ export default {
   height: 91%;
   margin: 10px auto;
   padding: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: 2px solid #343434;
   background-color: #282828;
   border-radius: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .info-box::-webkit-scrollbar {
   width: 1px;
 }
 .info-row {
-  grid-column: 1;
   width: 100%;
   height: 45px;
   margin-top: 5px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.row {
+  width: 100%;
+  height: 100%;
   background-color: #33393e;
   box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
+  border: 2px solid #33393e;
   border-radius: 10px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  transition-duration: 50ms;
+}
+.row:hover {
+  border: 2px solid #1d7ecd;
+  transition-duration: 50ms;
 }
 .content {
   width: 85%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 .plugin-name {
-  width: 46%;
+  width: 83%;
   height: 90%;
-  text-align: left;
+  margin-left: 5px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .plugin-name span {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-align: center;
   color: rgb(203, 203, 203);
@@ -301,8 +328,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 3px;
+  margin-left: 4px;
 }
+
 .plugin-icon {
   width: 100%;
   height: 100%;
@@ -317,43 +345,52 @@ export default {
   border-radius: 50%;
   border: 2px solid rgb(133, 133, 133);
 }
+
 .category {
-  width: 54%;
+  width: 17%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.category div {
-  width: 27px;
-  height: 27px;
-  border: 2px solid #6c6c6c;
-  box-shadow: 0 1px 3px 1px #242424;
+.category span {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgb(89, 136, 101);
   border-radius: 100%;
-  background-color: rgb(46, 82, 68);
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: rgb(206, 206, 206);
   text-transform: uppercase;
-  margin-left: 5px;
+}
+
+.replaced-plugins {
+  width: 100%;
+  height: 43px;
+  border-radius: 10px 10px 0 0;
+  background-color: #2b3034;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.category div:hover {
-  border: 2px solid #a1d1c9;
-  color: #a1d1c9;
-  transform: scale(1.1);
-  transition: all 100ms;
+.replaced-plugins .item {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.category div:active {
+.replaced-plugins .item img {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgb(175, 175, 175);
+  box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
+  border-radius: 100%;
+}
+.replaced-plugins .item img:hover {
+  transform: scale(1.07);
+  border: 2px solid rgb(123, 208, 251);
+}
+
+.replaced-plugins .item img:active {
   transform: scale(1);
-  transition: all 100ms;
-}
-.active {
-  border: 2px solid #a1d1c9 !important;
-  color: #a1d1c9 !important;
-  transform: scale(1.1);
 }
 .name-box {
   width: 95%;
