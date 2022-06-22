@@ -4,22 +4,14 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "validator-delete-api--teku--ubuntu-22.04"
+  - name: "validator-list-api--lighthouse--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx21
     image: ubuntu-22.04
     network:
       name: eth2-prater
       ip_range: 10.10.0.0/24
-      ip: 10.10.0.153
-  # - name: "validator-delete-api--teku--centos-stream-8"
-  #   hostname: "centos"
-  #   server_type: cpx21
-  #   image: centos-stream-8
-  #   network:
-  #     name: eth2-prater
-  #     ip_range: 10.10.0.0/24
-  #     ip: 10.10.0.154
+      ip: 10.10.0.156
 provisioner:
   name: ansible
 lint: |
