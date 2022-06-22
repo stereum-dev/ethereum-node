@@ -15,7 +15,7 @@ stereum_static:
 
       # execution clients
       geth: v1.10.19
-      besu: latest
+      besu: "22.4.3"
       nethermind: "1.13.2"
 
       # ssv
