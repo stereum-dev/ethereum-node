@@ -10,8 +10,6 @@ test('buildConfiguration', () => {
 
   const grafanaService = GrafanaService.buildByUserInput(networks.prater, ports, '/opt/stereum/grafana', 'nimbus').buildConfiguration()
 
-  expect(typeof grafanaService.env.GRAFANA_PROVISIONING).toBe('string')
-  expect(grafanaService.env.GRAFANA_PROVISIONING).toContain('nimbus')
   expect(grafanaService.volumes).toHaveLength(3)
   expect(grafanaService.volumes).toContain('/opt/stereum/grafana-' + grafanaService.id + '/provisioning:/etc/grafana/provisioning')
   expect(grafanaService.volumes).toContain('/opt/stereum/grafana-' + grafanaService.id + '/data:/var/lib/grafana')
