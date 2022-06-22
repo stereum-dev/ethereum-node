@@ -37,4 +37,14 @@ export class PrometheusNodeExporterService extends NodeService {
   buildPrometheusNodeExporterClientHttpEndpointUrl () {
     return 'http://stereum-' + this.id + ':9100'
   }
+
+  buildPrometheusNodeExporterClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':9100'
+  }
+
+  buildPrometheusJob () {
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildPrometheusNodeExporterClientMetricsEndpoint()}]`
+  }
+
+  
 }

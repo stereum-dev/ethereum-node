@@ -1,0 +1,83 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prometheus_service: 4e647253-8c7c-4d79-a0c3-1e670f2b6638
+    ssv_service: ea17abb3-f219-46f0-8933-17d4ba688d26
+    grafana_service: 0af126fa-c881-456f-9388-e977fb1537bf
+    grafana_provisioning: ["bloxssv"]
+
+  tasks:
+    # prometheus service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ prometheus_service }}"
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
+              ports:
+                - 127.0.0.1:9090:9090/tcp
+              env:
+                CONFIG: |
+                  global:
+                    scrape_interval:     15s
+                    evaluation_interval: 15s
+
+                  scrape_configs:
+                      - job_name: ssv
+                        metrics_path: /metrics
+                        static_configs:
+                          - targets: ['stereum-{{ ssv_service }}:15000']
+                      - job_name: ssv_health
+                        metrics_path: /health
+                        static_configs:
+                          - targets: ['stereum-{{ ssv_service }}:15000']
+              command: sh -c "touch /etc/prometheus/prometheus.yml &&
+                              echo \"$CONFIG\" > /etc/prometheus/prometheus.yml &&
+                              /bin/prometheus --config.file=/etc/prometheus/prometheus.yml"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
+                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
+    # grafana service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ grafana_service }}"
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
+              ports:
+                - 127.0.0.1:3000:3000/tcp
+              env:
+                GRAFANA_INI: |
+                  [auth.anonymous]
+                  enabled = true
+                  org_role = Admin
+              command: bash -c "touch /etc/grafana/grafana.ini &&
+                                echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
+                                /run.sh"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
+                - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
+                - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"

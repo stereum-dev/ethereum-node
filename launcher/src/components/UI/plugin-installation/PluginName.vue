@@ -116,6 +116,7 @@ import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from '../../../store/services';
 export default {
   components: { ToggleButton, ChangeModal },
 
@@ -139,8 +140,10 @@ export default {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       plugins: "presets",
-      allPlugins: "plugins",
       installationPath: "installationPath",
+    }),
+    ...mapWritableState(useServices, {
+      allPlugins: "allServices",
     }),
   },
   beforeUpdate() {},
@@ -180,7 +183,7 @@ export default {
     pluginExChange(el) {
       this.selectedPreset.includedPlugins.filter((item) => {
         item.showChangeModal = false;
-        if (item?.name === el.name && item?.id === el.id) {
+        if (item?.service === el.service && item?.id === el.id) {
           this.checkPluginCategory(item);
         }
       });

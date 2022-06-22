@@ -79,9 +79,8 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let services = await ControlService.getServices();
-      let blox = services.find(service => service.service === "BloxSSVService")
-      let bloxConfig = await ControlService.getServiceConfig(blox.id)
+      let blox = this.runningServices.find(service => service.service === "BloxSSVService")
+      let bloxConfig = await ControlService.getServiceConfig(blox.config.serviceID)
       //this.secretkey = bloxConfig.ssv_sk
       this.pubkey = bloxConfig.ssv_pk
     },

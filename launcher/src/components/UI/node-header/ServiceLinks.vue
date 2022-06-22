@@ -8,9 +8,9 @@
       >
         <div class="icon-box" onmousedown="return false">
           <img
-            @click="openServiceBrowser(service.serviceName)"
+            @click="openServiceBrowser(service.service)"
             v-show="isImgExists"
-            :src="service.icon"
+            :src="service.hIcon"
             alt="service-icon"
           />
         </div>
@@ -41,7 +41,7 @@
 <script>
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
@@ -61,8 +61,8 @@ export default {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
     }),
-    ...mapState(useClickInstall, {
-      services: "services",
+    ...mapState(useServices, {
+      allServices: "allServices",
     }),
   },
   methods: {
@@ -77,12 +77,12 @@ export default {
     //open & close modal for each service
     openServiceBrowser(serviceName) {
       this.runningServices.filter((item) => {
-        item.serviceName == serviceName;
-        if (serviceName == "grafana") {
+        item.service == serviceName;
+        if (serviceName == "GrafanaService") {
           this.showGrafanaWindow = true;
-        } else if (serviceName == "ssv") {
+        } else if (serviceName == "BloxSSVService") {
           this.showSsvWindow = true;
-        } else if (serviceName == "prometheus") {
+        } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
         } else {
           return;

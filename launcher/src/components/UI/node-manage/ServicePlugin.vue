@@ -8,13 +8,13 @@
     />
     <div class="service-bg" ref="serviceBg">
       <div
-        v-for="item in servicePlugins"
+        v-for="item in installedServices.filter(service => service.category === 'service')"
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
         @click="selectedItem(item)"
       >
-        <img :src="item.sIcon" alt="icon" />
+        <img :src="item.hIcon" alt="icon" />
       </div>
     </div>
     <img
@@ -27,15 +27,15 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
 
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapState(useNodeManage,{
-      servicePlugins: "servicePlugins",
+    ...mapState(useServices, {
+      installedServices: "installedServices",
     }),
   },
   methods: {

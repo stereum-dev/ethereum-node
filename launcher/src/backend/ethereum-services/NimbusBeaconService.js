@@ -77,6 +77,10 @@ export class NimbusBeaconService extends NodeService {
     return 'stereum-' + this.id + ':8008'
   }
 
+  buildPrometheusJob () {
+    return `\n  - job_name: stereum-${this.id}\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
+  }
+
   getAvailablePorts () {
     return [
       new ServicePortDefinition(9000, 'tcp', 'P2P connections'),

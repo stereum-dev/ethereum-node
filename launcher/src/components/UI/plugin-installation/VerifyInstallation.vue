@@ -56,6 +56,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 export default {
@@ -64,13 +65,16 @@ export default {
   },
   computed: {
     ...mapWritableState(useClickInstall, {
-      selectedPreset: "selectedPreset",
       installationPath: "installationPath",
-      services: "services",
-      installingServices: "installingServices",
+      selectedPreset: "selectedPreset",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+      allServices: "allServices"
     }),
     ...mapWritableState(useNodeHeader, {
-      runningServices: "runningServices",
+      headerServices: "runningServices",
     }),
   },
   mounted() {
@@ -81,52 +85,49 @@ export default {
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      let services = await ControlService.writeOneClickConfiguration();
-      console.log(await ControlService.startOneClickServices());
+      await ControlService.writeOneClickConfiguration(this.selectedPreset.includedPlugins);
+      await ControlService.startOneClickServices()
 
-      let grafana = services.find((service) =>
-        service.service.includes("Grafana")
-      );
-      let prometheus = services.find(
-        (service) =>
-          service.service.includes("Prometheus") &&
-          !service.service.includes("NodeExporter")
-      );
+      let services = await ControlService.getServices();
+        if (services && services.length > 0) {
+        services.forEach((service) => {
+          let buffer = this.allServices.find((element) => element.service === service.service)
+          if(buffer && (buffer.name === 'Teku' || buffer.name === 'Nimbus')){
+            this.installedServices.push(this.allServices.find((element) => element.service === buffer.name + 'ValidatorService'))
+          }
+          if(buffer){
+              buffer.config = {
+              serviceID: service.id,
+              configVersion: service.configVersion,
+              image: service.image,
+              imageVersion: service.imageVersion,
+              ports: service.ports,
+              volumes: service.volumes,
+              network: service.network,
+            }
+            this.installedServices.push(buffer)
+          }
+        })
+        let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
+          });
 
-      if(this.selectedPreset.name === "blox ssv"){
-        this.runningServices.push(this.services.find((e) => e.serviceName === "ssv"));
-      }
+        this.headerServices = (this.installedServices.filter(service => service.headerOption)
+                              .map(service => {             
+                                if(service.tunnelLink){
+                                  service.linkUrl = "http://localhost:" + localPorts.pop()
+                                }
+                                return service
+                              }))
+        let ports = (this.headerServices.filter(service => service.tunnelLink))
+                    .map(service => {
+                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
+                    })
 
-      let grafanaStats = this.services.find(
-        (e) => e.serviceName === "grafana"
-      );
-      let prometheusStats = this.services.find(
-        (e) => e.serviceName === "prometheus"
-      );
-
-      let localPorts = await ControlService.getAvailablePort({
-        min: 9000,
-        max: 9999,
-        amount: 2,
-      });
-
-      let grafanaPort = localPorts.pop();
-      let prometheusPort = localPorts.pop();
-
-      localPorts = await ControlService.openTunnels([
-        {
-          dstPort: grafana.ports[0].split(":")[2].replace("/tcp", ""),
-          localPort: grafanaPort,
-        },
-        {
-          dstPort: prometheus.ports[0].split(":")[2].replace("/tcp", ""),
-          localPort: prometheusPort,
-        },
-      ]);
-
-      grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
-      prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
-      this.runningServices.push(grafanaStats, prometheusStats);
+        await ControlService.openTunnels(ports);
+        }
     },
   },
 };

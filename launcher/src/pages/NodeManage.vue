@@ -20,38 +20,38 @@
             ></base-modal>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               :title="'execution'"
-              :list="executionItems"
+              :list="installedServices.filter(service => service.category === 'execution')"
               @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="consensusItems"
+              :list="installedServices.filter(service => service.category === 'consensus')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="validatorItems"
+              :list="installedServices.filter(service => service.category === 'validator')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -62,12 +62,12 @@
           </div>
           <div
             class="service-parent"
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <service-plugin
-              :list="servicePlugins"
+              :list="installedServices.filter(service => service.category === 'service')"
               @itemSelect="serviceItemSelection"
             >
             </service-plugin>
@@ -82,7 +82,7 @@
         <div class="sidebar">
           <sidebar-manage
             :startDrag="startDrag"
-            :sidebarPlugins="sidebarPlugins"
+            :allServices="allServices"
           >
           </sidebar-manage>
         </div>
@@ -103,7 +103,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
-import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
@@ -130,14 +130,11 @@ export default {
     ...mapWritableState(useNodeStore, {
       selectedItemToRemove: "selectedItemToRemove",
       confirmChanges: "confirmChanges",
-      sidebarPlugins: "sidebarPlugins",
       configData: "configData",
     }),
-    ...mapWritableState(useNodeManage, {
-      consensusItems: "consensusItems",
-      executionItems: "executionItems",
-      validatorItems: "validatorItems",
-      servicePlugins: "servicePlugins",
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
     }),
   },
   methods: {
@@ -164,19 +161,8 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if (item.category === "validator") {
-        if (this.validatorItems.some((item) => item.id == itemId)) return;
-        this.validatorItems.push(item);
-      } else if (item.category === "consensus") {
-        if (this.consensusItems.some((item) => item.id == itemId)) return;
-        this.consensusItems.push(item);
-      } else if (item.category === "execution") {
-        if (this.executionItems.some((item) => item.id == itemId)) return;
-        this.executionItems.push(item);
-      } else {
-        if (this.servicePlugins.some((item) => item.id == itemId)) return;
-        this.servicePlugins.push(item);
-      }
+      if(this.installedServices.some(item => item.id == itemId)) return;
+        this.installedServices.push(item)
     },
     serviceItemSelection(item) {
       this.selectedItemToRemove = item

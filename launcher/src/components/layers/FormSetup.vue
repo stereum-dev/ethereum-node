@@ -145,6 +145,7 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
 
 export default {
   components: { BaseDialog },
@@ -182,8 +183,13 @@ export default {
       allPlugins: "plugins",
       services: "services",
     }),
-    ...mapWritableState(useNodeHeader, {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
       runningServices: "runningServices",
+      allServices: "allServices"
+    }),
+    ...mapWritableState(useNodeHeader, {
+      headerServices: "runningServices",
     }),
   },
   methods: {
@@ -322,9 +328,6 @@ export default {
     //     return true;
     //   }
     // },
-    includesSSV(array) {
-      return array.includes("BLOXSSV") || array.includes("ROCKETPOOL");
-    },
     login: async function () {
       this.connectingAnimActive = true;
       try {
@@ -351,72 +354,53 @@ export default {
       }
 
       if (await ControlService.checkStereumInstallation()) {
+        this.headerServices = [];
+        this.installedServices = [];
         let services = await ControlService.getServices();
         if (services && services.length > 0) {
-          let constellation = services.map((service) => {
-            return service.service
-              .replace(/(Beacon|Validator|Service)/gm, "")
-              .toUpperCase();
-          });
-          const includedPlugins = [];
-          constellation.forEach((plugin, index, array) => {
-            let buffer = this.allPlugins.filter(
-              (element) => element.name === plugin
-            );
-            if (buffer.length > 1 && this.includesSSV(array)) {
-              buffer.splice(buffer.findIndex((e) => e.category === "validator"),1);
-            }
-            buffer.forEach((element) => includedPlugins.push(element));
-          });
-
-          let grafana = services.find((service) =>
-            service.service.includes("Grafana")
-          );
-          let prometheus = services.find(
-            (service) =>
-              service.service.includes("Prometheus") &&
-              !service.service.includes("NodeExporter")
-          );
-          if(this.includesSSV(constellation)){
-            this.runningServices.push(this.services.find((e) => e.serviceName === "ssv"));
+        services.forEach((service) => {
+          let buffer = this.allServices.find((element) => element.service === service.service)
+          if(buffer && (buffer.name === 'Teku' || buffer.name === 'Nimbus')){
+            this.installedServices.push(this.allServices.find((element) => element.service === buffer.name + 'ValidatorService'))
           }
-
-          let grafanaStats = this.services.find(
-            (e) => e.serviceName === "grafana"
-          );
-          let prometheusStats = this.services.find(
-            (e) => e.serviceName === "prometheus"
-          );
-
-          let localPorts = await ControlService.getAvailablePort({
+          if(buffer){
+              buffer.config = {
+              serviceID: service.id,
+              configVersion: service.configVersion,
+              image: service.image,
+              imageVersion: service.imageVersion,
+              ports: service.ports,
+              volumes: service.volumes,
+              network: service.network,
+            }
+            this.installedServices.push(buffer)
+          }
+        })
+      
+        let localPorts = await ControlService.getAvailablePort({
             min: 9000,
             max: 9999,
-            amount: 2,
+            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
           });
 
-          let grafanaPort = localPorts.pop();
-          let prometheusPort = localPorts.pop();
+        this.headerServices = (this.installedServices.filter(service => service.headerOption)
+                              .map(service => {             
+                                if(service.tunnelLink){
+                                  service.linkUrl = "http://localhost:" + localPorts.pop()
+                                }
+                                return service
+                              }))
 
-          localPorts = await ControlService.openTunnels([
-            { dstPort: grafana.ports[0].servicePort, localPort: grafanaPort },
-            {
-              dstPort: prometheus.ports[0].servicePort,
-              localPort: prometheusPort,
-            },
-          ]);
+        let ports = (this.headerServices.filter(service => service.tunnelLink))
+                    .map(service => {
+                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
+                    })
 
-          grafanaStats.linkUrl = "http://localhost:" + grafanaPort;
-          prometheusStats.linkUrl = "http://localhost:" + prometheusPort;
-
-          this.runningServices.push(grafanaStats, prometheusStats);
-          this.selectedPreset = {
-            includedPlugins: includedPlugins,
-          };
+        await ControlService.openTunnels(ports);
         }
 
         this.$router.push("/node");
       }
-
       this.$emit("page", "welcome-page");
     },
   },

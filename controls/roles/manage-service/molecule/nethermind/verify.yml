@@ -1,0 +1,57 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("5052/tcp") != -1
+      - stereum_ufw_status.stdout.find("30303/tcp") != -1
+      - stereum_ufw_status.stdout.find("30303/udp") != -1
+  #  nethermind logs
+  - name: Nethermind
+    command: "docker logs stereum-f733d0cc-edc4-11ec-9a6c-638aa5beb5c6"
+    register: nethermind
+    until:
+      - nethermind.stdout is search("Old Headers")
+      - nethermind.stdout is search("Sync peers")
+      - nethermind.stdout is not search("Permission denied")
+      - nethermind.stdout is not search("An error occurred while trying to encrypt the provided data")
+    retries: 60
+    delay: 10
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs --tail=200 stereum-3dfa838e-eb13-11ec-adbf-bbf57939f94d"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stderr is search("est_time")
+      - lighthouse_beacon.stderr is not search("eth1-endpoints contains an invalid URL")
+      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
+    retries: 60
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("nethermind/nethermind") != -1
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("30303->30303") != -1
+      - stereum_docker_ps.stdout.find("5052->5052") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+
+# EOF

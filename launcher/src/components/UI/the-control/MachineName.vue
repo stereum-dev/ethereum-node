@@ -23,7 +23,9 @@ export default {
     async maschinNameMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.maschinName = await response.hostname.stdout;
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.maschinName = arr[0];
       } catch (error) {
         console.log(error);
       }

@@ -50,7 +50,7 @@ export default {
   methods: {
     filterPrometheusService() {
       this.runningServices.forEach((service) => {
-        if (service.serviceName.toLowerCase() === "prometheus") {
+        if (service.service === "PrometheusService") {
           this.prometheusService.push(service);
         }
       });
