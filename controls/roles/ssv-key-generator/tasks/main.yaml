@@ -14,15 +14,21 @@
       pk: "{{ ssv_keys.stdout | regex_search('(?<=\"pk\":\\s\").*(?=\")') }}"
       sk: "{{ ssv_keys.stdout | regex_search('(?<=\"sk\":\\s\").*(?=\")') }}"
 
-- name: Write ssv-secret/public key
-  copy:
-    dest: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
-    content: |
-        ssv_sk: "{{ ssv.sk }}"
-        ssv_pk: "{{ ssv.pk }}"
+- name: Create ssv-secret/public key
+  file:
+    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
+    state: touch
     owner: "2000"
     group: "2000"
     mode: '0644'
+  become: yes
+
+- name: Adapt ssv-secret/public key
+  blockinfile:
+    path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
+    block: |
+      ssv_pk: "{{ ssv.pk }}"
+      ssv_pk: "{{ ssv.pk }}"
   become: yes
 
 # EOF
