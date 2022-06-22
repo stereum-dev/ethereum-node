@@ -7,7 +7,7 @@ test('getServiceConfiguration', () => {
   const NimbusBeaconService = require('./NimbusBeaconService')
   NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
     return {
-      buildConsensusClientMetricsEndpoint: jest.fn(() => { return 'stereum-someID:9190' })
+      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]` })
     }
   })
 
@@ -15,12 +15,12 @@ test('getServiceConfiguration', () => {
   const PrometheusNodeExporterService = require('./PrometheusNodeExporterService')
   PrometheusNodeExporterService.PrometheusNodeExporterService.mockImplementation(() => {
     return {
-      buildPrometheusNodeExporterClientHttpEndpointUrl: jest.fn(() => { return 'http://stereum-someOtherID:9100' })
+      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]` })
     }
   })
 
-  const config = PrometheusService.getServiceConfiguration([new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService()])
-  expect(config).toStrictEqual({ CONFIG: 'global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: stereum-someID\n    static_configs:\n      - targets: [stereum-someID:9190]\n  - job_name: stereum-someOtherID\n    static_configs:\n      - targets: [stereum-someOtherID:9100]\n' })
+  const config = PrometheusService.getServiceConfiguration([new NimbusBeaconService.NimbusBeaconService(), new PrometheusNodeExporterService.PrometheusNodeExporterService()])
+  expect(config).toStrictEqual({ CONFIG: 'global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]' })
 })
 
 test('buildConfiguration', () => {
@@ -32,7 +32,7 @@ test('buildConfiguration', () => {
   const NimbusBeaconService = require('./NimbusBeaconService')
   NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
     return {
-      buildConsensusClientMetricsEndpoint: jest.fn(() => { return 'stereum-someID:9190' }),
+      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]` }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'nimbus-id',
@@ -46,7 +46,7 @@ test('buildConfiguration', () => {
   const PrometheusNodeExporterService = require('./PrometheusNodeExporterService')
   PrometheusNodeExporterService.PrometheusNodeExporterService.mockImplementation(() => {
     return {
-      buildPrometheusNodeExporterClientHttpEndpointUrl: jest.fn(() => { return 'http://stereum-someOtherID:9100' }),
+      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]` }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'pne-id',
@@ -56,7 +56,7 @@ test('buildConfiguration', () => {
     }
   })
 
-  const prometheus = PrometheusService.buildByUserInput(networks.prater, ports, '/opt/stereum/prometheus', [new NimbusBeaconService.NimbusBeaconService()], [new PrometheusNodeExporterService.PrometheusNodeExporterService()]).buildConfiguration()
+  const prometheus = PrometheusService.buildByUserInput(networks.prater, ports, '/opt/stereum/prometheus', [new NimbusBeaconService.NimbusBeaconService(), new PrometheusNodeExporterService.PrometheusNodeExporterService()]).buildConfiguration()
 
   expect(prometheus.volumes).toHaveLength(2)
   expect(prometheus.volumes).toContain('/opt/stereum/prometheus-' + prometheus.id + '/data/prometheus:/prometheus')

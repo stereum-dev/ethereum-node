@@ -40,10 +40,10 @@
           <div
             @dragstart="startDrag($event, item)"
             class="plugin-item"
-            v-for="item in sidebarPlugins"
+            v-for="item in allServices"
             :key="item.id"
           >
-            <img :src="item.source" alt="" />
+            <img :src="item.sIcon" alt="" />
           </div>
         </div>
         <img
@@ -76,7 +76,7 @@
 </template>
 <script>
 export default {
-  props: ['startDrag', 'sidebarPlugins'],
+  props: ['startDrag', 'allServices'],
   data () {
     return {
       showSidebar: false

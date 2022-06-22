@@ -25,6 +25,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 );
 
 const log = require("electron-log");
+//log.transports.console.level = "info"
 
 let remoteHost = {};
 
@@ -93,8 +94,8 @@ promiseIpc.on("prepareOneClickInstallation", async (arg) => {
   return await oneClickInstall.prepareNode(arg, nodeConnection);
 });
 
-promiseIpc.on("writeOneClickConfiguration", async () => {
-  await oneClickInstall.createServices();
+promiseIpc.on("writeOneClickConfiguration", async (args) => {
+  await oneClickInstall.createServices(args.array.map(service => {return service.service}));
   return await oneClickInstall.writeConfig();
 });
 

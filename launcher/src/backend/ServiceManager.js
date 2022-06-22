@@ -114,7 +114,7 @@ export class ServiceManager {
         } else {
           log.error('found configuration without service!')
           log.error(config)
-          throw 'configuration without service specified'
+          throw new Error('configuration without service specified')
         }
       }
       //retrieve full service out of minimal config
@@ -136,7 +136,9 @@ export class ServiceManager {
         }
       })
       return services
+    }).catch(err => {
+      log.error(err)
+      return err
     })
-      .catch(err => log.error(err))
   }
 }

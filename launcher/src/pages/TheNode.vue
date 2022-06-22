@@ -27,7 +27,7 @@
           <div>
             <drop-zone
               :title="'execution'"
-              :list="executionItems"
+              :list="installedServices.filter(service => service.category === 'execution')"
               @modal-view="showModal"
             ></drop-zone>
           </div>
@@ -35,21 +35,21 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="consensusItems"
+              :list="installedServices.filter(service => service.category === 'consensus')"
             ></drop-zone>
           </div>
           <div>
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="validatorItems"
+              :list="installedServices.filter(service => service.category === 'validator')"
             ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin :list="servicePlugins"> </service-plugin>
+            <service-plugin :list="installedServices.filter(service => service.category === 'service')"> </service-plugin>
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
@@ -71,12 +71,15 @@ import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
+
+import { useServices } from "../store/services";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeStore } from "@/store/theNode";
 import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
+
 export default {
   components: {
     JournalNode,
@@ -97,50 +100,17 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useClickInstall, {
-      selectedPreset: "selectedPreset",
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
     }),
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
-    }),
-    ...mapWritableState(useNodeManage, {
-      consensusItems: "consensusItems",
-      executionItems: "executionItems",
-      validatorItems: "validatorItems",
-      servicePlugins: "servicePlugins",
     }),
     ...mapWritableState(useTutorialStore, {
       steps: "steps",
     }),
   },
-  mounted() {
-    if (Object.keys(this.selectedPreset).length !== 0) {
-      this.selectedPreset.includedPlugins.map((item) => {
-        if (item.category === "validator") {
-          if (this.validatorItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.validatorItems.push(item);
-        } else if (item.category === "consensus") {
-          if (this.consensusItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.consensusItems.push(item);
-        } else if (item.category === "execution") {
-          if (this.executionItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.executionItems.push(item);
-        } else if (item.category === "service") {
-          if (this.servicePlugins.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.servicePlugins.push(item);
-        }
-      });
-      this.selectedPreset = [];
-    }
-  },
+  mounted() {},
   methods: {
     showModal(data) {
       this.isModalActive = true;

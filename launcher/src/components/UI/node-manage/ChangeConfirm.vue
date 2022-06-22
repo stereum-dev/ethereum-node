@@ -50,42 +50,25 @@
 </template>
 <script>
 import BaseButton from "../BaseButton.vue";
-import { mapState } from "pinia";
-import { useNodeManage } from "@/store/nodeManage";
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
+import { useServices } from "@/store/services";
 export default {
   components: { BaseButton },
   props: ["confirmChanges"],
   computed: {
-    ...mapState(useNodeManage, {
-      consensusItems: "consensusItems",
-      executionItems: "executionItems",
-      validatorItems: "validatorItems",
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices"
+    }),
+    ...mapWritableState(useNodeStore, {
       selectedItemToRemove: "selectedItemToRemove",
-      servicePlugins: "servicePlugins",
     }),
   },
   methods: {
     clickOnRemoveBtn() {
-      if (this.selectedItemToRemove.category == "service") {
-        this.servicePlugins = this.servicePlugins.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "execution") {
-        this.executionItems = this.executionItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "consensus") {
-        this.consensusItems = this.consensusItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
-      if (this.selectedItemToRemove.category == "validator") {
-        this.validatorItems = this.validatorItems.filter((item) => {
-          return item.id !== this.selectedItemToRemove.id;
-        });
-      }
+      this.installedServices = this.installedServices.filter(item => {
+        return item.id !== this.selectedItemToRemove.id;
+      })
     },
   },
 };

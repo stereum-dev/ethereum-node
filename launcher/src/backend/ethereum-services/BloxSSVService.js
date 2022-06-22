@@ -52,7 +52,7 @@ MetricsAPIPort: 15000
       service.id, // id
       1,  // configVersion
       image, //image
-      'v0.1.12',  //imageVersion
+      'v0.2.0',  //imageVersion
       'make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node', // command
       null, // entrypoint
       {
@@ -79,6 +79,10 @@ MetricsAPIPort: 15000
 
   buildValidatorClientMetricsEndpoint () {
     return 'stereum-' + this.id + ':15000'
+  }
+
+  buildPrometheusJob () {
+    return `\n  - job_name: ssv\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]\n  - job_name: ssv_health\n    metrics_path: /health\n    static_configs:\n      - targets: [${this.buildValidatorClientMetricsEndpoint()}]`
   }
 
   getAvailablePorts () {

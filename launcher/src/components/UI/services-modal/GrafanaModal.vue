@@ -49,7 +49,7 @@ export default {
   methods: {
     filterGrafanaService() {
       this.runningServices.forEach((service) => {
-        if (service.serviceName.toLowerCase() === "grafana") {
+        if (service.service === "GrafanaService") {
           this.grafanaService.push(service);
         }
       });

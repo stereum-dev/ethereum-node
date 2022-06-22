@@ -74,6 +74,10 @@ export class LighthouseBeaconService extends NodeService {
     return 'stereum-' + this.id + ':5054'
   }
 
+  buildPrometheusJob () {
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
+  }
+
   getAvailablePorts () {
     return [
       new ServicePortDefinition(9000, 'tcp', 'P2P connections'),
