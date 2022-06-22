@@ -24,7 +24,7 @@
     register: grafana_ini
   - debug:
       msg: "{{ grafana_ini }}"
-  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/beacon_nodes_Grafana_dashboard.json
+  - stat: path=/opt/app/services/52134fcc-9744-11ec-b5ca-572497326b43/grafana/provisioning/dashboards/multiple-source.json
     register: grafana_dashboard
   - debug:
       msg: "{{ grafana_dashboard }}"

@@ -1,6 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
   vars:
     ssv_key_service: c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e
     ssv_container_config: |
