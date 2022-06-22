@@ -51,7 +51,7 @@
           entrypoint: []
           env: {}
           id: {{ beacon_service }}
-          image: sigp/lighthouse:v2.1.2
+          image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
           ports:
             - 0.0.0.0:9000:9000/tcp
             - 0.0.0.0:9000:9000/udp

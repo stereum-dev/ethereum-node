@@ -1,6 +1,8 @@
 ---
 - name: Converge
   hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
   vars:
     ssv_key_service: c5be3926-cf8b-11ec-a0be-5f31e8fa7d9e
     ssv_container_config: |
@@ -9,7 +11,7 @@
       env:
         CONFIG_PATH: /data/config.yaml
       id: {{ ssv_key_service }}
-      image: bloxstaking/ssv-node:alpine-dns
+      image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
       ports:
       - 0.0.0.0:12000:12000/udp
       - 0.0.0.0:13000:13000/tcp

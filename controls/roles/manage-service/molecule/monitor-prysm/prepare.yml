@@ -41,7 +41,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
                 - 127.0.0.1:4000:4000/tcp
                 - 0.0.0.0:12000:12000/udp
@@ -62,6 +62,8 @@
                 --grpc-gateway-host=0.0.0.0
                 --p2p-max-peers=100
                 --http-web3provider=http://10.10.0.3:8545
+                --monitoring-port=8080
+                --monitoring-host=0.0.0.0
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"

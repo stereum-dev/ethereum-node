@@ -16,8 +16,6 @@
       that:
       - stereum_ufw_status.stdout.find("9000/tcp") != -1
       - stereum_ufw_status.stdout.find("9000/udp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
-      - stereum_ufw_status.stdout.find("9190/tcp") != -1
   # Nimbus api-token
   - stat: path=/opt/app/services/96d0bd64-b40b-11ec-9748-ef3d97c5f568/validator/api-token.txt
     register: api_token
@@ -51,8 +49,6 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
-      - stereum_docker_ps.stdout.find("9190->9190") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 1
 

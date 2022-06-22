@@ -1,0 +1,72 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: f420f27c-ee3f-11ec-b858-037ea73ab504
+    besu_service: 9c52bfc6-ee3f-11ec-8841-fff909f62b80
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+                - 127.0.0.1:5052:5052/tcp
+              command:
+                - lighthouse
+                - bn
+                - --debug-level=debug
+                - --network=prater
+                - --eth1-endpoints=http://stereum-{{ besu_service }}:8545
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
