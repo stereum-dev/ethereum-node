@@ -4,16 +4,21 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "validator-list-api--nimbus--ubuntu-22.04"
+  - name: "validator-list-api--prysm--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx21
     image: ubuntu-22.04
     network:
       name: eth2-prater
       ip_range: 10.10.0.0/24
-      ip: 10.10.0.157
+      ip: 10.10.0.158
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      timeout: 120
+    ssh_connection:
+      ssh_args: -o ProxyCommand=none -o ServerAliveInterval=300
 lint: |
   set -e
   yamllint .
