@@ -96,7 +96,7 @@
         mode: '0744'
       become: yes
 
-    - name: Write "sk" into SSV-Service's config
+    - name: Write SSV-Service's config
       copy:
         dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
         content: |
@@ -113,7 +113,6 @@
         owner: "2000"
         group: "2000"
         mode: '0644'
-        # line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
       become: yes
 
     # ssv service

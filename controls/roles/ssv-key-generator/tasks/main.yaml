@@ -28,7 +28,7 @@
     path: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
     block: |
       ssv_pk: "{{ ssv.pk }}"
-      ssv_pk: "{{ ssv.pk }}"
+      ssv_sk: "{{ ssv.sk }}"
   become: yes
 
 # EOF
