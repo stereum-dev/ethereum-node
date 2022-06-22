@@ -1,0 +1,44 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    nethermind_service: f733d0cc-edc4-11ec-9a6c-638aa5beb5c6
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --log=debug
+              - --datadir=/opt/app/data
+              - --Network.DiscoveryPort=30303
+              - --Network.P2PPort=30303
+              - --JsonRpc.Enabled=true
+              - --JsonRpc.Host=0.0.0.0
+              - --Init.WebSocketsEnabled=true
+              - --JsonRpc.WebSocketsPort=8546
+              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+              - --Metrics.Enabled=true
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
