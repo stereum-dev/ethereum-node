@@ -46,8 +46,9 @@
 
                   scrape_configs:
                     - job_name: 'stereum-{{ beacon_service }}'
+                      metrics_path: /metrics
                       static_configs:
-                        - targets: ['stereum-{{ beacon_service }}:5054']
+                        - targets: ['stereum-{{ beacon_service }}:8008']
                     - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
                       static_configs:
                         - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
