@@ -4,7 +4,6 @@
       <span class="title">{{ title }}</span>
       <div
         class="item-box"
-        @drop="onDrop($event, sidebarPlugins)"
         @dragenter.prevent
         @dragover.prevent
         onmousedown="return false"

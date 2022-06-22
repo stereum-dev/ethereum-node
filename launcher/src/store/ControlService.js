@@ -70,8 +70,21 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("prepareOneClickInstallation", args);
   }
 
-  async writeOneClickConfiguration() {
-    return await this.promiseIpc.send("writeOneClickConfiguration");
+  async writeOneClickConfiguration(args) {
+    let buffer = []
+    args.forEach(service => {
+      buffer.push({
+        id: service.id,
+        name: service.name,
+        service: service.service,
+        category: service.category,
+        displayCategory: service.displayCategory,
+        path: service.path,
+        icon: service.icon,
+        sIcon: service.sIcon,
+      })
+    })
+    return await this.promiseIpc.send("writeOneClickConfiguration", {array: buffer});
   }
 
   async startOneClickServices() {

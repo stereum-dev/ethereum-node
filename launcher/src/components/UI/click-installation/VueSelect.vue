@@ -71,6 +71,7 @@
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from '@/store/services';
 export default {
   data() {
     return {
@@ -84,8 +85,10 @@ export default {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
-      allPlugins: "plugins",
       selectedNetworks: "selectedNetworks",
+    }),
+    ...mapWritableState(useServices, {
+      allServices: "allServices",
     }),
   },
   beforeUpdate() {
@@ -112,25 +115,12 @@ export default {
         this.isTestnetActive = true;
       }
     },
-    includesSSV(array){
-      return (array.includes('BLOXSSV') || array.includes('ROCKETPOOL'))
-    },
     selectItemToInstall: async function (item) {
-      const constellation = await ControlService.getOneClickConstellation(
-        item.name
-      );
-      const includedPlugins = [];
-      constellation.forEach((plugin, index, array) => {
-        let buffer = this.allPlugins.filter(
-          (element) => element.name === plugin
-        );
-        if(buffer.length > 1 && this.includesSSV(array)){
-          buffer.splice(buffer.findIndex(e => e.category === 'validator'), 1)
-        }
-        buffer.forEach((element) => {
-          includedPlugins.push(element)
-        });
-      });
+      const constellation = await ControlService.getOneClickConstellation(item.name);
+      let includedPlugins = this.allServices.filter(service => constellation.includes(service.service));
+      if(includedPlugins.map(e => e.service).includes("BloxSSVService") || includedPlugins.map(e => e.service).includes("RocketpoolService")){
+        includedPlugins.splice(includedPlugins.findIndex(e => (e.service != 'BloxSSVService' && e.service != 'RocketpoolService' && e.category === 'validator')),1)
+      }
       item.includedPlugins = includedPlugins;
       this.selectedPreset = item;
       this.$emit("disableBtn");

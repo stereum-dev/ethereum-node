@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition'
 import { ServiceVolume } from './ServiceVolume'
 
 export class GrafanaService extends NodeService {
-  static buildByUserInput (network, ports, dir, grafanaProvisioning) {
+  static buildByUserInput (network, ports, dir) {
     const service = new GrafanaService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -30,7 +30,6 @@ export class GrafanaService extends NodeService {
       null, // entrypoint
       {
         GRAFANA_INI: '[auth.anonymous]\nenabled = true\norg_role = Admin\n',
-        GRAFANA_PROVISIONING: grafanaProvisioning
       }, // env
       ports, // ports
       volumes, // volumes

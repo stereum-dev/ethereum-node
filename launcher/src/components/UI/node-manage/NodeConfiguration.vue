@@ -74,7 +74,7 @@
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
-import { useNodeManage } from "../../../store/nodeManage";
+import { useServices } from "@/store/services";
 export default {
   data() {
     return {
@@ -86,14 +86,12 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       configData: "getConfigData",
-      runningServices: "runningServices",
+      headerServices: "runningServices",
       configData_nodeSidebarVideo: "configData_nodeSidebarVideo",
     }),
-    ...mapWritableState(useNodeManage, {
-      consensusItems: "consensusItems",
-      executionItems: "executionItems",
-      validatorItems: "validatorItems",
-      servicePlugins: "servicePlugins",
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
     }),
   },
   methods: {
@@ -118,11 +116,9 @@ export default {
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
+        this.headerServices = [];
         this.runningServices = [];
-        this.servicePlugins = [];
-        this.consensusItems = [];
-        this.executionItems = [];
-        this.validatorItems = [];
+        this.installedServices = [];
       }
       this.removeIsConfirmed = false;
     },
