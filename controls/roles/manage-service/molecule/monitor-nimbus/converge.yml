@@ -112,3 +112,11 @@
                 - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
                 - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
                 - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
+
+    # replace prometheus service-id into grafana's datasource.yml
+    - name: replace prometheus-ID into grafana's datasource.yml
+      replace:
+        path: "/opt/app/services/{{ grafana_service }}/grafana/provisioning/datasources/datasource.yml"
+        regexp: '  url: http:\/\/prometheus:9090'
+        replace: '  url: http://stereum-{{ prometheus_service }}:9090'
+      become: yes
