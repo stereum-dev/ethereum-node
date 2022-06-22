@@ -13,18 +13,18 @@
 </template>
 <style scoped>
 .router__items {
-  width: 32%;
+  width: 30%;
   max-width: 450px;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  margin: 0 80px 0 50px;
+  margin: 0 80px 0 60px;
 }
 .router__items .router__item {
   width: 30%;
+  max-width: max-content;
   height: 80%;
-  padding: 0 10px;
   list-style: none;
   display: flex;
   justify-content: space-evenly;
@@ -44,15 +44,11 @@
   transition-duration: 100ms;
 }
 .router__items .router__item a:hover {
-  width: 90%;
-  font-size: 1.28rem;
-  font-weight: 900;
+  transform: scale(1.05);
   color: #3a8074;
 }
 .router__items .router__item a:active {
-  width: 90%;
-  font-size: 1.2rem;
-  font-weight: 700;
+  transform: scale(1);
   color: #3a8074;
   text-shadow: none;
 }
