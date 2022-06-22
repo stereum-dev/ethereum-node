@@ -67,9 +67,11 @@ export default {
     async storageMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.total = Math.floor(await response.entireStorage.stdout);
-        this.used = Math.floor(await response.usedStorage.stdout);
-        this.usedStotagePer = Math.floor(await response.usedStoragePer.stdout);
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.usedStotagePer = parseInt(arr[3]);
+        this.total = parseInt(arr[4]);
+        this.used = parseInt(arr[5]);
       } catch (error) {
         console.log(error);
       }

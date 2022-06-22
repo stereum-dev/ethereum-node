@@ -36,8 +36,10 @@ export default {
     async ramMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.entireRam = await response.entireRam.stdout;
-        this.usedRam = await response.usedRam.stdout;
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.entireRam = parseInt(arr[1]);
+        this.usedRam = parseInt(arr[2]);
       } catch (error) {
         console.log(error);
       }
