@@ -8,7 +8,7 @@
     prometheus_node_exporter_service: 9da95c20-e068-11ec-b762-b38d94c6d8a8
     grafana_service: a5657b06-e068-11ec-8e1c-2f728e608caa
     beacon_service: aba073ae-e068-11ec-8b8a-ab1197e06ccd
-    grafana_provisioning: prysm
+    grafana_provisioning: ["prysm"]
 
   tasks:
     # prometheus service
@@ -25,7 +25,7 @@
             state: started
             configuration:
               id: "{{ prometheus_service }}"
-              image: prom/prometheus:v2.33.1
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
               ports:
                 - 127.0.0.1:9090:9090/tcp
               env:
@@ -47,7 +47,7 @@
                   scrape_configs:
                     - job_name: 'stereum-{{ beacon_service }}'
                       static_configs:
-                        - targets: ['stereum-{{ beacon_service }}:5054']
+                        - targets: ['stereum-{{ beacon_service }}:8080']
                     - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
                       static_configs:
                         - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
@@ -73,7 +73,7 @@
             state: started
             configuration:
               id: "{{ prometheus_node_exporter_service }}"
-              image: prom/node-exporter:v1.3.1
+              image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
               ports: []
               env: {}
               command: []
@@ -94,7 +94,7 @@
             state: started
             configuration:
               id: "{{ grafana_service }}"
-              image: grafana/grafana:8.4.0
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
               ports:
                 - 127.0.0.1:3000:3000/tcp
               env:
@@ -102,7 +102,6 @@
                   [auth.anonymous]
                   enabled = true
                   org_role = Admin
-                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
               command: bash -c "touch /etc/grafana/grafana.ini &&
                                 echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
                                 /run.sh"

@@ -22,7 +22,7 @@
             state: started
             configuration:
               id: "{{ ssv_service }}"
-              image: bloxstaking/ssv-node:v0.1.12
+              image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp

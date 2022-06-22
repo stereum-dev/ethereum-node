@@ -8,7 +8,7 @@
     prometheus_node_exporter_service: ffd332e6-e0d5-11ec-a82b-9b01f3fb02d7
     grafana_service: 0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1
     beacon_service: 1929168e-e0d6-11ec-9183-97daacc21ea6
-    grafana_provisioning: teku
+    grafana_provisioning: ["teku"]
 
   tasks:
     # prometheus service
@@ -25,7 +25,7 @@
             state: started
             configuration:
               id: "{{ prometheus_service }}"
-              image: prom/prometheus:v2.33.1
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
               ports:
                 - 127.0.0.1:9090:9090/tcp
               env:
@@ -46,8 +46,11 @@
 
                   scrape_configs:
                     - job_name: 'stereum-{{ beacon_service }}'
+                      scrape_timeout: 10s
+                      metrics_path: /metrics
+                      scheme: http
                       static_configs:
-                        - targets: ['stereum-{{ beacon_service }}:5054']
+                        - targets: ['stereum-{{ beacon_service }}:8008']
                     - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
                       static_configs:
                         - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
@@ -73,7 +76,7 @@
             state: started
             configuration:
               id: "{{ prometheus_node_exporter_service }}"
-              image: prom/node-exporter:v1.3.1
+              image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
               ports: []
               env: {}
               command: []
@@ -94,7 +97,7 @@
             state: started
             configuration:
               id: "{{ grafana_service }}"
-              image: grafana/grafana:8.4.0
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
               ports:
                 - 127.0.0.1:3000:3000/tcp
               env:
@@ -102,7 +105,6 @@
                   [auth.anonymous]
                   enabled = true
                   org_role = Admin
-                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
               command: bash -c "touch /etc/grafana/grafana.ini &&
                                 echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
                                 /run.sh"

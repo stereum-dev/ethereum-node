@@ -175,6 +175,7 @@ export const useNodeStore = defineStore("theNode", {
         {
           id: 1,
           name: "First Steps!",
+         
         },
         {
           id: 2,

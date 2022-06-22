@@ -54,15 +54,17 @@ export default {
     this.networkMet();
   },
 
-  beforeUpdate() {
+  updated() {
     this.networkMet();
   },
   methods: {
     async networkMet() {
       try {
         const response = await ControlService.getServerVitals();
-        this.receiveValue = Math.floor(await response.recievedData.stdout);
-        this.transmitValue = Math.floor(await response.transmitData.stdout);
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.receiveValue = parseInt(arr[7]);
+        this.transmitValue = parseInt(arr[8]);
       } catch (error) {
         console.log("Loading...");
       }
