@@ -24,7 +24,7 @@
 .router__items .router__item {
   width: 30%;
   max-width: max-content;
-  height: 80%;
+  height: 90%;
   list-style: none;
   display: flex;
   justify-content: space-evenly;
@@ -37,8 +37,8 @@
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: #c2c2c2;
   text-shadow: 2px 2px #192c27;
   transition-duration: 100ms;

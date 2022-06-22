@@ -193,10 +193,10 @@ export default {
   },
   methods: {
     importKey: async function () {
-      // await ControlService.importKey({
-      //   files: this.keyFiles,
-      //   password: this.password,
-      // });
+      await ControlService.importKey({
+        files: this.keyFiles,
+        password: this.password,
+      });
       this.password = "";
       this.insertFilePage = true;
       this.enterPasswordPage = false;
@@ -278,7 +278,7 @@ export default {
   height: 30px;
   margin: 5px auto 0 auto;
   display: grid;
-  grid-template-columns: 3% 30% 7% 15% 5% 10% 30%;
+  grid-template-columns: 3% 30% 7% 14% 6% 10% 30%;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
   padding: 1px;
