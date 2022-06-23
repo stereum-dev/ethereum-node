@@ -28,7 +28,7 @@
           @click="$refs.pluginCol.scrollTop = 0"
         />
         <div class="plugin-col" ref="pluginCol">
-          <div class="plugin-item">
+          <div class="cloud-box">
             <div class="cloud-item">
               <img
                 onmousedown="return false"
@@ -39,7 +39,7 @@
           </div>
           <div
             @dragstart="startDrag($event, item)"
-            class="plugin-item"
+            class="cloud-box"
             v-for="item in allServices"
             :key="item.id"
           >
@@ -76,21 +76,21 @@
 </template>
 <script>
 export default {
-  props: ['startDrag', 'allServices'],
-  data () {
+  props: ["startDrag", "allServices"],
+  data() {
     return {
-      showSidebar: false
-    }
-  }
-}
+      showSidebar: false,
+    };
+  },
+};
 </script>
 <style scoped>
 .manage-sidebar {
   position: fixed;
-  top: 10%;
+  top: 9%;
   right: -200px;
-  width: 150px;
-  height: 81.5%;
+  width: 120px;
+  height: 86%;
   padding: 5px;
   background-color: gray;
   border-top-left-radius: 35px;
@@ -102,11 +102,12 @@ export default {
 .hidden-icon {
   position: fixed;
   top: 41%;
-  right: 125px;
+  right: 93px;
   height: 97px;
-  width: 60px;
+  width: 50px;
   border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
+  cursor: pointer;
 }
 .show-icon {
   position: fixed;
@@ -116,6 +117,7 @@ export default {
   width: 69px;
   border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
+  cursor: pointer;
 }
 
 .plugin-box {
@@ -126,24 +128,32 @@ export default {
 }
 .plugin-box .up-arrow {
   position: absolute;
-  top: -5px;
-  right: 20px;
-  width: 110px;
+  top: -9px;
+  right: 10px;
+  width: 90px;
   height: 25px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
 }
 .plugin-box .down-arrow {
   position: absolute;
-  width: 110px;
+  width: 90px;
   height: 25px;
   margin: 0 auto;
-  bottom: -12px;
-  right: 20px;
+  bottom: 10px;
+  right: 9px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px rgb(58, 58, 58);
+}
+.down-arrow:hover,
+.up-arrow:hover {
+  transform: scale(0.97);
 }
 .plugin-col {
   margin: 17px auto;
   padding: 25px 0 30px 0;
-  width: 110px;
-  height: 88%;
+  width: 80%;
+  height: 95%;
   background-color: #565656;
   border-radius: 15px;
   overflow-y: auto;
@@ -151,36 +161,44 @@ export default {
 .plugin-col::-webkit-scrollbar {
   display: none;
 }
-.plugin-item {
+.cloud-box {
   width: 50px;
   height: 50px;
   margin: 5px auto;
-  border-radius: 12px;
-  border: 2px solid rgb(70, 70, 70);
-}
-
-.plugin-item img {
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
-}
-.cloud-item {
-  width: 50px;
-  height: 50px;
-  border-radius: 11px;
-  background: rgb(11, 148, 206);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.cloud-item img {
-  width: 30px;
-  height: 30px;
-  border-radius: 11px;
-  background: transparent;
+
+.cloud-box:hover img {
+  transform: scale(0.99);
+  border: 2px solid rgb(74, 168, 219);
+  border-radius: 5px;
+  transition-duration: 50ms;
 }
-.plugin-item:hover {
-  border: 2px solid green;
+.cloud-item {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition-duration: 100ms;
+}
+.cloud-item img {
+  width: 95%;
+  height: 86%;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background: rgb(11, 148, 206);
+}
+.cloud-item img:hover {
+  transform: scale(0.99);
+  border: 2px solid rgb(145, 243, 202);
+  transition-duration: 50ms;
 }
 .filter-box {
   display: flex;
