@@ -231,10 +231,10 @@ export default {
 }
 .expert-items,
 .general-items {
-  width: 85%;
+  width: 80%;
   height: 68%;
   background-color: #e8e8e8;
-  border: 2px solid #233f3f;
+  border: 2px solid #e0e1e1;
   border-radius: 15px;
   justify-self: center;
   align-self: center;
@@ -243,8 +243,12 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  box-shadow: 0 1px 3px 1px #4b4b4b, inset 0 1px 5px 1px #bfbfbf;
+  box-shadow: 0 1px 3px 1px #4b4b4b;
   overflow: hidden;
+}
+.expert-items:hover,
+.general-items:hover {
+  border: 2px solid #65baf3;
 }
 
 .expert-title,
@@ -261,7 +265,7 @@ export default {
   color: rgb(240, 20, 20);
 }
 .general-title span {
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   font-weight: 800;
   color: rgb(82, 82, 82);
 }

@@ -55,8 +55,8 @@
 }
 .selection-row img {
   grid-column: 1;
-  width: 25px;
-  height: 25px;
+  width: 19px;
+  height: 20px;
 }
 .selection-row span {
   grid-column: 2;
