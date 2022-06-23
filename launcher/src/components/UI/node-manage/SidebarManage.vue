@@ -133,6 +133,7 @@ export default {
   width: 90px;
   height: 25px;
   cursor: pointer;
+  border-radius: 50px;
   box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
   z-index: 1;
 }
@@ -141,21 +142,27 @@ export default {
   width: 90px;
   height: 25px;
   margin: 0 auto;
-  bottom: 10px;
+  bottom: -2px;
   right: 9px;
+  border-radius: 50px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(58, 58, 58);
   z-index: 1;
+  transition-duration: 100ms;
 }
 .down-arrow:hover,
 .up-arrow:hover {
-  transform: scale(0.97);
+  transform: scale(1.1);
+}
+.down-arrow:active,
+.up-arrow:active {
+  transform: scale(1);
 }
 .plugin-col {
   margin: 17px auto;
   padding: 25px 0 30px 0;
   width: 80%;
-  height: 95%;
+  height: 100%;
   background-color: #565656;
   border-radius: 15px;
   overflow-y: auto;
@@ -205,18 +212,22 @@ export default {
 .filter-box {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  width: 100px;
-  margin: 17px auto;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 90%;
+  height: 20%;
+  margin: 5px auto;
 }
 .filter-box .filter-inp {
-  width: 95px;
+  width: 100%;
   height: 23px;
+  padding: 0;
   padding-left: 5px;
   border: none;
   border-radius: 45px;
   outline-style: none;
   margin-top: 2px;
+  font-size: 0.8rem;
 }
 .filter-icons {
   display: flex;
@@ -230,16 +241,7 @@ export default {
   background-color: #565656;
 }
 .filter-icons img {
-  width: 23px;
-  height: 23px;
-}
-.up-arrow,
-.down-arrow {
-  border-radius: 50px;
-  box-shadow: 0 2px 3px 1px rgb(67, 67, 67);
-}
-.up-arrow:active,
-.down-arrow:active {
-  box-shadow: none;
+  width: 23%;
+  height: 90%;
 }
 </style>

@@ -27,7 +27,11 @@
           <div>
             <drop-zone
               :title="'execution'"
-              :list="installedServices.filter(service => service.category === 'execution')"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'execution'
+                )
+              "
               @modal-view="showModal"
             ></drop-zone>
           </div>
@@ -35,21 +39,36 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="installedServices.filter(service => service.category === 'consensus')"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'consensus'
+                )
+              "
             ></drop-zone>
           </div>
           <div>
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="installedServices.filter(service => service.category === 'validator')"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'validator'
+                )
+              "
             ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin :list="installedServices.filter(service => service.category === 'service')"> </service-plugin>
+            <service-plugin
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'service'
+                )
+              "
+            >
+            </service-plugin>
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
@@ -229,8 +248,8 @@ export default {
   justify-content: space-evenly;
 }
 .modal-parent {
-  width: 45.5%;
-  height: 85.6%;
+  width: 56.2%;
+  height: 100%;
   margin: 0 auto;
   display: flex;
   grid-column: 2;
@@ -271,9 +290,9 @@ export default {
   border: 1px solid #2d4338;
   border-radius: 15px;
   margin: 10px auto;
-  font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 1px 1px 3px rgb(26, 26, 26);
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 3px rgb(19, 40, 31);
   display: flex;
   justify-content: center;
   align-items: center;
