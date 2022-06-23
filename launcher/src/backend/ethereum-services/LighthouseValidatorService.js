@@ -25,7 +25,7 @@ export class LighthouseValidatorService extends NodeService {
       service.id, //id
       1, //configVersion
       image,  //image
-      'v2.1.2', //imageVersion
+      'v2.3.1', //imageVersion
       [
         'lighthouse',
         'vc',

@@ -73,9 +73,7 @@ import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 
 import { useServices } from "../store/services";
-import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeStore } from "@/store/theNode";
-import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
