@@ -16,7 +16,7 @@ This repository contains the code and scripts for Stereum 2.0 (tba)
 
 
 ## Get Started 
-Pre-built software packages are available on our website or on GitHub releases. After installing the launcher start it up and connect to a server of your choice. Take a look at the guide (tba) to find out what server operating systems are supported and what you can do with Stereum!
+Pre-built software packages are available on our [website](https://stereum.net/) or on GitHub releases. After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
 
 ## Download
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betasolo)
