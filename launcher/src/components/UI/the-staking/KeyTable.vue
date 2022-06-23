@@ -191,13 +191,10 @@ export default {
       showExitText: false,
       password: "",
       forceRefresh: false,
-      listKeysTriggered: false,
     };
   },
   mounted() {
-    if(!this.listKeysTriggered){
       this.listKeys()
-    }
   },
   updated() {
     this.checkKeyExists();
@@ -225,7 +222,6 @@ export default {
               return service
             })
             this.keys = result.data ? result.data : [];
-          this.listKeysTriggered = false
           })
           }
       })
