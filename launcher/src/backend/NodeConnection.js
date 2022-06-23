@@ -456,16 +456,13 @@ export class NodeConnection {
   // the function needs to be async
   async getServerVitals() {
     let response = {};
-    const serverVitals = await this.sshService.exec(`\
+    const serverVitals = await this.sshService.exec(`
     hostname &&
-    free -m | sed -n '2p' | awk '{print $2}' &&
-    free -m | sed -n '2p' | awk '{print $3}' &&
-    df --total -m | tail -1 | awk '{print 100-$3/$2*100}' &&
-    df --total -m | tail -1 | awk '{print $2}' &&
-    df --total -m | tail -1 | awk '{print $3}' &&
+    free -m | sed -n '2p' | awk '{print $2" "$3}' &&
+    df --total -m | tail -1 | awk '{print $3/$2*100}' &&
+    df --total -m | tail -1 | awk '{print $2" "$3}' &&
     sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
-    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p' &&
-    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'
+    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p' 
     `);
 
     response.serverVitals = serverVitals;
