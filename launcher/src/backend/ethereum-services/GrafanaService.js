@@ -25,7 +25,7 @@ export class GrafanaService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      '8.4.0', // imageVersion
+      '8.5.6', // imageVersion
       'bash -c "touch /etc/grafana/grafana.ini && echo \\"$GRAFANA_INI\\" > /etc/grafana/grafana.ini && /run.sh"', // command
       null, // entrypoint
       {

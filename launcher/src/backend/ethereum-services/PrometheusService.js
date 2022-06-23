@@ -29,7 +29,7 @@ export class PrometheusService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      'v2.33.1', // imageVersion
+      'v2.36.2', // imageVersion
       'sh -c "touch /etc/prometheus/prometheus.yml && echo \\"$CONFIG\\" > /etc/prometheus/prometheus.yml && /bin/prometheus --config.file=/etc/prometheus/prometheus.yml"', // command
       null, // entrypoint
       config, // env

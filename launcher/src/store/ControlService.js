@@ -122,6 +122,10 @@ class ControlService extends EventEmitter {
       password: args.password,
     });
   }
+
+  async listValidators(args) {
+    return await this.promiseIpc.send("listValidators", args)
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

@@ -140,6 +140,10 @@ promiseIpc.on("importKey", async (args) => {
   return await validatorAccountManager.importKey(args.files, args.password);
 });
 
+promiseIpc.on("listValidators", async (args) => {
+  return await validatorAccountManager.listValidators(args);
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

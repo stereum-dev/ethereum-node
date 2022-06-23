@@ -92,11 +92,8 @@ export default {
         if (services && services.length > 0) {
         services.forEach((service) => {
           let buffer = this.allServices.find((element) => element.service === service.service)
-          if(buffer && (buffer.name === 'Teku' || buffer.name === 'Nimbus')){
-            this.installedServices.push(this.allServices.find((element) => element.service === buffer.name + 'ValidatorService'))
-          }
           if(buffer){
-              buffer.config = {
+            buffer.config = {
               serviceID: service.id,
               configVersion: service.configVersion,
               image: service.image,
@@ -104,6 +101,11 @@ export default {
               ports: service.ports,
               volumes: service.volumes,
               network: service.network,
+            }
+            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
+              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
+              vs.config = buffer.config
+              this.installedServices.push(vs)
             }
             this.installedServices.push(buffer)
           }

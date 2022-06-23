@@ -24,7 +24,7 @@
         >
           <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.name }}</span>
+            <span class="category">{{ item.validating_pubkey.substring(0,20) }}...{{ item.validating_pubkey.substring(item.validating_pubkey.length - 4, item.validating_pubkey.length) }}</span> 
             <span class="username"></span>
             <img
               class="service-icon"
@@ -50,19 +50,19 @@
                   alt="icon"
                 />
                 <span v-if="showGrafitiText" class="grafiti-text">GRAFITI</span>
-              </div>
+              </div> 
               <div
                 class="copy-box"
                 @mouseover="showCopyText = true"
                 @mouseleave="showCopyText = false"
-              >
+              > 
                 <img
                   class="copy-icon"
                   src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
                 <span v-if="showCopyText" class="copy-text">COPY</span>
-              </div>
+              </div> 
               <div
                 class="remove-box"
                 @mouseover="showRemoveText = true"
@@ -173,6 +173,8 @@ import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services"
 export default {
   components: { ShowKey, DropZone },
   data() {
@@ -187,17 +189,49 @@ export default {
       showRemoveText: false,
       showExitText: false,
       password: "",
+      forceRefresh: false,
     };
+  },
+  mounted() {
+    this.listKeys()
   },
   updated() {
     this.checkKeyExists();
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+    }),
+  },
   methods: {
+    listKeys: async function () {
+      let clients = this.installedServices.filter(s => s.service.includes('Validator'))
+      clients.forEach(client => {
+        if(client.config.keys && client.config.keys.length > 0 && this.forceRefresh === false){
+          this.keyFiles = client.config.keys
+        } else {
+          ControlService.listValidators(client.config.serviceID).then(result => {
+            client.config.keys = result.data
+            this.installedServices = this.installedServices.map(service => {
+              if(service.id === client.id){
+                return client
+              }
+              return service
+            })
+            this.keyFiles = result.data ;
+          })
+          }
+      })
+
+    },
     importKey: async function () {
       await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
       });
+      this.forceRefresh = true
+      this.listKeys()
       this.password = "";
       this.insertFilePage = true;
       this.enterPasswordPage = false;
