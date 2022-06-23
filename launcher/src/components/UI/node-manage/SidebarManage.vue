@@ -134,6 +134,7 @@ export default {
   height: 25px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
+  z-index: 1;
 }
 .plugin-box .down-arrow {
   position: absolute;
@@ -144,6 +145,7 @@ export default {
   right: 9px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(58, 58, 58);
+  z-index: 1;
 }
 .down-arrow:hover,
 .up-arrow:hover {

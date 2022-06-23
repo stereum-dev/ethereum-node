@@ -34,7 +34,7 @@
 }
 .router__items .router__item a {
   width: 100%;
-  height: 60%;
+  height: 65%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,7 +42,6 @@
   font-size: 1rem;
   font-weight: 700;
   color: #c2c2c2;
-
   transition-duration: 100ms;
 }
 .router__items .router__item a:hover {
