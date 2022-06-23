@@ -22,7 +22,7 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
+          <div class="table-row" v-for="(item, index) in keys" :key="index">
             <span class="circle"></span>
             <span class="category">{{ item.validating_pubkey.substring(0,20) }}...{{ item.validating_pubkey.substring(item.validating_pubkey.length - 4, item.validating_pubkey.length) }}</span> 
             <span class="username"></span>
@@ -181,6 +181,7 @@ export default {
     return {
       isDragOver: false,
       keyFiles: [],
+      keys: [],
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
@@ -190,10 +191,13 @@ export default {
       showExitText: false,
       password: "",
       forceRefresh: false,
+      listKeysTriggered: false,
     };
   },
   mounted() {
-    this.listKeys()
+    if(!this.listKeysTriggered){
+      this.listKeys()
+    }
   },
   updated() {
     this.checkKeyExists();
@@ -208,9 +212,10 @@ export default {
     listKeys: async function () {
       let clients = this.installedServices.filter(s => s.service.includes('Validator'))
       clients.forEach(client => {
-        if(client.config.keys && client.config.keys.length > 0 && this.forceRefresh === false){
-          this.keyFiles = client.config.keys
+        if(client.config.keys && client.config.keys.length > 0 && !this.forceRefresh){
+          this.keys = client.config.keys
         } else {
+          this.listKeysTriggered = true
           ControlService.listValidators(client.config.serviceID).then(result => {
             client.config.keys = result.data
             this.installedServices = this.installedServices.map(service => {
@@ -219,7 +224,8 @@ export default {
               }
               return service
             })
-            this.keyFiles = result.data ;
+            this.keys = result.data ? result.data : [];
+          this.listKeysTriggered = false
           })
           }
       })
