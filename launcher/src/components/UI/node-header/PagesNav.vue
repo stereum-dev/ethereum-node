@@ -3,9 +3,11 @@
     <li class="router__item">
       <router-link to="/node">NODE</router-link>
     </li>
+    <span class="border"></span>
     <li class="router__item">
       <router-link to="/control">CONTROL</router-link>
     </li>
+    <span class="border"></span>
     <li class="router__item">
       <router-link to="/staking">STAKING</router-link>
     </li>
@@ -40,16 +42,24 @@
   font-size: 1rem;
   font-weight: 700;
   color: #c2c2c2;
-  text-shadow: 2px 2px #192c27;
+
   transition-duration: 100ms;
 }
 .router__items .router__item a:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
   color: #3a8074;
+  transition-duration: 50ms;
+  text-shadow: 2px 2px #192c27;
 }
 .router__items .router__item a:active {
   transform: scale(1);
   color: #3a8074;
   text-shadow: none;
+}
+span.border {
+  content: "";
+  width: 0;
+  height: 60%;
+  border: 1px solid #a5a5a5;
 }
 </style>

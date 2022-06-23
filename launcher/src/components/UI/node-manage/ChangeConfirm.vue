@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <base-button class="confirm-btn">CONFIRM</base-button>
+      <button class="confirm-btn">CONFIRM</button>
     </div>
     <div class="table-container">
       <div class="table-header">
@@ -49,16 +49,14 @@
   </div>
 </template>
 <script>
-import BaseButton from "../BaseButton.vue";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 export default {
-  components: { BaseButton },
   props: ["confirmChanges"],
   computed: {
     ...mapWritableState(useServices, {
-      installedServices: "installedServices"
+      installedServices: "installedServices",
     }),
     ...mapWritableState(useNodeStore, {
       selectedItemToRemove: "selectedItemToRemove",
@@ -66,9 +64,9 @@ export default {
   },
   methods: {
     clickOnRemoveBtn() {
-      this.installedServices = this.installedServices.filter(item => {
+      this.installedServices = this.installedServices.filter((item) => {
         return item.id !== this.selectedItemToRemove.id;
-      })
+      });
     },
   },
 };
@@ -79,20 +77,23 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .confirm-box {
+  width: 100%;
+  height: 25%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
+
 .change-menu .confirm-bg-1 {
-  width: 70px;
-  height: 70px;
-  margin: 10px auto;
+  width: 48%;
+  height: 57%;
+  margin: 5px auto;
   border-radius: 50%;
   background-color: #33393e;
   display: flex;
@@ -100,44 +101,41 @@ export default {
   align-items: center;
 }
 .change-menu .confirm-bg-2 {
-  width: 55px;
-  height: 55px;
-  background-color: #2c2f30;
+  width: 85%;
+  height: 85%;
+  background-color: #454646;
   border-radius: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .change-menu .check-icon {
-  width: 46px;
-  height: 46px;
-  background-color: #33393e;
-  border: 1px solid #2b3034;
+  width: 90%;
+  height: 90%;
+  background-color: #2e2f2f;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 2px 1px rgb(75, 75, 75);
 }
-.change-menu img {
-  width: 40px;
-  height: 40px;
+.check-icon img {
+  width: 62%;
+  height: 68%;
+  background-color: #33393e;
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0 1px 3px 1px rgb(33, 33, 33);
 }
-.confirm-btn {
-  font-size: 0.8rem;
-  font-weight: bold;
-  width: 85px;
-  height: 35px;
-  outline-style: none;
-}
+
 .table-container {
   margin: 5px auto 0 auto;
   width: 80%;
-  height: 43%;
+  height: 45%;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
-  border-radius: 18px;
-  padding: 5px;
+  border-radius: 15px;
+  box-shadow: 0 0 2px 1px rgb(29, 63, 53);
+  padding: 3px;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
@@ -147,21 +145,20 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
-  height: 10%;
+  width: 97%;
+  height: 20px;
   background-color: #707070;
   border: 1px solid rgb(84, 84, 84);
-  box-shadow: 0 1px 4px 1px rgb(33, 33, 33);
-  border-radius: 50px;
+  border-radius: 13px 13px 0 0;
   margin: 0 auto;
   position: absolute;
-  top: 3px;
-  right: 4px;
+  top: 1px;
+  right: 1px;
 }
 .table-header span {
-  color: rgb(180, 193, 193);
-  font-size: 8px;
-  font-weight: 900;
+  color: #eee;
+  font-size: 0.5rem;
+  font-weight: 600;
 }
 .table-box {
   width: 95%;
@@ -217,15 +214,18 @@ export default {
   height: 200px;
 }
 .trash-box {
+  width: 100%;
+  height: 28%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
+
 .change-menu .trash-bg-1 {
-  width: 70px;
-  height: 70px;
-  margin: 10px auto;
+  width: 50%;
+  height: 54%;
+  margin: 5px auto;
   border-radius: 50%;
   background-color: #33393e;
   display: flex;
@@ -233,8 +233,8 @@ export default {
   align-items: center;
 }
 .change-menu .trash-bg-2 {
-  width: 55px;
-  height: 55px;
+  width: 85%;
+  height: 85%;
   background-color: #454646;
   border-radius: 20px;
   display: flex;
@@ -242,27 +242,39 @@ export default {
   align-items: center;
 }
 .change-menu .trash-icon {
-  width: 50px;
-  height: 50px;
-  background-color: #33393e;
+  width: 90%;
+  height: 90%;
+  background-color: #2e2f2f;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .trash-icon img {
-  width: 70px;
-  height: 70px;
+  width: 100%;
+  height: 100%;
 }
-.trash-btn {
-  font-size: 0.8rem;
-  font-weight: 900;
-  width: 85px;
-  height: 35px;
+button {
+  width: 80px;
+  height: 30px;
+  font-size: 0.7rem;
+  font-weight: 600;
   outline-style: none;
+  border: 3px solid gray;
+  box-shadow: 0 1px 3px 1px rgb(25, 48, 40);
   border-radius: 50px;
-  background-color: rgb(42, 42, 42);
+  background-color: rgb(28, 81, 78);
   color: rgb(215, 215, 215);
+  transition-duration: 100ms;
+}
+button:hover {
+  transform: scale(1.06);
+  border: 3px solid rgb(168, 168, 168);
+}
+button:active {
+  transform: scale(1);
+  border: 3px solid gray;
+  box-shadow: none;
 }
 ::-webkit-scrollbar {
   width: 1px;

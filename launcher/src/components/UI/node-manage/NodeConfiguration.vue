@@ -1,14 +1,5 @@
 <template>
   <div class="config-node">
-    <div class="edit-btn">
-      <router-link to="/node">
-        <span>NODE</span>
-        <img
-          src="../../../../public/img/icon/manage-node-icons/undo1.png"
-          alt="icon"
-        />
-      </router-link>
-    </div>
     <div class="config-row">
       <div class="row-content" v-for="(item, index) in configData" :key="index">
         <div v-if="item.network == 'testNet'" class="testnet-icon">
@@ -21,18 +12,24 @@
       </div>
     </div>
     <div class="config-bg">
+      <div class="edit-btn">
+        <router-link to="/node">
+          <span>back to NODE</span>
+          <img
+            src="../../../../public/img/icon/manage-node-icons/undo1.png"
+            alt="icon"
+          />
+        </router-link>
+      </div>
       <div class="config-btns">
         <div class="config-add" @click="$emit('modalPreset')">
           <span class="btn-text">ADD 1 CLICK PRESET</span>
-          <span class="btn-icon"></span>
         </div>
         <div class="config-network">
           <span class="btn-text">CHANGE NETWORK</span>
-          <span class="btn-icon"></span>
         </div>
         <div class="config-priority">
           <span class="btn-text">ADD PRIORITY</span>
-          <span class="btn-icon"></span>
         </div>
       </div>
       <div class="delete-box">
@@ -73,6 +70,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 export default {
@@ -85,9 +83,10 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-      configData: "getConfigData",
       headerServices: "runningServices",
-      configData_nodeSidebarVideo: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useNodeStore, {
+      configData: "configData",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -112,7 +111,6 @@ export default {
       this.removeIsConfirmed = true;
       this.removeAllPlugins();
       this.destroyNode();
-      
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
@@ -137,14 +135,14 @@ export default {
   margin-top: 1px;
   display: grid;
   background-color: #3b3b3b;
-  grid-template-rows: 6% 9% 70%;
+  grid-template-rows: 4% 9% 87%;
   grid-template-columns: repeat(6, 1fr);
   justify-content: center;
   align-items: center;
 }
 .config-bg {
   grid-column: 1/7;
-  grid-row: 3/6;
+  grid-row: 3;
   width: 95%;
   height: 98%;
   display: grid;
@@ -171,7 +169,7 @@ export default {
 
 .config-btns {
   grid-column: 1/6;
-  grid-row: 1/4;
+  grid-row: 2/5;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -184,9 +182,9 @@ export default {
   width: 90%;
   height: 32px;
   background-color: #292929;
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: rgb(194, 194, 194);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgb(196, 196, 196);
   border: 1px solid #787878;
   margin-top: 5px;
   border-radius: 8px;
@@ -195,6 +193,14 @@ export default {
   align-items: center;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.config-btns .config-add span,
+.config-btns .config-network span,
+.config-btns .config-priority span {
+  width: 100%;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgb(196, 196, 196);
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
@@ -210,41 +216,43 @@ export default {
 }
 .delete-box {
   grid-column: 1/6;
-  grid-row: 8;
+  grid-row: 6/7;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .edit-btn {
-  grid-column: 3/7;
-  grid-row: 1;
-  width: 74%;
-  height: 90%;
-  border: 1px solid rgb(64, 89, 75);
-  justify-self: end;
-  border-radius: 20px;
+  grid-column: 1/7;
+  grid-row: 1/2;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  background-color: #2c4030;
-  box-shadow: 0 1px 2px 1px rgb(46, 45, 45);
+  margin-top: 5px;
 }
-.edit-btn:hover {
-  box-shadow: none;
-  background-color: #1e2920;
+.edit-btn a:hover {
+  background-color: #2c2c2c;
+  transform: scale(1.02);
 }
-.edit-btn:active {
+.edit-btn a:active {
   box-shadow: none;
-  border: 1px solid #131413;
+  transform: scale(1);
 }
 .edit-btn a {
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
+  width: 90%;
+  height: 32px;
+  background-color: #292929;
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: rgb(194, 194, 194);
+  border: 1px solid #787878;
+  margin-top: 5px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 1px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
@@ -252,6 +260,7 @@ export default {
   font-weight: 800;
   text-align: center;
   margin-left: 10px;
+  text-transform: uppercase;
 }
 .edit-btn img {
   width: 18px;
@@ -259,10 +268,14 @@ export default {
   background-color: transparent;
   margin-right: 10px;
 }
+.delete-box {
+  grid-column: 1/6;
+  grid-row: 8;
+}
 .delete-box .delete-btn {
   width: 90%;
   height: 32px;
-  border: 1px solid #656565;
+  border: 1px solid #828282;
   border-radius: 8px;
   box-shadow: 0 1px 4px #373737;
   background-color: #303030;
@@ -270,7 +283,7 @@ export default {
   outline-style: none;
   color: #d25353;
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   display: flex;
   justify-content: space-between;
   align-items: center;
