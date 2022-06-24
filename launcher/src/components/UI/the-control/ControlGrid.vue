@@ -90,6 +90,9 @@ import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
+  beforeMount(){
+    this.updateStates()
+  },
   components: {
     ControlDashboard,
     ControlPlugins,
@@ -104,20 +107,28 @@ export default {
     }),
   },
   methods: {
+    updateStates: async function (){
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false
+        serviceInfos.forEach(i => {
+          if(i.Names.replace("stereum-","") === s.config.serviceID){
+            this.installedServices[idx].state = i.State
+            updated = true
+          }
+        })
+        if(!updated){
+          this.installedServices[idx].state = 'exited'
+        }
+      })
+    },
     stateHandler: async function (item){
       let state = 'stopped'
       if(item.state === 'exited'){
         state = 'started'
       }
       await ControlService.manageServiceState({id:item.config.serviceID, state: state})
-      item.state = 'exited'
-      if(state === 'started'){
-        item.state = 'running'
-      }
-      if(item.name === 'Teku' || item.name === 'Nimbus'){
-        this.installedServices[this.installedServices.findIndex(e => e.service === item.name + 'ValidatorService')].state = item.state
-        this.installedServices[this.installedServices.findIndex(e => e.service === item.name + 'BeaconService')].state = item.state
-      }
+      this.updateStates()
     }
   }
 };
