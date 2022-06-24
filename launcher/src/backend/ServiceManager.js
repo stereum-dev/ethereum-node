@@ -1,6 +1,7 @@
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
 import { GethService } from './ethereum-services/GethService'
+import { BesuService } from './ethereum-services/BesuService'
 import { BloxSSVService } from './ethereum-services/BloxSSVService'
 import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
 import { PrometheusService } from './ethereum-services/PrometheusService'
@@ -9,6 +10,7 @@ import { GrafanaService } from './ethereum-services/GrafanaService'
 import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
+import { NethermindService } from './ethereum-services/NethermindService'
 
 const log = require('electron-log')
 
@@ -94,6 +96,10 @@ export class ServiceManager {
             services.push(LighthouseValidatorService.buildByConfiguration(config))
           } else if (config.service == 'GethService') {
             services.push(GethService.buildByConfiguration(config))
+          } else if (config.service == 'BesuService') {
+            services.push(BesuService.buildByConfiguration(config))
+          } else if (config.service == 'NethermindService') {
+            services.push(NethermindService.buildByConfiguration(config))
           } else if (config.service == 'BloxSSVService') {
             services.push(BloxSSVService.buildByConfiguration(config))
           } else if (config.service == 'NimbusBeaconService') {

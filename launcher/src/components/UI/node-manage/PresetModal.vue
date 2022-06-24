@@ -10,8 +10,13 @@
             class="plugin-item"
             v-for="(plugin, index) in clickPresets"
             :key="index"
+            @click="selectItemToInstall(plugin)"
           >
-            <img :src="plugin.icon" alt="icon" />
+            <img :src="plugin.icon" alt="icon" 
+              :class="{
+                selectedItem: plugin.id === this.selectedPreset?.id,
+              }"
+            />
           </div>
         </div>
       </div>
@@ -41,15 +46,38 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import ControlService from "@/store/ControlService";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 export default {
   props: ["modalStatus"],
   computed: {
     ...mapState(useNodeManage, {
       clickPresets: "clickPresets",
     }),
+    ...mapWritableState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      selectedNetworks: "selectedNetworks",
+    }),
+    ...mapWritableState(useServices, {
+      allServices: "allServices",
+    }),
   },
+  methods: {
+    selectItemToInstall: async function (item) {
+      const constellation = await ControlService.getOneClickConstellation(item.name);
+      let includedPlugins = this.allServices.filter(service => constellation.includes(service.service));
+      if(includedPlugins.map(e => e.service).includes("BloxSSVService") || includedPlugins.map(e => e.service).includes("RocketpoolService")){
+        includedPlugins.splice(includedPlugins.findIndex(e => (e.service != 'BloxSSVService' && e.service != 'RocketpoolService' && e.category === 'validator')),1)
+      }
+      item.includedPlugins = includedPlugins;
+      this.selectedPreset = item;
+      this.$emit("disableBtn");
+    },
+  }
 };
 </script>
 <style scoped>
@@ -207,5 +235,10 @@ export default {
   width: 17px;
   height: 17px;
   border-radius: 50px;
+}
+.selectedItem {
+  border: 2px solid rgb(53, 178, 246) !important;
+  border-radius: 10px !important;
+  box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
 </style>

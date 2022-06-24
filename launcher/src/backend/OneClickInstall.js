@@ -1,5 +1,6 @@
 import { BloxSSVService } from './ethereum-services/BloxSSVService'
 import { GethService } from './ethereum-services/GethService'
+import { BesuService } from './ethereum-services/BesuService'
 import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
 import { PrometheusService } from './ethereum-services/PrometheusService'
 import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
@@ -12,6 +13,7 @@ import { LighthouseValidatorService } from './ethereum-services/LighthouseValida
 import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
+import { NethermindService } from './ethereum-services/NethermindService'
 
 const YAML = require('yaml')
 const log = require('electron-log')
@@ -111,6 +113,28 @@ export class OneClickInstall {
       this.executionClient = GethService.buildByUserInput('goerli', ports, this.installDir + '/geth')
       prometheusJobs.push(this.executionClient)
       this.provisioning.push('geth')
+
+    }
+
+    if (constellation.includes('BesuService')) {
+      ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+      ]
+      this.executionClient = BesuService.buildByUserInput('goerli', ports, this.installDir + '/besu')
+      prometheusJobs.push(this.executionClient)
+      //this.provisioning.push('besu')
+
+    }
+
+    if (constellation.includes('NethermindService')) {
+      ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+      ]
+      this.executionClient = NethermindService.buildByUserInput('goerli', ports, this.installDir + '/nethermind')
+      prometheusJobs.push(this.executionClient)
+      //this.provisioning.push('nethermind')
 
     }
 
