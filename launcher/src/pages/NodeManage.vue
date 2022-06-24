@@ -236,9 +236,10 @@ export default {
 }
 .modal-bg {
   width: 100%;
-  height: 86.7%;
+  height: 86.3%;
   position: absolute;
-  top: 7.5%;
+  top: 8%;
+  right: 1px;
 }
 .service {
   width: 99%;
@@ -268,9 +269,9 @@ export default {
   border: 1px solid #2d4338;
   border-radius: 15px;
   margin: 10px auto;
-  font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 1px 1px 3px rgb(26, 26, 26);
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 3px rgb(19, 40, 31);
   display: flex;
   justify-content: center;
   align-items: center;

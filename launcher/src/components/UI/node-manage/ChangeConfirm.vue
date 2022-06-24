@@ -147,7 +147,7 @@ export default {
   align-items: center;
   width: 97%;
   height: 20px;
-  background-color: #707070;
+  background-color: #535353;
   border: 1px solid rgb(84, 84, 84);
   border-radius: 13px 13px 0 0;
   margin: 0 auto;
