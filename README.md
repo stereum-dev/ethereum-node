@@ -8,7 +8,7 @@
 This repository contains the code and scripts for Stereum 2.0 (tba)
 
 
-🍄 Stereum is a tool to manage the process of setting up & maintaining an Ethereum node for you with a heavy focus on self sovereignty, privacy and flexibility. Stereum is actively developed by the RockLogic GmbH, who first started to develop on its predecessor in 2019.
+🍄 Stereum manages the process of setting up & maintaining an Ethereum node for you with a focus on self sovereignty, privacy and flexibility. 
 
 🍄 Stereum 2.0 aims to be the most flexible way to leverage your Ethereum node for staking, data science, development or your own personal use case. We hope to explore every hermit’s dream with you!
 
@@ -16,7 +16,7 @@ This repository contains the code and scripts for Stereum 2.0 (tba)
 
 
 ## Get Started 
-Pre-built software packages are available on our [website](https://stereum.net/) or on GitHub releases. After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
+After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
 
 ## Download
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betasolo)
