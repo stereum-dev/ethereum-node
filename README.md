@@ -5,7 +5,7 @@
 [![Support Server](https://img.shields.io/badge/Discord-Stereum-blue?style=flat-square)](https://discord.gg/8Znj8K6GjN) [![Support Email](https://img.shields.io/badge/Email-Stereum-brightgreen?style=flat-square)](mailto:stereum@stereum.net)
 
 ---
-This repository contains the code and scripts for Stereum 2.0 (tba)
+This repository contains the code and scripts for Stereum 2.0
 
 
 🍄 Stereum manages the process of setting up & maintaining an Ethereum node for you with a focus on self sovereignty, privacy and flexibility. 
