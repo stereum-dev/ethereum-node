@@ -71,7 +71,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      allServices: "allServices"
+      allServices: "allServices",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -85,22 +85,26 @@ export default {
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      await ControlService.writeOneClickConfiguration(this.selectedPreset.includedPlugins);
-      await ControlService.startOneClickServices()
+      await ControlService.writeOneClickConfiguration(
+        this.selectedPreset.includedPlugins
+      );
+      await ControlService.startOneClickServices();
 
       let services = await ControlService.getServices();
       let serviceInfos = await ControlService.listServices();
-        if (services && services.length > 0) {
-        let states = serviceInfos.map(service => {
+      if (services && services.length > 0) {
+        let states = serviceInfos.map((service) => {
           return {
-            serviceID: service.Names.replace("stereum-",""),
-            state: service.State
-          }
-        })
+            serviceID: service.Names.replace("stereum-", ""),
+            state: service.State,
+          };
+        });
         services.forEach((service) => {
-          let buffer = this.allServices.find((element) => element.service === service.service)
-          if(buffer){
-            buffer.state = (states.find(e => e.serviceID === service.id)).state
+          let buffer = this.allServices.find(
+            (element) => element.service === service.service
+          );
+          if (buffer) {
+            buffer.state = states.find((e) => e.serviceID === service.id).state;
             buffer.config = {
               serviceID: service.id,
               configVersion: service.configVersion,
@@ -109,36 +113,46 @@ export default {
               ports: service.ports,
               volumes: service.volumes,
               network: service.network,
+            };
+            if (buffer.name === "Teku" || buffer.name === "Nimbus") {
+              let vs = this.allServices.find(
+                (element) =>
+                  element.service === buffer.name + "ValidatorService"
+              );
+              vs.config = buffer.config;
+              vs.state = buffer.state;
+              this.installedServices.push(vs);
             }
-            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
-              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
-              vs.config = buffer.config
-              vs.state = buffer.state
-              this.installedServices.push(vs)
-            }
-            this.installedServices.push(buffer)
+            this.installedServices.push(buffer);
           }
-        })
+        });
         let localPorts = await ControlService.getAvailablePort({
-            min: 9000,
-            max: 9999,
-            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
+          min: 9000,
+          max: 9999,
+          amount: this.installedServices.filter(
+            (s) => s.headerOption && s.tunnelLink
+          ).length,
+        });
+
+        this.headerServices = this.installedServices
+          .filter((service) => service.headerOption)
+          .map((service) => {
+            if (service.tunnelLink) {
+              service.linkUrl = "http://localhost:" + localPorts.pop();
+            }
+            return service;
+          });
+        let ports = this.headerServices
+          .filter((service) => service.tunnelLink)
+          .map((service) => {
+            return {
+              dstPort: service.config.ports[0].servicePort,
+              localPort: service.linkUrl.split(":").pop(),
+            };
           });
 
-        this.headerServices = (this.installedServices.filter(service => service.headerOption)
-                              .map(service => {             
-                                if(service.tunnelLink){
-                                  service.linkUrl = "http://localhost:" + localPorts.pop()
-                                }
-                                return service
-                              }))
-        let ports = (this.headerServices.filter(service => service.tunnelLink))
-                    .map(service => {
-                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
-                    })
-
         await ControlService.openTunnels(ports);
-        }
+      }
     },
   },
 };
@@ -228,6 +242,7 @@ export default {
   width: 100%;
   height: 100%;
   border: 9px solid #8e8e8e;
+   background-color: #33393e;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -276,12 +291,9 @@ export default {
 
 .table-content .table-row {
   width: 95%;
-  height: 31px;
-  margin-top: 5px;
-  background-color: #33393e;
-  box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
-  border: 1px solid rgb(81, 80, 80);
-  border-radius: 10px;
+  height: 35px;
+  margin-top: 2px;
+  border-bottom: 1px solid rgb(81, 80, 80);
   justify-self: center;
   display: flex;
   justify-content: space-evenly;
@@ -297,7 +309,7 @@ export default {
   align-items: center;
 }
 .plugin-name img {
-  width: 14%;
+  width: 15%;
   height: 65%;
 }
 
@@ -347,8 +359,8 @@ export default {
   align-items: center;
 }
 .btn-box a {
-  width: 95%;
-  height: 90%;
+  width: 25%;
+  height: 60%;
   text-decoration: none;
   display: flex;
   justify-content: space-evenly;
@@ -356,16 +368,16 @@ export default {
 }
 .next-btn,
 .back-btn {
-  width: 55%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
-  color: #fff;
-  outline-style: none;
+  color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(49, 61, 54);
+  box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
   cursor: pointer;
 }
 .next-btn:hover,

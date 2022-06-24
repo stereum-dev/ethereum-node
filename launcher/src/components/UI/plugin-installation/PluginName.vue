@@ -624,8 +624,8 @@ export default {
   align-items: center;
 }
 .btn-box a {
-  width: 95%;
-  height: 90%;
+  width: 25%;
+  height: 60%;
   text-decoration: none;
   display: flex;
   justify-content: space-evenly;
@@ -633,8 +633,8 @@ export default {
 }
 .next-btn,
 .back-btn {
-  width: 55%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
