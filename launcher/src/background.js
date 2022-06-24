@@ -152,6 +152,10 @@ promiseIpc.on("manageServiceState", async (args) => {
   return await serviceManager.manageServiceState(args.id, args.state)
 })
 
+promiseIpc.on("runUpdates", async (args) => {
+  return await nodeConnection.runUpdates()
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
