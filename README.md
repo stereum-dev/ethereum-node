@@ -1,19 +1,31 @@
-# Stereum 2.0
+![GitHub - Stereum 2 0 - ReadMe](https://user-images.githubusercontent.com/82385103/175423093-03d28d7b-3c2e-44b7-8be1-7f2a5946fcc6.png)
+
+---
 
 [![Support Server](https://img.shields.io/badge/Discord-Stereum-blue?style=flat-square)](https://discord.gg/8Znj8K6GjN) [![Support Email](https://img.shields.io/badge/Email-Stereum-brightgreen?style=flat-square)](mailto:stereum@stereum.net)
 
-This repository contains the code and scripts for ~~[Stereum 2.0](https://stereum.net/ethereum-node/)~~ (tba), an [Ethereum](https://ethereum.org/) node setup and management software with focus on self sovereignity, privacy and flexibility.
+---
+This repository contains the code and scripts for Stereum 2.0
 
-## Get Started
-Pre-built software packages are available on our [website](https://stereum.net/) or on GitHub releases. After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
 
-### Latest Release
-[![beta2.0-solo](https://img.shields.io/badge/release-beta2.0--solo-green?style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betasolo)
+🍄 Stereum manages the process of setting up & maintaining an Ethereum node for you with a focus on self sovereignty, privacy and flexibility. 
+
+🍄 Stereum 2.0 aims to be the most flexible way to leverage your Ethereum node for staking, data science, development or your own personal use case. We hope to explore every hermit’s dream with you!
+
+🍄 With Stereum you are able to participate in the Ethereum network and its various protocols (like SSV)!
+
+
+## Get Started 
+After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
+
+## Download
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betasolo)
+
 
 ## Contribute
 Want to get involved? Create a pull request and we'll have a look at it!
 
-Not sure? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
+Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
 
 ## Branches
 ### `main`

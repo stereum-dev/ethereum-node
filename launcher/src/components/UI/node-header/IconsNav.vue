@@ -62,6 +62,7 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import UpdateModal from "./UpdateModal.vue";
 export default {
   components: { UpdateModal },
@@ -77,13 +78,19 @@ export default {
     };
   },
   methods: {
+    runUpdates: async function () {
+      await ControlService.runUpdates()
+    },
     updateModalHandler() {
       this.showUpdateModal = true;
     },
     removeModalHandler() {
       this.showUpdateModal = false;
     },
-    updateConfirmationHandler() {},
+    updateConfirmationHandler: async function () {
+      await this.runUpdates();
+      this.showUpdateModal = false;
+    },
   },
 };
 </script>

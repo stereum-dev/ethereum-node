@@ -517,4 +517,8 @@ export class NodeConnection {
     }
     return ports;
   }
+
+  async runUpdates(){
+    await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`)
+  }
 }
