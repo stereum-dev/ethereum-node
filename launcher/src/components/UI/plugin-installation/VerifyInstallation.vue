@@ -89,10 +89,18 @@ export default {
       await ControlService.startOneClickServices()
 
       let services = await ControlService.getServices();
+      let serviceInfos = await ControlService.listServices();
         if (services && services.length > 0) {
+        let states = serviceInfos.map(service => {
+          return {
+            serviceID: service.Names.replace("stereum-",""),
+            state: service.State
+          }
+        })
         services.forEach((service) => {
           let buffer = this.allServices.find((element) => element.service === service.service)
           if(buffer){
+            buffer.state = (states.find(e => e.serviceID === service.id)).state
             buffer.config = {
               serviceID: service.id,
               configVersion: service.configVersion,
@@ -105,6 +113,7 @@ export default {
             if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
               let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
               vs.config = buffer.config
+              vs.state = buffer.state
               this.installedServices.push(vs)
             }
             this.installedServices.push(buffer)
