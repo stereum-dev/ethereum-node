@@ -126,6 +126,14 @@ class ControlService extends EventEmitter {
   async listValidators(args) {
     return await this.promiseIpc.send("listValidators", args)
   }
+
+  async listServices(){
+    return await this.promiseIpc.send("listServices")
+  }
+
+  async manageServiceState(args){
+    return await this.promiseIpc.send("manageServiceState", args)
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

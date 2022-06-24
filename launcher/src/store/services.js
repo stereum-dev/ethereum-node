@@ -15,8 +15,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/consensus/Lighthouse-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -37,8 +37,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -59,8 +59,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/consensus/Prysm.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/consensus/Prysm-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -81,8 +81,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -103,8 +103,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/consensus/Nimbus.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -125,8 +125,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -147,8 +147,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/consensus/Teku.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/consensus/Teku-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -169,8 +169,8 @@ export const useServices = defineStore("services", {
                     icon: require("../../public/img/icon/plugin-icons/validator/teku-validator.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/validator/Teku-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -193,8 +193,8 @@ export const useServices = defineStore("services", {
                     hIcon: "/img/icon/service-icons/ssv.png",
                     linkUrl: "https://stereum.net",
                     headerOption: true,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -217,8 +217,8 @@ export const useServices = defineStore("services", {
                     linkUrl: "https://stereum.net",
                     headerOption: true,
                     tunnelLink: true,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -241,8 +241,8 @@ export const useServices = defineStore("services", {
                     linkUrl: "https://stereum.net",
                     headerOption: true,
                     tunnelLink: true,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",
@@ -263,8 +263,8 @@ export const useServices = defineStore("services", {
                     icon: require("../..//public/img/icon/plugin-icons/execution/Geth.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/execution/Geth-s.png"),
                     headerOption: false,
-                    aktive: false,
                     drag: true,
+                    state: 'exited',
                     config: {
                         serviceID: "",
                         configVersion: "",

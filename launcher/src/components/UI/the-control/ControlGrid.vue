@@ -13,21 +13,29 @@
             />
           </div>
           <div class="plugins-table">
-            <div class="plugins-row">
-              <div class="plugins-status-color"></div>
+            <div class="plugins-row" v-for="(item, index) in installedServices" :key="index">
+              <div
+                :class="{
+              'plugins-running-state': item.state == 'running',
+              'plugins-exited-state': item.state == 'exited',
+              'plugins-restarting-state': item.state == 'restarting',
+              }"
+              ></div>
               <div class="plugins-row-content">
                 <div class="row-plugin-name">
-                  <span>plugin-name</span>
+                  <span>{{ item.name }}</span>
                 </div>
                 <div class="row-category">
-                  <span>Consensus Client</span>
+                  <span>{{ item.category }}</span>
                 </div>
               </div>
               <div class="service-edit">
                 <div class="edit-box">
                   <div class="icon-bg">
                     <div class="power-icon">
-                      <img src="/img/icon/control/power.png" alt="icon" />
+                      <img src="/img/icon/control/power.png" alt="icon" 
+                        @click="stateHandler(item)"
+                      />
                     </div>
                   </div>
                   <div class="icon-bg">
@@ -73,11 +81,14 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: {
     ControlDashboard,
@@ -86,6 +97,29 @@ export default {
     ControlAlert,
     TaskManager,
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",    
+    }),
+  },
+  methods: {
+    stateHandler: async function (item){
+      let state = 'stopped'
+      if(item.state === 'exited'){
+        state = 'started'
+      }
+      await ControlService.manageServiceState({id:item.config.serviceID, state: state})
+      item.state = 'exited'
+      if(state === 'started'){
+        item.state = 'running'
+      }
+      if(item.name === 'Teku' || item.name === 'Nimbus'){
+        this.installedServices[this.installedServices.findIndex(e => e.service === item.name + 'ValidatorService')].state = item.state
+        this.installedServices[this.installedServices.findIndex(e => e.service === item.name + 'BeaconService')].state = item.state
+      }
+    }
+  }
 };
 </script>
 
@@ -235,10 +269,22 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 3px 1px #393939;
 }
-.plugins-status-color {
+.plugins-running-state {
   width: 20%;
   height: 100%;
   background-color: #22b53f;
+  border-radius: 3px;
+}
+.plugins-exited-state {
+  width: 20%;
+  height: 100%;
+  background-color: #a1a1a1;
+  border-radius: 3px;
+}
+.plugins-restarting-state {
+  width: 20%;
+  height: 100%;
+  background-color: #db0000;
   border-radius: 3px;
 }
 .plugins-row-content {

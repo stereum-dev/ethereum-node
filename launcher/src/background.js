@@ -142,6 +142,14 @@ promiseIpc.on("importKey", async (args) => {
 
 promiseIpc.on("listValidators", async (args) => {
   return await validatorAccountManager.listValidators(args);
+});
+
+promiseIpc.on("listServices", async () => {
+  return await nodeConnection.listServices();
+});
+
+promiseIpc.on("manageServiceState", async (args) => {
+  return await serviceManager.manageServiceState(args.id, args.state)
 })
 
 // Scheme must be registered before the app is ready
