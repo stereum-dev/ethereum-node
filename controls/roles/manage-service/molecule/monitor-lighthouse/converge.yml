@@ -8,7 +8,7 @@
     prometheus_node_exporter_service: ef7d66cc-9022-11ec-8bd0-57e35985136a
     grafana_service: 59827650-8ac6-11ec-81ec-f3dc0fb8f30e
     beacon_service: cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86
-    grafana_provisioning: lighthouse
+    grafana_provisioning: ["lighthouse"]
 
   tasks:
     # prometheus service
@@ -25,7 +25,7 @@
             state: started
             configuration:
               id: "{{ prometheus_service }}"
-              image: prom/prometheus:v2.33.1
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
               ports:
                 - 127.0.0.1:9090:9090/tcp
               env:
@@ -73,7 +73,7 @@
             state: started
             configuration:
               id: "{{ prometheus_node_exporter_service }}"
-              image: prom/node-exporter:v1.3.1
+              image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
               ports: []
               env: {}
               command: []
@@ -94,7 +94,7 @@
             state: started
             configuration:
               id: "{{ grafana_service }}"
-              image: grafana/grafana:8.4.0
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
               ports:
                 - 127.0.0.1:3000:3000/tcp
               env:
@@ -102,7 +102,6 @@
                   [auth.anonymous]
                   enabled = true
                   org_role = Admin
-                GRAFANA_PROVISIONING: "{{ grafana_provisioning }}"
               command: bash -c "touch /etc/grafana/grafana.ini &&
                                 echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
                                 /run.sh"

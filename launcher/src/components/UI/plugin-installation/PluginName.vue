@@ -63,17 +63,35 @@
                   v-for="(plugin, index) in selectedPreset.includedPlugins"
                   :key="index"
                 >
-                  <div class="icon-box">
-                    <div class="plugin-icon">
-                      <img :src="plugin.icon" alt="icon" />
+                  <change-modal v-if="plugin.showChangeModal">
+                    <div class="replaced-plugins">
+                      <div
+                        class="item"
+                        v-for="(item, idx) in filteredPluginsOnCategory"
+                        :key="idx"
+                        @click="pluginChangeHandler(plugin, item, index)"
+                      >
+                        <img
+                          :src="item.icon"
+                          alt="icon"
+                          @mousedown.prevent.stop
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div class="content">
-                    <div class="plugin-name">
-                      <span>{{ plugin.name }}</span>
+                  </change-modal>
+                  <div class="row" @click="pluginExChange(plugin)">
+                    <div class="icon-box">
+                      <div class="plugin-icon">
+                        <img :src="plugin.icon" alt="icon" />
+                      </div>
                     </div>
-                    <div class="category">
-                      <span>{{ plugin.category }}</span>
+                    <div class="content">
+                      <div class="plugin-name">
+                        <span>{{ plugin.name }}</span>
+                      </div>
+                      <div class="category">
+                        <span>{{ plugin.displayCategory }}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -95,53 +113,87 @@
 </template>
 <script>
 import ToggleButton from "./toggleButton.vue";
-import { mapGetters } from "vuex";
+import ChangeModal from "./ChangeModal.vue";
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from '../../../store/services';
 export default {
-  components: { ToggleButton },
+  components: { ToggleButton, ChangeModal },
 
   data() {
     return {
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
+      activeExecutionClient: false,
+      activeConsensusClient: false,
+      activeValidatorClient: false,
+      exchangeModalActive: false,
+      filteredPluginsOnCategory: [],
+      filteredPluginsOnName: [],
+      categoryDisplayName: "",
       testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
       mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      plugins: "getAllPlugins",
-      getInstallationPath: "getInstallationPath",
+    ...mapWritableState(useClickInstall, {
+      selectedPreset: "selectedPreset",
+      plugins: "presets",
+      installationPath: "installationPath",
     }),
-    installationPath: {
-      get() {
-        return this.getInstallationPath;
-      },
-      set(val) {
-        this.$store.commit("mutatedInstallationPath", val);
-      },
-    },
-
-    // getMemoryClass() {
-    //   if (this.systemInfos.memory >= this.selectedPreset.requirements?.memory) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
-    // getCpuClass() {
-    //   if (this.systemInfos.cpu >= this.selectedPreset.requirements?.core) {
-    //     return true;
-    //   } else {
-    //     return false;
-    //   }
-    // },
+    ...mapWritableState(useServices, {
+      allPlugins: "allServices",
+    }),
   },
+  beforeUpdate() {},
   mounted() {
-    if (Object.keys(this.selectedPreset).length === 0) {
+    if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
       this.$router.push("/clickinstall");
     }
+    this.selectedPreset.includedPlugins =
+      this.selectedPreset.includedPlugins.map((item) => {
+        return {
+          showChangeModal: false,
+          ...item,
+        };
+      });
+  },
+  methods: {
+    pluginChangeHandler(el, item, idx) {
+      el.showChangeModal = false;
+      if (el.category === "execution") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
+      if (el.category === "validator" || el.category === "consensus") {
+        this.selectedPreset.includedPlugins[idx] = item;
+      }
+    },
+    // validatorAndConsensusHandler(el, item, idx) {
+    //   this.selectedPreset.includedPlugins.map((param) => {
+    //     if (
+    //       param.name === this.selectedPreset.includedPlugins[idx].name &&
+    //       (param.category === "validator" || param.category === "consensus")
+    //     ) {
+    //       // this.filteredPluginsOnName.push(param);
+    //       param = item;
+    //     }
+    //   });
+    // },
+    pluginExChange(el) {
+      this.selectedPreset.includedPlugins.filter((item) => {
+        item.showChangeModal = false;
+        if (item?.service === el.service && item?.id === el.id) {
+          this.checkPluginCategory(item);
+        }
+      });
+      el.showChangeModal = true;
+    },
+    checkPluginCategory(element) {
+      this.filteredPluginsOnCategory = this.allPlugins.filter(
+        (item) => item.category === element.category
+      );
+    },
   },
 };
 </script>
@@ -188,10 +240,11 @@ export default {
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 15% 85%;
+  position: relative;
 }
 .included-title {
   width: 61%;
@@ -207,90 +260,140 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 .info-box {
-  width: 88%;
-  height: 83%;
+  width: 94%;
+  height: 91%;
   margin: 10px auto;
-  padding: 5px;
+  padding: 2px;
+  overflow-x: hidden;
+  overflow-y: auto;
   border: 2px solid #343434;
   background-color: #282828;
   border-radius: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .info-box::-webkit-scrollbar {
   width: 1px;
 }
 .info-row {
-  grid-column: 1;
   width: 100%;
   height: 45px;
   margin-top: 5px;
-  background-color: #33393e;
-  border: 1px solid rgb(81, 80, 80);
-  box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  cursor: pointer;
-}
-.content {
-  width: 75%;
-  height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  align-items: center;
+}
+.row {
+  width: 100%;
+  height: 100%;
+  background-color: #33393e;
+  box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
+  border: 2px solid #33393e;
+  border-radius: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  transition-duration: 50ms;
+}
+.row:hover {
+  border: 2px solid #1d7ecd;
+  transition-duration: 50ms;
+}
+.content {
+  width: 85%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 .plugin-name {
-  width: 100%;
-  max-width: auto;
+  width: 83%;
   height: 90%;
-  text-align: left;
-}
-.plugin-name span {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: rgb(203, 203, 203);
-  margin-left: 10px;
-}
-.icon-box {
-  width: 25%;
-  height: 100%;
+  margin-left: 5px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
+.plugin-name span {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  color: rgb(203, 203, 203);
+  margin-left: 2px;
+}
+.icon-box {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 4px;
+}
+
 .plugin-icon {
-  width: 61%;
-  height: 79%;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .plugin-icon img {
-  width: 98%;
-  height: 98%;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
-  border: 2px solid rgb(84, 84, 84);
-  box-shadow: 0 1px 3px 1px rgb(23, 23, 23);
+  border: 2px solid rgb(133, 133, 133);
 }
+
 .category {
-  width: 100%;
-  max-width: auto;
-  height: 90%;
-  text-align: left;
+  width: 17%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .category span {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: rgb(115, 115, 115);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgb(89, 136, 101);
+  border-radius: 100%;
   text-transform: uppercase;
-  margin-left: 10px;
+}
+
+.replaced-plugins {
+  width: 100%;
+  height: 43px;
+  border-radius: 10px 10px 0 0;
+  background-color: #2b3034;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.replaced-plugins .item {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.replaced-plugins .item img {
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgb(175, 175, 175);
+  box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
+  border-radius: 100%;
+}
+.replaced-plugins .item img:hover {
+  transform: scale(1.07);
+  border: 2px solid rgb(123, 208, 251);
+}
+
+.replaced-plugins .item img:active {
+  transform: scale(1);
 }
 .name-box {
   width: 95%;
@@ -348,7 +451,7 @@ export default {
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  box-shadow: 0 1px 3px 1px rgb(35, 56, 50);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -381,7 +484,7 @@ export default {
 .network-box .choose {
   width: 90%;
   height: 51%;
-  border: 2px solid #6a6a6a;
+  border: 2px solid #7f7d7d;
   border-radius: 15px;
   background-color: #30483b;
   margin-bottom: 2px;
@@ -399,7 +502,7 @@ export default {
 .network-box .none {
   width: 70%;
   height: 45%;
-  border: 2px solid #6a6a6a;
+  border: 2px solid #838383;
   border-radius: 30px;
   background-color: #2a2a2a;
   align-self: flex-end;
@@ -444,11 +547,11 @@ export default {
 }
 .fast-sync .sync-box {
   width: 45%;
-  height: 45%;
+  height: 52%;
   margin: 5px;
-  border: 3px solid rgb(93, 92, 92);
+  border: 3px solid #8f8f8f;
   border-radius: 15px;
-  background-color: #30483b;
+  background-color: #1a5443;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -487,26 +590,30 @@ export default {
 }
 .change-installation .change-box {
   width: 90%;
-  height: 40%;
+  height: 50%;
   background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0;
 }
 .change-box input {
   width: 100%;
-  height: 85%;
+  height: 100%;
   background-color: rgb(209, 209, 209);
   border: none;
-  border-radius: 10px;
+  border-radius: 6px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding-left: 10px;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 
 .btn-box {

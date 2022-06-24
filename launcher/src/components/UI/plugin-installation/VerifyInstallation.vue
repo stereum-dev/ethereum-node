@@ -54,17 +54,27 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import ControlService from '@/store/ControlService'
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {};
   },
   computed: {
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
-      installationPath: "getInstallationPath",
-      pluginServices: "getServiceIcons",
+    ...mapWritableState(useClickInstall, {
+      installationPath: "installationPath",
+      selectedPreset: "selectedPreset",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+      allServices: "allServices"
+    }),
+    ...mapWritableState(useNodeHeader, {
+      headerServices: "runningServices",
     }),
   },
   mounted() {
@@ -73,18 +83,55 @@ export default {
     }
   },
   methods: {
-    runInstalltion: async function(){
-      console.log(await ControlService.prepareOneClickInstallation(this.installationPath));
-      let services = await ControlService.writeOneClickConfiguration();
-      console.log(await ControlService.startOneClickServices());
-      let grafana = services.find(service => service.service.includes('Grafana'))
-      let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-      let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
-      await ControlService.openTunnels([{dstPort: grafana.ports[0].split(":")[2].replace('/tcp',''), localPort: freePort}])
-      grafanaStats.linkUrl = 'http://localhost:' + freePort
-      this.$store.commit("updateRunningServices", [grafanaStats]);
-    }
-  }
+    runInstalltion: async function () {
+      await ControlService.prepareOneClickInstallation(this.installationPath);
+      await ControlService.writeOneClickConfiguration(this.selectedPreset.includedPlugins);
+      await ControlService.startOneClickServices()
+
+      let services = await ControlService.getServices();
+        if (services && services.length > 0) {
+        services.forEach((service) => {
+          let buffer = this.allServices.find((element) => element.service === service.service)
+          if(buffer){
+            buffer.config = {
+              serviceID: service.id,
+              configVersion: service.configVersion,
+              image: service.image,
+              imageVersion: service.imageVersion,
+              ports: service.ports,
+              volumes: service.volumes,
+              network: service.network,
+            }
+            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
+              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
+              vs.config = buffer.config
+              this.installedServices.push(vs)
+            }
+            this.installedServices.push(buffer)
+          }
+        })
+        let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
+          });
+
+        this.headerServices = (this.installedServices.filter(service => service.headerOption)
+                              .map(service => {             
+                                if(service.tunnelLink){
+                                  service.linkUrl = "http://localhost:" + localPorts.pop()
+                                }
+                                return service
+                              }))
+        let ports = (this.headerServices.filter(service => service.tunnelLink))
+                    .map(service => {
+                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
+                    })
+
+        await ControlService.openTunnels(ports);
+        }
+    },
+  },
 };
 </script>
 <style scoped>

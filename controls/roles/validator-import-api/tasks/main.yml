@@ -1,103 +1,72 @@
 ---
+#############
+# read config
+- name: Build service configuration's path
+  set_fact:
+    stereum_service_config_path: "/etc/stereum/services/{{ validator_service }}.yaml"
+- name: Read service's configuration
+  slurp:
+    src: "{{ stereum_service_config_path }}"
+  register: stereum_service_configuration_raw
+  become: yes
+- name: Read variable
+  set_fact:
+    stereum_service_configuration: "{{ stereum_service_configuration_raw.content | b64decode | from_yaml }}"
+  become: yes
+
+########
+# import
 - block:
   - name: Prysm - Get validator service's api token
-    command: "docker exec -u 0 -w /opt/app/data/wallets stereum-{{ validator_service }} cat auth-token"
-    changed_when: false
-    register: auth_token
+    slurp:
+      src: "{{ stereum_service_configuration.volumes | select('match', '.*\/opt\/app\/data\/wallets') | first | split(':') | first }}/auth-token"
+    register: stereum_service_configuration_raw
     become: yes
-  - name: Print out auth_token
-    debug:
-      msg: "{{ auth_token.stdout_lines[1] }}"
-  - name: Get api-token
-    set_fact:
-      api_token: "{{ auth_token.stdout_lines[1] }}"
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token }}"
-  - name: Prysm import-validator using API
-    uri:
-      url: http://localhost:7500/eth/v1/keystores
-      headers:
-        Content-Type: application/json
-        Authorization: "Bearer {{ api_token }}"
-      method: POST
-      body:
-        keystores: "{{ item.content }}"
-        passwords: ["{{ validator_password | quote }}"]
-      body_format: json
-    become: yes
-    with_items: "{{ validator_keys }}"
-  when: consClient == "prysm"
+  - include_tasks: import.yaml
+    vars:
+      validator_port: 7500
+      api_token: "{{ (stereum_service_configuration_raw.content | b64decode).splitlines() | last }}"
+    loop: "{{ validator_keys }}"
+  when: stereum_service_configuration.service == "PrysmValidatorService"
 
 - block:
   - name: Lighthouse - Get validator service's api token
     command: "docker exec -u 0 -w /opt/app/validator/validators stereum-{{ validator_service }} cat api-token.txt"
     changed_when: false
-    register: api_token
+    register: api_token_lh
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token.stdout }}"
-  - name: Lighthouse import-validator using API
-    uri:
-      url: http://localhost:5062/eth/v1/keystores
-      headers:
-        Content-Type: application/json
-        Authorization: "Bearer {{ api_token.stdout }}"
-      method: POST
-      body:
-        keystores: "{{ item.content }}"
-        passwords: ["{{ validator_password | quote }}"]
-      body_format: json
-    become: yes
-    with_items: "{{ validator_keys }}"
-  when: consClient == "lighthouse"
+  - include_tasks: import.yaml
+    vars:
+      validator_port: 5062
+      api_token: "{{ api_token_lh.stdout }}"
+    loop: "{{ validator_keys }}"
+  when: stereum_service_configuration.service == "LighthouseValidatorService"
 
 - block:
   - name: Nimbus - Get validator service's api token
-    command: "docker exec -u 0 -w /opt/app/validators stereum-{{ beacon_service }} cat api-token.txt"
+    command: "docker exec -u 0 -w /opt/app/validators stereum-{{ validator_service }} cat api-token.txt"
     changed_when: false
-    register: api_token
+    register: api_token_n
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token.stdout }}"
-  - name: Nimbus import-validator using API
-    uri:
-      url: http://localhost:5052/eth/v1/keystores
-      headers:
-        Content-Type: application/json
-        Authorization: "Bearer {{ api_token.stdout }}"
-      method: POST
-      body:
-        keystores: ["{{ item.content }}"]
-        passwords: ["{{ validator_password | quote }}"]
-      body_format: json
-    become: yes
-    with_items: "{{ validator_keys }}"
-  when: consClient == "nimbus"
+  - include_tasks: import.yaml
+    vars:
+      validator_port: 5052
+      api_token: "{{ api_token_n.stdout }}"
+    loop: "{{ validator_keys }}"
+  when: stereum_service_configuration.service == "NimbusBeaconService"
 
 - block:
   - name: Teku - Get validator service's api token
-    command: "docker exec -u 0 -w /opt/app/data/validator/key-manager stereum-{{ beacon_service }} cat validator-api-bearer"
+    command: "docker exec -u 0 -w /opt/app/data/validator/key-manager stereum-{{ validator_service }} cat validator-api-bearer"
     changed_when: false
-    register: api_token
+    register: api_token_t
     become: yes
-  - name: Print out api_token
-    debug:
-      msg: "{{ api_token.stdout }}"
-  - name: Teku import-validator using API
-    uri:
-      url: https://localhost:5052/eth/v1/keystores
-      validate_certs: no
-      headers:
-        Content-Type: application/json
-        Authorization: "Bearer {{ api_token.stdout }}"
-      method: POST
-      body:
-        keystores: "{{ item.content }}"
-        passwords: ["{{ validator_password | quote }}"]
-      body_format: json
-    become: yes
-    with_items: "{{ validator_keys }}"
-  when: consClient == "teku"
+  - include_tasks: import.yaml
+    vars:
+      validator_port: 5052
+      api_token: "{{ api_token_t.stdout }}"
+      api_service_protocol: "--insecure https"
+    loop: "{{ validator_keys }}"
+  when: stereum_service_configuration.service == "TekuBeaconService"
+
+# EOF

@@ -1,0 +1,55 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+  # Nimbus api-token
+  - stat: path=/opt/app/services/9ffc35c2-e7ef-11ec-bea9-7795f6ff7cd2/validator/api-token.txt
+    register: api_token
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Check for api-token
+    assert:
+      that:
+        - api_token.stat.exists
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 3
+  # Nimbus beacon & validator logs
+  - name: Nimbus beacon & validator node
+    command: "docker logs --tail=150 stereum-9ffc35c2-e7ef-11ec-bea9-7795f6ff7cd2"
+    register: beacon_validator
+    until:
+      until:
+      - beacon_validator.stdout is search('Slot start')
+      - beacon_validator.stdout is search('Local validator attached')
+      - beacon_validator.stdout is search('sync=')
+      - beacon_validator.stdout is not search('Eth1 chain monitoring failure')
+      - beacon_validator.stdout is not search('Failed to setup web3 connection')
+    retries: 360
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 1
+
+# EOF

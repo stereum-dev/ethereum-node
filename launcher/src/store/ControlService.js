@@ -1,6 +1,6 @@
-import EventEmitter from 'events'
+import EventEmitter from "events";
 
-let instance = null
+let instance = null;
 class ControlService extends EventEmitter {
   constructor() {
     super();
@@ -70,8 +70,21 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("prepareOneClickInstallation", args);
   }
 
-  async writeOneClickConfiguration() {
-    return await this.promiseIpc.send("writeOneClickConfiguration");
+  async writeOneClickConfiguration(args) {
+    let buffer = []
+    args.forEach(service => {
+      buffer.push({
+        id: service.id,
+        name: service.name,
+        service: service.service,
+        category: service.category,
+        displayCategory: service.displayCategory,
+        path: service.path,
+        icon: service.icon,
+        sIcon: service.sIcon,
+      })
+    })
+    return await this.promiseIpc.send("writeOneClickConfiguration", {array: buffer});
   }
 
   async startOneClickServices() {
@@ -82,32 +95,51 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServerVitals");
   }
 
-  async getHostName() {
-    return await this.promiseIpc.send("getHostName");
+  async getAvailablePort(args) {
+    return await this.promiseIpc.send("getAvailablePort", args);
   }
 
-  async getAvailablePort(args){
-    return await this.promiseIpc.send('getAvailablePort', args)
+  async checkStereumInstallation() {
+    return await this.promiseIpc.send("checkStereumInstallation");
   }
 
-  async checkStereumInstallation(){
-    return await this.promiseIpc.send('checkStereumInstallation')
+  async getServices() {
+    return await this.promiseIpc.send("getServices");
   }
 
-  async getServices(){
-    return await this.promiseIpc.send('getServices')
+  async getServiceConfig(args) {
+    return await this.promiseIpc.send("getServiceConfig", args)
   }
 
-  async importKey(args){
+  async importKey(args) {
     //resolve proxy
-    let files = []
-    args.files.forEach(file => {
-      files.push({name: file.name, path: file.path})
-    })
-    return await this.promiseIpc.send('importKey', {files: files, password: args.password})
+    let files = [];
+    args.files.forEach((file) => {
+      files.push({ name: file.name, path: file.path });
+    });
+    return await this.promiseIpc.send("importKey", {
+      files: files,
+      password: args.password,
+    });
+  }
+
+  async listValidators(args) {
+    return await this.promiseIpc.send("listValidators", args)
+  }
+
+  async listServices(){
+    return await this.promiseIpc.send("listServices")
+  }
+
+  async manageServiceState(args){
+    return await this.promiseIpc.send("manageServiceState", args)
+  }
+
+  async runUpdates(){
+    return await this.promiseIpc.send("runUpdates")
   }
 }
 if (!instance) {
-  instance = new ControlService(window.electron)
+  instance = new ControlService(window.electron);
 }
-export default instance
+export default instance;

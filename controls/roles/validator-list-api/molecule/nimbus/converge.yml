@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  vars:
+    validator_service: 9ffc35c2-e7ef-11ec-bea9-7795f6ff7cd2
+
+  tasks:
+    - set_fact:
+        stereum: "{{ stereum_static }}"
+
+    - name: "Include validator-list-api"
+      include_role:
+        name: "validator-list-api"

@@ -34,8 +34,8 @@ export class PrysmBeaconService extends NodeService {
             service.id, //id
             1, // configVersion 
             image,  //image
-            'HEAD-c8a7f6-debug', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider,  //command
+            'v2.1.2', //imageVersion
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001',  //command
             null, //entrypoint
             null, //env
             ports,  //ports
@@ -65,13 +65,21 @@ export class PrysmBeaconService extends NodeService {
     }
 
     buildConsensusClientHttpEndpointUrl() {
-        return 'http://stereum-' + this.id + ':4000'
+        return 'http://stereum-' + this.id + ':3500'
+    }
+
+    buildConsensusClientMetricsEndpoint () {
+        return 'stereum-' + this.id + ':8080'
+    }
+
+    buildPrometheusJob () {
+        return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
     }
 
     getAvailablePorts() {
         return [
-            new ServicePortDefinition(13000, 'tcp', 'P2P connections'),
-            new ServicePortDefinition(12000, 'udp', 'P2P connections'),
+            new ServicePortDefinition(13001, 'tcp', 'P2P connections'),
+            new ServicePortDefinition(12001, 'udp', 'P2P connections'),
             new ServicePortDefinition(4000, 'tcp', 'Consensus Client API')
         ]
     }

@@ -1,7 +1,12 @@
 <template>
   <div class="tutorial-box">
     <div class="tutorial-table">
-      <div class="table-row" v-for="(item, index) in configData" :key="index">
+      <div
+        class="table-row"
+        v-for="(item, index) in configData"
+        :key="index"
+        @click="$emit('showModal')"
+      >
         <div class="camera-icon">
           <img
             src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
@@ -9,7 +14,7 @@
           />
         </div>
         <div class="row-content">
-          <p>{{ item.name }}</p>
+          <span>{{ item.name }}</span>
         </div>
       </div>
     </div>
@@ -19,16 +24,34 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
+import { useTutorialStore } from "@/store/tutorialSteps";
+
 export default {
-  data () {
-    return {}
+  data() {
+    return {};
+  },
+  mounted() {
+    this.configData = this.configData.map((item) => {
+      return {
+        showPlayModal: false,
+        ...item,
+      };
+    });
   },
   computed: {
-    configData () {
-      return this.$store.getters.nodeSbVideo_get
-    }
-  }
-}
+    ...mapWritableState(useNodeStore, {
+      configData: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useTutorialStore, {
+      showTutorialModal: "showTutorialModal",
+    }),
+  },
+  methods: {
+
+  },
+};
 </script>
 <style scoped>
 * {
@@ -59,7 +82,7 @@ export default {
   background: #161b1b;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 5px 0;
+  padding-top: 5px;
 }
 .tutorial-table::-webkit-scrollbar {
   width: 1px;
@@ -68,7 +91,7 @@ export default {
 .table-row {
   display: flex;
   width: 98%;
-  height: 16%;
+  height: 22px;
   margin-top: 2px;
   background-color: #222c2c;
   border: 2px solid #314242;
@@ -104,13 +127,14 @@ export default {
   background-color: #272a2d;
   height: 100%;
   width: 77%;
+  padding-top: 2px;
 }
 
-.row-content p {
+.row-content span {
   text-align: center;
   width: 100%;
   color: rgb(208, 208, 208);
-  font-size: 8px;
+  font-size: 0.5rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 800;
   overflow-x: hidden;

@@ -42,24 +42,22 @@
       msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
     pause:
-      minutes: 10
+      minutes: 1
   # prysm beacon & ssv logs
   - name: prysm beacon node healthy
     command: "docker logs --tail=150 stereum-995c224c-82e9-11ec-9115-2349bc4566fa"
     register: beacon
     until:
-      - beacon.stderr is not search('estimated time remaining')
-      - beacon.stderr is search('Synced new block')
+      - beacon.stderr is search('estimated time remaining')
     retries: 360
     delay: 10
   - name: Blox-SSV connected to beacon node
-    command: "docker logs --tail=250 stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
+    command: "docker logs stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: blox_ssv
     until:
-      - blox_ssv.stdout is search('discovered node is connected')
-      - blox_ssv.stdout is search('no indices\, duties won\'t be fetched')
-      - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is not search('errors')
+      - blox_ssv.stdout is search('discovery is ready')
+      - blox_ssv.stdout is search('p2p services were configured')
+      - blox_ssv.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
@@ -69,7 +67,7 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - stereum_docker_ps.stdout.find("gcr.io/prysmaticlabs/prysm/beacon-chain") != -1
+      - stereum_docker_ps.stdout.find("prysmaticlabs/prysm-beacon-chain") != -1
       - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("4000->4000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1

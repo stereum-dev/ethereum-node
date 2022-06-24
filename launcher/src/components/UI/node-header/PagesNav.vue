@@ -1,58 +1,64 @@
 <template>
   <ul class="router__items">
     <li class="router__item">
-      <router-link :to="{ path: '/node' }">NODE</router-link>
+      <router-link to="/node">NODE</router-link>
     </li>
+    <span class="border"></span>
     <li class="router__item">
-      <router-link :to="{ path: '/control' }">CONTROL</router-link>
+      <router-link to="/control">CONTROL</router-link>
     </li>
+    <span class="border"></span>
     <li class="router__item">
-      <router-link :to="{ path: '/staking' }">STAKING</router-link>
+      <router-link to="/staking">STAKING</router-link>
     </li>
   </ul>
 </template>
 <style scoped>
 .router__items {
-  width: 40%;
+  width: 30%;
   max-width: 450px;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  margin: 0 0 0 20px;
+  margin: 0 80px 0 60px;
 }
 .router__items .router__item {
-  width: 80%;
-  height: 80%;
+  width: 30%;
+  max-width: max-content;
+  height: 90%;
   list-style: none;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
 .router__items .router__item a {
-  width: 80%;
-  height: 60%;
+  width: 100%;
+  height: 65%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   color: #c2c2c2;
-  text-shadow: 2px 2px #192c27;
-  transition-duration:150ms;
+  transition-duration: 100ms;
 }
 .router__items .router__item a:hover {
-  width: 90%;
-  font-size: 1.28rem;
-  font-weight: 900;
+  transform: scale(1.02);
   color: #3a8074;
+  transition-duration: 50ms;
+  text-shadow: 2px 2px #192c27;
 }
 .router__items .router__item a:active {
-  width: 90%;
-  font-size: 1.2rem;
-  font-weight: 700;
+  transform: scale(1);
   color: #3a8074;
   text-shadow: none;
+}
+span.border {
+  content: "";
+  width: 0;
+  height: 60%;
+  border: 1px solid #a5a5a5;
 }
 </style>

@@ -41,7 +41,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
-              image: consensys/teku:22.5.0
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
               ports:
                 - 0.0.0.0:9001:9001/tcp
                 - 0.0.0.0:9001:9001/udp
@@ -59,6 +59,7 @@
                 - --metrics-port=8008
                 - --metrics-interface=0.0.0.0
                 - --metrics-host-allowlist="*"
+                - --metrics-publish-interval=10
                 - --data-path=/opt/app/data
                 - --data-storage-mode=archive
                 - --rest-api-port=5051

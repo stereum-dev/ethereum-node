@@ -22,7 +22,7 @@ export class TekuBeaconService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             image,                  // image
-            '22.5.0',               // imageVersion
+            '22.6.0',               // imageVersion
             [
                 `--network=${network}`,
                 '--p2p-enabled=true',
@@ -34,11 +34,11 @@ export class TekuBeaconService extends NodeService {
                 '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',
                 '--metrics-interface=0.0.0.0',
-                '--metrics-host-allowlist="*"',
+                '--metrics-host-allowlist=*',
                 `--data-path=${dataDir}`,
                 '--data-storage-mode=archive',
                 '--rest-api-port=5051',
-                '--rest-api-host-allowlist="*"',
+                '--rest-api-host-allowlist=*',
                 '--rest-api-interface=0.0.0.0',
                 '--rest-api-docs-enabled=true',
                 '--rest-api-enabled=true',
@@ -74,6 +74,14 @@ export class TekuBeaconService extends NodeService {
 
     buildConsensusClientHttpEndpointUrl() {
         return 'http://stereum-' + this.id + ':5051'
+    }
+
+    buildConsensusClientMetricsEndpoint () {
+        return 'stereum-' + this.id + ':8008'
+    }
+
+    buildPrometheusJob () {
+        return `\n  - job_name: stereum-${this.id}\n    scrape_timeout: 10s\n    metrics_path: /metrics\n    scheme: http\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
     }
 
     getAvailablePorts() {

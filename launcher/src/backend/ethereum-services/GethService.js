@@ -16,8 +16,8 @@ export class GethService extends NodeService {
       service.id, // id
       1,  // configVersion
       'ethereum/client-go', // image
-      'v1.10.11', // imageVersion
-      'geth --' + network + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*"', // command
+      'v1.10.19', // imageVersion
+      'geth --' + network + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*" --metrics --metrics.expensive --metrics.port=6060 --metrics.addr=0.0.0.0', // command
       null, // entrypoint
       null, // env
       ports,  // ports
@@ -45,6 +45,14 @@ export class GethService extends NodeService {
 
   buildExecutionClientWsEndpointUrl () {
     return 'ws://stereum-' + this.id + ':8546'
+  }
+
+  buildExecutionClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':6060'
+  }
+
+  buildPrometheusJob () {
+    return `\n  - job_name: stereum-${this.id}\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`
   }
 }
 

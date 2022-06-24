@@ -4,10 +4,10 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "validator-import-api--teku--ubuntu-20.04"
+  - name: "validator-import-api--teku--ubuntu-22.04"
     hostname: ubuntu
-    server_type: cpx21
-    image: ubuntu-20.04
+    server_type: cpx31
+    image: ubuntu-22.04
     network:
       name: eth2-prater
       ip_range: 10.10.0.0/24
@@ -19,7 +19,7 @@ platforms:
   #   network:
   #     name: eth2-prater
   #     ip_range: 10.10.0.0/24
-  #     ip: 10.10.0.151
+  #     ip: 10.10.0.152
 provisioner:
   name: ansible
 lint: |

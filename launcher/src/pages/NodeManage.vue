@@ -20,38 +20,38 @@
             ></base-modal>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               :title="'execution'"
-              :list="executionItems"
+              :list="installedServices.filter(service => service.category === 'execution')"
               @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="consensusItems"
+              :list="installedServices.filter(service => service.category === 'consensus')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="validatorItems"
+              :list="installedServices.filter(service => service.category === 'validator')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -62,12 +62,12 @@
           </div>
           <div
             class="service-parent"
-            @drop="onDrop($event, sidebarPlugins)"
+            @drop="onDrop($event, allServices)"
             @dragenter.prevent
             @dragover.prevent
           >
             <service-plugin
-              :list="servicePlugins"
+              :list="installedServices.filter(service => service.category === 'service')"
               @itemSelect="serviceItemSelection"
             >
             </service-plugin>
@@ -82,7 +82,7 @@
         <div class="sidebar">
           <sidebar-manage
             :startDrag="startDrag"
-            :sidebarPlugins="sidebarPlugins"
+            :allServices="allServices"
           >
           </sidebar-manage>
         </div>
@@ -102,7 +102,9 @@ import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
-import { mapGetters } from "vuex";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services";
+import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 export default {
   components: {
@@ -125,15 +127,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      selectedItemToRemove: "getSelectedItemToRemove",
-      confirmChanges: "getConfirmChanges",
-      servicePlugins: "getServicePlugins",
-      sidebarPlugins: "getSidebarPlugins",
-      configData: "getConfigData",
+    ...mapWritableState(useNodeStore, {
+      selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      configData: "configData",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
     }),
   },
   methods: {
@@ -160,26 +161,11 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if (item.category === "validator") {
-        if (this.validatorItems.some((item) => item.id == itemId)) return;
-        this.validatorItems.push(item);
-        this.$store.commit("mutatedValidatorItems", this.validatorItems);
-      } else if (item.category === "consensus") {
-        if (this.consensusItems.some((item) => item.id == itemId)) return;
-        this.consensusItems.push(item);
-        this.$store.commit("mutatedConsensusItems", this.consensusItems);
-      } else if (item.category === "execution") {
-        if (this.executionItems.some((item) => item.id == itemId)) return;
-        this.executionItems.push(item);
-        this.$store.commit("mutatedExecutionItems", this.executionItems);
-      } else {
-        if (this.servicePlugins.some((item) => item.id == itemId)) return;
-        this.servicePlugins.push(item);
-        this.$store.commit("mutatedServiceplugins", this.servicePlugins);
-      }
+      if(this.installedServices.some(item => item.id == itemId)) return;
+        this.installedServices.push(item)
     },
     serviceItemSelection(item) {
-      this.$store.commit("selectedItemToRemoveMutation", item);
+      this.selectedItemToRemove = item
     },
   },
 };
@@ -199,9 +185,9 @@ export default {
 .manage-parent {
   display: grid;
   width: 100%;
-  height: 90%;
+  height: 91%;
   border: 4px solid #979797;
-  border-radius: 10px 35px 10px 10px;
+  border-radius: 0 35px 10px 10px;
   grid-template-columns: 18% 46% 20% 16%;
   grid-template-rows: 31% 32% 32% 5%;
   grid-row-gap: 1px;
@@ -227,9 +213,9 @@ export default {
 .drop-parent {
   width: 100%;
   height: 100%;
-  margin: 0;
   grid-column: 2;
   grid-row: 1/4;
+  margin-top: 1px;
   background-color: #000000;
   display: flex;
   flex-direction: column;
@@ -250,13 +236,14 @@ export default {
 }
 .modal-bg {
   width: 100%;
-  height: 86.7%;
+  height: 86.3%;
   position: absolute;
-  top: 7.5%;
+  top: 8%;
+  right: 1px;
 }
 .service {
-  width: 98%;
-  height: 98.2%;
+  width: 99%;
+  height: 100.2%;
   grid-column: 3;
   grid-row: 1/4;
   background: #334b3f;
@@ -282,9 +269,9 @@ export default {
   border: 1px solid #2d4338;
   border-radius: 15px;
   margin: 10px auto;
-  font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 1px 1px 3px rgb(26, 26, 26);
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 3px rgb(19, 40, 31);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -304,12 +291,13 @@ export default {
 }
 
 .change-menu {
-  width: 94%;
-  height: 98.2%;
+  width: 99.5%;
+  height: 100.2%;
   grid-row: 1/4;
   grid-column: 4;
   background: #334b3f;
   border: 5px solid #1a2620;
+  border-left: 5px solid #161616;
   border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;

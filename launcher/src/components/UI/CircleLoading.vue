@@ -15,19 +15,19 @@
 export default {
   props: {
     message: String,
-    open: Boolean
+    open: Boolean,
   },
-  data () {
+  data() {
     return {
-      active: true
-    }
+      active: true,
+    };
   },
-  created () {
+  created() {
     setTimeout(() => {
-      this.active = false
-    }, 5000)
-  }
-}
+      this.active = false;
+    }, 5000);
+  },
+};
 </script>
 
 <style scoped>
@@ -50,7 +50,7 @@ dialog {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 12px;
   padding: 1rem;
-  background-color: white;
+  background-color: rgb(100, 100, 100);
   z-index: 100;
   border: none;
 }
@@ -75,8 +75,8 @@ dialog {
 /* TEST*/
 
 .progress-box {
-  width: 100% !important;
-  height: 100% !important;
+  width: 435px !important;
+  height: 15px !important;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -84,8 +84,8 @@ dialog {
 
 .progress {
   position: relative;
-  height: 82% !important;
-  width: 99.3% !important;
+  height: 83% !important;
+  width: 99.8% !important;
   border-radius: 20px;
   display: flex;
   justify-content: flex-start;
@@ -97,7 +97,7 @@ dialog {
   font-weight: 700;
   color: rgb(44, 44, 44);
   text-align: left;
-  margin-left: 10px;
+  margin-left: 11px;
   z-index: 100;
 }
 
@@ -106,7 +106,7 @@ dialog {
   left: 0;
   width: 0;
   background-color: #237fd5;
-  height: 100%;
+  height: 15px;
   border-radius: 20px;
   border: 1px solid rgb(37, 89, 113);
   animation: progres 5s linear;

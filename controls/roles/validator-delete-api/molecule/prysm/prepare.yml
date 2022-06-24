@@ -1,0 +1,185 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 741e3504-e8bc-11ec-a681-5b761b6ebc01
+    validator_service: 076e91e2-e8bc-11ec-84c1-37b5fd5ea8e1
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install pip, expect (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - python3-pip
+          - expect
+      become: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install pip, expect (CentOS 8)
+      yum:
+        name:
+          - python3-pip
+          - expect
+        state: latest
+      become: true
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ beacon_service }}"
+              image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --p2p-max-peers=100
+                --http-web3provider=http://10.10.0.3:8545
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/genesis:/opt/app/genesis"
+
+    # prysm validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Generate wallet's password
+        command: uuidgen
+        register: wallet_password
+        changed_when: false
+        become: yes
+      - name: Set wallet password
+        copy:
+          content: "{{ wallet_password.stdout }}"
+          dest: "/opt/app/services/{{ validator_service }}/data/passwords/wallet-password"
+          owner: "2000"
+          group: "2000"
+          mode: 0700
+        become: yes
+      - name: Prysm - Create wallet for account(s)
+        command: bash -c "docker exec stereum-{{ validator_service }}
+                          /app/cmd/validator/validator
+                          wallet create
+                          --wallet-dir=/opt/app/data/wallets
+                          --wallet-password-file=/opt/app/data/passwords/wallet-password
+                          --accept-terms-of-use
+                          --keymanager-kind=direct
+                          --prater"
+        changed_when: false
+        become: yes
+      - name: Prysm - Set wallet permission
+        ansible.builtin.file:
+          path: "/opt/app/services/{{ validator_service }}/data/wallets"
+          state: directory
+          recurse: yes
+          owner: "2000"
+          group: "2000"
+        become: yes
+      - name: Stop beacon & validator service
+        docker_container:
+          name: "{{ item }}"
+          state: stopped
+        become: yes
+        with_items:
+          - "stereum-{{ beacon_service }}"
+          - "stereum-{{ validator_service }}"
+      - name: Restart beacon & validator service
+        command: "docker start {{ item }}"
+        changed_when: false
+        become: yes
+        with_items:
+          - "stereum-{{ beacon_service }}"
+          - "stereum-{{ validator_service }}"
+      - name: Waiting for the services to start properly
+        pause:
+          minutes: 1
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmValidatorService
+              id: "{{ validator_service }}"
+              image: "prysmaticlabs/prysm-validator:{{ stereum_static.defaults.versions.prysm }}"
+              env: {}
+              entrypoint: []
+              command:
+                /app/cmd/validator/validator
+                --accept-terms-of-use=true
+                --beacon-rpc-provider="stereum-{{ beacon_service }}:4000"
+                --beacon-rpc-gateway-provider="stereum-{{ beacon_service }}:3500"
+                --web=true
+                --prater=true
+                --datadir=/opt/app/data/db
+                --wallet-dir=/opt/app/data/wallets
+                --wallet-password-file=/opt/app/data/passwords/wallet-password
+                --monitoring-host=0.0.0.0
+                --grpc-gateway-port=7500
+                --grpc-gateway-host=0.0.0.0
+                --grpc-gateway-corsdomain="*"
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ validator_service }}/data/db:/opt/app/data/db"
+                - "/opt/app/services/{{ validator_service }}/data/wallets:/opt/app/data/wallets"
+                - "/opt/app/services/{{ validator_service }}/data/passwords:/opt/app/data/passwords"
+
+    - include_role:
+        name: "validator-import-api"
+      vars:
+        validator_keys:
+          - passwords: ["MyTestPassword", "MyTestPassword"]
+            content:
+              [
+                "{\"crypto\": {\"kdf\": {\"function\": \"scrypt\", \"params\": {\"dklen\": 32, \"n\": 262144, \"r\": 8, \"p\": 1, \"salt\": \"de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116\"}, \"message\": \"\"}, \"checksum\": {\"function\": \"sha256\", \"params\": {}, \"message\": \"3691a02425a4607b86292313cc72e31d4866043034ee9cff0b7cab2096105269\"}, \"cipher\": {\"function\": \"aes-128-ctr\", \"params\": {\"iv\": \"a24857026939492f49444679544cb6bb\"}, \"message\": \"e8a184e9d70408acd33459c67632c7bb63cf9c58a175de2030f962da88a2eb4d\"}}, \"description\": \"\", \"pubkey\": \"82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf\", \"path\": \"m\/12381\/3600\/1\/0\/0\", \"uuid\": \"f712f984-b926-4e90-a603-f3f14703bf4b\", \"version\": 4}",
+                "{\"crypto\": {\"kdf\": {\"function\": \"scrypt\", \"params\": {\"dklen\": 32, \"n\": 262144, \"r\": 8, \"p\": 1, \"salt\": \"de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116\"}, \"message\": \"\"}, \"checksum\": {\"function\": \"sha256\", \"params\": {}, \"message\": \"fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d\"}, \"cipher\": {\"function\": \"aes-128-ctr\", \"params\": {\"iv\": \"a24857026939492f49444679544cb6bb\"}, \"message\": \"8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b\"}}, \"description\": \"\", \"pubkey\": \"948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458\", \"path\": \"m\/12381\/3600\/2\/0\/0\", \"uuid\": \"c7521eed-533a-4fd1-90b7-ad1aa0f24a2d\", \"version\": 4}",
+              ]
+
+# EOF

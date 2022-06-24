@@ -3,7 +3,7 @@
     <div class="keys-table-box">
       <div class="keys-table">
         <div class="table-header" v-if="insertFilePage">
-          <span id="name">NAME</span>
+          <span id="name">Public Key</span>
           <span id="service">SERVICE</span>
           <span id="active">ACTIVE SINCE</span>
           <span id="state">STATE</span>
@@ -22,10 +22,9 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
+          <div class="table-row" v-for="(item, index) in keys" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.name }}</span>
-            <span class="username"></span>
+            <span class="category">{{ item.validating_pubkey.substring(0,20) }}...{{ item.validating_pubkey.substring(item.validating_pubkey.length - 4, item.validating_pubkey.length) }}</span> 
             <img
               class="service-icon"
               src="../../../../public/img/icon/the-staking/blox-service.png"
@@ -39,37 +38,53 @@
             />
             <span class="balance">24.000001</span>
             <div class="option-box">
-              <div class="grafiti-box">
+              <div
+                class="grafiti-box"
+                @mouseover="showGrafitiText = true"
+                @mouseleave="showGrafitiText = false"
+              >
                 <img
                   class="grafiti-icon"
                   src="../../../../public/img/icon/the-staking/option-graffiti.png"
                   alt="icon"
                 />
-                <div class="grafiti-text">GRAFITI</div>
-              </div>
-              <div class="copy-box">
+                <span v-if="showGrafitiText" class="grafiti-text">GRAFITI</span>
+              </div> 
+              <div
+                class="copy-box"
+                @mouseover="showCopyText = true"
+                @mouseleave="showCopyText = false"
+              > 
                 <img
                   class="copy-icon"
                   src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
-                <div class="copy-text">COPY</div>
-              </div>
-              <div class="remove-box">
+                <span v-if="showCopyText" class="copy-text">COPY</span>
+              </div> 
+              <div
+                class="remove-box"
+                @mouseover="showRemoveText = true"
+                @mouseleave="showRemoveText = false"
+              >
                 <img
                   class="remove-icon"
                   src="../../../../public/img/icon/the-staking/option-remove.png"
                   alt="icon"
                 />
-                <div class="remove-text">REMOVE</div>
+                <span v-if="showRemoveText" class="remove-text">REMOVE</span>
               </div>
-              <div class="exit-box">
+              <div
+                class="exit-box"
+                @mouseover="showExitText = true"
+                @mouseleave="showExitText = false"
+              >
                 <img
                   class="exit-icon"
                   src="../../../../public/img/icon/the-staking/redexit-icon.png"
                   alt="icon"
                 />
-                <div class="exit-text">EXIT</div>
+                <span v-if="showExitText" class="exit-text">EXIT</span>
               </div>
             </div>
           </div>
@@ -156,43 +171,90 @@
 import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
-import ControlService from '@/store/ControlService'
+import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services"
 export default {
   components: { ShowKey, DropZone },
   data() {
     return {
       isDragOver: false,
       keyFiles: [],
+      keys: [],
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
+      showCopyText: false,
+      showGrafitiText: false,
+      showRemoveText: false,
+      showExitText: false,
       password: "",
+      forceRefresh: false,
     };
+  },
+  mounted() {
+      this.listKeys()
   },
   updated() {
     this.checkKeyExists();
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+    }),
+  },
   methods: {
-    importKey: async function(){
-      await ControlService.importKey({files: this.keyFiles, password: this.password})
-      this.password = ""
+    listKeys: async function () {
+      let clients = this.installedServices.filter(s => s.service.includes('Validator'))
+      clients.forEach(client => {
+        if(client.config.keys && client.config.keys.length > 0 && !this.forceRefresh){
+          this.keys = client.config.keys
+        } else {
+          this.listKeysTriggered = true
+          ControlService.listValidators(client.config.serviceID).then(result => {
+            client.config.keys = result.data
+            this.installedServices = this.installedServices.map(service => {
+              if(service.id === client.id){
+                return client
+              }
+              return service
+            })
+            this.keys = result.data ? result.data : [];
+          })
+          }
+      })
+
+    },
+    importKey: async function () {
+      await ControlService.importKey({
+        files: this.keyFiles,
+        password: this.password,
+      });
+      this.forceRefresh = true
+      this.listKeys()
+      this.password = "";
+      this.insertFilePage = true;
+      this.enterPasswordPage = false;
+      this.passwordInputActive = false;
     },
     uploadFileHandler(event) {
-      console.log("upload", event);
       let uploadedFiles = event.target.files;
-      this.keyFiles.push(...uploadedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (uploadedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...uploadedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     dropFileHandler(event) {
-      console.log("drop", event);
       let droppedFiles = event.dataTransfer.files;
-      console.log(droppedFiles);
-      this.keyFiles.push(...droppedFiles);
-      this.insertFilePage = false;
-      this.enterPasswordPage = true;
-      this.isDragOver = false;
+      if (droppedFiles[0]["type"] === "application/json") {
+        this.keyFiles.push(...droppedFiles);
+        this.insertFilePage = false;
+        this.enterPasswordPage = true;
+        this.isDragOver = false;
+      }
     },
     removeKeyHandler(key_name) {
       this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
@@ -226,7 +288,7 @@ export default {
 }
 .keys-table-box {
   width: 96%;
-  height: 92%;
+  height: 93%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
@@ -252,18 +314,21 @@ export default {
   height: 30px;
   margin: 5px auto 0 auto;
   display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
+  grid-template-columns: 3% 30% 7% 14% 6% 10% 30%;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
   padding: 1px;
   position: relative;
+  box-sizing: border-box;
 }
 .table-row span {
+  align-self: center;
+  width: max-content;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .table-row .circle {
   grid-column: 1;
@@ -278,58 +343,64 @@ export default {
   width: 100%;
   grid-column: 2;
   font-size: 13px;
+  align-self: center;
 }
-.table-row .username {
-  width: 100%;
-  grid-column: 3;
-  font-size: 10px;
-}
+
 .table-row .service-icon {
   width: 20px;
-  grid-column: 4;
+  grid-column: 3;
   justify-self: center;
+  align-self: center;
 }
 .table-row .since {
-  grid-column: 5;
+  grid-column: 4;
   font-size: 10px;
+  justify-self: center;
+  align-self: center;
 }
 .table-row .state-icon {
   width: 18px;
-  grid-column: 6;
+  grid-column: 5;
   justify-self: center;
+  align-self: center;
 }
 .table-row .balance {
-  grid-column: 7;
+  grid-column: 6;
+  justify-self: center;
+  align-self: center;
 }
 
 .option-box {
-  grid-column: 8;
+  grid-column: 7;
   width: 90%;
-  height: 80%;
-  border: 3px solid #bfbfbf;
-  background-color: #000000;
+  height: 95%;
+  justify-self: center;
+  align-self: center;
+  border: 2px solid #bfbfbf;
+  background-color: black;
   border-radius: 30px;
   position: absolute;
-  right: 0;
+  right: 1px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
   align-items: center;
 }
 .option-box img {
-  width: 20px;
+  width: 19px;
   height: 20px;
   margin: 0 auto;
+  cursor: pointer;
 }
 .option-box img:hover {
-  width: 23px;
-  height: 23px;
-  box-shadow: 0 0 4px 0 rgb(228, 230, 228);
+  border: 1px solid #72cbf8;
+  border-radius: 3px;
+  transform: scale(1.1);
 }
+
 .option-box img:active {
-  width: 21px;
-  height: 21px;
-  box-shadow: none;
+  border: 1px solid #0c6e9f;
+  transform: scale(1);
 }
 .option-box .copy-box {
   height: 100%;
@@ -338,13 +409,28 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
+.copy-box .copy-text {
+  position: absolute;
+  bottom: -17px;
+  left: 6px;
+  transition-duration: 500ms;
+}
+
 .option-box .grafiti-box {
   height: 100%;
   grid-column: 2;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.grafiti-box .grafiti-text {
+  position: absolute;
+  bottom: -17px;
+  left: 0;
+  transition-duration: 500ms;
 }
 .option-box .remove-box {
   height: 100%;
@@ -352,6 +438,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.remove-box .remove-text {
+  position: absolute;
+  bottom: -17px;
+  left: -1px;
+  transition-duration: 500ms;
 }
 .option-box .exit-box {
   height: 100%;
@@ -359,6 +452,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+.exit-box .exit-text {
+  position: absolute;
+  bottom: -17px;
+  right: 9px;
+  transition-duration: 500ms;
 }
 .keys-table {
   width: 100%;
@@ -380,7 +480,8 @@ export default {
   align-items: flex-end;
 }
 .table-header #name {
-  grid-column: 3;
+  grid-column: 2;
+  text-transform: uppercase;
 }
 .table-header #service {
   grid-column: 4;
@@ -458,13 +559,13 @@ export default {
   border-radius: 35px 0 0 35px;
   background-color: #002828;
   outline-style: none;
+  padding: 0;
   padding-left: 10px;
   position: absolute;
   left: 5px;
   font-size: 1.5rem;
   color: #fff;
   font-weight: 300;
-  padding-top: 2px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -496,12 +597,12 @@ export default {
 }
 
 .middle-icon .insert-key span {
-  color: #336666;
+  color: #3a3a3a;
   font-size: 1.1rem;
   font-weight: 700;
 }
 .middle-icon .insert-key img {
-  width: 28px;
+  width: 26px;
   height: 28px;
 }
 .key-table-row {

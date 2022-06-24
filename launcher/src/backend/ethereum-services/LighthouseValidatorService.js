@@ -25,7 +25,7 @@ export class LighthouseValidatorService extends NodeService {
       service.id, //id
       1, //configVersion
       image,  //image
-      'v2.1.2', //imageVersion
+      'v2.3.1', //imageVersion
       [
         'lighthouse',
         'vc',
@@ -39,6 +39,7 @@ export class LighthouseValidatorService extends NodeService {
         '--metrics-address=0.0.0.0',
         '--http',
         '--http-address=0.0.0.0',
+        '--http-port=5062',
         '--unencrypted-http-transport'
       ],  //command
       null, // entrypoint
@@ -60,6 +61,10 @@ export class LighthouseValidatorService extends NodeService {
     service.initByConfig(config)
 
     return service
+  }
+
+  buildValidatorClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':5064'
   }
 
   getAvailablePorts () {

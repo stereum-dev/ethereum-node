@@ -4,7 +4,7 @@
       <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
     </div>
     <div class="machineNam">
-      <span>{{ this.maschinName }}</span>
+      <span>{{ maschinName }}</span>
     </div>
   </div>
 </template>
@@ -16,10 +16,20 @@ export default {
       maschinName: "",
     };
   },
-  async created() {
-    const response = await ControlService.getHostName();
-    const { data: maschinName } = await response.json();
-    this.maschinName = maschinName;
+  created() {
+    this.maschinNameMet();
+  },
+  methods: {
+    async maschinNameMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.maschinName = arr[0];
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>

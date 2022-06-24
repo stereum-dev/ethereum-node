@@ -1,13 +1,14 @@
 import "mutationobserver-shim";
 import Vue, { createApp } from "vue"; // CHANGE
 
-import store from "./store/index.js";
 import App from "./App.vue";
 import router from "./router/index.js";
 import "./components/UI/the-control/chart.js";
 import "./main.css";
 
 import i18n from "./includes/i18n";
+import { createPinia } from "pinia";
+import copyText from "@meforma/vue-copy-to-clipboard";
 import BaseButton from "./components/UI/BaseButton.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from "./components/UI/TheTrapezium.vue";
@@ -28,7 +29,8 @@ app.component("chart-bg", ChartBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 
-app.use(store);
+app.use(createPinia());
+app.use(copyText);
 app.use(router);
 app.use(i18n);
 app.mount("#app");

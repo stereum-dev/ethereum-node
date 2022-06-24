@@ -28,6 +28,7 @@
     </div>
     <div
       class="icon-btn"
+      @click="updateModalHandler"
       v-else
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
@@ -53,13 +54,22 @@
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
       <span class="exit-text" v-if="showExitText">Exit</span>
     </div>
+    <update-modal
+      @remove-modal="removeModalHandler"
+      @update-confirm="updateConfirmationHandler"
+      v-if="showUpdateModal"
+    ></update-modal>
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import UpdateModal from "./UpdateModal.vue";
 export default {
+  components: { UpdateModal },
   data() {
     return {
       isUpdateAvailable: false,
+      showUpdateModal: false,
       showHelpText: false,
       showExitText: false,
       showSettingText: false,
@@ -67,7 +77,21 @@ export default {
       showNotifText: false,
     };
   },
-  methods: {},
+  methods: {
+    runUpdates: async function () {
+      await ControlService.runUpdates()
+    },
+    updateModalHandler() {
+      this.showUpdateModal = true;
+    },
+    removeModalHandler() {
+      this.showUpdateModal = false;
+    },
+    updateConfirmationHandler: async function () {
+      await this.runUpdates();
+      this.showUpdateModal = false;
+    },
+  },
 };
 </script>
 <style scoped>
@@ -91,7 +115,7 @@ export default {
   cursor: pointer;
 }
 .icon-btn {
-  width: 14.5%;
+  width: 14%;
   height: 85%;
   border: 2px solid #a5a5a5;
   border-radius: 100%;
@@ -102,7 +126,7 @@ export default {
   align-items: center;
   cursor: pointer;
   position: relative;
-  transition-duration:200ms;
+  transition-duration: 200ms;
 }
 .icon-btn:hover {
   background-color: #274f4f;
@@ -112,12 +136,12 @@ export default {
 .icon-btn:active {
   box-shadow: none;
   background-color: #274f4f;
-  transition-duration:200ms;
+  transition-duration: 200ms;
+  transform: scale(0.92);
 }
 .icon-btn:active img {
   /* width: 65%;
   height: 65%; */
-  transform: scale(0.92);
   box-shadow: none;
 }
 .icon-btn img {
@@ -133,7 +157,7 @@ export default {
   font-weight: 500;
   position: absolute;
   bottom: -10px;
-  left: 6px;
+  left: 3px;
   transition-duration: 500ms;
 }
 .notif-text {

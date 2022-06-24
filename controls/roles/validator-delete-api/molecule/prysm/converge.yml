@@ -1,0 +1,18 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  vars:
+    validator_service: 076e91e2-e8bc-11ec-84c1-37b5fd5ea8e1
+    validator_public_keys:
+      - pubkeys: ["0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"]
+
+  tasks:
+    - set_fact:
+        stereum: "{{ stereum_static }}"
+
+    - name: "Include validator-delete-api"
+      include_role:
+        name: "validator-delete-api"

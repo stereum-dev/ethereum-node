@@ -1,0 +1,16 @@
+---
+- name: "finishUpdate"
+  hosts: localhost
+  vars_files:
+  - defaults/stereum_defaults.yaml # stereum_static
+  - /etc/stereum/stereum.yaml # stereum_settings
+
+  tasks:
+    # merge default config with node's config
+    - set_fact:
+        stereum: "{{ stereum_settings | combine(stereum_static, recursive=True) }}"
+
+    - debug:
+       msg: "applied all patches"
+
+#EOF

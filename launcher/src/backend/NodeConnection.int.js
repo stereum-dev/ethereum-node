@@ -10,7 +10,7 @@ test('prepareStereumNode on ubuntu', async () => {
     name: 'NodeConnection--integration-test--ubuntu-2204',
     image: 'ubuntu-22.04',
     location: 'fsn1',
-    server_type: 'cx11',
+    server_type: 'cpx21',
     start_after_create: true
   }
 
@@ -29,6 +29,7 @@ test('prepareStereumNode on ubuntu', async () => {
   const nodeConnection = new NodeConnection(connectionParams)
   await testServer.connect(nodeConnection)
 
+  //change password
   await testServer.passwordAuthentication(testServer.serverRootPassword)
 
   await nodeConnection.findOS()

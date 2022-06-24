@@ -27,7 +27,7 @@ export class LighthouseBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image,  //image
-      'v2.1.2', //imageVersion
+      'v2.3.1', //imageVersion
       [
         'lighthouse',
         'bn',
@@ -68,6 +68,14 @@ export class LighthouseBeaconService extends NodeService {
 
   buildConsensusClientHttpEndpointUrl () {
     return 'http://stereum-' + this.id + ':5052'
+  }
+
+  buildConsensusClientMetricsEndpoint () {
+    return 'stereum-' + this.id + ':5054'
+  }
+
+  buildPrometheusJob () {
+    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
   }
 
   getAvailablePorts () {

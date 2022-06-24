@@ -16,13 +16,14 @@
         />
       </div>
       <select
+        class="ring-0"
         id="selector"
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
       >
-        <option value="" selected>CHOOSE A NETWORK</option>
-        <option value="mainnet">Mainnet</option>
-        <option value="testnet">Testnet</option>
+        <option class="ring-0" value="" selected>CHOOSE A NETWORK</option>
+        <option class="ring-0" value="mainnet">Mainnet</option>
+        <option class="ring-0" value="testnet">Testnet</option>
       </select>
     </div>
     <div class="plugin-table">
@@ -67,8 +68,10 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from '@/store/services';
 export default {
   data() {
     return {
@@ -76,17 +79,18 @@ export default {
       mainnetPlugins: [],
       isTestnetActive: false,
       testnetPlugins: [],
-      selectedNetworks: null,
     };
   },
   computed: {
-    ...mapGetters({
-      plugins: "installationPlugins",
-      selectedPreset: "getSelectedPreset",
-      allPlugins: "getAllPlugins",
+    ...mapWritableState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      selectedNetworks: "selectedNetworks",
+    }),
+    ...mapWritableState(useServices, {
+      allServices: "allServices",
     }),
   },
-
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
@@ -112,20 +116,14 @@ export default {
       }
     },
     selectItemToInstall: async function (item) {
-      const constellation = await ControlService.getOneClickConstellation(
-        item.name
-      );
-
-      const includedPlugins = [];
-      constellation.forEach((plugin) => {
-        const buffer = this.allPlugins.filter(
-          (element) => element.name === plugin
-        );
-        buffer.forEach((element) => includedPlugins.push(element));
-      });
+      const constellation = await ControlService.getOneClickConstellation(item.name);
+      let includedPlugins = this.allServices.filter(service => constellation.includes(service.service));
+      if(includedPlugins.map(e => e.service).includes("BloxSSVService") || includedPlugins.map(e => e.service).includes("RocketpoolService")){
+        includedPlugins.splice(includedPlugins.findIndex(e => (e.service != 'BloxSSVService' && e.service != 'RocketpoolService' && e.category === 'validator')),1)
+      }
       item.includedPlugins = includedPlugins;
-      this.$store.commit("mutatedSelectedPreset", item);
-      this.$emit('disableBtn')
+      this.selectedPreset = item;
+      this.$emit("disableBtn");
     },
   },
 };
@@ -143,25 +141,36 @@ export default {
 }
 .select-box {
   width: 35%;
-  height: 12%;
+  height: 13%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  background-color: rgb(31, 31, 31) !important;
+  background-color: rgb(31, 31, 31);
   border: 2px solid rgb(126, 159, 151);
   border-radius: 5px;
   box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
 .select-box #selector {
   width: 85%;
-  height: 80%;
-  border: none;
+  height: 90%;
+  border: none !important;
   border-radius: 5px;
   background-color: transparent;
-  outline: none;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(234, 234, 234);
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(97, 194, 255);
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
+    var(--tw-ring-color);
+}
+.select-box #selector option {
+  width: 100%;
+  height: 100%;
+  border: none !important;
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
+    var(--tw-ring-color);
 }
 .select-box:hover {
   border: 2px solid rgb(32, 191, 235);
@@ -174,7 +183,7 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  width: 88%;
+  width: 77%;
   height: 100%;
 }
 .plugin-table {
@@ -219,12 +228,17 @@ export default {
 .testnet-plugin img {
   width: 52%;
   height: 79%;
+  cursor: pointer;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
-  width: 53%;
-  height: 82%;
-  transition: 0.2s;
+  transform: scale(1.1);
+  transition-duration: 0.1s;
+}
+.mainnet-plugin img:active,
+.testnet-plugin img:active {
+  transform: scale(1);
+  transition-duration: 0.1s;
 }
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;

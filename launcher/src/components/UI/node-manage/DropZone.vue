@@ -4,7 +4,6 @@
       <span class="title">{{ title }}</span>
       <div
         class="item-box"
-        @drop="onDrop($event, sidebarPlugins)"
         @dragenter.prevent
         @dragover.prevent
         onmousedown="return false"
@@ -32,37 +31,37 @@
   </manage-trapezoid>
 </template>
 <script>
-import ManageTrapezoid from './ManageTrapezoid.vue'
+import ManageTrapezoid from "./ManageTrapezoid.vue";
 export default {
   components: {
-    ManageTrapezoid
+    ManageTrapezoid,
   },
   props: {
     title: {
       type: String,
       required: true,
-      default: 'Title'
+      default: "Title",
     },
     list: {
       type: Array,
       required: true,
       default: () => {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
-  data () {
+  data() {
     return {
-      itemsList: []
-    }
+      itemsList: [],
+    };
   },
   methods: {
-    selectedItem (item) {
-      item.active = !item.active
-      this.$emit('itemSelect', item)
-    }
-  }
-}
+    selectedItem(item) {
+      item.active = !item.active;
+      this.$emit("itemSelect", item);
+    },
+  },
+};
 </script>
 <style scoped>
 .showModal {
@@ -102,7 +101,6 @@ export default {
   height: 63px;
   width: 56%;
   background-color: transparent;
-  border-bottom: 3px solid #656565;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
@@ -113,16 +111,13 @@ export default {
   align-self: center;
   width: 50px;
   height: 50px;
-  border: 1px solid rgb(96, 95, 95);
-  /* box-shadow:0 1px 3px 1px #2a2a2a; */
-  border-radius: 10px;
+  border-radius: 7px;
   margin: 0 auto;
 }
 .item-box .items img {
   width: 50px;
   height: 50px;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px 1px #2a2a2a;
+  border-radius: 5px;
 }
 .plus-icon-box {
   background-color: rgb(171, 171, 171);
@@ -158,7 +153,7 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  border: 2px solid rgb(68, 168, 240);
-  border-radius: 8px;
+  border: 2px solid rgb(64, 168, 243);
+  border-radius: 10px;
 }
 </style>

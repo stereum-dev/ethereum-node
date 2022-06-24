@@ -441,7 +441,7 @@ export class NodeConnection {
                 docker system prune -a -f &&\
                 rm -rf ${this.settings.stereum.settings.controls_install_path} &&\
                 rm -rf /etc/stereum`);
-    this.settings = undefined
+    this.settings = undefined;
     return "Node destroyed";
   }
 
@@ -456,17 +456,19 @@ export class NodeConnection {
   // the function needs to be async
   async getServerVitals() {
     let response = {};
-    const cpuUsage = await this.sshService.exec(
-      `sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1`
-    ); //CPU usage
-    response.cpuUsage = cpuUsage;
-    return response;
-  }
+    const serverVitals = await this.sshService.exec(`\
+    hostname &&
+    free -m | sed -n '2p' | awk '{print $2}' &&
+    free -m | sed -n '2p' | awk '{print $3}' &&
+    df --total -m | tail -1 | awk '{print 100-$3/$2*100}' &&
+    df --total -m | tail -1 | awk '{print $2}' &&
+    df --total -m | tail -1 | awk '{print $3}' &&
+    sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
+    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5}' | sed -n '1p' &&
+    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $6}' | sed -n '1p'
+    `);
 
-  async getHostName() {
-    let response = {};
-    const cpuUsage = await this.sshService.exec(`hostname`); //CPU usage
-    response.cpuUsage = cpuUsage;
+    response.serverVitals = serverVitals;
     return response;
   }
 
@@ -497,17 +499,26 @@ export class NodeConnection {
   }
 
   async checkAvailablePorts(option) {
-    let available = false;
-    let port = option.min;
-    while (!available && port < option.max) {
-      available = await this.checkPort(port);
-      if (!available) {
-        port++;
+    const ports = [];
+    for (let i = 0; i < option.amount; i++) {
+      let available = false;
+      let port = option.min;
+      while ((!available && port < option.max) || ports.includes(port)) {
+        available = await this.checkPort(port);
+        if (!available || ports.includes(port)) {
+          available = false;
+          port++;
+        }
       }
+      log.info(
+        `Port ${port} is the next available in range ${option.min} - ${option.max}`
+      );
+      ports.push(port);
     }
-    log.info(
-      `Port ${port} is the next available in range ${option.min} - ${option.max}`
-    );
-    return port;
+    return ports;
+  }
+
+  async runUpdates(){
+    await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`)
   }
 }

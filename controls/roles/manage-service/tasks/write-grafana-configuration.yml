@@ -1,4 +1,10 @@
 ---
+- name: Delete old Grafana dashboards
+  file:
+    path: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
+    state: absent
+  become: yes
+
 - name: Create directories for Grafana
   file:
     path: "{{ item }}"
@@ -18,12 +24,15 @@
     mode: 0655
   become: yes
 
-- name: Copy Grafana's dashboard(s)
+- name: Copy Grafana's dashboard.yml
   copy:
-    src: "{{ item }}"
+    src: "{{ role_path }}/files/grafana/dashboard.yml"
     dest: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
     mode: 0655
   become: yes
-  with_fileglob: "{{ role_path }}/files/grafana/{{ grafana_provisioning }}/dashboards/*"
+
+- name: Copy selected Grafana dashboard(s)
+  include_tasks: write-grafana-dashboards.yml
+  loop: "{{ grafana_provisioning }}"
 
 # EOF

@@ -1,0 +1,60 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+  # Lighthouse api-token
+  - stat: path=/opt/app/services/957fd49a-e63d-11ec-8d13-8f5d1bf7c1ca/validator/validators/api-token.txt
+    register: api_token
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Check for api-token
+    assert:
+      that:
+        - api_token.stat.exists
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 3
+  # lh beacon & validator logs
+  - name: Lighthouse beacon node
+    command: "docker logs --tail=150 stereum-8a8324de-e63d-11ec-9f7f-7f5f5f2c08dc"
+    register: beacon
+    until:
+      - beacon.stderr is search('est_time')
+      - beacon.stderr is not search('Failed to start beacon node')
+    retries: 360
+    delay: 10
+  - name: Lighthouse validator
+    command: "docker logs --tail=150 stereum-957fd49a-e63d-11ec-8d13-8f5d1bf7c1ca"
+    register: validator
+    until:
+      - validator.stderr is search('pubkey:')
+      - validator.stderr is search('Connected to beacon node')
+      - validator.stderr is not search('Offline beacon node')
+    retries: 360
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+
+# EOF

@@ -13,23 +13,11 @@
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
-      <p>C</p>
-      <p>O</p>
-      <p>N</p>
-      <p>N</p>
-      <p>E</p>
-      <p>C</p>
-      <p>T</p>
-      <p>I</p>
-      <p>N</p>
-      <p>G</p>
-      <p>.</p>
-      <p>.</p>
-      <p>.</p>
+      <img src="../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
-        <h2>{{ $t("formsetup.server") }}</h2>
+        <span>{{ $t("formsetup.server") }}</span>
       </section>
 
       <base-dialog
@@ -72,7 +60,7 @@
               <img :src="imgTrash" alt="" />
             </div>
           </div>
-          <div class="formGroup" :class="{ errors: !model.name.isFilled }">
+          <div class="server-group" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
             <input
               name="servername"
@@ -82,7 +70,7 @@
               @blur="checkInput(model.name)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !model.host.isFilled }">
+          <div class="server-group" :class="{ errors: !model.host.isFilled }">
             <label for="host">IP / HOSTNAME</label>
             <input
               name="host"
@@ -92,9 +80,10 @@
               @blur="checkInput(model.host)"
             />
           </div>
-          <div class="formGroup" :class="{ errors: !model.user.isFilled }">
+          <div class="server-group" :class="{ errors: !model.user.isFilled }">
             <label for="user">USERNAME</label>
             <input
+              type="text"
               name="user"
               id="username"
               v-model="model.user.value"
@@ -153,7 +142,10 @@
 <script>
 import BaseDialog from "./BaseDialog.vue";
 import ControlService from "@/store/ControlService";
-import { mapGetters } from "vuex";
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
 
 export default {
   components: { BaseDialog },
@@ -185,11 +177,19 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
-    ...mapGetters({
-      plugins: "installationPlugins",
-      selectedPreset: "getSelectedPreset",
-      allPlugins: "getAllPlugins",
-      pluginServices: "getServiceIcons",
+    ...mapWritableState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      allPlugins: "plugins",
+      services: "services",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+      allServices: "allServices"
+    }),
+    ...mapWritableState(useNodeHeader, {
+      headerServices: "runningServices",
     }),
   },
   methods: {
@@ -342,37 +342,67 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
+        if (
+          typeof err === "string" &&
+          new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(
+            err.toLowerCase()
+          )
+        ) {
+          this.error = "You need to change your password first";
+        }
         return;
       }
 
       if (await ControlService.checkStereumInstallation()) {
+        this.headerServices = [];
+        this.installedServices = [];
         let services = await ControlService.getServices();
         if (services && services.length > 0) {
-          let constellation = services.map((service) => {
-            return service.service
-              .replace(/(Beacon|Validator|Service)/gm, "")
-              .toUpperCase();
-          });
-          const includedPlugins = [];
-          constellation.forEach((plugin) => {
-            const buffer = this.allPlugins.filter(
-              (element) => element.name === plugin
-            );
-            buffer.forEach((element) => includedPlugins.push(element));
+        services.forEach((service) => {
+          let buffer = this.allServices.find((element) => element.service === service.service)
+          if(buffer){
+            buffer.config = {
+              serviceID: service.id,
+              configVersion: service.configVersion,
+              image: service.image,
+              imageVersion: service.imageVersion,
+              ports: service.ports,
+              volumes: service.volumes,
+              network: service.network,
+            }
+            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
+              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
+              vs.config = buffer.config
+              this.installedServices.push(vs)
+            }
+            this.installedServices.push(buffer)
+          }
+        })
+      
+        let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
           });
 
-          let grafana = services.find(service => service.service.includes('Grafana'))
-          let grafanaStats = this.pluginServices.find(e => e.name === 'grafana')
-          let freePort = await ControlService.getAvailablePort({min: grafanaStats.minPort, max: grafanaStats.maxPort})
-          await ControlService.openTunnels([{dstPort: grafana.ports[0].servicePort, localPort: freePort}])
-          grafanaStats.linkUrl = 'http://localhost:' + freePort
-          this.$store.commit("updateRunningServices", [grafanaStats]);
-          this.$store.commit("mutatedSelectedPreset", {includedPlugins: includedPlugins,});
+        this.headerServices = (this.installedServices.filter(service => service.headerOption)
+                              .map(service => {             
+                                if(service.tunnelLink){
+                                  service.linkUrl = "http://localhost:" + localPorts.pop()
+                                }
+                                return service
+                              }))
+
+        let ports = (this.headerServices.filter(service => service.tunnelLink))
+                    .map(service => {
+                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
+                    })
+
+        await ControlService.openTunnels(ports);
         }
 
         this.$router.push("/node");
       }
-
       this.$emit("page", "welcome-page");
     },
   },
@@ -396,13 +426,13 @@ export default {
 #header {
   grid-column: 1/4;
   grid-row: 2/3;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   margin: 0 auto;
   width: 40%;
   max-width: 50%;
-  height: 60%;
+  height: 59%;
   border-radius: 40px;
-  background-color: #234141;
+  background-color: #194747;
   opacity: 0.9;
   box-shadow: 0 1px 3px 1px #1f3737;
   display: flex;
@@ -410,12 +440,12 @@ export default {
   align-items: center;
   text-align: center;
 }
-#header h2 {
+#header span {
   width: 95%;
   max-width: auto;
-  height: 50%;
+  height: 89%;
   font-size: 1.4rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   color: #cecece !important;
   border: none;
   background-color: transparent;
@@ -449,7 +479,7 @@ form {
   width: 65%;
   height: 69%;
   padding: 10px;
-  border: 5px solid #686868;
+  border: 5px solid #929292;
   border-radius: 25px;
   background-color: #234141;
   opacity: 0.9;
@@ -463,21 +493,31 @@ form {
 }
 .select-wrapper {
   width: 82%;
-  margin: 0;
+  height: 100%;
   border-radius: 40px;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-wrapper::after {
+  width: 50%;
+  height: 100%;
 }
 
 select {
   width: 100%;
-  height: 35px;
+  height: 65%;
   border-radius: 40px;
+  outline-style: none;
   cursor: pointer;
   text-align-last: center;
   font-weight: bold;
+  padding: 0;
 }
-.select-wrapper::after {
+.select::after {
   position: absolute;
+  top: -5px;
   width: 50%;
 }
 
@@ -501,7 +541,6 @@ select {
   font-size: 14px;
   font-weight: bold;
   line-height: 1.5em;
-  padding: 0.5em 3.5em 0.5em 1em;
   /* reset */
   margin: 0;
   -webkit-box-sizing: border-box;
@@ -509,39 +548,11 @@ select {
   box-sizing: border-box;
   -webkit-appearance: none;
   -moz-appearance: none;
+  color: #393939;
+  font-weight: 800;
+  font-size: 1rem;
 }
 
-/* arrows */
-#one select {
-  background-image: linear-gradient(
-      45deg,
-      transparent 50%,
-      rgb(254, 254, 255) 50%
-    ),
-    linear-gradient(135deg, rgb(255, 255, 255) 50%, transparent 50%),
-    linear-gradient(to right, #5d5d5d, #5d5d5d);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-    calc(100% - 15px) calc(1em + 2px), 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-}
-
-select.classic:focus {
-  background-image: linear-gradient(45deg, white 50%, transparent 50%),
-    linear-gradient(135deg, transparent 50%, white 50%),
-    linear-gradient(to right, gray, gray);
-  background-position: calc(100% - 15px) 1em, calc(100% - 20px) 1em, 100% 0;
-  background-size: 5px 5px, 5px 5px, 2.5em 2.5em;
-  background-repeat: no-repeat;
-  border-color: grey;
-  outline: 0;
-}
-/* #one select {
-  outline-style: none;
-  font-size: 20px;
-  text-align: center;
-  padding: 0 auto;
-} */
 #two {
   width: 70%;
   padding: 1rem;
@@ -568,8 +579,17 @@ select.classic:focus {
 .three img {
   width: 30px;
   height: 30px;
+  cursor: pointer;
 }
-.formGroup {
+.three:hover img {
+  transform: scale(1.1);
+  transition-duration: 100ms;
+}
+.three:active img {
+  transform: scale(1);
+  transition-duration: 100ms;
+}
+.server-group {
   margin: 0;
   height: 50px;
   padding: 5px;
@@ -580,29 +600,31 @@ select.classic:focus {
   font-weight: bold;
 }
 
-.formGroup label {
+.server-group label {
   clear: both;
   font-size: 1.1rem;
   font-weight: 700;
   margin-left: 10px;
-  color: #cecece !important;
+  color: #dfdfdf !important;
 }
-.formGroup input {
+.server-group input {
   width: 60%;
-  height: 20px;
-  background-color: #d8e1e1;
-  border: 4px solid #3a3939;
+  height: 30px;
+  background-color: #eaeaea;
+  border: 2px solid #979797;
   border-radius: 40px;
   padding-left: 10px;
-  font-weight: bold;
-  outline-style: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  outline-style: none !important;
+  color: #242424;
 }
-.formGroup input:hover {
-  border: 4px solid gray;
+.server-group input:hover {
+  border: 2px solid rgb(54, 54, 54);
 }
 #keyLocation {
-  width: 67%;
-  border: 5px solid #686868;
+  width: 65%;
+  border: 5px solid #929292;
   border-radius: 18px;
   background-color: #234141;
   display: flex;
@@ -621,22 +643,25 @@ select.classic:focus {
 }
 #keyLocation input {
   width: 57%;
+  height: 80%;
   margin-right: 16px;
   border-radius: 40px;
   padding-left: 10px;
-  background-color: #b6c4c4;
+  background-color: #dbdbdb;
   font-size: large;
   font-weight: bold;
   outline-style: none;
-  border: 4px solid #363535;
+  border: 2px solid #929292;
 }
 
 #login {
+  width: 120px;
   min-width: 120px;
-  min-height: 50px;
+  height: 48px;
+  min-height: 45px;
   outline-style: none;
-  padding: 10px;
-  border: 5px solid #686868;
+  padding: 5px;
+  border: 5px solid #929292;
   border-radius: 35px;
   cursor: pointer;
   position: absolute;
@@ -647,6 +672,9 @@ select.classic:focus {
   font-size: 1.4rem;
   font-weight: 800;
   color: #cecece;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #login:hover {
   box-shadow: none;
@@ -663,13 +691,13 @@ input {
 .ssh {
   width: 150px;
   min-width: 100px;
-  height: 24px;
+  height: 33px;
   background-color: #234141;
-  border: 3px solid rgb(116, 116, 116);
+  border: 3px solid #929292;
   border-radius: 40px;
-  color: #fff;
+  color: rgb(235, 235, 235);
   position: absolute;
-  left: 16.5%;
+  left: 17.5%;
   bottom: 15%;
   box-shadow: 0 1px 3px 1px rgb(23, 38, 32);
   display: flex;
@@ -686,8 +714,10 @@ input {
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 24px;
+  width: 29%;
+  height: 89%;
+  margin-left: 2px;
+  margin-top: 3px;
 }
 
 .switch input {
@@ -697,12 +727,14 @@ input {
 }
 
 .slider {
+  height: 90%;
   position: absolute;
   cursor: pointer;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+
   background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -711,9 +743,9 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 20px;
+  height: 19px;
   border: 1px solid #228bb1;
-  width: 20px;
+  width: 19px;
   left: 1px;
   bottom: 1px;
   background-color: #25acde;
@@ -727,9 +759,9 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(16px);
-  -ms-transform: translateX(16px);
-  transform: translateX(16px);
+  -webkit-transform: translateX(19px);
+  -ms-transform: translateX(19px);
+  transform: translateX(19px);
   background-color: #51a76e;
   border: 1px solid #329f55;
   box-shadow: inset 1px 1px 5px #91d8a9;
@@ -839,100 +871,14 @@ input:invalid {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.9;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 99;
 }
-p {
-  display: inline-block;
-  text-transform: uppercase;
-  text-align: center;
-  font-size: 4em;
-  font-family: arial;
-  font-weight: 600;
-  transform: scale(0.5);
-  color: #121212;
-  -webkit-text-stroke: 2px gray;
-}
-p:nth-child(1) {
-  animation: hover 2s linear infinite;
-  color: #44f2f2;
-}
-
-p:nth-child(2) {
-  animation: hover 2s linear infinite 0.125s;
-  color: #44f2f2;
-}
-
-p:nth-child(3) {
-  animation: hover 2s linear infinite 0.25s;
-  color: #44f2f2;
-}
-
-p:nth-child(4) {
-  animation: hover 2s linear infinite 0.375s;
-  color: #44f2f2;
-}
-
-p:nth-child(5) {
-  animation: hover 2s linear infinite 0.5s;
-  color: #44f2f2;
-}
-
-p:nth-child(6) {
-  animation: hover 2s linear infinite 0.675s;
-  color: #44f2f2;
-}
-
-p:nth-child(7) {
-  animation: hover 2s linear infinite 0.75s;
-  color: #44f2f2;
-}
-
-p:nth-child(8) {
-  animation: hover 2s linear infinite 0.825s;
-  color: #44f2f2;
-}
-p:nth-child(9) {
-  animation: hover 2s linear infinite 0.9s;
-  color: #44f2f2;
-}
-p:nth-child(10) {
-  animation: hover 2s linear infinite 0.975s;
-  color: #44f2f2;
-}
-p:nth-child(11) {
-  animation: hover 2s linear infinite 1.125s;
-  color: #44f2f2;
-}
-p:nth-child(12) {
-  animation: hover 2s linear infinite 1.2s;
-  color: #44f2f2;
-}
-p:nth-child(13) {
-  animation: hover 2s linear infinite 1.275s;
-  color: #44f2f2;
-}
-
-@keyframes hover {
-  0% {
-    transform: scale(0.5);
-    color: #121212;
-    -webkit-text-stroke: 2px #44f2f2;
-  }
-
-  20% {
-    transform: scale(1);
-    color: #121212;
-    -webkit-text-stroke: 2px #e7da67;
-  }
-
-  50% {
-    transform: scale(0.5);
-    color: #121212;
-    -webkit-text-stroke: 2px #60fbbb;
-  }
+.anim img {
+  width: 35%;
+  height: 45%;
 }
 </style>

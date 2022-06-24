@@ -19,7 +19,7 @@
 .shape {
   width: 36.5%;
   height: 9%;
-  background-color: rgb(28, 28, 28);
+  background-color: rgb(36, 36, 36);
   position: absolute;
   top: 0;
   left: 0;

@@ -6,14 +6,16 @@
           <img :src="item.sIcon" alt="icon" />
         </div>
       </div>
-      <button class="close-btn" @click="$emit('closeMe')">Close</button>
+      <button class="close-btn" @click="$emit('closeMe')">
+        <img src="/img/icon/manage-node-icons/close2.png" alt="" />
+      </button>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ['modalItems']
-}
+  props: ["modalItems"],
+};
 </script>
 <style scoped>
 .modal-bg {
@@ -60,25 +62,26 @@ export default {
   display: none;
 }
 .close-btn {
+  width: 25px;
+  height: 25px;
   position: absolute;
   top: 10px;
   right: 12px;
-  border: 1px solid #ce4f4f;
-  border-radius: 50px;
-  background-color: #ce4f4f;
   color: #fff;
   outline-style: none;
-  font-weight: bold;
-  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+  font-weight: 600;
+  font-size: 0.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.close-btn img {
+  width: 100%;
 }
 .close-btn:hover {
-  border: 1px solid #dfdfdf;
-  background-color: #a42424;
-  box-shadow: 0 1px 3px 1px rgb(54, 54, 54);
+  transform: scale(1.1);
 }
 .close-btn:active {
-  border: 1px solid #a42424;
-  background-color: #a42424;
-  box-shadow: none;
+  transform: scale(1);
 }
 </style>

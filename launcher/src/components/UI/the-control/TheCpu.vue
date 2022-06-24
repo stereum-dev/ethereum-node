@@ -7,9 +7,6 @@
       </div>
       <div class="cpuCountPart">
         <div class="cpuUsage">
-          <!-- <div class="circle">
-            <span>{{ cpuValue }}%</span>
-          </div> -->
           <div class="cpuProccessBarCont">
             <div class="cpuProccessBar">
               <div class="cpuProccessBar_value_bg">
@@ -19,16 +16,6 @@
           </div>
         </div>
         <div class="cpuTemp">
-          <!-- <div class="circle">
-            <span>{{ temp }}°</span>
-          </div>
-          <div class="cpuTempCont">
-            <div class="cpuTempBar">
-              <div class="cpuTemp_value_bg">
-                <div class="cpuTemp_value" :style="verticalBar"></div>
-              </div>
-            </div>
-          </div> -->
           <span>Proccess: %{{ cpuValue }}</span>
         </div>
       </div>
@@ -41,9 +28,11 @@ import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      cpuValue: [],
-      temp: 100,
+      cpuValue: null,
     };
+  },
+  created() {
+    this.cpuValueMet();
   },
   computed: {
     verticalBar() {
@@ -52,6 +41,9 @@ export default {
     cpuVal() {
       return { width: this.cpuCoun() + "%" };
     },
+  },
+  beforeUpdate() {
+    this.cpuValueMet();
   },
   methods: {
     tVal() {
@@ -62,11 +54,19 @@ export default {
       const cVal = 100 - this.cpuValue;
       return cVal;
     },
-  },
-  async created() {
-    const response = await ControlService.getServerVitals();
-    const { data: cpuValue } = await response.json();
-    this.cpuValue = cpuValue;
+
+    async cpuValueMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.cpuValue = parseInt(arr[6]);
+      } catch (error) {
+
+        console.log(error);
+
+      }
+    },
   },
 };
 </script>
@@ -123,7 +123,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   box-sizing: border-box;
 }
 .cpuUsage,
@@ -133,55 +132,13 @@ export default {
   align-items: center;
   width: 100%;
   height: 50%;
-
   box-sizing: border-box;
-
   font-size: 70%;
   font-weight: bold;
   color: #eee;
 }
-.circle {
-  width: 15%;
-  font-size: 53%;
-  background: #33393e;
-  height: 80%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  border: 1px solid #eee;
-}
-.cpuTempCont {
-  width: 79%;
-  display: flex;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-.cpuTempBar {
-  width: 90%;
-  background: #33393e;
-  height: 40%;
-  border: 1px solid #eee;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.cpuTemp_value_bg {
-  width: 99%;
-  background-image: linear-gradient(to right, blue, green, yellow, red);
-  height: 88%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.cpuTemp_value {
-  height: 100%;
-  background: #33393e;
-}
 .cpuProccessBarCont {
   width: 90%;
-
   display: flex;
   height: 100%;
   justify-content: center;
@@ -198,7 +155,7 @@ export default {
 }
 .cpuProccessBar_value_bg {
   width: 99%;
-  background-image: linear-gradient(to right, green 50%, yellow, red);
+  background-image: linear-gradient(to right, green 35%, yellow, red);
   height: 88%;
   display: flex;
   justify-content: flex-end;

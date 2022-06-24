@@ -26,7 +26,8 @@
 
 <script>
 import VueSelect from "../UI/click-installation/VueSelect.vue";
-import { mapGetters } from "vuex";
+import { mapState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: {
     VueSelect,
@@ -41,11 +42,8 @@ export default {
     };
   },
   computed: {
-    R1clkInstls() {
-      return this.$store.getters.R1clkInstls_get;
-    },
-    ...mapGetters({
-      selectedPreset: "getSelectedPreset",
+    ...mapState(useClickInstall, {
+      selectedPreset: "selectedPreset",
     }),
   },
   methods: {
@@ -87,17 +85,16 @@ export default {
 .header {
   grid-column: 2/4;
   grid-row: 2/3;
-  padding: 1%;
   margin: 0 auto;
-  border: 4px solid grey;
+  border: 5px solid #929292;
+  background-color: #194747;
   width: 60%;
-  height: 50%;
+  height: 49%;
   text-align: center;
   border-radius: 40px;
-  font-size: 1.3rem;
-  color: rgb(207, 207, 207);
-  font-weight: bold;
-  background: #2a4243;
+  font-size: 1.1rem;
+  color: rgb(214, 214, 214);
+  font-weight: 700;
   position: relative;
   opacity: 0.8;
   box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
@@ -109,7 +106,7 @@ export default {
 .containerOption {
   grid-column: 1/5;
   grid-row: 3/4;
-  border: 3px solid grey;
+  border: 4px solid #929292;
   width: 55%;
   height: 90%;
   margin: 10px auto;
@@ -168,13 +165,13 @@ export default {
   min-width: 120px;
   height: 70%;
   resize: both;
-  border: 3px solid #545454;
   border-radius: 40px;
-  background-color: rgb(36, 55, 49);
-  font-size: 1.3rem;
-  font-weight: 800;
+  border: 3px solid #929292;
+  background-color: #194747;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: rgb(191, 191, 191);
-  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  box-shadow: 0 1px 3px 1px rgb(33, 49, 41);
   outline-style: none;
   cursor: pointer;
 }
@@ -184,13 +181,13 @@ export default {
   height: 70%;
   min-width: 120px;
   resize: both;
-  border: 3px solid #545454;
   border-radius: 40px;
-  background-color: rgb(36, 55, 49);
-  font-size: 1.3rem;
-  font-weight: 800;
+  border: 3px solid #929292;
+  background-color: #194747;
+  font-size: 1.2rem;
+  font-weight: 700;
   color: rgb(191, 191, 191);
-  box-shadow: 0 1px 3px 1px rgb(21, 31, 26);
+  box-shadow: 0 1px 3px 1px rgb(41, 61, 51);
   outline-style: none;
   cursor: pointer;
 }

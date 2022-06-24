@@ -3,6 +3,17 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="node-parent">
+        <div class="play-box" v-if="playFirstVideo">
+          <div class="close-video" @click="hideVideoDisplay">
+            <span>Close</span>
+          </div>
+          <the-videos></the-videos>
+        </div>
+        <tutorial-modal
+          @hide-modal="hideFirstStepModal"
+          @show-item="displaySingleModal(steps)"
+          v-if="isTutorialModalActive"
+        ></tutorial-modal>
         <div class="journal-box" onmousedown="return false">
           <journal-node></journal-node>
         </div>
@@ -16,7 +27,11 @@
           <div>
             <drop-zone
               :title="'execution'"
-              :list="executionItems"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'execution'
+                )
+              "
               @modal-view="showModal"
             ></drop-zone>
           </div>
@@ -24,25 +39,40 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="consensusItems"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'consensus'
+                )
+              "
             ></drop-zone>
           </div>
           <div>
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="validatorItems"
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'validator'
+                )
+              "
             ></drop-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin :list="servicePlugins"> </service-plugin>
+            <service-plugin
+              :list="
+                installedServices.filter(
+                  (service) => service.category === 'service'
+                )
+              "
+            >
+            </service-plugin>
           </div>
         </div>
         <div class="node-side" onmousedown="return false">
-          <node-sidebar></node-sidebar>
+          <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
         <div class="footer" onmousedown="return false">
           <div class="footer-content"></div>
@@ -59,7 +89,14 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
-import { mapGetters } from "vuex";
+import { mapWritableState } from "pinia";
+
+import { useServices } from "../store/services";
+import { useNodeStore } from "@/store/theNode";
+import { useTutorialStore } from "@/store/tutorialSteps";
+import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
+import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
+
 export default {
   components: {
     JournalNode,
@@ -67,51 +104,30 @@ export default {
     BaseModal,
     NodeSidebar,
     TaskManager,
+    TheVideos,
+    TutorialModal,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
   data() {
     return {
       isModalActive: false,
+      isTutorialModalActive: false,
+      playFirstVideo: false,
     };
   },
   computed: {
-    ...mapGetters({
-      consensusItems: "getConsensusItems",
-      executionItems: "getExecutionItems",
-      validatorItems: "getValidatorItems",
-      servicePlugins: "getServicePlugins",
-      selectedPreset: "getSelectedPreset",
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
+    ...mapWritableState(useNodeStore, {
+      configData: "configData_nodeSidebarVideo",
+    }),
+    ...mapWritableState(useTutorialStore, {
+      steps: "steps",
     }),
   },
-  mounted() {
-    if (Object.keys(this.selectedPreset).length !== 0) {
-      this.selectedPreset.includedPlugins.map((item) => {
-        if (item.category === "validator") {
-          if (this.validatorItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.validatorItems.push(item);
-        } else if (item.category === "consensus") {
-          if (this.consensusItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.consensusItems.push(item);
-        } else if (item.category === "execution") {
-          if (this.executionItems.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.executionItems.push(item);
-        } else if (item.category === "service") {
-          if (this.servicePlugins.some((plugin) => plugin.id == item.id)) {
-            return;
-          }
-          this.servicePlugins.push(item);
-        }
-      });
-      this.$store.commit("mutatedSelectedPreset", []);
-    }
-  },
+  mounted() {},
   methods: {
     showModal(data) {
       this.isModalActive = true;
@@ -119,6 +135,25 @@ export default {
     },
     closeModal() {
       this.isModalActive = false;
+    },
+    showFirstStepModal() {
+      this.isTutorialModalActive = true;
+    },
+    hideFirstStepModal() {
+      this.isTutorialModalActive = false;
+    },
+    displaySingleModal(el) {
+      this.steps.filter((item) => {
+        item.displayModal = false;
+        item?.id === el.id;
+      });
+      this.playFirstVideo = true;
+      this.isTutorialModalActive = false;
+      el.displayModal = true;
+    },
+    hideVideoDisplay() {
+      this.playFirstVideo = false;
+      this.isTutorialModalActive = false;
     },
   },
 };
@@ -134,7 +169,7 @@ export default {
 .node-parent {
   display: grid;
   width: 100%;
-  height: 90%;
+  height: 91%;
   border: 4px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 18% 46% 20% 16%;
@@ -142,8 +177,55 @@ export default {
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);
   z-index: 1;
+  position: relative;
 }
-
+.play-box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000000d9;
+  border-radius: 0 35px 5px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 301;
+}
+.play-box .close-video {
+  width: 70px;
+  height: 30px;
+  border: 2px solid rgb(183, 48, 48);
+  border-radius: 5px;
+  background-color: rgb(183, 48, 48);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 302;
+  cursor: pointer;
+  position: fixed;
+  bottom: 15px;
+  right: 45%;
+}
+.close-video span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #eee;
+}
+.close-video:hover {
+  border: 2px solid #b73030;
+  background-color: rgb(218, 218, 218);
+}
+.close-video:hover span {
+  color: #b73030;
+}
+.close-video:active {
+  border: 2px solid rgb(183, 48, 48);
+  background-color: rgb(151, 36, 36);
+}
+.close-video:active span {
+  color: #eee;
+}
 .journal-box {
   width: 100%;
   height: 100%;
@@ -157,6 +239,7 @@ export default {
 .trapezoid-parent {
   width: 100%;
   height: 100%;
+  margin-top: 1px;
   grid-column: 2;
   grid-row: 1/4;
   background-color: #000000;
@@ -165,8 +248,8 @@ export default {
   justify-content: space-evenly;
 }
 .modal-parent {
-  width: 45.5%;
-  height: 85.6%;
+  width: 56.2%;
+  height: 100%;
   margin: 0 auto;
   display: flex;
   grid-column: 2;
@@ -178,8 +261,8 @@ export default {
   height: 100%;
 }
 .service {
-  width: 98%;
-  height: 98.2%;
+  width: 99%;
+  height: 100%;
   grid-column: 3;
   grid-row: 1/4;
   background: #334b3f;
@@ -207,9 +290,9 @@ export default {
   border: 1px solid #2d4338;
   border-radius: 15px;
   margin: 10px auto;
-  font-weight: 800;
-  font-size: 0.9rem;
-  box-shadow: 1px 1px 3px rgb(26, 26, 26);
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 3px rgb(19, 40, 31);
   display: flex;
   justify-content: center;
   align-items: center;

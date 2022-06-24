@@ -2,15 +2,22 @@
   <div class="modal-container">
     <div class="modal-content">
       <div class="plugins">
-        <div class="plugin-item">
-          <img
-            src="../../../../public/img/icon/manage-node-icons/obol-ssv-icon.png"
-            alt="icon"
-          />
-          <img
-            src="../../../../public/img/icon/manage-node-icons/obol-ssv-icon.png"
-            alt="icon"
-          />
+        <div class="title">
+          <span>THE PRESETS</span>
+        </div>
+        <div class="plugin-content">
+          <div
+            class="plugin-item"
+            v-for="(plugin, index) in clickPresets"
+            :key="index"
+            @click="selectItemToInstall(plugin)"
+          >
+            <img :src="plugin.icon" alt="icon" 
+              :class="{
+                selectedItem: plugin.id === this.selectedPreset?.id,
+              }"
+            />
+          </div>
         </div>
       </div>
       <div class="content">
@@ -32,54 +39,104 @@
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
       <img
-        src="../../../../public/img/icon/manage-node-icons/close.png"
+        src="../../../../public/img/icon/manage-node-icons/close3.png"
         alt="icon"
       />
     </div>
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import { mapState, mapWritableState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
+import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 export default {
-  props: ['modalStatus']
-}
+  props: ["modalStatus"],
+  computed: {
+    ...mapState(useNodeManage, {
+      clickPresets: "clickPresets",
+    }),
+    ...mapWritableState(useClickInstall, {
+      plugins: "presets",
+      selectedPreset: "selectedPreset",
+      selectedNetworks: "selectedNetworks",
+    }),
+    ...mapWritableState(useServices, {
+      allServices: "allServices",
+    }),
+  },
+  methods: {
+    selectItemToInstall: async function (item) {
+      const constellation = await ControlService.getOneClickConstellation(item.name);
+      let includedPlugins = this.allServices.filter(service => constellation.includes(service.service));
+      if(includedPlugins.map(e => e.service).includes("BloxSSVService") || includedPlugins.map(e => e.service).includes("RocketpoolService")){
+        includedPlugins.splice(includedPlugins.findIndex(e => (e.service != 'BloxSSVService' && e.service != 'RocketpoolService' && e.category === 'validator')),1)
+      }
+      item.includedPlugins = includedPlugins;
+      this.selectedPreset = item;
+      this.$emit("disableBtn");
+    },
+  }
+};
 </script>
 <style scoped>
 .modal-container {
-  width: 99.9%;
-  height: 99.1%;
+  width: 100%;
+  height: 100%;
   border-radius: 0 35px 0 0;
   background: rgb(26, 25, 33);
-  border: 3px solid rgb(112, 189, 210);
+  border: 3px solid rgb(139, 176, 187);
   position: absolute;
-  top: -2px;
+  bottom: 0;
+  left: 0.5%;
 }
 .modal-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content .plugins {
+  width: 39%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-left: 20px;
+}
+.plugins .title {
+  width: 100%;
+  height: 20%;
+  padding-top: 4px;
+  text-align: center;
+}
+.plugins .title span {
+  color: rgb(206, 206, 206);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+.plugins .plugin-content {
+  width: 100%;
+  height: 77%;
+  overflow: hidden;
+  border-top: 1px solid rgb(63, 70, 99);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+.plugin-content .plugin-item {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
 }
-.modal-content .plugins {
-  width: 50%;
-  height: 70%;
-  border-right: 1px solid rgb(63, 70, 99);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.modal-content .plugins .plugin-item {
-  width: 95%;
-  height: 90%;
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-}
 .plugin-item img {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   justify-self: center;
   align-self: center;
   border-radius: 10px;
@@ -88,6 +145,8 @@ export default {
 .modal-content .content {
   width: 50%;
   height: 90%;
+  border-left: 1px solid rgb(63, 70, 99);
+  margin-left: 35px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -97,10 +156,11 @@ export default {
   width: 80%;
   height: 20%;
   border-bottom: 1px solid rgb(63, 70, 99);
+  text-align: center;
 }
 .content .title span {
   color: rgb(206, 206, 206);
-  font-size: 20px;
+  font-size: 1.5rem;
   font-weight: 900;
 }
 .content .description {
@@ -123,7 +183,7 @@ export default {
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
-  box-shadow: 1px 2px 8px #000000, inset 0 0 8px 2px #3e7670;
+  box-shadow: 1px 2px 8px #000000;
 }
 .content .install-btn:hover {
   background-color: rgb(27, 62, 60);
@@ -148,15 +208,37 @@ export default {
   height: 25px;
   border-radius: 50px;
   position: fixed;
-  top: 10%;
-  right: 2%;
+  margin: 5px;
+  padding: 1px;
+  top: 11%;
+  right: 1%;
   background-color: #171b1f;
+  border: 2px solid #63707e;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.close-preset:hover {
+  background-color: #141515;
+  border: 2px solid #cf503f;
+  transform: scale(1.1);
+  transition: all 200ms;
+}
+.close-preset:active {
+  background-color: #141515;
+  border: 2px solid #63707e;
+  transform: scale(1);
+  transition: all 200ms;
 }
 .close-preset img {
-  width: 25px;
-  height: 25px;
-  border: 1px solid #212223;
+  width: 17px;
+  height: 17px;
   border-radius: 50px;
-  box-shadow: 0 1px 5px 0 rgb(12, 12, 12), inset 0 1px 10px 0 rgb(48, 72, 99);
+}
+.selectedItem {
+  border: 2px solid rgb(53, 178, 246) !important;
+  border-radius: 10px !important;
+  box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
 </style>

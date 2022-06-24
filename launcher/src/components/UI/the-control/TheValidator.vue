@@ -1,7 +1,8 @@
 <template>
   <div class="theValidatorParent">
-    <div class="theValidatorTitle"><span>Validator</span></div>
-    <hr />
+    <div class="theValidatorTitle">
+      <span>Validator</span>
+      </div>
     <div class="theValidatorBox">
       <div class="theValidatorBox_left">
         <div class="activePart">
@@ -58,7 +59,7 @@ export default {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 60%;
+  height: 80%;
   box-sizing: border-box;
 }
 .theValidatorTitle {
@@ -67,6 +68,7 @@ export default {
   align-items: center;
   height: 20%;
   width: 100%;
+  margin-bottom: 9px;
 }
 .theValidatorTitle span {
   font-size: 60%;
