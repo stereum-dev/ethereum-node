@@ -8,7 +8,9 @@
     />
     <div class="service-bg" ref="serviceBg">
       <div
-        v-for="item in installedServices.filter(service => service.category === 'service')"
+        v-for="item in installedServices.filter(
+          (service) => service.category === 'service'
+        )"
         :key="item.id"
         :class="{ 'chosen-plugin': item.active }"
         class="service-item"
@@ -75,14 +77,13 @@ export default {
   grid-template-rows: repeat(10, 1fr);
   align-items: center;
   justify-items: center;
-  padding-top: 20px;
+  padding: 10px;
   width: 90%;
   height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   background: #707070;
   border-radius: 20px;
-  gap: 3px;
   cursor: pointer;
   overflow-x: hidden;
   overflow-y: auto;
@@ -91,9 +92,16 @@ export default {
   display: none;
 }
 
+.service-item {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .service-item img {
-  width: 60px;
-  height: 56px;
+  width: 50px;
+  height: 50px;
 }
 .service-item img:active {
   box-shadow: none;
