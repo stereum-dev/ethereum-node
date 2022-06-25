@@ -59,13 +59,15 @@
       @update-confirm="updateConfirmationHandler"
       v-if="showUpdateModal"
     ></update-modal>
+    <update-waiting v-if="updateWaitingModal"></update-waiting>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
 import UpdateModal from "./UpdateModal.vue";
+import UpdateWaiting from "./UpdateWaiting.vue";
 export default {
-  components: { UpdateModal },
+  components: { UpdateModal, UpdateWaiting },
   data() {
     return {
       isUpdateAvailable: false,
@@ -75,11 +77,12 @@ export default {
       showSettingText: false,
       showUpdateText: false,
       showNotifText: false,
+      updateWaitingModal: false,
     };
   },
   methods: {
     runUpdates: async function () {
-      await ControlService.runUpdates()
+      await ControlService.runUpdates();
     },
     updateModalHandler() {
       this.showUpdateModal = true;
@@ -88,8 +91,10 @@ export default {
       this.showUpdateModal = false;
     },
     updateConfirmationHandler: async function () {
-      await this.runUpdates();
       this.showUpdateModal = false;
+      this.updateWaitingModal = true;
+      await this.runUpdates();
+      this.updateWaitingModal = false;
     },
   },
 };
