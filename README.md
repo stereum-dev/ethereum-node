@@ -8,18 +8,18 @@
 This repository contains the code and scripts for Stereum 2.0
 
 
-🍄 Stereum manages the process of setting up & maintaining an Ethereum node for you with a focus on self sovereignty, privacy and flexibility. 
+🍄 Stereum manages the process of setting up & maintaining an Ethereum node for you with a focus on self sovereignty, privacy and flexibility.
 
 🍄 Stereum 2.0 aims to be the most flexible way to leverage your Ethereum node for staking, data science, development or your own personal use case. We hope to explore every hermit’s dream with you!
 
 🍄 With Stereum you are able to participate in the Ethereum network and its various protocols (like SSV)!
 
 
-## Get Started 
+## Get Started
 After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
 
-## Download
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betasolo)
+## Download (latest)
+[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-betassv)
 
 
 ## Contribute
@@ -51,20 +51,21 @@ Milestones build on top of the features of previous milestones.
 - [![beta2.0-solo](https://img.shields.io/badge/milestone-beta2.0--solo-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/2): Suitable for testnet, supporting use cases:
   - Solo staking: Staking validator accounts on Lighthouse, Nimbus, Prysm and Teku
   - Basic monitoring capabilities
-- [![beta2.0-bloxssv](https://img.shields.io/badge/milestone-beta2.0--bloxssv-orange?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/3): Suitable for testnet, adding e. g. use cases & features:
+- [![beta2.0-bloxssv](https://img.shields.io/badge/milestone-beta2.0--bloxssv-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/3): Suitable for testnet, adding e. g. use cases & features:
   - Blox SSV: Setup an operator and connect to Lighthouse, Nimbus, Prysm or Teku
   - Blox SSV dashboard
   - Fix Grafana dashboards
   - Besu support
   - Nethermind support
   - Update button
-- [![beta2.0-stack](https://img.shields.io/badge/milestone-beta2.0--stack-inactive?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/4): Suitable for testnet, adding e. g. use cases & features:
+- [![beta2.0-stack](https://img.shields.io/badge/milestone-beta2.0--stack-orange?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/4): Suitable for testnet, adding e. g. use cases & features:
   - Advanced service configuration by user ("Expert Mode")
   - Install latest versions
   - Update services
   - Validator account stats
   - Technical documentation (preparation for security audit)
   - Enhanced plugin actions via mouse over menu
+  - [The Merge](https://ethereum.org/en/upgrades/merge/) support
 - ![unnamed](https://img.shields.io/badge/milestone-unnamed-inactive?style=flat-square): Suitable for testnet, adding use cases & features:
   - tba
 
