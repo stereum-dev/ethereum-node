@@ -51,7 +51,7 @@
     register: prometheus_up
     until:
       - prometheus_up.json.status == "success"
-      - prometheus_up.json.data.result | length > 0
+      - prometheus_up.json.data.result | length == 4
     retries: 10
     delay: 6
   # container's images & ports
