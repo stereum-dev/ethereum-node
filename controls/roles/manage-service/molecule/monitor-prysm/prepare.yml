@@ -40,6 +40,7 @@
             save: true
             state: started
             configuration:
+              service: PrysmBeaconService
               id: "{{ beacon_service }}"
               image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
