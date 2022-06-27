@@ -89,7 +89,7 @@ export default {
       await ControlService.startOneClickServices()
 
       let services = await ControlService.getServices();
-        if (services && services.length > 0) {
+        if (services && Array.isArray(services) && services.length > 0) {
         services.forEach((service) => {
           let buffer = this.allServices.find((element) => element.service === service.service)
           if(buffer){
