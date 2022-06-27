@@ -133,7 +133,9 @@ test('teku validator import', async () => {
     expect(docker.stdout).toMatch(/5051-5052->5051-5052/)
     expect(docker.stdout).toMatch(/8008->8008/)
     expect(docker.stdout).toMatch(/9001->9001/)
-    expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+    if(!(tekuClient.id.includes('Up'))){
+      expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+    }
     
 })
 
