@@ -2,27 +2,6 @@ import { PrometheusService } from './PrometheusService'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 
-test('getServiceConfiguration', () => {
-  jest.mock('./NimbusBeaconService')
-  const NimbusBeaconService = require('./NimbusBeaconService')
-  NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
-    return {
-      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]` })
-    }
-  })
-
-  jest.mock('./PrometheusNodeExporterService')
-  const PrometheusNodeExporterService = require('./PrometheusNodeExporterService')
-  PrometheusNodeExporterService.PrometheusNodeExporterService.mockImplementation(() => {
-    return {
-      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]` })
-    }
-  })
-
-  const config = PrometheusService.getServiceConfiguration([new NimbusBeaconService.NimbusBeaconService(), new PrometheusNodeExporterService.PrometheusNodeExporterService()])
-  expect(config).toStrictEqual({ CONFIG: 'global:\n  scrape_interval:     15s\n  evaluation_interval: 15s\n\nalerting:\n  alertmanagers:\n  - static_configs:\n    - targets:\n      # - alertmanager:9093\n\nrule_files:\n  # - \"first_rules.yml\"\n  # - \"second_rules.yml\"\n\nscrape_configs:\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]' })
-})
-
 test('buildConfiguration', () => {
   const ports = [
     new ServicePort('127.0.0.1', 9090, 9090, servicePortProtocol.tcp)
@@ -32,7 +11,6 @@ test('buildConfiguration', () => {
   const NimbusBeaconService = require('./NimbusBeaconService')
   NimbusBeaconService.NimbusBeaconService.mockImplementation(() => {
     return {
-      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    metrics_path: /metrics\n    static_configs:\n      - targets: [stereum-<serviceID>:8008]` }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'nimbus-id',
@@ -46,7 +24,6 @@ test('buildConfiguration', () => {
   const PrometheusNodeExporterService = require('./PrometheusNodeExporterService')
   PrometheusNodeExporterService.PrometheusNodeExporterService.mockImplementation(() => {
     return {
-      buildPrometheusJob: jest.fn(() => { return `\n  - job_name: stereum-<serviceID>\n    static_configs:\n      - targets: [stereum-<serviceID>:9100]` }),
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'pne-id',
