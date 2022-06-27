@@ -33,7 +33,7 @@
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
-      minutes: 5
+      minutes: 1
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-0af126fa-c881-456f-9388-e977fb1537bf"
