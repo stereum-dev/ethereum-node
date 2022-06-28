@@ -1,0 +1,22 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- name: Read all service configs
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configs
+  with_items: "{{ service_config_files.files }}"
+
+- name: Write prometheus configuration
+  template:
+    src: prometheus.yml
+    dest: "{{ stereum_service_configuration.volumes | select('match', '.*\/etc\/prometheus') | first | split(':') | first }}/prometheus.yml"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
+  become: yes
+
+# EOF

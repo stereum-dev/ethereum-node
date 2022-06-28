@@ -40,6 +40,7 @@
             save: true
             state: started
             configuration:
+              service: TekuBeaconService
               id: "{{ beacon_service }}"
               image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
               ports:

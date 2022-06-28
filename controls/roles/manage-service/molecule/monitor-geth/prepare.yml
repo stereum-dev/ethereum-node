@@ -39,6 +39,7 @@
             save: true
             state: started
             configuration:
+              service: GethService
               id: "{{ geth_service }}"
               image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
               ports:

@@ -115,7 +115,9 @@ test('nimbus validator import', async () => {
     expect(docker.stdout).toMatch(/5052->5052/)
     expect(docker.stdout).toMatch(/9190->9190/)
     expect(docker.stdout).toMatch(/9000->9000/)
-    expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+    if(!(nimbusClient.id.includes('Up'))){
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+    }
     
     //check nimbus service logs
     expect(status.stdout).toMatch(/Slot start/)

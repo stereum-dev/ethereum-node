@@ -45,7 +45,7 @@
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
-      minutes: 5
+      minutes: 1
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1"
@@ -56,32 +56,16 @@
       - grafana.stdout is not search("can't read dashboard provisioning files from directory")
     retries: 60
     delay: 10
-  #  prometheus logs
+  # prometheus
   - name: Prometheus
-    command: "docker logs --tail=100  stereum-f52b6dcc-e0d5-11ec-8e8d-87f977a4cd88"
-    register: prometheus
+    uri:
+      url: http://localhost:9090/api/v1/query?query=up
+    register: prometheus_up
     until:
-      - prometheus.stderr is search("Server is ready to receive web requests")
-      - prometheus.stderr is not search("Error loading config")
-    retries: 60
-    delay: 10
-  #  node exporter logs
-  - name: Node exporter
-    command: "docker logs --tail=100 stereum-ffd332e6-e0d5-11ec-a82b-9b01f3fb02d7"
-    register: node_exporter
-    until:
-      - node_exporter.stderr is search("Listening on")
-    retries: 60
-    delay: 10
-  #  teku beacon logs
-  - name: teku beacon
-    command: "docker logs --tail=200 stereum-1929168e-e0d6-11ec-9183-97daacc21ea6"
-    register: teku_beacon
-    until:
-      - teku_beacon.stdout is search("Syncing")
-      - teku_beacon.stdout is not search("Eth1 service down")
-    retries: 60
-    delay: 10
+      - prometheus_up.json.status == "success"
+      - prometheus_up.json.data.result | length == 3
+    retries: 10
+    delay: 6
   # container's images & ports
   - shell: docker ps
     register: stereum_docker_ps
