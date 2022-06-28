@@ -2,13 +2,11 @@
   <div class="pubkey-parent" @click="$emit('registerHandler')">
     <div class="operator-box">
       <div class="pubkey-box">
-        <div class="pubkey-title">
-          <span> OPERATOR PUBLIC KEY</span>
-        </div>
         <div class="pub-key">
+          <span class="pubkey-input_text">Public operator key</span>
           <input
             v-on:focus="$event.target.select()"
-            type="password"
+            type="hidden"
             class="pubkey-input"
             ref="pubkeyRef"
             v-model="pubkey"
@@ -21,12 +19,10 @@
         </div>
       </div>
       <div class="secretkey-box">
-        <div class="secretkey-title">
-          <span> OPERATOR SECRET KEY</span>
-        </div>
         <div class="secret-key">
+          <span class="secretkey-input_text">Secret Operator Key</span>
           <input
-            type="password"
+            type="hidden"
             class="secretkey-input"
             v-model="secretkey"
             disabled
@@ -159,14 +155,24 @@ export default {
 .pub-key,
 .secret-key {
   width: 100%;
-  height: 65%;
-  border-radius: 10px;
+  height: 68%;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #373737;
   border: 1px solid #c3c3c3;
   box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
+}
+.pubkey-input_text,
+.secretkey-input_text {
+  width: 94%;
+  font-size: 0.9rem;
+  padding-left: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: #71b1e1;
 }
 .pubkey-input,
 .secretkey-input {
@@ -220,17 +226,17 @@ export default {
   align-items: center;
 }
 .text-1 {
-  width: 50%;
-  height: 10%;
+  width: 70%;
+  height: 12%;
   text-align: center;
   margin-bottom: 40px;
-  line-height: 8px;
+  line-height: 12px;
 }
 .text-1 span {
   color: aliceblue;
   overflow-wrap: break-word;
-  font-size: 0.6rem;
-  font-weight: 400;
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
 .copiedPubKey label {
@@ -240,7 +246,8 @@ export default {
   text-align: center;
   color: rgb(201, 69, 46);
   font-size: 0.7rem;
-  font-weight: 400;
+  font-weight: 500;
+  z-index: 701;
 }
 .copiedPubKey {
   width: 90%;
@@ -250,6 +257,7 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  z-index: 700;
 }
 .copiedPubKey input {
   width: 100%;
@@ -259,6 +267,7 @@ export default {
   background-color: rgb(212, 212, 212);
   padding: 0;
   padding-left: 10px;
+  margin-top: 10px;
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(51, 129, 239);
@@ -291,7 +300,7 @@ export default {
   z-index: -1;
 }
 .btn-box button:hover {
-  transform: scale(1.1);
+  transform: scale(1.07);
   border: 2px solid #364a59;
   background-color: #283742;
   color: #5ba3cd;

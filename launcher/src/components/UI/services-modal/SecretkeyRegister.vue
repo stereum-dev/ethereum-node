@@ -76,7 +76,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   z-index: 602;
-  color: rgb(217, 217, 217);
+  color: rgb(105, 169, 241);
 }
 .secretkey-box input {
   width: 100%;
