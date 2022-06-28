@@ -74,9 +74,7 @@ export default {
 .service-bg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(10, 1fr);
-  align-items: center;
-  justify-items: center;
+  grid-template-rows: repeat(5, 1fr);
   padding: 10px;
   width: 90%;
   height: 80%;
@@ -93,8 +91,8 @@ export default {
 }
 
 .service-item {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -107,6 +105,8 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
+  width:55px;
+  height:55px;
   border: 2px solid rgb(64, 168, 243);
   border-radius: 7px;
 }

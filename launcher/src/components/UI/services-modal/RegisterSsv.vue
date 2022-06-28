@@ -31,7 +31,7 @@
             v-model="secretkey"
             disabled
           />
-          <div class="copy-icon">
+          <div class="copy-icon" @click="copySecretKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
             <span>copied!</span>
           </div>
@@ -45,19 +45,17 @@
           safe place.Do not share this key with anyone.</span
         >
       </div>
-      <div class="text-2">
-        <span
+      <div class="copiedPubKey">
+        <label for="copyPubkey"
           >Copy your public operator key into this field to confirm that you
-          stored your keys!</span
-        >
-      </div>
-      <div class="copy-pubkey">
-        <input
-          type="password"
-          class="pubkey-input"
-          ref="copyPub"
-          v-model="copiedPubkey"
-        />
+          stored your keys!
+          <input
+            name="copiedPubkey"
+            id="copyPubkey"
+            type="password"
+            v-model="model.copiedPubkey"
+          />
+        </label>
       </div>
       <div class="btn-box">
         <button
@@ -76,23 +74,37 @@ export default {
   props: ["pubkey", "secretkey"],
   data() {
     return {
-      copiedPubkey: null,
+      model: {
+        copiedPubkey: "",
+        copiedSecretkey: "",
+      },
       isBtnDisabled: true,
     };
   },
-  computed: {
+  updated() {
+    this.getPubkeyHandler();
+  },
+  methods: {
     getPubkeyHandler() {
-      if (this.$refs.copyPub.value.length > 0) {
+      if (this.model.copiedPubkey === this.pubkey) {
         this.isBtnDisabled = false;
       } else {
         this.$router.push("/node");
       }
     },
-  },
-  methods: {
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
       this.$copyText(pubkeyToCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
+    copySecretKey() {
+      let secretkeyToCopy = this.secretkey;
+      this.$copyText(secretkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -168,7 +180,8 @@ export default {
   color: rgb(51, 129, 239);
 }
 .pub-key .copy-icon,
-.secret-key .copy-icon {
+.secret-key .copy-icon,
+.copiedPubKey .copy-icon {
   width: 5%;
   height: 100%;
   display: flex;
@@ -219,50 +232,38 @@ export default {
   font-size: 0.6rem;
   font-weight: 400;
 }
-.text-2 {
-  width: 80%;
-  height: 10%;
+
+.copiedPubKey label {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
   text-align: center;
-  line-height: 8px;
-}
-.text-2 span {
   color: rgb(201, 69, 46);
-  overflow-wrap: break-word;
   font-size: 0.7rem;
   font-weight: 400;
 }
-.copy-pubkey {
+.copiedPubKey {
   width: 90%;
-  height: 18%;
+  height: 45%;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
-  background-color: #373737;
-  border: 1px solid #c3c3c3;
-  box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
 }
-.copy-pubkey input {
+.copiedPubKey input {
   width: 100%;
-  height: 100%;
+  height: 50%;
+  overflow: hidden;
   border-radius: 8px;
   background-color: rgb(212, 212, 212);
+  padding: 0;
   padding-left: 10px;
   font-size: 1.5rem;
   font-weight: 600;
-  outline-color: #3294c5;
+  color: rgb(51, 129, 239);
 }
-.copy-pubkey .copy-icon {
-  width: 5%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.copy-pubkey img {
-  width: 16px;
-  height: 22px;
-}
+
 .btn-box {
   width: 100%;
   height: 30%;
@@ -273,7 +274,7 @@ export default {
 }
 .btn-box button {
   width: 25%;
-  height: 55%;
+  height: 70%;
   border-radius: 10px;
   background-color: #364a59;
   box-shadow: 1px 1px 5px 1px rgb(12, 12, 12);
@@ -290,12 +291,13 @@ export default {
   z-index: -1;
 }
 .btn-box button:hover {
+  transform: scale(1.1);
   border: 2px solid #364a59;
   background-color: #283742;
   color: #5ba3cd;
 }
 .btn-box button:active {
-  transform: scale(0.99);
+  transform: scale(1);
   border: none;
   background-color: #1f2d37;
   color: #5ba3cd;
