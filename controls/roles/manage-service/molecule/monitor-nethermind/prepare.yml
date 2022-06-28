@@ -1,0 +1,68 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    nethermind_service: 858c4aa8-f6fc-11ec-b06d-978415f2a199
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # nethermind
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --log=debug
+              - --datadir=/opt/app/data
+              - --Network.DiscoveryPort=30303
+              - --Network.P2PPort=30303
+              - --JsonRpc.Enabled=true
+              - --JsonRpc.Host=0.0.0.0
+              - --Init.WebSocketsEnabled=true
+              - --JsonRpc.WebSocketsPort=8546
+              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+              - --Metrics.Enabled=true
+              - --Metrics.ExposePort=6060
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
+
+# EOF

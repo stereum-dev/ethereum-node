@@ -1,0 +1,68 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prometheus_service: d5c45ace-f6e3-11ec-8604-0fec8b98e807
+    grafana_service: fde62064-f6e3-11ec-81d0-8fedcc23795d
+    grafana_provisioning: ["besu"]
+
+  tasks:
+    # prometheus service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrometheusService
+              id: "{{ prometheus_service }}"
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
+              ports:
+                - 127.0.0.1:9090:9090/tcp
+              env: {}
+              command: sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml  --web.enable-lifecycle"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
+                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
+    # grafana service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GrafanaService
+              id: "{{ grafana_service }}"
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
+              ports:
+                - 127.0.0.1:3000:3000/tcp
+              env:
+                GRAFANA_INI: |
+                  [auth.anonymous]
+                  enabled = true
+                  org_role = Admin
+              command: bash -c "touch /etc/grafana/grafana.ini &&
+                                echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
+                                /run.sh"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
+                - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
+                - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
