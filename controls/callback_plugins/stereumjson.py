@@ -47,7 +47,7 @@ class CallbackModule(CallbackBase):
         self._task_type_cache = {}
         super(CallbackModule, self).__init__()
 
-    MSG_FORMAT = "%(now)s  -  %(playbook)s  -  %(task_name)s  -  %(task_action)s  -  %(category)s  -  %(data)s\n>\n"
+    MSG_FORMAT = "TIME: %(now)s\nPLAYBOOK: %(playbook)s\nTASK: %(task_name)s\nACTION: %(task_action)s\nCATEGORY: %(category)s\nDATA: %(data)s\n\n"
 
     def __init__(self):
 
