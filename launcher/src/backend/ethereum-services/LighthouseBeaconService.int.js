@@ -124,7 +124,9 @@ test('lighthouse validator import', async () => {
     expect(docker.stdout).toMatch(/5052->5052/)
     expect(docker.stdout).toMatch(/5062->5062/)
     expect(docker.stdout).toMatch(/9000->9000/)
-    expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+    if(!([lhBC.id,lhVC.id].join('').includes('Up'))){
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+    }
 
     //check lighthouse BC logs
     expect(BCstatus.stderr).toMatch(/est_time/)

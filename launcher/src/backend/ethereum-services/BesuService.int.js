@@ -2,14 +2,14 @@ import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 import { ServiceManager } from '../ServiceManager.js'
-import { GethService } from './GethService.js'
+import { BesuService } from './BesuService.js'
 const log = require('electron-log')
 
 jest.setTimeout(500000)
 
-test('geth installation', async () => {
+test('besu installation', async () => {
   const serverSettings = {
-    name: 'Geth--integration-test--ubuntu-2204',
+    name: 'Besu--integration-test--ubuntu-2204',
     image: 'ubuntu-22.04',
     location: 'fsn1',
     server_type: 'cpx21',
@@ -36,24 +36,25 @@ test('geth installation', async () => {
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
-  echo "stereum_settings:
-  settings:
-    controls_install_path: /opt/stereum
-    os_user: stereum
-    updates:
-      lane: stable
-      unattended:
-        install: false
-  " > /etc/stereum/stereum.yaml`)
+      echo "stereum_settings:
+      settings:
+        controls_install_path: /opt/stereum
+        os_user: stereum
+        updates:
+          lane: stable
+          unattended:
+            install: false
+      " > /etc/stereum/stereum.yaml`)
   await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  //install geth
+  //install besu
   const ports = [
     new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
     new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
   ]
-  const executionClient = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+
+  const executionClient = BesuService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/besu')
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration())
   await serviceManager.manageServiceState(executionClient.id, 'started')
 
@@ -68,20 +69,21 @@ test('geth installation', async () => {
   await nodeConnection.sshService.disconnect()
   await testServer.destroy()
 
+
   //check ufw
   expect(ufw.stdout).toMatch(/30303\/tcp/)
   expect(ufw.stdout).toMatch(/30303\/udp/)
 
   //check docker container
-  expect(docker.stdout).toMatch(/ethereum\/client-go/)
+  expect(docker.stdout).toMatch(/hyperledger\/besu/)
   expect(docker.stdout).toMatch(/30303->30303/)
   if (!(executionClient.id.includes('Up'))) {
     expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
   }
 
-  // check if geth service established WebSocket connection
-  // idk why but logs are stored in stderr but stdout string is empty
-  expect(status.stderr).toMatch(/WebSocket enabled/)
-  expect(status.stderr).toMatch(/Started P2P networking/)
-  expect(status.stderr).not.toMatch(/Rejected WebSocket connection/)
+  expect(status.stdout).toMatch(/Websocket service started/)
+  expect(status.stdout).toMatch(/P2P RLPx agent started/)
+  expect(status.stdout).toMatch(/Starting peer discovery agent/)
+  expect(status.stdout).toMatch(/Starting sync/)
+
 })

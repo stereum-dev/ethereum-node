@@ -161,7 +161,9 @@ test('prysm validator import', async () => {
     expect(docker.stdout).toMatch(/4000->4000/)
     expect(docker.stdout).toMatch(/12000->12000/)
     expect(docker.stdout).toMatch(/13000->13000/)
-    expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+    if(!([prysmBC.id,prysmVC.id].join('').includes('Up'))){
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+    }
 
     //check prysm BC logs
     expect(BCstatus.stderr).toMatch(/estimated time remaining/)
