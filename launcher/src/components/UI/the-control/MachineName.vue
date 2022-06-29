@@ -41,18 +41,29 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 70%;
 }
 .machineNam {
   background: #33393e;
   color: #eee;
   border: 2px solid #b7c2c2;
+  border-radius: 4px;
   left: -5%;
   position: relative;
   z-index: 2;
   width: 80%;
+  height: 90%;
   padding-left: 6%;
+  padding-top: 1px;
   outline: none;
-  font-size: 70%;
+  font-size: .8rem;
+  font-weight: 600;
+  color: rgb(122, 204, 255);
+  text-transform: uppercase;
+}
+.machineNam span{
+  width: 100%;
+  height: 100%;
 }
 .machineNam:hover,
 .machineNam:active {
