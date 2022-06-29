@@ -8,7 +8,6 @@
     prometheus_node_exporter_service: ffd332e6-e0d5-11ec-a82b-9b01f3fb02d7
     grafana_service: 0ee5a0e8-e0d6-11ec-add4-3b3d662c25b1
     beacon_service: 1929168e-e0d6-11ec-9183-97daacc21ea6
-    grafana_provisioning: ["teku"]
 
   tasks:
     # prometheus node-exporter service

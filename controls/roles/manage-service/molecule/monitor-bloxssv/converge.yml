@@ -7,7 +7,6 @@
     prometheus_service: 4e647253-8c7c-4d79-a0c3-1e670f2b6638
     ssv_service: ea17abb3-f219-46f0-8933-17d4ba688d26
     grafana_service: 0af126fa-c881-456f-9388-e977fb1537bf
-    grafana_provisioning: ["bloxssv"]
 
   tasks:
     # prometheus service

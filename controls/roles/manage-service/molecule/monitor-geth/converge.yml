@@ -7,7 +7,6 @@
     prometheus_service: 4e647253-8c7c-4d79-a0c3-1e670f2b6638
     geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
     grafana_service: 0af126fa-c881-456f-9388-e977fb1537bf
-    grafana_provisioning: ["geth"]
 
   tasks:
     # prometheus service
