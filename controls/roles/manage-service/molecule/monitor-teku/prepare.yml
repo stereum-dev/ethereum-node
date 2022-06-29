@@ -62,7 +62,7 @@
                 - --metrics-host-allowlist="*"
                 - --metrics-publish-interval=10
                 - --data-path=/opt/app/data
-                - --data-storage-mode=archive
+                - --data-storage-mode=prune
                 - --rest-api-port=5051
                 - --rest-api-host-allowlist="*"
                 - --rest-api-interface=0.0.0.0
