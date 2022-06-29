@@ -2,9 +2,7 @@
   <div class="pubkey-parent" @click="$emit('openPubkey')">
     <div class="pubkey-box">
       <div class="pub-key">
-        <span class="input-text"
-          >Public operator key</span
-        >
+        <span class="input-text">Public operator key</span>
         <input
           type="hidden"
           class="pubkey-input"
@@ -18,25 +16,36 @@
         </div>
       </div>
     </div>
-    <div class="operator-box">
-      <div class="operator-btn">
-        <span>My Operator Page</span>
+    <div class="browser-box">
+      <div class="operator-box">
+        <div class="operator-btn">
+          <a href="bloxUrl.operatorUrl" target="_blank">My Operator Page</a>
+        </div>
       </div>
-    </div>
-
-    <div class="insert-box">
-      <div class="insert-btn">
-        <span>SSV Node Grafana Dashboard</span>
+      <div class="grafana-box">
+        <div class="grafana-btn">
+          <a href="bloxUrl.grafanaDashboardUrl" target="_blank"
+            >SSV Node Grafana Dashboard</a
+          >
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   props: ["pubkey"],
   data() {
     return {};
   },
+  computed: {
+    ...mapState(useNodeStore, {
+      bloxUrl: "bloxUrl",
+    }),
+  },
+
   methods: {
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
@@ -62,7 +71,7 @@ export default {
 }
 .operator-box,
 .pubkey-box,
-.insert-box {
+.grafana-box {
   width: 90%;
   height: 42px;
   margin-top: 10px;
@@ -94,7 +103,7 @@ export default {
 }
 .input-text {
   width: 94%;
-  font-size: .9rem;
+  font-size: 0.9rem;
   padding-left: 30px;
   font-weight: 700;
   text-align: center;
@@ -130,10 +139,18 @@ export default {
   font-size: 0.5rem;
   position: absolute;
   top: -15px;
-  right:0;
+  right: 0;
+}
+.browser-box {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .operator-btn,
-.insert-btn {
+.grafana-btn {
   width: 100%;
   height: 85%;
   border-radius: 10px;
@@ -143,36 +160,41 @@ export default {
   background-color: #20a9f8;
   box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
   transition-duration: 50ms;
+  cursor: pointer;
 }
-.operator-btn span,
-.insert-btn span {
-  width: max-content;
+.operator-btn a,
+.grafana-btn a {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  align-self: center;
+  padding-top: 5px;
   font-size: 1rem;
   font-weight: 600;
   color: rgb(57, 57, 57);
   transition-duration: 50ms;
 }
 .operator-btn:hover,
-.insert-btn:hover {
-  transform: scale(1.01);
+.grafana-btn:hover {
+  transform: scale(1.005);
   background-color: rgb(9, 140, 216);
   border: 1px solid #91caf3;
   border-radius: 10px;
-  transition-duration: 50ms;
+  transition-duration: 100ms;
 }
-.operator-btn:hover span,
-.insert-btn:hover span {
+.operator-btn:hover a,
+.grafana-btn:hover a {
   color: rgb(222, 222, 222);
 }
 .operator-btn:active,
-.insert-btn:active {
+.grafana-btn:active {
   transform: scale(1);
   background-color: rgb(6, 116, 180);
   box-shadow: none;
   border: none;
 }
-.operator-btn:active span,
-.insert-btn:active span {
+.operator-btn:active a,
+.grafana-btn:active a {
   color: rgb(222, 222, 222);
 }
 

@@ -175,7 +175,6 @@ export const useNodeStore = defineStore("theNode", {
         {
           id: 1,
           name: "First Steps!",
-         
         },
         {
           id: 2,
@@ -240,6 +239,10 @@ export const useNodeStore = defineStore("theNode", {
           status: "deactive",
         },
       ],
+      bloxUrl: {
+        operatorUrl: "https://www.google.com/",
+        grafanaDashboardUrl: "https://www.google.com",
+      },
     };
   },
   getters: {},
