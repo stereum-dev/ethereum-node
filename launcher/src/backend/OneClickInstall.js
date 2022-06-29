@@ -83,7 +83,6 @@ export class OneClickInstall {
     this.prometheusNodeExporter = undefined
     this.prometheus = undefined
     this.grafana = undefined
-    this.provisioning = []
     this.setup = undefined
     this.choosenClient = undefined
   }
@@ -112,7 +111,6 @@ export class OneClickInstall {
       ]
       this.executionClient = GethService.buildByUserInput('goerli', ports, this.installDir + '/geth')
       prometheusJobs.push(this.executionClient)
-      this.provisioning.push('geth')
 
     }
 
@@ -123,7 +121,6 @@ export class OneClickInstall {
       ]
       this.executionClient = BesuService.buildByUserInput('goerli', ports, this.installDir + '/besu')
       prometheusJobs.push(this.executionClient)
-      //this.provisioning.push('besu')
 
     }
 
@@ -134,12 +131,11 @@ export class OneClickInstall {
       ]
       this.executionClient = NethermindService.buildByUserInput('goerli', ports, this.installDir + '/nethermind')
       prometheusJobs.push(this.executionClient)
-      //this.provisioning.push('nethermind')
 
     }
 
     if (constellation.includes('LighthouseBeaconService')) {
-      //LighthouseBeaconService   
+      //LighthouseBeaconService
       ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
@@ -147,7 +143,6 @@ export class OneClickInstall {
       ]
       this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
       prometheusJobs.push(this.beaconService)
-      this.provisioning.push('lighthouse')
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -167,7 +162,6 @@ export class OneClickInstall {
       ]
       this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
       prometheusJobs.push(this.beaconService)
-      this.provisioning.push('prysm')
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -194,7 +188,6 @@ export class OneClickInstall {
       await this.nodeConnection.sshService.exec(`sudo mkdir -p ${valDir}`)
       await this.nodeConnection.sshService.exec(`sudo echo ${token} > ${valDir}/api-token.txt`)
       prometheusJobs.push(this.beaconService)
-      this.provisioning.push('nimbus')
     }
 
     if (constellation.includes('TekuBeaconService')) {
@@ -215,7 +208,6 @@ export class OneClickInstall {
       await this.nodeConnection.sshService.exec(`sudo echo ${password} > ${dataDir}/teku_api_password.txt`)
       await this.nodeConnection.sshService.exec(`sudo bash -c "cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1"`)
       prometheusJobs.push(this.beaconService)
-      this.provisioning.push('teku')
     }
 
     if (constellation.includes('BloxSSVService')) {
@@ -226,7 +218,6 @@ export class OneClickInstall {
       ]
       this.validatorService = BloxSSVService.buildByUserInput('prater', ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
       prometheusJobs.push(this.validatorService)
-      this.provisioning.push('bloxssv')
     }
 
 
@@ -255,7 +246,7 @@ export class OneClickInstall {
         const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
         let ssvConfig = this.validatorService.getServiceConfiguration('prater', [this.executionClient], [this.beaconService])
         ssvConfig.OperatorPrivateKey = config.ssv_sk
-        
+
         // prepare service's config file
         const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
         const configFile = new YAML.Document()
@@ -272,11 +263,7 @@ export class OneClickInstall {
     const runRefs = []
     if (services[0] !== undefined) {
       await Promise.all(services.map(async (service) => {
-        if (service.service === 'GrafanaService') {
-          runRefs.push(await this.serviceManager.manageServiceState(service.id, 'started', this.provisioning))
-        } else {
-          runRefs.push(await this.serviceManager.manageServiceState(service.id, 'started'))
-        }
+        runRefs.push(await this.serviceManager.manageServiceState(service.id, 'started'))
       }))
     }
     this.clearSetup()
