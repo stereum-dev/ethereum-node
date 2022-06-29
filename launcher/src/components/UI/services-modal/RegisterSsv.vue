@@ -2,13 +2,11 @@
   <div class="pubkey-parent" @click="$emit('registerHandler')">
     <div class="operator-box">
       <div class="pubkey-box">
-        <div class="pubkey-title">
-          <span> OPERATOR PUBLIC KEY</span>
-        </div>
         <div class="pub-key">
+          <span class="pubkey-input_text">Public operator key</span>
           <input
             v-on:focus="$event.target.select()"
-            type="password"
+            type="hidden"
             class="pubkey-input"
             ref="pubkeyRef"
             v-model="pubkey"
@@ -21,17 +19,15 @@
         </div>
       </div>
       <div class="secretkey-box">
-        <div class="secretkey-title">
-          <span> OPERATOR SECRET KEY</span>
-        </div>
         <div class="secret-key">
+          <span class="secretkey-input_text">Secret Operator Key</span>
           <input
-            type="password"
+            type="hidden"
             class="secretkey-input"
             v-model="secretkey"
             disabled
           />
-          <div class="copy-icon">
+          <div class="copy-icon" @click="copySecretKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
             <span>copied!</span>
           </div>
@@ -45,19 +41,17 @@
           safe place.Do not share this key with anyone.</span
         >
       </div>
-      <div class="text-2">
-        <span
+      <div class="copiedPubKey">
+        <label for="copyPubkey"
           >Copy your public operator key into this field to confirm that you
-          stored your keys!</span
-        >
-      </div>
-      <div class="copy-pubkey">
-        <input
-          type="password"
-          class="pubkey-input"
-          ref="copyPub"
-          v-model="copiedPubkey"
-        />
+          stored your keys!
+          <input
+            name="copiedPubkey"
+            id="copyPubkey"
+            type="password"
+            v-model="model.copiedPubkey"
+          />
+        </label>
       </div>
       <div class="btn-box">
         <button
@@ -76,23 +70,37 @@ export default {
   props: ["pubkey", "secretkey"],
   data() {
     return {
-      copiedPubkey: null,
+      model: {
+        copiedPubkey: "",
+        copiedSecretkey: "",
+      },
       isBtnDisabled: true,
     };
   },
-  computed: {
+  updated() {
+    this.getPubkeyHandler();
+  },
+  methods: {
     getPubkeyHandler() {
-      if (this.$refs.copyPub.value.length > 0) {
+      if (this.model.copiedPubkey === this.pubkey) {
         this.isBtnDisabled = false;
       } else {
         this.$router.push("/node");
       }
     },
-  },
-  methods: {
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
       this.$copyText(pubkeyToCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
+    copySecretKey() {
+      let secretkeyToCopy = this.secretkey;
+      this.$copyText(secretkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -147,14 +155,24 @@ export default {
 .pub-key,
 .secret-key {
   width: 100%;
-  height: 65%;
-  border-radius: 10px;
+  height: 68%;
+  border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #373737;
   border: 1px solid #c3c3c3;
   box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
+}
+.pubkey-input_text,
+.secretkey-input_text {
+  width: 94%;
+  font-size: 0.9rem;
+  padding-left: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: #71b1e1;
 }
 .pubkey-input,
 .secretkey-input {
@@ -168,7 +186,8 @@ export default {
   color: rgb(51, 129, 239);
 }
 .pub-key .copy-icon,
-.secret-key .copy-icon {
+.secret-key .copy-icon,
+.copiedPubKey .copy-icon {
   width: 5%;
   height: 100%;
   display: flex;
@@ -207,62 +226,53 @@ export default {
   align-items: center;
 }
 .text-1 {
-  width: 50%;
-  height: 10%;
+  width: 70%;
+  height: 12%;
   text-align: center;
   margin-bottom: 40px;
-  line-height: 8px;
+  line-height: 12px;
 }
 .text-1 span {
   color: aliceblue;
   overflow-wrap: break-word;
-  font-size: 0.6rem;
-  font-weight: 400;
-}
-.text-2 {
-  width: 80%;
-  height: 10%;
-  text-align: center;
-  line-height: 8px;
-}
-.text-2 span {
-  color: rgb(201, 69, 46);
-  overflow-wrap: break-word;
   font-size: 0.7rem;
-  font-weight: 400;
+  font-weight: 500;
 }
-.copy-pubkey {
-  width: 90%;
-  height: 18%;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #373737;
-  border: 1px solid #c3c3c3;
-  box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
-}
-.copy-pubkey input {
+
+.copiedPubKey label {
   width: 100%;
   height: 100%;
+  margin: 0 auto;
+  text-align: center;
+  color: rgb(201, 69, 46);
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 701;
+}
+.copiedPubKey {
+  width: 90%;
+  height: 45%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 700;
+}
+.copiedPubKey input {
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
   border-radius: 8px;
   background-color: rgb(212, 212, 212);
+  padding: 0;
   padding-left: 10px;
+  margin-top: 10px;
   font-size: 1.5rem;
   font-weight: 600;
-  outline-color: #3294c5;
+  color: rgb(51, 129, 239);
 }
-.copy-pubkey .copy-icon {
-  width: 5%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.copy-pubkey img {
-  width: 16px;
-  height: 22px;
-}
+
 .btn-box {
   width: 100%;
   height: 30%;
@@ -273,7 +283,7 @@ export default {
 }
 .btn-box button {
   width: 25%;
-  height: 55%;
+  height: 70%;
   border-radius: 10px;
   background-color: #364a59;
   box-shadow: 1px 1px 5px 1px rgb(12, 12, 12);
@@ -290,12 +300,13 @@ export default {
   z-index: -1;
 }
 .btn-box button:hover {
+  transform: scale(1.07);
   border: 2px solid #364a59;
   background-color: #283742;
   color: #5ba3cd;
 }
 .btn-box button:active {
-  transform: scale(0.99);
+  transform: scale(1);
   border: none;
   background-color: #1f2d37;
   color: #5ba3cd;
