@@ -1,0 +1,76 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    besu_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      raw: apt update && apt install -y pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # besu
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: "hyperledger/besu:{{ stereum_static.defaults.versions.besu }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+                - --rpc-http-enabled
+                - --rpc-http-api=WEB3,ETH,NET
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-port=8545
+                - --rpc-ws-enabled
+                - --rpc-ws-api=WEB3,ETH,NET
+                - --rpc-ws-port=8546
+                - --host-allowlist=*
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --metrics-port=9545
+                - --logging=DEBUG
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+
+# EOF
