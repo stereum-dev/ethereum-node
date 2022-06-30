@@ -67,7 +67,8 @@ jobs:
           python-version: '3.9'
       - name: Install depencencies
         run: |
-          pip install molecule
+          pip install ansible==2.12.5
+          pip install molecule==3.5.2
           pip install "molecule[docker.lint]"
           pip install molecule-docker
           pip install molecule-hetznercloud
@@ -76,6 +77,8 @@ jobs:
           ansible-galaxy collection install community.docker
       - name: Install dependency for pipx
         run: |
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==2.12.5
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==3.5.2
           /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
           /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
