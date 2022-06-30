@@ -62,7 +62,7 @@ jobs:
         shell: bash
       - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
       - name: Install depencencies
         run: |
           pip install molecule
