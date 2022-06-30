@@ -12,7 +12,7 @@
 
 - name: Write prometheus configuration
   template:
-    src: prometheus.yml
+    src: prometheus.yml.j2
     dest: "{{ stereum_service_configuration.volumes | select('match', '.*\/etc\/prometheus') | first | split(':') | first }}/prometheus.yml"
     owner: "2000"
     group: "2000"
