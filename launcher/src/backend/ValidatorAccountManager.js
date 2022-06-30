@@ -112,8 +112,8 @@ export class ValidatorAccountManager {
     async listValidators(serviceID) {
         try{
             let run = await this.nodeConnection.runPlaybook('validator-list-api', { stereum_role: 'validator-list-api', validator_service: serviceID})
-            let logs = [...(await this.nodeConnection.playbookStatus(run.playbookRunRef)).matchAll(/^.*Log list result.*$/gm)][1][0].split(' - ')
-            let result = (JSON.parse(logs[logs.length-1])).msg
+            let logs = new RegExp(/^DATA: ({"msg":.*)/,'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            let result = (JSON.parse(logs[1])).msg
             return result
         }catch(err){
             log.error("Listing Validators Failed:\n", err)

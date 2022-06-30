@@ -50,7 +50,7 @@ export class ServiceManager {
     if (grafana_provisioning !== undefined) {
       Object.assign(extraVars, { grafana_provisioning: grafana_provisioning })
     }
-    return this.nodeConnection.runPlaybook('manage-service', extraVars)
+    return this.nodeConnection.runPlaybook(state.replace("ed","ing Service"), extraVars)
   }
 
   /**

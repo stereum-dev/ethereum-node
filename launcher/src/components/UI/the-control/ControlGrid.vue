@@ -127,7 +127,11 @@ export default {
       if(item.state === 'exited'){
         state = 'started'
       }
-      await ControlService.manageServiceState({id:item.config.serviceID, state: state})
+      try{
+        await ControlService.manageServiceState({id:item.config.serviceID, state: state})
+      }catch(err){
+        console.log(state.replace('ed','ing') + ' service failed:\n',err)
+      }
       this.updateStates()
     }
   }
