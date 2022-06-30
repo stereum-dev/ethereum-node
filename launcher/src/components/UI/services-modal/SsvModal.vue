@@ -22,17 +22,23 @@
         </div>
       </div>
       <div class="content-box">
-        <pubkey-ssv
+        <frontpage-ssv
           v-if="pubkeyModalActive"
           @open-pubkey="operatorModalHandler"
+          @open-secretkey="registerSecretkeyHandler"
           :pubkey="pubkey"
-        ></pubkey-ssv>
+        ></frontpage-ssv>
         <register-ssv
           v-if="registerModalActive"
           :pubkey="pubkey"
           :secretkey="secretkey"
           @register-pubkey="registerSsvPubkeyHandler"
         ></register-ssv>
+        <secretkey-register
+          v-if="registerSecretkeyActive"
+          :secretkey="secretkey"
+          @login-secretkey="loginWithSecretkeyHandler"
+        ></secretkey-register>
         <ssv-dashboard
           :pubkey="pubkey"
           v-if="ssvDashboardActive"
@@ -42,14 +48,20 @@
   </div>
 </template>
 <script>
-import PubkeySsv from "./PubkeySsv.vue";
+import FrontpageSsv from "./FrontpageSsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
 import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import SecretkeyRegister from "./SecretkeyRegister.vue";
 export default {
-  components: { PubkeySsv, RegisterSsv, SsvDashboard },
+  components: {
+    FrontpageSsv,
+    RegisterSsv,
+    SsvDashboard,
+    SecretkeyRegister,
+  },
   data() {
     return {
       ssvService: [],
@@ -57,15 +69,16 @@ export default {
       pubkeyModalActive: true,
       registerModalActive: false,
       ssvDashboardActive: false,
+      registerSecretkeyActive: false,
       enteredText: "",
       selectedOperator: null,
       accepted: "",
-      secretkey: "127635123hg1j23769152376",
-      pubkey: "112gf1hj2fjh1f24jkhf4fhgfhad444",
+      secretkey: null,
+      pubkey: null,
     };
   },
-  mounted(){
-    this.getKeys()
+  mounted() {
+    this.getKeys();
   },
   computed: {
     ...mapState(useNodeHeader, {
@@ -79,18 +92,30 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let blox = this.runningServices.find(service => service.service === "BloxSSVService")
-      let bloxConfig = await ControlService.getServiceConfig(blox.config.serviceID)
-      //this.secretkey = bloxConfig.ssv_sk
-      this.pubkey = bloxConfig.ssv_pk
+      let blox = this.runningServices.find(
+        (service) => service.service === "BloxSSVService"
+      );
+      let bloxConfig = await ControlService.getServiceConfig(
+        blox.config.serviceID
+      );
+      this.secretkey = bloxConfig.ssv_sk;
+      this.pubkey = bloxConfig.ssv_pk;
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.ssvDashboardActive = true;
     },
-    logItem(event) {
-      console.log(event.target);
+    registerSecretkeyHandler() {
+      this.registerModalActive = false;
+      this.pubkeyModalActive = false;
+      this.registerSecretkeyActive = true;
+    },
+    loginWithSecretkeyHandler() {
+      this.registerModalActive = false;
+      this.pubkeyModalActive = false;
+      this.registerSecretkeyActive = false;
+      this.ssvDashboardActive = true;
     },
   },
 };

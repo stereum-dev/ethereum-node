@@ -6,8 +6,8 @@
       </div>
     </div>
     <div class="insert-box">
-      <div class="insert-btn">
-        <span>Insert Operator Key</span>
+      <div class="insert-btn" @click="$emit('openSecretkey')">
+        <span>Insert Operator Secret Key</span>
       </div>
     </div>
   </div>

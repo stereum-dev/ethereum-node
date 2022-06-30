@@ -1,22 +1,32 @@
 <template>
   <div class="pubkey-parent" @click="$emit('openPubkey')">
-    <div class="operator-box">
-      <div class="operator-btn">
-        <span> Register New Operator</span>
-      </div>
-    </div>
     <div class="pubkey-box">
       <div class="pub-key">
-        <input type="password" class="pubkey-input" v-model="pubkey" disabled />
+        <span class="input-text"
+          >Public operator key</span
+        >
+        <input
+          type="hidden"
+          class="pubkey-input"
+          v-model="pubkey"
+          disabled
+          placeholder="Public Operator Key"
+        />
         <div class="copy-icon" @click="copyPubKey">
           <img src="/img/icon/service-icons/copy1.png" alt="icon" />
           <span>copied!</span>
         </div>
       </div>
     </div>
+    <div class="operator-box">
+      <div class="operator-btn">
+        <span>My Operator Page</span>
+      </div>
+    </div>
+
     <div class="insert-box">
       <div class="insert-btn">
-        <span>Insert Operator Key</span>
+        <span>SSV Node Grafana Dashboard</span>
       </div>
     </div>
   </div>
@@ -24,6 +34,21 @@
 <script>
 export default {
   props: ["pubkey"],
+  data() {
+    return {};
+  },
+  methods: {
+    copyPubKey() {
+      let pubkeyToCopy = this.pubkey;
+      this.$copyText(pubkeyToCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
+  },
 };
 </script>
 <style scoped>
@@ -61,12 +86,23 @@ export default {
   height: 100%;
   border-radius: 8px 0 0 8px;
   background-color: rgb(212, 212, 212);
+  padding: 0;
   padding-left: 10px;
   font-size: 2rem;
   font-weight: 600;
   color: rgb(51, 129, 239);
 }
+.input-text {
+  width: 94%;
+  font-size: .9rem;
+  padding-left: 30px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  color: #71b1e1;
+}
 .pub-key .copy-icon {
+  justify-self: end;
   width: 5%;
   height: 100%;
   display: flex;
@@ -93,8 +129,8 @@ export default {
   color: rgb(96, 150, 120);
   font-size: 0.5rem;
   position: absolute;
-  top: 0;
-  right: -4%;
+  top: -15px;
+  right:0;
 }
 .operator-btn,
 .insert-btn {
@@ -171,6 +207,7 @@ export default {
   height: 100%;
   border-radius: 8px 0 0 8px;
   background-color: rgb(212, 212, 212);
+  padding: 0;
   padding-left: 10px;
   font-size: 2rem;
   font-weight: 600;

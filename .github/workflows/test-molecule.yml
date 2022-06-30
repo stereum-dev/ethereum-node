@@ -18,8 +18,10 @@ jobs:
           {role: "manage-service", test: "ssv-nimbus", delay: 40},
           {role: "manage-service", test: "ssv-teku", delay: 50},
           {role: "manage-service", test: "ssv-prysm", delay: 60},
-          {role: "manage-service", test: "monitor-geth", delay: 20},
-          {role: "manage-service", test: "monitor-bloxssv", delay: 15},
+          {role: "manage-service", test: "monitor-geth", delay: 5},
+          {role: "manage-service", test: "monitor-bloxssv", delay: 10},
+          {role: "manage-service", test: "monitor-besu", delay: 15},
+          {role: "manage-service", test: "monitor-nethermind", delay: 20},
           {role: "manage-service", test: "monitor-lighthouse", delay: 70},
           {role: "manage-service", test: "monitor-nimbus", delay: 80},
           {role: "manage-service", test: "monitor-prysm", delay: 85},
@@ -60,7 +62,9 @@ jobs:
         shell: bash
       - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
       - name: Install depencencies
         run: |
           pip install molecule
@@ -79,6 +83,10 @@ jobs:
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
       - name: Install ansible-lint
         run: sudo apt-get install -y ansible-lint
+      - name: Molecule version
+        run: molecule --version
+        env:
+          ansible_python_interpreter: "/usr/bin/python3"
       - name: Run tests
         working-directory: ./controls/roles/${{ matrix.tests.role }}
         run: molecule test -s ${{ matrix.tests.test }}

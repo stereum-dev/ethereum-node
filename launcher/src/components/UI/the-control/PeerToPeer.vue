@@ -83,9 +83,9 @@ export default {
   font-size: large;
 }
 .circleProc {
-  width: 80%;
+  width: 72%;
   background: #33393e;
-  height: 80%;
+  height: 90%;
   border-radius: 50%;
   display: flex;
   justify-content: center;
