@@ -219,6 +219,7 @@ export default {
   width: 100%;
   height: 100%;
   border: 9px solid #8e8e8e;
+   background-color: #33393e;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -267,12 +268,9 @@ export default {
 
 .table-content .table-row {
   width: 95%;
-  height: 31px;
-  margin-top: 5px;
-  background-color: #33393e;
-  box-shadow: 0 1px 3px 1px rgb(37, 37, 37);
-  border: 1px solid rgb(81, 80, 80);
-  border-radius: 10px;
+  height: 35px;
+  margin-top: 2px;
+  border-bottom: 1px solid rgb(81, 80, 80);
   justify-self: center;
   display: flex;
   justify-content: space-evenly;
@@ -288,7 +286,7 @@ export default {
   align-items: center;
 }
 .plugin-name img {
-  width: 14%;
+  width: 15%;
   height: 65%;
 }
 
@@ -338,8 +336,8 @@ export default {
   align-items: center;
 }
 .btn-box a {
-  width: 95%;
-  height: 90%;
+  width: 25%;
+  height: 60%;
   text-decoration: none;
   display: flex;
   justify-content: space-evenly;
@@ -347,16 +345,16 @@ export default {
 }
 .next-btn,
 .back-btn {
-  width: 55%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
-  color: #fff;
-  outline-style: none;
+  color: #eaeaea;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 1px 2px 1px rgb(49, 61, 54);
+  box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
   cursor: pointer;
 }
 .next-btn:hover,

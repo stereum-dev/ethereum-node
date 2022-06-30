@@ -13,13 +13,17 @@
             />
           </div>
           <div class="plugins-table">
-            <div class="plugins-row" v-for="(item, index) in installedServices" :key="index">
+            <div
+              class="plugins-row"
+              v-for="(item, index) in installedServices"
+              :key="index"
+            >
               <div
                 :class="{
-              'plugins-running-state': item.state == 'running',
-              'plugins-exited-state': item.state == 'exited',
-              'plugins-restarting-state': item.state == 'restarting',
-              }"
+                  'plugins-running-state': item.state == 'running',
+                  'plugins-exited-state': item.state == 'exited',
+                  'plugins-restarting-state': item.state == 'restarting',
+                }"
               ></div>
               <div class="plugins-row-content">
                 <div class="row-plugin-name">
@@ -33,7 +37,16 @@
                 <div class="edit-box">
                   <div class="icon-bg">
                     <div class="power-icon">
-                      <img src="/img/icon/control/power.png" alt="icon" 
+                      <img
+                        v-if="item.state == 'running'"
+                        src="/img/icon/control/power-off.png"
+                        alt="icon"
+                        @click="stateHandler(item)"
+                      />
+                      <img
+                        v-else
+                        src="/img/icon/control/power-on.png"
+                        alt="icon"
                         @click="stateHandler(item)"
                       />
                     </div>
@@ -90,9 +103,6 @@ import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
-  beforeMount(){
-    this.updateStates()
-  },
   components: {
     ControlDashboard,
     ControlPlugins,
@@ -100,32 +110,44 @@ export default {
     ControlAlert,
     TaskManager,
   },
+  data() {
+    return {
+      powerBtnRed: false,
+    };
+  },
+  beforeMount() {
+    this.updateStates();
+  },
+  updated() {
+    this.updateStates();
+  },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
-      runningServices: "runningServices",    
+      runningServices: "runningServices",
     }),
   },
   methods: {
-    updateStates: async function (){
+    updateStates: async function () {
       let serviceInfos = await ControlService.listServices();
       this.installedServices.forEach((s, idx) => {
-        let updated = false
-        serviceInfos.forEach(i => {
-          if(i.Names.replace("stereum-","") === s.config.serviceID){
-            this.installedServices[idx].state = i.State
-            updated = true
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
           }
-        })
-        if(!updated){
-          this.installedServices[idx].state = 'exited'
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
         }
-      })
+      });
     },
-    stateHandler: async function (item){
-      let state = 'stopped'
-      if(item.state === 'exited'){
-        state = 'started'
+    stateHandler: async function (item) {
+      let state = "stopped";
+      if (item.state === "exited") {
+        state = "started";
+        this.powerBtnRed = true;
       }
       try{
         await ControlService.manageServiceState({id:item.config.serviceID, state: state})
@@ -267,7 +289,7 @@ export default {
   overflow-y: auto;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
 }
 .plugins-table::-webkit-scrollbar {
   width: 0;
@@ -346,7 +368,7 @@ export default {
 .edit-box .icon-bg {
   width: 100%;
   height: 100%;
-  border: 1px solid #1e2929;
+  border: 1px solid #a4a5a5;
   border-radius: 4px;
   background-color: #336666;
   display: flex;
@@ -380,8 +402,14 @@ export default {
   transform: scale(1);
 }
 .power-icon img {
-  width: 13px;
-  height: 12px;
+  width: 77%;
+  height: 74%;
+}
+.powerOff {
+  background-color: rgb(226, 62, 62);
+}
+.powerOn {
+  background-color: rgb(113, 205, 136);
 }
 .book-icon img {
   width: 12px;

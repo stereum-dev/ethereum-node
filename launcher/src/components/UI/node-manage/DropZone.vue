@@ -25,7 +25,7 @@
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
-        <span>+</span>
+        <img src="/img/icon/manage-node-icons/fullscreen1.png" alt="icon" />
       </div>
     </template>
   </manage-trapezoid>
@@ -120,7 +120,6 @@ export default {
   border-radius: 5px;
 }
 .plus-icon-box {
-  background-color: rgb(171, 171, 171);
   width: 30px;
   height: 20px;
   border-radius: 50px;
@@ -130,25 +129,24 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: rgb(65, 65, 65);
-  border: 1px solid rgb(229, 229, 229);
-  box-shadow: inset 0 1px 4px 1px #cecece, 0 1px 3px 1px #2d2d2d;
   cursor: pointer;
 }
+.plus-icon-box img {
+  width: 17px;
+  border-radius: 3px;
+}
 
-.plus-icon-box:hover {
-  border: 1px solid rgb(46, 46, 46);
-  box-shadow: none;
-  font-size: 0.9rem;
+.plus-icon-box img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 1px 3px 1px rgb(27, 27, 27);
+  transition-duration: 100ms;
 }
-.plus-icon-box:active {
-  background-color: rgb(126, 126, 126);
-  border: 1px solid rgb(159, 159, 159);
+.plus-icon-box img:active {
+  transform: scale(1);
   box-shadow: none;
-  font-size: 0.9rem;
+  transition-duration: 100ms;
 }
+
 .items img:active {
   box-shadow: none;
 }

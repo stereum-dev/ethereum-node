@@ -35,7 +35,7 @@ export class ServiceManager {
      * @param state a string with the desired state, see serivceState
      * @returns an object containing a reference to the ansible process output, usable with NodeConnection.playbookStatus
      */
-  manageServiceState (serviceId, state, grafana_provisioning) {
+  manageServiceState (serviceId, state) {
     const extraVars = {
       stereum_role: 'manage-service',
       stereum_args: {
@@ -46,9 +46,6 @@ export class ServiceManager {
           }
         }
       }
-    }
-    if (grafana_provisioning !== undefined) {
-      Object.assign(extraVars, { grafana_provisioning: grafana_provisioning })
     }
     return this.nodeConnection.runPlaybook(state.replace("ed","ing Service"), extraVars)
   }

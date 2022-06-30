@@ -157,6 +157,7 @@ scrape_configs:
 # teku
   - job_name: teku
     metrics_path: /metrics
+    scheme: http
     static_configs:
       - targets: [
 {% set config_count = 0 %}

@@ -7,10 +7,10 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ countFreeVal }} MiB FREE</span>
+          <span>{{ countFreeVal }} Mb FREE</span>
         </div>
         <div class="totalPart">
-          <span> {{ total }} MiB TOTAL</span>
+          <span> {{ total }} Mb TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
@@ -144,18 +144,21 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 90%;
-  font-weight: bold;
+  margin-top: 4px;
+  margin-left: 11px;
+  font-size: 1rem;
+  font-weight: 600;
 }
 .totalPart {
-  width: 90%;
+  width: 94%;
   height: 15%;
+  margin-top: 10px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
-  font-size: 60%;
-  font-weight: bold;
-  color: #25db32;
+  font-size:.5rem;
+  font-weight: 700;
+  color: #5a945e;
 }
 .valueBarPart {
   width: 100%;
@@ -166,15 +169,18 @@ export default {
 }
 .valueBarPart_loader {
   width: 95%;
-  height: 70%;
+  height: 90%;
+  border-radius: 3px;
+  margin-top: 3px;
   background: #848484;
   justify-content: flex-start;
   align-items: center;
   display: flex;
 }
 .valueBarPart_loader-value {
-  height: 50%;
-  background: #25db32;
+  height: 90%;
+  border-radius: 3px;
+  background: #5ed966;
 }
 .latencyCounter {
   width: 100%;
