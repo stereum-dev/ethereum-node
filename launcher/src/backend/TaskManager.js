@@ -1,6 +1,6 @@
 import { NodeConnection } from "./NodeConnection"
 
-export class Taskmanager {
+export class TaskManager {
     constructor() {
         this.nodeConnection = new NodeConnection()
         this.tasks = []                 //all tasks
