@@ -220,7 +220,6 @@ async function createWindow() {
 
   win.on('close', (e) => {
     if (app.showExitPrompt) {
-      console.log("HELLOOO",app.getCurrentActivityType())
         e.preventDefault() // Prevents the window from closing 
         const response = dialog.showMessageBoxSync({
             type: 'question',
