@@ -138,6 +138,18 @@ class ControlService extends EventEmitter {
   async runUpdates(){
     return await this.promiseIpc.send("runUpdates")
   }
+
+  async getTasks(){
+    return await this.promiseIpc.send("getTasks") // gets the current available Data
+  }
+
+  async clearTasks(){
+    return await this.promiseIpc.send("clearTasks") // clears all data
+  }
+
+  async updateTasks(){
+    return await this.promiseIpc.send("updateTasks")  // updates task progression
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
