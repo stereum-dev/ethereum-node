@@ -56,17 +56,6 @@
         mode: 0644
       become: yes
 
-    - block:
-      - name: Set fastsync params
-        set_fact:
-          stereum:
-            fastsync:
-              network: prater
-              service: lighthouse
-              dest: /opt/app/services/{{ beacon_service }}/beacon
-      - include_role:
-          name: "fastsync"
-
     # lh beacon service
     - block:
       - set_fact:
