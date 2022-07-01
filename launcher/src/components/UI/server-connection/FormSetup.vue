@@ -73,6 +73,7 @@
               type="text"
               v-model="model.host.value"
               @blur="checkInput(model.host)"
+              required
             />
           </div>
           <div class="server-group" :class="{ errors: !model.user.isFilled }">
@@ -83,6 +84,7 @@
               id="username"
               v-model="model.user.value"
               @blur="checkInput(model.user)"
+              required
             />
           </div>
         </div>
