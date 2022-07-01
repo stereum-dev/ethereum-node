@@ -3,7 +3,7 @@
     <div class="error-box" v-if="errorMsgExists"></div>
     <div class="error-modal" v-if="errorMsgExists">
       <div class="title-box">
-        <img src="../../../public/img/icon/no-connection.png" alt="icon" />
+        <img src="../../../../public/img/icon/no-connection.png" alt="icon" />
       </div>
       <div class="description">
         <span>{{ this.error }}</span>
@@ -13,23 +13,18 @@
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
-      <img src="../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
+      <img src="../../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
         <span>{{ $t("formsetup.server") }}</span>
       </section>
 
-      <base-dialog
+      <delete-modal
         v-if="bDialogVisible"
-        @bDialogDis="hideBDialog"
-        @bDialogOk="baseDialogDelete"
-      >
-        <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
-        <template v-slot:des><h5>Are you sure recode Delete ?</h5></template>
-        <template v-slot:cancel>Cancel</template>
-        <template v-slot:ok>Delete</template>
-      </base-dialog>
+        @delete-server="baseDialogDelete"
+        @remove-modal="hideBDialog"
+      ></delete-modal>
       <form @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
@@ -49,7 +44,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="../../../public/img/icon/PLUS_ICON.png" alt="icon" />
+              <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -140,7 +135,7 @@
 </template>
 
 <script>
-import BaseDialog from "./BaseDialog.vue";
+import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
@@ -148,7 +143,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 
 export default {
-  components: { BaseDialog },
+  components: { DeleteModal },
   name: "FormSetup",
   emits: ["page"],
   data() {
@@ -186,7 +181,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      allServices: "allServices"
+      allServices: "allServices",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -358,47 +353,59 @@ export default {
         this.installedServices = [];
         let services = await ControlService.getServices();
         if (services && Array.isArray(services) && services.length > 0) {
-        services.forEach((service) => {
-          let buffer = this.allServices.find((element) => element.service === service.service)
-          if(buffer){
-            buffer.config = {
-              serviceID: service.id,
-              configVersion: service.configVersion,
-              image: service.image,
-              imageVersion: service.imageVersion,
-              ports: service.ports,
-              volumes: service.volumes,
-              network: service.network,
+          services.forEach((service) => {
+            let buffer = this.allServices.find(
+              (element) => element.service === service.service
+            );
+            if (buffer) {
+              buffer.config = {
+                serviceID: service.id,
+                configVersion: service.configVersion,
+                image: service.image,
+                imageVersion: service.imageVersion,
+                ports: service.ports,
+                volumes: service.volumes,
+                network: service.network,
+              };
+              if (buffer.name === "Teku" || buffer.name === "Nimbus") {
+                let vs = this.allServices.find(
+                  (element) =>
+                    element.service === buffer.name + "ValidatorService"
+                );
+                vs.config = buffer.config;
+                this.installedServices.push(vs);
+              }
+              this.installedServices.push(buffer);
             }
-            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
-              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
-              vs.config = buffer.config
-              this.installedServices.push(vs)
-            }
-            this.installedServices.push(buffer)
-          }
-        })
-      
-        let localPorts = await ControlService.getAvailablePort({
-            min: 9000,
-            max: 9999,
-            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
           });
 
-        this.headerServices = (this.installedServices.filter(service => service.headerOption)
-                              .map(service => {             
-                                if(service.tunnelLink){
-                                  service.linkUrl = "http://localhost:" + localPorts.pop()
-                                }
-                                return service
-                              }))
+          let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: this.installedServices.filter(
+              (s) => s.headerOption && s.tunnelLink
+            ).length,
+          });
 
-        let ports = (this.headerServices.filter(service => service.tunnelLink))
-                    .map(service => {
-                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
-                    })
+          this.headerServices = this.installedServices
+            .filter((service) => service.headerOption)
+            .map((service) => {
+              if (service.tunnelLink) {
+                service.linkUrl = "http://localhost:" + localPorts.pop();
+              }
+              return service;
+            });
 
-        await ControlService.openTunnels(ports);
+          let ports = this.headerServices
+            .filter((service) => service.tunnelLink)
+            .map((service) => {
+              return {
+                dstPort: service.config.ports[0].servicePort,
+                localPort: service.linkUrl.split(":").pop(),
+              };
+            });
+
+          await ControlService.openTunnels(ports);
         }
 
         this.$router.push("/node");
