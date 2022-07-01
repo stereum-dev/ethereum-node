@@ -149,13 +149,14 @@ export default {
         state = "started";
         this.powerBtnRed = true;
       }
-      await ControlService.manageServiceState({
-        id: item.config.serviceID,
-        state: state,
-      });
-      this.updateStates();
-    },
-  },
+      try{
+        await ControlService.manageServiceState({id:item.config.serviceID, state: state})
+      }catch(err){
+        console.log(state.replace('ed','ing') + ' service failed:\n',err)
+      }
+      this.updateStates()
+    }
+  }
 };
 </script>
 

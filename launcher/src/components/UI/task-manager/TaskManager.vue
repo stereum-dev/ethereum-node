@@ -8,14 +8,14 @@
         <div class="table-content">
           <div
             class="table-row"
-            v-for="(item, index) in playbookTasks"
+            v-for="(item, index) in displayingTasks"
             :key="index"
           >
             <div class="table-row-active" v-if="item.status == null">
               <div class="active-icon">
                 <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.playbook }}</span>
+              <span>{{ item.name }}</span>
               <drop-tasks
                 :item="item"
                 @droptaskActive="openDropDown"
@@ -25,7 +25,7 @@
               <div class="success-icon">
                 <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.playbook }}</span>
+              <span>{{ item.name }}</span>
 
               <drop-tasks
                 :item="item"
@@ -36,7 +36,7 @@
               <div class="failed-icon">
                 <img :src="installIconSrc.failedInstallIcon" alt="icon" />
               </div>
-              <span>{{ item.playbook }}</span>
+              <span>{{ item.name }}</span>
               <drop-tasks
                 :item="item"
                 @droptaskActive="openDropDown"
@@ -44,7 +44,7 @@
             </div>
             <sub-tasks
               v-if="item.showDropDown"
-              :subTasks="item?.tasks"
+              :subTasks="item?.subTasks"
             ></sub-tasks>
           </div>
         </div>
@@ -63,6 +63,7 @@ import SubTasks from "./SubTasks.vue";
 import DropTasks from "./DropTasks.vue";
 import { mapWritableState } from "pinia";
 import { useTaskManager } from "@/store/taskManager";
+import ControlService from "@/store/ControlService";
 export default {
   components: { SubTasks, DropTasks },
   data() {
@@ -71,15 +72,23 @@ export default {
       showDropDownList: false,
       isTaskFailed: false,
       isTaskSuccess: false,
+      polling: null,
+      refresh: null,
+      Tasks: [],
+      displayingTasks: [],
     };
   },
   beforeUpdate() {
-    this.checkTaskStatus();
+
   },
   mounted() {
-    this.playbookTasks = this.dataTasks;
+    this.polling = setInterval(ControlService.updateTasks, 2000)  //refresh playbook logs
+    this.refresh = setInterval(this.getTasks, 1000) //refresh data
   },
-
+  beforeUnmount() {
+    clearInterval(this.polling)
+    clearInterval(this.refresh)
+  },
   computed: {
     ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
@@ -88,52 +97,47 @@ export default {
       installIconSrc: "installIconSrc",
     }),
     mainTaskIcon() {
-      let mainIconColor = this.playbookTasks.some(
-        (el) => el.status === "failed"
-      );
-      let mainIconColorActive = this.playbookTasks.some(
-        (el) => el.status == null
-      );
-      if (mainIconColor) {
-        return this.taskManagerIcons.failedIcon;
-      } else if (mainIconColorActive) {
+      if(this.Tasks.some(task => task.status === null)){
         return this.taskManagerIcons.activeIcon;
-      } else {
+      }
+      if(this.Tasks.some(task => task.status === 'failed')){
+        return this.taskManagerIcons.failedIcon;
+      }
+      if(this.Tasks.some(task => task.status === 'success')){
         return this.taskManagerIcons.successIcon;
       }
+      return this.taskManagerIcons.progressIcon;
+        
     },
   },
   methods: {
-    checkTaskStatus() {
-      setTimeout(() => {
-        this.playbookTasks.map((el) => {
-          let taskStatus = el.tasks.every((task) => {
-            return task.status == "success";
-          });
-          if (taskStatus) {
-            el.status = "success";
-          } else {
-            el.status = "failed";
-          }
-        });
-      }, 3000);
+    getTasks: async function(){
+      this.Tasks = await ControlService.getTasks()
+      if(!this.showDropDownList){
+        this.displayingTasks = this.Tasks
+      }else{  //if DropDown is open only update what the user sees so the menue doesn't close
+        this.displayingTasks[0].subTasks = this.Tasks.find(t=>t.id === this.displayingTasks[0].id).subTasks
+        this.displayingTasks[0].status = this.Tasks.find(t=>t.id === this.displayingTasks[0].id).status
+      }
     },
     taskModalHandler() {
+      this.showDropDownList = false
       this.isTaskModalActive = !this.isTaskModalActive;
     },
-
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
       if (item.showDropDown) {
-        this.playbookTasks = this.dataTasks.filter((task) => {
-          return task.playbook == item.playbook;
-        });
+        this.showDropDownList = true
+        this.displayingTasks = this.Tasks.filter(e => e.id === item.id)
       } else {
-        this.playbookTasks = this.dataTasks;
+        this.showDropDownList = false
+        this.displayingTasks = this.Tasks
       }
     },
-    listCleanerHandler() {
-      this.playbookTasks = [];
+    listCleanerHandler: async function() {
+      this.displayingTasks = []
+      this.Tasks = []
+      await ControlService.clearTasks()
     },
   },
 };

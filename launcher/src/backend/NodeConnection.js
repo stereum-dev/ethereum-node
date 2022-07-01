@@ -20,8 +20,9 @@ export class NodeConnection {
     this.os = null;
   }
 
-  async establish() {
+  async establish(taskManager) {
     await this.sshService.connect(this.nodeConnectionParams);
+    this.taskManager = taskManager;
   }
 
   /**
@@ -73,13 +74,17 @@ export class NodeConnection {
        * install necessary OS packages
        */
       log.info("installing necessary os packages");
+      const ref = StringUtils.createRandomString()
+      this.taskManager.tasks.push({name: "install os packages", otherRunRef: ref})
 
       log.debug("this.os: ", this.os);
       log.debug("nodeOS.ubuntu: ", nodeOS.ubuntu);
       if (this.os == nodeOS.centos) {
+        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
         return reject("not implemented yet");
       } else if (this.os == nodeOS.ubuntu) {
         log.debug("procede on ubuntu");
+        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: true})
         let installPkgResult;
         try {
           installPkgResult = await this.sshService.exec(
@@ -93,12 +98,15 @@ export class NodeConnection {
           installPkgResult = { rc: 1, stderr: err };
         }
         if (SSHService.checkExecError(installPkgResult)) {
+          this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: false})
           return reject(
             "Can't install os packages: " +
               SSHService.extractExecError(installPkgResult)
           );
         }
+        this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: true})
       } else {
+        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
         return reject("unsupported OS");
       }
 
@@ -132,16 +140,19 @@ export class NodeConnection {
         );
       } catch (err) {
         log.error("can't install ansible roles", err);
+        this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
         return reject("Can't install ansible roles: " + err);
       }
 
       if (SSHService.checkExecError(installResult)) {
+        this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
         return reject(
           "Can't install ansible role: " +
             SSHService.extractExecError(installResult)
         );
       }
-
+      this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: true})
+      this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
       /**
        * run stereum ansible playbook "setup"
        */
@@ -189,13 +200,13 @@ export class NodeConnection {
       const playbookRunRef = StringUtils.createRandomString();
 
       log.info("using playbookRunRef: ", playbookRunRef);
-
       let extraVarsJson = "";
       if (extraVars) {
         extraVarsJson = JSON.stringify(extraVars);
       }
-
+      
       let ansibleResult;
+      this.taskManager.tasks.push({name: playbook, ref: playbookRunRef})
       try {
         ansibleResult = await this.sshService.exec(
           "sudo\
@@ -228,7 +239,7 @@ export class NodeConnection {
             SSHService.extractExecError(ansibleResult)
         );
       }
-
+      this.taskManager.finishedPlaybooks.push(playbookRunRef)
       return resolve({
         playbook: playbook,
         playbookRunRef: playbookRunRef,
@@ -333,6 +344,8 @@ export class NodeConnection {
   async writeServiceConfiguration(serviceConfiguration) {
     return new Promise(async (resolve, reject) => {
       let configStatus;
+      const ref = StringUtils.createRandomString()
+      this.taskManager.tasks.push({name: "write config", otherRunRef: ref})
       try {
         configStatus = await this.sshService.exec(
           "sudo echo -e " +
@@ -344,6 +357,7 @@ export class NodeConnection {
             ".yaml"
         );
       } catch (err) {
+        this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
         log.error(
           "Can't write service configuration of " + serviceConfiguration.id,
           err
@@ -357,6 +371,7 @@ export class NodeConnection {
       }
 
       if (SSHService.checkExecError(configStatus)) {
+        this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
         return reject(
           "Failed writing service configuration " +
             serviceConfiguration.id +
@@ -364,7 +379,8 @@ export class NodeConnection {
             SSHService.extractExecError(configStatus)
         );
       }
-
+      this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: true})
+      this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
       return resolve();
     });
   }
@@ -434,13 +450,38 @@ export class NodeConnection {
   }
 
   async destroyNode() {
-    await this.sshService.exec("docker rm -vf $(docker ps -aq)");
-    await this.sshService.exec("docker rmi -f $(docker images -aq)");
-    await this.sshService.exec(`\
-                docker volume prune -f &&\
-                docker system prune -a -f &&\
-                rm -rf ${this.settings.stereum.settings.controls_install_path} &&\
-                rm -rf /etc/stereum`);
+    const ref = StringUtils.createRandomString()
+    this.taskManager.tasks.push({name: "Delete Node", otherRunRef: ref,})
+
+    this.taskManager.otherSubTasks.push({name: "remove Docker-Container", otherRunRef: ref, status: 
+      !(await this.sshService.exec("docker rm -vf $(docker ps -aq)")).rc
+    })
+    
+    this.taskManager.otherSubTasks.push({name: "remove Docker-Images", otherRunRef: ref, status: 
+      !(await this.sshService.exec("docker rmi -f $(docker images -aq)")).rc
+    })
+
+    this.taskManager.otherSubTasks.push({name: "clean up Docker-Volumes", otherRunRef: ref, status: 
+      !(await this.sshService.exec("docker volume prune -f")).rc
+    })
+
+    this.taskManager.otherSubTasks.push({name: "clean up Docker", otherRunRef: ref, status: 
+      !(await this.sshService.exec("docker system prune -a -f")).rc
+    })
+
+    if(this.settings){
+      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status: 
+        !((await this.sshService.exec("rm -rf " + this.settings.stereum.settings.controls_install_path)).rc)
+      })
+    }else{
+      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status: true})
+    }
+
+    this.taskManager.otherSubTasks.push({name: "remove Stereum Settings", otherRunRef: ref, status: 
+      !((await this.sshService.exec("rm -rf /etc/stereum")).rc)
+    })
+    
+    this.taskManager.finishedOtherTasks.push({otherRunRef: ref,})
     this.settings = undefined;
     return "Node destroyed";
   }
@@ -519,6 +560,9 @@ export class NodeConnection {
   }
 
   async runUpdates(){
-    await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`)
+    const updateRunRef = StringUtils.createRandomString()
+    this.taskManager.tasks.push({name: "Update", updateRunRef: updateRunRef})
+    const logs = await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`)
+    this.taskManager.finishedUpdates.push({updateRunRef: updateRunRef, logs: logs})
   }
 }

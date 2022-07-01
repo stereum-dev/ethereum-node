@@ -1,3 +1,4 @@
+import { TaskManager } from "./TaskManager.js";
 import * as crypto from 'crypto'
 const log = require('electron-log')
 const https = require('https')
@@ -97,7 +98,7 @@ export class HetznerServer {
       await this.nodeConnection.sshService.disconnect()
       this.serverRootPassword = newPassword
       this.nodeConnection.nodeConnectionParams.password = newPassword
-      await this.nodeConnection.establish()
+      await this.nodeConnection.establish(new TaskManager())
       log.info('Reconnected after password change')
     }).catch(err => log.error('Password Authentication failed:\n', err))
   }
