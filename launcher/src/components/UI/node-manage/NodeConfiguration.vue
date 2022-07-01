@@ -1,16 +1,5 @@
 <template>
   <div class="config-node">
-    <div class="config-row">
-      <div class="row-content" v-for="(item, index) in configData" :key="index">
-        <div v-if="item.network == 'testNet'" class="testnet-icon">
-          <img src="../../../../public/img/icon/mainnetIcon.png" alt="icon" />
-        </div>
-        <div v-else class="testnet-icon">
-          <img src="../../../../public/img/icon/testnetIcon.png" alt="" />
-        </div>
-        <span>Ethereum-Mainnet</span>
-      </div>
-    </div>
     <div class="config-bg">
       <div class="edit-btn">
         <router-link to="/node">
@@ -142,7 +131,7 @@ export default {
 }
 .config-bg {
   grid-column: 1/7;
-  grid-row: 3;
+  grid-row: 2/4;
   width: 95%;
   height: 98%;
   display: grid;
