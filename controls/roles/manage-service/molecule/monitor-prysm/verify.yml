@@ -45,7 +45,7 @@
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
-      minutes: 5
+      minutes: 1
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-a5657b06-e068-11ec-8e1c-2f728e608caa"
@@ -56,32 +56,16 @@
       - grafana.stdout is not search("can't read dashboard provisioning files from directory")
     retries: 60
     delay: 10
-  #  prometheus logs
+  # prometheus
   - name: Prometheus
-    command: "docker logs --tail=100 stereum-87ca1aac-e068-11ec-a974-9bb31ed410be"
-    register: prometheus
+    uri:
+      url: http://localhost:9090/api/v1/query?query=up
+    register: prometheus_up
     until:
-      - prometheus.stderr is search("Server is ready to receive web requests")
-      - prometheus.stderr is not search("Error loading config")
-    retries: 60
-    delay: 10
-  #  node exporter logs
-  - name: Node exporter
-    command: "docker logs --tail=100 stereum-9da95c20-e068-11ec-b762-b38d94c6d8a8"
-    register: node_exporter
-    until:
-      - node_exporter.stderr is search("Listening on")
-    retries: 60
-    delay: 10
-  #  prysm beacon logs
-  - name: prysm beacon
-    command: "docker logs --tail=200 stereum-aba073ae-e068-11ec-8b8a-ab1197e06ccd"
-    register: prysm_beacon
-    until:
-      - prysm_beacon.stderr is search('estimated time remaining')
-      - prysm_beacon.stderr is not search('Could not connect to execution client endpoint')
-    retries: 60
-    delay: 10
+      - prometheus_up.json.status == "success"
+      - prometheus_up.json.data.result | length == 3
+    retries: 10
+    delay: 6
   # container's images & ports
   - shell: docker ps
     register: stereum_docker_ps

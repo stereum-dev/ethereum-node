@@ -7,11 +7,12 @@
           v-for="(item, index) in subTasks"
           :key="index"
           :class="{
-            'success-installation': item.status == 'success',
-            'failed-installation': item.status == 'failed',
+            'skipping-installation': item.status == 'SKIPPED',
+            'success-installation': item.status == 'OK',
+            'failed-installation': item.status == 'FAILED',
           }"
         >
-          <div class="success-box" v-if="item.status == 'success'">
+          <div class="success-box" v-if="item.status == 'OK'">
             <span v-if="displayTaskResult">{{ item.action }}</span>
             <span v-else>{{ item.name }}</span>
             <div class="loading-box">
@@ -21,7 +22,7 @@
               />
             </div>
           </div>
-          <div class="failed-box" v-if="item.status == 'failed'">
+          <div class="failed-box" v-if="item.status == 'FAILED'">
             <span v-if="displayTaskResult">{{ item.action }}</span>
             <span v-else>{{ item.name }}</span>
             <div class="loading-box">
@@ -31,6 +32,18 @@
               />
             </div>
           </div>
+          <div class="skipped-box" v-if="item.status == 'SKIPPED'">
+            <span v-if="displayTaskResult">{{ item.action }}</span>
+            <span v-else>{{ item.name }}</span>
+            <div class="loading-box">
+             <img
+                src="../../../../public/img/icon/task-manager-icons/check3.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+        <div ref="task">
         </div>
       </div>
     </div>
@@ -44,15 +57,12 @@ export default {
       displayTaskResult: false,
     };
   },
-  mounted() {
-    this.taskResultHandler();
-  },
-  methods: {
-    taskResultHandler() {
-      setTimeout(() => {
-        this.displayTaskResult = true;
-      }, 5000);
-    },
+  mounted(){
+    const el = this.$refs.task;
+        if (el) {
+      //scroll to bottom when opening subtasks
+     el.scrollIntoView({behavior: 'smooth'});
+    }
   },
 };
 </script>
@@ -86,6 +96,7 @@ export default {
   align-items: center;
 }
 
+.subTask-row .skipped-box,
 .subTask-row .success-box,
 .subTask-row .failed-box {
   width: 100%;
@@ -105,18 +116,21 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.subTask-row .skipped-box img,
 .subTask-row .success-box img,
 .subTask-row .failed-box img {
   width: 70%;
   height: 70%;
 }
 
+.subTask-row .skipped-box span,
 .subTask-row .success-box span,
 .subTask-row .failed-box span {
   font-size: 0.7rem;
   font-weight: 800;
   color: #303030;
   margin-left: 10px;
+  width: 100%;
 }
 
 .success-installation {
@@ -127,4 +141,9 @@ export default {
   background-color: rgb(219, 74, 74);
   border-radius: 15px;
 }
+.skipping-installation {
+  background-color: rgb(134, 184, 202);
+  border-radius: 15px;
+}
+
 </style>

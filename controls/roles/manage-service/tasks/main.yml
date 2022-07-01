@@ -74,7 +74,14 @@
     with_items: "{{ stereum_service_configuration.volumes }}"
 
   - include_tasks: write-grafana-configuration.yml
-    when: stereum_service_configuration.image is match("grafana/grafana:*")
+    when: >
+      stereum_service_configuration.image is match("grafana/grafana:*") and
+      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
+  - include_tasks: write-prometheus-configuration.yml
+    when: >
+      stereum_service_configuration.image is match("prom/prometheus:*") and
+      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
 
   - name: Start service
     community.docker.docker_container:
@@ -92,6 +99,7 @@
       ports: "{{ stereum_service_configuration.ports | default([]) }}"
       networks:
         - name: stereum
+          aliases: "{{ ['prometheus'] if (stereum_service_configuration.image is match('prom/prometheus:*')) else [] }}"
       # working_dir: "{{ stereum_service_configuration.working_dir }}" # doesn't work at all
       volumes: "{{ stereum_service_configuration.volumes }}"
       log_driver: "json-file"
@@ -100,4 +108,20 @@
         max-size: "100m"
     become: yes
     when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
+
+  - name: Reload config (prometheus only)
+    community.docker.docker_container:
+      command_handling: correct
+      name: "reload-prometheus"
+      user: "2000"
+      image: "curlimages/curl:{{ stereum_static.defaults.versions.curl }}"
+      detach: false
+      command: |
+        curl -X POST http://prometheus:9090/-/reload -s
+      networks:
+        - name: stereum
+    become: yes
+    when: >
+      stereum_service_configuration.image is match("prom/prometheus:*") and
+      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
   when: stereum.manage_service.state is defined

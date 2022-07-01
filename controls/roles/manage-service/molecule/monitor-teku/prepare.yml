@@ -40,6 +40,7 @@
             save: true
             state: started
             configuration:
+              service: TekuBeaconService
               id: "{{ beacon_service }}"
               image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
               ports:
@@ -61,7 +62,7 @@
                 - --metrics-host-allowlist="*"
                 - --metrics-publish-interval=10
                 - --data-path=/opt/app/data
-                - --data-storage-mode=archive
+                - --data-storage-mode=prune
                 - --rest-api-port=5051
                 - --rest-api-host-allowlist="*"
                 - --rest-api-interface=0.0.0.0

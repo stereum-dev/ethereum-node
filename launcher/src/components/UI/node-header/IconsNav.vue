@@ -28,6 +28,7 @@
     </div>
     <div
       class="icon-btn"
+      @click="updateModalHandler"
       v-else
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
@@ -53,21 +54,49 @@
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
       <span class="exit-text" v-if="showExitText">Exit</span>
     </div>
+    <update-modal
+      @remove-modal="removeModalHandler"
+      @update-confirm="updateConfirmationHandler"
+      v-if="showUpdateModal"
+    ></update-modal>
+    <update-waiting v-if="updateWaitingModal"></update-waiting>
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import UpdateModal from "./UpdateModal.vue";
+import UpdateWaiting from "./UpdateWaiting.vue";
 export default {
+  components: { UpdateModal, UpdateWaiting },
   data() {
     return {
       isUpdateAvailable: false,
+      showUpdateModal: false,
       showHelpText: false,
       showExitText: false,
       showSettingText: false,
       showUpdateText: false,
       showNotifText: false,
+      updateWaitingModal: false,
     };
   },
-  methods: {},
+  methods: {
+    runUpdates: async function () {
+      await ControlService.runUpdates();
+    },
+    updateModalHandler() {
+      this.showUpdateModal = true;
+    },
+    removeModalHandler() {
+      this.showUpdateModal = false;
+    },
+    updateConfirmationHandler: async function () {
+      this.showUpdateModal = false;
+      this.updateWaitingModal = true;
+      await this.runUpdates();
+      this.updateWaitingModal = false;
+    },
+  },
 };
 </script>
 <style scoped>
@@ -102,7 +131,7 @@ export default {
   align-items: center;
   cursor: pointer;
   position: relative;
-  transition-duration:200ms;
+  transition-duration: 200ms;
 }
 .icon-btn:hover {
   background-color: #274f4f;
@@ -112,7 +141,7 @@ export default {
 .icon-btn:active {
   box-shadow: none;
   background-color: #274f4f;
-  transition-duration:200ms;
+  transition-duration: 200ms;
   transform: scale(0.92);
 }
 .icon-btn:active img {

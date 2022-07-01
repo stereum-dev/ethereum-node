@@ -33,7 +33,7 @@ test('geth installation', async () => {
 
   //change password
   await testServer.passwordAuthentication(testServer.serverRootPassword)
-  
+
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
   echo "stereum_settings:
@@ -47,7 +47,7 @@ test('geth installation', async () => {
   " > /etc/stereum/stereum.yaml`)
   await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
-  
+
   //install geth
   const ports = [
     new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
@@ -60,11 +60,24 @@ test('geth installation', async () => {
   // get logs
   await testServer.Sleep(10000)
   const status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
+  const ufw = await nodeConnection.sshService.exec('ufw status')
+  const docker = await nodeConnection.sshService.exec('docker ps')
 
   // destroy
   await nodeConnection.destroyNode()
   await nodeConnection.sshService.disconnect()
   await testServer.destroy()
+
+  //check ufw
+  expect(ufw.stdout).toMatch(/30303\/tcp/)
+  expect(ufw.stdout).toMatch(/30303\/udp/)
+
+  //check docker container
+  expect(docker.stdout).toMatch(/ethereum\/client-go/)
+  expect(docker.stdout).toMatch(/30303->30303/)
+  if (!(executionClient.id.includes('Up'))) {
+    expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+  }
 
   // check if geth service established WebSocket connection
   // idk why but logs are stored in stderr but stdout string is empty

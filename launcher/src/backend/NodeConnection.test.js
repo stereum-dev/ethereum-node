@@ -1,4 +1,5 @@
 import { NodeConnection } from './NodeConnection'
+import { TaskManager } from './TaskManager'
 import { nodeOS } from './NodeOS'
 const log = require('electron-log')
 
@@ -15,6 +16,7 @@ test('findOS Ubuntu', () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   nodeConnection.findOS()
@@ -35,6 +37,7 @@ test('findOS CentOS', () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   nodeConnection.findOS()
@@ -68,6 +71,7 @@ test('findStereumSettings', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.findStereumSettings()
@@ -101,6 +105,7 @@ test('findStereumSettings failure', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.findStereumSettings()
@@ -120,6 +125,7 @@ test('prepareStereumNode failure ubuntu installpkg', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
@@ -142,6 +148,7 @@ test('prepareStereumNode error ubuntu installpkg', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
@@ -164,6 +171,7 @@ test('prepareStereumNode failure ubuntu unsupported os', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
@@ -187,6 +195,7 @@ test('prepareStereumNode failure ubuntu install', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
@@ -211,6 +220,7 @@ test('prepareStereumNode error ubuntu install', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.prepareStereumNode('/opt/stereum/bar').catch(e => {
@@ -239,6 +249,7 @@ test('prepareStereumNode success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.findStereumSettings()
@@ -289,6 +300,7 @@ test('prepareStereumNode error playbook', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.findStereumSettings()
@@ -326,6 +338,7 @@ test('prepareStereumNode failure playbook', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.findStereumSettings()
@@ -357,6 +370,7 @@ test('playbookStatus error', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   expect.assertions(1)
@@ -378,6 +392,7 @@ test('playbookStatus failure', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   expect.assertions(1)
@@ -400,6 +415,7 @@ test('playbookStatus success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   expect(await nodeConnection.playbookStatus('ref-123')).toMatch('playbook-output')
@@ -417,6 +433,7 @@ test('runPlaybook extravars success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   nodeConnection.settings = {
@@ -440,6 +457,7 @@ test('runPlaybook extravars success', async () => {
 
 test('runPlaybook error no settings', async () => {
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
 
   await nodeConnection.runPlaybook('ref-abc', { stereum_var: 'sowow' }).catch(e => {
     expect(e).toMatch(/Settings not loaded/)
@@ -458,6 +476,7 @@ test('listServicesConfigurations success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   const list = await nodeConnection.listServicesConfigurations()
@@ -484,6 +503,7 @@ test('listServicesConfigurations success empty', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   const list = await nodeConnection.listServicesConfigurations()
@@ -507,6 +527,7 @@ test('readServiceConfiguration success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   const config = await nodeConnection.readServiceConfiguration('foo-bar')
@@ -532,6 +553,7 @@ test('writeServiceConfiguration success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   await nodeConnection.writeServiceConfiguration({
@@ -566,6 +588,7 @@ test('listServices success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   const services = await nodeConnection.listServices()
@@ -904,6 +927,7 @@ test('getServiceDetails success', async () => {
   })
 
   const nodeConnection = new NodeConnection(null)
+  nodeConnection.taskManager = new TaskManager()
   nodeConnection.sshService = new SSHService.SSHService()
 
   const details = await nodeConnection.getServiceDetails('a655')

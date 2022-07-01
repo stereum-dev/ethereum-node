@@ -26,7 +26,7 @@ export class NimbusBeaconService extends NodeService {
       service.id, // id,
       1, // configVersion
       image, // image,
-      'multiarch-v22.3.0', // imageVersion,
+      'multiarch-v22.6.0', // imageVersion,
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,
@@ -78,7 +78,7 @@ export class NimbusBeaconService extends NodeService {
   }
 
   buildPrometheusJob () {
-    return `\n  - job_name: stereum-${this.id}\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
+    return `\n  - job_name: "nimbus"\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
   }
 
   getAvailablePorts () {

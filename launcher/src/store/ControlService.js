@@ -122,6 +122,34 @@ class ControlService extends EventEmitter {
       password: args.password,
     });
   }
+
+  async listValidators(args) {
+    return await this.promiseIpc.send("listValidators", args)
+  }
+
+  async listServices(){
+    return await this.promiseIpc.send("listServices")
+  }
+
+  async manageServiceState(args){
+    return await this.promiseIpc.send("manageServiceState", args)
+  }
+
+  async runUpdates(){
+    return await this.promiseIpc.send("runUpdates")
+  }
+
+  async getTasks(){
+    return await this.promiseIpc.send("getTasks") // gets the current available Data
+  }
+
+  async clearTasks(){
+    return await this.promiseIpc.send("clearTasks") // clears all data
+  }
+
+  async updateTasks(){
+    return await this.promiseIpc.send("updateTasks")  // updates task progression
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

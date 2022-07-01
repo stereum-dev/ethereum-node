@@ -13,21 +13,42 @@
             />
           </div>
           <div class="plugins-table">
-            <div class="plugins-row">
-              <div class="plugins-status-color"></div>
+            <div
+              class="plugins-row"
+              v-for="(item, index) in installedServices"
+              :key="index"
+            >
+              <div
+                :class="{
+                  'plugins-running-state': item.state == 'running',
+                  'plugins-exited-state': item.state == 'exited',
+                  'plugins-restarting-state': item.state == 'restarting',
+                }"
+              ></div>
               <div class="plugins-row-content">
                 <div class="row-plugin-name">
-                  <span>plugin-name</span>
+                  <span>{{ item.name }}</span>
                 </div>
                 <div class="row-category">
-                  <span>Consensus Client</span>
+                  <span>{{ item.category }}</span>
                 </div>
               </div>
               <div class="service-edit">
                 <div class="edit-box">
                   <div class="icon-bg">
                     <div class="power-icon">
-                      <img src="/img/icon/control/power.png" alt="icon" />
+                      <img
+                        v-if="item.state == 'running'"
+                        src="/img/icon/control/power-off.png"
+                        alt="icon"
+                        @click="stateHandler(item)"
+                      />
+                      <img
+                        v-else
+                        src="/img/icon/control/power-on.png"
+                        alt="icon"
+                        @click="stateHandler(item)"
+                      />
                     </div>
                   </div>
                   <div class="icon-bg">
@@ -73,11 +94,14 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: {
     ControlDashboard,
@@ -86,6 +110,53 @@ export default {
     ControlAlert,
     TaskManager,
   },
+  data() {
+    return {
+      powerBtnRed: false,
+    };
+  },
+  beforeMount() {
+    this.updateStates();
+  },
+  updated() {
+    this.updateStates();
+  },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+    }),
+  },
+  methods: {
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
+    },
+    stateHandler: async function (item) {
+      let state = "stopped";
+      if (item.state === "exited") {
+        state = "started";
+        this.powerBtnRed = true;
+      }
+      try{
+        await ControlService.manageServiceState({id:item.config.serviceID, state: state})
+      }catch(err){
+        console.log(state.replace('ed','ing') + ' service failed:\n',err)
+      }
+      this.updateStates()
+    }
+  }
 };
 </script>
 
@@ -218,7 +289,7 @@ export default {
   overflow-y: auto;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(8, 1fr);
 }
 .plugins-table::-webkit-scrollbar {
   width: 0;
@@ -235,10 +306,22 @@ export default {
   border-radius: 3px;
   box-shadow: 0 1px 3px 1px #393939;
 }
-.plugins-status-color {
+.plugins-running-state {
   width: 20%;
   height: 100%;
   background-color: #22b53f;
+  border-radius: 3px;
+}
+.plugins-exited-state {
+  width: 20%;
+  height: 100%;
+  background-color: #a1a1a1;
+  border-radius: 3px;
+}
+.plugins-restarting-state {
+  width: 20%;
+  height: 100%;
+  background-color: #db0000;
   border-radius: 3px;
 }
 .plugins-row-content {
@@ -285,7 +368,7 @@ export default {
 .edit-box .icon-bg {
   width: 100%;
   height: 100%;
-  border: 1px solid #1e2929;
+  border: 1px solid #a4a5a5;
   border-radius: 4px;
   background-color: #336666;
   display: flex;
@@ -319,8 +402,14 @@ export default {
   transform: scale(1);
 }
 .power-icon img {
-  width: 13px;
-  height: 12px;
+  width: 77%;
+  height: 74%;
+}
+.powerOff {
+  background-color: rgb(226, 62, 62);
+}
+.powerOn {
+  background-color: rgb(113, 205, 136);
 }
 .book-icon img {
   width: 12px;

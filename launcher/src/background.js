@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog } from "electron";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { StereumService } from "./stereumservice.js";
@@ -9,6 +9,7 @@ import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
 import { ServiceManager } from "./backend/ServiceManager.js";
 import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
+import { TaskManager } from "./backend/TaskManager.js";
 import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
@@ -16,6 +17,7 @@ import url from "url";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
+const taskManager = new TaskManager();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
@@ -43,7 +45,9 @@ promiseIpc.on("connect", async (arg) => {
   }
   stereumService.connect(remoteHost);
   nodeConnection.nodeConnectionParams = remoteHost;
-  await nodeConnection.establish();
+  taskManager.nodeConnection.nodeConnectionParams = remoteHost;
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
   return 0;
 });
 
@@ -59,7 +63,10 @@ promiseIpc.on("setup", async (arg) => {
 
 // called via promiseIpc as an async function
 promiseIpc.on("destroy", async () => {
-  return nodeConnection.destroyNode();
+  app.showExitPrompt = true
+  const returnValue = await nodeConnection.destroyNode();
+  app.showExitPrompt = false
+  return returnValue
 });
 
 // called via promiseIpc as an async function
@@ -91,6 +98,7 @@ promiseIpc.on("getOneClickConstellation", async (arg) => {
 });
 
 promiseIpc.on("prepareOneClickInstallation", async (arg) => {
+  app.showExitPrompt = true
   return await oneClickInstall.prepareNode(arg, nodeConnection);
 });
 
@@ -100,7 +108,9 @@ promiseIpc.on("writeOneClickConfiguration", async (args) => {
 });
 
 promiseIpc.on("startOneClickServices", async () => {
-  return await oneClickInstall.startServices();
+  const returnValue = await oneClickInstall.startServices();
+  app.showExitPrompt = false
+  return returnValue
 });
 
 //get data for control cpu comp
@@ -137,8 +147,42 @@ promiseIpc.on("getServiceConfig", async (args) => {
 })
 
 promiseIpc.on("importKey", async (args) => {
-  return await validatorAccountManager.importKey(args.files, args.password);
+  app.showExitPrompt = true
+  const returnValue =  await validatorAccountManager.importKey(args.files, args.password);
+  app.showExitPrompt = false
+  return returnValue
 });
+
+promiseIpc.on("listValidators", async (args) => {
+  return await validatorAccountManager.listValidators(args);
+});
+
+promiseIpc.on("listServices", async () => {
+  return await nodeConnection.listServices();
+});
+
+promiseIpc.on("manageServiceState", async (args) => {
+  return await serviceManager.manageServiceState(args.id, args.state)
+})
+
+promiseIpc.on("runUpdates", async (args) => {
+  app.showExitPrompt = true
+  const returnValue = await nodeConnection.runUpdates()
+  app.showExitPrompt = false
+  return returnValue
+})
+
+promiseIpc.on("getTasks", async () => {
+  return await taskManager.getTasks()
+})
+
+promiseIpc.on("updateTasks", async () => {
+  return await taskManager.updateTasks()
+})
+
+promiseIpc.on("clearTasks", async () => {
+  return await taskManager.clearTasks()
+})
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -173,6 +217,23 @@ async function createWindow() {
     win.loadURL("app://./index.html");
     // win.webContents.openDevTools()
   }
+
+  win.on('close', (e) => {
+    if (app.showExitPrompt) {
+        e.preventDefault() // Prevents the window from closing 
+        const response = dialog.showMessageBoxSync({
+            type: 'question',
+            buttons: ['Yes', 'No'],
+            title: 'Confirm',
+            message: 'Critical tasks are running in the background.\nAre you sure you want to quit?',
+            icon: './public/img/icon/node-journal-icons/red-warning.png'
+        })
+        if(response === 0){
+          app.showExitPrompt = false
+          win.close()
+        }
+    }
+})
 }
 
 // Quit when all windows are closed.

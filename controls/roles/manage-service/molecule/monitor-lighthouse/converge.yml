@@ -8,57 +8,8 @@
     prometheus_node_exporter_service: ef7d66cc-9022-11ec-8bd0-57e35985136a
     grafana_service: 59827650-8ac6-11ec-81ec-f3dc0fb8f30e
     beacon_service: cbf9f518-8ac7-11ec-8da2-ebc33b8d2c86
-    grafana_provisioning: ["lighthouse"]
 
   tasks:
-    # prometheus service
-    - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
-      vars:
-        stereum_args:
-          manage_service:
-            save: true
-            state: started
-            configuration:
-              id: "{{ prometheus_service }}"
-              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
-              ports:
-                - 127.0.0.1:9090:9090/tcp
-              env:
-                CONFIG: |
-                  global:
-                    scrape_interval:     15s
-                    evaluation_interval: 15s
-
-                  alerting:
-                    alertmanagers:
-                    - static_configs:
-                      - targets:
-                        # - alertmanager:9093
-
-                  rule_files:
-                    # - "first_rules.yml"
-                    # - "second_rules.yml"
-
-                  scrape_configs:
-                    - job_name: 'stereum-{{ beacon_service }}'
-                      static_configs:
-                        - targets: ['stereum-{{ beacon_service }}:5054']
-                    - job_name: 'stereum-{{ prometheus_node_exporter_service }}'
-                      static_configs:
-                        - targets: ['stereum-{{ prometheus_node_exporter_service }}:9100']
-              command: sh -c "touch /etc/prometheus/prometheus.yml &&
-                              echo \"$CONFIG\" > /etc/prometheus/prometheus.yml &&
-                              /bin/prometheus --config.file=/etc/prometheus/prometheus.yml"
-              entrypoint: []
-              user: "2000"
-              volumes:
-                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
-                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
     # prometheus node-exporter service
     - block:
       - set_fact:
@@ -72,6 +23,7 @@
             save: true
             state: started
             configuration:
+              service: PrometheusNodeExporterService
               id: "{{ prometheus_node_exporter_service }}"
               image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
               ports: []
@@ -80,6 +32,31 @@
               entrypoint: ["/bin/node_exporter"]
               user: "2000"
               volumes: []
+    # prometheus service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrometheusService
+              id: "{{ prometheus_service }}"
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
+              ports:
+                - 127.0.0.1:9090:9090/tcp
+              env: {}
+              command: sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
+                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
     # grafana service
     - block:
       - set_fact:
@@ -93,6 +70,7 @@
             save: true
             state: started
             configuration:
+              service: GrafanaService
               id: "{{ grafana_service }}"
               image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
               ports:

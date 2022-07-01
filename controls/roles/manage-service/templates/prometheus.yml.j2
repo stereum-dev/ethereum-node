@@ -1,0 +1,172 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+scrape_configs:
+
+# besu
+  - job_name: besu
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "BesuService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:9545"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# blox ssv
+  - job_name: ssv
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "BloxSSVService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:15000"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+  - job_name: ssv_health
+    metrics_path: /health
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "BloxSSVService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:15000"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# geth
+  - job_name: geth
+    metrics_path: /debug/metrics/prometheus
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "GethService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:6060"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# lighthouse beacon
+  - job_name: lighthouse_beacon
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "LighthouseBeaconService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:5054"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# lighthouse validator
+  - job_name: lighthouse_validator
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "LighthouseValidatorService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:5064"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# nethermind
+  - job_name: nethermind
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "NethermindService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:6060"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# nimbus consensus client
+  - job_name: nimbus
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "NimbusBeaconService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8008"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# prometheus node exporter
+  - job_name: prometheus_node_exporter
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "PrometheusNodeExporterService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:9100"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# prometheus
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+# prysm beacon
+  - job_name: prysm_beacon
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "PrysmBeaconService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8080"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# prysm validator
+  - job_name: prysm_validator
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "PrysmValidatorService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8081"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# teku
+  - job_name: teku
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "TekuBeaconService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8008"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# EOF

@@ -31,8 +31,19 @@
     mode: 0655
   become: yes
 
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- name: Read all service configs
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configs
+  with_items: "{{ service_config_files.files }}"
+
 - name: Copy selected Grafana dashboard(s)
   include_tasks: write-grafana-dashboards.yml
-  loop: "{{ grafana_provisioning }}"
+  loop: "{{ service_configs.results | map(attribute='content') | map('b64decode') | map('from_yaml') | map(attribute='service') | unique }}"
 
 # EOF

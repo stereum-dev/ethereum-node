@@ -22,10 +22,9 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="table-row" v-for="(item, index) in keyFiles" :key="index">
+          <div class="table-row" v-for="(item, index) in keys" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.name }}</span>
-            <span class="username"></span>
+            <span class="category">{{ item.validating_pubkey.substring(0,20) }}...{{ item.validating_pubkey.substring(item.validating_pubkey.length - 4, item.validating_pubkey.length) }}</span> 
             <img
               class="service-icon"
               src="../../../../public/img/icon/the-staking/blox-service.png"
@@ -50,19 +49,19 @@
                   alt="icon"
                 />
                 <span v-if="showGrafitiText" class="grafiti-text">GRAFITI</span>
-              </div>
+              </div> 
               <div
                 class="copy-box"
                 @mouseover="showCopyText = true"
                 @mouseleave="showCopyText = false"
-              >
+              > 
                 <img
                   class="copy-icon"
                   src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
                 <span v-if="showCopyText" class="copy-text">COPY</span>
-              </div>
+              </div> 
               <div
                 class="remove-box"
                 @mouseover="showRemoveText = true"
@@ -173,12 +172,15 @@ import LangButtonVue from "../LangButton.vue";
 import ShowKey from "./DropZone.vue";
 import DropZone from "./ShowKey.vue";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services"
 export default {
   components: { ShowKey, DropZone },
   data() {
     return {
       isDragOver: false,
       keyFiles: [],
+      keys: [],
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
@@ -187,17 +189,50 @@ export default {
       showRemoveText: false,
       showExitText: false,
       password: "",
+      forceRefresh: false,
     };
+  },
+  mounted() {
+      this.listKeys()
   },
   updated() {
     this.checkKeyExists();
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+    }),
+  },
   methods: {
+    listKeys: async function () {
+      let clients = this.installedServices.filter(s => s.service.includes('Validator'))
+      clients.forEach(client => {
+        if(client.config.keys && client.config.keys.length > 0 && !this.forceRefresh){
+          this.keys = client.config.keys
+        } else {
+          this.listKeysTriggered = true
+          ControlService.listValidators(client.config.serviceID).then(result => {
+            client.config.keys = result.data
+            this.installedServices = this.installedServices.map(service => {
+              if(service.id === client.id){
+                return client
+              }
+              return service
+            })
+            this.keys = result.data ? result.data : [];
+          })
+          }
+      })
+
+    },
     importKey: async function () {
       await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
       });
+      this.forceRefresh = true
+      this.listKeys()
       this.password = "";
       this.insertFilePage = true;
       this.enterPasswordPage = false;
@@ -279,18 +314,21 @@ export default {
   height: 30px;
   margin: 5px auto 0 auto;
   display: grid;
-  justify-content: center;
-  align-items: center;
-  grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
+  grid-template-columns: 3% 30% 7% 14% 6% 10% 30%;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
   padding: 1px;
   position: relative;
+  box-sizing: border-box;
 }
 .table-row span {
+  align-self: center;
+  width: max-content;
   color: #fff;
   font-size: 10px;
   font-weight: 700;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 .table-row .circle {
   grid-column: 1;
@@ -305,58 +343,64 @@ export default {
   width: 100%;
   grid-column: 2;
   font-size: 13px;
+  align-self: center;
 }
-.table-row .username {
-  width: 100%;
-  grid-column: 3;
-  font-size: 10px;
-}
+
 .table-row .service-icon {
   width: 20px;
-  grid-column: 4;
+  grid-column: 3;
   justify-self: center;
+  align-self: center;
 }
 .table-row .since {
-  grid-column: 5;
+  grid-column: 4;
   font-size: 10px;
+  justify-self: center;
+  align-self: center;
 }
 .table-row .state-icon {
   width: 18px;
-  grid-column: 6;
+  grid-column: 5;
   justify-self: center;
+  align-self: center;
 }
 .table-row .balance {
-  grid-column: 7;
+  grid-column: 6;
+  justify-self: center;
+  align-self: center;
 }
 
 .option-box {
-  grid-column: 8;
+  grid-column: 7;
   width: 90%;
-  height: 80%;
-  border: 3px solid #bfbfbf;
-  background-color: #000000;
+  height: 95%;
+  justify-self: center;
+  align-self: center;
+  border: 2px solid #bfbfbf;
+  background-color: black;
   border-radius: 30px;
   position: absolute;
-  right: 0;
+  right: 1px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
   align-items: center;
 }
 .option-box img {
-  width: 20px;
+  width: 19px;
   height: 20px;
   margin: 0 auto;
+  cursor: pointer;
 }
 .option-box img:hover {
-  width: 23px;
-  height: 23px;
+  border: 1px solid #72cbf8;
+  border-radius: 3px;
+  transform: scale(1.1);
 }
 
 .option-box img:active {
-  width: 21px;
-  height: 21px;
-  box-shadow: none;
+  border: 1px solid #0c6e9f;
+  transform: scale(1);
 }
 .option-box .copy-box {
   height: 100%;
@@ -515,13 +559,13 @@ export default {
   border-radius: 35px 0 0 35px;
   background-color: #002828;
   outline-style: none;
+  padding: 0;
   padding-left: 10px;
   position: absolute;
   left: 5px;
   font-size: 1.5rem;
   color: #fff;
   font-weight: 300;
-  padding-top: 2px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

@@ -3,8 +3,8 @@
     <div class="circle">
       <svg
         class="clock"
-        width="50%"
-        height="20%"
+        width="80%"
+        height="80%"
         viewBox="0 0 73 88"
         version="1.1"
       >
@@ -64,9 +64,14 @@
 </template>
 
 <style scoped>
+.sandParent{
+  width:100%;
+  height:100%;
+}
 .circle {
   background: #83d0f5;
-  width: 100%;
+  width: 95%;
+  height: 100%;
   border-radius: 50%;
   padding: 5%;
   display: flex;

@@ -21,11 +21,11 @@ test('manageServiceState success', async () => {
   const sm = new ServiceManager(NodeConnection.NodeConnection())
 
   await expect(sm.manageServiceState('123', serivceState.restarted)).resolves.toEqual({
-    playbook: 'manage-service',
+    playbook: 'restarting Service',
     playbookRunRef: 'asdf'
   })
 
-  expect(mMock.mock.calls[0][0]).toMatch(/manage-service/)
+  expect(mMock.mock.calls[0][0]).toMatch(/restarting Service/)
   expect(mMock.mock.calls[0][1].stereum_args.manage_service.configuration.id).toMatch(/123/)
   expect(mMock.mock.calls[0][1].stereum_args.manage_service.state).toMatch(serivceState.restarted)
 })
@@ -48,7 +48,7 @@ test('manageServiceState failure', async () => {
 
   await expect(sm.manageServiceState('123', serivceState.started)).rejects.toMatch(/error321/)
 
-  expect(mMock.mock.calls[0][0]).toMatch(/manage-service/)
+  expect(mMock.mock.calls[0][0]).toMatch(/starting Service/)
   expect(mMock.mock.calls[0][1].stereum_args.manage_service.configuration.id).toMatch(/123/)
   expect(mMock.mock.calls[0][1].stereum_args.manage_service.state).toMatch(serivceState.started)
 })

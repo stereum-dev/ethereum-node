@@ -10,7 +10,7 @@
 
 - name: Write service config
   template:
-    src: service.yaml
+    src: service.yaml.j2
     dest: "/etc/stereum/services/{{ stereum.manage_service.configuration.id }}.yaml"
     owner: "root"
     group: "root"
