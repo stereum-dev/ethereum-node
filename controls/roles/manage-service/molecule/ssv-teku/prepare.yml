@@ -57,17 +57,6 @@
         mode: 0644
       become: yes
 
-    - block:
-      - name: Set fastsync params
-        set_fact:
-          stereum:
-            fastsync:
-              network: prater
-              service: teku
-              dest: /opt/app/services/{{ beacon_service }}/data
-      - include_role:
-          name: "fastsync"
-
     # teku beacon service
     - block:
       - set_fact:
