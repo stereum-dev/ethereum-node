@@ -1,242 +1,170 @@
 <template>
-  <div class="amsterdamParent">
-    <div class="amsTitle">
-      <div class="amsTitle_name"><span>NODE STARTED</span></div>
-      <div class="amsTitle_R">
-        <div class="amsTitle_timer">{{ dateTime }}</div>
-        <div class="amsTitle_runingIco">
+  <div class="amsterdamparent">
+    <div class="icoTitle">
+      <div class="icoContainer">
+        <img src="../../../../public/img/icon/control/testnetIconControl.png" />
+      </div>
+      <span>NODE</span>
+    </div>
+    <div class="docBox">
+      <div class="upSide">
+        <div class="epochBox">
+          <div class="ttlEpoch"><span>EPOCH</span></div>
+          <div class="epochText">
+            <span>12345</span>
+          </div>
+          <div class="downTtl"><span class="downTtl">CONFIRMED</span></div>
+        </div>
+      </div>
+      <div class="downSide">
+        <div class="fahrradIco">
           <img src="../../../../public/img/icon/control/amsterdam.png" />
         </div>
-      </div>
-    </div>
-    <div class="amsBox">
-      <div class="syncAndIco">
-        <div class="syncIco">
-          <div class="syncIco_img">
-            <img
-              src="../../../../public/img/icon/control/testnetIconControl.png"
-            />
-          </div>
-          <div class="syncNetTitle"><span>NETWORK</span></div>
+        <div class="dateBox">
+          <span>000000000 days</span>
+          <span>-00h - 00m - 00s</span>
         </div>
-        <div class="syncBox">
-          <div class="syncBoxTitle"><span>SYNCHRONISATION</span></div>
-          <div class="syncItems">
-            <div class="procItems"><span>Execution Client</span></div>
-            <div class="procItems"><span>Consensus Client</span></div>
-          </div>
+        <div class="circleArrow">
+          <img
+            src="../../../../public/img/icon/arrows/SynchronisationIconSynchronized.gif"
+          />
         </div>
-      </div>
-      <div class="epochBox">
-        <div class="epochBox_title"><span>EPOCH</span></div>
-        <div class="epochBox_input">
-          <span>#{{ epochValue }}</span>
-        </div>
-        <div class="epochBox_footer"><span>CONFIRMED</span></div>
       </div>
     </div>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      dateTime: "00:00",
-      epochValue: "123455",
-    };
-  },
-};
-</script>
+
 <style scoped>
-.amsterdamParent {
+.amsterdamparent {
   display: flex;
   width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-content: center;
+}
+.icoTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  height: 100%;
-}
-.amsTitle {
-  width: 98%;
-  height: 20%;
-  background: #33393e;
-  border-radius: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  box-sizing: border-box;
-}
-.amsTitle_name {
-  font-size: 50%;
-  color: #eee;
-  border: 1px solid rgb(27, 26, 26);
   width: 30%;
-  border-radius: 10px;
+  height: 100%;
+}
+.icoContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  width: 100%;
+  height: 80%;
 }
-.amsTitle_R {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.icoContainer img {
+  width: 80%;
 }
-.amsTitle_timer {
-  width: 60%;
-  height: 100%;
+.icoTitle span {
+  width: 100%;
+  height: 20%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   font-size: 60%;
-  padding-right: 5%;
 }
-.amsTitle_runingIco {
-  width: 40%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid rgb(27, 26, 26);
-  border-radius: 10px;
-}
-.amsTitle_runingIco img {
-  width: 30%;
-}
-.amsBox {
-  display: flex;
-  width: 100%;
-  height: 80%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.syncAndIco {
-  display: flex;
-  width: 100%;
-  height: 60%;
-  justify-content: flex-start;
-  align-items: center;
-}
-.syncIco {
-  width: 30%;
-  height: 80%;
-  justify-content: center;
-  align-content: center;
-  display: flex;
-  flex-direction: column;
-}
-.syncIco_img {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
-.syncIco_img img {
-  width: 40%;
-}
-.syncNetTitle {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 40%;
-}
-.syncNetTitle span {
+.docBox {
   width: 70%;
-  background: #33393e;
-  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.syncBox {
+.upSide {
+  height: 50%;
   width: 100%;
   display: flex;
-  background: #33393e;
-  height: 60%;
-  border-radius: 10px;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-.syncBoxTitle {
-  display: flex;
-  width: 98%;
-  height: 30%;
-  font-size: 50%;
-  justify-content: center;
-  align-items: center;
-  background: #464a44;
-  border-radius: 5px;
-}
-.syncItems {
-  display: flex;
-  width: 100%;
-  height: 90%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-size: 50%;
-  flex-direction: column;
-  gap: 5%;
-}
-.procItems {
-  height: 40%;
-  width: 90%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  background: #2f3031;
-  font-size: 100%;
-  padding-left: 5%;
-  border-radius: 10px;
 }
 .epochBox {
-  width: 99%;
-  height: 40%;
+  width: 95%;
+  height: 98%;
+  display: flex;
+  background: #33393e;
+  flex-direction: column;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+}
+.ttlEpoch {
+  width: 90%;
+  display: flex;
+  height: 22%;
+  font-size: 50%;
+  margin-bottom: 2%;
+  font-weight: bold;
+}
+.epochText {
+  width: 90%;
+  height: 50%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  border: 1px solid #eee;
+  background: #000;
+  font-size: 80%;
+  padding-right: 2%;
+}
+.downTtl {
+  width: 90%;
+  height: 22%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 15%;
+  margin-top: 1%;
+}
+.downSide {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fahrradIco {
+  height: 85%;
+  width: 20%;
+  background: #33393e;
+  border: 1px solid #191b1d;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fahrradIco img {
+  width: 80%;
+}
+.dateBox {
+  width: 40%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: 45%;
   background: #33393e;
   border-radius: 5px;
+  border: 1px solid #191b1d;
 }
-.epochBox_title {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: flex-start;
-  font-size: 20%;
-  align-items: center;
-}
-.epochBox_input {
-  width: 90%;
-  height: 70%;
+
+.circleArrow {
+  width: 20%;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 60%;
+  margin-left: 5%;
+  background: #33393e;
+  border-radius: 5px;
+  border: 1px solid #191b1d;
 }
-.epochBox_input span {
-  width: 100%;
-  height: 60%;
-  background: #000;
-  color: #eee;
-  border: 0.5px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 5%;
-  align-items: center;
-}
-.epochBox_footer {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 25%;
+.circleArrow img {
+  width: 60%;
 }
 </style>

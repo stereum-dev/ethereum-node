@@ -29,7 +29,7 @@ export class GrafanaService extends NodeService {
       'bash -c "touch /etc/grafana/grafana.ini && echo \\"$GRAFANA_INI\\" > /etc/grafana/grafana.ini && /run.sh"', // command
       null, // entrypoint
       {
-        GRAFANA_INI: '[auth.anonymous]\nenabled = true\norg_role = Admin\n',
+        GRAFANA_INI: '[auth.anonymous]\nenabled = true\norg_role = Admin\nforce_migration=true\n',
       }, // env
       ports, // ports
       volumes, // volumes
