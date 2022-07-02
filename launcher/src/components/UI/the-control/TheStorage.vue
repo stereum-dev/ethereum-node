@@ -7,10 +7,10 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ countFreeVal }} Mb FREE</span>
+          <span>{{ countFreeVal }} Mib FREE</span>
         </div>
         <div class="totalPart">
-          <span> {{ total }} Mb TOTAL</span>
+          <span> {{ total }} Mib TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">

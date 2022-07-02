@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import FormSetup from '../components/layers/FormSetup.vue'
+import FormSetup from '../components/UI/server-connection/FormSetup.vue'
 export default {
   components: { FormSetup },
   methods: {

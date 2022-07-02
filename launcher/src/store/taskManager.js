@@ -81,14 +81,17 @@ export const useTaskManager = defineStore("taskManager", {
             {
               status: "active",
               statusLabel: "TASK ACTIVE",
+              displayTooltip: false,
             },
             {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
+              displayTooltip: false,
             },
             {
               status: "failed",
               statusLabel: "TASK FAILED",
+              displayTooltip: false,
             },
           ],
         },
@@ -100,6 +103,7 @@ export const useTaskManager = defineStore("taskManager", {
             {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
+              displayTooltip: false,
             },
           ],
         },
@@ -111,6 +115,7 @@ export const useTaskManager = defineStore("taskManager", {
             {
               status: "failed",
               statusLabel: "TASK FAILED",
+              showTooltip: false,
             },
           ],
         },

@@ -3,7 +3,10 @@
     <div class="error-box" v-if="errorMsgExists"></div>
     <div class="error-modal" v-if="errorMsgExists">
       <div class="title-box">
-        <img src="../../../public/img/icon/no-connection.png" alt="icon" />
+        <img
+          src="../../../../public/img/icon/form-setup/form-error.png"
+          alt="icon"
+        />
       </div>
       <div class="description">
         <span>{{ this.error }}</span>
@@ -13,23 +16,18 @@
       </div>
     </div>
     <div class="anim" v-if="connectingAnimActive">
-      <img src="../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
+      <img src="../../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
       <section id="header">
         <span>{{ $t("formsetup.server") }}</span>
       </section>
 
-      <base-dialog
+      <delete-modal
         v-if="bDialogVisible"
-        @bDialogDis="hideBDialog"
-        @bDialogOk="baseDialogDelete"
-      >
-        <template v-slot:title><h4 id="dialTitle">Warning!</h4></template>
-        <template v-slot:des><h5>Are you sure recode Delete ?</h5></template>
-        <template v-slot:cancel>Cancel</template>
-        <template v-slot:ok>Delete</template>
-      </base-dialog>
+        @delete-server="baseDialogDelete"
+        @remove-modal="hideBDialog"
+      ></delete-modal>
       <form @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
@@ -49,7 +47,7 @@
               </select>
             </div>
             <div class="three plus" @click.prevent="addModel">
-              <img src="../../../public/img/icon/PLUS_ICON.png" alt="icon" />
+              <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
             </div>
             <div
               class="three trash"
@@ -78,6 +76,7 @@
               type="text"
               v-model="model.host.value"
               @blur="checkInput(model.host)"
+              required
             />
           </div>
           <div class="server-group" :class="{ errors: !model.user.isFilled }">
@@ -88,6 +87,7 @@
               id="username"
               v-model="model.user.value"
               @blur="checkInput(model.user)"
+              required
             />
           </div>
         </div>
@@ -108,6 +108,7 @@
             id="keylocation"
             v-model="model.keylocation.value"
             @blur="checkInput(model.keylocation)"
+            required
           />
           <input
             v-if="!keyAuth"
@@ -116,6 +117,7 @@
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
+            required
           />
         </div>
         <div class="ssh">
@@ -140,7 +142,7 @@
 </template>
 
 <script>
-import BaseDialog from "./BaseDialog.vue";
+import DeleteModal from "./DeleteModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
@@ -148,7 +150,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 
 export default {
-  components: { BaseDialog },
+  components: { DeleteModal },
   name: "FormSetup",
   emits: ["page"],
   data() {
@@ -186,7 +188,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      allServices: "allServices"
+      allServices: "allServices",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -358,47 +360,59 @@ export default {
         this.installedServices = [];
         let services = await ControlService.getServices();
         if (services && Array.isArray(services) && services.length > 0) {
-        services.forEach((service) => {
-          let buffer = this.allServices.find((element) => element.service === service.service)
-          if(buffer){
-            buffer.config = {
-              serviceID: service.id,
-              configVersion: service.configVersion,
-              image: service.image,
-              imageVersion: service.imageVersion,
-              ports: service.ports,
-              volumes: service.volumes,
-              network: service.network,
+          services.forEach((service) => {
+            let buffer = this.allServices.find(
+              (element) => element.service === service.service
+            );
+            if (buffer) {
+              buffer.config = {
+                serviceID: service.id,
+                configVersion: service.configVersion,
+                image: service.image,
+                imageVersion: service.imageVersion,
+                ports: service.ports,
+                volumes: service.volumes,
+                network: service.network,
+              };
+              if (buffer.name === "Teku" || buffer.name === "Nimbus") {
+                let vs = this.allServices.find(
+                  (element) =>
+                    element.service === buffer.name + "ValidatorService"
+                );
+                vs.config = buffer.config;
+                this.installedServices.push(vs);
+              }
+              this.installedServices.push(buffer);
             }
-            if(buffer.name === 'Teku' || buffer.name === 'Nimbus'){
-              let vs = this.allServices.find((element) => element.service === buffer.name + 'ValidatorService')
-              vs.config = buffer.config
-              this.installedServices.push(vs)
-            }
-            this.installedServices.push(buffer)
-          }
-        })
-      
-        let localPorts = await ControlService.getAvailablePort({
-            min: 9000,
-            max: 9999,
-            amount: (this.installedServices.filter(s => s.headerOption && s.tunnelLink)).length,
           });
 
-        this.headerServices = (this.installedServices.filter(service => service.headerOption)
-                              .map(service => {             
-                                if(service.tunnelLink){
-                                  service.linkUrl = "http://localhost:" + localPorts.pop()
-                                }
-                                return service
-                              }))
+          let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: this.installedServices.filter(
+              (s) => s.headerOption && s.tunnelLink
+            ).length,
+          });
 
-        let ports = (this.headerServices.filter(service => service.tunnelLink))
-                    .map(service => {
-                      return {dstPort: service.config.ports[0].servicePort, localPort: service.linkUrl.split(':').pop()}
-                    })
+          this.headerServices = this.installedServices
+            .filter((service) => service.headerOption)
+            .map((service) => {
+              if (service.tunnelLink) {
+                service.linkUrl = "http://localhost:" + localPorts.pop();
+              }
+              return service;
+            });
 
-        await ControlService.openTunnels(ports);
+          let ports = this.headerServices
+            .filter((service) => service.tunnelLink)
+            .map((service) => {
+              return {
+                dstPort: service.config.ports[0].servicePort,
+                localPort: service.linkUrl.split(":").pop(),
+              };
+            });
+
+          await ControlService.openTunnels(ports);
         }
 
         this.$router.push("/node");
@@ -796,73 +810,82 @@ input:invalid {
   z-index: 96;
 }
 .error-modal {
-  width: 30%;
+  width: 35%;
   height: 40%;
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(232, 232, 232);
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   z-index: 101;
 }
 .error-modal .title-box {
+  grid-column: 1/2;
+  grid-row: 1/4;
   width: 100%;
-  height: 30%;
-  background-color: rgb(213, 102, 102);
+  height: 100%;
   border-radius: 9px 9px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .title-box img {
-  width: 19%;
-  height: 80%;
+  width: 90%;
+  height: 75%;
+  margin-left: 10px;
 }
 .error-modal .description {
-  width: 80%;
-  margin-top: 20px;
-  text-align: center;
+  grid-column: 2/4;
+  grid-row: 1/3;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .error-modal .description span {
-  width: 50%;
-  color: rgb(55, 55, 55);
+  width: 100%;
+  height: 50%;
+  margin-right: 10px;
+  color: #e81f05;
   font-size: 1.2rem;
   font-weight: 800;
-  word-break: break-word;
+  text-transform: uppercase;
   text-align: center;
 }
 
 .error-modal .btn-box {
+  grid-column: 2/4;
+  grid-row: 3;
   width: 100%;
-  height: 30%;
-  border-radius: 0 0 9px 9px;
+  height: 50%;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .btn-box button {
-  width: 30%;
-  height: 60%;
+  width: 60%;
+  height: 80%;
+  margin-right: 10px;
   outline-style: none;
-  border: 2px solid rgb(235, 115, 115);
+  background-color: #e81f05;
+  border: 1px solid rgb(178, 178, 178);
   border-radius: 10px;
-  color: #de897f;
+  color: #eae9e9;
   font-size: 1rem;
   font-weight: 800;
-  box-shadow: 0px 1px 5px 1px rgb(97, 97, 97);
+  box-shadow: 0px 1px 3px 1px #811515;
 }
 .btn-box button:hover {
-  border: 2px solid rgb(235, 115, 115);
-  box-shadow: 0px 0px 2px 1px rgb(97, 97, 97);
-  color: #dd6456;
+  transform: scale(1.1);
 }
 .btn-box button:active {
+  transform: scale(1);
   box-shadow: none;
-  background-color: #eb7373;
-  color: #f7f7f7;
 }
 .anim {
   width: 100%;
