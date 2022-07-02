@@ -69,9 +69,10 @@ export default {
         const response = await ControlService.getServerVitals();
         let data = await response.serverVitals.stdout;
         const arr = data.split(/\r?\n/);
-        this.usedStotagePer = parseInt(arr[3]);
-        this.total = parseInt(arr[4]);
-        this.used = parseInt(arr[5]);
+        this.usedStotagePer = parseInt(arr[2]);
+        const arr2 = arr[3].split(" ");
+        this.total = parseInt(arr2[0]);
+        this.used = parseInt(arr2[1]);
       } catch (error) {
         console.log(error);
       }

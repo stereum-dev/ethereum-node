@@ -60,11 +60,9 @@ export default {
         const response = await ControlService.getServerVitals();
         let data = await response.serverVitals.stdout;
         const arr = data.split(/\r?\n/);
-        this.cpuValue = parseInt(arr[6]);
+        this.cpuValue = parseInt(arr[4]);
       } catch (error) {
-
         console.log(error);
-
       }
     },
   },

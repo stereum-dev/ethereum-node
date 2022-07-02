@@ -63,10 +63,11 @@ export default {
         const response = await ControlService.getServerVitals();
         let data = await response.serverVitals.stdout;
         const arr = data.split(/\r?\n/);
-        this.receiveValue = parseInt(arr[7]);
-        this.transmitValue = parseInt(arr[8]);
+        const arr2 = arr[5].split(" ");
+        this.receiveValue = parseInt(arr2[0]);
+        this.transmitValue = parseInt(arr2[1]);
       } catch (error) {
-        console.log("Loading...");
+        console.log(error);
       }
     },
   },

@@ -5,18 +5,14 @@
       <div class="p2pIco">
         <img src="../../../../public/img/icon/control/PeerToPeerIcon.svg" />
       </div>
-      <div class="circBarCont">
-        <div class="circleProc">
-          <div class="circProc_value" :style="verticalBar">
-            <span class="circCounter">{{ valPeer }}</span>
-          </div>
-        </div>
-      </div>
       <div class="p2pBarCont">
         <div class="p2pVal">
           <div class="p2pVal_value" :style="verticalBar"></div>
         </div>
       </div>
+    </div>
+    <div class="vlaueType">
+      <span>{{ valPeer }}</span>
     </div>
   </div>
 </template>
@@ -25,7 +21,7 @@
 export default {
   data() {
     return {
-      valPeer: 80,
+      valPeer: 64,
     };
   },
   computed: {
@@ -72,43 +68,16 @@ export default {
 .p2pIco img {
   width: 70%;
 }
-.circBarCont {
-  width: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.circCounter {
-  font-weight: bold;
-  font-size: large;
-}
-.circleProc {
-  width: 72%;
-  background: #33393e;
-  height: 90%;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  border: 2px solid #707070;
-  overflow: hidden;
-}
-.circProc_value {
-  width: 100%;
-  background: #336666;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-}
+
 .p2pBarCont {
-  width: 40%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 .p2pVal {
-  width: 70%;
+  width: 80%;
   height: 90%;
   background: #33393e;
   display: flex;
@@ -120,5 +89,13 @@ export default {
 .p2pVal_value {
   background: #568d50;
   width: 98%;
+}
+.vlaueType {
+  position: absolute;
+  top: 52%;
+  left: 52%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: -2px 2px 0 #000;
 }
 </style>

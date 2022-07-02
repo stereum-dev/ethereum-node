@@ -38,8 +38,9 @@ export default {
         const response = await ControlService.getServerVitals();
         let data = await response.serverVitals.stdout;
         const arr = data.split(/\r?\n/);
-        this.entireRam = parseInt(arr[1]);
-        this.usedRam = parseInt(arr[2]);
+        const arr2 = arr[1].split(" ");
+        this.entireRam = parseInt(arr2[0]);
+        this.usedRam = parseInt(arr2[1]);
       } catch (error) {
         console.log(error);
       }
