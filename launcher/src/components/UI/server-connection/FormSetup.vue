@@ -3,7 +3,10 @@
     <div class="error-box" v-if="errorMsgExists"></div>
     <div class="error-modal" v-if="errorMsgExists">
       <div class="title-box">
-        <img src="../../../../public/img/icon/no-connection.png" alt="icon" />
+        <img
+          src="../../../../public/img/icon/form-setup/form-error.png"
+          alt="icon"
+        />
       </div>
       <div class="description">
         <span>{{ this.error }}</span>
@@ -105,6 +108,7 @@
             id="keylocation"
             v-model="model.keylocation.value"
             @blur="checkInput(model.keylocation)"
+            required
           />
           <input
             v-if="!keyAuth"
@@ -113,6 +117,7 @@
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
+            required
           />
         </div>
         <div class="ssh">
@@ -805,73 +810,82 @@ input:invalid {
   z-index: 96;
 }
 .error-modal {
-  width: 30%;
+  width: 35%;
   height: 40%;
-  background-color: rgb(235, 235, 235);
+  background-color: rgb(232, 232, 232);
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
   z-index: 101;
 }
 .error-modal .title-box {
+  grid-column: 1/2;
+  grid-row: 1/4;
   width: 100%;
-  height: 30%;
-  background-color: rgb(213, 102, 102);
+  height: 100%;
   border-radius: 9px 9px 0 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .title-box img {
-  width: 19%;
-  height: 80%;
+  width: 90%;
+  height: 75%;
+  margin-left: 10px;
 }
 .error-modal .description {
-  width: 80%;
-  margin-top: 20px;
-  text-align: center;
+  grid-column: 2/4;
+  grid-row: 1/3;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .error-modal .description span {
-  width: 50%;
-  color: rgb(55, 55, 55);
+  width: 100%;
+  height: 50%;
+  margin-right: 10px;
+  color: #e81f05;
   font-size: 1.2rem;
   font-weight: 800;
-  word-break: break-word;
+  text-transform: uppercase;
   text-align: center;
 }
 
 .error-modal .btn-box {
+  grid-column: 2/4;
+  grid-row: 3;
   width: 100%;
-  height: 30%;
-  border-radius: 0 0 9px 9px;
+  height: 50%;
+
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .btn-box button {
-  width: 30%;
-  height: 60%;
+  width: 60%;
+  height: 80%;
+  margin-right: 10px;
   outline-style: none;
-  border: 2px solid rgb(235, 115, 115);
+  background-color: #e81f05;
+  border: 1px solid rgb(178, 178, 178);
   border-radius: 10px;
-  color: #de897f;
+  color: #eae9e9;
   font-size: 1rem;
   font-weight: 800;
-  box-shadow: 0px 1px 5px 1px rgb(97, 97, 97);
+  box-shadow: 0px 1px 3px 1px #811515;
 }
 .btn-box button:hover {
-  border: 2px solid rgb(235, 115, 115);
-  box-shadow: 0px 0px 2px 1px rgb(97, 97, 97);
-  color: #dd6456;
+  transform: scale(1.1);
 }
 .btn-box button:active {
+  transform: scale(1);
   box-shadow: none;
-  background-color: #eb7373;
-  color: #f7f7f7;
 }
 .anim {
   width: 100%;

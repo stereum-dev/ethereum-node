@@ -78,16 +78,14 @@ export default {
       displayingTasks: [],
     };
   },
-  beforeUpdate() {
-
-  },
+  beforeUpdate() {},
   mounted() {
-    this.polling = setInterval(ControlService.updateTasks, 2000)  //refresh playbook logs
-    this.refresh = setInterval(this.getTasks, 1000) //refresh data
+    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
+    this.refresh = setInterval(this.getTasks, 1000); //refresh data
   },
   beforeUnmount() {
-    clearInterval(this.polling)
-    clearInterval(this.refresh)
+    clearInterval(this.polling);
+    clearInterval(this.refresh);
   },
   computed: {
     ...mapWritableState(useTaskManager, {
@@ -97,47 +95,51 @@ export default {
       installIconSrc: "installIconSrc",
     }),
     mainTaskIcon() {
-      if(this.Tasks.some(task => task.status === null)){
+      if (this.Tasks.some((task) => task.status === null)) {
         return this.taskManagerIcons.activeIcon;
       }
-      if(this.Tasks.some(task => task.status === 'failed')){
+      if (this.Tasks.some((task) => task.status === "failed")) {
         return this.taskManagerIcons.failedIcon;
       }
-      if(this.Tasks.some(task => task.status === 'success')){
+      if (this.Tasks.some((task) => task.status === "success")) {
         return this.taskManagerIcons.successIcon;
       }
       return this.taskManagerIcons.progressIcon;
-        
     },
   },
   methods: {
-    getTasks: async function(){
-      this.Tasks = await ControlService.getTasks()
-      if(!this.showDropDownList){
-        this.displayingTasks = this.Tasks
-      }else{  //if DropDown is open only update what the user sees so the menue doesn't close
-        this.displayingTasks[0].subTasks = this.Tasks.find(t=>t.id === this.displayingTasks[0].id).subTasks
-        this.displayingTasks[0].status = this.Tasks.find(t=>t.id === this.displayingTasks[0].id).status
+    getTasks: async function () {
+      this.Tasks = await ControlService.getTasks();
+      if (!this.showDropDownList) {
+        this.displayingTasks = this.Tasks;
+      } else {
+        //if DropDown is open only update what the user sees so the menue doesn't close
+        this.displayingTasks[0].subTasks = this.Tasks.find(
+          (t) => t.id === this.displayingTasks[0].id
+        ).subTasks;
+        this.displayingTasks[0].status = this.Tasks.find(
+          (t) => t.id === this.displayingTasks[0].id
+        ).status;
       }
     },
     taskModalHandler() {
-      this.showDropDownList = false
+      this.showDropDownList = false;
       this.isTaskModalActive = !this.isTaskModalActive;
     },
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
       if (item.showDropDown) {
-        this.showDropDownList = true
-        this.displayingTasks = this.Tasks.filter(e => e.id === item.id)
+        this.showDropDownList = true;
+        this.displayingTasks = this.Tasks.filter((e) => e.id === item.id);
       } else {
-        this.showDropDownList = false
-        this.displayingTasks = this.Tasks
+        this.showDropDownList = false;
+        this.displayingTasks = this.Tasks;
       }
     },
-    listCleanerHandler: async function() {
-      this.displayingTasks = []
-      this.Tasks = []
-      await ControlService.clearTasks()
+    listCleanerHandler: async function () {
+      this.displayingTasks = [];
+      this.Tasks = [];
+      await ControlService.clearTasks();
     },
   },
 };
@@ -202,10 +204,35 @@ export default {
   align-items: center;
   padding-top: 5px;
 }
+/* width */
+.table-content::-webkit-scrollbar {
+  width: 5px;
+  margin: 5px 0;
+  height: 5px;
+}
+
+/* Track */
+.table-content::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 10px 0;
+  height: 5px;
+  cursor: pointer;
+}
+
+/* Handle */
+.table-content::-webkit-scrollbar-thumb {
+  background: rgb(34, 137, 127);
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+.table-content::-webkit-scrollbar-thumb:hover {
+  background: rgb(28, 87, 81);
+}
 .table-content .table-row {
-  width: 95%;
-  height: 12%;
-  border: 2px solid #888888;
+  width: 97%;
+  height: 15%;
+  border: 2px solid #a7a7a7;
   border-radius: 20px;
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
   margin-top: 5px;
@@ -228,7 +255,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: #5ed285;
+  background-color: 	#7AC16D;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -238,16 +265,28 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: rgb(92, 182, 251);
+  background-color: #7ECDE4 ;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .table-row-failed .failed-icon,
-.table-row-active .active-icon,
+.table-row-active .active-icon {
+  width: 20px;
+  height: 20px;
+  /* background-color: #292929; */
+  background-color: #323232;
+  border: 2px solid #444444;
+  border-radius: 50%;
+  margin-left: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .table-row-success .success-icon {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   /* background-color: #292929; */
   background-color: #323232;
   border: 2px solid #444444;
@@ -267,7 +306,7 @@ export default {
 }
 .active-icon img {
   width: 20px;
-  height: 20px;
+  height: 16px;
 }
 
 .table-row-failed span,
@@ -276,9 +315,10 @@ export default {
 .table-row-progress span {
   width: 70%;
   text-align: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(53, 53, 53);
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(56, 56, 56);
 }
 .list-cleaner {
   width: 97%;
