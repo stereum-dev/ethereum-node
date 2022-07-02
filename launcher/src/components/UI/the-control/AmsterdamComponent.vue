@@ -11,7 +11,7 @@
         <div class="epochBox">
           <div class="ttlEpoch"><span>EPOCH</span></div>
           <div class="epochText">
-            <span>12345</span>
+            <span>{{ counter }} #</span>
           </div>
           <div class="downTtl"><span class="downTtl">CONFIRMED</span></div>
         </div>
@@ -25,15 +25,49 @@
           <span>-00h - 00m - 00s</span>
         </div>
         <div class="circleArrow">
-          <img
-            src="../../../../public/img/icon/arrows/SynchronisationIconSynchronized.gif"
-          />
+          <img :src="activeIco" />
         </div>
       </div>
     </div>
   </div>
 </template>
-
+<script>
+export default {
+  data() {
+    return {
+      counter: 0,
+      syncIco: [
+        {
+          id: 1,
+          name: "error",
+          icon: "/img/icon/arrows/SynchronisationIconError.gif",
+        },
+        {
+          id: 2,
+          name: "active",
+          icon: "/img/icon/arrows/SynchronisationIconActive.gif",
+        },
+        {
+          id: 3,
+          name: "synched",
+          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
+        },
+      ],
+    };
+  },
+  computed: {
+    errorIco() {
+      return this.syncIco[0].icon;
+    },
+    activeIco() {
+      return this.syncIco[1].icon;
+    },
+    synchedIco() {
+      return this.syncIco[2].icon;
+    },
+  },
+};
+</script>
 <style scoped>
 .amsterdamparent {
   display: flex;
