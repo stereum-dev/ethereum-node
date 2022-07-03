@@ -24,7 +24,12 @@
           <span>000000000 days</span>
           <span>-00h - 00m - 00s</span>
         </div>
-        <div class="circleArrow">
+        <div
+          class="circleArrow"
+          @mouseover="showSyncInfo = true"
+          @mouseleave="showSyncInfo = false"
+        >
+          <sync-info v-if="showSyncInfo">test test test test%</sync-info>
           <img :src="activeIco" />
         </div>
       </div>
@@ -32,9 +37,15 @@
   </div>
 </template>
 <script>
+import SyncInfo from "./SyncInfo.vue";
 export default {
+  components: { SyncInfo },
+  comments: {
+    SyncInfo,
+  },
   data() {
     return {
+      showSyncInfo: false,
       counter: 0,
       syncIco: [
         {
