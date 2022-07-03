@@ -107,7 +107,7 @@ export default {
   grid-column: 1/5;
   grid-row: 3/4;
   border: 4px solid #929292;
-  width: 55%;
+  width: 50%;
   height: 90%;
   margin: 10px auto;
   background: #2a4243;
