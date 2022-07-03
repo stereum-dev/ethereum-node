@@ -17,6 +17,21 @@
         </div>
       </div> -->
     </div>
+    <div class="item-container">
+      <div
+        class="item-column"
+        v-for="(install, index) in installation"
+        :key="index"
+      >
+        <router-link class="lintTtl" :to="install.path"
+          ><button-installation
+            onmousedown="return false"
+            :img="install.img"
+            :url="install.img2"
+          ></button-installation
+        ></router-link>
+      </div>
+    </div>
     <div class="message-box" v-if="active">
       <p class="msg-title">
         CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED
@@ -36,21 +51,6 @@
       >
         {{ message }}
       </span>
-    </div>
-    <div class="item-container">
-      <div
-        class="item-column"
-        v-for="(install, index) in installation"
-        :key="index"
-      >
-        <router-link class="lintTtl" :to="install.path"
-          ><button-installation
-            onmousedown="return false"
-            :img="install.img"
-            :url="install.img2"
-          ></button-installation
-        ></router-link>
-      </div>
     </div>
   </div>
 </template>
@@ -75,7 +75,7 @@ export default {
   created() {
     setTimeout(() => {
       this.active = false;
-    }, 3000);
+    }, 5000);
     this.checkOS();
     this.randomValue();
   },
@@ -123,10 +123,11 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  box-sizing: border-box;
 }
 .item-container {
   width: 80% !important;
-  height: 40% !important;
+  height: 30% !important;
   margin: 10px auto !important;
   position: relative;
   border-radius: 40px;
@@ -191,24 +192,24 @@ export default {
 .message-box {
   width: 100% !important;
   height: 50px;
-  margin-top: 30px;
+  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.message-box .check-msg {
-  width: 50%;
-  height: 100%;
+.result-box .check-msg {
+  padding-bottom: 5px;
+  border-bottom: 2px solid rgb(189, 189, 189);
   text-align: center;
   font-size: 1rem;
   font-weight: 800;
 }
 .message-box .msg-title {
-  width: 70%;
+  width: 48%;
   height: 30%;
   text-align: center;
-  font-size: 1rem !important;
+  font-size: 1rem;
   font-weight: 700;
   color: #eee;
   display: flex;
@@ -218,7 +219,8 @@ export default {
 .result-box {
   width: 100% !important;
   height: 50px;
-  margin-top: 30px;
+  margin-bottom: 20px;
+  margin-right: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -226,7 +228,9 @@ export default {
 .result-box img {
   width: 30px;
   height: 30px;
-  margin-right: 20px;
+  margin-right: 10px;
+  border-radius: 100%;
+  box-shadow: 1px 1px 3px 1px rgb(16, 60, 27);
 }
 .progress-container {
   width: 82% !important;
@@ -321,9 +325,10 @@ export default {
   }
 }
 .supported {
-  color: #7bbf7f;
+  color: #55b568;
   font-size: 1rem;
   font-weight: 800;
+  text-shadow: 1px 1px 1px rgb(19, 55, 36);
 }
 .notSupported {
   color: #c83e29;

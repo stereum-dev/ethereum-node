@@ -269,8 +269,7 @@ export default {
 }
 .notAvailable {
   opacity: 0.2;
+  pointer-events: none;
 }
-.notAvailable:hover {
-  transform: scale(1) !important;
-}
+
 </style>
