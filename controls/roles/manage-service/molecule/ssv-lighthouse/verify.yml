@@ -43,25 +43,23 @@
       msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
     pause:
-      minutes: 10
+      minutes: 1
   # lh beacon & ssv logs
   - name: Lighthouse beacon node
-    command: "docker logs --tail=150 stereum-d00ff1ae-7161-11ec-915c-0f48d393560f"
+    command: "docker logs --tail=250 stereum-d00ff1ae-7161-11ec-915c-0f48d393560f"
     register: beacon
     until:
-      - beacon.stderr is not search('est_time')
+      - beacon.stderr is search('est_time')
       - beacon.stderr is not search('Failed to start beacon node')
-      - beacon.stderr is search('sync_state:\ Synced')
     retries: 360
     delay: 10
   - name: Blox-SSV connection beacon node
-    command: "docker logs --tail=250 stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
+    command: "docker logs stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
     register: blox_ssv
     until:
-      - blox_ssv.stdout is search('connected topics')
-      - blox_ssv.stdout is search('no indices\, duties won\'t be fetched')
-      - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is not search('errors')
+      - blox_ssv.stdout is search('discovery is ready')
+      - blox_ssv.stdout is search('p2p services were configured')
+      - blox_ssv.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
