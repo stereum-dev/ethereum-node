@@ -1,4 +1,9 @@
 ---
+- name: Apply stereum configuration to this setup
+  set_fact:
+    stereum: "{{ stereum_static }}"
+  when: stereum is undefined
+
 - include_tasks: update-os-ubuntu.yml
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
