@@ -4,7 +4,7 @@
       <div class="icon-box">
         <img
           v-if="isTestnetActive"
-          class="textnet-icon"
+          class="testnet-icon"
           src="../../../../public/img/icon/click-installation/testnet-icon.png"
           alt="icon"
         />
@@ -39,7 +39,10 @@
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === this.selectedPreset?.id,
+                  selectedItem:
+                    item.id === this.selectedPreset?.id &&
+                    item.serviceAvailable,
+                  notAvailable: !item.serviceAvailable,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -52,11 +55,14 @@
               :key="index"
             >
               <img
-                onmousedown="return false"
+                @mousedown.stop
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem: item.id === this.selectedPreset?.id,
+                  selectedItem:
+                    item.id === this.selectedPreset?.id &&
+                    item.serviceAvailable,
+                  notAvailable: !item.serviceAvailable,
                 }"
                 @click="selectItemToInstall(item)"
               />
@@ -71,7 +77,7 @@
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import { useServices } from '@/store/services';
+import { useServices } from "@/store/services";
 export default {
   data() {
     return {
@@ -116,10 +122,25 @@ export default {
       }
     },
     selectItemToInstall: async function (item) {
-      const constellation = await ControlService.getOneClickConstellation(item.name);
-      let includedPlugins = this.allServices.filter(service => constellation.includes(service.service));
-      if(includedPlugins.map(e => e.service).includes("BloxSSVService") || includedPlugins.map(e => e.service).includes("RocketpoolService")){
-        includedPlugins.splice(includedPlugins.findIndex(e => (e.service != 'BloxSSVService' && e.service != 'RocketpoolService' && e.category === 'validator')),1)
+      const constellation = await ControlService.getOneClickConstellation(
+        item.name
+      );
+      let includedPlugins = this.allServices.filter((service) =>
+        constellation.includes(service.service)
+      );
+      if (
+        includedPlugins.map((e) => e.service).includes("BloxSSVService") ||
+        includedPlugins.map((e) => e.service).includes("RocketpoolService")
+      ) {
+        includedPlugins.splice(
+          includedPlugins.findIndex(
+            (e) =>
+              e.service != "BloxSSVService" &&
+              e.service != "RocketpoolService" &&
+              e.category === "validator"
+          ),
+          1
+        );
       }
       item.includedPlugins = includedPlugins;
       this.selectedPreset = item;
@@ -157,7 +178,7 @@ export default {
   border-radius: 5px;
   background-color: transparent;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: rgb(97, 194, 255);
   text-transform: uppercase;
@@ -168,6 +189,7 @@ export default {
 .select-box #selector option {
   width: 100%;
   height: 100%;
+  margin-left: 5px;
   border: none !important;
   box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
     var(--tw-ring-color);
@@ -183,7 +205,7 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  width: 77%;
+  width: 90%;
   height: 100%;
 }
 .plugin-table {
@@ -227,7 +249,7 @@ export default {
 .mainnet-plugin img,
 .testnet-plugin img {
   width: 52%;
-  height: 79%;
+  height: 75%;
   cursor: pointer;
 }
 .mainnet-plugin img:hover,
@@ -242,7 +264,12 @@ export default {
 }
 .selectedItem {
   border: 2px solid rgb(53, 178, 246) !important;
-  border-radius: 10px !important;
+  border-radius: 6px !important;
   box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
+.notAvailable {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 </style>

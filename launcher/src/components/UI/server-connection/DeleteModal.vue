@@ -3,17 +3,14 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/form-setup/warning.png"
-          alt=""
-        />
+        <img src="../../../../public/img/icon/form-setup/warning.png" alt="" />
       </div>
       <div class="update-message">
         <span>Do you want to remove the saved connection?</span>
       </div>
-      <div class="update-btn">
+      <div class="remove-btn">
         <div class="confirm-box" @click="$emit('deleteServer')">
-          <span>Delete</span>
+          <span>Remove</span>
         </div>
         <span class="close">Click outside to close.</span>
       </div>
@@ -43,7 +40,7 @@ export default {};
   z-index: 311;
 }
 .remove-modal-content {
-  width: 50%;
+  width: 40%;
   height: 40%;
   border-radius: 1rem;
   background-color: #324844;
@@ -52,7 +49,7 @@ export default {};
   opacity: 1;
   position: fixed;
   top: 30%;
-  left: 25%;
+  left: 30%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -72,7 +69,7 @@ export default {};
   height: 45px;
 }
 .update-message {
-  width: 90%;
+  width: 95%;
   height: 40%;
   display: flex;
   flex-direction: column;
@@ -86,16 +83,17 @@ export default {};
 }
 .update-message span:last-child {
   color: rgb(197, 197, 197);
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  text-align: center;
 }
 /* .update-message span {
   color: rgb(195, 195, 195);
   font-size: 1rem;
   font-weight: 700;
 } */
-.update-btn {
+.remove-btn {
   width: 100%;
   height: 30%;
   display: flex;
@@ -105,31 +103,31 @@ export default {};
 }
 .confirm-box {
   width: 20%;
-  height: 50%;
+  height: 45%;
   margin-right: 20px;
-  border-radius: 30px;
-  border: 2px solid #8f8f8f;
-  background-color: #32564d;
+  border-radius: 10px;
+  border: 1px solid #8f8f8f;
+  background-color: #c93d24;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
 }
 
 .confirm-box:hover {
-  color: #dadada;
-  background-color: #2c433d;
-  transform: scale(1.05);
-  transition-duration:50ms;
+  transform: scale(1.1);
+  transition-duration: 100ms;
+  border: 1px solid #4e0a0a;
 }
 .confirm-box:active {
   transform: scale(1);
   box-shadow: none;
+  transition-duration: 100ms;
 }
 .close {
   color: rgb(154, 154, 154);

@@ -11,11 +11,11 @@
           OUT
         </p>
       </div>
-      <div class="progress-container">
+      <!-- <div class="progress-container">
         <div class="progress-bg">
-          <circle-loading :message="message" :open="running"></circle-loading>
+          <circle-loading :open="running"></circle-loading>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="item-container">
       <div
@@ -32,6 +32,26 @@
         ></router-link>
       </div>
     </div>
+    <div class="message-box" v-if="active">
+      <p class="msg-title">
+        CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED
+        <span class="dot-flashing"></span>
+      </p>
+    </div>
+    <div class="result-box" v-if="!active">
+      <img
+        src="/img/icon/welcome-page/like.png"
+        alt="icon"
+        v-if="isSupported"
+      />
+      <img src="/img/icon/welcome-page/dislike.png" alt="icon" v-else />
+      <span
+        class="check-msg"
+        :class="{ supported: isSupported, notSupported: !isSupported }"
+      >
+        {{ message }}
+      </span>
+    </div>
   </div>
 </template>
 <script>
@@ -41,18 +61,26 @@ import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
 export default {
-  created() {
-    this.checkOS();
-    this.randomValue();
-  },
   components: { ButtonInstallation, CircleLoading },
   data() {
     return {
+      active: true,
       running: true,
       message: "",
+      isSupported: false,
       value: 1,
       max: 100,
     };
+  },
+  created() {
+    setTimeout(() => {
+      this.active = false;
+    }, 5000);
+    this.checkOS();
+    this.randomValue();
+  },
+  mounted() {
+    console.log(this.message);
   },
   computed: {
     ...mapState(useWelcomeStore, { installation: "installation" }),
@@ -65,6 +93,7 @@ export default {
       const data = await response;
       if (data == "Ubuntu" || data == "CentOS") {
         this.message = data.toUpperCase() + " IS A SUPPORTED OS";
+        this.isSupported = true;
       } else if (data.name !== undefined) {
         this.message =
           data.name.toUpperCase() + ": " + data.message.toUpperCase();
@@ -92,12 +121,14 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
+  box-sizing: border-box;
 }
 .item-container {
   width: 80% !important;
-  height: 40% !important;
-  margin: 30px auto !important;
+  height: 30% !important;
+  margin: 10px auto !important;
   position: relative;
   border-radius: 40px;
   display: flex;
@@ -124,10 +155,10 @@ export default {
 
 #welcome-header {
   border: 5px solid #929292;
-  margin: 6% auto 2% auto;
   width: 40%;
   max-width: 50%;
-  height: 50px;
+  height: 52px;
+  margin: 30px auto;
   border-radius: 40px;
   background-color: #194747;
   opacity: 0.88;
@@ -150,13 +181,56 @@ export default {
   text-transform: uppercase;
 }
 .middle-box {
-  width: 90% !important;
-  height: 35% !important;
-  margin: 10px auto !important;
+  width: 100% !important;
+  height: 20% !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.message-box {
+  width: 100% !important;
+  height: 50px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.result-box .check-msg {
+  padding-bottom: 5px;
+  border-bottom: 2px solid rgb(189, 189, 189);
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.message-box .msg-title {
+  width: 48%;
+  height: 30%;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result-box {
+  width: 100% !important;
+  height: 50px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result-box img {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  border-radius: 100%;
+  box-shadow: 1px 1px 3px 1px rgb(16, 60, 27);
 }
 .progress-container {
   width: 82% !important;
@@ -166,6 +240,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .progress-bg {
   width: 59% !important;
   height: 70% !important;
@@ -179,7 +254,7 @@ export default {
   opacity: 1;
 }
 #txt {
-  width: 85% !important;
+  width: 75% !important;
   height: 95% !important;
   border: 5px solid #929292;
   margin: 0 auto !important;
@@ -196,5 +271,68 @@ export default {
   font-weight: 600;
   color: rgb(225, 225, 225);
   text-align: center;
+}
+.dot-flashing {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  align-self: flex-end;
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #1068a3;
+  }
+  50%,
+  100% {
+    background-color: #eee;
+  }
+}
+.supported {
+  color: #55b568;
+  font-size: 1rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 1px rgb(19, 55, 36);
+}
+.notSupported {
+  color: #c83e29;
+  font-size: 1rem;
+  font-weight: 800;
 }
 </style>

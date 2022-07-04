@@ -879,9 +879,11 @@ input:invalid {
   font-size: 1rem;
   font-weight: 800;
   box-shadow: 0px 1px 3px 1px #811515;
+  transition-duration: 100ms;
 }
 .btn-box button:hover {
   transform: scale(1.1);
+  border: 1px solid rgb(59, 11, 11);
 }
 .btn-box button:active {
   transform: scale(1);
@@ -903,5 +905,10 @@ input:invalid {
 .anim img {
   width: 35%;
   height: 45%;
+}
+input:invalid {
+  color: rgb(51, 51, 51);
+  border-color: rgb(226, 107, 86) !important;
+  box-shadow: none;
 }
 </style>
