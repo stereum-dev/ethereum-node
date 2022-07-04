@@ -160,7 +160,16 @@ export class NodeConnection {
       let playbookRuns = [];
       try {
         playbookRuns.push(
-          await this.runPlaybook("setup", { stereum_role: "setup" })
+          await this.runPlaybook(
+            "setup",
+            {
+              stereum_role: "setup",
+              stereum_args: {
+                settings: {
+                  controls_install_path: this.installationDirectory
+                }
+              }
+            })
         );
       } catch (err) {
         log.error("foo", err);
@@ -204,7 +213,7 @@ export class NodeConnection {
       if (extraVars) {
         extraVarsJson = JSON.stringify(extraVars);
       }
-      
+
       let ansibleResult;
       this.taskManager.tasks.push({name: playbook, ref: playbookRunRef})
       try {
@@ -453,34 +462,34 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString()
     this.taskManager.tasks.push({name: "Delete Node", otherRunRef: ref,})
 
-    this.taskManager.otherSubTasks.push({name: "remove Docker-Container", otherRunRef: ref, status: 
+    this.taskManager.otherSubTasks.push({name: "remove Docker-Container", otherRunRef: ref, status:
       !(await this.sshService.exec("docker rm -vf $(docker ps -aq)")).rc
     })
-    
-    this.taskManager.otherSubTasks.push({name: "remove Docker-Images", otherRunRef: ref, status: 
+
+    this.taskManager.otherSubTasks.push({name: "remove Docker-Images", otherRunRef: ref, status:
       !(await this.sshService.exec("docker rmi -f $(docker images -aq)")).rc
     })
 
-    this.taskManager.otherSubTasks.push({name: "clean up Docker-Volumes", otherRunRef: ref, status: 
+    this.taskManager.otherSubTasks.push({name: "clean up Docker-Volumes", otherRunRef: ref, status:
       !(await this.sshService.exec("docker volume prune -f")).rc
     })
 
-    this.taskManager.otherSubTasks.push({name: "clean up Docker", otherRunRef: ref, status: 
+    this.taskManager.otherSubTasks.push({name: "clean up Docker", otherRunRef: ref, status:
       !(await this.sshService.exec("docker system prune -a -f")).rc
     })
 
     if(this.settings){
-      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status: 
+      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status:
         !((await this.sshService.exec("rm -rf " + this.settings.stereum.settings.controls_install_path)).rc)
       })
     }else{
       this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status: true})
     }
 
-    this.taskManager.otherSubTasks.push({name: "remove Stereum Settings", otherRunRef: ref, status: 
+    this.taskManager.otherSubTasks.push({name: "remove Stereum Settings", otherRunRef: ref, status:
       !((await this.sshService.exec("rm -rf /etc/stereum")).rc)
     })
-    
+
     this.taskManager.finishedOtherTasks.push({otherRunRef: ref,})
     this.settings = undefined;
     return "Node destroyed";
@@ -503,7 +512,7 @@ export class NodeConnection {
     df --total -m | tail -1 | awk '{print $3/$2*100}' &&
     df --total -m | tail -1 | awk '{print $2" "$3}' &&
     sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
-    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p' 
+    sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p'
     `);
 
     response.serverVitals = serverVitals;
