@@ -42,22 +42,23 @@
       msg: "{{ ssv_keys }}"
   - name: Waiting for the services to start properly
     pause:
-      minutes: 10
+      minutes: 1
   # nimbus beacon & ssv logs
   - name: nimbus beacon node
     command: "docker logs --tail=250 stereum-493f2578-7e13-11ec-80bb-1b593d9699ff"
     register: beacon
-    until: beacon.stdout is search('sync=synced')
+    until:
+      - beacon.stdout is search('current_peers=')
+      - beacon.stdout is not search('current_peers=0')
     retries: 360
     delay: 10
   - name: Blox-SSV beacon node connection
-    command: "docker logs --tail=250 stereum-52d77bd0-7e13-11ec-a95e-bb669ccf3e66"
+    command: "docker logs stereum-52d77bd0-7e13-11ec-a95e-bb669ccf3e66"
     register: blox_ssv
     until:
-      - blox_ssv.stdout is search('connected topics')
-      - blox_ssv.stdout is search('no indices\, duties won\'t be fetched')
-      - blox_ssv.stdout is not search('beacon node is not healthy')
-      - blox_ssv.stdout is not search('errors')
+      - blox_ssv.stdout is search('discovery is ready')
+      - blox_ssv.stdout is search('p2p services were configured')
+      - blox_ssv.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
