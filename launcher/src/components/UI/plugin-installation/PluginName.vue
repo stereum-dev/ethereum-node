@@ -70,12 +70,17 @@
                         v-for="(item, idx) in filteredPluginsOnCategory"
                         :key="idx"
                         @click="pluginChangeHandler(plugin, item, index)"
+                        @mouseover="pluginExChange(plugin)"
+                        @mouseleave="item.displayTooltip = false"
                       >
                         <img
                           :src="item.icon"
                           alt="icon"
                           @mousedown.prevent.stop
                         />
+                        <span class="tooltip" v-if="plugin.displayTooltip">{{
+                          item.name
+                        }}</span>
                       </div>
                     </div>
                   </change-modal>
@@ -116,7 +121,7 @@ import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import { useServices } from '../../../store/services';
+import { useServices } from "../../../store/services";
 export default {
   components: { ToggleButton, ChangeModal },
 
@@ -194,6 +199,12 @@ export default {
         (item) => item.category === element.category
       );
     },
+    // runTooltip(el) {
+    //   this.filteredPluginsOnName = this.allPlugins.filter((param) => {
+    //     param.id == el.id;
+    //   }).forEach(e => {
+    //   })
+    // },
   },
 };
 </script>
@@ -379,6 +390,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .replaced-plugins .item img {
   width: 30px;
@@ -662,5 +674,18 @@ export default {
 .faildreq {
   color: rgb(225, 54, 54) !important;
   border: 1px solid rgb(225, 54, 54) !important;
+}
+.tooltip {
+  width: max-content;
+  height: 25px;
+  padding: 5px;
+  background-color: rgb(36, 36, 36);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(222, 221, 221);
+  text-align: center;
 }
 </style>

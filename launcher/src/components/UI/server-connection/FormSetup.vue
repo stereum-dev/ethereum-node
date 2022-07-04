@@ -906,4 +906,9 @@ input:invalid {
   width: 35%;
   height: 45%;
 }
+input:invalid {
+  color: rgb(51, 51, 51);
+  border-color: rgb(226, 107, 86) !important;
+  box-shadow: none;
+}
 </style>

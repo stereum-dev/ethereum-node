@@ -174,7 +174,7 @@ export const useServices = defineStore("services", {
                     displayCategory: "vlc",
                     displayTooltip: false,
                     path: "/teku",
-                    icon: require("../../public/img/icon/plugin-icons/validator/teku-validator.png"),
+                    icon: require("../../public/img/icon/plugin-icons/validator/Teku.png"),
                     sIcon: require("../../public/img/icon/plugin-icons/validator/Teku-s.png"),
                     headerOption: false,
                     drag: true,
