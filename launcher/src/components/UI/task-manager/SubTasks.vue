@@ -8,16 +8,13 @@
           :key="index"
           :class="{
             'skipping-installation': item.status == 'SKIPPED',
-            'success-installation': item.status == 'OK',
-            'failed-installation': item.status == 'FAILED',
+            'success-installation': item.status == 'OKi',
+            'failed-installation': item.status == 'OK',
           }"
+          @mouseover="tooltipShowHandler(item)"
+          @mouseleave="tooltipHideHandler(item)"
         >
-          <div
-            class="success-box"
-            v-if="item.status == 'OK'"
-            @mouseover="tooltipShowHandler(item)"
-            @mouseleave="tooltipHideHandler(item)"
-          >
+          <!-- <div class="success-box" v-if="item.status == 'OK'">
             <span class="itemAction" v-if="displayTaskResult">{{
               item.action
             }}</span>
@@ -31,36 +28,37 @@
             <div class="success-tooltip" v-if="item.showTooltip">
               <span>{{ item.action }}</span>
             </div>
-          </div>
+          </div> -->
           <div
             class="failed-box"
-            v-if="item.status == 'FAILED'"
-            @mouseover="tooltipShowHandler(item)"
-            @mouseleave="tooltipHideHandler(item)"
+            v-if="item.status == 'OK'"
+            @click="openTerminalHandler(item)"
           >
-            <span v-if="displayTaskResult">{{ item.action }}</span>
-            <span v-else>{{ item.name }}</span>
-            <div class="copy-icon" @click="copyErrorText(item.action)">
-              <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-            </div>
-            <div class="loading-box">
+            <span class="error" v-if="displayTaskResult">{{
+              item.action
+            }}</span>
+            <span class="noError" v-else>{{ item.name }}</span>
+            <div class="error-icon">
               <img
-                src="../../../../public/img/icon/task-manager-icons/close3.png"
+                src="../../../../public/img/icon/task-manager-icons/cancel.png"
                 alt=""
               />
-            </div>
-            <div class="failed-tooltip" v-if="item.showTooltip">
-              <span>{{ item.action }}</span>
+              <div class="failed-tooltip" v-if="item.showTooltip">
+                <span>Click To Display Error</span>
+              </div>
             </div>
           </div>
-          <div
-            class="skipped-box"
-            v-if="item.status == 'SKIPPED'"
-            @mouseover="tooltipShowHandler(item)"
-            @mouseleave="tooltipHideHandler(item)"
-          >
-            <span v-if="displayTaskResult">{{ item.action }}</span>
-            <span v-else>{{ item.name }}</span>
+          <error-terminal
+            v-if="showErrorterminal"
+            @close-terminal="hideTerminalHandler"
+            @copy-error="copyErrorText(item)"
+            :item="item"
+          ></error-terminal>
+          <div class="skipped-box" v-if="item.status == 'SKIPPED'">
+            <span class="error" v-if="displayTaskResult">{{
+              item.action
+            }}</span>
+            <span class="noError" v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
                 src="../../../../public/img/icon/task-manager-icons/check3.png"
@@ -78,11 +76,14 @@
   </div>
 </template>
 <script>
+import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
+  components: { ErrorTerminal },
   props: ["subTasks"],
   data() {
     return {
       displayTaskResult: false,
+      showErrorterminal: false,
     };
   },
   created() {
@@ -96,8 +97,8 @@ export default {
     }
   },
   methods: {
-    copyErrorText(text) {
-      let errorToCopy = text;
+    copyErrorText(item) {
+      let errorToCopy = item.action;
       this.$copyText(errorToCopy)
         .then(() => {
           console.log("copied!");
@@ -112,11 +113,20 @@ export default {
         el.showTooltip = true;
       });
     },
-    tooltipHideHandler() {
+    tooltipHideHandler(el) {
       this.subTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
+    },
+    openTerminalHandler(el) {
+      this.subTasks.filter((item) => {
+        item.action.toLowerCase() === el.action.toLowerCase();
+        this.showErrorterminal = true;
+      });
+    },
+    hideTerminalHandler() {
+      this.showErrorterminal = false;
     },
   },
 };
@@ -148,6 +158,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .subTask-row .skipped-box,
@@ -183,19 +194,40 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.error-icon {
+  width: 10%;
+  height: 20px;
+  margin-right: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.error-icon img {
+  width: 15px;
+  height: 15px;
+}
+
 .subTask-row .skipped-box img,
-.subTask-row .success-box img,
-.subTask-row .failed-box img {
+.subTask-row .failed-box img,
+.subTask-row .success-box img {
   width: 70%;
   height: 70%;
 }
 
 .subTask-row .skipped-box span,
-.subTask-row .success-box span,
-.subTask-row .failed-box span {
+.subTask-row .success-box span {
   font-size: 0.7rem;
   font-weight: 800;
   color: #5c5c5c;
+  margin-left: 10px;
+  width: 80%;
+  overflow: hidden;
+  text-transform: capitalize;
+}
+.subTask-row .failed-box span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #cbcbcb;
   margin-left: 10px;
   width: 80%;
   overflow: hidden;
@@ -207,7 +239,7 @@ export default {
   border-radius: 15px;
 }
 .failed-installation {
-  background-color: rgb(219, 74, 74);
+  background-color: #aa4343;
   border-radius: 15px;
 }
 .skipping-installation {
@@ -217,19 +249,18 @@ export default {
 .success-tooltip,
 .failed-tooltip,
 .skipped-tooltip {
-  width: 90%;
-  max-width: 246px;
-  min-height: 25px;
-  max-height: fit-content;
+  width: max-content;
+  height: 25px;
   border: 1px solid #979797;
   border-radius: 6px;
   position: absolute;
-  top: -10px;
+  top: -20px;
   left: 10px;
-  padding: 5px 7px;
+  padding: 2px;
   background-color: rgb(41, 41, 41);
   text-align: left;
-  z-index: 500;
+  z-index: 1000;
+  display: inline-block;
 }
 .success-tooltip::after,
 .failed-tooltip::after,
@@ -242,17 +273,34 @@ export default {
   border-width: 5px;
   border-style: solid;
   border-color: black transparent transparent transparent;
+  z-index: 1001;
+}
+.failed-tooltip {
+  width: max-content;
+  height: 25px;
+  border: 1px solid #979797;
+  border-radius: 6px;
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  padding: 3px 2px 2px 0;
+  background-color: rgb(41, 41, 41);
+  text-align: left;
+  z-index: 1000;
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: left;
+  color: rgb(211, 211, 211) !important;
 }
 .success-tooltip span,
 .failed-tooltip span,
 .skipped-tooltip span {
-  width: 100%;
-  height: 100%;
+  width: max-content;
+  margin-right: 4px;
   font-size: 0.7rem;
   font-weight: 500;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  color: rgb(155, 155, 155) !important;
+  text-align: left;
+  color: rgb(211, 211, 211) !important;
 }
 </style>
