@@ -191,7 +191,7 @@ export const useServices = defineStore("services", {
                 },
                 {
                     id: 9,
-                    name: "Blox SSV",
+                    name: "Blox-SSV",
                     service: "BloxSSVService",
                     category: "validator",
                     displayCategory: "vlc",

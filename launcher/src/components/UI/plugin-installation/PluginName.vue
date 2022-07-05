@@ -163,29 +163,54 @@ export default {
           ...item,
         };
       });
-    this.sortPlugins()
+    this.sortPlugins();
   },
   methods: {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
-      this.selectedPreset.includedPlugins[idx] = item;  //no matter what change the service you clicked on
-      if(this.selectedPreset.name === "staking"){       //if the preset is staking:
-        if(item.category === "consensus"){              //and you just changed the consensus client
-          let valIndex = this.selectedPreset.includedPlugins.findIndex(e => e.category === "validator")   //find the index of the current validator service
-          this.selectedPreset.includedPlugins[valIndex] = this.allPlugins.find(e => e.service === item.name + "ValidatorService") //change the validator service to the matching one
-        }else if(item.category === "validator"){        //otherwise if you changed the validator client do the same for the consensus client 
-          let conIndex = this.selectedPreset.includedPlugins.findIndex(e => e.category === "consensus")
-          this.selectedPreset.includedPlugins[conIndex] = this.allPlugins.find(e => e.service === item.name + "BeaconService")
+      this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
+      if (this.selectedPreset.name === "staking") {
+        //if the preset is staking:
+        if (item.category === "consensus") {
+          //and you just changed the consensus client
+          let valIndex = this.selectedPreset.includedPlugins.findIndex(
+            (e) => e.category === "validator"
+          ); //find the index of the current validator service
+          this.selectedPreset.includedPlugins[valIndex] = this.allPlugins.find(
+            (e) => e.service === item.name + "ValidatorService"
+          ); //change the validator service to the matching one
+        } else if (item.category === "validator") {
+          //otherwise if you changed the validator client do the same for the consensus client
+          let conIndex = this.selectedPreset.includedPlugins.findIndex(
+            (e) => e.category === "consensus"
+          );
+          this.selectedPreset.includedPlugins[conIndex] = this.allPlugins.find(
+            (e) => e.service === item.name + "BeaconService"
+          );
         }
       }
     },
-    sortPlugins(){  //sorts includedPlugins in this order: EXECUTION -> CONSENSUS -> VALIDATOR -> SERVICE
-      if(this.selectedPreset.includedPlugins){
-        const ec = this.selectedPreset.includedPlugins.filter(p => p.category === 'execution')
-        const cc = this.selectedPreset.includedPlugins.filter(p => p.category === 'consensus')
-        const vc = this.selectedPreset.includedPlugins.filter(p => p.category === 'validator')
-        const services = this.selectedPreset.includedPlugins.filter(p => p.category === 'service')
-        this.selectedPreset.includedPlugins = new Array().concat(ec,cc,vc,services)
+    sortPlugins() {
+      //sorts includedPlugins in this order: EXECUTION -> CONSENSUS -> VALIDATOR -> SERVICE
+      if (this.selectedPreset.includedPlugins) {
+        const ec = this.selectedPreset.includedPlugins.filter(
+          (p) => p.category === "execution"
+        );
+        const cc = this.selectedPreset.includedPlugins.filter(
+          (p) => p.category === "consensus"
+        );
+        const vc = this.selectedPreset.includedPlugins.filter(
+          (p) => p.category === "validator"
+        );
+        const services = this.selectedPreset.includedPlugins.filter(
+          (p) => p.category === "service"
+        );
+        this.selectedPreset.includedPlugins = new Array().concat(
+          ec,
+          cc,
+          vc,
+          services
+        );
       }
     },
     // validatorAndConsensusHandler(el, item, idx) {
@@ -200,7 +225,7 @@ export default {
     //   });
     // },
     pluginExChange(el) {
-      if(el.category !== "service"){
+      if (el.category !== "service") {
         this.selectedPreset.includedPlugins.filter((item) => {
           item.showChangeModal = false;
           if (item?.service === el.service) {
@@ -211,27 +236,30 @@ export default {
       }
     },
     checkPluginCategory(element) {
-      let filter
-      switch(this.selectedPreset.name){   //apply filter depending on which preset was chosen
-        case 'staking':
-          filter = (item) => item.category === element.category && item.service !== "BloxSSVService"
+      let filter;
+      switch (
+        this.selectedPreset.name //apply filter depending on which preset was chosen
+      ) {
+        case "staking":
+          filter = (item) =>
+            item.category === element.category &&
+            item.service !== "BloxSSVService";
           break;
-        case 'blox ssv':
+        case "blox ssv":
           filter = (item) => {
-            if(element.category === "validator"){
-              return item.service === "BloxSSVService"
+            if (element.category === "validator") {
+              return item.service === "BloxSSVService";
             }
-            return item.category === element.category
-          }
+            return item.category === element.category;
+          };
           break;
-        case 'obol ssv':
+        case "obol ssv":
           //filter = (item) => item.category === element.category
           break;
-        case 'rocketpool':
+        case "rocketpool":
           //filter = (item) => item.category === element.category
           break;
         default:
-
           break;
       }
       this.filteredPluginsOnCategory = this.allPlugins.filter(filter);
@@ -432,7 +460,7 @@ export default {
   height: 90%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   position: relative;
 }
 .replaced-plugins .item img {
@@ -442,14 +470,7 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
   border-radius: 100%;
 }
-.replaced-plugins .item img:hover {
-  transform: scale(1.07);
-  border: 2px solid rgb(123, 208, 251);
-}
 
-.replaced-plugins .item img:active {
-  transform: scale(1);
-}
 .name-box {
   width: 95%;
   height: 20%;
@@ -719,18 +740,20 @@ export default {
   border: 1px solid rgb(225, 54, 54) !important;
 }
 .tooltip {
-  width: max-content;
-  height: max-content;
+  max-width: 40px;
+  height: 13px;
   background-color: rgb(42, 42, 42);
   border: 1px solid #3c3c3c;
   border-radius: 3px;
-  padding: 2px 3px;
+  padding:0 3px 3px 3px;
   position: absolute;
-  top: 10px;
-  left: 10%;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #cfcfcf;
+  top: 3px;
+  left: 25%;
+  transform: translate(-5px, -5px);
+  font-size: 0.6rem;
+  font-weight: 400;
+  color: #dce2e9;
   text-align: center;
+  display: inline-block;
 }
 </style>
