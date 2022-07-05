@@ -112,7 +112,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50%;
+  font-size: 60%;
   font-weight: bold;
 }
 .cpuCountPart {

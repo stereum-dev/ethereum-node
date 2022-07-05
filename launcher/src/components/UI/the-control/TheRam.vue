@@ -1,11 +1,11 @@
 <template>
   <div class="theRamParent">
-    <div class="ramTtl">
-      <span>RAM</span>
-    </div>
     <div class="ramBox">
       <div class="ramIco">
-        <img src="../../../../public/img/icon/control/ramStick.svg" />
+        <div class="ramIco-container">
+          <img src="../../../../public/img/icon/control/ramStick.svg" />
+        </div>
+        <span>RAM</span>
       </div>
       <div class="ramValue">
         <div class="valDigits">
@@ -59,41 +59,38 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
-.ramTtl {
-  width: 98%;
-  height: 20%;
-  background: #33393e;
-  border-radius: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  box-sizing: border-box;
-}
-.ramTtl span {
-  font-size: 55%;
-  color: #eee;
-  border: 1px solid rgb(27, 26, 26);
-  width: 20%;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .ramBox {
   width: 100%;
-  height: 79%;
+  height: 100%;
   display: flex;
   box-sizing: border-box;
 }
 .ramIco {
   box-sizing: border-box;
   width: 30%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  flex-direction: column;
 }
-.ramIco img {
+.ramIco span {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60%;
+  font-weight: bold;
+}
+.ramIco-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+}
+.ramIco-container img {
   width: 75%;
 }
 .ramValue {
