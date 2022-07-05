@@ -66,10 +66,9 @@ export default {
   z-index: 101;
 }
 .error-modal .title-box {
-  width: 96%;
+  width: 100%;
   height: 20%;
   border-radius: 9px 9px 0 0;
-  border-bottom:1px solid gray;
   margin: 10px;
   display: flex;
   justify-content: flex-start;
