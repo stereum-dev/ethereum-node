@@ -165,7 +165,11 @@ export default {
         this.installedServices.push(item)
     },
     serviceItemSelection(item) {
-      this.selectedItemToRemove = item
+      if(this.selectedItemToRemove.map(element => element.id).includes(item.id)){
+          this.selectedItemToRemove = this.selectedItemToRemove.filter(element => element.id != item.id)
+      }else{
+          this.selectedItemToRemove.push(item)
+      }
     },
   },
 };
