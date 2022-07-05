@@ -6,7 +6,7 @@
         <span>{{ item.name }} :</span>
       </div>
       <div class="description">
-        <span>>> {{ item.action }}</span>
+        <span>>> {{ error }}</span>
       </div>
       <div class="copy-icon" @click="$emit('copyError')">
         <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -19,8 +19,15 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useTaskManager } from "@/store/taskManager";
 export default {
   props: ["item"],
+  computed: {
+    ...mapWritableState(useTaskManager, {
+      error: "fakeError",
+    }),
+  },
 };
 </script>
 <style scoped>
@@ -45,8 +52,8 @@ export default {
   z-index: 96;
 }
 .error-modal {
-  width: 45%;
-  height: 40%;
+  width: 55%;
+  height: 50%;
   background-color: rgb(25, 25, 25);
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
   border-radius: 10px;
@@ -81,10 +88,38 @@ export default {
   width: 96%;
   height: 100%;
   margin: 10px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+}
+.description::-webkit-scrollbar {
+  width: 1px;
+}
+.description::-webkit-scrollbar {
+  width: 5px;
+  margin: 5px 0;
+  height: 5px;
+}
+
+/* Track */
+.description::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0;
+  height: 5px;
+  cursor: pointer;
+}
+
+/* Handle */
+.description::-webkit-scrollbar-thumb {
+  background: rgb(34, 137, 127);
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+.description::-webkit-scrollbar-thumb:hover {
+  background: rgb(28, 87, 81);
 }
 .error-modal .description span {
   width: 100%;
@@ -98,16 +133,14 @@ export default {
 }
 
 .error-modal .btn-box {
-  grid-column: 2/4;
-  grid-row: 3;
   width: 100%;
-  height: 50%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .btn-box span {
-  color: #979595;
+  color: #b73737;
   font-size: 0.6rem;
   font-weight: 600;
   align-self: flex-end;
@@ -120,7 +153,7 @@ export default {
   align-items: center;
   position: absolute;
   right: 5px;
-  top: 52px;
+  top: 8px;
 }
 .copy-icon img {
   width: 20px;
@@ -140,7 +173,7 @@ export default {
   color: rgb(96, 150, 120);
   font-size: 0.5rem;
   position: absolute;
-  top: -15px;
-  right: 0;
+  top: 2px;
+  right: 25px;
 }
 </style>

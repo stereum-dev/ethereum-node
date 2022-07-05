@@ -8,13 +8,13 @@
           :key="index"
           :class="{
             'skipping-installation': item.status == 'SKIPPED',
-            'success-installation': item.status == 'OK',
-            'failed-installation': item.status == 'FAILED',
+            'success-installation': item.status == 'OKi',
+            'failed-installation': item.status == 'OK',
           }"
           @mouseover="tooltipShowHandler(item)"
           @mouseleave="tooltipHideHandler(item)"
         >
-          <div class="success-box" v-if="item.status == 'OK'">
+          <!-- <div class="success-box" v-if="item.status == 'OK'">
             <span class="itemAction" v-if="displayTaskResult">{{
               item.action
             }}</span>
@@ -28,10 +28,10 @@
             <div class="success-tooltip" v-if="item.showTooltip">
               <span>{{ item.action }}</span>
             </div>
-          </div>
+          </div> -->
           <div
             class="failed-box"
-            v-if="item.status == 'FAILED'"
+            v-if="item.status == 'OK'"
             @click="openTerminalHandler(item)"
           >
             <span class="error" v-if="displayTaskResult">{{
