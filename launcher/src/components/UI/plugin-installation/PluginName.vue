@@ -207,15 +207,9 @@ export default {
     // },
     runningTooltip(el) {
       this.allPlugins.filter((i) => {
-        i.category == el.category && i.id == el.id;
+        i.category === el.category && i.id == el.id;
         el.displayTooltip = true;
       });
-      // .map((e) => {
-      //   e.displayTooltip = true;
-
-      // });
-      console.log(el);
-      console.log(el.displayTooltip);
     },
   },
 };

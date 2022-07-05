@@ -81,6 +81,7 @@ export default {
   width: 96%;
   height: 100%;
   margin: 10px;
+  overflow: hidden;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
