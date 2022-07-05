@@ -213,17 +213,6 @@ export default {
         );
       }
     },
-    // validatorAndConsensusHandler(el, item, idx) {
-    //   this.selectedPreset.includedPlugins.map((param) => {
-    //     if (
-    //       param.name === this.selectedPreset.includedPlugins[idx].name &&
-    //       (param.category === "validator" || param.category === "consensus")
-    //     ) {
-    //       // this.filteredPluginsOnName.push(param);
-    //       param = item;
-    //     }
-    //   });
-    // },
     pluginExChange(el) {
       if (el.category !== "service") {
         this.selectedPreset.includedPlugins.filter((item) => {
@@ -264,12 +253,6 @@ export default {
       }
       this.filteredPluginsOnCategory = this.allPlugins.filter(filter);
     },
-    // runTooltip(el) {
-    //   this.filteredPluginsOnName = this.allPlugins.filter((param) => {
-    //     param.id == el.id;
-    //   }).forEach(e => {
-    //   })
-    // },
     runningTooltip(el) {
       this.allPlugins.filter((i) => {
         i.category === el.category && i.id == el.id;
@@ -451,13 +434,13 @@ export default {
   height: 43px;
   border-radius: 10px 10px 0 0;
   background-color: #2b3034;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr;
 }
 .replaced-plugins .item {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
@@ -740,14 +723,14 @@ export default {
   border: 1px solid rgb(225, 54, 54) !important;
 }
 .tooltip {
-  max-width: 40px;
-  height: 13px;
+  width: max-content;
+  height: 15px;
   background-color: rgb(42, 42, 42);
-  border: 1px solid #3c3c3c;
+  border: 1px solid #a0a0a0;
   border-radius: 3px;
-  padding:0 3px 3px 3px;
+  padding: 0 3px 3px 3px;
   position: absolute;
-  top: 3px;
+  top: 5px;
   left: 25%;
   transform: translate(-5px, -5px);
   font-size: 0.6rem;
