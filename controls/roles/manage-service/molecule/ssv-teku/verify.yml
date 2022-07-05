@@ -55,7 +55,6 @@
     ansible.builtin.shell: docker logs stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
     register: blox_ssv
     until:
-    until:
       - blox_ssv.stdout is search('discovery is ready')
       - blox_ssv.stdout is search('p2p services were configured')
       - blox_ssv.stdout is not search('ERROR')
