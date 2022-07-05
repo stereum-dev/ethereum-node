@@ -74,7 +74,7 @@
                         @mouseleave="item.displayTooltip = false"
                       >
                         <img
-                          :src="item.icon"
+                          :src="item.ocIcon"
                           alt="icon"
                           @mousedown.prevent.stop
                         />
@@ -87,7 +87,7 @@
                   <div class="row" @click="pluginExChange(plugin)">
                     <div class="icon-box">
                       <div class="plugin-icon">
-                        <img :src="plugin.icon" alt="icon" />
+                        <img :src="plugin.ocIcon" alt="icon" />
                       </div>
                     </div>
                     <div class="content">
@@ -163,15 +163,29 @@ export default {
           ...item,
         };
       });
+    this.sortPlugins()
   },
   methods: {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
-      if (el.category === "execution") {
-        this.selectedPreset.includedPlugins[idx] = item;
+      this.selectedPreset.includedPlugins[idx] = item;  //no matter what change the service you clicked on
+      if(this.selectedPreset.name === "staking"){       //if the preset is staking:
+        if(item.category === "consensus"){              //and you just changed the consensus client
+          let valIndex = this.selectedPreset.includedPlugins.findIndex(e => e.category === "validator")   //find the index of the current validator service
+          this.selectedPreset.includedPlugins[valIndex] = this.allPlugins.find(e => e.service === item.name + "ValidatorService") //change the validator service to the matching one
+        }else if(item.category === "validator"){        //otherwise if you changed the validator client do the same for the consensus client 
+          let conIndex = this.selectedPreset.includedPlugins.findIndex(e => e.category === "consensus")
+          this.selectedPreset.includedPlugins[conIndex] = this.allPlugins.find(e => e.service === item.name + "BeaconService")
+        }
       }
-      if (el.category === "validator" || el.category === "consensus") {
-        this.selectedPreset.includedPlugins[idx] = item;
+    },
+    sortPlugins(){  //sorts includedPlugins in this order: EXECUTION -> CONSENSUS -> VALIDATOR -> SERVICE
+      if(this.selectedPreset.includedPlugins){
+        const ec = this.selectedPreset.includedPlugins.filter(p => p.category === 'execution')
+        const cc = this.selectedPreset.includedPlugins.filter(p => p.category === 'consensus')
+        const vc = this.selectedPreset.includedPlugins.filter(p => p.category === 'validator')
+        const services = this.selectedPreset.includedPlugins.filter(p => p.category === 'service')
+        this.selectedPreset.includedPlugins = new Array().concat(ec,cc,vc,services)
       }
     },
     // validatorAndConsensusHandler(el, item, idx) {
@@ -186,18 +200,41 @@ export default {
     //   });
     // },
     pluginExChange(el) {
-      this.selectedPreset.includedPlugins.filter((item) => {
-        item.showChangeModal = false;
-        if (item?.service === el.service && item?.id === el.id) {
-          this.checkPluginCategory(item);
-        }
-      });
-      el.showChangeModal = true;
+      if(el.category !== "service"){
+        this.selectedPreset.includedPlugins.filter((item) => {
+          item.showChangeModal = false;
+          if (item?.service === el.service) {
+            this.checkPluginCategory(item);
+          }
+        });
+        el.showChangeModal = true;
+      }
     },
     checkPluginCategory(element) {
-      this.filteredPluginsOnCategory = this.allPlugins.filter(
-        (item) => item.category === element.category
-      );
+      let filter
+      switch(this.selectedPreset.name){   //apply filter depending on which preset was chosen
+        case 'staking':
+          filter = (item) => item.category === element.category && item.service !== "BloxSSVService"
+          break;
+        case 'blox ssv':
+          filter = (item) => {
+            if(element.category === "validator"){
+              return item.service === "BloxSSVService"
+            }
+            return item.category === element.category
+          }
+          break;
+        case 'obol ssv':
+          //filter = (item) => item.category === element.category
+          break;
+        case 'rocketpool':
+          //filter = (item) => item.category === element.category
+          break;
+        default:
+
+          break;
+      }
+      this.filteredPluginsOnCategory = this.allPlugins.filter(filter);
     },
     // runTooltip(el) {
     //   this.filteredPluginsOnName = this.allPlugins.filter((param) => {

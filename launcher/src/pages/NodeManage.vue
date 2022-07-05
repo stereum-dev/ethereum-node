@@ -165,7 +165,7 @@ export default {
         this.installedServices.push(item)
     },
     serviceItemSelection(item) {
-      this.selectedItemToRemove = item
+      this.selectedItemToRemove.push(item)
     },
   },
 };

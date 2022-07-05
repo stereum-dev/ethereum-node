@@ -6,7 +6,7 @@ export const useNodeStore = defineStore("theNode", {
       executionItems: [],
       validatorItems: [],
       servicePlugins: [],
-      selectedItemToRemove: {},
+      selectedItemToRemove: [],
       confirmChanges: [
         {
           id: 1,

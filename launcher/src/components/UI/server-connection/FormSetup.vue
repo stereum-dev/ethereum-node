@@ -182,8 +182,6 @@ export default {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
-      allPlugins: "plugins",
-      services: "services",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",

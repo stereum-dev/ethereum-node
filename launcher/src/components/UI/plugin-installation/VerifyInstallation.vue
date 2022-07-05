@@ -26,7 +26,7 @@
                     :key="index"
                   >
                     <div class="plugin-name">
-                      <img :src="plugin.icon" alt="icon" />
+                      <img :src="plugin.ocIcon" alt="icon" />
                       <span>{{ plugin.name }}</span>
                     </div>
                     <div class="category">
