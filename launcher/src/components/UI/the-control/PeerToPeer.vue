@@ -99,7 +99,7 @@ export default {
 }
 .p2pVal {
   width: 80%;
-  height: 90%;
+  height: 80%;
   background: #33393e;
   display: flex;
   flex-direction: column;
@@ -113,7 +113,7 @@ export default {
 }
 .vlaueType {
   position: absolute;
-  top: 52%;
+  top: 48%;
   left: 52%;
   font-size: 1.5rem;
   font-weight: bold;

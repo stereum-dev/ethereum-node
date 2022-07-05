@@ -1,6 +1,5 @@
 <template>
   <div class="validatorContainerBoxParent">
-    <div class="validatorContainerBox_title"><span>VALIDATOR</span></div>
     <div class="validatorContainerBox">
       <div class="validatorContainerBox_left">
         <inclusion-distance></inclusion-distance>
@@ -31,23 +30,6 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
-.validatorContainerBox_title {
-  width: 98%;
-  height: 20%;
-  background: #33393e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-}
-.validatorContainerBox_title span {
-  font-size: 50%;
-  color: #eee;
-  width: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .validatorContainerBox {
   display: flex;
   justify-content: center;
@@ -59,7 +41,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40%;
+  width: 50%;
   height: 100%;
 }
 .validatorContainerBox_right {
