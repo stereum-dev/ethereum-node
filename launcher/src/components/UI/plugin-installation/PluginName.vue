@@ -74,7 +74,7 @@
                         @mouseleave="item.displayTooltip = false"
                       >
                         <img
-                          :src="item.ocIcon"
+                          :src="item.icon"
                           alt="icon"
                           @mousedown.prevent.stop
                         />
@@ -87,7 +87,7 @@
                   <div class="row" @click="pluginExChange(plugin)">
                     <div class="icon-box">
                       <div class="plugin-icon">
-                        <img :src="plugin.ocIcon" alt="icon" />
+                        <img :src="plugin.icon" alt="icon" />
                       </div>
                     </div>
                     <div class="content">
