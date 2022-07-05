@@ -70,15 +70,15 @@
                         v-for="(item, idx) in filteredPluginsOnCategory"
                         :key="idx"
                         @click="pluginChangeHandler(plugin, item, index)"
-                        @mouseover="pluginExChange(plugin)"
-                        @mouseleave="item.displayTooltip = false"
                       >
                         <img
                           :src="item.icon"
                           alt="icon"
                           @mousedown.prevent.stop
+                          @mouseover="runningTooltip(item)"
+                          @mouseleave="item.displayTooltip = false"
                         />
-                        <span class="tooltip" v-if="plugin.displayTooltip">{{
+                        <span class="tooltip" v-if="item.displayTooltip">{{
                           item.name
                         }}</span>
                       </div>
@@ -151,7 +151,7 @@ export default {
       allPlugins: "allServices",
     }),
   },
-  beforeUpdate() {},
+  beforeMount() {},
   mounted() {
     if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
       this.$router.push("/clickinstall");
@@ -242,6 +242,12 @@ export default {
     //   }).forEach(e => {
     //   })
     // },
+    runningTooltip(el) {
+      this.allPlugins.filter((i) => {
+        i.category === el.category && i.id == el.id;
+        el.displayTooltip = true;
+      });
+    },
   },
 };
 </script>
@@ -714,15 +720,17 @@ export default {
 }
 .tooltip {
   width: max-content;
-  height: 25px;
-  padding: 5px;
-  background-color: rgb(36, 36, 36);
+  height: max-content;
+  background-color: rgb(42, 42, 42);
+  border: 1px solid #3c3c3c;
+  border-radius: 3px;
+  padding: 2px 3px;
   position: absolute;
   top: 10px;
-  left: 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgb(222, 221, 221);
+  left: 10%;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #cfcfcf;
   text-align: center;
 }
 </style>
