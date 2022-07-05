@@ -1,9 +1,11 @@
 <template>
   <div class="theCpuParent">
-    <div class="theCpuTtl"><span>CPU</span></div>
     <div class="cpuContentBox">
       <div class="cpuIco">
-        <img src="../../../../public/img/icon/control/cpuIcon.svg" />
+        <div class="cpuIco-container">
+          <img src="../../../../public/img/icon/control/cpuIcon.svg" />
+        </div>
+        <span>CPU</span>
       </div>
       <div class="cpuCountPart">
         <div class="cpuUsage">
@@ -79,41 +81,39 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
-.theCpuTtl {
-  width: 98%;
-  height: 20%;
-  background: #33393e;
-  border-radius: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  box-sizing: border-box;
-}
-.theCpuTtl span {
-  font-size: 50%;
-  color: #eee;
-  border: 1px solid rgb(27, 26, 26);
-  width: 20%;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .cpuContentBox {
   width: 100%;
-  height: 79%;
+  height: 100%;
   display: flex;
   box-sizing: border-box;
 }
 .cpuIco {
   box-sizing: border-box;
   width: 30%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.cpuIco-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
 }
 .cpuIco img {
-  width: 70%;
+  width: 75%;
+}
+.cpuIco span {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
+  font-weight: bold;
 }
 .cpuCountPart {
   display: flex;
