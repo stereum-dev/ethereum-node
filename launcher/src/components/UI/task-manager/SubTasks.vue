@@ -8,13 +8,13 @@
           :key="index"
           :class="{
             'skipping-installation': item.status == 'SKIPPED',
-            'success-installation': item.status == 'OKi',
-            'failed-installation': item.status == 'OK',
+            'success-installation': item.status == 'OK',
+            'failed-installation': item.status == 'FAILED',
           }"
           @mouseover="tooltipShowHandler(item)"
           @mouseleave="tooltipHideHandler(item)"
         >
-          <!-- <div class="success-box" v-if="item.status == 'OK'">
+          <div class="success-box" v-if="item.status == 'OK'">
             <span class="itemAction" v-if="displayTaskResult">{{
               item.action
             }}</span>
@@ -28,10 +28,10 @@
             <div class="success-tooltip" v-if="item.showTooltip">
               <span>{{ item.action }}</span>
             </div>
-          </div> -->
+          </div>
           <div
             class="failed-box"
-            v-if="item.status == 'OK'"
+            v-if="item.status == 'FAILED'"
             @click="openTerminalHandler(item)"
           >
             <span class="error" v-if="displayTaskResult">{{
@@ -246,22 +246,7 @@ export default {
   background-color: rgb(134, 184, 202);
   border-radius: 15px;
 }
-.success-tooltip,
-.failed-tooltip,
-.skipped-tooltip {
-  width: max-content;
-  height: 25px;
-  border: 1px solid #979797;
-  border-radius: 6px;
-  position: absolute;
-  top: -20px;
-  left: 10px;
-  padding: 2px;
-  background-color: rgb(41, 41, 41);
-  text-align: left;
-  z-index: 1000;
-  display: inline-block;
-}
+
 .success-tooltip::after,
 .failed-tooltip::after,
 .skipped-toolt::after {
@@ -275,7 +260,9 @@ export default {
   border-color: black transparent transparent transparent;
   z-index: 1001;
 }
-.failed-tooltip {
+.success-tooltip,
+.failed-tooltip,
+.skipped-tooltip {
   width: max-content;
   height: 25px;
   border: 1px solid #979797;
