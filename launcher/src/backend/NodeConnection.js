@@ -81,6 +81,7 @@ export class NodeConnection {
       log.debug("nodeOS.ubuntu: ", nodeOS.ubuntu);
       if (this.os == nodeOS.centos) {
         this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         return reject("not implemented yet");
       } else if (this.os == nodeOS.ubuntu) {
         log.debug("procede on ubuntu");
@@ -99,6 +100,7 @@ export class NodeConnection {
         }
         if (SSHService.checkExecError(installPkgResult)) {
           this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: false})
+          this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
           return reject(
             "Can't install os packages: " +
               SSHService.extractExecError(installPkgResult)
@@ -107,6 +109,7 @@ export class NodeConnection {
         this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: true})
       } else {
         this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         return reject("unsupported OS");
       }
 
@@ -141,11 +144,13 @@ export class NodeConnection {
       } catch (err) {
         log.error("can't install ansible roles", err);
         this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         return reject("Can't install ansible roles: " + err);
       }
 
       if (SSHService.checkExecError(installResult)) {
         this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         return reject(
           "Can't install ansible role: " +
             SSHService.extractExecError(installResult)
@@ -367,6 +372,7 @@ export class NodeConnection {
         );
       } catch (err) {
         this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         log.error(
           "Can't write service configuration of " + serviceConfiguration.id,
           err
@@ -381,6 +387,7 @@ export class NodeConnection {
 
       if (SSHService.checkExecError(configStatus)) {
         this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
+        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
         return reject(
           "Failed writing service configuration " +
             serviceConfiguration.id +

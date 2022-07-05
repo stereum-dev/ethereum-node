@@ -101,6 +101,10 @@ export default {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
   },
+  mounted() {
+    this.selectedNetworks = ""
+    this.selectedPreset = undefined
+  },
   methods: {
     mainnetNetworkHandler() {
       if (this.selectedNetworks == "mainnet") {

@@ -65,7 +65,7 @@ export default {
   methods: {
     clickOnRemoveBtn() {
       this.installedServices = this.installedServices.filter((item) => {
-        return item.id !== this.selectedItemToRemove.id;
+        return !this.selectedItemToRemove.map(e => e.id).includes(item.id);
       });
     },
   },
