@@ -14,7 +14,11 @@
           @mouseover="tooltipShowHandler(item)"
           @mouseleave="tooltipHideHandler(item)"
         >
-          <div class="success-box" v-if="item.status == 'OK'">
+          <div
+            class="success-box"
+            v-if="item.status == 'OK'"
+            @click="openTerminalHandler(item)"
+          >
             <span class="itemAction" v-if="displayTaskResult">{{
               item.action
             }}</span>
@@ -48,13 +52,11 @@
               </div>
             </div>
           </div>
-          <error-terminal
-            v-if="showErrorterminal"
-            @close-terminal="hideTerminalHandler"
-            @copy-error="copyErrorText(item)"
-            :item="item"
-          ></error-terminal>
-          <div class="skipped-box" v-if="item.status == 'SKIPPED'">
+          <div
+            class="skipped-box"
+            v-if="item.status == 'SKIPPED'"
+            @click="openTerminalHandler(item)"
+          >
             <span class="error" v-if="displayTaskResult">{{
               item.action
             }}</span>
@@ -69,6 +71,12 @@
               <span>{{ item.action }}</span>
             </div>
           </div>
+          <error-terminal
+            v-if="showErrorterminal"
+            @close-terminal="hideTerminalHandler"
+            @copy-error="copyErrorText(item)"
+            :item="item"
+          ></error-terminal>
         </div>
         <div ref="task"></div>
       </div>
@@ -120,9 +128,9 @@ export default {
       });
     },
     openTerminalHandler(el) {
-      this.subTasks.filter((item) => {
-        item.action.toLowerCase() === el.action.toLowerCase();
-        this.showErrorterminal = true;
+      this.subTasks.forEach((item) => {
+        if (item.name.toLowerCase() === el.name.toLowerCase())
+          this.showErrorterminal = true;
       });
     },
     hideTerminalHandler() {
