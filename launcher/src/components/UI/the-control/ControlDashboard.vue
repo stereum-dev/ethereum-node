@@ -24,6 +24,9 @@
     <dashboard-card class="third_cell"
       ><the-network></the-network
     ></dashboard-card>
+    <div class="half-card">
+      <node-connection-card></node-connection-card>
+    </div>
   </div>
 </template>
 
@@ -39,6 +42,7 @@ import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
+import NodeConnectionCard from "./NodeConnectionCard.vue";
 export default {
   components: {
     TheStorage,
@@ -52,6 +56,7 @@ export default {
     ValidatorContainerBox,
     TimeGas,
     NodeServerResponse,
+    NodeConnectionCard,
   },
 };
 </script>
@@ -139,5 +144,12 @@ export default {
 .third_cell {
   grid-row: 4/5;
   grid-column: 2/3;
+}
+.half-card {
+  grid-row: 3/4;
+  grid-column: 3/4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 </style>
