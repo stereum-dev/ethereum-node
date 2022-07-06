@@ -271,8 +271,9 @@ export default {
 }
 
 .table-row-failed .failed-icon {
-  border-radius: 50%;
-  margin-left: 4px;
+  width: 10%;
+  height: 100%;
+  margin-left: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -280,7 +281,6 @@ export default {
 .table-row-active .active-icon {
   width: 20px;
   height: 20px;
-  /* background-color: #292929; */
   background-color: #323232;
   border: 2px solid #444444;
   border-radius: 50%;
@@ -290,24 +290,20 @@ export default {
   align-items: center;
 }
 .table-row-success .success-icon {
-  width: 20px;
-  height: 20px;
-  /* background-color: #292929; */
-  background-color: #323232;
-  border: 2px solid #444444;
-  border-radius: 50%;
-  margin-left: 2px;
+  width: 10%;
+  height: 100%;
+  margin-left: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .failed-icon img {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
 }
 .success-icon img {
-  width: 13px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
 }
 .active-icon img {
   width: 20px;
@@ -333,9 +329,9 @@ export default {
   color: rgb(56, 56, 56);
 }
 .list-cleaner {
-  width: 97%;
-  height: 12%;
-  border: 3px solid #444444;
+  width: 100%;
+  height: 14%;
+  border-top: 3px solid #444444;
   border-radius: 7px;
   background-color: rgb(97, 97, 97);
   display: flex;

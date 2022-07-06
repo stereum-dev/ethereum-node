@@ -31,7 +31,7 @@
             <span class="itemName" v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
-                src="../../../../public/img/icon/task-manager-icons/check3.png"
+                src="../../../../public/img/icon/task-manager-icons/check5.png"
                 alt=""
               />
             </div>
@@ -158,11 +158,10 @@ export default {
 <style scoped>
 .subTask_parent {
   width: 92%;
-  padding: 8px 0;
   position: absolute;
   left: 4%;
-  top: 17px;
-  z-index: 99;
+  top: 27px;
+  z-index: 1000;
 }
 .subTask-table {
   width: 100%;
@@ -217,17 +216,9 @@ export default {
   width: 20px;
   height: 90%;
 }
+
+.error-icon,
 .loading-box {
-  width: 9%;
-  height: 18px;
-  border-radius: 15px;
-  margin-right: 2px;
-  background-color: rgb(59, 59, 59);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.error-icon {
   width: 10%;
   height: 20px;
   margin-right: 2px;
@@ -236,8 +227,12 @@ export default {
   align-items: center;
 }
 .error-icon img {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
+}
+.loading-box img {
+  width: 20px;
+  height: 20px;
 }
 
 .subTask-row .skipped-box img,
