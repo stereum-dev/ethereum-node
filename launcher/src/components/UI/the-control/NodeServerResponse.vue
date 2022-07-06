@@ -1,33 +1,30 @@
 <template>
   <div class="nodeResponse_parent">
-    <div class="nodeResponse_ttl">
-      <span>NODE SERVER RESPONSE</span>
-    </div>
     <div class="nodeResponse_box">
       <div class="success">
-        <div class="resLbl">
-          <span>Success Rate</span>
-        </div>
         <div class="successValue">
           <span>{{ successVal }}%</span>
         </div>
+        <div class="resLbl">
+          <span>Success Rate</span>
+        </div>
       </div>
       <div class="resTime">
-        <div class="resLbl">
-          <span>Response Time(last)</span>
-        </div>
         <div class="resTimeVal">
           <span>{{ lastTimeVal }}</span>
           <small>ms</small>
         </div>
-      </div>
-      <div class="resTime">
         <div class="resLbl">
           <span>Response Time(last)</span>
         </div>
+      </div>
+      <div class="resTime">
         <div class="resTimeVal">
           <span>{{ lastTimeVal }}</span>
           <small>ms</small>
+        </div>
+        <div class="resLbl">
+          <span>Response Time(last)</span>
         </div>
       </div>
     </div>
@@ -85,13 +82,14 @@ export default {
   height: 100%;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
 }
 .resLbl {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width: 40%;
+  width: 100%;
   height: 95%;
   font-size: 5%;
 }
@@ -110,6 +108,7 @@ export default {
   height: 100%;
   justify-content: space-between;
   align-items: center;
+  flex-direction: column;
 }
 .resTimeVal {
   display: flex;

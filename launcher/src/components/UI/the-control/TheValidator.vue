@@ -1,8 +1,8 @@
 <template>
   <div class="theValidatorParent">
-    <div class="theValidatorTitle">
+    <!-- <div class="theValidatorTitle">
       <span>Validator</span>
-      </div>
+    </div> -->
     <div class="theValidatorBox">
       <div class="theValidatorBox_left">
         <div class="activePart">
@@ -59,7 +59,7 @@ export default {
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 80%;
+  height: 100%;
   box-sizing: border-box;
 }
 .theValidatorTitle {
@@ -79,7 +79,7 @@ hr {
 }
 .theValidatorBox {
   width: 90%;
-  height: 80%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,7 +100,7 @@ hr {
   align-items: center;
 }
 .activeIco {
-  width: 20%;
+  width: 30%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -115,12 +115,12 @@ hr {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 60%;
+  font-size: 55%;
   font-weight: bold;
 }
 .gewiPart {
   width: 100%;
-  height: 65%;
+  height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,7 +129,7 @@ hr {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20%;
+  width: 30%;
   height: 100%;
 }
 .gewiIco img {
@@ -200,7 +200,7 @@ hr {
   justify-content: center;
   width: 100%;
   height: 75%;
-  font-size: 100%;
+  font-size: 200%;
   color: #4dfff3;
 }
 </style>
