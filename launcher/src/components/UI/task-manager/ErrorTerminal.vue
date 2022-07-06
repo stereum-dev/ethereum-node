@@ -45,11 +45,11 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgb(8, 8, 8);
-  opacity: 0.2;
+  opacity: 0.6;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 96;
+  z-index: 2000;
 }
 .error-modal {
   width: 55%;
@@ -63,7 +63,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  z-index: 101;
+  z-index: 2001;
 }
 .error-modal .title-box {
   width: 100%;
@@ -94,32 +94,28 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 }
-.description::-webkit-scrollbar {
-  width: 1px;
-}
+
 .description::-webkit-scrollbar {
   width: 5px;
   margin: 5px 0;
-  height: 5px;
 }
 
 /* Track */
 .description::-webkit-scrollbar-track {
   background: transparent;
   margin: 20px 0;
-  height: 5px;
   cursor: pointer;
 }
 
 /* Handle */
 .description::-webkit-scrollbar-thumb {
-  background: rgb(34, 137, 127);
+  background: rgb(112, 199, 249);
   border-radius: 3px;
 }
 
 /* Handle on hover */
 .description::-webkit-scrollbar-thumb:hover {
-  background: rgb(28, 87, 81);
+  background: rgb(24, 161, 241);
 }
 .error-modal .description span {
   width: 100%;

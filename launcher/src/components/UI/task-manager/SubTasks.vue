@@ -4,7 +4,7 @@
       <div class="subTask-content">
         <div
           class="subTask-row"
-          v-for="(item, index) in subTasks"
+          v-for="(item, index) in modifiedSubTasks"
           :key="index"
           :class="{
             'skipping-installation': item.status == 'SKIPPED',
@@ -14,6 +14,12 @@
           @mouseover="tooltipShowHandler(item)"
           @mouseleave="tooltipHideHandler(item)"
         >
+          <error-terminal
+            v-if="item.showErrorterminal"
+            @close-terminal="hideTerminalHandler(item)"
+            @copy-error="copyErrorText(item)"
+            :item="item"
+          ></error-terminal>
           <div
             class="success-box"
             v-if="item.status == 'OK'"
@@ -48,7 +54,7 @@
                 alt=""
               />
               <div class="failed-tooltip" v-if="item.showTooltip">
-                <span>Click To Display Error</span>
+                <span>{{ item.name }}</span>
               </div>
             </div>
           </div>
@@ -68,15 +74,9 @@
               />
             </div>
             <div class="skipped-tooltip" v-if="item.showTooltip">
-              <span>{{ item.action }}</span>
+              <span>{{ item.name }}</span>
             </div>
           </div>
-          <error-terminal
-            v-if="showErrorterminal"
-            @close-terminal="hideTerminalHandler"
-            @copy-error="copyErrorText(item)"
-            :item="item"
-          ></error-terminal>
         </div>
         <div ref="task"></div>
       </div>
@@ -87,15 +87,21 @@
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
-  props: ["subTasks"],
+  props: ["subTasks", "item"],
   data() {
     return {
       displayTaskResult: false,
-      showErrorterminal: false,
+      modifiedSubTasks: this.subTasks,
+      terminalModal: false,
     };
   },
   created() {
-    // this.tooltipByHover();
+    this.modifiedSubTasks = this.modifiedSubTasks.map((item) => {
+      return {
+        showErrorterminal: false,
+        ...item,
+      };
+    });
   },
   mounted() {
     const el = this.$refs.task;
@@ -116,25 +122,34 @@ export default {
         });
     },
     tooltipShowHandler(el) {
-      this.subTasks.filter((item) => {
+      this.modifiedSubTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = true;
       });
     },
     tooltipHideHandler(el) {
-      this.subTasks.filter((item) => {
+      this.modifiedSubTasks.filter((item) => {
         item.name.toLowerCase() === el.name.toLowerCase();
         el.showTooltip = false;
       });
     },
     openTerminalHandler(el) {
-      this.subTasks.forEach((item) => {
-        if (item.name.toLowerCase() === el.name.toLowerCase())
-          this.showErrorterminal = true;
+      this.modifiedSubTasks.forEach((item) => {
+        if (el.showTooltip) {
+          el.showTooltip = false;
+        }
+        if (el.showErrorterminal) {
+          el.showErrorterminal = false;
+        }
+      });
+      this.modifiedSubTasks.filter((item) => {
+        item.name.toLowerCase() === el.name.toLowerCase();
+        el.showErrorterminal = true;
       });
     },
-    hideTerminalHandler() {
-      this.showErrorterminal = false;
+    hideTerminalHandler(el) {
+      el.showTooltip = false;
+      el.showErrorterminal = false;
     },
   },
 };
@@ -156,8 +171,17 @@ export default {
 
 .subTask-content {
   width: 98%;
+  max-height: 146;
   border-radius: 15px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
+
+/* width */
+.subTask-content::-webkit-scrollbar {
+  width: 1px;
+}
+
 .subTask-row {
   width: 100%;
   padding: 1px;
@@ -167,6 +191,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  z-index: 1;
 }
 
 .subTask-row .skipped-box,
@@ -281,7 +306,7 @@ export default {
   padding: 3px 2px 2px 0;
   background-color: rgb(41, 41, 41);
   text-align: left;
-  z-index: 1000;
+  z-index: 1005;
   display: inline-block;
   font-size: 0.7rem;
   font-weight: 500;

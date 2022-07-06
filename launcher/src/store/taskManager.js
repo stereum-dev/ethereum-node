@@ -70,7 +70,7 @@ export const useTaskManager = defineStore("taskManager", {
       installIconSrc: {
         activeInstallIcon: require("../../public/img/icon/task-manager-icons/turning_circle.gif"),
         successInstallIcon: require("../../public/img/icon/task-manager-icons/check3.png"),
-        failedInstallIcon: require("../../public/img/icon/task-manager-icons/close3.png"),
+        failedInstallIcon: require("../../public/img/icon/task-manager-icons/cancel.png"),
       },
       pluginsInstalling: [
         {
@@ -82,16 +82,19 @@ export const useTaskManager = defineStore("taskManager", {
               status: "active",
               statusLabel: "TASK ACTIVE",
               displayTooltip: false,
+              showErrorterminal:false,
             },
             {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
               displayTooltip: false,
+              showErrorterminal:false,
             },
             {
               status: "failed",
               statusLabel: "TASK FAILED",
               displayTooltip: false,
+              showErrorterminal:false,
             },
           ],
         },
@@ -104,6 +107,7 @@ export const useTaskManager = defineStore("taskManager", {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
               displayTooltip: false,
+              showErrorterminal:false,
             },
           ],
         },
@@ -116,6 +120,7 @@ export const useTaskManager = defineStore("taskManager", {
               status: "failed",
               statusLabel: "TASK FAILED",
               showTooltip: false,
+              showErrorterminal:false,
             },
           ],
         },

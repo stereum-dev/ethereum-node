@@ -50,6 +50,7 @@
         </div>
       </div>
       <div class="list-cleaner" @click="listCleanerHandler">
+        <span class="footer-text">Click on tasks to display</span>
         <img
           src="../../../../public/img/icon/task-manager-icons/read-empty-list-icon.png"
           alt=""
@@ -78,7 +79,7 @@ export default {
       displayingTasks: [],
     };
   },
-  beforeUpdate() {},
+
   mounted() {
     this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
     this.refresh = setInterval(this.getTasks, 1000); //refresh data
@@ -128,6 +129,7 @@ export default {
     },
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
+      window.scrollTo(0, 0);
       if (item.showDropDown) {
         this.showDropDownList = true;
         this.displayingTasks = this.Tasks.filter((e) => e.id === item.id);
@@ -188,33 +190,27 @@ export default {
   height: 80%;
   opacity: 0.99;
 }
-.task-table .table-content::webkit-scrollbar {
-  visibility: hidden;
-  display: none;
-  width: 1px;
-}
 
 .task-table .table-content {
   width: 100%;
   height: 100%;
+  min-height: 195px;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
   padding-top: 5px;
 }
 /* width */
 .table-content::-webkit-scrollbar {
-  width: 5px;
-  margin: 5px 0;
-  height: 5px;
+  width: 3px;
 }
 
 /* Track */
 .table-content::-webkit-scrollbar-track {
   background: transparent;
-  margin: 10px 0;
   height: 5px;
   cursor: pointer;
 }
@@ -246,32 +242,41 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  background-color: #df5656;
+  background-color: #aa4343;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 0;
 }
 .table-content .table-row-success {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: 	#7AC16D;
+  background-color: #7ac16d;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 0;
 }
 
 .table-content .table-row-active {
   width: 100%;
   height: 100%;
   border-radius: 15px;
-  background-color: #7ECDE4 ;
+  background-color: #7ecde4;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
 }
 
-.table-row-failed .failed-icon,
+.table-row-failed .failed-icon {
+  border-radius: 50%;
+  margin-left: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .table-row-active .active-icon {
   width: 20px;
   height: 20px;
@@ -297,8 +302,8 @@ export default {
   align-items: center;
 }
 .failed-icon img {
-  width: 12px;
-  height: 11px;
+  width: 18px;
+  height: 18px;
 }
 .success-icon img {
   width: 13px;
@@ -309,7 +314,14 @@ export default {
   height: 16px;
 }
 
-.table-row-failed span,
+.table-row-failed span {
+  width: 70%;
+  text-align: center;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(220, 220, 220);
+}
 .table-row-active span,
 .table-row-success span,
 .table-row-progress span {
@@ -327,7 +339,7 @@ export default {
   border-radius: 7px;
   background-color: rgb(97, 97, 97);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
 }
 .list-cleaner img {
@@ -335,5 +347,11 @@ export default {
   height: 97%;
   margin-right: 1px;
   cursor: pointer;
+}
+.footer-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #c4c4c4;
+  margin-left: 45px;
 }
 </style>
