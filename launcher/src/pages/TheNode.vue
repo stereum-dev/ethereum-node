@@ -25,7 +25,7 @@
             ></base-modal>
           </div>
           <div>
-            <drop-zone
+            <plugin-zone
               :title="'execution'"
               :list="
                 installedServices.filter(
@@ -33,10 +33,10 @@
                 )
               "
               @modal-view="showModal"
-            ></drop-zone>
+            ></plugin-zone>
           </div>
           <div>
-            <drop-zone
+            <plugin-zone
               @modal-view="showModal"
               :title="'consensus'"
               :list="
@@ -44,10 +44,10 @@
                   (service) => service.category === 'consensus'
                 )
               "
-            ></drop-zone>
+            ></plugin-zone>
           </div>
           <div>
-            <drop-zone
+            <plugin-zone
               @modal-view="showModal"
               :title="'validator'"
               :list="
@@ -55,7 +55,7 @@
                   (service) => service.category === 'validator'
                 )
               "
-            ></drop-zone>
+            ></plugin-zone>
           </div>
         </div>
         <div class="service" onmousedown="return false">
@@ -85,7 +85,7 @@
 
 <script>
 import JournalNode from "../components/UI/the-node/JournalNode.vue";
-import DropZone from "../components/UI/node-manage/DropZone.vue";
+import PluginZone from "../components/UI/the-node/PluginZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
@@ -100,7 +100,7 @@ import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 export default {
   components: {
     JournalNode,
-    DropZone,
+    PluginZone,
     BaseModal,
     NodeSidebar,
     TaskManager,
