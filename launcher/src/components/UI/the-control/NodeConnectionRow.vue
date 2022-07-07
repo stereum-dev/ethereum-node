@@ -4,7 +4,7 @@
       <span>{{ rowName }}</span>
     </div>
     <div class="btn" :class="{ active: isActive }" @click="toggle">
-      <span>{{ isActive ? "ON" : "OFF" }}</span>
+      <span>{{ onoff }}</span>
     </div>
   </div>
 </template>
@@ -15,6 +15,11 @@ export default {
     return {
       isActive: false,
     };
+  },
+  computed: {
+    onoff() {
+      return this.isActive ? "ON" : "OFF";
+    },
   },
 
   methods: {
