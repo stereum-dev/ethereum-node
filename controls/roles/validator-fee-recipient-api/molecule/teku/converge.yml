@@ -7,11 +7,11 @@
   vars:
     validator_service: df8a069a-fca0-11ec-87b6-c3949203ceed
     validator_keys:
-      - pubkeys: "0xacaa51756fb445b406c9e599f3f4bec991f7799c002619566ab1fa5b70445c62f1ac6561154ca5e49d7542dbe690b96b"
+      - pubkey: "0xacaa51756fb445b406c9e599f3f4bec991f7799c002619566ab1fa5b70445c62f1ac6561154ca5e49d7542dbe690b96b"
         recipient: "0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e"
-      - pubkeys: "0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"
+      - pubkey: "0x82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf"
         recipient: "0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e"
-      - pubkeys: "0x948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458"
+      - pubkey: "0x948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458"
         recipient: "0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e"
 
   tasks:

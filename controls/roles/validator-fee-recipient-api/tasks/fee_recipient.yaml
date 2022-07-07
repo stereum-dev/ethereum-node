@@ -16,7 +16,7 @@
     image: "curlimages/curl:{{ stereum_static.defaults.versions.curl }}"
     detach: false
     command: |
-      curl -X POST {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/validator/{{ item.pubkeys }}/feerecipient
+      curl -X POST {{ api_service_protocol | default("http") }}://stereum-{{ validator_service }}:{{ validator_port }}/eth/v1/validator/{{ item.pubkey }}/feerecipient
       -H "Content-Type: application/json"
       -H "Authorization: Bearer {{ api_token }}"
       -d "@/validator-fee-recipient-api-data"
