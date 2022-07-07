@@ -1,35 +1,16 @@
 <template>
   <div class="nodeConParent">
     <div class="nodConBox">
-      <div class="rowStatus">
-        <!-- <div class="title"><span>RPC-ENDPOINT</span></div> -->
-        <div class="btn" :class="{ active: isActive }" @click="toggle">
-          <span>{{ isActive ? "RPC-ENDPOINT ON" : "RPC-ENDPOINT OFF" }}</span>
-        </div>
-      </div>
-      <div class="rowStatus">
-        <!-- <div class="title"><span>DATA-API</span></div> -->
-        <div class="btn" :class="{ active: isActive }" @click="toggle">
-          <span>{{ isActive ? "DATA-API ON" : "DATA-API OFF" }}</span>
-        </div>
-      </div>
+      <node-connection-row row-name="RPC-ENDPOINT"></node-connection-row>
+      <node-connection-row row-name="DATA-API"></node-connection-row>
     </div>
     <div class="compTtl"><span>NODE CONNECTIONS</span></div>
   </div>
 </template>
 <script>
+import NodeConnectionRow from "./NodeConnectionRow.vue";
 export default {
-  data() {
-    return {
-      isActive: false,
-    };
-  },
-
-  methods: {
-    toggle() {
-      this.isActive = this.isActive ? false : true;
-    },
-  },
+  components: { NodeConnectionRow },
 };
 </script>
 <style scoped>
@@ -45,19 +26,7 @@ export default {
   border-radius: 15px;
   flex-direction: column;
 }
-.rowStatus {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 30%;
 
-  border-radius: 10px;
-  margin: 5% 0;
-}
-.active {
-  color: greenyellow !important;
-}
 .nodConBox {
   width: 100%;
   height: 75%;
@@ -69,26 +38,6 @@ export default {
   width: 100%;
   height: 20%;
   font-size: 40%;
-  justify-content: center;
-  align-items: center;
-}
-.title {
-  display: flex;
-  width: 70%;
-  font-size: 48%;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0 4%;
-}
-.btn {
-  display: flex;
-  width: 100%;
-  font-size: 50%;
-  font-weight: bold;
-  padding: 0 2px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: red;
   justify-content: center;
   align-items: center;
 }
