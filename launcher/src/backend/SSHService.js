@@ -1,3 +1,5 @@
+import { StringUtils } from './StringUtils'
+
 const { readFileSync } = require('fs')
 const { Client } = require('ssh2')
 const tunnel = require('tunnel-ssh')
@@ -38,7 +40,7 @@ export class SSHService {
         }
       })
       this.conn.on('ready', async () => {
-        let test = await this.exec('sudo ls')
+        let test = await this.exec('ls')
         if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())){
           if (process.env.IS_DEV === "true") {
             resolve(this.conn)
@@ -77,6 +79,16 @@ export class SSHService {
   }
 
   async exec (command, logline) {
+    const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF"
+
+    return this.execCommand(ensureSudoCommand, logline)
+  }
+
+  async execCommand (command) {
+    return this.exec(command, command)
+  }
+
+  async execCommand (command, logline) {
     log.info('exec', logline)
 
     return new Promise((resolve, reject) => {

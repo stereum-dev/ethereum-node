@@ -488,7 +488,7 @@ test('listServicesConfigurations success', async () => {
 
   expect(mMock.mock.calls.length).toBe(1)
 
-  expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/)
+  expect(mMock.mock.calls[0][0]).toMatch(/ls -1 \/etc\/stereum\/services/)
 })
 
 test('listServicesConfigurations success empty', async () => {
@@ -512,7 +512,7 @@ test('listServicesConfigurations success empty', async () => {
 
   expect(mMock.mock.calls.length).toBe(1)
 
-  expect(mMock.mock.calls[0][0]).toMatch(/sudo ls -1 \/etc\/stereum\/services/)
+  expect(mMock.mock.calls[0][0]).toMatch(/ls -1 \/etc\/stereum\/services/)
 })
 
 test('readServiceConfiguration success', async () => {
@@ -538,7 +538,7 @@ test('readServiceConfiguration success', async () => {
 
   expect(mMock.mock.calls.length).toBe(1)
 
-  expect(mMock.mock.calls[0][0]).toMatch(/sudo cat \/etc\/stereum\/services\/foo-bar.yaml/)
+  expect(mMock.mock.calls[0][0]).toMatch(/cat \/etc\/stereum\/services\/foo-bar.yaml/)
 })
 
 test('writeServiceConfiguration success', async () => {
