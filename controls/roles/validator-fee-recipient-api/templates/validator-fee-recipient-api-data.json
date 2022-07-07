@@ -1,0 +1,3 @@
+{
+  "ethaddress": {{ item.recipient | to_json }}
+}

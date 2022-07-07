@@ -1,9 +1,12 @@
 <template>
   <div class="peer2peerParent">
-    <div class="p2pTtl">PEER CONNECTION</div>
+    <!-- <div class="p2pTtl">PEER CONNECTION</div> -->
     <div class="p2pBox">
       <div class="p2pIco">
-        <img src="../../../../public/img/icon/control/PeerToPeerIcon.svg" />
+        <div class="p2pIco-container">
+          <img src="../../../../public/img/icon/control/PeerToPeerIcon.svg" />
+        </div>
+        <span>P2P</span>
       </div>
       <div class="p2pBarCont">
         <div class="p2pVal">
@@ -42,7 +45,7 @@ export default {
   box-sizing: border-box;
 }
 .p2pTtl {
-  width: 98%;
+  width: 100%;
   height: 20%;
   background: #33393e;
   border-radius: 10px;
@@ -54,19 +57,37 @@ export default {
 
 .p2pBox {
   width: 100%;
-  height: 79%;
+  height: 100%;
   display: flex;
   box-sizing: border-box;
 }
 .p2pIco {
   box-sizing: border-box;
   width: 30%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
-.p2pIco img {
-  width: 70%;
+.p2pIco span {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 60%;
+  font-weight: bold;
+}
+.p2pIco-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+}
+.p2pIco-container img {
+  width: 75%;
 }
 
 .p2pBarCont {
@@ -78,7 +99,7 @@ export default {
 }
 .p2pVal {
   width: 80%;
-  height: 90%;
+  height: 80%;
   background: #33393e;
   display: flex;
   flex-direction: column;
@@ -92,7 +113,7 @@ export default {
 }
 .vlaueType {
   position: absolute;
-  top: 52%;
+  top: 48%;
   left: 52%;
   font-size: 1.5rem;
   font-weight: bold;

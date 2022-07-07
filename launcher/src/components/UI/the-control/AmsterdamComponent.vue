@@ -29,8 +29,33 @@
           @mouseover="showSyncInfo = true"
           @mouseleave="showSyncInfo = false"
         >
-          <sync-info v-if="showSyncInfo">test test test test%</sync-info>
-          <img :src="activeIco" />
+          <sync-info v-if="showSyncInfo">
+            <div class="serviceName">
+              <div class="serviceName_val">
+                <div class="serviceName-row">
+                  <span>[SERVICE NAME]</span>
+                </div>
+                <div class="serviceName-greenRow">
+                  <span>12345678910</span>
+                  <span>/</span>
+                  <span>12345678910</span>
+                  <span>100%</span>
+                </div>
+              </div>
+              <div class="serviceName_val">
+                <div class="serviceName-row">
+                  <span>[SERVICE NAME]</span>
+                </div>
+                <div class="serviceName-blueRow">
+                  <span>12345678910</span>
+                  <span>/</span>
+                  <span>12345678910</span>
+                  <span>100%</span>
+                </div>
+              </div>
+            </div>
+          </sync-info>
+          <img :src="errorIco" />
         </div>
       </div>
     </div>
@@ -80,6 +105,42 @@ export default {
 };
 </script>
 <style scoped>
+.serviceName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+}
+.serviceName_val {
+  display: flex;
+  width: 100%;
+  height: 50%;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 80%;
+}
+.serviceName-row {
+  display: flex;
+  width: 25%;
+  justify-items: center;
+  align-items: center;
+}
+.serviceName-greenRow,
+.serviceName-blueRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+  font-weight: bold;
+}
+.serviceName-greenRow {
+  color: #5ed966;
+}
+.serviceName-blueRow {
+  color: #4dfff3;
+}
 .amsterdamparent {
   display: flex;
   width: 100%;
