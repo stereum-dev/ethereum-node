@@ -55,7 +55,7 @@
               </div>
             </div>
           </sync-info>
-          <img :src="activeIco" />
+          <img :src="errorIco" />
         </div>
       </div>
     </div>
