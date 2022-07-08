@@ -10,13 +10,13 @@
         <img v-else src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" />
       </div>
       <div class="book">
-        <img src="/img/icon/plugin-menu-icons/book3.png" alt="icon" />
+        <img src="/img/icon/plugin-menu-icons/logs3.png" alt="icon" />
       </div>
       <div class="restart">
-        <img src="/img/icon/plugin-menu-icons/refresh2.png" alt="icon" />
+        <img src="/img/icon/plugin-menu-icons/sync3.png" alt="icon" />
       </div>
       <div class="setting">
-        <img src="/img/icon/plugin-menu-icons/setting1.png" alt="icon" />
+        <img src="/img/icon/plugin-menu-icons/setting4.png" alt="icon" />
       </div>
     </div>
   </div>
@@ -81,7 +81,7 @@ export default {
 .book img {
   width: 25px;
   height: 25px;
-  border: 2px solid rgb(225, 225, 225);
+  border: 1px solid rgb(124, 124, 124);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
@@ -100,8 +100,8 @@ export default {
 .restart img {
   width: 25px;
   height: 25px;
-  border: 2px solid rgb(225, 225, 225);
   border-radius: 100%;
+  border: 1px solid rgb(124, 124, 124);
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .setting {
@@ -120,7 +120,7 @@ export default {
 .setting img {
   width: 90%;
   height: 90%;
-  border: 2px solid rgb(225, 225, 225);
+  border: 1px solid rgb(124, 124, 124);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }

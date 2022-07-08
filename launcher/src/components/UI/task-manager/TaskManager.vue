@@ -81,7 +81,7 @@ export default {
   },
 
   mounted() {
-    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
+    // this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
     this.refresh = setInterval(this.getTasks, 1000); //refresh data
   },
   beforeUnmount() {
