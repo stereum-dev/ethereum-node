@@ -58,23 +58,23 @@
             ></plugin-zone>
           </div>
         </div>
-        <div class="service" @mousedown.prevent.stop>
+        <div class="service" >
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
-            <service-plugin
+            <node-service
               :list="
                 installedServices.filter(
                   (service) => service.category === 'service'
                 )
               "
             >
-            </service-plugin>
+            </node-service>
           </div>
         </div>
-        <div class="node-side" onmousedown="return false">
+        <div class="node-side" @mousedown.prevent>
           <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
-        <div class="footer" onmousedown="return false">
+        <div class="footer" @mousedown.prevent>
           <div class="footer-content"></div>
         </div>
         <task-manager></task-manager>
@@ -130,7 +130,6 @@ export default {
   },
   mounted() {},
   methods: {
-
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;

@@ -12,11 +12,14 @@
           (service) => service.category === 'service'
         )"
         :key="item.id"
-        :class="{ 'chosen-plugin': item.active }"
         class="service-item"
-        @click="selectedItem(item)"
       >
-        <img :src="item.hIcon" alt="icon" />
+        <img
+          :src="item.hIcon"
+          alt="icon"
+          @click="selectedItem(item)"
+          :class="{ 'chosen-plugin': item.active }"
+        />
       </div>
     </div>
     <img
@@ -105,8 +108,8 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  width:55px;
-  height:55px;
+  width: 55px;
+  height: 55px;
   border: 2px solid rgb(64, 168, 243);
   border-radius: 7px;
 }

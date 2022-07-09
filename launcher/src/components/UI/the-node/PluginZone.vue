@@ -9,7 +9,12 @@
           :key="index"
           ref="itemsList"
         >
-          <img :src="item.sIcon" alt="icon" @click="pluginMenuHandler(item)" />
+          <img
+            :src="item.sIcon"
+            alt="icon"
+            @click.self="pluginMenuHandler(item)"
+            @dblclick.self="openDefaultBrowser(item)"
+          />
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
@@ -126,15 +131,18 @@ export default {
       }
       this.updateStates();
     },
-    selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("itemSelect", item);
+    openDefaultBrowser(el) {
+      let url = "https://www.google.com/";
+      window.open(url, "_blank");
+      el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
-      this.list.filter((item) => {
-        item.id === el.id;
-        el.displayPluginMenu = !el.displayPluginMenu;
-      });
+      setTimeout(() => {
+        this.list.filter((item) => {
+          item.id === el.id;
+          el.displayPluginMenu = !el.displayPluginMenu;
+        });
+      }, 200);
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;

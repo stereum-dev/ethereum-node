@@ -16,6 +16,7 @@ import NodeBg from "./components/UI/the-node/NodeBg.vue";
 import ChartBg from "./components/UI/ChartBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
+import NodeService from "./components/UI/the-node/NodeService.vue";
 
 Vue.configureCompat({ WATCH_ARRAY: false });
 
@@ -28,6 +29,7 @@ app.component("node-bg", NodeBg);
 app.component("chart-bg", ChartBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
+app.component("node-service", NodeService);
 
 app.use(createPinia());
 app.use(copyText);
