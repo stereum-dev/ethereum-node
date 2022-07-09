@@ -1,6 +1,6 @@
 <template>
   <div class="router-view">
-    <node-header id="head" onmousedown="return false"></node-header>
+    <node-header id="head" @mousedown.prevent></node-header>
     <node-bg>
       <div class="node-parent">
         <div class="play-box" v-if="playFirstVideo">
@@ -14,7 +14,7 @@
           @show-item="displaySingleModal(steps)"
           v-if="isTutorialModalActive"
         ></tutorial-modal>
-        <div class="journal-box" onmousedown="return false">
+        <div class="journal-box" @mousedown.prevent>
           <journal-node></journal-node>
         </div>
         <div class="trapezoid-parent">
@@ -58,7 +58,7 @@
             ></plugin-zone>
           </div>
         </div>
-        <div class="service" onmousedown="return false">
+        <div class="service" @mousedown.prevent.stop>
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
             <service-plugin
@@ -90,7 +90,7 @@ import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
-
+import ControlService from "@/store/ControlService";
 import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
@@ -119,6 +119,7 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      runningServices: "runningServices",
     }),
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
@@ -129,6 +130,7 @@ export default {
   },
   mounted() {},
   methods: {
+
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;

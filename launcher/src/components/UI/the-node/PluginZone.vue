@@ -5,14 +5,41 @@
       <div class="item-box" @drag.prevent.stop>
         <div
           class="items"
-          v-for="(item, index) in filteredList"
+          v-for="(item, index) in list"
           :key="index"
           ref="itemsList"
-          @mouseover="pluginMenuHandler(item)"
-          @mouseleave="hidePluginMenu(item)"
         >
-          <img :src="item.sIcon" alt="icon" @click="selectedItem(item)" />
-          <plugin-menu></plugin-menu>
+          <img :src="item.sIcon" alt="icon" @click="pluginMenuHandler(item)" />
+          <plugin-menu v-if="item.displayPluginMenu">
+            <div class="menu-content">
+              <div class="power">
+                <img
+                  v-if="item.state == 'running'"
+                  @click="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/shutdown.png"
+                  alt="icon"
+                />
+                <img
+                  v-else
+                  @click="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/turn-on.png"
+                  alt="icon"
+                />
+              </div>
+              <div class="book">
+                <img src="/img/icon/plugin-menu-icons/logs3.png" alt="icon" />
+              </div>
+              <div class="restart">
+                <img src="/img/icon/plugin-menu-icons/sync3.png" alt="icon" />
+              </div>
+              <div class="setting">
+                <img
+                  src="/img/icon/plugin-menu-icons/setting4.png"
+                  alt="icon"
+                />
+              </div>
+            </div>
+          </plugin-menu>
         </div>
       </div>
     </template>
@@ -24,6 +51,9 @@
   </manage-trapezoid>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
 export default {
@@ -48,31 +78,62 @@ export default {
   data() {
     return {
       itemsList: [],
-      isPluginMenuActive: true,
-      filteredList: [],
+      isPluginMenuActive: false,
+      isServiceOn: false,
     };
   },
-  created() {
-    this.filteredList = this.list;
+  beforeMount() {
+    this.updateStates();
   },
-  mounted() {
-    this.filteredList = this.filteredList.map((item) => {
-      return {
-        displayPluginMenu: false,
-        ...item,
-      };
-    });
+  updated() {
+    this.updateStates();
   },
-  computed: {},
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+    }),
+  },
   methods: {
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
+    },
+    stateHandler: async function (item) {
+      let state = "stopped";
+      if (item.state === "exited") {
+        state = "started";
+        this.isServiceOn = true;
+      }
+      try {
+        await ControlService.manageServiceState({
+          id: item.config.serviceID,
+          state: state,
+        });
+      } catch (err) {
+        console.log(state.replace("ed", "ing") + " service failed:\n", err);
+      }
+      this.updateStates();
+    },
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("itemSelect", item);
     },
     pluginMenuHandler(el) {
-      this.filteredList.map((item) => {
-        if (item.id === el.id && item.name === el.name)
-          el.displayPluginMenu = true;
+      this.list.filter((item) => {
+        item.id === el.id;
+        el.displayPluginMenu = !el.displayPluginMenu;
       });
     },
     hidePluginMenu(el) {
@@ -107,17 +168,11 @@ export default {
   display: grid;
   grid-template-columns: repeat(4, 25%);
   grid-template-rows: repeat(2, 63px);
-  justify-content: space-between;
-  align-self: center;
-  align-items: center;
   row-gap: 10px;
   overflow-x: hidden;
   overflow-y: auto;
-  position: absolute;
-  top: 21%;
-  left: 21.6%;
-  height: 63px;
-  width: 56%;
+  width: 100%;
+  margin-top: 10px;
   background-color: transparent;
 }
 .item-box::-webkit-scrollbar {
@@ -132,7 +187,6 @@ export default {
   border-radius: 7px;
   margin: 0 auto;
   cursor: pointer;
-  z-index: 0;
 }
 .item-box .items img {
   width: 50px;
@@ -173,5 +227,145 @@ export default {
 .chosen-plugin {
   border: 2px solid rgb(64, 168, 243);
   border-radius: 10px;
+}
+.menu-content {
+  width: 100%;
+  height: 100%;
+}
+.menu-content .power {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -2%;
+  left: 27%;
+  animation: power 1s;
+}
+@keyframes power {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: -2%;
+    left: 27%;
+  }
+}
+.menu-content .power img {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+
+.menu-content .book {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 40%;
+  left: 36.1%;
+  animation: book 1s;
+}
+@keyframes book {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: 40%;
+    left: 36.1%;
+  }
+}
+.menu-content .book img {
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgb(124, 124, 124);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .restart {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 40%;
+  left: 17.2%;
+  animation: restart 1s;
+}
+@keyframes restart {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: 40%;
+    left: 17.2%;
+  }
+}
+
+.menu-content .restart img {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  border: 1px solid rgb(124, 124, 124);
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .setting {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 80%;
+  left: 27%;
+  animation: setting 1s;
+}
+@keyframes setting {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    width: 28px;
+    height: 28px;
+    top: 80%;
+    left: 27%;
+  }
+}
+.menu-content .setting img {
+  width: 90%;
+  height: 90%;
+  border: 1px solid rgb(124, 124, 124);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .power img:hover,
+.menu-content .book img:hover,
+.menu-content .restart img:hover,
+.menu-content .setting img:hover {
+  transform: scale(1.1);
+}
+
+.menu-content .book img:active,
+.menu-content .restart img:active,
+.menu-content .setting img:active,
+.menu-content .power img:active {
+  transform: scale(1);
 }
 </style>
