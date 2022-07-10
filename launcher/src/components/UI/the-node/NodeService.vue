@@ -6,21 +6,15 @@
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
-    <div class="service-bg" ref="serviceBg">
-      <div
-        v-for="item in installedServices.filter(
-          (service) => service.category === 'service'
-        )"
-        :key="item.id"
-        class="service-item"
-      >
+    <div class="item-box" ref="serviceBg">
+      <div v-for="item in list" :key="item.id" class="items">
         <img
           :src="item.hIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
           @dblclick="openDefaultBrowser(item)"
         />
-        <plugin-menu v-if="item.displayPluginMenu">
+        <plugin-menu>
           <div class="menu-content">
             <div class="power">
               <img
@@ -58,65 +52,78 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useServices } from "@/store/services";
+import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
 
 export default {
   components: { PluginMenu },
-  props: ["list"],
+  props: {
+    list: {
+      type: Array,
+      required: true,
+      default: () => {
+        return [];
+      },
+    },
+  },
   data() {
     return {
+      itemsList: [],
       isPluginMenuActive: false,
       isServiceOn: false,
     };
   },
+  beforeMount() {},
+  updated() {},
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      runningServices: "runningServices",
     }),
   },
   methods: {
-    updateStates: async function () {
-      let serviceInfos = await ControlService.listServices();
-      this.installedServices.forEach((s, idx) => {
-        let updated = false;
-        serviceInfos.forEach((i) => {
-          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
-            this.installedServices[idx].state = i.State;
-            updated = true;
-          }
-        });
-        if (!updated) {
-          this.installedServices[idx].state = "exited";
-        }
-      });
-    },
-    stateHandler: async function (item) {
-      let state = "stopped";
-      if (item.state === "exited") {
-        state = "started";
-        this.isServiceOn = true;
-      }
-      try {
-        await ControlService.manageServiceState({
-          id: item.config.serviceID,
-          state: state,
-        });
-      } catch (err) {
-        console.log(state.replace("ed", "ing") + " service failed:\n", err);
-      }
-      this.updateStates();
-    },
+    // updateStates: async function () {
+    //   let serviceInfos = await ControlService.listServices();
+    //   this.installedServices.forEach((s, idx) => {
+    //     let updated = false;
+    //     serviceInfos.forEach((i) => {
+    //       if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+    //         this.installedServices[idx].state = i.State;
+    //         updated = true;
+    //       }
+    //     });
+    //     if (!updated) {
+    //       this.installedServices[idx].state = "exited";
+    //     }
+    //   });
+    // },
+    // stateHandler: async function (item) {
+    //   let state = "stopped";
+    //   if (item.state === "exited") {
+    //     state = "started";
+    //     this.isServiceOn = true;
+    //   }
+    //   try {
+    //     await ControlService.manageServiceState({
+    //       id: item.config.serviceID,
+    //       state: state,
+    //     });
+    //   } catch (err) {
+    //     console.log(state.replace("ed", "ing") + " service failed:\n", err);
+    //   }
+    //   this.updateStates();
+    // },
     openDefaultBrowser(el) {
-      let url = "https://www.google.com/";
+      let url = el.linkUrl;
       window.open(url, "_blank");
       el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
       setTimeout(() => {
-        this.list.filter((item) => {
-          item.id === el.id;
+        this.list.filter((i) => {
+          i?.id == el.id;
           el.displayPluginMenu = !el.displayPluginMenu;
         });
       }, 200);
@@ -143,11 +150,8 @@ export default {
   width: 50%;
   height: 25px;
 }
-.service-item {
-  width: 60px;
-  height: 60px;
-}
-.service-bg {
+
+.item-box {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(5, 1fr);
@@ -158,39 +162,171 @@ export default {
   overflow-y: auto;
   background: #707070;
   border-radius: 20px;
-  cursor: pointer;
   overflow-x: hidden;
   overflow-y: auto;
 }
-.service-bg::-webkit-scrollbar {
+.item-box::-webkit-scrollbar {
   display: none;
 }
 
-.service-item {
+.items {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
-.service-item img {
+.items img {
   width: 50px;
   height: 50px;
+  z-index: 1;
+  cursor: pointer;
 }
-.service-item img:active {
-  box-shadow: none;
-}
-.chosen-plugin {
-  width: 55px;
-  height: 55px;
-  border: 2px solid rgb(64, 168, 243);
-  border-radius: 7px;
-}
+
 .service-arrow {
   border-radius: 50px;
   box-shadow: 1px 2px 3px 1px rgb(63, 63, 63);
 }
 .service-arrow:active {
   box-shadow: none;
+}
+.menu-content {
+  width: 100%;
+  height: 100%;
+}
+.menu-content .power {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -2%;
+  left: 2%;
+  animation: power 1s;
+}
+@keyframes power {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: -2%;
+    left: 2%;
+  }
+}
+.menu-content .power img {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+
+.menu-content .book {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: -2%;
+  left: 66%;
+  animation: book 1s;
+}
+@keyframes book {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: -2%;
+    left: 66%;
+  }
+}
+.menu-content .book img {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #a3a3a3;
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .restart {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 65%;
+  left: 2%;
+  animation: restart 1s;
+}
+@keyframes restart {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: 65%;
+    left: 2%;
+  }
+}
+
+.menu-content .restart img {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  border: 1px solid #a3a3a3;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .setting {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 65%;
+  left: 66%;
+  animation: setting 1s;
+}
+@keyframes setting {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 27%;
+  }
+  100% {
+    top: 65%;
+    left: 66%;
+  }
+}
+.menu-content .setting img {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #a3a3a3;
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
+.menu-content .power img:hover,
+.menu-content .book img:hover,
+.menu-content .restart img:hover,
+.menu-content .setting img:hover {
+  transform: scale(1.1);
+}
+
+.menu-content .book img:active,
+.menu-content .restart img:active,
+.menu-content .setting img:active,
+.menu-content .power img:active {
+  transform: scale(1);
 }
 </style>

@@ -71,10 +71,10 @@
             </node-service>
           </div>
         </div>
-        <div class="node-side" @mousedown.prevent>
+        <div class="node-side" >
           <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
-        <div class="footer" @mousedown.prevent>
+        <div class="footer" >
           <div class="footer-content"></div>
         </div>
         <task-manager></task-manager>
@@ -233,8 +233,6 @@ export default {
   color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
-  margin-top: 1px;
-  background-color: #606060;
   border-radius: 0 25px 25px 10px;
 }
 .trapezoid-parent {
