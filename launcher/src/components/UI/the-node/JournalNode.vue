@@ -18,8 +18,12 @@
         </router-link>
       </div>
       <div class="config-btns">
-        <div class="config-priority">
-          <span class="btn-text">ADD PRIORITY</span>
+        <div class="config-update">
+          <span class="btn-text">UPDATE</span>
+          <img
+            alt="update-icon"
+            src="/img/icon/header-icons/update-green.png"
+          />
         </div>
       </div>
     </div>
@@ -70,7 +74,7 @@ export default {
   width: 95%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: 1fr;
   grid-template-rows: repeat(9, 1fr);
   background-color: #606060;
   border-radius: 10px;
@@ -134,17 +138,17 @@ export default {
 }
 
 .config-btns {
-  grid-column: 1/6;
-  grid-row: 1/5;
+  grid-column: 1;
+  grid-row: 2/10;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
-.config-btns .config-priority {
-  grid-column: 1/7;
+.config-btns .config-update {
+  grid-column: 1;
   grid-row: 2/3;
   width: 90%;
   height: 32px;
@@ -162,25 +166,30 @@ export default {
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 
-.config-btns .config-priority span {
-  width: 100%;
-  font-size: 0.7rem;
+.config-btns .config-update span {
+  width: 50%;
+  font-size: 0.8rem;
   font-weight: 700;
   color: rgb(196, 196, 196);
 }
+.config-btns .config-update img {
+  width: 20px;
+  height: 17px;
+  margin-right: 10px;
+}
 
-.config-btns .config-priority:hover {
+.config-btns .config-update:hover {
   background-color: #2c2c2c;
   transform: scale(1.02);
 }
 
-.config-btns .config-priority:active {
+.config-btns .config-update:active {
   box-shadow: none;
   transform: scale(1);
 }
 
 .edit-btn {
-  grid-column: 1/7;
+  grid-column: 1;
   grid-row: 1/2;
   display: flex;
   flex-direction: column;
