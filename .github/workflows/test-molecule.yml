@@ -41,7 +41,6 @@ jobs:
           {role: "validator-list-api", test: "nimbus", delay: 120},
           {role: "validator-list-api", test: "prysm", delay: 125},
           {role: "validator-list-api", test: "teku", delay: 130},
-          {role: "validator-fee-recipient-api", test: "teku", delay: 135},
           {role: "configure-updates", test: "default", delay: 1},
           {role: "configure-updates", test: "no-unattended-updates", delay: 1},
           {role: "setup", test: "default", delay: 1},
