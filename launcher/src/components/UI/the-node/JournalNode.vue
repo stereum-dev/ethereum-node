@@ -1,5 +1,12 @@
 <template>
   <div class="config-node">
+    <div class="server">
+      <span class="title">Server</span>
+      <div class="server-details">
+        <span class="ip">ip</span>
+        <span class="name">{{ maschinName }}</span>
+      </div>
+    </div>
     <div class="config-bg">
       <div class="edit-btn">
         <router-link to="/manage">
@@ -19,9 +26,27 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
-    return {};
+    return {
+      maschinName: "",
+    };
+  },
+  mounted() {
+    this.maschinNameMet();
+  },
+  methods: {
+    async maschinNameMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.maschinName = arr[0];
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
@@ -34,14 +59,14 @@ export default {
   margin-top: 1px;
   display: grid;
   background-color: #3b3b3b;
-  grid-template-rows: 4% 9% 87%;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(9, 1fr);
+  grid-template-columns: 1fr;
   justify-content: center;
   align-items: center;
 }
 .config-bg {
-  grid-column: 1/7;
-  grid-row: 3/4;
+  grid-column: 1;
+  grid-row: 3/10;
   width: 95%;
   height: 100%;
   display: grid;
@@ -50,6 +75,62 @@ export default {
   background-color: #606060;
   border-radius: 10px;
   margin: 0 auto;
+}
+.server {
+  grid-column: 1;
+  grid-row: 1/3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.server .title {
+  width: max-content;
+  height: 15px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(138, 138, 138);
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+.server-details {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.server-details span:first-child {
+  width: 100%;
+  height: 30%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(138, 138, 138);
+  text-transform: uppercase;
+  border: 1px solid #a1a1a1;
+  margin-top: 2px;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  padding: 4px;
+}
+.server-details span:last-child {
+  width: 100%;
+  height: 30%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(102, 199, 149);
+  text-transform: uppercase;
+  border: 1px solid #a1a1a1;
+  margin-top: 2px;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  padding: 4px;
 }
 
 .config-btns {

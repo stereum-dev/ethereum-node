@@ -906,7 +906,7 @@ input:invalid {
 }
 input:invalid {
   color: rgb(51, 51, 51);
-  border-color: rgb(226, 107, 86) !important;
+  border-color: rgb(226, 107, 86);
   box-shadow: none;
 }
 </style>
