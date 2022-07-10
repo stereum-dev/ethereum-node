@@ -7,25 +7,25 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="item-box" ref="serviceBg">
-      <div v-for="item in list" :key="item.id" class="items">
+      <div v-for="(param, index) in list" :key="index" class="items">
         <img
-          :src="item.hIcon"
+          :src="param.hIcon"
           alt="icon"
-          @click="pluginMenuHandler(item)"
-          @dblclick="openDefaultBrowser(item)"
+          @click="pluginMenuHandler(param)"
+          @dblclick="openDefaultBrowser(param)"
         />
-        <plugin-menu>
+        <plugin-menu v-if="param.displayPluginMenu">
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="item.state == 'running'"
-                @click="stateHandler(item)"
+                v-if="param.state == 'running'"
+                @click="stateHandler(param)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
               />
               <img
                 v-else
-                @click="stateHandler(item)"
+                @click="stateHandler(param)"
                 src="/img/icon/plugin-menu-icons/turn-on.png"
                 alt="icon"
               />
@@ -75,7 +75,12 @@ export default {
       isServiceOn: false,
     };
   },
-  beforeMount() {},
+  beforeMount() {
+    this.updateStates();
+  },
+  updated() {
+    this.updateStates();
+  },
   updated() {},
   computed: {
     ...mapWritableState(useServices, {
@@ -84,49 +89,47 @@ export default {
     }),
   },
   methods: {
-    // updateStates: async function () {
-    //   let serviceInfos = await ControlService.listServices();
-    //   this.installedServices.forEach((s, idx) => {
-    //     let updated = false;
-    //     serviceInfos.forEach((i) => {
-    //       if (i.Names.replace("stereum-", "") === s.config.serviceID) {
-    //         this.installedServices[idx].state = i.State;
-    //         updated = true;
-    //       }
-    //     });
-    //     if (!updated) {
-    //       this.installedServices[idx].state = "exited";
-    //     }
-    //   });
-    // },
-    // stateHandler: async function (item) {
-    //   let state = "stopped";
-    //   if (item.state === "exited") {
-    //     state = "started";
-    //     this.isServiceOn = true;
-    //   }
-    //   try {
-    //     await ControlService.manageServiceState({
-    //       id: item.config.serviceID,
-    //       state: state,
-    //     });
-    //   } catch (err) {
-    //     console.log(state.replace("ed", "ing") + " service failed:\n", err);
-    //   }
-    //   this.updateStates();
-    // },
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
+    },
+    stateHandler: async function (item) {
+      let state = "stopped";
+      if (item.state === "exited") {
+        state = "started";
+        this.isServiceOn = true;
+      }
+      try {
+        await ControlService.manageServiceState({
+          id: item.config.serviceID,
+          state: state,
+        });
+      } catch (err) {
+        console.log(state.replace("ed", "ing") + " service failed:\n", err);
+      }
+      this.updateStates();
+    },
     openDefaultBrowser(el) {
       let url = el.linkUrl;
       window.open(url, "_blank");
       el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
-      setTimeout(() => {
-        this.list.filter((i) => {
-          i?.id == el.id;
+      this.list.map((i) => {
+        if (i?.id === el.id && i?.name === el.name)
           el.displayPluginMenu = !el.displayPluginMenu;
-        });
-      }, 200);
+      });
     },
   },
 };
