@@ -5,7 +5,20 @@
 </template>
 <script>
 export default {
-  props: ["name", "isRed"],
+  props: {
+    name: {
+      type: String,
+      required: true,
+    },
+    isRed: {
+      type: String,
+      required: false,
+      default: "0",
+      validator: function (value) {
+        return value === "1" || value === "0";
+      },
+    },
+  },
   data() {
     return {
       colorStyle: this.isRed,
