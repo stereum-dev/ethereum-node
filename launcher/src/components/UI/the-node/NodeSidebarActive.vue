@@ -1,223 +1,125 @@
 <template>
-  <div class="active-box">
-    <div class="active-table">
-      <div class="table-row" v-for="(item, index) in configData" :key="index">
-        <div v-if="item.status === 'deactive'" class="status-icon">
-          <span class="red"></span>
-        </div>
-        <div v-else-if="item.status === 'active'" class="status-icon">
-          <span class="green"></span>
-        </div>
-        <div v-else-if="item.status === 'off'" class="status-icon">
-          <span class="yellow"></span>
-        </div>
-        <div v-else class="status-icon">
-          <span class="blue"></span>
-        </div>
-        <div class="row-content">
-          <span>{{ item.name }}</span>
-        </div>
+  <div class="status-box">
+    <div class="warning-box">
+      <div class="yellow-warning">
+        <img
+          src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
+          alt=""
+        />
+        <span>002</span>
+      </div>
+      <div class="red-warning">
+        <img
+          src="../../../../public/img/icon/node-journal-icons/red-warning.png"
+          alt=""
+        />
+        <span>002</span>
       </div>
     </div>
-    <div class="badge">
-      <div class="active-badge" :class="{ activated: activeBtn }">
-        <span :class="{ spanColor: activeBtn }" @click="activeBtnHandler"
-          >ACTIVE</span
+    <div class="status-table">
+      <div class="status-table-content">
+        <div
+          class="status-table-row"
+          v-for="item in statusContents"
+          :key="item.id"
         >
-      </div>
-      <div class="installed-badge" :class="{ activated: installedBtn }">
-        <span :class="{ spanColor: installedBtn }" @click="installedBtnHandler"
-          >INSTALLED</span
-        >
+          <div v-if="item.status == 'yellow'" class="status-yellow"></div>
+          <div else class="status-red"></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from 'pinia'
-import { useNodeStore } from '@/store/theNode'
+import { mapState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
-  data () {
-    return {
-      installedBtn: false,
-      activeBtn: false
-    }
+  data() {
+    return {};
   },
   computed: {
-    ...mapState(useNodeStore,{
-      configData: 'configData_nodeSidebarActive'
-    })
+    ...mapState(useNodeStore, {
+      newUpdates: "newUpdates",
+      statusContents: "statusContents",
+    }),
   },
-  methods: {
-    installedBtnHandler () {
-      this.installedBtn = true
-      this.activeBtn = false
-    },
-    activeBtnHandler () {
-      this.activeBtn = true
-      this.installedBtn = false
-    }
-  }
-}
+};
 </script>
 <style scoped>
 * {
   box-sizing: border-box;
 }
-.active-box {
-  width: 96%;
-  height: 55%;
+.status-box {
+  width: 100%;
+  height: 45%;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
-  flex-wrap: nowrap;
-  overflow: hidden;
-  border: 1px solid #7f7f7f;
-  border-radius: 20px;
-  padding: 0 5px 5px 5px;
-  background-color: gray;
 }
-.badge {
-  width: 100%;
-  height: 8%;
+.status-box .warning-box {
   display: flex;
-  justify-content: space-between;
-}
-
-.active-badge {
-  width: 49%;
-  height: 100%;
-  border: 1px solid rgb(171, 169, 169);
-  border-radius: 40px 0 0 40px;
-  box-shadow: 0 1px 3px 1px #393939;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.installed-badge {
-  width: 49%;
-  height: 100%;
-  border: 1px solid rgb(171, 169, 169);
-  border-radius: 0 40px 40px 0;
-  box-shadow: 0 1px 3px 1px #393939;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.active-badge span,
-.installed-badge span {
-  height: 70%;
-  align-self: center;
-  font-size: 9px;
-  font-weight: 800;
-  color: rgb(26, 30, 29);
-}
-.active-badge:hover,
-.installed-badge:hover {
-  background-color: #373737;
-  box-shadow: 0 1px 3px 1px #373737;
-}
-.active-badge:active,
-.installed-badge:active {
-  box-shadow: none;
-}
-.active-badge:hover span,
-.installed-badge:hover span {
-  color: rgb(222, 222, 222);
-}
-
-.activated {
-  background-color: #373737 !important;
-  border: 1px solid #2a2a2a !important;
-  box-shadow: none !important;
-}
-.spanColor {
-  color: rgb(205, 205, 204) !important;
-}
-.active-table {
-  width: 100%;
-  height: 80%;
-  border: 2px solid #747474;
-  border-radius: 15px;
-  background: #242526;
-  color: rgb(41, 41, 41);
-  overflow-x: hidden;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  margin: 10px auto;
+  margin-bottom: 10px;
 }
-
-.active-table::-webkit-scrollbar {
+.warning-box .yellow-warning {
+  width: 70px;
+  height: 30px;
+  background-color: #fed506;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color: black;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.warning-box .red-warning {
+  width: 70px;
+  height: 30px;
+  background-color: #f44444;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color: black;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.status-box .red-warning img,
+.status-box .yellow-warning img {
+  width: 25px;
+}
+.status-box .status-table {
+  width: 95%;
+  height: 75%;
+  background-color: #2d2d34;
+  margin: 5px auto;
+  overflow: hidden;
+  padding: 5px;
+}
+.status-table .status-table-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+.status-table-content::-webkit-scrollbar {
   width: 1px;
 }
-
-.table-row {
-  display: flex;
-  width: 96%;
-  height: 10%;
-  background-color: white;
-  border: 1px solid gray;
-  border-radius: 45px;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1px;
+.status-box .status-table-row {
+  width: 100%;
+  height: 20px;
 }
-
-.status-icon {
-  width: 24%;
+.status-box .status-table-row .status-red {
+  width: 100%;
   height: 100%;
-  border-radius: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  background-color: #f44444;
+  margin-top: 3px;
 }
-
-.status-icon .red {
-  width: 65%;
-  height: 90%;
-  background-color: rgb(216, 37, 37);
-  border-radius: 50%;
-  margin-left: 1px;
-}
-.status-icon .yellow {
-  width: 65%;
-  height: 90%;
-  background-color: rgb(212, 159, 25);
-  border-radius: 50%;
-  margin-left: 1px;
-}
-.status-icon .green {
-  width: 65%;
-  height: 90%;
-  background-color: rgb(55, 135, 77);
-  border-radius: 50%;
-  margin-left: 1px;
-}
-.status-icon .blue {
-  width: 65%;
-  height: 90%;
-  background-color: rgb(35, 116, 229);
-  border-radius: 50%;
-  margin-left: 1px;
-}
-
-.row-content {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 86%;
+.status-box .status-table-row .status-yellow {
+  width: 100%;
   height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.row-content span {
-  font-size: 0.6rem;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 800;
+  background-color: #f6ce07;
+  margin-top: 3px;
 }
 </style>

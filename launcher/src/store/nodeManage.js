@@ -10,7 +10,7 @@ export const useNodeManage = defineStore("nodeManage", {
       clickPresets: [
         {
           id: 1,
-          name: "blox ssv",
+          name: "blox-ssv",
           category: "execution",
           defaultPath: "/opt/stereum",
           icon: require("../../public/img/icon/click-installation/BLOX_SSV.png"),

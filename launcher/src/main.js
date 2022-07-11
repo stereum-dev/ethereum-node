@@ -11,11 +11,12 @@ import { createPinia } from "pinia";
 import copyText from "@meforma/vue-copy-to-clipboard";
 import BaseButton from "./components/UI/BaseButton.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
-import TheTrapezium from "./components/UI/TheTrapezium.vue";
-import NodeBg from "./components/UI/NodeBg.vue";
+import TheTrapezium from "./components/UI/the-node/TheTrapezium.vue";
+import NodeBg from "./components/UI/the-node/NodeBg.vue";
 import ChartBg from "./components/UI/ChartBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
+import NodeService from "./components/UI/the-node/NodeService.vue";
 
 Vue.configureCompat({ WATCH_ARRAY: false });
 
@@ -28,6 +29,7 @@ app.component("node-bg", NodeBg);
 app.component("chart-bg", ChartBg);
 app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
+app.component("node-service", NodeService);
 
 app.use(createPinia());
 app.use(copyText);

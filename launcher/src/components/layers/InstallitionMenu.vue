@@ -79,9 +79,6 @@ export default {
     this.checkOS();
     this.randomValue();
   },
-  mounted() {
-    console.log(this.message);
-  },
   computed: {
     ...mapState(useWelcomeStore, { installation: "installation" }),
   },
