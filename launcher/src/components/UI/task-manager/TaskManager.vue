@@ -228,7 +228,7 @@ export default {
 }
 .table-content .table-row {
   width: 97%;
-  height: 15%;
+  height: 29px;
   border: 2px solid #d9d9d9;
   border-radius: 20px;
   box-shadow: 0 1px 5px 1px rgb(35, 35, 35);
