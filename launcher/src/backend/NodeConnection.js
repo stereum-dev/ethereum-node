@@ -29,7 +29,7 @@ export class NodeConnection {
    * identify the operating system of the connected node
    */
   async findOS() {
-    const uname = await this.sshService.exec("sudo cat /etc/*-release");
+    const uname = await this.sshService.exec("cat /etc/*-release");
     log.debug("result uname: ", uname);
     if (uname.rc == 0) {
       if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
@@ -49,7 +49,7 @@ export class NodeConnection {
    */
   async findStereumSettings() {
     const stereumConfig = await this.sshService.exec(
-      "sudo cat /etc/stereum/stereum.yaml"
+      "cat /etc/stereum/stereum.yaml"
     );
 
     if (stereumConfig.rc == 0) {
@@ -89,10 +89,10 @@ export class NodeConnection {
         let installPkgResult;
         try {
           installPkgResult = await this.sshService.exec(
-            "sudo apt update &&\
-                    sudo apt install -y software-properties-common &&\
-                    sudo add-apt-repository --yes --update ppa:ansible/ansible &&\
-                    sudo apt install -y pip ansible tar gzip wget"
+            "apt update &&\
+                    apt install -y software-properties-common &&\
+                    add-apt-repository --yes --update ppa:ansible/ansible &&\
+                    apt install -y pip ansible tar gzip wget"
           );
         } catch (err) {
           log.error(err);
@@ -128,17 +128,17 @@ export class NodeConnection {
       try {
         installResult = await this.sshService.exec(
           `
-                sudo mkdir -p "` +
+                mkdir -p "` +
             this.installationDirectory +
             `/ansible" &&
                 cd "` +
             this.installationDirectory +
             `/ansible" &&
-                sudo git init &&
-                sudo git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
-                sudo git config core.sparseCheckout true &&
-                sudo echo 'controls' >> .git/info/sparse-checkout &&
-                sudo git checkout ${branch}
+                git init &&
+                git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
+                git config core.sparseCheckout true &&
+                echo 'controls' >> .git/info/sparse-checkout &&
+                git checkout ${branch}
                 `
         );
       } catch (err) {
@@ -223,8 +223,7 @@ export class NodeConnection {
       this.taskManager.tasks.push({name: playbook, ref: playbookRunRef})
       try {
         ansibleResult = await this.sshService.exec(
-          "sudo\
-                        ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
+          "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
             playbookRunRef +
@@ -271,7 +270,7 @@ export class NodeConnection {
       let statusResult;
       try {
         statusResult = await this.sshService.exec(
-          "sudo cat /tmp/" + playbookRunRef + "/localhost"
+          "cat /tmp/" + playbookRunRef + "/localhost"
         );
       } catch (err) {
         log.error("Can't read playbook status '" + playbookRunRef + "'", err);
@@ -301,7 +300,7 @@ export class NodeConnection {
       let services;
       try {
         services = await this.sshService.exec(
-          "sudo ls -1 /etc/stereum/services"
+          "ls -1 /etc/stereum/services"
         );
       } catch (err) {
         log.error("Can't read services configurations", err);
@@ -328,7 +327,7 @@ export class NodeConnection {
       try {
         const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
         serviceConfig = await this.sshService.exec(
-          "sudo cat /etc/stereum/services/" + serviceId + suffix
+          "cat /etc/stereum/services/" + serviceId + suffix
         );
       } catch (err) {
         log.error("Can't read service configuration of " + serviceId, err);
@@ -362,7 +361,7 @@ export class NodeConnection {
       this.taskManager.tasks.push({name: "write config", otherRunRef: ref})
       try {
         configStatus = await this.sshService.exec(
-          "sudo echo -e " +
+          "echo -e " +
             StringUtils.escapeStringForShell(
               YAML.stringify(serviceConfiguration)
             ) +

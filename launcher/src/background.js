@@ -127,7 +127,7 @@ promiseIpc.on("checkStereumInstallation", async () => {
     let services;
     let settings;
     try {
-      settings = await nodeConnection.sshService.exec("sudo ls /etc/stereum");
+      settings = await nodeConnection.sshService.exec("ls /etc/stereum");
       services = await nodeConnection.listServicesConfigurations();
     } catch {
       services = [];
@@ -220,7 +220,7 @@ async function createWindow() {
 
   win.on('close', (e) => {
     if (app.showExitPrompt) {
-        e.preventDefault() // Prevents the window from closing 
+        e.preventDefault() // Prevents the window from closing
         const response = dialog.showMessageBoxSync({
             type: 'question',
             buttons: ['Yes', 'No'],
