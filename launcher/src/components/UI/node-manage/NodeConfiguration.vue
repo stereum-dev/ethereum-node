@@ -3,7 +3,7 @@
     <div class="server">
       <span class="title">Server</span>
       <div class="server-details">
-        <span class="ip">ip</span>
+        <span class="ip">{{ ipAddress }}</span>
         <span class="name">{{ maschinName }}</span>
       </div>
     </div>
@@ -75,7 +75,8 @@ export default {
       modalActive: false,
       removeModal: false,
       removeIsConfirmed: false,
-      maschinName: "",
+      maschinName: "Server Name",
+      ipAddress: "0.0.0.0",
     };
   },
   beforeMount() {
@@ -196,7 +197,7 @@ export default {
   text-align: center;
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(138, 138, 138);
+  color: #8a8a8a;
   text-transform: uppercase;
   border: 1px solid #a1a1a1;
   margin-top: 2px;
@@ -210,7 +211,7 @@ export default {
   text-align: center;
   font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(102, 199, 149);
+  color: #8a8a8a;
   text-transform: uppercase;
   border: 1px solid #a1a1a1;
   margin-top: 2px;
