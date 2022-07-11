@@ -84,10 +84,6 @@ export class SSHService {
     return this.execCommand(ensureSudoCommand, logline)
   }
 
-  async execCommand (command) {
-    return this.exec(command, command)
-  }
-
   async execCommand (command, logline) {
     log.info('exec', logline)
 
