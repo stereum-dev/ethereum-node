@@ -49,9 +49,10 @@
           </div>
         </div>
       </div>
-      <div class="list-cleaner" @click="listCleanerHandler">
+      <div class="list-cleaner">
         <span class="footer-text">Click on tasks to display</span>
         <img
+          @click="listCleanerHandler"
           src="../../../../public/img/icon/task-manager-icons/read-empty-list-icon.png"
           alt=""
         />
