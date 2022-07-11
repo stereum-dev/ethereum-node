@@ -116,16 +116,16 @@ export default {
 .welcome-parent {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(12, 1fr);
 }
 .item-container {
+  grid-column: 1/7;
+  grid-row: 7/11;
   width: 80% !important;
-  height: 30% !important;
-  margin: 10px auto !important;
+  height: 180px !important;
+  margin: 0 auto !important;
   position: relative;
   border-radius: 40px;
   display: flex;
@@ -151,11 +151,13 @@ export default {
 }
 
 #welcome-header {
+  grid-column: 3/5;
+  grid-row: 2/3;
   border: 5px solid #929292;
-  width: 40%;
-  max-width: 50%;
+  width: 100%;
+  max-width: 350px;
   height: 52px;
-  margin: 30px auto;
+  margin: 0 auto;
   border-radius: 40px;
   background-color: #194747;
   opacity: 0.88;
@@ -178,8 +180,10 @@ export default {
   text-transform: uppercase;
 }
 .middle-box {
+  grid-column: 1/7;
+  grid-row: 4/7;
   width: 100% !important;
-  height: 20% !important;
+  height: 120px !important;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -187,6 +191,8 @@ export default {
 }
 
 .message-box {
+  grid-column: 1/7;
+  grid-row: 11/13;
   width: 100% !important;
   height: 50px;
   margin-bottom: 20px;
@@ -214,6 +220,8 @@ export default {
   align-items: center;
 }
 .result-box {
+  grid-column: 1/7;
+  grid-row: 11/13;
   width: 100% !important;
   height: 50px;
   margin-bottom: 20px;
