@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+
 import { stringLiteral } from "@babel/types";
 
 export default {
@@ -21,6 +22,7 @@ export default {
       },
     },
   },
+
   data() {
     return {
       colorStyle: this.isRed,

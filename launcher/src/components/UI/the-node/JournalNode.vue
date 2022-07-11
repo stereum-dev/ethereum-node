@@ -1,93 +1,196 @@
 <template>
-  <div class="journal-parent">
-    <div class="edit-btn">
-      <router-link to="/manage">
-        <span>to edit node</span>
-        <img
-          src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
-          alt="icon"
-        />
-      </router-link>
-    </div>
-    <div class="updates">
-      <div class="update-title">
-        <span>Available Updates</span>
-      </div>
-      <div class="update-table">
-        <div
-          class="update-table-content"
-          v-for="item in newUpdates"
-          :key="item.id"
-        >
-          <div class="update-table-row">
-            <span>{{ item.name }}</span>
-            <span>{{ item.version }}</span>
-            <span>to</span>
-            <span>{{ item.version }}</span>
-          </div>
-        </div>
+  <div class="config-node">
+    <div class="server">
+      <span class="title">Server</span>
+      <div class="server-details">
+        <span class="ip">ip</span>
+        <span class="name">{{ maschinName }}</span>
       </div>
     </div>
-    <div class="status-box">
-      <div class="warning-box">
-        <div class="yellow-warning">
+    <div class="config-bg">
+      <div class="edit-btn">
+        <router-link to="/manage">
+          <span>to edit node</span>
           <img
-            src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
-            alt=""
+            src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
+            alt="icon"
           />
-          <span>002</span>
-        </div>
-        <div class="red-warning">
-          <img
-            src="../../../../public/img/icon/node-journal-icons/red-warning.png"
-            alt=""
-          />
-          <span>002</span>
-        </div>
+        </router-link>
       </div>
-      <div class="status-table">
-        <div class="status-table-content">
-          <div
-            class="status-table-row"
-            v-for="item in statusContents"
-            :key="item.id"
-          >
-            <div v-if="item.status == 'yellow'" class="status-yellow"></div>
-            <div else class="status-red"></div>
-          </div>
+      <div class="config-btns">
+        <div class="config-update">
+          <span class="btn-text">UPDATE</span>
+          <img
+            alt="update-icon"
+            src="/img/icon/header-icons/update-green.png"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
+import ControlService from "@/store/ControlService";
 export default {
   data() {
-    return {};
+    return {
+      maschinName: "",
+    };
   },
-  computed: {
-    ...mapState(useNodeStore, {
-      newUpdates: "newUpdates",
-      statusContents: "statusContents",
-    }),
+  mounted() {
+    this.maschinNameMet();
+  },
+  methods: {
+    async maschinNameMet() {
+      try {
+        const response = await ControlService.getServerVitals();
+        let data = await response.serverVitals.stdout;
+        const arr = data.split(/\r?\n/);
+        this.maschinName = arr[0];
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>
 <style scoped>
-.journal-parent {
+.config-node {
+  grid-column: 1;
   width: 100%;
   height: 100%;
-  background-color: #3b3b3b;
+  padding: 5px;
+  margin-top: 1px;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 4% 10% 40% 44%;
+  background-color: #3b3b3b;
+  grid-template-rows: repeat(9, 1fr);
+  grid-template-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+}
+.config-bg {
+  grid-column: 1;
+  grid-row: 3/10;
+  width: 95%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(9, 1fr);
+  background-color: #606060;
+  border-radius: 10px;
+  margin: 0 auto;
+}
+.server {
+  grid-column: 1;
+  grid-row: 1/3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.server .title {
+  width: max-content;
+  height: 15px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(138, 138, 138);
+  text-transform: uppercase;
+  margin-left: 8px;
+}
+.server-details {
+  width: 95%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.server-details span:first-child {
+  width: 100%;
+  height: 30%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(138, 138, 138);
+  text-transform: uppercase;
+  border: 1px solid #a1a1a1;
+  margin-top: 2px;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  padding: 4px;
+}
+.server-details span:last-child {
+  width: 100%;
+  height: 30%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgb(102, 199, 149);
+  text-transform: uppercase;
+  border: 1px solid #a1a1a1;
+  margin-top: 2px;
+  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  padding: 4px;
+}
+
+.config-btns {
+  grid-column: 1;
+  grid-row: 2/10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.config-btns .config-update {
+  grid-column: 1;
+  grid-row: 2/3;
+  width: 90%;
+  height: 32px;
+  background-color: #292929;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgb(196, 196, 196);
+  border: 1px solid #787878;
+  margin-top: 5px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+
+.config-btns .config-update span {
+  width: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgb(196, 196, 196);
+}
+.config-btns .config-update img {
+  width: 20px;
+  height: 17px;
+  margin-right: 10px;
+}
+
+.config-btns .config-update:hover {
+  background-color: #2c2c2c;
+  transform: scale(1.02);
+}
+
+.config-btns .config-update:active {
+  box-shadow: none;
+  transform: scale(1);
 }
 
 .edit-btn {
-  grid-column: 1/6;
-  grid-row: 2/3;
+  grid-column: 1;
+  grid-row: 1/2;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -133,131 +236,73 @@ export default {
   margin-right: 10px;
 }
 
-.updates {
-  grid-column: 1/6;
-  grid-row: 3/4;
-  width: 100%;
-  height: 100%;
-  margin-top: 10px;
+.btn-text {
+  margin-left: 10px;
 }
-.update-title {
-  width: 90%;
-  height: 15px;
-  margin: 5px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.router-box .btn-text {
+  text-decoration: none;
+  color: #4eb051;
 }
 
-.update-title span {
-  border-bottom: 1px solid #333e33;
-  margin-top: 1px;
-  font-size: 0.8rem;
+.delete-btn img {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+}
+.btn-icon {
+  width: 21px;
+  height: 21px;
+  border-radius: 5px;
+  margin-right: 5px;
+}
+.btn-icon img {
+  width: 21px;
+  height: 21px;
+}
+
+.config-row {
+  grid-column: 1/7;
+  grid-row: 2;
+  width: 95%;
+  height: 30px;
+  border: 2px solid rgb(155, 212, 236);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+  margin: 0 auto;
+}
+
+.config-row .row-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 25px;
+}
+.config-row .row-content span {
+  width: 80%;
+  font-size: 0.7rem;
   font-weight: 700;
 }
-.update-table {
-  width: 100%;
-  height: 70%;
-  border: 2px solid #505250;
-  margin: 5px auto 0 auto;
-  overflow-y: auto;
-}
-.update-table::-webkit-scrollbar {
-  width: 1px;
-}
-.update-table-content {
-  width: 100%;
-}
-.update-table-row {
-  width: 100%;
+.testnet-icon {
+  width: 20%;
+  min-width: 23px;
   display: flex;
-  background-color: #303030;
-  justify-content: space-between;
-  border: 2px solid #30483c;
-  padding: 2px;
-  margin: 1px auto;
-}
-.update-table-row:hover {
-  border: 2px solid #1a7584;
-}
-.update-table-row span {
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.status-box {
-  grid-column: 1/6;
-  grid-row: 4/5;
-  width: 100%;
-  height: 100%;
-  margin-top: 5px;
-  display: flex;
-  flex-direction: column;
-}
-.status-box .warning-box {
-  display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 10px;
 }
-.warning-box .yellow-warning {
-  width: 70px;
-  height: 30px;
-  background-color: #fed506;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  color: black;
-  border-radius:8px;
-  font-size: 14px;
-  font-weight: 800;
+.testnet-icon img {
+  width: 23px;
+  height: 23px;
 }
-.warning-box .red-warning {
-  width: 70px;
-  height: 30px;
-  background-color: #f44444;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  color: black;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 800;
-}
-.status-box .red-warning img,
-.status-box .yellow-warning img {
-  width: 25px;
-}
-.status-box .status-table {
-  width: 95%;
-  height: 75%;
-  background-color: #2d2d34;
-  margin: 5px auto;
-  overflow: hidden;
-  padding: 5px;
-}
-.status-table .status-table-content {
+.remove-modal-parent {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-}
-.status-table-content::-webkit-scrollbar {
-  width: 1px;
-}
-.status-box .status-table-row {
-  width: 100%;
-  height: 20px;
-}
-.status-box .status-table-row .status-red {
-  width: 100%;
-  height: 100%;
-  background-color: #f44444;
-  margin-top: 3px;
-}
-.status-box .status-table-row .status-yellow {
-  width: 100%;
-  height: 100%;
-  background-color: #f6ce07;
-  margin-top: 3px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 97;
 }
 </style>

@@ -22,15 +22,17 @@ export default {}
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: -1;
 }
 .trap-box {
   width: 95%;
-  /* height: 70%; */
+  height: 70%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #3b3b3b;
   position: relative;
+   z-index: 0;
 }
 .trapezoid {
   height: 0;
@@ -40,15 +42,9 @@ export default {}
   border-bottom: 5rem solid #828282;
   border-left: 5rem solid transparent;
   border-right: 5rem solid transparent;
+  z-index: 1;
 }
 
-.trap-item {
-  width: 90%;
-  height: 90%;
-  background-color: rgb(15, 15, 15);
-  border: 1px solid #fff;
-  position: relative;
-}
 
 .plus-icon {
   position: absolute;

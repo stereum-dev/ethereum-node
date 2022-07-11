@@ -7,10 +7,10 @@
         :key="index"
         @click="$emit('showModal')"
       >
-        <div class="camera-icon">
+        <div class="question-icon">
           <img
             src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
-            alt="camera-icon"
+            alt="question-icon"
           />
         </div>
         <div class="row-content">
@@ -59,7 +59,7 @@ export default {
 }
 .tutorial-box {
   width: 96%;
-  height: 43%;
+  height: 50%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -82,7 +82,7 @@ export default {
   background: #161b1b;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-top: 5px;
+  padding-top: 1px;
 }
 .tutorial-table::-webkit-scrollbar {
   width: 1px;
@@ -91,7 +91,7 @@ export default {
 .table-row {
   display: flex;
   width: 98%;
-  height: 22px;
+  height: 25px;
   margin-top: 2px;
   background-color: #222c2c;
   border: 2px solid #314242;
@@ -103,10 +103,10 @@ export default {
 .table-row:hover {
   border: 2px solid #45d1ae;
 }
-.table-row:hover .camera-icon {
+.table-row:hover .question-icon {
   border-right: 2px solid #45d1ae;
 }
-.camera-icon {
+.question-icon {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -115,7 +115,7 @@ export default {
   border-right: 2px solid #314242;
 }
 
-.camera-icon img {
+.question-icon img {
   width: 60%;
   height: 70%;
 }
@@ -148,7 +148,7 @@ export default {
   align-items: center;
 }
 .round-icon img {
-  width: 30%;
+  width: 33%;
   height: 100%;
 }
 </style>
