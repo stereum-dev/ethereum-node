@@ -23,6 +23,17 @@
         >
           <span>EXPERT</span>
         </div>
+        <control-panel-btn
+          @click="generalActive"
+          :class="{ active: generalBtn }"
+          name="TEST"
+        ></control-panel-btn>
+        <control-panel-btn
+          @click="generalActive"
+          :class="{ active: generalBtn }"
+          name="TEST2"
+          is-red="1"
+        ></control-panel-btn>
       </div>
       <div class="description-box">
         <div class="general-description-box" v-if="isGeneralActive">
@@ -61,8 +72,9 @@
 </template>
 <script>
 import panelModal from "./panelModal";
+import ControlPanelBtn from "./ControlPanelBtn.vue";
 export default {
-  components: { panelModal },
+  components: { panelModal, ControlPanelBtn },
   emits: ["close-modal"],
   data() {
     return {
