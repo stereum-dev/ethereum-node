@@ -61,6 +61,10 @@
           <div class="server-group" :class="{ errors: !model.name.isFilled }">
             <label for="servername">SERVERNAME</label>
             <input
+              :class="{
+                notFilled: !model.host.isFilled,
+                isFilled: model.host.isFilled,
+              }"
               name="servername"
               id="servername"
               type="text"
@@ -71,6 +75,10 @@
           <div class="server-group" :class="{ errors: !model.host.isFilled }">
             <label for="host">IP / HOSTNAME</label>
             <input
+              :class="{
+                notFilled: !model.host.isFilled,
+                isFilled: model.host.isFilled,
+              }"
               name="host"
               id="iporhostname"
               type="text"
@@ -79,9 +87,19 @@
               required
             />
           </div>
-          <div class="server-group" :class="{ errors: !model.user.isFilled }">
+          <div
+            class="server-group"
+            :class="{
+              errors: !model.user.isFilled,
+              isFilled: model.user.isFilled,
+            }"
+          >
             <label for="user">USERNAME</label>
             <input
+              :class="{
+                notFilled: !model.user.isFilled,
+                isFilled: model.user.isFilled,
+              }"
               type="text"
               name="user"
               id="username"
@@ -111,6 +129,10 @@
             required
           />
           <input
+            :class="{
+              notFilled: !model.pass.isFilled,
+              isFilled: model.pass.isFilled,
+            }"
             v-if="!keyAuth"
             type="password"
             name="keylocation"
@@ -698,6 +720,7 @@ select {
 }
 input {
   cursor: pointer;
+  outline-style: none;
 }
 
 .ssh {
@@ -792,7 +815,7 @@ input:optional {
   border-color: gray;
 }
 input:required {
-  border-color: rgb(38, 38, 38);
+  border-color: rgb(222, 207, 93);
 }
 input:invalid {
   border-color: rgb(233, 100, 100);
@@ -904,9 +927,15 @@ input:invalid {
   width: 35%;
   height: 45%;
 }
-input:invalid {
+
+.error {
+  color: #e43e3e;
+  border-color: #e43e3e !important;
+  box-shadow: none;
+}
+.notFilled {
   color: rgb(51, 51, 51);
-  border-color: rgb(226, 107, 86);
+  border-color: rgb(226, 182, 86) !important;
   box-shadow: none;
 }
 </style>
