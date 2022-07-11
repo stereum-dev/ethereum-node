@@ -16,7 +16,7 @@ export class BesuService extends NodeService {
             service.id,     // id
             1,              // configVersion
             'hyperledger/besu', // image
-            '22.4.3',           // imageVersion
+            '22.4.4',           // imageVersion
             [
                 `--network=${network}`,
                 `--data-path=${dataDir}`,

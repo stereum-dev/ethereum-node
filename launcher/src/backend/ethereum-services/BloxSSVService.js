@@ -52,7 +52,7 @@ MetricsAPIPort: 15000
       service.id, // id
       1,  // configVersion
       image, //image
-      'v0.2.0',  //imageVersion
+      'v0.2.1-rc.4',  //imageVersion
       'make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node', // command
       null, // entrypoint
       {

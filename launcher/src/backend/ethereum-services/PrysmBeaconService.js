@@ -34,7 +34,7 @@ export class PrysmBeaconService extends NodeService {
             service.id, //id
             1, // configVersion 
             image,  //image
-            'v2.1.2', //imageVersion
+            'v2.1.3', //imageVersion
             '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001',  //command
             null, //entrypoint
             null, //env
