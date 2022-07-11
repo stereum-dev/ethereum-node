@@ -14,7 +14,7 @@ export class StereumService {
     log.info('  checking stereum')
     let exists = false
     try {
-      const resp = await this.sshService.exec('sudo ls /etc/stereum/ethereum2.yaml')
+      const resp = await this.sshService.exec('ls /etc/stereum/ethereum2.yaml')
       exists = resp.rc == 0
     } catch (ex) {
       log.error("can't access ethereum2.yaml")
@@ -47,7 +47,7 @@ export class StereumService {
   async check_controlcenter () {
     // check if /etc/stereum/ethereum2.yaml does not exist
     log.info('  checking stereum controlcenter')
-    const resp = await this.sshService.exec('sudo cat /opt/stereum/controlcenter/.env')
+    const resp = await this.sshService.exec('cat /opt/stereum/controlcenter/.env')
     log.info('resp.rc: ' + resp.rc)
     if (resp.rc == 0) {
       const out = resp.stdout
@@ -69,7 +69,7 @@ export class StereumService {
   async check_controlcenter_web () {
     // check if /etc/stereum/ethereum2.yaml does not exist
     log.info('  checking stereum web cc')
-    const resp = await this.sshService.exec('sudo docker ps | grep control')
+    const resp = await this.sshService.exec('docker ps | grep control')
     if (resp.rc == 0) {
       return resp.stdout.split('   ')[1].split(':')[1]
     }
@@ -79,7 +79,7 @@ export class StereumService {
   async get_stereum_release () {
     // check if /etc/stereum/ethereum2.yaml does not exist
     log.info('  getting installed stereum version')
-    const resp = await this.sshService.exec('sudo cat /etc/stereum/ethereum2.yaml')
+    const resp = await this.sshService.exec('cat /etc/stereum/ethereum2.yaml')
     if (resp.rc == 0) {
       const yaml_doc = yaml.load(resp.stdout)
       return yaml_doc.stereum_version_tag
@@ -175,7 +175,7 @@ export class StereumService {
 
   async setApikey (apikey) {
     return new Promise(async (resolve, reject) => {
-      const resp = await this.sshService.exec("sudo bash -c \"echo '" + apikey + "' > /etc/stereum/cc-apikey\"", "sudo bash -c \"echo '<apikey>' > /etc/stereum/cc-apikey\"")
+      const resp = await this.sshService.exec("echo '" + apikey + "' > /etc/stereum/cc-apikey", "echo '<apikey>' > /etc/stereum/cc-apikey")
       if (resp.rc == 0) {
         log.info('    successfully set apikey')
         resolve(resp)

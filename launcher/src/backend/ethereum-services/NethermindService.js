@@ -17,7 +17,7 @@ export class NethermindService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             'nethermind/nethermind',// image
-            '1.13.2',               // imageVersion
+            '1.13.4',               // imageVersion
             [
                 `--config=${network}`,
                 '--log=debug',

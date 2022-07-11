@@ -69,7 +69,7 @@
             <span class="noError" v-else>{{ item.name }}</span>
             <div class="loading-box">
               <img
-                src="../../../../public/img/icon/task-manager-icons/check3.png"
+                src="../../../../public/img/icon/task-manager-icons/check5.png"
                 alt=""
               />
             </div>
@@ -248,8 +248,10 @@ export default {
   font-weight: 800;
   color: #5c5c5c;
   margin-left: 10px;
-  width: 80%;
+  width: 85%;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: clip;
   text-transform: capitalize;
 }
 .subTask-row .failed-box span {
@@ -257,8 +259,10 @@ export default {
   font-weight: 600;
   color: #cbcbcb;
   margin-left: 10px;
-  width: 80%;
+  width: 85%;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: clip;
   text-transform: capitalize;
 }
 

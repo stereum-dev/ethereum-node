@@ -1,5 +1,7 @@
 <template>
   <div class="welcome-parent">
+    <div class="empty1"></div>
+    <div class="empty2"></div>
     <div id="welcome-header">
       <h2 class="welcome-title">WELCOME</h2>
     </div>
@@ -116,16 +118,26 @@ export default {
 .welcome-parent {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+}
+.empty1 {
+  grid-column: 1/7;
+  grid-row: 1/2;
+  height: 100%;
+}
+.empty2 {
+  grid-column: 1/7;
+  grid-row: 2/3;
+  height: 100%;
 }
 .item-container {
+  grid-column: 1/7;
+  grid-row: 8/13;
   width: 80% !important;
-  height: 30% !important;
-  margin: 10px auto !important;
+  height: 180px !important;
+  margin: 0 auto !important;
   position: relative;
   border-radius: 40px;
   display: flex;
@@ -151,11 +163,13 @@ export default {
 }
 
 #welcome-header {
+  grid-column: 3/5;
+  grid-row: 3/4;
   border: 5px solid #929292;
-  width: 40%;
-  max-width: 50%;
-  height: 52px;
-  margin: 30px auto;
+  width: 100%;
+  max-width: 350px;
+  height: 50px;
+  margin: 50px auto;
   border-radius: 40px;
   background-color: #194747;
   opacity: 0.88;
@@ -178,8 +192,10 @@ export default {
   text-transform: uppercase;
 }
 .middle-box {
-  width: 100% !important;
-  height: 20% !important;
+  grid-column: 1/7;
+  grid-row: 5/8;
+  width: 100%;
+  height: 120px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -187,9 +203,10 @@ export default {
 }
 
 .message-box {
-  width: 100% !important;
+  grid-column: 1/7;
+  grid-row: 14/16;
+  width: 100%;
   height: 50px;
-  margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -214,9 +231,10 @@ export default {
   align-items: center;
 }
 .result-box {
-  width: 100% !important;
+  grid-column: 1/7;
+  grid-row: 14/16;
+  width: 100%;
   height: 50px;
-  margin-bottom: 20px;
   margin-right: 20px;
   display: flex;
   justify-content: center;
@@ -230,17 +248,17 @@ export default {
   box-shadow: 1px 1px 3px 1px rgb(16, 60, 27);
 }
 .progress-container {
-  width: 82% !important;
-  height: 30% !important;
-  margin: 10px auto !important;
+  width: 82%;
+  height: 30%;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .progress-bg {
-  width: 59% !important;
-  height: 70% !important;
+  width: 59%;
+  height: 70%;
   border: 3px solid #929292;
   background-color: #6e8582;
   border-radius: 40px;
@@ -251,10 +269,10 @@ export default {
   opacity: 1;
 }
 #txt {
-  width: 75% !important;
-  height: 95% !important;
+  width: 75%;
+  height: 95%;
   border: 5px solid #929292;
-  margin: 0 auto !important;
+  margin: 0 auto;
   background-color: #194747;
   border-radius: 20px;
   opacity: 0.8;

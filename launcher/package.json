@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.0-betassv",
+  "version": "2.0.0-stack-rc1",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",

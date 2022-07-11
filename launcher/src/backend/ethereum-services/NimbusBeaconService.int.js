@@ -34,9 +34,9 @@ test('nimbus validator import', async () => {
     const nodeConnection = new NodeConnection(connectionParams)
     const serviceManager = new ServiceManager(nodeConnection)
     await testServer.connect(nodeConnection)
- 
+
     //change password
-    await testServer.passwordAuthentication(testServer.serverRootPassword)    
+    await testServer.passwordAuthentication(testServer.serverRootPassword)
 
     //attach to subnetwork
     await testServer.attachToNetwork('eth2-prater', '10.10.0.145')
@@ -73,16 +73,16 @@ test('nimbus validator import', async () => {
 
     //generate validator api-token
     const token = StringUtils.createRandomString();
-    await nodeConnection.sshService.exec(`sudo echo ${token} > /opt/stereum/nimbus-${nimbusClient.id}/validator/validators/api-token.txt`)
+    await nodeConnection.sshService.exec(`echo ${token} > /opt/stereum/nimbus-${nimbusClient.id}/validator/validators/api-token.txt`)
 
     //Waiting for the service to start properly
     await testServer.Sleep(60000)
 
     //import validator
     const extraVars = {
-        stereum_role: 'validator-import-api', validator_service: nimbusClient.id , validator_keys:[{ 
-                name: 'batch0', 
-                passwords: ['MyTestPassword','MyTestPassword','MyTestPassword'], 
+        stereum_role: 'validator-import-api', validator_service: nimbusClient.id , validator_keys:[{
+                name: 'batch0',
+                passwords: ['MyTestPassword','MyTestPassword','MyTestPassword'],
                 content: [
                     '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "1ccb24f0f1469ab56cc0147dae242aab59ff360177c8ec4f710966913da839b6"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "b5d944adfb65e33873c5c1b809c3c15b558821f2829cd7e9da1df65d0b78fdb6"}}, "description": "", "pubkey": "acaa51756fb445b406c9e599f3f4bec991f7799c002619566ab1fa5b70445c62f1ac6561154ca5e49d7542dbe690b96b", "path": "m/12381/3600/0/0/0", "uuid": "1ea9ed13-e3bb-4555-99d9-c5e83ab9eb67", "version": 4}',
                     '{"crypto": {"kdf": {"function": "scrypt", "params": {"dklen": 32, "n": 262144, "r": 8, "p": 1, "salt": "de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116"}, "message": ""}, "checksum": {"function": "sha256", "params": {}, "message": "3691a02425a4607b86292313cc72e31d4866043034ee9cff0b7cab2096105269"}, "cipher": {"function": "aes-128-ctr", "params": {"iv": "a24857026939492f49444679544cb6bb"}, "message": "e8a184e9d70408acd33459c67632c7bb63cf9c58a175de2030f962da88a2eb4d"}}, "description": "", "pubkey": "82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf", "path": "m/12381/3600/1/0/0", "uuid": "f712f984-b926-4e90-a603-f3f14703bf4b", "version": 4}',
@@ -109,7 +109,7 @@ test('nimbus validator import', async () => {
     expect(ufw.stdout).toMatch(/9000\/udp/)
     expect(ufw.stdout).toMatch(/5052\/tcp/)
     expect(ufw.stdout).toMatch(/9190\/tcp/)
-    
+
     //check docker container
     expect(docker.stdout).toMatch(/statusim\/nimbus-eth2/)
     expect(docker.stdout).toMatch(/5052->5052/)
@@ -118,7 +118,7 @@ test('nimbus validator import', async () => {
     if(!(nimbusClient.id.includes('Up'))){
         expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
     }
-    
+
     //check nimbus service logs
     expect(status.stdout).toMatch(/Slot start/)
     expect(status.stdout).toMatch(/Local validator attached/)
