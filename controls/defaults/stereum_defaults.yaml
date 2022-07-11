@@ -23,6 +23,6 @@ stereum_static:
 
       # tools
       curl: "7.83.1"
-      grafana: "8.5.6"
+      grafana: "9.0.2"
       node_exporter: v1.3.1
       prometheus: v2.36.2
