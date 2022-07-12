@@ -9,50 +9,30 @@
     </panel-modal>
     <div class="panel-content">
       <div class="level-box">
-        <div
-          class="general-box"
-          @click="generalActive"
-          :class="{ active: generalBtn }"
-        >
-          <span>GENERAL</span>
-        </div>
-        <div
-          class="expert-box"
-          @click="expertActive"
-          :class="{ active: expertBtn }"
-        >
-          <span>EXPERT</span>
-        </div>
         <control-panel-btn
-          @click="generalActive"
+          @click.native="generalActive"
           :class="{ active: generalBtn }"
-          name="TEST"
+          name="GENERAL"
         ></control-panel-btn>
         <control-panel-btn
-          @click="generalActive"
+          @click.native="expertActive"
           :class="{ active: generalBtn }"
-          name="TEST2"
+          name="EXPERT"
           is-red="1"
         ></control-panel-btn>
       </div>
       <div class="description-box">
         <div class="general-description-box" v-if="isGeneralActive">
-          <div
-            class="general-items"
+          <control-panel-items
             v-for="item in controlPanelGeneralItems"
             :key="item.id"
-            @click="openModalHandler(item)"
-          >
-            <div class="general-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="general-description">
-              <p>{{ item.summary }}</p>
-            </div>
-          </div>
+            @click.native="openModalHandler(item)"
+            :title="item.title"
+            :summary="item.summary"
+          ></control-panel-items>
         </div>
         <div class="expert-description-box" v-else>
-          <div
+          <!-- <div
             class="expert-items"
             v-for="item in controlPanelExpertItems"
             :key="item.id"
@@ -64,7 +44,15 @@
             <div class="expert-description">
               <p>{{ item.summary }}</p>
             </div>
-          </div>
+          </div> -->
+          <control-panel-items
+            v-for="item in controlPanelExpertItems"
+            :key="item.id"
+            @click.native="openModalHandler(item)"
+            :title="item.title"
+            :summary="item.summary"
+            is-red="1"
+          ></control-panel-items>
         </div>
       </div>
     </div>
@@ -73,8 +61,9 @@
 <script>
 import panelModal from "./panelModal";
 import ControlPanelBtn from "./ControlPanelBtn.vue";
+import ControlPanelItems from "./ControlPanelItems.vue";
 export default {
-  components: { panelModal, ControlPanelBtn },
+  components: { panelModal, ControlPanelBtn, ControlPanelItems },
   emits: ["close-modal"],
   data() {
     return {
@@ -179,51 +168,12 @@ export default {
   align-items: center;
 }
 
-.expert-box {
-  width: 80%;
-  height: 16%;
-  border: 1px solid rgb(142, 142, 142);
-  background-color: #0f3c3f;
-  border-radius: 20px;
-  margin-top: 5px;
-  padding-top: 2px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px rgb(62, 61, 61);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .active {
   box-shadow: none !important;
   background-color: #10383a !important;
   border: 1px solid #041313 !important;
 }
-.general-box {
-  width: 80%;
-  height: 16%;
-  border: 1px solid rgb(142, 142, 142);
-  background-color: #0f3c3f;
-  border-radius: 20px;
-  margin-top: 5px;
-  padding-top: 2px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px rgb(62, 61, 61);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.general-box span {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgb(239, 235, 235);
-}
-
-.expert-box span {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: rgb(244, 57, 57);
-}
 .description-box {
   width: 80%;
   height: 99%;
@@ -240,57 +190,5 @@ export default {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 1fr;
-}
-.expert-items,
-.general-items {
-  width: 80%;
-  height: 68%;
-  background-color: #e8e8e8;
-  border: 2px solid #e0e1e1;
-  border-radius: 15px;
-  justify-self: center;
-  align-self: center;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  box-shadow: 0 1px 3px 1px #4b4b4b;
-  overflow: hidden;
-}
-.expert-items:hover,
-.general-items:hover {
-  border: 2px solid #65baf3;
-}
-
-.expert-title,
-.general-title {
-  width: 90%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.expert-title span {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: rgb(240, 20, 20);
-}
-.general-title span {
-  font-size: 0.55rem;
-  font-weight: 800;
-  color: rgb(82, 82, 82);
-}
-.expert-description,
-.general-description {
-  width: 90%;
-  height: 80%;
-}
-.expert-description p,
-.general-description p {
-  font-size: 0.55rem;
-  font-weight: 900;
-  text-align: center;
-  color: #2b6262;
 }
 </style>
