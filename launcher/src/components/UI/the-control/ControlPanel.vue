@@ -9,50 +9,30 @@
     </panel-modal>
     <div class="panel-content">
       <div class="level-box">
-        <div
-          class="general-box"
-          @click="generalActive"
-          :class="{ active: generalBtn }"
-        >
-          <span>GENERAL</span>
-        </div>
-        <div
-          class="expert-box"
-          @click="expertActive"
-          :class="{ active: expertBtn }"
-        >
-          <span>EXPERT</span>
-        </div>
         <control-panel-btn
-          @click="generalActive"
+          @click.native="generalActive"
           :class="{ active: generalBtn }"
-          name="TEST"
+          name="GENERAL"
         ></control-panel-btn>
         <control-panel-btn
-          @click="generalActive"
+          @click.native="expertActive"
           :class="{ active: generalBtn }"
-          name="TEST2"
+          name="EXPERT"
           is-red="1"
         ></control-panel-btn>
       </div>
       <div class="description-box">
         <div class="general-description-box" v-if="isGeneralActive">
-          <div
-            class="general-items"
+          <control-panel-item
             v-for="item in controlPanelGeneralItems"
             :key="item.id"
-            @click="openModalHandler(item)"
-          >
-            <div class="general-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="general-description">
-              <p>{{ item.summary }}</p>
-            </div>
-          </div>
+            @click.native="openModalHandler(item)"
+            :title="item.title"
+            :summary="item.summary"
+          ></control-panel-item>
         </div>
         <div class="expert-description-box" v-else>
-          <div
+          <!-- <div
             class="expert-items"
             v-for="item in controlPanelExpertItems"
             :key="item.id"
@@ -64,7 +44,15 @@
             <div class="expert-description">
               <p>{{ item.summary }}</p>
             </div>
-          </div>
+          </div> -->
+          <control-panel-item
+            v-for="item in controlPanelExpertItems"
+            :key="item.id"
+            @click.native="openModalHandler(item)"
+            :title="item.title"
+            :summary="item.summary"
+            is-red="1"
+          ></control-panel-item>
         </div>
       </div>
     </div>
@@ -73,8 +61,9 @@
 <script>
 import panelModal from "./panelModal";
 import ControlPanelBtn from "./ControlPanelBtn.vue";
+import ControlPanelItem from "./ControlPanelItem.vue";
 export default {
-  components: { panelModal, ControlPanelBtn },
+  components: { panelModal, ControlPanelBtn, ControlPanelItem },
   emits: ["close-modal"],
   data() {
     return {

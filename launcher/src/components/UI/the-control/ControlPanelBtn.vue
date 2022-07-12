@@ -4,9 +4,6 @@
   </div>
 </template>
 <script>
-
-import { stringLiteral } from "@babel/types";
-
 export default {
   props: {
     name: {
