@@ -95,11 +95,8 @@ export default {
   row-gap: 10px;
   overflow-x: hidden;
   overflow-y: auto;
-  position: absolute;
-  top: 21%;
-  left: 21.6%;
-  height: 63px;
-  width: 56%;
+  margin-top: 10px;
+  width: 100%;
   background-color: transparent;
 }
 .item-box::-webkit-scrollbar {

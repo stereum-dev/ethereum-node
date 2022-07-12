@@ -32,7 +32,6 @@ export default {}
   align-items: center;
   background-color: #3b3b3b;
   position: relative;
-   z-index: 0;
 }
 .trapezoid {
   height: 0;

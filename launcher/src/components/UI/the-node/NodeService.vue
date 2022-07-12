@@ -140,7 +140,6 @@ export default {
   height: 98%;
   background-color: #3b3b3b;
   border-radius: 20px;
-  overflow: auto;
   padding: 5px;
   box-sizing: border-box;
   display: flex;
