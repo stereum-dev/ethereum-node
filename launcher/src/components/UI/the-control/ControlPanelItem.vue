@@ -71,4 +71,7 @@ export default {
   text-align: center;
   color: #2b6262;
 }
+.items:hover {
+  border: 2px solid greenyellow;
+}
 </style>

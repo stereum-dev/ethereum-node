@@ -12,12 +12,23 @@
         <control-panel-btn
           @click.native="generalActive"
           :class="{ active: generalBtn }"
-          name="GENERAL"
+          name="SERVER"
+        ></control-panel-btn>
+        <control-panel-btn
+          @click.native="generalActive"
+          :class="{ active: generalBtn }"
+          name="NODE"
+        ></control-panel-btn>
+        <control-panel-btn
+          @click.native="generalActive"
+          :class="{ active: generalBtn }"
+          name="EXC. CLIENT"
+          is-red="1"
         ></control-panel-btn>
         <control-panel-btn
           @click.native="expertActive"
           :class="{ active: generalBtn }"
-          name="EXPERT"
+          name="CON. CLIENT"
           is-red="1"
         ></control-panel-btn>
       </div>
@@ -32,19 +43,6 @@
           ></control-panel-item>
         </div>
         <div class="expert-description-box" v-else>
-          <!-- <div
-            class="expert-items"
-            v-for="item in controlPanelExpertItems"
-            :key="item.id"
-            @click="openModalHandler(item)"
-          >
-            <div class="expert-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="expert-description">
-              <p>{{ item.summary }}</p>
-            </div>
-          </div> -->
           <control-panel-item
             v-for="item in controlPanelExpertItems"
             :key="item.id"
@@ -182,11 +180,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.active {
-  box-shadow: none !important;
-  background-color: #10383a !important;
-  border: 1px solid #041313 !important;
-}
+
 .general-box {
   width: 80%;
   height: 16%;
@@ -259,27 +253,5 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.expert-title span {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: rgb(240, 20, 20);
-}
-.general-title span {
-  font-size: 0.55rem;
-  font-weight: 800;
-  color: rgb(82, 82, 82);
-}
-.expert-description,
-.general-description {
-  width: 90%;
-  height: 80%;
-}
-.expert-description p,
-.general-description p {
-  font-size: 0.55rem;
-  font-weight: 900;
-  text-align: center;
-  color: #2b6262;
 }
 </style>

@@ -55,8 +55,12 @@ export default {
   align-items: center;
 }
 .control-btn span {
-  font-size: 0.8rem;
+  font-size: 70%;
   font-weight: 600;
   color: rgb(239, 235, 235);
+}
+.control-btn:hover,
+.control-btn:focus {
+  border: none;
 }
 </style>
