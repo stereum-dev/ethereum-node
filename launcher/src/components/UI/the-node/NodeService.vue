@@ -31,13 +31,13 @@
               />
             </div>
             <div class="book">
-              <img src="/img/icon/plugin-menu-icons/logs3.png" alt="icon" />
+              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
             </div>
             <div class="restart">
-              <img src="/img/icon/plugin-menu-icons/sync3.png" alt="icon" />
+              <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
             </div>
             <div class="setting">
-              <img src="/img/icon/plugin-menu-icons/setting4.png" alt="icon" />
+              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
           </div>
         </plugin-menu>
@@ -182,7 +182,6 @@ export default {
 .items img {
   width: 50px;
   height: 50px;
-  z-index: 1;
   cursor: pointer;
 }
 
@@ -205,19 +204,19 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: -2%;
-  left: 2%;
+  top: 0%;
+  left: 5%;
   animation: power 1s;
 }
 @keyframes power {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 34%;
+    left: 34%;
   }
   100% {
-    top: -2%;
-    left: 2%;
+    top: 0%;
+    left: 5%;
   }
 }
 .menu-content .power img {
@@ -235,25 +234,24 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: -2%;
-  left: 66%;
+  top: 0%;
+  left: 65%;
   animation: book 1s;
 }
 @keyframes book {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 34%;
+    left: 34%;
   }
   100% {
-    top: -2%;
-    left: 66%;
+    top: 0%;
+    left: 65%;
   }
 }
 .menu-content .book img {
   width: 20px;
   height: 20px;
-  border: 1px solid #a3a3a3;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
@@ -266,18 +264,18 @@ export default {
   align-items: center;
   position: absolute;
   top: 65%;
-  left: 2%;
+  left: 3%;
   animation: restart 1s;
 }
 @keyframes restart {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 34%;
+    left: 34%;
   }
   100% {
     top: 65%;
-    left: 2%;
+    left: 3%;
   }
 }
 
@@ -285,7 +283,6 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 100%;
-  border: 1px solid #a3a3a3;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .setting {
@@ -303,8 +300,8 @@ export default {
 @keyframes setting {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 34%;
+    left: 34%;
   }
   100% {
     top: 65%;
@@ -314,7 +311,6 @@ export default {
 .menu-content .setting img {
   width: 20px;
   height: 20px;
-  border: 1px solid #a3a3a3;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }

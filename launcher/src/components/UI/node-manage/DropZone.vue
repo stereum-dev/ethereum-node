@@ -87,29 +87,28 @@ export default {
 }
 .item-box {
   display: grid;
-  grid-template-columns: repeat(4, 25%);
-  grid-template-rows: repeat(2, 63px);
-  justify-content: space-between;
-  align-self: center;
-  align-items: center;
-  row-gap: 10px;
+  grid-template-columns: repeat(3, 33.3%);
+  grid-template-rows: repeat(2, 87px);
+  row-gap: 3px;
   overflow-x: hidden;
   overflow-y: auto;
-  margin-top: 10px;
   width: 100%;
-  background-color: transparent;
+  height: 100%;
+  margin-top: 5px;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
 .item-box .items {
+  width: 100%;
+  height: 87px;
+  border-radius: 7px;
+  margin: 0 auto 0 5px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
-  align-self: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 7px;
-  margin: 0 auto;
+  align-items: center;
+  position: relative;
 }
 .item-box .items img {
   width: 50px;

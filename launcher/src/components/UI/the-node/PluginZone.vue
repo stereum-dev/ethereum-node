@@ -174,32 +174,34 @@ export default {
 }
 .item-box {
   display: grid;
-  grid-template-columns: repeat(4, 25%);
-  grid-template-rows: repeat(2, 63px);
-  row-gap: 10px;
+  grid-template-columns: repeat(3, 33.3%);
+  grid-template-rows: repeat(2, 87px);
+  row-gap: 3px;
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
-  margin-top: 10px;
-  background-color: transparent;
+  height: 100%;
+  margin-top: 5px;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
 .item-box .items {
+  width: 100%;
+  height: 87px;
+  border-radius: 7px;
+  margin: 0 auto 0 5px;
+  cursor: pointer;
   display: flex;
   justify-content: center;
-  align-self: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 7px;
-  margin: 0 auto;
-  cursor: pointer;
+  align-items: center;
+  position: relative;
 }
 .item-box .items img {
   width: 50px;
   height: 50px;
   border-radius: 5px;
+  align-self: center;
 }
 .plus-icon-box {
   width: 30px;
@@ -239,124 +241,125 @@ export default {
 .menu-content {
   width: 100%;
   height: 100%;
+  z-index: 900;
 }
 .menu-content .power {
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: -2%;
-  left: 27%;
+  top: 0;
+  left: 41%;
+  z-index: 11;
   animation: power 1s;
 }
 @keyframes power {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 42%;
   }
   100% {
-    top: -2%;
-    left: 27%;
+    top: 0;
+    left: 41%;
   }
 }
 .menu-content .power img {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 
 .menu-content .book {
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 40%;
-  left: 36.1%;
+  left: 82%;
+  top: 39%;
   animation: book 1s;
 }
 @keyframes book {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 42%;
   }
   100% {
-    top: 40%;
-    left: 36.1%;
+    left: 82%;
+    top: 39%;
   }
 }
 .menu-content .book img {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .restart {
-  width: 28px;
-  height: 28px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 40%;
-  left: 17.2%;
+  top: 39%;
+  left: -1%;
   animation: restart 1s;
+  z-index: 11;
 }
 @keyframes restart {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 42%;
   }
   100% {
-    top: 40%;
-    left: 17.2%;
+    top: 39%;
+    left: -1%;
   }
 }
 
 .menu-content .restart img {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
 }
 .menu-content .setting {
-  width: 28px;
-  height: 28px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 80%;
-  left: 27%;
+  left: 41%;
   animation: setting 1s;
 }
 @keyframes setting {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 42%;
   }
   100% {
-    width: 28px;
-    height: 28px;
     top: 80%;
-    left: 27%;
+    left: 41%;
   }
 }
 .menu-content .setting img {
-  width: 90%;
-  height: 90%;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }

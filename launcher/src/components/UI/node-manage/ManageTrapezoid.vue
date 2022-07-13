@@ -11,39 +11,34 @@
   </div>
 </template>
 <script>
-export default {}
+export default {};
 </script>
 <style scoped>
 .trap-container {
   width: 98%;
   margin: 0 auto;
-  min-height: 135px;
+  height: 155px;
   background-color: #181818;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: -1;
 }
 .trap-box {
   width: 95%;
-  height: 70%;
+  height: 84%;
   display: flex;
+  background-image: url("../../../../public/img/icon/manage-node-icons/trap.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   justify-content: center;
   align-items: center;
-  background-color: #3b3b3b;
   position: relative;
 }
 .trapezoid {
-  height: 0;
-  width: 90%;
-  margin: 10px;
-  padding-top: 5px;
-  border-bottom: 5rem solid #828282;
-  border-left: 5rem solid transparent;
-  border-right: 5rem solid transparent;
-  z-index: 1;
+  width: 61%;
+  height: 73%;
+  margin-top: 5px;
 }
-
 
 .plus-icon {
   position: absolute;
