@@ -1,40 +1,46 @@
 <template>
-  <div class="control-btn">
+  <div class="control-btn" @click="openCont">
     <span :style="color()">{{ name }}</span>
   </div>
 </template>
 <script>
 export default {
+  emits: ["open-cont"],
   props: {
     name: {
       type: String,
       required: true,
     },
-    isRed: {
+    isColor: {
       type: String,
       required: false,
       default: "0",
-      validator: function (value) {
-        return value === "1" || value === "0";
-      },
     },
   },
 
   data() {
     return {
-      colorStyle: this.isRed,
+      colorStyle: this.isColor,
     };
   },
   computed: {
     red() {
       return { color: "red" };
     },
+    green() {
+      return { color: "green" };
+    },
   },
   methods: {
     color() {
       if (this.colorStyle === "1") {
         return this.red;
+      } else if (this.colorStyle === "2") {
+        return this.green;
       }
+    },
+    openCont() {
+      this.$emit("open-cont");
     },
   },
 };
