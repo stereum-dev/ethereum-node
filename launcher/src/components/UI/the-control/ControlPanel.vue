@@ -215,6 +215,7 @@ export default {
   align-items: center;
 }
 
+
 .description-box {
   width: 80%;
   height: 99%;
