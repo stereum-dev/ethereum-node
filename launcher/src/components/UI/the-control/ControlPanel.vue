@@ -10,49 +10,63 @@
     <div class="panel-content">
       <div class="level-box">
         <control-panel-btn
-          @click.native="generalActive"
+          @open-cont="generalActive"
           :class="{ active: generalBtn }"
-          name="GENERAL"
+          name="SERVER"
         ></control-panel-btn>
         <control-panel-btn
-          @click.native="expertActive"
+          @open-cont="expertActive"
           :class="{ active: generalBtn }"
-          name="EXPERT"
-          is-red="1"
+          name="NODE"
+        ></control-panel-btn>
+        <control-panel-btn
+          @open-cont="connectActive"
+          :class="{ active: generalBtn }"
+          name="EXC. CLIENT"
+          is-color="1"
+        ></control-panel-btn>
+        <control-panel-btn
+          @open-cont="expertActive"
+          :class="{ active: generalBtn }"
+          name="CON. CLIENT"
+          is-color="1"
         ></control-panel-btn>
       </div>
       <div class="description-box">
         <div class="general-description-box" v-if="isGeneralActive">
-          <control-panel-items
-            v-for="item in controlPanelGeneralItems"
-            :key="item.id"
-            @click.native="openModalHandler(item)"
-            :title="item.title"
-            :summary="item.summary"
-          ></control-panel-items>
+          <div class="contin">
+            <control-panel-item
+              v-for="item in controlPanelGeneralItems"
+              :key="item.id"
+              @open-item="openModalHandler(item)"
+              :title="item.title"
+              :summary="item.summary"
+            ></control-panel-item>
+          </div>
         </div>
-        <div class="expert-description-box" v-else>
-          <!-- <div
-            class="expert-items"
-            v-for="item in controlPanelExpertItems"
-            :key="item.id"
-            @click="openModalHandler(item)"
-          >
-            <div class="expert-title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="expert-description">
-              <p>{{ item.summary }}</p>
-            </div>
-          </div> -->
-          <control-panel-items
-            v-for="item in controlPanelExpertItems"
-            :key="item.id"
-            @click.native="openModalHandler(item)"
-            :title="item.title"
-            :summary="item.summary"
-            is-red="1"
-          ></control-panel-items>
+        <div class="expert-description-box" v-else-if="isExpertActive">
+          <div class="contin">
+            <control-panel-item
+              v-for="item in controlPanelExpertItems"
+              :key="item.id"
+              @open-item="openModalHandler(item)"
+              :title="item.title"
+              :summary="item.summary"
+              is-color="1"
+            ></control-panel-item>
+          </div>
+        </div>
+        <div class="connect-description-box" v-else>
+          <div class="contin">
+            <control-panel-item
+              v-for="item in controlPanelConnectItems"
+              :key="item.id"
+              @open-item="openModalHandler(item)"
+              :title="item.title"
+              :summary="item.summary"
+              :is-color="item.isColor"
+            ></control-panel-item>
+          </div>
         </div>
       </div>
     </div>
@@ -61,16 +75,18 @@
 <script>
 import panelModal from "./panelModal";
 import ControlPanelBtn from "./ControlPanelBtn.vue";
-import ControlPanelItems from "./ControlPanelItems.vue";
+import ControlPanelItem from "./ControlPanelItem.vue";
 export default {
-  components: { panelModal, ControlPanelBtn, ControlPanelItems },
+  components: { panelModal, ControlPanelBtn, ControlPanelItem },
   emits: ["close-modal"],
   data() {
     return {
       generalBtn: false,
       expertBtn: false,
+      connectBtn: false,
       isGeneralActive: false,
       isExpertActive: false,
+      isConnectActive: false,
       isModalActive: false,
       controlPanelGeneralItems: [
         {
@@ -112,6 +128,25 @@ export default {
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
         },
       ],
+      controlPanelConnectItems: [
+        {
+          id: 1,
+          title: "RPC - ENDPOINT",
+          summary: "Configure an IP you can access from the outside",
+          description:
+            "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
+          isColor: "1",
+        },
+        {
+          id: 2,
+          title: "PRUNNING",
+          summary: "Configure an IP you can access from the outside",
+          description:
+            "Your execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space.",
+          isColor: "2",
+        },
+      ],
+
       modalItem: undefined,
     };
   },
@@ -121,12 +156,24 @@ export default {
       this.generalBtn = true;
       this.isExpertActive = false;
       this.expertBtn = false;
+      this.isConnectActive = false;
+      this.connectBtn = false;
     },
     expertActive() {
       this.isExpertActive = true;
       this.expertBtn = true;
       this.isGeneralActive = false;
       this.generalBtn = false;
+      this.isConnectActive = false;
+      this.connectBtn = false;
+    },
+    connectActive() {
+      this.isExpertActive = false;
+      this.expertBtn = false;
+      this.isGeneralActive = false;
+      this.generalBtn = false;
+      this.isConnectActive = true;
+      this.connectBtn = true;
     },
     openModalHandler(item) {
       this.isModalActive = true;
@@ -168,11 +215,6 @@ export default {
   align-items: center;
 }
 
-.active {
-  box-shadow: none !important;
-  background-color: #10383a !important;
-  border: 1px solid #041313 !important;
-}
 
 .description-box {
   width: 80%;
@@ -181,14 +223,22 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.connect-description-box,
 .expert-description-box,
 .general-description-box {
   width: 97%;
   height: 90%;
   background-color: #686a6c;
   border-radius: 10px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 1fr;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contin {
+  display: flex;
+  width: 90%;
+  height: 95%;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

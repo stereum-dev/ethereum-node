@@ -9,10 +9,10 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ countFreeVal }} MB FREE</span>
+          <span>{{ free }} MB FREE</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ total }} MB TOTAL</span>
+          <span>/ {{ total }} GB TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
@@ -21,22 +21,6 @@
               :style="valueStoragePer"
             ></div>
           </div>
-        </div>
-        <div class="latencyCounter">
-          <!-- <div class="latencyCounterTtl"><span>SSD LATENCY</span></div>
-          <div class="write">
-            <span>write</span>
-            <div class="writeBox">
-              <span>{{ writeValue }} kb</span>
-            </div>
-          </div>
-          <div class="read">
-            <span>Read</span>
-            <div class="readBox">
-              <span>{{ readValue }} mb</span>
-            </div>
-            css have to change to the right height 35%
-          </div> -->
         </div>
       </div>
     </div>
@@ -50,8 +34,6 @@ export default {
       free: null,
       used: null,
       total: null,
-      writeValue: 134.24,
-      readValue: 1.05,
       usedStotagePer: null,
     };
   },
@@ -76,8 +58,8 @@ export default {
         const arr = data.split(/\r?\n/);
         this.usedStotagePer = parseInt(arr[2]);
         const arr2 = arr[3].split(" ");
-        this.total = parseInt(arr2[0]);
-        this.used = parseInt(arr2[1]);
+        this.total = Math.floor(parseInt(arr2[0]) / 10000);
+        this.free = parseInt(arr2[1]);
       } catch (error) {
         console.log(error);
       }
@@ -140,7 +122,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 80%;
 }
 .freePart {
   width: 100%;
@@ -148,26 +130,24 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 4px;
-  margin-left: 11px;
-  font-size: 1rem;
+  font-size: 100%;
   font-weight: 600;
   color: #5ed966;
 }
 .totalPart {
   width: 94%;
-  height: 15%;
+  height: 25%;
   margin-top: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 0.5rem;
+  font-size: 100%;
   font-weight: 700;
   color: #eee;
 }
 .valueBarPart {
   width: 100%;
-  height: 10%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -185,58 +165,6 @@ export default {
 .valueBarPart_loader-value {
   height: 90%;
   border-radius: 3px;
-  background: #5ed966;
-}
-.latencyCounter {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.latencyCounterTtl {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.latencyCounterTtl span {
-  font-size: 20%;
-  width: 90%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.write {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  font-size: 39%;
-}
-.writeBox {
-  width: 100%;
-  text-align: left;
-  font-weight: bold;
-  font-size: 140%;
-}
-.read {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  font-size: 39%;
-}
-.readBox {
-  width: 100%;
-  text-align: left;
-  font-weight: bold;
-  font-size: 140%;
+  background-image: linear-gradient(to right, green 22%, yellow, red);
 }
 </style>
