@@ -150,6 +150,10 @@ class ControlService extends EventEmitter {
   async updateTasks(){
     return await this.promiseIpc.send("updateTasks")  // updates task progression
   }
+
+  async insertBloxSSVKeys(args){
+    return await this.promiseIpc.send("insertBloxSSVKeys", args)  // insert existing operator keys
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

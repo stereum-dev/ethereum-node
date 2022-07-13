@@ -506,6 +506,26 @@ export class NodeConnection {
       return resolve(JSON.parse(serviceJson.stdout));
     });
   }
+  
+  async getServiceLogs(serviceID) {
+    return new Promise(async (resolve,reject) => {
+      let logs;
+      try {
+        logs = await this.sshService.exec("docker logs --tail=100 stereum-" + serviceID);
+      } catch (err) {
+        log.error("Can't get service logs of '" + serviceID + "': ", err);
+        return reject(
+          "Can't get service logs of '" + serviceID + "': " + err
+        );
+      }
+
+      if(logs.stdout.length > 0){
+        return resolve(logs.stdout);
+      }
+      return resolve(logs.stderr);
+
+    })
+  }
 
   async destroyNode() {
     const ref = StringUtils.createRandomString();

@@ -13,7 +13,7 @@
     </div>
     <div class="btn-box">
       <button
-        @click="$emit('loginSecretkey')"
+        @click="insertKey($data)"
         :class="{ 'btn-disabled': isBtnDisabled }"
         :disabled="isBtnDisabled"
       >
@@ -23,8 +23,10 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import { toRaw } from "vue";
 export default {
-  props: ["secretkey"],
+  props: ['ssvService'],
   data() {
     return {
       isBtnDisabled: true,
@@ -36,12 +38,23 @@ export default {
   },
   methods: {
     checkSecretkeyHandler() {
-      if (this.enteredSecretkey === this.secretkey) {
+      if (this.enteredSecretkey != '') {
         this.isBtnDisabled = false;
+      } else if (this.enteredSecretkey === ''){
+        this.isBtnDisabled = true;
       } else {
         this.$router.push("/node");
       }
     },
+    insertKey: async function(data){
+      const result = await ControlService.insertBloxSSVKeys({service: toRaw(this.ssvService), pk: data.enteredSecretkey})
+        if (result && result.stack && result.message) {
+          console.log("importing Keys failed")
+          //implement error msg here
+        }else{
+          this.$emit('loginSecretkey')
+        }
+    }
   },
 };
 </script>

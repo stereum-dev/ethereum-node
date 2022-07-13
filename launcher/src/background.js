@@ -184,6 +184,10 @@ promiseIpc.on("clearTasks", async () => {
   return await taskManager.clearTasks()
 })
 
+promiseIpc.on("insertBloxSSVKeys", async (args) => {
+  return await validatorAccountManager.insertBloxSSVKeys(args.service, args.pk)
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
