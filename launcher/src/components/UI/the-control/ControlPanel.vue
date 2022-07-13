@@ -10,12 +10,12 @@
     <div class="panel-content">
       <div class="level-box">
         <control-panel-btn
-          @click.native="generalActive"
+          @click="generalActive"
           :class="{ active: generalBtn }"
           name="GENERAL"
         ></control-panel-btn>
         <control-panel-btn
-          @click.native="expertActive"
+          @click="expertActive"
           :class="{ active: generalBtn }"
           name="EXPERT"
           is-red="1"
@@ -26,7 +26,7 @@
           <control-panel-items
             v-for="item in controlPanelGeneralItems"
             :key="item.id"
-            @click.native="openModalHandler(item)"
+            @click="openModalHandler(item)"
             :title="item.title"
             :summary="item.summary"
           ></control-panel-items>
@@ -48,7 +48,7 @@
           <control-panel-items
             v-for="item in controlPanelExpertItems"
             :key="item.id"
-            @click.native="openModalHandler(item)"
+            @click="openModalHandler(item)"
             :title="item.title"
             :summary="item.summary"
             is-red="1"

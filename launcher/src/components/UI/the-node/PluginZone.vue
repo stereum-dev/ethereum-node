@@ -32,14 +32,14 @@
                 />
               </div>
               <div class="book">
-                <img src="/img/icon/plugin-menu-icons/logs3.png" alt="icon" />
+                <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
               </div>
               <div class="restart">
-                <img src="/img/icon/plugin-menu-icons/sync3.png" alt="icon" />
+                <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
               </div>
               <div class="setting">
                 <img
-                  src="/img/icon/plugin-menu-icons/setting4.png"
+                  src="/img/icon/plugin-menu-icons/setting8.png"
                   alt="icon"
                 />
               </div>
@@ -296,7 +296,6 @@ export default {
 .menu-content .book img {
   width: 25px;
   height: 25px;
-  border: 1px solid rgb(124, 124, 124);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
@@ -328,8 +327,7 @@ export default {
   width: 25px;
   height: 25px;
   border-radius: 100%;
-  border: 1px solid rgb(124, 124, 124);
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
 }
 .menu-content .setting {
   width: 28px;
@@ -359,7 +357,6 @@ export default {
 .menu-content .setting img {
   width: 90%;
   height: 90%;
-  border: 1px solid rgb(124, 124, 124);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
