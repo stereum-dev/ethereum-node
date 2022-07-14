@@ -42,12 +42,13 @@ export class TaskManager {
                         let buffer = logs.split('\n\n')
                     buffer.pop()
                     task.subTasks = []
-
-                    for (let subtask of buffer) {
+                    let subtasks = buffer.filter(st => !st.includes('START_TASK'))
+                    for (let subtask of subtasks) {
                         let obj = {
                             name: (/^TASK: (.*)/gm).exec(subtask)[1],
                             action: (/^ACTION: (.*)/gm).exec(subtask)[1],
                             status: (/^CATEGORY: (.*)/gm).exec(subtask)[1],
+                            data: subtask,
                         }
                         if (!obj.name) {
                             obj.name = obj.action
@@ -70,6 +71,7 @@ export class TaskManager {
                                 name: (/\[(.*)\]/).exec(subtask)[1],
                                 action: (/\n.*(^.*?)$/m).exec(subtask)[1],
                                 status: (/\n.*(^.*?): /gm).exec(subtask)[1],
+                                data: subtask,
                             }
                             switch(obj.status){
                                 case "ok":
@@ -103,6 +105,11 @@ export class TaskManager {
                         name: subTask.name,
                         action: subTask.name,
                         status: subTask.status ? 'OK' : 'FAILED',
+                        data: 
+                        'TASK: ' + subTask.name +
+                        '\nACTION: ' + subTask.name +
+                        '\nCATEGORY: ' + subTask.status ? 'OK' : 'FAILED'+
+                        '\nDATA: There is no data for these kind of tasks ¯\\_(ツ)_/¯'
                       }
                     })
 

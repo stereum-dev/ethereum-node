@@ -6,7 +6,7 @@
         <span>{{ item.name }} :</span>
       </div>
       <div class="description">
-        <span>>> {{ error }}</span>
+        <span>{{ item.data }}</span>
       </div>
       <div class="copy-icon" @click="$emit('copyError')">
         <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -124,7 +124,8 @@ export default {
   color: #a8a8a8;
   font-size: 0.8rem;
   font-weight: 500;
-  text-transform: capitalize;
+  white-space: pre-wrap;
+  text-transform: none;
   text-align: left;
 }
 
