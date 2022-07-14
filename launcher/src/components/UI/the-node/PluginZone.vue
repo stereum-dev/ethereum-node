@@ -19,15 +19,21 @@
             <div class="menu-content">
               <div class="power">
                 <img
-                  v-if="item.state == 'running'"
+                  v-if="isServicePending"
+                  class="pending"
+                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  alt="icon"
+                />
+                <img
+                  v-else-if="item.state == 'running'"
                   @click="stateHandler(item)"
                   src="/img/icon/plugin-menu-icons/shutdown.png"
                   alt="icon"
                 />
                 <img
-                  v-else-if="isServicePending"
-                  class="pending"
-                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  v-else-if="item.state == 'restarting'"
+                  @click="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/restart.png"
                   alt="icon"
                 />
                 <img
@@ -123,6 +129,7 @@ export default {
       });
     },
     stateHandler: async function (item) {
+      this.isServiceOn = false;
       this.isServicePending = true;
       let state = "stopped";
       if (item.state === "exited") {
@@ -281,6 +288,7 @@ export default {
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  z-index: 900;
 }
 .menu-content .power .pending {
   width: 17px;
@@ -288,6 +296,7 @@ export default {
   background-color: rgb(71, 70, 70);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  z-index: 1000;
 }
 .menu-content .book {
   width: 17px;

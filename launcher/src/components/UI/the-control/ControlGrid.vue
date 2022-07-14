@@ -38,32 +38,53 @@
                   <div class="icon-bg">
                     <div class="power-icon">
                       <img
-                        v-if="item.state == 'running'"
-                        src="/img/icon/control/power-off.png"
+                        v-if="item.isServicePending"
+                        class="pending"
+                        src="/img/icon/plugin-menu-icons/turning_circle.gif"
                         alt="icon"
+                      />
+                      <img
+                        v-else-if="item.state == 'running'"
                         @click="stateHandler(item)"
+                        src="/img/icon/plugin-menu-icons/shutdown.png"
+                        alt="icon"
+                      />
+                      <img
+                        v-else-if="item.state == 'restarting'"
+                        @click="stateHandler(item)"
+                        src="/img/icon/plugin-menu-icons/restart.png"
+                        alt="icon"
                       />
                       <img
                         v-else
-                        src="/img/icon/control/power-on.png"
-                        alt="icon"
                         @click="stateHandler(item)"
+                        src="/img/icon/plugin-menu-icons/turn-on.png"
+                        alt="icon"
                       />
                     </div>
                   </div>
                   <div class="icon-bg">
                     <div class="book-icon">
-                      <img src="/img/icon/control/book.png" alt="icon" />
+                      <img
+                        src="/img/icon/plugin-menu-icons/log7.png"
+                        alt="icon"
+                      />
                     </div>
                   </div>
                   <div class="icon-bg">
                     <div class="refresh-icon">
-                      <img src="/img/icon/control/refresh.png" alt="icon" />
+                      <img
+                        src="/img/icon/plugin-menu-icons/sync9.png"
+                        alt="icon"
+                      />
                     </div>
                   </div>
                   <div class="icon-bg">
                     <div class="seting-icon">
-                      <img src="/img/icon/control/setting.png" alt="icon" />
+                      <img
+                        src="/img/icon/plugin-menu-icons/setting8.png"
+                        alt="icon"
+                      />
                     </div>
                   </div>
                 </div>
@@ -115,6 +136,14 @@ export default {
       powerBtnRed: false,
     };
   },
+  create() {
+    this.installedServices = this.installedServices.map((i) => {
+      return {
+        isServicePending: false,
+        ...i,
+      };
+    });
+  },
   beforeMount() {
     this.updateStates();
   },
@@ -144,19 +173,24 @@ export default {
       });
     },
     stateHandler: async function (item) {
+      item.isServicePending = true;
       let state = "stopped";
       if (item.state === "exited") {
         state = "started";
-        this.powerBtnRed = true;
+        this.isServiceOn = true;
       }
-      try{
-        await ControlService.manageServiceState({id:item.config.serviceID, state: state})
-      }catch(err){
-        console.log(state.replace('ed','ing') + ' service failed:\n',err)
+      try {
+        await ControlService.manageServiceState({
+          id: item.config.serviceID,
+          state: state,
+        });
+      } catch (err) {
+        console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
-      this.updateStates()
-    }
-  }
+      item.isServicePending = false;
+      this.updateStates();
+    },
+  },
 };
 </script>
 
@@ -368,9 +402,7 @@ export default {
 .edit-box .icon-bg {
   width: 100%;
   height: 100%;
-  border: 1px solid #a4a5a5;
   border-radius: 4px;
-  background-color: #336666;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -379,9 +411,8 @@ export default {
 .book-icon,
 .refresh-icon,
 .seting-icon {
-  width: 90%;
-  height: 89%;
-  background-color: rgb(11, 11, 11);
+  width: 18px;
+  height: 18px;
   border-radius: 3px;
   display: flex;
   justify-content: center;
@@ -402,8 +433,8 @@ export default {
   transform: scale(1);
 }
 .power-icon img {
-  width: 77%;
-  height: 74%;
+  width: 17px;
+  height: 17px;
 }
 .powerOff {
   background-color: rgb(226, 62, 62);
@@ -411,17 +442,24 @@ export default {
 .powerOn {
   background-color: rgb(113, 205, 136);
 }
+.power .pending {
+  width: 17px;
+  height: 17px;
+  background-color: rgb(71, 70, 70);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
 .book-icon img {
-  width: 12px;
-  height: 10px;
+  width: 17px;
+  height: 17px;
 }
 .refresh-icon img {
-  width: 11px;
-  height: 12px;
+  width: 17px;
+  height: 17px;
 }
 .seting-icon img {
-  width: 10px;
-  height: 12px;
+  width: 17px;
+  height: 17px;
 }
 
 .service-options .control-task__manager {
