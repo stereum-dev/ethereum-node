@@ -1,6 +1,7 @@
 import ElectronLog from "electron-log";
 import { readFileSync } from "fs";
 import { StringUtils } from './StringUtils.js'
+import YAML from "yaml";
 
 const log = require('electron-log')
 
@@ -15,7 +16,7 @@ export class ValidatorAccountManager {
         this.batches = []
     }
 
-    createBatch(files, password){
+    createBatch(files, password) {
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
@@ -87,7 +88,7 @@ export class ValidatorAccountManager {
 
             case 'teku':
                 const dataDir = (client.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
-                if((await this.nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_password.txt`)).rc === 1){
+                if ((await this.nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_password.txt`)).rc === 1) {
                     log.error("Couldn't read API-Token")
                     log.info("Generating one")
                     const password = StringUtils.createRandomString()
@@ -99,9 +100,9 @@ export class ValidatorAccountManager {
                 break;
 
         }
-        try{
+        try {
             await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
-        }catch(err){
+        } catch (err) {
             log.error("Validator Import Failed:\n", err)
             return err
         }
@@ -110,15 +111,57 @@ export class ValidatorAccountManager {
     }
 
     async listValidators(serviceID) {
-        try{
-            let run = await this.nodeConnection.runPlaybook('validator-list-api', { stereum_role: 'validator-list-api', validator_service: serviceID})
-            let logs = new RegExp(/^DATA: ({"msg":.*)/,'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+        try {
+            let run = await this.nodeConnection.runPlaybook('validator-list-api', { stereum_role: 'validator-list-api', validator_service: serviceID })
+            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
             let result = (JSON.parse(logs[1])).msg
             return result
-        }catch(err){
+        } catch (err) {
             log.error("Listing Validators Failed:\n", err)
             return err
         }
+    }
+
+    async insertBloxSSVKeys(service, sk) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const dataDir = (service.config.volumes.find(vol => vol.servicePath === '/data')).destinationPath
+                let bloxConfig = YAML.parse((await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout)
+                if (bloxConfig) {
+                    bloxConfig.OperatorPrivateKey = sk
+                    const newConfig = new YAML.Document()
+                    newConfig.contents = bloxConfig
+                    const escapedConfigFile = StringUtils.escapeStringForShell(newConfig.toString())
+                    await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
+
+                    await this.serviceManager.manageServiceState(service.config.serviceID, 'stopped')
+                    await this.serviceManager.manageServiceState(service.config.serviceID, 'started')
+
+                    let pk = undefined
+                    let tries = 0
+                    while (pk === undefined) {
+                        let logs = await this.nodeConnection.getServiceLogs(service.config.serviceID)
+                        if (new RegExp(/"public-key": "(.*)"/gm).test(logs)) {
+                            pk = new RegExp(/"public-key": "(.*)"/gm).exec(logs)[1]
+                        }
+                        tries++
+                        if(tries === 20){
+                            throw new Error('"public-key" was not found in service logs')
+                        }
+                    }
+                    let serviceConfig = await this.nodeConnection.readServiceConfiguration(service.config.serviceID)
+                    serviceConfig.ssv_pk = pk
+                    await this.nodeConnection.writeServiceConfiguration(serviceConfig)
+                    return resolve(serviceConfig.ssv_pk)
+                }else{
+                    throw new Error('no ssv config.yaml')
+                }
+            } catch (err) {
+                log.error("Inserting Keys failed:\n", err)
+                return reject(err)
+            }
+        })
+
     }
 
 }

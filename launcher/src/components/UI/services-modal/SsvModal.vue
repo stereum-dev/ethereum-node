@@ -36,7 +36,7 @@
         ></register-ssv>
         <secretkey-register
           v-if="registerSecretkeyActive"
-          :secretkey="secretkey"
+          :ssvService="ssvService"
           @login-secretkey="loginWithSecretkeyHandler"
         ></secretkey-register>
         <ssv-dashboard
@@ -64,7 +64,7 @@ export default {
   },
   data() {
     return {
-      ssvService: [],
+      ssvService: null,
       isSsvAvailable: false,
       pubkeyModalActive: true,
       registerModalActive: false,
@@ -95,6 +95,7 @@ export default {
       let blox = this.runningServices.find(
         (service) => service.service === "BloxSSVService"
       );
+      this.ssvService = blox;
       let bloxConfig = await ControlService.getServiceConfig(
         blox.config.serviceID
       );
@@ -111,7 +112,8 @@ export default {
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = true;
     },
-    loginWithSecretkeyHandler() {
+    loginWithSecretkeyHandler: async function() {
+      await this.getKeys()
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = false;

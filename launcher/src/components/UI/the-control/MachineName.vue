@@ -56,12 +56,12 @@ export default {
   padding-left: 6%;
   padding-top: 1px;
   outline: none;
-  font-size: .8rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: bold;
   color: rgb(122, 204, 255);
   text-transform: uppercase;
 }
-.machineNam span{
+.machineNam span {
   width: 100%;
   height: 100%;
 }

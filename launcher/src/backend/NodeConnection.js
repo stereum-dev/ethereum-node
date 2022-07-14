@@ -74,18 +74,29 @@ export class NodeConnection {
        * install necessary OS packages
        */
       log.info("installing necessary os packages");
-      const ref = StringUtils.createRandomString()
-      this.taskManager.tasks.push({name: "install os packages", otherRunRef: ref})
+      const ref = StringUtils.createRandomString();
+      this.taskManager.tasks.push({
+        name: "install os packages",
+        otherRunRef: ref,
+      });
 
       log.debug("this.os: ", this.os);
       log.debug("nodeOS.ubuntu: ", nodeOS.ubuntu);
       if (this.os == nodeOS.centos) {
-        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "Check OS",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject("not implemented yet");
       } else if (this.os == nodeOS.ubuntu) {
         log.debug("procede on ubuntu");
-        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: true})
+        this.taskManager.otherSubTasks.push({
+          name: "Check OS",
+          otherRunRef: ref,
+          status: true,
+        });
         let installPkgResult;
         try {
           installPkgResult = await this.sshService.exec(
@@ -99,17 +110,29 @@ export class NodeConnection {
           installPkgResult = { rc: 1, stderr: err };
         }
         if (SSHService.checkExecError(installPkgResult)) {
-          this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: false})
-          this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+          this.taskManager.otherSubTasks.push({
+            name: "installing packages",
+            otherRunRef: ref,
+            status: false,
+          });
+          this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
           return reject(
             "Can't install os packages: " +
               SSHService.extractExecError(installPkgResult)
           );
         }
-        this.taskManager.otherSubTasks.push({name: "installing packages", otherRunRef: ref, status: true})
+        this.taskManager.otherSubTasks.push({
+          name: "installing packages",
+          otherRunRef: ref,
+          status: true,
+        });
       } else {
-        this.taskManager.otherSubTasks.push({name: "Check OS", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "Check OS",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject("unsupported OS");
       }
 
@@ -143,21 +166,33 @@ export class NodeConnection {
         );
       } catch (err) {
         log.error("can't install ansible roles", err);
-        this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "install ansible roles",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject("Can't install ansible roles: " + err);
       }
 
       if (SSHService.checkExecError(installResult)) {
-        this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "install ansible roles",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject(
           "Can't install ansible role: " +
             SSHService.extractExecError(installResult)
         );
       }
-      this.taskManager.otherSubTasks.push({name: "install ansible roles", otherRunRef: ref, status: true})
-      this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+      this.taskManager.otherSubTasks.push({
+        name: "install ansible roles",
+        otherRunRef: ref,
+        status: true,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       /**
        * run stereum ansible playbook "setup"
        */
@@ -165,16 +200,14 @@ export class NodeConnection {
       let playbookRuns = [];
       try {
         playbookRuns.push(
-          await this.runPlaybook(
-            "setup",
-            {
-              stereum_role: "setup",
-              stereum_args: {
-                settings: {
-                  controls_install_path: this.installationDirectory
-                }
-              }
-            })
+          await this.runPlaybook("setup", {
+            stereum_role: "setup",
+            stereum_args: {
+              settings: {
+                controls_install_path: this.installationDirectory,
+              },
+            },
+          })
         );
       } catch (err) {
         log.error("foo", err);
@@ -220,7 +253,7 @@ export class NodeConnection {
       }
 
       let ansibleResult;
-      this.taskManager.tasks.push({name: playbook, ref: playbookRunRef})
+      this.taskManager.tasks.push({ name: playbook, ref: playbookRunRef });
       try {
         ansibleResult = await this.sshService.exec(
           "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
@@ -252,7 +285,7 @@ export class NodeConnection {
             SSHService.extractExecError(ansibleResult)
         );
       }
-      this.taskManager.finishedPlaybooks.push(playbookRunRef)
+      this.taskManager.finishedPlaybooks.push(playbookRunRef);
       return resolve({
         playbook: playbook,
         playbookRunRef: playbookRunRef,
@@ -299,9 +332,7 @@ export class NodeConnection {
     return new Promise(async (resolve, reject) => {
       let services;
       try {
-        services = await this.sshService.exec(
-          "ls -1 /etc/stereum/services"
-        );
+        services = await this.sshService.exec("ls -1 /etc/stereum/services");
       } catch (err) {
         log.error("Can't read services configurations", err);
         return reject("Can't read services configurations: " + err);
@@ -357,8 +388,8 @@ export class NodeConnection {
   async writeServiceConfiguration(serviceConfiguration) {
     return new Promise(async (resolve, reject) => {
       let configStatus;
-      const ref = StringUtils.createRandomString()
-      this.taskManager.tasks.push({name: "write config", otherRunRef: ref})
+      const ref = StringUtils.createRandomString();
+      this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
       try {
         configStatus = await this.sshService.exec(
           "echo -e " +
@@ -370,8 +401,12 @@ export class NodeConnection {
             ".yaml"
         );
       } catch (err) {
-        this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "write " + serviceConfiguration.service + " config",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         log.error(
           "Can't write service configuration of " + serviceConfiguration.id,
           err
@@ -385,8 +420,12 @@ export class NodeConnection {
       }
 
       if (SSHService.checkExecError(configStatus)) {
-        this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: false})
-        this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+        this.taskManager.otherSubTasks.push({
+          name: "write " + serviceConfiguration.service + " config",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject(
           "Failed writing service configuration " +
             serviceConfiguration.id +
@@ -394,8 +433,12 @@ export class NodeConnection {
             SSHService.extractExecError(configStatus)
         );
       }
-      this.taskManager.otherSubTasks.push({name: "write " + serviceConfiguration.service + " config", otherRunRef: ref, status: true})
-      this.taskManager.finishedOtherTasks.push({otherRunRef: ref})
+      this.taskManager.otherSubTasks.push({
+        name: "write " + serviceConfiguration.service + " config",
+        otherRunRef: ref,
+        status: true,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       return resolve();
     });
   }
@@ -463,40 +506,83 @@ export class NodeConnection {
       return resolve(JSON.parse(serviceJson.stdout));
     });
   }
+  
+  async getServiceLogs(serviceID) {
+    return new Promise(async (resolve,reject) => {
+      let logs;
+      try {
+        logs = await this.sshService.exec("docker logs --tail=100 stereum-" + serviceID);
+      } catch (err) {
+        log.error("Can't get service logs of '" + serviceID + "': ", err);
+        return reject(
+          "Can't get service logs of '" + serviceID + "': " + err
+        );
+      }
+
+      if(logs.stdout.length > 0){
+        return resolve(logs.stdout);
+      }
+      return resolve(logs.stderr);
+
+    })
+  }
 
   async destroyNode() {
-    const ref = StringUtils.createRandomString()
-    this.taskManager.tasks.push({name: "Delete Node", otherRunRef: ref,})
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
 
-    this.taskManager.otherSubTasks.push({name: "remove Docker-Container", otherRunRef: ref, status:
-      !(await this.sshService.exec("docker rm -vf $(docker ps -aq)")).rc
-    })
+    this.taskManager.otherSubTasks.push({
+      name: "remove Docker-Container",
+      otherRunRef: ref,
+      status: !(await this.sshService.exec("docker rm -vf $(docker ps -aq)"))
+        .rc,
+    });
 
-    this.taskManager.otherSubTasks.push({name: "remove Docker-Images", otherRunRef: ref, status:
-      !(await this.sshService.exec("docker rmi -f $(docker images -aq)")).rc
-    })
+    this.taskManager.otherSubTasks.push({
+      name: "remove Docker-Images",
+      otherRunRef: ref,
+      status: !(
+        await this.sshService.exec("docker rmi -f $(docker images -aq)")
+      ).rc,
+    });
 
-    this.taskManager.otherSubTasks.push({name: "clean up Docker-Volumes", otherRunRef: ref, status:
-      !(await this.sshService.exec("docker volume prune -f")).rc
-    })
+    this.taskManager.otherSubTasks.push({
+      name: "clean up Docker-Volumes",
+      otherRunRef: ref,
+      status: !(await this.sshService.exec("docker volume prune -f")).rc,
+    });
 
-    this.taskManager.otherSubTasks.push({name: "clean up Docker", otherRunRef: ref, status:
-      !(await this.sshService.exec("docker system prune -a -f")).rc
-    })
+    this.taskManager.otherSubTasks.push({
+      name: "clean up Docker",
+      otherRunRef: ref,
+      status: !(await this.sshService.exec("docker system prune -a -f")).rc,
+    });
 
-    if(this.settings){
-      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status:
-        !((await this.sshService.exec("rm -rf " + this.settings.stereum.settings.controls_install_path)).rc)
-      })
-    }else{
-      this.taskManager.otherSubTasks.push({name: "remove Stereum Controls", otherRunRef: ref, status: true})
+    if (this.settings) {
+      this.taskManager.otherSubTasks.push({
+        name: "remove Stereum Controls",
+        otherRunRef: ref,
+        status: !(
+          await this.sshService.exec(
+            "rm -rf " + this.settings.stereum.settings.controls_install_path
+          )
+        ).rc,
+      });
+    } else {
+      this.taskManager.otherSubTasks.push({
+        name: "remove Stereum Controls",
+        otherRunRef: ref,
+        status: true,
+      });
     }
 
-    this.taskManager.otherSubTasks.push({name: "remove Stereum Settings", otherRunRef: ref, status:
-      !((await this.sshService.exec("rm -rf /etc/stereum")).rc)
-    })
+    this.taskManager.otherSubTasks.push({
+      name: "remove Stereum Settings",
+      otherRunRef: ref,
+      status: !(await this.sshService.exec("rm -rf /etc/stereum")).rc,
+    });
 
-    this.taskManager.finishedOtherTasks.push({otherRunRef: ref,})
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
     this.settings = undefined;
     return "Node destroyed";
   }
@@ -515,8 +601,8 @@ export class NodeConnection {
     const serverVitals = await this.sshService.exec(`
     hostname &&
     free -m | sed -n '2p' | awk '{print $2" "$3}' &&
-    df --total -m | tail -1 | awk '{print $3/$2*100}' &&
-    df --total -m | tail -1 | awk '{print $2" "$3}' &&
+    df --total -m | tail -1 | awk '{print $5}' &&
+    df --total -m | tail -1 | awk '{print $2" "$4}' &&
     sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
     sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p'
     `);
@@ -571,10 +657,15 @@ export class NodeConnection {
     return ports;
   }
 
-  async runUpdates(){
-    const updateRunRef = StringUtils.createRandomString()
-    this.taskManager.tasks.push({name: "Update", updateRunRef: updateRunRef})
-    const logs = await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`)
-    this.taskManager.finishedUpdates.push({updateRunRef: updateRunRef, logs: logs})
+  async runUpdates() {
+    const updateRunRef = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "Update", updateRunRef: updateRunRef });
+    const logs = await this.sshService.exec(
+      `cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`
+    );
+    this.taskManager.finishedUpdates.push({
+      updateRunRef: updateRunRef,
+      logs: logs,
+    });
   }
 }
