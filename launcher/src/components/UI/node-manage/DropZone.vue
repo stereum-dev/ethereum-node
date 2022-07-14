@@ -87,23 +87,23 @@ export default {
 }
 .item-box {
   display: grid;
-  grid-template-columns: repeat(3, 33.3%);
-  grid-template-rows: repeat(2, 87px);
+  grid-template-columns: repeat(3, 33.33%);
+  grid-template-rows: repeat(2, 100px);
   row-gap: 3px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 100%;
+  width: 99%;
   height: 100%;
-  margin-top: 5px;
+  margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
 .item-box .items {
-  width: 100%;
-  height: 87px;
+  width: 95%;
+  height: 95%;
   border-radius: 7px;
-  margin: 0 auto 0 5px;
+  margin: 0 auto;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -111,9 +111,10 @@ export default {
   position: relative;
 }
 .item-box .items img {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 5px;
+  align-self: center;
 }
 .plus-icon-box {
   width: 30px;
