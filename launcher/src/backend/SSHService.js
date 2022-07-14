@@ -85,7 +85,7 @@ export class SSHService {
   }
 
   async execCommand (command, logline) {
-    log.info('exec', logline)
+    log.debug('exec', logline)
 
     return new Promise((resolve, reject) => {
       const data = {
@@ -97,16 +97,16 @@ export class SSHService {
         if (err) return reject(err)
         stream
           .on('close', (code, signal) => {
-            log.info('stream closed', code)
+            log.debug('stream closed', code)
             data.rc = code
             resolve(data)
           })
           .on('data', (stdout) => {
-            log.info('stdout got data', stdout.toString('utf8'))
+            log.debug('stdout got data', stdout.toString('utf8'))
             data.stdout += stdout.toString('utf8')
           })
           .stderr.on('data', (stderr) => {
-            log.info('stderr got data', stderr.toString('utf8'))
+            log.debug('stderr got data', stderr.toString('utf8'))
             data.stderr += stderr.toString('utf8')
           })
       })

@@ -26,7 +26,7 @@
           >
             <drop-zone
               :title="'execution'"
-              :list="installedServices.filter(service => service.category === 'execution')"
+              :list="newConfiguration.filter(service => service.category === 'execution')"
               @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
@@ -39,7 +39,7 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="installedServices.filter(service => service.category === 'consensus')"
+              :list="newConfiguration.filter(service => service.category === 'consensus')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -51,7 +51,7 @@
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="installedServices.filter(service => service.category === 'validator')"
+              :list="newConfiguration.filter(service => service.category === 'validator')"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -67,7 +67,7 @@
             @dragover.prevent
           >
             <service-plugin
-              :list="installedServices.filter(service => service.category === 'service')"
+              :list="newConfiguration.filter(service => service.category === 'service')"
               @itemSelect="serviceItemSelection"
             >
             </service-plugin>
@@ -106,6 +106,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
+import { useNodeManage } from "../store/nodeManage";
 export default {
   components: {
     SidebarManage,
@@ -136,6 +137,12 @@ export default {
       installedServices: "installedServices",
       allServices: "allServices",
     }),
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
+    })
+  },
+  mounted(){
+    this.newConfiguration = this.installedServices
   },
   methods: {
     showModal(data) {
@@ -161,8 +168,8 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if(this.installedServices.some(item => item.id == itemId)) return;
-        this.installedServices.push(item)
+      if(this.newConfiguration.some(item => item.id == itemId)) return;
+        this.newConfiguration.push(item)
     },
     serviceItemSelection(item) {
       if(this.selectedItemToRemove.map(element => element.id).includes(item.id)){

@@ -2,10 +2,7 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
-      consensusItems: [],
-      executionItems: [],
-      validatorItems: [],
-      servicePlugins: [],
+      newConfiguration: [],
       selectedItemToRemove: {},
       clickPresets: [
         {
