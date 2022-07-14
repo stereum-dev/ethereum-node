@@ -35,7 +35,7 @@ export default {};
   position: relative;
 }
 .trapezoid {
-  width: 61%;
+  width: 70%;
   height: 73%;
   margin-top: 5px;
 }

@@ -2,7 +2,7 @@
   <div class="secretkey-parent">
     <div class="secretkey-box">
       <label for="secretKey"
-        >INSERT YOUR OPERATOR KEY TO LOG INTO AN EXISITING NODE OPERATOR
+        >INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY
         <input
           name="secretkey"
           id="secretKey"
@@ -17,7 +17,7 @@
         :class="{ 'btn-disabled': isBtnDisabled }"
         :disabled="isBtnDisabled"
       >
-        REGISTER
+        APPLY
       </button>
     </div>
   </div>
