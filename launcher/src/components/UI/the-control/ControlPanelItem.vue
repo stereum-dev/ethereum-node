@@ -52,6 +52,7 @@ export default {
   align-items: center;
   box-shadow: 0 1px 3px 1px #4b4b4b;
   overflow: hidden;
+  margin: 0 2%;
 }
 .title {
   width: 95%;

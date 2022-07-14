@@ -10,33 +10,29 @@
     <div class="panel-content">
       <div class="level-box">
         <control-panel-btn
-          @open-cont="generalActive"
-          :class="{ active: generalBtn }"
+          @open-cont="serverActive"
           name="SERVER"
         ></control-panel-btn>
         <control-panel-btn
-          @open-cont="expertActive"
-          :class="{ active: generalBtn }"
+          @open-cont="nodeActive"
           name="NODE"
         ></control-panel-btn>
         <control-panel-btn
           @open-cont="connectActive"
-          :class="{ active: generalBtn }"
           name="EXC. CLIENT"
           is-color="1"
         ></control-panel-btn>
         <control-panel-btn
-          @open-cont="expertActive"
-          :class="{ active: generalBtn }"
+          @open-cont="execActive"
           name="CON. CLIENT"
           is-color="1"
         ></control-panel-btn>
       </div>
       <div class="description-box">
-        <div class="general-description-box" v-if="isGeneralActive">
+        <div class="server-description-box" v-if="isServerActive">
           <div class="contin">
             <control-panel-item
-              v-for="item in controlPanelGeneralItems"
+              v-for="item in controlPanelSeverItems"
               :key="item.id"
               @open-item="openModalHandler(item)"
               :title="item.title"
@@ -44,10 +40,10 @@
             ></control-panel-item>
           </div>
         </div>
-        <div class="expert-description-box" v-else-if="isExpertActive">
+        <div class="node-description-box" v-else-if="isNodeActive">
           <div class="contin">
             <control-panel-item
-              v-for="item in controlPanelExpertItems"
+              v-for="item in controlPanelNodeItems"
               :key="item.id"
               @open-item="openModalHandler(item)"
               :title="item.title"
@@ -56,10 +52,22 @@
             ></control-panel-item>
           </div>
         </div>
-        <div class="connect-description-box" v-else>
+        <div class="exec-description-box" v-else-if="isExcActive">
           <div class="contin">
             <control-panel-item
-              v-for="item in controlPanelConnectItems"
+              v-for="item in controlPanelExecItems"
+              :key="item.id"
+              @open-item="openModalHandler(item)"
+              :title="item.title"
+              :summary="item.summary"
+              :is-color="item.isColor"
+            ></control-panel-item>
+          </div>
+        </div>
+        <div class="cons-description-box" v-else>
+          <div class="contin">
+            <control-panel-item
+              v-for="item in controlPanelConsItems"
               :key="item.id"
               @open-item="openModalHandler(item)"
               :title="item.title"
@@ -81,21 +89,18 @@ export default {
   emits: ["close-modal"],
   data() {
     return {
-      generalBtn: false,
-      expertBtn: false,
-      connectBtn: false,
-      isGeneralActive: false,
-      isExpertActive: false,
-      isConnectActive: false,
+      isServerActive: false,
+      isNodeActive: false,
+      isExcActive: false,
+      isConsActive: false,
       isModalActive: false,
-      controlPanelGeneralItems: [
+      controlPanelSeverItems: [
         {
           id: 1,
-          title: "PRUNNING",
-          summary:
-            "Initiates the prunning of your execution client to free up storage",
+          title: "RESTART HOST",
+          summary: "Restarts the host of your node",
           description:
-            "Geth as execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space",
+            "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
         },
         {
           id: 2,
@@ -104,31 +109,17 @@ export default {
           description:
             "Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!",
         },
+      ],
+      controlPanelNodeItems: [
         {
-          id: 3,
+          id: 1,
           title: "CONFIG EXPORT",
           summary: "Export your configuration to import it on a new device",
           description:
             'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.',
         },
-        {
-          id: 4,
-          title: "RESTART HOST",
-          summary: "Restarts the host of your node",
-          description:
-            "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
-        },
       ],
-      controlPanelExpertItems: [
-        {
-          id: 1,
-          title: "API BINDING",
-          summary: "Configure an IP you can access from the outside",
-          description:
-            "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
-        },
-      ],
-      controlPanelConnectItems: [
+      controlPanelExecItems: [
         {
           id: 1,
           title: "RPC - ENDPOINT",
@@ -146,34 +137,43 @@ export default {
           isColor: "2",
         },
       ],
+      controlPanelConsItems: [
+        {
+          id: 1,
+          title: "API BINDING",
+          summary: "Configure an IP you can access from the outside",
+          description:
+            "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
+        },
+      ],
 
       modalItem: undefined,
     };
   },
   methods: {
-    generalActive() {
-      this.isGeneralActive = true;
-      this.generalBtn = true;
-      this.isExpertActive = false;
-      this.expertBtn = false;
-      this.isConnectActive = false;
-      this.connectBtn = false;
+    serverActive() {
+      this.isServerActive = true;
+      this.isNodeActive = false;
+      this.isExcActive = false;
+      this.isConsActive = false;
     },
-    expertActive() {
-      this.isExpertActive = true;
-      this.expertBtn = true;
-      this.isGeneralActive = false;
-      this.generalBtn = false;
-      this.isConnectActive = false;
-      this.connectBtn = false;
+    nodeActive() {
+      this.isNodeActive = true;
+      this.isServerActive = false;
+      this.isExcActive = false;
+      this.isConsActive = false;
+    },
+    execActive() {
+      this.isNodeActive = false;
+      this.isServerActive = false;
+      this.isExcActive = true;
+      this.isConsActive = false;
     },
     connectActive() {
-      this.isExpertActive = false;
-      this.expertBtn = false;
-      this.isGeneralActive = false;
-      this.generalBtn = false;
-      this.isConnectActive = true;
-      this.connectBtn = true;
+      this.isNodeActive = false;
+      this.isServerActive = false;
+      this.isExcActive = false;
+      this.isConsActive = true;
     },
     openModalHandler(item) {
       this.isModalActive = true;
@@ -193,14 +193,12 @@ export default {
   border-radius: 20px;
   background-color: #464a44;
 }
-.modalActive {
-  display: inline-block;
-}
+
 .panel-content {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 .level-box {
@@ -215,7 +213,6 @@ export default {
   align-items: center;
 }
 
-
 .description-box {
   width: 80%;
   height: 99%;
@@ -223,9 +220,10 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.connect-description-box,
-.expert-description-box,
-.general-description-box {
+.exec-description-box,
+.cons-description-box,
+.node-description-box,
+.server-description-box {
   width: 97%;
   height: 90%;
   background-color: #686a6c;
@@ -238,7 +236,7 @@ export default {
   display: flex;
   width: 90%;
   height: 95%;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 </style>

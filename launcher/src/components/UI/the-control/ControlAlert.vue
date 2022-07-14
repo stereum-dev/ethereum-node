@@ -49,28 +49,28 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       systemWarning: [
         {
           id: 1,
-          title: 'WARNING',
-          description: 'SYSTEM LOAD'
+          title: "WARNING",
+          description: "SYSTEM LOAD",
         },
         {
           id: 2,
-          title: 'WARNING',
-          description: 'HEAVY SYSTEM LOAD'
+          title: "WARNING",
+          description: "HEAVY SYSTEM LOAD",
         },
         {
           id: 3,
-          title: 'WARNING',
-          description: 'SYSTEM LOAD'
-        }
-      ]
-    }
-  }
-}
+          title: "WARNING",
+          description: "SYSTEM LOAD",
+        },
+      ],
+    };
+  },
+};
 </script>
 <style scoped>
 .alert-box {
@@ -151,6 +151,10 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 .table-row {
   width: 95%;
