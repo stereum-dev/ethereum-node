@@ -10,6 +10,7 @@ import { OneClickInstall } from "./backend/OneClickInstall.js";
 import { ServiceManager } from "./backend/ServiceManager.js";
 import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
+import { Monitoring } from "./backend/Monitoring.js";
 import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
@@ -18,6 +19,7 @@ const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
 const taskManager = new TaskManager();
+const monitoring = new Monitoring();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
@@ -46,8 +48,10 @@ promiseIpc.on("connect", async (arg) => {
   stereumService.connect(remoteHost);
   nodeConnection.nodeConnectionParams = remoteHost;
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
+  monitoring.nodeConnection.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   return 0;
 });
 
@@ -186,6 +190,10 @@ promiseIpc.on("clearTasks", async () => {
 
 promiseIpc.on("insertBloxSSVKeys", async (args) => {
   return await validatorAccountManager.insertBloxSSVKeys(args.service, args.pk)
+})
+
+promiseIpc.on("refreshServiceInfos", async () => {
+  return await monitoring.refreshServiceInfos()
 })
 
 // Scheme must be registered before the app is ready
