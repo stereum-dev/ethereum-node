@@ -2,12 +2,12 @@
   <div class="drop-icon" @click="openSubTasksHandler">
     <img
       v-if="isSubTasksActive"
-      src="../../../../public/img/icon/task-manager-icons/task-down-icon.png"
+      src="../../../../public/img/icon/task-manager-icons/up.png"
       alt=""
     />
     <img
       v-else
-      src="../../../../public/img/icon/task-manager-icons/task-up-icon.png"
+      src="../../../../public/img/icon/task-manager-icons/down.png"
       alt=""
     />
   </div>

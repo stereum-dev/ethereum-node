@@ -49,7 +49,7 @@ export default {
         const arr = data.split(/\r?\n/);
         this.maschinName = arr[0];
       } catch (error) {
-        console.log(error);
+        error;
       }
     },
   },

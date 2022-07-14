@@ -79,7 +79,7 @@ export default {
       ipAddress: "0.0.0.0",
     };
   },
-  beforeMount() {
+  created() {
     this.maschinNameMet();
   },
   computed: {

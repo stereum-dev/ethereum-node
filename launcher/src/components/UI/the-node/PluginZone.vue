@@ -25,6 +25,12 @@
                   alt="icon"
                 />
                 <img
+                  v-else-if="isServicePending"
+                  class="pending"
+                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  alt="icon"
+                />
+                <img
                   v-else
                   @click="stateHandler(item)"
                   src="/img/icon/plugin-menu-icons/turn-on.png"
@@ -32,14 +38,14 @@
                 />
               </div>
               <div class="book">
-                <img src="/img/icon/plugin-menu-icons/logs3.png" alt="icon" />
+                <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
               </div>
               <div class="restart">
-                <img src="/img/icon/plugin-menu-icons/sync3.png" alt="icon" />
+                <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
               </div>
               <div class="setting">
                 <img
-                  src="/img/icon/plugin-menu-icons/setting4.png"
+                  src="/img/icon/plugin-menu-icons/setting8.png"
                   alt="icon"
                 />
               </div>
@@ -85,6 +91,7 @@ export default {
       itemsList: [],
       isPluginMenuActive: false,
       isServiceOn: false,
+      isServicePending: false,
     };
   },
   beforeMount() {
@@ -116,6 +123,7 @@ export default {
       });
     },
     stateHandler: async function (item) {
+      this.isServicePending = true;
       let state = "stopped";
       if (item.state === "exited") {
         state = "started";
@@ -129,6 +137,7 @@ export default {
       } catch (err) {
         console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
+      this.isServicePending = false;
       this.updateStates();
     },
     openDefaultBrowser(el) {
@@ -138,9 +147,9 @@ export default {
     },
     pluginMenuHandler(el) {
       setTimeout(() => {
-        this.list.filter((item) => {
-          item.id === el.id;
-          el.displayPluginMenu = !el.displayPluginMenu;
+        this.list.map((item) => {
+          if (item?.category === el.category && item?.id === el.id)
+            el.displayPluginMenu = !el.displayPluginMenu;
         });
       }, 200);
     },
@@ -174,32 +183,34 @@ export default {
 }
 .item-box {
   display: grid;
-  grid-template-columns: repeat(4, 25%);
-  grid-template-rows: repeat(2, 63px);
-  row-gap: 10px;
+  grid-template-columns: repeat(3, 33.33%);
+  grid-template-rows: repeat(2, 100px);
+  row-gap: 3px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 100%;
-  margin-top: 10px;
-  background-color: transparent;
+  width: 99%;
+  height: 100%;
+  margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
 .item-box .items {
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  width: 50px;
-  height: 50px;
+  width: 95%;
+  height: 95%;
   border-radius: 7px;
   margin: 0 auto;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 .item-box .items img {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 5px;
+  align-self: center;
 }
 .plus-icon-box {
   width: 30px;
@@ -239,127 +250,131 @@ export default {
 .menu-content {
   width: 100%;
   height: 100%;
+  z-index: 900;
 }
 .menu-content .power {
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: -2%;
-  left: 27%;
+  top: 2px;
+  left: 41%;
+  z-index: 11;
   animation: power 1s;
 }
 @keyframes power {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 41%;
   }
   100% {
-    top: -2%;
-    left: 27%;
+    top: 2px;
+    left: 41%;
   }
 }
 .menu-content .power img {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
-
+.menu-content .power .pending {
+  width: 17px;
+  height: 17px;
+  background-color: rgb(71, 70, 70);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+}
 .menu-content .book {
-  width: 30px;
-  height: 30px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 40%;
-  left: 36.1%;
+  left: 80%;
+  top: 39%;
   animation: book 1s;
 }
 @keyframes book {
   0% {
     opacity: 0;
     top: 39%;
-    left: 27%;
+    left: 42%;
   }
   100% {
-    top: 40%;
-    left: 36.1%;
+    left: 80%;
+    top: 39%;
   }
 }
 .menu-content .book img {
-  width: 25px;
-  height: 25px;
-  border: 1px solid rgb(124, 124, 124);
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .restart {
-  width: 28px;
-  height: 28px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 40%;
-  left: 17.2%;
+  top: 39%;
+  left: 2%;
   animation: restart 1s;
+  z-index: 11;
 }
 @keyframes restart {
   0% {
     opacity: 0;
     top: 39%;
-    left: 27%;
+    left: 42%;
   }
   100% {
-    top: 40%;
-    left: 17.2%;
+    top: 39%;
+    left: 2%;
   }
 }
 
 .menu-content .restart img {
-  width: 25px;
-  height: 25px;
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
-  border: 1px solid rgb(124, 124, 124);
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
 }
 .menu-content .setting {
-  width: 28px;
-  height: 28px;
+  width: 17px;
+  height: 17px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 80%;
-  left: 27%;
+  top: 78%;
+  left: 41%;
   animation: setting 1s;
 }
 @keyframes setting {
   0% {
     opacity: 0;
-    top: 39%;
-    left: 27%;
+    top: 40%;
+    left: 42%;
   }
   100% {
-    width: 28px;
-    height: 28px;
-    top: 80%;
-    left: 27%;
+    top: 78%;
+    left: 41%;
   }
 }
 .menu-content .setting img {
-  width: 90%;
-  height: 90%;
-  border: 1px solid rgb(124, 124, 124);
+  width: 17px;
+  height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
