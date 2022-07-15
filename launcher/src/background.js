@@ -29,7 +29,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 );
 
 const log = require("electron-log");
-//log.transports.console.level = "info"
+log.transports.console.level = "info"
 
 let remoteHost = {};
 

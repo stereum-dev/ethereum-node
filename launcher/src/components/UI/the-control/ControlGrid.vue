@@ -19,6 +19,7 @@
               :key="index"
             >
               <div
+                class="plugins-pending-state"
                 :class="{
                   'plugins-running-state': item.state == 'running',
                   'plugins-exited-state': item.state == 'exited',
@@ -343,19 +344,25 @@ export default {
 .plugins-running-state {
   width: 20%;
   height: 100%;
-  background-color: #22b53f;
+  background-color: #22b53f !important;
   border-radius: 3px;
 }
 .plugins-exited-state {
   width: 20%;
   height: 100%;
-  background-color: #a1a1a1;
+  background-color: #d52727 !important;
   border-radius: 3px;
 }
 .plugins-restarting-state {
   width: 20%;
   height: 100%;
-  background-color: #db0000;
+  background-color: #ff843d !important;
+  border-radius: 3px;
+}
+.plugins-pending-state {
+  width: 20%;
+  height: 100%;
+  background-color: #7d7d7d;
   border-radius: 3px;
 }
 .plugins-row-content {
@@ -419,19 +426,21 @@ export default {
   align-items: center;
   cursor: pointer;
 }
-.power-icon:hover,
-.book-icon:hover,
-.refresh-icon:hover,
-.seting-icon:hover {
-  transform: scale(1.07);
-  background-color: rgb(31, 31, 32);
+.power-icon img:hover,
+.book-icon img:hover,
+.refresh-icon img:hover,
+.seting-icon img:hover {
+  transform: scale(1.1);
+  border:1px solid white;
+  border-radius:100%;
 }
-.power-icon:active,
-.book-icon:active,
-.refresh-icon:active,
-.seting-icon:active {
+.power-icon img:active,
+.book-icon img:active,
+.refresh-icon img:active,
+.seting-icon img:active {
   transform: scale(1);
 }
+
 .power-icon img {
   width: 17px;
   height: 17px;
