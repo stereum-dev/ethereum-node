@@ -86,7 +86,6 @@ import ControlPanelBtn from "./ControlPanelBtn.vue";
 import ControlPanelItem from "./ControlPanelItem.vue";
 export default {
   components: { panelModal, ControlPanelBtn, ControlPanelItem },
-  emits: ["close-modal"],
   data() {
     return {
       isServerActive: false,
@@ -101,6 +100,7 @@ export default {
           summary: "Restarts the host of your node",
           description:
             "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
+          btn: "INITIATE",
         },
         {
           id: 2,
@@ -108,6 +108,7 @@ export default {
           summary: "Updates your OS to the newest available version",
           description:
             "Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!",
+          btn: "INITIATE",
         },
       ],
       controlPanelNodeItems: [
@@ -117,6 +118,10 @@ export default {
           summary: "Export your configuration to import it on a new device",
           description:
             'Currently running "Configuration" will be exported and stored in "/tmp/exported-config" directory. It could be then used to setup on other/new device.',
+          img: "/img/icon/control/import-configurations.png",
+          idescript:
+            'Use the "import configuration" option when you set up a node',
+          btn: "INITIATE",
         },
       ],
       controlPanelExecItems: [
@@ -127,6 +132,7 @@ export default {
           description:
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
           isColor: "1",
+          btn: "INITIATE",
         },
         {
           id: 2,
@@ -135,6 +141,7 @@ export default {
           description:
             "Your execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space.",
           isColor: "2",
+          btn: "INITIATE",
         },
       ],
       controlPanelConsItems: [
@@ -144,6 +151,8 @@ export default {
           summary: "Configure an IP you can access from the outside",
           description:
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
+          btn: "CONFIRM",
+          ipBox: true,
         },
       ],
 

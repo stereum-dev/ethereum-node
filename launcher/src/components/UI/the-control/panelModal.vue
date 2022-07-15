@@ -1,6 +1,6 @@
 <template>
   <div class="modal-parent">
-    <div class="modal-opacity" @click="$emit('close-modal')"></div>
+    <div class="modal-opacity" @click="closeModel"></div>
     <div class="modal-box">
       <div class="modal-item">
         <div class="show-item">
@@ -11,7 +11,25 @@
             <div class="item-description">
               <p>{{ item.description }}</p>
             </div>
-            <span class="exit">Click outside to close</span>
+            <div class="item-ip" v-if="item.ipBox">
+              <input type="text" placeholder="0.0.0.0" v-model="ip" />
+            </div>
+            <div class="item-img-box">
+              <div class="item-img">
+                <img :src="item.img" />
+              </div>
+              <div class="item-img-discription">
+                <span>{{ item.idescript }}</span>
+              </div>
+            </div>
+            <div class="item-btn-box">
+              <div class="item-btn" @click="test">
+                <span>{{ item.btn }}</span>
+              </div>
+            </div>
+            <div class="item-footer">
+              <span class="exit">Click outside to close</span>
+            </div>
           </div>
         </div>
       </div>
@@ -20,8 +38,28 @@
 </template>
 <script>
 export default {
-  props: ['item']
-}
+  props: ["item"],
+  emits: ["click-option", "close-modal"],
+  data() {
+    return {
+      ip: null,
+    };
+  },
+  methods: {
+    closeModel() {
+      this.$emit("close-modal");
+    },
+    clickOption() {
+      this.$emit("click-option");
+    },
+    alert() {
+      alert(this.ip);
+    },
+    test() {
+      alert(this.ip);
+    },
+  },
+};
 </script>
 <style scoped>
 .modal-parent {
@@ -73,43 +111,116 @@ export default {
 }
 .items-container {
   width: 90%;
-  height: 88%;
+  height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 .item-title {
   width: 100%;
   height: 20%;
-  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.item-title span {
-  width: 100%;
-  height: 100%;
-  font-size: 2rem;
+  font-size: 120%;
   font-weight: 900;
   color: rgb(237, 78, 78);
 }
+
 .item-description {
   width: 100%;
-  height: 80%;
+  height: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.item-description p {
-  font-size: 1.2rem;
-  font-weight: 900;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: 100%;
+  font-weight: 700;
   text-align: justify;
   color: rgb(52, 51, 51);
+  line-height: 200%;
 }
-.exit {
+
+.item-img-box {
+  display: flex;
+  width: 100%;
+  height: 20%;
+}
+.item-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 100%;
+}
+.item-img-box img {
+  width: 55%;
+}
+.item-img-discription {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  color: #494949;
+  font-size: 60%;
+  flex-direction: column;
+  text-align: left;
+}
+.item-btn-box {
+  display: flex;
+  width: 80%;
+  height: 20%;
+  justify-content: center;
+  align-items: center;
+}
+.item-btn {
+  width: 35%;
+  height: 50%;
+  border: 3px solid #707070;
+  background: #33393e;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 400;
+  color: #eee;
+  border-radius: 10px;
+}
+.item-btn:hover,
+.item-btn:focus {
+  border: none;
+  font-weight: 500;
+}
+.item-footer {
+  width: 100%;
+  height: 5%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   font-size: 0.7rem;
   font-weight: 500;
   color: rgb(37, 107, 126);
+  flex-direction: column;
+}
+.item-ip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 15%;
+}
+.item-ip input {
+  height: 70%;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  border: 2px solid #707070;
+  color: #000;
+  font-size: 100%;
+  font-weight: 500;
 }
 </style>
