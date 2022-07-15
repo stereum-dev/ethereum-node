@@ -2,7 +2,7 @@
 
 ---
 
-[![Support Server](https://img.shields.io/badge/Discord-Stereum-blue?style=flat-square)](https://discord.gg/8Znj8K6GjN) [![Support Email](https://img.shields.io/badge/Email-Stereum-brightgreen?style=flat-square)](mailto:stereum@stereum.net)
+[![Support Server](https://img.shields.io/badge/Discord-Stereum-blue?style=flat-square)](https://discord.gg/8Znj8K6GjN) [![Support Email](https://img.shields.io/badge/Email-Stereum-brightgreen?style=flat-square)](mailto:stereum@stereum.net) [![GitPOAP Badge](https://public-api.gitpoap.io/v1/repo/stereum-dev/ethereum-node/badge)](https://www.gitpoap.io/gh/stereum-dev/ethereum-node)
 
 ---
 This repository contains the code and scripts for Stereum 2.0
