@@ -27,4 +27,7 @@ export default {};
   overflow-x: hidden;
   overflow-y: auto;
 }
+.tableContent::-webkit-scrollbar {
+  width: 1px;
+}
 </style>

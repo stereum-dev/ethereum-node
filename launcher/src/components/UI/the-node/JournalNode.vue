@@ -355,7 +355,7 @@ export default {
   height: 25px;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #cbcbcb;
+  color: #a5a5a5;
   margin-left: 3px;
   white-space: nowrap;
   overflow: hidden;
@@ -370,7 +370,7 @@ export default {
   height: 25px;
   font-size: 0.7rem;
   font-weight: 600;
-  color: #dad155;
+  color: #c6ad51;
   margin-left: 3px;
   white-space: nowrap;
   overflow: hidden;
