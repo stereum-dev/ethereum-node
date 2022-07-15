@@ -69,6 +69,7 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   data() {
     return {
@@ -85,6 +86,7 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
+      refresh: "refresh",
     }),
     ...mapWritableState(useNodeStore, {
       configData: "configData",
@@ -93,6 +95,9 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
+    })
   },
   methods: {
     async maschinNameMet() {
@@ -118,6 +123,7 @@ export default {
       this.removeModal = false;
     },
     removeConfirmation() {
+      this.refresh = false  //stop refreshing
       this.removeModal = false;
       this.removeIsConfirmed = true;
       this.removeAllPlugins();
@@ -128,11 +134,13 @@ export default {
         this.headerServices = [];
         this.runningServices = [];
         this.installedServices = [];
+        this.newConfiguration = [];
       }
       this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
       console.log(await ControlService.destroy());
+      this.refresh = true
     },
   },
 };

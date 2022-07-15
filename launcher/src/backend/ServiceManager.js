@@ -141,7 +141,7 @@ export class ServiceManager {
       return services
     }).catch(err => {
       log.error(err)
-      return err
+      return []
     })
   }
 }

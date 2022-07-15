@@ -374,67 +374,7 @@ export default {
         }
         return;
       }
-
       if (await ControlService.checkStereumInstallation()) {
-        this.headerServices = [];
-        this.installedServices = [];
-        let services = await ControlService.getServices();
-        if (services && Array.isArray(services) && services.length > 0) {
-          services.forEach((service) => {
-            let buffer = this.allServices.find(
-              (element) => element.service === service.service
-            );
-            if (buffer) {
-              buffer.config = {
-                serviceID: service.id,
-                configVersion: service.configVersion,
-                image: service.image,
-                imageVersion: service.imageVersion,
-                ports: service.ports,
-                volumes: service.volumes,
-                network: service.network,
-              };
-              if (buffer.name === "Teku" || buffer.name === "Nimbus") {
-                let vs = this.allServices.find(
-                  (element) =>
-                    element.service === buffer.name + "ValidatorService"
-                );
-                vs.config = buffer.config;
-                this.installedServices.push(vs);
-              }
-              this.installedServices.push(buffer);
-            }
-          });
-
-          let localPorts = await ControlService.getAvailablePort({
-            min: 9000,
-            max: 9999,
-            amount: this.installedServices.filter(
-              (s) => s.headerOption && s.tunnelLink
-            ).length,
-          });
-
-          this.headerServices = this.installedServices
-            .filter((service) => service.headerOption)
-            .map((service) => {
-              if (service.tunnelLink) {
-                service.linkUrl = "http://localhost:" + localPorts.pop();
-              }
-              return service;
-            });
-
-          let ports = this.headerServices
-            .filter((service) => service.tunnelLink)
-            .map((service) => {
-              return {
-                dstPort: service.config.ports[0].servicePort,
-                localPort: service.linkUrl.split(":").pop(),
-              };
-            });
-
-          await ControlService.openTunnels(ports);
-        }
-
         this.$router.push("/node");
       }
       this.$emit("page", "welcome-page");

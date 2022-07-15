@@ -16,7 +16,8 @@ import { useServices } from "@/store/services";
 export default {
   components: { PagesNav, IconsNav, ServiceLinks },
   mounted() {
-    this.polling = setInterval(this.refreshServiceStates, 1000); //refresh services
+    this.refreshServiceStates()
+    this.polling = setInterval(this.refreshServiceStates, 2000); //refresh services
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -29,21 +30,75 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
+      refresh: "refresh",
     }),
   },
   methods: {
     refreshServiceStates: async function(){
-      let services = (await ControlService.refreshServiceInfos()).filter(s => s.service != "PrometheusNodeExporterService")
-      const newServices = services.map(service => {
-          const oldService = this.installedServices.find(s => s.config.serviceID === service.config.serviceID)
-          oldService.config = service.config
-          oldService.state = service.state
-        return oldService
-      })
-      this.installedServices = newServices
+      if(this.refresh){
+      let services = await ControlService.refreshServiceInfos()
+      if(services && services.length != 0 && this.refresh){
+        let otherServices = []
+        let needForTunnel = []
+        const newServices = services.map(service => {
+          let oldService
+          if(this.installedServices.map(s => s.config.serviceID).includes(service.config.serviceID)){
+            oldService = this.installedServices.find(s => s.service === service.service && 
+              s.config.serviceID && s.config.serviceID === service.config.serviceID)
+          } else {
+            oldService = this.allServices.find(s => s.service === service.service)
+            needForTunnel.push(oldService)
+          }
+            oldService.config = service.config
+            oldService.state = service.state
+            if (oldService.name === "Teku" || oldService.name === "Nimbus") {
+              let vs = this.allServices.find(
+                (element) =>
+                  element.service === oldService.name + "ValidatorService"
+              );
+              vs.config = oldService.config;
+              vs.state = oldService.state
+              otherServices.push(vs);
+            }
+            return oldService
+        })
+        this.installedServices = newServices.concat(otherServices)
+        if(needForTunnel.length != 0 && this.refresh){
+          let localPorts = await ControlService.getAvailablePort({
+            min: 9000,
+            max: 9999,
+            amount: this.installedServices.filter(
+              (s) => s.headerOption && s.tunnelLink
+            ).length,
+          });
 
-      this.headerServices = this.installedServices
-        .filter((service) => service.headerOption)
+          this.headerServices = this.installedServices
+            .filter((service) => service.headerOption)
+            .map((service) => {
+              if (service.tunnelLink) {
+                service.linkUrl = "http://localhost:" + localPorts.pop();
+              }
+              return service;
+            });
+
+          let ports = this.headerServices
+            .filter((service) => service.tunnelLink)
+            .map((service) => {
+              return {
+                dstPort: service.config.ports[0].servicePort,
+                localPort: service.linkUrl.split(":").pop(),
+              };
+            });
+
+          await ControlService.openTunnels(ports);
+        } else if (this.refresh){
+          this.headerServices = this.installedServices
+            .filter((service) => service.headerOption)
+        }
+      } else {
+        this.installedServices = []
+      }
+    }
     }
   },
 };
