@@ -144,12 +144,6 @@ export default {
       };
     });
   },
-  beforeMount() {
-    this.updateStates();
-  },
-  updated() {
-    this.updateStates();
-  },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",

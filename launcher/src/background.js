@@ -29,7 +29,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 );
 
 const log = require("electron-log");
-//log.transports.console.level = "info"
+log.transports.console.level = "info"
 
 let remoteHost = {};
 
@@ -127,19 +127,7 @@ promiseIpc.on("getAvailablePort", async (args) => {
 });
 
 promiseIpc.on("checkStereumInstallation", async () => {
-  if (nodeConnection.sshService.connected) {
-    let services;
-    let settings;
-    try {
-      settings = await nodeConnection.sshService.exec("ls /etc/stereum");
-      services = await nodeConnection.listServicesConfigurations();
-    } catch {
-      services = [];
-    }
-    if (services.length != 0 || settings.stdout.includes("stereum.yaml"))
-      return true;
-  }
-  return false;
+  return await monitoring.checkStereumInstallation(nodeConnection);
 });
 
 promiseIpc.on("getServices", async () => {
