@@ -400,4 +400,7 @@ export default {
 .menu-content .power img:active {
   transform: scale(1);
 }
+.menu-content .power .pending:hover{
+  transform: scale(1);
+}
 </style>
