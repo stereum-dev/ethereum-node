@@ -1,0 +1,28 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "update-os--default--ubuntu-22.04"
+    server_type: cx11
+    image: ubuntu-22.04
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - lint
+    - verify
+    - destroy
