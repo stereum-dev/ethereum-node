@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="cpuTemp">
-          <span>Proccess: %{{ cpuValue }}</span>
+          <span>Proccess: {{ cpuValue }} %</span>
         </div>
       </div>
     </div>
