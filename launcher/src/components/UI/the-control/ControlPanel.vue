@@ -101,6 +101,7 @@ export default {
           description:
             "Sometimes there are things getting stuck or not responding anymore, a restart might help you resolve some issues (but not all). This will take a couple of minutes.",
           btn: "INITIATE",
+          ipBox: false,
         },
         {
           id: 2,
@@ -109,6 +110,7 @@ export default {
           description:
             "Operating System updates might repair security holes, can add new features to your devices and remove outdated ones. Keep your device turned on!",
           btn: "INITIATE",
+          ipBox: false,
         },
       ],
       controlPanelNodeItems: [
@@ -122,6 +124,7 @@ export default {
           idescript:
             'Use the "import configuration" option when you set up a node',
           btn: "INITIATE",
+          ipBox: false,
         },
       ],
       controlPanelExecItems: [
@@ -133,6 +136,7 @@ export default {
             "If you want to use your beacon client(s) or monitoring to be accessible outside of your server, configure on which IP the services should listen on.",
           isColor: "1",
           btn: "INITIATE",
+          ipBox: false,
         },
         {
           id: 2,
@@ -142,6 +146,7 @@ export default {
             "Your execution client collects massive amounts of data that can be deleted after a while. Run this to free up some storage space.",
           isColor: "2",
           btn: "INITIATE",
+          ipBox: false,
         },
       ],
       controlPanelConsItems: [

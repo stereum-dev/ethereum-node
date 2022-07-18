@@ -12,7 +12,7 @@
               <p>{{ item.description }}</p>
             </div>
             <div class="item-ip" v-if="item.ipBox">
-              <input type="text" placeholder="0.0.0.0" v-model="ip" />
+              <input type="text" placeholder="127.0.0.1" v-model="ip" />
             </div>
             <div class="item-img-box">
               <div class="item-img">
@@ -23,7 +23,7 @@
               </div>
             </div>
             <div class="item-btn-box">
-              <div class="item-btn" @click="test">
+              <div class="item-btn" @click="btnAction">
                 <span>{{ item.btn }}</span>
               </div>
             </div>
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       ip: null,
+      ipList: [],
     };
   },
   methods: {
@@ -52,11 +53,16 @@ export default {
     clickOption() {
       this.$emit("click-option");
     },
-    alert() {
-      alert(this.ip);
-    },
-    test() {
-      alert(this.ip);
+    btnAction() {
+      if (this.item.ipBox) {
+        alert(this.ip);
+        var ipVar = this.ip;
+        this.ipList.push(ipVar);
+        this.ip = "";
+        console.log(this.ipList);
+      } else {
+        alert("initite");
+      }
     },
   },
 };
@@ -222,5 +228,8 @@ export default {
   color: #000;
   font-size: 100%;
   font-weight: 500;
+}
+.item-ip input:focus::placeholder {
+  color: transparent;
 }
 </style>
