@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+
+  tasks:
+    - set_fact:
+        stereum:
+          settings:
+            controls_install_path: "/opt/stereum"
+          only_os_updates: true
+    - debug:
+        msg: "{{ stereum }}"
+    - name: "Include update-os"
+      include_role:
+        name: "update-os"

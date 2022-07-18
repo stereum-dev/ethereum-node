@@ -1,4 +1,10 @@
 ---
+- name: Remove "resume stereum-services-update" from crontab
+  cron:
+    name: "resume stereum-services-update"
+    state: absent
+  become: yes
+
 - name: Download update metadata
   uri:
     url: https://stereum.net/downloads/updates.json

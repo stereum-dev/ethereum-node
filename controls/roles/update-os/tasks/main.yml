@@ -1,0 +1,40 @@
+---
+- name: Upgrade all apt packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+  become: yes
+
+- name: Check if a reboot is needed for Debian and Ubuntu boxes
+  stat:
+    path: /var/run/reboot-required
+    get_md5: no
+  register: reboot_required_file
+  become: yes
+
+- name: Create cron @reboot to run unattended stereum update
+  cron:
+    name: "resume stereum-services-update"
+    special_time: reboot
+    job: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}/ansible/controls\" && ./stereum-services-update.sh"
+  when: >
+    reboot_required_file.stat.exists and
+    (stereum.only_os_updates is not defined or not stereum.only_os_updates)
+  become: yes
+
+- name: Run unattended stereum update
+  shell: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}/ansible/controls\" && ./stereum-services-update.sh"
+  when: >
+    not reboot_required_file.stat.exists and
+    (stereum.only_os_updates is not defined or not stereum.only_os_updates)
+  become: yes
+
+- name: Reboot the Debian or Ubuntu server
+  shell: sleep 10 && /sbin/shutdown -r now 'Rebooting to update system libs'
+  ignore_errors: yes
+  async: 60
+  poll: 0
+  when: reboot_required_file.stat.exists
+  become: yes
+
+# EOF

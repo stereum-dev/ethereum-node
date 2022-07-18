@@ -4,7 +4,7 @@
     name: "stereum auto unattended update"
     minute: "{{ 59 | random }}"
     hour: "{{ 5 | random }}" # execute updates only in the night time/very early morning
-    job: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}\" && ./unattended-update.sh"
+    job: "cd \"{{ stereum.settings.controls_install_path | default(stereum.defaults.controls_install_path) }}/ansible/controls\" && ./unattended-update.sh"
     state: "{{ 'present' if (stereum.settings.updates.unattended.install | default(stereum.defaults.updates.unattended.install)) else 'absent' }}"
     user: "root"
   become: yes
