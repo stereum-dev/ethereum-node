@@ -9,7 +9,7 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ free }} MB FREE</span>
+          <span>{{ free }} GB FREE</span>
         </div>
         <div class="totalPart">
           <span>/ {{ total }} GB TOTAL</span>
@@ -59,7 +59,7 @@ export default {
         this.usedStotagePer = parseInt(arr[2]);
         const arr2 = arr[3].split(" ");
         this.total = Math.floor(parseInt(arr2[0]) / 10000);
-        this.free = parseInt(arr2[1]);
+        this.free = parseFloat(arr2[1]).toFixed(2) / 10000;
       } catch (error) {
         console.log(error);
       }
