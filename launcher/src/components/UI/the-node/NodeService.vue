@@ -206,7 +206,7 @@ export default {
   position: absolute;
   top: 0%;
   left: 5%;
-  animation: power 1s;
+  animation: power 500ms;
 }
 @keyframes power {
   0% {
@@ -236,7 +236,7 @@ export default {
   position: absolute;
   top: 0%;
   left: 65%;
-  animation: book 1s;
+  animation: book 500ms;
 }
 @keyframes book {
   0% {
@@ -265,7 +265,7 @@ export default {
   position: absolute;
   top: 65%;
   left: 3%;
-  animation: restart 1s;
+  animation: restart 500ms;
 }
 @keyframes restart {
   0% {
@@ -295,7 +295,7 @@ export default {
   position: absolute;
   top: 65%;
   left: 66%;
-  animation: setting 1s;
+  animation: setting 500ms;
 }
 @keyframes setting {
   0% {

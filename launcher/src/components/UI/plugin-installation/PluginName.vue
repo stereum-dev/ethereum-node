@@ -104,9 +104,9 @@
             </div>
           </div>
           <div class="btn-box">
-            <router-link :to="{ path: '/clickinstall' }">
-              <button class="back-btn">BACK</button>
-            </router-link>
+            <div class="back-btn" @click="backToHistoryHandler">
+              <span>BACK</span>
+            </div>
             <router-link :to="{ path: '/verify' }">
               <button class="next-btn">NEXT</button>
             </router-link>
@@ -258,6 +258,9 @@ export default {
         i.category === el.category && i.id == el.id;
         el.displayTooltip = true;
       });
+    },
+    backToHistoryHandler() {
+      history.back();
     },
   },
 };
@@ -687,11 +690,17 @@ export default {
   height: 60%;
   text-decoration: none;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
-.next-btn,
-.back-btn {
+.btn-box .back-btn {
+  width: 25%;
+  height: 60%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.next-btn {
   width: 100%;
   height: 100%;
   border: 2px solid rgb(125, 125, 125);
@@ -703,14 +712,30 @@ export default {
   box-shadow: 0 1px 2px 1px #353e39;
   outline-style: none;
   cursor: pointer;
+  text-align: center;
+}
+.back-btn span {
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgb(125, 125, 125);
+  border-radius: 20px;
+  background-color: #336666;
+  color: #eaeaea;
+  padding-top: 2%;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px 1px #353e39;
+  outline-style: none;
+  cursor: pointer;
+  text-align: center;
 }
 .next-btn:hover,
-.back-btn:hover {
+.back-btn span:hover {
   background-color: #1a3535;
   box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
 .next-btn:active,
-.back-btn:active {
+.back-btn span:active {
   box-shadow: inset 1px 1px 5px 1px rgb(28, 36, 28);
   font-size: 0.8rem;
 }
