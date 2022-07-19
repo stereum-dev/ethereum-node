@@ -6,7 +6,6 @@
       apt:
         name: cron
         update_cache: yes
-        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
