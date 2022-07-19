@@ -43,7 +43,7 @@
                   alt="icon"
                 />
               </div>
-              <div class="book">
+              <div class="book" @click="expertModeHandler(item)">
                 <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
               </div>
               <div class="restart">
@@ -57,6 +57,68 @@
               </div>
             </div>
           </plugin-menu>
+          <expert-mode
+            @close-expert="hideExpertMode(item)"
+            v-if="item.expertOptionsModal"
+          >
+            <div class="serviceName">
+              <span class="nameSpan">{{ item.name }}</span>
+              <span class="category">{{ item.category }}</span>
+            </div>
+            <div class="expertRow">
+              <div class="dataTitleBox" @click="openExpertMode">
+                <span>Expert Mode</span>
+                <img
+                  v-if="isExpertModeActive"
+                  src="../../../../public/img/icon/task-manager-icons/up.png"
+                  alt=""
+                />
+                <img
+                  v-else
+                  src="../../../../public/img/icon/task-manager-icons/down.png"
+                  alt=""
+                />
+              </div>
+              <div class="ramTitleBox" @click="openRamUsage">
+                <span>RAM Usage Limit</span>
+                <img
+                  v-if="isRamUsageActive"
+                  src="../../../../public/img/icon/task-manager-icons/up.png"
+                  alt=""
+                />
+                <img
+                  v-else
+                  src="../../../../public/img/icon/task-manager-icons/down.png"
+                  alt=""
+                />
+              </div>
+            </div>
+            <div
+              class="expertTable"
+              v-for="(e, index) in item.expertOptions"
+              :key="index"
+            >
+              <div class="expertMode" v-if="e.name === 'expert mode'">
+                <textarea class="editContent" v-model="editableData"></textarea>
+              </div>
+              <div class="ramSpace" v-if="e.name === 'ram'">
+                <span>Choose RAM Usage Limit</span>
+                <select v-model="ramUsage" id="ramUsage">
+                  <option
+                    v-for="(rate, idx) in e.value"
+                    :value="rate"
+                    :key="idx"
+                  >
+                    {{ rate }}GB
+                  </option>
+                </select>
+              </div>
+
+              <div class="btn-box">
+                <span>Apply & Confirm</span>
+              </div>
+            </div>
+          </expert-mode>
         </div>
       </div>
     </template>
@@ -73,10 +135,12 @@ import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
+import ExpertMode from "./ExpertMode.vue";
 export default {
   components: {
     ManageTrapezoid,
     PluginMenu,
+    ExpertMode,
   },
   props: {
     title: {
@@ -98,6 +162,10 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      ramUsage: null,
+      editableData: null,
+      isRamUsageActive: false,
+      isExpertModeActive: false,
     };
   },
   computed: {
@@ -156,6 +224,21 @@ export default {
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
+    expertModeHandler(el) {
+      this.list.map((item) => {
+        if (item?.category === el.category && item?.id === el.id)
+          el.expertOptionsModal = true;
+      });
+    },
+    openExpertMode() {
+      this.isExpertModeActive = !this.isExpertModeActive;
+    },
+    openRamUsage() {
+      this.isRamUsageActive = !this.isRamUsageActive;
     },
   },
 };
@@ -394,7 +477,128 @@ export default {
 .menu-content .power img:active {
   transform: scale(1);
 }
-.menu-content .power .pending:hover{
+.menu-content .power .pending:hover {
   transform: scale(1);
 }
+
+.expert-modal .serviceName {
+  width: 95%;
+  height: 20%;
+  border-bottom: 1px solid #adadad;
+  border-radius: 9px 9px 0 0;
+  margin: 10px auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+}
+.serviceName .nameSpan {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-left: 5px;
+  color: #d3d3d3;
+}
+.serviceName .category {
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-left: 5px;
+  color: #ababab;
+}
+.expertRow {
+  width: 95%;
+  height: 35%;
+  margin: 5px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+  z-index: 1003;
+}
+.expertRow .ramTitleBox,
+.expertRow .dataTitleBox {
+  width: 100%;
+  height: 28px;
+  margin: 2px auto;
+  padding: 3px 20px;
+  border: 1px solid #8a8a8a;
+  border-radius: 25px;
+  background-color: #8a8a8a;
+  text-align: center;
+  color: #393939;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition-duration: 100ms;
+}
+.expertRow .ramTitleBox:hover,
+.expertRow .dataTitleBox:hover {
+  border: 1px solid #d6d6d6;
+  color: #d9d9d9;
+}
+.expertRow .ramTitleBox:active,
+.expertRow .dataTitleBox:active {
+  border: 1px solid #2d2d2d;
+}
+
+.expertRow .ramTitleBox img,
+.expertRow .dataTitleBox img {
+  width: 20px;
+  height: 20px;
+}
+.expertTable {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expertContent .expertMode {
+  width: 96%;
+  height: 100%;
+  margin: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.expertMode::-webkit-scrollbar {
+  width: 5px;
+  margin: 5px 0;
+}
+
+/* Track */
+.expertMode::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 20px 0;
+  cursor: pointer;
+}
+
+/* Handle */
+.expertMode::-webkit-scrollbar-thumb {
+  background: rgb(112, 199, 249);
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+.expertMode::-webkit-scrollbar-thumb:hover {
+  background: rgb(24, 161, 241);
+}
+/* .expertContent .expertMode span {
+  width: 100%;
+  height: 50%;
+  margin-left: 10px;
+  color: #a8a8a8;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: pre-wrap;
+  text-transform: none;
+  text-align: left;
+} */
 </style>
