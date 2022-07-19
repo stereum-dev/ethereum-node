@@ -8,8 +8,15 @@
     beacon_service: c3d37b1a-b51b-11ec-849b-6375f2b3a630
 
   tasks:
-    - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip
+    - name: Install pkgs for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - pip
+          - python3-pip
+          - openjdk-8-jre-headless
+          - expect
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
@@ -20,26 +27,11 @@
       changed_when: false
       when: ansible_distribution == "CentOS"
 
-    - name: Install keytool for creating Keystore (Ubuntu)
-      raw: apt install -y openjdk-8-jre-headless
-      become: true
-      changed_when: false
-      when: ansible_distribution == "Ubuntu"
-
     - name: Install keytool for creating Keystore (CentOS 8)
       raw: yum install -y java-1.8.0-openjdk
       become: true
       changed_when: false
       when: ansible_distribution == "CentOS"
-
-    - name: Install pip, expect (Ubuntu)
-      apt:
-        update_cache: yes
-        name:
-          - python3-pip
-          - expect
-      become: true
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: Install pip, expect (CentOS 8)
       yum:

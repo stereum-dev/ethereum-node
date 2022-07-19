@@ -28,5 +28,7 @@ platforms:
   #     - /lib/modules:/lib/modules:ro
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
 verifier:
   name: ansible

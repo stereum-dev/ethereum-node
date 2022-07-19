@@ -2,6 +2,7 @@ import { SSHService } from "./SSHService";
 import { StringUtils } from "./StringUtils";
 import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
+import axios from "axios";
 import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
@@ -657,6 +658,16 @@ export class NodeConnection {
     return ports;
   }
 
+  async checkUpdates() {
+    try{
+      let response = await axios.get('https://stereum.net/downloads/updates.json')
+      log.info(response)
+      return response.data
+    }catch(err){
+      log.error("REST request failed:\n",err)
+    }
+  }
+
   async runUpdates() {
     const updateRunRef = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Update", updateRunRef: updateRunRef });
@@ -667,5 +678,28 @@ export class NodeConnection {
       updateRunRef: updateRunRef,
       logs: logs,
     });
+  }
+
+  async getCurrentStereumVersion(){
+    return new Promise(async (resolve,reject) => {
+      let response;
+      try {
+        response = await this.sshService.exec(`cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`)
+      } catch (err) {
+        log.error("Couldn't get Stereum Version:", err);
+        return reject(
+          "Couldn't get Stereum Version:\n" + err
+        );
+      }
+
+      if (SSHService.checkExecError(response)) {
+        return reject(
+          "Failed reading Stereum Version:\n" +
+            SSHService.extractExecError(response)
+        );
+      }
+      return resolve(response.stdout)
+    })
+
   }
 }

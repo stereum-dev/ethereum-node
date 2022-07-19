@@ -8,8 +8,14 @@
     validator_service: 0ca56612-998f-11ec-a28d-f71957ab65a0
 
   tasks:
-    - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip
+    - name: Install pkgs for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - pip
+          - python3-pip
+          - expect
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
@@ -18,24 +24,6 @@
       raw: yum install -y python38 tar && yum remove -y python36
       become: true
       changed_when: false
-      when: ansible_distribution == "CentOS"
-
-    - name: Install pip, expect (Ubuntu)
-      apt:
-        update_cache: yes
-        name:
-          - python3-pip
-          - expect
-      become: true
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-
-    - name: Install pip, expect (CentOS 8)
-      yum:
-        name:
-          - python3-pip
-          - expect
-        state: latest
-      become: true
       when: ansible_distribution == "CentOS"
 
     - include_role:

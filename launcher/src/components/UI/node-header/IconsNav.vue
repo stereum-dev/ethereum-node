@@ -19,6 +19,7 @@
     </div>
     <div
       class="icon-btn"
+      @click="updateModalHandler"
       v-if="isUpdateAvailable"
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
@@ -66,11 +67,12 @@
 import ControlService from "@/store/ControlService";
 import UpdateModal from "./UpdateModal.vue";
 import UpdateWaiting from "./UpdateWaiting.vue";
+import { useNodeHeader } from "../../../store/nodeHeader";
+import { mapWritableState } from "pinia";
 export default {
   components: { UpdateModal, UpdateWaiting },
   data() {
     return {
-      isUpdateAvailable: false,
       showUpdateModal: false,
       showHelpText: false,
       showExitText: false,
@@ -79,6 +81,11 @@ export default {
       showNotifText: false,
       updateWaitingModal: false,
     };
+  },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+        isUpdateAvailable: "isUpdateAvailable",
+    }),
   },
   methods: {
     runUpdates: async function () {

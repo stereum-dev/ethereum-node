@@ -2,8 +2,9 @@
 - name: Prepare
   hosts: all
   tasks:
-    - name: Prepare apt
-      raw: apt update
+    - name: Update cache & os (Ubuntu)
+      apt:
+        update_cache: yes
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
