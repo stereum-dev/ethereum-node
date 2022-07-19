@@ -8,8 +8,14 @@
     beacon_service: 96d0bd64-b40b-11ec-9748-ef3d97c5f568
 
   tasks:
-    - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip
+    - name: Install pkgs for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - pip
+          - python3-pip
+          - expect
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
@@ -19,15 +25,6 @@
       become: true
       changed_when: false
       when: ansible_distribution == "CentOS"
-
-    - name: Install pip, expect (Ubuntu)
-      apt:
-        update_cache: yes
-        name:
-          - python3-pip
-          - expect
-      become: true
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
     - name: Install pip, expect (CentOS 8)
       yum:

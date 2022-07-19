@@ -10,7 +10,10 @@
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y pip
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
