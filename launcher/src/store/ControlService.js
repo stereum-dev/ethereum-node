@@ -139,6 +139,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("runUpdates")
   }
 
+  async checkUpdates(){
+    return await this.promiseIpc.send("checkUpdates")
+  }
+
+  async getCurrentStereumVersion(){
+    return await this.promiseIpc.send("getCurrentStereumVersion")
+  }
+
   async getTasks(){
     return await this.promiseIpc.send("getTasks") // gets the current available Data
   }

@@ -102,7 +102,6 @@ export class OneClickInstall {
 
   async createServices(constellation) {
     let ports = []
-    let prometheusJobs = []
 
     if (constellation.includes('GethService')) {
       ports = [
@@ -110,7 +109,6 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
       this.executionClient = GethService.buildByUserInput('goerli', ports, this.installDir + '/geth')
-      prometheusJobs.push(this.executionClient)
 
     }
 
@@ -120,7 +118,6 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
       this.executionClient = BesuService.buildByUserInput('goerli', ports, this.installDir + '/besu')
-      prometheusJobs.push(this.executionClient)
 
     }
 
@@ -130,7 +127,6 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
       this.executionClient = NethermindService.buildByUserInput('goerli', ports, this.installDir + '/nethermind')
-      prometheusJobs.push(this.executionClient)
 
     }
 
@@ -142,7 +138,6 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
       this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
-      prometheusJobs.push(this.beaconService)
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -161,7 +156,6 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
       ]
       this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
-      prometheusJobs.push(this.beaconService)
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -187,7 +181,6 @@ export class OneClickInstall {
       const token = StringUtils.createRandomString()
       await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`)
       await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`)
-      prometheusJobs.push(this.beaconService)
     }
 
     if (constellation.includes('TekuBeaconService')) {
@@ -207,7 +200,6 @@ export class OneClickInstall {
       await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`)
       await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
       await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
-      prometheusJobs.push(this.beaconService)
     }
 
     if (constellation.includes('BloxSSVService')) {
@@ -217,7 +209,6 @@ export class OneClickInstall {
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
       ]
       this.validatorService = BloxSSVService.buildByUserInput('prater', ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
-      prometheusJobs.push(this.validatorService)
     }
 
 
@@ -226,12 +217,42 @@ export class OneClickInstall {
     ports = [
       new ServicePort('127.0.0.1', 9090, 9090, servicePortProtocol.tcp)
     ]
-    this.prometheus = PrometheusService.buildByUserInput('prater', ports, this.installDir + '/prometheus', prometheusJobs)
+    this.prometheus = PrometheusService.buildByUserInput('prater', ports, this.installDir + '/prometheus')
 
     ports = [
       new ServicePort('127.0.0.1', 3000, 3000, servicePortProtocol.tcp)
     ]
     this.grafana = GrafanaService.buildByUserInput('prater', ports, this.installDir + '/grafana')
+
+    const versions = await this.nodeConnection.checkUpdates()
+    if(versions){
+      this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient)
+      this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService)
+      this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus)
+      this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter)
+      this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana)
+      if(this.validatorService){
+        this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService)
+      }
+    }
+  }
+
+  getLatestVersion(versions, service){
+    return versions[service.network][service.service].slice(-1).pop()
+  }
+
+  async generateBloxKeys(){
+    await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
+    const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
+    let ssvConfig = this.validatorService.getServiceConfiguration('prater', [this.executionClient], [this.beaconService])
+    ssvConfig.OperatorPrivateKey = config.ssv_sk
+
+    // prepare service's config file
+    const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
+    const configFile = new YAML.Document()
+    configFile.contents = ssvConfig
+    const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
+    this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
   }
 
   async writeConfig() {
@@ -240,19 +261,8 @@ export class OneClickInstall {
       await Promise.all(configs.map(async (config) => {
         await this.nodeConnection.writeServiceConfiguration(config)
       }))
-
       if (this.validatorService && this.validatorService.service === 'BloxSSVService') {
-        await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
-        const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
-        let ssvConfig = this.validatorService.getServiceConfiguration('prater', [this.executionClient], [this.beaconService])
-        ssvConfig.OperatorPrivateKey = config.ssv_sk
-
-        // prepare service's config file
-        const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-        const configFile = new YAML.Document()
-        configFile.contents = ssvConfig
-        const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
-        this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
+        await this.generateBloxKeys()
       }
       return configs
     }

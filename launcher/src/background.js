@@ -164,6 +164,14 @@ promiseIpc.on("runUpdates", async (args) => {
   return returnValue
 })
 
+promiseIpc.on("checkUpdates", async () => {
+  return await nodeConnection.checkUpdates()
+})
+
+promiseIpc.on("getCurrentStereumVersion", async () => {
+  return await nodeConnection.getCurrentStereumVersion()
+})
+
 promiseIpc.on("getTasks", async () => {
   return await taskManager.getTasks()
 })
