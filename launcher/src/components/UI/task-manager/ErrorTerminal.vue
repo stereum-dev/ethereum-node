@@ -40,6 +40,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 .error-box {
   width: 100%;
@@ -49,7 +50,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 2000;
+  z-index: 2;
 }
 .error-modal {
   width: 55%;
@@ -63,7 +64,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  z-index: 2001;
+  z-index: 3;
 }
 .error-modal .title-box {
   width: 100%;
