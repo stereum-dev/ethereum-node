@@ -19,7 +19,7 @@ stereum_static:
       nethermind: "1.13.4"
 
       # ssv
-      blox_ssv: v0.2.1-rc.4
+      blox_ssv: v0.2.1-rc.5
 
       # tools
       curl: "7.83.1"
