@@ -19,6 +19,8 @@ provisioner:
       timeout: 120
     ssh_connection:
       ssh_args: -o ProxyCommand=none -o ServerAliveInterval=300
+  env:
+    ANSIBLE_PIPELINING: "True"
 lint: |
   set -e
   yamllint .
