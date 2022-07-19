@@ -69,6 +69,7 @@ import UpdateModal from "./UpdateModal.vue";
 import UpdateWaiting from "./UpdateWaiting.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: { UpdateModal, UpdateWaiting },
   data() {
@@ -86,10 +87,13 @@ export default {
     ...mapWritableState(useNodeHeader, {
         isUpdateAvailable: "isUpdateAvailable",
     }),
+    ...mapWritableState(useServices, {
+        versions: "versions",
+    }),
   },
   methods: {
-    runUpdates: async function () {
-      await ControlService.runUpdates();
+    runAllUpdates: async function () {
+      await ControlService.runAllUpdates();
     },
     updateModalHandler() {
       this.showUpdateModal = true;
@@ -100,7 +104,8 @@ export default {
     updateConfirmationHandler: async function () {
       this.showUpdateModal = false;
       this.updateWaitingModal = true;
-      await this.runUpdates();
+      await this.runAllUpdates();
+      this.versions = {}
       this.updateWaitingModal = false;
     },
   },

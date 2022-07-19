@@ -29,6 +29,7 @@
           <div
             class="tableRow"
             v-for="(item, index) in newUpdates"
+            @click="runUpdate(item)"
             :key="index"
           >
             <div class="serviceName">
@@ -53,6 +54,7 @@
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 export default {
   components: { UpdateTable },
@@ -70,6 +72,9 @@ export default {
     ...mapState(useServices, {
       newUpdates: "newUpdates",
     }),
+    ...mapWritableState(useServices, {
+      versions: "versions",
+    })
   },
   methods: {
     async maschinNameMet() {
@@ -80,6 +85,15 @@ export default {
         this.maschinName = arr[0];
       } catch (error) {
         error;
+      }
+    },
+    async runUpdate(item) {
+      if(item && item.id){
+        await ControlService.updateServices({service: item.id})
+        this.versions = {}
+      }else if(item && item.commit){
+        await ControlService.updateStereum({commit: item.commit})
+        this.versions = {}
       }
     },
     openUpdateTableHandler() {
