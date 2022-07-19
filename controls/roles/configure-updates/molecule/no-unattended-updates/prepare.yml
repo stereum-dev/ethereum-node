@@ -2,8 +2,11 @@
 - name: Prepare
   hosts: all
   tasks:
-    - name: Install python for Ansible (Ubuntu)
-      raw: apt update && apt install -y cron
+    - name: Install cron for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: cron
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
