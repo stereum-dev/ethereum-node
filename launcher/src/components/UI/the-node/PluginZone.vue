@@ -57,10 +57,7 @@
               </div>
             </div>
           </plugin-menu>
-          <expert-mode
-            @close-expert="hideExpertMode(item)"
-            v-if="item.expertOptionsModal"
-          >
+          <expert-mode v-if="item.expertOptionsModal">
             <div class="serviceName">
               <span class="nameSpan">{{ item.name }}</span>
               <span class="category">{{ item.category }}</span>
@@ -113,9 +110,13 @@
                   </option>
                 </select>
               </div>
-
-              <div class="btn-box">
+            </div>
+            <div class="btn-box">
+              <div class="confirmBtn" @click="confirmExpertChanges(item)">
                 <span>Apply & Confirm</span>
+              </div>
+              <div class="exit-btn" @click="hideExpertMode(item)">
+                <span>Cancel</span>
               </div>
             </div>
           </expert-mode>
@@ -233,6 +234,9 @@ export default {
         if (item?.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
       });
+    },
+    confirmExpertChanges(el) {
+      el.expertOptionsModal = false;
     },
     openExpertMode() {
       this.isExpertModeActive = !this.isExpertModeActive;

@@ -1,11 +1,8 @@
 <template>
   <div class="expert-parent">
-    <div class="opacityBackground" @click="$emit('closeExpert')"></div>
+    <div class="opacityBackground"></div>
     <div class="expert-modal">
       <slot></slot>
-      <div class="exit-btn">
-        <span>Click outside to close</span>
-      </div>
     </div>
   </div>
 </template>
@@ -47,7 +44,7 @@ export default {
   height: 84%;
   background-color: #33393e;
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
-  border-radius: 10px;
+  border-radius: 5px;
   border: 3px solid #adadad;
   position: absolute;
   top: 10.4%;
