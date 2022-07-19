@@ -22,6 +22,8 @@ platforms:
 #      ip: 10.10.0.144
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
 lint: |
   set -e
   yamllint .
