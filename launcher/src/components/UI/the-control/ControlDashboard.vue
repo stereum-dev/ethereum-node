@@ -9,7 +9,9 @@
       <the-hard></the-hard>
     </dashboard-card>
     <dashboard-card class="storage"></dashboard-card>
-    <dashboard-card class="disk-speed"></dashboard-card>
+    <dashboard-card class="disk-speed"
+      ><disk-speed></disk-speed
+    ></dashboard-card>
     <dashboard-card class="p2p"> <peer-to-peer></peer-to-peer></dashboard-card>
     <dashboard-card class="the-cpu">
       <the-cpu></the-cpu>
@@ -46,6 +48,7 @@ import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
 import NodeConnectionCard from "./NodeConnectionCard.vue";
+import DiskSpeed from "./DiskSpeed.vue";
 export default {
   components: {
     TheHard,
@@ -60,6 +63,7 @@ export default {
     TimeGas,
     NodeServerResponse,
     NodeConnectionCard,
+    DiskSpeed,
   },
 };
 </script>
