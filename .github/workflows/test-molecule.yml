@@ -197,7 +197,8 @@ jobs:
           {role: "manage-service", test: "monitor-teku"},
           {role: "manage-service", test: "geth"},
           {role: "manage-service", test: "besu"},
-          {role: "manage-service", test: "nethermind"}
+          {role: "manage-service", test: "nethermind"},
+          {role: "manage-service", test: "notifications"}
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}

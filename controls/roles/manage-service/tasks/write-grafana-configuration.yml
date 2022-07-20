@@ -1,7 +1,11 @@
 ---
+- name: Find correct provisioning path
+  set_fact:
+    service_provisioning_path: "{{ stereum_service_configuration.volumes | select('search', '/etc/grafana/provisioning') | first | split(':') | first }}"
+
 - name: Delete old Grafana dashboards
   file:
-    path: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
+    path: "{{ service_provisioning_path }}/dashboards"
     state: absent
   become: yes
 
@@ -9,26 +13,30 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: root
-    group: root
-    mode: 0655
+    owner: "2000"
+    group: "2000"
+    mode: 0755
   loop:
-    - "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/datasources"
-    - "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
+    - "{{ service_provisioning_path }}/datasources"
+    - "{{ service_provisioning_path }}/dashboards"
   become: yes
 
 - name: Copy Grafana's "datasource" file
   copy:
     src: "{{ role_path }}/files/grafana/datasource.yml"
-    dest: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/datasources"
-    mode: 0655
+    dest: "{{ service_provisioning_path }}/datasources/datasource.yml"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
   become: yes
 
 - name: Copy Grafana's dashboard.yml
   copy:
     src: "{{ role_path }}/files/grafana/dashboard.yml"
-    dest: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
-    mode: 0655
+    dest: "{{ service_provisioning_path }}/dashboards/dashboard.yml"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
   become: yes
 
 - name: Find service configs
