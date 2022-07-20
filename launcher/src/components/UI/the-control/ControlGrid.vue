@@ -103,9 +103,9 @@
     <div class="dashboard-container">
       <control-dashboard></control-dashboard>
     </div>
-    <div class="control-panel">
+    <!-- <div class="control-panel">
       <control-panel></control-panel>
-    </div>
+    </div> -->
     <div class="alerts">
       <control-alert></control-alert>
     </div>
@@ -220,10 +220,8 @@ export default {
   height: 93%;
   margin-top: 7px;
   color: white;
-  grid-column-start: 2;
-  grid-column-end: 4;
-  grid-row-start: 1;
-  grid-row-end: 3;
+  grid-column: 2/4;
+  grid-row: 1/5;
   z-index: 0;
   border: 4px solid grey;
   border-radius: 20px 27px 20px 20px;

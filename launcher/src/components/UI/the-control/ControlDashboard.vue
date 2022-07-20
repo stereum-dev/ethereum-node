@@ -1,32 +1,35 @@
 <template>
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
-    <div class="the-ram"><node-server-response></node-server-response></div>
+    <div class="node-serve">
+      <node-server-response></node-server-response>
+    </div>
     <div class="sandFull_cell"><time-gas></time-gas></div>
-    <dashboard-card class="discSpace_cell">
-      <router-link class="link" to="/storage">
-        <the-storage></the-storage
-      ></router-link>
+    <dashboard-card class="hard-disk">
+      <the-hard></the-hard>
     </dashboard-card>
-    <dashboard-card class="nodeStart_cell">
-      <peer-to-peer></peer-to-peer
-    ></dashboard-card>
-    <dashboard-card class="peerConnection_cell">
+    <dashboard-card class="storage"></dashboard-card>
+    <dashboard-card class="disk-speed"></dashboard-card>
+    <dashboard-card class="p2p"> <peer-to-peer></peer-to-peer></dashboard-card>
+    <dashboard-card class="the-cpu">
       <the-cpu></the-cpu>
     </dashboard-card>
-    <dashboard-card class="networkCheck"
+    <dashboard-card class="amsterdam"
       ><amsterdam-component></amsterdam-component>
     </dashboard-card>
+    <dashboard-card class="sync-status"></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <validator-container-box></validator-container-box>
     </dashboard-card>
-    <dashboard-card class="nodeStart"> <the-ram></the-ram></dashboard-card>
-    <dashboard-card class="third_cell"
+    <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
+    <dashboard-card class="the-network"
       ><the-network></the-network
     ></dashboard-card>
+
     <div class="half-card">
       <node-connection-card></node-connection-card>
     </div>
+    <div class="half-card2"><node-connection-card></node-connection-card></div>
   </div>
 </template>
 
@@ -34,7 +37,7 @@
 import NodeServerResponse from "./NodeServerResponse.vue";
 import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
-import TheStorage from "./TheStorage.vue";
+import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
 import DashboardCard from "./DashboardCard.vue";
 import AmsterdamComponent from "./AmsterdamComponent.vue";
@@ -45,7 +48,7 @@ import TimeGas from "./TimeGas.vue";
 import NodeConnectionCard from "./NodeConnectionCard.vue";
 export default {
   components: {
-    TheStorage,
+    TheHard,
     DashboardCard,
     AmsterdamComponent,
     MachineName,
@@ -72,7 +75,7 @@ export default {
   width: 100%;
   height: 100%;
   grid-template-columns: repeat(3, 32%);
-  grid-template-rows: 13% repeat(3, 26%);
+  grid-template-rows: 10% repeat(5, 16.5%);
   position: relative;
   gap: 1%;
   margin: 1%;
@@ -93,7 +96,7 @@ export default {
   border-radius: 15px 0 0 0;
 }
 
-.nodeProcess_cell {
+.node-serve {
   grid-column: 2/3;
   grid-row: 1/2;
 }
@@ -105,26 +108,32 @@ export default {
   display: flex;
 }
 
-.discSpace_cell {
+.hard-disk {
   grid-column: 1/2;
   grid-row: 2/3;
 }
-
-.networkCheck {
-  grid-row: 2/3;
+.storage {
+  grid-column: 1/2;
+  grid-row: 3/4;
+}
+.disk-speed {
+  grid-column: 1/2;
+  grid-row: 4/5;
+}
+.amsterdam {
+  grid-row: 3/4;
   grid-column: 2/3;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
-.peerConnection_cell {
+.the-cpu {
+  grid-row: 5/6;
   grid-column: 1/2;
-  grid-row: 3/4;
 }
-
-.networkUsage_cell {
-  grid-column: 1/2;
+.sync-status {
+  grid-column: 2/3;
   grid-row: 4/5;
 }
 
@@ -133,16 +142,16 @@ export default {
   grid-row: 2/3;
 }
 
-.nodeStart {
+.the-ram {
   grid-column: 1/2;
-  grid-row: 4/5;
+  grid-row: 6/7;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
-.third_cell {
-  grid-row: 4/5;
+.the-network {
+  grid-row: 2/3;
   grid-column: 2/3;
 }
 .half-card {
@@ -151,5 +160,16 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.half-card2 {
+  grid-row: 4/5;
+  grid-column: 3/4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.p2p {
+  grid-row: 5/6;
+  grid-column: 2/3;
 }
 </style>
