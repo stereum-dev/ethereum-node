@@ -57,13 +57,18 @@
               </div>
             </div>
           </plugin-menu>
-          <expert-mode v-if="item.expertOptionsModal">
+          <expert-mode v-if="isExperModeForRamUsage">
             <div class="serviceName">
               <span class="nameSpan">{{ item.name }}</span>
               <span class="category">{{ item.category }}</span>
             </div>
             <div class="expertRow">
               <div class="dataTitleBox" @click="openExpertMode">
+                <img
+                  class="titleIcon"
+                  src="../../../../public/img/icon/plugin-menu-icons/crown2.png"
+                  alt="icon"
+                />
                 <span>Expert Mode</span>
                 <img
                   v-if="isExpertModeActive"
@@ -77,6 +82,11 @@
                 />
               </div>
               <div class="ramTitleBox" @click="openRamUsage">
+                <img
+                  class="titleIcon"
+                  src="../../../../public/img/icon/plugin-menu-icons/ram.png"
+                  alt="icon"
+                />
                 <span>RAM Usage Limit</span>
                 <img
                   v-if="isRamUsageActive"
@@ -90,15 +100,19 @@
                 />
               </div>
             </div>
+            <div class="expertTable">
+              <div class="expertMode" v-if="isExpertModeActive">
+                <textarea class="editContent" v-model="e.value"></textarea>
+              </div>
+            </div>
             <div
               class="expertTable"
-              v-for="(e, index) in item.expertOptions"
+              v-for="(e, index) in item.expertOptions.filter(
+                (p) => p.name === 'ram'
+              )"
               :key="index"
             >
-              <div class="expertMode" v-if="e.name === 'expert mode'">
-                <textarea class="editContent" v-model="editableData"></textarea>
-              </div>
-              <div class="ramSpace" v-if="e.name === 'ram'">
+              <div class="ramSpace" v-if="isRamUsageActive">
                 <span>Choose RAM Usage Limit</span>
                 <select v-model="ramUsage" id="ramUsage">
                   <option
@@ -113,10 +127,7 @@
             </div>
             <div class="btn-box">
               <div class="confirmBtn" @click="confirmExpertChanges(item)">
-                <span>Apply & Confirm</span>
-              </div>
-              <div class="exit-btn" @click="hideExpertMode(item)">
-                <span>Cancel</span>
+                <span>Confirm</span>
               </div>
             </div>
           </expert-mode>
@@ -165,6 +176,7 @@ export default {
       isServicePending: false,
       ramUsage: null,
       editableData: null,
+      isExperModeForRamUsage: false,
       isRamUsageActive: false,
       isExpertModeActive: false,
     };
@@ -231,7 +243,7 @@ export default {
     },
     expertModeHandler(el) {
       this.list.map((item) => {
-        if (item?.category === el.category && item?.id === el.id)
+        if (item.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
       });
     },
@@ -239,10 +251,18 @@ export default {
       el.expertOptionsModal = false;
     },
     openExpertMode() {
+      this.isRamUsageActive = false;
       this.isExpertModeActive = !this.isExpertModeActive;
     },
     openRamUsage() {
+      this.isExpertModeActive = false;
       this.isRamUsageActive = !this.isRamUsageActive;
+    },
+    checkServicesForRamUsage() {
+      this.list.filter(
+        (service) => service?.name === "Teku" || service?.name === "Nethermind"
+      );
+      this.isExperModeForRamUsage = true;
     },
   },
 };
@@ -513,7 +533,7 @@ export default {
   margin: 5px auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
   z-index: 1003;
@@ -521,7 +541,7 @@ export default {
 .expertRow .ramTitleBox,
 .expertRow .dataTitleBox {
   width: 100%;
-  height: 28px;
+  height: 30px;
   margin: 2px auto;
   padding: 3px 20px;
   border: 1px solid #8a8a8a;
@@ -535,7 +555,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition-duration: 100ms;
+  transition-duration: 200ms;
 }
 .expertRow .ramTitleBox:hover,
 .expertRow .dataTitleBox:hover {
@@ -552,26 +572,126 @@ export default {
   width: 20px;
   height: 20px;
 }
+.titleIcon {
+  width: 25px;
+  height: 25px;
+}
 .expertTable {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.expertTable .ramSpace {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.expertTable .ramSpace span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgb(196, 196, 196);
+  margin-bottom: 20px;
+}
+.expertTable .ramSpace select {
+  width: 50%;
+  height: 30px;
+  border-radius: 5px;
+  background-color: rgb(83, 83, 83);
+  padding: 0 5px;
+  text-align: center;
+  color: rgb(203, 203, 203);
+}
+.expertTable .ramSpace select option {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: rgb(203, 203, 203);
+}
+.expertTable .expertMode {
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
-
-.expertContent .expertMode {
-  width: 96%;
-  height: 100%;
-  margin: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
+.expertTable .expertMode .editContent {
+  width: 95%;
+  height: 95%;
+  background-color: rgb(46, 46, 46);
+  resize: none;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #d9d9d9;
 }
 
+.expert-modal .btn-box {
+  width: 100%;
+  height: 25%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.expert-modal .btn-box .exit-btn {
+  width: 20%;
+  height: 30px;
+  padding: 3px;
+  border: 2px solid rgb(203, 203, 203);
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.expert-modal .btn-box .exit-btn span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #d6d6d6;
+  text-align: center;
+}
+.expert-modal .btn-box .exit-btn:hover {
+  transform: scale(1.1);
+  border: 2px solid #cf4646;
+  color: #cf4646;
+}
+.expert-modal .btn-box .exit-btn:hover span {
+  color: #cf4646;
+}
+.expert-modal .btn-box .exit-btn:active {
+  transform: scale(1);
+}
+.expert-modal .btn-box .confirmBtn {
+  width: 20%;
+  height: 30px;
+  padding: 3px;
+  border: 2px solid #78c098;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.expert-modal .btn-box .confirmBtn span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #78c098;
+  text-align: center;
+}
+.expert-modal .btn-box .confirmBtn:hover {
+  transform: scale(1.1);
+  background-color: #78c098;
+}
+.expert-modal .btn-box .confirmBtn:hover span {
+  color: #2a2a2a;
+}
+.expert-modal .btn-box .confirmBtn:active {
+  transform: scale(1);
+}
 .expertMode::-webkit-scrollbar {
   width: 5px;
   margin: 5px 0;
@@ -594,15 +714,4 @@ export default {
 .expertMode::-webkit-scrollbar-thumb:hover {
   background: rgb(24, 161, 241);
 }
-/* .expertContent .expertMode span {
-  width: 100%;
-  height: 50%;
-  margin-left: 10px;
-  color: #a8a8a8;
-  font-size: 0.8rem;
-  font-weight: 500;
-  white-space: pre-wrap;
-  text-transform: none;
-  text-align: left;
-} */
 </style>

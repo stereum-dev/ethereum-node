@@ -57,19 +57,5 @@ export default {
   cursor:default;
 }
 
-.expert-modal .exit-btn {
-  width: 100%;
-  height: 20%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  bottom: 0;
-}
-.exit-btn span {
-  color: #d75555;
-  font-size: 0.6rem;
-  font-weight: 600;
-  align-self: flex-end;
-}
+
 </style>
