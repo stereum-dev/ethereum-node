@@ -668,7 +668,7 @@ export class NodeConnection {
     }
   }
 
-  async runUpdates() {
+  async runAllUpdates() {
     const updateRunRef = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Update", updateRunRef: updateRunRef });
     const logs = await this.sshService.exec(
@@ -678,6 +678,31 @@ export class NodeConnection {
       updateRunRef: updateRunRef,
       logs: logs,
     });
+  }
+
+  async updateServices(services) {
+    try{
+      await this.runPlaybook("Update Services", {
+        stereum_role: 'update-services',
+        services_to_update: services
+      })
+    }catch(err){
+      log.error("Couldn't update services:\n",err)
+    }
+  }
+
+  async updateStereum(commit) {
+    let extraVars = {
+      stereum_role: 'update-stereum',
+      stereum_args: {
+        override_gitcommit: commit ? commit : undefined
+      }
+    }
+    try{
+      await this.runPlaybook("Update Stereum", extraVars)
+    }catch(err){
+      log.error("Couldn't update Stereum:\n",err)
+    }
   }
 
   async getCurrentStereumVersion(){

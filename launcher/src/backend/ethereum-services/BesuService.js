@@ -36,7 +36,7 @@ export class BesuService extends NodeService {
                 '--metrics-enabled',
                 '--metrics-host=0.0.0.0',
                 '--metrics-port=9545',
-                '--logging=DEBUG',
+                '--logging=INFO',
             ],          // command
             ["besu"],   // entrypoint
             { JAVA_OPTS: '-Xmx4g' },  // env

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
+      network: "",
       installedServices: [],
       runningServices: [],
       allServices: [
@@ -346,6 +347,8 @@ export const useServices = defineStore("services", {
           },
         },
       ],
+      versions: {},
+      stereumVersion: {},
       newUpdates: [
         { name: "teku", version: "2.2.0" },
         { name: "geth", version: "1.2.0" },

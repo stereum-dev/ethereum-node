@@ -2,7 +2,7 @@
   <div class="amsterdamparent">
     <div class="icoTitle">
       <div class="icoContainer">
-        <img src="../../../../public/img/icon/control/testnetIconControl.png" />
+        <img :src="networkIcon" />
       </div>
       <span>NODE</span>
     </div>
@@ -63,6 +63,8 @@
 </template>
 <script>
 import SyncInfo from "./SyncInfo.vue";
+import { mapState } from "pinia";
+import { useServices } from "@/store/services";
 export default {
   components: { SyncInfo },
   comments: {
@@ -72,6 +74,9 @@ export default {
     return {
       showSyncInfo: false,
       counter: 0,
+      networkIcon: "",
+      mainnetIcon: "/img/icon/control/mainnetIconControl.png",
+      testnetIcon: "/img/icon/control/testnetIconControl.png",
       syncIco: [
         {
           id: 1,
@@ -91,7 +96,17 @@ export default {
       ],
     };
   },
+  mounted(){
+    if(this.network === "mainnet"){
+      this.networkIcon = this.mainnetIcon
+    }else{
+      this.networkIcon = this.testnetIcon
+    }
+  },
   computed: {
+    ...mapState(useServices, {
+      network: "network",
+    }),
     errorIco() {
       return this.syncIco[0].icon;
     },

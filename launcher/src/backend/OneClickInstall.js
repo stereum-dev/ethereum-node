@@ -85,6 +85,7 @@ export class OneClickInstall {
     this.grafana = undefined
     this.setup = undefined
     this.choosenClient = undefined
+    this.network = undefined
   }
 
   getConfigurations() {
@@ -100,16 +101,24 @@ export class OneClickInstall {
     return [beacon, validator, executionClient, prometheusNodeExporter, prometheus, grafana]
   }
 
+  networkHandler(eth1){
+    if(this.network === "mainnet"){
+      return "mainnet"
+    }else if(this.network === "testnet"){
+      if(eth1)
+        return "goerli"
+      return "prater"
+    }
+  }
+
   async createServices(constellation) {
     let ports = []
-
     if (constellation.includes('GethService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
-      this.executionClient = GethService.buildByUserInput('goerli', ports, this.installDir + '/geth')
-
+      this.executionClient = GethService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/geth')
     }
 
     if (constellation.includes('BesuService')) {
@@ -117,7 +126,7 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
-      this.executionClient = BesuService.buildByUserInput('goerli', ports, this.installDir + '/besu')
+      this.executionClient = BesuService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/besu')
 
     }
 
@@ -126,7 +135,7 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
       ]
-      this.executionClient = NethermindService.buildByUserInput('goerli', ports, this.installDir + '/nethermind')
+      this.executionClient = NethermindService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/nethermind')
 
     }
 
@@ -137,7 +146,7 @@ export class OneClickInstall {
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.executionClient], '16')
+      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16')
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -145,7 +154,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
       ]
-      this.validatorService = LighthouseValidatorService.buildByUserInput('prater', ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
+      this.validatorService = LighthouseValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
     }
 
     if (constellation.includes('PrysmBeaconService')) {
@@ -155,7 +164,7 @@ export class OneClickInstall {
         new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
       ]
-      this.beaconService = PrysmBeaconService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.executionClient])
+      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient])
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -163,7 +172,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
       ]
-      this.validatorService = PrysmValidatorService.buildByUserInput('prater', ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
+      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
     }
 
     if (constellation.includes('NimbusBeaconService')) {
@@ -174,7 +183,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = NimbusBeaconService.buildByUserInput('prater', ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
+      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
 
       //generate validator api-token
       const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
@@ -191,7 +200,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       ]
-      this.beaconService = TekuBeaconService.buildByUserInput('prater', ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
+      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
 
       //keystore
       const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
@@ -208,21 +217,21 @@ export class OneClickInstall {
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
       ]
-      this.validatorService = BloxSSVService.buildByUserInput('prater', ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
+      this.validatorService = BloxSSVService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
     }
 
 
-    this.prometheusNodeExporter = PrometheusNodeExporterService.buildByUserInput()
+    this.prometheusNodeExporter = PrometheusNodeExporterService.buildByUserInput(this.networkHandler(false))
 
     ports = [
       new ServicePort('127.0.0.1', 9090, 9090, servicePortProtocol.tcp)
     ]
-    this.prometheus = PrometheusService.buildByUserInput('prater', ports, this.installDir + '/prometheus')
+    this.prometheus = PrometheusService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prometheus')
 
     ports = [
       new ServicePort('127.0.0.1', 3000, 3000, servicePortProtocol.tcp)
     ]
-    this.grafana = GrafanaService.buildByUserInput('prater', ports, this.installDir + '/grafana')
+    this.grafana = GrafanaService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/grafana')
 
     const versions = await this.nodeConnection.checkUpdates()
     if(versions){
@@ -244,7 +253,7 @@ export class OneClickInstall {
   async generateBloxKeys(){
     await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
     const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
-    let ssvConfig = this.validatorService.getServiceConfiguration('prater', [this.executionClient], [this.beaconService])
+    let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(false), [this.executionClient], [this.beaconService])
     ssvConfig.OperatorPrivateKey = config.ssv_sk
 
     // prepare service's config file
@@ -280,9 +289,10 @@ export class OneClickInstall {
     return runRefs
   }
 
-  async getSetupConstellation(setup) {
+  async getSetupConstellation(setup, network) {
     this.clearSetup()
     this.setup = setup
+    this.network = network
     const services = ['GethService', 'GrafanaService', 'PrometheusNodeExporterService', 'PrometheusService']
 
     this.choosenClient = await this.chooseClient()

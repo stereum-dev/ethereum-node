@@ -11,13 +11,18 @@ export class GethService extends NodeService {
       new ServiceVolume(workingDir + '/data', '/root/.ethereum')
     ]
 
+    let networkCommand = " --" + network
+    if(network === "mainnet"){
+      networkCommand = ""
+    }
+
     service.init(
       'GethService',  // service
       service.id, // id
       1,  // configVersion
       'ethereum/client-go', // image
       'v1.10.20', // imageVersion
-      'geth --' + network + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*" --metrics --metrics.expensive --metrics.port=6060 --metrics.addr=0.0.0.0', // command
+      'geth' + networkCommand + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*" --metrics --metrics.expensive --metrics.port=6060 --metrics.addr=0.0.0.0', // command
       null, // entrypoint
       null, // env
       ports,  // ports
