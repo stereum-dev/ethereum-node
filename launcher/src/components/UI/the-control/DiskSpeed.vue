@@ -28,8 +28,8 @@
 export default {
   data() {
     return {
-      writeValue: 10,
-      readValue: 11,
+      writeValue: 10, //dummy data
+      readValue: 11, //dummy data
     };
   },
 };

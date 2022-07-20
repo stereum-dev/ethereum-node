@@ -19,7 +19,9 @@
     <dashboard-card class="amsterdam"
       ><amsterdam-component></amsterdam-component>
     </dashboard-card>
-    <dashboard-card class="sync-status"></dashboard-card>
+    <dashboard-card class="sync-status"
+      ><sync-status></sync-status
+    ></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <validator-container-box></validator-container-box>
     </dashboard-card>
@@ -36,6 +38,7 @@
 </template>
 
 <script>
+import SyncStatus from "./SyncStatus.vue";
 import NodeServerResponse from "./NodeServerResponse.vue";
 import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
@@ -51,6 +54,7 @@ import NodeConnectionCard from "./NodeConnectionCard.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 export default {
   components: {
+    SyncStatus,
     TheHard,
     DashboardCard,
     AmsterdamComponent,
