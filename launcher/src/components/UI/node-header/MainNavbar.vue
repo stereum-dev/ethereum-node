@@ -30,6 +30,7 @@ export default {
       versions: "versions",
       stereumVersion: "stereumVersion",
       newUpdates: "newUpdates",
+      network: "network",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -68,6 +69,12 @@ export default {
             return oldService
         })
         this.installedServices = newServices.concat(otherServices)
+        let beaconService = this.installedServices.find(s => s.category === "consensus")
+        if(beaconService.config.network === "mainnet"){
+          this.network = "mainnet"
+        }else{
+          this.network = "testnet"
+        }
         if(needForTunnel.length != 0 && this.refresh){
           let localPorts = await ControlService.getAvailablePort({
             min: 9000,

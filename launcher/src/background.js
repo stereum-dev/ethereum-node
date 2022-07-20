@@ -98,7 +98,7 @@ promiseIpc.on("checkOS", async () => {
 });
 
 promiseIpc.on("getOneClickConstellation", async (arg) => {
-  return await oneClickInstall.getSetupConstellation(arg);
+  return await oneClickInstall.getSetupConstellation(arg.setup, arg.network);
 });
 
 promiseIpc.on("prepareOneClickInstallation", async (arg) => {

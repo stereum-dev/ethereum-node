@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition'
 import { ServiceVolume } from './ServiceVolume'
 
 export class PrometheusNodeExporterService extends NodeService {
-  static buildByUserInput () {
+  static buildByUserInput (network) {
     const image = 'prom/node-exporter'
     const service = new PrometheusNodeExporterService()
     service.init(
@@ -18,7 +18,7 @@ export class PrometheusNodeExporterService extends NodeService {
       null, // ports
       null, // volumes
       null, // user
-      null // network
+      network // network
       // executionClients
       // consensusClients
       // prometheusNodeExporterClients
