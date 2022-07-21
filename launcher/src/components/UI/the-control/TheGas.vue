@@ -40,13 +40,6 @@ export default {
       }
     },
   },
-  //array test method and it has to delete
-  //for red test have change to feeValue--
-  // methods: {
-  //   test() {
-  //     this.feeValue++;
-  //   },
-  // },
 };
 </script>
 <style scoped>

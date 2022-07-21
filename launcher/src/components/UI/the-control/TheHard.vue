@@ -15,12 +15,6 @@
           <span>/ {{ total }} GB TOTAL</span>
         </div>
         <div class="valueBarPart">
-          <!-- <div class="valueBarPart_loader">
-            <div
-              class="valueBarPart_loader-value"
-              :style="valueStoragePer"
-            ></div>
-          </div> -->
           <div class="valueBarPart_loader">
             <div class="valueBarPart_loader_value_bg">
               <div
