@@ -103,15 +103,15 @@
       user: "{{ stereum_service_configuration.user }}"
       image: "{{ stereum_service_configuration.image }}"
       env: "{{ stereum_service_configuration.env }}"
-      command: "{{ stereum_service_configuration.command }}"
-      entrypoint: "{{ stereum_service_configuration.entrypoint }}"
+      command: "{{ stereum_service_configuration.command | default([]) }}"
+      entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
       restart_policy: "unless-stopped"
       state: started
       # recreate: yes # default: no
       ports: "{{ stereum_service_configuration.ports | default([]) }}"
       networks:
         - name: stereum
-          aliases: "{{ ['prometheus'] if (stereum_service_configuration.image is match('prom/prometheus:*')) else [] }}"
+          aliases: "{{ ['prometheus'] if (stereum_service_configuration.image is match('prom/prometheus:*')) else (['notifications'] if (stereum_service_configuration.image is match('stereum/notifications:*')) else []) }}"
       # working_dir: "{{ stereum_service_configuration.working_dir }}" # doesn't work at all
       volumes: "{{ stereum_service_configuration.volumes }}"
       log_driver: "json-file"
@@ -136,4 +136,10 @@
     when: >
       stereum_service_configuration.image is match("prom/prometheus:*") and
       (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
+  - include_tasks: configure-grafana.yml
+    when: >
+      stereum_service_configuration.image is match("grafana/grafana:*") and
+      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+
   when: stereum.manage_service.state is defined
