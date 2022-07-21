@@ -12,7 +12,7 @@ test('network test goerli', () => {
 })
 
 test('network test mainnet', () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildConfiguration().command).toMatch(/mainnet/)
+  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildConfiguration().command).not.toMatch(/goerli/)
 })
 
 test('user', () => {

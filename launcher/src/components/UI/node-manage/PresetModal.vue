@@ -126,9 +126,10 @@ export default {
   },
   methods: {
     selectItemToInstall: async function (item) {
-      const constellation = await ControlService.getOneClickConstellation(
-        item.name
-      );
+      const constellation = await ControlService.getOneClickConstellation({
+        setup: item.name,
+        network: this.selectedNetworks,
+      });
       let includedPlugins = this.allServices.filter((service) =>
         constellation.includes(service.service)
       );
@@ -153,10 +154,12 @@ export default {
     switchNetworkHandler() {
       this.isMainnetActive = !this.isMainnetActive;
       if (this.isMainnetActive) {
+        this.selectedNetworks = "mainnet"
         this.mainnetPlugins = this.plugins.filter(
           (item) => item.network == "mainnet"
         );
       } else {
+        this.selectedNetworks = "testnet"
         this.testnetPlugins = this.plugins.filter(
           (item) => item.network == "testnet"
         );

@@ -10,7 +10,7 @@
       </div>
       <div class="update-message">
         <span>New version is now available.</span>
-        <span>Do you want to update your app to the new version?</span>
+        <span>Do you want to update Stereum to the newest version?</span>
       </div>
       <div class="update-btn">
         <div class="confirm-box" @click="$emit('updateConfirm')">

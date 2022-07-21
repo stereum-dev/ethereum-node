@@ -3,9 +3,6 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
-- name: Upgrade APT to the latest packages
-  apt:
-    upgrade: "yes"
 - name: Update all packages to the latest version
   apt:
     upgrade: dist

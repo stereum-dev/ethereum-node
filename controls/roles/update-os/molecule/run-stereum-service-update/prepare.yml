@@ -1,0 +1,68 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+
+  tasks:
+    - name: Update cache & os (Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install p3-pip, expect (Ubuntu)
+      apt:
+        name:
+          - python3-pip
+          - expect
+          - git
+      become: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install pip, expect (CentOS 8)
+      yum:
+        name:
+          - python3-pip
+          - expect
+          - git
+        state: latest
+      become: true
+      when: ansible_distribution == "CentOS"
+
+    - name: dummy directories
+      file:
+        path: "/opt/stereum/ansible/controls/"
+        state: directory
+      become: yes
+
+    - name: dummy script for stereum-service-update
+      copy:
+        content: |
+          #!/bin/bash
+
+          mkdir /tmp/run-stereum-service-update
+        dest: "/opt/stereum/ansible/controls/stereum-services-update.sh"
+        owner: "root"
+        group: "root"
+        mode: 0755
+      become: true
+
+# EOF

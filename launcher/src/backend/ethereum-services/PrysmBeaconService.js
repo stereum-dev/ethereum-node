@@ -10,8 +10,6 @@ export class PrysmBeaconService extends NodeService {
         
         const image = 'prysmaticlabs/prysm-beacon-chain'
 
-        network = 'prater'
-
         const dataDir = '/opt/app/beacon'
         const genesisDir = '/opt/app/genesis'
 
@@ -20,6 +18,11 @@ export class PrysmBeaconService extends NodeService {
             new ServiceVolume(workingDir + '/beacon', dataDir),
             new ServiceVolume(workingDir + '/genesis', genesisDir)
         ]
+
+        let genesisFile = ' --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz'
+        if(network === "mainnet"){
+            genesisFile = ''
+        }
 
         // web3provider
         let fallbackProvider
@@ -35,7 +38,7 @@ export class PrysmBeaconService extends NodeService {
             1, // configVersion 
             image,  //image
             'v2.1.3', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001',  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001',  //command
             null, //entrypoint
             null, //env
             ports,  //ports

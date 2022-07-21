@@ -10,8 +10,6 @@ export class PrysmValidatorService extends NodeService {
         
         const image = 'prysmaticlabs/prysm-validator'
 
-        network = 'prater'
-
         const dataDir = '/opt/app/data/db'
         const walletDir = '/opt/app/data/wallets'
         const passwordDir = '/opt/app/data/passwords'

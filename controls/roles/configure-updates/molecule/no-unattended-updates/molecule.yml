@@ -12,6 +12,8 @@ platforms:
  #   image: geerlingguy/docker-centos8-ansible
 provisioner:
   name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
 lint: |
   set -e
   yamllint .

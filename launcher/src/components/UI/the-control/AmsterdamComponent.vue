@@ -2,7 +2,7 @@
   <div class="amsterdamparent">
     <div class="icoTitle">
       <div class="icoContainer">
-        <img src="../../../../public/img/icon/control/testnetIconControl.png" />
+        <img :src="networkIcon" />
       </div>
       <span>NODE</span>
     </div>
@@ -59,6 +59,8 @@
 </template>
 <script>
 import SyncInfo from "./SyncInfo.vue";
+import { mapState } from "pinia";
+import { useServices } from "@/store/services";
 export default {
   components: { SyncInfo },
   comments: {
@@ -70,7 +72,6 @@ export default {
       counter: 0,
     };
   },
- 
 };
 </script>
 <style scoped>

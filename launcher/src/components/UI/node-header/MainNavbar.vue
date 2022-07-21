@@ -27,10 +27,16 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
       allServices: "allServices",
+      versions: "versions",
+      stereumVersion: "stereumVersion",
+      newUpdates: "newUpdates",
+      network: "network",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
+      checkedForUpdates: "checkedForUpdates",
       refresh: "refresh",
+      isUpdateAvailable: "isUpdateAvailable",
     }),
   },
   methods: {
@@ -63,6 +69,12 @@ export default {
             return oldService
         })
         this.installedServices = newServices.concat(otherServices)
+        let beaconService = this.installedServices.find(s => s.category === "consensus")
+        if(beaconService.config.network === "mainnet"){
+          this.network = "mainnet"
+        }else{
+          this.network = "testnet"
+        }
         if(needForTunnel.length != 0 && this.refresh){
           let localPorts = await ControlService.getAvailablePort({
             min: 9000,
@@ -95,10 +107,34 @@ export default {
           this.headerServices = this.installedServices
             .filter((service) => service.headerOption)
         }
-      } else {
-        this.installedServices = []
+      }
+      if(Object.keys(this.versions).length === 0 && await ControlService.checkStereumInstallation()){
+        await this.checkUpdates(services)
       }
     }
+    },
+    checkUpdates: async function(){
+      let updates = []
+      let services = await ControlService.getServices()
+      let response = await ControlService.checkUpdates()
+      let stereumVersion = (await ControlService.getCurrentStereumVersion()).replace('\n', '')
+      this.versions = response
+      this.stereumVersion = stereumVersion
+      this.isUpdateAvailable = false
+
+      services.forEach(service => {
+        if(service.imageVersion != response[service.network][service.service][response[service.network][service.service].length - 1]){
+          this.isUpdateAvailable = true
+          updates.push({id: service.id, name: service.service.replace(/(Beacon|Validator|Service)/gm, ''), version: response[service.network][service.service][response[service.network][service.service].length - 1]})
+          console.log("Service Update Available!")
+        }
+      })
+      if(stereumVersion != response.stereum[response.stereum.length - 1].commit){
+        this.isUpdateAvailable = true
+        updates.push({ commit: response.stereum[response.stereum.length - 1].commit, name: "Stereum", version: response.stereum[response.stereum.length - 1].name})
+        console.log("Stereum Update Available!")
+      }
+      this.newUpdates = updates
     }
   },
 };

@@ -18,28 +18,63 @@
         </router-link>
       </div>
       <div class="config-btns">
-        <div class="config-update">
-          <span class="btn-text">UPDATE</span>
+        <div class="config-update" @click="openUpdateTableHandler">
+          <span class="btn-text">UPDATES</span>
           <img
             alt="update-icon"
             src="/img/icon/header-icons/update-green.png"
           />
         </div>
+        <update-table v-if="updateTableIsOpen">
+          <div
+            class="tableRow"
+            v-for="(item, index) in newUpdates"
+            @click="runUpdate(item)"
+            :key="index"
+          >
+            <div class="serviceName">
+              <span>{{ item.name }}</span>
+            </div>
+            <div class="version">
+              <span>{{ item.version }}</span>
+            </div>
+            <div class="downloadIcon">
+              <img
+                src="/img/icon/node-journal-icons/download2.png"
+                alt="icon"
+              />
+            </div>
+          </div>
+        </update-table>
       </div>
     </div>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
+import UpdateTable from "./UpdateTable.vue";
+import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services.js";
 export default {
+  components: { UpdateTable },
   data() {
     return {
       maschinName: "Server Name",
       ipAddress: "0.0.0.0",
+      updateTableIsOpen: false,
     };
   },
   mounted() {
     this.maschinNameMet();
+  },
+  computed: {
+    ...mapState(useServices, {
+      newUpdates: "newUpdates",
+    }),
+    ...mapWritableState(useServices, {
+      versions: "versions",
+    })
   },
   methods: {
     async maschinNameMet() {
@@ -51,6 +86,18 @@ export default {
       } catch (error) {
         error;
       }
+    },
+    async runUpdate(item) {
+      if(item && item.id){
+        await ControlService.updateServices({service: item.id})
+        this.versions = {}
+      }else if(item && item.commit){
+        await ControlService.updateStereum({commit: item.commit})
+        this.versions = {}
+      }
+    },
+    openUpdateTableHandler() {
+      this.updateTableIsOpen = !this.updateTableIsOpen;
     },
   },
 };
@@ -305,5 +352,64 @@ export default {
   top: 0;
   left: 0;
   z-index: 97;
+}
+.tableRow {
+  width: 99%;
+  height: 25px;
+  background-color: rgb(36, 35, 35);
+  border: 1px solid #787878;
+  border-radius: 5px;
+  padding: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.serviceName {
+  width: 40%;
+  height: 25px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #a5a5a5;
+  margin-left: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  text-transform: capitalize;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.version {
+  width: 30%;
+  height: 25px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #c6ad51;
+  margin-left: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  text-transform: capitalize;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.downloadIcon {
+  width: 15%;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.downloadIcon img {
+  width: 15px;
+  height: 18px;
+  cursor: pointer;
+}
+.downloadIcon img:hover {
+  transform: scale(1.1);
+}
+.downloadIcon img:active {
+  transform: scale(1);
 }
 </style>

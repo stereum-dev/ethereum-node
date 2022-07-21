@@ -98,7 +98,7 @@ promiseIpc.on("checkOS", async () => {
 });
 
 promiseIpc.on("getOneClickConstellation", async (arg) => {
-  return await oneClickInstall.getSetupConstellation(arg);
+  return await oneClickInstall.getSetupConstellation(arg.setup, arg.network);
 });
 
 promiseIpc.on("prepareOneClickInstallation", async (arg) => {
@@ -157,11 +157,37 @@ promiseIpc.on("manageServiceState", async (args) => {
   return await serviceManager.manageServiceState(args.id, args.state)
 })
 
-promiseIpc.on("runUpdates", async (args) => {
+promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true
-  const returnValue = await nodeConnection.runUpdates()
+  const returnValue = await nodeConnection.runAllUpdates()
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
   return returnValue
+})
+
+promiseIpc.on("updateServices", async (args) => {
+  app.showExitPrompt = true
+  await nodeConnection.updateServices(args.services)
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
+  app.showExitPrompt = false
+})
+
+promiseIpc.on("updateStereum", async (args) => {
+  app.showExitPrompt = true
+  await nodeConnection.updateStereum(args.commit)
+  app.showExitPrompt = false
+})
+
+promiseIpc.on("checkUpdates", async () => {
+  return await nodeConnection.checkUpdates()
+})
+
+promiseIpc.on("getCurrentStereumVersion", async () => {
+  return await nodeConnection.getCurrentStereumVersion()
 })
 
 promiseIpc.on("getTasks", async () => {

@@ -94,6 +94,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+      versions: "versions",
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
@@ -126,11 +127,12 @@ export default {
       this.refresh = false  //stop refreshing
       this.removeModal = false;
       this.removeIsConfirmed = true;
-      this.removeAllPlugins();
       this.destroyNode();
+      this.removeAllPlugins();
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
+        this.versions = {}
         this.headerServices = [];
         this.runningServices = [];
         this.installedServices = [];

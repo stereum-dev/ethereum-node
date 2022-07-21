@@ -12,18 +12,29 @@
     #   become: true
     #   changed_when: false
     #   when: ansible_distribution == "Ubuntu"
-
-    - name: Install community.docker, ansible latest
-      raw: "{{ item }}"
+    - name: Install apt repo deps (Ubuntu)
+      apt:
+        update_cache: yes
+        name: software-properties-common
+        state: present
       become: true
       changed_when: false
       when: ansible_distribution == "Ubuntu"
-      with_items:
-        - apt update
-        - apt install -y software-properties-common
-        - add-apt-repository --yes --update ppa:ansible/ansible
-        - apt install -y pip ansible
-        # - ansible-galaxy collection install community.docker
+
+    - name: Add source repository into sources list
+      apt_repository:
+        repo: "ppa:ansible/ansible"
+
+    - name: Install ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - pip
+          - ansible
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
 
     - name: Install python for Ansible (CentOS 8)
       raw: yum install -y python38 tar ansible && yum remove -y python36
