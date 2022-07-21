@@ -1,6 +1,6 @@
 <template>
   <div class="expert-parent">
-    <div class="opacityBackground"></div>
+    <div class="opacityBackground" @click="$emit('hideModal')"></div>
     <div class="expert-modal">
       <slot></slot>
     </div>
@@ -37,7 +37,7 @@ export default {
   top: 0;
   left: 0;
   z-index: 1001;
-  cursor:default;
+  cursor: default;
 }
 .expert-modal {
   width: 44%;
@@ -54,8 +54,6 @@ export default {
   justify-content: center;
   align-items: flex-start;
   z-index: 1002;
-  cursor:default;
+  cursor: default;
 }
-
-
 </style>

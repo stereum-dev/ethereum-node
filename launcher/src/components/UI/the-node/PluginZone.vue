@@ -57,10 +57,14 @@
               </div>
             </div>
           </plugin-menu>
-          <expert-mode v-if="isExperModeForRamUsage">
-            <div class="serviceName">
+          <expert-mode
+            @hide-modal="hideExpertMode(item)"
+            v-if="item.expertOptionsModal"
+          >
+            <div class="serviceDetails">
               <span class="nameSpan">{{ item.name }}</span>
               <span class="category">{{ item.category }}</span>
+              <span class="serviceId">ID: {{ item.config.serviceID }}</span>
             </div>
             <div class="expertRow">
               <div class="dataTitleBox" @click="openExpertMode">
@@ -98,6 +102,57 @@
                   src="../../../../public/img/icon/task-manager-icons/down.png"
                   alt=""
                 />
+              </div>
+              <div class="apiBinding">
+                <img
+                  class="titleIcon"
+                  src="../../../../public/img/icon/plugin-menu-icons/key4.png"
+                  alt="icon"
+                />
+                <span>API Binding</span>
+                <span
+                  class="apiOff"
+                  v-if="bindingIsOn"
+                  @click="apiBindingTrunOff"
+                  >OFF</span
+                >
+                <span class="apiOn" v-else @click="apiBindingTrunOn">ON</span>
+                <input
+                  class="inputApi"
+                  type="text"
+                  v-model="bindingIp"
+                  :class="{ disabled: !bindingIsOn }"
+                />
+              </div>
+              <div class="apiBinding">
+                <img
+                  class="titleIcon"
+                  src="../../../../public/img/icon/plugin-menu-icons/key4.png"
+                  alt="icon"
+                />
+                <span>RPC Endpoint-Port</span>
+                <span
+                  class="apiOff"
+                  v-if="enterPortIsEnabled"
+                  @click="apiBindingTrunOff"
+                  >OFF</span
+                >
+                <span class="apiOn" v-else @click="apiBindingTrunOn">ON</span>
+                <input
+                  class="inputApi"
+                  type="text"
+                  v-model="enteredPort"
+                  :class="{ disabled: !enterPortIsEnabled }"
+                />
+              </div>
+              <div class="apiBinding">
+                <img
+                  class="titleIcon"
+                  src="../../../../public/img/icon/plugin-menu-icons/key4.png"
+                  alt="icon"
+                />
+                <span>Prunning</span>
+                <span class="apiOn" @click="apiBindingTrunOn">Start</span>
               </div>
             </div>
             <div class="expertTable">
@@ -179,6 +234,10 @@ export default {
       isExperModeForRamUsage: false,
       isRamUsageActive: false,
       isExpertModeActive: false,
+      bindingIsOn: false,
+      bindingIp: "126.0.23.22",
+      enterPortIsEnabled: false,
+      enteredPort: "9006",
     };
   },
   computed: {
@@ -263,6 +322,12 @@ export default {
         (service) => service?.name === "Teku" || service?.name === "Nethermind"
       );
       this.isExperModeForRamUsage = true;
+    },
+    apiBindingTrunOff() {
+      this.bindingIsOn = false;
+    },
+    apiBindingTrunOn() {
+      this.bindingIsOn = true;
     },
   },
 };
@@ -505,27 +570,36 @@ export default {
   transform: scale(1);
 }
 
-.expert-modal .serviceName {
+.expert-modal .serviceDetails {
   width: 95%;
-  height: 20%;
+  height: 17%;
   border-bottom: 1px solid #adadad;
   border-radius: 9px 9px 0 0;
   margin: 10px auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: baseline;
 }
-.serviceName .nameSpan {
+.serviceDetails .nameSpan {
   font-size: 1.5rem;
   font-weight: 700;
   margin-left: 5px;
   color: #d3d3d3;
 }
-.serviceName .category {
+.serviceDetails .category {
   font-size: 0.7rem;
   font-weight: 500;
-  margin-left: 5px;
+  margin-left: -5%;
   color: #ababab;
+}
+.serviceDetails .serviceId {
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #ababab;
+  justify-self: end;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 .expertRow {
   width: 95%;
@@ -541,7 +615,7 @@ export default {
 .expertRow .ramTitleBox,
 .expertRow .dataTitleBox {
   width: 100%;
-  height: 30px;
+  height: 25px;
   margin: 2px auto;
   padding: 3px 20px;
   border: 1px solid #8a8a8a;
@@ -549,12 +623,30 @@ export default {
   background-color: #8a8a8a;
   text-align: center;
   color: #393939;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition-duration: 200ms;
+}
+.expertRow .apiBinding {
+  width: 100%;
+  height: 25px;
+  margin: 2px auto;
+  padding: 1px 4px 0 20px;
+  border: 1px solid #8a8a8a;
+  border-radius: 25px;
+  background-color: #8a8a8a;
+  text-align: center;
+  color: #393939;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
 .expertRow .ramTitleBox:hover,
@@ -576,9 +668,75 @@ export default {
   width: 25px;
   height: 25px;
 }
+.apiBinding .inputApi {
+  grid-column: 5/7;
+  grid-row: 1;
+  width: 80%;
+  height: 90%;
+  border-radius: 20px;
+  padding: 0;
+  padding-left: 10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgb(44, 44, 44);
+  justify-self: end;
+}
+.disabled {
+  opacity: 0.6 !important;
+  background-color: rgb(104, 104, 104) !important;
+  pointer-events: none !important;
+}
+.apiBinding span {
+  grid-column: 3/5;
+  grid-row: 1;
+  padding-left: 29px;
+  width: 100%;
+  height: 100%;
+}
+.apiBinding .apiOn {
+  grid-column: 5/6;
+  grid-row: 1;
+  width: 25px;
+  height: 20px;
+  padding: 4px;
+  margin-right: 10px;
+  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
+  border-radius: 3px;
+  background-color: rgb(9, 193, 101);
+  color: #f0f0f0;
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.apiBinding .apiOff {
+  grid-column: 5/6;
+  grid-row: 1;
+  width: 27px;
+  height: 20px;
+  padding: 4px;
+  margin-right: 10px;
+  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
+  border-radius: 3px;
+  background-color: rgb(242, 75, 75);
+  color: #d9d9d9;
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.apiOff:active,
+.apiOn:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+.expertRow .apiBinding img {
+  grid-column: 1/2;
+  grid-row: 1;
+  width: 18px;
+  height: 18px;
+}
 .expertTable {
   width: 100%;
-  height: 90%;
+  height: 48%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -632,9 +790,9 @@ export default {
 
 .expert-modal .btn-box {
   width: 100%;
-  height: 25%;
+  height: 50px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 }
 .expert-modal .btn-box .exit-btn {
@@ -670,7 +828,8 @@ export default {
   height: 30px;
   padding: 3px;
   border: 2px solid #78c098;
-  border-radius: 6px;
+  margin-right: 30px;
+  border-radius: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
