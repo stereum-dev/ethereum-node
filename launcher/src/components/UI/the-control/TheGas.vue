@@ -11,7 +11,7 @@
     </div>
     <div class="ethIco">
       <img
-        :class="{ greenArrow: isGreen }"
+        :class="{ greenArrow: isGreen, greyArrow: isGrey }"
         src="../../../../public/img/icon/control/arrowUpDown.png"
       />
     </div>
@@ -23,17 +23,30 @@ export default {
     return {
       feeValue: 85,
       isGreen: false,
+      isGrey: true,
     };
   },
   watch: {
     feeValue(newFeeValue, oldFeeValue) {
       if (newFeeValue > oldFeeValue) {
         this.isGreen = true;
+        this.isGrey = false;
+      } else if (newFeeValue < oldFeeValue) {
+        this.isGreen = false;
+        this.isGrey = false;
       } else {
         this.isGreen = false;
+        this.isGrey = true;
       }
     },
   },
+  //array test method and it has to delete
+  //for red test have change to feeValue--
+  // methods: {
+  //   test() {
+  //     this.feeValue++;
+  //   },
+  // },
 };
 </script>
 <style scoped>
@@ -99,5 +112,9 @@ export default {
   filter: grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg)
     saturate(500%);
   transform: rotate(-85deg);
+}
+.greyArrow {
+  filter: grayscale(100%);
+  transform: rotate(-40deg);
 }
 </style>
