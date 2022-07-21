@@ -90,7 +90,7 @@
       name: "{{ stereum_service_container_name }}"
       user: "{{ stereum_service_configuration.user }}"
       image: "{{ stereum_service_configuration.image }}"
-      env: "{{ stereum_service_configuration.env }}"
+      env: "{{ stereum_service_configuration.env | default({}) }}"
       command: "{{ stereum_service_configuration.command | default([]) }}"
       entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
       restart_policy: "unless-stopped"
