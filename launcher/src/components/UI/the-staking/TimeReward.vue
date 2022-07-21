@@ -3,10 +3,10 @@
     <div class="time-reward-box">
       <div class="time-reward">
         <div class="time-reward-title">
-          <span>ALL TIME REWARD</span>
+          <span>TOTAL BALANCE</span>
         </div>
         <div class="time-reward-value">
-          <span></span>
+          <span>{{totalBalance}}</span>
         </div>
       </div>
       <div class="proposed">
@@ -53,7 +53,18 @@
     </div>
   </div>
 </template>
+<script>
+import { mapState } from 'pinia'
+import { useStakingStore } from '../../../store/theStaking'
 
+export default {
+  computed: {
+    ...mapState(useStakingStore, {
+      totalBalance: "totalBalance",
+    }),
+  },
+}
+</script>
 <style scoped>
 .reward-parent {
   width: 100%;
@@ -97,6 +108,15 @@
   background-color: #181818;
   border-radius: 25px;
   box-shadow: inset 0 0 5px 1px #060606;
+}
+.time-reward .time-reward-value span{
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  margin: 2% auto 0 6px;
+  display: flex;
+  justify-content: left;
+  align-items: flex-end;
 }
 .time-reward-box .proposed {
   width: 100%;
