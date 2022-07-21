@@ -131,7 +131,7 @@
                   :class="{ disabled: !bindingIsOn }"
                 />
               </div>
-              <div class="apiBinding">
+              <div class="endpointPort">
                 <img
                   class="titleIcon"
                   src="../../../../public/img/icon/plugin-menu-icons/endpoints.png"
@@ -139,32 +139,31 @@
                 />
                 <span>RPC Endpoint-Port</span>
                 <span
-                  class="apiOff"
+                  class="portOff"
                   v-if="enterPortIsEnabled"
-                  @click="apiBindingTrunOff"
+                  @click="endpointPortTrunOff"
                   >OFF</span
                 >
-                <span class="apiOn" v-else @click="apiBindingTrunOn">ON</span>
+                <span class="portOn" v-else @click="endpointPortTrunOn"
+                  >ON</span
+                >
                 <input
-                  class="inputApi"
+                  class="inputPort"
                   type="text"
                   v-model="enteredPort"
                   :class="{ disabled: !enterPortIsEnabled }"
                 />
               </div>
-              <div class="apiBinding">
+              <div class="prunning">
                 <img
-                  class="titleIcon"
                   src="../../../../public/img/icon/plugin-menu-icons/key4.png"
                   alt="icon"
                 />
                 <span>Prunning</span>
-                <span class="apiOn" @click="apiBindingTrunOn">Start</span>
                 <input
-                  class="inputApi"
-                  type="text"
-                  v-model="enteredPort"
-                  :class="{ disabled: !enterPortIsEnabled }"
+                  class="prunningInput"
+                  type="checkbox"
+                  v-model="checkedPrunning"
                 />
               </div>
             </div>
@@ -174,6 +173,7 @@
               </div>
             </div>
             <div class="btn-box">
+              <span class="exit-btn">Click outside to close</span>
               <div class="confirmBtn" @click="confirmExpertChanges(item)">
                 <span>Confirm</span>
               </div>
@@ -231,6 +231,7 @@ export default {
       bindingIp: "126.0.23.22",
       enterPortIsEnabled: false,
       enteredPort: "9006",
+      checkedPrunning: null,
     };
   },
   computed: {
@@ -321,6 +322,12 @@ export default {
     },
     apiBindingTrunOn() {
       this.bindingIsOn = true;
+    },
+    endpointPortTrunOff() {
+      this.enterPortIsEnabled = false;
+    },
+    endpointPortTrunOn() {
+      this.enterPortIsEnabled = true;
     },
   },
 };
@@ -606,7 +613,8 @@ export default {
   z-index: 1003;
 }
 
-.expertRow .dataTitleBox {
+.expertRow .dataTitleBox,
+.expertRow .prunning {
   width: 100%;
   height: 25px;
   margin: 2px auto;
@@ -656,13 +664,13 @@ export default {
   margin-right: 2px;
   border-radius: 25px;
   color: #2d2d2d;
-  padding:0;
-  padding-left:10px;
+  padding: 0;
+  padding-left: 10px;
   font-size: 0.7rem;
   font-weight: 600;
   border: none;
 }
-.ramTitleBox .spaceParent select option{
+.ramTitleBox .spaceParent select option {
   color: #d9d9d9;
   font-size: 0.7rem;
   font-weight: 600;
@@ -674,6 +682,7 @@ export default {
   width: 20px;
   height: 20px;
 }
+.expertRow .endpointPort,
 .expertRow .apiBinding {
   width: 100%;
   height: 25px;
@@ -701,12 +710,15 @@ export default {
 .expertRow .dataTitleBox:active {
   border: 1px solid #2d2d2d;
 }
-
+.expertRow .prunning img,
 .expertRow .dataTitleBox img {
   width: 20px;
   height: 20px;
 }
-
+.expertRow .prunning input {
+  box-shadow: none;
+}
+.expertRow .endpointPort .inputPort,
 .apiBinding .inputApi {
   grid-column: 5/7;
   grid-row: 1;
@@ -725,6 +737,7 @@ export default {
   background-color: rgb(104, 104, 104) !important;
   pointer-events: none !important;
 }
+.endpointPort span,
 .apiBinding span {
   grid-column: 3/5;
   grid-row: 1;
@@ -732,6 +745,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+.endpointPort .portOn,
 .apiBinding .apiOn {
   grid-column: 5/6;
   grid-row: 1;
@@ -744,29 +758,33 @@ export default {
   background-color: rgb(9, 193, 101);
   color: #f0f0f0;
   font-size: 0.6rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
+.endpointPort .portOff,
 .apiBinding .apiOff {
   grid-column: 5/6;
   grid-row: 1;
-  width: 27px;
+  width: 26px;
   height: 20px;
   padding: 4px;
-  margin-right: 10px;
+  margin-left: 10px;
   box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
   border-radius: 3px;
   background-color: rgb(242, 75, 75);
   color: #d9d9d9;
   font-size: 0.6rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
 }
+.portOff:active,
+.portOn:active,
 .apiOff:active,
 .apiOn:active {
   transform: scale(0.9);
   box-shadow: none;
 }
+.expertRow .endpointPort img,
 .expertRow .apiBinding img {
   grid-column: 1/2;
   grid-row: 1;
@@ -803,62 +821,48 @@ export default {
 .expert-modal .btn-box {
   width: 100%;
   height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 50px;
 }
 .expert-modal .btn-box .exit-btn {
-  width: 20%;
-  height: 30px;
-  padding: 3px;
-  border: 2px solid rgb(203, 203, 203);
-  border-radius: 6px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+  grid-column: 2/3;
+  margin: 0 auto;
+  grid-row: 1;
+  color: #e24949;
+  font-size: 0.6rem;
+  font-weight: 500;
+  align-self: flex-end;
 }
-.expert-modal .btn-box .exit-btn span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #d6d6d6;
-  text-align: center;
-}
-.expert-modal .btn-box .exit-btn:hover {
-  transform: scale(1.1);
-  border: 2px solid #cf4646;
-  color: #cf4646;
-}
-.expert-modal .btn-box .exit-btn:hover span {
-  color: #cf4646;
-}
-.expert-modal .btn-box .exit-btn:active {
-  transform: scale(1);
-}
+
 .expert-modal .btn-box .confirmBtn {
-  width: 20%;
-  height: 30px;
+  grid-column: 3/4;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 25px;
   padding: 3px;
-  border: 2px solid #78c098;
-  margin-right: 30px;
+  border: 2px solid #609879;
   border-radius: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
 }
 .expert-modal .btn-box .confirmBtn span {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #78c098;
+  color: #609879;
   text-align: center;
 }
 .expert-modal .btn-box .confirmBtn:hover {
   transform: scale(1.1);
-  background-color: #78c098;
+  background-color: #609879;
 }
 .expert-modal .btn-box .confirmBtn:hover span {
-  color: #2a2a2a;
+  color: #e0e0e0;
 }
 .expert-modal .btn-box .confirmBtn:active {
   transform: scale(1);
