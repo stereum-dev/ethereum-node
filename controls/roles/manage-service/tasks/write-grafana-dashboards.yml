@@ -2,8 +2,10 @@
 - name: Copy Grafana's dashboard(s)
   copy:
     src: "{{ item }}"
-    dest: "{{ stereum_service_configuration.volumes[2].split(':') | first }}/provisioning/dashboards"
-    mode: 0655
+    dest: "{{ service_provisioning_path }}/dashboards"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
   become: yes
   with_fileglob: "{{ role_path }}/files/grafana/{{ item }}/dashboards/*"
 

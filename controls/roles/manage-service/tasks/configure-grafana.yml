@@ -1,0 +1,43 @@
+---
+- name: Configure stereum-notifier for Grafana
+  uri:
+    url: "http://localhost:3000/api/alertmanager/grafana/config/api/v1/alerts"
+    method: POST
+    body_format: json
+    status_code: 202
+    headers:
+      Content-Type: application/json
+    body: |
+      {
+        "template_files": {},
+        "alertmanager_config": {
+          "route": {
+            "receiver": "stereum-notifier"
+          },
+          "templates": null,
+          "receivers": [
+            {
+              "name": "stereum-notifier",
+              "grafana_managed_receiver_configs": [
+                {
+                  "name": "stereum-notifier",
+                  "type": "webhook",
+                  "disableResolveMessage": false,
+                  "settings": {
+                    "url": "http://notifications:3000/api/webhooks/grafana",
+                    "httpMethod": "POST",
+                    "uploadImage": false
+                  },
+                  "secureFields": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+  register: _wait_result
+  until: _wait_result.status is defined and _wait_result.status == 202
+  retries: 5
+  delay: 2
+
+# EOF
