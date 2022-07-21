@@ -24,11 +24,7 @@
           <span>000000000 days</span>
           <span>-00h - 00m - 00s</span>
         </div>
-        <div
-          class="circleArrow"
-          @mouseover="showSyncInfo = true"
-          @mouseleave="showSyncInfo = false"
-        >
+        <!-- <div class="circleArrow">
           <sync-info v-if="showSyncInfo">
             <div class="serviceName">
               <div class="serviceName_val">
@@ -56,7 +52,7 @@
             </div>
           </sync-info>
           <img :src="errorIco" />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -67,9 +63,6 @@ import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
   components: { SyncInfo },
-  comments: {
-    SyncInfo,
-  },
   data() {
     return {
       showSyncInfo: false,
@@ -77,45 +70,20 @@ export default {
       networkIcon: "",
       mainnetIcon: "/img/icon/control/mainnetIconControl.png",
       testnetIcon: "/img/icon/control/testnetIconControl.png",
-      syncIco: [
-        {
-          id: 1,
-          name: "error",
-          icon: "/img/icon/arrows/SynchronisationIconError.gif",
-        },
-        {
-          id: 2,
-          name: "active",
-          icon: "/img/icon/arrows/SynchronisationIconActive.gif",
-        },
-        {
-          id: 3,
-          name: "synched",
-          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
-        },
-      ],
     };
   },
-  mounted(){
-    if(this.network === "mainnet"){
-      this.networkIcon = this.mainnetIcon
-    }else{
-      this.networkIcon = this.testnetIcon
+
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkIcon = this.mainnetIcon;
+    } else {
+      this.networkIcon = this.testnetIcon;
     }
   },
   computed: {
     ...mapState(useServices, {
       network: "network",
     }),
-    errorIco() {
-      return this.syncIco[0].icon;
-    },
-    activeIco() {
-      return this.syncIco[1].icon;
-    },
-    synchedIco() {
-      return this.syncIco[2].icon;
-    },
   },
 };
 </script>

@@ -35,13 +35,12 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50%;
+  height: 35%;
   border-radius: 10px;
-  margin: 5% 0;
+  margin: 1% 0;
 }
 .active {
-  background: greenyellow !important;
-  color: #000 !important;
+  color: greenyellow !important;
 }
 .title {
   display: flex;
@@ -50,19 +49,20 @@ export default {
   justify-content: flex-start;
   align-items: center;
   margin: 0 4%;
+  font-weight: 600;
 }
 .btn {
   display: flex;
   width: 30%;
   font-size: 50%;
-  font-weight: bold;
-  padding: 0 2px;
+  font-weight: 800;
+  padding: 0 1px;
   border-radius: 5px;
   cursor: pointer;
   color: #eee;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 90%;
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
 }
