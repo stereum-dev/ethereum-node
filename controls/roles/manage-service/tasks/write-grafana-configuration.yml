@@ -1,7 +1,8 @@
 ---
 - name: Find correct provisioning path
   set_fact:
-    service_provisioning_path: "{{ stereum_service_configuration.volumes | select('search', '/etc/grafana/provisioning') | first | split(':') | first }}"
+    service_provisioning_path: "{{ stereum_service_configuration.volumes | select('match', '.*:/etc/grafana/provisioning$') | first | split(':') | first }}"
+    service_config_path: "{{ stereum_service_configuration.volumes | select('match', '.*:/etc/grafana$') | first | split(':') | first }}"
 
 - name: Delete old Grafana dashboards
   file:
@@ -17,8 +18,18 @@
     group: "2000"
     mode: 0755
   loop:
+    - "{{ service_config_path }}"
     - "{{ service_provisioning_path }}/datasources"
     - "{{ service_provisioning_path }}/dashboards"
+  become: yes
+
+- name: Copy Grafana's "grafana.ini" file
+  copy:
+    src: "{{ role_path }}/files/grafana/grafana.ini"
+    dest: "{{ service_config_path }}/grafana.ini"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
   become: yes
 
 - name: Copy Grafana's "datasource" file
