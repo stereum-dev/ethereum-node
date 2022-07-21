@@ -8,7 +8,7 @@
     <dashboard-card class="hard-disk">
       <the-hard></the-hard>
     </dashboard-card>
-    <dashboard-card class="storage"></dashboard-card>
+    <dashboard-card class="storage"><the-storage></the-storage></dashboard-card>
     <dashboard-card class="disk-speed"
       ><disk-speed></disk-speed
     ></dashboard-card>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
 import NodeServerResponse from "./NodeServerResponse.vue";
@@ -55,6 +56,7 @@ import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 export default {
   components: {
+    TheStorage,
     DataApi,
     SyncStatus,
     TheHard,

@@ -63,14 +63,27 @@ import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
   components: { SyncInfo },
-  comments: {
-    SyncInfo,
-  },
   data() {
     return {
       showSyncInfo: false,
       counter: 0,
+      networkIcon: "",
+      mainnetIcon: "/img/icon/control/mainnetIconControl.png",
+      testnetIcon: "/img/icon/control/testnetIconControl.png",
     };
+  },
+
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkIcon = this.mainnetIcon;
+    } else {
+      this.networkIcon = this.testnetIcon;
+    }
+  },
+  computed: {
+    ...mapState(useServices, {
+      network: "network",
+    }),
   },
 };
 </script>
