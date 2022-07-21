@@ -31,13 +31,14 @@
     ></dashboard-card>
 
     <div class="half-card">
-      <node-connection-card></node-connection-card>
+      <rpc-endpoint></rpc-endpoint>
     </div>
-    <div class="half-card2"><node-connection-card></node-connection-card></div>
+    <div class="half-card2"><data-api></data-api></div>
   </div>
 </template>
 
 <script>
+import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
 import NodeServerResponse from "./NodeServerResponse.vue";
 import ValidatorContainerBox from "./ValidatorContainerBox.vue";
@@ -50,10 +51,11 @@ import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
-import NodeConnectionCard from "./NodeConnectionCard.vue";
+import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 export default {
   components: {
+    DataApi,
     SyncStatus,
     TheHard,
     DashboardCard,
@@ -66,7 +68,7 @@ export default {
     ValidatorContainerBox,
     TimeGas,
     NodeServerResponse,
-    NodeConnectionCard,
+    RpcEndpoint,
     DiskSpeed,
   },
 };
