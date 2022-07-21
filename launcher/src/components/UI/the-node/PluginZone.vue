@@ -92,21 +92,28 @@
                   alt="icon"
                 />
                 <span>RAM Usage Limit</span>
-                <img
-                  v-if="isRamUsageActive"
-                  src="../../../../public/img/icon/task-manager-icons/up.png"
-                  alt=""
-                />
-                <img
-                  v-else
-                  src="../../../../public/img/icon/task-manager-icons/down.png"
-                  alt=""
-                />
+                <div
+                  class="spaceParent"
+                  v-for="(e, index) in item.expertOptions.filter(
+                    (e) => e.name === 'ram'
+                  )"
+                  :key="index"
+                >
+                  <select v-model="ramUsage" id="ramUsage">
+                    <option
+                      v-for="(rate, idx) in e.value"
+                      :value="rate"
+                      :key="idx"
+                    >
+                      {{ rate }}GB
+                    </option>
+                  </select>
+                </div>
               </div>
               <div class="apiBinding">
                 <img
                   class="titleIcon"
-                  src="../../../../public/img/icon/plugin-menu-icons/key4.png"
+                  src="../../../../public/img/icon/plugin-menu-icons/api.png"
                   alt="icon"
                 />
                 <span>API Binding</span>
@@ -127,7 +134,7 @@
               <div class="apiBinding">
                 <img
                   class="titleIcon"
-                  src="../../../../public/img/icon/plugin-menu-icons/key4.png"
+                  src="../../../../public/img/icon/plugin-menu-icons/endpoints.png"
                   alt="icon"
                 />
                 <span>RPC Endpoint-Port</span>
@@ -153,31 +160,17 @@
                 />
                 <span>Prunning</span>
                 <span class="apiOn" @click="apiBindingTrunOn">Start</span>
+                <input
+                  class="inputApi"
+                  type="text"
+                  v-model="enteredPort"
+                  :class="{ disabled: !enterPortIsEnabled }"
+                />
               </div>
             </div>
             <div class="expertTable">
               <div class="expertMode" v-if="isExpertModeActive">
                 <textarea class="editContent" v-model="e.value"></textarea>
-              </div>
-            </div>
-            <div
-              class="expertTable"
-              v-for="(e, index) in item.expertOptions.filter(
-                (p) => p.name === 'ram'
-              )"
-              :key="index"
-            >
-              <div class="ramSpace" v-if="isRamUsageActive">
-                <span>Choose RAM Usage Limit</span>
-                <select v-model="ramUsage" id="ramUsage">
-                  <option
-                    v-for="(rate, idx) in e.value"
-                    :value="rate"
-                    :key="idx"
-                  >
-                    {{ rate }}GB
-                  </option>
-                </select>
               </div>
             </div>
             <div class="btn-box">
@@ -572,7 +565,7 @@ export default {
 
 .expert-modal .serviceDetails {
   width: 95%;
-  height: 17%;
+  height: 40px;
   border-bottom: 1px solid #adadad;
   border-radius: 9px 9px 0 0;
   margin: 10px auto;
@@ -612,7 +605,7 @@ export default {
   text-align: center;
   z-index: 1003;
 }
-.expertRow .ramTitleBox,
+
 .expertRow .dataTitleBox {
   width: 100%;
   height: 25px;
@@ -630,6 +623,56 @@ export default {
   justify-content: space-between;
   align-items: center;
   transition-duration: 200ms;
+}
+.expertRow .ramTitleBox {
+  width: 100%;
+  height: 25px;
+  margin: 2px auto;
+  border: 1px solid #8a8a8a;
+  border-radius: 25px;
+  background-color: #8a8a8a;
+  color: #393939;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr;
+}
+.ramTitleBox .spaceParent {
+  grid-column: 3/4;
+  grid-row: 1;
+  width: 100%;
+  height: 21px;
+  margin-top: 1px;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ramTitleBox .spaceParent select {
+  width: 70%;
+  height: 100%;
+  margin-right: 2px;
+  border-radius: 25px;
+  color: #2d2d2d;
+  padding:0;
+  padding-left:10px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: none;
+}
+.ramTitleBox .spaceParent select option{
+  color: #d9d9d9;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border: none;
+}
+.expertRow .ramTitleBox img {
+  grid-column: 1/2;
+  margin-left: 20px;
+  width: 20px;
+  height: 20px;
 }
 .expertRow .apiBinding {
   width: 100%;
@@ -649,29 +692,25 @@ export default {
   grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
-.expertRow .ramTitleBox:hover,
+
 .expertRow .dataTitleBox:hover {
   border: 1px solid #d6d6d6;
   color: #d9d9d9;
 }
-.expertRow .ramTitleBox:active,
+
 .expertRow .dataTitleBox:active {
   border: 1px solid #2d2d2d;
 }
 
-.expertRow .ramTitleBox img,
 .expertRow .dataTitleBox img {
   width: 20px;
   height: 20px;
 }
-.titleIcon {
-  width: 25px;
-  height: 25px;
-}
+
 .apiBinding .inputApi {
   grid-column: 5/7;
   grid-row: 1;
-  width: 80%;
+  width: 65%;
   height: 90%;
   border-radius: 20px;
   padding: 0;
@@ -699,7 +738,7 @@ export default {
   width: 25px;
   height: 20px;
   padding: 4px;
-  margin-right: 10px;
+  margin-left: 10px;
   box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
   border-radius: 3px;
   background-color: rgb(9, 193, 101);
@@ -741,34 +780,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.expertTable .ramSpace {
-  width: 90%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.expertTable .ramSpace span {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: rgb(196, 196, 196);
-  margin-bottom: 20px;
-}
-.expertTable .ramSpace select {
-  width: 50%;
-  height: 30px;
-  border-radius: 5px;
-  background-color: rgb(83, 83, 83);
-  padding: 0 5px;
-  text-align: center;
-  color: rgb(203, 203, 203);
-}
-.expertTable .ramSpace select option {
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: rgb(203, 203, 203);
-}
+
 .expertTable .expertMode {
   width: 100%;
   height: 100%;
