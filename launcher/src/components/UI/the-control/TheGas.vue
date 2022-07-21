@@ -34,15 +34,6 @@ export default {
       }
     },
   },
-  computed: {
-    greenArrow() {
-      return {
-        filter:
-          "grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg)saturate(500%)",
-        animation: "rotation 1s infinite linear",
-      };
-    },
-  },
 };
 </script>
 <style scoped>
