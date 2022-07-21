@@ -1,0 +1,99 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    teku_service: d2cf0214-ea78-11ec-bbf0-ab0094207ad6
+    geth_service: d6358d80-ea76-11ec-94b3-2fb45dfeb66a
+
+  tasks:
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+                - 127.0.0.1:8551:8551
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.port=8545
+                - --http.addr=0.0.0.0
+                - --http.vhosts="*"
+                - --http.api="engine,eth,web3,net,debug"
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.port=8551
+                - --authrpc.vhosts="*"
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # teku beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: TekuBeaconService
+              id: "{{ teku_service }}"
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+              env:
+                JAVA_OPTS: -Xmx4g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=prater
+                - --logging=INFO
+                - --p2p-enabled=true
+                - --p2p-port=9001
+                - --ee-endpoint="http://stereum-{{ geth_service }}:8545"
+                - --ee-jwt-secret-file=/engine.jwt
+                - --metrics-enabled=true
+                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                - --metrics-port=8008
+                - --metrics-interface=0.0.0.0
+                - --metrics-host-allowlist="*"
+                - --metrics-publish-interval=10
+                - --data-path=/opt/app/data
+                - --data-storage-mode=prune
+                - --rest-api-port=5051
+                - --rest-api-host-allowlist="*"
+                - --rest-api-interface=0.0.0.0
+                - --rest-api-docs-enabled=true
+                - --rest-api-enabled=true
+                - --log-destination=CONSOLE
+#                - --eth1-endpoints=http://10.10.0.3:8545
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+# EOF
