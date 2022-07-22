@@ -174,6 +174,7 @@ export default {
   border-radius: 15px;
   overflow-x: hidden;
   overflow-y: auto;
+  z-index: -1;
 }
 
 /* width */
@@ -190,7 +191,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  z-index: 1;
+  z-index: 0;
 }
 
 .subTask-row .skipped-box,
