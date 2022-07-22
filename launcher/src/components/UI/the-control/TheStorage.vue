@@ -1,25 +1,23 @@
 <template>
-  <div class="storageParent">
-    <div class="storageBox">
-      <div class="storageIco">
-        <div class="icoContainer">
-          <img src="../../../../public/img/icon/control/hdd.svg" />
+  <div class="storage-parent">
+    <div class="storage-box">
+      <div class="storage-icon">
+        <div class="storage-icon_container">
+          <img src="../../../../public/img/icon/control/ServiceIcon.png" />
         </div>
-        <span>HARD DISK</span>
+        <span>STORAGE</span>
       </div>
-      <div class="storageProcPart">
-        <div class="freePart">
-          <span>{{ free }} GB FREE</span>
-        </div>
-        <div class="totalPart">
-          <span>/ {{ total }} GB TOTAL</span>
-        </div>
-        <div class="valueBarPart">
-          <div class="valueBarPart_loader">
-            <div
-              class="valueBarPart_loader-value"
-              :style="valueStoragePer"
-            ></div>
+      <div class="storage-data_box">
+        <div
+          class="storage-data_row"
+          v-for="item in storageDataItems"
+          :key="item.id"
+        >
+          <div class="storage-data_row_title">
+            <span>{{ item.title }}</span>
+          </div>
+          <div class="storage-data_row_value">
+            <span>{{ item.storageValue }} GB</span>
           </div>
         </div>
       </div>
@@ -27,53 +25,32 @@
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
-      free: null,
-      used: null,
-      total: null,
-      usedStotagePer: null,
+      storageDataItems: [
+        {
+          id: 1,
+          title: "GETH",
+          storageValue: 13.2,
+        },
+        {
+          id: 2,
+          title: "PRYSM",
+          storageValue: 13.2,
+        },
+        {
+          id: 3,
+          title: "PRYSM VC",
+          storageValue: 13.2,
+        },
+      ],
     };
-  },
-  created() {
-    this.storageMet();
-  },
-
-  computed: {
-    valueStoragePer() {
-      return { width: this.usedStotagePer + "%" };
-    },
-    countFreeVal() {
-      return this.freeVall();
-    },
-  },
-
-  methods: {
-    async storageMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.usedStotagePer = parseInt(arr[2]);
-        const arr2 = arr[3].split(" ");
-        this.total = Math.floor(parseInt(arr2[0]) / 10000);
-        this.free = parseFloat(arr2[1]).toFixed(2) / 10000;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-
-    freeVall() {
-      const free = this.total - this.used;
-      return free;
-    },
   },
 };
 </script>
 <style scoped>
-.storageParent {
+.storage-parent {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -82,32 +59,24 @@ export default {
   box-sizing: border-box;
   height: 100%;
 }
-
-.storageBox {
+.storage-box {
   width: 100%;
   height: 100%;
   display: flex;
   box-sizing: border-box;
-}
-.storageIco {
-  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+}
+.storage-icon {
+  box-sizing: border-box;
   width: 30%;
   height: 100%;
-}
-.icoContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 80%;
+  flex-direction: column;
 }
-.storageIco img {
-  width: 80%;
-}
-.storageIco span {
+.storage-icon span {
   width: 100%;
   height: 20%;
   display: flex;
@@ -116,55 +85,35 @@ export default {
   font-size: 50%;
   font-weight: bold;
 }
-.storageProcPart {
+.storage-icon_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 75%;
+}
+.storage-icon_container img {
+  width: 80%;
+}
+.storage-data_box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 70%;
-  display: flex;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 80%;
 }
-.freePart {
-  width: 100%;
-  height: 35%;
+.storage-data_row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  font-size: 100%;
-  font-weight: 600;
-  color: #5ed966;
-}
-.totalPart {
-  width: 94%;
-  height: 25%;
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  font-size: 100%;
-  font-weight: 700;
-  color: #eee;
-}
-.valueBarPart {
-  width: 100%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.valueBarPart_loader {
   width: 95%;
-  height: 90%;
-  border-radius: 3px;
-  margin-top: 3px;
-  background: #848484;
-  justify-content: flex-start;
-  align-items: center;
-  display: flex;
-}
-.valueBarPart_loader-value {
-  height: 90%;
-  border-radius: 3px;
-  background-image: linear-gradient(to right, green 22%, yellow, red);
+  height: 25%;
+  margin: 1.2px;
+  font-size: 70%;
+  font-weight: 600;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 1% 2%;
 }
 </style>

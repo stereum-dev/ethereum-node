@@ -75,7 +75,7 @@ export default {
 <style scoped>
 .alert-box {
   width: 90%;
-  height: 97%;
+  height: 99%;
   margin-left: 3px;
   border: 5px solid rgb(55, 55, 55);
   border-radius: 20px;

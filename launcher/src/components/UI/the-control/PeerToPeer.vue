@@ -113,7 +113,7 @@ export default {
 }
 .vlaueType {
   position: absolute;
-  top: 48%;
+  top: 68%;
   left: 52%;
   font-size: 1.5rem;
   font-weight: bold;
