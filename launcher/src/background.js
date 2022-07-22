@@ -15,6 +15,7 @@ import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
+import { captureRejectionSymbol } from "events";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
@@ -55,7 +56,7 @@ promiseIpc.on("connect", async (arg) => {
   return 0;
 });
 
-promiseIpc.on("checkConnection", async () => {
+promiseIpc.on("reconnect", async () => {
   try{
     if(!nodeConnection.sshService.connected){
       await nodeConnection.establish(taskManager);
@@ -67,6 +68,17 @@ promiseIpc.on("checkConnection", async () => {
   }catch(err){
     log.error("Couldn't reconnect:\n",err)
   }
+});
+
+promiseIpc.on("checkConnection", async () => {
+  try{
+    await nodeConnection.sshService.exec("ls")
+    await taskManager.nodeConnection.sshService.exec("ls")
+    await monitoring.nodeConnection.sshService.exec("ls")
+  }catch(err){
+    return false
+  }
+  return true
 });
 
 // called via promiseIpc as an async function
