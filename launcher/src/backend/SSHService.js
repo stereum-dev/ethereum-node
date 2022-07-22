@@ -30,6 +30,9 @@ export class SSHService {
         this.conn.end()
         reject(error)
       })
+      this.conn.on('close', () => {
+        this.connected = false
+      })
       //only works for ubuntu 22.04
       this.conn.on('banner', (msg) => {
         if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())){
@@ -66,7 +69,6 @@ export class SSHService {
     return new Promise((resolve, reject) => {
       try {
         this.conn.end()
-        this.connected = false
         resolve(true)
       } catch (error) {
         reject(error)
