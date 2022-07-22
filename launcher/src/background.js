@@ -55,6 +55,20 @@ promiseIpc.on("connect", async (arg) => {
   return 0;
 });
 
+promiseIpc.on("checkConnection", async () => {
+  try{
+    if(!nodeConnection.sshService.connected){
+      await nodeConnection.establish(taskManager);
+    }else if(!taskManager.nodeConnection.sshService.connected){
+      await taskManager.nodeConnection.establish();
+    }else if(!monitoring.nodeConnection.sshService.connected){
+      await monitoring.nodeConnection.establish();
+    }
+  }catch(err){
+    log.error("Couldn't reconnect:\n",err)
+  }
+});
+
 // called via promiseIpc as an async function
 promiseIpc.on("inquire", async (arg) => {
   return stereumService.getInstalledVersions(remoteHost);

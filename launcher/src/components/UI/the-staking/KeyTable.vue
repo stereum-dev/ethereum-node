@@ -147,61 +147,64 @@ export default {
       let keys = []
       let totalBalance = 0
       let clients = this.installedServices.filter(s => s.service.includes('Validator'))
-      for (let client of clients) {
-        //if there is already a list of keys ()
-        if (client.config.keys && client.config.keys.length > 0 && !this.forceRefresh) {
+      if(clients && clients.length > 0){
+        for (let client of clients) {
+          //if there is already a list of keys ()
+          if (client.config.keys && client.config.keys.length > 0 && !this.forceRefresh) {
 
-          //update validator stats
-          keys = await this.updateValidatorStats(client)
+            //update validator stats
+            keys = await this.updateValidatorStats(client)
 
-          //update totalBalance
-          keys.forEach(key => {
-            totalBalance += key.balance
-          })
+            //update totalBalance
+            keys.forEach(key => {
+              totalBalance += key.balance
+            })
 
-        } else {  //refresh validaotr list 
-          this.listKeysTriggered = true
-          let result = await ControlService.listValidators(client.config.serviceID)
+          } else {  //refresh validaotr list 
+            this.listKeysTriggered = true
+            let result = await ControlService.listValidators(client.config.serviceID)
 
-          //update service config (pinia)
-          client.config.keys = result.data ? result.data.map(e => e.validating_pubkey) : []
+            //update service config (pinia)
+            client.config.keys = result.data ? result.data.map(e => e.validating_pubkey) : []
 
-          //update validator stats
-          keys = await this.updateValidatorStats(client)
+            if (client.config.keys && client.config.keys.length > 0) {
+              //update validator stats
+              keys = await this.updateValidatorStats(client)
 
-          //update totalBalance
-          keys.forEach(key => {
-            totalBalance += key.balance
-          })
+              //update totalBalance
+              keys.forEach(key => {
+                totalBalance += key.balance
+              })
 
-          //update service datasets in Pinia store
-          this.installedServices = this.installedServices.map(service => {
-            if (service.id === client.id) {
-              return client
+              //update service datasets in Pinia store
+              this.installedServices = this.installedServices.map(service => {
+                if (service.id === client.id) {
+                  return client
+                }
+                return service
+              })
             }
-            return service
-          })
+          }
 
         }
-
+        this.keys = keys.map(key => {
+          return {
+            ...key,
+            showGrafitiText: false,
+            showCopyText: false,
+            showRemoveText: false,
+            showExitText: false
+          }
+        })
+        this.totalBalance = totalBalance
       }
-      this.keys = keys.map(key => {
-        return {
-          ...key,
-          showGrafitiText: false,
-          showCopyText: false,
-          showRemoveText: false,
-          showExitText: false
-        }
-      })
-      this.totalBalance = totalBalance
     },
     async updateValidatorStats(client) {
       let keys = []
       try {
         let response = await axios.get("https://" + client.config.network + ".beaconcha.in/api/v1/validator/" + encodeURIComponent(client.config.keys.join()))
         let data = response.data.data
-        
+
         client.config.keys.forEach(key => {
           let info = data.find(k => k.pubkey === key)
           if (info) {

@@ -24,6 +24,10 @@ class ControlService extends EventEmitter {
     });
   }
 
+  async checkConnection() {
+    return this.promiseIpc.send("checkConnection");
+  }
+
   async disconnect(args) {
     return this.promiseIpc.send("disconnect", args);
   }

@@ -41,6 +41,7 @@ export default {
   },
   methods: {
     refreshServiceStates: async function () {
+      await this.checkConnection()
       if (this.refresh) {
         let services = await ControlService.refreshServiceInfos()
         if (services && services.length != 0 && this.refresh) {
@@ -74,7 +75,7 @@ export default {
           })
           this.installedServices = newServices.concat(otherServices)
           let beaconService = this.installedServices.find(s => s.category === "consensus")
-          if (beaconService.config.network === "mainnet") {
+          if (beaconService && beaconService.config.network === "mainnet") {
             this.network = "mainnet"
           } else {
             this.network = "testnet"
@@ -139,6 +140,9 @@ export default {
         console.log("Stereum Update Available!")
       }
       this.newUpdates = updates
+    },
+    async checkConnection(){
+      await ControlService.checkConnection()
     }
   },
 };
