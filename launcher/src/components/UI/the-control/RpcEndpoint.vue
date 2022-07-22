@@ -7,7 +7,7 @@
         v-for="item in rpcItems"
         :key="item.id"
         ref="clone"
-        @click="copy(item.value)"
+        @click="copy(item.value, item.title)"
       >
         <span>{{ item.title }}</span>
       </div>
@@ -35,9 +35,9 @@ export default {
   },
 
   methods: {
-    async copy(s) {
+    async copy(s, t) {
       await navigator.clipboard.writeText(s);
-      this.copyVal = "copied";
+      this.copyVal = t + " copied";
     },
   },
 };
