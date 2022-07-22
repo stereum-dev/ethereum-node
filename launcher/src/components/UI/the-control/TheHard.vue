@@ -16,10 +16,12 @@
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
-            <div
-              class="valueBarPart_loader-value"
-              :style="valueStoragePer"
-            ></div>
+            <div class="valueBarPart_loader_value_bg">
+              <div
+                class="valueBarPart_loader-value"
+                :style="valueStoragePer"
+              ></div>
+            </div>
           </div>
         </div>
       </div>
@@ -43,7 +45,7 @@ export default {
 
   computed: {
     valueStoragePer() {
-      return { width: this.usedStotagePer + "%" };
+      return { width: this.hdd() + "%" };
     },
     countFreeVal() {
       return this.freeVall();
@@ -64,7 +66,10 @@ export default {
         console.log(error);
       }
     },
-
+    hdd() {
+      const hddV = 100 - this.usedStotagePer;
+      return hddV;
+    },
     freeVall() {
       const free = this.total - this.used;
       return free;
@@ -120,7 +125,7 @@ export default {
   width: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   height: 80%;
 }
@@ -137,7 +142,7 @@ export default {
 .totalPart {
   width: 94%;
   height: 25%;
-  margin-top: 10px;
+  margin-top: 0 1%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -153,18 +158,25 @@ export default {
   align-items: center;
 }
 .valueBarPart_loader {
-  width: 95%;
-  height: 90%;
-  border-radius: 3px;
-  margin-top: 3px;
-  background: #848484;
-  justify-content: flex-start;
-  align-items: center;
+  width: 90%;
+  background: #33393e;
+  height: 80%;
+  border: 1px solid #33393e;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5%;
 }
 .valueBarPart_loader-value {
-  height: 90%;
-  border-radius: 3px;
-  background-image: linear-gradient(to right, green 22%, yellow, red);
+  height: 100%;
+  background: #33393e;
+}
+.valueBarPart_loader_value_bg {
+  width: 99%;
+  background-image: linear-gradient(to right, green 35%, yellow, red);
+  height: 88%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
