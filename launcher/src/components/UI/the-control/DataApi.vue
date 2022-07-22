@@ -25,6 +25,7 @@ export default {
     return {
       copyVal: "click to copy",
       dataApiItems: [
+        // dataApiItems are dummy, for wire the have to change but the best stract. for the design is this one
         {
           id: 1,
           title: "TEKU",

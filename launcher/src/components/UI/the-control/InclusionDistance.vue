@@ -30,6 +30,7 @@
 export default {
   data() {
     return {
+      // strIns has to wire for active comp.
       strIns: null,
       off: true,
       good: false,

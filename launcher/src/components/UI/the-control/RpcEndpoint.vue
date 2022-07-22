@@ -25,6 +25,7 @@ export default {
     return {
       copyVal: "click to copy",
       rpcItems: [
+        // rpcItems is dummy, for wire the have to change but the best stract. for the design is this one
         {
           id: 1,
           title: "GETH",

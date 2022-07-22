@@ -34,6 +34,7 @@
 export default {
   data() {
     return {
+      // datas are dummy, for wire the have to change to null
       successVal: 100,
       lastTimeVal: 120,
     };

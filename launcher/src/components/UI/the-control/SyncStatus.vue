@@ -47,6 +47,7 @@ export default {
           icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
         },
       ],
+      // syncStatusItems are dummy, for wire the have to change but the best stract. for the design is this one
       syncStatusItems: [
         {
           id: 1,
