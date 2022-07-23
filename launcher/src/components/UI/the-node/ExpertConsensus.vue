@@ -24,7 +24,10 @@
           alt=""
         />
       </div>
-      <div class="ramTitleBox" @click="openRamUsage">
+      <div
+        class="ramTitleBox"
+        v-if="item.name === 'Teku' || item.name === 'Nethermind'"
+      >
         <img
           class="titleIcon"
           src="../../../../public/img/icon/plugin-menu-icons/ram.png"
@@ -66,7 +69,7 @@
     </div>
     <div class="expertTable">
       <div class="expertMode" v-if="isExpertModeActive">
-        <textarea class="editContent" v-model="e.value"></textarea>
+        <textarea class="editContent" v-model="editableData"></textarea>
       </div>
     </div>
     <div class="btn-box">
@@ -94,6 +97,20 @@ export default {
       checkedPrunning: null,
       isPrunningActive: false,
     };
+  },
+  methods: {
+    openExpertMode() {
+      this.isExpertModeActive = !this.isExpertModeActive;
+    },
+    apiBindingTrunOn() {
+      this.bindingIsOn = true;
+    },
+    apiBindingTrunOff() {
+      this.bindingIsOn = false;
+    },
+    confirmExpertChanges(el) {
+      el.expertOptionsModal = false;
+    },
   },
 };
 </script>

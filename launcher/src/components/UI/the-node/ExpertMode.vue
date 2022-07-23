@@ -3,16 +3,11 @@
     <div class="opacityBackground" @click="$emit('hideModal')"></div>
     <expert-consensus
       :item="item"
-      v-if="item.category === 'consensus'"
+      v-if="item.category === 'consensus' || item.category === 'validator'"
     ></expert-consensus>
     <expert-execution
       :item="item"
-      v-if="item.category === 'execution' || item.category === 'validator'"
-      @open-expert="openExpertMode"
-      @turn-off="endpointPortTrunOff"
-      @turn-on="endpointPortTrunOn"
-      @confirm-btn="confirmExpertChanges(item)"
-      @prunning-active="prunningInitiateHandler"
+      v-if="item.category === 'execution'"
     ></expert-execution>
   </div>
 </template>
@@ -34,23 +29,7 @@ export default {
   computed: {
     ...mapWritableState(useServices, {}),
   },
-  methods: {
-    confirmExpertChanges(el) {
-      el.expertOptionsModal = false;
-    },
-    openExpertMode() {
-      this.isExpertModeActive = !this.isExpertModeActive;
-    },
-    endpointPortTrunOff() {
-      this.enterPortIsEnabled = false;
-    },
-    endpointPortTrunOn() {
-      this.enterPortIsEnabled = true;
-    },
-    prunningInitiateHandler() {
-      this.isPrunningActive = true;
-    },
-  },
+  methods: {},
 };
 </script>
 <style scoped>

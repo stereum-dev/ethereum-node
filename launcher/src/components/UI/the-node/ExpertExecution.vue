@@ -34,10 +34,10 @@
         <span
           class="portOff"
           v-if="enterPortIsEnabled"
-          @click="$emit('turnOff')"
+          @click="endpointPortTrunOff"
           >OFF</span
         >
-        <span class="portOn" v-else @click="$emit('turnOn')">ON</span>
+        <span class="portOn" v-else @click="endpointPortTrunOn">ON</span>
         <input
           class="inputPort"
           type="text"
@@ -54,7 +54,7 @@
         <span class="startPrunning" v-if="isPrunningActive"
           >prunning . . .</span
         >
-        <span class="initiate" v-else @click="$emit('prunningActive')"
+        <span class="initiate" v-else @click="prunningInitiateHandler"
           >INITIATE</span
         >
       </div>
@@ -66,7 +66,7 @@
     </div>
     <div class="btn-box">
       <span class="exit-btn">Click outside to close</span>
-      <div class="confirmBtn" @click="$emit('confirmBtn', item)">
+      <div class="confirmBtn" @click="confirmExpertChanges(item)">
         <span>Confirm</span>
       </div>
     </div>
@@ -83,8 +83,24 @@ export default {
       isExpertModeActive: false,
       isPrunningActive: false,
       enterPortIsEnabled: false,
-     
     };
+  },
+  methods: {
+    openExpertMode() {
+      this.isExpertModeActive = !this.isExpertModeActive;
+    },
+    endpointPortTrunOff() {
+      this.enterPortIsEnabled = false;
+    },
+    endpointPortTrunOn() {
+      this.enterPortIsEnabled = true;
+    },
+    prunningInitiateHandler() {
+      this.isPrunningActive = true;
+    },
+    confirmExpertChanges(el) {
+      el.expertOptionsModal = false;
+    },
   },
 };
 </script>
