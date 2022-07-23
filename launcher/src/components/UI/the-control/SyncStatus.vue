@@ -3,7 +3,7 @@
     <div class="sync-box">
       <div class="sync-icon">
         <div class="sync-icon_container">
-          <img :src="activeIco" />
+          <img :src="syncSituation()" />
         </div>
         <span>SYNC STATUS</span>
       </div>
@@ -28,6 +28,8 @@
 export default {
   data() {
     return {
+      syncIcoSituation: false,
+      syncIcoError: false,
       syncIco: [
         {
           id: 1,
@@ -45,6 +47,7 @@ export default {
           icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
         },
       ],
+      // syncStatusItems are dummy, for wire the have to change but the best stract. for the design is this one
       syncStatusItems: [
         {
           id: 1,
@@ -70,6 +73,21 @@ export default {
     },
     synchedIco() {
       return this.syncIco[2].icon;
+    },
+  },
+  methods: {
+    syncSituation() {
+      if (this.syncIcoSituation === false && this.syncIcoError === false) {
+        return this.activeIco;
+      } else if (
+        this.syncIcoSituation === true &&
+        this.syncIcoError === false
+      ) {
+        return this.synchedIco;
+      } else {
+        this.syncIcoError = true;
+        return this.errorIco;
+      }
     },
   },
 };

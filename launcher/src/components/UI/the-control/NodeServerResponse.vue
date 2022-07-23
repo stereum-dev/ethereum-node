@@ -34,6 +34,7 @@
 export default {
   data() {
     return {
+      // datas are dummy, for wire the have to change to null
       successVal: 100,
       lastTimeVal: 120,
     };
@@ -91,7 +92,7 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 95%;
-  font-size: 5%;
+  font-size: 45%;
 }
 .successValue {
   display: flex;

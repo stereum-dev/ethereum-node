@@ -21,38 +21,9 @@
           <img src="../../../../public/img/icon/control/amsterdam.png" />
         </div>
         <div class="dateBox">
-          <span>000000000 days</span>
-          <span>-00h - 00m - 00s</span>
+          <span>{{ days }} days</span>
+          <span>{{ date }}</span>
         </div>
-        <!-- <div class="circleArrow">
-          <sync-info v-if="showSyncInfo">
-            <div class="serviceName">
-              <div class="serviceName_val">
-                <div class="serviceName-row">
-                  <span>[SERVICE NAME]</span>
-                </div>
-                <div class="serviceName-greenRow">
-                  <span>12345678910</span>
-                  <span>/</span>
-                  <span>12345678910</span>
-                  <span>100%</span>
-                </div>
-              </div>
-              <div class="serviceName_val">
-                <div class="serviceName-row">
-                  <span>[SERVICE NAME]</span>
-                </div>
-                <div class="serviceName-blueRow">
-                  <span>12345678910</span>
-                  <span>/</span>
-                  <span>12345678910</span>
-                  <span>100%</span>
-                </div>
-              </div>
-            </div>
-          </sync-info>
-          <img :src="errorIco" />
-        </div> -->
       </div>
     </div>
   </div>
@@ -66,10 +37,12 @@ export default {
   data() {
     return {
       showSyncInfo: false,
-      counter: 0,
+      counter: null,
       networkIcon: "",
       mainnetIcon: "/img/icon/control/mainnetIconControl.png",
       testnetIcon: "/img/icon/control/testnetIconControl.png",
+      days: null,
+      date: "",
     };
   },
 

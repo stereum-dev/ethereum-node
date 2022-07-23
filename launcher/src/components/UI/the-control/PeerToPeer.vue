@@ -1,6 +1,5 @@
 <template>
   <div class="peer2peerParent">
-    <!-- <div class="p2pTtl">PEER CONNECTION</div> -->
     <div class="p2pBox">
       <div class="p2pIco">
         <div class="p2pIco-container">
@@ -24,6 +23,7 @@
 export default {
   data() {
     return {
+      // data is dummy, for wiring it has to change to null
       valPeer: 64,
     };
   },

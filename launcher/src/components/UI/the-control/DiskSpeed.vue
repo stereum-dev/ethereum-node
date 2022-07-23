@@ -28,6 +28,7 @@
 export default {
   data() {
     return {
+      // datas are dummy, for wire the have to change to null
       writeValue: 10, //dummy data
       readValue: 11, //dummy data
     };
