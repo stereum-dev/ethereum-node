@@ -78,6 +78,7 @@ export default {
   align-items: center;
   font-size: 60%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .p2pIco-container {
   display: flex;
@@ -87,7 +88,7 @@ export default {
   height: 80%;
 }
 .p2pIco-container img {
-  width: 75%;
+  width: 65%;
 }
 
 .p2pBarCont {
@@ -117,6 +118,7 @@ export default {
   left: 52%;
   font-size: 1.5rem;
   font-weight: bold;
-  text-shadow: -2px 2px 0 #000;
+  text-shadow: 2px 2px 0 rgb(37, 75, 54);
+  color: #c1c1c1;
 }
 </style>

@@ -82,6 +82,7 @@ export default {
   align-items: center;
   font-size: 60%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .ramIco-container {
   display: flex;
@@ -107,6 +108,7 @@ export default {
   height: 70%;
   justify-content: center;
   align-items: center;
+  color: #c1c1c1;
 }
 .digits {
   display: flex;
@@ -117,14 +119,17 @@ export default {
 }
 .valDigits,
 .digits span {
-  font-size: 100%;
-  font-weight: bold;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #c1c1c1;
 }
 .valLbl {
   display: flex;
   width: 40%;
   align-items: center;
   justify-content: space-between;
-  font-size: 60%;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #c1c1c1;
 }
 </style>
