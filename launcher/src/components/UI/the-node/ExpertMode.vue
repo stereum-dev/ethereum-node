@@ -45,8 +45,9 @@ export default {
   z-index: 1000;
 }
 .opacityBackground {
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  border-radius: 0 35px 0 0;
   background-color: rgb(8, 8, 8);
   opacity: 0.4;
   position: absolute;

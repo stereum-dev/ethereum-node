@@ -69,6 +69,7 @@
                       <img
                         src="/img/icon/plugin-menu-icons/log7.png"
                         alt="icon"
+                        @click="expertModeHandler(item)"
                       />
                     </div>
                   </div>
@@ -90,6 +91,12 @@
                   </div>
                 </div>
               </div>
+              <expert-mode
+                id="expertMode"
+                @hide-modal="hideExpertMode(item)"
+                v-if="item.expertOptionsModal"
+                :item="item"
+              ></expert-mode>
             </div>
           </div>
           <div class="arrow-down">
@@ -121,6 +128,7 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
+import ExpertMode from "../the-node/ExpertMode.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -131,6 +139,7 @@ export default {
     ControlPanel,
     ControlAlert,
     TaskManager,
+    ExpertMode,
   },
   data() {
     return {
@@ -184,6 +193,15 @@ export default {
       }
       item.isServicePending = false;
       this.updateStates();
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
+    expertModeHandler(el) {
+      this.installedServices.map((item) => {
+        if (item.category === el.category && item?.id === el.id)
+          el.expertOptionsModal = true;
+      });
     },
   },
 };
@@ -423,8 +441,8 @@ export default {
 .refresh-icon img:hover,
 .seting-icon img:hover {
   transform: scale(1.1);
-  border:1px solid white;
-  border-radius:100%;
+  border: 1px solid white;
+  border-radius: 100%;
 }
 .power-icon img:active,
 .book-icon img:active,
@@ -469,4 +487,5 @@ export default {
   bottom: -1px;
   z-index: 1;
 }
+
 </style>

@@ -5,8 +5,8 @@
       <span class="category">{{ item.category }} client</span>
       <span class="serviceId">ID: {{ item.config.serviceID }}</span>
     </div>
-    <div class="expertRow">
-      <div class="dataTitleBox" @click="$emit('openExpert')">
+    <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
+      <div class="dataTitleBox" @click="openExpertMode">
         <img
           class="titleIcon"
           src="../../../../public/img/icon/plugin-menu-icons/crown2.png"
@@ -24,7 +24,7 @@
           alt=""
         />
       </div>
-      <div class="endpointPort">
+      <div class="endpointPort" :class="{ unvisible: isExpertModeActive }">
         <img
           class="titleIcon"
           src="../../../../public/img/icon/plugin-menu-icons/endpoints.png"
@@ -45,7 +45,7 @@
           :class="{ disabled: !enterPortIsEnabled }"
         />
       </div>
-      <div class="prunning">
+      <div class="prunning" :class="{ unvisible: isExpertModeActive }">
         <img
           src="../../../../public/img/icon/plugin-menu-icons/ram1.png"
           alt="icon"
@@ -61,7 +61,7 @@
     </div>
     <div class="expertTable">
       <div class="expertMode" v-if="isExpertModeActive">
-        <textarea class="editContent" v-model="e.value"></textarea>
+        <textarea class="editContent" v-model="editableData"></textarea>
       </div>
     </div>
     <div class="btn-box">
@@ -84,6 +84,16 @@ export default {
       isPrunningActive: false,
       enterPortIsEnabled: false,
     };
+  },
+  watch: {
+    getNewValue(newValue, oldValue) {
+      console.log(
+        "You now have the new value: ",
+        newValue,
+        "and the old value: ",
+        oldValue
+      );
+    },
   },
   methods: {
     openExpertMode() {
@@ -387,7 +397,7 @@ export default {
 }
 .expertTable {
   width: 100%;
-  height: 48%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -482,5 +492,11 @@ export default {
 /* Handle on hover */
 .expertMode::-webkit-scrollbar-thumb:hover {
   background: rgb(24, 161, 241);
+}
+.unvisible {
+  display: none !important;
+}
+.shorterRowBox {
+  height: 4% !important;
 }
 </style>

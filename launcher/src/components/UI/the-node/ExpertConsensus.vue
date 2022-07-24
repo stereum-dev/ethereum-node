@@ -5,7 +5,7 @@
       <span class="category">{{ item.category }} client</span>
       <span class="serviceId">ID: {{ item.config.serviceID }}</span>
     </div>
-    <div class="expertRow">
+    <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
       <div class="dataTitleBox" @click="openExpertMode">
         <img
           class="titleIcon"
@@ -26,6 +26,7 @@
       </div>
       <div
         class="ramTitleBox"
+        :class="{ unvisible: isExpertModeActive }"
         v-if="item.name === 'Teku' || item.name === 'Nethermind'"
       >
         <img
@@ -48,7 +49,7 @@
           </select>
         </div>
       </div>
-      <div class="apiBinding">
+      <div class="apiBinding" :class="{ unvisible: isExpertModeActive }">
         <img
           class="titleIcon"
           src="../../../../public/img/icon/plugin-menu-icons/key.png"
@@ -397,7 +398,7 @@ export default {
 }
 .expertTable {
   width: 100%;
-  height: 48%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -492,5 +493,12 @@ export default {
 /* Handle on hover */
 .expertMode::-webkit-scrollbar-thumb:hover {
   background: rgb(24, 161, 241);
+}
+
+.unvisible {
+  display: none !important;
+}
+.shorterRowBox {
+  height: 4% !important;
 }
 </style>
