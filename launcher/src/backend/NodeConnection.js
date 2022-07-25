@@ -299,7 +299,7 @@ export class NodeConnection {
    */
   async playbookStatus(playbookRunRef) {
     return new Promise(async (resolve, reject) => {
-      log.info("playbook status of ref ", playbookRunRef);
+      log.debug("playbook status of ref ", playbookRunRef);
 
       let statusResult;
       try {
