@@ -60,8 +60,8 @@ export default {
         const arr = data.split(/\r?\n/);
         this.usedStotagePer = parseInt(arr[2]);
         const arr2 = arr[3].split(" ");
-        this.total = Math.floor(parseInt(arr2[0]) / 10000);
-        this.free = parseFloat(arr2[1]).toFixed(2) / 10000;
+        this.total = Math.ceil(parseInt(arr2[0]) / 10000);
+        this.free = Math.ceil(arr2[1] / 10000);
       } catch (error) {
         console.log(error);
       }
@@ -111,6 +111,7 @@ export default {
 }
 .storageIco img {
   width: 80%;
+  height: 80%;
 }
 .storageIco span {
   width: 100%;
@@ -130,25 +131,27 @@ export default {
   height: 80%;
 }
 .freePart {
-  width: 100%;
+  width: 90%;
   height: 35%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 100%;
+  font-size: 1.3rem;
   font-weight: 600;
-  color: #5ed966;
+  color: #448f49;
+  text-align: center;
+  margin-top: 10px;
 }
 .totalPart {
-  width: 94%;
+  width: 90%;
   height: 25%;
   margin-top: 0 1%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 100%;
+  font-size: 0.6rem;
   font-weight: 700;
-  color: #eee;
+  color: #c1c1c1;
 }
 .valueBarPart {
   width: 100%;

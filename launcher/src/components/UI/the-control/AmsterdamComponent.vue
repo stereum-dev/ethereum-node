@@ -120,7 +120,7 @@ export default {
   height: 80%;
 }
 .icoContainer img {
-  width: 80%;
+  width: 70%;
 }
 .icoTitle span {
   width: 100%;
@@ -168,10 +168,11 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border: 1px solid #eee;
+  border: 1px solid #c1c1c1;
   background: #000;
   font-size: 80%;
   padding-right: 2%;
+  border-radius: 3px;
 }
 .downTtl {
   width: 90%;

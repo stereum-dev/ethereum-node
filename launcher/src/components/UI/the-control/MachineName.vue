@@ -45,15 +45,14 @@ export default {
 }
 .machineNam {
   background: #33393e;
-  color: #eee;
-  border: 2px solid #b7c2c2;
+  border: 2px solid #c1c1c1;
   border-radius: 4px;
   left: -5%;
   position: relative;
   z-index: 2;
   width: 80%;
-  height: 90%;
-  padding-left: 6%;
+  height: 75%;
+  padding-left: 5%;
   padding-top: 1px;
   outline: none;
   font-size: 0.8rem;

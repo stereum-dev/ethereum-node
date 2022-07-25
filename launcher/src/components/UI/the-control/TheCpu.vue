@@ -105,6 +105,7 @@ export default {
 }
 .cpuIco img {
   width: 75%;
+  height: 80%;
 }
 .cpuIco span {
   width: 100%;

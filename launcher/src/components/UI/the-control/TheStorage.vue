@@ -95,7 +95,8 @@ export default {
   height: 75%;
 }
 .storage-icon_container img {
-  width: 80%;
+  width: 72%;
+  height: 90%;
 }
 .storage-data_box {
   display: flex;
@@ -114,8 +115,13 @@ export default {
   margin: 1.2px;
   font-size: 70%;
   font-weight: 600;
-  border: 1px solid #eee;
+  border: 1px solid #c1c1c1;
   border-radius: 10px;
   padding: 1% 2%;
+}
+.storage-data_row span {
+  color: #c1c1c1;
+  font-size: 0.6rem;
+  margin-left: 2px;
 }
 </style>

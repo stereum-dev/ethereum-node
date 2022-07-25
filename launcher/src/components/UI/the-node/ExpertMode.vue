@@ -1,19 +1,35 @@
 <template>
   <div class="expert-parent">
     <div class="opacityBackground" @click="$emit('hideModal')"></div>
-    <div class="expert-modal">
-      <slot></slot>
-    </div>
+    <expert-consensus
+      :item="item"
+      v-if="item.category === 'consensus' || item.category === 'validator'"
+    ></expert-consensus>
+    <expert-execution
+      :item="item"
+      v-if="item.category === 'execution'"
+    ></expert-execution>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import ExpertConsensus from "./ExpertConsensus.vue";
+import ExpertExecution from "./ExpertExecution.vue";
 export default {
+  components: { ExpertConsensus, ExpertExecution },
   props: ["item"],
+  data() {
+    return {
+      isPrunningActive: false,
+      enterPortIsEnabled: false,
+      isExpertModeActive: false,
+    };
+  },
   computed: {
     ...mapWritableState(useServices, {}),
   },
+  methods: {},
 };
 </script>
 <style scoped>
@@ -29,8 +45,9 @@ export default {
   z-index: 1000;
 }
 .opacityBackground {
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  border-radius: 0 35px 0 0;
   background-color: rgb(8, 8, 8);
   opacity: 0.4;
   position: absolute;
