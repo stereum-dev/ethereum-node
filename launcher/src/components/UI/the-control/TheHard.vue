@@ -60,8 +60,8 @@ export default {
         const arr = data.split(/\r?\n/);
         this.usedStotagePer = parseInt(arr[2]);
         const arr2 = arr[3].split(" ");
-        this.total = Math.floor(parseInt(arr2[0]) / 10000);
-        this.free = Math.floor(arr2[1] / 10000);
+        this.total = Math.ceil(parseInt(arr2[0]) / 10000);
+        this.free = Math.ceil(arr2[1] / 10000);
       } catch (error) {
         console.log(error);
       }
