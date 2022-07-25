@@ -254,13 +254,10 @@ export class OneClickInstall {
     await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
     const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
     let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(false), [this.executionClient], [this.beaconService])
-    ssvConfig.OperatorPrivateKey = config.ssv_sk
 
     // prepare service's config file
     const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-    const configFile = new YAML.Document()
-    configFile.contents = ssvConfig
-    const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
+    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + config.ssv_sk + "\""))
     this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
   }
 

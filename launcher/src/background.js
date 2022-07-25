@@ -15,7 +15,6 @@ import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
-import { captureRejectionSymbol } from "events";
 const isDevelopment = process.env.NODE_ENV !== "production";
 const stereumService = new StereumService();
 const storageService = new StorageService();
@@ -31,6 +30,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 
 const log = require("electron-log");
 log.transports.console.level = "info"
+log.transports.file.level = "info"
 
 let remoteHost = {};
 

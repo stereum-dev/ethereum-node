@@ -11,10 +11,10 @@ test('buildConfiguration', () => {
 
   jest.mock('./GethService')
   const GethService = require('./GethService')
-  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  const mMock = jest.fn(() => { return 'ws-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientWsEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
@@ -56,10 +56,10 @@ test('buildConfiguration', () => {
 test('getServiceConfiguration', () => {
   jest.mock('./GethService')
   const GethService = require('./GethService')
-  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  const mMock = jest.fn(() => { return 'ws-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock
+      buildExecutionClientWsEndpointUrl: mMock
     }
   })
 
@@ -74,11 +74,10 @@ test('getServiceConfiguration', () => {
 
   const bloxService = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()])
 
-  expect(bloxService.MetricsAPIPort).toBeDefined()
-  expect(bloxService.eth2.Network).toMatch(/prater/)
-  expect(bloxService.eth2.BeaconNodeAddr).toMatch(/http-lh-endpoint-string/)
-  expect(bloxService.eth1.ETH1Addr).toMatch(/http-endpoint-string/)
-  expect(bloxService.OperatorPrivateKey).toBeDefined()
+  expect(bloxService).toBeDefined()
+  expect(bloxService).toMatch(/prater/)
+  expect(bloxService).toMatch(/http-lh-endpoint-string/)
+  expect(bloxService).toMatch(/ws-endpoint-string/)
 })
 
 test('getAvailablePorts', () => {
