@@ -4,7 +4,7 @@
       <span class="title">Server</span>
       <div class="server-details">
         <span class="ip">{{ ipAddress }}</span>
-        <span class="name">{{ maschinName }}</span>
+        <span class="name">{{ ServerName }}</span>
       </div>
     </div>
     <div class="config-bg">
@@ -64,24 +64,20 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
       modalActive: false,
       removeModal: false,
       removeIsConfirmed: false,
-      maschinName: "Server Name",
-      ipAddress: "0.0.0.0",
     };
-  },
-  created() {
-    this.maschinNameMet();
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
@@ -98,19 +94,13 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
-    })
+    }),
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
   },
   methods: {
-    async maschinNameMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.maschinName = arr[0];
-      } catch (error) {
-        console.log(error);
-      }
-    },
     openModal() {
       this.modalActive = true;
     },

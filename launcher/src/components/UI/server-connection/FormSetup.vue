@@ -170,6 +170,7 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { useControlStore } from '../../../store/theControl';
 
 export default {
   components: { DeleteModal },
@@ -213,6 +214,9 @@ export default {
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
     }),
+    ...mapWritableState(useControlStore, {
+      ipAddress: "ipAddress",
+    })
   },
   methods: {
     changeLabel() {
@@ -374,6 +378,7 @@ export default {
         }
         return;
       }
+      this.ipAddress = this.model.host.value
       if (await ControlService.checkStereumInstallation()) {
         this.$router.push("/node");
       }

@@ -9,17 +9,17 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ free }} GB FREE</span>
+          <span>{{ formatData(parseInt(availDisk)) }} GB FREE</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ total }} GB TOTAL</span>
+          <span>/ {{ formatData(parseInt(availDisk) + parseInt(usedDisk)) }} GB TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
             <div class="valueBarPart_loader_value_bg">
               <div
                 class="valueBarPart_loader-value"
-                :style="valueStoragePer"
+                :style="getPerc"
               ></div>
             </div>
           </div>
@@ -29,52 +29,29 @@
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
+import { useControlStore } from '../../../store/theControl';
+import { mapState } from 'pinia';
 export default {
   data() {
-    return {
-      free: null,
-      used: null,
-      total: null,
-      usedStotagePer: null,
-    };
+    return {};
   },
-  created() {
-    this.storageMet();
-  },
-
-  computed: {
-    valueStoragePer() {
-      return { width: this.hdd() + "%" };
-    },
-    countFreeVal() {
-      return this.freeVall();
-    },
-  },
-
-  methods: {
-    async storageMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.usedStotagePer = parseInt(arr[2]);
-        const arr2 = arr[3].split(" ");
-        this.total = Math.ceil(parseInt(arr2[0]) / 10000);
-        this.free = Math.ceil(arr2[1] / 10000);
-      } catch (error) {
-        console.log(error);
+    computed: {
+    ...mapState(useControlStore, {
+      availDisk: "availDisk",
+      usedDisk: "usedDisk",
+      usedPerc: "usedPerc",
+    }),
+    getPerc(){
+      if(this.usedPerc){
+        return { width: (100 - parseInt(this.usedPerc.replace('%',''))) + '%'}
       }
     },
-    hdd() {
-      const hddV = 100 - this.usedStotagePer;
-      return hddV;
-    },
-    freeVall() {
-      const free = this.total - this.used;
-      return free;
-    },
   },
+  methods: {
+    formatData(data){
+      return Math.ceil(data/1048576)
+    },
+  }
 };
 </script>
 <style scoped>

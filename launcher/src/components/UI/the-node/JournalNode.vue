@@ -4,7 +4,7 @@
       <span class="title">Server</span>
       <div class="server-details">
         <span class="ip">{{ ipAddress }}</span>
-        <span class="name">{{ maschinName }}</span>
+        <span class="name">{{ ServerName }}</span>
       </div>
     </div>
     <div class="config-bg">
@@ -56,17 +56,13 @@ import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
+import { useControlStore } from "../../../store/theControl";
 export default {
   components: { UpdateTable },
   data() {
     return {
-      maschinName: "Server Name",
-      ipAddress: "0.0.0.0",
       updateTableIsOpen: false,
     };
-  },
-  mounted() {
-    this.maschinNameMet();
   },
   computed: {
     ...mapState(useServices, {
@@ -74,19 +70,13 @@ export default {
     }),
     ...mapWritableState(useServices, {
       versions: "versions",
-    })
+    }),
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
   },
   methods: {
-    async maschinNameMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.maschinName = arr[0];
-      } catch (error) {
-        error;
-      }
-    },
     async runUpdate(item) {
       if(item && item.id){
         await ControlService.updateServices({service: item.id})
