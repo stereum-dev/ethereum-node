@@ -325,7 +325,7 @@ export default {
   position: absolute;
   left: 80%;
   top: 39%;
-  animation: setting 500mss;
+  animation: setting 500ms;
 }
 @keyframes setting {
   0% {

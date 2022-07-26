@@ -126,12 +126,9 @@ export class ValidatorAccountManager {
         return new Promise(async (resolve, reject) => {
             try {
                 const dataDir = (service.config.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-                let bloxConfig = YAML.parse((await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout)
+                let bloxConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
                 if (bloxConfig) {
-                    bloxConfig.OperatorPrivateKey = sk
-                    const newConfig = new YAML.Document()
-                    newConfig.contents = bloxConfig
-                    const escapedConfigFile = StringUtils.escapeStringForShell(newConfig.toString())
+                    const escapedConfigFile = StringUtils.escapeStringForShell(bloxConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
                     await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
 
                     await this.serviceManager.manageServiceState(service.config.serviceID, 'stopped')

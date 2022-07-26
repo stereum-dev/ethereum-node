@@ -69,6 +69,7 @@
                       <img
                         src="/img/icon/plugin-menu-icons/log7.png"
                         alt="icon"
+                        @click="expertModeHandler(item)"
                       />
                     </div>
                   </div>
@@ -489,4 +490,5 @@ export default {
   bottom: -1px;
   z-index: 1;
 }
+
 </style>

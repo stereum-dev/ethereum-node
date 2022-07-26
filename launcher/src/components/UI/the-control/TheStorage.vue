@@ -28,6 +28,8 @@
 export default {
   data() {
     return {
+      // datas are dummy, but the best stracture for the design is like this
+      //for the wiring use this stracture
       storageDataItems: [
         {
           id: 1,
