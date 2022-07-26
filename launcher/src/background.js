@@ -145,7 +145,7 @@ promiseIpc.on("startOneClickServices", async () => {
 
 //get data for control cpu comp
 promiseIpc.on("getServerVitals", async () => {
-  return await nodeConnection.getServerVitals();
+  return await monitoring.getServerVitals();
 });
 
 promiseIpc.on("getAvailablePort", async (args) => {
@@ -186,9 +186,6 @@ promiseIpc.on("manageServiceState", async (args) => {
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true
   const returnValue = await nodeConnection.runAllUpdates()
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
   return returnValue
 })
@@ -209,7 +206,13 @@ promiseIpc.on("updateStereum", async (args) => {
 })
 
 promiseIpc.on("checkUpdates", async () => {
-  return await nodeConnection.checkUpdates()
+  let versions
+  try{
+    versions = await nodeConnection.checkUpdates()
+  }catch(err){
+    throw err
+  }
+   return versions
 })
 
 promiseIpc.on("getCurrentStereumVersion", async () => {

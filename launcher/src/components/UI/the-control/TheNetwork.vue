@@ -10,7 +10,7 @@
       </div>
       <div class="totalReceived">
         <div class="receivePerSecond">
-          <span>{{ receiveValue }}</span>
+          <span>{{ rx }}</span>
         </div>
         <div class="mbit"><span>kB/s</span></div>
         <div class="receiveTitle">Receiving Data</div>
@@ -25,10 +25,10 @@
       </div>
       <div class="totalTransmitted">
         <div class="transPerSecond">
-          <span>{{ transmitValue }}</span>
+          <span>{{ tx }}</span>
         </div>
         <div class="mbit"><span>kB/s</span></div>
-        <div class="transmitTitle">Total Transmiied</div>
+        <div class="transmitTitle">Transmitting Data</div>
         <!-- <div class="totalTransmitValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
@@ -43,36 +43,17 @@
 </template>
 
 <script>
-import ControlService from "@/store/ControlService";
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
-    return {
-      receiveValue: null,
-      transmitValue: null,
-      totalReceive: 44.1,
-      totalTransmit: 44.1,
-    };
+    return {};
   },
-  created() {
-    this.networkMet();
-  },
-
-  updated() {
-    this.networkMet();
-  },
-  methods: {
-    async networkMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        const arr2 = arr[5].split(" ");
-        this.receiveValue = parseInt(arr2[0]);
-        this.transmitValue = parseInt(arr2[1]);
-      } catch (error) {
-        console.log(error);
-      }
-    },
+  computed: {
+    ...mapState(useControlStore, {
+      rx: "rx",
+      tx: "tx",
+    }),
   },
 };
 </script>

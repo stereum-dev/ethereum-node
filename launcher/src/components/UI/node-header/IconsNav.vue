@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     runAllUpdates: async function () {
-      await ControlService.runAllUpdates();
+        await ControlService.runAllUpdates();
     },
     updateModalHandler() {
       this.showUpdateModal = true;

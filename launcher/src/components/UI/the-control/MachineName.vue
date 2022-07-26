@@ -4,33 +4,22 @@
       <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
     </div>
     <div class="machineNam">
-      <span>{{ maschinName }}</span>
+      <span>{{ ServerName }}</span>
     </div>
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
+import { useControlStore } from '../../../store/theControl';
+import { mapState } from 'pinia';
 export default {
   data() {
-    return {
-      maschinName: "",
-    };
+    return {};
   },
-  created() {
-    this.maschinNameMet();
-  },
-  methods: {
-    async maschinNameMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.maschinName = arr[0];
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+  computed: {
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+    })
+  }
 };
 </script>
 

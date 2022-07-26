@@ -10,9 +10,9 @@
       <div class="ramValue">
         <div class="valDigits">
           <div class="digits">
-            <span>{{ usedRam }} / {{ entireRam }}</span>
+            <span>{{ usedRam }} / {{ totalRam }}</span>
           </div>
-          <span>MiB</span>
+          <span>MB</span>
         </div>
         <div class="valLbl"><span>used</span><span>total</span></div>
       </div>
@@ -20,32 +20,18 @@
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
+import { mapState } from 'pinia';
+import { useControlStore } from '../../../store/theControl';
 export default {
   data() {
-    return {
-      usedRam: null,
-      entireRam: null,
-    };
+    return {};
   },
-  created() {
-    this.ramMet();
-  },
-
-  methods: {
-    async ramMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        const arr2 = arr[1].split(" ");
-        this.entireRam = parseInt(arr2[0]);
-        this.usedRam = parseInt(arr2[1]);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+  computed: {
+    ...mapState(useControlStore, {
+      usedRam: "usedRam",
+      totalRam: "totalRam",
+    })
+  }
 };
 </script>
 
