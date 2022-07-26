@@ -1,5 +1,5 @@
 <template>
-  <div class="expert-modal">
+  <div class="expert-modal" :style="{ left: `${position}%` }" >
     <div class="serviceDetails">
       <span class="nameSpan">{{ item.name }}</span>
       <span class="category">{{ item.category }} client</span>
@@ -74,7 +74,7 @@
 </template>
 <script>
 export default {
-  props: ["item"],
+  props: ["item", "position"],
   data() {
     return {
       editableData: null,

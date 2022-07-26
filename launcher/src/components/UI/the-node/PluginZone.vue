@@ -43,26 +43,33 @@
                   alt="icon"
                 />
               </div>
-              <div class="book" @click="expertModeHandler(item)">
-                <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
-              </div>
-              <div class="restart">
-                <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
-              </div>
-              <div class="setting">
+              <div class="setting" @click="expertModeHandler(item)">
                 <img
                   src="/img/icon/plugin-menu-icons/setting8.png"
                   alt="icon"
                 />
               </div>
+              <div class="restart">
+                <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
+              </div>
+              <div class="book">
+                <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
+              </div>
             </div>
           </plugin-menu>
-          <expert-mode
+          <the-expert
             @hide-modal="hideExpertMode(item)"
             v-if="item.expertOptionsModal"
             :item="item"
+            position="19"
+          ></the-expert>
+          <!-- <expert-mode
+            @hide-modal="hideExpertMode(item)"
+            v-if="item.expertOptionsModal"
+            :item="item"
+            position="19"
           >
-          </expert-mode>
+          </expert-mode> -->
         </div>
       </div>
     </template>
@@ -79,12 +86,12 @@ import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
-import ExpertMode from "./ExpertMode.vue";
+import TheExpert from "./TheExpert.vue";
 export default {
   components: {
     ManageTrapezoid,
     PluginMenu,
-    ExpertMode,
+    TheExpert,
   },
   props: {
     title: {
@@ -160,7 +167,7 @@ export default {
           if (item?.category === el.category && item?.id === el.id)
             el.displayPluginMenu = !el.displayPluginMenu;
         });
-      }, 200);
+      }, 100);
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;
@@ -281,7 +288,7 @@ export default {
   top: 2px;
   left: 41%;
   z-index: 11;
-  animation: power 1s;
+  animation: power 500ms;
 }
 @keyframes power {
   0% {
@@ -299,7 +306,6 @@ export default {
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-  z-index: 900;
 }
 .menu-content .power .pending {
   width: 17px;
@@ -309,7 +315,7 @@ export default {
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
   z-index: 1000;
 }
-.menu-content .book {
+.menu-content .setting {
   width: 17px;
   height: 17px;
   border-radius: 5px;
@@ -319,9 +325,9 @@ export default {
   position: absolute;
   left: 80%;
   top: 39%;
-  animation: book 1s;
+  animation: setting 500mss;
 }
-@keyframes book {
+@keyframes setting {
   0% {
     opacity: 0;
     top: 39%;
@@ -332,7 +338,7 @@ export default {
     top: 39%;
   }
 }
-.menu-content .book img {
+.menu-content .setting img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
@@ -348,7 +354,7 @@ export default {
   position: absolute;
   top: 39%;
   left: 2%;
-  animation: restart 1s;
+  animation: restart 500ms;
   z-index: 11;
 }
 @keyframes restart {
@@ -369,7 +375,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
 }
-.menu-content .setting {
+.menu-content .book {
   width: 17px;
   height: 17px;
   border-radius: 5px;
@@ -379,9 +385,9 @@ export default {
   position: absolute;
   top: 78%;
   left: 41%;
-  animation: setting 1s;
+  animation: book 500ms;
 }
-@keyframes setting {
+@keyframes book {
   0% {
     opacity: 0;
     top: 40%;
@@ -392,22 +398,22 @@ export default {
     left: 41%;
   }
 }
-.menu-content .setting img {
+.menu-content .book img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .power img:hover,
-.menu-content .book img:hover,
+.menu-content .setting img:hover,
 .menu-content .restart img:hover,
-.menu-content .setting img:hover {
+.menu-content .book img:hover {
   transform: scale(1.1);
 }
 
-.menu-content .book img:active,
-.menu-content .restart img:active,
 .menu-content .setting img:active,
+.menu-content .restart img:active,
+.menu-content .book img:active,
 .menu-content .power img:active {
   transform: scale(1);
 }

@@ -30,17 +30,28 @@
                 alt="icon"
               />
             </div>
-            <div class="book">
-              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
+            <div class="setting" @click="expertModeHandler(param)">
+              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
             <div class="restart">
               <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
             </div>
-            <div class="setting">
-              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
+            <div class="book">
+              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
             </div>
           </div>
         </plugin-menu>
+        <the-expert
+          @hide-modal="hideExpertMode(param)"
+          v-if="param.expertOptionsModal"
+          :item="param"
+        ></the-expert>
+        <!-- <expert-mode
+          @hide-modal="hideExpertMode(param)"
+          v-if="param.expertOptionsModal"
+          :item="param"
+        >
+        </expert-mode> -->
       </div>
     </div>
     <img
@@ -56,16 +67,14 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
+import TheExpert from "./TheExpert.vue";
 
 export default {
-  components: { PluginMenu },
+  components: { PluginMenu, TheExpert },
   props: {
     list: {
       type: Array,
       required: true,
-      default: () => {
-        return [];
-      },
     },
   },
   data() {
@@ -129,6 +138,15 @@ export default {
       this.list.map((i) => {
         if (i?.id === el.id && i?.name === el.name)
           el.displayPluginMenu = !el.displayPluginMenu;
+      });
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
+    expertModeHandler(el) {
+      this.list.map((item) => {
+        if (item.category === el.category && item?.id === el.id)
+          el.expertOptionsModal = true;
       });
     },
   },
@@ -226,7 +244,7 @@ export default {
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 
-.menu-content .book {
+.menu-content .setting {
   width: 20px;
   height: 20px;
   border-radius: 5px;
@@ -236,9 +254,9 @@ export default {
   position: absolute;
   top: 0%;
   left: 65%;
-  animation: book 500ms;
+  animation: setting 500ms;
 }
-@keyframes book {
+@keyframes setting {
   0% {
     opacity: 0;
     top: 34%;
@@ -249,7 +267,7 @@ export default {
     left: 65%;
   }
 }
-.menu-content .book img {
+.menu-content .setting img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
@@ -285,7 +303,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
-.menu-content .setting {
+.menu-content .book {
   width: 20px;
   height: 20px;
   border-radius: 5px;
@@ -295,9 +313,9 @@ export default {
   position: absolute;
   top: 65%;
   left: 66%;
-  animation: setting 500ms;
+  animation: book 500ms;
 }
-@keyframes setting {
+@keyframes book {
   0% {
     opacity: 0;
     top: 34%;
@@ -308,22 +326,22 @@ export default {
     left: 66%;
   }
 }
-.menu-content .setting img {
+.menu-content .book img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .power img:hover,
-.menu-content .book img:hover,
+.menu-content .setting img:hover,
 .menu-content .restart img:hover,
-.menu-content .setting img:hover {
+.menu-content .book img:hover {
   transform: scale(1.1);
 }
 
-.menu-content .book img:active,
-.menu-content .restart img:active,
 .menu-content .setting img:active,
+.menu-content .restart img:active,
+.menu-content .book img:active,
 .menu-content .power img:active {
   transform: scale(1);
 }

@@ -440,6 +440,7 @@ export const useServices = defineStore("services", {
             },
             {
               name: "expert mode",
+              type:"select",
               value: {
                 TIME: 1656923564922971207,
                 PLAYBOOK:

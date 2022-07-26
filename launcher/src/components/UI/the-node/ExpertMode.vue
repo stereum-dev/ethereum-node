@@ -4,10 +4,12 @@
     <expert-consensus
       :item="item"
       v-if="item.category === 'consensus' || item.category === 'validator'"
+      :position="position"
     ></expert-consensus>
     <expert-execution
       :item="item"
       v-if="item.category === 'execution'"
+      :position="position"
     ></expert-execution>
   </div>
 </template>
@@ -18,7 +20,7 @@ import ExpertConsensus from "./ExpertConsensus.vue";
 import ExpertExecution from "./ExpertExecution.vue";
 export default {
   components: { ExpertConsensus, ExpertExecution },
-  props: ["item"],
+  props: ["item", "position"],
   data() {
     return {
       isPrunningActive: false,
