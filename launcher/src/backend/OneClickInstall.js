@@ -233,7 +233,19 @@ export class OneClickInstall {
     ]
     this.grafana = GrafanaService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/grafana')
 
-    const versions = await this.nodeConnection.checkUpdates()
+    let versions
+    try{
+      versions = await this.nodeConnection.checkUpdates()
+    }catch(err){
+      log.error(`Couldn't fetch versions in OneClickInstallation...
+      Installing with predefined Versions
+      ${err.name}: ${err.message}
+      url: ${err.config.url}
+      method: ${err.config.method}
+      headers: ${err.config.headers}
+      timeout: ${err.config.timeout}
+      `)
+    }
     if(versions){
       this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient)
       this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService)

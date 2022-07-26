@@ -14,6 +14,12 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 export default {
+  data(){
+    return{
+      failed: false,
+      checked: false,
+    };
+  },
   components: { PagesNav, IconsNav, ServiceLinks },
   mounted() {
     this.refreshServiceStates()
@@ -121,30 +127,46 @@ export default {
     },
     checkUpdates: async function () {
       let updates = []
+      if(!this.failed && !this.checked){
       let services = await ControlService.getServices()
-      let response = await ControlService.checkUpdates()
-      let stereumVersion = (await ControlService.getCurrentStereumVersion()).replace('\n', '')
-      this.versions = response
-      this.stereumVersion = stereumVersion
-      this.isUpdateAvailable = false
+      let response
+      let stereumVersion
+      try{
+        response = await ControlService.checkUpdates()
+        stereumVersion = (await ControlService.getCurrentStereumVersion()).replace('\n', '')
+        this.response = response
+        this.stereumVersion = stereumVersion
+      }catch(err)
+      {
+        this.failed = true
+        console.log("Couldn't fetch versions...\nError:",err.message)
+      }
 
-      services.forEach(service => {
-        if (service.imageVersion != response[service.network][service.service][response[service.network][service.service].length - 1]) {
+      this.isUpdateAvailable = false
+      if(response && services && services.length > 0){
+        services.forEach(service => {
+          if (service.imageVersion != response[service.network][service.service][response[service.network][service.service].length - 1]) {
+            this.isUpdateAvailable = true
+            updates.push({ id: service.id, name: service.service.replace(/(Beacon|Validator|Service)/gm, ''), version: response[service.network][service.service][response[service.network][service.service].length - 1] })
+            console.log("Service Update Available!")
+          }
+        })
+      }
+      if(response && stereumVersion){
+        if (stereumVersion != response.stereum[response.stereum.length - 1].commit) {
           this.isUpdateAvailable = true
-          updates.push({ id: service.id, name: service.service.replace(/(Beacon|Validator|Service)/gm, ''), version: response[service.network][service.service][response[service.network][service.service].length - 1] })
-          console.log("Service Update Available!")
+          updates.push({ commit: response.stereum[response.stereum.length - 1].commit, name: "Stereum", version: response.stereum[response.stereum.length - 1].name })
+          console.log("Stereum Update Available!")
         }
-      })
-      if (stereumVersion != response.stereum[response.stereum.length - 1].commit) {
-        this.isUpdateAvailable = true
-        updates.push({ commit: response.stereum[response.stereum.length - 1].commit, name: "Stereum", version: response.stereum[response.stereum.length - 1].name })
-        console.log("Stereum Update Available!")
+      }
+      this.checked = true
       }
       this.newUpdates = updates
     },
     async checkConnection() {
       let connected = await ControlService.checkConnection()
       if (!connected) {
+        console.log("Reconnecting...")
         await ControlService.reconnect()
       }
       return connected

@@ -105,14 +105,9 @@ export class TaskManager {
                         name: subTask.name,
                         action: subTask.name,
                         status: subTask.status ? 'OK' : 'FAILED',
-                        data: 
-                        'TASK: ' + subTask.name +
-                        '\nACTION: ' + subTask.name +
-                        '\nCATEGORY: ' + subTask.status ? 'OK' : 'FAILED'+
-                        '\nDATA: There is no data for these kind of tasks ¯\\_(ツ)_/¯'
+                        data: `TASK: ${subTask.name}\nACTION: ${subTask.name}\nCATEGORY: ${subTask.status ? 'OK' : 'FAILED'}\nDATA: There is no data for these kind of tasks ¯\\_(ツ)_/¯`
                       }
                     })
-
                     if(this.finishedOtherTasks.map(other => other.otherRunRef).includes(task.otherRunRef)){
                         if(task.subTasks.some(task => task.status === 'FAILED')){
                             task.status = "failed"
