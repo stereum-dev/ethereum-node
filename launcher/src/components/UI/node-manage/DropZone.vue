@@ -109,7 +109,6 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-  z-index: 1000;
 }
 .item-box .items img {
   width: 48px;
