@@ -7,30 +7,30 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="item-box" ref="serviceBg">
-      <div v-for="(item, index) in list" :key="index" class="items">
+      <div v-for="(param, index) in list" :key="index" class="items">
         <img
-          :src="item.hIcon"
+          :src="param.hIcon"
           alt="icon"
-          @click="pluginMenuHandler(item)"
-          @dblclick="openDefaultBrowser(item)"
+          @click="pluginMenuHandler(param)"
+          @dblclick="openDefaultBrowser(param)"
         />
-        <plugin-menu v-if="item.displayPluginMenu">
+        <plugin-menu v-if="param.displayPluginMenu">
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="item.state == 'running'"
-                @click="stateHandler(item)"
+                v-if="param.state == 'running'"
+                @click="stateHandler(param)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
               />
               <img
                 v-else
-                @click="stateHandler(item)"
+                @click="stateHandler(param)"
                 src="/img/icon/plugin-menu-icons/turn-on.png"
                 alt="icon"
               />
             </div>
-            <div class="setting" @click="expertModeHandler(item)">
+            <div class="setting" @click="expertModeHandler(param)">
               <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
             <div class="restart">
@@ -42,9 +42,9 @@
           </div>
         </plugin-menu>
         <the-expert
-          @hide-modal="hideExpertMode(item)"
-          v-if="item.expertOptionsModal"
-          :item="item"
+          @hide-modal="hideExpertMode(param)"
+          v-if="param.expertOptionsModal"
+          :item="param"
         ></the-expert>
       </div>
     </div>
