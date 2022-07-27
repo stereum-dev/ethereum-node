@@ -66,7 +66,7 @@ Milestones build on top of the features of previous milestones.
   - [x] Technical documentation (preparation for security audit)
   - [ ] Enhanced plugin actions via mouse over menu
   - [ ] Fully support [The Merge](https://ethereum.org/en/upgrades/merge/)
-  - [ ] Mainnet support (not recommended to use yet!)
+  - [x] Mainnet support (not recommended to use yet!)
 - ![unnamed](https://img.shields.io/badge/milestone-unnamed-inactive?style=flat-square): Suitable for testnet, adding use cases & features:
   - tba
 
