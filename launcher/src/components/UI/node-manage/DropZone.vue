@@ -93,7 +93,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   width: 99%;
-  height: 100%;
+  height: 100px;
   margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
@@ -109,6 +109,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  z-index: 1000;
 }
 .item-box .items img {
   width: 48px;

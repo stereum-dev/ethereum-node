@@ -17,7 +17,7 @@ export default {};
 .trap-container {
   width: 98%;
   margin: 0 auto;
-  height: 155px;
+  height: 145px;
   background-color: #181818;
   display: flex;
   justify-content: center;
@@ -26,18 +26,19 @@ export default {};
 .trap-box {
   width: 95%;
   height: 84%;
+  background-color: rgb(39, 39, 39);
   display: flex;
-  background-image: url("../../../../public/img/icon/manage-node-icons/trap.png");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 .trapezoid {
-  width: 70%;
-  height: 73%;
+  width: 95%;
   margin-top: 5px;
+  border-bottom: 100px solid rgb(125, 125, 125);
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  height: 0;
 }
 
 .plus-icon {

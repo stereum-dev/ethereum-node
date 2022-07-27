@@ -214,7 +214,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
   width: 99%;
-  height: 100%;
+  height: 100px;
   margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
