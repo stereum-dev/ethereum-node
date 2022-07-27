@@ -69,7 +69,6 @@
                       <img
                         src="/img/icon/plugin-menu-icons/log7.png"
                         alt="icon"
-                        @click="expertModeHandler(item)"
                       />
                     </div>
                   </div>
@@ -82,7 +81,7 @@
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon">
+                    <div class="seting-icon" @click="expertModeHandler(item)">
                       <img
                         src="/img/icon/plugin-menu-icons/setting8.png"
                         alt="icon"
@@ -91,12 +90,18 @@
                   </div>
                 </div>
               </div>
-              <expert-mode
-                id="expertMode"
+              <the-expert
                 @hide-modal="hideExpertMode(item)"
                 v-if="item.expertOptionsModal"
                 :item="item"
-              ></expert-mode>
+                position="24"
+              ></the-expert>
+              <!-- <expert-mode
+                @hide-modal="hideExpertMode(item)"
+                v-if="item.expertOptionsModal"
+                :item="item"
+                position="24"
+              ></expert-mode> -->
             </div>
           </div>
           <div class="arrow-down">
@@ -111,9 +116,6 @@
     <div class="dashboard-container">
       <control-dashboard></control-dashboard>
     </div>
-    <!-- <div class="control-panel">
-      <control-panel></control-panel>
-    </div> -->
     <div class="alerts">
       <control-alert></control-alert>
     </div>
@@ -128,7 +130,7 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
-import ExpertMode from "../the-node/ExpertMode.vue";
+import TheExpert from "../the-node/TheExpert.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -139,7 +141,7 @@ export default {
     ControlPanel,
     ControlAlert,
     TaskManager,
-    ExpertMode,
+    TheExpert,
   },
   data() {
     return {

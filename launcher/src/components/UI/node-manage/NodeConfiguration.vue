@@ -114,7 +114,7 @@ export default {
       this.removeModal = false;
     },
     removeConfirmation() {
-      this.refresh = false  //stop refreshing
+      this.refresh = false; //stop refreshing
       this.removeModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
@@ -122,7 +122,7 @@ export default {
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
-        this.versions = {}
+        this.versions = {};
         this.headerServices = [];
         this.runningServices = [];
         this.installedServices = [];
@@ -132,7 +132,7 @@ export default {
     },
     destroyNode: async function () {
       console.log(await ControlService.destroy());
-      this.refresh = true
+      this.refresh = true;
     },
   },
 };
@@ -193,9 +193,9 @@ export default {
 }
 .server-details span:first-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -204,12 +204,15 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 .server-details span:last-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -218,6 +221,9 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .config-box .config-title {
