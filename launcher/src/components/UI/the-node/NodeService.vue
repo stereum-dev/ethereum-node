@@ -46,12 +46,6 @@
           v-if="param.expertOptionsModal"
           :item="param"
         ></the-expert>
-        <!-- <expert-mode
-          @hide-modal="hideExpertMode(param)"
-          v-if="param.expertOptionsModal"
-          :item="param"
-        >
-        </expert-mode> -->
       </div>
     </div>
     <img

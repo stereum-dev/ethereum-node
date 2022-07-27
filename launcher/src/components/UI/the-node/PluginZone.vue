@@ -391,7 +391,7 @@ export default {
   0% {
     opacity: 0;
     top: 40%;
-    left: 42%;
+    left: 41%;
   }
   100% {
     top: 78%;
