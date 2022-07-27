@@ -35,7 +35,7 @@ export default {};
 .trapezoid {
   width: 95%;
   margin-top: 5px;
-  border-bottom: 100px solid rgb(125, 125, 125);
+  border-bottom: 100px solid rgb(100, 100, 100);
   border-left: 50px solid transparent;
   border-right: 50px solid transparent;
   height: 0;
