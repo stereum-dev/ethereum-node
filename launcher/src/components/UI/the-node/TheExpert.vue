@@ -6,7 +6,7 @@
         <span class="nameSpan">{{ item.name }}</span>
         <span class="category"
           >{{ item.category }}
-          <small v-if="item.category != 'service'">Client</small></span
+          <small v-if="item.category != 'service'">client</small></span
         >
         <span class="serviceId">ID: {{ item.config.serviceID }}</span>
       </div>
