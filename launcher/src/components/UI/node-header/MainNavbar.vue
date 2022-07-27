@@ -125,9 +125,10 @@ export default {
         }
       }
     },
+
     checkUpdates: async function () {
+    if(!this.failed && !this.checked){
       let updates = []
-      if(!this.failed && !this.checked){
       let services = await ControlService.getServices()
       let response
       let stereumVersion
@@ -160,8 +161,8 @@ export default {
         }
       }
       this.checked = true
-      }
       this.newUpdates = updates
+      }
     },
     async checkConnection() {
       let connected = await ControlService.checkConnection()
