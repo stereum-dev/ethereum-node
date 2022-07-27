@@ -120,9 +120,11 @@
         </div>
       </div>
       <div class="expertTable">
-        <div class="expertMode" v-if="isExpertModeActive">
-          <textarea class="editContent" v-model="editableData"></textarea>
-        </div>
+        <textarea
+          v-if="isExpertModeActive"
+          class="editContent"
+          v-model="editableData"
+        ></textarea>
       </div>
       <div class="btn-box">
         <span class="exit-btn">Click outside to close</span>
@@ -506,20 +508,13 @@ export default {
 }
 .expertTable {
   width: 100%;
-  height: 100%;
+  min-height: 345px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.expertTable .expertMode {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.expertTable .expertMode .editContent {
+.expertTable .editContent {
   width: 98%;
   height: 98%;
   background-color: rgb(46, 46, 46);
