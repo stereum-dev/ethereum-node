@@ -276,7 +276,7 @@ export default {
   align-items: center;
   position: absolute;
   top: 65%;
-  left: 3%;
+  left: 5%;
   animation: restart 500ms;
 }
 @keyframes restart {
@@ -287,7 +287,7 @@ export default {
   }
   100% {
     top: 65%;
-    left: 3%;
+    left: 5%;
   }
 }
 
@@ -306,7 +306,7 @@ export default {
   align-items: center;
   position: absolute;
   top: 65%;
-  left: 66%;
+  left: 65%;
   animation: book 500ms;
 }
 @keyframes book {
@@ -317,7 +317,7 @@ export default {
   }
   100% {
     top: 65%;
-    left: 66%;
+    left: 65%;
   }
 }
 .menu-content .book img {

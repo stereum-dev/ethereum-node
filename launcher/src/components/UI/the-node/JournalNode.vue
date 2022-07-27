@@ -78,12 +78,12 @@ export default {
   },
   methods: {
     async runUpdate(item) {
-      if(item && item.id){
-        await ControlService.updateServices({service: item.id})
-        this.versions = {}
-      }else if(item && item.commit){
-        await ControlService.updateStereum({commit: item.commit})
-        this.versions = {}
+      if (item && item.id) {
+        await ControlService.updateServices({ service: item.id });
+        this.versions = {};
+      } else if (item && item.commit) {
+        await ControlService.updateStereum({ commit: item.commit });
+        this.versions = {};
       }
     },
     openUpdateTableHandler() {
@@ -148,9 +148,9 @@ export default {
 }
 .server-details span:first-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -159,12 +159,15 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 .server-details span:last-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -173,6 +176,9 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .config-btns {
