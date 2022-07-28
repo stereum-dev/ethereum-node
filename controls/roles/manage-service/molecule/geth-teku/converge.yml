@@ -34,13 +34,12 @@
                 - --goerli
                 - --http
                 - --datadir=/opt/app/geth
-                - --http.port=8545
                 - --http.addr=0.0.0.0
-                - --http.vhosts="*"
+                - --http.vhosts=*
                 - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
                 - --authrpc.addr=0.0.0.0
-                - --authrpc.port=8551
-                - --authrpc.vhosts="*"
+                - --authrpc.vhosts=*
                 - --authrpc.jwtsecret=/engine.jwt
               user: "2000"
               volumes:
@@ -74,7 +73,7 @@
                 - --logging=INFO
                 - --p2p-enabled=true
                 - --p2p-port=9001
-                - --ee-endpoint="http://stereum-{{ geth_service }}:8545"
+                - --ee-endpoint=http://stereum-{{ geth_service }}:8551
                 - --ee-jwt-secret-file=/engine.jwt
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
