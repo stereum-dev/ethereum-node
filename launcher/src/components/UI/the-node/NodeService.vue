@@ -1,5 +1,5 @@
 <template>
-  <div class="service-container" >
+  <div class="service-container">
     <img
       class="service-arrow"
       src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
