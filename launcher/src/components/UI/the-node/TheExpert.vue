@@ -29,99 +29,110 @@
             alt=""
           />
         </div>
+        
+        <!--
+        option needs: {
+          title: string,
+          type: "select",
+          value: array,
+          changeValue: null
+          icon: string (path)
+          unit: string
+          }
+        -->
         <div
-          class="ramTitleBox"
+          class="selectBox"
           :class="{ unvisible: isExpertModeActive }"
-          v-if="item.name === 'Teku' || item.name === 'Nethermind'"
+          v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'select'
+            )"
+          :key="index"
         >
           <img
             class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/ram.png"
+            :src="option.icon"
             alt="icon"
           />
-          <span>RAM Usage Limit</span>
+          <span>{{ option.title }}</span>
           <div
             class="spaceParent"
-            v-for="(e, index) in item.expertOptions.filter(
-              (e) => e.name === 'ram'
-            )"
-            :key="index"
+            
           >
-            <select v-model="ramUsage" id="ramUsage">
-              <option v-for="(rate, idx) in e.value" :value="rate" :key="idx">
-                {{ rate }}GB
+            <select v-model="option.changeValue" id="value" @change="option.changed = true">
+              <option v-for="(rate, idx) in option.value" :value="rate" :key="idx">
+                {{ rate }} {{ option.unit }}
               </option>
             </select>
           </div>
         </div>
+        
+        <!--
+        option needs: {
+          title: string,
+          type: "text",
+          changeValue: string,
+          icon: string (path)
+          }
+        -->
         <div
-          class="apiBinding"
-          v-if="item.category === 'consensus' || item.category === 'validator'"
+          class="toggleTextBox"
+          v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'text'
+            )"
+          :key="index"
           :class="{ unvisible: isExpertModeActive }"
         >
           <img
             class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/key.png"
+            :src="option.icon"
             alt="icon"
           />
-          <span>API Binding</span>
-          <span class="apiOff" v-if="bindingIsOn" @click="apiBindingTrunOff"
+          <span>{{ option.title }}</span>
+          <span class="buttonOff" v-if="option.buttonState" @click="buttonOff(option)"
             >OFF</span
           >
-          <span class="apiOn" v-else @click="apiBindingTrunOn">ON</span>
+          <span class="buttonOn" v-else @click="buttonOn(option)">ON</span>
           <input
-            class="inputApi"
+            class="toggleTextInput"
             type="text"
-            v-model="bindingIp"
-            :class="{ disabled: !bindingIsOn }"
+            v-model="option.changeValue"
+            :class="{ disabled: !option.buttonState }"
+            @change="option.changed = true"
           />
         </div>
+        
+        <!--
+        option needs: {
+          title: string,
+          type: "action",
+          action: string,
+          icon: string (path)
+          }
+        -->
         <div
-          class="endpointPort"
-          v-if="item.category === 'execution'"
+          class="actionBox"
+          v-for="(option, index) in item.expertOptions.filter(
+              (option) => option.type === 'action'
+            )"
+          :key="index"
           :class="{ unvisible: isExpertModeActive }"
         >
           <img
-            class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/endpoints.png"
+            :src="option.icon"
             alt="icon"
           />
-          <span>RPC Endpoint-Port</span>
-          <span
-            class="portOff"
-            v-if="enterPortIsEnabled"
-            @click="endpointPortTrunOff"
-            >OFF</span
+          <span class="actionBoxTitle">{{ option.title }}</span>
+          <span class="startAction" v-if="option.runningAction"
+            >{{ option.action }} . . .</span
           >
-          <span class="portOn" v-else @click="endpointPortTrunOn">ON</span>
-          <input
-            class="inputPort"
-            type="text"
-            v-model="enteredPort"
-            :class="{ disabled: !enterPortIsEnabled }"
-          />
-        </div>
-        <div
-          class="prunning"
-          v-if="item.category === 'execution'"
-          :class="{ unvisible: isExpertModeActive }"
-        >
-          <img
-            src="../../../../public/img/icon/plugin-menu-icons/ram1.png"
-            alt="icon"
-          />
-          <span class="prunningTitle">Prunning</span>
-          <span class="startPrunning" v-if="isPrunningActive"
-            >prunning . . .</span
-          >
-          <span class="initiate" v-else @click="prunningInitiateHandler"
+          <span class="initiateAction" v-else @click="actionInitiateHandler(option)"
             >INITIATE</span
           >
         </div>
       </div>
       <div class="expertTable">
         <div class="expertMode" v-if="isExpertModeActive">
-          <textarea class="editContent" v-model="editableData"></textarea>
+          <textarea class="editContent" v-model="item.yaml"></textarea>
         </div>
       </div>
       <div class="btn-box">
@@ -134,13 +145,13 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
   props: ["item", "position"],
   data() {
     return {
-      isPrunningActive: false,
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ramUsage: null,
@@ -151,12 +162,41 @@ export default {
       enteredPort: "9006",
       checkedPrunning: null,
       editableData: null,
+      changed: false,
     };
   },
   computed: {
     ...mapWritableState(useServices, {}),
   },
+  mounted(){
+    this.readService()
+  },
   methods: {
+    async readService(){
+      this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID)
+      
+    this.item.expertOptions = this.item.expertOptions.map(option => {
+      if(option.type === "select" || option.type === "text"){
+        option.changeValue = (option.pattern.exec(this.item.yaml))[2]
+      }
+      return {
+        ...option,
+        buttonState: false,
+        runningAction: false,
+      }
+    })
+    },
+    async writeService(){
+      this.item.expertOptions.forEach(option => {
+        if(option.changeValue){
+          if(option.changed){
+            this.item.yaml = this.item.yaml.replace(option.pattern,"$1" + option.changeValue + "$3")
+          }
+          option.changed = false
+        }
+      })
+      await ControlService.writeServiceYAML({id: this.item.config.serviceID, data: this.item.yaml, service: this.item.service})
+    },
     openExpertMode() {
       this.isExpertModeActive = !this.isExpertModeActive;
     },
@@ -166,16 +206,17 @@ export default {
     endpointPortTrunOn() {
       this.enterPortIsEnabled = true;
     },
-    apiBindingTrunOn() {
-      this.bindingIsOn = true;
+    buttonOn(option) {
+      option.buttonState = true;
     },
-    apiBindingTrunOff() {
-      this.bindingIsOn = false;
+    buttonOff(option) {
+      option.buttonState = false;
     },
-    prunningInitiateHandler() {
-      this.isPrunningActive = true;
+    actionInitiateHandler(option) {
+      option.runningAction = true;
     },
-    confirmExpertChanges(el) {
+    async confirmExpertChanges(el) {
+      await this.writeService()
       el.expertOptionsModal = false;
     },
   },
@@ -206,7 +247,7 @@ export default {
   cursor: default;
 }
 .expert-modal {
-  width: 44%;
+  width: 64%;
   height: 84%;
   background-color: #33393e;
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
@@ -285,7 +326,7 @@ export default {
   align-items: center;
   transition-duration: 200ms;
 }
-.expertRow .ramTitleBox {
+.expertRow .selectBox {
   width: 100%;
   height: 25px;
   margin: 2px auto;
@@ -299,7 +340,7 @@ export default {
   grid-template-columns: 1fr 2fr 1fr;
   grid-template-rows: 1fr;
 }
-.ramTitleBox .spaceParent {
+.selectBox .spaceParent {
   grid-column: 3/4;
   grid-row: 1;
   width: 100%;
@@ -310,7 +351,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
-.ramTitleBox .spaceParent select {
+.selectBox .spaceParent select {
   width: 86%;
   height: 94%;
   margin-right: 3px;
@@ -327,14 +368,13 @@ export default {
   height: 10px;
 }
 
-.expertRow .ramTitleBox img {
+.expertRow .selectBox img {
   grid-column: 1/2;
   margin-left: 20px;
   width: 20px;
   height: 20px;
 }
-.expertRow .endpointPort,
-.expertRow .apiBinding {
+.expertRow .toggleTextBox {
   width: 100%;
   height: 25px;
   margin: 2px auto;
@@ -365,7 +405,7 @@ export default {
   width: 20px;
   height: 20px;
 }
-.expertRow .prunning {
+.expertRow .actionBox {
   width: 100%;
   height: 25px;
   margin: 2px auto;
@@ -383,18 +423,18 @@ export default {
   grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
-.expertRow .prunning img {
+.expertRow .actionBox img {
   grid-column: 1/2;
   grid-row: 1;
   width: 20px;
   height: 20px;
 }
-.expertRow .prunning .prunningTitle {
+.expertRow .actionBox .actionBoxTitle {
   grid-column: 2/4;
   grid-row: 1;
   margin-left: 54px;
 }
-.expertRow .prunning .initiate {
+.expertRow .actionBox .initiateAction {
   grid-column: 4/6;
   grid-row: 1;
   width: 58%;
@@ -411,13 +451,13 @@ export default {
   cursor: pointer;
   transition-duration: 200ms;
 }
-.expertRow .prunning .initiate:hover {
+.expertRow .actionBox .initiateAction:hover {
   border: 1px solid #dedede;
 }
-.expertRow .prunning .initiate:active {
+.expertRow .actionBox .initiateAction:active {
   transform: scale(0.95);
 }
-.expertRow .prunning .startPrunning {
+.expertRow .actionBox .startAction {
   grid-column: 4/6;
   grid-row: 1;
   width: 58%;
@@ -431,8 +471,7 @@ export default {
   color: rgb(239, 239, 239);
   justify-self: end;
 }
-.expertRow .endpointPort .inputPort,
-.apiBinding .inputApi {
+.toggleTextBox .toggleTextInput {
   grid-column: 5/7;
   grid-row: 1;
   width: 65%;
@@ -450,16 +489,13 @@ export default {
   background-color: rgb(104, 104, 104) !important;
   pointer-events: none !important;
 }
-.endpointPort span,
-.apiBinding span {
-  grid-column: 3/5;
+.toggleTextBox span {
+  grid-column: 2/5;
   grid-row: 1;
-  padding-left: 29px;
   width: 100%;
   height: 100%;
 }
-.endpointPort .portOn,
-.apiBinding .apiOn {
+.toggleTextBox .buttonOn {
   grid-column: 5/6;
   grid-row: 1;
   width: 25px;
@@ -474,8 +510,7 @@ export default {
   font-weight: 700;
   cursor: pointer;
 }
-.endpointPort .portOff,
-.apiBinding .apiOff {
+.toggleTextBox .buttonOff {
   grid-column: 5/6;
   grid-row: 1;
   width: 26px;
@@ -492,13 +527,12 @@ export default {
 }
 .portOff:active,
 .portOn:active,
-.apiOff:active,
-.apiOn:active {
+.buttonOff:active,
+.buttonOn:active {
   transform: scale(0.9);
   box-shadow: none;
 }
-.expertRow .endpointPort img,
-.expertRow .apiBinding img {
+.expertRow .toggleTextBox img {
   grid-column: 1/2;
   grid-row: 1;
   width: 18px;
@@ -531,6 +565,8 @@ export default {
   justify-content: center;
   align-items: center;
   color: #d9d9d9;
+  white-space: nowrap;
+  font-family:"Courier New"
 }
 
 .expert-modal .btn-box {
@@ -607,225 +643,5 @@ export default {
 
 .unvisible {
   display: none !important;
-}
-
-.expertRow .ramTitleBox {
-  width: 100%;
-  height: 25px;
-  margin: 2px auto;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
-  color: #393939;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 1fr;
-}
-.ramTitleBox .spaceParent {
-  grid-column: 3/4;
-  grid-row: 1;
-  width: 100%;
-  height: 21px;
-  margin-top: 1px;
-
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-.ramTitleBox .spaceParent select {
-  width: 86%;
-  height: 94%;
-  margin-right: 3px;
-  border-radius: 25px;
-  color: #4c4c4c;
-  padding: 0;
-  padding-left: 10px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-}
-.spaceParent select option {
-  height: 10px;
-}
-
-.expertRow .ramTitleBox img {
-  grid-column: 1/2;
-  margin-left: 20px;
-  width: 20px;
-  height: 20px;
-}
-.expertRow .endpointPort,
-.expertRow .apiBinding {
-  width: 100%;
-  height: 25px;
-  margin: 2px auto;
-  padding: 1px 4px 0 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
-  text-align: center;
-  color: #393939;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr 2fr;
-  grid-template-rows: 1fr;
-  transition-duration: 200ms;
-}
-
-.expertRow .dataTitleBox:hover {
-  border: 1px solid #d6d6d6;
-  color: #d9d9d9;
-}
-
-.expertRow .dataTitleBox:active {
-  border: 1px solid #2d2d2d;
-}
-
-.expertRow .dataTitleBox img {
-  width: 20px;
-  height: 20px;
-}
-.expertRow .prunning {
-  width: 100%;
-  height: 25px;
-  margin: 2px auto;
-  padding: 1px 4px 0 20px;
-  border: 1px solid #8a8a8a;
-  border-radius: 25px;
-  background-color: #8a8a8a;
-  text-align: center;
-  color: #393939;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: default;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr;
-  transition-duration: 200ms;
-}
-.expertRow .prunning img {
-  grid-column: 1/2;
-  grid-row: 1;
-  width: 20px;
-  height: 20px;
-}
-.expertRow .prunning .prunningTitle {
-  grid-column: 2/4;
-  grid-row: 1;
-  margin-left: 54px;
-}
-.expertRow .prunning .initiate {
-  grid-column: 4/6;
-  grid-row: 1;
-  width: 58%;
-  height: 96%;
-  background-color: rgb(49, 88, 66);
-  border-radius: 20px;
-  border: 1px solid #8a8a8a;
-  padding: 2px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(207, 207, 207);
-  box-shadow: 0 1px 3px 1px rgb(91, 91, 91);
-  justify-self: end;
-  cursor: pointer;
-  transition-duration: 200ms;
-}
-.expertRow .prunning .initiate:hover {
-  border: 1px solid #dedede;
-}
-.expertRow .prunning .initiate:active {
-  transform: scale(0.95);
-}
-.expertRow .prunning .startPrunning {
-  grid-column: 4/6;
-  grid-row: 1;
-  width: 58%;
-  height: 96%;
-  background-color: #238dce;
-  border-radius: 20px;
-  border: 1px solid #0c81c9;
-  padding: 2px;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: rgb(239, 239, 239);
-  justify-self: end;
-}
-.expertRow .endpointPort .inputPort,
-.apiBinding .inputApi {
-  grid-column: 5/7;
-  grid-row: 1;
-  width: 65%;
-  height: 90%;
-  border-radius: 20px;
-  padding: 0;
-  padding-left: 10px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(44, 44, 44);
-  justify-self: end;
-}
-.disabled {
-  opacity: 0.6 !important;
-  background-color: rgb(104, 104, 104) !important;
-  pointer-events: none !important;
-}
-.endpointPort span,
-.apiBinding span {
-  grid-column: 3/5;
-  grid-row: 1;
-  padding-left: 29px;
-  width: 100%;
-  height: 100%;
-}
-.endpointPort .portOn,
-.apiBinding .apiOn {
-  grid-column: 5/6;
-  grid-row: 1;
-  width: 25px;
-  height: 20px;
-  padding: 4px;
-  margin-left: 10px;
-  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
-  border-radius: 3px;
-  background-color: rgb(9, 193, 101);
-  color: #f0f0f0;
-  font-size: 0.6rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-.endpointPort .portOff,
-.apiBinding .apiOff {
-  grid-column: 5/6;
-  grid-row: 1;
-  width: 26px;
-  height: 20px;
-  padding: 4px;
-  margin-left: 10px;
-  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
-  border-radius: 3px;
-  background-color: rgb(242, 75, 75);
-  color: #d9d9d9;
-  font-size: 0.6rem;
-  font-weight: 700;
-  cursor: pointer;
-}
-.portOff:active,
-.portOn:active,
-.apiOff:active,
-.apiOn:active {
-  transform: scale(0.9);
-  box-shadow: none;
-}
-.expertRow .endpointPort img,
-.expertRow .apiBinding img {
-  grid-column: 1/2;
-  grid-row: 1;
-  width: 18px;
-  height: 18px;
 }
 </style>

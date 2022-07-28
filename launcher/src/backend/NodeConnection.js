@@ -417,6 +417,98 @@ export class NodeConnection {
   }
 
   /**
+   * read a specific service configuration
+   */
+  async readServiceYAML(serviceId) {
+    return new Promise(async (resolve, reject) => {
+      let serviceYAML;
+      try {
+        const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
+        serviceYAML = await this.sshService.exec(
+          "cat /etc/stereum/services/" + serviceId + suffix
+        );
+      } catch (err) {
+        log.error("Can't read service yaml of " + serviceId, err);
+        return reject(
+          "Can't read service yaml of " + serviceId + ": " + err
+        );
+      }
+
+      if (SSHService.checkExecError(serviceYAML)) {
+        return reject(
+          "Failed reading service yaml " +
+          serviceId +
+          ": " +
+          SSHService.extractExecError(serviceYAML)
+        );
+      }
+
+      return resolve(serviceYAML.stdout);
+    });
+  }
+  
+  /**
+   * write a specific service YAML
+   *
+   * @param service object {id,data,service} id: serviceID, data: plain YAML, service: Service Name
+   */
+  async writeServiceYAML(service) {
+    return new Promise(async (resolve, reject) => {
+      let configStatus;
+      const ref = StringUtils.createRandomString();
+      this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
+      try {
+        configStatus = await this.sshService.exec(
+          "echo -e " +
+          StringUtils.escapeStringForShell(service.data) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
+        );
+      } catch (err) {
+        this.taskManager.otherSubTasks.push({
+          name: "write " + service.service + " yaml",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        log.error(
+          "Can't write service yaml of " + service.id,
+          err
+        );
+        return reject(
+          "Can't write service configuration of " +
+          service.id +
+          ": " +
+          err
+        );
+      }
+
+      if (SSHService.checkExecError(configStatus)) {
+        this.taskManager.otherSubTasks.push({
+          name: "write " + service.service + " config",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        return reject(
+          "Failed writing service configuration " +
+          service.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
+        );
+      }
+      this.taskManager.otherSubTasks.push({
+        name: "write " + service.service + " config",
+        otherRunRef: ref,
+        status: true,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      return resolve();
+    });
+  }
+
+  /**
    * write a specific service configuration
    *
    * @param serviceConfiguration servicd configuration to write to the node

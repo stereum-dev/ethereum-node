@@ -203,7 +203,8 @@ export default {
       let keys = []
       try {
         let response = await axios.get("https://" + client.config.network + ".beaconcha.in/api/v1/validator/" + encodeURIComponent(client.config.keys.join()))
-        let data = response.data.data
+        let data = []
+        data = data.concat(response.data.data)
 
         client.config.keys.forEach(key => {
           let info = data.find(k => k.pubkey === key)
