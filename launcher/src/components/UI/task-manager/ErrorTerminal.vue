@@ -53,42 +53,50 @@ export default {
   z-index: 2;
 }
 .error-modal {
-  width: 55%;
-  height: 50%;
-  background-color: rgb(25, 25, 25);
+  width: 64%;
+  height: 88%;
+  background-color: #2b3034;
   box-shadow: 0px 1px 3px 1px rgb(19, 19, 19);
-  border-radius: 10px;
-  border: 3px solid rgb(173, 173, 173);
+  border-radius: 5px;
+  border: 3px solid #adadad;
   position: absolute;
+  top: 10.4%;
+  left: 19%;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  z-index: 3;
+  z-index: 1002;
+  cursor: default;
 }
 .error-modal .title-box {
   width: 100%;
-  height: 20%;
+  height: 15%;
   border-radius: 9px 9px 0 0;
-  margin: 10px;
+  margin: 10px auto;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #adadad;
 }
 .title-box span {
   width: 100%;
-  height: 50%;
+  height: 100%;
   color: #d7d7d7;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 600;
   text-transform: capitalize;
-  text-align: left;
+  text-align: justify;
   margin-left: 10px;
+  line-height: 1.1;
 }
 .error-modal .description {
   width: 96%;
   height: 100%;
-  margin: 10px;
+  margin: 20px auto 10px auto;
+  border: 1px solid #383f45;
+  border-radius: 5px;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
@@ -120,10 +128,10 @@ export default {
 }
 .error-modal .description span {
   width: 100%;
-  height: 50%;
+  height: 100%;
   margin-left: 10px;
   color: #a8a8a8;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
   white-space: pre-wrap;
   text-transform: none;
@@ -156,6 +164,7 @@ export default {
 .copy-icon img {
   width: 20px;
   height: 20px;
+  cursor: pointer;
 }
 .copy-icon:active img {
   transform: scale(0.95);

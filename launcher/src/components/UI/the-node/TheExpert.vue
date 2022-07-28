@@ -29,7 +29,7 @@
             alt=""
           />
         </div>
-        
+
         <!--
         option needs: {
           title: string,
@@ -44,28 +44,29 @@
           class="selectBox"
           :class="{ unvisible: isExpertModeActive }"
           v-for="(option, index) in item.expertOptions.filter(
-              (option) => option.type === 'select'
-            )"
+            (option) => option.type === 'select'
+          )"
           :key="index"
         >
-          <img
-            class="titleIcon"
-            :src="option.icon"
-            alt="icon"
-          />
+          <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <div
-            class="spaceParent"
-            
-          >
-            <select v-model="option.changeValue" id="value" @change="option.changed = true">
-              <option v-for="(rate, idx) in option.value" :value="rate" :key="idx">
+          <div class="spaceParent">
+            <select
+              v-model="option.changeValue"
+              id="value"
+              @change="option.changed = true"
+            >
+              <option
+                v-for="(rate, idx) in option.value"
+                :value="rate"
+                :key="idx"
+              >
                 {{ rate }} {{ option.unit }}
               </option>
             </select>
           </div>
         </div>
-        
+
         <!--
         option needs: {
           title: string,
@@ -77,18 +78,17 @@
         <div
           class="toggleTextBox"
           v-for="(option, index) in item.expertOptions.filter(
-              (option) => option.type === 'text'
-            )"
+            (option) => option.type === 'text'
+          )"
           :key="index"
           :class="{ unvisible: isExpertModeActive }"
         >
-          <img
-            class="titleIcon"
-            :src="option.icon"
-            alt="icon"
-          />
+          <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <span class="buttonOff" v-if="option.buttonState" @click="buttonOff(option)"
+          <span
+            class="buttonOff"
+            v-if="option.buttonState"
+            @click="buttonOff(option)"
             >OFF</span
           >
           <span class="buttonOn" v-else @click="buttonOn(option)">ON</span>
@@ -100,7 +100,7 @@
             @change="option.changed = true"
           />
         </div>
-        
+
         <!--
         option needs: {
           title: string,
@@ -112,20 +112,20 @@
         <div
           class="actionBox"
           v-for="(option, index) in item.expertOptions.filter(
-              (option) => option.type === 'action'
-            )"
+            (option) => option.type === 'action'
+          )"
           :key="index"
           :class="{ unvisible: isExpertModeActive }"
         >
-          <img
-            :src="option.icon"
-            alt="icon"
-          />
+          <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
           <span class="startAction" v-if="option.runningAction"
             >{{ option.action }} . . .</span
           >
-          <span class="initiateAction" v-else @click="actionInitiateHandler(option)"
+          <span
+            class="initiateAction"
+            v-else
+            @click="actionInitiateHandler(option)"
             >INITIATE</span
           >
         </div>
@@ -168,34 +168,43 @@ export default {
   computed: {
     ...mapWritableState(useServices, {}),
   },
-  mounted(){
-    this.readService()
+  mounted() {
+    this.readService();
   },
   methods: {
-    async readService(){
-      this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID)
-      
-    this.item.expertOptions = this.item.expertOptions.map(option => {
-      if(option.type === "select" || option.type === "text"){
-        option.changeValue = (option.pattern.exec(this.item.yaml))[2]
-      }
-      return {
-        ...option,
-        buttonState: false,
-        runningAction: false,
-      }
-    })
-    },
-    async writeService(){
-      this.item.expertOptions.forEach(option => {
-        if(option.changeValue){
-          if(option.changed){
-            this.item.yaml = this.item.yaml.replace(option.pattern,"$1" + option.changeValue + "$3")
-          }
-          option.changed = false
+    async readService() {
+      this.item.yaml = await ControlService.getServiceYAML(
+        this.item.config.serviceID
+      );
+
+      this.item.expertOptions = this.item.expertOptions.map((option) => {
+        if (option.type === "select" || option.type === "text") {
+          option.changeValue = option.pattern.exec(this.item.yaml)[2];
         }
-      })
-      await ControlService.writeServiceYAML({id: this.item.config.serviceID, data: this.item.yaml, service: this.item.service})
+        return {
+          ...option,
+          buttonState: false,
+          runningAction: false,
+        };
+      });
+    },
+    async writeService() {
+      this.item.expertOptions.forEach((option) => {
+        if (option.changeValue) {
+          if (option.changed) {
+            this.item.yaml = this.item.yaml.replace(
+              option.pattern,
+              "$1" + option.changeValue + "$3"
+            );
+          }
+          option.changed = false;
+        }
+      });
+      await ControlService.writeServiceYAML({
+        id: this.item.config.serviceID,
+        data: this.item.yaml,
+        service: this.item.service,
+      });
     },
     openExpertMode() {
       this.isExpertModeActive = !this.isExpertModeActive;
@@ -216,7 +225,7 @@ export default {
       option.runningAction = true;
     },
     async confirmExpertChanges(el) {
-      await this.writeService()
+      await this.writeService();
       el.expertOptionsModal = false;
     },
   },
@@ -566,7 +575,21 @@ export default {
   align-items: center;
   color: #d9d9d9;
   white-space: nowrap;
-  font-family:"Courier New"
+  font-family: "Courier New";
+}
+.editContent::-webkit-scrollbar {
+  background-color: transparent;
+  width: 4px;
+  height: 5px;
+}
+.editContent::-webkit-scrollbar-thumb {
+  background-color: #7787a1;
+  border-radius: 6px;
+  cursor: pointer !important;
+}
+.editContent::-webkit-scrollbar-thumb:hover {
+  background-color: #496fad;
+  transform: scale(1.1);
 }
 
 .expert-modal .btn-box {

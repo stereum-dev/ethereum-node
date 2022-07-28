@@ -94,8 +94,7 @@
                 @hide-modal="hideExpertMode(item)"
                 v-if="item.expertOptionsModal"
                 :item="item"
-                long="60%"
-                position="23.4%"
+                position="23.4"
               ></the-expert>
             </div>
           </div>
