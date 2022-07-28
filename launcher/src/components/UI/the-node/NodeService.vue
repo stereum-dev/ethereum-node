@@ -1,5 +1,5 @@
 <template>
-  <div class="service-container" onmousedown="return false">
+  <div class="service-container" >
     <img
       class="service-arrow"
       src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
@@ -45,6 +45,8 @@
           @hide-modal="hideExpertMode(item)"
           v-if="item.expertOptionsModal"
           :item="item"
+          position="18.8%"
+          wide="39%"
         ></the-expert>
       </div>
     </div>
@@ -81,6 +83,7 @@ export default {
   beforeMount() {
     this.updateStates();
   },
+
   updated() {
     this.updateStates();
   },

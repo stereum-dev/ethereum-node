@@ -94,14 +94,9 @@
                 @hide-modal="hideExpertMode(item)"
                 v-if="item.expertOptionsModal"
                 :item="item"
-                position="24"
+                long="60%"
+                position="23.4%"
               ></the-expert>
-              <!-- <expert-mode
-                @hide-modal="hideExpertMode(item)"
-                v-if="item.expertOptionsModal"
-                :item="item"
-                position="24"
-              ></expert-mode> -->
             </div>
           </div>
           <div class="arrow-down">
@@ -489,5 +484,4 @@ export default {
   bottom: -1px;
   z-index: 1;
 }
-
 </style>
