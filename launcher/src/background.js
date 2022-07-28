@@ -164,6 +164,14 @@ promiseIpc.on("getServiceConfig", async (args) => {
   return await nodeConnection.readServiceConfiguration(args);
 })
 
+promiseIpc.on("getServiceYAML", async (args) => {
+  return await nodeConnection.readServiceYAML(args);
+})
+
+promiseIpc.on("writeServiceYAML", async (args) => {
+  return await nodeConnection.writeServiceYAML(args);
+})
+
 promiseIpc.on("importKey", async (args) => {
   app.showExitPrompt = true
   const returnValue =  await validatorAccountManager.importKey(args.files, args.password);
