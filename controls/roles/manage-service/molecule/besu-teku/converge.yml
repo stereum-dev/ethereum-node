@@ -1,0 +1,112 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    teku_service: 1929168e-e0d6-11ec-9183-97daacc21ea6
+    besu_service: 9c52bfc6-ee3f-11ec-8841-fff909f62b80
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: "hyperledger/besu:{{ stereum_static.defaults.versions.besu }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+                - 127.0.0.1:8551:8551/tcp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+
+                - --rpc-http-enabled
+#                - --rpc-http-api=WEB3,ETH,NET
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+#                - --rpc-http-port=8545
+                - --rpc-ws-enabled
+#                - --rpc-ws-api=WEB3,ETH,NET
+#                - --rpc-ws-port=8546
+
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --logging=INFO
+
+                - --engine-host-allowlist="*"
+                - --engine-rpc-port=8551
+                - --engine-jwt-secret=/engine.jwt
+                - --engine-jwt-enabled=true
+                - --engine-jwt-disabled=false
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # teku beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: TekuBeaconService
+              id: "{{ teku_service }}"
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+              env:
+                JAVA_OPTS: -Xmx4g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=prater
+                - --logging=INFO
+                - --p2p-enabled=true
+                - --p2p-port=9001
+                - --ee-endpoint="http://stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80:8545"
+                - --ee-jwt-secret-file=/engine.jwt
+                - --metrics-enabled=true
+                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                - --metrics-port=8008
+                - --metrics-interface=0.0.0.0
+                - --metrics-host-allowlist="*"
+                - --metrics-publish-interval=10
+                - --data-path=/opt/app/data
+                - --data-storage-mode=prune
+                - --rest-api-port=5051
+                - --rest-api-host-allowlist="*"
+                - --rest-api-interface=0.0.0.0
+                - --rest-api-docs-enabled=true
+                - --rest-api-enabled=true
+                - --log-destination=CONSOLE
+#                - --eth1-endpoints=http://10.10.0.3:8545
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"

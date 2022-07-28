@@ -4,11 +4,11 @@ dependency:
 driver:
   name: hetznercloud
 platforms:
-  - name: "manage-service--besu--ubuntu-22.04"
+  - name: "manage-service--besu-teku--ubuntu-22.04"
     hostname: ubuntu
     server_type: cpx31
     image: ubuntu-22.04
-#  - name: "manage-service--besu--centos-stream-8"
+#  - name: "manage-service--besu-teku--centos-stream-8"
 #    hostname: "centos"
 #    server_type: cpx31
 #    image: centos-stream-8
