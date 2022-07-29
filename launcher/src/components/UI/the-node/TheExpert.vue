@@ -4,10 +4,10 @@
     <div class="expert-modal" :style="{ left: `${position}%` }">
       <div class="serviceDetails">
         <span class="nameSpan">{{ item.name }}</span>
-        <span class="category"
-          >{{ item.category }}
-          <small v-if="item.category != 'service'">client</small></span
-        >
+        <p class="category">
+          {{ item.category }}
+          <span v-if="item.category != 'service'">client</span>
+        </p>
         <span class="serviceId">ID: {{ item.config.serviceID }}</span>
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
@@ -284,16 +284,18 @@ export default {
   align-items: baseline;
 }
 .serviceDetails .nameSpan {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 700;
   margin-left: 4px;
   color: #d3d3d3;
+  text-transform: uppercase;
 }
 .serviceDetails .category {
   font-size: 0.7rem;
   font-weight: 500;
   margin-left: -5%;
   color: #ababab;
+  text-transform: uppercase;
 }
 .serviceDetails .serviceId {
   font-size: 0.6rem;
@@ -396,7 +398,7 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr 2fr;
+   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
@@ -503,6 +505,7 @@ export default {
   grid-row: 1;
   width: 100%;
   height: 100%;
+  text-align: center;
 }
 .toggleTextBox .buttonOn {
   grid-column: 5/6;
