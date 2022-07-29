@@ -7,30 +7,30 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="item-box" ref="serviceBg">
-      <div v-for="(param, index) in list" :key="index" class="items">
+      <div v-for="(item, index) in list" :key="index" class="items">
         <img
-          :src="param.hIcon"
+          :src="item.hIcon"
           alt="icon"
-          @click="pluginMenuHandler(param)"
-          @dblclick="openDefaultBrowser(param)"
+          @click="pluginMenuHandler(item)"
+          @dblclick="openDefaultBrowser(item)"
         />
-        <plugin-menu v-if="param.displayPluginMenu">
+        <plugin-menu v-if="item.displayPluginMenu">
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="param.state == 'running'"
-                @click="stateHandler(param)"
+                v-if="item.state == 'running'"
+                @click="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
               />
               <img
                 v-else
-                @click="stateHandler(param)"
+                @click="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/turn-on.png"
                 alt="icon"
               />
             </div>
-            <div class="setting" @click="expertModeHandler(param)">
+            <div class="setting" @click="expertModeHandler(item)">
               <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
             <div class="restart">
@@ -42,9 +42,11 @@
           </div>
         </plugin-menu>
         <the-expert
-          @hide-modal="hideExpertMode(param)"
-          v-if="param.expertOptionsModal"
-          :item="param"
+          @hide-modal="hideExpertMode(item)"
+          v-if="item.expertOptionsModal"
+          :item="item"
+          position="18.8%"
+          wide="39%"
         ></the-expert>
       </div>
     </div>
@@ -81,6 +83,7 @@ export default {
   beforeMount() {
     this.updateStates();
   },
+
   updated() {
     this.updateStates();
   },

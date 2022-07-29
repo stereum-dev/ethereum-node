@@ -61,15 +61,9 @@
             @hide-modal="hideExpertMode(item)"
             v-if="item.expertOptionsModal"
             :item="item"
-            position="19"
+            position="18.8%"
+            long="54%"
           ></the-expert>
-          <!-- <expert-mode
-            @hide-modal="hideExpertMode(item)"
-            v-if="item.expertOptionsModal"
-            :item="item"
-            position="19"
-          >
-          </expert-mode> -->
         </div>
       </div>
     </template>

@@ -11,8 +11,6 @@
             'success-installation': item.status == 'OK',
             'failed-installation': item.status == 'FAILED',
           }"
-          @mouseover="tooltipShowHandler(item)"
-          @mouseleave="tooltipHideHandler(item)"
         >
           <error-terminal
             v-if="item.showErrorterminal"
