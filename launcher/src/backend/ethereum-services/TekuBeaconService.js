@@ -35,7 +35,7 @@ export class TekuBeaconService extends NodeService {
                 `--validators-graffiti="${graffiti}"`,
                 //`--eth1-endpoints=${executionLayer}`,
                 `--ee-endpoint=${executionLayer}`,
-                '--ee-jwt-secret-file=/engine.jwt',
+                `--ee-jwt-secret-file=${JWTDir}`,
                 '--metrics-enabled=true',
                 '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',
