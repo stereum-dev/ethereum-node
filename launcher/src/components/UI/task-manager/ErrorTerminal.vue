@@ -96,6 +96,7 @@ export default {
   height: 100%;
   margin: 20px auto 10px auto;
   border: 1px solid #383f45;
+  background-color: #212122;
   border-radius: 5px;
   overflow-x: hidden;
   overflow-y: auto;
