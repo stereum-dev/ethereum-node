@@ -12,13 +12,13 @@ stereum_static:
       # consensus clients
       lighthouse: v2.3.1
       nimbus: multiarch-v22.6.1
-      teku: "22.6.1"
+      teku: "22.7.0"
       prysm: v2.1.3
 
       # execution clients
-      geth: v1.10.20
-      besu: "22.4.4"
-      nethermind: "1.13.4"
+      geth: v1.10.21
+      besu: "22.7.0-RC2"
+      nethermind: "1.13.5"
 
       # ssv
       blox_ssv: v0.2.1-rc.5
