@@ -21,14 +21,18 @@ const ports = [
           id: 'geth-id',
           service: 'GethService'
         }
-      })
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
     }
   })
   const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm/', [new GethService.GethService(),new GethService.GethService()]).buildConfiguration()
 
   expect(prysm.command).toMatch(/--fallback-web3provider=http-endpoint-string/)
   expect(prysm.command).toMatch(/--http-web3provider=http-endpoint-string/)
-  expect(prysm.volumes).toHaveLength(2)
+  expect(prysm.volumes).toHaveLength(3)
   expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/beacon:/opt/app/beacon')
   expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/genesis:/opt/app/genesis')
   expect(prysm.ports).toHaveLength(3)
@@ -39,49 +43,139 @@ const ports = [
 })
 
 test('buildConsensusClientHttpEndpointUrl', () => {
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
     const ports = [
       new ServicePort(null, 100, 200, servicePortProtocol.tcp),
       new ServicePort(null, 101, 202, servicePortProtocol.udp),
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', []).buildConsensusClientHttpEndpointUrl()
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientHttpEndpointUrl()
   
     expect(prysm).toMatch(/http:\/\/stereum-.{36}:3500/)
   })
 
   test('buildConsensusClientGateway', () => {
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
     const ports = [
       new ServicePort(null, 100, 200, servicePortProtocol.tcp),
       new ServicePort(null, 101, 202, servicePortProtocol.udp),
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', []).buildConsensusClientGateway()
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientGateway()
   
     expect(prysm).toMatch(/stereum-.{36}:3500/)
   })
 
   test('buildConsensusClientEndpoint', () => {
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
     const ports = [
       new ServicePort(null, 100, 200, servicePortProtocol.tcp),
       new ServicePort(null, 101, 202, servicePortProtocol.udp),
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', []).buildConsensusClientEndpoint()
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientEndpoint()
   
     expect(prysm).toMatch(/stereum-.{36}:4000/)
   })
 
   test('getAvailablePorts', () => {
-    const prysmPorts = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', []).getAvailablePorts()
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
+    const prysmPorts = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()]).getAvailablePorts()
   
     expect(prysmPorts).toHaveLength(3)
   })
 
   test('network', () => {
-    const prysmNetwork = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', []).buildConfiguration()
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
+    const prysmNetwork = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()]).buildConfiguration()
   
     expect(prysmNetwork.network).toMatch(/prater/)
   })
