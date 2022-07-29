@@ -116,7 +116,8 @@ export class OneClickInstall {
     if (constellation.includes('GethService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp)
       ]
       this.executionClient = GethService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/geth')
     }
