@@ -1,6 +1,7 @@
 import { TekuBeaconService } from './TekuBeaconService.js'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
+import { ServiceVolume } from './ServiceVolume.js'
 
 test('buildConfiguration', () => {
     const ports = [
@@ -22,16 +23,20 @@ test('buildConfiguration', () => {
             id: 'geth-id',
             service: 'GethService'
           }
-        })
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
       }
     })
   
     const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConfiguration()
   
-    expect(tekuService.command).toContain('--eth1-endpoints=http-endpoint-string')
+    expect(tekuService.command).toContain('--ee-endpoint=http-endpoint-string')
     expect(tekuService.command).toContain('--network=prater')
     expect(tekuService.command).toContain('--validators-graffiti="stereum.net"')
-    expect(tekuService.volumes).toHaveLength(1)
+    expect(tekuService.volumes).toHaveLength(2)
     expect(tekuService.volumes).toContain('/opt/stereum/teku-' + tekuService.id + '/data:/opt/app/data')
     expect(tekuService.ports).toHaveLength(5)
     expect(tekuService.id).toHaveLength(36)
@@ -52,23 +57,69 @@ test('buildConfiguration', () => {
     const mMock = jest.fn(() => { return 'http-endpoint-string' })
     GethService.GethService.mockImplementation(() => {
       return {
-        buildExecutionClientHttpEndpointUrl: mMock
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
       }
     })
   
-    const tekuEndpoint = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [], 'stereum.net').buildConsensusClientHttpEndpointUrl()
+    const tekuEndpoint = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConsensusClientHttpEndpointUrl()
   
     expect(tekuEndpoint).toMatch(/http:\/\/stereum-.{36}:5051/)
   })
 
   test('getAvailablePorts', () => {
-    const tekuServicePorts = TekuBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/teku', [], 'stereum.net').getAvailablePorts()
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
+    const tekuServicePorts = TekuBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').getAvailablePorts()
   
     expect(tekuServicePorts).toHaveLength(5)
   })
 
   test('network', () => {
-    const tekuService = TekuBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/teku', [], 'stereum.net').buildConfiguration()
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
+    const tekuService = TekuBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConfiguration()
   
     expect(tekuService.network).toMatch(/goerli/)
   })
