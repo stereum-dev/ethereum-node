@@ -398,7 +398,7 @@ export default {
   font-size: 0.9rem;
   font-weight: 600;
   display: grid;
-   grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
 }
@@ -485,11 +485,11 @@ export default {
 .toggleTextBox .toggleTextInput {
   grid-column: 5/7;
   grid-row: 1;
-  width: 65%;
-  height: 90%;
+  width: 100%;
+  height: 94%;
   border-radius: 20px;
   padding: 0;
-  padding-left: 10px;
+  padding-left: 5px;
   font-size: 0.7rem;
   font-weight: 600;
   color: rgb(44, 44, 44);
@@ -503,17 +503,17 @@ export default {
 .toggleTextBox span {
   grid-column: 2/5;
   grid-row: 1;
-  width: 100%;
+  width: 96%;
   height: 100%;
   text-align: center;
+  text-transform: capitalize;
 }
 .toggleTextBox .buttonOn {
-  grid-column: 5/6;
+  grid-column: 4/5;
   grid-row: 1;
   width: 25px;
   height: 20px;
   padding: 4px;
-  margin-left: 10px;
   box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
   border-radius: 3px;
   background-color: rgb(9, 193, 101);
@@ -521,20 +521,23 @@ export default {
   font-size: 0.6rem;
   font-weight: 700;
   cursor: pointer;
+  justify-self: end;
+  margin-right: 10px;
 }
 .toggleTextBox .buttonOff {
-  grid-column: 5/6;
+  grid-column: 4/5;
   grid-row: 1;
   width: 26px;
   height: 20px;
   padding: 4px;
-  margin-left: 10px;
   box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
   border-radius: 3px;
   background-color: rgb(242, 75, 75);
   color: #d9d9d9;
   font-size: 0.6rem;
   font-weight: 700;
+  justify-self: end;
+  margin-right: 10px;
   cursor: pointer;
 }
 .portOff:active,
@@ -547,8 +550,9 @@ export default {
 .expertRow .toggleTextBox img {
   grid-column: 1/2;
   grid-row: 1;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
+  align-self: center;
 }
 .expertTable {
   width: 100%;
