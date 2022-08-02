@@ -21,7 +21,7 @@ export class GethService extends NodeService {
       service.id, // id
       1,  // configVersion
       'ethereum/client-go', // image
-      'v1.10.20', // imageVersion
+      'v1.10.21', // imageVersion
       [
         `--${network}`,
         `--datadir=${dataDir}`,
@@ -70,7 +70,7 @@ export class GethService extends NodeService {
   }
 
   buildExecutionClientWsEndpointUrl () {
-    return 'ws://stereum-' + this.id + ':8546'
+    return 'ws://stereum-' + this.id + ':8551'
   }
 
   buildExecutionClientMetricsEndpoint () {

@@ -117,7 +117,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp)
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = GethService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/geth')
     }
@@ -125,7 +125,8 @@ export class OneClickInstall {
     if (constellation.includes('BesuService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = BesuService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/besu')
 
@@ -134,7 +135,8 @@ export class OneClickInstall {
     if (constellation.includes('NethermindService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = NethermindService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/nethermind')
 

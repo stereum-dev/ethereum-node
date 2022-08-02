@@ -7,9 +7,11 @@ export class NethermindService extends NodeService {
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
         const dataDir = '/opt/app/data'
+        const JWTDir = '/engine.jwt'
 
         const volumes = [
-            new ServiceVolume(workingDir + '/data',dataDir)
+            new ServiceVolume(workingDir + '/data',dataDir),
+            new ServiceVolume(workingDir + '/engine.jwt', JWTDir)
         ]
 
         service.init(
@@ -17,16 +19,16 @@ export class NethermindService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             'nethermind/nethermind',// image
-            '1.13.4',               // imageVersion
+            '1.13.5',               // imageVersion
             [
                 `--config=${network}`,
-                '--log=debug',
+                '--log=info',
                 `--datadir=${dataDir}`,
                 '--Network.DiscoveryPort=30303',
                 '--Network.P2PPort=30303',
                 '--JsonRpc.Enabled=true',
+                '--JsonRpc.JwtSecretFile=/engine.jwt',
                 '--JsonRpc.Host=0.0.0.0',
-                '--JsonRpc.Port=8545',
                 '--Init.WebSocketsEnabled=true',
                 '--JsonRpc.WebSocketsPort=8546',
                 '--JsonRpc.EnabledModules=[web3,eth,subscribe,net]',
@@ -55,11 +57,11 @@ export class NethermindService extends NodeService {
   }
 
   buildExecutionClientHttpEndpointUrl () {
-    return 'http://stereum-' + this.id + ':8545'
+    return 'http://stereum-' + this.id + ':8551'
   }
 
   buildExecutionClientWsEndpointUrl () {
-    return 'ws://stereum-' + this.id + ':8546'
+    return 'ws://stereum-' + this.id + ':8551'
   }
 
   buildExecutionClientMetricsEndpoint () {

@@ -7,8 +7,10 @@ export class BesuService extends NodeService {
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
         const dataDir = '/opt/app/data'
+        const JWTDir = '/engine.jwt'
         const volumes = [
-            new ServiceVolume(workingDir + '/data', '/opt/app/data')
+            new ServiceVolume(workingDir + '/data', '/opt/app/data'),
+            new ServiceVolume(workingDir + '/engine.jwt', JWTDir)
         ]
 
         service.init(
@@ -16,7 +18,7 @@ export class BesuService extends NodeService {
             service.id,     // id
             1,              // configVersion
             'hyperledger/besu', // image
-            '22.4.4',           // imageVersion
+            '22.7.0-RC2',           // imageVersion
             [
                 `--network=${network}`,
                 `--data-path=${dataDir}`,
@@ -24,25 +26,28 @@ export class BesuService extends NodeService {
                 '--sync-mode=X_SNAP',
                 '--p2p-port=30303',
                 '--p2p-host=0.0.0.0',
-                '--rpc-http-enabled',
-                '--rpc-http-api=WEB3,ETH,NET',
+                '--rpc-http-enabled=true',
                 '--rpc-http-host=0.0.0.0',
                 '--rpc-http-cors-origins=*',
-                '--rpc-http-port=8545',
-                '--rpc-ws-enabled',
-                '--rpc-ws-api=WEB3,ETH,NET',
-                '--rpc-ws-port=8546',
+                '--rpc-ws-enabled=true',
+                '--rpc-ws-host=0.0.0.0',
                 '--host-allowlist=*',
                 '--metrics-enabled',
                 '--metrics-host=0.0.0.0',
                 '--metrics-port=9545',
                 '--logging=INFO',
+                '--engine-rpc-enabled=true',
+                '--engine-host-allowlist=*',
+                '--engine-rpc-port=8551',
+                '--engine-jwt-enabled=true',
+                '--engine-jwt-secret=/engine.jwt',
+                '--Xmerge-support=true',
             ],          // command
             ["besu"],   // entrypoint
             { JAVA_OPTS: '-Xmx4g' },  // env
             ports,      // ports
             volumes,    // volumes
-            'root',       // user
+            null,       // user
             network,    // network
             // executionClients
             // consensusClients
@@ -60,11 +65,11 @@ export class BesuService extends NodeService {
 
 
     buildExecutionClientHttpEndpointUrl() {
-        return 'http://stereum-' + this.id + ':8545'
+        return 'http://stereum-' + this.id + ':8551'
     }
 
     buildExecutionClientWsEndpointUrl() {
-        return 'ws://stereum-' + this.id + ':8546'
+        return 'ws://stereum-' + this.id + ':8551'
     }
 
     buildExecutionClientMetricsEndpoint() {
