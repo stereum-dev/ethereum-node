@@ -447,7 +447,7 @@ export default {
 .keys-table-box {
   grid-column: 1/13;
   grid-row: 1/3;
-  width: 98%;
+  width: 99%;
   height: 100%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
