@@ -62,7 +62,7 @@ export default {
   bottom: 0px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 30% 32% 33% 5%;
+  grid-template-rows: 30% 26% 39% 5%;
 }
 .footer {
   width: 100%;

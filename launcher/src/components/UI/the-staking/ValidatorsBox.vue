@@ -16,21 +16,17 @@
         </div>
       </div>
     </div>
-    <div class="validator-title">
-      <span class="title">ALL</span>
-    </div>
   </div>
 </template>
 
 <style scoped>
 .validators-box {
   width: 100%;
-  height: 100%;
+  height: 95%;
   grid-column: 10/13;
   grid-row: 2/3;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content:center;
   align-items: center;
 }
 .validators-box .validator-title {
@@ -52,7 +48,7 @@
 
 .validators-box .validator-table {
   width: 90%;
-  height: 70%;
+  height: 98%;
   background-color: #bfbfbf;
   margin: 2px auto 0 auto;
   padding: 3px;
