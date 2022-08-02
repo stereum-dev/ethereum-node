@@ -160,8 +160,19 @@
         alt="icon"
       />
       <div class="enter-password" @click="confirmPasswordHandler">
-        <input v-model="password" v-if="passwordInputActive" type="password" />
-        <button @click="importKey" v-if="passwordInputActive">CONFIRM</button>
+        <input
+          v-model="password"
+          v-if="passwordInputActive"
+          type="password"
+          autofocus
+        />
+        <button
+          @keyup.enter="importKey"
+          @click="importKey"
+          v-if="passwordInputActive"
+        >
+          CONFIRM
+        </button>
         <span v-else>ENTER PASSWORD & IMPORT</span>
       </div>
     </div>
@@ -354,6 +365,7 @@ export default {
       this.insertFilePage = true;
       this.enterPasswordPage = false;
       this.passwordInputActive = false;
+      this.keyFiles = [];
     },
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
