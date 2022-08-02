@@ -28,7 +28,7 @@ test('endpoint url', () => {
 })
 
 test('endpoint ws url', () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientWsEndpointUrl()).toMatch(new RegExp('^ws:\/\/stereum-.*:8546'))
+  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientWsEndpointUrl()).toMatch(new RegExp('^ws:\/\/stereum-.*:8551'))
 })
 
 test('empty ports', () => {

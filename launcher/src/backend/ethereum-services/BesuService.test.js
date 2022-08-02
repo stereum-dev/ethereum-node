@@ -21,18 +21,18 @@ test('buildByUserInput', () => {
     expect(besuService.ports).toHaveLength(1)
     expect(besuService.ports).toContain('0.0.0.0:4040:4040/tcp')
     expect(besuService.volumes).toContain('/opt/stereum/besu-' + besuService.id + '/data:/opt/app/data')
-    expect(besuService.user).toBe('root')
+    expect(besuService.user).toBe('2000')
     expect(besuService.network).toBe(networks.goerli)    
 })
 
 test('buildExecutionClientHttpEndpointUrl', () => {
     const besuHttpEndpoint = BesuService.buildByUserInput(networks.goerli, [], '/opt/stereum/besu').buildExecutionClientHttpEndpointUrl()
-    expect(besuHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8545/)
+    expect(besuHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8551/)
 })
 
 test('buildExecutionClientWsEndpointUrl', () => {
     const besuWsEndpoint = BesuService.buildByUserInput(networks.goerli, [], '/opt/stereum/besu').buildExecutionClientWsEndpointUrl()
-    expect(besuWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8546/)
+    expect(besuWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8551/)
 })
 
 test('buildExecutionClientMetricsEndpoint', () => {
