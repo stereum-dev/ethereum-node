@@ -1,6 +1,8 @@
 <template>
   <div class="parentGuage">
-    <div class="guageTitle"><span>INCLUSION DISTANCE</span></div>
+    <div class="guageTitle" v-on:click="test">
+      <span>INCLUSION DISTANCE</span>
+    </div>
     <div class="guageBox">
       <div
         class="gauge four"
@@ -19,7 +21,7 @@
         </div>
         <div class="needle"></div>
         <div class="gauge-center">
-          <div class="str">{{ strIns }}</div>
+          <div class="str" v-on:click="test1">{{ strIns }}</div>
         </div>
       </div>
     </div>
@@ -61,6 +63,15 @@ export default {
         this.okay = false;
         this.bad = true;
       }
+    },
+  },
+  // methods are dummy and have to delete
+  methods: {
+    test() {
+      this.strIns++;
+    },
+    test1() {
+      this.strIns--;
     },
   },
 };
