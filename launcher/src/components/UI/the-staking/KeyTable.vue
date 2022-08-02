@@ -2,7 +2,7 @@
   <div class="keys-parent">
     <div class="keys-table-box">
       <div class="keys-table">
-        <div class="table-header" v-if="insertFilePage">
+        <div class="table-header" v-if="importValidatorKeyActive">
           <span id="name">Public Key</span>
           <span id="service">SERVICE</span>
           <span id="active">ACTIVE SINCE</span>
@@ -12,7 +12,7 @@
         </div>
         <div
           class="table-content"
-          v-if="insertFilePage"
+          v-if="importValidatorKeyActive"
           :class="{ dropActive: isDragOver }"
           @drag.prevent.stop=""
           @dragstart.prevent.stop=""
@@ -89,10 +89,10 @@
             </div>
           </div>
         </div>
-        <div class="table-header" v-if="enterPasswordPage">
+        <div class="table-header" v-if="enterPasswordBox">
           <span id="active">FILE NAME</span>
         </div>
-        <div class="table-content" v-if="enterPasswordPage">
+        <div class="table-content" v-if="enterPasswordBox">
           <div
             class="key-table-row"
             v-for="(item, index) in keyFiles"
@@ -110,7 +110,7 @@
         </div>
       </div>
     </div>
-    <div class="middle-icon" v-if="insertFilePage">
+    <div class="searchOptions">
       <img
         class="rename"
         src="../../../../public/img/icon/the-staking/rename-icon.png"
@@ -126,6 +126,8 @@
         src="../../../../public/img/icon/the-staking/staking-filter.png"
         alt="icon"
       />
+    </div>
+    <div class="insertBox" v-if="insertKeyBoxActive">
       <div class="insert-key" @click="openUploadHandler">
         <input
           type="file"
@@ -143,22 +145,7 @@
         />
       </div>
     </div>
-    <div class="password-box" v-if="enterPasswordPage">
-      <img
-        class="rename"
-        src="../../../../public/img/icon/the-staking/rename-icon.png"
-        alt="icon"
-      />
-      <img
-        class="folder"
-        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
-        alt="icon"
-      />
-      <img
-        class="filter"
-        src="../../../../public/img/icon/the-staking/staking-filter.png"
-        alt="icon"
-      />
+    <div class="passwordBox" v-if="enterPasswordBox">
       <div class="enter-password" @click="confirmPasswordHandler">
         <input
           v-model="password"
@@ -167,13 +154,32 @@
           autofocus
         />
         <button
-          @keyup.enter="importKey"
+          @keydown.enter="importKey"
           @click="importKey"
           v-if="passwordInputActive"
         >
           CONFIRM
         </button>
         <span v-else>ENTER PASSWORD & IMPORT</span>
+      </div>
+    </div>
+    <div class="feeBox" v-if="feeRecipientBoxActive">
+      <div class="enter-fee" @click="enterFeeHandler">
+        <input
+          placeholder="Enter a valid Ethereum address to send your blobk rewards to ... "
+          v-model="password"
+          v-if="feeInputActive"
+          type="text"
+          autofocus
+        />
+        <button
+          @keydown.enter="setFeeRecipient"
+          @click="setFeeRecipient"
+          v-if="feeInputActive"
+        >
+          CONFIRM
+        </button>
+        <span v-else>SET A BLOCK FEE RECIPIENT ADDRESS</span>
       </div>
     </div>
   </div>
@@ -193,9 +199,12 @@ export default {
       isDragOver: false,
       keyFiles: [],
       keys: [],
-      insertFilePage: true,
-      enterPasswordPage: false,
+      importValidatorKeyActive: true,
+      insertKeyBoxActive: true,
+      enterPasswordBox: false,
       passwordInputActive: false,
+      feeRecipientBoxActive: false,
+      feeInputActive: false,
       password: "",
       forceRefresh: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
@@ -362,10 +371,19 @@ export default {
       this.forceRefresh = true;
       this.listKeys();
       this.password = "";
-      this.insertFilePage = true;
-      this.enterPasswordPage = false;
+      this.importValidatorKeyActive = false;
+      this.insertKeyBoxActive = false;
+      this.enterPasswordBox = false;
       this.passwordInputActive = false;
+      this.feeRecipientBoxActive = true;
       this.keyFiles = [];
+    },
+    setFeeRecipient() {
+      this.enterPasswordBox = false;
+      this.passwordInputActive = false;
+      this.feeRecipientBoxActive = false;
+      this.insertKeyBoxActive = true;
+      this.importValidatorKeyActive = true;
     },
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
@@ -375,20 +393,21 @@ export default {
         uploadedFiles[0]["type"] === "application/json"
       ) {
         this.keyFiles.push(...uploadedFiles);
-        this.insertFilePage = false;
-        this.enterPasswordPage = true;
+        this.importValidatorKeyActive = false;
+        this.insertKeyBoxActive = false;
+        this.enterPasswordBox = true;
         this.isDragOver = false;
       }
     },
     dropFileHandler(event) {
       let droppedFiles = event.dataTransfer.files;
       if (
-        !this.keyFiles.includes(uploadedFiles[0]["name"]) &&
-        uploadedFiles[0]["type"] === "application/json"
+        !this.keyFiles.includes(droppedFiles[0]["name"]) &&
+        droppedFiles[0]["type"] === "application/json"
       ) {
         this.keyFiles.push(...droppedFiles);
-        this.insertFilePage = false;
-        this.enterPasswordPage = true;
+        this.importValidatorKeyActive = false;
+        this.enterPasswordBox = true;
         this.isDragOver = false;
       }
     },
@@ -401,11 +420,13 @@ export default {
     confirmPasswordHandler() {
       this.passwordInputActive = true;
     },
+    enterFeeHandler() {
+      this.feeInputActive = true;
+    },
     checkKeyExists() {
       if (this.keyFiles.length <= 0) {
-        this.insertFilePage = true;
-        this.enterPasswordPage = false;
-        this.passwordInputActive = false;
+        this.importValidatorKeyActive = true;
+        this.enterPasswordBox = false;
       }
     },
   },
@@ -418,14 +439,16 @@ export default {
   margin-left: 5px;
   grid-column: 1/10;
   grid-row: 1/4;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 86% 7% 7%;
 }
 
 .keys-table-box {
-  width: 96%;
-  height: 93%;
+  grid-column: 1/13;
+  grid-row: 1/3;
+  width: 98%;
+  height: 100%;
   margin: 10px 10px 0 0;
   border: 4px solid #bfbfbf;
   border-radius: 20px;
@@ -433,7 +456,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
+.searchOptions {
+  grid-column: 1/3;
+  grid-row: 2/3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
 .dropActive {
   width: 100%;
   height: 92%;
@@ -665,39 +696,30 @@ export default {
   grid-column: 8;
 }
 
-.password-box,
-.middle-icon {
-  width: 60%;
+.passwordBox,
+.insertBox,
+.feeBox {
+  grid-column: 3/11;
+  grid-row: 2/3;
+  width: 100%;
   height: 40px;
+  margin-top: 21px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  bottom: 6%;
-  left: 2%;
 }
 
-.password-box img,
-.middle-icon img {
-  width: 30px;
-  height: 30px;
+.searchOptions .rename,
+.searchOptions .folder,
+.searchOptions .filter {
+  margin-top: 50px;
+  width: 23px;
 }
 
-.password-box .rename,
-.password-box .folder,
-.middle-icon .rename,
-.middle-icon .folder {
-  margin-right: 10px;
-}
-
-.password-box .filter,
-.middle-icon .filter {
-  margin-right: 20px;
-}
-
-.middle-icon .insert-key {
-  width: 70%;
-  height: 32px;
+.insertBox .insert-key {
+  width: 100%;
+  height: 80%;
+  margin: 0 auto;
   background-color: #bfbfbf;
   border-radius: 40px;
   display: flex;
@@ -706,10 +728,9 @@ export default {
   cursor: pointer;
 }
 
-.password-box .enter-password {
-  width: 70%;
-  height: 32px;
-  border: 1px solid #bfbfbf;
+.passwordBox .enter-password {
+  width: 100%;
+  height: 80%;
   background-color: #336666;
   border-radius: 40px;
   display: flex;
@@ -719,16 +740,15 @@ export default {
   position: relative;
 }
 
-.password-box .enter-password span {
+.passwordBox .enter-password span {
   color: rgb(227, 227, 227);
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-.password-box .enter-password input {
+.passwordBox .enter-password input {
   width: 80%;
-  height: 60%;
-  border: 1px solid #878787;
+  height: 80%;
   border-radius: 35px 0 0 35px;
   background-color: #002828;
   outline-style: none;
@@ -736,53 +756,116 @@ export default {
   padding-left: 10px;
   position: absolute;
   left: 5px;
-  font-size: 1.5rem;
-  color: #fff;
-  font-weight: 300;
+  font-size: 1rem;
+  color: #d5d5d5;
+  font-weight: 500;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-.password-box .enter-password button {
+.passwordBox .enter-password button {
   width: 20%;
   height: 100%;
   border: none;
-  border-right: 1px solid #bfbfbf;
-  border-left: 1px solid #bfbfbf;
+  padding: 7px;
   border-radius: 0 35px 35px 0;
-  background-color: #3f4449;
+  background-color: #3f4750;
   outline-style: none;
   position: absolute;
   right: 0;
-  font-size: 0.7rem;
-  color: #fff;
-  font-weight: 400;
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: inset 1px 1px 10px #33393e;
 }
 
-.password-box .enter-password button:hover {
+.passwordBox .enter-password button:hover {
   background-color: #23272a;
   box-shadow: none;
 }
 
-.password-box .enter-password button:active {
+.passwordBox .enter-password button:active {
   background-color: #181b1d;
   box-shadow: inset 1px 1px 3px #070708;
 }
 
-.middle-icon .insert-key span {
+.insertBox .insert-key span {
   color: #3a3a3a;
   font-size: 1.1rem;
   font-weight: 700;
 }
 
-.middle-icon .insert-key img {
+.insertBox .insert-key img {
   width: 26px;
   height: 28px;
 }
+.feeBox .enter-fee {
+  width: 100%;
+  height: 80%;
+  /* border: 1px solid #bfbfbf; */
+  background-color: #266ad1;
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
 
+.feeBox .enter-fee span {
+  color: rgb(227, 227, 227);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.feeBox .enter-fee input {
+  width: 80%;
+  height: 80%;
+  border: 1px solid #96d6f3;
+  border-radius: 35px 0 0 35px;
+  background-color: #7cbbf6;
+  outline-style: none;
+  padding: 0;
+  padding-left: 10px;
+  position: absolute;
+  left: 5px;
+  font-size: 0.7rem;
+  color: rgb(55, 55, 59);
+  font-weight: 600;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.feeBox .enter-fee button {
+  width: 20%;
+  height: 100%;
+  border: none;
+  padding: 7px;
+  border-radius: 0 35px 35px 0;
+  background-color: #3f4750;
+  outline-style: none;
+  position: absolute;
+  right: 0;
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.feeBox .enter-fee button:hover {
+  transition-duration: 100ms;
+  background-color: #252f36;
+  color: #9accfb;
+  font-size: 0.85rem;
+}
+
+.feeBox .enter-fee button:active {
+  transition-duration: 100ms;
+  background-color: #3f4750;
+  font-size: 0.8rem;
+}
 .key-table-row {
   width: 99%;
   height: 30px;
