@@ -219,7 +219,7 @@ export default {
   data() {
     return {
       message: "",
-      bDialogVisible: true,
+      bDialogVisible: false,
       isDragOver: false,
       keyFiles: [],
       importValidatorKeyActive: true,
@@ -230,7 +230,7 @@ export default {
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
-      importIsProcessing: true,
+      importIsProcessing: false,
       importIsDone: false,
       password: "",
       forceRefresh: false,
