@@ -2,9 +2,11 @@
   <div class="staking-parent">
     <div class="staking-green-bg">
       <div class="staking-black-bg">
-        <key-table></key-table>
+        <key-table :button="button"></key-table>
         <time-reward></time-reward>
-        <selection-options></selection-options>
+        <selection-options
+          @click-me="optionButtonHandler(button)"
+        ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
         <task-manager></task-manager>
@@ -13,11 +15,11 @@
   </div>
 </template>
 <script>
-import KeyTable from './KeyTable.vue'
-import SelectionOptions from './SelectionOptions.vue'
-import ValidatorsBox from './ValidatorsBox.vue'
-import TimeReward from './TimeReward.vue'
-import TaskManager from '../task-manager/TaskManager.vue'
+import KeyTable from "./KeyTable.vue";
+import SelectionOptions from "./SelectionOptions.vue";
+import ValidatorsBox from "./ValidatorsBox.vue";
+import TimeReward from "./TimeReward.vue";
+import TaskManager from "../task-manager/TaskManager.vue";
 
 export default {
   components: {
@@ -25,9 +27,10 @@ export default {
     SelectionOptions,
     ValidatorsBox,
     TimeReward,
-    TaskManager
-  }
-}
+    TaskManager,
+  },
+  methods: {},
+};
 </script>
 <style scoped>
 .staking-parent {

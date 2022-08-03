@@ -2,13 +2,14 @@
   <div class="selection-box">
     <div class="selection-table">
       <div
-        class="selection-row"
-        v-for="(item, index) in buttonState"
+        @click="$emit('clickBtn', ...button)"
+        class="buttonRow"
+        v-for="(button, index) in buttonState"
         :key="index"
       >
-        <div class="row-content">
-          <img :src="item.icon" alt="icon" />
-          <span>{{ item.name }}</span>
+        <div class="btnContent">
+          <img :src="button.icon" alt="icon" />
+          <span>{{ button.name }}</span>
         </div>
       </div>
     </div>
@@ -68,17 +69,18 @@ export default {
   align-items: center;
   position: relative;
 }
-.selection-table .selection-row:last-child {
+.selection-table .buttonRow:last-child {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
+  padding: 5px 8px 3px 8px;
 }
-.selection-table .selection-row:nth-child(3).row-content span {
-  font-size: ;
-}
-.selection-row {
+
+.buttonRow {
   width: 99%;
   height: 25px;
   border-radius: 20px;
+  border: 1px solid #eee;
+  padding: 5px 8px 3px 8px;
   background-color: #dfdfdf;
   box-shadow: 0 1px 5px 1px rgb(32, 32, 32);
   margin-top: 5px;
@@ -88,19 +90,20 @@ export default {
   cursor: pointer;
 }
 
-.row-content {
+.btnContent {
   display: grid;
   grid-template-columns: 10% 90%;
   grid-template-rows: 100%;
   width: 90%;
   align-items: center;
 }
-.selection-row img {
-  grid-column: 1;
+.buttonRow img {
+  grid-column: 1/2;
+  grid-row: 1/2;
   width: 19px;
-  height: 20px;
+  height: 100%;
 }
-.selection-row span {
+.buttonRow span {
   grid-column: 2;
   font-size: 0.75rem;
   font-weight: 800;
@@ -109,18 +112,18 @@ export default {
   text-transform: uppercase;
 }
 
-.selection-row:hover {
+.buttonRow:hover {
   transition-duration: 100ms;
   background-color: #3d746e;
   box-shadow: none;
 }
-.selection-row:hover span {
+.buttonRow:hover span {
   transition-duration: 100ms;
   color: #fff;
 }
-.selection-row:active {
-  transition-duration: 100ms;
-  transform: scale(0.9);
+.buttonRow:active {
+  padding: 4px 8px;
+  transform: scale(0.96);
   box-shadow: none;
 }
 </style>

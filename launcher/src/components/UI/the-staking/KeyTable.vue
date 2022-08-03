@@ -166,7 +166,7 @@
     <div class="feeBox" v-if="feeRecipientBoxActive">
       <div class="enter-fee" @click="enterFeeHandler">
         <input
-          placeholder="Enter a valid Ethereum address to send your blobk rewards to ... "
+          placeholder="Enter a valid Ethereum address to send your block rewards to ... "
           v-model="password"
           v-if="feeInputActive"
           type="text"
@@ -193,6 +193,7 @@ import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
+  props: ["button"],
   components: { ShowKey, DropZone },
   data() {
     return {
