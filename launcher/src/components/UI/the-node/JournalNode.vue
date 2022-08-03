@@ -4,7 +4,7 @@
       <span class="title">Server</span>
       <div class="server-details">
         <span class="ip">{{ ipAddress }}</span>
-        <span class="name">{{ maschinName }}</span>
+        <span class="name">{{ ServerName }}</span>
       </div>
     </div>
     <div class="config-bg">
@@ -56,17 +56,13 @@ import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
+import { useControlStore } from "../../../store/theControl";
 export default {
   components: { UpdateTable },
   data() {
     return {
-      maschinName: "Server Name",
-      ipAddress: "0.0.0.0",
       updateTableIsOpen: false,
     };
-  },
-  mounted() {
-    this.maschinNameMet();
   },
   computed: {
     ...mapState(useServices, {
@@ -74,26 +70,20 @@ export default {
     }),
     ...mapWritableState(useServices, {
       versions: "versions",
-    })
+    }),
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
   },
   methods: {
-    async maschinNameMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.maschinName = arr[0];
-      } catch (error) {
-        error;
-      }
-    },
     async runUpdate(item) {
-      if(item && item.id){
-        await ControlService.updateServices({service: item.id})
-        this.versions = {}
-      }else if(item && item.commit){
-        await ControlService.updateStereum({commit: item.commit})
-        this.versions = {}
+      if (item && item.id) {
+        await ControlService.updateServices({ service: item.id });
+        this.versions = {};
+      } else if (item && item.commit) {
+        await ControlService.updateStereum({ commit: item.commit });
+        this.versions = {};
       }
     },
     openUpdateTableHandler() {
@@ -158,9 +148,9 @@ export default {
 }
 .server-details span:first-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -169,12 +159,15 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 .server-details span:last-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -183,6 +176,9 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .config-btns {

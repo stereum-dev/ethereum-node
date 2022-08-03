@@ -10,7 +10,10 @@
       </div>
     </div>
     <div class="ethIco">
-      <img src="../../../../public/img/icon/control/ethIco.svg" />
+      <img
+        :class="{ greenArrow: isGreen, greyArrow: isGrey }"
+        src="../../../../public/img/icon/control/arrowUpDown.png"
+      />
     </div>
   </div>
 </template>
@@ -18,8 +21,25 @@
 export default {
   data() {
     return {
-      feeValue: 86,
+      // fee value data is dummy, for wire the have to change to null
+      feeValue: 85,
+      isGreen: false,
+      isGrey: true,
     };
+  },
+  watch: {
+    feeValue(newFeeValue, oldFeeValue) {
+      if (newFeeValue > oldFeeValue) {
+        this.isGreen = true;
+        this.isGrey = false;
+      } else if (newFeeValue < oldFeeValue) {
+        this.isGreen = false;
+        this.isGrey = false;
+      } else {
+        this.isGreen = false;
+        this.isGrey = true;
+      }
+    },
   },
 };
 </script>
@@ -81,5 +101,14 @@ export default {
 }
 .ethIco img {
   width: 10 0%;
+}
+.greenArrow {
+  filter: grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg)
+    saturate(500%);
+  transform: rotate(-85deg);
+}
+.greyArrow {
+  filter: grayscale(100%);
+  transform: rotate(-40deg);
 }
 </style>

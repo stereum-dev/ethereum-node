@@ -1,5 +1,5 @@
 <template>
-  <div class="service-container" onmousedown="return false">
+  <div class="service-container">
     <img
       class="service-arrow"
       src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
@@ -7,40 +7,47 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="item-box" ref="serviceBg">
-      <div v-for="(param, index) in list" :key="index" class="items">
+      <div v-for="(item, index) in list" :key="index" class="items">
         <img
-          :src="param.hIcon"
+          :src="item.hIcon"
           alt="icon"
-          @click="pluginMenuHandler(param)"
-          @dblclick="openDefaultBrowser(param)"
+          @click="pluginMenuHandler(item)"
+          @dblclick="openDefaultBrowser(item)"
         />
-        <plugin-menu v-if="param.displayPluginMenu">
+        <plugin-menu v-if="item.displayPluginMenu">
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="param.state == 'running'"
-                @click="stateHandler(param)"
+                v-if="item.state == 'running'"
+                @click="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
               />
               <img
                 v-else
-                @click="stateHandler(param)"
+                @click="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/turn-on.png"
                 alt="icon"
               />
             </div>
-            <div class="book">
-              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
+            <div class="setting" @click="expertModeHandler(item)">
+              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
             <div class="restart">
               <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
             </div>
-            <div class="setting">
-              <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
+            <div class="book">
+              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
             </div>
           </div>
         </plugin-menu>
+        <the-expert
+          @hide-modal="hideExpertMode(item)"
+          v-if="item.expertOptionsModal"
+          :item="item"
+          position="18.8%"
+          wide="39%"
+        ></the-expert>
       </div>
     </div>
     <img
@@ -56,16 +63,14 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
+import TheExpert from "./TheExpert.vue";
 
 export default {
-  components: { PluginMenu },
+  components: { PluginMenu, TheExpert },
   props: {
     list: {
       type: Array,
       required: true,
-      default: () => {
-        return [];
-      },
     },
   },
   data() {
@@ -78,6 +83,7 @@ export default {
   beforeMount() {
     this.updateStates();
   },
+
   updated() {
     this.updateStates();
   },
@@ -129,6 +135,15 @@ export default {
       this.list.map((i) => {
         if (i?.id === el.id && i?.name === el.name)
           el.displayPluginMenu = !el.displayPluginMenu;
+      });
+    },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
+    expertModeHandler(el) {
+      this.list.map((item) => {
+        if (item.category === el.category && item?.id === el.id)
+          el.expertOptionsModal = true;
       });
     },
   },
@@ -226,7 +241,7 @@ export default {
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 
-.menu-content .book {
+.menu-content .setting {
   width: 20px;
   height: 20px;
   border-radius: 5px;
@@ -236,9 +251,9 @@ export default {
   position: absolute;
   top: 0%;
   left: 65%;
-  animation: book 500ms;
+  animation: setting 500ms;
 }
-@keyframes book {
+@keyframes setting {
   0% {
     opacity: 0;
     top: 34%;
@@ -249,7 +264,7 @@ export default {
     left: 65%;
   }
 }
-.menu-content .book img {
+.menu-content .setting img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
@@ -264,7 +279,7 @@ export default {
   align-items: center;
   position: absolute;
   top: 65%;
-  left: 3%;
+  left: 5%;
   animation: restart 500ms;
 }
 @keyframes restart {
@@ -275,7 +290,7 @@ export default {
   }
   100% {
     top: 65%;
-    left: 3%;
+    left: 5%;
   }
 }
 
@@ -285,7 +300,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
-.menu-content .setting {
+.menu-content .book {
   width: 20px;
   height: 20px;
   border-radius: 5px;
@@ -294,10 +309,10 @@ export default {
   align-items: center;
   position: absolute;
   top: 65%;
-  left: 66%;
-  animation: setting 500ms;
+  left: 65%;
+  animation: book 500ms;
 }
-@keyframes setting {
+@keyframes book {
   0% {
     opacity: 0;
     top: 34%;
@@ -305,25 +320,25 @@ export default {
   }
   100% {
     top: 65%;
-    left: 66%;
+    left: 65%;
   }
 }
-.menu-content .setting img {
+.menu-content .book img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 .menu-content .power img:hover,
-.menu-content .book img:hover,
+.menu-content .setting img:hover,
 .menu-content .restart img:hover,
-.menu-content .setting img:hover {
+.menu-content .book img:hover {
   transform: scale(1.1);
 }
 
-.menu-content .book img:active,
-.menu-content .restart img:active,
 .menu-content .setting img:active,
+.menu-content .restart img:active,
+.menu-content .book img:active,
 .menu-content .power img:active {
   transform: scale(1);
 }

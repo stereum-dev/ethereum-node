@@ -1,17 +1,24 @@
 module.exports = {
   pluginOptions: {
-    electronBuilder: {
+    electronBuilder: {      
       preload: 'src/preload.js',
       externals: ['ssh2', 'tunnel-ssh'],
       builderOptions: {
+        appId: "com.stereum.launcher",
+        productName: "Stereum Launcher",
+        afterSign: "@sapien99/vue-cli-plugin-electron-builder-notarize",  
         // options placed here will be merged with default configuration and passed to electron-builder
         buildDependenciesFromSource: false,
         nodeGypRebuild: false,
         npmRebuild: false,
-        //npmArgs: "--no-optional",
 	linux: {
 	  target: "AppImage"
-	}
+	},
+        mac: {
+	  hardenedRuntime  : true,
+          entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
+          gatekeeperAssess: false
+	}        
       }
     }
   },

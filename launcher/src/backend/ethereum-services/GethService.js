@@ -6,24 +6,45 @@ export class GethService extends NodeService {
     const service = new GethService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-        
+      
+    const JWTDir = '/engine.jwt'
+    const dataDir = '/opt/data/geth'
     const volumes = [
-      new ServiceVolume(workingDir + '/data', '/root/.ethereum')
+      new ServiceVolume(workingDir + '/data', dataDir),
+      new ServiceVolume(workingDir + '/engine.jwt', JWTDir)
     ]
 
-    let networkCommand = " --" + network
-    if(network === "mainnet"){
-      networkCommand = ""
-    }
+
 
     service.init(
       'GethService',  // service
       service.id, // id
       1,  // configVersion
       'ethereum/client-go', // image
-      'v1.10.20', // imageVersion
-      'geth' + networkCommand + ' --http --http.port=8545 --http.addr=0.0.0.0 --http.vhosts="*" --allow-insecure-unlock --http.api="debug,eth,net,web3,personal" --ws --ws.port=8546 --ws.addr=0.0.0.0 --ws.api="debug,eth,net,web3" --ws.origins="*" --metrics --metrics.expensive --metrics.port=6060 --metrics.addr=0.0.0.0', // command
-      null, // entrypoint
+      'v1.10.21', // imageVersion
+      [
+        `--${network}`,
+        `--datadir=${dataDir}`,
+        '--http', 
+        '--http.port=8545', 
+        '--http.addr=0.0.0.0', 
+        '--http.vhosts=*', 
+        '--http.api="engine,eth,web3,net,debug"',
+        '--http.corsdomain=*',
+        '--ws', 
+        '--ws.port=8546',
+        '--ws.addr=0.0.0.0',
+        '--ws.api="debug,eth,net,web3"',
+        '--ws.origins=*',
+        '--authrpc.addr=0.0.0.0',
+        '--authrpc.vhosts=*',
+        '--authrpc.jwtsecret=/engine.jwt',
+        '--metrics',
+        '--metrics.expensive',
+        '--metrics.port=6060',
+        '--metrics.addr=0.0.0.0',
+      ], // command
+      ['geth'], // entrypoint
       null, // env
       ports,  // ports
       volumes,  // volumes
@@ -45,11 +66,11 @@ export class GethService extends NodeService {
   }
 
   buildExecutionClientHttpEndpointUrl () {
-    return 'http://stereum-' + this.id + ':8545'
+    return 'http://stereum-' + this.id + ':8551'
   }
 
   buildExecutionClientWsEndpointUrl () {
-    return 'ws://stereum-' + this.id + ':8546'
+    return 'ws://stereum-' + this.id + ':8551'
   }
 
   buildExecutionClientMetricsEndpoint () {

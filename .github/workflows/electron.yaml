@@ -20,50 +20,35 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      #- name: Install Node.js, NPM and Yarn
-      #  uses: actions/setup-node@v1
-      #  with:
-      #    node-version: 16
-
-      #- name: see directory
-      #  run: ls
-
-      - name: Build/release Electron app
+      - name: Build and Sign
         uses: samuelmeuli/action-electron-builder@v1
         with:
           args: "--publish onTag"
           github_token: ${{ secrets.GITHUB_TOKEN }}
           package_root: launcher
           use_vue_cli: true
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
 
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
+          # release the app after building - never in this step
+          release: never
+        if: "!startsWith(github.ref, 'refs/tags/v')"
+
+      - name: Build, Sign, Notarize and Release
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          args: "--publish onTag"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          package_root: launcher
+          use_vue_cli: true        
+          mac_certs: ${{ secrets.mac_certs }}
+          mac_certs_password: ${{ secrets.mac_certs_password }}
+
+          # release the app after building - in case of a tag starting with v (in this case always)
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-
-          # @see https://github.com/electron-userland/electron-builder/issues/3559
-
-          #  bump-version:
-          #    name: 'Bump Version in package.json'
-          #    needs: release_launcher
-          #    runs-on: ubuntu-latest
-          #
-          #    steps:
-          #      - name: 'Checkout source code'
-          #        uses: 'actions/checkout@v2'
-          #        with:
-          #          ref: ${{ github.ref }}
-          #      - name: 'cat package.json'
-          #        run: cat ./launcher/package.json
-          #      - name: 'Automated Version Bump'
-          #        id: version-bump
-          #        uses: 'phips28/gh-action-bump-version@master'
-          #        with:
-          #          skip-tag: 'true'
-          #          skip-commit: 'true'
-          #          #tag-prefix: 'v'
-          #          commit-message: 'bump to {{version}} [skip ci]'
-          #        env:
-          #          PACKAGEJSON_DIR: 'launcher'
-          #          GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
-          #      - name: 'cat package.json'
-          #        run: cat ./launcher/package.json
+        env:
+          APPLE_ID: ${{ secrets.apple_id }}
+          APPLE_ID_PASSWORD: ${{ secrets.apple_id_password }}
+          TEAM_SHORT_NAME: ${{ secrets.team_short_name }}
+          APP_ID: "com.stereum.launcher"
+        if: "startsWith(github.ref, 'refs/tags/v')"

@@ -18,7 +18,7 @@ stereum_static:
       # execution clients
       geth: v1.10.21
       besu: "22.7.0-RC2"
-      nethermind: "1.13.4"
+      nethermind: "1.13.5"
 
       # ssv
       blox_ssv: v0.2.1-rc.5

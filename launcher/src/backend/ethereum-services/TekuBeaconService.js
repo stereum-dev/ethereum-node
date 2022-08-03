@@ -7,14 +7,17 @@ export class TekuBeaconService extends NodeService {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
+        const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
 
         const image = 'consensys/teku'
 
-        const gethServices = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
+        const executionLayer = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
 
+        const JWTDir = '/engine.jwt'
         const dataDir = '/opt/app/data'
         const volumes = [
-            new ServiceVolume(workingDir + '/data', dataDir)
+            new ServiceVolume(workingDir + '/data', dataDir),
+            new ServiceVolume(elJWTDir, JWTDir)
         ]
     
         service.init(
@@ -22,21 +25,26 @@ export class TekuBeaconService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             image,                  // image
-            '22.6.1',               // imageVersion
+            '22.7.0',               // imageVersion
             [
                 `--network=${network}`,
+                '--logging=INFO',
                 '--p2p-enabled=true',
                 '--p2p-port=9001',
                 '--validators-keystore-locking-enabled=false',
                 `--validators-graffiti="${graffiti}"`,
-                `--eth1-endpoints=${gethServices}`,
+                //`--eth1-endpoints=${executionLayer}`,
+                `--ee-endpoint=${executionLayer}`,
+                `--ee-jwt-secret-file=${JWTDir}`,
+                //`--validators-proposer-default-fee-recipient=<ADDRESS>`,
                 '--metrics-enabled=true',
                 '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',
                 '--metrics-interface=0.0.0.0',
                 '--metrics-host-allowlist=*',
+                '--metrics-publish-interval=10',
                 `--data-path=${dataDir}`,
-                '--data-storage-mode=archive',
+                '--data-storage-mode=prune',
                 '--rest-api-port=5051',
                 '--rest-api-host-allowlist=*',
                 '--rest-api-interface=0.0.0.0',

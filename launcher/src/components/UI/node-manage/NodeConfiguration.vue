@@ -4,7 +4,7 @@
       <span class="title">Server</span>
       <div class="server-details">
         <span class="ip">{{ ipAddress }}</span>
-        <span class="name">{{ maschinName }}</span>
+        <span class="name">{{ ServerName }}</span>
       </div>
     </div>
     <div class="config-bg">
@@ -64,24 +64,21 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
+import { useControlStore } from "../../../store/theControl";
+import { useStakingStore } from "../../../store/theStaking";
 export default {
   data() {
     return {
       modalActive: false,
       removeModal: false,
       removeIsConfirmed: false,
-      maschinName: "Server Name",
-      ipAddress: "0.0.0.0",
     };
-  },
-  created() {
-    this.maschinNameMet();
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
@@ -98,19 +95,16 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+    }),
+    ...mapState(useControlStore, {
+      ServerName: "ServerName",
+      ipAddress: "ipAddress",
+    }),
+    ...mapWritableState(useStakingStore, {
+      keys: "keys",
     })
   },
   methods: {
-    async maschinNameMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.maschinName = arr[0];
-      } catch (error) {
-        console.log(error);
-      }
-    },
     openModal() {
       this.modalActive = true;
     },
@@ -124,7 +118,7 @@ export default {
       this.removeModal = false;
     },
     removeConfirmation() {
-      this.refresh = false  //stop refreshing
+      this.refresh = false; //stop refreshing
       this.removeModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
@@ -132,7 +126,8 @@ export default {
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
-        this.versions = {}
+        this.keys = []
+        this.versions = {};
         this.headerServices = [];
         this.runningServices = [];
         this.installedServices = [];
@@ -142,7 +137,7 @@ export default {
     },
     destroyNode: async function () {
       console.log(await ControlService.destroy());
-      this.refresh = true
+      this.refresh = true;
     },
   },
 };
@@ -203,9 +198,9 @@ export default {
 }
 .server-details span:first-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -214,12 +209,15 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 .server-details span:last-child {
   width: 100%;
-  height: 30%;
+  height: 29%;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
@@ -228,6 +226,9 @@ export default {
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .config-box .config-title {

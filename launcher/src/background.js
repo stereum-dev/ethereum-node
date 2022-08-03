@@ -30,6 +30,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 
 const log = require("electron-log");
 log.transports.console.level = "info"
+log.transports.file.level = "info"
 
 let remoteHost = {};
 
@@ -53,6 +54,31 @@ promiseIpc.on("connect", async (arg) => {
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   return 0;
+});
+
+promiseIpc.on("reconnect", async () => {
+  try{
+    if(!nodeConnection.sshService.connected){
+      await nodeConnection.establish(taskManager);
+    }else if(!taskManager.nodeConnection.sshService.connected){
+      await taskManager.nodeConnection.establish();
+    }else if(!monitoring.nodeConnection.sshService.connected){
+      await monitoring.nodeConnection.establish();
+    }
+  }catch(err){
+    log.error("Couldn't reconnect:\n",err)
+  }
+});
+
+promiseIpc.on("checkConnection", async () => {
+  try{
+    await nodeConnection.sshService.exec("ls")
+    await taskManager.nodeConnection.sshService.exec("ls")
+    await monitoring.nodeConnection.sshService.exec("ls")
+  }catch(err){
+    return false
+  }
+  return true
 });
 
 // called via promiseIpc as an async function
@@ -119,7 +145,7 @@ promiseIpc.on("startOneClickServices", async () => {
 
 //get data for control cpu comp
 promiseIpc.on("getServerVitals", async () => {
-  return await nodeConnection.getServerVitals();
+  return await monitoring.getServerVitals();
 });
 
 promiseIpc.on("getAvailablePort", async (args) => {
@@ -136,6 +162,14 @@ promiseIpc.on("getServices", async () => {
 
 promiseIpc.on("getServiceConfig", async (args) => {
   return await nodeConnection.readServiceConfiguration(args);
+})
+
+promiseIpc.on("getServiceYAML", async (args) => {
+  return await nodeConnection.readServiceYAML(args);
+})
+
+promiseIpc.on("writeServiceYAML", async (args) => {
+  return await nodeConnection.writeServiceYAML(args);
 })
 
 promiseIpc.on("importKey", async (args) => {
@@ -160,9 +194,6 @@ promiseIpc.on("manageServiceState", async (args) => {
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true
   const returnValue = await nodeConnection.runAllUpdates()
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
   return returnValue
 })
@@ -183,7 +214,13 @@ promiseIpc.on("updateStereum", async (args) => {
 })
 
 promiseIpc.on("checkUpdates", async () => {
-  return await nodeConnection.checkUpdates()
+  let versions
+  try{
+    versions = await nodeConnection.checkUpdates()
+  }catch(err){
+    throw err
+  }
+   return versions
 })
 
 promiseIpc.on("getCurrentStereumVersion", async () => {

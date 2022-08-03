@@ -101,13 +101,20 @@ export class ValidatorAccountManager {
 
         }
         try {
-            await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
+            let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
+            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            let result = (JSON.parse(logs[1])).msg.data
+            if(result.some(run => run.status === "error")){
+                throw result.find(run => run.message != undefined).message
+            }
+            let imported = 0
+            result.forEach(run => {if(run.status === "imported")imported ++})
+            return imported + " Keys were imported!"
         } catch (err) {
             log.error("Validator Import Failed:\n", err)
-            return err
+            this.batches = []
+            return "Validator Import Failed:\n" + err
         }
-        this.batches = []
-        return client
     }
 
     async listValidators(serviceID) {
@@ -126,12 +133,9 @@ export class ValidatorAccountManager {
         return new Promise(async (resolve, reject) => {
             try {
                 const dataDir = (service.config.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-                let bloxConfig = YAML.parse((await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout)
+                let bloxConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
                 if (bloxConfig) {
-                    bloxConfig.OperatorPrivateKey = sk
-                    const newConfig = new YAML.Document()
-                    newConfig.contents = bloxConfig
-                    const escapedConfigFile = StringUtils.escapeStringForShell(newConfig.toString())
+                    const escapedConfigFile = StringUtils.escapeStringForShell(bloxConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
                     await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
 
                     await this.serviceManager.manageServiceState(service.config.serviceID, 'stopped')

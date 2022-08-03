@@ -38,25 +38,21 @@
                 - --sync-mode=X_SNAP
                 - --p2p-port=30303
                 - --p2p-host=0.0.0.0
-
-                - --rpc-http-enabled
-#                - --rpc-http-api=WEB3,ETH,NET
+                - --rpc-http-enabled=true
                 - --rpc-http-host=0.0.0.0
                 - --rpc-http-cors-origins=*
-#                - --rpc-http-port=8545
-                - --rpc-ws-enabled
-#                - --rpc-ws-api=WEB3,ETH,NET
-#                - --rpc-ws-port=8546
-
+                - --rpc-ws-enabled=true
+                - --rpc-ws-host=0.0.0.0
+                - --host-allowlist=*
                 - --metrics-enabled
                 - --metrics-host=0.0.0.0
                 - --logging=INFO
-
-                - --engine-host-allowlist="*"
+                - --engine-rpc-enabled=true
+                - --engine-host-allowlist=*
                 - --engine-rpc-port=8551
-                - --engine-jwt-secret=/engine.jwt
                 - --engine-jwt-enabled=true
-                - --engine-jwt-disabled=false
+                - --engine-jwt-secret=/engine.jwt
+                - --Xmerge-support=true
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
@@ -89,7 +85,7 @@
                 - --logging=INFO
                 - --p2p-enabled=true
                 - --p2p-port=9001
-                - --ee-endpoint="http://stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80:8545"
+                - --ee-endpoint=http://stereum-{{ besu_service }}:8551
                 - --ee-jwt-secret-file=/engine.jwt
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
@@ -97,16 +93,17 @@
                 - --metrics-interface=0.0.0.0
                 - --metrics-host-allowlist="*"
                 - --metrics-publish-interval=10
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
                 - --rest-api-port=5051
                 - --rest-api-host-allowlist="*"
                 - --rest-api-interface=0.0.0.0
                 - --rest-api-docs-enabled=true
                 - --rest-api-enabled=true
+                - --data-path=/opt/app/data
+                - --data-storage-mode=prune
                 - --log-destination=CONSOLE
-#                - --eth1-endpoints=http://10.10.0.3:8545
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+# EOF

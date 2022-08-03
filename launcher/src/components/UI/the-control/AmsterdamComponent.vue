@@ -21,41 +21,8 @@
           <img src="../../../../public/img/icon/control/amsterdam.png" />
         </div>
         <div class="dateBox">
-          <span>000000000 days</span>
-          <span>-00h - 00m - 00s</span>
-        </div>
-        <div
-          class="circleArrow"
-          @mouseover="showSyncInfo = true"
-          @mouseleave="showSyncInfo = false"
-        >
-          <sync-info v-if="showSyncInfo">
-            <div class="serviceName">
-              <div class="serviceName_val">
-                <div class="serviceName-row">
-                  <span>[SERVICE NAME]</span>
-                </div>
-                <div class="serviceName-greenRow">
-                  <span>12345678910</span>
-                  <span>/</span>
-                  <span>12345678910</span>
-                  <span>100%</span>
-                </div>
-              </div>
-              <div class="serviceName_val">
-                <div class="serviceName-row">
-                  <span>[SERVICE NAME]</span>
-                </div>
-                <div class="serviceName-blueRow">
-                  <span>12345678910</span>
-                  <span>/</span>
-                  <span>12345678910</span>
-                  <span>100%</span>
-                </div>
-              </div>
-            </div>
-          </sync-info>
-          <img :src="errorIco" />
+          <span>{{ days }} days</span>
+          <span>{{ date }}</span>
         </div>
       </div>
     </div>
@@ -67,55 +34,29 @@ import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
   components: { SyncInfo },
-  comments: {
-    SyncInfo,
-  },
   data() {
     return {
       showSyncInfo: false,
-      counter: 0,
+      counter: null,
       networkIcon: "",
       mainnetIcon: "/img/icon/control/mainnetIconControl.png",
       testnetIcon: "/img/icon/control/testnetIconControl.png",
-      syncIco: [
-        {
-          id: 1,
-          name: "error",
-          icon: "/img/icon/arrows/SynchronisationIconError.gif",
-        },
-        {
-          id: 2,
-          name: "active",
-          icon: "/img/icon/arrows/SynchronisationIconActive.gif",
-        },
-        {
-          id: 3,
-          name: "synched",
-          icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
-        },
-      ],
+      days: null,
+      date: "",
     };
   },
-  mounted(){
-    if(this.network === "mainnet"){
-      this.networkIcon = this.mainnetIcon
-    }else{
-      this.networkIcon = this.testnetIcon
+
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkIcon = this.mainnetIcon;
+    } else {
+      this.networkIcon = this.testnetIcon;
     }
   },
   computed: {
     ...mapState(useServices, {
       network: "network",
     }),
-    errorIco() {
-      return this.syncIco[0].icon;
-    },
-    activeIco() {
-      return this.syncIco[1].icon;
-    },
-    synchedIco() {
-      return this.syncIco[2].icon;
-    },
   },
 };
 </script>
@@ -179,7 +120,7 @@ export default {
   height: 80%;
 }
 .icoContainer img {
-  width: 80%;
+  width: 70%;
 }
 .icoTitle span {
   width: 100%;
@@ -227,10 +168,11 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  border: 1px solid #eee;
+  border: 1px solid #c1c1c1;
   background: #000;
   font-size: 80%;
   padding-right: 2%;
+  border-radius: 3px;
 }
 .downTtl {
   width: 90%;

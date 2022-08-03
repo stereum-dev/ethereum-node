@@ -21,14 +21,18 @@ test('buildConfiguration', () => {
           id: 'geth-id',
           service: 'GethService'
         }
-      })
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
     }
   })
 
   const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16).buildConfiguration()
 
-  expect(lhService.command).toContain('--eth1-endpoints=http-endpoint-string')
-  expect(lhService.volumes).toHaveLength(2)
+  expect(lhService.command).toContain('--execution-endpoint=http-endpoint-string')
+  expect(lhService.volumes).toHaveLength(3)
   expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/beacon:/opt/app/beacon')
   expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/slasher:/opt/app/slasher')
   expect(lhService.ports).toHaveLength(3)
@@ -39,31 +43,103 @@ test('buildConfiguration', () => {
 })
 
 test('buildConsensusClientHttpEndpointUrl', () => {
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
   const ports = [
     new ServicePort(null, 100, 200, servicePortProtocol.tcp),
     new ServicePort(null, 101, 202, servicePortProtocol.udp),
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
 
-  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [], 16).buildConsensusClientHttpEndpointUrl()
+  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16).buildConsensusClientHttpEndpointUrl()
 
   expect(lhService).toMatch(/http:\/\/stereum-.{36}:5052/)
 })
 
 test('getAvailablePorts', () => {
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/lh', [], 16).getAvailablePorts()
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/lh', [new GethService.GethService()], 16).getAvailablePorts()
 
   expect(lhServicePorts).toHaveLength(3)
 })
 
 test('network', () => {
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [], 16).buildConfiguration()
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 16).buildConfiguration()
 
   expect(lhServicePorts.network).toMatch(/goerli/)
 })
 
 test('slasherDbSize', () => {
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [], 123).buildConfiguration()
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 123).buildConfiguration()
 
   expect(lhServicePorts.command).toContain('--slasher-max-db-size=123')
 })

@@ -24,6 +24,14 @@ class ControlService extends EventEmitter {
     });
   }
 
+  async reconnect() {
+    return this.promiseIpc.send("reconnect");
+  }
+
+  async checkConnection() {
+    return this.promiseIpc.send("checkConnection");
+  }
+
   async disconnect(args) {
     return this.promiseIpc.send("disconnect", args);
   }
@@ -111,6 +119,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServiceConfig", args)
   }
 
+  async getServiceYAML(args) {
+    return await this.promiseIpc.send("getServiceYAML", args)
+  }
+  
+  async writeServiceYAML(args) {
+    return await this.promiseIpc.send("writeServiceYAML", args)
+  }
+  
   async importKey(args) {
     //resolve proxy
     let files = [];

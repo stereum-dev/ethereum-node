@@ -52,15 +52,7 @@
               image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
               ports:
                 - 127.0.0.1:3000:3000/tcp
-              env:
-                GRAFANA_INI: |
-                  [auth.anonymous]
-                  enabled = true
-                  org_role = Admin
-              command: bash -c "touch /etc/grafana/grafana.ini &&
-                                echo \"$GRAFANA_INI\" > /etc/grafana/grafana.ini &&
-                                /run.sh"
-              entrypoint: []
+              command: "/run.sh"
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"

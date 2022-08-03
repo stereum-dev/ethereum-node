@@ -2,7 +2,15 @@
   <div class="parentGuage">
     <div class="guageTitle"><span>INCLUSION DISTANCE</span></div>
     <div class="guageBox">
-      <div class="gauge four rischio4">
+      <div
+        class="gauge four"
+        :class="{
+          rischio0: off,
+          rischio2: good,
+          rischio3: okay,
+          rischio4: bad,
+        }"
+      >
         <div class="slice-colors">
           <div class="st slice-item"></div>
           <div class="st slice-item"></div>
@@ -22,8 +30,38 @@
 export default {
   data() {
     return {
-      strIns: 79,
+      // strIns has to wire for active comp.
+      strIns: null,
+      off: true,
+      good: false,
+      okay: false,
+      bad: false,
     };
+  },
+  watch: {
+    strIns(newValue, _) {
+      if (newValue === null) {
+        this.off = true;
+        this.good = false;
+        this.okay = false;
+        this.bad = false;
+      } else if (newValue === 0) {
+        this.off = false;
+        this.good = true;
+        this.okay = false;
+        this.bad = false;
+      } else if (newValue === 1) {
+        this.off = false;
+        this.good = false;
+        this.okay = true;
+        this.bad = false;
+      } else {
+        this.off = false;
+        this.good = false;
+        this.okay = false;
+        this.bad = true;
+      }
+    },
   },
 };
 </script>
@@ -55,10 +93,15 @@ export default {
 }
 .str {
   border-radius: 5px;
-  font-size: 85%;
-  padding: 2%;
+  font-size: 60%;
+  margin-bottom: 2%;
   font-weight: bold;
   background: #33393e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 80%;
 }
 
 .parentGuage {
@@ -79,7 +122,6 @@ export default {
 }
 .gauge {
   background: #e7e7e7;
-  box-shadow: 0 -3px 6px 2px rgba(0, 0, 0, 0.5);
   width: 75%;
   height: 80%;
   border-radius: 100px 100px 0 0 !important;
@@ -107,7 +149,6 @@ export default {
   align-items: flex-end;
 }
 
-.gauge-center .label,
 .gauge-center .number {
   display: flex;
   flex-direction: column;
@@ -115,13 +156,8 @@ export default {
   text-align: center;
   border: 0 !important;
 }
-/*.gauge-center .label {
-  font-size: 50%;
-  opacity: 0.6;
-  margin: 1.1em 0 0.3em 0;
-}*/
 .gauge-center .number {
-  font-size: 80%;
+  font-size: 70%;
 }
 
 .needle {
@@ -133,13 +169,16 @@ export default {
   border-top-left-radius: 100% !important;
   border-top-right-radius: 10px !important;
   position: absolute;
-  bottom: 10px;
-  left: 5%;
+  bottom: 10%;
+  left: -10%;
   transform-origin: 100% 4px;
   transform: rotate(0deg);
   box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.38);
   display: none;
   z-index: 9;
+}
+.four.rischio0 .needle {
+  display: block;
 }
 
 .four.rischio1 .needle {
@@ -156,6 +195,7 @@ export default {
   animation: fourspeed3 2s 1 both;
   animation-delay: 1s;
   display: block;
+  left: -1% !important;
 }
 .four.rischio4 .needle {
   animation: fourspeed4 2s 1 both;
@@ -190,25 +230,25 @@ export default {
   background-color: #e67e22;
 }
 
-@-webkit-keyframes fourspeed1 {
+@keyframes fourspeed1 {
   0% {
     transform: rotate(0);
   }
   100% {
-    transform: rotate(16deg);
+    transform: rotate(30deg);
   }
 }
 
-@-webkit-keyframes fourspeed2 {
+@keyframes fourspeed2 {
   0% {
     transform: rotate(0);
   }
   100% {
-    transform: rotate(65deg);
+    transform: rotate(70deg);
   }
 }
 
-@-webkit-keyframes fourspeed3 {
+@keyframes fourspeed3 {
   0% {
     transform: rotate(0);
   }
@@ -217,12 +257,12 @@ export default {
   }
 }
 
-@-webkit-keyframes fourspeed4 {
+@keyframes fourspeed4 {
   0% {
     transform: rotate(0);
   }
   100% {
-    transform: rotate(164deg);
+    transform: rotate(170deg);
   }
 }
 </style>

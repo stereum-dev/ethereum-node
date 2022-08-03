@@ -70,8 +70,8 @@
 }
 .circle {
   background: #83d0f5;
-  width: 95%;
-  height: 100%;
+  width: 100%;
+  height: 95%;
   border-radius: 50%;
   padding: 5%;
   display: flex;

@@ -12,13 +12,13 @@
           <div class="cpuProccessBarCont">
             <div class="cpuProccessBar">
               <div class="cpuProccessBar_value_bg">
-                <div class="cpuProccessBar_value" :style="cpuVal"></div>
+                <div class="cpuProccessBar_value" :style="getStyle"></div>
               </div>
             </div>
           </div>
         </div>
         <div class="cpuTemp">
-          <span>Proccess: {{ cpuValue }} %</span>
+          <span>Usage: {{ cpu }} %</span>
         </div>
       </div>
     </div>
@@ -26,48 +26,22 @@
 </template>
 
 <script>
-import ControlService from "@/store/ControlService";
+import { mapState } from 'pinia';
+import { useControlStore } from '../../../store/theControl';
 export default {
   data() {
     return {
       cpuValue: null,
     };
   },
-  created() {
-    this.cpuValueMet();
-  },
   computed: {
-    verticalBar() {
-      return { width: this.tVal() + "%" };
-    },
-    cpuVal() {
-      return { width: this.cpuCoun() + "%" };
-    },
-  },
-  beforeUpdate() {
-    this.cpuValueMet();
-  },
-  methods: {
-    tVal() {
-      const SVal = 100 - this.temp;
-      return SVal;
-    },
-    cpuCoun() {
-      const cVal = 100 - this.cpuValue;
-      return cVal;
-    },
-
-    async cpuValueMet() {
-      try {
-        const response = await ControlService.getServerVitals();
-        let data = await response.serverVitals.stdout;
-        const arr = data.split(/\r?\n/);
-        this.cpuValue = parseInt(arr[4]);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+    ...mapState(useControlStore, {
+      cpu: "cpu",
+    }),
+    getStyle(){
+      return {width: (100-this.cpu)+'%'}
+    }
+  }
 };
 </script>
 
@@ -105,6 +79,7 @@ export default {
 }
 .cpuIco img {
   width: 75%;
+  height: 80%;
 }
 .cpuIco span {
   width: 100%;

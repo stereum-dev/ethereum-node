@@ -81,7 +81,7 @@
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon">
+                    <div class="seting-icon" @click="expertModeHandler(item)">
                       <img
                         src="/img/icon/plugin-menu-icons/setting8.png"
                         alt="icon"
@@ -90,6 +90,12 @@
                   </div>
                 </div>
               </div>
+              <the-expert
+                @hide-modal="hideExpertMode(item)"
+                v-if="item.expertOptionsModal"
+                :item="item"
+                position="23.4"
+              ></the-expert>
             </div>
           </div>
           <div class="arrow-down">
@@ -103,9 +109,6 @@
     </div>
     <div class="dashboard-container">
       <control-dashboard></control-dashboard>
-    </div>
-    <div class="control-panel">
-      <control-panel></control-panel>
     </div>
     <div class="alerts">
       <control-alert></control-alert>
@@ -121,6 +124,7 @@ import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
+import TheExpert from "../the-node/TheExpert.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -131,6 +135,7 @@ export default {
     ControlPanel,
     ControlAlert,
     TaskManager,
+    TheExpert,
   },
   data() {
     return {
@@ -185,6 +190,15 @@ export default {
       item.isServicePending = false;
       this.updateStates();
     },
+    hideExpertMode(el) {
+      el.expertOptionsModal = false;
+    },
+    expertModeHandler(el) {
+      this.installedServices.map((item) => {
+        if (item.category === el.category && item?.id === el.id)
+          el.expertOptionsModal = true;
+      });
+    },
   },
 };
 </script>
@@ -221,10 +235,8 @@ export default {
   height: 93%;
   margin-top: 7px;
   color: white;
-  grid-column-start: 2;
-  grid-column-end: 4;
-  grid-row-start: 1;
-  grid-row-end: 3;
+  grid-column: 2/4;
+  grid-row: 1/5;
   z-index: 0;
   border: 4px solid grey;
   border-radius: 20px 27px 20px 20px;
@@ -245,7 +257,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
+  z-index: 0;
 }
 
 .footer {
@@ -425,8 +437,8 @@ export default {
 .refresh-icon img:hover,
 .seting-icon img:hover {
   transform: scale(1.1);
-  border:1px solid white;
-  border-radius:100%;
+  border: 1px solid white;
+  border-radius: 100%;
 }
 .power-icon img:active,
 .book-icon img:active,

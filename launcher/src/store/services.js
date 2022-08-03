@@ -18,6 +18,16 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/consensus/LightHouse.png"),
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Lighthouse-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+            {
+              title: "Slasher DB Size",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/ram1.png",
+              pattern: new RegExp(/(- --slasher-max-db-size=)(\d+)(\n)/),
+            }
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -42,6 +52,9 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/validator/lighthouse-validator.png"),
           sIcon: require("../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -66,6 +79,9 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/consensus/Prysm.png"),
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Prysm-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -90,6 +106,9 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/validator/prysm-validator.png"),
           sIcon: require("../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -114,6 +133,9 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/consensus/Nimbus.png"),
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -138,6 +160,9 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/validator/nimbus-validator.png"),
           sIcon: require("../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -162,6 +187,18 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/consensus/Teku.png"),
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Teku-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+            {
+              title: "RAM Usage Limit",
+              type: "select",
+              value: [2,4,8,16],
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/ram.png",
+              unit: "GB",
+              pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -186,6 +223,18 @@ export const useServices = defineStore("services", {
           icon: require("../../public/img/icon/plugin-icons/validator/Teku.png"),
           sIcon: require("../../public/img/icon/plugin-icons/validator/Teku-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+            {
+              title: "RAM Usage Limit",
+              type: "select",
+              value: [2,4,8,16],
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/ram.png",
+              unit: "GB",
+              pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -212,6 +261,9 @@ export const useServices = defineStore("services", {
           hIcon: "/img/icon/service-icons/ssv.png",
           linkUrl: "https://stereum.net",
           headerOption: true,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -236,6 +288,9 @@ export const useServices = defineStore("services", {
           hIcon: "/img/icon/service-icons/prometheus.png",
           linkUrl: "https://stereum.net",
           headerOption: true,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           tunnelLink: true,
           drag: true,
           state: "exited",
@@ -261,6 +316,9 @@ export const useServices = defineStore("services", {
           hIcon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://stereum.net",
           headerOption: true,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           tunnelLink: true,
           drag: true,
           state: "exited",
@@ -286,6 +344,9 @@ export const useServices = defineStore("services", {
           icon: require("../..//public/img/icon/plugin-icons/execution/Geth.png"),
           sIcon: require("../../public/img/icon/plugin-icons/execution/Geth-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -310,6 +371,9 @@ export const useServices = defineStore("services", {
           icon: require("../..//public/img/icon/plugin-icons/execution/hyperLedger-besu.png"),
           sIcon: require("../../public/img/icon/plugin-icons/execution/HyperLedger-besu-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -334,6 +398,9 @@ export const useServices = defineStore("services", {
           icon: require("../..//public/img/icon/plugin-icons/execution/Nethermind.png"),
           sIcon: require("../../public/img/icon/plugin-icons/execution/Nethermind-s.png"),
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -349,11 +416,7 @@ export const useServices = defineStore("services", {
       ],
       versions: {},
       stereumVersion: {},
-      newUpdates: [
-        { name: "teku", version: "2.2.0" },
-        { name: "geth", version: "1.2.0" },
-        { name: "grafana", version: "3.2.1" },
-      ],
+      newUpdates: [],
     };
   },
   getters: {},

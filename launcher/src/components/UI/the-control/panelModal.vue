@@ -53,13 +53,26 @@ export default {
     clickOption() {
       this.$emit("click-option");
     },
+
+    //ip validator function
+    ValidateIPaddress(ipaddress) {
+      if (
+        /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
+          ipaddress
+        )
+      ) {
+        alert("The IP Address I Valid");
+      } else {
+        alert("You have entered an invalid IP address!");
+      }
+    },
     btnAction() {
       if (this.item.ipBox) {
         alert(this.ip);
         var ipVar = this.ip;
         this.ipList.push(ipVar);
+        this.ValidateIPaddress(this.ip);
         this.ip = "";
-        console.log(this.ipList);
       } else {
         alert("initite");
       }

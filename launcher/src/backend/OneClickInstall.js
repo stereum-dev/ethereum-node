@@ -116,7 +116,8 @@ export class OneClickInstall {
     if (constellation.includes('GethService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = GethService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/geth')
     }
@@ -124,7 +125,8 @@ export class OneClickInstall {
     if (constellation.includes('BesuService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = BesuService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/besu')
 
@@ -133,7 +135,8 @@ export class OneClickInstall {
     if (constellation.includes('NethermindService')) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-        new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       this.executionClient = NethermindService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/nethermind')
 
@@ -233,7 +236,19 @@ export class OneClickInstall {
     ]
     this.grafana = GrafanaService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/grafana')
 
-    const versions = await this.nodeConnection.checkUpdates()
+    let versions
+    try{
+      versions = await this.nodeConnection.checkUpdates()
+    }catch(err){
+      log.error(`Couldn't fetch versions in OneClickInstallation...
+      Installing with predefined Versions
+      ${err.name}: ${err.message}
+      url: ${err.config.url}
+      method: ${err.config.method}
+      headers: ${err.config.headers}
+      timeout: ${err.config.timeout}
+      `)
+    }
     if(versions){
       this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient)
       this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService)
@@ -254,13 +269,10 @@ export class OneClickInstall {
     await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
     const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
     let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(false), [this.executionClient], [this.beaconService])
-    ssvConfig.OperatorPrivateKey = config.ssv_sk
 
     // prepare service's config file
     const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-    const configFile = new YAML.Document()
-    configFile.contents = ssvConfig
-    const escapedConfigFile = StringUtils.escapeStringForShell(configFile.toString())
+    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + config.ssv_sk + "\""))
     this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
   }
 

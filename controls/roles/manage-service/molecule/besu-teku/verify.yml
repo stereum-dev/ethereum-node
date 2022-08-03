@@ -3,52 +3,14 @@
   hosts: all
   gather_facts: false
   tasks:
-  - stat: path=/etc/stereum/services
-    register: stereum_services_dir
-  - debug:
-      msg: "{{ stereum_services_dir }}"
-  # ufw
-  - shell: ufw status
-    register: stereum_ufw_status
-  - debug:
-      msg: "{{ stereum_ufw_status }}"
-  - assert:
-      that:
-      - stereum_ufw_status.stdout.find("9000/tcp") != -1
-      - stereum_ufw_status.stdout.find("9000/udp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
-      - stereum_ufw_status.stdout.find("30303/tcp") != -1
-      - stereum_ufw_status.stdout.find("30303/udp") != -1
-  #  besu logs
-  - name: Besu
-    command: "docker logs --tail=200 stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80"
-    register: besu
+  #  teku beacon logs
+  - name: Teku beacon
+    command: "docker logs --tail=20 stereum-1929168e-e0d6-11ec-9183-97daacc21ea6"
+    register: teku_beacon
     until:
-      - besu.stdout is search("\(importBlock\)")
+      - teku_beacon.stdout is search("Endpoint http://stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80:8551 is INVALID | Connection refused")
+      - teku_beacon.stdout is search("Eth1 service down or still syncing for")
     retries: 60
     delay: 10
-  #  lighthouse beacon logs
-  - name: Lighthouse beacon
-    command: "docker logs --tail=200 stereum-f420f27c-ee3f-11ec-b858-037ea73ab504"
-    register: lighthouse_beacon
-    until:
-      - lighthouse_beacon.stderr is search("est_time")
-      - lighthouse_beacon.stderr is not search("eth1-endpoints contains an invalid URL")
-      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
-    retries: 60
-    delay: 10
-  # container's images & ports
-  - shell: docker ps
-    register: stereum_docker_ps
-  - debug:
-      msg: "{{ stereum_docker_ps }}"
-  - assert:
-      that:
-      - stereum_docker_ps.stdout.find("hyperledger/besu") != -1
-      - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("30303->30303") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
-      - stereum_docker_ps.stdout.find("9000->9000") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
 
 # EOF

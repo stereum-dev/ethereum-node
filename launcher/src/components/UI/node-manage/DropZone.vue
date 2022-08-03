@@ -89,11 +89,11 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
   grid-template-rows: repeat(2, 100px);
-  row-gap: 3px;
+  row-gap: 1px;
   overflow-x: hidden;
   overflow-y: auto;
   width: 99%;
-  height: 100%;
+  height: 100px;
   margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
