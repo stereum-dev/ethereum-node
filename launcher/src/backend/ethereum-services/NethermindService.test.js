@@ -26,12 +26,12 @@ test('buildByUserInput', () => {
 
 test('buildExecutionClientHttpEndpointUrl', () => {
     const nethermindHttpEndpoint = NethermindService.buildByUserInput(networks.goerli, [], '/opt/stereum/nethermind').buildExecutionClientHttpEndpointUrl()
-    expect(nethermindHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8545/)
+    expect(nethermindHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8551/)
 })
 
 test('buildExecutionClientWsEndpointUrl', () => {
     const nethermindWsEndpoint = NethermindService.buildByUserInput(networks.goerli, [], '/opt/stereum/nethermind').buildExecutionClientWsEndpointUrl()
-    expect(nethermindWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8546/)
+    expect(nethermindWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8551/)
 })
 
 test('buildExecutionClientMetricsEndpoint', () => {

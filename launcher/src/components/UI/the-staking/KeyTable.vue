@@ -186,7 +186,7 @@ export default {
   data() {
     return {
       message: "",
-      bDialogVisible: true,
+      bDialogVisible: false,
       isDragOver: false,
       keyFiles: [],
       insertFilePage: true,
