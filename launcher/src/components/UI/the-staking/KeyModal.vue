@@ -1,14 +1,21 @@
 <template>
-  <div class="finish-modal-parent">
+  <div class="key-modal-parent">
     <div class="modal-opacity"></div>
-    <div class="finish-modal-content">
-      <div class="title-box">
-        <img src="../../../../public/img/icon/form-setup/warning.png" alt="" />
+    <div class="key-modal-content">
+      <div class="title-box" v-if="importIsProcessing">
+        <span>Importing validator key(s)</span>
       </div>
-      <div class="import-message">
+      <div class="processImg" v-if="importIsProcessing">
+        <img src="/img/icon/the-staking/bicycle2.gif" alt="icon" />
+      </div>
+      <div class="import-message" v-if="importIsProcessing">
+        <span>It may take some times</span>
+        <span>Please wait until the key is imported</span>
+      </div>
+      <div class="import-message" v-if="importIsDone">
         <span>{{ message }}</span>
       </div>
-      <div class="confirm-btn">
+      <div class="confirm-btn" v-if="importIsDone">
         <div class="confirm-box" @click="$emit('hideModal')">
           <span>Confirm</span>
         </div>
@@ -17,12 +24,20 @@
   </div>
 </template>
 <script>
+import SandClock from "../the-control/SandClock.vue";
 export default {
-    props: ["message"],
+  components: { SandClock },
+  props: ["message"],
+  data() {
+    return {
+      importIsProcessing: true,
+      importIsDone: false,
+    };
+  },
 };
 </script>
 <style scoped>
-.finish-modal-parent {
+.key-modal-parent {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -40,17 +55,17 @@ export default {
   opacity: 0.7;
   z-index: 311;
 }
-.finish-modal-content {
-  width: 40%;
-  height: 40%;
+.key-modal-content {
+  width: 50%;
+  height: 50%;
   border-radius: 1rem;
-  background-color: #324844;
+  background-color: #363a41;
   border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
-  position: fixed;
-  top: 30%;
-  left: 30%;
+  position: absolute;
+  top: 13%;
+  left: 20%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -60,40 +75,71 @@ export default {
 .title-box {
   width: 100%;
   height: 50px;
-  margin-top: 10px;
+  background-color: rgb(55, 107, 102);
+  border-radius: 12px 12px 0 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.title-box img {
-  width: 45px;
-  height: 45px;
+
+.title-box span {
+  color: rgb(162, 162, 162);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.processImg {
+  width: 80%;
+  height: 30%;
+  margin: 0 auto;
+  position: relative;
+  border-bottom: 1px solid gray;
+}
+.processImg img {
+  width: 40px;
+  height: 27px;
+  position: absolute;
+  animation: move 5s linear infinite;
+}
+@keyframes move {
+  0% {
+    left: 0%;
+    bottom: 5px;
+  }
+  25% {
+    left: 25%;
+    bottom: 5px;
+  }
+  50% {
+    left: 50%;
+    bottom: 5px;
+  }
+  75% {
+    left: 75%;
+    bottom: 5px;
+  }
+  100% {
+    left: 90%;
+    bottom: 5px;
+  }
 }
 .import-message {
-  width: 95%;
-  height: 40%;
+  width: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
-.import-message span:first-child {
-  color: rgb(124, 162, 197);
-  font-size: 0.9rem;
-  font-weight: 700;
-}
-.import-message span:last-child {
-  color: rgb(197, 197, 197);
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-top: 20px;
-  text-align: center;
-}
-/* .import-message span {
-  color: rgb(195, 195, 195);
+
+.import-message span {
+  color: rgb(156, 156, 156);
   font-size: 1rem;
-  font-weight: 700;
-} */
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-transform: unset;
+}
 .confirm-btn {
   width: 100%;
   height: 30%;

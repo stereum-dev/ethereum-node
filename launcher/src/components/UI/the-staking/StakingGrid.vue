@@ -5,7 +5,7 @@
         <key-table :button="button"></key-table>
         <time-reward></time-reward>
         <selection-options
-          @click-me="optionButtonHandler(button)"
+          @click-me="optionButtonHandlefa-rotate-90"
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>

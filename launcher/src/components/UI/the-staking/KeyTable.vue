@@ -10,11 +10,11 @@
           <span id="balance">BALANCE</span>
           <span id="option">OPTIONS</span>
         </div>
-        <finish-modal
+        <key-modal
           v-if="bDialogVisible"
           @hide-modal="hideBDialog"
           :message="message"
-        ></finish-modal>
+        ></key-modal>
         <div
           class="table-content"
           v-if="importValidatorKeyActive"
@@ -159,7 +159,7 @@
           autofocus
         />
         <button
-          @keydown.enter="importKey"
+          @keyup.enter="importKey"
           @click="importKey"
           v-if="passwordInputActive"
         >
@@ -178,7 +178,7 @@
           autofocus
         />
         <button
-          @keydown.enter="setFeeRecipient"
+          @keyup.enter="setFeeRecipient"
           @click="setFeeRecipient"
           v-if="feeInputActive"
         >
@@ -192,7 +192,7 @@
 <script>
 import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
-import FinishModal from "./FinishModal.vue";
+import KeyModal from "./KeyModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -200,14 +200,13 @@ import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
   props: ["button"],
-  components: { ShowKey, DropZone, FinishModal },
+  components: { ShowKey, DropZone, KeyModal },
   data() {
     return {
       message: "",
       bDialogVisible: true,
       isDragOver: false,
       keyFiles: [],
-      keys: [],
       importValidatorKeyActive: true,
       insertKeyBoxActive: true,
       enterPasswordBox: false,
@@ -265,6 +264,7 @@ export default {
       }
     },
     listKeys: async function () {
+      
       let keys = [];
       let totalBalance = 0;
       let clients = this.installedServices.filter((s) =>
@@ -376,11 +376,12 @@ export default {
       }
     },
     importKey: async function () {
+      this.bDialogVisible = true;
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
       });
-      this.bDialogVisible = true
+      this.bDialogVisible = true;
       this.forceRefresh = true;
       this.keyFiles = [];
       this.listKeys();
@@ -390,7 +391,6 @@ export default {
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
       this.feeRecipientBoxActive = true;
-      this.keyFiles = [];
     },
     setFeeRecipient() {
       this.enterPasswordBox = false;
@@ -443,8 +443,8 @@ export default {
       }
     },
     hideBDialog() {
-      this.bDialogVisible = false
-    }
+      this.bDialogVisible = false;
+    },
   },
 };
 </script>
