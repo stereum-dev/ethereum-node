@@ -43,6 +43,19 @@
     when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
     with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt') }}"
 
+  - name: Set directory permissions for engine.jwt
+    file:
+      path: "{{ item.split(':') | first | replace('/engine.jwt', '') }}"
+      state: directory
+      owner: "{{ stereum_service_configuration.user }}"
+      group: "{{ stereum_service_configuration.user }}"
+      mode: 0700
+      recurse: yes
+    changed_when: false
+    become: yes
+    when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
+    with_items: "{{ stereum_service_configuration.volumes | select('search', ':/engine.jwt') }}"
+
   - name: Stereum's docker network
     docker_network:
       name: stereum
@@ -83,7 +96,7 @@
     vars:
         hex_chars: '0123456789abcdef'
     become: yes
-    when: stereum_service_configuration.service in ['BesuService', 'GethService', 'NethermindService']
+    when: stereum_service_configuration.service in ['BesuService', 'GethService', 'NethermindService', 'TekuBeaconService']
 
   - include_tasks: write-grafana-configuration.yml
     when: >
