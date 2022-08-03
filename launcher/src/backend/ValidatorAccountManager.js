@@ -101,13 +101,20 @@ export class ValidatorAccountManager {
 
         }
         try {
-            await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
+            let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
+            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            let result = (JSON.parse(logs[1])).msg.data
+            if(result.some(run => run.status === "error")){
+                throw result.find(run => run.message != undefined).message
+            }
+            let imported = 0
+            result.forEach(run => {if(run.status === "imported")imported ++})
+            return imported + " Keys were imported!"
         } catch (err) {
             log.error("Validator Import Failed:\n", err)
-            return err
+            this.batches = []
+            return "Validator Import Failed:\n" + err
         }
-        this.batches = []
-        return client
     }
 
     async listValidators(serviceID) {
