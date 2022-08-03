@@ -36,6 +36,7 @@ export class TekuBeaconService extends NodeService {
                 //`--eth1-endpoints=${executionLayer}`,
                 `--ee-endpoint=${executionLayer}`,
                 `--ee-jwt-secret-file=${JWTDir}`,
+                //`--validators-proposer-default-fee-recipient=<ADDRESS>`,
                 '--metrics-enabled=true',
                 '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',

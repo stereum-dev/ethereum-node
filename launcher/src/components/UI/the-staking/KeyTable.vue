@@ -94,6 +94,8 @@ export default {
   components: { ShowKey, DropZone },
   data() {
     return {
+      message: "",
+      bDialogVisible: true,
       isDragOver: false,
       keyFiles: [],
       keys: [],
