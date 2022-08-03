@@ -71,6 +71,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 import { useControlStore } from "../../../store/theControl";
+import { useStakingStore } from "../../../store/theStaking";
 export default {
   data() {
     return {
@@ -99,6 +100,9 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+    ...mapWritableState(useStakingStore, {
+      keys: "keys",
+    })
   },
   methods: {
     openModal() {
@@ -122,6 +126,7 @@ export default {
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
+        this.keys = []
         this.versions = {};
         this.headerServices = [];
         this.runningServices = [];

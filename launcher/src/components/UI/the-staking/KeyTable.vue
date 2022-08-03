@@ -10,6 +10,11 @@
           <span id="balance">BALANCE</span>
           <span id="option">OPTIONS</span>
         </div>
+        <finish-modal
+          v-if="bDialogVisible"
+          @hide-modal="hideBDialog"
+          :message="message"
+        ></finish-modal>
         <div
           class="table-content"
           v-if="insertFilePage"
@@ -168,20 +173,22 @@
   </div>
 </template>
 <script>
-import ShowKey from "./DropZone.vue";
-import DropZone from "./ShowKey.vue";
+import DropZone from "./DropZone.vue";
+import ShowKey from "./ShowKey.vue";
+import FinishModal from "./FinishModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
-  components: { ShowKey, DropZone },
+  components: { ShowKey, DropZone, FinishModal },
   data() {
     return {
+      message: "",
+      bDialogVisible: true,
       isDragOver: false,
       keyFiles: [],
-      keys: [],
       insertFilePage: true,
       enterPasswordPage: false,
       passwordInputActive: false,
@@ -213,6 +220,7 @@ export default {
     }),
     ...mapWritableState(useStakingStore, {
       totalBalance: "totalBalance",
+      keys: "",
     }),
   },
   methods: {
@@ -344,11 +352,13 @@ export default {
       }
     },
     importKey: async function () {
-      await ControlService.importKey({
+      this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
       });
+      this.bDialogVisible = true
       this.forceRefresh = true;
+      this.keyFiles = [];
       this.listKeys();
       this.password = "";
       this.insertFilePage = true;
@@ -357,7 +367,6 @@ export default {
     },
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
-      console.log(uploadedFiles);
       if (
         !this.keyFiles.includes(uploadedFiles[0]["name"]) &&
         uploadedFiles[0]["type"] === "application/json"
@@ -396,6 +405,9 @@ export default {
         this.passwordInputActive = false;
       }
     },
+    hideBDialog() {
+      this.bDialogVisible = false
+    }
   },
 };
 </script>
