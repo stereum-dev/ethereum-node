@@ -15,7 +15,7 @@
             <span>Importing validator key(s)</span>
           </div>
           <div class="processImg" v-if="importIsProcessing">
-            <img src="/img/icon/the-staking/bicycle2.gif" alt="icon" />
+            <img src="/img/icon/the-staking/motor3.gif" alt="icon" />
           </div>
           <div class="import-message" v-if="importIsProcessing">
             <span>It may take some times</span>
@@ -219,7 +219,7 @@ export default {
   data() {
     return {
       message: "",
-      bDialogVisible: false,
+      bDialogVisible: true,
       isDragOver: false,
       keyFiles: [],
       importValidatorKeyActive: true,
@@ -230,7 +230,7 @@ export default {
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
-      importIsProcessing: false,
+      importIsProcessing: true,
       importIsDone: false,
       password: "",
       forceRefresh: false,
@@ -394,6 +394,7 @@ export default {
     importKey: async function () {
       this.bDialogVisible = true;
       this.importIsProcessing = true;
+      this.importIsDone = false;
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
@@ -970,31 +971,31 @@ export default {
   border-bottom: 1px solid gray;
 }
 .processImg img {
-  width: 40px;
-  height: 27px;
+  width: 65px;
+  height: 60px;
   position: absolute;
   animation: move 5s linear infinite;
 }
 @keyframes move {
   0% {
     left: 0%;
-    bottom: 5px;
+    bottom: -10px;
   }
   25% {
-    left: 25%;
-    bottom: 5px;
+    left: 20%;
+    bottom: -10px;
   }
   50% {
-    left: 50%;
-    bottom: 5px;
+    left: 40%;
+    bottom: -10px;
   }
   75% {
-    left: 75%;
-    bottom: 5px;
+    left: 62%;
+    bottom: -10px;
   }
   100% {
-    left: 90%;
-    bottom: 5px;
+    left: 85%;
+    bottom: -10px;
   }
 }
 .import-message {
