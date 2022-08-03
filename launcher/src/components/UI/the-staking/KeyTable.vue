@@ -10,11 +10,26 @@
           <span id="balance">BALANCE</span>
           <span id="option">OPTIONS</span>
         </div>
-        <key-modal
-          v-if="bDialogVisible"
-          @hide-modal="hideBDialog"
-          :message="message"
-        ></key-modal>
+        <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
+          <div class="title-box">
+            <span>Importing validator key(s)</span>
+          </div>
+          <div class="processImg" v-if="importIsProcessing">
+            <img src="/img/icon/the-staking/bicycle2.gif" alt="icon" />
+          </div>
+          <div class="import-message" v-if="importIsProcessing">
+            <span>It may take some times</span>
+            <span>Please wait until the key is imported</span>
+          </div>
+          <div class="import-message" v-if="importIsDone">
+            <span>{{ message }}</span>
+          </div>
+          <div class="confirm-btn" v-if="importIsDone">
+            <div class="confirm-box" @click="hideBDialog">
+              <span>Confirm</span>
+            </div>
+          </div>
+        </key-modal>
         <div
           class="table-content"
           v-if="importValidatorKeyActive"
@@ -204,7 +219,7 @@ export default {
   data() {
     return {
       message: "",
-      bDialogVisible: true,
+      bDialogVisible: false,
       isDragOver: false,
       keyFiles: [],
       importValidatorKeyActive: true,
@@ -215,6 +230,8 @@ export default {
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
+      importIsProcessing: false,
+      importIsDone: false,
       password: "",
       forceRefresh: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
@@ -264,7 +281,6 @@ export default {
       }
     },
     listKeys: async function () {
-      
       let keys = [];
       let totalBalance = 0;
       let clients = this.installedServices.filter((s) =>
@@ -377,14 +393,16 @@ export default {
     },
     importKey: async function () {
       this.bDialogVisible = true;
+      this.importIsProcessing = true;
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
       });
-      this.bDialogVisible = true;
       this.forceRefresh = true;
       this.keyFiles = [];
       this.listKeys();
+      this.importIsProcessing = false;
+      this.importIsDone = true;
       this.password = "";
       this.importValidatorKeyActive = false;
       this.insertKeyBoxActive = false;
@@ -926,5 +944,107 @@ export default {
   border-radius: 50% !important;
   background-color: #fff !important;
   margin-left: 5px;
+}
+.title-box {
+  width: 100%;
+  height: 50px;
+  background-color: rgb(55, 107, 102);
+  border-radius: 12px 12px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-box span {
+  color: rgb(162, 162, 162);
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.processImg {
+  width: 80%;
+  height: 30%;
+  margin: 0 auto;
+  position: relative;
+  border-bottom: 1px solid gray;
+}
+.processImg img {
+  width: 40px;
+  height: 27px;
+  position: absolute;
+  animation: move 5s linear infinite;
+}
+@keyframes move {
+  0% {
+    left: 0%;
+    bottom: 5px;
+  }
+  25% {
+    left: 25%;
+    bottom: 5px;
+  }
+  50% {
+    left: 50%;
+    bottom: 5px;
+  }
+  75% {
+    left: 75%;
+    bottom: 5px;
+  }
+  100% {
+    left: 90%;
+    bottom: 5px;
+  }
+}
+.import-message {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.import-message span {
+  color: rgb(156, 156, 156);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+  text-transform: unset;
+}
+.confirm-btn {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.confirm-box {
+  width: 50%;
+  height: 45%;
+  border-radius: 10px;
+  border: 1px solid #8f8f8f;
+  background-color: #8f8f8f;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: rgb(210, 210, 210);
+  text-transform: uppercase;
+}
+
+.confirm-box:hover {
+  border: 1px solid #d3d3d3;
+  transition-duration: 100ms;
+}
+.confirm-box:active {
+  transform: scale(0.98);
+  box-shadow: none;
+  transition-duration: 100ms;
 }
 </style>
