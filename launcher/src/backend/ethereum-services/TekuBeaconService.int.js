@@ -4,6 +4,8 @@ import { ServicePort, servicePortProtocol } from './ServicePort.js'
 import { StringUtils } from '../StringUtils.js'
 import { ServiceManager } from '../ServiceManager.js'
 import { TekuBeaconService } from './TekuBeaconService.js'
+import { GethService } from './GethService.js'
+import { ServiceVolume } from './ServiceVolume.js'
 const log = require('electron-log')
 
 jest.setTimeout(1000000)
@@ -56,18 +58,28 @@ test('teku validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    let ports = [
+      new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+      new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+      new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+    ]
+    let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
 
-    const ports = [
-        new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
-        new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
-      ]
-    let tekuClient = TekuBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [], 'stereum.net')
+    ports = [
+      new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
+      new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+      new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
+      new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
+      new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
+    ]
+    let tekuClient = TekuBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [geth], 'stereum.net')
     //change out eth1 endpoint address for integration test
-    const index = tekuClient.command.findIndex(element => element.includes('--eth1-endpoints='))
-    tekuClient.command[index] = '--eth1-endpoints=http://10.10.0.3:8545'
+    // const index = tekuClient.command.findIndex(element => element.includes('--ee-endpoint='))
+    // tekuClient.command[index] = '--ee-endpoint==http://10.10.0.3:8545'
+    
+    await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
+    await serviceManager.manageServiceState(geth.id, 'started')
+
     //write config and start teku
     await nodeConnection.writeServiceConfiguration(tekuClient.buildConfiguration())
     await serviceManager.manageServiceState(tekuClient.id, 'started')
@@ -123,10 +135,11 @@ test('teku validator import', async () => {
     expect(validator_api_bearer.stdout).toBeTruthy()
 
     //teku teku logs
-    expect(status.stdout).toMatch(/Syncing/)
+    //expect(status.stdout).toMatch(/Syncing/)
     //expect(status.stdout).not.toMatch(/Eth1 service down/)
-    expect(status.stdout).toMatch(/Loading \b(?:[1-9]|[1-9][0-9]{1,3})\b validator keys\.\.\./)
-    expect(status.stdout).not.toMatch(/Loading \b[0]+\b validator keys\.\.\./)
+    //expect(status.stdout).toMatch(/Loading \b(?:[1-9]|[1-9][0-9]{1,3})\b validator keys\.\.\./)
+    //expect(status.stdout).not.toMatch(/Loading \b[0]+\b validator keys\.\.\./)
+    expect(status.stdout).toMatch(/Endpoint http:\/\/stereum-${geth.id}:8551 is INVALID | Still syncing/)
 
     //check docker container
     expect(docker.stdout).toMatch(/consensys\/teku/)
@@ -134,7 +147,7 @@ test('teku validator import', async () => {
     expect(docker.stdout).toMatch(/8008->8008/)
     expect(docker.stdout).toMatch(/9001->9001/)
     if(!(tekuClient.id.includes('Up'))){
-      expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+      expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
     }
 
 })

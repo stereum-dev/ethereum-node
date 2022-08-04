@@ -19,7 +19,7 @@
           </div>
           <div class="gewiValuePart">
             <div class="green">
-              <span>{{ incomVal }}</span>
+              <span>{{ totalBalance }}</span>
             </div>
             <div class="gewiCount">
               <div class="gewiCountValue">
@@ -41,14 +41,21 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "../../../store/theStaking";
 export default {
   data() {
     return {
       activeVal: 1,
-      incomVal: 32.000000001,
+
       gewiCount: 1,
       ratingVal: "S",
     };
+  },
+  computed: {
+    ...mapState(useStakingStore, {
+      totalBalance: "totalBalance",
+    }),
   },
 };
 </script>

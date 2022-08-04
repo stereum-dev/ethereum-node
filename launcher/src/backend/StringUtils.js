@@ -1,4 +1,5 @@
 const log = require('electron-log')
+import * as crypto from 'crypto'
 
 export class StringUtils {
   static escapeStringForShell (shellCmd) {
@@ -15,13 +16,14 @@ export class StringUtils {
   }
 
   static createRandomString () {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    //fallback if crypto breaks on us
+    const randomString = crypto.randomBytes(18).toString('hex')
     let result = ''
     for (let i = 0; i < 36; i++) {
       if (i == 8 || i == 13 || i == 18 || i == 23) {
         result += '-'
       } else {
-        result += characters.charAt(Math.random() * characters.length)
+        result += randomString[i]
       }
     }
     return result
