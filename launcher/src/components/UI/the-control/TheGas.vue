@@ -1,11 +1,11 @@
 <template>
   <div class="gasParent">
-    <div class="gasIco">
+    <div class="gasIco" v-on:click="test1">
       <img src="../../../../public/img/icon/control/gasIco.svg" />
     </div>
     <div class="baseFeeBox">
       <div class="baseFeeBox_title"><span>BASE FEE</span></div>
-      <div class="feeValue">
+      <div class="feeValue" v-on:click="test">
         <span>{{ feeValue }}</span>
       </div>
     </div>
@@ -39,6 +39,15 @@ export default {
         this.isGreen = false;
         this.isGrey = true;
       }
+    },
+  },
+  // methods are dummy and have to delete
+  methods: {
+    test() {
+      this.feeValue++;
+    },
+    test1() {
+      this.feeValue--;
     },
   },
 };
