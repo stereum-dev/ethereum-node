@@ -1,0 +1,94 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prysm_service: 1aaaf4a6-1352-11ed-ad87-b37d6103eb33
+    geth_service: 1c3ab554-1352-11ed-817e-37f53e69ec7d
+
+  tasks:
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+                - 127.0.0.1:8551:8551
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmBeaconService
+              id: "{{ prysm_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
+              ports:
+                - 127.0.0.1:4000:4000/tcp
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --p2p-max-peers=100
+                --http-web3provider=http://stereum-{{ geth_service }}:8551
+                --monitoring-port=8080
+                --monitoring-host=0.0.0.0
+                --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+# EOF
