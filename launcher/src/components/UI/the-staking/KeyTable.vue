@@ -167,12 +167,7 @@
     </div>
     <div class="passwordBox" v-if="enterPasswordBox">
       <div class="enter-password" @click="confirmPasswordHandler">
-        <input
-          v-model="password"
-          v-if="passwordInputActive"
-          type="password"
-          autofocus
-        />
+        <input v-model="password" v-if="passwordInputActive" type="password" />
         <button
           @keyup.enter="importKey"
           @click="importKey"
@@ -190,7 +185,6 @@
           v-model="password"
           v-if="feeInputActive"
           type="text"
-          autofocus
         />
         <button
           @keyup.enter="setFeeRecipient"
@@ -209,13 +203,13 @@ import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapActions, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
-  props: ["button"],
   components: { ShowKey, DropZone, KeyModal },
+  props: ["button"],
   data() {
     return {
       message: "",
@@ -246,11 +240,19 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
     };
   },
-  mounted() {
-    this.listKeys();
-  },
-  updated() {
-    this.checkKeyExists();
+  watch: {
+    button: {
+      deep: true,
+      handler(newVal) {
+        console.log(newVal.name);
+        if (newVal.name === "fee") {
+          this.insertKeyBoxActive = false;
+          this.enterPasswordBox = false;
+          this.feeRecipientBoxActive = true;
+          this.feeInputActive = true;
+        }
+      },
+    },
   },
   computed: {
     ...mapWritableState(useServices, {
@@ -262,6 +264,12 @@ export default {
       totalBalance: "totalBalance",
       keys: "",
     }),
+  },
+  mounted() {
+    this.listKeys();
+  },
+  updated() {
+    this.checkKeyExists();
   },
   methods: {
     stateIconHandler(item) {
@@ -411,13 +419,18 @@ export default {
       this.passwordInputActive = false;
       this.feeRecipientBoxActive = true;
     },
+    //FEE RECIPIENT
     setFeeRecipient() {
+      this.importValidatorKeyActive = true;
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
       this.feeRecipientBoxActive = false;
       this.insertKeyBoxActive = true;
-      this.importValidatorKeyActive = true;
     },
+    enterFeeHandler() {
+      this.feeInputActive = true;
+    },
+    //Importing key
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
       if (
@@ -449,18 +462,18 @@ export default {
     openUploadHandler() {
       this.$refs.fileInput.click();
     },
+    //Confirm buttons functions
     confirmPasswordHandler() {
       this.passwordInputActive = true;
     },
-    enterFeeHandler() {
-      this.feeInputActive = true;
-    },
+
     checkKeyExists() {
       if (this.keyFiles.length <= 0) {
         this.importValidatorKeyActive = true;
         this.enterPasswordBox = false;
       }
     },
+    //Importing key modal
     hideBDialog() {
       this.bDialogVisible = false;
     },

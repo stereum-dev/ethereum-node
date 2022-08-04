@@ -2,14 +2,14 @@
   <div class="selection-box">
     <div class="selection-table">
       <div
-        @click="$emit('clickBtn', ...button)"
         class="buttonRow"
         v-for="(button, index) in buttonState"
         :key="index"
+        @click="$emit('clickBtn', button)"
       >
         <div class="btnContent">
           <img :src="button.icon" alt="icon" />
-          <span>{{ button.name }}</span>
+          <span>{{ button.displayName }}</span>
         </div>
       </div>
     </div>
@@ -17,32 +17,8 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      buttonState: [
-        {
-          id: 1,
-          name: "grafiti",
-          icon: "/img/icon/the-staking/option-graffiti.png",
-        },
-        {
-          id: 2,
-          name: "remove keys",
-          icon: "/img/icon/the-staking/option-remove.png",
-        },
-        {
-          id: 3,
-          name: "change fee recipient",
-          icon: "img/icon/the-staking/fee-icon2.png",
-        },
-        {
-          id: 4,
-          name: "exit chain",
-          icon: "img/icon/the-staking/redexit-icon.png",
-        },
-      ],
-    };
-  },
+  props: ["buttonState"],
+  methods: {},
 };
 </script>
 <style scoped>

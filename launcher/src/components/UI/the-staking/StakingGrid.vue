@@ -5,7 +5,8 @@
         <key-table :button="button"></key-table>
         <time-reward></time-reward>
         <selection-options
-          @click-me="optionButtonHandlefa-rotate-90"
+          :buttonState="buttonState"
+          @click-btn="clickBtnHandler"
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
@@ -20,7 +21,6 @@ import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
 import TimeReward from "./TimeReward.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
-
 export default {
   components: {
     KeyTable,
@@ -29,7 +29,46 @@ export default {
     TimeReward,
     TaskManager,
   },
-  methods: {},
+  data() {
+    return {
+      buttonState: [
+        {
+          id: 1,
+          name: "grafiti",
+          displayName: "Grafiti",
+          icon: "/img/icon/the-staking/option-graffiti.png",
+          method: this.grafitiBtn,
+        },
+        {
+          id: 2,
+          name: "remove",
+          displayName: "Remove keys",
+          icon: "/img/icon/the-staking/option-remove.png",
+          method: this.removeBtn,
+        },
+        {
+          id: 3,
+          name: "fee",
+          displayName: "change fee recipient",
+          icon: "img/icon/the-staking/fee-icon2.png",
+          method: this.feeBtn,
+        },
+        {
+          id: 4,
+          name: "exit",
+          displayName: "exit chain",
+          icon: "img/icon/the-staking/redexit-icon.png",
+          method: this.exitBtn,
+        },
+      ],
+      button: {},
+    };
+  },
+  methods: {
+    clickBtnHandler(el) {
+      this.button = el;
+    },
+  },
 };
 </script>
 <style scoped>
