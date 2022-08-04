@@ -62,6 +62,7 @@ export class Monitoring {
   //availDisk, usedDisk, used%
   //CPUusage
   //rx tx
+  //readSpeed writeSpeed
   async getServerVitals() {
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
