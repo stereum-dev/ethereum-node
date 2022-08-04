@@ -10,8 +10,8 @@ stereum_static:
         install: false
     versions:
       # consensus clients
-      lighthouse: v2.3.1
-      nimbus: multiarch-v22.6.1
+      lighthouse: v2.4.0
+      nimbus: multiarch-v22.7.0
       teku: "22.7.0"
       prysm: v2.1.3
 
