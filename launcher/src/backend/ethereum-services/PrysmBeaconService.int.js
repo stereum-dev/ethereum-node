@@ -5,6 +5,7 @@ import { StringUtils } from '../StringUtils.js'
 import { ServiceManager } from '../ServiceManager.js'
 import { PrysmBeaconService } from './PrysmBeaconService.js'
 import { PrysmValidatorService } from './PrysmValidatorService.js'
+import { GethService } from './GethService.js'
 const log = require('electron-log')
 
 jest.setTimeout(1000000)
@@ -58,20 +59,29 @@ test('prysm validator import', async () => {
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
     let ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+      ]
+      let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+
+    ports = [
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
     ]
-    let prysmBC = PrysmBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [])
+    let prysmBC = PrysmBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [geth])
     //change out http address for integration test
-    prysmBC.command = prysmBC.command.replace('--http-web3provider=undefined','--http-web3provider=http://10.10.0.3:8545')
+    // prysmBC.command = prysmBC.command.replace('--http-web3provider=' + geth.buildExecutionClientHttpEndpointUrl(),'--http-web3provider=http://10.10.0.3:8545')
     prysmBC.command = prysmBC.command.replace('--fallback-web3provider=undefined','--fallback-web3provider=[]')
-
+    
     ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
     ]
     let prysmVC = PrysmValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [prysmBC])
-
+    
+    await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
+    await serviceManager.manageServiceState(geth.id, 'started')
     await Promise.all([
         nodeConnection.writeServiceConfiguration(prysmBC.buildConfiguration()),
         nodeConnection.writeServiceConfiguration(prysmVC.buildConfiguration())
@@ -97,7 +107,6 @@ test('prysm validator import', async () => {
     await nodeConnection.sshService.exec(`docker exec stereum-${prysmVC.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater`)
 
     await nodeConnection.sshService.exec(`chown -R 2000:2000 ${wallet_path}`)
-
 
     await Promise.all([
         serviceManager.manageServiceState(prysmBC.id, 'stopped'),
@@ -162,7 +171,7 @@ test('prysm validator import', async () => {
     expect(docker.stdout).toMatch(/12000->12000/)
     expect(docker.stdout).toMatch(/13000->13000/)
     if(!([prysmBC.id,prysmVC.id].join('').includes('Up'))){
-        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(3)
     }
 
     //check prysm BC logs

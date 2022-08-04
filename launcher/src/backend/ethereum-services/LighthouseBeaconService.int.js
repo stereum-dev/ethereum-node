@@ -5,6 +5,7 @@ import { StringUtils } from '../StringUtils.js'
 import { ServiceManager } from '../ServiceManager.js'
 import { LighthouseBeaconService } from './LighthouseBeaconService.js'
 import { LighthouseValidatorService } from './LighthouseValidatorService.js'
+import { GethService } from './GethService.js'
 const log = require('electron-log')
 
 jest.setTimeout(1000000)
@@ -57,19 +58,30 @@ test('lighthouse validator import', async () => {
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
     let ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+      ]
+      let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+
+    ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
-    let lhBC = LighthouseBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [], '16')
+
+    let lhBC = LighthouseBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16')
     //change out http address for integration test
-    const index = lhBC.command.findIndex(element => element.includes('--eth1-endpoints='))
-    lhBC.command[index] = '--eth1-endpoints=http://10.10.0.3:8545'
+    // const index = lhBC.command.findIndex(element => element.includes('--execution-endpoint='))
+    // lhBC.command[index] = '--execution-endpoint=http://10.10.0.3:8545'
 
     ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
     ]
     let lhVC = LighthouseValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [lhBC], 'stereum.net')
+
+    await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
+    await serviceManager.manageServiceState(geth.id, 'started')
 
     //write configs for lighhouse BC and VC
     await nodeConnection.writeServiceConfiguration(lhBC.buildConfiguration())
@@ -125,7 +137,7 @@ test('lighthouse validator import', async () => {
     expect(docker.stdout).toMatch(/5062->5062/)
     expect(docker.stdout).toMatch(/9000->9000/)
     if(!([lhBC.id,lhVC.id].join('').includes('Up'))){
-        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(3)
     }
 
     //check lighthouse BC logs
