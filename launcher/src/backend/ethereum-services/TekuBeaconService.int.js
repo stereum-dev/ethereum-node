@@ -17,7 +17,7 @@ test('teku validator import', async () => {
         name: 'Teku--integration-test--ubuntu-2204',
         image: 'ubuntu-22.04',
         location: 'fsn1',
-        server_type: 'cxp21',
+        server_type: 'cpx21',
         start_after_create: true,
     }
     await testServer.create(serverSettings)
