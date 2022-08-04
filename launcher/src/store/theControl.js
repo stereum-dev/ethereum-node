@@ -13,6 +13,8 @@ export const useControlStore = defineStore("theControl", {
       cpu: null,
       rx: null,
       tx: null,
+      readValue: null,
+      writeValue:null
     };
   },
   actions: {
