@@ -187,8 +187,8 @@
           type="text"
         />
         <button
-          @keyup.enter="setFeeRecipient"
-          @click="setFeeRecipient"
+          @keyup.enter="confirmFeeRecipientAddress"
+          @click="confirmFeeRecipientAddress"
           v-if="feeInputActive"
         >
           CONFIRM
@@ -203,7 +203,7 @@ import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
 import ControlService from "@/store/ControlService";
-import { mapActions, mapWritableState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
@@ -243,13 +243,18 @@ export default {
   watch: {
     button: {
       deep: true,
-      handler(newVal) {
-        console.log(newVal.name);
-        if (newVal.name === "fee") {
+      handler(val) {
+        if (val.name === "fee") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.feeRecipientBoxActive = true;
           this.feeInputActive = true;
+        } else if (val.name === "grafiti") {
+          console.log("This is grafiti");
+        } else if (val.name === "remove") {
+          console.log("this removes a key");
+        } else {
+          console.log("this is exit");
         }
       },
     },
@@ -420,7 +425,7 @@ export default {
       this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
-    setFeeRecipient() {
+    confirmFeeRecipientAddress() {
       this.importValidatorKeyActive = true;
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
