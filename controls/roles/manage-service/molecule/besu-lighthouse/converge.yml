@@ -1,0 +1,107 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_service: 38ea4c6c-13d1-11ed-9409-a3ba683b4353
+    besu_service: 3a262fb0-13d1-11ed-af95-cb6eba7b380c
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: "hyperledger/besu:{{ stereum_static.defaults.versions.besu }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+                - 127.0.0.1:8551:8551/tcp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-host=0.0.0.0
+                - --host-allowlist=*
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --logging=INFO
+                - --engine-rpc-enabled=true
+                - --engine-host-allowlist=*
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+                - --Xmerge-support=true
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+                - 127.0.0.1:5052:5052/tcp
+              command:
+                - lighthouse
+                - --spec=goerli
+                - --network=prater
+                - --debug-level=info
+                - beacon_node
+                - --datadir=/opt/app/beacon
+                - --eth1
+                - --http
+                - --http-allow-sync-stalled
+                - --metrics
+                - --merge
+                - --execution-endpoints=http://stereum-{{ besu_service }}:8551
+                - --jwt-secrets=/engine.jwt
+                - --enr-udp-port=9000
+                - --enr-tcp-port=9000
+                - --discovery-port=9000
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_service }}/slasher:/opt/app/slasher"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+# EOF
