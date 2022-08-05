@@ -15,13 +15,17 @@ test('buildConfiguration', () => {
   const mMock = jest.fn(() => { return 'Ws-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientWsEndpointUrl: mMock,
+      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
           service: 'GethService'
         }
-      })
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
     }
   })
 
@@ -29,10 +33,11 @@ test('buildConfiguration', () => {
 
   expect(nimbusService.command).toContain('--web3-url=Ws-endpoint-string')
   expect(nimbusService.command).toContain('--network=prater')
-  expect(nimbusService.volumes).toHaveLength(3)
+  expect(nimbusService.volumes).toHaveLength(4)
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus-' + nimbusService.id + '/beacon:/opt/app/beacon')
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus-' + nimbusService.id + '/validator/validators:/opt/app/validators')
   expect(nimbusService.volumes).toContain('/opt/stereum/nimbus-' + nimbusService.id + '/validator/secrets:/opt/app/secrets')
+  expect(nimbusService.volumes).toContain('some/path/engine.jwt:/engine.jwt')
   expect(nimbusService.ports).toHaveLength(3)
   expect(nimbusService.id).toHaveLength(36)
   expect(nimbusService.user).toMatch(/2000/)
@@ -52,23 +57,71 @@ test('buildConsensusClientWsEndpointUrl', () => {
   const mMock = jest.fn(() => { return 'Ws-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientWsEndpointUrl: mMock
+      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
     }
   })
 
-  const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', []).buildConsensusClientHttpEndpointUrl()
+  const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', [new GethService.GethService()]).buildConsensusClientHttpEndpointUrl()
 
   expect(nimbusEndpoint).toMatch(/http:\/\/stereum-.{36}:5052/)
 })
 
 test('getAvailablePorts', () => {
-  const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/nimbus', []).getAvailablePorts()
+
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'Ws-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
+  const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/nimbus', [new GethService.GethService()]).getAvailablePorts()
 
   expect(nimbusServicePorts).toHaveLength(4)
 })
 
 test('network', () => {
-  const nimbusService = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', []).buildConfiguration()
+
+  jest.mock('./GethService')
+  const GethService = require('./GethService')
+  const mMock = jest.fn(() => { return 'Ws-endpoint-string' })
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCWsEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'geth-id',
+          service: 'GethService'
+        }
+      }),
+      volumes: [
+        new ServiceVolume('some/path/data', 'some/path/other/data'),
+        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+      ]
+    }
+  })
+  const nimbusService = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', [new GethService.GethService()]).buildConfiguration()
 
   expect(nimbusService.network).toMatch(/goerli/)
 })
