@@ -15,7 +15,7 @@ test('buildConfiguration', () => {
   const mMock = jest.fn(() => { return 'http-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
@@ -48,7 +48,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
   const mMock = jest.fn(() => { return 'http-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
@@ -78,7 +78,7 @@ test('getAvailablePorts', () => {
   const mMock = jest.fn(() => { return 'http-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
@@ -102,7 +102,7 @@ test('network', () => {
   const mMock = jest.fn(() => { return 'http-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
@@ -126,7 +126,7 @@ test('slasherDbSize', () => {
   const mMock = jest.fn(() => { return 'http-endpoint-string' })
   GethService.GethService.mockImplementation(() => {
     return {
-      buildExecutionClientHttpEndpointUrl: mMock,
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
       buildMinimalConfiguration: jest.fn(() => {
         return {
           id: 'geth-id',
