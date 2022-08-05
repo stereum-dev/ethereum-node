@@ -151,7 +151,7 @@ export default {
       this.updateStates();
     },
     openDefaultBrowser(el) {
-      let url = "https://www.google.com/";
+      let url = el.linkUrl;
       window.open(url, "_blank");
       el.displayPluginMenu = false;
     },

@@ -2,9 +2,12 @@
   <div class="staking-parent">
     <div class="staking-green-bg">
       <div class="staking-black-bg">
-        <key-table></key-table>
+        <key-table :button="button"></key-table>
         <time-reward></time-reward>
-        <selection-options></selection-options>
+        <selection-options
+          :buttonState="buttonState"
+          @click-btn="clickBtnHandler"
+        ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
         <task-manager></task-manager>
@@ -13,21 +16,60 @@
   </div>
 </template>
 <script>
-import KeyTable from './KeyTable.vue'
-import SelectionOptions from './SelectionOptions.vue'
-import ValidatorsBox from './ValidatorsBox.vue'
-import TimeReward from './TimeReward.vue'
-import TaskManager from '../task-manager/TaskManager.vue'
-
+import KeyTable from "./KeyTable.vue";
+import SelectionOptions from "./SelectionOptions.vue";
+import ValidatorsBox from "./ValidatorsBox.vue";
+import TimeReward from "./TimeReward.vue";
+import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     KeyTable,
     SelectionOptions,
     ValidatorsBox,
     TimeReward,
-    TaskManager
-  }
-}
+    TaskManager,
+  },
+  data() {
+    return {
+      buttonState: [
+        {
+          id: 1,
+          name: "grafiti",
+          displayName: "Grafiti",
+          icon: "/img/icon/the-staking/option-graffiti.png",
+          method: this.grafitiBtn,
+        },
+        {
+          id: 2,
+          name: "remove",
+          displayName: "Remove keys",
+          icon: "/img/icon/the-staking/option-remove.png",
+          method: this.removeBtn,
+        },
+        {
+          id: 3,
+          name: "fee",
+          displayName: "change fee recipient",
+          icon: "img/icon/the-staking/fee-icon2.png",
+          method: this.feeBtn,
+        },
+        {
+          id: 4,
+          name: "exit",
+          displayName: "exit chain",
+          icon: "img/icon/the-staking/redexit-icon.png",
+          method: this.exitBtn,
+        },
+      ],
+      button: {},
+    };
+  },
+  methods: {
+    clickBtnHandler(el) {
+      this.button = el;
+    },
+  },
+};
 </script>
 <style scoped>
 .staking-parent {
@@ -62,7 +104,7 @@ export default {
   bottom: 0px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 30% 32% 33% 5%;
+  grid-template-rows: 30% 26% 39% 5%;
 }
 .footer {
   width: 100%;
