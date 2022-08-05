@@ -74,6 +74,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
+              service: PrysmBeaconService
               image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
                 - 127.0.0.1:4000:4000/tcp

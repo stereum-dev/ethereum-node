@@ -27,12 +27,12 @@ test('buildByUserInput', () => {
 
 test('buildExecutionClientHttpEndpointUrl', () => {
     const besuHttpEndpoint = BesuService.buildByUserInput(networks.goerli, [], '/opt/stereum/besu').buildExecutionClientHttpEndpointUrl()
-    expect(besuHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8551/)
+    expect(besuHttpEndpoint).toMatch(/http:\/\/stereum-.{36}:8545/)
 })
 
 test('buildExecutionClientWsEndpointUrl', () => {
     const besuWsEndpoint = BesuService.buildByUserInput(networks.goerli, [], '/opt/stereum/besu').buildExecutionClientWsEndpointUrl()
-    expect(besuWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8551/)
+    expect(besuWsEndpoint).toMatch(/ws:\/\/stereum-.{36}:8546/)
 })
 
 test('buildExecutionClientMetricsEndpoint', () => {

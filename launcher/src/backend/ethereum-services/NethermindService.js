@@ -56,11 +56,19 @@ export class NethermindService extends NodeService {
     return service
   }
 
-  buildExecutionClientHttpEndpointUrl () {
+  buildExecutionClientHttpEndpointUrl() {
+    return 'http://stereum-' + this.id + ':8545'
+  }
+
+  buildExecutionClientWsEndpointUrl() {
+    return 'ws://stereum-' + this.id + ':8546'
+  }
+
+  buildExecutionClientEngineRPCHttpEndpointUrl() {
     return 'http://stereum-' + this.id + ':8551'
   }
 
-  buildExecutionClientWsEndpointUrl () {
+  buildExecutionClientEngineRPCWsEndpointUrl() {
     return 'ws://stereum-' + this.id + ':8551'
   }
 

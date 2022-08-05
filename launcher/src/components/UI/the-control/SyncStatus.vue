@@ -136,7 +136,7 @@ export default {
   height: 75%;
 }
 .sync-icon_container img {
-  width: 80%;
+  width: 60%;
 }
 .sync-box_value {
   display: flex;

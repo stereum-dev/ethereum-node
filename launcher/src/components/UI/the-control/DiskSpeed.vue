@@ -25,14 +25,17 @@
   </div>
 </template>
 <script>
+import { mapState } from 'pinia';
+import { useControlStore } from '../../../store/theControl';
 export default {
-  data() {
-    return {
-      // datas are dummy, for wire the have to change to null
-      writeValue: 10, //dummy data
-      readValue: 11, //dummy data
-    };
-  },
+
+  computed: {
+    ...mapState(useControlStore, {
+      writeValue:"writeValue",
+      readValue:"readValue"
+    }),
+    },
+
 };
 </script>
 <style scoped>
@@ -112,7 +115,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 35%;
-  font-size: 100%;
+  font-size: 90%;
   font-weight: 800;
 }
 .write_val {
