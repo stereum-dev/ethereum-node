@@ -22,6 +22,7 @@
             state: started
             configuration:
               id: "{{ ssv_service }}"
+              service: BloxSSVService
               image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
