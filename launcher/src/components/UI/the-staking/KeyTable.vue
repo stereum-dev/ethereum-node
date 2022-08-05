@@ -72,7 +72,7 @@
               >
                 <img
                   class="copy-icon"
-                  src="../../../../public/img/icon/the-staking/option-copy.png"
+                  src="../../../../public/img/icon/the-staking/copy6.png"
                   alt="icon"
                 />
               </div>
@@ -614,13 +614,21 @@ export default {
   margin: 0 auto;
   cursor: pointer;
 }
+.option-box .copy-icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  cursor: pointer;
+}
 
-.option-box img:hover {
+.option-box img:hover,
+.option-box .copy-icon:hover {
   transform: scale(1.1);
 }
 
-.option-box img:active {
-  border:none;
+.option-box img:active,
+.option-box .copy-icon:active {
+  border: none;
   transform: scale(1);
 }
 
