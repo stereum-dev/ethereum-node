@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     grey() {
-      return { backgroundColor: "#787575" };
+      return { backgroundColor: "#787575", borderRadius: "20px" };
     },
     red() {
       return { backgroundColor: "#EB5353" };
@@ -65,7 +65,7 @@ export default {
       return { height: "40%" };
     },
     updateStyle() {
-      return { height: "30%" };
+      return { height: "20%" };
     },
   },
   methods: {
@@ -106,7 +106,7 @@ export default {
   border-radius: 20px;
 }
 .setting-items_title {
-  width: 30%;
+  width: 60%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -122,14 +122,16 @@ export default {
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  font-weight: 400;
+  font-weight: 500;
   border: 1.5px solid #30353a;
   cursor: pointer;
   margin: 0 2%;
+  height: 95%;
+  color: #000;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {
-  font-weight: 600;
+  font-weight: 700;
   border: 1.5px solid #eee;
 }
 </style>

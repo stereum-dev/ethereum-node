@@ -36,7 +36,14 @@
           <div class="update-panel_title"><span>UPDATE</span></div>
           <hr />
           <div class="items-box_update">
-            <setting-items></setting-items>
+            <setting-items
+              v-for="item in updateItems"
+              :key="item.id"
+              :title="item.title"
+              :btnValue="item.btnValue"
+              :isColor="item.isColor"
+              :itemType="item.itemType"
+            ></setting-items>
           </div>
         </div>
       </div>
@@ -67,6 +74,43 @@ export default {
           btnValue: "OPEN",
           isColor: "open",
           itemType: "general",
+        },
+      ],
+      updateItems: [
+        {
+          id: 1,
+          title: "Stereum Version",
+          isColor: "alpha",
+          itemType: "update",
+          btnValue: "ALPHA",
+        },
+        {
+          id: 2,
+          title: "Stereum Node Version",
+          isColor: "alpha",
+          itemType: "update",
+          btnValue: "ALPHA",
+        },
+        {
+          id: 3,
+          title: "Stereum - Testing Lane",
+          isColor: "off",
+          itemType: "update",
+          btnValue: "OFF",
+        },
+        {
+          id: 4,
+          title: "Stereum Update Configuration",
+          isColor: "manual",
+          itemType: "update",
+          btnValue: "MANUAL",
+        },
+        {
+          id: 5,
+          title: "Plug-in / Service Update Configuration",
+          isColor: "manual",
+          itemType: "update",
+          btnValue: "Manual",
         },
       ],
     };
@@ -220,5 +264,13 @@ hr {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.items-box_update {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>
