@@ -64,9 +64,6 @@
                   src="../../../../public/img/icon/the-staking/option-graffiti.png"
                   alt="icon"
                 />
-                <span v-if="item.showGrafitiText" class="grafiti-text"
-                  >GRAFITI</span
-                >
               </div>
               <div
                 class="copy-box"
@@ -78,7 +75,6 @@
                   src="../../../../public/img/icon/the-staking/option-copy.png"
                   alt="icon"
                 />
-                <span v-if="item.showCopyText" class="copy-text">COPY</span>
               </div>
               <div
                 class="remove-box"
@@ -90,9 +86,6 @@
                   src="../../../../public/img/icon/the-staking/option-remove.png"
                   alt="icon"
                 />
-                <span v-if="item.showRemoveText" class="remove-text"
-                  >REMOVE</span
-                >
               </div>
               <div
                 class="exit-box"
@@ -104,7 +97,6 @@
                   src="../../../../public/img/icon/the-staking/redexit-icon.png"
                   alt="icon"
                 />
-                <span v-if="item.showExitText" class="exit-text">EXIT</span>
               </div>
             </div>
           </div>
@@ -617,20 +609,18 @@ export default {
 }
 
 .option-box img {
-  width: 19px;
-  height: 20px;
+  width: 17px;
+  height: 18px;
   margin: 0 auto;
   cursor: pointer;
 }
 
 .option-box img:hover {
-  border: 1px solid #72cbf8;
-  border-radius: 3px;
   transform: scale(1.1);
 }
 
 .option-box img:active {
-  border: 1px solid #0c6e9f;
+  border:none;
   transform: scale(1);
 }
 
