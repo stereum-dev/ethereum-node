@@ -247,8 +247,8 @@ promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos()
 })
 
-promiseIpc.on("changeFeeRecipient", async (args) => {
-  return await validatorAccountManager.changeFeeRecipient(args.keys, args.address)
+promiseIpc.on("addFeeRecipient", async (args) => {
+  return await validatorAccountManager.addFeeRecipient(args.keys, args.address)
 })
 
 // Scheme must be registered before the app is ready

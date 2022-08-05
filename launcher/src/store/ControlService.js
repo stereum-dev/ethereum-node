@@ -192,7 +192,7 @@ class ControlService extends EventEmitter {
   }
 
   async addFeeRecipient(args){
-    return await this.promiseIpc.send("changeFeeRecipient", args)  // 
+    return await this.promiseIpc.send("addFeeRecipient", args)  // 
   }
 
 }
