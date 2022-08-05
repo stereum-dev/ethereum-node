@@ -199,6 +199,7 @@
   </div>
 </template>
 <script>
+import { toRaw } from "vue";
 import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
@@ -425,7 +426,9 @@ export default {
       this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
-    confirmFeeRecipientAddress() {
+    async confirmFeeRecipientAddress() {
+      await ControlService.addFeeRecipient({keys: toRaw(this.keys), address: this.password})
+      this.password = ""
       this.importValidatorKeyActive = true;
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
