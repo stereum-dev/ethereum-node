@@ -12,6 +12,7 @@
         state: started
         configuration:
           id: "{{ beacon_service }}"
+          service: LighthouseBeaconService
           image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
           env: {}
           ports:
