@@ -32,7 +32,7 @@ export class PrysmBeaconService extends NodeService {
         let fallbackProvider
         let web3provider
         if (executionClients[0] !== undefined) {
-            fallbackProvider = executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })
+            fallbackProvider = executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })
             web3provider = fallbackProvider.shift() //removes first element of array and returns it
         }
 

@@ -36,6 +36,7 @@ export class GethService extends NodeService {
         '--ws.addr=0.0.0.0',
         '--ws.api="debug,eth,net,web3"',
         '--ws.origins=*',
+        '--authrpc.port=8551',
         '--authrpc.addr=0.0.0.0',
         '--authrpc.vhosts=*',
         '--authrpc.jwtsecret=/engine.jwt',
@@ -66,10 +67,18 @@ export class GethService extends NodeService {
   }
 
   buildExecutionClientHttpEndpointUrl () {
-    return 'http://stereum-' + this.id + ':8551'
+    return 'http://stereum-' + this.id + ':8545'
   }
 
   buildExecutionClientWsEndpointUrl () {
+    return 'ws://stereum-' + this.id + ':8546'
+  }
+
+  buildExecutionClientEngineRPCHttpEndpointUrl() {
+    return 'http://stereum-' + this.id + ':8551'
+  }
+
+  buildExecutionClientEngineRPCWsEndpointUrl() {
     return 'ws://stereum-' + this.id + ':8551'
   }
 
