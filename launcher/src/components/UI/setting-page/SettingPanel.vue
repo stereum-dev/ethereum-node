@@ -17,23 +17,28 @@
         </div>
       </div>
       <div class="division-line"></div>
-      <div class="general-panel">
-        <div class="general-panel_title"><span>GENERAL</span></div>
-        <hr />
-        <div class="items-box">
-          <setting-items
-            v-for="item in generalItems"
-            :key="item.id"
-            :title="item.title"
-            :btnValue="item.btnValue"
-            :isColor="item.isColor"
-          ></setting-items>
+      <div class="general-container">
+        <div class="general-panel">
+          <div class="general-panel_title"><span>GENERAL</span></div>
+          <hr />
+          <div class="items-box_general">
+            <setting-items
+              v-for="item in generalItems"
+              :key="item.id"
+              :title="item.title"
+              :btnValue="item.btnValue"
+              :isColor="item.isColor"
+              :itemType="item.itemType"
+            ></setting-items>
+          </div>
         </div>
-      </div>
-      <div class="update-panel">
-        <div class="general-panel_title"><span>UPDATE</span></div>
-        <hr />
-        <div class="items-box"></div>
+        <div class="update-panel">
+          <div class="update-panel_title"><span>UPDATE</span></div>
+          <hr />
+          <div class="items-box_update">
+            <setting-items></setting-items>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -54,12 +59,14 @@ export default {
           title: "Leanguage Selection",
           btnValue: "ENGLISH",
           isColor: "open",
+          itemType: "general",
         },
         {
           id: 2,
           title: "Credits",
           btnValue: "OPEN",
           isColor: "open",
+          itemType: "general",
         },
       ],
     };
@@ -129,6 +136,14 @@ export default {
   font-weight: 300;
   color: #eee;
 }
+.general-container {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
 .confirm-btn {
   width: 18%;
   height: 65%;
@@ -156,7 +171,7 @@ export default {
 }
 .general-panel {
   width: 100%;
-  height: 40%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -164,15 +179,14 @@ export default {
 }
 .update-panel {
   width: 100%;
-  height: 45%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 .general-panel_title,
-.general-panel_title {
-  height: 15%;
+.update-panel_title {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -180,9 +194,17 @@ export default {
   font-size: 130%;
   font-weight: 600;
   color: #eee;
+  margin: 1% 0 0 0;
+}
+.general-panel_title {
+  height: 22%;
+}
+.update-panel_title {
+  height: 10%;
 }
 hr {
   width: 95%;
+  margin: 0.2% 0 0 0;
 }
 .footer {
   background-color: rgb(52, 52, 52);
@@ -191,8 +213,9 @@ hr {
   height: 5%;
   display: flex;
 }
-.items-box {
+.items-box_general {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

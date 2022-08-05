@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-items_parent">
+  <div class="setting-items_parent" :style="itemStyle()">
     <div class="setting-items_title">
       <span>{{ title }}</span>
     </div>
@@ -36,11 +36,16 @@ export default {
       required: false,
       default: false,
     },
+    itemType: {
+      type: String,
+      required: true,
+    },
   },
   emits: ["customize-setting"],
   data() {
     return {
       colorStyle: this.isColor,
+      heightItem: this.itemType,
     };
   },
   computed: {
@@ -56,6 +61,12 @@ export default {
     green() {
       return { backgroundColor: "#316464" };
     },
+    generalStyle() {
+      return { height: "40%" };
+    },
+    updateStyle() {
+      return { height: "30%" };
+    },
   },
   methods: {
     color() {
@@ -69,6 +80,13 @@ export default {
         return this.green;
       }
     },
+    itemStyle() {
+      if (this.heightItem === "general") {
+        return this.generalStyle;
+      } else if (this.heightItem === "update") {
+        return this.updateStyle;
+      }
+    },
     customizeSetting() {
       this.$emit("customize-setting");
     },
@@ -79,7 +97,6 @@ export default {
 .setting-items_parent {
   width: 95%;
   display: flex;
-  height: 50%;
   color: #eee;
   justify-content: space-between;
   align-items: center;
@@ -93,7 +110,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 100%;
+  font-size: 115%;
   font-weight: 600;
 }
 .setting-items_title span {
