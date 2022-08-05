@@ -1,16 +1,16 @@
 <template>
-    <div class="setting-parent">
+  <div class="setting-parent">
     <node-bg>
-    <setting-panel></setting-panel>
+      <setting-panel></setting-panel>
     </node-bg>
     <node-header id="head"> </node-header>
-    </div>
+  </div>
 </template>
 <script>
-import SettingPanel from '../components/UI/setting-page/SettingPanel.vue';
+import SettingPanel from "../components/UI/setting-page/SettingPanel.vue";
 export default {
-  components:{SettingPanel}
-}
+  components: { SettingPanel },
+};
 </script>
 
 <style scoped>

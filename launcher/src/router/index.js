@@ -7,7 +7,7 @@ import TheNode from "../pages/TheNode.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
-import SettingPage from '../pages/SettingPage.vue';
+import SettingPage from "../pages/SettingPage.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import StorageChartPage from "../pages/StorageChartPage.vue";
@@ -82,10 +82,10 @@ const routes = [
   //   component: WrittenGuide,
   // },
   {
-    path:"/setting",
-    name:"SettingPage",
-    component:SettingPage,
-  }
+    path: "/setting",
+    name: "SettingPage",
+    component: SettingPage,
+  },
 ];
 
 const router = createRouter({ history: createWebHashHistory(), routes });
