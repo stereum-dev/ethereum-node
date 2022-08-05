@@ -38,14 +38,15 @@
       <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
 
+ <router-link to="/setting" class="icon-btn">
     <div
-      class="icon-btn"
       @mouseover="showSettingText = true"
       @mouseleave="showSettingText = false"
     >
       <img alt="Login" src="/img/icon/header-icons/setting4.png" />
       <span class="setting-text" v-if="showSettingText">Setting</span>
     </div>
+ </router-link>
 
     <div
       class="icon-btn"
@@ -120,7 +121,7 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
-.icon-btn {
+.icon-btn{
   width: 14.5%;
   height: 85%;
   border-radius: 100%;
@@ -131,7 +132,14 @@ export default {
   align-items: center;
   cursor: pointer;
 }
-.icon-btn {
+.icon-btn div{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-btn{
   width: 14%;
   height: 85%;
   border: 2px solid #a5a5a5;
@@ -161,7 +169,7 @@ export default {
   height: 65%; */
   box-shadow: none;
 }
-.icon-btn img {
+.icon-btn img{
   width: 70%;
   height: 70%;
   transform: scale(1);
