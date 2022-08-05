@@ -10,6 +10,7 @@
 </template>
 <script>
 export default {
+  
   props: ["title", "summary", "isColor"],
   emits: ["open-item"],
   data() {
