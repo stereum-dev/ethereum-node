@@ -197,7 +197,7 @@ jobs:
           {role: "manage-service", test: "monitor-teku"},
           {role: "manage-service", test: "geth-teku"},
           {role: "manage-service", test: "besu-teku"},
-          {role: "manage-service", test: "nethermind"},
+          {role: "manage-service", test: "nethermind-teku"},
           {role: "manage-service", test: "notifications"}
         ]
       fail-fast: false
