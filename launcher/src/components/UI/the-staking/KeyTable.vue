@@ -22,11 +22,11 @@
             <span>Please wait until the key is imported</span>
           </div>
           <div class="import-message" v-if="importIsDone">
-            <span>{{ message }}</span>
+            <span :class="importingErrorMessage">{{ message }}</span>
           </div>
           <div class="confirm-btn" v-if="importIsDone">
             <div class="confirm-box" @click="hideBDialog">
-              <span>Confirm</span>
+              <span>OK</span>
             </div>
           </div>
         </key-modal>
@@ -205,6 +205,7 @@ export default {
   data() {
     return {
       message: "",
+      messageIsError: false,
       bDialogVisible: false,
       isDragOver: false,
       keyFiles: [],
@@ -261,6 +262,11 @@ export default {
       totalBalance: "totalBalance",
       keys: "",
     }),
+    importingErrorMessage() {
+      return {
+        "text-danger": this.message.includes("Failed"),
+      };
+    },
   },
   mounted() {
     this.listKeys();
@@ -444,11 +450,11 @@ export default {
     dropFileHandler(event) {
       let droppedFiles = event.dataTransfer.files;
       if (
-        !this.keyFiles.includes(droppedFiles[0]["name"]) &&
         droppedFiles[0]["type"] === "application/json"
       ) {
         this.keyFiles.push(...droppedFiles);
         this.importValidatorKeyActive = false;
+        this.insertKeyBoxActive = false;
         this.enterPasswordBox = true;
         this.isDragOver = false;
       }
@@ -1024,11 +1030,17 @@ export default {
 }
 
 .import-message span {
+  width: 90%;
+  margin: 0 auto;
   color: rgb(156, 156, 156);
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 10px;
-  text-transform: unset;
+  text-transform: capitalize;
+  text-align: center;
+}
+.text-danger {
+  color: rgb(219, 77, 77) !important;
 }
 .confirm-btn {
   width: 100%;
