@@ -16,10 +16,10 @@ This repository contains the code and scripts for Stereum 2.0
 
 
 ## Get Started
-After installing the launcher start it up and connect to a server of your choice. Take a look at the ~~[guide](https://stereum.net/ethereum-node/)~~ (tba) to find out what server operating systems are supported and what you can do with Stereum!
+After installing the launcher start it up and connect to a server of your choice. Take a look at the [guide](https://stereum.net/ethereum-node-setup/) to find out what server operating systems are supported and what you can do with Stereum!
 
 ## Download (latest)
-[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-stack-rc3)
+[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-stack-rc4)
 
 
 ## Contribute
@@ -59,9 +59,9 @@ Milestones build on top of the features of previous milestones.
   - Nethermind support
   - Update button
 - [![beta2.0-stack](https://img.shields.io/badge/milestone-beta2.0--stack-orange?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/4): Suitable for testnet, adding e. g. use cases & features:
-  - [ ] Advanced service configuration by user ("Expert Mode")
+  - [x] Advanced service configuration by user ("Expert Mode")
   - [x] Install latest versions
-  - [x] Update services
+  - [x] Updates (os, services, stereum)
   - [x] Validator account stats
   - [x] Technical documentation (preparation for security audit)
   - [ ] Enhanced plugin actions via mouse over menu
