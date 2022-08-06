@@ -87,7 +87,7 @@
                 --network=prater
                 --p2p-enabled=true
                 --p2p-port=9001
-                --eth1-endpoint=http://10.10.0.3:8545
+                --ee-endpoint=http://10.10.0.3:8545
                 --metrics-enabled=true
                 --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 --metrics-port=8008
