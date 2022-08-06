@@ -108,7 +108,7 @@
                 - --p2p-port=9001
                 - --validators-keystore-locking-enabled=false
                 - --validators-graffiti="stereum.net"
-                - --eth1-endpoints=http://10.10.0.3:8545
+                - --ee-endpoint=http://10.10.0.3:8545
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 - --metrics-port=8008
