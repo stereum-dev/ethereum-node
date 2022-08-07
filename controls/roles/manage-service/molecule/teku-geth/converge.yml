@@ -51,7 +51,6 @@
                 - --rest-api-docs-enabled=true
                 - --rest-api-enabled=true
                 - --log-destination=CONSOLE
-#                - --eth1-endpoints=http://10.10.0.3:8545
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"

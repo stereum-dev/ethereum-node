@@ -197,65 +197,8 @@ jobs:
           {role: "manage-service", test: "monitor-teku"},
           {role: "manage-service", test: "geth-teku"},
           {role: "manage-service", test: "besu-teku"},
-          {role: "manage-service", test: "nethermind"},
+          {role: "manage-service", test: "nethermind-teku"},
           {role: "manage-service", test: "notifications"}
-        ]
-      fail-fast: false
-    concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install depencencies
-        run: |
-          pip install ansible==5.10.0
-          pip install molecule==3.5.2
-          pip install "molecule[docker.lint]"
-          pip install molecule-docker
-          pip install molecule-hetznercloud
-          pip install docker
-          pip install hcloud
-          ansible-galaxy collection install community.docker
-      - name: Install dependency for pipx
-        run: |
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==5.10.0
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==3.5.2
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
-          /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
-      - name: Install ansible-lint
-        run: sudo apt-get install -y ansible-lint
-      - name: Molecule version
-        run: molecule --version
-        env:
-          ansible_python_interpreter: "/usr/bin/python3"
-      - name: Run tests
-        working-directory: ./controls/roles/${{ matrix.tests.role }}
-        run: molecule test -s ${{ matrix.tests.test }}
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-          ansible_python_interpreter: "/usr/bin/python3"
-      # destroying is necessary when previous task failed and didn't clean up properly
-      - name: Destroy previous testing VMs
-        if: ${{ failure() || cancelled() }}
-        working-directory: ./controls/roles/${{ matrix.tests.role }}
-        run: molecule destroy -s ${{ matrix.tests.test }}
-        env:
-          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
-          ansible_python_interpreter: "/usr/bin/python3"
-
-  fastsync:
-    needs:
-      - manage-service
-    strategy:
-      matrix:
-        tests: [
-          {role: "fastsync", test: "default"}
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
