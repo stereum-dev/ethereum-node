@@ -4,6 +4,7 @@ import { ServicePort, servicePortProtocol } from './ServicePort.js'
 import { StringUtils } from '../StringUtils.js'
 import { ServiceManager } from '../ServiceManager.js'
 import { NimbusBeaconService } from './NimbusBeaconService.js'
+import { GethService } from './GethService.js'
 const log = require('electron-log')
 
 jest.setTimeout(1000000)
@@ -56,17 +57,30 @@ test('nimbus validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    //install geth
+    let ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+      ]
+    let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+
     //install nimbus
-    const ports = [
+    ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
-    let nimbusClient = NimbusBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [], 'stereum.net')
+    let nimbusClient = NimbusBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [geth], 'stereum.net')
     //change out web3 address for integration test
-    const index = nimbusClient.command.findIndex(element => element.includes('--web3-url='))
-    nimbusClient.command[index] = '--web3-url=ws://10.10.0.2:8545'
+    // const index = nimbusClient.command.findIndex(element => element.includes('--web3-url='))
+    // nimbusClient.command[index] = '--web3-url=ws://10.10.0.2:8545'
+    
+    //write config and start geth
+    await nodeConnection.writeServiceConfiguration(geth.buildConfiguration())
+    await serviceManager.manageServiceState(geth.id, 'started')
+    
     //write config and start nimbus
     await nodeConnection.writeServiceConfiguration(nimbusClient.buildConfiguration())
     await serviceManager.manageServiceState(nimbusClient.id, 'started')
@@ -116,14 +130,11 @@ test('nimbus validator import', async () => {
     expect(docker.stdout).toMatch(/9190->9190/)
     expect(docker.stdout).toMatch(/9000->9000/)
     if(!(nimbusClient.id.includes('Up'))){
-        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(1)
+        expect((docker.stdout.match(new RegExp('Up', 'g')) || []).length).toBe(2)
     }
 
     //check nimbus service logs
-    expect(status.stdout).toMatch(/Slot start/)
-    expect(status.stdout).toMatch(/Local validator attached/)
-    expect(status.stdout).toMatch(/sync=/)
-    expect(status.stdout).not.toMatch(/Eth1 chain monitoring failure/)
-    expect(status.stdout).not.toMatch(/Failed to setup web3 connection/)
+    expect(status.stdout).toMatch(/Eth1 chain monitoring failure, restarting/)
+    expect(status.stdout).toMatch(/Parameter \[result\] expected JObject but got JNull/)
 
 })

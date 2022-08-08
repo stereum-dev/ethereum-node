@@ -29,8 +29,10 @@ export class BesuService extends NodeService {
                 '--rpc-http-enabled=true',
                 '--rpc-http-host=0.0.0.0',
                 '--rpc-http-cors-origins=*',
+                '--rpc-http-port=8545',
                 '--rpc-ws-enabled=true',
                 '--rpc-ws-host=0.0.0.0',
+                '--rpc-ws-port=8546',
                 '--host-allowlist=*',
                 '--metrics-enabled',
                 '--metrics-host=0.0.0.0',
@@ -65,10 +67,18 @@ export class BesuService extends NodeService {
 
 
     buildExecutionClientHttpEndpointUrl() {
-        return 'http://stereum-' + this.id + ':8551'
+        return 'http://stereum-' + this.id + ':8545'
     }
 
     buildExecutionClientWsEndpointUrl() {
+        return 'ws://stereum-' + this.id + ':8546'
+    }
+
+    buildExecutionClientEngineRPCHttpEndpointUrl() {
+        return 'http://stereum-' + this.id + ':8551'
+    }
+
+    buildExecutionClientEngineRPCWsEndpointUrl() {
         return 'ws://stereum-' + this.id + ':8551'
     }
 

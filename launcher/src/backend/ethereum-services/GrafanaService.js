@@ -25,7 +25,7 @@ export class GrafanaService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      '9.0.2', // imageVersion
+      '9.0.5', // imageVersion
       '/run.sh', // command
       null, // entrypoint
       null, // env

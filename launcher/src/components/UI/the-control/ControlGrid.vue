@@ -65,22 +65,6 @@
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="book-icon">
-                      <img
-                        src="/img/icon/plugin-menu-icons/log7.png"
-                        alt="icon"
-                      />
-                    </div>
-                  </div>
-                  <div class="icon-bg">
-                    <div class="refresh-icon">
-                      <img
-                        src="/img/icon/plugin-menu-icons/sync9.png"
-                        alt="icon"
-                      />
-                    </div>
-                  </div>
-                  <div class="icon-bg">
                     <div class="seting-icon" @click="expertModeHandler(item)">
                       <img
                         src="/img/icon/plugin-menu-icons/setting8.png"
@@ -372,7 +356,7 @@ export default {
   border-radius: 3px;
 }
 .plugins-row-content {
-  width: 60%;
+  width: 68%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -383,7 +367,7 @@ export default {
 }
 .row-plugin-name,
 .row-category {
-  width: 90%;
+  width: 98%;
   height: 40%;
   color: #333;
   background-color: #fff;
@@ -399,7 +383,7 @@ export default {
   font-weight: 800;
 }
 .service-edit {
-  width: 20%;
+  width: 12%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -408,9 +392,10 @@ export default {
 .service-edit .edit-box {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 .edit-box .icon-bg {
   width: 100%;
@@ -420,9 +405,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.power-icon,
-.book-icon,
-.refresh-icon,
+.power-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
 .seting-icon {
   width: 18px;
   height: 18px;
@@ -433,23 +424,19 @@ export default {
   cursor: pointer;
 }
 .power-icon img:hover,
-.book-icon img:hover,
-.refresh-icon img:hover,
 .seting-icon img:hover {
   transform: scale(1.1);
   border: 1px solid white;
   border-radius: 100%;
 }
 .power-icon img:active,
-.book-icon img:active,
-.refresh-icon img:active,
 .seting-icon img:active {
   transform: scale(1);
 }
 
 .power-icon img {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
 }
 .powerOff {
   background-color: rgb(226, 62, 62);
@@ -464,14 +451,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
-.book-icon img {
-  width: 17px;
-  height: 17px;
-}
-.refresh-icon img {
-  width: 17px;
-  height: 17px;
-}
+
 .seting-icon img {
   width: 17px;
   height: 17px;

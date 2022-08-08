@@ -57,6 +57,7 @@
             - --slasher-max-db-size=16
           entrypoint: []
           env: {}
+          service: LighthouseBeaconService
           id: {{ beacon_service }}
           image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
           ports:
@@ -80,6 +81,7 @@
           entrypoint: []
           env:
             STEREUM_DUMMY: foobar
+          service: GethService
           id: {{ geth_service }}
           image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
           name: geth

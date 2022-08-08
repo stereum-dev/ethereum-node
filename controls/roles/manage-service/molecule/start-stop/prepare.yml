@@ -53,6 +53,7 @@
             - --slasher-max-db-size=16
           entrypoint: []
           env: {}
+          service: LighthouseBeaconService
           id: {{ beacon_service }}
           image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
           ports:

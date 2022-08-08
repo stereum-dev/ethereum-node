@@ -11,7 +11,7 @@ export class TekuBeaconService extends NodeService {
 
         const image = 'consensys/teku'
 
-        const executionLayer = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
+        const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
         const JWTDir = '/engine.jwt'
         const dataDir = '/opt/app/data'
@@ -25,7 +25,7 @@ export class TekuBeaconService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             image,                  // image
-            '22.7.0',               // imageVersion
+            '22.8.0',               // imageVersion
             [
                 `--network=${network}`,
                 '--logging=INFO',

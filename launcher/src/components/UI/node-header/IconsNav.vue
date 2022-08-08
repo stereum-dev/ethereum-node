@@ -6,7 +6,6 @@
       @mouseleave="showHelpText = false"
     >
       <img alt="help-icon" src="/img/icon/header-icons/question-mark.png" />
-      <span class="help-text" v-if="showHelpText">Help</span>
     </div>
 
     <div
@@ -15,7 +14,6 @@
       @mouseleave="showNotifText = false"
     >
       <img alt="Login" src="/img/icon/header-icons/megaphone9.png" />
-      <span class="notif-text" v-if="showNotifText">Notifications</span>
     </div>
     <div
       class="icon-btn"
@@ -25,7 +23,6 @@
       @mouseleave="showUpdateText = false"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
     <div
       class="icon-btn"
@@ -35,7 +32,6 @@
       @mouseleave="showUpdateText = false"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
 
     <router-link to="/setting" class="icon-btn">
@@ -48,13 +44,13 @@
       </div>
     </router-link>
 
+
     <div
       class="icon-btn"
       @mouseover="showExitText = true"
       @mouseleave="showExitText = false"
     >
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
-      <span class="exit-text" v-if="showExitText">Exit</span>
     </div>
     <update-modal
       @remove-modal="removeModalHandler"

@@ -7,18 +7,21 @@ export class NimbusBeaconService extends NodeService {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
+    const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
     
     const image = 'statusim/nimbus-eth2'
 
-    const gethServices = (executionClients.map(client => { return client.buildExecutionClientWsEndpointUrl() })).join()
+    const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCWsEndpointUrl() })).join()
 
+    const JWTDir = '/engine.jwt'
     const dataDir = '/opt/app/beacon'
     const validatorsDir = '/opt/app/validators'
     const secretsDir = '/opt/app/secrets'
     const volumes = [
       new ServiceVolume(workingDir + '/beacon', dataDir),
       new ServiceVolume(workingDir + '/validator/validators', validatorsDir),
-      new ServiceVolume(workingDir + '/validator/secrets', secretsDir)
+      new ServiceVolume(workingDir + '/validator/secrets', secretsDir),
+      new ServiceVolume(elJWTDir, JWTDir),
     ]
 
     service.init(
@@ -26,18 +29,15 @@ export class NimbusBeaconService extends NodeService {
       service.id, // id,
       1, // configVersion
       image, // image,
-      'multiarch-v22.6.1', // imageVersion,
+      'multiarch-v22.7.0', // imageVersion,
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,
         `--validators-dir=${validatorsDir}`,
         `--secrets-dir=${secretsDir}`,
-        `--web3-url=${gethServices}`,
+        `--web3-url=${executionLayer}`,
         '--tcp-port=9000',
         '--udp-port=9000',
-        '--rpc',
-        '--rpc-port=9190',  //should this be a variable? (more than one service)
-        '--rpc-address=0.0.0.0',
         '--metrics',
         '--metrics-port=8008',
         '--metrics-address=0.0.0.0',
@@ -47,7 +47,8 @@ export class NimbusBeaconService extends NodeService {
         `--graffiti=\"${graffiti}\"`,
         '--keymanager',
         '--keymanager-address=0.0.0.0',
-        '--keymanager-token-file=/opt/app/validators/api-token.txt'
+        '--keymanager-token-file=/opt/app/validators/api-token.txt',
+        '--jwt-secret=/engine.jwt',
       ], // command,
       ["/home/user/nimbus-eth2/build/nimbus_beacon_node"], // entrypoint,
       null, // env,
