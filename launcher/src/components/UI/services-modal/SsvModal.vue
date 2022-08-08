@@ -4,7 +4,7 @@
     <div class="browser-modal">
       <div class="ssv-header">
         <div class="icon-box">
-          <img src="/img/icon/service-icons/ssv.png" alt="icon" />
+          <img src="/img/icon/service-icons/blox-ssv.png" alt="icon" />
         </div>
         <div class="network-icon">
           <img
@@ -236,11 +236,11 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 41%;
-  top: 52%;
+  left: 37%;
+  top: 47%;
 }
 .network-icon img {
-  width: 73%;
-  height: 73%;
+  width: 68%;
+  height: 68%;
 }
 </style>

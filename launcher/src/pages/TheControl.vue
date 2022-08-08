@@ -49,8 +49,8 @@ export default {
         this.cpu = response.cpu;
         this.rx = response.rx;
         this.tx = response.tx;
-        this.readValue=response.readValue;
-        this.writeValue=response.writeValue;
+        this.readValue = response.readValue;
+        this.writeValue = response.writeValue;
       }
     },
   },

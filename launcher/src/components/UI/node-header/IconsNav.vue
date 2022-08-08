@@ -6,7 +6,6 @@
       @mouseleave="showHelpText = false"
     >
       <img alt="help-icon" src="/img/icon/header-icons/question-mark.png" />
-      <span class="help-text" v-if="showHelpText">Help</span>
     </div>
 
     <div
@@ -15,7 +14,6 @@
       @mouseleave="showNotifText = false"
     >
       <img alt="Login" src="/img/icon/header-icons/megaphone9.png" />
-      <span class="notif-text" v-if="showNotifText">Notifications</span>
     </div>
     <div
       class="icon-btn"
@@ -25,7 +23,6 @@
       @mouseleave="showUpdateText = false"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
     <div
       class="icon-btn"
@@ -35,17 +32,18 @@
       @mouseleave="showUpdateText = false"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
 
-    <div
-      class="icon-btn"
-      @mouseover="showSettingText = true"
-      @mouseleave="showSettingText = false"
-    >
-      <img alt="Login" src="/img/icon/header-icons/setting4.png" />
-      <span class="setting-text" v-if="showSettingText">Setting</span>
-    </div>
+    <router-link to="/setting" class="icon-btn">
+      <div
+        @mouseover="showSettingText = true"
+        @mouseleave="showSettingText = false"
+      >
+        <img alt="Login" src="/img/icon/header-icons/setting4.png" />
+        <span class="setting-text" v-if="showSettingText">Setting</span>
+      </div>
+    </router-link>
+
 
     <div
       class="icon-btn"
@@ -53,7 +51,6 @@
       @mouseleave="showExitText = false"
     >
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
-      <span class="exit-text" v-if="showExitText">Exit</span>
     </div>
     <update-modal
       @remove-modal="removeModalHandler"
@@ -85,15 +82,15 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-        isUpdateAvailable: "isUpdateAvailable",
+      isUpdateAvailable: "isUpdateAvailable",
     }),
     ...mapWritableState(useServices, {
-        versions: "versions",
+      versions: "versions",
     }),
   },
   methods: {
     runAllUpdates: async function () {
-        await ControlService.runAllUpdates();
+      await ControlService.runAllUpdates();
     },
     updateModalHandler() {
       this.showUpdateModal = true;
@@ -105,7 +102,7 @@ export default {
       this.showUpdateModal = false;
       this.updateWaitingModal = true;
       await this.runAllUpdates();
-      this.versions = {}
+      this.versions = {};
       this.updateWaitingModal = false;
     },
   },
@@ -130,6 +127,13 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.icon-btn div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .icon-btn {
   width: 14%;

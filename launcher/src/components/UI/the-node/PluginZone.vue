@@ -49,12 +49,6 @@
                   alt="icon"
                 />
               </div>
-              <div class="restart">
-                <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
-              </div>
-              <div class="book">
-                <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
-              </div>
             </div>
           </plugin-menu>
           <the-expert
@@ -269,7 +263,6 @@ export default {
 .menu-content {
   width: 100%;
   height: 100%;
-  z-index: 900;
 }
 .menu-content .power {
   width: 17px;
@@ -279,20 +272,20 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 2px;
-  left: 41%;
+  top: 29%;
+  left: 7%;
   z-index: 11;
   animation: power 500ms;
 }
 @keyframes power {
   0% {
     opacity: 0;
-    top: 40%;
+    top: 29%;
     left: 41%;
   }
   100% {
-    top: 2px;
-    left: 41%;
+    top: 29%;
+    left: 7%;
   }
 }
 .menu-content .power img {
@@ -317,19 +310,19 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 80%;
-  top: 39%;
+  left: 7%;
+  top: 52%;
   animation: setting 500ms;
 }
 @keyframes setting {
   0% {
     opacity: 0;
-    top: 39%;
+    top: 52%;
     left: 42%;
   }
   100% {
-    left: 80%;
-    top: 39%;
+    left: 7%;
+    top: 52%;
   }
 }
 .menu-content .setting img {
