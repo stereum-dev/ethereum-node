@@ -37,29 +37,11 @@
           />
         </div>
       </div>
-      <div class="remove-modal-parent" v-if="removeModal">
-        <div class="modal-opacity"></div>
-        <div class="remove-modal-content">
-          <div class="title-box">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/stop.png"
-              alt=""
-            />
-          </div>
-          <div class="remove-message">
-            <span>All the plugins will be removed.</span>
-            <span>Are you sure?</span>
-          </div>
-          <div class="remove-btn">
-            <div class="cancel-box" @click="cancelRemove">
-              <span>Cancel</span>
-            </div>
-            <div class="yes-box" @click="removeConfirmation">
-              <span>Remove</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <remove-modal
+        v-if="removeServicesModal"
+        @close-me="closeRemoveModal"
+        @remove-items="removeConfirmation"
+      ></remove-modal>
     </div>
   </div>
 </template>
@@ -72,11 +54,13 @@ import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 import { useControlStore } from "../../../store/theControl";
 import { useStakingStore } from "../../../store/theStaking";
+import RemoveModal from "./RemoveModal.vue";
 export default {
+  components: { RemoveModal },
   data() {
     return {
       modalActive: false,
-      removeModal: false,
+      removeServicesModal: false,
       removeIsConfirmed: false,
     };
   },
@@ -102,7 +86,7 @@ export default {
     }),
     ...mapWritableState(useStakingStore, {
       keys: "keys",
-    })
+    }),
   },
   methods: {
     openModal() {
@@ -112,21 +96,21 @@ export default {
       this.modalActive = false;
     },
     openRemoveModal() {
-      this.removeModal = true;
+      this.removeServicesModal = true;
     },
-    cancelRemove() {
-      this.removeModal = false;
+    closeRemoveModal() {
+      this.removeServicesModal = false;
     },
     removeConfirmation() {
       this.refresh = false; //stop refreshing
-      this.removeModal = false;
+      this.removeServicesModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
       this.removeAllPlugins();
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
-        this.keys = []
+        this.keys = [];
         this.versions = {};
         this.headerServices = [];
         this.runningServices = [];
@@ -437,110 +421,7 @@ export default {
   width: 23px;
   height: 23px;
 }
-.remove-modal-parent {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 97;
-}
-.modal-opacity {
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  position: fixed;
-  left: 0;
-  top: 0;
-  opacity: 0.7;
-  z-index: 98;
-}
-.remove-modal-content {
-  width: 40%;
-  height: 40%;
-  border-radius: 3rem;
-  background-color: #324844;
-  border: 4px solid rgb(171, 170, 170);
-  z-index: 99;
-  opacity: 1;
-  position: fixed;
-  top: 30%;
-  left: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
-}
-.remove-message {
-  width: 90%;
-  height: 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.remove-message span {
-  color: rgb(195, 195, 195);
-  font-size: 1.1rem;
-  font-weight: 800;
-}
-.remove-btn {
-  width: 80%;
-  height: 30%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.yes-box {
-  width: 30%;
-  height: 50%;
-  border-radius: 10px;
-  background-color: #e94949;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(210, 210, 210);
-}
-.cancel-box {
-  width: 30%;
-  height: 50%;
-  border-radius: 10px;
-  border: 3px solid #8f8f8f;
-  background-color: #32564d;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(187, 187, 187);
-}
-.cancel-box:hover {
-  background-color: #2c433d;
-  transform: scale(1.1);
-  transition: all 100ms;
-}
-.yes-box:hover {
-  background-color: #e94949;
-  border: none;
-  transform: scale(1.1);
-  transition: all 100ms;
-  color: #d6d6d6;
-}
-.cancel-box:active {
-  transform: scale(1);
-  box-shadow: none;
-}
-.yes-box:active {
-  transform: scale(1);
-  box-shadow: none;
-}
+
 .title-box {
   width: 80%;
   height: 30%;
