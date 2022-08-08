@@ -3,15 +3,16 @@
     <div class="setting-items_title">
       <span>{{ title }}</span>
     </div>
-    <language-setting v-if="isLang"></language-setting>
+
     <div
       class="setting-items_btn"
-      v-else
+      v-if="btnValue"
       @click="customizeSetting"
       :style="color()"
     >
       <span>{{ btnValue }}</span>
     </div>
+    <language-setting v-else></language-setting>
   </div>
 </template>
 <script>
@@ -29,10 +30,10 @@ export default {
     },
     isColor: {
       type: String,
-      required: true,
+      required: false,
     },
     isLang: {
-      type: String,
+      type: Boolean,
       required: false,
       default: false,
     },

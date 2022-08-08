@@ -43,6 +43,7 @@
               :btnValue="item.btnValue"
               :isColor="item.isColor"
               :itemType="item.itemType"
+              :isLang="item.isLang"
             ></setting-items>
           </div>
         </div>
@@ -64,8 +65,6 @@ export default {
         {
           id: 1,
           title: "Leanguage Selection",
-          btnValue: "ENGLISH",
-          isColor: "open",
           itemType: "general",
         },
         {
