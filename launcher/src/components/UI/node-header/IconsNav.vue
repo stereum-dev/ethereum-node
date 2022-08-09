@@ -24,7 +24,6 @@
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
-      @remove-modal="removeModalHandler"
       @update-confirm="updateConfirmationHandler"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
     ></update-panel>

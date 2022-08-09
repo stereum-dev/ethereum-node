@@ -1,6 +1,5 @@
 <template>
   <div class="panelParent">
-    <div class="panelOpacity" @click="$emit('removeModal')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
@@ -11,8 +10,29 @@
           >
         </div>
         <div class="stereum-updateBox">
-          <div class="versionBox"></div>
-          <div class="btnBox"></div>
+          <div class="versionBox">
+            <span>current version: ALPHA </span>
+            <span>latest version: 2.0</span>
+            <span>auto-update: ON</span>
+          </div>
+          <div class="btnBox">
+            <div class="searchBtn">
+              <img src="/img/icon/header-icons/search.png" alt="icon" />
+            </div>
+            <div class="downloadBtn" @click.self="$emit('updateConfirm')">
+              <img
+                src="/img/icon/node-journal-icons/download2.png"
+                alt="icon"
+              />
+            </div>
+
+            <div class="available">
+              <div class="updateIcon">
+                <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+              </div>
+              <span class="availableText">Update "2.0" available</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="serviceUpdates">
@@ -33,7 +53,7 @@ export default {};
 </script>
 <style scoped>
 .panelParent {
-  width: 50%;
+  width: 36%;
   height: 91%;
   position: fixed;
   top: 10%;
@@ -51,7 +71,7 @@ export default {};
   z-index: 311;
 }
 .panelContent {
-  width: 72%;
+  width: 100%;
   height: 100%;
   border-radius: 1rem 0 0 1rem;
   background-color: #343434;
@@ -68,7 +88,7 @@ export default {};
 }
 .stereumUpdates {
   width: 100%;
-  height: 40%;
+  height: 30%;
 }
 .serviceUpdates {
   width: 100%;
@@ -87,7 +107,7 @@ export default {};
 .serviceUpdates-title .title {
   font-size: 1.2rem;
   font-weight: 800;
-  color: #acacac;
+  color: #c6c6c6;
   margin-left: 15px;
   text-transform: uppercase;
 }
@@ -95,12 +115,12 @@ export default {};
 .description {
   font-size: 0.6rem;
   font-weight: 400;
-  color: #f7f7f7;
+  color: #9f9f9f;
   margin-left: 15px;
 }
 .stereum-updateBox {
   width: 100%;
-  height: 75%;
+  height: 65%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -108,5 +128,118 @@ export default {};
 .service-updateBox {
   width: 100%;
   height: 75%;
+}
+.stereum-updateBox .versionBox {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+.stereum-updateBox .versionBox span {
+  width: 100%;
+  height: 25%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c6c6c6;
+  margin-left: 15px;
+}
+.stereum-updateBox .btnBox {
+  width: 50%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
+.btnBox .searchBtn {
+  grid-column: 1/4;
+  grid-row: 2/4;
+  border-radius: 3px;
+  margin-left: 20px;
+  box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
+  width: 70%;
+  height: 80%;
+  border: 1px solid #17a2b8;
+  background-color: #17a2b8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.btnBox .searchBtn img {
+  width: 30%;
+  height: 70%;
+}
+.btnBox .searchBtn:hover {
+  background-color: #028397;
+}
+.btnBox .searchBtn:active {
+  border: none;
+  box-shadow: none;
+  transform: scale(0.95);
+}
+.btnBox .downloadBtn {
+  grid-column: 4/7;
+  grid-row: 2/4;
+  margin-right: 20px;
+  border: 1px solid #067c5a;
+  border-radius: 3px;
+  width: 70%;
+  height: 80%;
+  background-color: #067c5a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.btnBox .downloadBtn img {
+  width: 40%;
+  height: 90%;
+}
+.btnBox .downloadBtn:hover {
+  background-color: rgb(3, 82, 60);
+}
+.btnBox .downloadBtn:active {
+  border: none;
+  box-shadow: none;
+  transform: scale(0.95);
+}
+.btnBox .available {
+  grid-column: 1/7;
+  grid-row: 4/5;
+  margin: 0 auto;
+  width: 90%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 1fr;
+}
+.btnBox .available .updateIcon {
+  grid-column: 1/2;
+  grid-row: 1;
+  width: 67%;
+  height: 100%;
+  margin: 0 auto 0 12px;
+  background-color: rgb(59, 103, 100);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+}
+.btnBox .available .updateIcon img {
+  width: 66%;
+}
+.btnBox .available .availableText {
+  grid-column: 2/7;
+  grid-row: 1;
+  margin: 0 auto 0 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #c6c6c6;
+  align-self: center;
+  text-align: left;
 }
 </style>
