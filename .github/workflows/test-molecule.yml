@@ -195,8 +195,17 @@ jobs:
           {role: "manage-service", test: "monitor-nimbus"},
           {role: "manage-service", test: "monitor-prysm"},
           {role: "manage-service", test: "monitor-teku"},
-          {role: "manage-service", test: "geth-teku"},
+          {role: "manage-service", test: "besu-lighthouse"},
+          {role: "manage-service", test: "besu-nimbus"},
+          {role: "manage-service", test: "besu-prysm"},
           {role: "manage-service", test: "besu-teku"},
+          {role: "manage-service", test: "geth-lighthouse"},
+          {role: "manage-service", test: "geth-nimbus"},
+          {role: "manage-service", test: "geth-prysm"},
+          {role: "manage-service", test: "geth-teku"},
+          {role: "manage-service", test: "nethermind-lighthouse"},
+          {role: "manage-service", test: "nethermind-nimbus"},
+          {role: "manage-service", test: "nethermind-prysm"},
           {role: "manage-service", test: "nethermind-teku"},
           {role: "manage-service", test: "notifications"}
         ]
