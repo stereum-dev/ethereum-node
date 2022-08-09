@@ -44,6 +44,7 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       refresh: "refresh",
       isUpdateAvailable: "isUpdateAvailable",
+      updating: "updating",
     }),
   },
   methods: {
@@ -123,6 +124,7 @@ export default {
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services)
           }
+      console.log("updated")
         }
       }
     },
@@ -167,13 +169,16 @@ export default {
       }
     },
     async checkConnection() {
-      let connected = await ControlService.checkConnection()
-      if (!connected) {
-        console.log("Reconnecting...")
-        await ControlService.reconnect()
-        this.forceUpdateCheck = true
+      if(!this.updating){
+        let connected = await ControlService.checkConnection()
+        if (!connected) {
+          console.log("Reconnecting...")
+          await ControlService.reconnect()
+          this.forceUpdateCheck = true
+        }
+        return connected
       }
-      return connected
+      return false
     }
   },
 };

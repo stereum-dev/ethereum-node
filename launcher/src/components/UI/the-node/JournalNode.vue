@@ -74,6 +74,7 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
+      updating: "updating",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -87,10 +88,14 @@ export default {
     async runUpdate(item) {
         item.running = true
         if (item && item.id) {
+          this.updating = true
           await ControlService.updateServices({ service: item.id });
+          this.updating = false
           this.forceUpdateCheck = true
         } else if (item && item.commit) {
+          this.updating = true
           await ControlService.updateStereum({ commit: item.commit });
+          this.updating = false
           this.forceUpdateCheck = true
         }
     },

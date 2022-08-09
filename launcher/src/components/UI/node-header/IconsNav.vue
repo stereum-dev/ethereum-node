@@ -26,7 +26,6 @@
     </div>
     <div
       class="icon-btn"
-      @click="updateModalHandler"
       v-else
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
@@ -83,6 +82,7 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       isUpdateAvailable: "isUpdateAvailable",
+      updating: "updating",
     }),
     ...mapWritableState(useServices, {
       versions: "versions",
@@ -101,7 +101,9 @@ export default {
     updateConfirmationHandler: async function () {
       this.showUpdateModal = false;
       this.updateWaitingModal = true;
+      this.updating = true;
       await this.runAllUpdates();
+      this.updating = false;
       this.versions = {};
       this.updateWaitingModal = false;
     },

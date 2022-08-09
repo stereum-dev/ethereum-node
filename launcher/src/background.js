@@ -198,6 +198,9 @@ promiseIpc.on("manageServiceState", async (args) => {
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true
   const returnValue = await nodeConnection.runAllUpdates()
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
   return returnValue
 })
@@ -214,6 +217,9 @@ promiseIpc.on("updateServices", async (args) => {
 promiseIpc.on("updateStereum", async (args) => {
   app.showExitPrompt = true
   await nodeConnection.updateStereum(args.commit)
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
 })
 
