@@ -4,8 +4,8 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    teku_service: d2cf0214-ea78-11ec-bbf0-ab0094207ad6
-    geth_service: d6358d80-ea76-11ec-94b3-2fb45dfeb66a
+    lighthouse_service: d3df49ca-1336-11ed-9bd0-631a44a83cab
+    geth_service: e0877210-1336-11ed-8280-9be061625555
 
   tasks:
     # geth service
@@ -45,7 +45,7 @@
                 - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
 
-    # teku beacon service
+    # lh beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -58,39 +58,36 @@
             save: true
             state: started
             configuration:
-              service: TekuBeaconService
-              id: "{{ teku_service }}"
-              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
               ports:
-                - 0.0.0.0:9001:9001/tcp
-                - 0.0.0.0:9001:9001/udp
-              env:
-                JAVA_OPTS: -Xmx4g
-              entrypoint: ["/opt/teku/bin/teku"]
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
               command:
+                - lighthouse
+                - bn
+                - --debug-level=info
                 - --network=prater
-                - --logging=INFO
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --ee-endpoint=http://stereum-{{ geth_service }}:8551
-                - --ee-jwt-secret-file=/engine.jwt
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
-                - --metrics-publish-interval=10
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --log-destination=CONSOLE
+                - --execution-endpoints=http://stereum-{{ geth_service }}:8551
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+                - --jwt-secrets=/engine.jwt
+              entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ lighthouse_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_service }}/slasher:/opt/app/slasher"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
 
 # EOF

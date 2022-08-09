@@ -4,8 +4,8 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    teku_service: 97618b7c-0f3d-11ed-946a-00155d41d3f9
-    nethermind_service: d81cf9b6-0f3e-11ed-aad3-00155d41d3f9
+    nimbus_service: cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1
+    nethermind_service: cd56b018-1401-11ed-9a3f-c70dc9c2e0bc
 
   tasks:
     # nethermind service
@@ -47,7 +47,7 @@
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
-    # teku beacon service
+    # nimbus beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -60,39 +60,24 @@
             save: true
             state: started
             configuration:
-              service: TekuBeaconService
-              id: "{{ teku_service }}"
-              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              service: NimbusBeaconService
+              id: "{{ nimbus_service }}"
+              image: "statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}"
               ports:
-                - 0.0.0.0:9001:9001/tcp
-                - 0.0.0.0:9001:9001/udp
-              env:
-                JAVA_OPTS: -Xmx4g
-              entrypoint: ["/opt/teku/bin/teku"]
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
                 - --network=prater
-                - --logging=INFO
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --ee-endpoint=http://stereum-{{ nethermind_service }}:8551
-                - --ee-jwt-secret-file=/engine.jwt
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
-                - --metrics-publish-interval=10
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
-                - --log-destination=CONSOLE
+                - --data-dir=/opt/app/beacon
+                - --web3-url=http://stereum-{{ nethermind_service }}:8551
+                - --metrics
+                - --rest
+                - --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nimbus_service }}/nimbus/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
 # EOF

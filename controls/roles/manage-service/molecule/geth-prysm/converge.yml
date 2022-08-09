@@ -4,8 +4,8 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    teku_service: d2cf0214-ea78-11ec-bbf0-ab0094207ad6
-    geth_service: d6358d80-ea76-11ec-94b3-2fb45dfeb66a
+    prysm_service: 1aaaf4a6-1352-11ed-ad87-b37d6103eb33
+    geth_service: 1c3ab554-1352-11ed-817e-37f53e69ec7d
 
   tasks:
     # geth service
@@ -45,7 +45,7 @@
                 - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
 
-    # teku beacon service
+    # prysm beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -58,39 +58,35 @@
             save: true
             state: started
             configuration:
-              service: TekuBeaconService
-              id: "{{ teku_service }}"
-              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              service: PrysmBeaconService
+              id: "{{ prysm_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
-                - 0.0.0.0:9001:9001/tcp
-                - 0.0.0.0:9001:9001/udp
-              env:
-                JAVA_OPTS: -Xmx4g
-              entrypoint: ["/opt/teku/bin/teku"]
-              command:
-                - --network=prater
-                - --logging=INFO
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --ee-endpoint=http://stereum-{{ geth_service }}:8551
-                - --ee-jwt-secret-file=/engine.jwt
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
-                - --metrics-publish-interval=10
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --log-destination=CONSOLE
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --p2p-host-ip=""
+                --p2p-host-dns=""
+                --prater=true
+                --fallback-web3provider=[]
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --grpc-gateway-host=0.0.0.0
+                --p2p-max-peers=100
+                --http-web3provider=http://stereum-{{ geth_service }}:8551
+                --monitoring-port=8080
+                --monitoring-host=0.0.0.0
+                --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
 
 # EOF

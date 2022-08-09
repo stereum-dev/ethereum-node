@@ -4,8 +4,8 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    teku_service: 97618b7c-0f3d-11ed-946a-00155d41d3f9
-    nethermind_service: d81cf9b6-0f3e-11ed-aad3-00155d41d3f9
+    lighthouse_service: 873c232a-1400-11ed-a161-238c740f59c9
+    nethermind_service: 887350f6-1400-11ed-8a35-cfe04e704bcb
 
   tasks:
     # nethermind service
@@ -31,7 +31,7 @@
               env: {}
               command:
               - --config=goerli
-              - --log=debug
+              - --log=info
               - --datadir=/opt/app/data
               - --Network.DiscoveryPort=30303
               - --Network.P2PPort=30303
@@ -47,7 +47,7 @@
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
-    # teku beacon service
+    # lh beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -60,39 +60,35 @@
             save: true
             state: started
             configuration:
-              service: TekuBeaconService
-              id: "{{ teku_service }}"
-              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
               ports:
-                - 0.0.0.0:9001:9001/tcp
-                - 0.0.0.0:9001:9001/udp
-              env:
-                JAVA_OPTS: -Xmx4g
-              entrypoint: ["/opt/teku/bin/teku"]
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
               command:
+                - lighthouse
+                - --spec=goerli
                 - --network=prater
-                - --logging=INFO
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --ee-endpoint=http://stereum-{{ nethermind_service }}:8551
-                - --ee-jwt-secret-file=/engine.jwt
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
-                - --metrics-publish-interval=10
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
-                - --log-destination=CONSOLE
+                - --debug-level=info
+                - beacon_node
+                - --datadir=/opt/app/beacon
+                - --eth1
+                - --http
+                - --http-allow-sync-stalled
+                - --metrics
+                - --merge
+                - --execution-endpoints=http://stereum-{{ nethermind_service }}:8551
+                - --jwt-secrets=/engine.jwt
+                - --enr-udp-port=9000
+                - --enr-tcp-port=9000
+                - --discovery-port=9000
+              entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ lighthouse_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_service }}/slasher:/opt/app/slasher"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
 # EOF

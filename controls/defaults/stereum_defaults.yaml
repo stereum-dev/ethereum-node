@@ -11,7 +11,7 @@ stereum_static:
     versions:
       # consensus clients
       lighthouse: v2.5.1
-      nimbus: multiarch-v22.6.1
+      nimbus: multiarch-v22.7.0
       teku: "22.8.0"
       prysm: v2.1.3
 

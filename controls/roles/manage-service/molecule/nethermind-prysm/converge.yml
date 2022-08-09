@@ -4,8 +4,8 @@
   vars_files:
   - ../../../../defaults/stereum_defaults.yaml
   vars:
-    teku_service: 97618b7c-0f3d-11ed-946a-00155d41d3f9
-    nethermind_service: d81cf9b6-0f3e-11ed-aad3-00155d41d3f9
+    prysm_service: a4e62e72-1408-11ed-a754-d7403173d153
+    nethermind_service: a52c230a-1408-11ed-8344-bfbd60108b3d
 
   tasks:
     # nethermind service
@@ -47,7 +47,7 @@
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
-    # teku beacon service
+    # prysm beacon service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -60,39 +60,26 @@
             save: true
             state: started
             configuration:
-              service: TekuBeaconService
-              id: "{{ teku_service }}"
-              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              service: PrysmBeaconService
+              id: "{{ prysm_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
-                - 0.0.0.0:9001:9001/tcp
-                - 0.0.0.0:9001:9001/udp
-              env:
-                JAVA_OPTS: -Xmx4g
-              entrypoint: ["/opt/teku/bin/teku"]
-              command:
-                - --network=prater
-                - --logging=INFO
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --ee-endpoint=http://stereum-{{ nethermind_service }}:8551
-                - --ee-jwt-secret-file=/engine.jwt
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
-                - --metrics-publish-interval=10
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --data-path=/opt/app/data
-                - --data-storage-mode=prune
-                - --log-destination=CONSOLE
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --prater=true
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --http-web3provider=http://stereum-{{ nethermind_service }}:8551
+                --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
 # EOF
