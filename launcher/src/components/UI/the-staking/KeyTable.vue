@@ -40,7 +40,7 @@
                 item.key.substring(item.key.length - 4, item.key.length)
             }}</span>
             <img class="service-icon" :src="item.icon" alt="icon" />
-            <span class="since">12d 11h 20m</span>
+            <span class="since">{{ item.activeSince }}</span>
             <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
             <span class="balance">{{ item.balance }}</span>
             <div class="option-box">
@@ -150,6 +150,7 @@ export default {
       pendingStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png",
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
+      apiProblems: "/img/icon/no-connection.png"
     };
   },
   watch: {
@@ -221,6 +222,8 @@ export default {
           return this.pendingStatusIcon;
         case "exited":
           return this.exitedStatusIcon;
+        case "NA":
+          return this.apiProblems;
         default:
           return this.depositStatusIcon;
       }
@@ -244,7 +247,8 @@ export default {
 
             //update totalBalance
             keyStats.forEach((key) => {
-              totalBalance += key.balance;
+              if(typeof key.balance === 'number')
+                totalBalance += key.balance;
             });
           } else {
             //refresh validaotr list
@@ -264,7 +268,8 @@ export default {
 
               //update totalBalance
               keyStats.forEach((key) => {
-                totalBalance += key.balance;
+                if(typeof key.balance === 'number')
+                  totalBalance += key.balance;
               });
 
               //update service datasets in Pinia store
@@ -314,6 +319,7 @@ export default {
               key: key,
               validatorID: client.config.serviceID,
               icon: client.icon,
+              activeSince: '-',
               status: info.status,
               balance: info.balance / 1000000000,
             });
@@ -322,8 +328,9 @@ export default {
               key: key,
               validatorID: client.config.serviceID,
               icon: client.icon,
-              status: "NA",
-              balance: 0,
+              activeSince: '-',
+              status: "deposit",
+              balance: "-",
             });
           }
         });
@@ -335,8 +342,9 @@ export default {
             key: key,
             validatorID: client.config.serviceID,
             icon: client.icon,
+            activeSince: '-',
             status: "NA",
-            balance: 0,
+            balance: "-",
           });
         });
         return keys;
