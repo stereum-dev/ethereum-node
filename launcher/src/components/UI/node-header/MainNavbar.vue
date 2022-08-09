@@ -18,6 +18,7 @@ export default {
     return{
       failed: false,
       checked: false,
+      polling: null,
     };
   },
   components: { PagesNav, IconsNav, ServiceLinks },

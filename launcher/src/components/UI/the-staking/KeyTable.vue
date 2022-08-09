@@ -30,73 +30,34 @@
             </div>
           </div>
         </key-modal>
-        <div
-          class="table-content"
-          v-if="importValidatorKeyActive"
-          :class="{ dropActive: isDragOver }"
-          @drag.prevent.stop=""
-          @dragstart.prevent.stop=""
-          @dragend.prevent.stop="isDragOver = false"
-          @dragover.prevent.stop="isDragOver = true"
-          @dragenter.prevent.stop="isDragOver = true"
-          @dragleave.prevent.stop="isDragOver = false"
-          @drop.prevent.stop="dropFileHandler"
-        >
+        <div class="table-content" v-if="importValidatorKeyActive" :class="{ dropActive: isDragOver }"
+          @drag.prevent.stop="" @dragstart.prevent.stop="" @dragend.prevent.stop="isDragOver = false"
+          @dragover.prevent.stop="isDragOver = true" @dragenter.prevent.stop="isDragOver = true"
+          @dragleave.prevent.stop="isDragOver = false" @drop.prevent.stop="dropFileHandler">
           <div class="table-row" v-for="(item, index) in keys" :key="index">
             <span class="circle"></span>
-            <span class="category"
-              >{{ item.key.substring(0, 20) }}...{{
+            <span class="category">{{ item.key.substring(0, 20) }}...{{
                 item.key.substring(item.key.length - 4, item.key.length)
-              }}</span
-            >
+            }}</span>
             <img class="service-icon" :src="item.icon" alt="icon" />
             <span class="since">12d 11h 20m</span>
             <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
             <span class="balance">{{ item.balance }}</span>
             <div class="option-box">
-              <div
-                class="grafiti-box"
-                @mouseover="item.showGrafitiText = true"
-                @mouseleave="item.showGrafitiText = false"
-              >
-                <img
-                  class="grafiti-icon"
-                  src="../../../../public/img/icon/the-staking/option-graffiti.png"
-                  alt="icon"
-                />
+              <div class="grafiti-box" @mouseover="item.showGrafitiText = true"
+                @mouseleave="item.showGrafitiText = false">
+                <img class="grafiti-icon" src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                  alt="icon" />
               </div>
-              <div
-                class="copy-box"
-                @mouseover="item.showCopyText = true"
-                @mouseleave="item.showCopyText = false"
-              >
-                <img
-                  class="copy-icon"
-                  src="../../../../public/img/icon/the-staking/copy6.png"
-                  alt="icon"
-                />
+              <div class="copy-box" @mouseover="item.showCopyText = true" @mouseleave="item.showCopyText = false"
+                @click="copyHandler(item)">
+                <img class="copy-icon" src="../../../../public/img/icon/the-staking/copy6.png" alt="icon" />
               </div>
-              <div
-                class="remove-box"
-                @mouseover="item.showRemoveText = true"
-                @mouseleave="item.showRemoveText = false"
-              >
-                <img
-                  class="remove-icon"
-                  src="../../../../public/img/icon/the-staking/option-remove.png"
-                  alt="icon"
-                />
+              <div class="remove-box" @mouseover="item.showRemoveText = true" @mouseleave="item.showRemoveText = false">
+                <img class="remove-icon" src="../../../../public/img/icon/the-staking/option-remove.png" alt="icon" />
               </div>
-              <div
-                class="exit-box"
-                @mouseover="item.showExitText = true"
-                @mouseleave="item.showExitText = false"
-              >
-                <img
-                  class="exit-icon"
-                  src="../../../../public/img/icon/the-staking/redexit-icon.png"
-                  alt="icon"
-                />
+              <div class="exit-box" @mouseover="item.showExitText = true" @mouseleave="item.showExitText = false">
+                <img class="exit-icon" src="../../../../public/img/icon/the-staking/redexit-icon.png" alt="icon" />
               </div>
             </div>
           </div>
@@ -105,66 +66,33 @@
           <span id="active">FILE NAME</span>
         </div>
         <div class="table-content" v-if="enterPasswordBox">
-          <div
-            class="key-table-row"
-            v-for="(item, index) in keyFiles"
-            :key="index"
-          >
+          <div class="key-table-row" v-for="(item, index) in keyFiles" :key="index">
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
             <div @click="removeKeyHandler(item.name)" class="key-remove-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/close3.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="searchOptions">
-      <img
-        class="rename"
-        src="../../../../public/img/icon/the-staking/rename-icon.png"
-        alt="icon"
-      />
-      <img
-        class="folder"
-        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
-        alt="icon"
-      />
-      <img
-        class="filter"
-        src="../../../../public/img/icon/the-staking/staking-filter.png"
-        alt="icon"
-      />
+      <img class="rename" src="../../../../public/img/icon/the-staking/rename-icon.png" alt="icon" />
+      <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
+      <img class="filter" src="../../../../public/img/icon/the-staking/staking-filter.png" alt="icon" />
     </div>
     <div class="insertBox" v-if="insertKeyBoxActive">
       <div class="insert-key" @click="openUploadHandler">
-        <input
-          type="file"
-          @change="uploadFileHandler"
-          style="display: none"
-          ref="fileInput"
-          multiple="multiple"
-          accept="application/json"
-        />
+        <input type="file" @change="uploadFileHandler" style="display: none" ref="fileInput" multiple="multiple"
+          accept="application/json" />
         <span>CLICK OR DRAG TO INSERT KEY</span>
-        <img
-          class="black-key"
-          src="../../../../public/img/icon/the-staking/black-key.png"
-          alt="icon"
-        />
+        <img class="black-key" src="../../../../public/img/icon/the-staking/black-key.png" alt="icon" />
       </div>
     </div>
     <div class="passwordBox" v-if="enterPasswordBox">
       <div class="enter-password" @click="confirmPasswordHandler">
         <input v-model="password" v-if="passwordInputActive" type="password" />
-        <button
-          @keyup.enter="importKey"
-          @click="importKey"
-          v-if="passwordInputActive"
-        >
+        <button @keyup.enter="importKey" @click="importKey" v-if="passwordInputActive">
           CONFIRM
         </button>
         <span v-else>ENTER PASSWORD & IMPORT</span>
@@ -172,17 +100,9 @@
     </div>
     <div class="feeBox" v-if="feeRecipientBoxActive">
       <div class="enter-fee" @click="enterFeeHandler">
-        <input
-          placeholder="Enter a valid Ethereum address to send your block rewards to ... "
-          v-model="password"
-          v-if="feeInputActive"
-          type="text"
-        />
-        <button
-          @keyup.enter="confirmFeeRecipientAddress"
-          @click="confirmFeeRecipientAddress"
-          v-if="feeInputActive"
-        >
+        <input placeholder="Enter a valid Ethereum address to send your block rewards to ... " v-model="password"
+          v-if="feeInputActive" type="text" />
+        <button @keyup.enter="confirmFeeRecipientAddress" @click="confirmFeeRecipientAddress" v-if="feeInputActive">
           CONFIRM
         </button>
         <span v-else>SET A BLOCK FEE RECIPIENT ADDRESS</span>
@@ -220,7 +140,6 @@ export default {
       importIsProcessing: false,
       importIsDone: false,
       password: "",
-      forceRefresh: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
       slashedStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Slashed.png",
@@ -260,7 +179,8 @@ export default {
     }),
     ...mapWritableState(useStakingStore, {
       totalBalance: "totalBalance",
-      keys: "",
+      keys: "keys",
+      forceRefresh: "forceRefresh",
     }),
     importingErrorMessage() {
       return {
@@ -270,11 +190,25 @@ export default {
   },
   mounted() {
     this.listKeys();
+    this.polling = setInterval(this.listKeys, 384000); //refresh validator account stats
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   updated() {
     this.checkKeyExists();
   },
   methods: {
+    copyHandler(item) {
+      let toCopy = item.key
+      this.$copyText(toCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
+    },
     stateIconHandler(item) {
       switch (item.status) {
         case "active_online":
@@ -292,7 +226,7 @@ export default {
       }
     },
     listKeys: async function () {
-      let keys = [];
+      let keyStats = [];
       let totalBalance = 0;
       let clients = this.installedServices.filter((s) =>
         s.service.includes("Validator")
@@ -306,10 +240,10 @@ export default {
             !this.forceRefresh
           ) {
             //update validator stats
-            keys = await this.updateValidatorStats(client);
+            keyStats = await this.updateValidatorStats(client);
 
             //update totalBalance
-            keys.forEach((key) => {
+            keyStats.forEach((key) => {
               totalBalance += key.balance;
             });
           } else {
@@ -326,10 +260,10 @@ export default {
 
             if (client.config.keys && client.config.keys.length > 0) {
               //update validator stats
-              keys = await this.updateValidatorStats(client);
+              keyStats = await this.updateValidatorStats(client);
 
               //update totalBalance
-              keys.forEach((key) => {
+              keyStats.forEach((key) => {
                 totalBalance += key.balance;
               });
 
@@ -341,9 +275,10 @@ export default {
                 return service;
               });
             }
+            this.forceRefresh = false
           }
         }
-        this.keys = keys.map((key) => {
+        this.keys = keyStats.map((key) => {
           return {
             ...key,
             showGrafitiText: false,
@@ -357,15 +292,20 @@ export default {
     },
     async updateValidatorStats(client) {
       let keys = [];
+      let data = [];
       try {
-        let response = await axios.get(
-          "https://" +
+        let buffer = client.config.keys
+        const chunkSize = 100;
+        for (let i = 0; i < buffer.length; i += chunkSize) {  //split validator accounts into chunks of 100 (api limit)
+          const chunk = buffer.slice(i, i + chunkSize);
+          let response = await axios.get(
+            "https://" +
             client.config.network +
             ".beaconcha.in/api/v1/validator/" +
-            encodeURIComponent(client.config.keys.join())
-        );
-        let data = [];
-        data = data.concat(response.data.data);
+            encodeURIComponent(chunk.join())
+          );
+          data = data.concat(response.data.data);   //merge all gathered stats in one array
+        }
 
         client.config.keys.forEach((key) => {
           let info = data.find((k) => k.pubkey === key);
@@ -412,15 +352,15 @@ export default {
       });
       this.forceRefresh = true;
       this.keyFiles = [];
-      this.listKeys();
+      await this.listKeys();
       this.importIsProcessing = false;
       this.importIsDone = true;
       this.password = "";
-      this.importValidatorKeyActive = false;
-      this.insertKeyBoxActive = false;
+      this.importValidatorKeyActive = true;
+      this.insertKeyBoxActive = true;
       this.enterPasswordBox = false;
       this.passwordInputActive = false;
-      this.feeRecipientBoxActive = true;
+      //this.feeRecipientBoxActive = true;
     },
     //FEE RECIPIENT
     confirmFeeRecipientAddress() {
@@ -507,6 +447,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .searchOptions {
   grid-column: 1/3;
   grid-row: 2/3;
@@ -516,6 +457,7 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
+
 .dropActive {
   width: 100%;
   height: 92%;
@@ -620,6 +562,7 @@ export default {
   margin: 0 auto;
   cursor: pointer;
 }
+
 .option-box .copy-icon {
   width: 20px;
   height: 20px;
@@ -857,6 +800,7 @@ export default {
   width: 26px;
   height: 28px;
 }
+
 .feeBox .enter-fee {
   width: 100%;
   height: 80%;
@@ -923,6 +867,7 @@ export default {
   background-color: #3f4750;
   font-size: 0.8rem;
 }
+
 .key-table-row {
   width: 99%;
   height: 30px;
@@ -968,6 +913,7 @@ export default {
   background-color: #fff !important;
   margin-left: 5px;
 }
+
 .title-box {
   width: 100%;
   height: 50px;
@@ -985,6 +931,7 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
 }
+
 .processImg {
   width: 80%;
   height: 30%;
@@ -992,34 +939,41 @@ export default {
   position: relative;
   border-bottom: 1px solid gray;
 }
+
 .processImg img {
   width: 65px;
   height: 60px;
   position: absolute;
   animation: move 5s linear infinite;
 }
+
 @keyframes move {
   0% {
     left: 0%;
     bottom: -10px;
   }
+
   25% {
     left: 20%;
     bottom: -10px;
   }
+
   50% {
     left: 40%;
     bottom: -10px;
   }
+
   75% {
     left: 62%;
     bottom: -10px;
   }
+
   100% {
     left: 85%;
     bottom: -10px;
   }
 }
+
 .import-message {
   width: 100%;
   height: 70%;
@@ -1036,12 +990,14 @@ export default {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 10px;
-  text-transform: capitalize;
+  display: inline-block;
   text-align: center;
 }
+
 .text-danger {
   color: rgb(219, 77, 77) !important;
 }
+
 .confirm-btn {
   width: 100%;
   height: 30%;
@@ -1050,6 +1006,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .confirm-box {
   width: 50%;
   height: 45%;
@@ -1071,6 +1028,7 @@ export default {
   border: 1px solid #d3d3d3;
   transition-duration: 100ms;
 }
+
 .confirm-box:active {
   transform: scale(0.98);
   box-shadow: none;
