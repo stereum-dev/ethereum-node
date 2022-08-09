@@ -1,83 +1,46 @@
 <template>
   <div class="icons-box">
-    <div
-      class="icon-btn"
-      @mouseover="showHelpText = true"
-      @mouseleave="showHelpText = false"
-    >
+    <div class="icon-btn">
       <img alt="help-icon" src="/img/icon/header-icons/question-mark.png" />
     </div>
 
-    <div
-      class="icon-btn"
-      @mouseover="showNotifText = true"
-      @mouseleave="showNotifText = false"
-    >
+    <div class="icon-btn">
       <img alt="Login" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div
-      class="icon-btn"
-      @click="updateModalHandler"
-      v-if="isUpdateAvailable"
-      @mouseover="showUpdateText = true"
-      @mouseleave="showUpdateText = false"
-    >
+    <div class="icon-btn" @click="updateModalHandler" v-if="isUpdateAvailable">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
-    <div
-      class="icon-btn"
-      @click="updateModalHandler"
-      v-else
-      @mouseover="showUpdateText = true"
-      @mouseleave="showUpdateText = false"
-    >
+    <div class="icon-btn" @click="updateModalHandler" v-else>
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
 
     <router-link to="/setting" class="icon-btn">
-      <div
-        @mouseover="showSettingText = true"
-        @mouseleave="showSettingText = false"
-      >
+      <div>
         <img alt="Login" src="/img/icon/header-icons/setting4.png" />
-        <span class="setting-text" v-if="showSettingText">Setting</span>
       </div>
     </router-link>
 
-
-    <div
-      class="icon-btn"
-      @mouseover="showExitText = true"
-      @mouseleave="showExitText = false"
-    >
+    <div class="icon-btn">
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
     </div>
-    <update-modal
+    <update-panel
       @remove-modal="removeModalHandler"
       @update-confirm="updateConfirmationHandler"
-      v-if="showUpdateModal"
-    ></update-modal>
-    <update-waiting v-if="updateWaitingModal"></update-waiting>
+      :class="{ 'updatePanel-show': displayUpdatePanel }"
+    ></update-panel>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import UpdateModal from "./UpdateModal.vue";
-import UpdateWaiting from "./UpdateWaiting.vue";
+import UpdatePanel from "./UpdatePanel.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
-  components: { UpdateModal, UpdateWaiting },
+  components: { UpdatePanel },
   data() {
     return {
-      showUpdateModal: false,
-      showHelpText: false,
-      showExitText: false,
-      showSettingText: false,
-      showUpdateText: false,
-      showNotifText: false,
-      updateWaitingModal: false,
+      displayUpdatePanel: false,
     };
   },
   computed: {
@@ -93,13 +56,10 @@ export default {
       await ControlService.runAllUpdates();
     },
     updateModalHandler() {
-      this.showUpdateModal = true;
-    },
-    removeModalHandler() {
-      this.showUpdateModal = false;
+      this.displayUpdatePanel = !this.displayUpdatePanel;
     },
     updateConfirmationHandler: async function () {
-      this.showUpdateModal = false;
+      this.displayUpdatePanel = false;
       this.updateWaitingModal = true;
       await this.runAllUpdates();
       this.versions = {};
@@ -224,5 +184,9 @@ export default {
   bottom: -10px;
   left: 6px;
   transition-duration: 500ms;
+}
+.updatePanel-show {
+  transition-duration: 500ms;
+  right: 0 !important;
 }
 </style>
