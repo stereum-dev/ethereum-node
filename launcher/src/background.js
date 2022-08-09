@@ -148,6 +148,10 @@ promiseIpc.on("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });
 
+promiseIpc.on("getServerName", async () => {
+  return await monitoring.getServerName();
+});
+
 promiseIpc.on("getAvailablePort", async (args) => {
   return await nodeConnection.checkAvailablePorts(args);
 });

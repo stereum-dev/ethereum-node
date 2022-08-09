@@ -127,9 +127,17 @@ export default {
     ...mapWritableState(useTutorialStore, {
       steps: "steps",
     }),
+    ...mapWritableState(useControlStore, {
+      ServerName: "ServerName",
+    }),
   },
-  mounted() {},
+  mounted() {
+    this.updateServerName()
+  },
   methods: {
+   async updateServerName(){
+      this.ServerName = await getServerName()
+    },
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
