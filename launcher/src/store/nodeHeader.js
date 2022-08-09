@@ -4,7 +4,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
     return {
       runningServices: [],
       refresh: true,
-      checkedForUpdates: false,
+      forceUpdateCheck: false,
       isUpdateAvailable: false,
       operators: [
         { operatorName: "stereum" },

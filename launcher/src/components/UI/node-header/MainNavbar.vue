@@ -41,7 +41,7 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
-      checkedForUpdates: "checkedForUpdates",
+      forceUpdateCheck: "forceUpdateCheck",
       refresh: "refresh",
       isUpdateAvailable: "isUpdateAvailable",
     }),
@@ -120,7 +120,7 @@ export default {
                 .filter((service) => service.headerOption)
             }
           }
-          if (Object.keys(this.versions).length === 0 && await ControlService.checkStereumInstallation()) {
+          if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services)
           }
         }
@@ -128,7 +128,7 @@ export default {
     },
 
     checkUpdates: async function () {
-    if(!this.failed && !this.checked){
+    if((!this.failed && !this.checked) || this.forceUpdateCheck){
       let updates = []
       let services = await ControlService.getServices()
       let response
@@ -136,7 +136,7 @@ export default {
       try{
         response = await ControlService.checkUpdates()
         stereumVersion = (await ControlService.getCurrentStereumVersion()).replace('\n', '')
-        this.response = response
+        this.versions = response
         this.stereumVersion = stereumVersion
       }catch(err)
       {
@@ -163,6 +163,7 @@ export default {
       }
       this.checked = true
       this.newUpdates = updates
+      this.forceUpdateCheck = false
       }
     },
     async checkConnection() {
@@ -170,6 +171,7 @@ export default {
       if (!connected) {
         console.log("Reconnecting...")
         await ControlService.reconnect()
+        this.forceUpdateCheck = true
       }
       return connected
     }

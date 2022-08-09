@@ -29,7 +29,6 @@
           <div
             class="tableRow"
             v-for="(item, index) in newUpdates"
-            @click="runUpdate(item)"
             :key="index"
           >
             <div class="serviceName">
@@ -38,10 +37,17 @@
             <div class="version">
               <span>{{ item.version }}</span>
             </div>
-            <div class="downloadIcon">
+            <div v-if="item.running" class="disabledDownloadIcon">
+              <img
+                src="/img/icon/node-journal-icons/download_disabled.png"
+                alt="icon"
+              />
+            </div>
+            <div v-else class="downloadIcon">
               <img
                 src="/img/icon/node-journal-icons/download2.png"
                 alt="icon"
+                @click="runUpdate(item)"
               />
             </div>
           </div>
@@ -57,6 +63,7 @@ import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useControlStore } from "../../../store/theControl";
+import { useNodeHeader } from "../../../store/nodeHeader";
 export default {
   components: { UpdateTable },
   data() {
@@ -65,11 +72,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(useServices, {
-      newUpdates: "newUpdates",
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
     }),
     ...mapWritableState(useServices, {
-      versions: "versions",
+      newUpdates: "newUpdates",
     }),
     ...mapState(useControlStore, {
       ServerName: "ServerName",
@@ -78,13 +85,14 @@ export default {
   },
   methods: {
     async runUpdate(item) {
-      if (item && item.id) {
-        await ControlService.updateServices({ service: item.id });
-        this.versions = {};
-      } else if (item && item.commit) {
-        await ControlService.updateStereum({ commit: item.commit });
-        this.versions = {};
-      }
+        item.running = true
+        if (item && item.id) {
+          await ControlService.updateServices({ service: item.id });
+          this.forceUpdateCheck = true
+        } else if (item && item.commit) {
+          await ControlService.updateStereum({ commit: item.commit });
+          this.forceUpdateCheck = true
+        }
     },
     openUpdateTableHandler() {
       this.updateTableIsOpen = !this.updateTableIsOpen;
@@ -401,6 +409,17 @@ export default {
   width: 15px;
   height: 18px;
   cursor: pointer;
+}
+.disabledDownloadIcon {
+  width: 15%;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.disabledDownloadIcon img {
+  width: 15px;
+  height: 18px;
 }
 .downloadIcon img:hover {
   transform: scale(1.1);
