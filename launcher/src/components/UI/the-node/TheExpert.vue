@@ -179,7 +179,7 @@ export default {
 
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (option.type === "select" || option.type === "text") {
-          option.changeValue = option.pattern.exec(this.item.yaml)[2];
+          option.changeValue = [...this.item.yaml.match(option.pattern)][2];
         }
         return {
           ...option,
