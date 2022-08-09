@@ -27,7 +27,6 @@
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
-                - 127.0.0.1:8551:8551/tcp
               entrypoint: ["./Nethermind.Runner"]
               env: {}
               command:
@@ -65,7 +64,6 @@
               id: "{{ prysm_service }}"
               image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
-                - 127.0.0.1:4000:4000/tcp
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp
               env: {}

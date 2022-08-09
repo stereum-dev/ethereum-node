@@ -27,7 +27,6 @@
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
-                - 127.0.0.1:8551:8551/tcp
               entrypoint: ["besu"]
               env:
                 JAVA_OPTS: -Xmx4g
@@ -79,7 +78,6 @@
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
-                - 127.0.0.1:5052:5052/tcp
               command:
                 - lighthouse
                 - --spec=goerli

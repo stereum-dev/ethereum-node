@@ -27,7 +27,6 @@
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
-                - 127.0.0.1:8551:8551/tcp
               entrypoint: ["./Nethermind.Runner"]
               env: {}
               command:
@@ -67,7 +66,6 @@
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
-                - 127.0.0.1:9190:9190/tcp
               env: {}
               entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
