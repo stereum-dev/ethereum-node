@@ -55,7 +55,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -109,7 +117,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(--suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -136,7 +152,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -163,7 +187,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -199,6 +231,13 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+            },
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/),
             },
           ],
           drag: true,
@@ -236,6 +275,13 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+            },
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/),
             },
           ],
           drag: true,
