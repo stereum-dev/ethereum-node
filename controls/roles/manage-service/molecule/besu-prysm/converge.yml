@@ -1,0 +1,96 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prysm_service: a8cff346-13f5-11ed-988b-c74564e46b4c
+    besu_service: a99fccec-13f5-11ed-a982-73f6b3b1e023
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: "hyperledger/besu:{{ stereum_static.defaults.versions.besu }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-host=0.0.0.0
+                - --host-allowlist=*
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --logging=INFO
+                - --engine-rpc-enabled=true
+                - --engine-host-allowlist=*
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+                - --Xmerge-support=true
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmBeaconService
+              id: "{{ prysm_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --prater=true
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --http-web3provider=http://stereum-{{ besu_service }}:8551
+                --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+# EOF

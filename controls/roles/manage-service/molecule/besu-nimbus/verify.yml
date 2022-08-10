@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  nimbus beacon logs
+  - name: nimbus beacon
+    command: "docker logs --tail=20 stereum-8be890ca-13f1-11ed-98ff-8b4850a8f6a4"
+    register: nimbus_beacon
+    until:
+      - nimbus_beacon.stdout is search("Failed to send POST Request with JSON-RPC")
+      - nimbus_beacon.stdout is search("Eth1 chain monitoring failure, restarting")
+    retries: 60
+    delay: 10
+
+# EOF

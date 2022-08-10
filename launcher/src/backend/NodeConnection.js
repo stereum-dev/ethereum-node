@@ -764,7 +764,7 @@ export class NodeConnection {
   async checkUpdates() {
     try {
       let response = await axios.get('https://stereum.net/downloads/updates.json')
-      log.info(response.data)
+      log.debug(response.data)
       return response.data
     } catch (err) {
       throw err

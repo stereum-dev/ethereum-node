@@ -36,6 +36,7 @@ export class NimbusBeaconService extends NodeService {
         `--validators-dir=${validatorsDir}`,
         `--secrets-dir=${secretsDir}`,
         `--web3-url=${executionLayer}`,
+        '--suggested-fee-recipient=0x0000000000000000000000000000000000000000',
         '--tcp-port=9000',
         '--udp-port=9000',
         '--metrics',

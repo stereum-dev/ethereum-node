@@ -1,0 +1,83 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    nimbus_service: cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1
+    nethermind_service: cd56b018-1401-11ed-9a3f-c70dc9c2e0bc
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --log=debug
+              - --datadir=/opt/app/data
+              - --Network.DiscoveryPort=30303
+              - --Network.P2PPort=30303
+              - --JsonRpc.Enabled=true
+              - --JsonRpc.Host=0.0.0.0
+              - --JsonRpc.JwtSecretFile=/engine.jwt
+              - --Init.WebSocketsEnabled=true
+              - --JsonRpc.WebSocketsPort=8546
+              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+              - --Metrics.Enabled=true
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # nimbus beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconService
+              id: "{{ nimbus_service }}"
+              image: "statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              command:
+                - --network=prater
+                - --data-dir=/opt/app/beacon
+                - --web3-url=http://stereum-{{ nethermind_service }}:8551
+                - --metrics
+                - --rest
+                - --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ nimbus_service }}/nimbus/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+# EOF

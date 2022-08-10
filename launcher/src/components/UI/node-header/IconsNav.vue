@@ -10,7 +10,13 @@
     <div class="icon-btn" @click="updateModalHandler" v-if="isUpdateAvailable">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
-    <div class="icon-btn" @click="updateModalHandler" v-else>
+    <div
+      class="icon-btn"
+      @click="updateModalHandler"
+      v-else
+      @mouseover="showUpdateText = true"
+      @mouseleave="showUpdateText = false"
+    >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
 
@@ -45,6 +51,7 @@ export default {
   computed: {
     ...mapWritableState(useNodeHeader, {
       isUpdateAvailable: "isUpdateAvailable",
+      updating: "updating",
     }),
     ...mapWritableState(useServices, {
       versions: "versions",
@@ -60,7 +67,9 @@ export default {
     updateConfirmationHandler: async function () {
       this.displayUpdatePanel = false;
       this.updateWaitingModal = true;
+      this.updating = true;
       await this.runAllUpdates();
+      this.updating = false;
       this.versions = {};
       this.updateWaitingModal = false;
     },

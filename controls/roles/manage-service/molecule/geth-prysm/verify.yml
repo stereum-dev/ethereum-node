@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  prysm beacon logs
+  - name: Prysm beacon
+    command: "docker logs stereum-1aaaf4a6-1352-11ed-ad87-b37d6103eb33"
+    register: prysm_beacon
+    until:
+      - prysm_beacon.stdout is search("Connected to new endpoint: http://stereum-1c3ab554-1352-11ed-817e-37f53e69ec7d:8551")
+    retries: 60
+    delay: 10
+
+# EOF

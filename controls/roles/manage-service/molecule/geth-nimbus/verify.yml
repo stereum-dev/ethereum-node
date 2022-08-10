@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  nimbus beacon logs
+  - name: nimbus beacon
+    command: "docker logs --tail=20 stereum-33791152-1339-11ed-a2b4-733451c3c44d"
+    register: nimbus_beacon
+    until:
+      - nimbus_beacon.stdout is search("Parameter \[result\] expected JObject but got JNull")
+      - nimbus_beacon.stdout is search("Eth1 chain monitoring failure, restarting")
+    retries: 60
+    delay: 10
+
+# EOF
