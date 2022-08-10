@@ -51,8 +51,45 @@
               </div>
               <span>AVAILABLE PLUG-IN UPDATES</span>
             </div>
-            <div class="tableContent"></div>
-            <div class="btnBox"></div>
+            <div class="tableContent">
+              <div
+                class="tableRow"
+                v-for="(item, index) in newUpdates"
+                :key="index"
+              >
+                <div class="serviceName">
+                  <span>{{ item.name }}</span>
+                </div>
+                <div class="version">
+                  <span>{{ item.version }}</span>
+                </div>
+                <div v-if="item.running" class="disabledDownloadIcon">
+                  <img
+                    src="/img/icon/node-journal-icons/download_disabled.png"
+                    alt="icon"
+                  />
+                </div>
+                <div v-else class="downloadIcon">
+                  <img
+                    src="/img/icon/node-journal-icons/download2.png"
+                    alt="icon"
+                    @click="runUpdate(item)"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="btnBox">
+              <div class="confirmUpdate">
+                <span>update all</span>
+                <img
+                  src="/img/icon/node-journal-icons/download2.png"
+                  alt="icon"
+                />
+              </div>
+              <div class="autoUpdateText">
+                <span>auto-update: ON</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -60,7 +97,15 @@
   </div>
 </template>
 <script>
-export default {};
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services.js";
+export default {
+  computed: {
+    ...mapWritableState(useServices, {
+      newUpdates: "newUpdates",
+    }),
+  },
+};
 </script>
 <style scoped>
 .panelParent {
@@ -103,7 +148,7 @@ export default {};
 }
 .serviceUpdates {
   width: 100%;
-  height: 60%;
+  height: 68%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -266,7 +311,6 @@ export default {};
   width: 100%;
   height: 100%;
   background-color: #334d4d;
-  border: 3px solid #434343;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -277,7 +321,8 @@ export default {};
   width: 100%;
   height: 10%;
   background-color: #335959;
-  border-bottom: 3px solid #434343;
+  border: 3px solid #434343;
+  border-bottom: none;
   border-radius: 3px;
   padding: 2px;
   display: grid;
@@ -287,8 +332,8 @@ export default {};
 .tableHeader .tableUpdateIcon {
   grid-column: 2/3;
   grid-row: 1;
-  width:27%;
-  height:100%;
+  width: 27%;
+  height: 100%;
   background-color: #2a4940;
   border-radius: 100%;
   margin-right: 5px;
@@ -310,5 +355,83 @@ export default {};
   color: #c6c6c6;
   text-transform: uppercase;
   align-self: center;
+}
+.service-updateBox .availableTable .tableContent {
+  width: 100%;
+  height: 77%;
+  border: 3px solid #434343;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.tableContent::-webkit-scrollbar {
+  width: 1px;
+}
+.service-updateBox .availableTable .btnBox {
+  width: 100%;
+  height: 13%;
+  background-color: #343434;
+  display: grid;
+  grid-template-columns: 35% 30% 35%;
+  grid-template-rows: 1fr;
+}
+.availableTable .btnBox .confirmUpdate {
+  grid-column: 1/2;
+  grid-row: 1;
+  width: 95%;
+  height: 90%;
+  margin: 0 auto;
+  background-color: #067c5a;
+  border-radius: 3px;
+  border: 2px solid #067c5a;
+  box-shadow: 0 1px 3px 1px rgb(46, 46, 46);
+  color: #c6c6c6;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  align-self: center;
+  cursor: pointer;
+  transition-duration: 50ms;
+}
+
+.btnBox .confirmUpdate img {
+  width: 13%;
+  height: 70%;
+  max-width: 13px;
+  max-height: 15px;
+}
+.btnBox .confirmUpdate span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #c6c6c6;
+  text-transform: uppercase;
+}
+.btnBox .confirmUpdate:hover {
+  transform: scale(1.05);
+  color: #c6c6c6;
+  border: 2px solid #63957d;
+}
+.btnBox .confirmUpdate:active {
+  box-shadow: none;
+  transform: scale(1);
+  border: none;
+}
+
+.btnBox .autoUpdateText {
+  grid-column: 3/4;
+  grid-row: 1;
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+}
+.btnBox .autoUpdateText span {
+  width: 100%;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c6c6c6;
+  text-transform: uppercase;
+  margin-right: 5px;
 }
 </style>
