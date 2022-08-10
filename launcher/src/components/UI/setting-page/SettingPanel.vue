@@ -1,6 +1,9 @@
 <template>
   <div class="seting-panel_parent">
-    <div class="seting-panel_box">
+    <div class="seting-language_box" v-if="langActive">
+      <language-panel @back="langActiveBox"></language-panel>
+    </div>
+    <div class="seting-panel_box" v-else>
       <div class="setting-panel_title">
         <div class="ttl-box">
           <div class="setting-panel_title_ico">
@@ -29,6 +32,9 @@
               :btnValue="item.btnValue"
               :isColor="item.isColor"
               :itemType="item.itemType"
+              :savedFlag="langIco"
+              :savedLang="langName"
+              @lang-action="langActiveBox"
             ></setting-items>
           </div>
         </div>
@@ -55,12 +61,17 @@
   </div>
 </template>
 <script>
+import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
+import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
 export default {
-  components: { TaskManager, SettingItems },
+  components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      langActive: false,
+      langIco: "",
+      langName: "",
       generalItems: [
         {
           id: 1,
@@ -114,10 +125,30 @@ export default {
       ],
     };
   },
+  updated() {
+    this.checkSettings();
+  },
+  created() {
+    this.checkSettings();
+  },
+
   methods: {
     confirm() {
       // confirm method have to write here
       alert("Done!");
+    },
+    langActiveBox() {
+      this.langActive = !this.langActive;
+    },
+    checkSettings: async function () {
+      const savedConfig = await ControlService.readConfig();
+      if (
+        savedConfig !== undefined &&
+        savedConfig.savedLanguage !== undefined
+      ) {
+        this.langIco = savedConfig.savedLanguage.flag;
+        this.langName = savedConfig.savedLanguage.language;
+      }
     },
   },
 };
@@ -142,6 +173,13 @@ export default {
   width: 100%;
   height: 95%;
   justify-content: flex-start;
+  align-items: center;
+}
+.seting-language_box {
+  display: flex;
+  width: 100%;
+  height: 95%;
+  justify-content: center;
   align-items: center;
 }
 .setting-panel_title {

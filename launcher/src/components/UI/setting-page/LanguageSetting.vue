@@ -1,76 +1,21 @@
 <template>
-  <div class="langSettingParent" @click="openDial()">
+  <div class="langSettingParent" @click="languageBox">
     <div class="icoLang">
-      <img :src="selectedLanguage.flag" alt="" />
+      <img :src="flag" alt="" />
     </div>
     <div class="langTtl">
-      <span>{{ selectedLanguage.lang }}</span>
+      <span>{{ lang }}</span>
     </div>
-    <lang-dialog @close="hideDialog" :open="dialogIsVisible">
-      <div id="flag" v-for="link in linkFlags" :key="link.langImg">
-        <div
-          class="content-box"
-          @click="setLang(link.langName, link.langSelect)"
-        >
-          <img :src="link.langImg" id="flagId" />
-          <span>{{ link.langName }}</span>
-        </div>
-      </div>
-    </lang-dialog>
   </div>
 </template>
 <script>
-import { mapWritableState, mapActions } from "pinia";
-import { useFlagDialog } from "../../../store/flagDialog";
-import LangDialog from "../LangDialog.vue";
-import ControlService from "@/store/ControlService";
 export default {
-  components: { LangDialog },
-  emit: ["open", "page"],
-  data() {
-    return {
-      isLanguageSelected: false,
-      hiddenDialogActive: true,
-      selectedLanguage: {
-        lang: "",
-        flag: "",
-      },
-    };
-  },
-  mounted() {
-    this.showDialog();
-  },
-  computed: {
-    ...mapWritableState(useFlagDialog, {
-      linkFlags: "linkFlags",
-      dialogIsVisible: "dialogIsVisible",
-    }),
-  },
+  props: ["flag", "lang"],
+  emit: ["language-box"],
+  data() {},
   methods: {
-    openDial() {
-      this.dialogIsVisible = !this.dialogIsVisible;
-    },
-
-    ...mapActions(useFlagDialog, {
-      showDialog: "showDialog",
-      hideDialog: "hideDialog",
-    }),
-    setLang(lang, langSelect) {
-      this.selectedLanguage.lang = lang;
-      this.selectedLanguage.flag = langSelect;
-      this.isLanguageSelected = true;
-      this.hideDialog = !this.hideDialog;
-      this.hiddenDialogActive = false;
-      this.updateSettings(lang, langSelect);
-      console.log(lang);
-    },
-    updateSettings: async function (lang, langSelect) {
-      const prevConf = await ControlService.readConfig();
-      const conf = {
-        ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect },
-      };
-      await ControlService.writeConfig(conf);
+    languageBox() {
+      this.$emit("language-box");
     },
   },
 };
@@ -139,10 +84,12 @@ export default {
   width: 50%;
 }
 .langTtl {
-  width: 85%;
+  width: 70%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 </style>

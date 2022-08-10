@@ -12,7 +12,7 @@
     >
       <span>{{ btnValue }}</span>
     </div>
-    <language-setting v-else></language-setting>
+    <language-setting v-else @language-box="langAction" :flag="savedFlag" :lang="savedLang"></language-setting>
   </div>
 </template>
 <script>
@@ -41,8 +41,16 @@ export default {
       type: String,
       required: true,
     },
+    savedFlag: {
+      type: String,
+      required:false
+    },
+    savedLang: {
+      type: String,
+      required:false
+    }
   },
-  emits: ["customize-setting"],
+  emits: ["customize-setting", "lang-action"],
   data() {
     return {
       colorStyle: this.isColor,
@@ -90,6 +98,9 @@ export default {
     },
     customizeSetting() {
       this.$emit("customize-setting");
+    },
+    langAction() {
+      this.$emit("lang-action");
     },
   },
 };
