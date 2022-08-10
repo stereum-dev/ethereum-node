@@ -1,5 +1,6 @@
 <template>
   <div class="panelParent">
+    <div class="clickOutside" @click.self="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
@@ -11,9 +12,12 @@
         </div>
         <div class="stereum-updateBox">
           <div class="versionBox">
-            <span>current version: ALPHA </span>
-            <span>latest version: 2.0</span>
-            <span>auto-update: ON</span>
+            <span id="current">current version:</span>
+            <span id="latest">latest version:</span>
+            <span id="autoUpdate">auto-update:</span>
+            <span id="currentValue">{{ stereumApp.current }}</span>
+            <span id="latestValue">{{ stereumApp.latest }}</span>
+            <span id="updateStatus">{{ stereumApp.autoUpdate }}</span>
           </div>
           <div class="btnBox">
             <div class="searchBtn">
@@ -57,29 +61,22 @@
                 v-for="(item, index) in newUpdates"
                 :key="index"
               >
+                <div class="downloadBtn">
+                  <img
+                    src="/img/icon/node-journal-icons/download2.png"
+                    alt="icon"
+                  />
+                </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
                 </div>
                 <div class="version">
                   <span>{{ item.version }}</span>
                 </div>
-                <div v-if="item.running" class="disabledDownloadIcon">
-                  <img
-                    src="/img/icon/node-journal-icons/download_disabled.png"
-                    alt="icon"
-                  />
-                </div>
-                <div v-else class="downloadIcon">
-                  <img
-                    src="/img/icon/node-journal-icons/download2.png"
-                    alt="icon"
-                    @click="runUpdate(item)"
-                  />
-                </div>
               </div>
             </div>
             <div class="btnBox">
-              <div class="confirmUpdate">
+              <div class="confirmUpdate" @click.self="$emit('updateAll')">
                 <span>update all</span>
                 <img
                   src="/img/icon/node-journal-icons/download2.png"
@@ -100,6 +97,15 @@
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 export default {
+  data() {
+    return {
+      stereumApp: {
+        current: "alpha",
+        latest: "2.0",
+        autoUpdate: "on",
+      },
+    };
+  },
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -117,9 +123,9 @@ export default {
   z-index: 310;
   transition-duration: 300ms;
 }
-.panelOpacity {
-  width: 100%;
-  height: 91%;
+.clickOutside {
+  width: 100vw;
+  height: 91vh;
   position: fixed;
   left: 0;
   top: 52px;
@@ -189,19 +195,75 @@ export default {
 .stereum-updateBox .versionBox {
   width: 50%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  grid-template-rows: repeat(3, 1fr);
 }
-.stereum-updateBox .versionBox span {
+.stereum-updateBox .versionBox #current {
+  grid-column: 1/2;
+  grid-row: 1/2;
   width: 100%;
-  height: 25%;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #c6c6c6;
-  margin-left: 15px;
+  margin-left: 5px;
+  justify-self: flex-start;
+  align-self: center;
+}
+.stereum-updateBox .versionBox #currentValue {
+  grid-column: 2/3;
+  grid-row: 1/2;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #b4b443;
+  justify-self: center;
+  align-self: center;
+}
+.stereum-updateBox .versionBox #latest {
+  grid-column: 1/2;
+  grid-row: 2/3;
+  width: 100%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c6c6c6;
+  margin-left: 5px;
+  justify-self: flex-start;
+  align-self: center;
+}
+.stereum-updateBox .versionBox #latestValue{
+  grid-column: 2/3;
+  grid-row: 2/3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #b4b443;
+  justify-self: center;
+  align-self: center;
+}
+.stereum-updateBox .versionBox #autoUpdate {
+  grid-column: 1/2;
+  grid-row: 3/4;
+  width: 100%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c6c6c6;
+  margin-left: 5px;
+  justify-self: flex-start;
+  align-self: center;
+}
+.stereum-updateBox .versionBox #updateStatus {
+  grid-column: 2/3;
+  grid-row: 3/4;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #37614b;
+  justify-self: center;
+  align-self: center;
 }
 .stereum-updateBox .btnBox {
   width: 50%;
@@ -362,9 +424,80 @@ export default {
   border: 3px solid #434343;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 .tableContent::-webkit-scrollbar {
   width: 1px;
+}
+.availableTable .tableContent .tableRow {
+  width: 100%;
+  height: 30px;
+  background-color: #343434;
+  margin-top: 3px;
+  border: 2px solid rgb(107, 107, 107);
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: 25% 45% 30%;
+  /* display: flex;
+  justify-content: space-between;
+  align-items: center; */
+}
+.tableContent .tableRow .downloadBtn {
+  grid-column: 1/2;
+  width: 100%;
+  height: 98%;
+  margin: 0 auto;
+  background-color: #067c5a;
+  border-radius: 3px;
+  border: 1px solid #0a5741;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.tableContent .tableRow .downloadBtn:hover {
+  background-color: rgb(3, 82, 60);
+}
+.tableContent .tableRow .downloadBtn:active {
+  border: none;
+  box-shadow: none;
+  transform: scale(0.95);
+}
+.tableContent .tableRow .downloadBtn img {
+  width: 25%;
+  height: 80%;
+}
+.availableTable .tableContent .tableRow .serviceName {
+  grid-column: 2/3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.availableTable .tableContent .tableRow .serviceName span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #c6c6c6;
+  text-transform: uppercase;
+}
+
+.availableTable .tableContent .tableRow .version {
+  grid-column: 3/4;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.availableTable .tableContent .tableRow .version span {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #b4b443;
+  text-transform: uppercase;
 }
 .service-updateBox .availableTable .btnBox {
   width: 100%;
@@ -406,6 +539,14 @@ export default {
   text-transform: uppercase;
 }
 .btnBox .confirmUpdate:hover {
+  background-color: rgb(3, 82, 60);
+}
+.btnBox .confirmUpdate:active {
+  border: none;
+  box-shadow: none;
+  transform: scale(0.95);
+}
+/* .btnBox .confirmUpdate:hover {
   transform: scale(1.05);
   color: #c6c6c6;
   border: 2px solid #63957d;
@@ -414,7 +555,7 @@ export default {
   box-shadow: none;
   transform: scale(1);
   border: none;
-}
+} */
 
 .btnBox .autoUpdateText {
   grid-column: 3/4;

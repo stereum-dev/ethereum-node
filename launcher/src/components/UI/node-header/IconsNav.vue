@@ -30,7 +30,11 @@
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
+      v-if="displayUpdatePanel"
       @update-confirm="updateConfirmationHandler"
+      @run-update="runUpdate"
+      @update-all="runAllUpdates"
+      @click-out="removeUpdateModal"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
     ></update-panel>
   </div>
@@ -54,6 +58,7 @@ export default {
       updating: "updating",
     }),
     ...mapWritableState(useServices, {
+      newUpdates: "newUpdates",
       versions: "versions",
     }),
   },
@@ -64,6 +69,9 @@ export default {
     updateModalHandler() {
       this.displayUpdatePanel = !this.displayUpdatePanel;
     },
+    removeUpdateModal() {
+      this.displayUpdatePanel = false;
+    },
     updateConfirmationHandler: async function () {
       this.displayUpdatePanel = false;
       this.updateWaitingModal = true;
@@ -72,6 +80,20 @@ export default {
       this.updating = false;
       this.versions = {};
       this.updateWaitingModal = false;
+    },
+    async runUpdate(item) {
+      item.running = true;
+      if (item && item.id) {
+        this.updating = true;
+        await ControlService.updateServices({ service: item.id });
+        this.updating = false;
+        this.forceUpdateCheck = true;
+      } else if (item && item.commit) {
+        this.updating = true;
+        await ControlService.updateStereum({ commit: item.commit });
+        this.updating = false;
+        this.forceUpdateCheck = true;
+      }
     },
   },
 };
