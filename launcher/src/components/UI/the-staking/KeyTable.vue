@@ -150,7 +150,8 @@ export default {
       pendingStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png",
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
-      apiProblems: "/img/icon/no-connection.png"
+      apiProblems: "/img/icon/no-connection.png",
+      apiLoading: "/img/icon/the-staking/loading.gif",
     };
   },
   watch: {
@@ -191,7 +192,7 @@ export default {
   },
   mounted() {
     this.listKeys();
-    this.polling = setInterval(this.listKeys, 384000); //refresh validator account stats
+    this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -224,35 +225,22 @@ export default {
           return this.exitedStatusIcon;
         case "NA":
           return this.apiProblems;
+        case "loading":
+          return this.apiLoading;
         default:
           return this.depositStatusIcon;
       }
     },
     listKeys: async function () {
       let keyStats = [];
-      let totalBalance = 0;
       let clients = this.installedServices.filter((s) =>
         s.service.includes("Validator")
       );
-      if (clients && clients.length > 0) {
+      if (clients && clients.length > 0 && this.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
-          if (
-            client.config.keys &&
-            client.config.keys.length > 0 &&
-            !this.forceRefresh
-          ) {
-            //update validator stats
-            keyStats = await this.updateValidatorStats(client);
-
-            //update totalBalance
-            keyStats.forEach((key) => {
-              if(typeof key.balance === 'number')
-                totalBalance += key.balance;
-            });
-          } else {
-            //refresh validaotr list
-            this.listKeysTriggered = true;
+          if (client.config.keys === undefined || client.config.keys.length === 0 || this.forceRefresh) {
+                        //refresh validaotr list
             let result = await ControlService.listValidators(
               client.config.serviceID
             );
@@ -262,27 +250,27 @@ export default {
               ? result.data.map((e) => e.validating_pubkey)
               : [];
 
-            if (client.config.keys && client.config.keys.length > 0) {
-              //update validator stats
-              keyStats = await this.updateValidatorStats(client);
+            //update service datasets in Pinia store
+            this.installedServices = this.installedServices.map((service) => {
+              if (service.id === client.id) {
+                return client;
+              }
+              return service;
+            });
 
-              //update totalBalance
-              keyStats.forEach((key) => {
-                if(typeof key.balance === 'number')
-                  totalBalance += key.balance;
-              });
-
-              //update service datasets in Pinia store
-              this.installedServices = this.installedServices.map((service) => {
-                if (service.id === client.id) {
-                  return client;
-                }
-                return service;
-              });
-            }
-            this.forceRefresh = false
           }
+
+            keyStats = keyStats.concat(client.config.keys.map(key => {
+              return {
+                key: key,
+                validatorID: client.config.serviceID,
+                icon: client.icon,
+                activeSince: '-',
+                status: "loading",
+                balance: "-",
+              }}))
         }
+        this.forceRefresh = false
         this.keys = keyStats.map((key) => {
           return {
             ...key,
@@ -292,63 +280,46 @@ export default {
             showExitText: false,
           };
         });
-        this.totalBalance = totalBalance;
+      this.updateValidatorStats()
       }
     },
-    async updateValidatorStats(client) {
-      let keys = [];
+    async updateValidatorStats() {
+      let totalBalance = 0;
       let data = [];
+      let network = this.network === "mainnet" ? "mainnet" : "prater"
       try {
-        let buffer = client.config.keys
+        let buffer = this.keys.map(key => key.key)
         const chunkSize = 100;
         for (let i = 0; i < buffer.length; i += chunkSize) {  //split validator accounts into chunks of 100 (api limit)
           const chunk = buffer.slice(i, i + chunkSize);
           let response = await axios.get(
             "https://" +
-            client.config.network +
+            network +
             ".beaconcha.in/api/v1/validator/" +
             encodeURIComponent(chunk.join())
           );
           data = data.concat(response.data.data);   //merge all gathered stats in one array
         }
-
-        client.config.keys.forEach((key) => {
-          let info = data.find((k) => k.pubkey === key);
-          if (info) {
-            keys.push({
-              key: key,
-              validatorID: client.config.serviceID,
-              icon: client.icon,
-              activeSince: '-',
-              status: info.status,
-              balance: info.balance / 1000000000,
-            });
-          } else {
-            keys.push({
-              key: key,
-              validatorID: client.config.serviceID,
-              icon: client.icon,
-              activeSince: '-',
-              status: "deposit",
-              balance: "-",
-            });
-          }
-        });
-        return keys;
       } catch (err) {
         console.log("Couldn't fetch validator stats:\n", err);
-        client.config.keys.forEach((key) => {
-          keys.push({
-            key: key,
-            validatorID: client.config.serviceID,
-            icon: client.icon,
-            activeSince: '-',
-            status: "NA",
-            balance: "-",
-          });
-        });
-        return keys;
+        this.keys.forEach(key => {
+          key.status = "NA"
+        })
+        return;
       }
+
+        this.keys.forEach(key => {
+          let info = data.find((k) => k.pubkey === key.key);
+          if(info){
+            key.status = info.status
+            key.balance = info.balance / 1000000000
+            totalBalance += key.balance
+          }else{
+            key.status = "deposit"
+            key.balance = "-"
+          }
+        })
+        this.totalBalance = totalBalance 
     },
     importKey: async function () {
       this.bDialogVisible = true;

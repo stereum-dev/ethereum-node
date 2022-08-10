@@ -124,7 +124,6 @@ export default {
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services)
           }
-      console.log("updated")
         }
       }
     },
