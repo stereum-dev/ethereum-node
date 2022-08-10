@@ -86,6 +86,7 @@ export default {
     }),
     ...mapWritableState(useStakingStore, {
       keys: "keys",
+      forceRefresh: "forceRefresh",
     }),
   },
   methods: {
@@ -110,6 +111,7 @@ export default {
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
+        this.forceRefresh = true;
         this.keys = [];
         this.versions = {};
         this.headerServices = [];

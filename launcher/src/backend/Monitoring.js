@@ -57,6 +57,11 @@ export class Monitoring {
     return [];
   }
 
+  async getServerName() {
+    const serverName = await this.nodeConnection.sshService.exec('hostname')
+    return serverName
+  }
+
   //serverNmae
   //totalRam, usedRam
   //availDisk, usedDisk, used%

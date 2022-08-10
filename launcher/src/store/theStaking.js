@@ -5,6 +5,7 @@ export const useStakingStore = defineStore("theStaking", {
     return {
       totalBalance: 0,
       keys: [],
+      forceRefresh: false,
     };
   },
   actions: {},

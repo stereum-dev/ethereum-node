@@ -103,6 +103,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServerVitals");
   }
 
+  async getServerName() {
+    return await this.promiseIpc.send("getServerName");
+  }
+
   async getAvailablePort(args) {
     return await this.promiseIpc.send("getAvailablePort", args);
   }
