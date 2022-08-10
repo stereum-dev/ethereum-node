@@ -30,34 +30,74 @@
             </div>
           </div>
         </key-modal>
-        <div class="table-content" v-if="importValidatorKeyActive" :class="{ dropActive: isDragOver }"
-          @drag.prevent.stop="" @dragstart.prevent.stop="" @dragend.prevent.stop="isDragOver = false"
-          @dragover.prevent.stop="isDragOver = true" @dragenter.prevent.stop="isDragOver = true"
-          @dragleave.prevent.stop="isDragOver = false" @drop.prevent.stop="dropFileHandler">
+        <div
+          class="table-content"
+          v-if="importValidatorKeyActive"
+          :class="{ dropActive: isDragOver }"
+          @drag.prevent.stop=""
+          @dragstart.prevent.stop=""
+          @dragend.prevent.stop="isDragOver = false"
+          @dragover.prevent.stop="isDragOver = true"
+          @dragenter.prevent.stop="isDragOver = true"
+          @dragleave.prevent.stop="isDragOver = false"
+          @drop.prevent.stop="dropFileHandler"
+        >
           <div class="table-row" v-for="(item, index) in keys" :key="index">
             <span class="circle"></span>
-            <span class="category">{{ item.key.substring(0, 20) }}...{{
+            <span class="category"
+              >{{ item.key.substring(0, 20) }}...{{
                 item.key.substring(item.key.length - 4, item.key.length)
-            }}</span>
+              }}</span
+            >
             <img class="service-icon" :src="item.icon" alt="icon" />
             <span class="since">{{ item.activeSince }}</span>
             <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
             <span class="balance">{{ item.balance }}</span>
             <div class="option-box">
-              <div class="grafiti-box" @mouseover="item.showGrafitiText = true"
-                @mouseleave="item.showGrafitiText = false">
-                <img class="grafiti-icon" src="../../../../public/img/icon/the-staking/option-graffiti.png"
-                  alt="icon" />
+              <div
+                class="grafiti-box"
+                @mouseover="item.showGrafitiText = true"
+                @mouseleave="item.showGrafitiText = false"
+              >
+                <img
+                  class="grafiti-icon"
+                  src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                  alt="icon"
+                />
               </div>
-              <div class="copy-box" @mouseover="item.showCopyText = true" @mouseleave="item.showCopyText = false"
-                @click="copyHandler(item)">
-                <img class="copy-icon" src="../../../../public/img/icon/the-staking/copy6.png" alt="icon" />
+              <div
+                class="copy-box"
+                @mouseover="item.showCopyText = true"
+                @mouseleave="item.showCopyText = false"
+                @click="copyHandler(item)"
+              >
+                <img
+                  class="copy-icon"
+                  src="../../../../public/img/icon/the-staking/copy6.png"
+                  alt="icon"
+                />
               </div>
-              <div class="remove-box" @mouseover="item.showRemoveText = true" @mouseleave="item.showRemoveText = false">
-                <img class="remove-icon" src="../../../../public/img/icon/the-staking/option-remove.png" alt="icon" />
+              <div
+                class="remove-box"
+                @mouseover="item.showRemoveText = true"
+                @mouseleave="item.showRemoveText = false"
+              >
+                <img
+                  class="remove-icon"
+                  src="../../../../public/img/icon/the-staking/option-remove.png"
+                  alt="icon"
+                />
               </div>
-              <div class="exit-box" @mouseover="item.showExitText = true" @mouseleave="item.showExitText = false">
-                <img class="exit-icon" src="../../../../public/img/icon/the-staking/redexit-icon.png" alt="icon" />
+              <div
+                class="exit-box"
+                @mouseover="item.showExitText = true"
+                @mouseleave="item.showExitText = false"
+              >
+                <img
+                  class="exit-icon"
+                  src="../../../../public/img/icon/the-staking/redexit-icon.png"
+                  alt="icon"
+                />
               </div>
             </div>
           </div>
@@ -66,33 +106,66 @@
           <span id="active">FILE NAME</span>
         </div>
         <div class="table-content" v-if="enterPasswordBox">
-          <div class="key-table-row" v-for="(item, index) in keyFiles" :key="index">
+          <div
+            class="key-table-row"
+            v-for="(item, index) in keyFiles"
+            :key="index"
+          >
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
             <div @click="removeKeyHandler(item.name)" class="key-remove-icon">
-              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
+              <img
+                src="../../../../public/img/icon/task-manager-icons/close3.png"
+                alt="icon"
+              />
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="searchOptions">
-      <img class="rename" src="../../../../public/img/icon/the-staking/rename-icon.png" alt="icon" />
-      <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
-      <img class="filter" src="../../../../public/img/icon/the-staking/staking-filter.png" alt="icon" />
+      <img
+        class="rename"
+        src="../../../../public/img/icon/the-staking/rename-icon.png"
+        alt="icon"
+      />
+      <img
+        class="folder"
+        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
+        alt="icon"
+      />
+      <img
+        class="filter"
+        src="../../../../public/img/icon/the-staking/staking-filter.png"
+        alt="icon"
+      />
     </div>
     <div class="insertBox" v-if="insertKeyBoxActive">
       <div class="insert-key" @click="openUploadHandler">
-        <input type="file" @change="uploadFileHandler" style="display: none" ref="fileInput" multiple="multiple"
-          accept="application/json" />
+        <input
+          type="file"
+          @change="uploadFileHandler"
+          style="display: none"
+          ref="fileInput"
+          multiple="multiple"
+          accept="application/json"
+        />
         <span>CLICK OR DRAG TO INSERT KEY</span>
-        <img class="black-key" src="../../../../public/img/icon/the-staking/black-key.png" alt="icon" />
+        <img
+          class="black-key"
+          src="../../../../public/img/icon/the-staking/black-key.png"
+          alt="icon"
+        />
       </div>
     </div>
     <div class="passwordBox" v-if="enterPasswordBox">
       <div class="enter-password" @click="confirmPasswordHandler">
         <input v-model="password" v-if="passwordInputActive" type="password" />
-        <button @keyup.enter="importKey" @click="importKey" v-if="passwordInputActive">
+        <button
+          @keyup.enter="importKey"
+          @click="importKey"
+          v-if="passwordInputActive"
+        >
           CONFIRM
         </button>
         <span v-else>ENTER PASSWORD & IMPORT</span>
@@ -100,9 +173,17 @@
     </div>
     <div class="feeBox" v-if="feeRecipientBoxActive">
       <div class="enter-fee" @click="enterFeeHandler">
-        <input placeholder="Enter a valid Ethereum address to send your block rewards to ... " v-model="password"
-          v-if="feeInputActive" type="text" />
-        <button @keyup.enter="confirmFeeRecipientAddress" @click="confirmFeeRecipientAddress" v-if="feeInputActive">
+        <input
+          placeholder="Enter a valid Ethereum address to send your block rewards to ... "
+          v-model="password"
+          v-if="feeInputActive"
+          type="text"
+        />
+        <button
+          @keyup.enter="confirmFeeRecipientAddress"
+          @click="confirmFeeRecipientAddress"
+          v-if="feeInputActive"
+        >
           CONFIRM
         </button>
         <span v-else>SET A BLOCK FEE RECIPIENT ADDRESS</span>
@@ -202,7 +283,7 @@ export default {
   },
   methods: {
     copyHandler(item) {
-      let toCopy = item.key
+      let toCopy = item.key;
       this.$copyText(toCopy)
         .then(() => {
           console.log("copied!");
@@ -239,8 +320,12 @@ export default {
       if (clients && clients.length > 0 && this.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
-          if (client.config.keys === undefined || client.config.keys.length === 0 || this.forceRefresh) {
-                        //refresh validaotr list
+          if (
+            client.config.keys === undefined ||
+            client.config.keys.length === 0 ||
+            this.forceRefresh
+          ) {
+            //refresh validaotr list
             let result = await ControlService.listValidators(
               client.config.serviceID
             );
@@ -257,20 +342,22 @@ export default {
               }
               return service;
             });
-
           }
 
-            keyStats = keyStats.concat(client.config.keys.map(key => {
+          keyStats = keyStats.concat(
+            client.config.keys.map((key) => {
               return {
                 key: key,
                 validatorID: client.config.serviceID,
                 icon: client.icon,
-                activeSince: '-',
+                activeSince: "-",
                 status: "loading",
                 balance: "-",
-              }}))
+              };
+            })
+          );
         }
-        this.forceRefresh = false
+        this.forceRefresh = false;
         this.keys = keyStats.map((key) => {
           return {
             ...key,
@@ -280,46 +367,47 @@ export default {
             showExitText: false,
           };
         });
-      this.updateValidatorStats()
+        this.updateValidatorStats();
       }
     },
     async updateValidatorStats() {
       let totalBalance = 0;
       let data = [];
-      let network = this.network === "mainnet" ? "mainnet" : "prater"
+      let network = this.network === "mainnet" ? "mainnet" : "prater";
       try {
-        let buffer = this.keys.map(key => key.key)
+        let buffer = this.keys.map((key) => key.key);
         const chunkSize = 100;
-        for (let i = 0; i < buffer.length; i += chunkSize) {  //split validator accounts into chunks of 100 (api limit)
+        for (let i = 0; i < buffer.length; i += chunkSize) {
+          //split validator accounts into chunks of 100 (api limit)
           const chunk = buffer.slice(i, i + chunkSize);
           let response = await axios.get(
             "https://" +
-            network +
-            ".beaconcha.in/api/v1/validator/" +
-            encodeURIComponent(chunk.join())
+              network +
+              ".beaconcha.in/api/v1/validator/" +
+              encodeURIComponent(chunk.join())
           );
-          data = data.concat(response.data.data);   //merge all gathered stats in one array
+          data = data.concat(response.data.data); //merge all gathered stats in one array
         }
       } catch (err) {
         console.log("Couldn't fetch validator stats:\n", err);
-        this.keys.forEach(key => {
-          key.status = "NA"
-        })
+        this.keys.forEach((key) => {
+          key.status = "NA";
+        });
         return;
       }
 
-        this.keys.forEach(key => {
-          let info = data.find((k) => k.pubkey === key.key);
-          if(info){
-            key.status = info.status
-            key.balance = info.balance / 1000000000
-            totalBalance += key.balance
-          }else{
-            key.status = "deposit"
-            key.balance = "-"
-          }
-        })
-        this.totalBalance = totalBalance 
+      this.keys.forEach((key) => {
+        let info = data.find((k) => k.pubkey === key.key);
+        if (info) {
+          key.status = info.status;
+          key.balance = info.balance / 1000000000;
+          totalBalance += key.balance;
+        } else {
+          key.status = "deposit";
+          key.balance = "-";
+        }
+      });
+      this.totalBalance = totalBalance;
     },
     importKey: async function () {
       this.bDialogVisible = true;
@@ -368,9 +456,7 @@ export default {
     },
     dropFileHandler(event) {
       let droppedFiles = event.dataTransfer.files;
-      if (
-        droppedFiles[0]["type"] === "application/json"
-      ) {
+      if (droppedFiles[0]["type"] === "application/json") {
         this.keyFiles.push(...droppedFiles);
         this.importValidatorKeyActive = false;
         this.insertKeyBoxActive = false;
