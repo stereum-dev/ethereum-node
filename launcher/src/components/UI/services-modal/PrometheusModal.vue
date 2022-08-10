@@ -163,6 +163,7 @@ export default {
 .btn-box .btn {
   width: 94%;
   height: 35px;
+  margin-top: 20px;
   background-color: #f37625;
   text-decoration: none;
   border-radius: 10px;
@@ -170,7 +171,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #fff;
+  color: rgb(59, 59, 59);
   font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -178,11 +179,11 @@ export default {
 }
 .btn:active {
   box-shadow: inset 2px 2px 15px #1d130d;
-  color: rgb(218, 218, 218);
+  transform: scale(0.99);
 }
 .btn:hover {
   transition-duration: 100ms;
-  transform: scale(1.01);
+  color: rgb(218, 218, 218);
   border: 2px solid #f9b88d;
   box-shadow: none;
   background-color: rgb(230, 127, 58) 5;

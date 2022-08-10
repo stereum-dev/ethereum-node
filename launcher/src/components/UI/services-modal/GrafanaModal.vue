@@ -109,12 +109,12 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  margin:10px 0 0 15px;
+  margin: 10px 0 0 15px;
   width: 65%;
   height: 90%;
 }
 .title-box {
-  grid-column:1/4;
+  grid-column: 1/4;
   margin-left: 80px;
   grid-row: 1;
   width: 90%;
@@ -163,14 +163,15 @@ export default {
 .btn-box .btn {
   width: 94%;
   height: 35px;
-  background-color: #f37625;
+  margin-top: 20px;
+  background-color: #f17b2c;
   text-decoration: none;
   border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #fff;
+  color: rgb(59, 59, 59);
   font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -178,11 +179,11 @@ export default {
 }
 .btn:active {
   box-shadow: inset 2px 2px 15px #1d130d;
-  color: rgb(218, 218, 218);
+  transform: scale(0.99);
 }
 .btn:hover {
   transition-duration: 100ms;
-  transform: scale(1.01);
+  color: rgb(209, 209, 209);
   border: 2px solid #f9b88d;
   box-shadow: none;
   background-color: rgb(230, 127, 58) 5;
