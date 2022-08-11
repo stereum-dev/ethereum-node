@@ -12,7 +12,12 @@
     >
       <span>{{ btnValue }}</span>
     </div>
-    <language-setting v-else @language-box="langAction" :flag="savedFlag" :lang="savedLang"></language-setting>
+    <language-setting
+      v-else
+      @language-box="langAction"
+      :flag="savedFlag"
+      :lang="savedLang"
+    ></language-setting>
   </div>
 </template>
 <script>
@@ -43,12 +48,12 @@ export default {
     },
     savedFlag: {
       type: String,
-      required:false
+      required: false,
     },
     savedLang: {
       type: String,
-      required:false
-    }
+      required: false,
+    },
   },
   emits: ["customize-setting", "lang-action"],
   data() {
@@ -74,7 +79,7 @@ export default {
       return { height: "40%" };
     },
     updateStyle() {
-      return { height: "20%" };
+      return { height: "15%" };
     },
   },
   methods: {
@@ -112,10 +117,18 @@ export default {
   color: #eee;
   justify-content: space-between;
   align-items: center;
-  background: #787575;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  text-decoration: none;
   margin: 0.7% 0;
   padding: 0.5%;
   border-radius: 20px;
+}
+.setting-items_parent:hover,
+.setting-items_parent:active {
+  background: #313131;
 }
 .setting-items_title {
   width: 60%;

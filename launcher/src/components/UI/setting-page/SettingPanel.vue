@@ -278,10 +278,10 @@ export default {
   margin: 1% 0 0 0;
 }
 .general-panel_title {
-  height: 22%;
+  height: 28%;
 }
 .update-panel_title {
-  height: 10%;
+  height: 14%;
 }
 hr {
   width: 95%;
