@@ -43,7 +43,7 @@
 
     - name: Create SSV config file
       file:
-        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv"
+        path: "/opt/app/services/{{ ssv_service }}/data//ssv/network"
         state: directory
         recurse: yes
         owner: "2000"
@@ -53,7 +53,7 @@
     - name: Write SSV configuration
       ansible.builtin.copy:
         content: "{{ ssv_config }}"
-        dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        dest: "/opt/app/services/{{ ssv_service }}/data/ssv/network/config.yaml"
         owner: "2000"
         group: "2000"
         mode: 0644

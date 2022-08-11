@@ -30,7 +30,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 
 const log = require("electron-log");
 log.transports.console.level = "info"
-log.transports.file.level = "info"
+log.transports.file.level = "debug"
 
 let remoteHost = {};
 
@@ -249,8 +249,8 @@ promiseIpc.on("clearTasks", async () => {
   return await taskManager.clearTasks()
 })
 
-promiseIpc.on("insertBloxSSVKeys", async (args) => {
-  return await validatorAccountManager.insertBloxSSVKeys(args.service, args.pk)
+promiseIpc.on("insertSSVNetworkKeys", async (args) => {
+  return await validatorAccountManager.insertSSVNetworkKeys(args.service, args.pk)
 })
 
 promiseIpc.on("refreshServiceInfos", async () => {

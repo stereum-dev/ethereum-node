@@ -1,4 +1,4 @@
-import { BloxSSVService } from './ethereum-services/BloxSSVService'
+import { SSVNetworkService } from './ethereum-services/SSVNetworkService'
 import { GethService } from './ethereum-services/GethService'
 import { BesuService } from './ethereum-services/BesuService'
 import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
@@ -214,13 +214,13 @@ export class OneClickInstall {
       await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
     }
 
-    if (constellation.includes('BloxSSVService')) {
-      //BloxSSVService
+    if (constellation.includes('SSVNetworkService')) {
+      //SSVNetworkService
       ports = [
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
       ]
-      this.validatorService = BloxSSVService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/blox', [this.executionClient], [this.beaconService])
+      this.validatorService = SSVNetworkService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/ssv_network', [this.executionClient], [this.beaconService])
     }
 
 
@@ -265,7 +265,7 @@ export class OneClickInstall {
     return versions[service.network][service.service].slice(-1).pop()
   }
 
-  async generateBloxKeys(){
+  async generateSSVKeys(){
     await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
     const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
     let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(false), [this.executionClient], [this.beaconService])
@@ -282,8 +282,8 @@ export class OneClickInstall {
       await Promise.all(configs.map(async (config) => {
         await this.nodeConnection.writeServiceConfiguration(config)
       }))
-      if (this.validatorService && this.validatorService.service === 'BloxSSVService') {
-        await this.generateBloxKeys()
+      if (this.validatorService && this.validatorService.service === 'SSVNetworkService') {
+        await this.generateSSVKeys()
       }
       return configs
     }
@@ -316,8 +316,8 @@ export class OneClickInstall {
     switch (setup) {
       case 'staking':
         break
-      case 'blox ssv':
-        services.push('BloxSSVService')
+      case 'ssv network':
+        services.push('SSVNetworkService')
         break
       case 'obol ssv':
         services.push('OBOLSSV')

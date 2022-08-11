@@ -1,4 +1,4 @@
-import { BloxSSVService } from './BloxSSVService.js'
+import { SSVNetworkService } from './SSVNetworkService.js'
 import { networks } from './NodeService.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 const log = require('electron-log')
@@ -39,18 +39,18 @@ test('buildConfiguration', () => {
     }
   })
 
-  const bloxService = BloxSSVService.buildByUserInput(networks.prater, ports, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration()
+  const ssvService = SSVNetworkService.buildByUserInput(networks.prater, ports, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration()
 
-  log.info('cmd: ', bloxService.command)
+  log.info('cmd: ', ssvService.command)
 
-  expect(bloxService.env.CONFIG_PATH).toMatch(/\/config.yaml/)
-  expect(bloxService.volumes).toHaveLength(1)
-  expect(bloxService.volumes).toContain('/opt/stereum/ssv-' + bloxService.id + '/data/blox/ssv:/data')
-  expect(bloxService.ports).toHaveLength(2)
-  expect(bloxService.id).toHaveLength(36)
-  expect(bloxService.user).toMatch(/2000/)
-  expect(bloxService.image).toMatch(/bloxstaking\/ssv-node/)
-  expect(bloxService.configVersion).toBe(1)
+  expect(ssvService.env.CONFIG_PATH).toMatch(/\/config.yaml/)
+  expect(ssvService.volumes).toHaveLength(1)
+  expect(ssvService.volumes).toContain('/opt/stereum/ssv-' + ssvService.id + '/data/ssv/network:/data')
+  expect(ssvService.ports).toHaveLength(2)
+  expect(ssvService.id).toHaveLength(36)
+  expect(ssvService.user).toMatch(/2000/)
+  expect(ssvService.image).toMatch(/bloxstaking\/ssv-node-shifu/)
+  expect(ssvService.configVersion).toBe(1)
 })
 
 test('getServiceConfiguration', () => {
@@ -72,28 +72,28 @@ test('getServiceConfiguration', () => {
     }
   })
 
-  const bloxService = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()])
+  const ssvService = SSVNetworkService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()]).getServiceConfiguration(networks.prater, [new GethService.GethService()], [new LighthouseBeaconService.LighthouseBeaconService()])
 
-  expect(bloxService).toBeDefined()
-  expect(bloxService).toMatch(/prater/)
-  expect(bloxService).toMatch(/http-lh-endpoint-string/)
-  expect(bloxService).toMatch(/ws-endpoint-string/)
+  expect(ssvService).toBeDefined()
+  expect(ssvService).toMatch(/prater/)
+  expect(ssvService).toMatch(/http-lh-endpoint-string/)
+  expect(ssvService).toMatch(/ws-endpoint-string/)
 })
 
 test('getAvailablePorts', () => {
-  const service = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).getAvailablePorts()
+  const service = SSVNetworkService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).getAvailablePorts()
 
   expect(service).toHaveLength(3)
 })
 
 test('service name', () => {
-  const service = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).buildConfiguration()
+  const service = SSVNetworkService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).buildConfiguration()
 
-  expect(service.service).toMatch(/BloxSSVService/)
+  expect(service.service).toMatch(/SSVNetworkService/)
 })
 
 test('autoupdate', () => {
-  const service = BloxSSVService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).buildConfiguration()
+  const service = SSVNetworkService.buildByUserInput(networks.prater, null, '/opt/stereum/ssv', [], []).buildConfiguration()
 
   expect(service.autoupdate).toBe(true)
 })

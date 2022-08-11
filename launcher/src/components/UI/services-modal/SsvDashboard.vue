@@ -19,12 +19,12 @@
     <div class="browser-box">
       <div class="operator-box">
         <div class="operator-btn">
-          <a :href="bloxUrl.operatorUrl" target="_blank">My Operator Page</a>
+          <a :href="ssvNetworkUrl.operatorUrl" target="_blank">My Operator Page</a>
         </div>
       </div>
       <div class="grafana-box">
         <div class="grafana-btn">
-          <a :href="bloxUrl.grafanaDashboardUrl" target="_blank"
+          <a :href="ssvNetworkUrl.grafanaDashboardUrl" target="_blank"
             >SSV Node Grafana Dashboard</a
           >
         </div>
@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeStore, {
-      bloxUrl: "bloxUrl",
+      ssvNetworkUrl: "ssvNetworkUrl",
     }),
     ...mapState(useServices, {
       installedServices: "installedServices",
@@ -67,8 +67,8 @@ export default {
     },
     async getURL() {
       const grafana = this.installedServices.find(service => service.service === "GrafanaService")
-      this.bloxUrl.operatorUrl = await ControlService.getOperatorPageURL(this.pubkey)
-      this.bloxUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1" : ""
+      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(this.pubkey)
+      this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1" : ""
     },
   },
 };

@@ -187,8 +187,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("updateTasks")  // updates task progression
   }
 
-  async insertBloxSSVKeys(args){
-    return await this.promiseIpc.send("insertBloxSSVKeys", args)  // insert existing operator keys
+  async insertSSVNetworkKeys(args){
+    return await this.promiseIpc.send("insertSSVNetworkKeys", args)  // insert existing operator keys
   }
 
   async refreshServiceInfos(){

@@ -188,7 +188,7 @@ jobs:
           {role: "manage-service", test: "ssv-teku"},
           {role: "manage-service", test: "ssv-prysm"},
           {role: "manage-service", test: "monitor-geth"},
-          {role: "manage-service", test: "monitor-bloxssv"},
+          {role: "manage-service", test: "monitor-ssvnetwork"},
           {role: "manage-service", test: "monitor-besu"},
           {role: "manage-service", test: "monitor-nethermind"},
           {role: "manage-service", test: "monitor-lighthouse"},

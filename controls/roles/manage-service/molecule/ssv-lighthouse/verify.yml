@@ -20,7 +20,7 @@
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
       - stereum_ufw_status.stdout.find("5052/tcp") != -1
   # ssv config file
-  - stat: path=/opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/data/blox/ssv/config.yaml
+  - stat: path=/opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/data/ssv/network/config.yaml
     register: ssv_config_file
   - debug:
       msg: "{{ ssv_config_file }}"
@@ -53,13 +53,13 @@
       - beacon.stderr is not search('Failed to start beacon node')
     retries: 360
     delay: 10
-  - name: Blox-SSV connection beacon node
+  - name: SSV-Network connection beacon node
     command: "docker logs stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
-    register: blox_ssv
+    register: ssv_network
     until:
-      - blox_ssv.stdout is search('discovery is ready')
-      - blox_ssv.stdout is search('p2p services were configured')
-      - blox_ssv.stdout is not search('ERROR')
+      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('p2p services were configured')
+      - ssv_network.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
@@ -70,7 +70,7 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1

@@ -142,13 +142,13 @@ export class ValidatorAccountManager {
         }
     }
 
-    async insertBloxSSVKeys(service, sk) {
+    async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
             try {
                 const dataDir = (service.config.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-                let bloxConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
-                if (bloxConfig) {
-                    const escapedConfigFile = StringUtils.escapeStringForShell(bloxConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
+                let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
+                if (ssvConfig) {
+                    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
                     await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
 
                     await this.serviceManager.manageServiceState(service.config.serviceID, 'stopped')

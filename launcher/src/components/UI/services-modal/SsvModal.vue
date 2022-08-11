@@ -4,7 +4,7 @@
     <div class="browser-modal">
       <div class="ssv-header">
         <div class="icon-box">
-          <img src="/img/icon/service-icons/blox-ssv.png" alt="icon" />
+          <img src="/img/icon/service-icons/ssv-network.png" alt="icon" />
         </div>
         <div class="network-icon">
           <img
@@ -92,15 +92,15 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let blox = this.runningServices.find(
-        (service) => service.service === "BloxSSVService"
+      let ssv = this.runningServices.find(
+        (service) => service.service === "SSVNetworkService"
       );
-      this.ssvService = blox;
-      let bloxConfig = await ControlService.getServiceConfig(
-        blox.config.serviceID
+      this.ssvService = ssv;
+      let ssvConfig = await ControlService.getServiceConfig(
+        ssv.config.serviceID
       );
-      this.secretkey = bloxConfig.ssv_sk;
-      this.pubkey = bloxConfig.ssv_pk;
+      this.secretkey = ssvConfig.ssv_sk;
+      this.pubkey = ssvConfig.ssv_pk;
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;

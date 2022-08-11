@@ -3,7 +3,7 @@ import { StringUtils } from '../StringUtils.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
-export class BloxSSVService extends NodeService {
+export class SSVNetworkService extends NodeService {
   getServiceConfiguration (network, executionClients, consensusClients) {
     /*
 eth2:
@@ -30,20 +30,20 @@ MetricsAPIPort: 15000`
   }
 
   static buildByUserInput (network, ports, dir, executionClients, consensusClients) {
-    const service = new BloxSSVService()
+    const service = new SSVNetworkService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
 
-    const image = 'bloxstaking/ssv-node'
+    const image = 'bloxstaking/ssv-node-shifu'
 
 
     const volumes = [
-      new ServiceVolume(workingDir + '/data/blox/ssv', '/data')
+      new ServiceVolume(workingDir + '/data/ssv/network', '/data')
     ]
 
     // build service
     service.init(
-      'BloxSSVService', // service
+      'SSVNetworkService', // service
       service.id, // id
       1,  // configVersion
       image, //image
@@ -65,7 +65,7 @@ MetricsAPIPort: 15000`
   }
 
   static buildByConfiguration (config) {
-    const service = new BloxSSVService()
+    const service = new SSVNetworkService()
 
     service.initByConfig(config)
 

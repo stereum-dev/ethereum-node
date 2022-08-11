@@ -239,7 +239,7 @@ export const useNodeStore = defineStore("theNode", {
           status: "deactive",
         },
       ],
-      bloxUrl: {
+      ssvNetworkUrl: {
         operatorUrl: "https://www.google.com/",
         grafanaDashboardUrl: "https://www.google.com",
       },

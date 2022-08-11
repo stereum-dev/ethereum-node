@@ -11,13 +11,13 @@
       env:
         CONFIG_PATH: /data/config.yaml
       id: {{ ssv_key_service }}
-      image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
+      image: "bloxstaking/ssv-node-shifu:{{ stereum_static.defaults.versions.ssv_network }}"
       ports:
       - 0.0.0.0:12000:12000/udp
       - 0.0.0.0:13000:13000/tcp
       user: '2000'
       volumes:
-      - /opt/app/services/{{ ssv_key_service }}/data/blox/ssv:/data
+      - /opt/app/services/{{ ssv_key_service }}/data/ssv/network:/data
 
   tasks:
     - name: Create directory for Service-ID.yaml
