@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class TekuBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, graffiti) {
+    static buildByUserInput(network, ports, dir, executionClients, graffiti, checkpointURL) {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -68,7 +68,8 @@ export class TekuBeaconService extends NodeService {
             // consensusClients
             // prometheusNodeExporterClients
         )
-
+        if(checkpointURL)
+            service.command.push('--initial-state=' + checkpointURL)
         return service
     }
 

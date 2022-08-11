@@ -133,7 +133,7 @@ promiseIpc.on("prepareOneClickInstallation", async (arg) => {
 });
 
 promiseIpc.on("writeOneClickConfiguration", async (args) => {
-  await oneClickInstall.createServices(args.array.map(service => {return service.service}));
+  await oneClickInstall.createServices(args.array.map(service => {return service.service}),args.checkpointURL);
   return await oneClickInstall.writeConfig();
 });
 
@@ -255,6 +255,10 @@ promiseIpc.on("insertBloxSSVKeys", async (args) => {
 
 promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos()
+})
+
+promiseIpc.on("getOperatorPageURL", async (args) => {
+  return await validatorAccountManager.getOperatorPageURL(args)
 })
 
 // Scheme must be registered before the app is ready
