@@ -17,7 +17,7 @@
       - 0.0.0.0:13000:13000/tcp
       user: '2000'
       volumes:
-      - /opt/app/services/{{ ssv_key_service }}/data/ssv/network:/data
+      - /opt/app/services/{{ ssv_key_service }}/data:/data
 
   tasks:
     - name: Create directory for Service-ID.yaml

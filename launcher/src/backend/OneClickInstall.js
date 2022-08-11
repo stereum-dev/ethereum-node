@@ -316,7 +316,7 @@ export class OneClickInstall {
     switch (setup) {
       case 'staking':
         break
-      case 'ssv network':
+      case 'ssv.network':
         services.push('SSVNetworkService')
         break
       case 'obol ssv':

@@ -13,7 +13,7 @@
           />
         </div>
         <div class="title-box">
-          <span class="service-name">SSV NETWORK</span>
+          <span class="service-name">ssv.network</span>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />

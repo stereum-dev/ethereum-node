@@ -19,7 +19,7 @@
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
   # ssv config file
-  - stat: path=/opt/app/services/f6a89270-7fa4-11ec-9378-fbd364d02350/data/ssv/network/config.yaml
+  - stat: path=/opt/app/services/f6a89270-7fa4-11ec-9378-fbd364d02350/data/config.yaml
     register: ssv_config_file
   - debug:
       msg: "{{ ssv_config_file }}"

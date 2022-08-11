@@ -234,7 +234,7 @@ export default {
             item.category === element.category &&
             item.service !== "SSVNetworkService";
           break;
-        case "ssv network":
+        case "ssv.network":
           filter = (item) => {
             if (element.category === "validator") {
               return item.service === "SSVNetworkService";

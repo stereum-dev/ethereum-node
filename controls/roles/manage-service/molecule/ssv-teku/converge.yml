@@ -34,7 +34,7 @@
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ ssv_service }}/data/ssv/network:/data"
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
 
     # ssv operator keys
     - block:
@@ -56,7 +56,7 @@
 
     - name: Write "sk" into SSV-Service's config
       ansible.builtin.lineinfile:
-        path: "/opt/app/services/{{ ssv_service }}/data/ssv/network/config.yaml"
+        path: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
         regexp: '^OperatorPrivateKey:*'
         line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
       become: yes

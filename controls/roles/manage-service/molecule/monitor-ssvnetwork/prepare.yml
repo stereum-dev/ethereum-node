@@ -93,7 +93,7 @@
 
     - name: Create service config directory
       file:
-        path: /opt/app/services/{{ ssv_service }}/data/ssv/network/
+        path: /opt/app/services/{{ ssv_service }}/data/
         state: directory
         owner: "2000"
         group: "2000"
@@ -102,7 +102,7 @@
 
     - name: Write SSV-Service's config
       copy:
-        dest: "/opt/app/services/{{ ssv_service }}/data/ssv/network/config.yaml"
+        dest: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
         content: |
           eth2:
             Network: "prater"
@@ -145,6 +145,6 @@
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ ssv_service }}/data/ssv/network:/data"
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
 
 # EOF

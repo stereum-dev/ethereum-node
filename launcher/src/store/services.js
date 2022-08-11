@@ -302,7 +302,7 @@ export const useServices = defineStore("services", {
         },
         {
           id: 9,
-          name: "SSV Network",
+          name: "ssv.network",
           service: "SSVNetworkService",
           category: "validator",
           displayCategory: "vlc",

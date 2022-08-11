@@ -38,7 +38,7 @@ MetricsAPIPort: 15000`
 
 
     const volumes = [
-      new ServiceVolume(workingDir + '/data/ssv/network', '/data')
+      new ServiceVolume(workingDir + '/data', '/data')
     ]
 
     // build service

@@ -182,7 +182,7 @@ export const useNodeStore = defineStore("theNode", {
         },
         {
           id: 3,
-          name: "Use SSV network",
+          name: "Use ssv.network",
         },
         {
           id: 4,
