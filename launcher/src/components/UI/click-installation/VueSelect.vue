@@ -134,13 +134,13 @@ export default {
         constellation.includes(service.service)
       );
       if (
-        includedPlugins.map((e) => e.service).includes("BloxSSVService") ||
+        includedPlugins.map((e) => e.service).includes("SSVNetworkService") ||
         includedPlugins.map((e) => e.service).includes("RocketpoolService")
       ) {
         includedPlugins.splice(
           includedPlugins.findIndex(
             (e) =>
-              e.service != "BloxSSVService" &&
+              e.service != "SSVNetworkService" &&
               e.service != "RocketpoolService" &&
               e.category === "validator"
           ),

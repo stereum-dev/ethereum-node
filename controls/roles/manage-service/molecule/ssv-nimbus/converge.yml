@@ -22,8 +22,8 @@
             state: started
             configuration:
               id: "{{ ssv_service }}"
-              service: BloxSSVService
-              image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
+              service: SSVNetworkService
+              image: "bloxstaking/ssv-node-shifu:{{ stereum_static.defaults.versions.ssv_network }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp
@@ -34,7 +34,7 @@
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
 
     # ssv operator keys
     - block:
@@ -56,7 +56,7 @@
 
     - name: Write "sk" into SSV-Service's config
       ansible.builtin.lineinfile:
-        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        path: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
         regexp: '^OperatorPrivateKey:*'
         line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
       become: yes

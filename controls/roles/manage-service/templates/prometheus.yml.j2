@@ -17,14 +17,14 @@ scrape_configs:
 {% endfor %}
         ]
 
-# blox ssv
+# ssv.network
   - job_name: ssv
     metrics_path: /metrics
     static_configs:
       - targets: [
 {% set config_count = 0 %}
 {% for service_config in service_configs.results %}
-{%   if (service_config.content | b64decode | from_yaml).service == "BloxSSVService" %}
+{%   if (service_config.content | b64decode | from_yaml).service == "SSVNetworkService" %}
           {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:15000"
           {% set config_count = config_count + 1 %}
 {%   endif %}
@@ -36,7 +36,7 @@ scrape_configs:
       - targets: [
 {% set config_count = 0 %}
 {% for service_config in service_configs.results %}
-{%   if (service_config.content | b64decode | from_yaml).service == "BloxSSVService" %}
+{%   if (service_config.content | b64decode | from_yaml).service == "SSVNetworkService" %}
           {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:15000"
           {% set config_count = config_count + 1 %}
 {%   endif %}

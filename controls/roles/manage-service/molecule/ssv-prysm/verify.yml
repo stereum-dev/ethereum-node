@@ -19,7 +19,7 @@
       - stereum_ufw_status.stdout.find("12001/udp") != -1
       - stereum_ufw_status.stdout.find("13001/tcp") != -1
   # ssv config file
-  - stat: path=/opt/app/services/99e8942a-82e9-11ec-9f76-cbc103131365/data/blox/ssv/config.yaml
+  - stat: path=/opt/app/services/99e8942a-82e9-11ec-9f76-cbc103131365/data/config.yaml
     register: ssv_config_file
   - debug:
       msg: "{{ ssv_config_file }}"
@@ -51,13 +51,13 @@
       - beacon.stderr is search('estimated time remaining')
     retries: 360
     delay: 10
-  - name: Blox-SSV connected to beacon node
+  - name: SSV-Network connected to beacon node
     command: "docker logs stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
-    register: blox_ssv
+    register: ssv_network
     until:
-      - blox_ssv.stdout is search('discovery is ready')
-      - blox_ssv.stdout is search('p2p services were configured')
-      - blox_ssv.stdout is not search('ERROR')
+      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('p2p services were configured')
+      - ssv_network.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
@@ -68,7 +68,7 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("prysmaticlabs/prysm-beacon-chain") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
       - stereum_docker_ps.stdout.find("4000->4000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1

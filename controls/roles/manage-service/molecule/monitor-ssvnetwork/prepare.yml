@@ -93,7 +93,7 @@
 
     - name: Create service config directory
       file:
-        path: /opt/app/services/{{ ssv_service }}/data/blox/ssv/
+        path: /opt/app/services/{{ ssv_service }}/data/
         state: directory
         owner: "2000"
         group: "2000"
@@ -102,7 +102,7 @@
 
     - name: Write SSV-Service's config
       copy:
-        dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        dest: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
         content: |
           eth2:
             Network: "prater"
@@ -132,9 +132,9 @@
             save: true
             state: started
             configuration:
-              service: BloxSSVService
+              service: SSVNetworkService
               id: "{{ ssv_service }}"
-              image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.blox_ssv }}"
+              image: "bloxstaking/ssv-node-shifu:{{ stereum_static.defaults.versions.ssv_network }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp
@@ -145,6 +145,6 @@
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ ssv_service }}/data/blox/ssv:/data"
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
 
 # EOF
