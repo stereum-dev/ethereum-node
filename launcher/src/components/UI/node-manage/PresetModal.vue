@@ -84,7 +84,11 @@
           </p>
         </div>
 
-        <router-link class="install-btn" :to="{ path: '/install' }">
+        <router-link
+          class="install-btn"
+          :to="{ path: '/install' }"
+          :class="{ notAvailable: buttonIsDisabled }"
+        >
           <button>INSTALL</button>
         </router-link>
       </div>
@@ -107,6 +111,7 @@ export default {
   data() {
     return {
       isMainnetActive: true,
+      buttonIsDisabled: true,
       mainnetPlugins: [],
       testnetPlugins: [],
     };
@@ -149,17 +154,18 @@ export default {
       }
       item.includedPlugins = includedPlugins;
       this.selectedPreset = item;
+      this.buttonIsDisabled = false;
       this.$emit("disableBtn");
     },
     switchNetworkHandler() {
       this.isMainnetActive = !this.isMainnetActive;
       if (this.isMainnetActive) {
-        this.selectedNetworks = "mainnet"
+        this.selectedNetworks = "mainnet";
         this.mainnetPlugins = this.plugins.filter(
           (item) => item.network == "mainnet"
         );
       } else {
-        this.selectedNetworks = "testnet"
+        this.selectedNetworks = "testnet";
         this.testnetPlugins = this.plugins.filter(
           (item) => item.network == "testnet"
         );
@@ -436,5 +442,9 @@ export default {
   border: 2px solid rgb(53, 178, 246) !important;
   border-radius: 10px !important;
   box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
+}
+.notAvailable {
+  opacity: 0.2;
+  pointer-events: none;
 }
 </style>

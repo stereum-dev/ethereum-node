@@ -151,21 +151,26 @@ export default {
       allPlugins: "allServices",
     }),
   },
-  beforeMount() {},
   mounted() {
-    if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
-      this.$router.push("/clickinstall");
-    }
-    this.selectedPreset.includedPlugins =
-      this.selectedPreset.includedPlugins.map((item) => {
-        return {
-          showChangeModal: false,
-          ...item,
-        };
-      });
+    this.selectedPluginsValidation();
+    this.pushNewProperthyToPresets();
     this.sortPlugins();
   },
   methods: {
+    selectedPluginsValidation() {
+      if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
+        this.$router.push("/clickinstall");
+      }
+    },
+    pushNewProperthyToPresets() {
+      this.selectedPreset.includedPlugins =
+        this.selectedPreset.includedPlugins.map((item) => {
+          return {
+            showChangeModal: false,
+            ...item,
+          };
+        });
+    },
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
