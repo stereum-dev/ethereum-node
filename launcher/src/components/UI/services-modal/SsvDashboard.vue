@@ -19,12 +19,12 @@
     <div class="browser-box">
       <div class="operator-box">
         <div class="operator-btn">
-          <a href="bloxUrl.operatorUrl" target="_blank">My Operator Page</a>
+          <a :href="bloxUrl.operatorUrl" target="_blank">My Operator Page</a>
         </div>
       </div>
       <div class="grafana-box">
         <div class="grafana-btn">
-          <a href="bloxUrl.grafanaDashboardUrl" target="_blank"
+          <a :href="bloxUrl.grafanaDashboardUrl" target="_blank"
             >SSV Node Grafana Dashboard</a
           >
         </div>
@@ -33,17 +33,25 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
+import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
 export default {
   props: ["pubkey"],
   data() {
     return {};
   },
+  mounted(){
+    this.getURL()
+  },
   computed: {
-    ...mapState(useNodeStore, {
+    ...mapWritableState(useNodeStore, {
       bloxUrl: "bloxUrl",
     }),
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    })
   },
 
   methods: {
@@ -56,6 +64,11 @@ export default {
         .catch(() => {
           console.log(`can't copy`);
         });
+    },
+    async getURL() {
+      const grafana = this.installedServices.find(service => service.service === "GrafanaService")
+      this.bloxUrl.operatorUrl = await ControlService.getOperatorPageURL(this.pubkey)
+      this.bloxUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1" : ""
     },
   },
 };

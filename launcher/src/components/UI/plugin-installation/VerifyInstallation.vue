@@ -85,7 +85,7 @@ export default {
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      await ControlService.writeOneClickConfiguration(this.selectedPreset.includedPlugins);
+      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: ""});
       await ControlService.startOneClickServices()
     },
   },

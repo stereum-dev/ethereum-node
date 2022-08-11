@@ -2,6 +2,7 @@ import ElectronLog from "electron-log";
 import { readFileSync } from "fs";
 import { StringUtils } from './StringUtils.js'
 import YAML from "yaml";
+import * as crypto from 'crypto'
 
 const log = require('electron-log')
 
@@ -178,6 +179,12 @@ export class ValidatorAccountManager {
             }
         })
 
+    }
+
+    async getOperatorPageURL(pubKey){
+        const hash = crypto.createHash('sha256').update(pubKey).digest('hex')
+        const URL = "https://explorer.ssv.network/operators/" + hash
+        return URL
     }
 
 }

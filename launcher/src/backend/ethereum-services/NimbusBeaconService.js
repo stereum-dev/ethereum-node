@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, graffiti) {
+  static buildByUserInput (network, ports, dir, executionClients, graffiti, checkpointURL) {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -59,7 +59,8 @@ export class NimbusBeaconService extends NodeService {
       network, // network,
       executionClients // executionClients,
     )
-
+    if(checkpointURL)
+      service.command.push('--trusted-node-url=' + checkpointURL)
     return service
   }
 

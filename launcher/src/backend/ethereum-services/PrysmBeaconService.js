@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients) {
+    static buildByUserInput(network, ports, dir, executionClients, checkpointURL) {
         const service = new PrysmBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -36,13 +36,15 @@ export class PrysmBeaconService extends NodeService {
             web3provider = fallbackProvider.shift() //removes first element of array and returns it
         }
 
+        let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
+
         service.init(
             'PrysmBeaconService',  //service
             service.id, //id
             1, // configVersion 
             image,  //image
             'v2.1.4-rc.0', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir,  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand,  //command
             null, //entrypoint
             null, //env
             ports,  //ports

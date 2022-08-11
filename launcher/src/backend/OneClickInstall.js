@@ -111,7 +111,7 @@ export class OneClickInstall {
     }
   }
 
-  async createServices(constellation) {
+  async createServices(constellation, checkpointURL) {
     let ports = []
     if (constellation.includes('GethService')) {
       ports = [
@@ -149,7 +149,7 @@ export class OneClickInstall {
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16')
+      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16', checkpointURL)
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -167,7 +167,7 @@ export class OneClickInstall {
         new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
       ]
-      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient])
+      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], checkpointURL)
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -186,7 +186,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net')
+      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net', checkpointURL)
 
       //generate validator api-token
       const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
@@ -203,7 +203,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       ]
-      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], 'stereum.net')
+      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], 'stereum.net', checkpointURL)
 
       //keystore
       const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
