@@ -7,17 +7,15 @@ export const useControlStore = defineStore("theControl", {
       ipAddress: "127.0.0.1",
       totalRam: null,
       usedRam: null,
+      totalDisk: null,
       availDisk: null,
-      usedDisk: null,
       usedPerc: null,
       cpu: null,
       rx: null,
       tx: null,
       readValue: null,
-      writeValue:null
+      writeValue: null,
     };
   },
-  actions: {
-
-  },
+  actions: {},
 });

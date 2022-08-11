@@ -15,8 +15,8 @@ export default {
 </script>
 <style scoped>
 .flagBtn_parent {
-  width: 20%;
-  height: 12%;
+  width: 80%;
+  height: 37%;
   display: flex;
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
@@ -26,6 +26,8 @@ export default {
   margin: 2%;
   border-radius: 30px;
   cursor: pointer;
+  justify-self: center;
+  align-self: center;
 }
 .flagBtn_parent:hover,
 .flagBtn_parent:active {

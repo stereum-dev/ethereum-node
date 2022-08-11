@@ -79,7 +79,7 @@ export default {
       return { height: "40%" };
     },
     updateStyle() {
-      return { height: "15%" };
+      return { height: "12%" };
     },
   },
   methods: {
@@ -122,8 +122,7 @@ export default {
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   text-decoration: none;
-  margin: 0.7% 0;
-  padding: 0.5%;
+  margin: 0.5% 0;
   border-radius: 20px;
 }
 .setting-items_parent:hover,
@@ -135,7 +134,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 115%;
+  font-size: 100%;
   font-weight: 600;
 }
 .setting-items_title span {
@@ -151,8 +150,10 @@ export default {
   border: 1.5px solid #30353a;
   cursor: pointer;
   margin: 0 2%;
-  height: 95%;
+  height: 90%;
   color: #000;
+  font-size: 90%;
+  font-weight: 500;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {

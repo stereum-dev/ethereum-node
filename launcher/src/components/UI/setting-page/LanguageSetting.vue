@@ -31,7 +31,7 @@ export default {
   border: 1.5px solid #30353a;
   cursor: pointer;
   margin: 0 2%;
-  height: 95%;
+  height: 90%;
   color: #000;
   background-color: #eee;
 }
@@ -44,7 +44,7 @@ export default {
   align-items: center;
 }
 .icoLang img {
-  width: 50%;
+  width: 55%;
 }
 
 .langTtl {

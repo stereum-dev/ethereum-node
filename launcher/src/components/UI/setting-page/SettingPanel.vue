@@ -1,18 +1,13 @@
 <template>
   <div class="seting-panel_parent">
-    <div class="seting-language_box" v-if="langActive">
-      <language-panel @back="langActiveBox"></language-panel>
-    </div>
-    <div class="seting-panel_box" v-else>
+    <div class="seting-panel_box">
       <div class="setting-panel_title">
         <div class="ttl-box">
           <div class="setting-panel_title_ico">
-            <img
-              src="../../../../public/img/icon/setting-page/setting_icon.png"
-            />
+            <img :src="pageIcon" />
           </div>
           <div class="setting-panel_title_ttl">
-            <span>STEREUM SETTING</span>
+            <span>{{ pageName }}</span>
           </div>
         </div>
         <div class="confirm-btn" @click="confirm">
@@ -20,7 +15,10 @@
         </div>
       </div>
       <div class="division-line"></div>
-      <div class="general-container">
+      <div class="seting-language_box" v-if="langActive">
+        <language-panel @back="langActiveBox"></language-panel>
+      </div>
+      <div class="base-container" v-else>
         <div class="general-panel">
           <div class="general-panel_title"><span>GENERAL</span></div>
           <hr />
@@ -69,6 +67,17 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      SIco: "/img/icon/setting-page/setting_icon.png",
+      pageName: "",
+      pageIcon: "",
+      settingData: {
+        name: "stereum setting",
+        icon: "/img/icon/setting-page/setting_icon.png",
+      },
+      languageData: {
+        name: "language - selection",
+        icon: "/img/icon/setting-page/language_page.png",
+      },
       langActive: false,
       langIco: "",
       langName: "",
@@ -130,6 +139,7 @@ export default {
   },
   created() {
     this.checkSettings();
+    this.selectror();
   },
 
   methods: {
@@ -137,8 +147,18 @@ export default {
       // confirm method have to write here
       alert("Done!");
     },
+    selectror() {
+      if (this.langActive === true) {
+        this.pageName = this.languageData.name;
+        this.pageIcon = this.languageData.icon;
+      } else {
+        this.pageName = this.settingData.name;
+        this.pageIcon = this.settingData.icon;
+      }
+    },
     langActiveBox() {
       this.langActive = !this.langActive;
+      this.selectror();
     },
     checkSettings: async function () {
       const savedConfig = await ControlService.readConfig();
@@ -166,6 +186,7 @@ export default {
   border: 4px solid #979797;
   border-radius: 10px 35px 10px 10px;
   z-index: 0;
+  box-sizing: border-box;
 }
 .seting-panel_box {
   display: flex;
@@ -178,7 +199,7 @@ export default {
 .seting-language_box {
   display: flex;
   width: 100%;
-  height: 95%;
+  height: 90%;
   justify-content: center;
   align-items: center;
 }
@@ -187,7 +208,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 8%;
+  height: 9%;
 }
 .ttl-box {
   display: flex;
@@ -205,7 +226,7 @@ export default {
   align-items: center;
 }
 .setting-panel_title_ico img {
-  width: 60%;
+  width: 50%;
 }
 .setting-panel_title_ttl {
   width: 85%;
@@ -214,10 +235,11 @@ export default {
   justify-content: flex-start;
   align-items: center;
   font-size: 130%;
-  font-weight: 300;
   color: #eee;
+  text-transform: uppercase;
+  font-weight: 500;
 }
-.general-container {
+.base-container {
   width: 100%;
   height: 90%;
   display: flex;
@@ -230,6 +252,7 @@ export default {
   height: 65%;
   background: #48e148;
   border: 1px solid #707070;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -275,17 +298,17 @@ export default {
   font-size: 130%;
   font-weight: 600;
   color: #eee;
-  margin: 1% 0 0 0;
+  margin: 0 0 0 0;
 }
 .general-panel_title {
-  height: 28%;
+  height: 30%;
 }
 .update-panel_title {
-  height: 14%;
+  height: 15%;
 }
 hr {
   width: 95%;
-  margin: 0.2% 0 0 0;
+  margin: 0 0 1% 0;
 }
 .footer {
   background-color: rgb(52, 52, 52);
@@ -296,17 +319,17 @@ hr {
 }
 .items-box_general {
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .items-box_update {
   width: 100%;
-  height: 100%;
+  height: 85%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 }
