@@ -112,8 +112,8 @@ export default {
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = true;
     },
-    loginWithSecretkeyHandler: async function() {
-      await this.getKeys()
+    loginWithSecretkeyHandler: async function () {
+      await this.getKeys();
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = false;
@@ -178,14 +178,15 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  margin: 8px 10px;
+  margin: 10px 0 0 15px;
   width: 58%;
   height: 86%;
 }
 .title-box {
-  grid-column: 2/5;
+  grid-column: 1/5;
+  margin-left: 80px;
   grid-row: 1;
-  width: 90%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;

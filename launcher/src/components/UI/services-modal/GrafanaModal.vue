@@ -46,7 +46,6 @@ export default {
       this.allServices.forEach((item) => {
         if (item.name === "Grafana") this.grafanaService = item;
       });
-      console.log(this.grafanaService);
       this.isGrafanaAvailable = true;
     },
   },
@@ -110,12 +109,13 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  margin: 8px 10px;
-  width: 58%;
-  height: 86%;
+  margin: 10px 0 0 15px;
+  width: 65%;
+  height: 90%;
 }
 .title-box {
-  grid-column: 2/5;
+  grid-column: 1/4;
+  margin-left: 80px;
   grid-row: 1;
   width: 90%;
   height: 90%;
@@ -152,34 +152,38 @@ export default {
 
 .btn-box {
   width: 100%;
-  height: 100%;
+  height: 70%;
+  margin-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  z-index: 103;
 }
 .btn-box .btn {
-  width: 70%;
-  height: 40px;
-  background-color: #f37625;
+  width: 94%;
+  height: 35px;
+  margin-top: 20px;
+  background-color: #f17b2c;
   text-decoration: none;
-  border: 2px solid #f9b88d;
   border-radius: 10px;
-  box-shadow: inset 1px 1px 5px #fac7a5;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #fff;
-  font-size: 1.1rem;
+  color: rgb(59, 59, 59);
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   transition-duration: all 200ms;
 }
 .btn:active {
   box-shadow: inset 2px 2px 15px #1d130d;
-  color: rgb(218, 218, 218);
+  transform: scale(0.99);
 }
 .btn:hover {
+  transition-duration: 100ms;
+  color: rgb(209, 209, 209);
   border: 2px solid #f9b88d;
   box-shadow: none;
   background-color: rgb(230, 127, 58) 5;

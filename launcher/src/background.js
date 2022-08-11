@@ -264,11 +264,12 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
   // Create the browser window.
+
   const win = new BrowserWindow({
-    width: 1024,
-    height: 607,
-    minWidth: 1024,
-    minHeight: 607,
+    width: 1044,
+    height: 609,
+    minWidth: 1044,
+    minHeight: 609,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -277,7 +278,7 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  win.setMinimumSize(1024, 607);
+  win.setMinimumSize(1044, 609);
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -286,7 +287,7 @@ async function createWindow() {
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
-    // Load the index.html when not in development
+    // Load the index.html when not in developmen
     win.loadURL("app://./index.html");
     // win.webContents.openDevTools()
   }

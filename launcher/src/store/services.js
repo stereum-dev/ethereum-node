@@ -237,7 +237,9 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
-              pattern: new RegExp(/(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/),
+              pattern: new RegExp(
+                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
             },
           ],
           drag: true,
@@ -281,7 +283,9 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
-              pattern: new RegExp(/(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/),
+              pattern: new RegExp(
+                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
             },
           ],
           drag: true,
@@ -298,7 +302,7 @@ export const useServices = defineStore("services", {
         },
         {
           id: 9,
-          name: "Blox-SSV",
+          name: "ssv network",
           service: "BloxSSVService",
           category: "validator",
           displayCategory: "vlc",
