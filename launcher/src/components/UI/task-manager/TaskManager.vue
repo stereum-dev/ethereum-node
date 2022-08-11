@@ -80,7 +80,9 @@ export default {
       displayingTasks: [],
     };
   },
-
+  created() {
+    this.displayTasksTemprory();
+  },
   mounted() {
     this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
     this.refresh = setInterval(this.getTasks, 1000); //refresh data
@@ -123,6 +125,12 @@ export default {
           (t) => t.id === this.displayingTasks[0].id
         ).status;
       }
+    },
+    displayTasksTemprory() {
+      this.isTaskModalActive = true;
+      setTimeout(() => {
+        this.isTaskModalActive = false;
+      }, 10000);
     },
     taskModalHandler() {
       this.showDropDownList = false;

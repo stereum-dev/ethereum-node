@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import BaseHome from "../pages/BaseHome.vue";
 import ClickInstall from "../pages/ClickInstall.vue";
@@ -27,7 +27,7 @@ const routes = [
     component: WelcomePage,
   },
   {
-    path: "/clickinstall",
+    path: "/selectPlugin",
     name: "ClickInstall",
     component: ClickInstall,
   },
@@ -53,6 +53,7 @@ const routes = [
   },
   {
     path: "/install",
+    redirectedFrom: "/preset",
     name: "PluginName",
     component: PluginName,
   },
@@ -88,6 +89,6 @@ const routes = [
   },
 ];
 
-const router = createRouter({ history: createWebHashHistory(), routes });
+const router = createRouter({ history: createWebHistory(), routes });
 
 export default router;

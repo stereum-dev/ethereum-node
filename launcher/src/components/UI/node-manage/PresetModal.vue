@@ -86,11 +86,18 @@
 
         <router-link
           class="install-btn"
-          :to="{ path: '/install' }"
           :class="{ notAvailable: buttonIsDisabled }"
         >
-          <button>INSTALL</button>
+          <span>INSTALL</span>
         </router-link>
+
+        <!-- <div
+          class="install-btn"
+          :class="{ notAvailable: buttonIsDisabled }"
+          @click="goToInstallation"
+        >
+          INSTALL
+        </div> -->
       </div>
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
@@ -130,6 +137,9 @@ export default {
     }),
   },
   methods: {
+    goToInstallation() {
+      console.log(this.$router.addRoute("/install"));
+    },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({
         setup: item.name,
@@ -386,6 +396,8 @@ export default {
   font-weight: 700;
   color: #fff;
   box-shadow: 1px 2px 8px #000000;
+  outline-style: none;
+  text-decoration: none;
 }
 .content .install-btn:hover {
   background-color: rgb(27, 62, 60);
@@ -396,7 +408,7 @@ export default {
   font-size: 1rem;
   box-shadow: inset 1px 1px 8px 1px #000000;
 }
-.install-btn button {
+.install-btn span {
   width: 100%;
   height: 100%;
   border: none;
@@ -404,6 +416,7 @@ export default {
   font-size: 1.1rem;
   font-weight: 800;
   color: #fff;
+  outline: none !important;
 }
 .close-preset {
   width: 25px;

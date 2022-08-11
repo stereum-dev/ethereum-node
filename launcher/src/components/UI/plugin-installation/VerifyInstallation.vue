@@ -157,7 +157,7 @@ export default {
 
 .content-box {
   width: 95%;
-  height: 53%;
+  height: 63%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

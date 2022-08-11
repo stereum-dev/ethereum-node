@@ -104,11 +104,11 @@
             </div>
           </div>
           <div class="btn-box">
-            <div class="back-btn" @click="backToHistoryHandler">
+            <router-link :to="{ path: '/selectPlugin' }">
               <span>BACK</span>
-            </div>
+            </router-link>
             <router-link :to="{ path: '/verify' }">
-              <button class="next-btn">NEXT</button>
+              <span>NEXT</span>
             </router-link>
           </div>
         </div>
@@ -698,16 +698,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.btn-box .back-btn {
-  width: 25%;
-  height: 60%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.next-btn {
+
+.btn-box a span {
   width: 100%;
-  height: 100%;
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
@@ -719,28 +712,13 @@ export default {
   cursor: pointer;
   text-align: center;
 }
-.back-btn span {
-  width: 100%;
-  height: 100%;
-  border: 2px solid rgb(125, 125, 125);
-  border-radius: 20px;
-  background-color: #336666;
-  color: #eaeaea;
-  padding-top: 2%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39;
-  outline-style: none;
-  cursor: pointer;
-  text-align: center;
-}
-.next-btn:hover,
-.back-btn span:hover {
+
+.btn-box a span:hover {
   background-color: #1a3535;
   box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
-.next-btn:active,
-.back-btn span:active {
+
+.btn-box a span:active {
   box-shadow: inset 1px 1px 5px 1px rgb(28, 36, 28);
   font-size: 0.8rem;
 }
