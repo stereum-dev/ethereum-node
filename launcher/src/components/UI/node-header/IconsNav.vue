@@ -54,6 +54,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
     }),

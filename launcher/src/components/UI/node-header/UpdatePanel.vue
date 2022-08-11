@@ -61,12 +61,18 @@
                 v-for="(item, index) in newUpdates"
                 :key="index"
               >
-                <div class="downloadBtn">
-                  <img
-                    src="/img/icon/node-journal-icons/download2.png"
-                    alt="icon"
-                  />
-                </div>
+              <div v-if="item.running" class="downloadBtnDisabled">
+                <img
+                  src="/img/icon/node-journal-icons/download_disabled.png"
+                  alt="icon"
+                />
+              </div>
+              <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
+                <img
+                  src="/img/icon/node-journal-icons/download2.png"
+                  alt="icon"
+                />
+              </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
                 </div>
@@ -458,6 +464,18 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+.tableContent .tableRow .downloadBtnDisabled {
+  grid-column: 1/2;
+  width: 100%;
+  height: 98%;
+  margin: 0 auto;
+  background-color: #7c7c7c;
+  border-radius: 3px;
+  border: 1px solid #4d4d4d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .tableContent .tableRow .downloadBtn:hover {
   background-color: rgb(3, 82, 60);
 }
@@ -467,6 +485,10 @@ export default {
   transform: scale(0.95);
 }
 .tableContent .tableRow .downloadBtn img {
+  width: 25%;
+  height: 80%;
+}
+.tableContent .tableRow .downloadBtnDisabled img {
   width: 25%;
   height: 80%;
 }
