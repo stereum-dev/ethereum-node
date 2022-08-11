@@ -83,6 +83,12 @@ export default {
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
+}
+.rpc-data:hover,
+.rpc-data:active {
+  color: rgb(246, 250, 141);
+  font-weight: 800;
+  background: #313131;
 }
 </style>

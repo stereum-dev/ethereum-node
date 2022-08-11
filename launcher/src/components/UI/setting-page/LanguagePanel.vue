@@ -83,6 +83,10 @@ export default {
   height: 100%;
   text-transform: uppercase;
   color: #eee;
-  font-weight: 600;
+  font-weight: 500;
+}
+.langName:hover,
+.langName:active {
+  font-weight: 700;
 }
 </style>
