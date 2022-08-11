@@ -59,8 +59,8 @@ export default {
 <style scoped>
 .lang-panel_parent {
   display: grid;
-  grid-template-rows: repeat(4, 1fr);
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   width: 100%;
   height: 95%;
 }
@@ -68,11 +68,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
+  width: 18%;
   height: 100%;
 }
 .langIco img {
-  width: 80%;
+  width: 70%;
 }
 .langName {
   display: flex;

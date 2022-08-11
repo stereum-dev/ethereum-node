@@ -15,8 +15,8 @@ export default {
 </script>
 <style scoped>
 .flagBtn_parent {
-  width: 80%;
-  height: 37%;
+  width: 85%;
+  height: 55%;
   display: flex;
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
