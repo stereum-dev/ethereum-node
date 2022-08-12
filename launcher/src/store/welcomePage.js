@@ -6,7 +6,7 @@ export const useWelcomeStore = defineStore("welcomePage", {
         {
           img: "/img/icon/one-click-installer.png",
           img2: "/img/icon/click-installation/click-installer.png",
-          path: "/clickinstall",
+          path: "/selectPlugin",
         },
         {
           img: "/img/icon/custom_installer.png",

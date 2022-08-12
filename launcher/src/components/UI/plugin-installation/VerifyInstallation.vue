@@ -67,6 +67,7 @@ export default {
     ...mapWritableState(useClickInstall, {
       installationPath: "installationPath",
       selectedPreset: "selectedPreset",
+      checkPointSync: "checkPointSync",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -79,13 +80,13 @@ export default {
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push("/clickinstall");
+      this.$router.push("/selectPlugin");
     }
   },
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: ""});
+      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: this.checkPointSync});
       await ControlService.startOneClickServices()
     },
   },
@@ -157,7 +158,7 @@ export default {
 
 .content-box {
   width: 95%;
-  height: 53%;
+  height: 63%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

@@ -400,11 +400,12 @@ export default {
 .tableHeader .tableUpdateIcon {
   grid-column: 2/3;
   grid-row: 1;
-  width: 27%;
-  height: 100%;
+  width: 28%;
+  height: 81%;
   background-color: #2a4940;
   border-radius: 100%;
   margin-right: 5px;
+  margin-top: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -514,12 +515,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .availableTable .tableContent .tableRow .version span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #b4b443;
   text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .service-updateBox .availableTable .btnBox {
   width: 100%;
