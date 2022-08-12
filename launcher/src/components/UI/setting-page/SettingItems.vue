@@ -4,20 +4,28 @@
       <span>{{ title }}</span>
     </div>
 
-    <div
+    <language-setting
+      v-if="isLanguage"
+      @language-box="langAction"
+      :flag="savedFlag"
+      :lang="savedLang"
+    ></language-setting
+    ><router-link
       class="setting-items_btn"
-      v-if="btnValue"
+      :style="color()"
+      to="/credit"
+      v-else-if="link"
+      >{{ linkValue }}</router-link
+    >
+    <div
+      iv
+      class="setting-items_btn"
+      v-else
       @click="customizeSetting"
       :style="color()"
     >
       <span>{{ btnValue }}</span>
     </div>
-    <language-setting
-      v-else
-      @language-box="langAction"
-      :flag="savedFlag"
-      :lang="savedLang"
-    ></language-setting>
   </div>
 </template>
 <script>
@@ -51,6 +59,18 @@ export default {
       required: false,
     },
     savedLang: {
+      type: String,
+      required: false,
+    },
+    link: {
+      type: Boolean,
+      required: false,
+    },
+    isLanguage: {
+      type: Boolean,
+      required: false,
+    },
+    linkValue: {
       type: String,
       required: false,
     },
@@ -154,6 +174,9 @@ export default {
   color: #000;
   font-size: 90%;
   font-weight: 500;
+  box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
+  box-sizing: border-box;
+  text-transform: uppercase;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {

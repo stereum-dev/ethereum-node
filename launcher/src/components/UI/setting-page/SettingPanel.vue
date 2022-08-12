@@ -32,6 +32,9 @@
               :itemType="item.itemType"
               :savedFlag="langIco"
               :savedLang="langName"
+              :link="item.link"
+              :isLanguage="item.isLanguage"
+              :linkValue="item.linkValue"
               @lang-action="langActiveBox"
             ></setting-items>
           </div>
@@ -86,13 +89,15 @@ export default {
           id: 1,
           title: "Leanguage Selection",
           itemType: "general",
+          isLanguage: true,
         },
         {
           id: 2,
           title: "Credits",
-          btnValue: "OPEN",
+          link: true,
           isColor: "open",
           itemType: "general",
+          linkValue: "open",
         },
       ],
       updateItems: [
@@ -288,6 +293,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
 }
 .general-panel_title,
 .update-panel_title {

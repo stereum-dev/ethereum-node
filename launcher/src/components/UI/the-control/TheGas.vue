@@ -77,7 +77,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #464a44;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   border-radius: 10px;
 }
 .baseFeeBox_title {
@@ -97,7 +100,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #33393e;
+  background: #181717;
   border-radius: 10px;
   padding: 5%;
 }
