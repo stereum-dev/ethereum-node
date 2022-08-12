@@ -42,6 +42,7 @@ export default {
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
       forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
       refresh: "refresh",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
@@ -131,6 +132,7 @@ export default {
     checkUpdates: async function () {
     if((!this.failed && !this.checked) || this.forceUpdateCheck){
       let updates = []
+      let stereumUpdate = {}
       let services = await ControlService.getServices()
       let response
       let stereumVersion
@@ -158,12 +160,14 @@ export default {
       if(response && stereumVersion){
         if (stereumVersion != response.stereum[response.stereum.length - 1].commit) {
           this.isUpdateAvailable = true
-          updates.push({ commit: response.stereum[response.stereum.length - 1].commit, name: "Stereum", version: response.stereum[response.stereum.length - 1].name })
+          const currentVersion = response.stereum.find(v => v.commit === stereumVersion)
+          stereumUpdate = { commit: response.stereum[response.stereum.length - 1].commit, name: "Stereum", version: response.stereum[response.stereum.length - 1].name, current:  currentVersion ? currentVersion.name : "-"}
           console.log("Stereum Update Available!")
         }
       }
       this.checked = true
       this.newUpdates = updates
+      this.stereumUpdate = stereumUpdate
       this.forceUpdateCheck = false
       }
     },

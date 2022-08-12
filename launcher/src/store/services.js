@@ -61,7 +61,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
-              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
             },
           ],
           drag: true,
@@ -158,7 +158,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
-              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
             },
           ],
           drag: true,
@@ -193,7 +193,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
-              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
             },
           ],
           drag: true,
@@ -238,7 +238,7 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
               pattern: new RegExp(
-                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
             },
           ],
@@ -284,7 +284,7 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/key4.png",
               pattern: new RegExp(
-                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
             },
           ],

@@ -17,42 +17,6 @@
           />
         </router-link>
       </div>
-      <div class="config-btns">
-        <div class="config-update" @click="openUpdateTableHandler">
-          <span class="btn-text">UPDATES</span>
-          <img
-            alt="update-icon"
-            src="/img/icon/header-icons/update-green.png"
-          />
-        </div>
-        <update-table v-if="updateTableIsOpen">
-          <div
-            class="tableRow"
-            v-for="(item, index) in newUpdates"
-            :key="index"
-          >
-            <div class="serviceName">
-              <span>{{ item.name }}</span>
-            </div>
-            <div class="version">
-              <span>{{ item.version }}</span>
-            </div>
-            <div v-if="item.running" class="disabledDownloadIcon">
-              <img
-                src="/img/icon/node-journal-icons/download_disabled.png"
-                alt="icon"
-              />
-            </div>
-            <div v-else class="downloadIcon">
-              <img
-                src="/img/icon/node-journal-icons/download2.png"
-                alt="icon"
-                @click="runUpdate(item)"
-              />
-            </div>
-          </div>
-        </update-table>
-      </div>
     </div>
   </div>
 </template>
@@ -72,37 +36,12 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
-      updating: "updating",
-    }),
-    ...mapWritableState(useServices, {
-      newUpdates: "newUpdates",
-    }),
     ...mapState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
   },
-  methods: {
-    async runUpdate(item) {
-        item.running = true
-        if (item && item.id) {
-          this.updating = true
-          await ControlService.updateServices({ service: item.id });
-          this.updating = false
-          this.forceUpdateCheck = true
-        } else if (item && item.commit) {
-          this.updating = true
-          await ControlService.updateStereum({ commit: item.commit });
-          this.updating = false
-          this.forceUpdateCheck = true
-        }
-    },
-    openUpdateTableHandler() {
-      this.updateTableIsOpen = !this.updateTableIsOpen;
-    },
-  },
+  methods: {},
 };
 </script>
 <style scoped>

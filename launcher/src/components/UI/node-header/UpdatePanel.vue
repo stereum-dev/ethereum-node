@@ -35,18 +35,18 @@
             <div class="searchBtn">
               <img src="/img/icon/header-icons/search.png" alt="icon" />
             </div>
-            <div class="downloadBtn" @click.self="$emit('updateConfirm')">
+            <div class="downloadBtn" @click="$emit('runUpdate', stereumUpdate)">
               <img
                 src="/img/icon/node-journal-icons/download2.png"
                 alt="icon"
               />
             </div>
 
-            <div class="available">
+            <div v-if="checkStereumUpdate()" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
-              <span class="availableText">Update "2.0" available</span>
+              <span class="availableText">{{ stereumUpdate.version }} available</span>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="confirmUpdate" @click.self="$emit('updateAll')">
+              <div class="confirmUpdate" @click="$emit('updateConfirm')">
                 <span>update all</span>
                 <img
                   src="/img/icon/node-journal-icons/download2.png"
@@ -106,25 +106,26 @@
                 />
               </div>
               <div class="autoUpdateText">
-                <span>auto-update: ON</span>
+                <span>auto-update: OFF</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>£
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
       stereumApp: {
         current: "alpha",
         latest: "2.0",
-        autoUpdate: "on",
+        autoUpdate: "off",
       },
     };
   },
@@ -132,6 +133,21 @@ export default {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
     }),
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
+    }),
+  },
+  methods: {
+    checkStereumUpdate(){
+      if(this.stereumUpdate && this.stereumUpdate.version){
+        return true
+      }
+      return false
+    }
+  },
+  mounted(){
+    this.forceUpdateCheck = true
   },
 };
 </script>
