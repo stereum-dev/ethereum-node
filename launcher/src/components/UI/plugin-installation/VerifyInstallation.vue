@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     if (Object.keys(this.selectedPreset).length === 0) {
-      this.$router.push("/clickinstall");
+      this.$router.push("/selectPlugin");
     }
   },
   methods: {

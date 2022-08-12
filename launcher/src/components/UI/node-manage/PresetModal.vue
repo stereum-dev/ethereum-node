@@ -84,12 +84,9 @@
           </p>
         </div>
 
-        <router-link
-          class="install-btn"
-          :class="{ notAvailable: buttonIsDisabled }"
-        >
+        <div class="install-btn" :class="{ notAvailable: buttonIsDisabled }">
           <span>INSTALL</span>
-        </router-link>
+        </div>
 
         <!-- <div
           class="install-btn"
@@ -389,15 +386,16 @@ export default {
 .content .install-btn {
   width: 30%;
   height: 11%;
-  border: 3px solid rgb(160, 160, 160);
+  border: 3px solid #a0a0a0;
   border-radius: 30px;
   background-color: #254f4c;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
   box-shadow: 1px 2px 8px #000000;
   outline-style: none;
   text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 .content .install-btn:hover {
   background-color: rgb(27, 62, 60);
@@ -405,18 +403,13 @@ export default {
   box-shadow: none;
 }
 .content .install-btn:active {
-  font-size: 1rem;
-  box-shadow: inset 1px 1px 8px 1px #000000;
+  transform: scale(0.95);
 }
 .install-btn span {
-  width: 100%;
-  height: 100%;
-  border: none;
   background-color: transparent;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #fff;
-  outline: none !important;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #a0a0a0;
 }
 .close-preset {
   width: 25px;

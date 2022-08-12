@@ -28,7 +28,7 @@ const routes = [
   },
   {
     path: "/selectPlugin",
-    name: "ClickInstall",
+    name: "/selectPlugin",
     component: ClickInstall,
   },
   {
@@ -53,7 +53,6 @@ const routes = [
   },
   {
     path: "/install",
-    redirectedFrom: "/preset",
     name: "PluginName",
     component: PluginName,
   },
