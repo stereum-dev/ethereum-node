@@ -55,7 +55,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Lighthouse-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -109,7 +117,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Prysm-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(--suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -136,7 +152,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Nimbus-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -163,7 +187,15 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/validator/Nimbus-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(/(  - --suggested-fee-recipient=)(.*)(\n)/),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -199,6 +231,15 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+            },
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(
+                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
             },
           ],
           drag: true,
@@ -237,6 +278,15 @@ export const useServices = defineStore("services", {
               unit: "GB",
               pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
             },
+            {
+              title: "Default Fee Recipient",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/key4.png",
+              pattern: new RegExp(
+                /(  - --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
           ],
           drag: true,
           state: "exited",
@@ -252,15 +302,15 @@ export const useServices = defineStore("services", {
         },
         {
           id: 9,
-          name: "Blox-SSV",
-          service: "BloxSSVService",
+          name: "ssv.network",
+          service: "SSVNetworkService",
           category: "validator",
           displayCategory: "vlc",
           displayTooltip: false,
           displayPluginMenu: false,
-          path: "/blox-ssv",
-          icon: require("../../public/img/icon/plugin-icons/Other/blox-ssv.png"),
-          sIcon: require("../../public/img/icon/plugin-icons/Other/Blox-ssv-s.png"),
+          path: "/ssv_network",
+          icon: require("../../public/img/icon/plugin-icons/Other/ssv-network.png"),
+          sIcon: require("../../public/img/icon/plugin-icons/Other/ssv-network-s.png"),
           hIcon: "/img/icon/service-icons/ssv.png",
           linkUrl: " https://docs.ssv.network/",
           headerOption: true,
@@ -312,8 +362,8 @@ export const useServices = defineStore("services", {
           displayPluginMenu: false,
           category: "service",
           path: "/grafana",
-          icon: require("../../public/img/icon/plugin-icons/Other/grafana-service.png"),
-          sIcon: require("../../public/img/icon/plugin-icons/Other/Grafana-s.png"),
+          icon: "/img/icon/plugin-icons/Other/grafana-service.png",
+          sIcon: "/img/icon/plugin-icons/Other/Grafana-s.png",
           hIcon: "/img/icon/service-icons/grafana.png",
           linkUrl: "https://grafana.com/docs/grafana/latest/",
           headerOption: true,

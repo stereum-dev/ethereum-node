@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize) {
+  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, checkpointURL) {
     const service = new LighthouseBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -23,14 +23,14 @@ export class LighthouseBeaconService extends NodeService {
     ]
 
     // eth1 nodes
-    const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientHttpEndpointUrl() })).join()
+    const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
     service.init(
       'LighthouseBeaconService',  //service
       service.id, //id
       1, // configVersion
       image,  //image
-      'v2.4.0', //imageVersion
+      'v2.5.1', //imageVersion
       [
         'lighthouse',
         'bn',
@@ -58,6 +58,9 @@ export class LighthouseBeaconService extends NodeService {
       network,  //network
       executionClients  //executionClients
       )
+
+    if(checkpointURL)
+      service.command.push('--checkpoint-sync-url=' + checkpointURL)
 
     return service
   }

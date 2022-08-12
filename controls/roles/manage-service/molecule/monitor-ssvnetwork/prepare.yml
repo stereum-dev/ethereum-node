@@ -1,0 +1,150 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    ssv_service: ea17abb3-f219-46f0-8933-17d4ba688d26
+    beacon_service: 0ec49452-f39e-4c68-9661-96facb1919f3
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseBeaconService
+              id: "{{ beacon_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              command:
+                - lighthouse
+                - bn
+                - --debug-level=debug
+                - --network=prater
+                - --eth1-endpoints=http://10.10.0.3:8545
+                - --eth1-blocks-per-log-query=150
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --disable-upnp
+                - --validator-monitor-auto
+                - --slasher
+                - --slasher-dir=/opt/app/slasher
+                - --slasher-max-db-size=16
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
+
+    # ssv operator keys
+    - block:
+      - name: "Include ssv-key-generator"
+        include_role:
+          name: "ssv-key-generator"
+      vars:
+        ssv_key_service: "{{ ssv_service }}"
+
+    - name: Get configuration's content in variable
+      slurp:
+        src: "/etc/stereum/services/{{ ssv_service }}.yaml"
+      register: config
+      become: yes
+
+    - name: Read service's configuration
+      set_fact:
+        config_content: "{{ config.content | b64decode | from_yaml }}"
+
+    - name: Create service config directory
+      file:
+        path: /opt/app/services/{{ ssv_service }}/data/
+        state: directory
+        owner: "2000"
+        group: "2000"
+        mode: '0744'
+      become: yes
+
+    - name: Write SSV-Service's config
+      copy:
+        dest: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
+        content: |
+          eth2:
+            Network: "prater"
+            BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
+          eth1:
+            ETH1Addr: "wss://goerli.infura.io/ws/v3/7a818692f59f487fab736e9192c0da4f"
+            RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+          OperatorPrivateKey: "{{ config_content.ssv_sk }}"
+          global:
+            LogLevel: "info"
+          MetricsAPIPort: 15000
+        owner: "2000"
+        group: "2000"
+        mode: '0644'
+      become: yes
+
+    # ssv service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: SSVNetworkService
+              id: "{{ ssv_service }}"
+              image: "bloxstaking/ssv-node-shifu:{{ stereum_static.defaults.versions.ssv_network }}"
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env:
+                CONFIG_PATH: /data/config.yaml
+              command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node &&
+                                docker logs ssv_node"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
+
+# EOF

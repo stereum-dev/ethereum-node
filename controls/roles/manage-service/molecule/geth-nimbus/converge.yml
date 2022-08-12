@@ -1,0 +1,81 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    nimbus_service: 33791152-1339-11ed-a2b4-733451c3c44d
+    geth_service: 34dd0ada-1339-11ed-a09e-c7c2acfe71ab
+
+  tasks:
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # nimbus beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconService
+              id: "{{ nimbus_service }}"
+              image: "statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              command:
+                - --network=prater
+                - --data-dir=/opt/app/beacon
+                - --web3-url=http://stereum-{{ geth_service }}:8551
+                - --metrics
+                - --rest
+                - --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ nimbus_service }}/nimbus/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+# EOF

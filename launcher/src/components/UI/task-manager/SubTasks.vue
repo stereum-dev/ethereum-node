@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     copyErrorText(item) {
-      let errorToCopy = item.action;
+      let errorToCopy = item.data;
       this.$copyText(errorToCopy)
         .then(() => {
           console.log("copied!");

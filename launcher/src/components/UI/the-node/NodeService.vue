@@ -33,12 +33,6 @@
             <div class="setting" @click="expertModeHandler(item)">
               <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
             </div>
-            <div class="restart">
-              <img src="/img/icon/plugin-menu-icons/sync9.png" alt="icon" />
-            </div>
-            <div class="book">
-              <img src="/img/icon/plugin-menu-icons/log7.png" alt="icon" />
-            </div>
           </div>
         </plugin-menu>
         <the-expert
@@ -187,16 +181,17 @@ export default {
 }
 
 .items {
-  width: 100%;
-  height: 100%;
+  width: 65%;
+  height: 70%;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 .items img {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 
@@ -212,134 +207,72 @@ export default {
   height: 100%;
 }
 .menu-content .power {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 0%;
-  left: 5%;
+  top: 6%;
+  left: -35%;
   animation: power 500ms;
 }
 @keyframes power {
   0% {
     opacity: 0;
-    top: 34%;
+    top: 6%;
     left: 34%;
   }
   100% {
-    top: 0%;
-    left: 5%;
+    top: 6%;
+    left: -35%;
   }
 }
 .menu-content .power img {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 100%;
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  box-shadow: 0 1px 2px 1px rgb(61, 61, 61);
 }
 
 .menu-content .setting {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 0%;
-  left: 65%;
+  top: 52%;
+  left: -35%;
   animation: setting 500ms;
 }
 @keyframes setting {
   0% {
     opacity: 0;
-    top: 34%;
+    top: 52%;
     left: 34%;
   }
   100% {
-    top: 0%;
-    left: 65%;
+    top: 52%;
+    left: -35%;
   }
 }
 .menu-content .setting img {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 100%;
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-}
-.menu-content .restart {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 65%;
-  left: 5%;
-  animation: restart 500ms;
-}
-@keyframes restart {
-  0% {
-    opacity: 0;
-    top: 34%;
-    left: 34%;
-  }
-  100% {
-    top: 65%;
-    left: 5%;
-  }
+  box-shadow: 0 1px 2px 1px rgb(71, 71, 71);
 }
 
-.menu-content .restart img {
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-}
-.menu-content .book {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 65%;
-  left: 65%;
-  animation: book 500ms;
-}
-@keyframes book {
-  0% {
-    opacity: 0;
-    top: 34%;
-    left: 34%;
-  }
-  100% {
-    top: 65%;
-    left: 65%;
-  }
-}
-.menu-content .book img {
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-}
 .menu-content .power img:hover,
-.menu-content .setting img:hover,
-.menu-content .restart img:hover,
-.menu-content .book img:hover {
+.menu-content .setting img:hover {
   transform: scale(1.1);
 }
 
 .menu-content .setting img:active,
-.menu-content .restart img:active,
-.menu-content .book img:active,
-.menu-content .power img:active {
+.menu-content .restart img:active {
   transform: scale(1);
 }
 </style>

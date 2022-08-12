@@ -94,6 +94,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
+import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 
@@ -127,9 +128,17 @@ export default {
     ...mapWritableState(useTutorialStore, {
       steps: "steps",
     }),
+    ...mapWritableState(useControlStore, {
+      ServerName: "ServerName",
+    }),
   },
-  mounted() {},
+  mounted() {
+    this.updateServerName()
+  },
   methods: {
+   async updateServerName(){
+      this.ServerName = (await ControlService.getServerName()).stdout
+    },
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;

@@ -1,0 +1,94 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_service: 873c232a-1400-11ed-a161-238c740f59c9
+    nethermind_service: 887350f6-1400-11ed-8a35-cfe04e704bcb
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --log=info
+              - --datadir=/opt/app/data
+              - --Network.DiscoveryPort=30303
+              - --Network.P2PPort=30303
+              - --JsonRpc.Enabled=true
+              - --JsonRpc.Host=0.0.0.0
+              - --JsonRpc.JwtSecretFile=/engine.jwt
+              - --Init.WebSocketsEnabled=true
+              - --JsonRpc.WebSocketsPort=8546
+              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+              - --Metrics.Enabled=true
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              command:
+                - lighthouse
+                - --spec=goerli
+                - --network=prater
+                - --debug-level=info
+                - beacon_node
+                - --datadir=/opt/app/beacon
+                - --eth1
+                - --http
+                - --http-allow-sync-stalled
+                - --metrics
+                - --merge
+                - --execution-endpoints=http://stereum-{{ nethermind_service }}:8551
+                - --jwt-secrets=/engine.jwt
+                - --enr-udp-port=9000
+                - --enr-tcp-port=9000
+                - --discovery-port=9000
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_service }}/slasher:/opt/app/slasher"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+# EOF

@@ -24,11 +24,11 @@ test('image', () => {
 })
 
 test('endpoint url', () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientHttpEndpointUrl()).toMatch(new RegExp('^http:\/\/stereum-.*:8551'))
+  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientHttpEndpointUrl()).toMatch(new RegExp('^http:\/\/stereum-.*:8545'))
 })
 
 test('endpoint ws url', () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientWsEndpointUrl()).toMatch(new RegExp('^ws:\/\/stereum-.*:8551'))
+  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientWsEndpointUrl()).toMatch(new RegExp('^ws:\/\/stereum-.*:8546'))
 })
 
 test('empty ports', () => {

@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs --tail=20 stereum-d3df49ca-1336-11ed-9bd0-631a44a83cab"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stderr is search("The execution endpoint is connected and configured, however it is not yet synced")
+    retries: 60
+    delay: 10
+
+# EOF

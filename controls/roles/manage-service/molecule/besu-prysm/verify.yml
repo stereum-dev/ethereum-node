@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  prysm beacon logs
+  - name: Prysm beacon
+    command: "docker logs stereum-a8cff346-13f5-11ed-988b-c74564e46b4c"
+    register: prysm_beacon
+    until:
+      - prysm_beacon.stderr is search("Could not connect to execution client endpoint: could not make initial request to verify execution chain ID")
+      - prysm_beacon.stderr is search("connect: connection refused")
+    retries: 60
+    delay: 10
+
+# EOF

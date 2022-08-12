@@ -2,6 +2,7 @@ import ElectronLog from "electron-log";
 import { readFileSync } from "fs";
 import { StringUtils } from './StringUtils.js'
 import YAML from "yaml";
+import * as crypto from 'crypto'
 
 const log = require('electron-log')
 
@@ -102,14 +103,26 @@ export class ValidatorAccountManager {
         }
         try {
             let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
-            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-            let result = (JSON.parse(logs[1])).msg.data
-            if(result.some(run => run.status === "error")){
-                throw result.find(run => run.message != undefined).message
-            }
+            let logs = [...(await this.nodeConnection.playbookStatus(run.playbookRunRef)).matchAll(/^DATA: ({"msg":.*)/gm)]
+
+            let result = logs.map(log => {
+                return (JSON.parse(log[1])).msg.data
+            })
+
+            result.forEach(batch => {
+                if(batch.some(run => run.status === "error")){
+                    throw batch.find(run => run.message != undefined).message
+                }
+            })
+
             let imported = 0
-            result.forEach(run => {if(run.status === "imported")imported ++})
-            return imported + " Keys were imported!"
+            let duplicate = 0
+            result.forEach(batch => batch.forEach(run => {
+                if(run.status === "imported")imported ++
+                if(run.status === "duplicate")duplicate ++
+            }))
+            this.batches = []
+            return imported + " key(s) imported ...\n" + duplicate + " duplicate(s) ..."
         } catch (err) {
             log.error("Validator Import Failed:\n", err)
             this.batches = []
@@ -129,13 +142,13 @@ export class ValidatorAccountManager {
         }
     }
 
-    async insertBloxSSVKeys(service, sk) {
+    async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
             try {
                 const dataDir = (service.config.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-                let bloxConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
-                if (bloxConfig) {
-                    const escapedConfigFile = StringUtils.escapeStringForShell(bloxConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
+                let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout
+                if (ssvConfig) {
+                    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + sk + "\""))
                     await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
 
                     await this.serviceManager.manageServiceState(service.config.serviceID, 'stopped')
@@ -167,7 +180,7 @@ export class ValidatorAccountManager {
         })
 
     }
-
+    
     async addFeeRecipient(keys, address){
         if(keys && keys.length != 0 && address){
             const serviceID = keys[0].validatorID
@@ -189,6 +202,12 @@ export class ValidatorAccountManager {
         }
         }
         return 0
+    }
+
+    async getOperatorPageURL(pubKey){
+        const hash = crypto.createHash('sha256').update(pubKey).digest('hex')
+        const URL = "https://explorer.ssv.network/operators/" + hash
+        return URL
     }
 
 }

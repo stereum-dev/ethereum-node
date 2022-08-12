@@ -80,7 +80,7 @@ class ControlService extends EventEmitter {
 
   async writeOneClickConfiguration(args) {
     let buffer = []
-    args.forEach(service => {
+    args.services.forEach(service => {
       buffer.push({
         id: service.id,
         name: service.name,
@@ -92,7 +92,7 @@ class ControlService extends EventEmitter {
         sIcon: service.sIcon,
       })
     })
-    return await this.promiseIpc.send("writeOneClickConfiguration", {array: buffer});
+    return await this.promiseIpc.send("writeOneClickConfiguration", {array: buffer, checkpointURL: args.checkpointURL});
   }
 
   async startOneClickServices() {
@@ -101,6 +101,10 @@ class ControlService extends EventEmitter {
 
   async getServerVitals() {
     return await this.promiseIpc.send("getServerVitals");
+  }
+
+  async getServerName() {
+    return await this.promiseIpc.send("getServerName");
   }
 
   async getAvailablePort(args) {
@@ -183,8 +187,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("updateTasks")  // updates task progression
   }
 
-  async insertBloxSSVKeys(args){
-    return await this.promiseIpc.send("insertBloxSSVKeys", args)  // insert existing operator keys
+  async insertSSVNetworkKeys(args){
+    return await this.promiseIpc.send("insertSSVNetworkKeys", args)  // insert existing operator keys
   }
 
   async refreshServiceInfos(){
@@ -193,6 +197,9 @@ class ControlService extends EventEmitter {
 
   async addFeeRecipient(args){
     return await this.promiseIpc.send("addFeeRecipient", args)  // 
+  }
+  async getOperatorPageURL(args){
+    return await this.promiseIpc.send("getOperatorPageURL",args)  // insert existing operator keys
   }
 
 }

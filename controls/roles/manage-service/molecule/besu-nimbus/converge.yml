@@ -1,0 +1,94 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    nimbus_service: 8be890ca-13f1-11ed-98ff-8b4850a8f6a4
+    besu_service: 8cdbcf4c-13f1-11ed-a8a2-dfed49ab5b12
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: "hyperledger/besu:{{ stereum_static.defaults.versions.besu }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-host=0.0.0.0
+                - --host-allowlist=*
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --logging=INFO
+                - --engine-rpc-enabled=true
+                - --engine-host-allowlist=*
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+                - --Xmerge-support=true
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # nimbus beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconService
+              id: "{{ nimbus_service }}"
+              image: "statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              command:
+                - --network=prater
+                - --data-dir=/opt/app/beacon
+                - --web3-url=http://stereum-{{ besu_service }}:8551
+                - --metrics
+                - --rest
+                - --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ nimbus_service }}/nimbus/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+# EOF

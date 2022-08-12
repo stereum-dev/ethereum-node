@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs stereum-873c232a-1400-11ed-a161-238c740f59c9"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stdout is search("warning: BLOCK PROPOSALS WILL FAIL WITHOUT VALID, SYNCED ETH1 CONNECTION")
+    retries: 60
+    delay: 10
+
+# EOF

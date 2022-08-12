@@ -2,13 +2,9 @@
   <div class="service-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
-      <div
-        class="grafana-container"
-        v-for="(service, idx) in grafanaService"
-        :key="idx"
-      >
+      <div class="grafana-header">
         <div class="icon-box">
-          <img :src="service.icon" alt="icon" />
+          <img :src="grafanaService.icon" alt="icon" />
         </div>
         <div class="title-box">
           <span class="service-name">GRAFANA</span>
@@ -18,40 +14,37 @@
             <img src="/img/icon/service-icons/discord.png" alt="icon" />
           </div>
         </div>
-        <div class="btn-box">
-          <a class="btn" :href="service.linkUrl" target="_blank"
-            >open default browser</a
-          >
-        </div>
+      </div>
+      <div class="btn-box">
+        <a class="btn" :href="grafanaService.linkUrl" target="_blank"
+          >open default browser</a
+        >
       </div>
     </div>
   </div>
 </template>
 <script>
 import { mapState } from "pinia";
-import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
 export default {
   data() {
     return {
-      grafanaService: [],
+      grafanaService: {},
       isGrafanaAvailable: false,
     };
   },
-  created() {
+  mounted() {
     this.filterGrafanaService();
   },
   computed: {
-    ...mapState(useNodeHeader,{
-      services: "services",
-      runningServices: "runningServices",
+    ...mapState(useServices, {
+      allServices: "allServices",
     }),
   },
   methods: {
     filterGrafanaService() {
-      this.runningServices.forEach((service) => {
-        if (service.service === "GrafanaService") {
-          this.grafanaService.push(service);
-        }
+      this.allServices.forEach((item) => {
+        if (item.name === "Grafana") this.grafanaService = item;
       });
       this.isGrafanaAvailable = true;
     },
@@ -78,6 +71,7 @@ export default {
   left: 0;
   top: 0;
   z-index: 102;
+  cursor: default;
 }
 .browser-modal {
   width: 60%;
@@ -85,104 +79,111 @@ export default {
   background-color: #1b1b1b;
   border: 5px solid rgb(161, 161, 161);
   box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
-  border-radius: 35px;
+  border-radius: 30px;
   position: absolute;
   top: 11%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 103;
-}
-grafana-modal {
   z-index: 105;
+  cursor: default;
 }
-.grafana-container {
+
+.grafana-header {
   width: 100%;
-  height: 100%;
+  height: 20%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  z-index: 106;
+  grid-template-columns: repeat(5, 1fr);
+  position: relative;
+  z-index: 102;
 }
 .icon-box {
   grid-column: 1;
   grid-row: 1;
-  padding: 10px;
   width: 100%;
-  height: 100%;
+  margin-top: 5px;
+  height: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .icon-box img {
-  width: 90%;
-  height: 98%;
-  margin-top: 6px;
-  z-index: 110;
+  margin: 10px 0 0 15px;
+  width: 65%;
+  height: 90%;
 }
 .title-box {
-  grid-column: 2/4;
+  grid-column: 1/4;
+  margin-left: 80px;
   grid-row: 1;
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
 }
 .title-box span {
+  width: 70%;
+  height: 35%;
+  text-align: center;
   color: rgb(226, 226, 226);
   text-transform: uppercase;
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 600;
 }
 .service-option {
-  width: 90%;
-  height: 50%;
+  width: 60%;
+  height: 35%;
+  margin-left: 16px;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  padding-left: 10px;
 }
 .service-option img {
-  width: 18%;
+  width: 11%;
   height: 70%;
+  margin-right: 15px;
 }
 
 .btn-box {
-  grid-column: 1/5;
-  grid-row: 3;
   width: 100%;
-  height: 100%;
+  height: 70%;
+  margin-top: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  z-index: 103;
 }
 .btn-box .btn {
-  width: 70%;
-  height: 40px;
-  background-color: #f37625;
+  width: 94%;
+  height: 35px;
+  margin-top: 20px;
+  background-color: #f17b2c;
   text-decoration: none;
-  border: 2px solid #f9b88d;
   border-radius: 10px;
-  box-shadow: inset 1px 1px 5px #fac7a5;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: #fff;
-  font-size: 1.1rem;
+  color: rgb(59, 59, 59);
+  font-size: 1rem;
   font-weight: 700;
   text-transform: uppercase;
   transition-duration: all 200ms;
 }
 .btn:active {
   box-shadow: inset 2px 2px 15px #1d130d;
-  color: rgb(218, 218, 218);
+  transform: scale(0.99);
 }
 .btn:hover {
+  transition-duration: 100ms;
+  color: rgb(209, 209, 209);
   border: 2px solid #f9b88d;
   box-shadow: none;
   background-color: rgb(230, 127, 58) 5;

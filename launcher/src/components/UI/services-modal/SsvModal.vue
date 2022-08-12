@@ -4,7 +4,7 @@
     <div class="browser-modal">
       <div class="ssv-header">
         <div class="icon-box">
-          <img src="/img/icon/service-icons/ssv.png" alt="icon" />
+          <img src="/img/icon/service-icons/ssv-network.png" alt="icon" />
         </div>
         <div class="network-icon">
           <img
@@ -13,7 +13,7 @@
           />
         </div>
         <div class="title-box">
-          <span class="service-name">SSV NETWORK</span>
+          <span class="service-name">ssv.network</span>
           <div class="service-option">
             <img src="/img/icon/service-icons/internet.png" alt="icon" />
             <img src="/img/icon/service-icons/github1.png" alt="icon" />
@@ -92,15 +92,15 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let blox = this.runningServices.find(
-        (service) => service.service === "BloxSSVService"
+      let ssv = this.runningServices.find(
+        (service) => service.service === "SSVNetworkService"
       );
-      this.ssvService = blox;
-      let bloxConfig = await ControlService.getServiceConfig(
-        blox.config.serviceID
+      this.ssvService = ssv;
+      let ssvConfig = await ControlService.getServiceConfig(
+        ssv.config.serviceID
       );
-      this.secretkey = bloxConfig.ssv_sk;
-      this.pubkey = bloxConfig.ssv_pk;
+      this.secretkey = ssvConfig.ssv_sk;
+      this.pubkey = ssvConfig.ssv_pk;
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;
@@ -112,8 +112,8 @@ export default {
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = true;
     },
-    loginWithSecretkeyHandler: async function() {
-      await this.getKeys()
+    loginWithSecretkeyHandler: async function () {
+      await this.getKeys();
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = false;
@@ -178,14 +178,15 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  margin: 8px 10px;
+  margin: 10px 0 0 15px;
   width: 58%;
   height: 86%;
 }
 .title-box {
-  grid-column: 2/5;
+  grid-column: 1/5;
+  margin-left: 80px;
   grid-row: 1;
-  width: 90%;
+  width: 70%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -236,11 +237,11 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  left: 41%;
-  top: 52%;
+  left: 37%;
+  top: 47%;
 }
 .network-icon img {
-  width: 73%;
-  height: 73%;
+  width: 68%;
+  height: 68%;
 }
 </style>

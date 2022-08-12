@@ -44,7 +44,7 @@
 
     - name: Create SSV config file
       file:
-        path: "/opt/app/services/{{ ssv_service }}/data/blox/ssv"
+        path: "/opt/app/services/{{ ssv_service }}/data"
         state: directory
         recurse: yes
         owner: "2000"
@@ -54,7 +54,7 @@
     - name: Write SSV configuration
       ansible.builtin.copy:
         content: "{{ ssv_config }}"
-        dest: "/opt/app/services/{{ ssv_service }}/data/blox/ssv/config.yaml"
+        dest: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
         owner: "2000"
         group: "2000"
         mode: 0644
@@ -74,6 +74,7 @@
             state: started
             configuration:
               id: "{{ beacon_service }}"
+              service: TekuBeaconService
               image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
               ports:
                 - 0.0.0.0:9001:9001/tcp
@@ -86,7 +87,7 @@
                 --network=prater
                 --p2p-enabled=true
                 --p2p-port=9001
-                --eth1-endpoint=http://10.10.0.3:8545
+                --ee-endpoint=http://10.10.0.3:8545
                 --metrics-enabled=true
                 --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 --metrics-port=8008

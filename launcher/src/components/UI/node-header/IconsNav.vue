@@ -1,31 +1,14 @@
 <template>
   <div class="icons-box">
-    <div
-      class="icon-btn"
-      @mouseover="showHelpText = true"
-      @mouseleave="showHelpText = false"
-    >
+    <div class="icon-btn">
       <img alt="help-icon" src="/img/icon/header-icons/question-mark.png" />
-      <span class="help-text" v-if="showHelpText">Help</span>
     </div>
 
-    <div
-      class="icon-btn"
-      @mouseover="showNotifText = true"
-      @mouseleave="showNotifText = false"
-    >
+    <div class="icon-btn">
       <img alt="Login" src="/img/icon/header-icons/megaphone9.png" />
-      <span class="notif-text" v-if="showNotifText">Notifications</span>
     </div>
-    <div
-      class="icon-btn"
-      @click="updateModalHandler"
-      v-if="isUpdateAvailable"
-      @mouseover="showUpdateText = true"
-      @mouseleave="showUpdateText = false"
-    >
+    <div class="icon-btn" @click="updateModalHandler" v-if="isUpdateAvailable">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
     <div
       class="icon-btn"
@@ -35,78 +18,83 @@
       @mouseleave="showUpdateText = false"
     >
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
-      <span class="update-text" v-if="showUpdateText">Update</span>
     </div>
 
-    <div
-      class="icon-btn"
-      @mouseover="showSettingText = true"
-      @mouseleave="showSettingText = false"
-    >
-      <img alt="Login" src="/img/icon/header-icons/setting4.png" />
-      <span class="setting-text" v-if="showSettingText">Setting</span>
-    </div>
+    <router-link to="/setting" class="icon-btn">
+      <div>
+        <img alt="Login" src="/img/icon/header-icons/setting4.png" />
+      </div>
+    </router-link>
 
-    <div
-      class="icon-btn"
-      @mouseover="showExitText = true"
-      @mouseleave="showExitText = false"
-    >
+    <div class="icon-btn">
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
-      <span class="exit-text" v-if="showExitText">Exit</span>
     </div>
-    <update-modal
-      @remove-modal="removeModalHandler"
+    <update-panel
+      v-if="displayUpdatePanel"
       @update-confirm="updateConfirmationHandler"
-      v-if="showUpdateModal"
-    ></update-modal>
-    <update-waiting v-if="updateWaitingModal"></update-waiting>
+      @run-update="runUpdate"
+      @update-all="runAllUpdates"
+      @click-out="removeUpdateModal"
+      :class="{ 'updatePanel-show': displayUpdatePanel }"
+    ></update-panel>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import UpdateModal from "./UpdateModal.vue";
-import UpdateWaiting from "./UpdateWaiting.vue";
+import UpdatePanel from "./UpdatePanel.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
-  components: { UpdateModal, UpdateWaiting },
+  components: { UpdatePanel },
   data() {
     return {
-      showUpdateModal: false,
-      showHelpText: false,
-      showExitText: false,
-      showSettingText: false,
-      showUpdateText: false,
-      showNotifText: false,
-      updateWaitingModal: false,
+      displayUpdatePanel: false,
     };
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-        isUpdateAvailable: "isUpdateAvailable",
+      forceUpdateCheck: "forceUpdateCheck",
+      isUpdateAvailable: "isUpdateAvailable",
+      updating: "updating",
     }),
     ...mapWritableState(useServices, {
-        versions: "versions",
+      newUpdates: "newUpdates",
+      versions: "versions",
     }),
   },
   methods: {
     runAllUpdates: async function () {
-        await ControlService.runAllUpdates();
+      await ControlService.runAllUpdates();
     },
     updateModalHandler() {
-      this.showUpdateModal = true;
+      this.displayUpdatePanel = !this.displayUpdatePanel;
     },
-    removeModalHandler() {
-      this.showUpdateModal = false;
+    removeUpdateModal() {
+      this.displayUpdatePanel = false;
     },
     updateConfirmationHandler: async function () {
-      this.showUpdateModal = false;
+      this.displayUpdatePanel = false;
       this.updateWaitingModal = true;
+      this.updating = true;
       await this.runAllUpdates();
-      this.versions = {}
+      this.updating = false;
+      this.versions = {};
       this.updateWaitingModal = false;
+    },
+    async runUpdate(item) {
+      item.running = true;
+      if (item && item.id) {
+        this.updating = true;
+        await ControlService.updateServices({ service: item.id });
+        this.updating = false;
+        this.forceUpdateCheck = true;
+      } else if (item && item.commit) {
+        this.updating = true;
+        await ControlService.updateStereum({ commit: item.commit });
+        this.updating = false;
+        this.forceUpdateCheck = true;
+      }
     },
   },
 };
@@ -130,6 +118,13 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.icon-btn div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .icon-btn {
   width: 14%;
@@ -220,5 +215,9 @@ export default {
   bottom: -10px;
   left: 6px;
   transition-duration: 500ms;
+}
+.updatePanel-show {
+  transition-duration: 500ms;
+  right: 0 !important;
 }
 </style>

@@ -30,7 +30,7 @@ const validatorAccountManager = new ValidatorAccountManager(
 
 const log = require("electron-log");
 log.transports.console.level = "info"
-log.transports.file.level = "info"
+log.transports.file.level = "debug"
 
 let remoteHost = {};
 
@@ -133,7 +133,7 @@ promiseIpc.on("prepareOneClickInstallation", async (arg) => {
 });
 
 promiseIpc.on("writeOneClickConfiguration", async (args) => {
-  await oneClickInstall.createServices(args.array.map(service => {return service.service}));
+  await oneClickInstall.createServices(args.array.map(service => {return service.service}),args.checkpointURL);
   return await oneClickInstall.writeConfig();
 });
 
@@ -146,6 +146,10 @@ promiseIpc.on("startOneClickServices", async () => {
 //get data for control cpu comp
 promiseIpc.on("getServerVitals", async () => {
   return await monitoring.getServerVitals();
+});
+
+promiseIpc.on("getServerName", async () => {
+  return await monitoring.getServerName();
 });
 
 promiseIpc.on("getAvailablePort", async (args) => {
@@ -194,6 +198,9 @@ promiseIpc.on("manageServiceState", async (args) => {
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true
   const returnValue = await nodeConnection.runAllUpdates()
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
   return returnValue
 })
@@ -210,6 +217,9 @@ promiseIpc.on("updateServices", async (args) => {
 promiseIpc.on("updateStereum", async (args) => {
   app.showExitPrompt = true
   await nodeConnection.updateStereum(args.commit)
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
+  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false
 })
 
@@ -239,16 +249,21 @@ promiseIpc.on("clearTasks", async () => {
   return await taskManager.clearTasks()
 })
 
-promiseIpc.on("insertBloxSSVKeys", async (args) => {
-  return await validatorAccountManager.insertBloxSSVKeys(args.service, args.pk)
+promiseIpc.on("insertSSVNetworkKeys", async (args) => {
+  return await validatorAccountManager.insertSSVNetworkKeys(args.service, args.pk)
 })
 
 promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos()
 })
 
+
 promiseIpc.on("addFeeRecipient", async (args) => {
   return await validatorAccountManager.addFeeRecipient(args.keys, args.address)
+})
+
+promiseIpc.on("getOperatorPageURL", async (args) => {
+  return await validatorAccountManager.getOperatorPageURL(args)
 })
 
 // Scheme must be registered before the app is ready
@@ -258,11 +273,12 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
   // Create the browser window.
+
   const win = new BrowserWindow({
-    width: 1024,
-    height: 607,
-    minWidth: 1024,
-    minHeight: 607,
+    width: 1044,
+    height: 609,
+    minWidth: 1044,
+    minHeight: 609,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -271,7 +287,7 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  win.setMinimumSize(1024, 607);
+  win.setMinimumSize(1044, 609);
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
@@ -280,7 +296,7 @@ async function createWindow() {
     if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol("app");
-    // Load the index.html when not in development
+    // Load the index.html when not in developmen
     win.loadURL("app://./index.html");
     // win.webContents.openDevTools()
   }
