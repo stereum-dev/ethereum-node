@@ -12,12 +12,24 @@
         </div>
         <div class="stereum-updateBox">
           <div class="versionBox">
-            <span id="current">current version:</span>
-            <span id="latest">latest version:</span>
-            <span id="autoUpdate">auto-update:</span>
-            <span id="currentValue">{{ stereumUpdate.current }}</span>
-            <span id="latestValue">{{ stereumUpdate.version }}</span>
-            <span id="updateStatus">{{ stereumApp.autoUpdate }}</span>
+            <div id="current">
+              <span>current:</span>
+            </div>
+            <div id="latest">
+              <span>latest:</span>
+            </div>
+            <div id="autoUpdate">
+              <span>auto-update:</span>
+            </div>
+            <div id="currentValue">
+              <span>{{ stereumApp.current }}</span>
+            </div>
+            <div id="latestValue">
+              <span>{{ stereumApp.latest }}</span>
+            </div>
+            <div id="updateStatus">
+              <span>{{ stereumApp.autoUpdate }}</span>
+            </div>
           </div>
           <div class="btnBox">
             <div class="searchBtn">
@@ -61,18 +73,22 @@
                 v-for="(item, index) in newUpdates"
                 :key="index"
               >
-              <div v-if="item.running" class="downloadBtnDisabled">
-                <img
-                  src="/img/icon/node-journal-icons/download_disabled.png"
-                  alt="icon"
-                />
-              </div>
-              <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
-              </div>
+                <div v-if="item.running" class="downloadBtnDisabled">
+                  <img
+                    src="/img/icon/node-journal-icons/download_disabled.png"
+                    alt="icon"
+                  />
+                </div>
+                <div
+                  v-else
+                  class="downloadBtn"
+                  @click="$emit('runUpdate', item)"
+                >
+                  <img
+                    src="/img/icon/node-journal-icons/download2.png"
+                    alt="icon"
+                  />
+                </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
                 </div>
@@ -216,10 +232,11 @@ export default {
 
 .stereum-updateBox .versionBox {
   width: 50%;
-  height: 100%;
+  height: 80%;
   display: grid;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 46% 54%;
   grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
 }
 .stereum-updateBox .versionBox #current {
   grid-column: 1/2;
@@ -232,16 +249,24 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .versionBox #currentValue {
+  width: 100%;
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: center;
+  justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 .stereum-updateBox .versionBox #latest {
   grid-column: 1/2;
@@ -254,16 +279,24 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.stereum-updateBox .versionBox #latestValue{
+.stereum-updateBox .versionBox #latestValue {
+  width: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: center;
+  justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
@@ -276,16 +309,22 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .versionBox #updateStatus {
   grid-column: 2/3;
   grid-row: 3/4;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   color: #37614b;
   justify-self: center;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .btnBox {
   width: 50%;
