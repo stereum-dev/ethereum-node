@@ -515,12 +515,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .availableTable .tableContent .tableRow .version span {
   font-size: 0.8rem;
   font-weight: 500;
   color: #b4b443;
   text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .service-updateBox .availableTable .btnBox {
   width: 100%;
