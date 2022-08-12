@@ -151,7 +151,6 @@ export default {
     return {
       genesisIsActive: true,
       checkPointIsActive: false,
-      checkPointSync: null,
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
@@ -171,6 +170,7 @@ export default {
       selectedPreset: "selectedPreset",
       plugins: "presets",
       installationPath: "installationPath",
+      checkPointSync: "checkPointSync",
     }),
     ...mapWritableState(useServices, {
       allPlugins: "allServices",

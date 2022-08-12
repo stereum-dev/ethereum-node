@@ -67,6 +67,7 @@ export default {
     ...mapWritableState(useClickInstall, {
       installationPath: "installationPath",
       selectedPreset: "selectedPreset",
+      checkPointSync: "checkPointSync",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -85,7 +86,7 @@ export default {
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: ""});
+      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: this.checkPointSync});
       await ControlService.startOneClickServices()
     },
   },
