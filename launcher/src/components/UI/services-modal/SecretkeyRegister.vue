@@ -47,7 +47,7 @@ export default {
       }
     },
     insertKey: async function(data){
-      const result = await ControlService.insertBloxSSVKeys({service: toRaw(this.ssvService), pk: data.enteredSecretkey})
+      const result = await ControlService.insertSSVNetworkKeys({service: toRaw(this.ssvService), pk: data.enteredSecretkey})
         if (result && result.stack && result.message) {
           console.log("importing Keys failed")
           //implement error msg here

@@ -50,7 +50,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 1,
-          name: "ssv network",
+          name: "ssv.network",
           network: "testnet",
           networkIcon: require("../../public/img/icon/click-installation/testnet-icon.png"),
           defaultPath: "/opt/stereum",
@@ -60,7 +60,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 5,
-          name: "ssv network",
+          name: "ssv.network",
           network: "mainnet",
           networkIcon: require("../../public/img/icon/click-installation/testnet-icon.png"),
           defaultPath: "/opt/stereum",

@@ -2,7 +2,7 @@ import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconSer
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
 import { GethService } from './ethereum-services/GethService'
 import { BesuService } from './ethereum-services/BesuService'
-import { BloxSSVService } from './ethereum-services/BloxSSVService'
+import { SSVNetworkService } from './ethereum-services/SSVNetworkService'
 import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
 import { PrometheusService } from './ethereum-services/PrometheusService'
 import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
@@ -97,8 +97,8 @@ export class ServiceManager {
             services.push(BesuService.buildByConfiguration(config))
           } else if (config.service == 'NethermindService') {
             services.push(NethermindService.buildByConfiguration(config))
-          } else if (config.service == 'BloxSSVService') {
-            services.push(BloxSSVService.buildByConfiguration(config))
+          } else if (config.service == 'SSVNetworkService') {
+            services.push(SSVNetworkService.buildByConfiguration(config))
           } else if (config.service == 'NimbusBeaconService') {
             services.push(NimbusBeaconService.buildByConfiguration(config))
           } else if (config.service == 'PrometheusService') {

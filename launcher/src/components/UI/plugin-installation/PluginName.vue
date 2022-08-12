@@ -262,12 +262,12 @@ export default {
         case "staking":
           filter = (item) =>
             item.category === element.category &&
-            item.service !== "BloxSSVService";
+            item.service !== "SSVNetworkService";
           break;
-        case "blox ssv":
+        case "ssv.network":
           filter = (item) => {
             if (element.category === "validator") {
-              return item.service === "BloxSSVService";
+              return item.service === "SSVNetworkService";
             }
             return item.category === element.category;
           };

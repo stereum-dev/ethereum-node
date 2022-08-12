@@ -7,7 +7,7 @@ export const useNodeManage = defineStore("nodeManage", {
       clickPresets: [
         {
           id: 1,
-          name: "ssv network",
+          name: "ssv.network",
           category: "execution",
           defaultPath: "/opt/stereum",
           icon: require("../../public/img/icon/click-installation/ssv-network.png"),

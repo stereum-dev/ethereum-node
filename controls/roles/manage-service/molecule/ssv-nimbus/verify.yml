@@ -19,7 +19,7 @@
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
   # ssv config file
-  - stat: path=/opt/app/services/52d77bd0-7e13-11ec-a95e-bb669ccf3e66/data/blox/ssv/config.yaml
+  - stat: path=/opt/app/services/52d77bd0-7e13-11ec-a95e-bb669ccf3e66/data/config.yaml
     register: ssv_config_file
   - debug:
       msg: "{{ ssv_config_file }}"
@@ -52,13 +52,13 @@
       - beacon.stdout is not search('current_peers=0')
     retries: 360
     delay: 10
-  - name: Blox-SSV beacon node connection
+  - name: SSV-Network beacon node connection
     command: "docker logs stereum-52d77bd0-7e13-11ec-a95e-bb669ccf3e66"
-    register: blox_ssv
+    register: ssv_network
     until:
-      - blox_ssv.stdout is search('discovery is ready')
-      - blox_ssv.stdout is search('p2p services were configured')
-      - blox_ssv.stdout is not search('ERROR')
+      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('p2p services were configured')
+      - ssv_network.stdout is not search('ERROR')
     retries: 360
     delay: 10
   # container's images & ports
@@ -69,7 +69,7 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("9190->9190") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1

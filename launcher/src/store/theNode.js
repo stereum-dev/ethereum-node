@@ -182,7 +182,7 @@ export const useNodeStore = defineStore("theNode", {
         },
         {
           id: 3,
-          name: "Use SSV network",
+          name: "Use ssv.network",
         },
         {
           id: 4,
@@ -239,7 +239,7 @@ export const useNodeStore = defineStore("theNode", {
           status: "deactive",
         },
       ],
-      bloxUrl: {
+      ssvNetworkUrl: {
         operatorUrl: "https://www.google.com/",
         grafanaDashboardUrl: "https://www.google.com",
       },

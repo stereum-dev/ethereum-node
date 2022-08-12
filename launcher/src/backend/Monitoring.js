@@ -32,7 +32,7 @@ export class Monitoring {
         await this.serviceManager.readServiceConfigurations()
       ).filter((s) => s.service != "PrometheusNodeExporterService");
       const serviceStates = await this.nodeConnection.listServices();
-      if (serviceConfigs && serviceConfigs.length > 0) {
+      if (serviceConfigs && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
         let newInfo = serviceConfigs.map((config) => {
           const newState = serviceStates.find(
             (state) => state.Names.replace("stereum-", "") === config.id

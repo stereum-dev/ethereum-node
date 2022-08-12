@@ -80,7 +80,7 @@ export default {
         item.service == serviceName;
         if (serviceName == "GrafanaService") {
           this.showGrafanaWindow = true;
-        } else if (serviceName == "BloxSSVService") {
+        } else if (serviceName == "SSVNetworkService") {
           this.showSsvWindow = true;
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;

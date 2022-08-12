@@ -52,8 +52,8 @@ Milestones build on top of the features of previous milestones.
   - Solo staking: Staking validator accounts on Lighthouse, Nimbus, Prysm and Teku
   - Basic monitoring capabilities
 - [![beta2.0-bloxssv](https://img.shields.io/badge/milestone-beta2.0--bloxssv-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/3): Suitable for testnet, adding e. g. use cases & features:
-  - Blox SSV: Setup an operator and connect to Lighthouse, Nimbus, Prysm or Teku
-  - Blox SSV dashboard
+  - ssv.network: Setup an operator and connect to Lighthouse, Nimbus, Prysm or Teku
+  - ssv.network dashboard
   - Fix Grafana dashboards
   - Besu support
   - Nethermind support
@@ -77,7 +77,7 @@ Milestones build on top of the features of previous milestones.
   - flexible selection of services
   - switch clients/networks on the fly
   - multiple exeuction/consensus clients
-  - ssv support (blox/obol)
+  - ssv support (ssv.network/obol)
   - one-click-installation
   - enhanced slashing protection on import
   - naming & grouping validators
