@@ -9,18 +9,15 @@
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ formatData(parseInt(availDisk)) }} GB FREE</span>
+          <span>{{ availDisk }} GB FREE</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ formatData(parseInt(availDisk) + parseInt(usedDisk)) }} GB TOTAL</span>
+          <span>/ {{ totalDisk }} GB TOTAL</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">
             <div class="valueBarPart_loader_value_bg">
-              <div
-                class="valueBarPart_loader-value"
-                :style="getPerc"
-              ></div>
+              <div class="valueBarPart_loader-value" :style="getPerc"></div>
             </div>
           </div>
         </div>
@@ -29,29 +26,23 @@
   </div>
 </template>
 <script>
-import { useControlStore } from '../../../store/theControl';
-import { mapState } from 'pinia';
+import { useControlStore } from "../../../store/theControl";
+import { mapState } from "pinia";
 export default {
   data() {
     return {};
   },
-    computed: {
+  computed: {
     ...mapState(useControlStore, {
       availDisk: "availDisk",
-      usedDisk: "usedDisk",
+      totalDisk: "totalDisk",
       usedPerc: "usedPerc",
     }),
-    getPerc(){
-      if(this.usedPerc){
-        return { width: (100 - parseInt(this.usedPerc.replace('%',''))) + '%'}
-      }
+    availableDisk() {},
+    getPerc() {
+      return { width: 100 - parseInt(this.usedPerc) + "%" };
     },
   },
-  methods: {
-    formatData(data){
-      return Math.ceil(data/1048576)
-    },
-  }
 };
 </script>
 <style scoped>

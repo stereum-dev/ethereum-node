@@ -58,13 +58,13 @@ export class Monitoring {
   }
 
   async getServerName() {
-    const serverName = await this.nodeConnection.sshService.exec('hostname')
-    return serverName
+    const serverName = await this.nodeConnection.sshService.exec("hostname");
+    return serverName;
   }
 
   //serverNmae
   //totalRam, usedRam
-  //availDisk, usedDisk, used%
+  //Total, usedDisk, used%
   //CPUusage
   //rx tx
   //readSpeed writeSpeed
@@ -72,7 +72,7 @@ export class Monitoring {
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df -k |tail -n +2 | awk '{if ($6 == "/") {print $3" "$4" "$5}; }'
+        df --total -h --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
         sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
         sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p' &&
         rm -rf disks &&
@@ -99,17 +99,15 @@ export class Monitoring {
       ServerName: arr[0],
       totalRam: arr[1].split(" ")[0],
       usedRam: arr[1].split(" ")[1],
-      usedDisk: arr[2].split(" ")[0],
-      availDisk: arr[2].split(" ")[1],
+      totalDisk: parseInt(arr[2].split(" ")[0]),
+      availDisk: parseInt(arr[2].split(" ")[1]),
       usedPerc: arr[2].split(" ")[2],
       cpu: arr[3],
       rx: arr[4].split(" ")[0],
       tx: arr[4].split(" ")[1],
-      readValue: arr[5].split(' ')[1],
+      readValue: arr[5].split(" ")[1],
       writeValue: arr[5].split(" ")[2],
     };
-     
-     return data;
-  
+    return data;
   }
 }

@@ -90,4 +90,10 @@ export default {
   cursor: pointer;
   font-weight: 600;
 }
+.dataApi-data:hover,
+.dataApi-data:active {
+  color: rgb(246, 250, 141);
+  font-weight: 800;
+  background: #313131;
+}
 </style>
