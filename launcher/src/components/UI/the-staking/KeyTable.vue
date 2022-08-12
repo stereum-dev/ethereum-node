@@ -231,7 +231,7 @@ export default {
       pendingStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png",
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
-      apiProblems: "/img/icon/no-connection.png",
+      apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
     };
   },
