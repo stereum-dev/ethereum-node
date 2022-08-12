@@ -516,6 +516,7 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 .availableTable .tableContent .tableRow .version span {
@@ -524,6 +525,7 @@ export default {
   color: #b4b443;
   text-transform: uppercase;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 .service-updateBox .availableTable .btnBox {
