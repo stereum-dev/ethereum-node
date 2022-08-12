@@ -171,7 +171,7 @@ export default {
   grid-column: 1;
   grid-row: 1;
   width: 100%;
-  margin-top: 5px;
+  margin-top: -1px;
   height: 90%;
   display: flex;
   justify-content: flex-start;
@@ -184,7 +184,7 @@ export default {
 }
 .title-box {
   grid-column: 1/5;
-  margin-left: 80px;
+  margin-left: 85px;
   grid-row: 1;
   width: 70%;
   height: 100%;
