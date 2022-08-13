@@ -12,8 +12,6 @@ provisioner:
   config_options:
     ssh_connection:
       ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
-  env:
-    ANSIBLE_PIPELINING: "True"
 lint: |
   set -e
   yamllint .
