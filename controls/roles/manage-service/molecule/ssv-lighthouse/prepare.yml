@@ -8,7 +8,7 @@
   vars:
     beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
     ssv_service: 1ce654a0-7162-11ec-91f3-8fdbc286367e
-    geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
+    geth_service: 9cb3b29a-f174-435a-9e58-9f2816c52c1b
     ssv_config: |
       eth2:
         Network: "prater"
