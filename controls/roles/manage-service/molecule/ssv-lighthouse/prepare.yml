@@ -8,16 +8,16 @@
   vars:
     beacon_service: d00ff1ae-7161-11ec-915c-0f48d393560f
     ssv_service: 1ce654a0-7162-11ec-91f3-8fdbc286367e
+    geth_service: 12ac7669-1874-426a-aae7-65c381ed1ec8
     ssv_config: |
       eth2:
         Network: "prater"
         BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
       eth1:
-        ETH1Addr: "ws://10.10.0.2:8545"
-        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+        ETH1Addr: "ws://stereum-{{ geth_service }}:8546"
       OperatorPrivateKey: ""
       global:
-        LogLevel: "debug"
+        LogLevel: "info"
       MetricsAPIPort: 15000
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -59,7 +59,47 @@
         mode: 0644
       become: yes
 
-    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --ws
+                - --ws.port=8546
+                - --ws.addr=0.0.0.0
+                - --ws.api="debug,eth,net,web3"
+                - --ws.origins=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -79,13 +119,12 @@
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
-                - 127.0.0.1:5052:5052/tcp
               command:
                 - lighthouse
                 - bn
-                - --debug-level=debug
+                - --debug-level=info
                 - --network=prater
-                - --eth1-endpoints=ws://10.10.0.2:8545
+                - --execution-endpoints=http://stereum-{{ geth_service }}:8551
                 - --eth1-blocks-per-log-query=150
                 - --datadir=/opt/app/beacon
                 - --http
@@ -97,8 +136,10 @@
                 - --slasher
                 - --slasher-dir=/opt/app/slasher
                 - --slasher-max-db-size=16
+                - --jwt-secrets=/engine.jwt
               entrypoint: []
               user: "2000"
               volumes:
-                - "/opt/app/services/{{ beacon_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ beacon_service }}/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ beacon_service }}/slasher:/opt/app/slasher"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
