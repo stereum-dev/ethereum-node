@@ -8,13 +8,13 @@
   vars:
     beacon_service: 995c224c-82e9-11ec-9115-2349bc4566fa
     ssv_service: 99e8942a-82e9-11ec-9f76-cbc103131365
+    geth_service: c41a8602-e123-4f8e-9ada-b4d471afd863
     ssv_config: |
       eth2:
         Network: "prater"
         BeaconNodeAddr: "http://stereum-{{ beacon_service }}:3500"
       eth1:
-        ETH1Addr: "ws://10.10.0.2:8545"
-        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+        ETH1Addr: "ws://stereum-{{ geth_service }}:8546"
       OperatorPrivateKey: ""
       global:
         LogLevel: "debug"
@@ -60,6 +60,47 @@
         mode: 0644
       become: yes
 
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --ws
+                - --ws.port=8546
+                - --ws.addr=0.0.0.0
+                - --ws.api="debug,eth,net,web3"
+                - --ws.origins=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
     # prysm beacon service
     - block:
       - set_fact:
@@ -93,15 +134,16 @@
                 --monitoring-host=0.0.0.0
                 --grpc-gateway-host=0.0.0.0
                 --grpc-gateway-port=3500
-                --p2p-max-peers=100
-                --http-web3provider=http://10.10.0.3:8545
+                --http-web3provider=http://stereum-{{ geth_service }}:8551
                 --prater=true
                 --fallback-web3provider=[]
                 --block-batch-limit=512
                 --p2p-udp-port=12001
                 --p2p-tcp-port=13001
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ beacon_service }}/genesis:/opt/app/genesis"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
