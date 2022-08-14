@@ -8,13 +8,13 @@
   vars:
     beacon_service: 731c4b72-7f7c-11ec-b824-c304f53cda24
     ssv_service: f6a89270-7fa4-11ec-9378-fbd364d02350
+    geth_service: b0ece243-bfce-49ea-a2d8-7986ff3bc708
     ssv_config: |
       eth2:
         Network: "prater"
         BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5051"
       eth1:
-        ETH1Addr: "ws://10.10.0.2:8545"
-        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+        ETH1Addr: "ws://stereum-{{ geth_service }}:8546"
       OperatorPrivateKey: ""
       global:
         LogLevel: "debug"
@@ -60,6 +60,47 @@
         mode: 0644
       become: yes
 
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --ws
+                - --ws.port=8546
+                - --ws.addr=0.0.0.0
+                - --ws.api="debug,eth,net,web3"
+                - --ws.origins=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
     # teku beacon service
     - block:
       - set_fact:
@@ -87,7 +128,7 @@
                 --network=prater
                 --p2p-enabled=true
                 --p2p-port=9001
-                --ee-endpoint=http://10.10.0.3:8545
+                --ee-endpoint=http://stereum-{{ geth_service }}:8551
                 --metrics-enabled=true
                 --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 --metrics-port=8008
@@ -103,3 +144,4 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/data/teku:/opt/app/data"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
