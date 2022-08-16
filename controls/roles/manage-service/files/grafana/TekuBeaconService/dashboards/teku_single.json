@@ -164,7 +164,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "validator_local_validator_count{instance=\"$system\"}",
+          "expr": "validator_local_validator_count",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -227,7 +227,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_block_total{instance=\"$system\"}",
+          "expr": "validator_beacon_node_published_block_total",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -290,7 +290,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_attestation_total{instance=\"$system\"}",
+          "expr": "validator_beacon_node_published_attestation_total",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -353,7 +353,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_aggregate_total{instance=\"$system\"}",
+          "expr": "validator_beacon_node_published_aggregate_total",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -418,7 +418,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_current_active_validators{instance=\"$system\"}",
+          "expr": "beacon_current_active_validators",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -481,19 +481,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_included_attestations{instance=\"$system\"} / validator_local_validator_count{instance=\"$system\"}",
+          "expr": "validator_performance_included_attestations / validator_local_validator_count",
           "interval": "",
           "legendFormat": "Included",
           "refId": "C"
         },
         {
-          "expr": "validator_performance_correct_head_block_count{instance=\"$system\"} / validator_performance_included_attestations{instance=\"$system\"}",
+          "expr": "validator_performance_correct_head_block_count / validator_performance_included_attestations",
           "interval": "",
           "legendFormat": "Correct Head",
           "refId": "A"
         },
         {
-          "expr": "validator_performance_correct_target_count{instance=\"$system\"} / validator_performance_included_attestations{instance=\"$system\"}",
+          "expr": "validator_performance_correct_target_count / validator_performance_included_attestations",
           "interval": "",
           "legendFormat": "Correct Target",
           "refId": "B"
@@ -593,19 +593,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_inclusion_distance_min{instance=\"$system\"}",
+          "expr": "validator_performance_inclusion_distance_min",
           "interval": "",
           "legendFormat": "Minimum",
           "refId": "A"
         },
         {
-          "expr": "validator_performance_inclusion_distance_average{instance=\"$system\"}",
+          "expr": "validator_performance_inclusion_distance_average",
           "interval": "",
           "legendFormat": "Average",
           "refId": "B"
         },
         {
-          "expr": "validator_performance_inclusion_distance_max{instance=\"$system\"}",
+          "expr": "validator_performance_inclusion_distance_max",
           "interval": "",
           "legendFormat": "Maximum",
           "refId": "C"
@@ -705,7 +705,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_included_blocks{instance=\"$system\"} / validator_performance_expected_blocks{instance=\"$system\"}",
+          "expr": "validator_performance_included_blocks / validator_performance_expected_blocks",
           "interval": "",
           "legendFormat": "Included Blocks",
           "refId": "A"
@@ -894,7 +894,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_slot{instance=\"$system\"}",
+          "expr": "beacon_slot",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -957,7 +957,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_slot{instance=\"$system\"}",
+          "expr": "beacon_slot",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1020,7 +1020,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_current_justified_epoch{instance=\"$system\"}",
+          "expr": "beacon_current_justified_epoch",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1083,7 +1083,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_finalized_epoch{instance=\"$system\"}",
+          "expr": "beacon_finalized_epoch",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1157,7 +1157,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_peer_count{instance=\"$system\"}",
+          "expr": "beacon_peer_count",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1219,7 +1219,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_epoch{instance=\"$system\"}",
+          "expr": "beacon_epoch",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1286,7 +1286,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_slot{instance=\"$system\"} - beacon_head_slot{instance=\"$system\"}",
+          "expr": "beacon_slot - beacon_head_slot",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1353,7 +1353,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "clamp_min(beacon_epoch{instance=\"$system\"} - beacon_current_justified_epoch{instance=\"$system\"} - 1, 0)",
+          "expr": "clamp_min(beacon_epoch - beacon_current_justified_epoch - 1, 0)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1420,7 +1420,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "clamp_min(beacon_epoch{instance=\"$system\"} - beacon_finalized_epoch{instance=\"$system\"} - 2, 0)",
+          "expr": "clamp_min(beacon_epoch - beacon_finalized_epoch - 2, 0)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1494,7 +1494,7 @@
       "pluginVersion": "7.3.10",
       "targets": [
         {
-          "expr": "beacon_previous_correct_validators{instance=\"$system\"} / beacon_previous_active_validators{instance=\"$system\"}",
+          "expr": "beacon_previous_correct_validators / beacon_previous_active_validators",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1560,19 +1560,19 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beacon_slot{instance=\"$system\"} - beacon_head_slot{instance=\"$system\"}",
+          "expr": "beacon_slot - beacon_head_slot",
           "interval": "",
           "legendFormat": "Head Slot",
           "refId": "A"
         },
         {
-          "expr": "clamp_min(beacon_epoch{instance=\"$system\"} - beacon_current_justified_epoch{instance=\"$system\"} - 1, 0)",
+          "expr": "clamp_min(beacon_epoch - beacon_current_justified_epoch - 1, 0)",
           "interval": "",
           "legendFormat": "Justification Delay",
           "refId": "B"
         },
         {
-          "expr": "clamp_min(beacon_epoch{instance=\"$system\"} - beacon_finalized_epoch{instance=\"$system\"} - 2, 0)",
+          "expr": "clamp_min(beacon_epoch - beacon_finalized_epoch - 2, 0)",
           "interval": "",
           "legendFormat": "Finalisation Delay",
           "refId": "C"
@@ -1673,13 +1673,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beacon_previous_live_validators{instance=\"$system\"} / beacon_previous_active_validators{instance=~\"$system\"}",
+          "expr": "beacon_previous_live_validators / beacon_previous_active_validators",
           "interval": "",
           "legendFormat": "Live Validators",
           "refId": "A"
         },
         {
-          "expr": "beacon_previous_correct_validators{instance=\"$system\"} / beacon_previous_active_validators{instance=~\"$system\"}",
+          "expr": "beacon_previous_correct_validators / beacon_previous_active_validators",
           "interval": "",
           "legendFormat": "Correct Validators",
           "refId": "B"
@@ -1791,7 +1791,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(libp2p_gossip_messages_total{instance=~\"$system\"}[1m])",
+          "expr": "irate(libp2p_gossip_messages_total[1m])",
           "interval": "",
           "legendFormat": "{{topic}}",
           "refId": "A"
@@ -1981,7 +1981,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(process_cpu_seconds_total{instance=~\"$system\"}[1m])",
+          "expr": "irate(process_cpu_seconds_total[1m])",
           "interval": "",
           "legendFormat": "{{job}}",
           "refId": "C"
@@ -2081,31 +2081,31 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_pool_bytes_used{instance=\"$system\"}",
+          "expr": "jvm_memory_pool_bytes_used",
           "interval": "",
           "legendFormat": "{{job}} {{pool}} Used",
           "refId": "C"
         },
         {
-          "expr": "sum by (instance) (jvm_memory_pool_bytes_used{instance=\"$system\"})",
+          "expr": "sum by (instance) (jvm_memory_pool_bytes_used)",
           "interval": "",
           "legendFormat": "{{job}} {{pool}} Used Total",
           "refId": "A"
         },
         {
-          "expr": "process_resident_memory_bytes{instance=\"$system\"}",
+          "expr": "process_resident_memory_bytes",
           "interval": "",
           "legendFormat": "{{job}} {{pool}} Process Total",
           "refId": "B"
         },
         {
-          "expr": " (jvm_memory_pool_bytes_max{instance=\"$system\"})",
+          "expr": " (jvm_memory_pool_bytes_max)",
           "interval": "",
           "legendFormat": "{{job}} {{pool}} Max",
           "refId": "D"
         },
         {
-          "expr": "node_memory_MemTotal_bytes{instance=\"$system\"}",
+          "expr": "node_memory_MemTotal_bytes",
           "interval": "",
           "legendFormat": "System Memory",
           "refId": "E"
@@ -2205,7 +2205,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_collection_seconds_sum{instance=\"$system\"}[1m])",
+          "expr": "rate(jvm_gc_collection_seconds_sum[1m])",
           "interval": "",
           "legendFormat": "{{gc}}",
           "refId": "C"
