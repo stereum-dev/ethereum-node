@@ -55,9 +55,9 @@
     ansible.builtin.shell: docker logs stereum-f6a89270-7fa4-11ec-9378-fbd364d02350
     register: ssv_network
     until:
-      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('successfully connected to beacon client')
       - ssv_network.stdout is search('p2p services were configured')
-      - ssv_network.stdout is not search('ERROR')
+      - ssv_network.stdout is search('eth1 node is currently syncing')
     retries: 360
     delay: 10
   # container's images & ports
@@ -73,6 +73,6 @@
       - stereum_docker_ps.stdout.find("9001->9001") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3
 
 # EOF
