@@ -8,13 +8,13 @@
   vars:
     beacon_service: 493f2578-7e13-11ec-80bb-1b593d9699ff
     ssv_service: 52d77bd0-7e13-11ec-a95e-bb669ccf3e66
+    geth_service: f5918e33-96f7-4ebf-8420-35dca91a8265
     ssv_config: |
       eth2:
         Network: "prater"
         BeaconNodeAddr: "http://stereum-{{ beacon_service }}:5052"
       eth1:
-        ETH1Addr: "ws://10.10.0.2:8545"
-        RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
+        ETH1Addr: "ws://stereum-{{ geth_service }}:8546"
       OperatorPrivateKey: ""
       global:
         LogLevel: "debug"
@@ -60,6 +60,47 @@
         mode: 0644
       become: yes
 
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --ws
+                - --ws.port=8546
+                - --ws.addr=0.0.0.0
+                - --ws.api="debug,eth,net,web3"
+                - --ws.origins=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
     # nimbus beacon & validator service
     - block:
       - set_fact:
@@ -79,13 +120,12 @@
               ports:
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
-                - 127.0.0.1:9190:9190/tcp
               env: {}
               entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon
-                - --web3-url=ws://10.10.0.2:8545
+                - --web3-url=http://stereum-{{ geth_service }}:8551
                 - --tcp-port=9000
                 - --udp-port=9000
                 - --rpc
@@ -96,6 +136,8 @@
                 - --rest
                 - --rest-address=0.0.0.0
                 - --graffiti="stereum.net"
+                - --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/nimbus/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"

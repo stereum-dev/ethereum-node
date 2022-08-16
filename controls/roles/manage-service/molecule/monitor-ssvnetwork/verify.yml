@@ -33,7 +33,7 @@
         - grafana_datasource.stat.exists
   - name: Waiting for the services to start properly
     pause:
-      minutes: 1
+      seconds: 10
   #  grafana logs
   - name: Grafana
     command: "docker logs --tail=100 stereum-0af126fa-c881-456f-9388-e977fb1537bf"
@@ -51,7 +51,7 @@
     register: prometheus_up
     until:
       - prometheus_up.json.status == "success"
-      - prometheus_up.json.data.result | length == 4
+      - prometheus_up.json.data.result | length == 5
     retries: 10
     delay: 6
   # container's images & ports
@@ -61,6 +61,6 @@
       msg: "{{ stereum_docker_ps }}"
   - assert:
       that:
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 4
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 5
 
 # EOF
