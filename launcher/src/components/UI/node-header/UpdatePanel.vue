@@ -22,10 +22,10 @@
               <span>auto-update:</span>
             </div>
             <div id="currentValue">
-              <span>{{ stereumApp.current }}</span>
+              <span>{{ stereumUpdate.current }}</span>
             </div>
             <div id="latestValue">
-              <span>{{ stereumApp.latest }}</span>
+              <span>{{ stereumUpdate.version }}</span>
             </div>
             <div id="updateStatus">
               <span>{{ stereumApp.autoUpdate }}</span>
@@ -42,11 +42,13 @@
               />
             </div>
 
-            <div v-if="checkStereumUpdate()" class="available">
+            <div v-if="checkStereumUpdate" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
-              <span class="availableText">{{ stereumUpdate.version }} available</span>
+              <span class="availableText"
+                >{{ stereumUpdate.versions }} available</span
+              >
             </div>
           </div>
         </div>
@@ -112,7 +114,8 @@
           </div>
         </div>
       </div>
-    </div>£
+    </div>
+    £
   </div>
 </template>
 <script>
@@ -132,6 +135,7 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
+      stereumUpdate: "stereumUpdate",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
@@ -139,15 +143,15 @@ export default {
     }),
   },
   methods: {
-    checkStereumUpdate(){
-      if(this.stereumUpdate && this.stereumUpdate.version){
-        return true
+    checkStereumUpdate() {
+      if (this.stereumUpdate && this.stereumUpdate.version) {
+        return true;
       }
-      return false
-    }
+      return false;
+    },
   },
-  mounted(){
-    this.forceUpdateCheck = true
+  mounted() {
+    this.forceUpdateCheck = true;
   },
 };
 </script>
@@ -255,6 +259,7 @@ export default {
 }
 .stereum-updateBox .versionBox #currentValue {
   width: 100%;
+  height: 100%;
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 0.7rem;
@@ -282,9 +287,13 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 .stereum-updateBox .versionBox #latestValue {
   width: 100%;
+  height: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
   font-size: 0.7rem;
@@ -297,6 +306,16 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+#currentValue span,
+#latestValue span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #b4b443;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
