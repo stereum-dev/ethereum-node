@@ -87,7 +87,7 @@ export default {
       generalItems: [
         {
           id: 1,
-          title: "Leanguage Selection",
+          title: "Language Selection",
           itemType: "general",
           isLanguage: true,
         },
@@ -108,29 +108,23 @@ export default {
           itemType: "update",
           btnValue: "ALPHA",
         },
+
         {
           id: 2,
-          title: "Stereum Node Version",
-          isColor: "alpha",
-          itemType: "update",
-          btnValue: "ALPHA",
-        },
-        {
-          id: 3,
           title: "Stereum - Testing Lane",
           isColor: "off",
           itemType: "update",
           btnValue: "OFF",
         },
         {
-          id: 4,
+          id: 3,
           title: "Stereum Update Configuration",
           isColor: "manual",
           itemType: "update",
           btnValue: "MANUAL",
         },
         {
-          id: 5,
+          id: 4,
           title: "Plug-in / Service Update Configuration",
           isColor: "manual",
           itemType: "update",
@@ -151,6 +145,7 @@ export default {
     confirm() {
       // confirm method have to write here
       alert("Done!");
+      console.log(this.langName);
     },
     selectror() {
       if (this.langActive === true) {
