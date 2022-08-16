@@ -33,7 +33,6 @@
       v-if="displayUpdatePanel"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
-      @update-all="runAllUpdates"
       @click-out="removeUpdateModal"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
     ></update-panel>
@@ -86,7 +85,7 @@ export default {
       item.running = true;
       if (item && item.id) {
         this.updating = true;
-        await ControlService.updateServices({ service: item.id });
+        await ControlService.updateServices({ services: item.id });
         this.updating = false;
         this.forceUpdateCheck = true;
       } else if (item && item.commit) {

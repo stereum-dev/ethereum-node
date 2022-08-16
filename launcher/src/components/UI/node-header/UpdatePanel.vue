@@ -12,29 +12,41 @@
         </div>
         <div class="stereum-updateBox">
           <div class="versionBox">
-            <span id="current">current version:</span>
-            <span id="latest">latest version:</span>
-            <span id="autoUpdate">auto-update:</span>
-            <span id="currentValue">{{ stereumApp.current }}</span>
-            <span id="latestValue">{{ stereumApp.latest }}</span>
-            <span id="updateStatus">{{ stereumApp.autoUpdate }}</span>
+            <div id="current">
+              <span>current:</span>
+            </div>
+            <div id="latest">
+              <span>latest:</span>
+            </div>
+            <div id="autoUpdate">
+              <span>auto-update:</span>
+            </div>
+            <div id="currentValue">
+              <span>{{ stereumApp.current }}</span>
+            </div>
+            <div id="latestValue">
+              <span>{{ stereumApp.latest }}</span>
+            </div>
+            <div id="updateStatus">
+              <span>{{ stereumApp.autoUpdate }}</span>
+            </div>
           </div>
           <div class="btnBox">
             <div class="searchBtn">
               <img src="/img/icon/header-icons/search.png" alt="icon" />
             </div>
-            <div class="downloadBtn" @click.self="$emit('updateConfirm')">
+            <div class="downloadBtn" @click="$emit('runUpdate', stereumUpdate)">
               <img
                 src="/img/icon/node-journal-icons/download2.png"
                 alt="icon"
               />
             </div>
 
-            <div class="available">
+            <div v-if="checkStereumUpdate()" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
-              <span class="availableText">Update "2.0" available</span>
+              <span class="availableText">{{ stereumUpdate.version }} available</span>
             </div>
           </div>
         </div>
@@ -61,18 +73,22 @@
                 v-for="(item, index) in newUpdates"
                 :key="index"
               >
-              <div v-if="item.running" class="downloadBtnDisabled">
-                <img
-                  src="/img/icon/node-journal-icons/download_disabled.png"
-                  alt="icon"
-                />
-              </div>
-              <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
-              </div>
+                <div v-if="item.running" class="downloadBtnDisabled">
+                  <img
+                    src="/img/icon/node-journal-icons/download_disabled.png"
+                    alt="icon"
+                  />
+                </div>
+                <div
+                  v-else
+                  class="downloadBtn"
+                  @click="$emit('runUpdate', item)"
+                >
+                  <img
+                    src="/img/icon/node-journal-icons/download2.png"
+                    alt="icon"
+                  />
+                </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
                 </div>
@@ -82,7 +98,7 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="confirmUpdate" @click.self="$emit('updateAll')">
+              <div class="confirmUpdate" @click="$emit('updateConfirm')">
                 <span>update all</span>
                 <img
                   src="/img/icon/node-journal-icons/download2.png"
@@ -90,25 +106,26 @@
                 />
               </div>
               <div class="autoUpdateText">
-                <span>auto-update: ON</span>
+                <span>auto-update: OFF</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>£
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
       stereumApp: {
         current: "alpha",
         latest: "2.0",
-        autoUpdate: "on",
+        autoUpdate: "off",
       },
     };
   },
@@ -116,6 +133,21 @@ export default {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
     }),
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
+    }),
+  },
+  methods: {
+    checkStereumUpdate(){
+      if(this.stereumUpdate && this.stereumUpdate.version){
+        return true
+      }
+      return false
+    }
+  },
+  mounted(){
+    this.forceUpdateCheck = true
   },
 };
 </script>
@@ -200,10 +232,11 @@ export default {
 
 .stereum-updateBox .versionBox {
   width: 50%;
-  height: 100%;
+  height: 80%;
   display: grid;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 46% 54%;
   grid-template-rows: repeat(3, 1fr);
+  overflow: hidden;
 }
 .stereum-updateBox .versionBox #current {
   grid-column: 1/2;
@@ -216,16 +249,24 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .versionBox #currentValue {
+  width: 100%;
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: center;
+  justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 .stereum-updateBox .versionBox #latest {
   grid-column: 1/2;
@@ -238,16 +279,24 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.stereum-updateBox .versionBox #latestValue{
+.stereum-updateBox .versionBox #latestValue {
+  width: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: center;
+  justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
@@ -260,16 +309,22 @@ export default {
   margin-left: 5px;
   justify-self: flex-start;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .versionBox #updateStatus {
   grid-column: 2/3;
   grid-row: 3/4;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   color: #37614b;
   justify-self: center;
   align-self: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .stereum-updateBox .btnBox {
   width: 50%;
