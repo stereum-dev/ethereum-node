@@ -42,13 +42,11 @@
               />
             </div>
 
-            <div v-if="checkStereumUpdate" class="available">
+            <div v-if="checkStereumUpdate()" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
-              <span class="availableText"
-                >{{ stereumApp.latest }} available</span
-              >
+              <span class="availableText">{{ stereumUpdate.version }} available</span>
             </div>
           </div>
         </div>
@@ -114,8 +112,7 @@
           </div>
         </div>
       </div>
-    </div>
-    £
+    </div>£
   </div>
 </template>
 <script>
@@ -135,7 +132,6 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
-      stereumUpdate: "stereumUpdate",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
@@ -143,15 +139,15 @@ export default {
     }),
   },
   methods: {
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        return true;
+    checkStereumUpdate(){
+      if(this.stereumUpdate && this.stereumUpdate.version){
+        return true
       }
-      return false;
-    },
+      return false
+    }
   },
-  mounted() {
-    this.forceUpdateCheck = true;
+  mounted(){
+    this.forceUpdateCheck = true
   },
 };
 </script>
@@ -259,16 +255,12 @@ export default {
 }
 .stereum-updateBox .versionBox #currentValue {
   width: 100%;
-  height: 100%;
   grid-column: 2/3;
   grid-row: 1/2;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   justify-self: flex-start;
   align-self: center;
   overflow: hidden;
@@ -290,13 +282,9 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 }
 .stereum-updateBox .versionBox #latestValue {
   width: 100%;
-  height: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
   font-size: 0.7rem;
@@ -306,21 +294,9 @@ export default {
   justify-self: flex-start;
   align-self: center;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-}
-#currentValue span,
-#latestValue span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b4b443;
-  justify-self: center;
-  align-self: center;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
