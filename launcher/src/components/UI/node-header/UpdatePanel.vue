@@ -22,10 +22,10 @@
               <span>auto-update:</span>
             </div>
             <div id="currentValue">
-              <span>{{ stereumUpdate.current }}</span>
+              <span>{{ stereumApp.current }}</span>
             </div>
             <div id="latestValue">
-              <span>{{ stereumUpdate.version }}</span>
+              <span>{{ stereumApp.latest }}</span>
             </div>
             <div id="updateStatus">
               <span>{{ stereumApp.autoUpdate }}</span>
@@ -47,7 +47,7 @@
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
               <span class="availableText"
-                >{{ stereumUpdate.versions }} available</span
+                >{{ stereumApp.latest }} available</span
               >
             </div>
           </div>
@@ -266,6 +266,9 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   justify-self: flex-start;
   align-self: center;
   overflow: hidden;
@@ -303,12 +306,12 @@ export default {
   justify-self: flex-start;
   align-self: center;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 }
 #currentValue span,
 #latestValue span {
@@ -316,6 +319,8 @@ export default {
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
+  justify-self: center;
+  align-self: center;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
