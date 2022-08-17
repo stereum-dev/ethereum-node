@@ -196,6 +196,7 @@ jobs:
           {role: "manage-service", test: "monitor-prysm"},
           {role: "manage-service", test: "monitor-teku"},
           {role: "manage-service", test: "besu-lighthouse"},
+          {role: "manage-service", test: "mevboost-besu-lighthouse"},
           {role: "manage-service", test: "besu-nimbus"},
           {role: "manage-service", test: "besu-prysm"},
           {role: "manage-service", test: "besu-teku"},
