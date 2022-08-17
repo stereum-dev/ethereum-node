@@ -197,30 +197,30 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "rate(process_cpu_seconds_total{instance=\"${instance}\"}[$__rate_interval]) * 100",
+          "expr": "rate(process_cpu_seconds_total[$__rate_interval]) * 100",
           "legendFormat": "CPU usage %",
           "refId": "A"
         },
         {
-          "expr": "process_open_fds{instance=\"${instance}\"}",
+          "expr": "process_open_fds",
           "legendFormat": "open file descriptors",
           "refId": "C"
         },
         {
-          "expr": "process_resident_memory_bytes{instance=\"${instance}\"}",
+          "expr": "process_resident_memory_bytes",
           "legendFormat": "RSS",
           "refId": "D"
         },
         {
           "exemplar": true,
-          "expr": "sum(nim_gc_mem_bytes{instance=\"${instance}\"})",
+          "expr": "sum(nim_gc_mem_bytes)",
           "interval": "",
           "legendFormat": "Nim GC mem total",
           "refId": "F"
         },
         {
           "exemplar": true,
-          "expr": "sum(nim_gc_mem_occupied_bytes{instance=\"${instance}\"})",
+          "expr": "sum(nim_gc_mem_occupied_bytes)",
           "interval": "",
           "legendFormat": "Nim GC mem used",
           "refId": "G"
@@ -300,14 +300,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "version{instance=\"${instance}\"}",
+          "expr": "version",
           "interval": "",
           "legendFormat": "{{version}}",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "network_name{instance=\"${instance}\"}",
+          "expr": "network_name",
           "hide": false,
           "interval": "",
           "legendFormat": "{{name}}",
@@ -395,7 +395,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "libp2p_open_streams{instance=\"${instance}\"}",
+          "expr": "libp2p_open_streams",
           "interval": "",
           "legendFormat": "{{type}} ({{dir}})",
           "refId": "A"
@@ -495,7 +495,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "nim_gc_heap_instance_occupied_bytes{instance=\"${instance}\"}",
+          "expr": "nim_gc_heap_instance_occupied_bytes",
           "interval": "",
           "legendFormat": "{{type_name}}",
           "refId": "A"
@@ -583,19 +583,19 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "libp2p_peers{instance=\"${instance}\"}",
+          "expr": "libp2p_peers",
           "interval": "",
           "legendFormat": "libp2p peers",
           "refId": "A"
         },
         {
-          "expr": "libp2p_pubsub_peers{instance=\"${instance}\"}",
+          "expr": "libp2p_pubsub_peers",
           "interval": "",
           "legendFormat": "libp2p pubsub peers",
           "refId": "C"
         },
         {
-          "expr": "nbc_peers{instance=\"${instance}\"}",
+          "expr": "nbc_peers",
           "interval": "",
           "legendFormat": "beacon_node peers",
           "refId": "B"
@@ -714,14 +714,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(beacon_blocks_received_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_blocks_received_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "received",
           "refId": "B"
         },
         {
           "exemplar": true,
-          "expr": "rate(beacon_blocks_proposed_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_blocks_proposed_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "proposed",
           "refId": "A"
@@ -827,7 +827,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "libp2p_peers_identity{instance=\"${instance}\"}",
+          "expr": "libp2p_peers_identity",
           "interval": "",
           "legendFormat": "{{agent}}",
           "refId": "A"
@@ -921,14 +921,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(beacon_attestations_received_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_attestations_received_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "received",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "rate(beacon_attestations_sent_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_attestations_sent_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "sent",
           "refId": "B"
@@ -1034,7 +1034,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(libp2p_peers_traffic_read_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(libp2p_peers_traffic_read_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "{{agent}}",
           "refId": "A"
@@ -1128,7 +1128,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(beacon_aggregates_received_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_aggregates_received_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "received",
           "refId": "A"
@@ -1234,7 +1234,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(libp2p_peers_traffic_write_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(libp2p_peers_traffic_write_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "{{agent}}",
           "refId": "A"
@@ -1327,7 +1327,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "rate(attached_validator_balance_total{instance=\"${instance}\"}[$__rate_interval]) * 384 / 1000000000",
+          "expr": "rate(attached_validator_balance_total[$__rate_interval]) * 384 / 1000000000",
           "interval": "",
           "legendFormat": "GWei",
           "refId": "A"
@@ -1461,7 +1461,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "libp2p_gossipsub_healthy_peers_topics{instance=\"${instance}\"}",
+          "expr": "libp2p_gossipsub_healthy_peers_topics",
           "interval": "",
           "legendFormat": "healthy",
           "refId": "A"
@@ -1472,7 +1472,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "libp2p_gossipsub_low_peers_topics{instance=\"${instance}\"}",
+          "expr": "libp2p_gossipsub_low_peers_topics",
           "hide": false,
           "interval": "",
           "legendFormat": "low",
@@ -1484,7 +1484,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "libp2p_gossipsub_no_peers_topics{instance=\"${instance}\"}",
+          "expr": "libp2p_gossipsub_no_peers_topics",
           "hide": false,
           "interval": "",
           "legendFormat": "no peers",
@@ -1574,7 +1574,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "eth1_chain_len{instance=\"${instance}\"}",
+          "expr": "eth1_chain_len",
           "interval": "",
           "legendFormat": "Eth1 chain len",
           "refId": "A"
@@ -1708,7 +1708,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "nbc_gossipsub_healthy_fanout{instance=\"${instance}\"}",
+          "expr": "nbc_gossipsub_healthy_fanout",
           "interval": "",
           "legendFormat": "healthy",
           "refId": "A"
@@ -1719,7 +1719,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "nbc_gossipsub_good_fanout{instance=\"${instance}\"}",
+          "expr": "nbc_gossipsub_good_fanout",
           "hide": false,
           "interval": "",
           "legendFormat": "good",
@@ -1731,7 +1731,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "nbc_gossipsub_low_fanout{instance=\"${instance}\"}",
+          "expr": "nbc_gossipsub_low_fanout",
           "hide": false,
           "interval": "",
           "legendFormat": "low",
@@ -1839,7 +1839,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "sqlite3_memory_used_bytes{instance=\"${instance}\"}",
+          "expr": "sqlite3_memory_used_bytes",
           "interval": "",
           "legendFormat": "Memory used",
           "refId": "A"
@@ -1979,7 +1979,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(libp2p_total_dial_attempts_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(libp2p_total_dial_attempts_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "dial attempts",
           "refId": "A"
@@ -2002,7 +2002,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(libp2p_successful_dials_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(libp2p_successful_dials_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "dial success",
@@ -2014,7 +2014,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(nbc_cycling_kicked_peers_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(nbc_cycling_kicked_peers_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "kicked peers",
@@ -2102,7 +2102,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "beacon_active_validators{instance=\"${instance}\"}",
+          "expr": "beacon_active_validators",
           "interval": "",
           "legendFormat": "current validators",
           "refId": "A"
@@ -2190,7 +2190,7 @@
       "pluginVersion": "8.1.6",
       "targets": [
         {
-          "expr": "beacon_state_data_cache_hits_total{instance=\"${instance}\"} * 100 / (beacon_state_data_cache_hits_total{instance=\"${instance}\"} + beacon_state_data_cache_misses_total{instance=\"${instance}\"})",
+          "expr": "beacon_state_data_cache_hits_total * 100 / (beacon_state_data_cache_hits_total + beacon_state_data_cache_misses_total)",
           "interval": "",
           "legendFormat": "cache hit rate",
           "refId": "A"
@@ -2303,7 +2303,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(batch_verification_batches_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(batch_verification_batches_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "batches",
           "refId": "A"
@@ -2314,7 +2314,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(batch_verification_signatures_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(batch_verification_signatures_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "signatures",
@@ -2326,7 +2326,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(batch_verification_aggregates_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(batch_verification_aggregates_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "aggregates",
@@ -2338,7 +2338,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(batch_verification_signatures_total{instance=\"${instance}\"}[$__rate_interval]) /\nrate(batch_verification_aggregates_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(batch_verification_signatures_total[$__rate_interval]) /\nrate(batch_verification_aggregates_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "sigs/aggregate",
@@ -2350,7 +2350,7 @@
             "uid": "Prometheus"
           },
           "exemplar": true,
-          "expr": "rate(batch_verification_signatures_total{instance=\"${instance}\"}[$__rate_interval]) /\nrate(batch_verification_batches_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(batch_verification_signatures_total[$__rate_interval]) /\nrate(batch_verification_batches_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "sigs/batch",
@@ -2426,7 +2426,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "process_resident_memory_bytes{instance=\"${instance}\"}",
+          "expr": "process_resident_memory_bytes",
           "refId": "A"
         }
       ],
@@ -2499,7 +2499,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "rate(process_cpu_seconds_total{instance=\"${instance}\"}[$__rate_interval]) * 100",
+          "expr": "rate(process_cpu_seconds_total[$__rate_interval]) * 100",
           "refId": "A"
         }
       ],
@@ -2572,7 +2572,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "beacon_slot{instance=\"${instance}\"}",
+          "expr": "beacon_slot",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2721,7 +2721,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "beacon_attestations_received_total{instance=\"${instance}\"}",
+          "expr": "beacon_attestations_received_total",
           "refId": "A"
         }
       ],
@@ -2794,7 +2794,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "beacon_current_epoch{instance=\"${instance}\"}",
+          "expr": "beacon_current_epoch",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2869,7 +2869,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "beacon_current_justified_epoch{instance=\"${instance}\"}",
+          "expr": "beacon_current_justified_epoch",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -2944,7 +2944,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "time() - process_start_time_seconds{instance=\"${instance}\"}",
+          "expr": "time() - process_start_time_seconds",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -3019,7 +3019,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "nbc_peers{instance=\"${instance}\"}",
+          "expr": "nbc_peers",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -3094,7 +3094,7 @@
       "pluginVersion": "8.3.5",
       "targets": [
         {
-          "expr": "beacon_finalized_epoch{instance=\"${instance}\"}",
+          "expr": "beacon_finalized_epoch",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -3145,7 +3145,7 @@
           "reverseYBuckets": false,
           "targets": [
             {
-              "expr": "rate(beacon_attestation_delay_bucket{instance=\"${instance}\"}[$__rate_interval])",
+              "expr": "rate(beacon_attestation_delay_bucket[$__rate_interval])",
               "format": "heatmap",
               "instant": false,
               "interval": "",
@@ -3203,7 +3203,7 @@
           "reverseYBuckets": false,
           "targets": [
             {
-              "expr": "rate(beacon_aggregate_delay_bucket{instance=\"${instance}\"}[$__rate_interval])",
+              "expr": "rate(beacon_aggregate_delay_bucket[$__rate_interval])",
               "format": "heatmap",
               "instant": false,
               "interval": "",
@@ -3261,7 +3261,7 @@
           "reverseYBuckets": false,
           "targets": [
             {
-              "expr": "rate(beacon_block_delay_bucket{instance=\"${instance}\"}[$__rate_interval])",
+              "expr": "rate(beacon_block_delay_bucket[$__rate_interval])",
               "format": "heatmap",
               "instant": false,
               "interval": "",
@@ -3318,7 +3318,7 @@
           "reverseYBuckets": false,
           "targets": [
             {
-              "expr": "rate(beacon_store_block_duration_seconds_bucket{instance=\"${instance}\"}[$__rate_interval])",
+              "expr": "rate(beacon_store_block_duration_seconds_bucket[$__rate_interval])",
               "format": "heatmap",
               "instant": false,
               "interval": "",
@@ -3440,14 +3440,14 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(beacon_sync_committee_messages_received_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_sync_committee_messages_received_total[$__rate_interval])",
           "interval": "",
           "legendFormat": "messages",
           "refId": "A"
         },
         {
           "exemplar": true,
-          "expr": "rate(beacon_sync_committee_contributions_received_total{instance=\"${instance}\"}[$__rate_interval])",
+          "expr": "rate(beacon_sync_committee_contributions_received_total[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "contributions",
