@@ -72,7 +72,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      allServices: "allServices",
+      allServices: "allServices"
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -82,16 +82,12 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/selectPlugin");
     }
-    console.log(this.checkPointSync);
   },
   methods: {
     runInstalltion: async function () {
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      await ControlService.writeOneClickConfiguration({
-        services: this.selectedPreset.includedPlugins,
-        checkpointURL: this.checkPointSync,
-      });
-      await ControlService.startOneClickServices();
+      await ControlService.writeOneClickConfiguration({services: this.selectedPreset.includedPlugins, checkpointURL: this.checkPointSync});
+      await ControlService.startOneClickServices()
     },
   },
 };
@@ -181,7 +177,7 @@ export default {
   width: 100%;
   height: 100%;
   border: 9px solid #8e8e8e;
-  background-color: #33393e;
+   background-color: #33393e;
   border-radius: 20px;
   display: flex;
   flex-direction: column;

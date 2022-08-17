@@ -132,11 +132,7 @@
       </div>
       <div class="expertTable">
         <div class="expertMode" v-if="isExpertModeActive">
-          <textarea
-            class="editContent"
-            @change="somethingsChanged"
-            v-model="item.yaml"
-          ></textarea>
+          <textarea class="editContent" v-model="item.yaml"></textarea>
         </div>
       </div>
       <div class="btn-box">
@@ -167,7 +163,6 @@ export default {
       checkedPrunning: null,
       editableData: null,
       changed: false,
-      nothingsChanged: true,
     };
   },
   computed: {
@@ -175,9 +170,6 @@ export default {
   },
   mounted() {
     this.readService();
-  },
-  somethingsChanged() {
-    this.nothingsChanged = false;
   },
   methods: {
     async readService() {
@@ -647,13 +639,14 @@ export default {
   text-align: center;
 }
 .expert-modal .btn-box .confirmBtn:hover {
+  transform: scale(1.1);
   background-color: #609879;
 }
 .expert-modal .btn-box .confirmBtn:hover span {
   color: #e0e0e0;
 }
 .expert-modal .btn-box .confirmBtn:active {
-  transform: scale(.95);
+  transform: scale(1);
 }
 .expertMode::-webkit-scrollbar {
   width: 5px;
@@ -680,12 +673,5 @@ export default {
 
 .unvisible {
   display: none !important;
-}
-.btnDisabled {
-  pointer-events: none !important;
-  box-shadow: none !important;
-  opacity: 0.7 !important;
-  color: #335844;
-  border: 2px solid #335844;
 }
 </style>
