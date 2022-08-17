@@ -26,7 +26,7 @@
       </div>
     </router-link>
 
-    <div class="icon-btn" @click="loggingOutHandler">
+    <div class="icon-btn" @click="loggingOut">
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
@@ -63,7 +63,7 @@ export default {
     }),
   },
   methods: {
-    loggingOutHandler() {
+    loggingOut() {
       this.$router.push("/");
     },
     runAllUpdates: async function () {
