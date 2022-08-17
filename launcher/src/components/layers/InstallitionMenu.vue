@@ -25,10 +25,13 @@
         v-for="(install, index) in installation"
         :key="index"
       >
-        <router-link class="lintTtl" :to="install.path"
+        <router-link
+          class="lintTtl"
+          :class="{ disabled: !install.display }"
+          :to="install.path"
           ><button-installation
             onmousedown="return false"
-            :img="install.img"
+            :img="install.display ? install.img : install.img3"
             :url="install.img2"
           ></button-installation
         ></router-link>
@@ -155,11 +158,13 @@ export default {
 }
 .lintTtl {
   width: 100%;
-  height: 100%;
+  height: 85%;
+  border-radius: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  z-index: 1;
 }
 
 #welcome-header {
@@ -349,5 +354,8 @@ export default {
   color: #c83e29;
   font-size: 1rem;
   font-weight: 800;
+}
+.disabled {
+  pointer-events: none;
 }
 </style>

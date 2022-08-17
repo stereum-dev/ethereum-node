@@ -3,8 +3,8 @@ import { defineStore } from "pinia";
 export const useControlStore = defineStore("theControl", {
   state: () => {
     return {
-      ServerName: "Server",
-      ipAddress: "127.0.0.1",
+      ServerName: null,
+      ipAddress: null,
       totalRam: null,
       usedRam: null,
       totalDisk: null,
