@@ -415,6 +415,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 85% !important;
+  cursor: pointer;
 }
 .server-parent {
   width: 99%;
