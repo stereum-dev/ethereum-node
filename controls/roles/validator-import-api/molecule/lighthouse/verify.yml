@@ -25,18 +25,6 @@
     assert:
       that:
         - api_token.stat.exists
-  - name: Waiting for the services to start properly
-    pause:
-      minutes: 3
-  # lh beacon & validator logs
-  - name: Lighthouse beacon node
-    command: "docker logs --tail=150 stereum-7c0b52c4-98a3-11ec-85c7-0735587b56e3"
-    register: beacon
-    until:
-      - beacon.stderr is search('est_time')
-      - beacon.stderr is not search('Failed to start beacon node')
-    retries: 360
-    delay: 10
   - name: Lighthouse validator
     command: "docker logs --tail=150 stereum-0ca56612-998f-11ec-a28d-f71957ab65a0"
     register: validator
