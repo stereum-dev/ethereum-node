@@ -82,8 +82,8 @@ export default {
   width: 50%;
   height: 50%;
   border-radius: 1rem;
-  background-color: #343434;
   background-color: #363a41;
+  background-color: #343434;
   border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
