@@ -15,12 +15,9 @@
           </div>
           <div class="btnBox">
             <img
-              src="../../../../public/img/icon/manage-node-icons/stop.png"
+              src="../../../../public/img/icon/header-icons/support.png"
               alt=""
             />
-            <span
-              >or write an email to: <strong>support@stereum.net</strong></span
-            >
           </div>
         </div>
         <div class="reportBox">
@@ -35,13 +32,13 @@
           </div>
           <div class="btnBox">
             <img
-              src="../../../../public/img/icon/manage-node-icons/stop.png"
+              src="../../../../public/img/icon/header-icons/bug.png"
               alt=""
             />
           </div>
         </div>
       </div>
-      <span class="close">Click outside to cancel</span>
+      <span class="email">or write an email to: <strong>support@stereum.net</strong></span>
     </div>
   </div>
 </template>
@@ -84,10 +81,11 @@
 
 .content {
   width: 100%;
-  height: 50%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px;
 }
 
 .content .supportBox,
@@ -96,7 +94,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 .content .supportBox .title,
@@ -105,12 +103,58 @@
   height: 10%;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+}
+.title span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #a5a5a5;
+  text-transform: uppercase;
+}
+.content .supportBox .text,
+.content .reportBox .text {
+  width: 95%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.content .supportBox .text p,
+.content .reportBox .text p {
+  width: 100%;
+  height: 100%;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #c6c6c6;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+.content .supportBox .btnBox,
+.content .reportBox .btnBox {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
 }
-
+.content .supportBox .btnBox img,
+.content .reportBox .btnBox img {
+  width: 80%;
+}
+.email{
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #c6c6c6c6;
+  text-align: center;
+}
+.email strong {
+  color: #83bbee;
+}
 .close {
   color: #bf3a3a;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 400;
   align-self: center;
 }
