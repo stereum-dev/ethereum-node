@@ -83,6 +83,7 @@ export default {
   height: 50%;
   border-radius: 1rem;
   background-color: #343434;
+  background-color: #363a41;
   border: 4px solid rgb(171, 170, 170);
   z-index: 312;
   opacity: 1;
@@ -124,8 +125,8 @@ export default {
 }
 .title span {
   font-size: 1rem;
-  font-weight: 600;
-  color: #a5a5a5;
+  font-weight: 800;
+  color: #b0b0b0;
   text-transform: uppercase;
 }
 .content .supportBox .text,
@@ -142,7 +143,7 @@ export default {
   height: 100%;
   font-size: 0.6rem;
   font-weight: 500;
-  color: #c6c6c6;
+  color: #bfbfbf;
   padding: 0;
   margin: 0;
   text-align: center;
