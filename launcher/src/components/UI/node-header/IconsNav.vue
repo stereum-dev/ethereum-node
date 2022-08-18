@@ -26,7 +26,7 @@
       </div>
     </router-link>
 
-    <div class="icon-btn" @click="loggingOut">
+    <div class="icon-btn" @click="logoutModalHandler">
       <img alt="Login" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
@@ -36,19 +36,26 @@
       @click-out="removeUpdateModal"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
     ></update-panel>
+    <logout-modal
+      v-if="logoutModalIsActive"
+      @close-me="clickToCancelLogout"
+      @confrim-logout="loggingOut"
+    ></logout-modal>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "./UpdatePanel.vue";
+import LogoutModal from "./LogoutModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
-  components: { UpdatePanel },
+  components: { UpdatePanel, LogoutModal },
   data() {
     return {
       displayUpdatePanel: false,
+      logoutModalIsActive: false,
     };
   },
   computed: {
@@ -63,18 +70,10 @@ export default {
     }),
   },
   methods: {
-    loggingOut() {
-      this.$router.push("/");
-    },
     runAllUpdates: async function () {
       await ControlService.runAllUpdates();
     },
-    updateModalHandler() {
-      this.displayUpdatePanel = !this.displayUpdatePanel;
-    },
-    removeUpdateModal() {
-      this.displayUpdatePanel = false;
-    },
+
     updateConfirmationHandler: async function () {
       this.displayUpdatePanel = false;
       this.updateWaitingModal = true;
@@ -97,6 +96,21 @@ export default {
         this.updating = false;
         this.forceUpdateCheck = true;
       }
+    },
+    clickToCancelLogout() {
+      this.logoutModalIsActive = false;
+    },
+    logoutModalHandler() {
+      this.logoutModalIsActive = true;
+    },
+    loggingOut() {
+      this.$router.push("/");
+    },
+    updateModalHandler() {
+      this.displayUpdatePanel = !this.displayUpdatePanel;
+    },
+    removeUpdateModal() {
+      this.displayUpdatePanel = false;
     },
   },
 };

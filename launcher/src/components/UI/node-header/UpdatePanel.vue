@@ -22,10 +22,10 @@
               <span>auto-update:</span>
             </div>
             <div id="currentValue">
-              <span>{{ stereumApp.current }}</span>
+              <span>{{ stereumUpdate.current }}</span>
             </div>
             <div id="latestValue">
-              <span>{{ stereumApp.latest }}</span>
+              <span>{{ stereumUpdate.version }}</span>
             </div>
             <div id="updateStatus">
               <span>{{ stereumApp.autoUpdate }}</span>
@@ -42,12 +42,12 @@
               />
             </div>
 
-            <div v-if="checkStereumUpdate" class="available">
+            <div v-if="checkStereumUpdate()" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
               <span class="availableText"
-                >{{ stereumApp.latest }} available</span
+                >{{ stereumUpdate.version }} available</span
               >
             </div>
           </div>
@@ -135,7 +135,6 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
-      stereumUpdate: "stereumUpdate",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
@@ -143,15 +142,15 @@ export default {
     }),
   },
   methods: {
-    checkStereumUpdate() {
-      if (this.stereumUpdate && this.stereumUpdate.version) {
-        return true;
+    checkStereumUpdate(){
+      if(this.stereumUpdate && this.stereumUpdate.version){
+        return true
       }
-      return false;
-    },
+      return false
+    }
   },
-  mounted() {
-    this.forceUpdateCheck = true;
+  mounted(){
+    this.forceUpdateCheck = true
   },
 };
 </script>
