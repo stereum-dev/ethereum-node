@@ -45,6 +45,7 @@
             save: true
             state: started
             configuration:
+              service: LighthouseBeaconService
               id: "{{ beacon_service }}"
               image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
               env: {}
@@ -56,8 +57,6 @@
                 - bn
                 - --debug-level=debug
                 - --network=prater
-                - --eth1-endpoints=http://10.10.0.3:8545
-                - --eth1-blocks-per-log-query=150
                 - --datadir=/opt/app/beacon
                 - --http
                 - --http-address=0.0.0.0
@@ -83,7 +82,7 @@
           name: "manage-service"
       - name: Waiting for the services to start properly
         pause:
-          minutes: 5
+          seconds: 15
       vars:
         stereum_args:
           manage_service:

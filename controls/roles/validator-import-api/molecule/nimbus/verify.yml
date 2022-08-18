@@ -25,9 +25,6 @@
     assert:
       that:
         - api_token.stat.exists
-  - name: Waiting for the services to start properly
-    pause:
-      minutes: 3
   # Nimbus beacon & validator logs
   - name: Nimbus beacon & validator node
     command: "docker logs --tail=150 stereum-96d0bd64-b40b-11ec-9748-ef3d97c5f568"
@@ -37,8 +34,6 @@
       - beacon_validator.stdout is search('Slot start')
       - beacon_validator.stdout is search('Local validator attached')
       - beacon_validator.stdout is search('sync=')
-      - beacon_validator.stdout is not search('Eth1 chain monitoring failure')
-      - beacon_validator.stdout is not search('Failed to setup web3 connection')
     retries: 360
     delay: 10
   # container's images & ports
