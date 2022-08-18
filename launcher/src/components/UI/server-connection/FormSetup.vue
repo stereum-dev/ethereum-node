@@ -119,15 +119,17 @@
         >
           <label v-if="keyAuth">KEYLOCATION</label>
           <label v-if="!keyAuth">PASSWORD</label>
-          <input
-            v-if="keyAuth"
-            type="text"
-            name="keylocation"
-            id="keylocation"
-            v-model="model.keylocation.value"
-            @blur="checkInput(model.keylocation)"
-            required
-          />
+          <label for="keylocation" class="ssvFile-label" v-if="keyAuth">
+            {{ labelView }}
+            <input
+              type="file"
+              name="keylocation"
+              class="ssvBtn"
+              id="keylocation"
+              @change="previewFiles"
+              @blur="checkInput(model.keylocation)"
+              required
+          /></label>
           <input
             :class="{
               notFilled: !model.pass.isFilled,
@@ -217,13 +219,21 @@ export default {
     ...mapWritableState(useControlStore, {
       ipAddress: "ipAddress",
     }),
+    labelView() {
+      if (this.model.keylocation.value === "") {
+        return "CLICK HERE";
+      } else {
+        const label = this.model.keylocation.value;
+        return label;
+      }
+    },
   },
   methods: {
     //test
-    changePath() {
-      const file = this.files[0].mozFullPath;
-      console.log(this.files[0].mozFullPath);
-      return file;
+    previewFiles(event, t) {
+      const Path = event.target.files[0].path;
+      this.model.keylocation.value = Path;
+      console.log(this.model.keylocation.value);
     },
     //finish
     changeLabel() {
@@ -395,6 +405,17 @@ export default {
 };
 </script>
 <style scoped>
+.ssvBtn {
+  display: none;
+}
+.ssvFile-label {
+  display: flex;
+  width: 80%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 85% !important;
+}
 .server-parent {
   width: 99%;
   height: 99%;
