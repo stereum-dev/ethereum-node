@@ -182,6 +182,7 @@ export default {
       try {
         let stereumVersion = await ControlService.getCurrentStereumVersion();
         this.stereumVersion = stereumVersion;
+        console.log(stereumVersion);
       } catch (error) {
         console.log("Couldn't fetch versions...\nError:", err.message);
       }

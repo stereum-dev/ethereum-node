@@ -14,9 +14,9 @@ export default {
 <style scoped>
 dialog {
   position: fixed;
-  top: 30%;
-  width: 60%;
-  height: 45%;
+  top: 12%;
+  width: 90%;
+  height: 75%;
   margin: 0 auto;
   box-shadow: 1px 1px 5px 1px rgba(31, 31, 31, 0.26);
   border: 5px solid #919191;
@@ -24,7 +24,7 @@ dialog {
   padding: 1rem;
   background-color: #1d3d3ad7;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
   overflow-x: hidden;
   overflow-y: auto;
