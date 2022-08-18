@@ -213,7 +213,6 @@ export default {
   height: 95%;
   border-radius: 7px;
   margin: 0 auto;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,6 +223,7 @@ export default {
   height: 48px;
   border-radius: 5px;
   align-self: center;
+  cursor: pointer;
 }
 .plus-icon-box {
   width: 30px;

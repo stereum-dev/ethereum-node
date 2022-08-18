@@ -85,7 +85,6 @@ export default {
   overflow-y: auto;
   background: #707070;
   border-radius: 20px;
-  cursor: pointer;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -103,6 +102,7 @@ export default {
 .service-item img {
   width: 50px;
   height: 50px;
+  cursor: pointer;
 }
 .service-item img:active {
   box-shadow: none;

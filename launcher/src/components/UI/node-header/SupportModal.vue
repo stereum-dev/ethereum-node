@@ -13,7 +13,7 @@
               Discord server!
             </p>
           </div>
-          <div class="btnBox">
+          <div class="btnBox" @click="OpenStereumGithub">
             <img
               src="../../../../public/img/icon/header-icons/support.png"
               alt=""
@@ -26,22 +26,39 @@
           </div>
           <div class="text">
             <p>
-              Please take the time and write out a issue on Github, with your
-              help we can me Stereum better!
+              Please take the time to write an issue and let us make the Stereum
+              better!
             </p>
           </div>
           <div class="btnBox">
             <img
+              @click="OpenStereumDiscord"
               src="../../../../public/img/icon/header-icons/bug.png"
               alt=""
             />
           </div>
         </div>
       </div>
-      <span class="email">or write an email to: <strong>support@stereum.net</strong></span>
+      <span class="email"
+        >or write an email to: <strong>support@stereum.net</strong></span
+      >
     </div>
   </div>
 </template>
+<script>
+export default {
+  methods: {
+    OpenStereumGithub() {
+      let URL = "https://github.com/stereum-dev/ethereum-node/issues/ ";
+      window.open(URL, "_blank");
+    },
+    OpenStereumDiscord() {
+      let URL = "https://discord.gg/DzAwgnSXtB";
+      window.open(URL, "_blank");
+    },
+  },
+};
+</script>
 <style scoped>
 .support-modal-parent {
   width: 100%;
@@ -113,7 +130,7 @@
 }
 .content .supportBox .text,
 .content .reportBox .text {
-  width: 95%;
+  width: 80%;
   height: 15%;
   display: flex;
   justify-content: center;
@@ -142,8 +159,14 @@
 .content .supportBox .btnBox img,
 .content .reportBox .btnBox img {
   width: 80%;
+  cursor: pointer;
 }
-.email{
+.content .supportBox .btnBox img:active,
+.content .reportBox .btnBox img:active {
+  transform: scale(.98);
+  transition-duration: 200ms;
+}
+.email {
   font-size: 0.6rem;
   font-weight: 500;
   color: #c6c6c6c6;

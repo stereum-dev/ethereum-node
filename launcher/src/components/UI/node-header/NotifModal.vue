@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <span>LOG-OUT</span>
+        <span>Notifications</span>
       </div>
       <div class="messageContent">
         <img
@@ -63,7 +63,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #bf3a3a;
+  background-color: #2e553b;
 }
 .title-box span {
   font-size: 1.8rem;
