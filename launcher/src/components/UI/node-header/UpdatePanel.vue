@@ -1,6 +1,6 @@
 <template>
   <div class="panelParent">
-    <div class="clickOutside" @click.self="$emit('clickOut')"></div>
+    <div class="clickOutside" @click="$emit('clickOut')" v-if="clickBg"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
@@ -123,6 +123,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
+  props: ["clickBg"],
   data() {
     return {
       stereumApp: {
@@ -142,15 +143,15 @@ export default {
     }),
   },
   methods: {
-    checkStereumUpdate(){
-      if(this.stereumUpdate && this.stereumUpdate.version){
-        return true
+    checkStereumUpdate() {
+      if (this.stereumUpdate && this.stereumUpdate.version) {
+        return true;
       }
-      return false
-    }
+      return false;
+    },
   },
-  mounted(){
-    this.forceUpdateCheck = true
+  mounted() {
+    this.forceUpdateCheck = true;
   },
 };
 </script>

@@ -134,14 +134,21 @@
         <div class="expertMode" v-if="isExpertModeActive">
           <textarea
             class="editContent"
-            @change="somethingsChanged"
+            @input="somethingIsChanged"
             v-model="item.yaml"
           ></textarea>
         </div>
       </div>
       <div class="btn-box">
         <span class="exit-btn">Click outside to close</span>
-        <div class="confirmBtn" @click="confirmExpertChanges(item)">
+        <div
+          class="confirmBtn"
+          v-if="!nothingsChanged"
+          @click="confirmExpertChanges(item)"
+        >
+          <span>Confirm</span>
+        </div>
+        <div class="disabledBtn" v-else>
           <span>Confirm</span>
         </div>
       </div>
@@ -176,10 +183,15 @@ export default {
   mounted() {
     this.readService();
   },
-  somethingsChanged() {
-    this.nothingsChanged = false;
-  },
+  // watch: {
+  //   changed: function (newValue, oldValue) {
+
+  //   },
+  // },
   methods: {
+    somethingIsChanged() {
+      this.nothingsChanged = false;
+    },
     async readService() {
       this.item.yaml = await ControlService.getServiceYAML(
         this.item.config.serviceID
@@ -653,7 +665,7 @@ export default {
   color: #e0e0e0;
 }
 .expert-modal .btn-box .confirmBtn:active {
-  transform: scale(.95);
+  transform: scale(0.95);
 }
 .expertMode::-webkit-scrollbar {
   width: 5px;
@@ -681,7 +693,20 @@ export default {
 .unvisible {
   display: none !important;
 }
-.btnDisabled {
+.disabledBtn {
+  grid-column: 3/4;
+  grid-row: 1;
+  margin-right: 20px;
+  width: 90%;
+  height: 25px;
+  padding: 3px;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  justify-self: flex-end;
+  transition-duration: 150ms;
   pointer-events: none !important;
   box-shadow: none !important;
   opacity: 0.7 !important;

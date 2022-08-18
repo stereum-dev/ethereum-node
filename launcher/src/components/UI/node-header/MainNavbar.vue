@@ -195,8 +195,12 @@ export default {
           //   stereumVersion !=
           //   response.stereum[response.stereum.length - 1].commit
           // ) {
-
-          this.isUpdateAvailable = true;
+          if (
+            stereumVersion !=
+            response.stereum[response.stereum.length - 1].commit
+          ) {
+            this.isUpdateAvailable = true;
+          }
           const currentVersion = response.stereum.find(
             (v) => v.commit === stereumVersion
           );
