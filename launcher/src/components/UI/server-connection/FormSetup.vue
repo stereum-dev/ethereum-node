@@ -229,8 +229,8 @@ export default {
     },
   },
   methods: {
-    //test
-    previewFiles(event, t) {
+    //path picker from the file input
+    previewFiles(event) {
       const Path = event.target.files[0].path;
       this.model.keylocation.value = Path;
       console.log(this.model.keylocation.value);
