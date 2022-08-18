@@ -66,6 +66,8 @@ import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services";
 export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
@@ -106,7 +108,7 @@ export default {
           title: "Stereum Version",
           isColor: "alpha",
           itemType: "update",
-          btnValue: "ALPHA",
+          btnValue: "alfa",
         },
 
         {
@@ -133,19 +135,25 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      stereumVersion: "stereumVersion",
+    }),
+  },
   updated() {
     this.checkSettings();
   },
   created() {
     this.checkSettings();
     this.selectror();
+    this.checkVersion();
   },
 
   methods: {
     confirm() {
       // confirm method have to write here
-      alert("Done!");
-      console.log(this.langName);
+      // alert("Done!");
+      alert(this.stereumVersion);
     },
     selectror() {
       if (this.langActive === true) {
@@ -168,6 +176,14 @@ export default {
       ) {
         this.langIco = savedConfig.savedLanguage.flag;
         this.langName = savedConfig.savedLanguage.language;
+      }
+    },
+    checkVersion: async function () {
+      try {
+        let stereumVersion = await ControlService.getCurrentStereumVersion();
+        this.stereumVersion = stereumVersion;
+      } catch (error) {
+        console.log("Couldn't fetch versions...\nError:", err.message);
       }
     },
   },
