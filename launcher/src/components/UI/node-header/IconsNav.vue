@@ -30,7 +30,6 @@
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
-      v-if="displayUpdatePanel"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
       @click-out="removeUpdateModal"
