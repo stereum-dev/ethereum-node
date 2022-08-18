@@ -1,11 +1,11 @@
 <template>
   <div class="icons-box">
-    <div class="icon-btn">
-      <img alt="help-icon" src="/img/icon/header-icons/question-mark.png" />
+    <div class="icon-btn" @click="supportModalOpen">
+      <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
 
-    <div class="icon-btn">
-      <img alt="Login" src="/img/icon/header-icons/megaphone9.png" />
+    <div class="icon-btn" @click="notifModalOpen">
+      <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
     <div class="icon-btn" @click="updateModalHandler" v-if="isUpdateAvailable">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
@@ -22,12 +22,12 @@
 
     <router-link to="/setting" class="icon-btn">
       <div>
-        <img alt="Login" src="/img/icon/header-icons/setting4.png" />
+        <img alt="setting" src="/img/icon/header-icons/setting4.png" />
       </div>
     </router-link>
 
     <div class="icon-btn" @click="logoutModalHandler">
-      <img alt="Login" src="/img/icon/header-icons/exit9.png" />
+      <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
       v-if="displayUpdatePanel"
@@ -41,21 +41,33 @@
       @close-me="clickToCancelLogout"
       @confrim-logout="loggingOut"
     ></logout-modal>
+    <support-modal
+      v-if="supportModalIsActive"
+      @close-me="supportModalClose"
+    ></support-modal>
+    <notif-modal
+      v-if="notificationModalIsActive"
+      @close-me="notifModalClose"
+    ></notif-modal>
   </div>
 </template>
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "./UpdatePanel.vue";
 import LogoutModal from "./LogoutModal.vue";
+import SupportModal from "./SupportModal.vue";
+import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
-  components: { UpdatePanel, LogoutModal },
+  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal },
   data() {
     return {
       displayUpdatePanel: false,
       logoutModalIsActive: false,
+      supportModalIsActive: false,
+      notificationModalIsActive: false,
     };
   },
   computed: {
@@ -111,6 +123,18 @@ export default {
     },
     removeUpdateModal() {
       this.displayUpdatePanel = false;
+    },
+    notifModalOpen() {
+      this.notificationModalIsActive = true;
+    },
+    notifModalClose() {
+      this.notificationModalIsActive = false;
+    },
+    supportModalOpen() {
+      this.supportModalIsActive = true;
+    },
+    supportModalClose() {
+      this.supportModalIsActive = false;
     },
   },
 };

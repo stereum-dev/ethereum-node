@@ -1,7 +1,7 @@
 <template>
-  <div class="logout-modal-parent">
+  <div class="remove-modal-parent">
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
-    <div class="logout-modal-content">
+    <div class="remove-modal-content">
       <div class="title-box">
         <span>LOG-OUT</span>
       </div>
@@ -10,9 +10,6 @@
           src="../../../../public/img/icon/manage-node-icons/stop.png"
           alt=""
         />
-        <span class="question"
-          >ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span
-        >
       </div>
       <div class="confrimBtn">
         <div class="confrimBox" @click="$emit('confrimLogout')">
@@ -24,7 +21,7 @@
   </div>
 </template>
 <style scoped>
-.logout-modal-parent {
+.remove-modal-parent {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -42,7 +39,7 @@
   opacity: 0.7;
   z-index: 311;
 }
-.logout-modal-content {
+.remove-modal-content {
   width: 50%;
   height: 50%;
   border-radius: 1rem;
