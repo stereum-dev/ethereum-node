@@ -56,7 +56,7 @@
         become: yes
       - name: Waiting for the services to start properly
         pause:
-          minutes: 5
+          seconds: 15
       vars:
         stereum_args:
           manage_service:
@@ -76,7 +76,6 @@
                 - --data-dir=/opt/app/beacon
                 - --validators-dir=/opt/app/validators
                 - --secrets-dir=/opt/app/secrets
-                - --web3-url=ws://10.10.0.2:8545
                 - --tcp-port=9000
                 - --udp-port=9000
                 - --rpc

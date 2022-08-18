@@ -54,6 +54,7 @@
             save: true
             state: started
             configuration:
+              service: PrysmBeaconService
               id: "{{ beacon_service }}"
               image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
               ports:
@@ -73,8 +74,6 @@
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
                 --rpc-host=0.0.0.0
                 --grpc-gateway-host=0.0.0.0
-                --p2p-max-peers=100
-                --http-web3provider=http://10.10.0.3:8545
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/prysm/beacon:/opt/app/beacon"
@@ -134,9 +133,6 @@
         with_items:
           - "stereum-{{ beacon_service }}"
           - "stereum-{{ validator_service }}"
-      - name: Waiting for the services to start properly
-        pause:
-          minutes: 1
       vars:
         stereum_args:
           manage_service:
