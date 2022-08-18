@@ -71,8 +71,6 @@
                 - bn
                 - --debug-level=debug
                 - --network=prater
-                - --eth1-endpoints=http://10.10.0.3:8545
-                - --eth1-blocks-per-log-query=150
                 - --datadir=/opt/app/beacon
                 - --http
                 - --http-address=0.0.0.0

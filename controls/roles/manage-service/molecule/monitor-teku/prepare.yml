@@ -49,7 +49,6 @@
               ports:
                 - 0.0.0.0:9001:9001/tcp
                 - 0.0.0.0:9001:9001/udp
-                - 127.0.0.1:5052:5052/tcp
               env:
                 JAVA_OPTS: -Xmx4g
               entrypoint: ["/opt/teku/bin/teku"]
