@@ -189,7 +189,7 @@ export default {
             }
           });
         }
-        //*******if didn't work,I commented it out
+        //******* the (IF) didn't work,I commented it out
         if (response && stereumVersion) {
           // if (
           //   stereumVersion !=
