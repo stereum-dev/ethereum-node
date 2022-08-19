@@ -1,15 +1,14 @@
 <template>
-  <div class="credit-parent">
+  <div class="setting-parent">
     <node-bg>
-      <credit-panel></credit-panel>
+      
     </node-bg>
     <node-header id="head"> </node-header>
   </div>
 </template>
 <script>
-import CreditPanel from "../components/UI/credit/CreditPanel.vue";
 export default {
-  components: { CreditPanel },
+  components: {  },
 };
 </script>
 

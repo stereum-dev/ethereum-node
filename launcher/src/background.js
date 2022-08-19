@@ -29,8 +29,8 @@ const validatorAccountManager = new ValidatorAccountManager(
 );
 
 const log = require("electron-log");
-log.transports.console.level = "info"
-log.transports.file.level = "debug"
+log.transports.console.level = "info";
+log.transports.file.level = "debug";
 
 let remoteHost = {};
 
@@ -57,28 +57,28 @@ promiseIpc.on("connect", async (arg) => {
 });
 
 promiseIpc.on("reconnect", async () => {
-  try{
-    if(!nodeConnection.sshService.connected){
+  try {
+    if (!nodeConnection.sshService.connected) {
       await nodeConnection.establish(taskManager);
-    }else if(!taskManager.nodeConnection.sshService.connected){
+    } else if (!taskManager.nodeConnection.sshService.connected) {
       await taskManager.nodeConnection.establish();
-    }else if(!monitoring.nodeConnection.sshService.connected){
+    } else if (!monitoring.nodeConnection.sshService.connected) {
       await monitoring.nodeConnection.establish();
     }
-  }catch(err){
-    log.error("Couldn't reconnect:\n",err)
+  } catch (err) {
+    log.error("Couldn't reconnect:\n", err);
   }
 });
 
 promiseIpc.on("checkConnection", async () => {
-  try{
-    await nodeConnection.sshService.exec("ls")
-    await taskManager.nodeConnection.sshService.exec("ls")
-    await monitoring.nodeConnection.sshService.exec("ls")
-  }catch(err){
-    return false
+  try {
+    await nodeConnection.sshService.exec("ls");
+    await taskManager.nodeConnection.sshService.exec("ls");
+    await monitoring.nodeConnection.sshService.exec("ls");
+  } catch (err) {
+    return false;
   }
-  return true
+  return true;
 });
 
 // called via promiseIpc as an async function
@@ -93,10 +93,10 @@ promiseIpc.on("setup", async (arg) => {
 
 // called via promiseIpc as an async function
 promiseIpc.on("destroy", async () => {
-  app.showExitPrompt = true
+  app.showExitPrompt = true;
   const returnValue = await nodeConnection.destroyNode();
-  app.showExitPrompt = false
-  return returnValue
+  app.showExitPrompt = false;
+  return returnValue;
 });
 
 // called via promiseIpc as an async function
@@ -128,19 +128,24 @@ promiseIpc.on("getOneClickConstellation", async (arg) => {
 });
 
 promiseIpc.on("prepareOneClickInstallation", async (arg) => {
-  app.showExitPrompt = true
+  app.showExitPrompt = true;
   return await oneClickInstall.prepareNode(arg, nodeConnection);
 });
 
 promiseIpc.on("writeOneClickConfiguration", async (args) => {
-  await oneClickInstall.createServices(args.array.map(service => {return service.service}),args.checkpointURL);
+  await oneClickInstall.createServices(
+    args.array.map((service) => {
+      return service.service;
+    }),
+    args.checkpointURL
+  );
   return await oneClickInstall.writeConfig();
 });
 
 promiseIpc.on("startOneClickServices", async () => {
   const returnValue = await oneClickInstall.startServices();
-  app.showExitPrompt = false
-  return returnValue
+  app.showExitPrompt = false;
+  return returnValue;
 });
 
 //get data for control cpu comp
@@ -166,21 +171,24 @@ promiseIpc.on("getServices", async () => {
 
 promiseIpc.on("getServiceConfig", async (args) => {
   return await nodeConnection.readServiceConfiguration(args);
-})
+});
 
 promiseIpc.on("getServiceYAML", async (args) => {
   return await nodeConnection.readServiceYAML(args);
-})
+});
 
 promiseIpc.on("writeServiceYAML", async (args) => {
   return await nodeConnection.writeServiceYAML(args);
-})
+});
 
 promiseIpc.on("importKey", async (args) => {
-  app.showExitPrompt = true
-  const returnValue =  await validatorAccountManager.importKey(args.files, args.password);
-  app.showExitPrompt = false
-  return returnValue
+  app.showExitPrompt = true;
+  const returnValue = await validatorAccountManager.importKey(
+    args.files,
+    args.password
+  );
+  app.showExitPrompt = false;
+  return returnValue;
 });
 
 promiseIpc.on("listValidators", async (args) => {
@@ -192,74 +200,77 @@ promiseIpc.on("listServices", async () => {
 });
 
 promiseIpc.on("manageServiceState", async (args) => {
-  return await serviceManager.manageServiceState(args.id, args.state)
-})
+  return await serviceManager.manageServiceState(args.id, args.state);
+});
 
 promiseIpc.on("runAllUpdates", async (args) => {
-  app.showExitPrompt = true
-  const returnValue = await nodeConnection.runAllUpdates()
+  app.showExitPrompt = true;
+  const returnValue = await nodeConnection.runAllUpdates();
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
-  app.showExitPrompt = false
-  return returnValue
-})
+  app.showExitPrompt = false;
+  return returnValue;
+});
 
 promiseIpc.on("updateServices", async (args) => {
-  app.showExitPrompt = true
-  await nodeConnection.updateServices(args.services)
+  app.showExitPrompt = true;
+  await nodeConnection.updateServices(args.services);
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
-  app.showExitPrompt = false
-})
+  app.showExitPrompt = false;
+});
 
 promiseIpc.on("updateStereum", async (args) => {
-  app.showExitPrompt = true
-  await nodeConnection.updateStereum(args.commit)
+  app.showExitPrompt = true;
+  await nodeConnection.updateStereum(args.commit);
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
-  app.showExitPrompt = false
-})
+  app.showExitPrompt = false;
+});
 
 promiseIpc.on("checkUpdates", async () => {
-  let versions
-  try{
-    versions = await nodeConnection.checkUpdates()
-  }catch(err){
-    throw err
+  let versions;
+  try {
+    versions = await nodeConnection.checkUpdates();
+  } catch (err) {
+    throw err;
   }
-   return versions
-})
+  return versions;
+});
 
 promiseIpc.on("getCurrentStereumVersion", async () => {
-  return await nodeConnection.getCurrentStereumVersion()
-})
+  return await nodeConnection.getCurrentStereumVersion();
+});
 
 promiseIpc.on("getTasks", async () => {
-  return await taskManager.getTasks()
-})
+  return await taskManager.getTasks();
+});
 
 promiseIpc.on("updateTasks", async () => {
-  return await taskManager.updateTasks()
-})
+  return await taskManager.updateTasks();
+});
 
 promiseIpc.on("clearTasks", async () => {
-  return await taskManager.clearTasks()
-})
+  return await taskManager.clearTasks();
+});
 
 promiseIpc.on("insertSSVNetworkKeys", async (args) => {
-  return await validatorAccountManager.insertSSVNetworkKeys(args.service, args.pk)
-})
+  return await validatorAccountManager.insertSSVNetworkKeys(
+    args.service,
+    args.pk
+  );
+});
 
 promiseIpc.on("refreshServiceInfos", async () => {
-  return await monitoring.refreshServiceInfos()
-})
+  return await monitoring.refreshServiceInfos();
+});
 
 promiseIpc.on("getOperatorPageURL", async (args) => {
-  return await validatorAccountManager.getOperatorPageURL(args)
-})
+  return await validatorAccountManager.getOperatorPageURL(args);
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -293,25 +304,25 @@ async function createWindow() {
     createProtocol("app");
     // Load the index.html when not in developmen
     win.loadURL("app://./index.html");
-    // win.webContents.openDevTools()
   }
 
-  win.on('close', (e) => {
+  win.on("close", (e) => {
     if (app.showExitPrompt) {
-        e.preventDefault() // Prevents the window from closing
-        const response = dialog.showMessageBoxSync({
-            type: 'question',
-            buttons: ['Yes', 'No'],
-            title: 'Confirm',
-            message: 'Critical tasks are running in the background.\nAre you sure you want to quit?',
-            icon: './public/img/icon/node-journal-icons/red-warning.png'
-        })
-        if(response === 0){
-          app.showExitPrompt = false
-          win.close()
-        }
+      e.preventDefault(); // Prevents the window from closing
+      const response = dialog.showMessageBoxSync({
+        type: "question",
+        buttons: ["Yes", "No"],
+        title: "Confirm",
+        message:
+          "Critical tasks are running in the background.\nAre you sure you want to quit?",
+        icon: "./public/img/icon/node-journal-icons/red-warning.png",
+      });
+      if (response === 0) {
+        app.showExitPrompt = false;
+        win.close();
+      }
     }
-})
+  });
 }
 
 // Quit when all windows are closed.

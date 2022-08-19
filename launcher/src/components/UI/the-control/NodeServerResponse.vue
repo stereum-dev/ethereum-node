@@ -24,7 +24,7 @@
           <small>ms</small>
         </div>
         <div class="resLbl">
-          <span>Response Time(last)</span>
+          <span>Response Time(⌀)</span>
         </div>
       </div>
     </div>
@@ -92,7 +92,8 @@ export default {
   flex-direction: column;
   width: 100%;
   height: 95%;
-  font-size: 45%;
+  font-size: 50%;
+  font-weight: 400;
 }
 .successValue {
   display: flex;
@@ -100,8 +101,8 @@ export default {
   height: 100%;
   justify-content: space-between;
   align-items: center;
-  font-size: 70%;
-  font-weight: bold;
+  font-size: 80%;
+  font-weight: 600;
 }
 .resTime {
   display: flex;
@@ -116,8 +117,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   font-size: 80%;
-  width: 50%;
-  font-weight: bold;
+  width: 55%;
+  font-weight: 800;
 }
 .resTimeVal small {
   font-size: 50%;
