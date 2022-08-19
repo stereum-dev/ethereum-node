@@ -18,7 +18,7 @@
         </router-link>
       </div>
       <div class="config-btns">
-        <div class="config-add" @click="$emit('modalPreset')">
+        <div class="config-add" @click.stop="$emit('modalPreset')">
           <span class="btn-text">ADD 1 CLICK PRESET</span>
         </div>
         <div class="config-network">
@@ -29,7 +29,7 @@
         </div>
       </div>
       <div class="delete-box">
-        <div class="delete-btn" @click="openRemoveModal">
+        <div class="delete-btn" @click.stop="openRemoveModal">
           <span class="btn-text">DELETE CONFIGS</span>
           <img
             src="../../../../public/img/icon/manage-node-icons/bin.png"

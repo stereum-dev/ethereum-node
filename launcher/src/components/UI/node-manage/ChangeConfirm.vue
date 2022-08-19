@@ -65,7 +65,7 @@ export default {
   methods: {
     clickOnRemoveBtn() {
       this.installedServices = this.installedServices.filter((item) => {
-        return !this.selectedItemToRemove.map(e => e.id).includes(item.id);
+        return !this.selectedItemToRemove.map((e) => e.id).includes(item.id);
       });
     },
   },
@@ -87,7 +87,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
 }
 
 .change-menu .confirm-bg-1 {
