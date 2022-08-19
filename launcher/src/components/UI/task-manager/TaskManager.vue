@@ -81,7 +81,9 @@ export default {
     };
   },
   created() {
-    this.displayTasksTemprory();
+    if (this.$route.name === "TheNode") {
+      this.displayTasksTemprory();
+    }
   },
   mounted() {
     this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs

@@ -1,6 +1,6 @@
 <template>
   <div class="panelParent">
-    <div class="clickOutside" @click.self="$emit('clickOut')"></div>
+    <div class="clickOutside" @click="$emit('clickOut')" v-if="clickBg"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
@@ -22,10 +22,10 @@
               <span>auto-update:</span>
             </div>
             <div id="currentValue">
-              <span>{{ stereumApp.current }}</span>
+              <span>{{ stereumUpdate.current }}</span>
             </div>
             <div id="latestValue">
-              <span>{{ stereumApp.latest }}</span>
+              <span>{{ stereumUpdate.version }}</span>
             </div>
             <div id="updateStatus">
               <span>{{ stereumApp.autoUpdate }}</span>
@@ -42,12 +42,12 @@
               />
             </div>
 
-            <div v-if="checkStereumUpdate" class="available">
+            <div v-if="checkStereumUpdate()" class="available">
               <div class="updateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
               <span class="availableText"
-                >{{ stereumApp.latest }} available</span
+                >{{ stereumUpdate.version }} available</span
               >
             </div>
           </div>
@@ -123,6 +123,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
+  props: ["clickBg"],
   data() {
     return {
       stereumApp: {
@@ -135,7 +136,6 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
-      stereumUpdate: "stereumUpdate",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",

@@ -16,7 +16,7 @@ export default {
 .sidebar-container {
   width: 100%;
   height: 100.2%;
-  background: #2c4030;
+  background: #334b3f;
   border: 5px solid #17241e;
   border-top-right-radius: 30px;
   display: flex;
