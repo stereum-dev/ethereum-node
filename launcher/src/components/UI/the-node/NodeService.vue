@@ -18,14 +18,20 @@
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="item.state == 'running'"
-                @click="stateHandler(item)"
+                v-if="item.isServicePending"
+                class="pending"
+                src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                alt="icon"
+              />
+              <img
+                v-else-if="item.state == 'running'"
+                @click.once="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
               />
               <img
                 v-else
-                @click="stateHandler(item)"
+                @click.stop="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/turn-on.png"
                 alt="icon"
               />
@@ -72,12 +78,16 @@ export default {
       itemsList: [],
       isPluginMenuActive: false,
       isServiceOn: false,
+      isServicePending: false,
     };
   },
   beforeMount() {
     this.updateStates();
   },
-
+  mounted() {
+    console.log('1',this.installedServices);
+    console.log('2',this.runningServices);
+  },
   updated() {
     this.updateStates();
   },
@@ -105,6 +115,8 @@ export default {
       });
     },
     stateHandler: async function (item) {
+      this.isServiceOn = false;
+      this.isServicePending = true;
       let state = "stopped";
       if (item.state === "exited") {
         state = "started";
@@ -118,6 +130,7 @@ export default {
       } catch (err) {
         console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
+      this.isServicePending = false;
       this.updateStates();
     },
     openDefaultBrowser(el) {
@@ -235,7 +248,15 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(61, 61, 61);
 }
-
+.menu-content .power .pending {
+  width: 17px;
+  height: 17px;
+  background-color: rgb(71, 70, 70);
+  border-radius: 100%;
+  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  z-index: 1000;
+  pointer-events: none;
+}
 .menu-content .setting {
   width: 16px;
   height: 16px;
@@ -265,14 +286,46 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(71, 71, 71);
 }
+.menu-content .restart {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 39%;
+  left: 2%;
+  animation: restart 500ms;
+  z-index: 11;
+}
+@keyframes restart {
+  0% {
+    opacity: 0;
+    top: 39%;
+    left: 42%;
+  }
+  100% {
+    top: 39%;
+    left: 2%;
+  }
+}
 
+.menu-content .restart img {
+  width: 17px;
+  height: 17px;
+  border-radius: 100%;
+  box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
+}
 .menu-content .power img:hover,
-.menu-content .setting img:hover {
+.menu-content .setting img:hover,
+.menu-content .restart img:hover {
   transform: scale(1.1);
 }
 
 .menu-content .setting img:active,
-.menu-content .restart img:active {
+.menu-content .restart img:active,
+.menu-content .power img:active {
   transform: scale(1);
 }
 </style>

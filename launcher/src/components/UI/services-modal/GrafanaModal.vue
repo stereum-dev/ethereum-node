@@ -110,7 +110,7 @@ export default {
 }
 .icon-box img {
   margin: 10px 0 0 15px;
-  width: 65%;
+  width: 62%;
   height: 90%;
 }
 .title-box {

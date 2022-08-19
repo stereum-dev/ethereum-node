@@ -46,26 +46,26 @@
                       />
                       <img
                         v-else-if="item.state == 'running'"
-                        @click="stateHandler(item)"
+                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/shutdown.png"
                         alt="icon"
                       />
                       <img
                         v-else-if="item.state == 'restarting'"
-                        @click="stateHandler(item)"
+                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/restart.png"
                         alt="icon"
                       />
                       <img
                         v-else
-                        @click="stateHandler(item)"
+                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/turn-on.png"
                         alt="icon"
                       />
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon" @click="expertModeHandler(item)">
+                    <div class="seting-icon" @click.stop="expertModeHandler(item)">
                       <img
                         src="/img/icon/plugin-menu-icons/setting8.png"
                         alt="icon"
@@ -444,12 +444,13 @@ export default {
 .powerOn {
   background-color: rgb(113, 205, 136);
 }
-.power .pending {
+.power-icon .pending {
   width: 17px;
   height: 17px;
   background-color: rgb(71, 70, 70);
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
+  pointer-events: none;
 }
 
 .seting-icon img {
