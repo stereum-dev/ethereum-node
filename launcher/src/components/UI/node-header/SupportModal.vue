@@ -13,7 +13,7 @@
               Discord server!
             </p>
           </div>
-          <div class="btnBox" @click="OpenStereumGithub">
+          <div class="btnBox" @click="OpenStereumDiscord">
             <img
               src="../../../../public/img/icon/header-icons/support.png"
               alt=""
@@ -32,7 +32,7 @@
           </div>
           <div class="btnBox">
             <img
-              @click="OpenStereumDiscord"
+              @click="OpenStereumGithub"
               src="../../../../public/img/icon/header-icons/bug.png"
               alt=""
             />
@@ -164,7 +164,7 @@ export default {
 }
 .content .supportBox .btnBox img:active,
 .content .reportBox .btnBox img:active {
-  transform: scale(.98);
+  transform: scale(0.98);
   transition-duration: 200ms;
 }
 .email {
