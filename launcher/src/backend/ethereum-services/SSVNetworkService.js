@@ -32,7 +32,7 @@ MetricsAPIPort: 15000`
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
 
-    const image = 'bloxstaking/ssv-node-shifu'
+    const image = 'bloxstaking/ssv-node'
 
 
     const volumes = [

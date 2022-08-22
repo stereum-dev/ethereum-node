@@ -49,7 +49,7 @@ test('buildConfiguration', () => {
   expect(ssvService.ports).toHaveLength(2)
   expect(ssvService.id).toHaveLength(36)
   expect(ssvService.user).toMatch(/2000/)
-  expect(ssvService.image).toMatch(/bloxstaking\/ssv-node-shifu/)
+  expect(ssvService.image).toMatch(/bloxstaking\/ssv-node/)
   expect(ssvService.configVersion).toBe(1)
 })
 

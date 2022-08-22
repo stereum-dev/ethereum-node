@@ -69,7 +69,7 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
