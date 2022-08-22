@@ -117,23 +117,25 @@
               : !model.pass.isFilled,
           }"
         >
-          <label v-if="keyAuth">KEYLOCATION</label>
-          <label v-if="!keyAuth">PASSWORD</label>
-          <input
-            v-if="keyAuth"
-            type="text"
-            name="keylocation"
-            id="keylocation"
-            v-model="model.keylocation.value"
-            @blur="checkInput(model.keylocation)"
-            required
-          />
+          <label class="keyLocation_title" v-if="keyAuth">KEYLOCATION</label>
+          <label class="keyLocation_title" v-if="!keyAuth">PASSWORD</label>
+          <label for="keylocation" class="ssvFile-label" v-if="keyAuth">
+            {{ labelView }}
+            <input
+              type="file"
+              name="keylocation"
+              class="ssvBtn"
+              id="keylocation"
+              @change="previewFiles"
+              @blur="checkInput(model.keylocation)"
+              required
+          /></label>
           <input
             :class="{
               notFilled: !model.pass.isFilled,
               isFilled: model.pass.isFilled,
             }"
-            v-if="!keyAuth"
+            v-else
             type="password"
             name="keylocation"
             id="keylocation"
@@ -170,7 +172,7 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
-import { useControlStore } from '../../../store/theControl';
+import { useControlStore } from "../../../store/theControl";
 
 export default {
   components: { DeleteModal },
@@ -216,9 +218,24 @@ export default {
     }),
     ...mapWritableState(useControlStore, {
       ipAddress: "ipAddress",
-    })
+    }),
+    labelView() {
+      if (this.model.keylocation.value === "") {
+        return "";
+      } else {
+        return this.model.keylocation.value;
+      }
+    },
   },
   methods: {
+    //path picker from the file input
+    previewFiles(event) {
+      const Path = event.target.files[0].path;
+      let pathString = new String(Path);
+      let result = pathString.toString();
+      this.model.keylocation.value = result;
+    },
+    //finish
     changeLabel() {
       this.keyAuth = !this.keyAuth;
     },
@@ -378,7 +395,7 @@ export default {
         }
         return;
       }
-      this.ipAddress = this.model.host.value
+      this.ipAddress = this.model.host.value;
       if (await ControlService.checkStereumInstallation()) {
         this.$router.push("/node");
       }
@@ -388,6 +405,26 @@ export default {
 };
 </script>
 <style scoped>
+.ssvBtn {
+  display: none;
+}
+.ssvFile-label {
+  width: 57%;
+  height: 80%;
+  margin-right: 16px;
+  border-radius: 40px;
+
+  background: #dbdbdb;
+  color: #242424 !important;
+  font-size: 65%;
+  font-weight: bold;
+  outline-style: none;
+  border: 2px solid #929292;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+}
 .server-parent {
   width: 99%;
   height: 99%;
@@ -613,7 +650,7 @@ select {
   box-shadow: 0 1px 3px 1px #182f2f;
   z-index: 95;
 }
-#keyLocation label {
+.keyLocation_title {
   clear: both;
   font-size: 1.1rem;
   font-weight: 700;

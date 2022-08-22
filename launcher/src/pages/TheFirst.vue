@@ -11,7 +11,7 @@
         <span v-else>Click to continue</span>
       </div>
       <lang-dialog @close="hideDialog" :open="dialogIsVisible">
-        <div id="flag" v-for="link in linkFlags" :key="link.langImg">
+        <!-- <div id="flag" v-for="link in linkFlags" :key="link.langImg">
           <div
             class="content-box"
             @click="setLang(link.langName, link.langSelect)"
@@ -19,7 +19,18 @@
             <img :src="link.langImg" id="flagId" />
             <span>{{ link.langName }}</span>
           </div>
-        </div>
+        </div> -->
+        <flag-button
+          @setting="setLang(link.langName, link.langSelect)"
+          v-for="link in linkFlags"
+          :key="link.langImg"
+          id="flag-btn"
+        >
+          <div class="langIco"><img :src="link.langImg" /></div>
+          <div class="langName">
+            <span>{{ link.langName }}</span>
+          </div>
+        </flag-button>
       </lang-dialog>
 
       <div class="selected-flag" v-if="isLanguageSelected">
@@ -42,10 +53,11 @@ import BaseLogo from "../components/layers/BaseLogo.vue";
 import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
 import ControlService from "@/store/ControlService";
+import FlagButton from "../components/UI/setting-page/FlagButton.vue";
 // import SetupServer from "./SetupServer.vue";
 export default {
   name: "TheFirst",
-  components: { BaseLogo, LangButton, LangDialog },
+  components: { BaseLogo, LangButton, LangDialog, FlagButton },
 
   emit: ["open", "page"],
   created() {
@@ -121,6 +133,35 @@ export default {
 </script>
 
 <style scoped>
+#flag-btn {
+  height: 42%;
+  background: #1d3d3ad7;
+}
+.langIco {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+.langIco img {
+  width: 85%;
+}
+.langName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  height: 100%;
+  text-transform: uppercase;
+  color: #eee;
+  font-weight: 500;
+  font-size: 100%;
+}
+.langName:hover,
+.langName:active {
+  font-weight: 700;
+}
 #container {
   border-radius: 10px;
   height: 100%;
