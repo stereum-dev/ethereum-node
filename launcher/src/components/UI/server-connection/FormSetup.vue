@@ -117,8 +117,8 @@
               : !model.pass.isFilled,
           }"
         >
-          <label v-if="keyAuth">KEYLOCATION</label>
-          <label v-if="!keyAuth">PASSWORD</label>
+          <label class="keyLocation_title" v-if="keyAuth">KEYLOCATION</label>
+          <label class="keyLocation_title" v-if="!keyAuth">PASSWORD</label>
           <label for="keylocation" class="ssvFile-label" v-if="keyAuth">
             {{ labelView }}
             <input
@@ -135,7 +135,7 @@
               notFilled: !model.pass.isFilled,
               isFilled: model.pass.isFilled,
             }"
-            v-if="!keyAuth"
+            v-else
             type="password"
             name="keylocation"
             id="keylocation"
@@ -221,10 +221,9 @@ export default {
     }),
     labelView() {
       if (this.model.keylocation.value === "") {
-        return "CLICK HERE";
+        return "";
       } else {
-        const label = this.model.keylocation.value;
-        return label;
+        return this.model.keylocation.value;
       }
     },
   },
@@ -232,8 +231,9 @@ export default {
     //path picker from the file input
     previewFiles(event) {
       const Path = event.target.files[0].path;
-      this.model.keylocation.value = Path;
-      console.log(this.model.keylocation.value);
+      let pathString = new String(Path);
+      let result = pathString.toString();
+      this.model.keylocation.value = result;
     },
     //finish
     changeLabel() {
@@ -409,13 +409,21 @@ export default {
   display: none;
 }
 .ssvFile-label {
+  width: 57%;
+  height: 80%;
+  margin-right: 16px;
+  border-radius: 40px;
+
+  background: #dbdbdb;
+  color: #242424 !important;
+  font-size: 65%;
+  font-weight: bold;
+  outline-style: none;
+  border: 2px solid #929292;
   display: flex;
-  width: 80%;
-  height: 100%;
   justify-content: center;
   align-items: center;
-  font-size: 85% !important;
-  cursor: pointer;
+  flex-wrap: nowrap;
 }
 .server-parent {
   width: 99%;
@@ -642,7 +650,7 @@ select {
   box-shadow: 0 1px 3px 1px #182f2f;
   z-index: 95;
 }
-#keyLocation label {
+.keyLocation_title {
   clear: both;
   font-size: 1.1rem;
   font-weight: 700;

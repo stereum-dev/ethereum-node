@@ -79,8 +79,8 @@ class ControlService extends EventEmitter {
   }
 
   async writeOneClickConfiguration(args) {
-    let buffer = []
-    args.services.forEach(service => {
+    let buffer = [];
+    args.services.forEach((service) => {
       buffer.push({
         id: service.id,
         name: service.name,
@@ -90,9 +90,12 @@ class ControlService extends EventEmitter {
         path: service.path,
         icon: service.icon,
         sIcon: service.sIcon,
-      })
-    })
-    return await this.promiseIpc.send("writeOneClickConfiguration", {array: buffer, checkpointURL: args.checkpointURL});
+      });
+    });
+    return await this.promiseIpc.send("writeOneClickConfiguration", {
+      array: buffer,
+      checkpointURL: args.checkpointURL,
+    });
   }
 
   async startOneClickServices() {
@@ -120,17 +123,17 @@ class ControlService extends EventEmitter {
   }
 
   async getServiceConfig(args) {
-    return await this.promiseIpc.send("getServiceConfig", args)
+    return await this.promiseIpc.send("getServiceConfig", args);
   }
 
   async getServiceYAML(args) {
-    return await this.promiseIpc.send("getServiceYAML", args)
+    return await this.promiseIpc.send("getServiceYAML", args);
   }
-  
+
   async writeServiceYAML(args) {
-    return await this.promiseIpc.send("writeServiceYAML", args)
+    return await this.promiseIpc.send("writeServiceYAML", args);
   }
-  
+
   async importKey(args) {
     //resolve proxy
     let files = [];
@@ -144,61 +147,60 @@ class ControlService extends EventEmitter {
   }
 
   async listValidators(args) {
-    return await this.promiseIpc.send("listValidators", args)
+    return await this.promiseIpc.send("listValidators", args);
   }
 
-  async listServices(){
-    return await this.promiseIpc.send("listServices")
+  async listServices() {
+    return await this.promiseIpc.send("listServices");
   }
 
-  async manageServiceState(args){
-    return await this.promiseIpc.send("manageServiceState", args)
+  async manageServiceState(args) {
+    return await this.promiseIpc.send("manageServiceState", args);
   }
 
-  async runAllUpdates(){
-    return await this.promiseIpc.send("runAllUpdates")
+  async runAllUpdates() {
+    return await this.promiseIpc.send("runAllUpdates");
   }
 
-  async updateServices(args){
-    return await this.promiseIpc.send("updateServices", args)
+  async updateServices(args) {
+    return await this.promiseIpc.send("updateServices", args);
   }
 
-  async updateStereum(args){
-    return await this.promiseIpc.send("updateStereum", args)
+  async updateStereum(args) {
+    return await this.promiseIpc.send("updateStereum", args);
   }
 
-  async checkUpdates(){
-    return await this.promiseIpc.send("checkUpdates")
+  async checkUpdates() {
+    return await this.promiseIpc.send("checkUpdates");
   }
 
-  async getCurrentStereumVersion(){
-    return await this.promiseIpc.send("getCurrentStereumVersion")
+  async getCurrentStereumVersion() {
+    return await this.promiseIpc.send("getCurrentStereumVersion");
   }
 
-  async getTasks(){
-    return await this.promiseIpc.send("getTasks") // gets the current available Data
+  async getTasks() {
+    return await this.promiseIpc.send("getTasks"); // gets the current available Data
   }
 
-  async clearTasks(){
-    return await this.promiseIpc.send("clearTasks") // clears all data
+  async clearTasks() {
+    return await this.promiseIpc.send("clearTasks"); // clears all data
   }
 
-  async updateTasks(){
-    return await this.promiseIpc.send("updateTasks")  // updates task progression
+  async updateTasks() {
+    return await this.promiseIpc.send("updateTasks"); // updates task progression
   }
 
-  async insertSSVNetworkKeys(args){
-    return await this.promiseIpc.send("insertSSVNetworkKeys", args)  // insert existing operator keys
+  async insertSSVNetworkKeys(args) {
+    return await this.promiseIpc.send("insertSSVNetworkKeys", args); // insert existing operator keys
   }
 
-  async refreshServiceInfos(){
-    return await this.promiseIpc.send("refreshServiceInfos")  // insert existing operator keys
+  async refreshServiceInfos() {
+    return await this.promiseIpc.send("refreshServiceInfos"); // insert existing operator keys
   }
 
-  async getOperatorPageURL(args){
-    return await this.promiseIpc.send("getOperatorPageURL",args)  // insert existing operator keys
+  async getOperatorPageURL(args) {
+    return await this.promiseIpc.send("getOperatorPageURL", args); // insert existing operator keys
   }
-
 }
 if (!instance) {
   instance = new ControlService(window.electron);
