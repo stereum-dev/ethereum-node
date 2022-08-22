@@ -106,7 +106,7 @@ export default {
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.ssvDashboardActive = true;
-      window.open("https://app.shifu.ssv.network/")
+      window.open("https://app.ssv.network/")
     },
     registerSecretkeyHandler() {
       this.registerModalActive = false;
