@@ -11,7 +11,6 @@ eth2:
   BeaconNodeAddr: "http://beacon:5052"
 eth1:
   ETH1Addr: ""
-  RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
 OperatorPrivateKey: ""
 global:
   LogLevel: "debug"
@@ -22,7 +21,6 @@ MetricsAPIPort: 15000
   BeaconNodeAddr: "${consensusClients.map(client => client.buildConsensusClientHttpEndpointUrl())[0]}"
 eth1:
   ETH1Addr: "${executionClients.map(client => client.buildExecutionClientWsEndpointUrl())[0]}"
-  RegistryContractAddr: "0x687fb596F3892904F879118e2113e1EEe8746C2E"
 OperatorPrivateKey: ""
 global:
   LogLevel: info
