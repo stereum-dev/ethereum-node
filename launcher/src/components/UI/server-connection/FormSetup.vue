@@ -135,7 +135,7 @@
               notFilled: !model.pass.isFilled,
               isFilled: model.pass.isFilled,
             }"
-            v-if="!keyAuth"
+            v-else
             type="password"
             name="keylocation"
             id="keylocation"
@@ -223,8 +223,7 @@ export default {
       if (this.model.keylocation.value === "") {
         return "";
       } else {
-        const label = this.model.keylocation.value;
-        return label;
+        return this.model.keylocation.value;
       }
     },
   },
@@ -232,8 +231,9 @@ export default {
     //path picker from the file input
     previewFiles(event) {
       const Path = event.target.files[0].path;
-      this.model.keylocation.value = Path;
-      console.log(this.model.keylocation.value);
+      let pathString = new String(Path);
+      let result = pathString.toString();
+      this.model.keylocation.value = result;
     },
     //finish
     changeLabel() {
