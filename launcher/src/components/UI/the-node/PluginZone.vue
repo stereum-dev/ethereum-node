@@ -19,7 +19,7 @@
             <div class="menu-content">
               <div class="power">
                 <img
-                  v-if="isServicePending"
+                 v-if="item.serviceIsPending"
                   class="pending"
                   src="/img/icon/plugin-menu-icons/turning_circle.gif"
                   alt="icon"
@@ -127,7 +127,7 @@ export default {
     },
     stateHandler: async function (item) {
       this.isServiceOn = false;
-      this.isServicePending = true;
+      item.serviceIsPending = true;
       let state = "stopped";
       if (item.state === "exited") {
         state = "started";
@@ -141,7 +141,7 @@ export default {
       } catch (err) {
         console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
-      this.isServicePending = false;
+      item.serviceIsPending = false;
       this.updateStates();
     },
     openDefaultBrowser(el) {
