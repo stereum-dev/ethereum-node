@@ -43,15 +43,7 @@
           @drop.prevent.stop="dropFileHandler"
         >
           <div class="table-row" v-for="(item, index) in keys" :key="index">
-            <grafiti-validator
-              v-if="item.isGrafitiBoxActive"
-              @confirm-change="grafitiConfirmHandler(item)"
-            ></grafiti-validator>
-            <exit-validator v-else-if="item.isExitBoxActive"></exit-validator>
-            <remove-validator
-              v-else-if="item.isRemoveBoxActive"
-            ></remove-validator>
-            <div class="rowContent" v-else>
+            <div class="rowContent">
               <span class="circle"></span>
               <span class="category"
                 >{{ item.key.substring(0, 20) }}...{{
@@ -74,12 +66,7 @@
                     alt="icon"
                   />
                 </div>
-                <div
-                  class="copy-box"
-                  @mouseover="item.showCopyText = true"
-                  @mouseleave="item.showCopyText = false"
-                  @click="copyHandler(item)"
-                >
+                <div class="copy-box">
                   <img
                     class="copy-icon"
                     src="../../../../public/img/icon/the-staking/copy6.png"
@@ -109,6 +96,19 @@
                 </div>
               </div>
             </div>
+            <grafiti-validator
+              v-if="item.isGrafitiBoxActive"
+              @confirm-change="grafitiConfirmHandler(item)"
+            ></grafiti-validator>
+            <exit-validator v-if="item.isExitBoxActive"></exit-validator>
+            <remove-validator v-if="item.isRemoveBoxActive" :item="item">
+            </remove-validator>
+            <remove-key-modal
+              v-if="item.isRemoveBoxActive"
+              :item="item"
+              @remove-modal="item.isRemoveBoxActive = false"
+              @delete-key="validatorRemoveConfirm(item)"
+            ></remove-key-modal>
           </div>
         </div>
         <div class="table-header" v-if="enterPasswordBox">
@@ -207,6 +207,7 @@ import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
+import RemoveKeyModal from "./RemoveKeyModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -220,6 +221,7 @@ export default {
     GrafitiValidator,
     ExitValidator,
     RemoveValidator,
+    RemoveKeyModal,
   },
   props: ["button"],
   data() {
@@ -240,6 +242,7 @@ export default {
       importIsProcessing: false,
       importIsDone: false,
       password: "",
+      displayRemoveValidatorModal: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
       slashedStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Slashed.png",
@@ -295,7 +298,9 @@ export default {
       return {
         isGrafitiBoxActive: false,
         isRemoveBoxActive: false,
+        isRemoveModalActive: false,
         isExitBoxActive: false,
+        displayExitModal: false,
         ...item,
       };
     });
@@ -314,12 +319,16 @@ export default {
   methods: {
     grafitiDisplayHandler(el) {
       el.isGrafitiBoxActive = true;
+      el.isRemoveModalActive = true;
     },
     grafitiConfirmHandler(el) {
       el.isGrafitiBoxActive = false;
     },
     removeModalDisplayHandler(el) {
       el.isRemoveBoxActive = true;
+    },
+    validatorRemoveConfirm(el) {
+      el.isRemoveBoxActive = false;
     },
     exitBtnHandler(el) {
       el.isExitBoxActive = true;
@@ -555,7 +564,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
+.keys-table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1;
+}
 .searchOptions {
   grid-column: 1/3;
   grid-row: 2/3;
@@ -575,11 +592,19 @@ export default {
 }
 
 .table-content {
+  width: 100%;
   height: 92%;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 2;
 }
-
+remove-validator {
+  z-index: 10000;
+}
 .table-row {
   width: 99%;
   height: 30px;
@@ -587,6 +612,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .table-row .rowContent {
   width: 100%;
@@ -598,7 +624,7 @@ export default {
   padding: 1px;
   position: relative;
   box-sizing: border-box;
-  z-index: 1;
+  z-index: 3;
 }
 
 .table-row span {
@@ -707,14 +733,6 @@ export default {
   margin: 0 auto;
 }
 
-.copy-box .copy-text {
-  position: absolute;
-  bottom: -17px;
-  left: 6px;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
 .option-box .grafiti-box {
   width: max-content;
   height: 100%;
@@ -724,14 +742,6 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-}
-
-.grafiti-box .grafiti-text {
-  position: absolute;
-  bottom: -17px;
-  left: 0;
-  transition-duration: 500ms;
-  z-index: 1;
 }
 
 .option-box .remove-box {
@@ -745,14 +755,6 @@ export default {
   position: relative;
 }
 
-.remove-box .remove-text {
-  position: absolute;
-  bottom: -17px;
-  left: -1px;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
 .option-box .exit-box {
   width: max-content;
   height: 100%;
@@ -764,20 +766,8 @@ export default {
   position: relative;
 }
 
-.exit-box .exit-text {
-  position: absolute;
-  bottom: -17px;
-  right: 9px;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
-.keys-table {
-  width: 100%;
-  height: 100%;
-}
-
 .table-header {
+  width: 100%;
   height: 30px;
   border-bottom: 7px solid #bfbfbf;
   display: grid;
