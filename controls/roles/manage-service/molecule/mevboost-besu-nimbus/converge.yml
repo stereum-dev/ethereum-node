@@ -1,0 +1,154 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    besu_service: 607da19e-2316-11ed-99a6-538aeb4affb0
+    nimbus_service: 60dab730-2316-11ed-87e9-33da6b458541
+    mevboost_service: 610ebb66-2316-11ed-b44b-9f89e153686b
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: hyperledger/besu:{{ stereum_static.defaults.versions.besu }}
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --p2p-port=30303
+                - --p2p-host=0.0.0.0
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-api=WEB3,ETH,NET
+                - --rpc-ws-host=0.0.0.0
+                - --host-allowlist=*
+                - --metrics-enabled
+                - --metrics-host=0.0.0.0
+                - --logging=INFO
+                - --engine-rpc-enabled=true
+                - --engine-host-allowlist=*
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # nimbus beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Create api-token file
+        copy:
+          content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
+          dest: /opt/app/services/{{ nimbus_service }}/validator/api-token.txt
+          force: no
+        become: yes
+      - name: Waiting for the services to start properly
+        pause:
+          seconds: 15
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconValidatorService
+              id: "{{ nimbus_service }}"
+              image: statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              command:
+                - --network=goerli
+                - --data-dir=/opt/app/beacon
+                - --validators-dir=/opt/app/validators
+                - --secrets-dir=/opt/app/secrets
+                - --web3-url=http://stereum-{{ besu_service }}:8551
+                - --tcp-port=9000
+                - --udp-port=9000
+                - --rpc
+                - --rpc-port=9190
+                - --rpc-address=0.0.0.0
+                - --metrics
+                - --metrics-port=8008
+                - --metrics-address=0.0.0.0
+                - --rest
+                - --rest-address=0.0.0.0
+                - --rest-port=5052
+                - --graffiti="stereum.net"
+                - --jwt-secret=/engine.jwt
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --keymanager
+                - --keymanager-address=0.0.0.0
+                - --keymanager-token-file=/opt/app/validators/api-token.txt
+                - --payload-builder=on
+                - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ nimbus_service }}/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ nimbus_service }}/validator:/opt/app/validators"
+                - "/opt/app/services/{{ nimbus_service }}/validator/secrets:/opt/app/secrets"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net
+              user: "2000"
+              volumes: []
+
+# EOF
