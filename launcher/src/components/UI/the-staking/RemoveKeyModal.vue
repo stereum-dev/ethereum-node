@@ -54,6 +54,7 @@ export default {
   width: 40%;
   height: 45%;
   border-radius: 45px;
+  border: 3px solid #bfbfbf;
   position: absolute;
   top: 20%;
   left: 30%;
