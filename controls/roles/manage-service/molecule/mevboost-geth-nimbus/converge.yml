@@ -1,0 +1,141 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    geth_service: ef6ba278-2313-11ed-b0b9-536749fb9bcb
+    nimbus_service: f0369a0a-2313-11ed-8fe9-4bf0f9c65ff1
+    mevboost_service: f0521370-2313-11ed-9a9b-a745c2468767
+
+  tasks:
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # nimbus beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Create api-token file
+        copy:
+          content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
+          dest: /opt/app/services/{{ nimbus_service }}/validator/api-token.txt
+          force: no
+        become: yes
+      - name: Waiting for the services to start properly
+        pause:
+          seconds: 15
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconValidatorService
+              id: "{{ nimbus_service }}"
+              image: statusim/nimbus-eth2:{{ stereum_static.defaults.versions.nimbus }}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              env: {}
+              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              command:
+                - --network=goerli
+                - --data-dir=/opt/app/beacon
+                - --validators-dir=/opt/app/validators
+                - --secrets-dir=/opt/app/secrets
+                - --web3-url=http://stereum-{{ geth_service }}:8551
+                - --tcp-port=9000
+                - --udp-port=9000
+                - --rpc
+                - --rpc-port=9190
+                - --rpc-address=0.0.0.0
+                - --metrics
+                - --metrics-port=8008
+                - --metrics-address=0.0.0.0
+                - --rest
+                - --rest-address=0.0.0.0
+                - --rest-port=5052
+                - --graffiti="stereum.net"
+                - --jwt-secret=/engine.jwt
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --keymanager
+                - --keymanager-address=0.0.0.0
+                - --keymanager-token-file=/opt/app/validators/api-token.txt
+                - --payload-builder=on
+                - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ nimbus_service }}/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ nimbus_service }}/validator:/opt/app/validators"
+                - "/opt/app/services/{{ nimbus_service }}/validator/secrets:/opt/app/secrets"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net
+              user: "2000"
+              volumes: []
+
+# EOF
