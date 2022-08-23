@@ -25,7 +25,7 @@
             configuration:
               service: BesuService
               id: "{{ besu_service }}"
-              image: hyperledger/besu:latest
+              image: hyperledger/besu:{{ stereum_static.defaults.versions.besu }}
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
@@ -75,7 +75,7 @@
             configuration:
               service: LighthouseBeaconService
               id: "{{ lighthouse_beacon_service }}"
-              image: sigp/lighthouse:latest-unstable
+              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
               env: {}
               ports:
                 - 0.0.0.0:9000:9000/tcp
@@ -119,7 +119,7 @@
             configuration:
               service: LighthouseValidatorService
               id: "{{ lighthouse_validator_service }}"
-              image: sigp/lighthouse:latest-unstable
+              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
               env: {}
               command:
                 - lighthouse
@@ -157,7 +157,7 @@
             configuration:
               service: MevBoostService
               id: "{{ mevboost_service }}"
-              image: flashbots/mev-boost:latest
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
               env: {}
               ports: []
               command: []
@@ -173,5 +173,3 @@
               volumes: []
 
 # EOF
-
-# - https://0xb124d80a00b80815397b4e7f1f05377ccc83aeeceb6be87963ba3649f1e6efa32ca870a88845917ec3f26a8e2aa25c77@builder-relay-ropsten.flashbots.net,http://0xb8a0bad3f3a4f0b35418c03357c6d42017582437924a1e1ca6aee2072d5c38d321d1f8b22cd36c50b0c29187b6543b6e@builder-relay.virginia.ropsten.blxrbdn.com

@@ -24,7 +24,7 @@
             configuration:
               service: BesuService
               id: "{{ besu_service }}"
-              image: hyperledger/besu:latest
+              image: hyperledger/besu:{{ stereum_static.defaults.versions.besu }}
               ports:
                 - 0.0.0.0:30303:30303/tcp
                 - 0.0.0.0:30303:30303/udp
@@ -169,7 +169,7 @@
             configuration:
               service: MevBoostService
               id: "{{ mevboost_service }}"
-              image: flashbots/mev-boost:latest
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
               env: {}
               ports: []
               command: []

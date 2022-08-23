@@ -156,7 +156,7 @@
             configuration:
               service: MevBoostService
               id: "{{ mevboost_service }}"
-              image: flashbots/mev-boost:latest
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
               env: {}
               ports: []
               command: []
