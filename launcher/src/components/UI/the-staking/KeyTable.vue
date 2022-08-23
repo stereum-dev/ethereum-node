@@ -43,61 +43,70 @@
           @drop.prevent.stop="dropFileHandler"
         >
           <div class="table-row" v-for="(item, index) in keys" :key="index">
-            <span class="circle"></span>
-            <span class="category"
-              >{{ item.key.substring(0, 20) }}...{{
-                item.key.substring(item.key.length - 4, item.key.length)
-              }}</span
-            >
-            <img class="service-icon" :src="item.icon" alt="icon" />
-            <span class="since">{{ item.activeSince }}</span>
-            <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
-            <span class="balance">{{ item.balance }}</span>
-            <div class="option-box">
-              <div
-                class="grafiti-box"
-                @mouseover="item.showGrafitiText = true"
-                @mouseleave="item.showGrafitiText = false"
+            <grafiti-validator
+              v-if="item.isGrafitiBoxActive"
+              @confirm-change="grafitiConfirmHandler(item)"
+            ></grafiti-validator>
+            <exit-validator v-else-if="item.isExitBoxActive"></exit-validator>
+            <remove-validator
+              v-else-if="item.isRemoveBoxActive"
+            ></remove-validator>
+            <div class="rowContent" v-else>
+              <span class="circle"></span>
+              <span class="category"
+                >{{ item.key.substring(0, 20) }}...{{
+                  item.key.substring(item.key.length - 4, item.key.length)
+                }}</span
               >
-                <img
-                  class="grafiti-icon"
-                  src="../../../../public/img/icon/the-staking/option-graffiti.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="copy-box"
-                @mouseover="item.showCopyText = true"
-                @mouseleave="item.showCopyText = false"
-                @click="copyHandler(item)"
-              >
-                <img
-                  class="copy-icon"
-                  src="../../../../public/img/icon/the-staking/copy6.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="remove-box"
-                @mouseover="item.showRemoveText = true"
-                @mouseleave="item.showRemoveText = false"
-              >
-                <img
-                  class="remove-icon"
-                  src="../../../../public/img/icon/the-staking/option-remove.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="exit-box"
-                @mouseover="item.showExitText = true"
-                @mouseleave="item.showExitText = false"
-              >
-                <img
-                  class="exit-icon"
-                  src="../../../../public/img/icon/the-staking/redexit-icon.png"
-                  alt="icon"
-                />
+              <img class="service-icon" :src="item.icon" alt="icon" />
+              <span class="since">{{ item.activeSince }}</span>
+              <img
+                class="state-icon"
+                :src="stateIconHandler(item)"
+                alt="icon"
+              />
+              <span class="balance">{{ item.balance }}</span>
+              <div class="option-box">
+                <div class="grafiti-box" @click="grafitiDisplayHandler(item)">
+                  <img
+                    class="grafiti-icon"
+                    src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                    alt="icon"
+                  />
+                </div>
+                <div
+                  class="copy-box"
+                  @mouseover="item.showCopyText = true"
+                  @mouseleave="item.showCopyText = false"
+                  @click="copyHandler(item)"
+                >
+                  <img
+                    class="copy-icon"
+                    src="../../../../public/img/icon/the-staking/copy6.png"
+                    alt="icon"
+                  />
+                </div>
+                <div
+                  class="remove-box"
+                  @click="removeModalDisplayHandler(item)"
+                >
+                  <img
+                    class="remove-icon"
+                    src="../../../../public/img/icon/the-staking/option-remove.png"
+                    alt="icon"
+                  />
+                </div>
+                <div
+                  class="exit-box"
+                  @mouseover="item.showExitText = true"
+                  @mouseleave="item.showExitText = false"
+                >
+                  <img
+                    class="exit-icon"
+                    src="../../../../public/img/icon/the-staking/redexit-icon.png"
+                    alt="icon"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -195,13 +204,23 @@
 import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
+import GrafitiValidator from "./GrafitiValidator.vue";
+import ExitValidator from "./ExitValidator.vue";
+import RemoveValidator from "./RemoveValidatore.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
-  components: { ShowKey, DropZone, KeyModal },
+  components: {
+    ShowKey,
+    DropZone,
+    KeyModal,
+    GrafitiValidator,
+    ExitValidator,
+    RemoveValidator,
+  },
   props: ["button"],
   data() {
     return {
@@ -271,7 +290,18 @@ export default {
       };
     },
   },
+  created() {
+    this.keys = this.keys.map((item) => {
+      return {
+        isGrafitiBoxActive: false,
+        isRemoveBoxActive: false,
+        isExitBoxActive: false,
+        ...item,
+      };
+    });
+  },
   mounted() {
+    console.log(this.keys);
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
@@ -282,16 +312,29 @@ export default {
     this.checkKeyExists();
   },
   methods: {
-    copyHandler(item) {
-      let toCopy = item.key;
-      this.$copyText(toCopy)
-        .then(() => {
-          console.log("copied!");
-        })
-        .catch(() => {
-          console.log(`can't copy`);
-        });
+    grafitiDisplayHandler(el) {
+      el.isGrafitiBoxActive = true;
     },
+    grafitiConfirmHandler(el) {
+      el.isGrafitiBoxActive = false;
+    },
+    removeModalDisplayHandler(el) {
+      el.isRemoveBoxActive = true;
+    },
+    exitBtnHandler(el) {
+      el.isExitBoxActive = true;
+    },
+
+    // copyHandler(item) {
+    //   let toCopy = item.key;
+    //   this.$copyText(toCopy)
+    //     .then(() => {
+    //       console.log("copied!");
+    //     })
+    //     .catch(() => {
+    //       console.log(`can't copy`);
+    //     });
+    // },
     stateIconHandler(item) {
       switch (item.status) {
         case "active_online":
@@ -541,6 +584,13 @@ export default {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.table-row .rowContent {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 3% 30% 7% 14% 6% 10% 30%;
   background-color: rgb(89, 89, 89);
@@ -548,6 +598,7 @@ export default {
   padding: 1px;
   position: relative;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 .table-row span {
@@ -618,7 +669,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
-  align-items: center;
 }
 
 .option-box img {
@@ -647,13 +697,14 @@ export default {
 }
 
 .option-box .copy-box {
+  width: max-content;
   height: 100%;
   grid-column: 1/2;
   grid-row: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  margin: 0 auto;
 }
 
 .copy-box .copy-text {
@@ -665,7 +716,9 @@ export default {
 }
 
 .option-box .grafiti-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 2;
   display: flex;
   justify-content: center;
@@ -682,7 +735,9 @@ export default {
 }
 
 .option-box .remove-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 4;
   display: flex;
   justify-content: center;
@@ -699,7 +754,9 @@ export default {
 }
 
 .option-box .exit-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 5;
   display: flex;
   justify-content: center;
