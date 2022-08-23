@@ -73,21 +73,14 @@
                     alt="icon"
                   />
                 </div>
-                <div
-                  class="remove-box"
-                  @click="removeModalDisplayHandler(item)"
-                >
+                <div class="remove-box" @click="removeModalDisplay(item)">
                   <img
                     class="remove-icon"
                     src="../../../../public/img/icon/the-staking/option-remove.png"
                     alt="icon"
                   />
                 </div>
-                <div
-                  class="exit-box"
-                  @mouseover="item.showExitText = true"
-                  @mouseleave="item.showExitText = false"
-                >
+                <div class="exit-box" @click="exitModalDisplay(item)">
                   <img
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/redexit-icon.png"
@@ -101,14 +94,19 @@
               @confirm-change="grafitiConfirmHandler(item)"
             ></grafiti-validator>
             <exit-validator v-if="item.isExitBoxActive"></exit-validator>
-            <remove-validator v-if="item.isRemoveBoxActive" :item="item">
-            </remove-validator>
-            <remove-key-modal
+            <exit-single-modal
+              v-if="item.isExitBoxActive"
+              :item="item"
+              @exit-modal="item.isExitBoxActive = false"
+              @confirm-btn="exitChainConfirm(item)"
+            ></exit-single-modal>
+            <remove-validator v-if="item.isRemoveBoxActive"> </remove-validator>
+            <remove-single-modal
               v-if="item.isRemoveBoxActive"
               :item="item"
               @remove-modal="item.isRemoveBoxActive = false"
               @delete-key="validatorRemoveConfirm(item)"
-            ></remove-key-modal>
+            ></remove-single-modal>
           </div>
         </div>
         <div class="table-header" v-if="enterPasswordBox">
@@ -206,8 +204,9 @@ import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
+import ExitSingleModal from "./ExitSingleModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
-import RemoveKeyModal from "./RemoveKeyModal.vue";
+import RemoveSingleModal from "./RemoveSingleModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -221,7 +220,8 @@ export default {
     GrafitiValidator,
     ExitValidator,
     RemoveValidator,
-    RemoveKeyModal,
+    RemoveSingleModal,
+    ExitSingleModal,
   },
   props: ["button"],
   data() {
@@ -306,7 +306,6 @@ export default {
     });
   },
   mounted() {
-    console.log(this.keys);
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
@@ -324,14 +323,17 @@ export default {
     grafitiConfirmHandler(el) {
       el.isGrafitiBoxActive = false;
     },
-    removeModalDisplayHandler(el) {
+    removeModalDisplay(el) {
       el.isRemoveBoxActive = true;
     },
     validatorRemoveConfirm(el) {
       el.isRemoveBoxActive = false;
     },
-    exitBtnHandler(el) {
+    exitModalDisplay(el) {
       el.isExitBoxActive = true;
+    },
+    exitChainConfirm(el) {
+      el.isExitBoxActive = false;
     },
 
     // copyHandler(item) {
