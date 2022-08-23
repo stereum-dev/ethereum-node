@@ -18,14 +18,5 @@ export default {};
   pointer-events: none;
   z-index: 10000;
 }
-.removeRow span {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 auto;
-  text-transform: uppercase;
-  color: rgb(191, 191, 191);
-}
-remove-key-modal {
-  z-index: 200;
-}
+
 </style>

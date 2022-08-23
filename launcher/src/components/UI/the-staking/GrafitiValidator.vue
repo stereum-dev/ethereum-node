@@ -32,8 +32,8 @@ export default {};
   grid-template-rows: 1fr;
   background-color: #723979;
   border-radius: 50px;
-  z-index: 1;
-  position: relative;
+  position: absolute;
+  z-index: 1000;
 }
 .iconBox {
   grid-column: 1/2;
