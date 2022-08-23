@@ -21,7 +21,7 @@ stereum_static:
       nethermind: "1.13.5"
 
       # ssv
-      ssv_network: v0.3.0-rc.1
+      ssv_network: v0.3.0
 
       # tools
       curl: "7.83.1"

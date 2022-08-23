@@ -23,7 +23,7 @@
             configuration:
               id: "{{ ssv_service }}"
               service: SSVNetworkService
-              image: "bloxstaking/ssv-node-shifu:{{ stereum_static.defaults.versions.ssv_network }}"
+              image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.ssv_network }}"
               ports:
                 - 0.0.0.0:12000:12000/udp
                 - 0.0.0.0:13000:13000/tcp

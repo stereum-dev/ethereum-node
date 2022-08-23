@@ -18,7 +18,8 @@
           <div class="menu-content">
             <div class="power">
               <img
-                v-if="item.isServicePending"
+                v-if="item.serviceIsPending"
+                @click="stateHandler(item)"
                 class="pending"
                 src="/img/icon/plugin-menu-icons/turning_circle.gif"
                 alt="icon"
@@ -84,10 +85,6 @@ export default {
   beforeMount() {
     this.updateStates();
   },
-  mounted() {
-    console.log('1',this.installedServices);
-    console.log('2',this.runningServices);
-  },
   updated() {
     this.updateStates();
   },
@@ -116,8 +113,9 @@ export default {
     },
     stateHandler: async function (item) {
       this.isServiceOn = false;
-      this.isServicePending = true;
+      item.serviceIsPending = true;
       let state = "stopped";
+      console.log("2", this.installedServices[4].state);
       if (item.state === "exited") {
         state = "started";
         this.isServiceOn = true;
@@ -130,7 +128,8 @@ export default {
       } catch (err) {
         console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
-      this.isServicePending = false;
+
+      item.serviceIsPending = false;
       this.updateStates();
     },
     openDefaultBrowser(el) {

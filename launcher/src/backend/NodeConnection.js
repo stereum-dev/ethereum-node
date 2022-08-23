@@ -103,7 +103,7 @@ export class NodeConnection {
             "apt update &&\
                     apt install -y software-properties-common &&\
                     add-apt-repository --yes --update ppa:ansible/ansible &&\
-                    apt install -y pip ansible tar gzip wget"
+                    apt install -y pip ansible tar gzip wget git"
           );
         } catch (err) {
           log.error(err);
@@ -446,7 +446,7 @@ export class NodeConnection {
       return resolve(serviceYAML.stdout);
     });
   }
-  
+
   /**
    * write a specific service YAML
    *
