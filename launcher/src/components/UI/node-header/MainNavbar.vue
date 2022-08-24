@@ -209,6 +209,7 @@ export default {
             name: "Stereum",
             version: response.stereum[response.stereum.length - 1].name,
             current: currentVersion ? currentVersion.name : "-",
+            current_commit: currentVersion ? currentVersion.commit : "-",
           };
 
           console.log("Stereum Update Available!");
