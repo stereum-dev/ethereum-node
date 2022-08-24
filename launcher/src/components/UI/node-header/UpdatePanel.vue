@@ -104,7 +104,11 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="confirmUpdate" @click="$emit('updateConfirm')">
+              <div
+                class="confirmUpdate"
+                @click="$emit('updateConfirm')"
+                :class="{ disabled: !checkAvailableServicesNewUpdate() }"
+              >
                 <span>update all</span>
                 <img
                   src="/img/icon/node-journal-icons/download2.png"
@@ -157,9 +161,16 @@ export default {
       }
       return false;
     },
+    checkAvailableServicesNewUpdate() {
+      if (this.newUpdates.length <= 0) {
+        return false;
+      }
+      return true;
+    },
   },
   mounted() {
     this.forceUpdateCheck = true;
+    this.checkAvailableServicesNewUpdate();
   },
 };
 </script>

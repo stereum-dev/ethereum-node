@@ -49,7 +49,8 @@
 export default {
   methods: {
     OpenStereumGithub() {
-      let URL = "https://github.com/stereum-dev/ethereum-node/issues/ ";
+      let URL =
+        "https://github.com/stereum-dev/ethereum-node/issues/new?assignees=&labels=bug&template=bug_report.md&title=BUG%3A+";
       window.open(URL, "_blank");
     },
     OpenStereumDiscord() {
