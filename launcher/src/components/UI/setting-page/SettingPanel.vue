@@ -67,7 +67,7 @@ import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
 import { mapWritableState } from "pinia";
-import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
@@ -108,7 +108,7 @@ export default {
           title: "Stereum Version",
           isColor: "alpha",
           itemType: "update",
-          btnValue: "alfa",
+          btnValue: "ALPHA",
         },
 
         {
@@ -135,10 +135,9 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapWritableState(useServices, {
-      stereumVersion: "stereumVersion",
-    }),
+  mounted() {
+    this.forceUpdateCheck = true;
+    this.stereumCurrentVersion();
   },
   updated() {
     this.checkSettings();
@@ -148,12 +147,23 @@ export default {
     this.selectror();
     this.checkVersion();
   },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
+    }),
+  },
 
   methods: {
+    checkStereumUpdate() {
+      if (this.stereumUpdate && this.stereumUpdate.current) {
+        return true;
+      }
+      return false;
+    },
     confirm() {
       // confirm method have to write here
       // alert("Done!");
-      alert(this.stereumVersion);
     },
     selectror() {
       if (this.langActive === true) {
@@ -182,10 +192,18 @@ export default {
       try {
         let stereumVersion = await ControlService.getCurrentStereumVersion();
         this.stereumVersion = stereumVersion;
-        console.log(stereumVersion);
       } catch (error) {
         console.log("Couldn't fetch versions...\nError:", err.message);
       }
+    },
+    stereumCurrentVersion() {
+      this.updateItems.map((item) => {
+        if (item.title === "Stereum Version" && this.checkStereumUpdate) {
+          item.btnValue = this.stereumUpdate.current;
+        } else {
+          item.btnValue === "ALPHA";
+        }
+      });
     },
   },
 };

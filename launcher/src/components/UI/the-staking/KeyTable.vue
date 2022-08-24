@@ -43,63 +43,70 @@
           @drop.prevent.stop="dropFileHandler"
         >
           <div class="table-row" v-for="(item, index) in keys" :key="index">
-            <span class="circle"></span>
-            <span class="category"
-              >{{ item.key.substring(0, 20) }}...{{
-                item.key.substring(item.key.length - 4, item.key.length)
-              }}</span
-            >
-            <img class="service-icon" :src="item.icon" alt="icon" />
-            <span class="since">{{ item.activeSince }}</span>
-            <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
-            <span class="balance">{{ item.balance }}</span>
-            <div class="option-box">
-              <div
-                class="grafiti-box"
-                @mouseover="item.showGrafitiText = true"
-                @mouseleave="item.showGrafitiText = false"
+            <div class="rowContent">
+              <span class="circle"></span>
+              <span class="category"
+                >{{ item.key.substring(0, 20) }}...{{
+                  item.key.substring(item.key.length - 4, item.key.length)
+                }}</span
               >
-                <img
-                  class="grafiti-icon"
-                  src="../../../../public/img/icon/the-staking/option-graffiti.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="copy-box"
-                @mouseover="item.showCopyText = true"
-                @mouseleave="item.showCopyText = false"
-                @click="copyHandler(item)"
-              >
-                <img
-                  class="copy-icon"
-                  src="../../../../public/img/icon/the-staking/copy6.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="remove-box"
-                @mouseover="item.showRemoveText = true"
-                @mouseleave="item.showRemoveText = false"
-              >
-                <img
-                  class="remove-icon"
-                  src="../../../../public/img/icon/the-staking/option-remove.png"
-                  alt="icon"
-                />
-              </div>
-              <div
-                class="exit-box"
-                @mouseover="item.showExitText = true"
-                @mouseleave="item.showExitText = false"
-              >
-                <img
-                  class="exit-icon"
-                  src="../../../../public/img/icon/the-staking/redexit-icon.png"
-                  alt="icon"
-                />
+              <img class="service-icon" :src="item.icon" alt="icon" />
+              <span class="since">{{ item.activeSince }}</span>
+              <img
+                class="state-icon"
+                :src="stateIconHandler(item)"
+                alt="icon"
+              />
+              <span class="balance">{{ item.balance }}</span>
+              <div class="option-box">
+                <div class="grafiti-box" @click="grafitiDisplayHandler(item)">
+                  <img
+                    class="grafiti-icon"
+                    src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                    alt="icon"
+                  />
+                </div>
+                <div class="copy-box">
+                  <img
+                    class="copy-icon"
+                    src="../../../../public/img/icon/the-staking/copy6.png"
+                    alt="icon"
+                  />
+                </div>
+                <div class="remove-box" @click="removeModalDisplay(item)">
+                  <img
+                    class="remove-icon"
+                    src="../../../../public/img/icon/the-staking/option-remove.png"
+                    alt="icon"
+                  />
+                </div>
+                <div class="exit-box" @click="exitModalDisplay(item)">
+                  <img
+                    class="exit-icon"
+                    src="../../../../public/img/icon/the-staking/redexit-icon.png"
+                    alt="icon"
+                  />
+                </div>
               </div>
             </div>
+            <grafiti-validator
+              v-if="item.isGrafitiBoxActive"
+              @confirm-change="grafitiConfirmHandler(item)"
+            ></grafiti-validator>
+            <exit-validator v-if="item.isExitBoxActive"></exit-validator>
+            <exit-single-modal
+              v-if="item.isExitBoxActive"
+              :item="item"
+              @exit-modal="item.isExitBoxActive = false"
+              @confirm-btn="exitChainConfirm(item)"
+            ></exit-single-modal>
+            <remove-validator v-if="item.isRemoveBoxActive"> </remove-validator>
+            <remove-single-modal
+              v-if="item.isRemoveBoxActive"
+              :item="item"
+              @remove-modal="item.isRemoveBoxActive = false"
+              @delete-key="validatorRemoveConfirm(item)"
+            ></remove-single-modal>
           </div>
         </div>
         <div class="table-header" v-if="enterPasswordBox">
@@ -195,13 +202,27 @@
 import DropZone from "./DropZone.vue";
 import ShowKey from "./ShowKey.vue";
 import KeyModal from "./KeyModal.vue";
+import GrafitiValidator from "./GrafitiValidator.vue";
+import ExitValidator from "./ExitValidator.vue";
+import ExitSingleModal from "./ExitSingleModal.vue";
+import RemoveValidator from "./RemoveValidatore.vue";
+import RemoveSingleModal from "./RemoveSingleModal.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 export default {
-  components: { ShowKey, DropZone, KeyModal },
+  components: {
+    ShowKey,
+    DropZone,
+    KeyModal,
+    GrafitiValidator,
+    ExitValidator,
+    RemoveValidator,
+    RemoveSingleModal,
+    ExitSingleModal,
+  },
   props: ["button"],
   data() {
     return {
@@ -221,6 +242,7 @@ export default {
       importIsProcessing: false,
       importIsDone: false,
       password: "",
+      displayRemoveValidatorModal: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
       slashedStatusIcon:
         "/img/icon/the-staking/Validatorkey_Status_Slashed.png",
@@ -271,6 +293,18 @@ export default {
       };
     },
   },
+  created() {
+    this.keys = this.keys.map((item) => {
+      return {
+        isGrafitiBoxActive: false,
+        isRemoveBoxActive: false,
+        isRemoveModalActive: false,
+        isExitBoxActive: false,
+        displayExitModal: false,
+        ...item,
+      };
+    });
+  },
   mounted() {
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
@@ -282,16 +316,36 @@ export default {
     this.checkKeyExists();
   },
   methods: {
-    copyHandler(item) {
-      let toCopy = item.key;
-      this.$copyText(toCopy)
-        .then(() => {
-          console.log("copied!");
-        })
-        .catch(() => {
-          console.log(`can't copy`);
-        });
+    grafitiDisplayHandler(el) {
+      el.isGrafitiBoxActive = true;
+      el.isRemoveModalActive = true;
     },
+    grafitiConfirmHandler(el) {
+      el.isGrafitiBoxActive = false;
+    },
+    removeModalDisplay(el) {
+      el.isRemoveBoxActive = true;
+    },
+    validatorRemoveConfirm(el) {
+      el.isRemoveBoxActive = false;
+    },
+    exitModalDisplay(el) {
+      el.isExitBoxActive = true;
+    },
+    exitChainConfirm(el) {
+      el.isExitBoxActive = false;
+    },
+
+    // copyHandler(item) {
+    //   let toCopy = item.key;
+    //   this.$copyText(toCopy)
+    //     .then(() => {
+    //       console.log("copied!");
+    //     })
+    //     .catch(() => {
+    //       console.log(`can't copy`);
+    //     });
+    // },
     stateIconHandler(item) {
       switch (item.status) {
         case "active_online":
@@ -512,7 +566,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
+.keys-table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 1;
+}
 .searchOptions {
   grid-column: 1/3;
   grid-row: 2/3;
@@ -532,15 +594,31 @@ export default {
 }
 
 .table-content {
+  width: 100%;
   height: 92%;
   overflow-x: hidden;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 2;
 }
-
+remove-validator {
+  z-index: 10000;
+}
 .table-row {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.table-row .rowContent {
+  width: 100%;
+  height: 100%;
   display: grid;
   grid-template-columns: 3% 30% 7% 14% 6% 10% 30%;
   background-color: rgb(89, 89, 89);
@@ -548,6 +626,7 @@ export default {
   padding: 1px;
   position: relative;
   box-sizing: border-box;
+  z-index: 3;
 }
 
 .table-row span {
@@ -618,7 +697,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto;
-  align-items: center;
 }
 
 .option-box img {
@@ -647,25 +725,20 @@ export default {
 }
 
 .option-box .copy-box {
+  width: max-content;
   height: 100%;
   grid-column: 1/2;
   grid-row: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-}
-
-.copy-box .copy-text {
-  position: absolute;
-  bottom: -17px;
-  left: 6px;
-  transition-duration: 500ms;
-  z-index: 1;
+  margin: 0 auto;
 }
 
 .option-box .grafiti-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 2;
   display: flex;
   justify-content: center;
@@ -673,16 +746,10 @@ export default {
   position: relative;
 }
 
-.grafiti-box .grafiti-text {
-  position: absolute;
-  bottom: -17px;
-  left: 0;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
 .option-box .remove-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 4;
   display: flex;
   justify-content: center;
@@ -690,16 +757,10 @@ export default {
   position: relative;
 }
 
-.remove-box .remove-text {
-  position: absolute;
-  bottom: -17px;
-  left: -1px;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
 .option-box .exit-box {
+  width: max-content;
   height: 100%;
+  margin: 0 auto;
   grid-column: 5;
   display: flex;
   justify-content: center;
@@ -707,20 +768,8 @@ export default {
   position: relative;
 }
 
-.exit-box .exit-text {
-  position: absolute;
-  bottom: -17px;
-  right: 9px;
-  transition-duration: 500ms;
-  z-index: 1;
-}
-
-.keys-table {
-  width: 100%;
-  height: 100%;
-}
-
 .table-header {
+  width: 100%;
   height: 30px;
   border-bottom: 7px solid #bfbfbf;
   display: grid;
