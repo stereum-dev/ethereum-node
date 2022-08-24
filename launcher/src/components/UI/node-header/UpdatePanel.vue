@@ -35,7 +35,11 @@
             <div class="searchBtn">
               <img src="/img/icon/header-icons/search.png" alt="icon" />
             </div>
-            <div class="downloadBtn" @click="$emit('runUpdate', stereumUpdate)">
+            <div
+              class="downloadBtn"
+              :class="{ disabled: !checkStereumUpdate }"
+              @click="$emit('runUpdate', stereumUpdate)"
+            >
               <img
                 src="/img/icon/node-journal-icons/download2.png"
                 alt="icon"
@@ -145,7 +149,11 @@ export default {
   methods: {
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
-        return true;
+        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
+        // console.log(this.stereumUpdate.current_commit)  // current installed commit on the os
+        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
+          ? true
+          : false;
       }
       return false;
     },
@@ -299,8 +307,8 @@ export default {
   height: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 500;
   text-transform: uppercase;
   color: #b4b443;
   justify-self: flex-start;
@@ -315,8 +323,8 @@ export default {
 }
 #currentValue span,
 #latestValue span {
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 500;
   text-transform: uppercase;
   color: #b4b443;
   justify-self: center;
@@ -439,6 +447,7 @@ export default {
 .btnBox .available .availableText {
   grid-column: 2/7;
   grid-row: 1;
+  width: max-content;
   margin: 0 auto 0 8px;
   font-size: 0.6rem;
   font-weight: 600;
@@ -682,5 +691,11 @@ export default {
   color: #c6c6c6;
   text-transform: uppercase;
   margin-right: 5px;
+}
+
+.disabled {
+  pointer-events: none;
+  background-color: #074634 !important;
+  opacity: 0.5;
 }
 </style>
