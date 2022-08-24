@@ -79,7 +79,7 @@
                 --rpc-host=0.0.0.0
                 --grpc-gateway-host=0.0.0.0
                 --p2p-max-peers=100
-                --http-web3provider=http://stereum-{{ geth_service }}:8551
+                --execution-endpoint=http://stereum-{{ geth_service }}:8551
                 --monitoring-port=8080
                 --monitoring-host=0.0.0.0
                 --jwt-secret=/engine.jwt

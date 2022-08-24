@@ -74,7 +74,7 @@
                 --datadir=/opt/app/beacon
                 --prater=true
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
-                --http-web3provider=http://stereum-{{ nethermind_service }}:8551
+                --execution-endpoint=http://stereum-{{ nethermind_service }}:8551
                 --jwt-secret=/engine.jwt
               user: "2000"
               volumes:
