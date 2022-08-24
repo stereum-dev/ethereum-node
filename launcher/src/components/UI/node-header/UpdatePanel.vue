@@ -324,7 +324,7 @@ export default {
   font-weight: 500;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: flex-start;
+  justify-self: center;
   align-self: center;
   overflow: hidden;
   display: flex;
@@ -335,8 +335,8 @@ export default {
 #currentValue span,
 #latestValue span {
   width: max-content;
-  font-size: 0.6rem;
-  font-weight: 500;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
   justify-self: center;
