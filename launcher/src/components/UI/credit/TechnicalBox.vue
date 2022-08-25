@@ -40,7 +40,6 @@ export default {
             });
           }
           this.results = results;
-          console.log(this.results);
         });
     },
   },

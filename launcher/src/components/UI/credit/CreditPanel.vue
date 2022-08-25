@@ -13,9 +13,9 @@
       </div>
       <div class="division-line"></div>
       <div class="desc-line">
-        <span
+        <small
           >GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!
-        </span>
+        </small>
         <div class="desc-line-button" @click="creditToggle">
           <div class="desc-line-button_ico">
             <img :src="technikalIco" alt="" />
@@ -39,9 +39,9 @@
       </div>
       <div class="division-line"></div>
       <div class="desc-line">
-        <span
+        <small
           >EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!
-        </span>
+        </small>
         <div class="desc-line-button" @click="creditToggle">
           <div class="desc-line-button_ico">
             <img :src="financialIco" alt="" />
@@ -62,7 +62,7 @@ export default {
   components: { TaskManager, TechnicalBox },
   data() {
     return {
-      financial: true,
+      financial: false,
       financialIco: ".//public/img/icon/credit/creditIcon.png",
       technikalIco: ".//public/img/icon/credit/technikal.png",
     };
