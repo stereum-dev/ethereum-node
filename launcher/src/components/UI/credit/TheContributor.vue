@@ -33,7 +33,7 @@ export default {
   height: 100%;
 }
 .contributor-avatar img {
-  width: 85%;
+  width: 90%;
   border-radius: 20px;
 }
 .contributor-name {

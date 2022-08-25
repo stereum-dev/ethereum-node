@@ -23,6 +23,7 @@
           <span>TECHNICAL CONTRIBUTION</span>
         </div>
       </div>
+      <div class="division-line2"></div>
       <div class="footer"></div>
       <task-manager></task-manager>
     </div>
@@ -49,6 +50,7 @@
           <span>FINANCIAL CONTRIBUTION</span>
         </div>
       </div>
+      <div class="division-line2"></div>
       <technical-box></technical-box>
       <div class="footer"></div>
       <task-manager></task-manager>
@@ -94,10 +96,16 @@ export default {
   align-items: center;
   cursor: pointer;
   font-weight: 400;
-  border: 1px solid #eee;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
 }
-.desc-line-button:hover {
-  font-weight: 800;
+
+.desc-line-button:hover,
+.desc-line-button:focus {
+  font-weight: 600;
+  background: #313131;
 }
 .desc-line-button_ico {
   display: flex;
@@ -199,5 +207,11 @@ export default {
   width: 95%;
   height: 1%;
   background: #eee;
+}
+.division-line2 {
+  width: 95%;
+  height: 0.1%;
+  background: #979797;
+  margin-bottom: 1%;
 }
 </style>
