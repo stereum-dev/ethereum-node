@@ -164,7 +164,7 @@ export default {
   height: 40%;
   border-radius: 10px;
   border: 1px solid #8f8f8f;
-  background-color: #c93d24;
+  background-color: #B81717;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
