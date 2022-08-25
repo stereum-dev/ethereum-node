@@ -38,7 +38,6 @@
             <div
               class="downloadBtn"
               :class="{ disabled: !checkStereumUpdate() }"
-
               @click="$emit('runUpdate', stereumUpdate)"
             >
               <img

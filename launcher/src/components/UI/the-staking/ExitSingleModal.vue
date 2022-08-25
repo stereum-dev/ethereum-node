@@ -137,8 +137,8 @@ export default {
   height: 30%;
   margin: 0 auto;
   font-size: 0.7rem;
-  font-weight: 500;
-  color: #a22828;
+  font-weight: 600;
+  color: #303030;
   display: flex;
   justify-content: center;
   align-items: center;

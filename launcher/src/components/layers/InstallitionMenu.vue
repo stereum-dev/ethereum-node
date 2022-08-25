@@ -30,9 +30,9 @@
           :class="{ disabled: !install.display }"
           :to="install.path"
           ><button-installation
-            onmousedown="return false"
-            :img="install.display ? install.img : install.img3"
-            :url="install.img2"
+            @mousedown.prevent.stop
+            :img="install.display ? install.img : install.imgDisabled"
+            :url="install.imgHover"
           ></button-installation
         ></router-link>
       </div>
@@ -165,6 +165,7 @@ export default {
   align-items: center;
   text-decoration: none;
   z-index: 1;
+  cursor: default;
 }
 
 #welcome-header {
