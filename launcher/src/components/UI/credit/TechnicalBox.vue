@@ -1,8 +1,17 @@
 <template>
-  <div class="technical-box_parent"></div>
+  <div class="technical-box_parent">
+    <the-contributor
+      v-for="result in results"
+      :key="result.id"
+      :name="result.name"
+      :avatar="result.avatar"
+    ></the-contributor>
+  </div>
 </template>
 <script>
+import TheContributor from "./TheContributor.vue";
 export default {
+  components: { TheContributor },
   data() {
     return {
       results: [],
@@ -39,7 +48,9 @@ export default {
 </script>
 <style scoped>
 .technical-box_parent {
-  display: flex;
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   width: 95%;
   height: 80%;
 }
