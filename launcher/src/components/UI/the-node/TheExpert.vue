@@ -86,13 +86,20 @@
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <span
+          <img
             class="buttonOff"
+            src="/img/icon/plugin-menu-icons/confirm.png"
+            alt="icon"
             v-if="option.buttonState"
             @click="buttonOff(option)"
-            >OFF</span
-          >
-          <span class="buttonOn" v-else @click="buttonOn(option)">ON</span>
+          />
+          <img
+            class="buttonOn"
+            src="/img/icon/plugin-menu-icons/edit2.png"
+            alt="icon"
+            v-else
+            @click="buttonOn(option)"
+          />
           <input
             class="toggleTextInput"
             type="text"
@@ -143,6 +150,11 @@
         </div>
       </div>
       <div class="btn-box">
+        <!-- service version -->
+        <p class="serviceVersion">
+          version: <span>{{ item.config.imageVersion }}</span>
+        </p>
+        <!-- close text -->
         <span class="exit-btn">Click outside to close</span>
         <!-- confirm button box -->
         <div
@@ -181,11 +193,10 @@ export default {
       nothingsChanged: true,
     };
   },
-  computed: {
-    ...mapWritableState(useServices, {}),
-  },
+  computed: {},
   mounted() {
     this.readService();
+    console.log("1", this.item);
   },
   // watch: {
   //   changed: function (newValue, oldValue) {
@@ -536,15 +547,8 @@ export default {
 .toggleTextBox .buttonOn {
   grid-column: 4/5;
   grid-row: 1;
-  width: 25px;
+  width: 20px;
   height: 20px;
-  padding: 4px;
-  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
-  border-radius: 3px;
-  background-color: rgb(9, 193, 101);
-  color: #f0f0f0;
-  font-size: 0.6rem;
-  font-weight: 700;
   cursor: pointer;
   justify-self: end;
   margin-right: 10px;
@@ -552,15 +556,8 @@ export default {
 .toggleTextBox .buttonOff {
   grid-column: 4/5;
   grid-row: 1;
-  width: 26px;
+  width: 20px;
   height: 20px;
-  padding: 4px;
-  box-shadow: 0 1px 3px 1px rgb(93, 93, 93);
-  border-radius: 3px;
-  background-color: rgb(242, 75, 75);
-  color: #d9d9d9;
-  font-size: 0.6rem;
-  font-weight: 700;
   justify-self: end;
   margin-right: 10px;
   cursor: pointer;
@@ -572,11 +569,11 @@ export default {
   transform: scale(0.9);
   box-shadow: none;
 }
-.expertRow .toggleTextBox img {
+.expertRow .toggleTextBox .titleIcon {
   grid-column: 1/2;
   grid-row: 1;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   align-self: center;
 }
 .expertTable {
@@ -717,5 +714,23 @@ export default {
   opacity: 0.7 !important;
   color: #335844;
   border: 2px solid #335844;
+}
+.serviceVersion {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #a7a7a7;
+  align-self: flex-end;
+  justify-self: flex-start;
+  text-align: center;
+  text-transform: capitalize;
+  margin-left: 8px;
+}
+.serviceVersion span{
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #a7a7a7;
+  align-self: flex-end;
+  justify-self: flex-start;
+  text-align: center;
 }
 </style>
