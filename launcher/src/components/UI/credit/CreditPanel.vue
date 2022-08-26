@@ -1,10 +1,10 @@
 <template>
   <div class="credit-panel_parent">
-    <div class="credit-panel_box">
+    <div class="credit-panel_box" v-if="financial">
       <div class="credit-panel_title">
         <div class="ttl-box">
           <div class="credit-panel_title_ico">
-            <img src="../../../../public/img/icon/credit/creditIcon.png" />
+            <img :src="financialIco" />
           </div>
           <div class="credit-panel_title_ttl">
             <span>CREDITS - FINANCIAL CONTRIBUTORS</span>
@@ -12,18 +12,111 @@
         </div>
       </div>
       <div class="division-line"></div>
+      <div class="desc-line">
+        <small
+          >GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!
+        </small>
+        <div class="desc-line-button" @click="creditToggle">
+          <div class="desc-line-button_ico">
+            <img :src="technikalIco" alt="" />
+          </div>
+          <span>TECHNICAL CONTRIBUTION</span>
+        </div>
+      </div>
+      <div class="division-line2"></div>
+      <div class="footer"></div>
+      <task-manager></task-manager>
+    </div>
+    <div class="credit-panel_box" v-else>
+      <div class="credit-panel_title">
+        <div class="ttl-box">
+          <div class="credit-panel_title_ico">
+            <img :src="technikalIco" />
+          </div>
+          <div class="credit-panel_title_ttl">
+            <span>CREDITS - TECHNICAL CONTRIBUTORS</span>
+          </div>
+        </div>
+      </div>
+      <div class="division-line"></div>
+      <div class="desc-line">
+        <small
+          >EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!
+        </small>
+        <div class="desc-line-button" @click="creditToggle">
+          <div class="desc-line-button_ico">
+            <img :src="financialIco" alt="" />
+          </div>
+          <span>FINANCIAL CONTRIBUTION</span>
+        </div>
+      </div>
+      <div class="division-line2"></div>
+      <technical-box></technical-box>
       <div class="footer"></div>
       <task-manager></task-manager>
     </div>
   </div>
 </template>
 <script>
+import TechnicalBox from "./TechnicalBox.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
-  components: { TaskManager },
+  components: { TaskManager, TechnicalBox },
+  data() {
+    return {
+      financial: false,
+      financialIco: ".//public/img/icon/credit/creditIcon.png",
+      technikalIco: ".//public/img/icon/credit/technikal.png",
+    };
+  },
+
+  methods: {
+    creditToggle() {
+      this.financial = !this.financial;
+    },
+  },
 };
 </script>
 <style scoped>
+.desc-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #eee;
+  font-weight: 400;
+  width: 90%;
+  height: 10%;
+}
+.desc-line-button {
+  display: flex;
+  width: 25%;
+  font-size: 80%;
+  height: 60%;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 400;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+}
+
+.desc-line-button:hover,
+.desc-line-button:focus {
+  font-weight: 600;
+  background: #313131;
+}
+.desc-line-button_ico {
+  display: flex;
+  height: 90%;
+  width: 20%;
+  justify-content: center;
+  align-items: center;
+}
+.desc-line-button_ico img {
+  width: 40%;
+}
 .credit-panel_parent {
   display: flex;
   flex-direction: column;
@@ -114,5 +207,11 @@ export default {
   width: 95%;
   height: 1%;
   background: #eee;
+}
+.division-line2 {
+  width: 95%;
+  height: 0.1%;
+  background: #979797;
+  margin-bottom: 1%;
 }
 </style>

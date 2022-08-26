@@ -55,6 +55,7 @@
               v-model="option.changeValue"
               id="value"
               @change="option.changed = true"
+              @input="somethingIsChanged"
             >
               <option
                 v-for="(rate, idx) in option.value"
@@ -95,6 +96,7 @@
           <input
             class="toggleTextInput"
             type="text"
+            @input="somethingIsChanged"
             v-model="option.changeValue"
             :class="{ disabled: !option.buttonState }"
             @change="option.changed = true"
@@ -130,6 +132,7 @@
           >
         </div>
       </div>
+      <!-- expert mode textarea -->
       <div class="expertTable">
         <div class="expertMode" v-if="isExpertModeActive">
           <textarea
@@ -141,6 +144,7 @@
       </div>
       <div class="btn-box">
         <span class="exit-btn">Click outside to close</span>
+        <!-- confirm button box -->
         <div
           class="confirmBtn"
           v-if="!nothingsChanged"
@@ -243,6 +247,7 @@ export default {
     },
     actionInitiateHandler(option) {
       option.runningAction = true;
+      this.somethingIsChanged();
     },
     async confirmExpertChanges(el) {
       await this.writeService();
