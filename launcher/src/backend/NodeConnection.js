@@ -29,7 +29,9 @@ export class NodeConnection {
    * identify the operating system of the connected node
    */
   async findOS() {
-    const uname = await this.sshService.exec("cat /etc/*-release");
+    // Run the command via "execCommand" and NOT "exec" to avoid the sudo wrapper
+    let cmd = "cat /etc/*-release";
+    const uname = await this.sshService.execCommand(cmd,cmd);
     log.debug("result uname: ", uname);
     if (uname.rc == 0) {
       if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
@@ -42,6 +44,49 @@ export class NodeConnection {
         this.os = nodeOS.ubuntu;
       }
     }
+  }
+
+  /**
+   * identify the sudo permission of the connected node
+   */
+  async checkSudo() {
+
+    // Create the command flow that will be executed on the node to check sudo perms
+    // Note that the code is executed interactively, thus keep the following in mind:
+    // 1. End each line with a semi-colon (;) and do NOT use comments (e.g.: # bla)
+    // 2. Redirect all (errors) to stdout to have everything available on the same stream for parsing
+    // https://tldp.org/LDP/abs/html/intandnonint.html
+    // https://unix.stackexchange.com/a/597803
+    let cmd = `
+      if [ $(id -u -n) == "root" ]; then
+        echo "SUCCESS: user can sudo without password because he is root";
+        exit 0;
+      fi;
+      if ! groups | grep -qw "sudo"; then
+        echo "FAIL: user can not sudo at all because not in sudo group!";
+        exit 1;
+      fi;
+      msg=$(sudo -l 2>&1);
+      if [[ "$msg" == *"sudo: a password is required"* ]]; then
+        echo "FAIL: user can not sudo without password!";
+        exit 2;
+      fi;
+      echo "SUCCESS: user can sudo without password";
+      exit 0;
+    `.replace(/(?:\r\n|\r|\n)/g, ' '); // <- Remove newlines from the command to execute
+
+    // Run the command (intentionally via "execCommand" and NOT "exec" to avoid the sudo wrapper!)
+    let result =  await this.sshService.execCommand(cmd,cmd);
+
+    // If we do not get any response to stdout the executed code above failed to run in general!
+    if(result.stdout == ""){
+      result.rc = 3;
+      result.stdout = "ERROR: Executed code failed due to interactive syntax error";
+      result.stderr = "";
+    }
+
+    // Return the result
+    return result;
   }
 
   /**
