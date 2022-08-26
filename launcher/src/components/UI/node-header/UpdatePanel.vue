@@ -354,7 +354,7 @@ export default {
   color: #c6c6c6;
   margin-left: 5px;
   justify-self: flex-start;
-  align-self: left;
+  align-self: center;
   overflow: hidden;
   text-overflow: clip;
   white-space: nowrap;
