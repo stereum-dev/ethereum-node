@@ -315,6 +315,7 @@ export default {
 }
 .stereum-updateBox .versionBox #latestValue {
   width: 100%;
+  max-width: max-content;
   height: 100%;
   grid-column: 2/3;
   grid-row: 2/3;
@@ -322,24 +323,26 @@ export default {
   font-weight: 500;
   text-transform: uppercase;
   color: #b4b443;
-  justify-self: flex-start;
+  justify-self: center;
   align-self: center;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   text-align: center;
 }
 #currentValue span,
 #latestValue span {
-  font-size: 0.6rem;
-  font-weight: 500;
+  width: max-content;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
   justify-self: center;
   align-self: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
@@ -353,7 +356,7 @@ export default {
   justify-self: flex-start;
   align-self: center;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   white-space: nowrap;
 }
 .stereum-updateBox .versionBox #updateStatus {
@@ -432,7 +435,7 @@ export default {
 .btnBox .available {
   grid-column: 1/7;
   grid-row: 4/5;
-  margin: 0 auto;
+  margin-left: 0;
   width: 90%;
   height: 100%;
   display: grid;
@@ -450,10 +453,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  align-self: center;
+  align-self: flex-start;
 }
 .btnBox .available .updateIcon img {
   width: 66%;
+  justify-self: flex-start;
 }
 .btnBox .available .availableText {
   grid-column: 2/7;

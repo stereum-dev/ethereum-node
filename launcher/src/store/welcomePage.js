@@ -4,23 +4,23 @@ export const useWelcomeStore = defineStore("welcomePage", {
     return {
       installation: [
         {
-          img: "/img/icon/one-click-installer.png",
-          img2: "/img/icon/click-installation/click-installer.png",
-          img3: "/img/icon/click-installation/click-installer.png",
+          img: "/img/icon/welcome-page/oneclick-install.png",
+          imgHover: "/img/icon/welcome-page/oneclick-install-hover.png",
+          imgDisabled: "/img/icon/welcome-page/oneclick-install-disabled.png",
           path: "/selectPlugin",
           display: true,
         },
         {
-          img: "/img/icon/custom_installer.png",
-          img2: "img/icon/click-installation/custom-nstallation.png",
-          img3: "/img/icon/custom_installer2.png",
+          img: "/img/icon/welcome-page/custom-install.png",
+          imgHover: "img/icon/welcome-page/custom-install-hover.png",
+          imgDisabled: "img/icon/welcome-page/custom-install-disabled.png",
           path: "/manage",
           display: false,
         },
         {
-          img: "/img/icon/IMPORT_CONFIGURATIONS.png",
-          img2: "/img/icon/click-installation/import.png",
-          img3: "/img/icon/IMPORT_CONFIGURATIONS2.png",
+          img: "/img/icon/welcome-page/config-import.png",
+          imgHover: "/img/icon/welcome-page/config-import-hover.png",
+          imgDisabled: "/img/icon/welcome-page/config-import-disabled.png",
           path: "/",
           display: false,
         },

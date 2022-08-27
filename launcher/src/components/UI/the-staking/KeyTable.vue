@@ -47,7 +47,7 @@
               <span class="circle"></span>
               <span class="category"
                 >{{ item.key.substring(0, 20) }}...{{
-                  item.key.substring(item.key.length - 4, item.key.length)
+                  item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
               >
               <img class="service-icon" :src="item.icon" alt="icon" />
@@ -80,7 +80,7 @@
                     alt="icon"
                   />
                 </div>
-                <div class="exit-box" @click="exitModalDisplay(item)">
+                <div class="exit-box" @click="passwordBoxSingleExitChain(item)">
                   <img
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/redexit-icon.png"
@@ -93,12 +93,15 @@
               v-if="item.isGrafitiBoxActive"
               @confirm-change="grafitiConfirmHandler(item)"
             ></grafiti-validator>
-            <exit-validator v-if="item.isExitBoxActive"></exit-validator>
-            <exit-single-modal
+            <exit-validator
               v-if="item.isExitBoxActive"
+              @confirm-password="confirmPasswordSingleExitChain(item)"
+            ></exit-validator>
+            <exit-single-modal
+              v-if="item.displayExitModal"
               :item="item"
-              @exit-modal="item.isExitBoxActive = false"
-              @confirm-btn="exitChainConfirm(item)"
+              @exit-modal="closeModalSingleExitChain(item)"
+              @confirm-btn="confirmSingleValidatorExitChain(item)"
             ></exit-single-modal>
             <remove-validator v-if="item.isRemoveBoxActive"> </remove-validator>
             <remove-single-modal
@@ -329,13 +332,20 @@ export default {
     validatorRemoveConfirm(el) {
       el.isRemoveBoxActive = false;
     },
-    exitModalDisplay(el) {
-      el.isExitBoxActive = true;
+    confirmPasswordSingleExitChain(el) {
+      el.displayExitModal = true;
     },
-    exitChainConfirm(el) {
+    confirmSingleValidatorExitChain(el) {
+      el.displayExitModal = false;
       el.isExitBoxActive = false;
     },
-
+    passwordBoxSingleExitChain(el) {
+      el.isExitBoxActive = true;
+    },
+    closeModalSingleExitChain(el) {
+      el.displayExitModal = false;
+      el.isExitBoxActive = false;
+    },
     // copyHandler(item) {
     //   let toCopy = item.key;
     //   this.$copyText(toCopy)
@@ -641,19 +651,22 @@ remove-validator {
 
 .table-row .circle {
   grid-column: 1;
-  width: 15px;
-  height: 15px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
-  background-color: #fff;
-  margin: 0 auto;
+  background-color: #bebebe;
+  margin: 0 5px;
   align-self: center;
 }
 
 .table-row .category {
   width: 100%;
   grid-column: 2;
-  font-size: 13px;
+  font-size: .8rem;
+  font-weight: 600;
   align-self: center;
+  margin-left: 5px;
+  color: #d7d7d7;
 }
 
 .table-row .service-icon {
