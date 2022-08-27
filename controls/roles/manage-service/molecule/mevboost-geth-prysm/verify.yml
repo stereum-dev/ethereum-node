@@ -13,5 +13,15 @@
       - mev_boost.stdout is not search("Invalid relay URL")
     retries: 60
     delay: 10
+  #  prysm beacon logs
+  - name: prysm beacon
+    command: "docker logs stereum-53bd0386-2321-11ed-8466-a3a699348ce5"
+    register: prysm_beacon
+    until:
+      - prysm_beacon.stderr is search("Builder has been configured")
+      - prysm_beacon.stderr is search("Connected to new endpoint")
+      - prysm_beacon.stderr is not search("Could not connect to execution endpoint")
+    retries: 60
+    delay: 10
 
 # EOF

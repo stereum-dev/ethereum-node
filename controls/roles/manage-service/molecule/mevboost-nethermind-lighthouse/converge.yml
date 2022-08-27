@@ -33,17 +33,11 @@
               env: {}
               command:
               - --config=goerli
-              - --log=info
               - --datadir=/opt/app/data
-              - --Network.DiscoveryPort=30303
-              - --Network.P2PPort=30303
-              - --JsonRpc.Enabled=true
-              - --JsonRpc.Host=0.0.0.0
+              - --Merge.Enabled=true
               - --JsonRpc.JwtSecretFile=/engine.jwt
-              - --Init.WebSocketsEnabled=true
-              - --JsonRpc.WebSocketsPort=8546
-              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
-              - --Metrics.Enabled=true
+              - --JsonRpc.EngineHost=0.0.0.0
+              - --JsonRpc.EnginePort=8551
               user: "root"
               volumes:
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
@@ -64,7 +58,7 @@
             configuration:
               service: LighthouseBeaconService
               id: "{{ lighthouse_beacon_service }}"
-              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
               env: {}
               ports:
                 - 0.0.0.0:9000:9000/tcp
@@ -77,15 +71,12 @@
                 - --datadir=/opt/app/beacon
                 - --http
                 - --http-address=0.0.0.0
-                - --http-allow-sync-stalled
                 - --metrics
                 - --metrics-address=0.0.0.0
-                - --execution-endpoints=http://stereum-{{ nethermind_service }}:8551
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --execution-endpoint=http://stereum-{{ nethermind_service }}:8551
                 - --execution-jwt=/engine.jwt
                 - --builder=http://stereum-{{ mevboost_service }}:18550
-                - --enr-udp-port=9000
-                - --enr-tcp-port=9000
-                - --discovery-port=9000
               entrypoint: []
               user: "2000"
               volumes:
@@ -108,7 +99,7 @@
             configuration:
               service: LighthouseValidatorService
               id: "{{ lighthouse_validator_service }}"
-              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
               env: {}
               command:
                 - lighthouse
@@ -117,13 +108,8 @@
                 - --network=goerli
                 - --beacon-nodes=http://stereum-{{ lighthouse_beacon_service }}:5052
                 - --datadir=/opt/app/validator
-                - --init-slashing-protection
-                - --graffiti="stereum.net"
                 - --metrics
                 - --metrics-address=0.0.0.0
-                - --http
-                - --http-address=0.0.0.0
-                - --unencrypted-http-transport
                 - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --builder-proposals
               entrypoint: []
@@ -146,7 +132,7 @@
             configuration:
               service: MevBoostService
               id: "{{ mevboost_service }}"
-              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              image: "flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}"
               env: {}
               ports: []
               command: []

@@ -13,5 +13,14 @@
       - mev_boost.stdout is not search("Invalid relay URL")
     retries: 60
     delay: 10
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs stereum-5bc8cb90-1909-11ed-9142-cf15cf490a91"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stderr is search("The execution endpoint is connected and configured, however it is not yet synced")
+      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
+    retries: 60
+    delay: 10
 
 # EOF

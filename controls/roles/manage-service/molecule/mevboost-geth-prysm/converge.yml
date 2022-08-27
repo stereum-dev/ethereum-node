@@ -37,7 +37,7 @@
                 - --datadir=/opt/app/geth
                 - --http.addr=0.0.0.0
                 - --http.vhosts=*
-                - --http.api="engine,eth,web3,net,debug"
+                - --http.api=engine,eth,web3,net,debug
                 - --http.corsdomain=*
                 - --authrpc.addr=0.0.0.0
                 - --authrpc.vhosts=*
@@ -72,18 +72,11 @@
                 /app/cmd/beacon-chain/beacon-chain
                 --accept-terms-of-use=true
                 --datadir=/opt/app/beacon
-                --p2p-host-ip=""
-                --p2p-host-dns=""
                 --goerli=true
-                --fallback-web3provider=[]
                 --block-batch-limit=512
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
                 --rpc-host=0.0.0.0
-                --grpc-gateway-host=0.0.0.0
-                --p2p-max-peers=100
                 --execution-endpoint=http://stereum-{{ geth_service }}:8551
-                --monitoring-port=8080
-                --monitoring-host=0.0.0.0
                 --jwt-secret=/engine.jwt
                 --http-mev-relay=http://stereum-{{ mevboost_service }}:18550
               user: "2000"
@@ -162,7 +155,7 @@
                 --accept-terms-of-use=true
                 --beacon-rpc-provider="stereum-{{ prysm_beacon_service }}:4000"
                 --beacon-rpc-gateway-provider="stereum-{{ prysm_beacon_service }}:3500"
-                --web=true
+                --web
                 --goerli=true
                 --datadir=/opt/app/data/db
                 --wallet-dir=/opt/app/data/wallets

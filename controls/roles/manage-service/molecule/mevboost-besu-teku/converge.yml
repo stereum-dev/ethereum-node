@@ -36,8 +36,7 @@
                 - --data-path=/opt/app/data
                 - --data-storage-format=BONSAI
                 - --sync-mode=X_SNAP
-                - --p2p-port=30303
-                - --p2p-host=0.0.0.0
+                - --host-allowlist=*
                 - --rpc-http-enabled=true
                 - --rpc-http-host=0.0.0.0
                 - --rpc-http-cors-origins=*
@@ -45,15 +44,11 @@
                 - --rpc-ws-enabled=true
                 - --rpc-ws-api=WEB3,ETH,NET
                 - --rpc-ws-host=0.0.0.0
-                - --host-allowlist=*
-                - --metrics-enabled
-                - --metrics-host=0.0.0.0
-                - --logging=INFO
                 - --engine-rpc-enabled=true
-                - --engine-host-allowlist=*
                 - --engine-rpc-port=8551
                 - --engine-jwt-enabled=true
                 - --engine-jwt-secret=/engine.jwt
+                - --engine-host-allowlist=*
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
@@ -121,32 +116,11 @@
               entrypoint: ["/opt/teku/bin/teku"]
               command:
                 - --network=prater
-                - --p2p-enabled=true
-                - --p2p-port=9001
-                - --validators-keystore-locking-enabled=false
-                - --validators-graffiti="stereum.net"
-                - --metrics-enabled=true
-                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
-                - --metrics-port=8008
-                - --metrics-interface=0.0.0.0
-                - --metrics-host-allowlist="*"
                 - --data-path=/opt/app/data
-                - --data-storage-mode=archive
-                - --rest-api-port=5051
-                - --rest-api-host-allowlist="*"
-                - --rest-api-interface=0.0.0.0
-                - --rest-api-docs-enabled=true
-                - --rest-api-enabled=true
-                - --log-destination=CONSOLE
-                - --validator-api-enabled=true
-                - --validator-api-port=5052
-                - --validator-api-host-allowlist=*
-                - --validator-api-cors-origins=*
-                - --validator-api-keystore-file=/opt/app/data/teku_api_keystore
-                - --validator-api-keystore-password-file=/opt/app/data/teku_api_password.txt
                 - --ee-endpoint=http://stereum-{{ besu_service }}:8551
                 - --ee-jwt-secret-file=/engine.jwt
                 - --validators-builder-registration-default-enabled=true
+                - --validators-proposer-blinded-blocks-enabled=true
                 - --validators-proposer-default-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --builder-endpoint=http://stereum-{{ mevboost_service }}:18550
               user: "2000"

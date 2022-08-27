@@ -13,5 +13,14 @@
       - mev_boost.stdout is not search("Invalid relay URL")
     retries: 60
     delay: 10
+  #  teku logs
+  - name: teku
+    command: "docker logs stereum-0c851526-1fe8-11ed-a4bc-a304c2a39bd6"
+    register: teku
+    until:
+      - teku.stdout is search("The builder is back online. It will be used for block production")
+      - teku.stdout is not search("Failed to update eth1 chain head")
+    retries: 60
+    delay: 10
 
 # EOF
