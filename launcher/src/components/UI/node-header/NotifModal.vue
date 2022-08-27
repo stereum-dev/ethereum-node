@@ -43,8 +43,8 @@
   z-index: 311;
 }
 .notif-modal-content {
-  width: 50%;
-  height: 50%;
+  width: 55%;
+  height: 55%;
   border-radius: 1rem;
   background-color: #343434;
   border: 4px solid rgb(171, 170, 170);
@@ -52,7 +52,7 @@
   opacity: 1;
   position: absolute;
   top: 13%;
-  left: 20%;
+  left: 18%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

@@ -334,7 +334,7 @@ export default {
   text-transform: uppercase;
 }
 .serviceDetails .serviceId {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: #ababab;
   justify-self: end;
