@@ -12,11 +12,11 @@ export default {};
   justify-content: center;
   align-items: center;
   background-color: #a3111192;
-  opacity: 0.7;
+  opacity: 0.9;
   border-radius: 50px;
   position: absolute;
   pointer-events: none;
-  z-index: 10000;
+  z-index: 100;
 }
 
 </style>
