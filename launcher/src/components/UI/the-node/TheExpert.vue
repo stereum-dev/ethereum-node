@@ -196,7 +196,6 @@ export default {
   computed: {},
   mounted() {
     this.readService();
-    console.log("1", this.item);
   },
   // watch: {
   //   changed: function (newValue, oldValue) {

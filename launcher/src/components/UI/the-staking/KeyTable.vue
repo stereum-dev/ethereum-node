@@ -133,72 +133,36 @@
         </div>
       </div>
     </div>
-    <div class="searchOptions">
-      <img
-        class="rename"
-        src="../../../../public/img/icon/the-staking/rename-icon.png"
-        alt="icon"
-      />
-      <img
-        class="folder"
-        src="../../../../public/img/icon/the-staking/newfolder-icon.png"
-        alt="icon"
-      />
-      <img
-        class="filter"
-        src="../../../../public/img/icon/the-staking/staking-filter.png"
-        alt="icon"
-      />
-    </div>
-    <div class="insertBox" v-if="insertKeyBoxActive">
-      <div class="insert-key" @click="openUploadHandler">
-        <input
-          type="file"
-          @change="uploadFileHandler"
-          style="display: none"
-          ref="fileInput"
-          multiple="multiple"
-          accept="application/json"
-        />
-        <span>CLICK OR DRAG TO INSERT KEY</span>
-        <img
-          class="black-key"
-          src="../../../../public/img/icon/the-staking/black-key.png"
-          alt="icon"
-        />
-      </div>
-    </div>
-    <div class="passwordBox" v-if="enterPasswordBox">
-      <div class="enter-password" @click="confirmPasswordHandler">
-        <input v-model="password" v-if="passwordInputActive" type="password" />
-        <button
-          @keyup.enter="importKey"
-          @click="importKey"
-          v-if="passwordInputActive"
-        >
-          CONFIRM
-        </button>
-        <span v-else>ENTER PASSWORD & IMPORT</span>
-      </div>
-    </div>
-    <div class="feeBox" v-if="feeRecipientBoxActive">
-      <div class="enter-fee" @click="enterFeeHandler">
-        <input
-          placeholder="Enter a valid Ethereum address to send your block rewards to ... "
-          v-model="password"
-          v-if="feeInputActive"
-          type="text"
-        />
-        <button
-          @keyup.enter="confirmFeeRecipientAddress"
-          @click="confirmFeeRecipientAddress"
-          v-if="feeInputActive"
-        >
-          CONFIRM
-        </button>
-        <span v-else>SET A BLOCK FEE RECIPIENT ADDRESS</span>
-      </div>
-    </div>
+    <search-options></search-options>
+    <insert-validator
+      v-if="insertKeyBoxActive"
+      @open-upload="openUploadHandler"
+      @upload-file="uploadFileHandler"
+    ></insert-validator>
+    <enter-password
+      v-if="enterPasswordBox"
+      :activePassword="passwordInputActive"
+      @confirm-password="confirmPasswordHandler"
+      @import-key="importKey"
+    ></enter-password>
+    <fee-recipient
+      v-if="feeRecipientBoxActive"
+      @enter-fee="enterFeeHandler"
+      :activeFee="feeInputActive"
+      @confirm-fee="confirmFeeRecipientAddress"
+    ></fee-recipient>
+    <grafiti-multiple-validators
+      v-if="grafitiForMultiValidatorsActive"
+      @confirm-grafiti="confirmEnteredGrafiti"
+    ></grafiti-multiple-validators>
+    <remove-multiple-validators
+      v-if="removeForMultiValidatorsActive"
+      @confirm-grafiti="confirmEnteredGrafiti"
+    ></remove-multiple-validators>
+    <exit-multiple-validators
+      v-if="exitChainForMultiValidatorsActive"
+      @confirm-grafiti="confirmEnteredGrafiti"
+    ></exit-multiple-validators>
   </div>
 </template>
 <script>
@@ -210,11 +174,15 @@ import ExitValidator from "./ExitValidator.vue";
 import ExitSingleModal from "./ExitSingleModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
+import SearchOptions from "./SearchOptions.vue";
+import EnterPassword from "./EnterPassword.vue";
+import InsertValidator from "./InsertValidator.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
+import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 export default {
   components: {
     ShowKey,
@@ -225,6 +193,10 @@ export default {
     RemoveValidator,
     RemoveSingleModal,
     ExitSingleModal,
+    SearchOptions,
+    InsertValidator,
+    EnterPassword,
+    GrafitiMultipleValidators,
   },
   props: ["button"],
   data() {
@@ -244,7 +216,11 @@ export default {
       feeInputActive: false,
       importIsProcessing: false,
       importIsDone: false,
+      grafitiForMultiValidatorsActive: false,
+      exitChainForMultiValidatorsActive: false,
+      removeForMultiValidatorsActive: false,
       password: "",
+      fileInput: "",
       displayRemoveValidatorModal: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
       slashedStatusIcon:
@@ -270,11 +246,11 @@ export default {
           this.feeRecipientBoxActive = true;
           this.feeInputActive = true;
         } else if (val.name === "grafiti") {
-          console.log("This is grafiti");
+          this.grafitiForMultiValidatorsActive = true;
         } else if (val.name === "remove") {
-          console.log("this removes a key");
+          this.removeForMultiValidatorsActive = true;
         } else {
-          console.log("this is exit");
+          this.exitChainForMultiValidatorsActive = true;
         }
       },
     },
@@ -549,6 +525,10 @@ export default {
     hideBDialog() {
       this.bDialogVisible = false;
     },
+    confirmEnteredGrafiti() {
+      this.grafitiForMultiValidatorsActive = false;
+      this.insertKeyBoxActive = true;
+    },
   },
 };
 </script>
@@ -584,15 +564,6 @@ export default {
   justify-content: flex-start;
   align-items: center;
   z-index: 1;
-}
-.searchOptions {
-  grid-column: 1/3;
-  grid-row: 2/3;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
 }
 
 .dropActive {
@@ -662,7 +633,7 @@ remove-validator {
 .table-row .category {
   width: 100%;
   grid-column: 2;
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: 600;
   align-self: center;
   margin-left: 5px;
@@ -821,178 +792,6 @@ remove-validator {
 
 .table-header #option {
   grid-column: 8;
-}
-
-.passwordBox,
-.insertBox,
-.feeBox {
-  grid-column: 3/11;
-  grid-row: 2/3;
-  width: 100%;
-  height: 40px;
-  margin-top: 21px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.searchOptions .rename,
-.searchOptions .folder,
-.searchOptions .filter {
-  margin-top: 50px;
-  width: 23px;
-}
-
-.insertBox .insert-key {
-  width: 100%;
-  height: 80%;
-  margin: 0 auto;
-  background-color: #bfbfbf;
-  border-radius: 40px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  cursor: pointer;
-}
-
-.passwordBox .enter-password {
-  width: 100%;
-  height: 80%;
-  background-color: #336666;
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.passwordBox .enter-password span {
-  color: rgb(227, 227, 227);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.passwordBox .enter-password input {
-  width: 80%;
-  height: 80%;
-  border-radius: 35px 0 0 35px;
-  background-color: #002828;
-  outline-style: none;
-  padding: 0;
-  padding-left: 10px;
-  position: absolute;
-  left: 5px;
-  font-size: 1rem;
-  color: #d5d5d5;
-  font-weight: 500;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.passwordBox .enter-password button {
-  width: 20%;
-  height: 100%;
-  border: none;
-  padding: 7px;
-  border-radius: 0 35px 35px 0;
-  background-color: #3f4750;
-  outline-style: none;
-  position: absolute;
-  right: 0;
-  font-size: 0.8rem;
-  color: #e0e0e0;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.passwordBox .enter-password button:hover {
-  background-color: #23272a;
-  box-shadow: none;
-}
-
-.passwordBox .enter-password button:active {
-  background-color: #181b1d;
-  box-shadow: inset 1px 1px 3px #070708;
-}
-
-.insertBox .insert-key span {
-  color: #3a3a3a;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.insertBox .insert-key img {
-  width: 26px;
-  height: 28px;
-}
-
-.feeBox .enter-fee {
-  width: 100%;
-  height: 80%;
-  /* border: 1px solid #bfbfbf; */
-  background-color: #266ad1;
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  position: relative;
-}
-
-.feeBox .enter-fee span {
-  color: rgb(227, 227, 227);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.feeBox .enter-fee input {
-  width: 80%;
-  height: 80%;
-  border: 1px solid #96d6f3;
-  border-radius: 35px 0 0 35px;
-  background-color: #7cbbf6;
-  outline-style: none;
-  padding: 0;
-  padding-left: 10px;
-  position: absolute;
-  left: 5px;
-  font-size: 0.7rem;
-  color: rgb(55, 55, 59);
-  font-weight: 600;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.feeBox .enter-fee button {
-  width: 20%;
-  height: 100%;
-  border: none;
-  padding: 7px;
-  border-radius: 0 35px 35px 0;
-  background-color: #3f4750;
-  outline-style: none;
-  position: absolute;
-  right: 0;
-  font-size: 0.8rem;
-  color: #e0e0e0;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.feeBox .enter-fee button:hover {
-  transition-duration: 100ms;
-  background-color: #252f36;
-  color: #9accfb;
-  font-size: 0.85rem;
-}
-
-.feeBox .enter-fee button:active {
-  transition-duration: 100ms;
-  background-color: #3f4750;
-  font-size: 0.8rem;
 }
 
 .key-table-row {
