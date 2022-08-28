@@ -123,6 +123,10 @@ promiseIpc.on("checkOS", async () => {
   return nodeConnection.os;
 });
 
+promiseIpc.on("checkSudo", async () => {
+  return await nodeConnection.checkSudo();
+});
+
 promiseIpc.on("getOneClickConstellation", async (arg) => {
   return await oneClickInstall.getSetupConstellation(arg.setup, arg.network);
 });
