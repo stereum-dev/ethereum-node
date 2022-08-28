@@ -157,11 +157,11 @@
     ></grafiti-multiple-validators>
     <remove-multiple-validators
       v-if="removeForMultiValidatorsActive"
-      @confirm-grafiti="confirmEnteredGrafiti"
+      @confirm-grafiti="confirmMultiRemove"
     ></remove-multiple-validators>
     <exit-multiple-validators
       v-if="exitChainForMultiValidatorsActive"
-      @confirm-grafiti="confirmEnteredGrafiti"
+      @confirm-exit="confirmMultiExitChain"
     ></exit-multiple-validators>
   </div>
 </template>
@@ -183,6 +183,8 @@ import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
+import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
+import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 export default {
   components: {
     ShowKey,
@@ -197,6 +199,8 @@ export default {
     InsertValidator,
     EnterPassword,
     GrafitiMultipleValidators,
+    RemoveMultipleValidators,
+    ExitMultipleValidators,
   },
   props: ["button"],
   data() {
@@ -236,25 +240,7 @@ export default {
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
     };
   },
-  watch: {
-    button: {
-      deep: true,
-      handler(val) {
-        if (val.name === "fee") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.feeRecipientBoxActive = true;
-          this.feeInputActive = true;
-        } else if (val.name === "grafiti") {
-          this.grafitiForMultiValidatorsActive = true;
-        } else if (val.name === "remove") {
-          this.removeForMultiValidatorsActive = true;
-        } else {
-          this.exitChainForMultiValidatorsActive = true;
-        }
-      },
-    },
-  },
+  watch: {},
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -293,6 +279,7 @@ export default {
   },
   updated() {
     this.checkKeyExists();
+    this.handler();
   },
   methods: {
     grafitiDisplayHandler(el) {
@@ -528,6 +515,37 @@ export default {
     confirmEnteredGrafiti() {
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
+    },
+    confirmMultiExitChain() {
+      this.exitChainForMultiValidatorsActive = false;
+      this.insertKeyBoxActive = true;
+    },
+    confirmMultiRemove() {
+      this.removeForMultiValidatorsActive = false;
+      this.insertKeyBoxActive = true;
+    },
+    handler() {
+      if (this.button.name === "fee") {
+        this.insertKeyBoxActive = false;
+        this.enterPasswordBox = false;
+        this.feeRecipientBoxActive = true;
+        this.feeInputActive = true;
+      } else if (this.button.name === "grafiti") {
+        this.insertKeyBoxActive = false;
+        this.enterPasswordBox = false;
+        this.feeRecipientBoxActive = false;
+        this.grafitiForMultiValidatorsActive = true;
+      } else if (this.button.name === "remove") {
+        this.insertKeyBoxActive = false;
+        this.enterPasswordBox = false;
+        this.feeRecipientBoxActive = false;
+        this.removeForMultiValidatorsActive = true;
+      } else {
+        this.insertKeyBoxActive = false;
+        this.enterPasswordBox = false;
+        this.feeRecipientBoxActive = false;
+        this.exitChainForMultiValidatorsActive = true;
+      }
     },
   },
 };

@@ -15,7 +15,7 @@
         />
       </div>
       <div class="confirmBox">
-        <button class="confirmBtn" @click="$emit('confirmGrafiti')">
+        <button class="confirmBtn" @click="$emit('confirmBtn')">
           Confrim
         </button>
       </div>
@@ -24,7 +24,7 @@
 </template>
 <script>
 export default {
-  props: ["activeGrafiti"],
+
 };
 </script>
 <style scoped>
@@ -46,7 +46,7 @@ export default {
   grid-template-columns: 5% 80% 15%;
   grid-template-rows: 1fr;
   background-color: #723979;
-  border-radius: 55px;
+  border-radius: 35px;
   z-index: 100;
 }
 .iconBox {
@@ -84,7 +84,7 @@ export default {
   border-right: none;
   border-radius: 5px;
   color: #958797;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 500;
 }
 .confirmBox {
@@ -103,7 +103,7 @@ export default {
   background-color: #292929;
   color: #b5b5b5;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
 }

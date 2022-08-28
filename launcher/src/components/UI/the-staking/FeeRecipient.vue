@@ -8,8 +8,8 @@
         type="text"
       />
       <button
-        @keyup.enter="$emit('confirmFee')"
-        @click="$emit('confirmFee')"
+        @keyup.enter="$emit('confirmBtn')"
+        @click="$emit('confirmBtn')"
         v-if="activeFee"
       >
         CONFIRM
