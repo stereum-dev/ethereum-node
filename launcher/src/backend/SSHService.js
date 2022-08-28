@@ -76,10 +76,10 @@ export class SSHService {
     })
   }
 
-  async exec (command, logline = null) {
+  async exec (command, logline = null, useSudo = true) {
     logline = logline === null ? command : logline;
     const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF"
-    return this.execCommand(ensureSudoCommand, logline)
+    return this.execCommand(useSudo ? ensureSudoCommand : command, logline)
   }
 
   async execCommand (command, logline) {
