@@ -21,11 +21,6 @@ export default {
       enteredPassword: "",
     };
   },
-  methods: {
-    // checkPassword(event) {
-    //   this.$emit("checkPass", enteredPassword);
-    // },
-  },
 };
 </script>
 <style scoped>

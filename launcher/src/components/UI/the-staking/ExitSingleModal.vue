@@ -70,12 +70,12 @@ export default {
 .modal-opacity {
   width: 100%;
   height: 91%;
-  background-color: black;
+  background-color: rgb(29, 29, 29);
   border-radius: 0 20px 0 0;
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: 0.8;
+  opacity: 0.5;
   z-index: 501;
 }
 .exit-modal-content {
