@@ -29,7 +29,8 @@ export class NodeConnection {
    * identify the operating system of the connected node
    */
   async findOS() {
-    const uname = await this.sshService.exec("cat /etc/*-release");
+    // Run the command without sudo wrapper
+    const uname = await this.sshService.exec("cat /etc/*-release",null,false);
     log.debug("result uname: ", uname);
     if (uname.rc == 0) {
       if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
@@ -42,6 +43,52 @@ export class NodeConnection {
         this.os = nodeOS.ubuntu;
       }
     }
+  }
+
+  /**
+   * identify the sudo permission of the connected node
+   */
+  async checkSudo() {
+
+    // Create the command that will be executed on the node to check sudo perms
+    let cmd = `
+      # Check if user is root
+      if [ $(id -u -n) == "root" ]; then
+        echo "SUCCESS: user can sudo without password because he is root"
+        exit 0
+      fi
+      # Check if user is in group sudo (Ubuntu) or "wheel" (CentOS)
+      if ! groups | grep -qwe "sudo" -qwe "wheel"; then
+        echo "FAIL: user can not sudo at all because not in sudo group!"
+        exit 1
+      fi
+      # Check if users needs a password for sudo
+      msg=$(sudo -l 2>&1)
+      if [[ "$msg" == *"sudo: a password is required"* ]]; then
+        echo "FAIL: user can not sudo without password!"
+        exit 2
+      fi
+      # Success
+      echo "SUCCESS: user can sudo without password"
+      exit 0
+    `;
+
+    // Run the command (without sudo wrapper!)
+    let result =  await this.sshService.exec(cmd,null,false);
+
+    // No data in stdout or data in stderr? Executed code above failed to run!
+    if(result.stdout == "" || result.stderr != ""){
+      result.rc = 3;
+      result.stdout = "ERROR: Executed code failed to run";
+      if(result.stderr != ""){
+        result.stdout += " (" + result.stderr + ")";
+      }else if(result.stdout == ""){
+        result.stdout += " (syntax error)";
+      }
+    }
+
+    // Return the result
+    return result;
   }
 
   /**
