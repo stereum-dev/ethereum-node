@@ -1,10 +1,10 @@
 <template>
   <div class="passwordBox">
     <div class="enter-password" @click="$emit('confirmPassword')">
-      <input v-model="password" v-if="activePassword" type="password" />
+      <input v-model="enteredPassword" v-if="activePassword" type="password" />
       <button
-        @keyup.enter="$emit('importKey')"
-        @click="$emit('importKey')"
+        @keyup.enter="$emit('importKey', this.enteredPassword)"
+        @click="$emit('importKey', this.enteredPassword)"
         v-if="activePassword"
       >
         CONFIRM
@@ -15,7 +15,17 @@
 </template>
 <script>
 export default {
-  props: ["activePassword"],
+  props: ["activePassword", "password"],
+  data() {
+    return {
+      enteredPassword: "",
+    };
+  },
+  methods: {
+    // checkPassword(event) {
+    //   this.$emit("checkPass", enteredPassword);
+    // },
+  },
 };
 </script>
 <style scoped>
