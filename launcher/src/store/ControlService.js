@@ -70,6 +70,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("checkOS");
   }
 
+  async checkSudo() {
+    return await this.promiseIpc.send("checkSudo");
+  }
+
   async getOneClickConstellation(args) {
     return await this.promiseIpc.send("getOneClickConstellation", args);
   }
