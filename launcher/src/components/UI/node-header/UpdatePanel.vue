@@ -507,7 +507,8 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #334d4d;
-  border: 3px solid #434343;
+  border: 2px solid #373737;
+  padding: 5px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -517,9 +518,8 @@ export default {
 }
 .service-updateBox .availableTable .tableHeader {
   width: 100%;
-  height: 10%;
-  background-color: #335959;
-  border-bottom: 3px solid #434343;
+  height: 9%;
+  background-color: #356262;
   border-radius: 3px;
   padding: 2px;
   display: grid;
