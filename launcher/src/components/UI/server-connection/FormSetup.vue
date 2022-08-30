@@ -119,17 +119,19 @@
         >
           <label class="keyLocation_title" v-if="keyAuth">KEYLOCATION</label>
           <label class="keyLocation_title" v-if="!keyAuth">PASSWORD</label>
-          <label for="keylocation" class="ssvFile-label" v-if="keyAuth">
-            {{ labelView }}
+          <div class="chooseFile" v-if="keyAuth" @click="openUploadHandler">
+            <input type="file" style="display: none" @change="previewFiles" ref="fileInput">
+            <img src="../../../../public/img/icon/header-icons/search.png"  />
+          </div>
             <input
-              type="file"
+            v-if="keyAuth"
+              type="text"
               name="keylocation"
-              class="ssvBtn"
               id="keylocation"
-              @change="previewFiles"
+              v-model="model.keylocation.value"
               @blur="checkInput(model.keylocation)"
               required
-          /></label>
+              />
           <input
             :class="{
               notFilled: !model.pass.isFilled,
@@ -172,7 +174,6 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
-import { useControlStore } from "../../../store/theControl";
 
 export default {
   components: { DeleteModal },
@@ -216,9 +217,6 @@ export default {
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
     }),
-    ...mapWritableState(useControlStore, {
-      ipAddress: "ipAddress",
-    }),
     labelView() {
       if (this.model.keylocation.value === "") {
         return "";
@@ -228,6 +226,9 @@ export default {
     },
   },
   methods: {
+    openUploadHandler() {
+      this.$refs.fileInput.click();
+    },
     //path picker from the file input
     previewFiles(event) {
       const Path = event.target.files[0].path;
@@ -395,7 +396,6 @@ export default {
         }
         return;
       }
-      this.ipAddress = this.model.host.value;
       if (await ControlService.checkStereumInstallation()) {
         this.$router.push("/node");
       }
@@ -657,6 +657,13 @@ select {
   color: #cecece !important;
   margin-left: 24px;
 }
+.chooseFile {
+  cursor: pointer;
+}
+.chooseFile img {
+  width: 30px;
+  height: 30px;
+}
 #keyLocation input {
   width: 57%;
   height: 80%;
@@ -664,8 +671,8 @@ select {
   border-radius: 40px;
   padding-left: 10px;
   background-color: #dbdbdb;
-  font-size: large;
-  font-weight: bold;
+  font-size: 0.9rem;
+  font-weight: 600;
   outline-style: none;
   border: 2px solid #929292;
 }

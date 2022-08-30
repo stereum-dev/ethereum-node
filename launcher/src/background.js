@@ -157,8 +157,10 @@ promiseIpc.on("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });
 
-promiseIpc.on("getServerName", async () => {
-  return await monitoring.getServerName();
+promiseIpc.on("getConnectionStats", async () => {
+  const name = await monitoring.getServerName();
+  const address = monitoring.getIPAddress();
+  return {ServerName: name, ipAddress: address}
 });
 
 promiseIpc.on("getAvailablePort", async (args) => {
