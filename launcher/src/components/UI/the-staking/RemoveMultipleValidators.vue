@@ -9,9 +9,10 @@
         />
       </div>
       <div class="removeMessage">
-        <span>Are you sure you want to remove</span>
-        <p>{{ item.key }}</p>
-        <span>FROM THIS MACHINE?</span>
+        <span
+          >Are you sure you want to remove All Validator keys FROM THIS
+          MACHINE?</span
+        >
       </div>
       <div class="remove-box">
         <div class="remove-btn" @click="$emit('deleteKey')">
@@ -47,7 +48,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: .8;
+  opacity: 0.7;
   z-index: 501;
 }
 .remove-modal-content {
@@ -75,7 +76,7 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 30%;
+  width: 28%;
   height: 100%;
 }
 .removeMessage {

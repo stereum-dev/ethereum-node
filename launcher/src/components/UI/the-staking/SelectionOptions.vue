@@ -5,7 +5,7 @@
         class="buttonRow"
         v-for="(button, index) in buttonState"
         :key="index"
-        @click="$emit('clickBtn', button)"
+        @click.stop="$emit('clickBtn', button)"
       >
         <div class="btnContent">
           <img :src="button.icon" alt="icon" />

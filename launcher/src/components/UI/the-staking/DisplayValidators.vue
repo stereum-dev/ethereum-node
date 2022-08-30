@@ -97,14 +97,18 @@
               v-if="item.isExitBoxActive"
               @confirm-password="confirmPasswordSingleExitChain(item)"
             ></exit-validator>
-            <exit-single-modal
+            <exit-validators-modal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
-              @exit-modal="closeModalSingleExitChain(item)"
-              @confirm-btn="confirmSingleValidatorExitChain(item)"
-            ></exit-single-modal>
+              @exit-modal="closeExitChainModal(item)"
+              @confirm-btn="confirmExitChainForValidators(item)"
+            ></exit-validators-modal>
             <remove-validator
-              v-if="item.isRemoveBoxActive || exitChainForMultiValidatorsActive"
+              v-if="
+                item.isRemoveBoxActive ||
+                exitChainForMultiValidatorsActive ||
+                removeForMultiValidatorsActive
+              "
             >
             </remove-validator>
             <remove-single-modal
@@ -166,7 +170,8 @@
     <!-- Remove Box for validator keys -->
     <remove-multiple-validators
       v-if="removeForMultiValidatorsActive"
-      @confirm-btn="confirmMultiRemove"
+      @remove-modal="removeForMultiValidatorsActive = false"
+      @delete-key="confirmRemoveAllValidators"
     ></remove-multiple-validators>
     <!-- Exit box for validator keys -->
     <exit-multiple-validators
@@ -180,7 +185,7 @@ import DropZone from "./DropZone.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
-import ExitSingleModal from "./ExitSingleModal.vue";
+import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
 import SearchOptions from "./SearchOptions.vue";
@@ -204,7 +209,7 @@ export default {
     ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
-    ExitSingleModal,
+    ExitValidatorsModal,
     SearchOptions,
     InsertValidator,
     EnterPassword,
@@ -267,8 +272,6 @@ export default {
           this.removeForMultiValidatorsActive = false;
           this.grafitiForMultiValidatorsActive = true;
         } else if (val.name === "remove") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
           this.exitChainForMultiValidatorsActive = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
@@ -342,23 +345,26 @@ export default {
       this.exitChainForMultiValidatorsActive = false;
       this.exitChainModalForMultiValidators = true;
     },
-    confirmSingleValidatorExitChain(el) {
+    confirmExitChainForValidators(el) {
       if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
       } else {
         this.exitChainModalForMultiValidators = false;
       }
+      this.insertKeyBoxActive = true;
     },
     passwordBoxSingleExitChain(el) {
       el.isExitBoxActive = true;
     },
-    closeModalSingleExitChain(el) {
+    closeExitChainModal(el) {
       if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
+        this.insertKeyBoxActive = true;
       } else {
         this.exitChainModalForMultiValidators = false;
+        this.insertKeyBoxActive = true;
       }
     },
     // copyHandler(item) {
@@ -571,9 +577,8 @@ export default {
       this.insertKeyBoxActive = true;
     },
 
-    confirmMultiRemove() {
+    confirmRemoveAllValidators() {
       this.removeForMultiValidatorsActive = false;
-      this.insertKeyBoxActive = true;
     },
   },
 };

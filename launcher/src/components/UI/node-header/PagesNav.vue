@@ -59,6 +59,6 @@ span.border {
   content: "";
   width: 0;
   height: 60%;
-  border: 1px solid #a5a5a5;
+  border: 1px solid #2e5e52;
 }
 </style>
