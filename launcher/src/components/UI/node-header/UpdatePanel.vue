@@ -51,6 +51,10 @@
                 >{{ stereumUpdate.version }} available</span
               >
             </div>
+            <div v-if="forceUpdateCheck" class="available">
+              <span class="circle pulse"></span>
+              <span class="availableText">searching for updates...</span>
+            </div>
           </div>
         </div>
       </div>
@@ -447,6 +451,26 @@ export default {
   align-items: center;
   align-self: flex-start;
 }
+.circle {
+  width: 12px;
+  height: 12px;
+  background: #17a2b8;
+  border-radius: 50%;
+  box-shadow: 0px 0px 1px 1px #666666;
+}
+.pulse {
+  animation: pulse-animation 1s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px #637973;
+  }
+  100% {
+    box-shadow: 0 0 0 10px #2e3533;
+  }
+}
+
 .btnBox .available .updateIcon img {
   width: 66%;
   justify-self: flex-start;
