@@ -189,18 +189,16 @@ export default {
             }
           });
         }
-        //******* the (IF) didn't work,I commented it out
+
         if (response && stereumVersion) {
-          // if (
-          //   stereumVersion !=
-          //   response.stereum[response.stereum.length - 1].commit
-          // ) {
           if (
             stereumVersion !=
             response.stereum[response.stereum.length - 1].commit
           ) {
             this.isUpdateAvailable = true;
+            console.log("Stereum Update Available!");
           }
+
           const currentVersion = response.stereum.find(
             (v) => v.commit === stereumVersion
           );
@@ -211,9 +209,6 @@ export default {
             current: currentVersion ? currentVersion.name : "-",
             current_commit: currentVersion ? currentVersion.commit : "-",
           };
-
-          console.log("Stereum Update Available!");
-          // }
         }
         this.checked = true;
         this.newUpdates = updates;

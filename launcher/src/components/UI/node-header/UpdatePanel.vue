@@ -32,12 +32,12 @@
             </div>
           </div>
           <div class="btnBox">
-            <div class="searchBtn">
+            <div class="searchBtn" @click="searchUpdate">
               <img src="/img/icon/header-icons/search.png" alt="icon" />
             </div>
             <div
               class="downloadBtn"
-              :class="{ disabled: !checkStereumUpdate() }"
+              :class="{ disabled: !checkStereumUpdate() || updating }"
               @click="$emit('runUpdate', stereumUpdate)"
             >
               <img
@@ -107,7 +107,7 @@
               <div
                 class="confirmUpdate"
                 @click="$emit('updateConfirm')"
-                :class="{ disabled: !checkAvailableServicesNewUpdate() }"
+                :class="{ disabled: !checkAvailableServicesNewUpdate() && !checkStereumUpdate() || updating }"
               >
                 <span>update all</span>
                 <img
@@ -148,9 +148,13 @@ export default {
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
+      updating: "updating",
     }),
   },
   methods: {
+    searchUpdate(){
+      this.forceUpdateCheck = true
+    },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
         // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
