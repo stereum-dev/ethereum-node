@@ -18,6 +18,10 @@ import { NethermindService } from './ethereum-services/NethermindService'
 const YAML = require('yaml')
 const log = require('electron-log')
 
+async function Sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 export class OneClickInstall {
   async prepareNode(installDir, nodeConnection) {
     this.installDir = installDir
@@ -95,10 +99,10 @@ export class OneClickInstall {
     const prometheus = this.prometheus.buildConfiguration()
     const grafana = this.grafana.buildConfiguration()
     if (!this.validatorService) {
-      return [beacon, executionClient, prometheusNodeExporter, prometheus, grafana]
+      return [executionClient, beacon, prometheusNodeExporter, prometheus, grafana]
     }
     const validator = this.validatorService.buildConfiguration()
-    return [beacon, validator, executionClient, prometheusNodeExporter, prometheus, grafana]
+    return [executionClient, beacon, validator, prometheusNodeExporter, prometheus, grafana]
   }
 
   networkHandler(eth1){
@@ -293,8 +297,8 @@ export class OneClickInstall {
     const services = this.getConfigurations()
     const runRefs = []
     if (services[0] !== undefined) {
-      await Promise.all(services.map(async (service) => {
-        runRefs.push(await this.serviceManager.manageServiceState(service.id, 'started'))
+      await Promise.all(services.map(async (service, index) => {
+        Sleep(index*1000).then(() => runRefs.push(this.serviceManager.manageServiceState(service.id, 'started')))
       }))
     }
     this.clearSetup()
