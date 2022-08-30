@@ -25,6 +25,7 @@
           v-for="link in linkFlags"
           :key="link.langImg"
           id="flag-btn"
+          :isActive="link.enable"
         >
           <div class="langIco"><img :src="link.langImg" /></div>
           <div class="langName">
