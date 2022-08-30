@@ -85,15 +85,17 @@ export default {
     runAllUpdates: async function () {
       await ControlService.runAllUpdates();
     },
-
+    serviceUpdateBtnHandler() {
+      this.newUpdates.forEach(update => update.running = true)
+    },
     updateConfirmationHandler: async function () {
       this.displayUpdatePanel = false;
-      this.updateWaitingModal = true;
       this.updating = true;
+      this.serviceUpdateBtnHandler();
       await this.runAllUpdates();
+      this.forceUpdateCheck = true;
       this.updating = false;
       this.versions = {};
-      this.updateWaitingModal = false;
     },
     async runUpdate(item) {
       item.running = true;
@@ -119,6 +121,8 @@ export default {
       this.$router.push("/");
     },
     updateModalHandler() {
+      if(!this.updating)
+        this.forceUpdateCheck = true
       this.displayUpdatePanel = !this.displayUpdatePanel;
     },
     removeUpdateModal() {

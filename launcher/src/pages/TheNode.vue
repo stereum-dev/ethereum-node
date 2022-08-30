@@ -130,14 +130,17 @@ export default {
     }),
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
+      ipAddress: "ipAddress",
     }),
   },
   mounted() {
-    this.updateServerName()
+    this.updateConnectionStats()
   },
   methods: {
-   async updateServerName(){
-      this.ServerName = (await ControlService.getServerName()).stdout
+   async updateConnectionStats(){
+      const stats = (await ControlService.getConnectionStats())
+      this.ServerName = stats.ServerName
+      this.ipAddress = stats.ipAddress
     },
     showModal(data) {
       this.isModalActive = true;

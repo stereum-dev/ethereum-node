@@ -64,7 +64,11 @@ export class Monitoring {
 
   async getServerName() {
     const serverName = await this.nodeConnection.sshService.exec("hostname");
-    return serverName;
+    return serverName.stdout;
+  }
+
+  getIPAddress() {
+    return this.nodeConnection.nodeConnectionParams.host
   }
 
   //serverNmae

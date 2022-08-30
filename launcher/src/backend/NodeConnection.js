@@ -822,7 +822,7 @@ export class NodeConnection {
     const updateRunRef = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Update", updateRunRef: updateRunRef });
     const logs = await this.sshService.exec(
-      `cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./unattended-update.sh`
+      `cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./stereum-services-update.sh`
     );
     this.taskManager.finishedUpdates.push({
       updateRunRef: updateRunRef,
