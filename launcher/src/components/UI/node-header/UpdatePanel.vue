@@ -583,7 +583,7 @@ export default {
 .tableContent .tableRow .downloadBtn {
   grid-column: 1/2;
   width: 100%;
-  height: 98%;
+  height: 99%;
   margin: 0 auto;
   background-color: #067c5a;
   border-radius: 3px;
