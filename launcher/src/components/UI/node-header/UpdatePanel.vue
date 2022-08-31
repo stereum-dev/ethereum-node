@@ -169,7 +169,7 @@ export default {
     },
   },
   mounted() {
-    this.forceUpdateCheck = true;
+    this.searchUpdate();
     this.checkAvailableServicesNewUpdate();
   },
 };
@@ -692,7 +692,7 @@ export default {
   max-height: 15px;
 }
 .updateAllBtnBox .confirmUpdate span {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #c6c6c6;
   text-transform: uppercase;
@@ -723,14 +723,14 @@ export default {
   align-self: center;
   position: absolute;
   right: 0;
-  bottom: -25px;
+  bottom: -20px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 .autoUpdateText span {
-  font-size: 0.6rem;
-  font-weight: 600;
+  font-size: 0.55rem;
+  font-weight: 500;
   color: #c6c6c6;
   text-transform: uppercase;
   justify-self: flex-end;
