@@ -191,6 +191,7 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
+      prunningWarning: false,
     };
   },
   computed: {},
@@ -254,6 +255,9 @@ export default {
     },
     buttonOff(option) {
       option.buttonState = false;
+    },
+    prunningWarningModal(){
+      this.prunningWarning = true;
     },
     actionInitiateHandler(option) {
       option.runningAction = true;
@@ -455,7 +459,7 @@ export default {
   width: 100%;
   height: 25px;
   margin: 2px auto;
-  padding: 1px 4px 0 20px;
+  padding: 1px 3px 1px 20px;
   border: 1px solid #8a8a8a;
   border-radius: 25px;
   background-color: #8a8a8a;
@@ -476,14 +480,15 @@ export default {
   height: 20px;
 }
 .expertRow .actionBox .actionBoxTitle {
-  grid-column: 2/4;
+  grid-column: 3/4;
   grid-row: 1;
-  margin-left: 54px;
+  text-align: left;
+  margin-left: 7px;
 }
 .expertRow .actionBox .initiateAction {
-  grid-column: 4/6;
+  grid-column: 5/6;
   grid-row: 1;
-  width: 58%;
+  width: 100%;
   height: 96%;
   background-color: rgb(49, 88, 66);
   border-radius: 20px;
@@ -498,24 +503,27 @@ export default {
   transition-duration: 200ms;
 }
 .expertRow .actionBox .initiateAction:hover {
-  border: 1px solid #dedede;
+  border: 1px solid #a2a2a2;
+  background-color: rgb(39, 68, 51);
 }
 .expertRow .actionBox .initiateAction:active {
   transform: scale(0.95);
 }
 .expertRow .actionBox .startAction {
-  grid-column: 4/6;
+  grid-column: 5/6;
   grid-row: 1;
-  width: 58%;
-  height: 96%;
+  width: 100%;
+  height: 99%;
   background-color: #238dce;
   border-radius: 20px;
   border: 1px solid #0c81c9;
   padding: 2px;
   font-size: 0.6rem;
-  font-weight: 600;
+  font-weight: 400;
+  text-transform: capitalize;
   color: rgb(239, 239, 239);
   justify-self: end;
+  text-align: center;
 }
 .toggleTextBox .toggleTextInput {
   grid-column: 5/7;
@@ -724,7 +732,7 @@ export default {
   text-transform: capitalize;
   margin-left: 8px;
 }
-.serviceVersion span{
+.serviceVersion span {
   font-size: 0.9rem;
   font-weight: 600;
   color: #a7a7a7;
