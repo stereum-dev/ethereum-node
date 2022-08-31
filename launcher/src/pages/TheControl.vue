@@ -20,8 +20,8 @@ export default {
       ipAddress: "ipAddress",
       totalRam: "totalRam",
       usedRam: "usedRam",
+      totalDisk: "totalDisk",
       availDisk: "availDisk",
-      usedDisk: "usedDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
       rx: "rx",
@@ -44,7 +44,7 @@ export default {
         this.totalRam = response.totalRam;
         this.usedRam = response.usedRam;
         this.availDisk = response.availDisk;
-        this.usedDisk = response.usedDisk;
+        this.totalDisk = response.totalDisk;
         this.usedPerc = response.usedPerc;
         this.cpu = response.cpu;
         this.rx = response.rx;

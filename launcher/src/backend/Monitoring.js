@@ -32,7 +32,12 @@ export class Monitoring {
         await this.serviceManager.readServiceConfigurations()
       ).filter((s) => s.service != "PrometheusNodeExporterService");
       const serviceStates = await this.nodeConnection.listServices();
-      if (serviceConfigs && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
+      if (
+        serviceConfigs &&
+        serviceConfigs.length > 0 &&
+        serviceStates &&
+        Array.isArray(serviceStates)
+      ) {
         let newInfo = serviceConfigs.map((config) => {
           const newState = serviceStates.find(
             (state) => state.Names.replace("stereum-", "") === config.id
@@ -58,13 +63,17 @@ export class Monitoring {
   }
 
   async getServerName() {
-    const serverName = await this.nodeConnection.sshService.exec('hostname')
-    return serverName
+    const serverName = await this.nodeConnection.sshService.exec("hostname");
+    return serverName.stdout;
+  }
+
+  getIPAddress() {
+    return this.nodeConnection.nodeConnectionParams.host
   }
 
   //serverNmae
   //totalRam, usedRam
-  //availDisk, usedDisk, used%
+  //Total, usedDisk, used%
   //CPUusage
   //rx tx
   //readSpeed writeSpeed
@@ -72,44 +81,46 @@ export class Monitoring {
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df -k |tail -n +2 | awk '{if ($6 == "/") {print $3" "$4" "$5}; }'
+        df --total -h --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
         sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
-        sar -n DEV 1 1 | awk '{ if($2 == "eth0") print $5" "$6}' | sed -n '1p' &&
+        INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
+sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
         rm -rf disks &&
-        rm -rf diskspeeds &&
-        rm -rf diskoutput &&
-        lsblk -d -o NAME | grep -v '[$!loop|NAME]' > disks &&
-        input="disks" &&
-        while IFS= read -r line
-        do
-        iostat -x | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
-        done < "$input" &&
-        linecount=\`wc -l disks | awk '{print $1}'\` &&
-        counter=1 &&
-        while [[ $linecount -ge $counter ]]
-        do
-        linea=$( head -n $counter disks | tail -1)
-        lineb=$( head -n $counter diskspeeds | tail -1)
-        echo "$linea $lineb"
-        counter=$(($counter + 1))
-        done
+rm -rf diskspeeds &&
+rm -rf diskoutput &&
+lsblk -d -o NAME | grep -v '[$!loop|NAME|]' | sed '/sr0/d' > disks &&
+input="disks" &&
+while IFS= read -r line
+do
+iostat -x | grep "$line" | awk '{print $3" "$9}' >> diskspeeds
+done < "$input" &&
+linecount=\`wc -l disks | awk '{print $1}'\` &&
+counter=1 &&
+while [[ $linecount -ge $counter ]]
+do
+linea=$( head -n $counter disks | tail -1)
+lineb=$( head -n $counter diskspeeds | tail -1)
+echo "$linea $lineb"
+counter=$(($counter + 1))
+done &&
+rm -rf disks &&
+rm -rf diskspeeds &&
+rm -rf diskoutput
         `);
     let arr = serverVitals.stdout.split(/\n/);
     const data = {
       ServerName: arr[0],
       totalRam: arr[1].split(" ")[0],
       usedRam: arr[1].split(" ")[1],
-      usedDisk: arr[2].split(" ")[0],
-      availDisk: arr[2].split(" ")[1],
+      totalDisk: parseInt(arr[2].split(" ")[0]),
+      availDisk: parseInt(arr[2].split(" ")[1]),
       usedPerc: arr[2].split(" ")[2],
       cpu: arr[3],
       rx: arr[4].split(" ")[0],
       tx: arr[4].split(" ")[1],
-      readValue: arr[5].split(' ')[1],
+      readValue: arr[5].split(" ")[1],
       writeValue: arr[5].split(" ")[2],
     };
-     
-     return data;
-  
+    return data;
   }
 }

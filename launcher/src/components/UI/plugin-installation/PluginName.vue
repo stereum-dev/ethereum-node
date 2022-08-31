@@ -37,18 +37,41 @@
                     />
                   </div>
                 </div>
-                <div class="fast-sync">
-                  <div class="sync-box">
-                    <toggle-button></toggle-button>
-                    <span>FAST SYNC</span>
-                  </div>
-                </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>CHANGE INSTALLATION PATH</span>
+                    <span>INSTALLATION PATH</span>
                   </div>
                   <div class="change-box">
                     <input type="text" v-model="installationPath" />
+                  </div>
+                </div>
+                <div class="fast-sync">
+                  <div class="sync-header">
+                    <div class="headerTitle">
+                      <span>SYNCHRONISATION</span>
+                    </div>
+                    <div class="headerContent">
+                      <img
+                        @click="changeTheOption"
+                        src="/img/icon/arrows/left-arrow.png"
+                        alt="icon"
+                      />
+                      <span v-if="genesisIsActive">GENESIS</span>
+                      <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
+                      <img
+                        @click="changeTheOption"
+                        src="/img/icon/arrows/right-arrow.png"
+                        alt="icon"
+                      />
+                    </div>
+                  </div>
+                  <div class="content">
+                    <span v-if="genesisIsActive"
+                      >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
+                    >
+                    <div class="inputBox" v-if="checkPointIsActive">
+                      <input type="text" v-model="checkPointSync" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -74,7 +97,6 @@
                         <img
                           :src="item.icon"
                           alt="icon"
-                          @mousedown.prevent.stop
                           @mouseover="runningTooltip(item)"
                           @mouseleave="item.displayTooltip = false"
                         />
@@ -104,11 +126,11 @@
             </div>
           </div>
           <div class="btn-box">
-            <div class="back-btn" @click="backToHistoryHandler">
+            <router-link :to="{ path: '/selectPlugin' }">
               <span>BACK</span>
-            </div>
+            </router-link>
             <router-link :to="{ path: '/verify' }">
-              <button class="next-btn">NEXT</button>
+              <span>NEXT</span>
             </router-link>
           </div>
         </div>
@@ -127,6 +149,8 @@ export default {
 
   data() {
     return {
+      genesisIsActive: true,
+      checkPointIsActive: false,
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
@@ -146,26 +170,32 @@ export default {
       selectedPreset: "selectedPreset",
       plugins: "presets",
       installationPath: "installationPath",
+      checkPointSync: "checkPointSync",
     }),
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
   },
-  beforeMount() {},
   mounted() {
-    if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
-      this.$router.push("/clickinstall");
-    }
-    this.selectedPreset.includedPlugins =
-      this.selectedPreset.includedPlugins.map((item) => {
-        return {
-          showChangeModal: false,
-          ...item,
-        };
-      });
+    this.selectedPluginsValidation();
+    this.pushNewProperthyToPresets();
     this.sortPlugins();
   },
   methods: {
+    selectedPluginsValidation() {
+      if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
+        this.$router.push("/selectPlugin");
+      }
+    },
+    pushNewProperthyToPresets() {
+      this.selectedPreset.includedPlugins =
+        this.selectedPreset.includedPlugins.map((item) => {
+          return {
+            showChangeModal: false,
+            ...item,
+          };
+        });
+    },
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
@@ -261,6 +291,15 @@ export default {
     },
     backToHistoryHandler() {
       history.back();
+    },
+    changeTheOption() {
+      if (this.genesisIsActive) {
+        this.genesisIsActive = false;
+        this.checkPointIsActive = true;
+      } else {
+        this.checkPointIsActive = false;
+        this.genesisIsActive = true;
+      }
     },
   },
 };
@@ -601,33 +640,105 @@ export default {
 
 .option-content .fast-sync {
   width: 100%;
-  height: 25%;
-  background-color: rgb(118, 118, 118);
+  height: 30%;
+  background-color: #343434;
   border-radius: 10px;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
 }
-.fast-sync .sync-box {
-  width: 45%;
-  height: 52%;
-  margin: 5px;
-  border: 3px solid #8f8f8f;
-  border-radius: 15px;
-  background-color: #1a5443;
+.fast-sync .sync-header {
+  width: 100%;
+  height: 34%;
+  border: 1px solid #929090;
+  border-radius: 15px 0 0 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
 }
-.fast-sync .sync-box span {
+.fast-sync .sync-header .headerTitle {
+  width: 45%;
+  height: 100%;
+  border-radius: 15px 0 0 15px;
+  background-color: #1a5443;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.headerTitle span {
   width: 86%;
   font-size: 0.65rem;
-  font-weight: 700;
-  color: #d3d3d3;
+  font-weight: 500;
+  color: #dedede;
   text-align: center;
   margin-right: 3px;
 }
-
+.fast-sync .sync-header .headerContent {
+  width: 55%;
+  height: 100%;
+  border-radius: 0;
+  padding: 0 5px;
+  background-color: #33393e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.headerContent span {
+  width: 86%;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: #dedede;
+  text-align: center;
+  margin-right: 3px;
+}
+.headerContent img {
+  width: 5%;
+  height: 50%;
+  cursor: pointer;
+}
+.fast-sync .content {
+  width: 100%;
+  height: 64%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fast-sync .content span {
+  font-size: 0.5rem;
+  font-weight: 400;
+  color: #aaaaaa;
+}
+.fast-sync .content .inputBox {
+  width: 96%;
+  height: 74%;
+  background-color: rgb(209, 209, 209);
+  border: 5px solid rgb(104, 104, 104);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+.fast-sync .content input {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
+}
 .option-content .change-installation {
   width: 100%;
   height: 30%;
@@ -651,7 +762,7 @@ export default {
   font-weight: 600;
 }
 .change-installation .change-box {
-  width: 90%;
+  width: 96%;
   height: 50%;
   background-color: rgb(209, 209, 209);
   border: 5px solid rgb(104, 104, 104);
@@ -693,16 +804,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.btn-box .back-btn {
-  width: 25%;
-  height: 60%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.next-btn {
+
+.btn-box a span {
   width: 100%;
-  height: 100%;
   border: 2px solid rgb(125, 125, 125);
   border-radius: 20px;
   background-color: #336666;
@@ -714,28 +818,13 @@ export default {
   cursor: pointer;
   text-align: center;
 }
-.back-btn span {
-  width: 100%;
-  height: 100%;
-  border: 2px solid rgb(125, 125, 125);
-  border-radius: 20px;
-  background-color: #336666;
-  color: #eaeaea;
-  padding-top: 2%;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39;
-  outline-style: none;
-  cursor: pointer;
-  text-align: center;
-}
-.next-btn:hover,
-.back-btn span:hover {
+
+.btn-box a span:hover {
   background-color: #1a3535;
   box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
 }
-.next-btn:active,
-.back-btn span:active {
+
+.btn-box a span:active {
   box-shadow: inset 1px 1px 5px 1px rgb(28, 36, 28);
   font-size: 0.8rem;
 }

@@ -55,9 +55,9 @@
     command: "docker logs stereum-99e8942a-82e9-11ec-9f76-cbc103131365"
     register: ssv_network
     until:
-      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('successfully connected to beacon client')
       - ssv_network.stdout is search('p2p services were configured')
-      - ssv_network.stdout is not search('ERROR')
+      - ssv_network.stdout is search('eth1 node is currently syncing')
     retries: 360
     delay: 10
   # container's images & ports
@@ -68,10 +68,10 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("prysmaticlabs/prysm-beacon-chain") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("4000->4000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
       - stereum_docker_ps.stdout.find("12001->12001") != -1
       - stereum_docker_ps.stdout.find("13001->13001") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3

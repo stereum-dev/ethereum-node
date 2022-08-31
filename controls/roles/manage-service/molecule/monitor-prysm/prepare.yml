@@ -65,7 +65,6 @@
                 --rpc-host=0.0.0.0
                 --grpc-gateway-host=0.0.0.0
                 --p2p-max-peers=100
-                --http-web3provider=http://10.10.0.3:8545
                 --monitoring-port=8080
                 --monitoring-host=0.0.0.0
               user: "2000"

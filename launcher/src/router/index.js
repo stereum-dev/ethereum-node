@@ -8,6 +8,7 @@ import ControlPanel from "../pages/TheControl.vue";
 import NodeManage from "../pages/NodeManage.vue";
 import TheStaking from "../pages/TheStaking.vue";
 import SettingPage from "../pages/SettingPage.vue";
+import CreditPage from '../pages/CreditPage.vue'
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import StorageChartPage from "../pages/StorageChartPage.vue";
@@ -27,8 +28,8 @@ const routes = [
     component: WelcomePage,
   },
   {
-    path: "/clickinstall",
-    name: "ClickInstall",
+    path: "/selectPlugin",
+    name: "/selectPlugin",
     component: ClickInstall,
   },
   {
@@ -85,6 +86,11 @@ const routes = [
     path: "/setting",
     name: "SettingPage",
     component: SettingPage,
+  },
+  {
+    path: "/credit",
+    name: "CreditPage",
+    component: CreditPage,
   },
 ];
 

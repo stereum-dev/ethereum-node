@@ -102,7 +102,7 @@ export default {
   grid-column: 1;
   grid-row: 1;
   width: 100%;
-  margin-top: 5px;
+  margin-top: -1px;
   height: 90%;
   display: flex;
   justify-content: flex-start;
@@ -110,12 +110,12 @@ export default {
 }
 .icon-box img {
   margin: 10px 0 0 15px;
-  width: 65%;
+  width: 62%;
   height: 90%;
 }
 .title-box {
   grid-column: 1/4;
-  margin-left: 80px;
+  margin-left: 85px;
   grid-row: 1;
   width: 90%;
   height: 90%;

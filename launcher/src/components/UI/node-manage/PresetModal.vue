@@ -84,9 +84,17 @@
           </p>
         </div>
 
-        <router-link class="install-btn" :to="{ path: '/install' }">
-          <button>INSTALL</button>
-        </router-link>
+        <div class="install-btn" :class="{ notAvailable: buttonIsDisabled }">
+          <span>INSTALL</span>
+        </div>
+
+        <!-- <div
+          class="install-btn"
+          :class="{ notAvailable: buttonIsDisabled }"
+          @click="goToInstallation"
+        >
+          INSTALL
+        </div> -->
       </div>
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
@@ -107,6 +115,7 @@ export default {
   data() {
     return {
       isMainnetActive: true,
+      buttonIsDisabled: true,
       mainnetPlugins: [],
       testnetPlugins: [],
     };
@@ -125,6 +134,9 @@ export default {
     }),
   },
   methods: {
+    goToInstallation() {
+      console.log(this.$router.addRoute("/install"));
+    },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({
         setup: item.name,
@@ -149,17 +161,18 @@ export default {
       }
       item.includedPlugins = includedPlugins;
       this.selectedPreset = item;
+      this.buttonIsDisabled = false;
       this.$emit("disableBtn");
     },
     switchNetworkHandler() {
       this.isMainnetActive = !this.isMainnetActive;
       if (this.isMainnetActive) {
-        this.selectedNetworks = "mainnet"
+        this.selectedNetworks = "mainnet";
         this.mainnetPlugins = this.plugins.filter(
           (item) => item.network == "mainnet"
         );
       } else {
-        this.selectedNetworks = "testnet"
+        this.selectedNetworks = "testnet";
         this.testnetPlugins = this.plugins.filter(
           (item) => item.network == "testnet"
         );
@@ -373,13 +386,16 @@ export default {
 .content .install-btn {
   width: 30%;
   height: 11%;
-  border: 3px solid rgb(160, 160, 160);
+  border: 3px solid #a0a0a0;
   border-radius: 30px;
   background-color: #254f4c;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
   box-shadow: 1px 2px 8px #000000;
+  outline-style: none;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 .content .install-btn:hover {
   background-color: rgb(27, 62, 60);
@@ -387,17 +403,13 @@ export default {
   box-shadow: none;
 }
 .content .install-btn:active {
-  font-size: 1rem;
-  box-shadow: inset 1px 1px 8px 1px #000000;
+  transform: scale(0.95);
 }
-.install-btn button {
-  width: 100%;
-  height: 100%;
-  border: none;
+.install-btn span {
   background-color: transparent;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #a0a0a0;
 }
 .close-preset {
   width: 25px;
@@ -436,5 +448,9 @@ export default {
   border: 2px solid rgb(53, 178, 246) !important;
   border-radius: 10px !important;
   box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
+}
+.notAvailable {
+  opacity: 0.2;
+  pointer-events: none;
 }
 </style>

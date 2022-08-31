@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.0-stack-rc4",
+  "version": "2.0.0-flexible-rc1",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
@@ -21,6 +21,7 @@
     "@babel/core": "^7.16.7",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@meforma/vue-copy-to-clipboard": "^0.0.1",
+    "@octokit/core": "^4.0.5",
     "@sapien99/vue-cli-plugin-electron-builder-notarize": "^1.0.2",
     "@vue/cli": "^5.0.4",
     "@vue/cli-service": "^5.0.4",

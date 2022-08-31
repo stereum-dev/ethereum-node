@@ -4,15 +4,28 @@
       <span>{{ title }}</span>
     </div>
 
-    <div
+    <language-setting
+      v-if="isLanguage"
+      @language-box="langAction"
+      :flag="savedFlag"
+      :lang="savedLang"
+    ></language-setting
+    ><router-link
       class="setting-items_btn"
-      v-if="btnValue"
+      :style="color()"
+      to="/credit"
+      v-else-if="link"
+      >{{ linkValue }}</router-link
+    >
+    <div
+      iv
+      class="setting-items_btn"
+      v-else
       @click="customizeSetting"
       :style="color()"
     >
       <span>{{ btnValue }}</span>
     </div>
-    <language-setting v-else></language-setting>
   </div>
 </template>
 <script>
@@ -41,8 +54,28 @@ export default {
       type: String,
       required: true,
     },
+    savedFlag: {
+      type: String,
+      required: false,
+    },
+    savedLang: {
+      type: String,
+      required: false,
+    },
+    link: {
+      type: Boolean,
+      required: false,
+    },
+    isLanguage: {
+      type: Boolean,
+      required: false,
+    },
+    linkValue: {
+      type: String,
+      required: false,
+    },
   },
-  emits: ["customize-setting"],
+  emits: ["customize-setting", "lang-action"],
   data() {
     return {
       colorStyle: this.isColor,
@@ -66,7 +99,7 @@ export default {
       return { height: "40%" };
     },
     updateStyle() {
-      return { height: "20%" };
+      return { height: "12%" };
     },
   },
   methods: {
@@ -91,6 +124,9 @@ export default {
     customizeSetting() {
       this.$emit("customize-setting");
     },
+    langAction() {
+      this.$emit("lang-action");
+    },
   },
 };
 </script>
@@ -101,17 +137,24 @@ export default {
   color: #eee;
   justify-content: space-between;
   align-items: center;
-  background: #787575;
-  margin: 0.7% 0;
-  padding: 0.5%;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  text-decoration: none;
+  margin: 0.5% 0;
   border-radius: 20px;
+}
+.setting-items_parent:hover,
+.setting-items_parent:active {
+  background: #313131;
 }
 .setting-items_title {
   width: 60%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 115%;
+  font-size: 100%;
   font-weight: 600;
 }
 .setting-items_title span {
@@ -127,8 +170,13 @@ export default {
   border: 1.5px solid #30353a;
   cursor: pointer;
   margin: 0 2%;
-  height: 95%;
+  height: 90%;
   color: #000;
+  font-size: 90%;
+  font-weight: 500;
+  box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
+  box-sizing: border-box;
+  text-transform: uppercase;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {

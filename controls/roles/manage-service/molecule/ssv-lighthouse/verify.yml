@@ -18,7 +18,6 @@
       - stereum_ufw_status.stdout.find("9000/udp") != -1
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
   # ssv config file
   - stat: path=/opt/app/services/1ce654a0-7162-11ec-91f3-8fdbc286367e/data/config.yaml
     register: ssv_config_file
@@ -57,9 +56,9 @@
     command: "docker logs stereum-1ce654a0-7162-11ec-91f3-8fdbc286367e"
     register: ssv_network
     until:
-      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('successfully connected to beacon client')
       - ssv_network.stdout is search('p2p services were configured')
-      - ssv_network.stdout is not search('ERROR')
+      - ssv_network.stdout is search('eth1 node is currently syncing')
     retries: 360
     delay: 10
   # container's images & ports
@@ -70,11 +69,10 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("sigp/lighthouse") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3
 
 # EOF

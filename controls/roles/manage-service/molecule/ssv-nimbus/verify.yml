@@ -45,10 +45,10 @@
       minutes: 1
   # nimbus beacon & ssv logs
   - name: nimbus beacon node
-    command: "docker logs --tail=250 stereum-493f2578-7e13-11ec-80bb-1b593d9699ff"
+    command: "docker logs --tail=100 stereum-493f2578-7e13-11ec-80bb-1b593d9699ff"
     register: beacon
     until:
-      - beacon.stdout is search('current_peers=')
+      - beacon.stdout is search('State replayed')
       - beacon.stdout is not search('current_peers=0')
     retries: 360
     delay: 10
@@ -56,9 +56,9 @@
     command: "docker logs stereum-52d77bd0-7e13-11ec-a95e-bb669ccf3e66"
     register: ssv_network
     until:
-      - ssv_network.stdout is search('discovery is ready')
+      - ssv_network.stdout is search('successfully connected to beacon client')
       - ssv_network.stdout is search('p2p services were configured')
-      - ssv_network.stdout is not search('ERROR')
+      - ssv_network.stdout is search('eth1 node is currently syncing')
     retries: 360
     delay: 10
   # container's images & ports
@@ -69,11 +69,10 @@
   - assert:
       that:
       - stereum_docker_ps.stdout.find("statusim/nimbus-eth2") != -1
-      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node-shifu") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
       - stereum_docker_ps.stdout.find("9000->9000") != -1
-      - stereum_docker_ps.stdout.find("9190->9190") != -1
       - stereum_docker_ps.stdout.find("12000->12000") != -1
       - stereum_docker_ps.stdout.find("13000->13000") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3
 
 # EOF

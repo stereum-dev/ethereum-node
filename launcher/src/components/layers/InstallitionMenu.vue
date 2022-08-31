@@ -25,11 +25,14 @@
         v-for="(install, index) in installation"
         :key="index"
       >
-        <router-link class="lintTtl" :to="install.path"
+        <router-link
+          class="lintTtl"
+          :class="{ disabled: !install.display || !isSupported }"
+          :to="install.path"
           ><button-installation
-            onmousedown="return false"
-            :img="install.img"
-            :url="install.img2"
+            @mousedown.prevent.stop
+            :img="install.display ? install.img : install.imgDisabled"
+            :url="install.imgHover"
           ></button-installation
         ></router-link>
       </div>
@@ -78,7 +81,7 @@ export default {
     setTimeout(() => {
       this.active = false;
     }, 5000);
-    this.checkOS();
+    this.checkOsRequirements();
     this.randomValue();
   },
   computed: {
@@ -88,28 +91,65 @@ export default {
     randomValue() {
       this.value = Math.random() * this.max;
     },
-    display: async function (response) {
-      const data = await response;
-      if (data == "Ubuntu" || data == "CentOS") {
-        this.message = data.toUpperCase() + " IS A SUPPORTED OS";
-        this.isSupported = true;
-      } else if (data.name !== undefined) {
+    display: async function (osResponse, suResponse) {
+      const osData = await osResponse;
+      const suData = await suResponse;
+      if (osData == "Ubuntu" || osData == "CentOS") {
+        this.message = osData.toUpperCase() + " IS A SUPPORTED OS";
+        if (suData.rc) {
+          // Description of return codes (suData.rc):
+          // 1 = FAIL: user can not sudo at all because not in sudo group!
+          // 2 = FAIL: user can not sudo without password!
+          // 3 = ERROR: Executed code failed to run (<errmsg>)
+          // There could also be unknown return codes that may happen on the OS!
+          // Those are usually 127 but they could also overwrite the "known" codes
+          // mentioned above. Therefore it's a good idea to parse stdout value in
+          // addition to the return code.
+          let errnum = parseInt(suData.rc);
+          let errmsg = suData.stdout.toLowerCase();
+          if(errnum === 1 && errmsg.indexOf("not in sudo group")){
+            // User needs to added in the group sudo AND the sudoers file with "%<username> ALL = (ALL) NOPASSWD: ALL"
+            this.message += " BUT YOUR USER HAS NO (PASSLESS) SUDO PERMISSION";
+          }else if(errnum === 2 && errmsg.indexOf("can not sudo without password")){
+            // User needs to added in the sudoers file with "%<username> ALL = (ALL) NOPASSWD: ALL"
+            this.message += " BUT YOU NEED TO ENABLE PASSLESS SUDO";
+          }else if(errnum === 3 && errmsg.indexOf("code failed to run")){
+            // We could not check due to interactive syntax error - allow install but show a warning
+            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.isSupported = true;
+          }else{
+            // We could not check due to unknonw error - allow install but show a warning
+            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.isSupported = true;
+          }
+        }else{
+          // OS supported, passless sudo avail - allow install :)
+          this.isSupported = true;
+        }
+      } else if (osData && osData.hasOwnProperty("name") && osData.name !== undefined) {
         this.message =
-          data.name.toUpperCase() + ": " + data.message.toUpperCase();
+          osData.name.toUpperCase() + ": " + osData.message.toUpperCase(); 
       } else {
         this.message = "UNSUPPORTED OS";
       }
       this.running = false;
     },
-    checkOS: async function () {
-      const response = ControlService.checkOS()
+    checkOsRequirements: async function () {
+      const osResponse = ControlService.checkOS()
         .then((result) => {
           return result;
         })
         .catch((error) => {
           return error;
         });
-      this.display(await response);
+      const suResponse = ControlService.checkSudo()
+        .then((result) => {
+          return result;
+        })
+        .catch((error) => {
+          return error;
+        });
+      this.display(await osResponse, await suResponse);
     },
   },
 };
@@ -155,11 +195,14 @@ export default {
 }
 .lintTtl {
   width: 100%;
-  height: 100%;
+  height: 85%;
+  border-radius: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  z-index: 1;
+  cursor: default;
 }
 
 #welcome-header {
@@ -349,5 +392,8 @@ export default {
   color: #c83e29;
   font-size: 1rem;
   font-weight: 800;
+}
+.disabled {
+  pointer-events: none;
 }
 </style>

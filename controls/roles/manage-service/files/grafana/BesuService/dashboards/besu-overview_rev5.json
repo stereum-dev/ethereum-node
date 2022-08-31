@@ -307,7 +307,7 @@
       ],
       "targets": [
         {
-          "expr": "sum by (instance) (besu_blockchain_height{instance=~\"$system\"} or ethereum_blockchain_height{instance=~\"$system\"})",
+          "expr": "sum by (instance) (besu_blockchain_height or ethereum_blockchain_height)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -316,21 +316,21 @@
           "refId": "A"
         },
         {
-          "expr": "sum by (instance) (besu_synchronizer_best_known_block{instance=~\"$system\"} or ethereum_best_known_block_number{instance=~\"$system\"})",
+          "expr": "sum by (instance) (besu_synchronizer_best_known_block or ethereum_best_known_block_number)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "F"
         },
         {
-          "expr": "sum by (instance) ((besu_synchronizer_best_known_block{instance=~\"$system\"} - besu_blockchain_height{instance=~\"$system\"}) or (ethereum_best_known_block_number{instance=~\"$system\"} - ethereum_blockchain_height{instance=~\"$system\"}))",
+          "expr": "sum by (instance) ((besu_synchronizer_best_known_block - besu_blockchain_height) or (ethereum_best_known_block_number - ethereum_blockchain_height))",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "G"
         },
         {
-          "expr": "sum by (instance) (besu_blockchain_difficulty_total{instance=~\"$system\"})",
+          "expr": "sum by (instance) (besu_blockchain_difficulty_total)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -338,21 +338,21 @@
           "refId": "B"
         },
         {
-          "expr": "sum by (instance) ((1/rate(besu_blockchain_height{instance=~\"$system\"}[5m])) or (1/rate(ethereum_blockchain_height{instance=~\"$system\"}[5m])))",
+          "expr": "sum by (instance) ((1/rate(besu_blockchain_height[5m])) or (1/rate(ethereum_blockchain_height[5m])))",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "D"
         },
         {
-          "expr": "sum by (instance) (time() - besu_blockchain_chain_head_timestamp{instance=~\"$system\"})",
+          "expr": "sum by (instance) (time() - besu_blockchain_chain_head_timestamp)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "E"
         },
         {
-          "expr": "sum by (instance) (besu_peers_peer_count_current{instance=~\"$system\"} or ethereum_peer_count{instance=~\"$system\"})",
+          "expr": "sum by (instance) (besu_peers_peer_count_current or ethereum_peer_count)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -360,7 +360,7 @@
           "refId": "C"
         },
         {
-          "expr": "sum by (instance) ((besu_peers_peer_count_current{instance=~\"$system\"} / besu_network_peers_limit{instance=~\"$system\"}) or ethereum_peer_count{instance=~\"$system\"} / ethereum_peer_limit{instance=~\"$system\"})",
+          "expr": "sum by (instance) ((besu_peers_peer_count_current / besu_network_peers_limit) or ethereum_peer_count / ethereum_peer_limit)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -654,7 +654,7 @@
       ],
       "targets": [
         {
-          "expr": "sum by (instance) ((besu_blockchain_height{instance=~\"$system\"} or ethereum_blockchain_height{instance=~\"$system\"}) and besu_synchronizer_world_state_pending_requests_current{instance=~\"$system\"} > 0)",
+          "expr": "sum by (instance) ((besu_blockchain_height or ethereum_blockchain_height) and besu_synchronizer_world_state_pending_requests_current > 0)",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -663,28 +663,28 @@
           "refId": "A"
         },
         {
-          "expr": "sum by (instance) (besu_synchronizer_fast_sync_pivot_block_current{instance=~\"$system\"} and besu_synchronizer_world_state_pending_requests_current{instance=~\"$system\"} > 0)",
+          "expr": "sum by (instance) (besu_synchronizer_fast_sync_pivot_block_current and besu_synchronizer_world_state_pending_requests_current > 0)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "B"
         },
         {
-          "expr": "sum by (instance) (besu_synchronizer_fast_sync_pivot_block_current{instance=~\"$system\"} - besu_blockchain_height{instance=~\"$system\"} and besu_synchronizer_world_state_pending_requests_current{instance=~\"$system\"} > 0)",
+          "expr": "sum by (instance) (besu_synchronizer_fast_sync_pivot_block_current - besu_blockchain_height and besu_synchronizer_world_state_pending_requests_current > 0)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "E"
         },
         {
-          "expr": "sum by (instance) (besu_synchronizer_world_state_pending_requests_current{instance=~\"$system\"} > 0)",
+          "expr": "sum by (instance) (besu_synchronizer_world_state_pending_requests_current > 0)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
           "refId": "C"
         },
         {
-          "expr": "sum by (instance) (besu_synchronizer_world_state_completed_requests_total{instance=~\"$system\"} and besu_synchronizer_world_state_pending_requests_current{instance=~\"$system\"} > 0)",
+          "expr": "sum by (instance) (besu_synchronizer_world_state_completed_requests_total and besu_synchronizer_world_state_pending_requests_current > 0)",
           "format": "table",
           "instant": true,
           "intervalFactor": 1,
@@ -734,7 +734,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "1/rate(besu_blockchain_height{instance=~\"$system\"}[5m]) or 1/rate(ethereum_blockchain_height{instance=~\"$system\"}[5m])",
+          "expr": "1/rate(besu_blockchain_height[5m]) or 1/rate(ethereum_blockchain_height[5m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -822,7 +822,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "besu_synchronizer_best_known_block{instance=~\"$system\"} - besu_blockchain_height{instance=~\"$system\"} or ethereum_best_known_block_number{instance=~\"$system\"} - ethereum_blockchain_height{instance=~\"$system\"}",
+          "expr": "besu_synchronizer_best_known_block - besu_blockchain_height or ethereum_best_known_block_number - ethereum_blockchain_height",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -908,7 +908,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(process_cpu_seconds_total{instance=~\"$system\"}[1m])",
+          "expr": "irate(process_cpu_seconds_total[1m])",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "CPU Time IRate [{{instance}}]",
@@ -994,7 +994,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_collection_seconds_sum{instance=~\"$system\"}[1m])",
+          "expr": "rate(jvm_gc_collection_seconds_sum[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 5,
@@ -1084,7 +1084,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_bytes_used{instance=~\"$system\", area=\"heap\"} + ignoring(area) jvm_memory_bytes_used{instance=~\"$system\", area=\"nonheap\"}",
+          "expr": "jvm_memory_bytes_used{area=\"heap\"} + ignoring(area) jvm_memory_bytes_used{area=\"nonheap\"}",
           "format": "time_series",
           "intervalFactor": 5,
           "legendFormat": "{{instance}}",

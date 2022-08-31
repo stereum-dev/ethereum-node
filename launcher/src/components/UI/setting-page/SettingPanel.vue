@@ -4,12 +4,10 @@
       <div class="setting-panel_title">
         <div class="ttl-box">
           <div class="setting-panel_title_ico">
-            <img
-              src="../../../../public/img/icon/setting-page/setting_icon.png"
-            />
+            <img :src="pageIcon" />
           </div>
           <div class="setting-panel_title_ttl">
-            <span>STEREUM SETTING</span>
+            <span>{{ pageName }}</span>
           </div>
         </div>
         <div class="confirm-btn" @click="confirm">
@@ -17,7 +15,10 @@
         </div>
       </div>
       <div class="division-line"></div>
-      <div class="general-container">
+      <div class="seting-language_box" v-if="langActive">
+        <language-panel @back="langActiveBox"></language-panel>
+      </div>
+      <div class="base-container" v-else>
         <div class="general-panel">
           <div class="general-panel_title"><span>GENERAL</span></div>
           <hr />
@@ -29,6 +30,12 @@
               :btnValue="item.btnValue"
               :isColor="item.isColor"
               :itemType="item.itemType"
+              :savedFlag="langIco"
+              :savedLang="langName"
+              :link="item.link"
+              :isLanguage="item.isLanguage"
+              :linkValue="item.linkValue"
+              @lang-action="langActiveBox"
             ></setting-items>
           </div>
         </div>
@@ -55,24 +62,44 @@
   </div>
 </template>
 <script>
+import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
+import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
-  components: { TaskManager, SettingItems },
+  components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      SIco: "/img/icon/setting-page/setting_icon.png",
+      pageName: "",
+      pageIcon: "",
+      settingData: {
+        name: "stereum setting",
+        icon: "/img/icon/setting-page/setting_icon.png",
+      },
+      languageData: {
+        name: "language - selection",
+        icon: "/img/icon/setting-page/language_page.png",
+      },
+      langActive: false,
+      langIco: "",
+      langName: "",
       generalItems: [
         {
           id: 1,
-          title: "Leanguage Selection",
+          title: "Language Selection",
           itemType: "general",
+          isLanguage: true,
         },
         {
           id: 2,
           title: "Credits",
-          btnValue: "OPEN",
+          link: true,
           isColor: "open",
           itemType: "general",
+          linkValue: "open",
         },
       ],
       updateItems: [
@@ -83,29 +110,23 @@ export default {
           itemType: "update",
           btnValue: "ALPHA",
         },
+
         {
           id: 2,
-          title: "Stereum Node Version",
-          isColor: "alpha",
-          itemType: "update",
-          btnValue: "ALPHA",
-        },
-        {
-          id: 3,
           title: "Stereum - Testing Lane",
           isColor: "off",
           itemType: "update",
           btnValue: "OFF",
         },
         {
-          id: 4,
+          id: 3,
           title: "Stereum Update Configuration",
           isColor: "manual",
           itemType: "update",
           btnValue: "MANUAL",
         },
         {
-          id: 5,
+          id: 4,
           title: "Plug-in / Service Update Configuration",
           isColor: "manual",
           itemType: "update",
@@ -114,10 +135,75 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.forceUpdateCheck = true;
+    this.stereumCurrentVersion();
+  },
+  updated() {
+    this.checkSettings();
+  },
+  created() {
+    this.checkSettings();
+    this.selectror();
+    this.checkVersion();
+  },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
+    }),
+  },
+
   methods: {
+    checkStereumUpdate() {
+      if (this.stereumUpdate && this.stereumUpdate.current) {
+        return true;
+      }
+      return false;
+    },
     confirm() {
       // confirm method have to write here
-      alert("Done!");
+      // alert("Done!");
+    },
+    selectror() {
+      if (this.langActive === true) {
+        this.pageName = this.languageData.name;
+        this.pageIcon = this.languageData.icon;
+      } else {
+        this.pageName = this.settingData.name;
+        this.pageIcon = this.settingData.icon;
+      }
+    },
+    langActiveBox() {
+      this.langActive = !this.langActive;
+      this.selectror();
+    },
+    checkSettings: async function () {
+      const savedConfig = await ControlService.readConfig();
+      if (
+        savedConfig !== undefined &&
+        savedConfig.savedLanguage !== undefined
+      ) {
+        this.langIco = savedConfig.savedLanguage.flag;
+        this.langName = savedConfig.savedLanguage.language;
+      }
+    },
+    checkVersion: async function () {
+      try {
+        let stereumVersion = await ControlService.getCurrentStereumVersion();
+        this.stereumVersion = stereumVersion;
+      } catch (error) {
+        console.log("Couldn't fetch versions...\nError:", err.message);
+      }
+    },
+    stereumCurrentVersion() {
+      this.updateItems.map((item) => {
+        if (item.title === "Stereum Version" && this.checkStereumUpdate) {
+          item.btnValue = this.stereumUpdate.current;
+        } else {
+          item.btnValue === "ALPHA";
+        }
+      });
     },
   },
 };
@@ -135,6 +221,7 @@ export default {
   border: 4px solid #979797;
   border-radius: 10px 35px 10px 10px;
   z-index: 0;
+  box-sizing: border-box;
 }
 .seting-panel_box {
   display: flex;
@@ -144,12 +231,19 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+.seting-language_box {
+  display: flex;
+  width: 100%;
+  height: 90%;
+  justify-content: center;
+  align-items: center;
+}
 .setting-panel_title {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 8%;
+  height: 9%;
 }
 .ttl-box {
   display: flex;
@@ -167,7 +261,7 @@ export default {
   align-items: center;
 }
 .setting-panel_title_ico img {
-  width: 60%;
+  width: 50%;
 }
 .setting-panel_title_ttl {
   width: 85%;
@@ -176,10 +270,11 @@ export default {
   justify-content: flex-start;
   align-items: center;
   font-size: 130%;
-  font-weight: 300;
   color: #eee;
+  text-transform: uppercase;
+  font-weight: 500;
 }
-.general-container {
+.base-container {
   width: 100%;
   height: 90%;
   display: flex;
@@ -192,6 +287,7 @@ export default {
   height: 65%;
   background: #48e148;
   border: 1px solid #707070;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -227,6 +323,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
 }
 .general-panel_title,
 .update-panel_title {
@@ -237,17 +334,17 @@ export default {
   font-size: 130%;
   font-weight: 600;
   color: #eee;
-  margin: 1% 0 0 0;
+  margin: 0 0 0 0;
 }
 .general-panel_title {
-  height: 22%;
+  height: 30%;
 }
 .update-panel_title {
-  height: 10%;
+  height: 15%;
 }
 hr {
   width: 95%;
-  margin: 0.2% 0 0 0;
+  margin: 0 0 1% 0;
 }
 .footer {
   background-color: rgb(52, 52, 52);
@@ -258,17 +355,17 @@ hr {
 }
 .items-box_general {
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .items-box_update {
   width: 100%;
-  height: 100%;
+  height: 85%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
 }

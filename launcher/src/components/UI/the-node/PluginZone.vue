@@ -19,14 +19,14 @@
             <div class="menu-content">
               <div class="power">
                 <img
-                  v-if="isServicePending"
+                 v-if="item.serviceIsPending"
                   class="pending"
                   src="/img/icon/plugin-menu-icons/turning_circle.gif"
                   alt="icon"
                 />
                 <img
                   v-else-if="item.state == 'running'"
-                  @click="stateHandler(item)"
+                  @click.stop="stateHandler(item)"
                   src="/img/icon/plugin-menu-icons/shutdown.png"
                   alt="icon"
                 />
@@ -38,7 +38,7 @@
                 />
                 <img
                   v-else
-                  @click="stateHandler(item)"
+                  @click.stop="stateHandler(item)"
                   src="/img/icon/plugin-menu-icons/turn-on.png"
                   alt="icon"
                 />
@@ -127,7 +127,7 @@ export default {
     },
     stateHandler: async function (item) {
       this.isServiceOn = false;
-      this.isServicePending = true;
+      item.serviceIsPending = true;
       let state = "stopped";
       if (item.state === "exited") {
         state = "started";
@@ -141,7 +141,7 @@ export default {
       } catch (err) {
         console.log(state.replace("ed", "ing") + " service failed:\n", err);
       }
-      this.isServicePending = false;
+      item.serviceIsPending = false;
       this.updateStates();
     },
     openDefaultBrowser(el) {
@@ -213,7 +213,6 @@ export default {
   height: 95%;
   border-radius: 7px;
   margin: 0 auto;
-  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,6 +223,7 @@ export default {
   height: 48px;
   border-radius: 5px;
   align-self: center;
+  cursor: pointer;
 }
 .plus-icon-box {
   width: 30px;
@@ -301,6 +301,7 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
   z-index: 1000;
+  pointer-events: none;
 }
 .menu-content .setting {
   width: 17px;
@@ -362,49 +363,17 @@ export default {
   border-radius: 100%;
   box-shadow: 0 1px 3px 1px rgb(48, 48, 48);
 }
-.menu-content .book {
-  width: 17px;
-  height: 17px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 78%;
-  left: 41%;
-  animation: book 500ms;
-}
-@keyframes book {
-  0% {
-    opacity: 0;
-    top: 40%;
-    left: 41%;
-  }
-  100% {
-    top: 78%;
-    left: 41%;
-  }
-}
-.menu-content .book img {
-  width: 17px;
-  height: 17px;
-  border-radius: 100%;
-  box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-}
+
 .menu-content .power img:hover,
 .menu-content .setting img:hover,
-.menu-content .restart img:hover,
-.menu-content .book img:hover {
+.menu-content .restart img:hover {
   transform: scale(1.1);
 }
 
 .menu-content .setting img:active,
 .menu-content .restart img:active,
-.menu-content .book img:active,
 .menu-content .power img:active {
   transform: scale(1);
 }
-.menu-content .power .pending:hover {
-  transform: scale(1);
-}
+
 </style>
