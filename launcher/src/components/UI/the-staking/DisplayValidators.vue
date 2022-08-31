@@ -275,7 +275,7 @@ export default {
           this.exitChainForMultiValidatorsActive = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
-        } else {
+        } else if (val.name === "exit") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.grafitiForMultiValidatorsActive = false;

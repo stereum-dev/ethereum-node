@@ -66,7 +66,10 @@ export default {
   },
   methods: {
     clickBtnHandler(el) {
-      this.button = el;
+      this.button = {};
+      setTimeout(() => {
+        this.button = el;
+      });
     },
   },
 };
