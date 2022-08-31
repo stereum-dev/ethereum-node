@@ -1,14 +1,30 @@
 <template>
-  <div class="flagBtn_parent" @click="setting">
+  <div class="flagBtn_parent" @click="setting" :style="activeCheck()">
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
+  props: ["isActive"],
   emits: ["setting"],
+  data() {
+    return {
+      enable: this.isActive,
+    };
+  },
+  computed: {
+    deActive() {
+      return { pointerEvents: "none", filter: "grayscale(100%)" };
+    },
+  },
   methods: {
     setting() {
       this.$emit("setting");
+    },
+    activeCheck() {
+      if (this.isActive === false) {
+        return this.deActive;
+      }
     },
   },
 };
