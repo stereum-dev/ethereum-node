@@ -256,7 +256,7 @@ export default {
     buttonOff(option) {
       option.buttonState = false;
     },
-    prunningWarningModal(){
+    prunningWarningModal() {
       this.prunningWarning = true;
     },
     actionInitiateHandler(option) {
@@ -482,8 +482,8 @@ export default {
 .expertRow .actionBox .actionBoxTitle {
   grid-column: 3/4;
   grid-row: 1;
-  text-align: left;
-  margin-left: 7px;
+  text-align: center;
+  margin-left: -14px;
 }
 .expertRow .actionBox .initiateAction {
   grid-column: 5/6;
