@@ -108,6 +108,7 @@ export default {
       this.removeIsConfirmed = true;
       this.destroyNode();
       this.removeAllPlugins();
+      this.$router.push("/");
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
