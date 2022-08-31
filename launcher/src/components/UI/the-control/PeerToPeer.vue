@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       // data is dummy, for wiring it has to change to null
-      valPeer: 64,
+      valPeer: 90,
     };
   },
   computed: {

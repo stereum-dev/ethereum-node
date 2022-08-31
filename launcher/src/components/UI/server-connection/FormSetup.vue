@@ -421,7 +421,7 @@ export default {
   outline-style: none;
   border: 2px solid #929292;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: nowrap;
 }
