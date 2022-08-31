@@ -112,7 +112,7 @@
       <div class="updateAllBtnBox">
         <div
           class="confirmUpdate"
-          @click="$emit('updateConfirm')"
+          @click.prevent.stop="$emit('updateConfirm')"
           :class="{ disabled: !checkAvailableServicesNewUpdate() }"
         >
           <span>update all</span>

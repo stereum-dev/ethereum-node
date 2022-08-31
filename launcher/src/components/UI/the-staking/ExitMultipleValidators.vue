@@ -4,7 +4,7 @@
       <div class="iconBox">
         <img
           class="exit-icon"
-          src="../../../../public/img/icon/the-staking/redexit-icon.png"
+          src="../../../../public/img/icon/the-staking/exit2.png"
           alt="icon"
         />
       </div>
@@ -57,7 +57,7 @@ export default {};
 }
 .iconBox img {
   width: 20px;
-  height: 25px;
+  height: 20px;
   margin: 0 auto;
 }
 .inputBox {
