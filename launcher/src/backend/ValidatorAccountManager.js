@@ -186,7 +186,7 @@ export class ValidatorAccountManager {
             const serviceID = keys[0].validatorID
             const validatorKeys = keys.map(key => {
                 return {
-                    pubkey: key.key.replace('0x',''),
+                    pubkey: key.key,
                     recipient: address
                 }
             })
