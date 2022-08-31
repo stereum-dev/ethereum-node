@@ -23,6 +23,7 @@
           <div class="general-panel_title"><span>GENERAL</span></div>
           <hr />
           <div class="items-box_general">
+            <setting-itemmv></setting-itemmv>
             <setting-items
               v-for="item in generalItems"
               :key="item.id"
@@ -43,6 +44,13 @@
           <div class="update-panel_title"><span>UPDATE</span></div>
           <hr />
           <div class="items-box_update">
+            <setting-items
+              title="Stereum Version"
+              :btn-value="stereumUpdate.current"
+              is-color="alpha"
+              item-type="update"
+              id="version"
+            ></setting-items>
             <setting-items
               v-for="item in updateItems"
               :key="item.id"
@@ -105,28 +113,20 @@ export default {
       updateItems: [
         {
           id: 1,
-          title: "Stereum Version",
-          isColor: "alpha",
-          itemType: "update",
-          btnValue: "ALPHA",
-        },
-
-        {
-          id: 2,
           title: "Stereum - Testing Lane",
           isColor: "off",
           itemType: "update",
           btnValue: "OFF",
         },
         {
-          id: 3,
+          id: 2,
           title: "Stereum Update Configuration",
           isColor: "manual",
           itemType: "update",
           btnValue: "MANUAL",
         },
         {
-          id: 4,
+          id: 3,
           title: "Plug-in / Service Update Configuration",
           isColor: "manual",
           itemType: "update",
@@ -137,10 +137,10 @@ export default {
   },
   mounted() {
     this.forceUpdateCheck = true;
-    this.stereumCurrentVersion();
   },
   updated() {
     this.checkSettings();
+    this.stereumCurrentVersion();
   },
   created() {
     this.checkSettings();
@@ -149,7 +149,6 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
-      forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
     }),
   },
@@ -210,6 +209,9 @@ export default {
 </script>
 
 <style scoped>
+#version {
+  pointer-events: none;
+}
 .seting-panel_parent {
   display: flex;
   flex-direction: column;

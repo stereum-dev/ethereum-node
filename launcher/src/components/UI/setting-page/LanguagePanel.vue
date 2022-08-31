@@ -4,6 +4,7 @@
       @setting="setLang(link.langName, link.langSelect)"
       v-for="link in linkFlags"
       :key="link.langImg"
+      :isActive="link.enable"
     >
       <div class="langIco"><img :src="link.langImg" /></div>
       <div class="langName">

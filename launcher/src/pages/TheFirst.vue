@@ -25,6 +25,7 @@
           v-for="link in linkFlags"
           :key="link.langImg"
           id="flag-btn"
+          :isActive="link.enable"
         >
           <div class="langIco"><img :src="link.langImg" /></div>
           <div class="langName">
@@ -134,7 +135,7 @@ export default {
 
 <style scoped>
 #flag-btn {
-  height: 42%;
+  height: 60%;
   background: #1d3d3ad7;
 }
 .langIco {
@@ -145,7 +146,7 @@ export default {
   height: 100%;
 }
 .langIco img {
-  width: 85%;
+  width: 75%;
 }
 .langName {
   display: flex;

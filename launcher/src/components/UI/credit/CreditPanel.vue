@@ -23,7 +23,7 @@
           <span>TECHNICAL CONTRIBUTION</span>
         </div>
       </div>
-      <div class="division-line2"></div>
+
       <div class="footer"></div>
       <task-manager></task-manager>
     </div>
@@ -50,7 +50,7 @@
           <span>FINANCIAL CONTRIBUTION</span>
         </div>
       </div>
-      <div class="division-line2"></div>
+
       <technical-box></technical-box>
       <div class="footer"></div>
       <task-manager></task-manager>
@@ -207,11 +207,5 @@ export default {
   width: 95%;
   height: 1%;
   background: #eee;
-}
-.division-line2 {
-  width: 95%;
-  height: 0.1%;
-  background: #979797;
-  margin-bottom: 1%;
 }
 </style>
