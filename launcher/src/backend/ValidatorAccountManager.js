@@ -105,8 +105,14 @@ export class ValidatorAccountManager {
             let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
             let logs = [...(await this.nodeConnection.playbookStatus(run.playbookRunRef)).matchAll(/^DATA: ({"msg":.*)/gm)]
 
-            let result = logs.map(log => {
-                return (JSON.parse(log[1])).msg.data
+            let output = logs.map(log => {
+                return (JSON.parse(log[1]))
+            })
+
+            let result = output.map(log => {
+                if(log.msg.data === undefined)
+                    throw log.msg.code + " " + log.msg.message
+                return log.msg.data
             })
 
             result.forEach(batch => {
