@@ -1,5 +1,13 @@
 <template>
   <div class="dataApi-parent">
+    <control-dialog v-if="openDialog"
+      ><div class="dialogBox">
+        <div class="dialogIcon"><img :src="copyIcon" /></div>
+        <div class="dialogMessage">
+          <span>{{ dialogValue }}</span>
+        </div>
+      </div></control-dialog
+    >
     <div class="dataApi-box">
       <node-connection-row row-name="DATA-API"></node-connection-row>
       <div
@@ -18,12 +26,16 @@
   </div>
 </template>
 <script>
+import ControlDialog from "./ControlDialog.vue";
 import NodeConnectionRow from "./NodeConnectionRow.vue";
 export default {
-  components: { NodeConnectionRow },
+  components: { NodeConnectionRow, ControlDialog },
   data() {
     return {
       copyVal: "click to copy",
+      openDialog: false,
+      dialogValue: "",
+      copyIcon: "/img/icon/control/ok.png",
       dataApiItems: [
         // dataApiItems are dummy, for wire the have to change but the best stract. for the design is this one
         {
@@ -44,6 +56,13 @@ export default {
     async copy(s, t) {
       await navigator.clipboard.writeText(s);
       this.copyVal = t + " copied";
+      this.openDialog = !this.openDialog;
+      this.dialogValue = t + " " + "Copied to clipboard!";
+      if (this.openDialog === true) {
+        setTimeout(() => {
+          this.openDialog = false;
+        }, 3000);
+      }
     },
   },
 };
@@ -62,6 +81,39 @@ export default {
   flex-direction: column;
 }
 
+.dialogBox {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+}
+.dialogIcon {
+  display: flex;
+  height: 100%;
+  width: 20%;
+  justify-content: center;
+  align-items: center;
+}
+.dialogIcon img {
+  width: 50%;
+}
+.dialogMessage {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  font-weight: 600;
+  font-size: 80%;
+}
+.rpc-box {
+  width: 100%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+}
 .dataApi-box {
   width: 100%;
   height: 75%;
