@@ -9,7 +9,7 @@
         />
       </div>
       <div class="warningMessage">
-        <span>Please wait until installation is done.</span>
+        <span>We recommend you to wait until the initial installation is done before applying further changes.</span>
       </div>
       <div class="confirm-box">
         <router-link class="confirm-link" :to="{ path: '/node' }">
@@ -90,8 +90,9 @@ export default {
 }
 
 .warningMessage span {
+  width: 80%;
   color: #b7b7b7;
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 600;
   margin-top: 5px;
   text-align: center;
