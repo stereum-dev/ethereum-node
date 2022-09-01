@@ -90,7 +90,7 @@ export default {
 }
 
 .warningMessage span {
-  color: #cec06d;
+  color: #b7b7b7;
   font-size: 1rem;
   font-weight: 600;
   margin-top: 5px;
