@@ -6,7 +6,7 @@ import axios from "axios";
 import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
-if (process.env.IS_DEV === "true") {
+if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
   log.info("pulling from main branch");
 } else {
