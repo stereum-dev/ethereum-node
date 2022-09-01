@@ -274,6 +274,11 @@ promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
+
+promiseIpc.on("addFeeRecipient", async (args) => {
+  return await validatorAccountManager.addFeeRecipient(args.keys, args.address)
+})
+
 promiseIpc.on("getOperatorPageURL", async (args) => {
   return await validatorAccountManager.getOperatorPageURL(args);
 });

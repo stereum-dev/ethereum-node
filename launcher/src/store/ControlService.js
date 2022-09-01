@@ -202,6 +202,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("refreshServiceInfos"); // insert existing operator keys
   }
 
+  async addFeeRecipient(args){
+    return await this.promiseIpc.send("addFeeRecipient", args)  // 
+  }
+
   async getOperatorPageURL(args) {
     return await this.promiseIpc.send("getOperatorPageURL", args); // insert existing operator keys
   }

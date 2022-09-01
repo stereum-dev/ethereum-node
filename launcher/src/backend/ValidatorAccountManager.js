@@ -186,6 +186,29 @@ export class ValidatorAccountManager {
         })
 
     }
+    
+    async addFeeRecipient(keys, address){
+        if(keys && keys.length != 0 && address){
+            const serviceID = keys[0].validatorID
+            const validatorKeys = keys.map(key => {
+                return {
+                    pubkey: key.key,
+                    recipient: address
+                }
+            })
+
+        try {
+            let run = await this.nodeConnection.runPlaybook('validator-fee-recipient-api', { stereum_role: 'validator-fee-recipient-api', validator_service: serviceID, validator_keys: validatorKeys })
+            //let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            //let result = (JSON.parse(logs[1])).msg
+            return run
+        } catch (err) {
+            log.error("Changing Fee Recipient Failed:\n", err)
+            return err
+        }
+        }
+        return 0
+    }
 
     async getOperatorPageURL(pubKey){
         const hash = crypto.createHash('sha256').update(pubKey).digest('hex')
