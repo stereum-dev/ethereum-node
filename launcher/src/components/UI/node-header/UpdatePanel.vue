@@ -51,9 +51,12 @@
                 >{{ stereumUpdate.version }} available</span
               >
             </div>
-            <div class="available" v-if="forceUpdateCheck">
+            <div
+              class="available"
+              v-if="forceUpdateCheck && !checkStereumUpdate()"
+            >
               <span class="circle pulse"></span>
-              <span class="availableText">searching for updates...</span>
+              <span class="searchingText">searching new updates</span>
             </div>
           </div>
         </div>
@@ -443,17 +446,17 @@ export default {
   grid-template-rows: 1fr;
 }
 .btnBox .available .updateIcon {
-  grid-column: 1/2;
+  grid-column: 2/3;
   grid-row: 1;
-  width: 67%;
+  width: 62%;
   height: 100%;
-  margin: 0 auto 0 12px;
   background-color: rgb(59, 103, 100);
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: flex-start;
+  justify-self: flex-start;
 }
 .btnBox .available .updateIcon img {
   width: 66%;
@@ -461,18 +464,28 @@ export default {
 }
 
 .btnBox .available .availableText {
-  grid-column: 2/7;
+  grid-column: 3/7;
   grid-row: 1;
   width: max-content;
-  margin: 0 auto 0 8px;
   font-size: 0.6rem;
   font-weight: 600;
   color: #c6c6c6;
   align-self: center;
   text-align: left;
 }
+.available .searchingText {
+  grid-column: 2/7;
+  grid-row: 1;
+  width: max-content;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #c6c6c6;
+  align-self: center;
+  text-align:center;
+  justify-self: center;
+}
 .circle {
-  grid-column: 1/2;
+  grid-column: 2/3;
   grid-row: 1;
   width: 10px;
   height: 10px;
@@ -480,7 +493,8 @@ export default {
   border-radius: 50%;
   box-shadow: 0px 0px 1px 1px #666666;
   align-self: center;
-  justify-self: flex-end;
+  justify-self: flex-start;
+  margin-right: 5px;
 }
 .pulse {
   animation: pulse-animation 1s infinite;
