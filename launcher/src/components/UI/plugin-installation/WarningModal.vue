@@ -61,7 +61,7 @@ export default {
   position: absolute;
   top: 20%;
   left: 30%;
-  background-color: #336666;
+  background-color: #313941;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -91,7 +91,7 @@ export default {
 
 .warningMessage span {
   color: #cec06d;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   margin-top: 5px;
   text-align: center;
@@ -147,7 +147,7 @@ export default {
   box-shadow: none;
 }
 .close {
-  color: rgba(136, 6, 6, 0.588);
+  color: rgb(237, 95, 95);
   font-size: 0.6rem;
   font-weight: 500;
   align-self: center;
