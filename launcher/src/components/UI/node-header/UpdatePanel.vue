@@ -116,7 +116,7 @@
         <div
           class="confirmUpdate"
           @click.prevent.stop="$emit('updateConfirm')"
-          :class="{ disabled: !checkAvailableServicesNewUpdate() }"
+          :class="{ disabled: !checkAvailableServicesNewUpdate() && !checkStereumUpdate() || updating}"
         >
           <span>update all</span>
           <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />

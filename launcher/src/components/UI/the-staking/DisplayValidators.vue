@@ -66,7 +66,7 @@
                     alt="icon"
                   />
                 </div>
-                <div class="copy-box">
+                <div class="copy-box" @click="copyHandler(item)">
                   <img
                     class="copy-icon"
                     src="../../../../public/img/icon/the-staking/copy6.png"
@@ -335,8 +335,9 @@ export default {
     removeModalDisplay(el) {
       el.isRemoveBoxActive = true;
     },
-    validatorRemoveConfirm(el) {
+    async validatorRemoveConfirm(el) {
       el.isRemoveBoxActive = false;
+      await this.deleteValidators(el.validatorID,[el.key])
     },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
@@ -396,6 +397,11 @@ export default {
         default:
           return this.depositStatusIcon;
       }
+    },
+    async deleteValidators(serviceID, keys){
+      await ControlService.deleteValidators({serviceID: serviceID, keys: keys})
+      this.forceRefresh = true;
+      await this.listKeys();
     },
     listKeys: async function () {
       let keyStats = [];
@@ -577,8 +583,35 @@ export default {
       this.insertKeyBoxActive = true;
     },
 
-    confirmRemoveAllValidators() {
+    async confirmRemoveAllValidators() {
+      let keys = this.keys.map(key => key.key)
+      let id = ""
+      let changed = 0
+      this.keys.forEach(key => {
+        if(id != key.validatorID) {
+          id = key.validatorID
+          changed++
+        }
+      })
       this.removeForMultiValidatorsActive = false;
+      if(changed === 1 && id){
+        await this.deleteValidators(id,keys)
+      }else if(changed === 0){
+        console.log("Nothing to delete!")
+      }else{
+        console.log("Multiple validator services are not supported yet!")
+      }
+    },
+
+    copyHandler(item) {
+      let toCopy = item.key;
+      this.$copyText(toCopy)
+        .then(() => {
+          console.log("copied!");
+        })
+        .catch(() => {
+          console.log(`can't copy`);
+        });
     },
   },
 };

@@ -148,6 +148,18 @@ export class ValidatorAccountManager {
         }
     }
 
+    async deleteValidators(serviceID, keys){
+        try {
+            let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
+            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            let result = (JSON.parse(logs[1])).msg
+            return result
+        } catch(err) {
+            log.error("Deleting Validators Failed:\n", err)
+            return err
+        }
+    } 
+
     async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
             try {
