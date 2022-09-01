@@ -40,6 +40,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 }
 .insertBox .insert-key {
   width: 100%;
