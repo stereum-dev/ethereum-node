@@ -489,7 +489,7 @@ export default {
   grid-row: 1;
   width: 10px;
   height: 10px;
-  background: #17b837;
+  background: #17a2b8;
   border-radius: 50%;
   box-shadow: 0px 0px 1px 1px #666666;
   align-self: center;
