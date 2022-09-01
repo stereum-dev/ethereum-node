@@ -1,30 +1,30 @@
 <template>
-  <div class="notif-modal-parent">
+  <div class="logout-modal-parent">
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
-    <div class="notif-modal-content">
-      <div class="content">
-        <div class="title-box">
-          <span>Notifications</span>
-        </div>
-        <div class="text">
-          <p>
-            You can set up different notification sources and the status you
-            want to be notified of here
-          </p>
-        </div>
-        <div class="messageContent">
-          <img
-            src="../../../../public/img/icon/header-icons/monitor2.png"
-            alt="icon"
-          />
-        </div>
-        <span class="close">Click outside to cancel</span>
+    <div class="logout-modal-content">
+      <div class="title-box">
+        <span>LOG-OUT</span>
       </div>
+      <div class="messageContent">
+        <img
+          src="../../../../public/img/icon/manage-node-icons/stop.png"
+          alt=""
+        />
+        <span class="question"
+          >ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span
+        >
+      </div>
+      <div class="confrimBtn">
+        <div class="confrimBox" @click="$emit('confrimLogout')">
+          <span>Log out</span>
+        </div>
+      </div>
+      <span class="close">Click outside to cancel</span>
     </div>
   </div>
 </template>
 <style scoped>
-.notif-modal-parent {
+.logout-modal-parent {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -42,9 +42,9 @@
   opacity: 0.7;
   z-index: 311;
 }
-.notif-modal-content {
-  width: 55%;
-  height: 55%;
+.logout-modal-content {
+  width: 50%;
+  height: 50%;
   border-radius: 1rem;
   background-color: #343434;
   border: 4px solid rgb(171, 170, 170);
@@ -52,35 +52,12 @@
   opacity: 1;
   position: absolute;
   top: 13%;
-  left: 18%;
+  left: 20%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
-}
-.content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.text {
-  width: 100%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.text p {
-  padding: 5px;
-  margin: 0;
-  text-align: center;
-  font-size: 0.7rem;
-  font-weight: 400;
-  color: #c3c3c3;
 }
 .title-box {
   width: 100%;
@@ -89,26 +66,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2e553b;
+  background-color: #bf3a3a;
 }
 .title-box span {
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
   color: #c6c6c6;
   text-align: center;
   text-transform: uppercase;
 }
 .messageContent {
   width: 100%;
-  height: 70%;
+  height: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
 }
 .messageContent img {
-  width: 80%;
-  height: 40%;
+  width: 20%;
+  height: 80%;
 }
 .messageContent .question {
   color: rgb(195, 195, 195);

@@ -150,6 +150,10 @@ class ControlService extends EventEmitter {
     });
   }
 
+  async deleteValidators(args) {
+    return await this.promiseIpc.send("deleteValidators", args);
+  }
+
   async listValidators(args) {
     return await this.promiseIpc.send("listValidators", args);
   }
@@ -200,6 +204,10 @@ class ControlService extends EventEmitter {
 
   async refreshServiceInfos() {
     return await this.promiseIpc.send("refreshServiceInfos"); // insert existing operator keys
+  }
+
+  async addFeeRecipient(args){
+    return await this.promiseIpc.send("addFeeRecipient", args)  // 
   }
 
   async getOperatorPageURL(args) {

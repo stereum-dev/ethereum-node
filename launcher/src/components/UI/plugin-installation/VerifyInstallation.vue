@@ -44,9 +44,19 @@
             <router-link :to="{ path: '/install' }">
               <button class="back-btn">BACK</button>
             </router-link>
-            <router-link :to="{ path: '/node' }">
+            <!-- <router-link :to="{ path: '/node' }">
               <button @click="runInstalltion" class="next-btn">INSTALL</button>
-            </router-link>
+            </router-link> -->
+            <a>
+              <button class="next-btn" @click="displayWarningHandler">
+                NEXT
+              </button>
+            </a>
+            <warning-modal
+              v-if="displayInstallationWarning"
+              @install-btn="runInstalltion"
+              @close-modal="closeWarningModal"
+            ></warning-modal>
           </div>
         </div>
       </div>
@@ -59,9 +69,15 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
+import WarningModal from "./WarningModal.vue";
 export default {
+  components: {
+    WarningModal,
+  },
   data() {
-    return {};
+    return {
+      displayInstallationWarning: false,
+    };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
@@ -85,12 +101,19 @@ export default {
   },
   methods: {
     runInstalltion: async function () {
+      this.displayInstallationWarning = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       await ControlService.writeOneClickConfiguration({
         services: this.selectedPreset.includedPlugins,
         checkpointURL: this.checkPointSync,
       });
       await ControlService.startOneClickServices();
+    },
+    displayWarningHandler() {
+      this.displayInstallationWarning = true;
+    },
+    closeWarningModal() {
+      this.displayInstallationWarning = false;
     },
   },
 };

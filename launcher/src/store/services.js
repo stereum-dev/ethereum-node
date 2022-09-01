@@ -408,7 +408,18 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/execution/Geth-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Prunning",
+              type: "action",
+              action: "prunning started",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/prunning.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {

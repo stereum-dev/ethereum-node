@@ -2,7 +2,7 @@
   <div class="staking-parent">
     <div class="staking-green-bg">
       <div class="staking-black-bg">
-        <key-table :button="button"></key-table>
+        <display-validators :button="button"></display-validators>
         <time-reward></time-reward>
         <selection-options
           :buttonState="buttonState"
@@ -16,14 +16,14 @@
   </div>
 </template>
 <script>
-import KeyTable from "./KeyTable.vue";
+import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
 import TimeReward from "./TimeReward.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
-    KeyTable,
+    DisplayValidators,
     SelectionOptions,
     ValidatorsBox,
     TimeReward,
@@ -66,7 +66,10 @@ export default {
   },
   methods: {
     clickBtnHandler(el) {
-      this.button = el;
+      this.button = {};
+      setTimeout(() => {
+        this.button = el;
+      });
     },
   },
 };

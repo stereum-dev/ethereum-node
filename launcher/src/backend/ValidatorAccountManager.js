@@ -105,8 +105,14 @@ export class ValidatorAccountManager {
             let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
             let logs = [...(await this.nodeConnection.playbookStatus(run.playbookRunRef)).matchAll(/^DATA: ({"msg":.*)/gm)]
 
-            let result = logs.map(log => {
-                return (JSON.parse(log[1])).msg.data
+            let output = logs.map(log => {
+                return (JSON.parse(log[1]))
+            })
+
+            let result = output.map(log => {
+                if(log.msg.data === undefined)
+                    throw log.msg.code + " " + log.msg.message
+                return log.msg.data
             })
 
             result.forEach(batch => {
@@ -141,6 +147,18 @@ export class ValidatorAccountManager {
             return err
         }
     }
+
+    async deleteValidators(serviceID, keys){
+        try {
+            let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
+            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            let result = (JSON.parse(logs[1])).msg
+            return result
+        } catch(err) {
+            log.error("Deleting Validators Failed:\n", err)
+            return err
+        }
+    } 
 
     async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
@@ -179,6 +197,29 @@ export class ValidatorAccountManager {
             }
         })
 
+    }
+    
+    async addFeeRecipient(keys, address){
+        if(keys && keys.length != 0 && address){
+            const serviceID = keys[0].validatorID
+            const validatorKeys = keys.map(key => {
+                return {
+                    pubkey: key.key,
+                    recipient: address
+                }
+            })
+
+        try {
+            let run = await this.nodeConnection.runPlaybook('validator-fee-recipient-api', { stereum_role: 'validator-fee-recipient-api', validator_service: serviceID, validator_keys: validatorKeys })
+            //let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+            //let result = (JSON.parse(logs[1])).msg
+            return run
+        } catch (err) {
+            log.error("Changing Fee Recipient Failed:\n", err)
+            return err
+        }
+        }
+        return 0
     }
 
     async getOperatorPageURL(pubKey){

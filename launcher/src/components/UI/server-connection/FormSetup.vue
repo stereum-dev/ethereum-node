@@ -119,19 +119,25 @@
         >
           <label class="keyLocation_title" v-if="keyAuth">KEYLOCATION</label>
           <label class="keyLocation_title" v-if="!keyAuth">PASSWORD</label>
-          <div class="chooseFile" v-if="keyAuth" @click="openUploadHandler">
-            <input type="file" style="display: none" @change="previewFiles" ref="fileInput">
-            <img src="../../../../public/img/icon/header-icons/search.png"  />
-          </div>
+          <div class="locationPicker" v-if="keyAuth">
+            <div class="chooseFile" @click="openUploadHandler">
+              <input
+                type="file"
+                style="display: none"
+                @change="previewFiles"
+                ref="fileInput"
+              />
+              <img src="../../../../public/img/icon/form-setup/plus.png" />
+            </div>
             <input
-            v-if="keyAuth"
               type="text"
               name="keylocation"
-              id="keylocation"
+              id="keyInput"
               v-model="model.keylocation.value"
               @blur="checkInput(model.keylocation)"
               required
-              />
+            />
+          </div>
           <input
             :class="{
               notFilled: !model.pass.isFilled,
@@ -625,11 +631,10 @@ select {
 }
 .server-group input {
   width: 60%;
-  height: 30px;
+  height: 75%;
   background-color: #eaeaea;
   border: 2px solid #979797;
   border-radius: 40px;
-  padding-left: 10px;
   font-weight: 600;
   font-size: 0.9rem;
   outline-style: none !important;
@@ -659,10 +664,17 @@ select {
 }
 .chooseFile {
   cursor: pointer;
+  background: #eaeaea;
+  border: 2px solid #979797;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 8%;
+  border-radius: 30px 0 0 30px;
 }
 .chooseFile img {
-  width: 30px;
-  height: 30px;
+  width: 60%;
 }
 #keyLocation input {
   width: 57%;
@@ -671,12 +683,24 @@ select {
   border-radius: 40px;
   padding-left: 10px;
   background-color: #dbdbdb;
-  font-size: 0.9rem;
+  font-size: 80%;
   font-weight: 600;
   outline-style: none;
   border: 2px solid #929292;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
-
+.locationPicker {
+  display: flex;
+  height: 80%;
+  width: 60%;
+}
+#keyInput {
+  height: 100% !important;
+  width: 100% !important;
+  border-radius: 0 30px 30px 0 !important;
+}
 #login {
   width: 120px;
   min-width: 120px;

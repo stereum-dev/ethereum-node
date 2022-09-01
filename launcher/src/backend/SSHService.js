@@ -36,7 +36,7 @@ export class SSHService {
       //only works for ubuntu 22.04
       this.conn.on('banner', (msg) => {
         if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())){
-          if (process.env.IS_DEV === "true") {
+          if (process.env.NODE_ENV === "test") {
             resolve(this.conn)
           }
           reject(msg)
@@ -45,7 +45,7 @@ export class SSHService {
       this.conn.on('ready', async () => {
         let test = await this.exec('ls')
         if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())){
-          if (process.env.IS_DEV === "true") {
+          if (process.env.NODE_ENV === "test") {
             resolve(this.conn)
           }
           reject(test.stderr)

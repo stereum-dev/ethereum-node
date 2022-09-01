@@ -197,6 +197,10 @@ promiseIpc.on("importKey", async (args) => {
   return returnValue;
 });
 
+promiseIpc.on("deleteValidators", async (args) => {
+  await validatorAccountManager.deleteValidators(args.serviceID, args.keys);
+})
+
 promiseIpc.on("listValidators", async (args) => {
   return await validatorAccountManager.listValidators(args);
 });
@@ -273,6 +277,11 @@ promiseIpc.on("insertSSVNetworkKeys", async (args) => {
 promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
+
+
+promiseIpc.on("addFeeRecipient", async (args) => {
+  return await validatorAccountManager.addFeeRecipient(args.keys, args.address)
+})
 
 promiseIpc.on("getOperatorPageURL", async (args) => {
   return await validatorAccountManager.getOperatorPageURL(args);

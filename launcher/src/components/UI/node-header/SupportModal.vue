@@ -80,8 +80,8 @@ export default {
   z-index: 311;
 }
 .support-modal-content {
-  width: 50%;
-  height: 50%;
+  width: 55%;
+  height: 55%;
   border-radius: 1rem;
   background-color: #363a41;
   background-color: #343434;
@@ -90,7 +90,7 @@ export default {
   opacity: 1;
   position: absolute;
   top: 13%;
-  left: 20%;
+  left: 18%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
