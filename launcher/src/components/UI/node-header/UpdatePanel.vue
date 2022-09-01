@@ -5,10 +5,7 @@
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
           <span class="title">Stereum updates</span>
-          <span class="description"
-            >After downloading and installing the update Stereum will be
-            restarted</span
-          >
+          <span class="description">Updates for the Launcher & Node </span>
         </div>
         <div class="stereum-updateBox">
           <div class="versionBox">
@@ -54,6 +51,13 @@
                 >{{ stereumUpdate.version }} available</span
               >
             </div>
+            <div
+              class="available"
+              v-if="forceUpdateCheck && !checkStereumUpdate()"
+            >
+              <span class="circle pulse"></span>
+              <span class="searchingText">searching new updates</span>
+            </div>
           </div>
         </div>
       </div>
@@ -61,8 +65,7 @@
         <div class="serviceUpdates-title">
           <span class="title">Service updates</span>
           <span class="description"
-            >After an Service update the service in question will be
-            restarted</span
+            >Updates for the installed selection of PLUG-INs</span
           >
         </div>
         <div class="service-updateBox">
@@ -103,27 +106,23 @@
                 </div>
               </div>
             </div>
-            <div class="btnBox">
-              <div
-                class="confirmUpdate"
-                @click="$emit('updateConfirm')"
-                :class="{ disabled: !checkAvailableServicesNewUpdate() && !checkStereumUpdate() || updating }"
-              >
-                <span>update all</span>
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
-              </div>
-              <div class="autoUpdateText">
-                <span>auto-update: OFF</span>
-              </div>
+            <div class="autoUpdateText">
+              <span>auto-update: OFF</span>
             </div>
           </div>
         </div>
       </div>
+      <div class="updateAllBtnBox">
+        <div
+          class="confirmUpdate"
+          @click.prevent.stop="$emit('updateConfirm')"
+          :class="{ disabled: !checkAvailableServicesNewUpdate() && !checkStereumUpdate() || updating}"
+        >
+          <span>update all</span>
+          <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+        </div>
+      </div>
     </div>
-    £
   </div>
 </template>
 <script>
@@ -152,8 +151,8 @@ export default {
     }),
   },
   methods: {
-    searchUpdate(){
-      this.forceUpdateCheck = true
+    searchUpdate() {
+      this.forceUpdateCheck = true;
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
@@ -173,7 +172,7 @@ export default {
     },
   },
   mounted() {
-    this.forceUpdateCheck = true;
+    this.searchUpdate();
     this.checkAvailableServicesNewUpdate();
   },
 };
@@ -219,7 +218,7 @@ export default {
 }
 .serviceUpdates {
   width: 100%;
-  height: 68%;
+  height: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -447,36 +446,72 @@ export default {
   grid-template-rows: 1fr;
 }
 .btnBox .available .updateIcon {
-  grid-column: 1/2;
+  grid-column: 2/3;
   grid-row: 1;
-  width: 67%;
+  width: 62%;
   height: 100%;
-  margin: 0 auto 0 12px;
   background-color: rgb(59, 103, 100);
   border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: flex-start;
+  justify-self: flex-start;
 }
 .btnBox .available .updateIcon img {
   width: 66%;
   justify-self: flex-start;
 }
+
 .btnBox .available .availableText {
-  grid-column: 2/7;
+  grid-column: 3/7;
   grid-row: 1;
   width: max-content;
-  margin: 0 auto 0 8px;
   font-size: 0.6rem;
   font-weight: 600;
   color: #c6c6c6;
   align-self: center;
   text-align: left;
 }
+.available .searchingText {
+  grid-column: 2/7;
+  grid-row: 1;
+  width: max-content;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #c6c6c6;
+  align-self: center;
+  text-align:center;
+  justify-self: center;
+}
+.circle {
+  grid-column: 2/3;
+  grid-row: 1;
+  width: 10px;
+  height: 10px;
+  background: #17a2b8;
+  border-radius: 50%;
+  box-shadow: 0px 0px 1px 1px #666666;
+  align-self: center;
+  justify-self: flex-start;
+  margin-right: 5px;
+}
+.pulse {
+  animation: pulse-animation 1s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px #637973;
+  }
+  100% {
+    box-shadow: 0 0 0 10px #2e3533;
+  }
+}
+
 .service-updateBox {
   width: 100%;
-  height: 75%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-self: center;
@@ -486,44 +521,44 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #334d4d;
+  border: 2px solid #373737;
+  padding: 5px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-self: center;
+  position: relative;
 }
 .service-updateBox .availableTable .tableHeader {
   width: 100%;
-  height: 10%;
-  background-color: #335959;
-  border: 3px solid #434343;
-  border-bottom: none;
+  height: 9%;
+  background-color: #356262;
   border-radius: 3px;
   padding: 2px;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 1fr;
 }
 .tableHeader .tableUpdateIcon {
-  grid-column: 2/3;
+  grid-column: 4/5;
   grid-row: 1;
-  width: 28%;
-  height: 81%;
+  width: 48%;
+  height: 100%;
   background-color: #2a4940;
   border-radius: 100%;
-  margin-right: 5px;
-  margin-top: 2px;
+  padding: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
-  justify-self: flex-end;
+  justify-self: center;
 }
 .tableHeader .tableUpdateIcon img {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 .tableHeader span {
-  grid-column: 3/6;
+  grid-column: 5/10;
   grid-row: 1;
   width: 100%;
   font-size: 0.6rem;
@@ -531,11 +566,11 @@ export default {
   color: #c6c6c6;
   text-transform: uppercase;
   align-self: center;
+  justify-self: flex-end;
 }
 .service-updateBox .availableTable .tableContent {
   width: 100%;
-  height: 77%;
-  border: 3px solid #434343;
+  height: 89%;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
@@ -562,7 +597,7 @@ export default {
 .tableContent .tableRow .downloadBtn {
   grid-column: 1/2;
   width: 100%;
-  height: 98%;
+  height: 99%;
   margin: 0 auto;
   background-color: #067c5a;
   border-radius: 3px;
@@ -635,19 +670,21 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.service-updateBox .availableTable .btnBox {
+.updateAllBtnBox {
   width: 100%;
-  height: 13%;
-  background-color: #343434;
+  height: 10%;
+  background-color: transparent;
   display: grid;
-  grid-template-columns: 35% 30% 35%;
+  grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 1fr;
+  position: absolute;
+  bottom: 0;
 }
-.availableTable .btnBox .confirmUpdate {
-  grid-column: 1/2;
+.updateAllBtnBox .confirmUpdate {
+  grid-column: 2/3;
   grid-row: 1;
-  width: 95%;
-  height: 90%;
+  width: 100%;
+  height: 60%;
   margin: 0 auto;
   background-color: #067c5a;
   border-radius: 3px;
@@ -662,22 +699,22 @@ export default {
   transition-duration: 50ms;
 }
 
-.btnBox .confirmUpdate img {
+.updateAllBtnBox .confirmUpdate img {
   width: 13%;
   height: 70%;
   max-width: 13px;
   max-height: 15px;
 }
-.btnBox .confirmUpdate span {
-  font-size: 0.7rem;
+.updateAllBtnBox .confirmUpdate span {
+  font-size: 0.8rem;
   font-weight: 700;
   color: #c6c6c6;
   text-transform: uppercase;
 }
-.btnBox .confirmUpdate:hover {
+.updateAllBtnBox .confirmUpdate:hover {
   background-color: rgb(3, 82, 60);
 }
-.btnBox .confirmUpdate:active {
+.updateAllBtnBox .confirmUpdate:active {
   border: none;
   box-shadow: none;
   transform: scale(0.95);
@@ -693,23 +730,24 @@ export default {
   border: none;
 } */
 
-.btnBox .autoUpdateText {
-  grid-column: 3/4;
-  grid-row: 1;
+.autoUpdateText {
   width: 100%;
-  height: 90%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 20px;
   align-self: center;
+  position: absolute;
+  right: 0;
+  bottom: -20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
-.btnBox .autoUpdateText span {
-  width: 100%;
-  font-size: 0.8rem;
-  font-weight: 600;
+.autoUpdateText span {
+  font-size: 0.55rem;
+  font-weight: 500;
   color: #c6c6c6;
   text-transform: uppercase;
-  margin-right: 5px;
+  justify-self: flex-end;
 }
 
 .disabled {

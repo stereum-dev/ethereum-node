@@ -107,8 +107,6 @@ export default {
       this.removeServicesModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
-      this.removeAllPlugins();
-      this.$router.push("/");
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
@@ -125,6 +123,8 @@ export default {
     destroyNode: async function () {
       console.log(await ControlService.destroy());
       this.refresh = true;
+      this.removeAllPlugins();
+      this.$router.push("/");
     },
   },
 };

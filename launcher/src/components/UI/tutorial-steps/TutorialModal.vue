@@ -98,14 +98,14 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(68, 68, 68);
 }
 .item:hover {
-  border: 2px solid rgb(125, 213, 245);
+  border: 2px solid rgb(79, 174, 160);
   box-shadow: 0 1px 5px 1px rgb(68, 68, 68);
-  transition-duration: 100ms;
-  transform: scale(1.04);
+  transition-duration: 200ms;
+  transform: scale(1.02);
 }
 .item:active {
-  border: 2px solid rgb(125, 213, 245);
-  transition-duration: 100ms;
+  border: 2px solid rgb(79, 174, 160);
+  transition-duration: 200ms;
   transform: scale(1);
 }
 .item .icon-box {

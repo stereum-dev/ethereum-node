@@ -1,53 +1,67 @@
 <template>
-  <div class="grafitiRow">
-    <div class="iconBox">
-      <img
-        class="grafiti-icon"
-        src="../../../../public/img/icon/the-staking/option-graffiti.png"
-        alt="icon"
-      />
-    </div>
-    <div class="inputBox">
-      <input
-        type="text"
-        placeholder="Enter up 32 characters to add to the chain whenever you create a block!"
-      />
-    </div>
-    <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmChange')">Confrim</button>
+  <div class="grafitiBox">
+    <div class="grafitiRow">
+      <div class="iconBox">
+        <img
+          class="grafiti-icon"
+          src="../../../../public/img/icon/the-staking/option-graffiti.png"
+          alt="icon"
+        />
+      </div>
+      <div class="inputBox">
+        <input
+          type="text"
+          placeholder="Enter up 32 characters to add to the chain when you create a block!"
+        />
+      </div>
+      <div class="confirmBox">
+        <button class="confirmBtn" @click="$emit('confirmBtn')">
+          Confrim
+        </button>
+      </div>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+
+};
 </script>
 <style scoped>
-.grafitiRow {
-  grid-column: 1/8;
-  grid-row: 1;
+.grafitiBox {
+  grid-column: 3/11;
+  grid-row: 2/3;
   width: 100%;
-  height: 100%;
+  height: 40px;
+  margin-top: 21px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.grafitiRow {
+  width: 100%;
+  height: 80%;
   display: grid;
-  grid-template-columns: 5% 85% 10%;
+  grid-template-columns: 5% 80% 15%;
   grid-template-rows: 1fr;
   background-color: #723979;
-  border-radius: 50px;
-  position: absolute;
-  z-index: 1000;
+  border-radius: 35px;
+  z-index: 100;
 }
 .iconBox {
   grid-column: 1/2;
   grid-row: 1;
   width: 100%;
   height: 100%;
+  margin-left: 7px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .iconBox img {
-  width: 20px;
-  height: 20px;
-  border-radius: 3px;
+  width: 25px;
+  height: 30px;
   margin: 0 auto;
 }
 .inputBox {
@@ -60,15 +74,17 @@ export default {};
   align-items: center;
 }
 .inputBox input {
-  width: 80%;
+  width: 100%;
   height: 95%;
   padding: 0;
-  padding-left: 10px;
+  padding-left: 5px;
+  margin-left: 5px;
   background-color: #3d0444;
-  border: 1px solid #958797;
-  border-radius: 35px;
+  border: 5px solid #723979;
+  border-right: none;
+  border-radius: 5px;
   color: #958797;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 500;
 }
 .confirmBox {
@@ -87,7 +103,7 @@ export default {};
   background-color: #292929;
   color: #b5b5b5;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
 }

@@ -1,22 +1,25 @@
 <template>
-  <div class="remove-modal-parent">
-    <div class="modal-opacity" @click="$emit('removeModal')"></div>
-    <div class="remove-modal-content">
+  <div class="warning-modal-parent">
+    <div class="modal-opacity" @click="$emit('closeModal')"></div>
+    <div class="warning-modal-content">
       <div class="title-box">
         <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
+          src="../../../../public/img/icon/click-installation/warning.png"
           alt="icon"
         />
       </div>
-      <div class="removeMessage">
-        <span>Are you sure you want to remove</span>
-        <p>{{ item.key }}</p>
-        <span>FROM THIS MACHINE?</span>
+      <div class="warningMessage">
+        <span>We recommend you to wait until the initial installation is done before applying further changes.</span>
       </div>
-      <div class="remove-box">
-        <div class="remove-btn" @click="$emit('deleteKey')">
-          <span>Remove</span>
-        </div>
+      <div class="confirm-box">
+        <router-link class="confirm-link" :to="{ path: '/node' }">
+          <button @click="$emit('installBtn')" class="confirm-btn">
+            INSTALL
+          </button>
+        </router-link>
+        <!-- <div class="confirm-btn" >
+          <span>Confirm</span>
+        </div> -->
         <span class="close">Click outside to close.</span>
       </div>
     </div>
@@ -28,7 +31,7 @@ export default {
 };
 </script>
 <style scoped>
-.remove-modal-parent {
+.warning-modal-parent {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -47,10 +50,10 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: .8;
+  opacity: 0.8;
   z-index: 501;
 }
-.remove-modal-content {
+.warning-modal-content {
   width: 40%;
   height: 45%;
   border-radius: 45px;
@@ -58,7 +61,7 @@ export default {
   position: absolute;
   top: 20%;
   left: 30%;
-  background-color: #336666;
+  background-color: #313941;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -75,39 +78,32 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 30%;
-  height: 100%;
+  width: 20%;
+  height: 90%;
 }
-.removeMessage {
+.warningMessage {
   width: 95%;
   height: 40%;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
-.removeMessage p {
-  width: 85%;
-  color: rgb(156, 156, 156);
-  font-size: 0.7rem;
-  font-weight: 700;
-  word-break: break-all;
-  text-align: center;
-}
-.removeMessage span {
-  color: rgb(197, 197, 197);
-  font-size: 1rem;
-  font-weight: 700;
+
+.warningMessage span {
+  width: 80%;
+  color: #b7b7b7;
+  font-size: .9rem;
+  font-weight: 600;
   margin-top: 5px;
   text-align: center;
   text-transform: uppercase;
 }
-/* .removeMessage span {
-  color: rgb(195, 195, 195);
-  font-size: 1rem;
-  font-weight: 700;
-} */
-.remove-box {
+/* .warningMessage span {
+    color: rgb(195, 195, 195);
+    font-size: 1rem;
+    font-weight: 700;
+  } */
+.confirm-box {
   width: 100%;
   height: 25%;
   display: flex;
@@ -116,34 +112,43 @@ export default {
   align-items: center;
   z-index: 502;
 }
-.remove-btn {
-  width: 30%;
-  height: 50%;
+.confirm-link {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline-style: none;
+  text-decoration: none;
+}
+.confirm-btn {
+  width: 35%;
+  height: 80%;
   border-radius: 10px;
-  border: 1px solid #8f8f8f;
-  background-color: #c93d24;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
+  border: 2px solid #409b94;
+  background-color: #409b94;
+  box-shadow:0 1px 2px 1px #1b403d;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
 }
 
-.remove-btn:hover {
-  transform: scale(1.08);
+.confirm-btn:hover {
+  transform: scale(1.04);
   transition-duration: 150ms;
-  box-shadow: 0 1px 5px 1px rgb(35, 59, 53);
+  background-color: #2a6560;
 }
-.remove-btn:active {
+.confirm-btn:active {
   transform: scale(1);
   box-shadow: none;
 }
 .close {
-  color: rgba(136, 6, 6, 0.588);
+  color: rgb(237, 95, 95);
   font-size: 0.6rem;
   font-weight: 500;
   align-self: center;

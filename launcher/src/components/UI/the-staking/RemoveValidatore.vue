@@ -1,4 +1,5 @@
 <template>
+  <div class="bg-opacity"></div>
   <div class="removeRow"></div>
 </template>
 <script>
@@ -18,5 +19,12 @@ export default {};
   pointer-events: none;
   z-index: 100;
 }
-
+.bg-opacity {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 101;
+}
 </style>
