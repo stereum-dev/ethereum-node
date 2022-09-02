@@ -11,12 +11,12 @@ stereum_static:
     versions:
       # consensus clients
       lighthouse: v3.0.0
-      nimbus: multiarch-v22.8.0
+      nimbus: multiarch-v22.8.1
       teku: "22.8.1"
       prysm: v3.0.0
 
       # execution clients
-      geth: v1.10.22
+      geth: v1.10.23
       besu: "22.7.1"
       nethermind: "1.14.0"
 
