@@ -223,7 +223,7 @@ export default {
 .fade-box-enter-active {
   transition: opacity 0.3s ease-out;
 }
-.fade-box-enter-active {
+.fade-box-leave-active {
   transition: opacity 0.3s ease-in;
 }
 
