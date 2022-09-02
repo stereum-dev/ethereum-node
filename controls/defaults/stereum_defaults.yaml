@@ -10,9 +10,9 @@ stereum_static:
         install: false
     versions:
       # consensus clients
-      lighthouse: v3.0.0
-      nimbus: multiarch-v22.8.1
-      teku: "22.8.1"
+      lighthouse: v3.1.0
+      nimbus: multiarch-v22.8.2
+      teku: "22.9.0"
       prysm: v3.0.0
 
       # execution clients
@@ -21,7 +21,7 @@ stereum_static:
       nethermind: "1.14.0"
 
       # mevboost
-      mevboost: v0.7.10
+      mevboost: v0.8.2
 
       # ssv
       ssv_network: v0.3.0
