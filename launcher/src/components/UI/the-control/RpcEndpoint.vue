@@ -1,6 +1,6 @@
 <template>
   <div class="rpc-parent">
-    <control-dialog v-if="openDialog"
+    <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
         <div class="dialogMessage">
