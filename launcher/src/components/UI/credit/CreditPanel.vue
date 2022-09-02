@@ -1,60 +1,59 @@
 <template>
   <div class="credit-panel_parent">
-    <div class="credit-panel_box" v-if="financial">
-      <div class="credit-panel_title">
-        <div class="ttl-box">
-          <div class="credit-panel_title_ico">
-            <img :src="financialIco" />
+    <transition name="fade-box" mode="out-in">
+      <div class="credit-panel_box" v-if="financial">
+        <div class="credit-panel_title">
+          <div class="ttl-box">
+            <div class="credit-panel_title_ico">
+              <img :src="financialIco" />
+            </div>
+            <div class="credit-panel_title_ttl">
+              <span>CREDITS - FINANCIAL CONTRIBUTORS</span>
+            </div>
           </div>
-          <div class="credit-panel_title_ttl">
-            <span>CREDITS - FINANCIAL CONTRIBUTORS</span>
+        </div>
+        <div class="division-line"></div>
+        <div class="desc-line">
+          <small
+            >GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE
+            DEVELOPMENT!
+          </small>
+          <div class="desc-line-button" @click="creditToggle">
+            <div class="desc-line-button_ico">
+              <img :src="technikalIco" />
+            </div>
+            <span>TECHNICAL CONTRIBUTION</span>
           </div>
         </div>
       </div>
-      <div class="division-line"></div>
-      <div class="desc-line">
-        <small
-          >GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!
-        </small>
-        <div class="desc-line-button" @click="creditToggle">
-          <div class="desc-line-button_ico">
-            <img :src="technikalIco" alt="" />
-          </div>
-          <span>TECHNICAL CONTRIBUTION</span>
-        </div>
-      </div>
-
-      <div class="footer"></div>
-      <task-manager></task-manager>
-    </div>
-    <div class="credit-panel_box" v-else>
-      <div class="credit-panel_title">
-        <div class="ttl-box">
-          <div class="credit-panel_title_ico">
-            <img :src="technikalIco" />
-          </div>
-          <div class="credit-panel_title_ttl">
-            <span>CREDITS - TECHNICAL CONTRIBUTORS</span>
+      <div class="credit-panel_box" v-else>
+        <div class="credit-panel_title">
+          <div class="ttl-box">
+            <div class="credit-panel_title_ico">
+              <img :src="technikalIco" />
+            </div>
+            <div class="credit-panel_title_ttl">
+              <span>CREDITS - TECHNICAL CONTRIBUTORS</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="division-line"></div>
-      <div class="desc-line">
-        <small
-          >EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!
-        </small>
-        <div class="desc-line-button" @click="creditToggle">
-          <div class="desc-line-button_ico">
-            <img :src="financialIco" alt="" />
+        <div class="division-line"></div>
+        <div class="desc-line">
+          <small
+            >EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!
+          </small>
+          <div class="desc-line-button" @click="creditToggle">
+            <div class="desc-line-button_ico">
+              <img :src="financialIco" alt="" />
+            </div>
+            <span>FINANCIAL CONTRIBUTION</span>
           </div>
-          <span>FINANCIAL CONTRIBUTION</span>
         </div>
+        <technical-box></technical-box>
       </div>
-
-      <technical-box></technical-box>
-      <div class="footer"></div>
-      <task-manager></task-manager>
-    </div>
+    </transition>
+    <div class="footer"></div>
+    <task-manager></task-manager>
   </div>
 </template>
 <script>
@@ -207,5 +206,29 @@ export default {
   width: 95%;
   height: 1%;
   background: #eee;
+}
+
+.footer {
+  background-color: rgb(52, 52, 52);
+  border-radius: 0 0 7px 7px;
+  width: 100%;
+  height: 5%;
+  display: flex;
+}
+.fade-box-enter-from,
+.fade-box-leave-to {
+  opacity: 0;
+}
+
+.fade-box-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.fade-box-enter-active {
+  transition: opacity 0.3s ease-in;
+}
+
+.fade-box-enter-to,
+.fade-box-leave-from {
+  opacity: 1;
 }
 </style>
