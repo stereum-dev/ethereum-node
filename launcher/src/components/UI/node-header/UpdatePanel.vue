@@ -82,7 +82,10 @@
                 v-for="(item, index) in newUpdates"
                 :key="index"
               >
-                <div v-if="item.running" class="downloadBtnDisabled">
+                <div
+                  v-if="item.running || updating"
+                  class="downloadBtnDisabled"
+                >
                   <img
                     src="/img/icon/node-journal-icons/download_disabled.png"
                     alt="icon"
@@ -116,7 +119,11 @@
         <div
           class="confirmUpdate"
           @click.prevent.stop="$emit('updateConfirm')"
-          :class="{ disabled: !checkAvailableServicesNewUpdate() && !checkStereumUpdate() || updating}"
+          :class="{
+            disabled:
+              (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) ||
+              updating,
+          }"
         >
           <span>update all</span>
           <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
@@ -481,7 +488,7 @@ export default {
   font-weight: 600;
   color: #c6c6c6;
   align-self: center;
-  text-align:center;
+  text-align: center;
   justify-self: center;
 }
 .circle {

@@ -89,7 +89,6 @@ export default {
       this.newUpdates.forEach(update => update.running = true)
     },
     updateConfirmationHandler: async function () {
-      this.displayUpdatePanel = false;
       this.updating = true;
       this.serviceUpdateBtnHandler();
       await this.runAllUpdates();
