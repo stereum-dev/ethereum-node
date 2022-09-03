@@ -75,6 +75,7 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
+      refresh: "refresh",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -82,33 +83,39 @@ export default {
     }),
   },
   methods: {
-    runAllUpdates: async function () {
-      await ControlService.runAllUpdates();
-    },
-    serviceUpdateBtnHandler() {
-      this.newUpdates.forEach(update => update.running = true)
-    },
     updateConfirmationHandler: async function () {
-      this.displayUpdatePanel = false;
-      this.updating = true;
-      this.serviceUpdateBtnHandler();
-      await this.runAllUpdates();
-      this.forceUpdateCheck = true;
-      this.updating = false;
-      this.versions = {};
+      try {
+        this.refresh = false
+        this.updating = true;
+        this.newUpdates.forEach(update => update.running = true)
+        await ControlService.runAllUpdates();
+      } catch (err) {
+        console.log("Running All Updates Failed: ", err)
+      } finally {
+        this.forceUpdateCheck = true;
+        this.updating = false;
+        this.versions = {};
+        this.newUpdates = [];
+        this.refresh = true
+      }
     },
     async runUpdate(item) {
-      item.running = true;
-      if (item && item.id) {
+      try {
+        this.refresh = false
+        item.running = true;
         this.updating = true;
-        await ControlService.updateServices({ services: item.id });
+        if (item && item.id) {
+          await ControlService.updateServices({ services: item.id });
+        } else if (item && item.commit) {
+          await ControlService.updateStereum({ commit: item.commit });
+        }
+      } catch (err) {
+        console.log(JSON.stringify(item) + "\nUpdate Failed", err)
+      } finally {
         this.updating = false;
         this.forceUpdateCheck = true;
-      } else if (item && item.commit) {
-        this.updating = true;
-        await ControlService.updateStereum({ commit: item.commit });
-        this.updating = false;
-        this.forceUpdateCheck = true;
+        this.refresh = true;
+        this.newUpdates = [];
       }
     },
     clickToCancelLogout() {
