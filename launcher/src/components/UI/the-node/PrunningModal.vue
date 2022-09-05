@@ -25,18 +25,18 @@
 </template>
 <style scoped>
 .logout-modal-parent {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  top: 10%;
-  left: 5%;
+  top: 0;
+  left: 0;
   z-index: 310;
 }
 .modal-opacity {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: black;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   opacity: 0.7;

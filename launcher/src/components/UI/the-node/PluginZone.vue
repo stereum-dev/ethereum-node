@@ -53,15 +53,18 @@
           </plugin-menu>
           <the-expert
             @hide-modal="hideExpertMode(item)"
-            @check-prunning="runGethPrunningWarning"
             v-if="item.expertOptionsModal"
+            @prunning-warning="runGethPrunningWarning"
             :item="item"
             position="18.8%"
             long="54%"
           ></the-expert>
-          <prunning-modal v-if="gethPrunningWarningModal"></prunning-modal>
         </div>
       </div>
+      <prunning-modal
+        v-if="gethPrunningWarningModal"
+        @close-me="hidePrunningWarningsModal"
+      ></prunning-modal>
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
@@ -113,9 +116,6 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
-  },
-  mounted() {
-    console.log(this.runGethPrunningWarning());
   },
   methods: {
     updateStates: async function () {
@@ -178,12 +178,14 @@ export default {
       });
     },
     runGethPrunningWarning(option) {
-      this.installedServices.forEach((item) => {
-        if (item.service === "GethService") {
-          option.displayWarningModal = true;
-          this.gethPrunningWarningModal = true;
-        }
-      });
+      if (option.changeValue && option.displayWarningModal) {
+        this.gethPrunningWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.gethPrunningWarningModal = false;
+      }
+    },
+    hidePrunningWarningsModal() {
+      this.gethPrunningWarningModal = false;
     },
   },
 };

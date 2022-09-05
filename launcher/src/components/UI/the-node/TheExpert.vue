@@ -134,7 +134,7 @@
                 type="checkbox"
                 v-model="option.changeValue"
                 name="check-button"
-                @change="actionPrunningHandler(item, option)"
+                @change="somethingIsChanged()"
               />
               <span class="slider round"></span>
             </label>
@@ -198,7 +198,6 @@ export default {
   computed: {},
 
   mounted() {
-    this.prunningModal = this.prunningWarning;
     this.readService();
   },
   // watch: {
@@ -260,16 +259,20 @@ export default {
       option.buttonState = false;
     },
 
-    actionPrunningHandler(item) {
-      if (item.service === "GethService") {
-        
-        this.$emit("checkPrunning", option);
+    actionPrunningHandler(el) {
+      if (el.name === "Geth") {
+        el.expertOptions.map((item) => {
+          if (item.changeValue) {
+            item.displayWarningModal = true;
+            this.$emit("prunningWarning", item);
+          }
+        });
       }
     },
-
     async confirmExpertChanges(el) {
       await this.writeService();
       el.expertOptionsModal = false;
+      this.actionPrunningHandler(el);
     },
   },
 };
