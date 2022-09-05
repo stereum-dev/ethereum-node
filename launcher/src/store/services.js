@@ -29,6 +29,17 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               pattern: new RegExp(/(- --slasher-max-db-size=)(\d+)(\n)/),
             },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
           ],
           drag: true,
           state: "exited",
@@ -93,7 +104,19 @@ export const useServices = defineStore("services", {
           sIcon: require("../../public/img/icon/plugin-icons/consensus/Prysm-s.png"),
           headerOption: false,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
+          ],
           drag: true,
           state: "exited",
           config: {
@@ -164,6 +187,17 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
               pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
+            },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
             },
           ],
           drag: true,
@@ -244,6 +278,17 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
               pattern: new RegExp(
                 /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
@@ -420,6 +465,17 @@ export const useServices = defineStore("services", {
                 /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
             },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
           ],
           drag: true,
           state: "exited",
@@ -460,6 +516,17 @@ export const useServices = defineStore("services", {
                 /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
             },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
           ],
           drag: true,
           state: "exited",
@@ -495,6 +562,17 @@ export const useServices = defineStore("services", {
               action: "prunning started",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
+              pattern: new RegExp(
+                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
+              ),
+            },
+            {
+              title: "Resync",
+              type: "action",
+              action: "resyncronization",
+              changeValue: null,
+              displayResyncModal: false,
+              icon: "/img/icon/plugin-menu-icons/resync.png",
               pattern: new RegExp(
                 /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
               ),
