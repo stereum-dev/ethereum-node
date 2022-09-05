@@ -50,9 +50,9 @@ export default {
   methods: {
     async copy(s, t) {
       await navigator.clipboard.writeText(s);
-      this.copyVal = t + " copied";
+
       this.openDialog = !this.openDialog;
-      this.dialogValue = t + " " + "Copied to clipboard!";
+      this.dialogValue = t + " Copied to clipboard!";
       if (this.openDialog === true) {
         setTimeout(() => {
           this.openDialog = false;

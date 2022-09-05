@@ -1,6 +1,6 @@
 <template>
   <div class="dataApi-parent">
-    <control-dialog  :open="openDialog"
+    <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
         <div class="dialogMessage">
@@ -55,9 +55,8 @@ export default {
   methods: {
     async copy(s, t) {
       await navigator.clipboard.writeText(s);
-      this.copyVal = t + " copied";
       this.openDialog = !this.openDialog;
-      this.dialogValue = t + " " + "Copied to clipboard!";
+      this.dialogValue = t + " Copied to clipboard!";
       if (this.openDialog === true) {
         setTimeout(() => {
           this.openDialog = false;
