@@ -11,15 +11,6 @@
         <span v-else>Click to continue</span>
       </div>
       <lang-dialog @close="hideDialog" :open="dialogIsVisible">
-        <!-- <div id="flag" v-for="link in linkFlags" :key="link.langImg">
-          <div
-            class="content-box"
-            @click="setLang(link.langName, link.langSelect)"
-          >
-            <img :src="link.langImg" id="flagId" />
-            <span>{{ link.langName }}</span>
-          </div>
-        </div> -->
         <flag-button
           @setting="setLang(link.langName, link.langSelect)"
           v-for="link in linkFlags"

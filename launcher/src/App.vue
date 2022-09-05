@@ -7,7 +7,6 @@
 export default {};
 </script>
 <style>
-
 #app {
   min-width: 1024px;
   min-height: 576px;
