@@ -1,10 +1,5 @@
-import { resolve } from 'path'
-import { StringUtils } from './StringUtils'
-
-const { readFileSync } = require('fs')
 const { Client } = require('ssh2')
 const tunnel = require('tunnel-ssh')
-const fs = require('fs')
 const log = require('electron-log')
 
 export class SSHService {
