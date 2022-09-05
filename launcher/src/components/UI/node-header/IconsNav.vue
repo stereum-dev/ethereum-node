@@ -117,8 +117,11 @@ export default {
     logoutModalHandler() {
       this.logoutModalIsActive = true;
     },
-    loggingOut() {
-      this.$router.push("/");
+    async loggingOut() {
+      await ControlService.closeTunnels();
+      this.$router.push("/").then(() => {
+        location.reload()
+      });
     },
     updateModalHandler() {
       if(!this.updating)
