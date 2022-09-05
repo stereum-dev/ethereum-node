@@ -171,10 +171,7 @@ export default {
       return true;
     },
   },
-  mounted() {
-    this.searchUpdate();
-    this.checkAvailableServicesNewUpdate();
-  },
+  mounted() {},
 };
 </script>
 <style scoped>
