@@ -104,6 +104,10 @@ promiseIpc.on("tunnel", async (arg) => {
   return nodeConnection.openTunnels(arg);
 });
 
+promiseIpc.on("closeTunnels", async () => {
+  return await nodeConnection.closeTunnels();
+});
+
 // called via promiseIpc as an async function
 promiseIpc.on("setApikey", async (arg) => {
   return stereumService.setApikey(arg);

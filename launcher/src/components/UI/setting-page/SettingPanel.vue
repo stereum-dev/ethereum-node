@@ -15,54 +15,56 @@
         </div>
       </div>
       <div class="division-line"></div>
-      <div class="seting-language_box" v-if="langActive">
-        <language-panel @back="langActiveBox"></language-panel>
-      </div>
-      <div class="base-container" v-else>
-        <div class="general-panel">
-          <div class="general-panel_title"><span>GENERAL</span></div>
-          <hr />
-          <div class="items-box_general">
-            <setting-itemmv></setting-itemmv>
-            <setting-items
-              v-for="item in generalItems"
-              :key="item.id"
-              :title="item.title"
-              :btnValue="item.btnValue"
-              :isColor="item.isColor"
-              :itemType="item.itemType"
-              :savedFlag="langIco"
-              :savedLang="langName"
-              :link="item.link"
-              :isLanguage="item.isLanguage"
-              :linkValue="item.linkValue"
-              @lang-action="langActiveBox"
-            ></setting-items>
+      <transition name="fade-box" mode="out-in">
+        <div class="seting-language_box" v-if="langActive">
+          <language-panel @back="langActiveBox"></language-panel>
+        </div>
+        <div class="base-container" v-else>
+          <div class="general-panel">
+            <div class="general-panel_title"><span>GENERAL</span></div>
+            <hr />
+            <div class="items-box_general">
+              <setting-itemmv></setting-itemmv>
+              <setting-items
+                v-for="item in generalItems"
+                :key="item.id"
+                :title="item.title"
+                :btnValue="item.btnValue"
+                :isColor="item.isColor"
+                :itemType="item.itemType"
+                :savedFlag="langIco"
+                :savedLang="langName"
+                :link="item.link"
+                :isLanguage="item.isLanguage"
+                :linkValue="item.linkValue"
+                @lang-action="langActiveBox"
+              ></setting-items>
+            </div>
+          </div>
+          <div class="update-panel">
+            <div class="update-panel_title"><span>UPDATE</span></div>
+            <hr />
+            <div class="items-box_update">
+              <setting-items
+                title="Stereum Version"
+                :btn-value="stereumUpdate.current"
+                is-color="alpha"
+                item-type="update"
+                id="version"
+              ></setting-items>
+              <setting-items
+                v-for="item in updateItems"
+                :key="item.id"
+                :title="item.title"
+                :btnValue="item.btnValue"
+                :isColor="item.isColor"
+                :itemType="item.itemType"
+                :isLang="item.isLang"
+              ></setting-items>
+            </div>
           </div>
         </div>
-        <div class="update-panel">
-          <div class="update-panel_title"><span>UPDATE</span></div>
-          <hr />
-          <div class="items-box_update">
-            <setting-items
-              title="Stereum Version"
-              :btn-value="stereumUpdate.current"
-              is-color="alpha"
-              item-type="update"
-              id="version"
-            ></setting-items>
-            <setting-items
-              v-for="item in updateItems"
-              :key="item.id"
-              :title="item.title"
-              :btnValue="item.btnValue"
-              :isColor="item.isColor"
-              :itemType="item.itemType"
-              :isLang="item.isLang"
-            ></setting-items>
-          </div>
-        </div>
-      </div>
+      </transition>
     </div>
 
     <div class="footer"></div>
@@ -370,5 +372,21 @@ hr {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+}
+.fade-box-enter-from,
+.fade-box-leave-to {
+  opacity: 0;
+}
+
+.fade-box-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.fade-box-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+
+.fade-box-enter-to,
+.fade-box-leave-from {
+  opacity: 1;
 }
 </style>

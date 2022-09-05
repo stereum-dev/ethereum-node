@@ -5,10 +5,8 @@ import App from "./App.vue";
 import router from "./router/index.js";
 import "./components/UI/the-control/chart.js";
 import "./main.css";
-
 import i18n from "./includes/i18n";
 import { createPinia } from "pinia";
-import copyText from "@meforma/vue-copy-to-clipboard";
 import BaseButton from "./components/UI/BaseButton.vue";
 import BackgroundPage from "./components/layers/BackgroundPage.vue";
 import TheTrapezium from "./components/UI/the-node/TheTrapezium.vue";
@@ -32,7 +30,6 @@ app.component("service-plugin", ServicePlugin);
 app.component("node-service", NodeService);
 
 app.use(createPinia());
-app.use(copyText);
 app.use(router);
 app.use(i18n);
 app.mount("#app");
