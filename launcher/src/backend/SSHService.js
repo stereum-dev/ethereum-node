@@ -1,9 +1,5 @@
-import { StringUtils } from './StringUtils'
-
-const { readFileSync } = require('fs')
 const { Client } = require('ssh2')
 const tunnel = require('tunnel-ssh')
-const fs = require('fs')
 const log = require('electron-log')
 
 export class SSHService {
@@ -11,6 +7,7 @@ export class SSHService {
     this.conn = null
     this.connectionInfo = null
     this.connected = false
+    this.tunnels = []
   }
 
   static checkExecError (err) {
@@ -132,12 +129,28 @@ export class SSHService {
           return reject(error)
         }
         log.info(`Tunnel Connection established! (${tunnelConfig.localPort})`)
+        this.tunnels.push({server: server, config: tunnelConfig})
         resolve(server)
       })
 
       server.on('error', function (error) {
         log.error('Tunnel connection error: ', error)
       })
+    })
+  }
+
+  async closeTunnels () {
+    return new Promise((resolve, reject) => {
+      if(this.tunnels.length > 0){
+        for(let tunnel of this.tunnels){
+          tunnel.server.close()
+          log.info(tunnel.config.localPort + " closed!")
+        }
+        this.tunnels = []
+        resolve("Tunnels Closed!")
+      }else{
+        reject("No Tunnels to Close!")
+      }
     })
   }
 }
