@@ -19,7 +19,7 @@
             <div class="menu-content">
               <div class="power">
                 <img
-                 v-if="item.serviceIsPending"
+                  v-if="item.serviceIsPending"
                   class="pending"
                   src="/img/icon/plugin-menu-icons/turning_circle.gif"
                   alt="icon"
@@ -53,11 +53,13 @@
           </plugin-menu>
           <the-expert
             @hide-modal="hideExpertMode(item)"
+            @check-prunning="runGethPrunningWarning"
             v-if="item.expertOptionsModal"
             :item="item"
             position="18.8%"
             long="54%"
           ></the-expert>
+          <prunning-modal v-if="gethPrunningWarningModal"></prunning-modal>
         </div>
       </div>
     </template>
@@ -75,11 +77,13 @@ import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
 import TheExpert from "./TheExpert.vue";
+import PrunningModal from "./PrunningModal.vue";
 export default {
   components: {
     ManageTrapezoid,
     PluginMenu,
     TheExpert,
+    PrunningModal,
   },
   props: {
     title: {
@@ -101,6 +105,7 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      gethPrunningWarningModal: false,
     };
   },
   computed: {
@@ -108,6 +113,9 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+  },
+  mounted() {
+    console.log(this.runGethPrunningWarning());
   },
   methods: {
     updateStates: async function () {
@@ -167,6 +175,14 @@ export default {
       this.list.map((item) => {
         if (item.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
+      });
+    },
+    runGethPrunningWarning(option) {
+      this.installedServices.forEach((item) => {
+        if (item.service === "GethService") {
+          option.displayWarningModal = true;
+          this.gethPrunningWarningModal = true;
+        }
       });
     },
   },
@@ -375,5 +391,4 @@ export default {
 .menu-content .power img:active {
   transform: scale(1);
 }
-
 </style>

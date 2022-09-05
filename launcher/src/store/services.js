@@ -414,6 +414,7 @@ export const useServices = defineStore("services", {
               type: "action",
               action: "prunning started",
               changeValue: null,
+              displayWarningModal: false,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
               pattern: new RegExp(
                 /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
