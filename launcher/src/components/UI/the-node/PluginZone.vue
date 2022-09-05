@@ -63,7 +63,8 @@
       </div>
       <prunning-modal
         v-if="gethPrunningWarningModal"
-        @close-me="hidePrunningWarningsModal"
+        @cancel-warning="hidePrunningWarningsModal"
+        @confirm-btn="confirmRunningGethPrunning(option)"
       ></prunning-modal>
     </template>
     <template #plusIcon>
@@ -109,6 +110,7 @@ export default {
       isServiceOn: false,
       isServicePending: false,
       gethPrunningWarningModal: false,
+      options: null,
     };
   },
   computed: {
@@ -186,6 +188,13 @@ export default {
     },
     hidePrunningWarningsModal() {
       this.gethPrunningWarningModal = false;
+    },
+    confirmRunningGethPrunning() {
+      this.gethPrunningWarningModal = false;
+      this.runGethPrunningWarning({
+        changeValue: false,
+        displayWarningModal: false,
+      });
     },
   },
 };
