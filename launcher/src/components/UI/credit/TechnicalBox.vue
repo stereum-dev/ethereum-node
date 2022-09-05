@@ -1,12 +1,16 @@
 <template>
-  <div class="technical-box_parent">
+  <transition-group
+    tag="div"
+    class="technical-box_parent"
+    name="contributors-list"
+  >
     <the-contributor
       v-for="result in results"
       :key="result.id"
       :name="result.name"
       :avatar="result.avatar"
     ></the-contributor>
-  </div>
+  </transition-group>
 </template>
 <script>
 import TheContributor from "./TheContributor.vue";
@@ -52,5 +56,15 @@ export default {
   grid-template-columns: repeat(4, 1fr);
   width: 95%;
   height: 80%;
+}
+
+.contributors-list-enter-from {
+  opacity: 0;
+}
+.contributors-list-enter-active {
+  transition: all 0.5s ease-out;
+}
+.contributors-list-enter-to {
+  opacity: 1;
 }
 </style>
