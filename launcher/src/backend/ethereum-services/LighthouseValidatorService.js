@@ -4,7 +4,7 @@ import { ServiceVolume } from './ServiceVolume.js'
 
 
 export class LighthouseValidatorService extends NodeService {
-  static buildByUserInput (network, ports, dir, consensusClients, graffiti) {
+  static buildByUserInput (network, ports, dir, consensusClients) {
     const service = new LighthouseValidatorService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -12,9 +12,11 @@ export class LighthouseValidatorService extends NodeService {
     const image = 'sigp/lighthouse'
 
     const dataDir = '/opt/app/validator'
+    const graffitiDir = '/opt/app/graffitis'
 
     const volumes = [
-      new ServiceVolume(workingDir + '/validator', dataDir)
+      new ServiceVolume(workingDir + '/validator', dataDir),
+      new ServiceVolume(workingDir + '/graffitis', graffitiDir)
     ]
 
     const eth2Nodes = (consensusClients.map(client => { return client.buildConsensusClientHttpEndpointUrl() })).join()
@@ -35,7 +37,7 @@ export class LighthouseValidatorService extends NodeService {
         '--suggested-fee-recipient=0x0000000000000000000000000000000000000000',
         `--datadir=${dataDir}`,
         '--init-slashing-protection',
-        `--graffiti=\"${graffiti}\"`,
+        `--graffiti-file=${graffitiDir}/graffitis.yaml`,
         '--metrics',
         '--metrics-address=0.0.0.0',
         '--http',

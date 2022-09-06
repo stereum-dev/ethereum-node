@@ -213,6 +213,10 @@ class ControlService extends EventEmitter {
   async getOperatorPageURL(args) {
     return await this.promiseIpc.send("getOperatorPageURL", args); // insert existing operator keys
   }
+
+  async setGraffitis(args) {
+    return await this.promiseIpc.send("setGraffitis", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

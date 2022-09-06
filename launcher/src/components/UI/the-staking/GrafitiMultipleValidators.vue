@@ -12,10 +12,11 @@
         <input
           type="text"
           placeholder="Enter up 32 characters to add to the chain when you create a block!"
+          v-model="graffiti"
         />
       </div>
       <div class="confirmBox">
-        <button class="confirmBtn" @click="$emit('confirmBtn')">
+        <button class="confirmBtn" @click="$emit('confirmBtn', this.graffiti)">
           Confrim
         </button>
       </div>
@@ -24,7 +25,11 @@
 </template>
 <script>
 export default {
-
+  data(){
+    return{
+      graffiti: ""
+    };
+  },
 };
 </script>
 <style scoped>

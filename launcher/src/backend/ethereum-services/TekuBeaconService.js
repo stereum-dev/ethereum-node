@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class TekuBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, graffiti, checkpointURL) {
+    static buildByUserInput(network, ports, dir, executionClients, checkpointURL) {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -15,9 +15,12 @@ export class TekuBeaconService extends NodeService {
 
         const JWTDir = '/engine.jwt'
         const dataDir = '/opt/app/data'
+        const graffitiDir = '/opt/app/graffitis'
+
         const volumes = [
             new ServiceVolume(workingDir + '/data', dataDir),
-            new ServiceVolume(elJWTDir, JWTDir)
+            new ServiceVolume(elJWTDir, JWTDir),
+            new ServiceVolume(workingDir + '/graffitis', graffitiDir)
         ]
     
         service.init(
@@ -32,7 +35,7 @@ export class TekuBeaconService extends NodeService {
                 '--p2p-enabled=true',
                 '--p2p-port=9001',
                 '--validators-keystore-locking-enabled=false',
-                `--validators-graffiti="${graffiti}"`,
+                `--validators-graffiti-file=${graffitiDir}/graffitis.yaml`,
                 //`--eth1-endpoints=${executionLayer}`,
                 `--ee-endpoint=${executionLayer}`,
                 `--ee-jwt-secret-file=${JWTDir}`,
