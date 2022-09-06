@@ -53,6 +53,10 @@ class ControlService extends EventEmitter {
     return args;
   }
 
+  async closeTunnels() {
+    return await this.promiseIpc.send("closeTunnels");
+  }
+
   async setApikey(args) {
     await this.promiseIpc.send("setApikey", args);
   }

@@ -772,6 +772,14 @@ export class NodeConnection {
     }
   }
 
+  async closeTunnels(){
+    try{
+      await this.sshService.closeTunnels()
+    } catch (err) {
+      log.error(err)
+    }
+  }
+
   async checkPort(port) {
     return new Promise((resolve, reject) => {
       const connection = net.connect(port);
