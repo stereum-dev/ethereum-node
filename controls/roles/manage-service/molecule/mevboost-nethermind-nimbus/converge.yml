@@ -32,23 +32,17 @@
               env: {}
               command:
               - --config=goerli
-              - --log=info
               - --datadir=/opt/app/data
-              - --Network.DiscoveryPort=30303
-              - --Network.P2PPort=30303
-              - --JsonRpc.Enabled=true
-              - --JsonRpc.Host=0.0.0.0
+              - --Merge.Enabled=true
               - --JsonRpc.JwtSecretFile=/engine.jwt
-              - --Init.WebSocketsEnabled=true
-              - --JsonRpc.WebSocketsPort=8546
-              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
-              - --Metrics.Enabled=true
+              - --JsonRpc.EngineHost=0.0.0.0
+              - --JsonRpc.EnginePort=8551
               user: "root"
               volumes:
                 - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
 
-    # nimbus beacon & validator service
+   # nimbus beacon & validator service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
@@ -86,16 +80,12 @@
                 - --web3-url=http://stereum-{{ nethermind_service }}:8551
                 - --tcp-port=9000
                 - --udp-port=9000
-                - --rpc
-                - --rpc-port=9190
-                - --rpc-address=0.0.0.0
                 - --metrics
                 - --metrics-port=8008
                 - --metrics-address=0.0.0.0
                 - --rest
                 - --rest-address=0.0.0.0
                 - --rest-port=5052
-                - --graffiti="stereum.net"
                 - --jwt-secret=/engine.jwt
                 - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --keymanager

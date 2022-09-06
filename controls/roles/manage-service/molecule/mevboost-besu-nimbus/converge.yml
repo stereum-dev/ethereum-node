@@ -36,8 +36,7 @@
                 - --data-path=/opt/app/data
                 - --data-storage-format=BONSAI
                 - --sync-mode=X_SNAP
-                - --p2p-port=30303
-                - --p2p-host=0.0.0.0
+                - --host-allowlist=*
                 - --rpc-http-enabled=true
                 - --rpc-http-host=0.0.0.0
                 - --rpc-http-cors-origins=*
@@ -45,15 +44,11 @@
                 - --rpc-ws-enabled=true
                 - --rpc-ws-api=WEB3,ETH,NET
                 - --rpc-ws-host=0.0.0.0
-                - --host-allowlist=*
-                - --metrics-enabled
-                - --metrics-host=0.0.0.0
-                - --logging=INFO
                 - --engine-rpc-enabled=true
-                - --engine-host-allowlist=*
                 - --engine-rpc-port=8551
                 - --engine-jwt-enabled=true
                 - --engine-jwt-secret=/engine.jwt
+                - --engine-host-allowlist=*
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
@@ -97,16 +92,6 @@
                 - --web3-url=http://stereum-{{ besu_service }}:8551
                 - --tcp-port=9000
                 - --udp-port=9000
-                - --rpc
-                - --rpc-port=9190
-                - --rpc-address=0.0.0.0
-                - --metrics
-                - --metrics-port=8008
-                - --metrics-address=0.0.0.0
-                - --rest
-                - --rest-address=0.0.0.0
-                - --rest-port=5052
-                - --graffiti="stereum.net"
                 - --jwt-secret=/engine.jwt
                 - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --keymanager
@@ -115,6 +100,7 @@
                 - --payload-builder=on
                 - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
               user: "2000"
+
               volumes:
                 - "/opt/app/services/{{ nimbus_service }}/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ nimbus_service }}/validator:/opt/app/validators"

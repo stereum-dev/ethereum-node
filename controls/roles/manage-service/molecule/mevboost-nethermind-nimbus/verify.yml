@@ -13,5 +13,13 @@
       - mev_boost.stdout is not search("Invalid relay URL")
     retries: 60
     delay: 10
-
+  #  nimbus logs
+  - name: Nimbus beacon
+    command: "docker logs stereum-28bf6a92-231d-11ed-ae9e-c75fab7a77b6"
+    register: nimbus
+    until:
+      - nimbus.stdout is search("Established connection to execution layer")
+      - nimbus.stdout is not search("Payload builder REST client setup failed")
+    retries: 60
+    delay: 10
 # EOF

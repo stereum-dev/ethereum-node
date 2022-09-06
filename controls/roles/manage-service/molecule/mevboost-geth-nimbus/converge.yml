@@ -84,16 +84,9 @@
                 - --web3-url=http://stereum-{{ geth_service }}:8551
                 - --tcp-port=9000
                 - --udp-port=9000
-                - --rpc
-                - --rpc-port=9190
-                - --rpc-address=0.0.0.0
-                - --metrics
-                - --metrics-port=8008
-                - --metrics-address=0.0.0.0
                 - --rest
                 - --rest-address=0.0.0.0
                 - --rest-port=5052
-                - --graffiti="stereum.net"
                 - --jwt-secret=/engine.jwt
                 - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --keymanager
@@ -102,6 +95,7 @@
                 - --payload-builder=on
                 - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
               user: "2000"
+
               volumes:
                 - "/opt/app/services/{{ nimbus_service }}/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ nimbus_service }}/validator:/opt/app/validators"
