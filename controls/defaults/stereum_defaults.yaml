@@ -13,7 +13,7 @@ stereum_static:
       lighthouse: v3.1.0
       nimbus: multiarch-v22.8.2
       teku: "22.9.0"
-      prysm: v3.0.0
+      prysm: v3.1.0
 
       # execution clients
       geth: v1.10.23
