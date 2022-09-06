@@ -21,14 +21,14 @@ test('LighthouseValidatorService buildConfiguration', () => {
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
 
-  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new LighthouseBeaconService.LighthouseBeaconService()], 'foobar').buildConfiguration()
+  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new LighthouseBeaconService.LighthouseBeaconService()]).buildConfiguration()
 
 
 
   expect(lhService.command).toContain('--beacon-nodes=http-endpoint-string')
-  expect(lhService.command).toContain('--graffiti=\"foobar\"')
-  expect(lhService.volumes).toHaveLength(1)
+  expect(lhService.volumes).toHaveLength(2)
   expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/validator:/opt/app/validator')
+  expect(lhService.volumes).toContain('/opt/stereum/lh-' + lhService.id + '/graffitis:/opt/app/graffitis')
   expect(lhService.ports).toHaveLength(1)
   expect(lhService.id).toHaveLength(36)
   expect(lhService.user).toMatch(/2000/)

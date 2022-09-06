@@ -72,7 +72,7 @@ test('teku validator import', async () => {
       new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
     ]
-    let tekuClient = TekuBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [geth], 'stereum.net')
+    let tekuClient = TekuBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [geth])
     //change out eth1 endpoint address for integration test
     // const index = tekuClient.command.findIndex(element => element.includes('--ee-endpoint='))
     // tekuClient.command[index] = '--ee-endpoint==http://10.10.0.3:8545'

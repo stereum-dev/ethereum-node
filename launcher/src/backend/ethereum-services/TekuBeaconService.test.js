@@ -31,13 +31,12 @@ test('buildConfiguration', () => {
       }
     })
   
-    const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConfiguration()
+    const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()]).buildConfiguration()
   
     expect(tekuService.command).toContain('--ee-endpoint=http-endpoint-string')
     expect(tekuService.command).toContain('--network=prater')
-    expect(tekuService.command).toContain('--validators-graffiti="stereum.net"')
-    expect(tekuService.volumes).toHaveLength(2)
-    expect(tekuService.volumes).toContain('/opt/stereum/teku-' + tekuService.id + '/data:/opt/app/data')
+    expect(tekuService.volumes).toHaveLength(3)
+    expect(tekuService.volumes).toContain('/opt/stereum/teku-' + tekuService.id + '/graffitis:/opt/app/graffitis')
     expect(tekuService.ports).toHaveLength(5)
     expect(tekuService.id).toHaveLength(36)
     expect(tekuService.user).toMatch(/2000/)
