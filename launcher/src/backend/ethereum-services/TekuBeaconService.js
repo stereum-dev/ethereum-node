@@ -19,7 +19,7 @@ export class TekuBeaconService extends NodeService {
             new ServiceVolume(workingDir + '/data', dataDir),
             new ServiceVolume(elJWTDir, JWTDir)
         ]
-    
+
         service.init(
             'TekuBeaconService',    // service
             service.id,             // id
@@ -38,7 +38,6 @@ export class TekuBeaconService extends NodeService {
                 `--ee-jwt-secret-file=${JWTDir}`,
                 `--validators-proposer-default-fee-recipient=0x0000000000000000000000000000000000000000`,
                 '--metrics-enabled=true',
-                '--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS',
                 '--metrics-port=8008',
                 '--metrics-interface=0.0.0.0',
                 '--metrics-host-allowlist=*',
