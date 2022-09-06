@@ -2,35 +2,73 @@
   <div class="warning-modal-paren">
     <div class="modal-opacity" @click="$emit('cancelWarning')"></div>
     <div class="warning-modal-content">
-      <div class="title-box">
+      <div class="title-box" v-if="displayWarningMessage">
         <img
           src="../../../../public/img/icon/the-staking/stereum-error.png"
           alt="icon"
         />
       </div>
-      <div class="warningMessage">
+      <div class="warningMessage" v-if="displayWarningMessage">
         <p>
-          GETH used up storage space GROWs over its operational time. It takes
-          MULTIPLE HOURS to prune the Geth database, removing unnecessary data
-          and freeing up some of the used storage space. This has to be done
-          while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL
-          GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.
+          YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN
+          serve the network. this is necessary for your node TO PICK up its
+          ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING
+          YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A
+          SOURCE TO SYNCHRONIZE YOUR NODE ANEW.
         </p>
       </div>
-      <div class="check-box">
-        <label for="checkbox">
-          <input id="checkbox" type="checkbox" v-model="isChecked" />
-          I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES
-        </label>
+      <div class="resyncBox" v-else>
+        <div class="titleBox">
+          <img src="/img/icon/plugin-menu-icons/resync.png" alt="icon" />
+        </div>
+        <div class="fast-sync">
+          <div class="sync-header">
+            <div class="headerTitle">
+              <span>SYNCHRONISATION</span>
+            </div>
+            <div class="headerContent">
+              <img
+                @click="changeTheOption"
+                src="/img/icon/arrows/left-arrow.png"
+                alt="icon"
+              />
+              <span v-if="genesisIsActive">GENESIS</span>
+              <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
+              <img
+                @click="changeTheOption"
+                src="/img/icon/arrows/right-arrow.png"
+                alt="icon"
+              />
+            </div>
+          </div>
+          <div class="content">
+            <span v-if="genesisIsActive"
+              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
+            >
+            <div class="inputBox" v-if="checkPointIsActive">
+              <input type="text" v-model="checkPointSync" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btnBox">
         <div
+          v-if="displayWarningMessage"
           class="confirmBtn"
-          :class="{ disabled: !isChecked }"
+          @click="continueToResync"
+        >
+          <span>Continue</span>
+        </div>
+        <div
+          v-else
+          class="confirmBtn"
           @click="$emit('confirmBtn')"
         >
-          <span>Start Prunning</span>
+          <span>RESYNC</span>
         </div>
-        <span class="close">Click outside to cancel.</span>
       </div>
+      <span class="close">Click outside to cancel.</span>
     </div>
   </div>
 </template>
@@ -41,6 +79,10 @@ export default {
     return {
       checked: null,
       isButtonDisabled: false,
+      genesisIsActive: true,
+      checkPointIsActive: false,
+      displayWarningMessage: true,
+      checkPointSync: "",
     };
   },
   computed: {
@@ -53,6 +95,20 @@ export default {
       set: function (newValue) {
         this.checked = newValue;
       },
+    },
+  },
+  methods: {
+    changeTheOption() {
+      if (this.genesisIsActive) {
+        this.genesisIsActive = false;
+        this.checkPointIsActive = true;
+      } else {
+        this.genesisIsActive = true;
+        this.checkPointIsActive = false;
+      }
+    },
+    continueToResync() {
+      this.displayWarningMessage = false;
     },
   },
 };
@@ -105,12 +161,12 @@ export default {
   align-items: center;
 }
 .title-box img {
-  width: 23%;
+  width: 20%;
   height: 100%;
 }
 .warningMessage {
   width: 95%;
-  height: 35%;
+  height: 50%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -119,51 +175,25 @@ export default {
 .warningMessage p {
   width: 90%;
   color: rgb(156, 156, 156);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 600;
   word-wrap: break-word;
   text-align: justify;
   text-transform: uppercase;
 }
-.check-box {
+.btnBox {
   width: 90%;
-  height: 35%;
+  height: 15%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   z-index: 502;
 }
-.check-box label {
-  width: 100%;
-  height: 30%;
-  margin: 0 auto;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #1b8da4;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.check-box #checkbox {
-  width: 15px;
-  height: 15px;
-  margin-right: 10px;
-  font-size: 0.6rem;
-  font-weight: 300;
-  color: #bfbfbf;
-  justify-self: center;
-  align-self: center;
-  cursor: pointer;
-  outline: none;
-}
-#checkbox[type="checkbox"]:focus {
-  outline: none !important;
-}
-.check-box .confirmBtn {
+
+.btnBox .confirmBtn {
   width: 40%;
-  height: 40%;
+  height: 80%;
   border-radius: 10px;
   border: 1px solid #8f8f8f;
   background-color: #127a65;
@@ -172,7 +202,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
@@ -189,6 +219,128 @@ export default {
 .confirmBtn:active {
   transform: scale(1);
   box-shadow: none;
+}
+.resyncBox {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.resyncBox .titleBox {
+  width: 100%;
+  height: 30%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.resyncBox .titleBox img {
+  width: 13%;
+  height: 90%;
+}
+.resyncBox .fast-sync {
+  width: 90%;
+  height: 40%;
+  background-color: #2a2e30;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.fast-sync .sync-header {
+  width: 100%;
+  height: 34%;
+
+  border-radius:5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.fast-sync .sync-header .headerTitle {
+  width: 45%;
+  height: 100%;
+  border-radius: 15px 0 0 15px;
+  background-color: #127a65;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.headerTitle span {
+  width: 86%;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c4c4c4;
+  text-align: center;
+  margin-right: 3px;
+}
+.fast-sync .sync-header .headerContent {
+  width: 55%;
+  height: 100%;
+  border-radius: 0;
+  padding: 0 5px;
+  background-color: #232427;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.headerContent span {
+  width: 86%;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c4c4c4;
+  text-align: center;
+  margin-right: 3px;
+}
+.headerContent img {
+  width: 5%;
+  height: 50%;
+  cursor: pointer;
+}
+.fast-sync .content {
+  width: 100%;
+  height: 64%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fast-sync .content span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #c4c4c4;
+}
+.fast-sync .content .inputBox {
+  width: 96%;
+  height: 60%;
+  background-color: rgb(209, 209, 209);
+  border: 5px solid rgb(104, 104, 104);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+.fast-sync .content input {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 .close {
   color: rgba(186, 71, 71, 0.826);

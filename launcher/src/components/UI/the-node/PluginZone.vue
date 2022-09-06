@@ -55,6 +55,7 @@
             @hide-modal="hideExpertMode(item)"
             v-if="item.expertOptionsModal"
             @prunning-warning="runGethPrunningWarning"
+            @resync-warning="runResyncWarning"
             :item="item"
             position="18.8%"
             long="54%"
@@ -66,6 +67,12 @@
         @cancel-warning="hidePrunningWarningsModal"
         @confirm-btn="confirmRunningGethPrunning(option)"
       ></prunning-modal>
+      <resync-modal
+        v-if="resyncWarningModal"
+        @cancel-warning="hideResyncWarningsModal"
+        @confirm-btn="confirmRunningResync"
+      >
+      </resync-modal>
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
@@ -82,12 +89,14 @@ import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
 import TheExpert from "./TheExpert.vue";
 import PrunningModal from "./PrunningModal.vue";
+import ResyncModal from "./ResyncModal.vue";
 export default {
   components: {
     ManageTrapezoid,
     PluginMenu,
     TheExpert,
     PrunningModal,
+    ResyncModal,
   },
   props: {
     title: {
@@ -110,6 +119,7 @@ export default {
       isServiceOn: false,
       isServicePending: false,
       gethPrunningWarningModal: false,
+      resyncWarningModal: false,
       options: null,
     };
   },
@@ -179,6 +189,7 @@ export default {
           el.expertOptionsModal = true;
       });
     },
+    // Check if service is Geth
     runGethPrunningWarning(option) {
       if (option.changeValue && option.displayWarningModal) {
         this.gethPrunningWarningModal = true;
@@ -186,6 +197,15 @@ export default {
         this.gethPrunningWarningModal = false;
       }
     },
+    //Double check & run Resync modal
+    runResyncWarning(option) {
+      if (option.changeValue && option.displayResyncModal) {
+        this.resyncWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.resyncWarningModal = false;
+      }
+    },
+    // Prunning Functions
     hidePrunningWarningsModal() {
       this.gethPrunningWarningModal = false;
     },
@@ -195,6 +215,14 @@ export default {
         changeValue: false,
         displayWarningModal: false,
       });
+    },
+
+    // Resync Functions
+    hideResyncWarningsModal() {
+      this.resyncWarningModal = false;
+    },
+    confirmRunningResync() {
+      this.resyncWarningModal = false;
     },
   },
 };

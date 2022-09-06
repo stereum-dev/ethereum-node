@@ -258,21 +258,41 @@ export default {
     buttonOff(option) {
       option.buttonState = false;
     },
-
+    //Prunning Handler
     actionPrunningHandler(el) {
       if (el.name === "Geth") {
-        el.expertOptions.map((item) => {
-          if (item.changeValue) {
-            item.displayWarningModal = true;
-            this.$emit("prunningWarning", item);
-          }
-        });
+        el.expertOptions
+          .filter((item) => {
+            return item.title === "Prunning";
+          })
+          .map((item) => {
+            if (item.changeValue) {
+              item.displayWarningModal = true;
+              this.$emit("prunningWarning", item);
+            }
+          });
+      }
+    },
+    // Resync Handler
+    actionResyncHandler(el) {
+      if (el.category === "execution" || el.category === "consensus") {
+        el.expertOptions
+          .filter((item) => {
+            return item.title === "Resync";
+          })
+          .map((item) => {
+            if (item.changeValue) {
+              item.displayResyncModal = true;
+              this.$emit("resyncWarning", item);
+            }
+          });
       }
     },
     async confirmExpertChanges(el) {
       await this.writeService();
       el.expertOptionsModal = false;
       this.actionPrunningHandler(el);
+      this.actionResyncHandler(el);
     },
   },
 };
