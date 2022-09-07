@@ -52,22 +52,40 @@
                 id="version"
               ></setting-items>
               <setting-items
-                v-for="item in updateItems"
-                :key="item.id"
-                :title="item.title"
-                :btnValue="item.btnValue"
-                :isColor="item.isColor"
-                :itemType="item.itemType"
-                :isLang="item.isLang"
-                :drop1="item.drop1"
-                :referrer="stereumRef"
+                title="Stereum Version"
+                btn-value="off"
+                is-color="off"
+                item-type="update"
+                @customize-setting="switchOnOff"
               ></setting-items>
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>Stereum Update Configuration</span>
                 </div>
                 <div class="setting-items_btn">
-                  <select name="stereum-update" id="stereum-update"></select>
+                  <select
+                    name="stereum-update"
+                    id="stereum-update"
+                    v-model="stereumRef"
+                  >
+                    <option value="manual">MANUAL</option>
+                    <option value="auto">AUTO</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Plug-in / Service Update Configuration</span>
+                </div>
+                <div class="setting-items_btn">
+                  <select
+                    name="stereum-update"
+                    id="stereum-update"
+                    v-model="pluginRef"
+                  >
+                    <option value="manual">MANUAL</option>
+                    <option value="auto">AUTO</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -92,9 +110,11 @@ export default {
   data() {
     return {
       SIco: "/img/icon/setting-page/setting_icon.png",
+      onOff: false,
       pageName: "",
       pageIcon: "",
       stereumRef: "manual",
+      pluginRef: "manual",
       settingData: {
         name: "stereum setting",
         icon: "/img/icon/setting-page/setting_icon.png",
@@ -130,19 +150,6 @@ export default {
           itemType: "update",
           btnValue: "OFF",
         },
-        {
-          id: 2,
-          title: "Stereum Update Configuration",
-          drop1: true,
-          itemType: "update",
-        },
-        {
-          id: 3,
-          title: "Plug-in / Service Update Configuration",
-          isColor: "manual",
-          itemType: "update",
-          btnValue: "Manual",
-        },
       ],
     };
   },
@@ -165,9 +172,8 @@ export default {
   },
 
   methods: {
-    test() {
-      this.stereumRef = "manual";
-      alert("This is " + this.stereumRef);
+    switchOnOff() {
+      alert("test");
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.current) {
@@ -237,7 +243,7 @@ export default {
   text-decoration: none;
   margin: 0.5% 0;
   border-radius: 20px;
-  height: 12%;
+  height: 18%;
 }
 .setting-items_title {
   width: 60%;
@@ -249,6 +255,29 @@ export default {
 }
 .setting-items_title span {
   margin: 0 5%;
+}
+.setting-items_btn {
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-weight: 500;
+  border: 1.5px solid #30353a;
+  cursor: pointer;
+  margin: 0 2%;
+  height: 90%;
+  color: #000;
+  font-size: 100%;
+  box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
+  box-sizing: border-box;
+  text-transform: uppercase;
+}
+.setting-items_btn select {
+  width: 100%;
+  height: 100%;
+  line-height: 100%;
+  text-align-last: center;
 }
 #version {
   pointer-events: none;
