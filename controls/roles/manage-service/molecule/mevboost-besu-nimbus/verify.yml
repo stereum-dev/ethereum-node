@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  mev boost logs
+  - name: MEV-boost
+    command: "docker logs stereum-610ebb66-2316-11ed-b44b-9f89e153686b"
+    register: mev_boost
+    until:
+      - mev_boost.stdout is search("listening on 0.0.0.0:18550")
+      - mev_boost.stdout is search("using 1 relays")
+      - mev_boost.stdout is not search("Invalid relay URL")
+    retries: 60
+    delay: 10
+  #  nimbus logs
+  - name: Nimbus beacon
+    command: "docker logs stereum-60dab730-2316-11ed-87e9-33da6b458541"
+    register: nimbus
+    until:
+      - nimbus.stdout is search("Established connection to execution layer")
+      - nimbus.stdout is not search("Payload builder REST client setup failed")
+    retries: 60
+    delay: 10
+
+# EOF

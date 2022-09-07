@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  mev boost logs
+  - name: MEV-boost
+    command: "docker logs stereum-0ce6b4ac-1fe8-11ed-b9c2-bb5736e3d599"
+    register: mev_boost
+    until:
+      - mev_boost.stdout is search("listening on 0.0.0.0:18550")
+      - mev_boost.stdout is search("using 1 relays")
+      - mev_boost.stdout is not search("Invalid relay URL")
+    retries: 60
+    delay: 10
+  #  teku logs
+  - name: teku
+    command: "docker logs stereum-0c851526-1fe8-11ed-a4bc-a304c2a39bd6"
+    register: teku
+    until:
+      - teku.stdout is search("The builder is back online. It will be used for block production")
+      - teku.stdout is not search("Failed to update eth1 chain head")
+    retries: 60
+    delay: 10
+
+# EOF

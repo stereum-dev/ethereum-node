@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  mev boost logs
+  - name: MEV-boost
+    command: "docker logs stereum-5c9541ac-1909-11ed-8585-a373c154e6c6"
+    register: mev_boost
+    until:
+      - mev_boost.stdout is search("listening on 0.0.0.0:18550")
+      - mev_boost.stdout is search("using 1 relays")
+      - mev_boost.stdout is not search("Invalid relay URL")
+    retries: 60
+    delay: 10
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs stereum-5bc8cb90-1909-11ed-9142-cf15cf490a91"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stderr is search("The execution endpoint is connected and configured, however it is not yet synced")
+      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
+    retries: 60
+    delay: 10
+
+# EOF

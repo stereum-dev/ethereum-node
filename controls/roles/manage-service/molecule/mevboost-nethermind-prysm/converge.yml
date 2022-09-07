@@ -1,0 +1,201 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prysm_beacon_service: a8645d22-2343-11ed-8d14-bfe4b8cce4a9
+    prysm_validator_service: a88b48ba-2343-11ed-abca-b3dc95ed08f4
+    nethermind_service: a8ac2814-2343-11ed-bb84-777f6a806038
+    mevboost_service: a8d611ec-2343-11ed-958c-6764986b8e2a
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --datadir=/opt/app/data
+              - --Merge.Enabled=true
+              - --JsonRpc.JwtSecretFile=/engine.jwt
+              - --JsonRpc.EngineHost=0.0.0.0
+              - --JsonRpc.EnginePort=8551
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmBeaconService
+              id: "{{ prysm_beacon_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --goerli=true
+                --block-batch-limit=512
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --rpc-host=0.0.0.0
+                --execution-endpoint=http://stereum-{{ nethermind_service }}:8551
+                --jwt-secret=/engine.jwt
+                --http-mev-relay=http://stereum-{{ mevboost_service }}:18550
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prysm_beacon_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_beacon_service }}/genesis:/opt/app/genesis"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # prysm validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Generate wallet's password
+        command: uuidgen
+        register: wallet_password
+        changed_when: false
+        become: yes
+      - name: Set wallet password
+        copy:
+          content: "{{ wallet_password.stdout }}"
+          dest: "/opt/app/services/{{ prysm_validator_service }}/data/passwords/wallet-password"
+          owner: "2000"
+          group: "2000"
+          mode: 0700
+        become: yes
+      - name: Prysm - Create wallet for account(s)
+        command: bash -c "docker exec stereum-{{ prysm_validator_service }}
+                          /app/cmd/validator/validator
+                          wallet create
+                          --wallet-dir=/opt/app/data/wallets
+                          --wallet-password-file=/opt/app/data/passwords/wallet-password
+                          --accept-terms-of-use
+                          --keymanager-kind=direct
+                          --prater"
+        changed_when: false
+        become: yes
+      - name: Prysm - Set wallet permission
+        ansible.builtin.file:
+          path: "/opt/app/services/{{ prysm_validator_service }}/data/wallets"
+          state: directory
+          recurse: yes
+          owner: "2000"
+          group: "2000"
+        become: yes
+      - name: Stop beacon & validator service
+        docker_container:
+          name: "{{ item }}"
+          state: stopped
+        become: yes
+        with_items:
+          - "stereum-{{ prysm_beacon_service }}"
+          - "stereum-{{ prysm_validator_service }}"
+      - name: Restart beacon & validator service
+        command: "docker start {{ item }}"
+        changed_when: false
+        become: yes
+        with_items:
+          - "stereum-{{ prysm_beacon_service }}"
+          - "stereum-{{ prysm_validator_service }}"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmValidatorService
+              id: "{{ prysm_validator_service }}"
+              image: "prysmaticlabs/prysm-validator:{{ stereum_static.defaults.versions.prysm }}"
+              env: {}
+              entrypoint: []
+              command:
+                /app/cmd/validator/validator
+                --accept-terms-of-use=true
+                --beacon-rpc-provider="stereum-{{ prysm_beacon_service }}:4000"
+                --beacon-rpc-gateway-provider="stereum-{{ prysm_beacon_service }}:3500"
+                --web
+                --goerli=true
+                --datadir=/opt/app/data/db
+                --wallet-dir=/opt/app/data/wallets
+                --wallet-password-file=/opt/app/data/passwords/wallet-password
+                --monitoring-host=0.0.0.0
+                --grpc-gateway-port=7500
+                --grpc-gateway-host=0.0.0.0
+                --grpc-gateway-corsdomain="*"
+                --enable-builder=true
+                --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prysm_validator_service }}/data/db:/opt/app/data/db"
+                - "/opt/app/services/{{ prysm_validator_service }}/data/wallets:/opt/app/data/wallets"
+                - "/opt/app/services/{{ prysm_validator_service }}/data/passwords:/opt/app/data/passwords"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - "{{ stereum_static.defaults.relay.goerli }}"
+              user: "2000"
+              volumes: []
+
+# EOF

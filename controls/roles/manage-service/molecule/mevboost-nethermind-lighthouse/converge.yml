@@ -1,0 +1,150 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_beacon_service: 47cc5bcc-1fc4-11ed-87f9-2fb1a3aea149
+    lighthouse_validator_service: 4870dc7e-1fc4-11ed-8ee1-4f4cf8b1962b
+    nethermind_service: 48a481e6-1fc4-11ed-aa6e-1fbb65c82620
+    mevboost_service: 48d6500e-1fc4-11ed-91f4-cb5bd96df843
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=goerli
+              - --datadir=/opt/app/data
+              - --Merge.Enabled=true
+              - --JsonRpc.JwtSecretFile=/engine.jwt
+              - --JsonRpc.EngineHost=0.0.0.0
+              - --JsonRpc.EnginePort=8551
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_beacon_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              command:
+                - lighthouse
+                - --network=goerli
+                - --debug-level=info
+                - beacon_node
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --execution-endpoint=http://stereum-{{ nethermind_service }}:8551
+                - --execution-jwt=/engine.jwt
+                - --builder=http://stereum-{{ mevboost_service }}:18550
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_beacon_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_beacon_service }}/slasher:/opt/app/slasher"
+                - "/opt/app/services/{{ nethermind_service }}/engine.jwt:/engine.jwt"
+
+    # lh validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseValidatorService
+              id: "{{ lighthouse_validator_service }}"
+              image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+              env: {}
+              command:
+                - lighthouse
+                - vc
+                - --debug-level=info
+                - --network=goerli
+                - --beacon-nodes=http://stereum-{{ lighthouse_beacon_service }}:5052
+                - --datadir=/opt/app/validator
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --builder-proposals
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_validator_service }}/validator:/opt/app/validator"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: "flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}"
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - "{{ stereum_static.defaults.relay.goerli }}"
+              user: "2000"
+              volumes: []
+
+# EOF

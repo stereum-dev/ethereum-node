@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  mev boost logs
+  - name: MEV-boost
+    command: "docker logs stereum-6c68baaa-2340-11ed-9102-3f79d0ec2539"
+    register: mev_boost
+    until:
+      - mev_boost.stdout is search("listening on 0.0.0.0:18550")
+      - mev_boost.stdout is search("using 1 relays")
+      - mev_boost.stdout is not search("Invalid relay URL")
+    retries: 60
+    delay: 10
+  #  prysm beacon logs
+  - name: prysm beacon
+    command: "docker logs stereum-6beef652-2340-11ed-95a3-27ae32be4eeb"
+    register: prysm_beacon
+    until:
+      - prysm_beacon.stderr is search("Builder has been configured")
+      - prysm_beacon.stderr is search("Connected to new endpoint")
+      - prysm_beacon.stderr is not search("Could not connect to execution endpoint")
+    retries: 60
+    delay: 10
+
+# EOF

@@ -10,15 +10,18 @@ stereum_static:
         install: false
     versions:
       # consensus clients
-      lighthouse: v2.5.1
-      nimbus: multiarch-v22.7.0
-      teku: "22.8.0"
-      prysm: v2.1.3
+      lighthouse: v3.1.0
+      nimbus: multiarch-v22.8.2
+      teku: "22.9.0"
+      prysm: v3.1.0
 
       # execution clients
-      geth: v1.10.21
-      besu: "22.7.0-RC2"
-      nethermind: "1.13.5"
+      geth: v1.10.23
+      besu: "22.7.1"
+      nethermind: "1.14.0"
+
+      # mevboost
+      mevboost: v0.8.2
 
       # ssv
       ssv_network: v0.3.0
@@ -29,3 +32,7 @@ stereum_static:
       node_exporter: v1.3.1
       prometheus: v2.36.2
       notifications: v1.1.0
+
+    # mevboost - relay
+    relay:
+      goerli: https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@builder-relay-goerli.flashbots.net

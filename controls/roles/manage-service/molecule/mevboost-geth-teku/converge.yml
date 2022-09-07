@@ -1,0 +1,153 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    teku_service: d16d704a-1fd4-11ed-a1cb-7743121feb31
+    geth_service: d1961d06-1fd4-11ed-9d96-d70f1b6a368a
+    mevboost_service: d1bfe5d2-1fd4-11ed-94b4-9fb17c6b318c
+
+  tasks:
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api=engine,eth,web3,net,debug
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # teku beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+
+      - name: Create keystore password
+        copy:
+          content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
+          dest: /opt/app/services/{{ teku_service }}/data/teku_api_password.txt
+          force: no
+        become: yes
+
+      - name: Get teku-api password
+        slurp:
+          src: "/opt/app/services/{{ teku_service }}/data/teku_api_password.txt"
+        register: teku_api_password
+        become: yes
+
+      - name: Set variable
+        set_fact:
+          api_password: "{{ teku_api_password.content | b64decode | trim }}"
+
+      - name: Create keystore file
+        command: bash -c "keytool -genkeypair
+                          -keystore teku_api_keystore
+                          -storetype PKCS12
+                          -storepass '{{ api_password }}'
+                          -keyalg RSA
+                          -keysize 2048
+                          -validity 109500
+                          -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU'
+                          -ext san=dns:localhost,ip:127.0.0.1"
+        args:
+          chdir: /opt/app/services/{{ teku_service }}/data
+        changed_when: false
+        become: yes
+
+      - name: Waiting for the services to start properly
+        pause:
+          seconds: 15
+
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: TekuBeaconValidatorService
+              id: "{{ teku_service }}"
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+              env:
+                JAVA_OPTS: -Xmx4g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=prater
+                - --data-path=/opt/app/data
+                - --ee-endpoint=http://stereum-{{ geth_service }}:8551
+                - --ee-jwt-secret-file=/engine.jwt
+                - --validators-builder-registration-default-enabled=true
+                - --validators-proposer-blinded-blocks-enabled=true
+                - --validators-proposer-default-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --builder-endpoint=http://stereum-{{ mevboost_service }}:18550
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ teku_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - "{{ stereum_static.defaults.relay.goerli }}"
+              user: "2000"
+              volumes: []
+
+# EOF

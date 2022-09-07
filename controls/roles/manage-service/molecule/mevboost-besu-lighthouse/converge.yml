@@ -1,0 +1,161 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_beacon_service: 5bc8cb90-1909-11ed-9142-cf15cf490a91
+    lighthouse_validator_service: 5e04445c-1909-11ed-b0ac-1b18212b17aa
+    besu_service: 5c716d90-1909-11ed-986f-931342a7fe9d
+    mevboost_service: 5c9541ac-1909-11ed-8585-a373c154e6c6
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: hyperledger/besu:{{ stereum_static.defaults.versions.besu }}
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --host-allowlist=*
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-api=WEB3,ETH,NET
+                - --rpc-ws-host=0.0.0.0
+                - --engine-rpc-enabled=true
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+                - --engine-host-allowlist=*
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # lh beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseBeaconService
+              id: "{{ lighthouse_beacon_service }}"
+              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
+              env: {}
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              command:
+                - lighthouse
+                - --network=goerli
+                - --debug-level=info
+                - beacon_node
+                - --datadir=/opt/app/beacon
+                - --http
+                - --http-address=0.0.0.0
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --execution-endpoint=http://stereum-{{ besu_service }}:8551
+                - --execution-jwt=/engine.jwt
+                - --builder=http://stereum-{{ mevboost_service }}:18550
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_beacon_service }}/beacon/lighthouse:/opt/app/beacon"
+                - "/opt/app/services/{{ lighthouse_beacon_service }}/slasher:/opt/app/slasher"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # lh validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LighthouseValidatorService
+              id: "{{ lighthouse_validator_service }}"
+              image: sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}
+              env: {}
+              command:
+                - lighthouse
+                - vc
+                - --debug-level=info
+                - --network=goerli
+                - --beacon-nodes=http://stereum-{{ lighthouse_beacon_service }}:5052
+                - --datadir=/opt/app/validator
+                - --metrics
+                - --metrics-address=0.0.0.0
+                - --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --builder-proposals
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lighthouse_validator_service }}/validator:/opt/app/validator"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - "{{ stereum_static.defaults.relay.goerli }}"
+              user: "2000"
+              volumes: []
+
+# EOF

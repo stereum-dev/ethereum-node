@@ -134,7 +134,7 @@
                 --monitoring-host=0.0.0.0
                 --grpc-gateway-host=0.0.0.0
                 --grpc-gateway-port=3500
-                --http-web3provider=http://stereum-{{ geth_service }}:8551
+                --execution-endpoint=http://stereum-{{ geth_service }}:8551
                 --prater=true
                 --fallback-web3provider=[]
                 --block-batch-limit=512
