@@ -1,0 +1,62 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Read teku service file
+    slurp:
+      src: "/etc/stereum/services/61cb4672-f069-4416-bf2a-db53a0776395.yaml"
+    register: teku_service_configuration_raw
+
+  - name: Parse teku service's configuration
+    set_fact:
+      teku_service_configuration: "{{ teku_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ teku_service_configuration }}"
+
+  - assert:
+      that:
+      - (teku_service_configuration.volumes | length) == 2
+      - (teku_service_configuration.command | select('match', "^--metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS") | length) == 0
+      - (teku_service_configuration.command | select('match', "^--validators-graffiti-file=\/opt\/app\/graffitis\/graffitis.yaml") | length) == 1
+      - (teku_service_configuration.command | select('match', "^--graffiti=") | length) == 0
+
+  # Prysm
+  - name: Read prysm service file
+    slurp:
+      src: "/etc/stereum/services/c6caec85-351b-4e63-8bf2-f9cf330ee3d6.yaml"
+    register: prysm_service_configuration_raw
+
+  - name: Parse prysm service's configuration
+    set_fact:
+      prysm_service_configuration: "{{ prysm_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ prysm_service_configuration }}"
+
+  - assert:
+      that:
+      - (prysm_service_configuration.volumes | length) == 2
+      - prysm_service_configuration.command is search("--graffiti-file=/opt/app/graffitis/graffitis.yaml")
+
+  # Lighthouse
+  - name: Read lighthouse service file
+    slurp:
+      src: "/etc/stereum/services/a70d00e8-c431-45d8-a29b-380dbb5143c8.yaml"
+    register: lighthouse_service_configuration_raw
+
+  - name: Parse lighthouse service's configuration
+    set_fact:
+      lighthouse_service_configuration: "{{ lighthouse_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ lighthouse_service_configuration }}"
+
+  - assert:
+      that:
+      - (lighthouse_service_configuration.volumes | length) == 2
+      - (lighthouse_service_configuration.command | select('match', "^--graffiti=") | length) == 0
+      - (lighthouse_service_configuration.command | select('match', "^--graffiti-file=\/opt\/app\/graffitis\/graffitis.yaml") | length) == 1
+
+# EOF

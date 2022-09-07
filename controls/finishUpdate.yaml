@@ -10,6 +10,9 @@
     - set_fact:
         stereum: "{{ stereum_settings | combine(stereum_static, recursive=True) }}"
 
+    - include_role:
+        name: "update-changes"
+
     - debug:
        msg: "applied all patches"
 
