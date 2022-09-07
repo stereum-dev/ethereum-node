@@ -660,7 +660,7 @@ export default {
 
 .table-content {
   width: 100%;
-  height: 92%;
+  height:86%;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;

@@ -19,7 +19,7 @@
             <div class="menu-content">
               <div class="power">
                 <img
-                 v-if="item.serviceIsPending"
+                  v-if="item.serviceIsPending"
                   class="pending"
                   src="/img/icon/plugin-menu-icons/turning_circle.gif"
                   alt="icon"
@@ -54,10 +54,25 @@
           <the-expert
             @hide-modal="hideExpertMode(item)"
             v-if="item.expertOptionsModal"
+            @prunning-warning="runGethPrunningWarning"
+            @resync-warning="runResyncWarning"
             :item="item"
             position="18.8%"
             long="54%"
           ></the-expert>
+          <prunning-modal
+            :item="item"
+            v-if="gethPrunningWarningModal"
+            @cancel-warning="hidePrunningWarningsModal"
+            @confirm-btn="confirmRunningGethPrunning(option)"
+          ></prunning-modal>
+          <resync-modal
+            :item="item"
+            v-if="resyncWarningModal"
+            @cancel-warning="hideResyncWarningsModal"
+            @confirm-btn="confirmRunningResync"
+          >
+          </resync-modal>
         </div>
       </div>
     </template>
@@ -75,11 +90,15 @@ import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
 import TheExpert from "./TheExpert.vue";
+import PrunningModal from "./PrunningModal.vue";
+import ResyncModal from "./ResyncModal.vue";
 export default {
   components: {
     ManageTrapezoid,
     PluginMenu,
     TheExpert,
+    PrunningModal,
+    ResyncModal,
   },
   props: {
     title: {
@@ -101,6 +120,9 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      gethPrunningWarningModal: false,
+      resyncWarningModal: false,
+      options: null,
     };
   },
   computed: {
@@ -168,6 +190,55 @@ export default {
         if (item.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
       });
+    },
+    // Check if service is Geth
+    runGethPrunningWarning(option) {
+      if (option.changeValue && option.displayWarningModal) {
+        this.gethPrunningWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.gethPrunningWarningModal = false;
+      }
+    },
+    //Double check & run Resync modal
+    runResyncWarning(option) {
+      if (option.changeValue && option.displayResyncModal) {
+        this.resyncWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.resyncWarningModal = false;
+      }
+    },
+    // Prunning Functions
+    hidePrunningWarningsModal(el) {
+      this.gethPrunningWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    confirmRunningGethPrunning() {
+      this.gethPrunningWarningModal = false;
+    },
+
+    // Resync Functions
+    hideResyncWarningsModal(el) {
+      this.resyncWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    confirmRunningResync() {
+      this.resyncWarningModal = false;
     },
   },
 };
@@ -375,5 +446,4 @@ export default {
 .menu-content .power img:active {
   transform: scale(1);
 }
-
 </style>

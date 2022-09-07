@@ -128,15 +128,17 @@
         >
           <img :src="option.icon" alt="icon" />
           <span class="actionBoxTitle">{{ option.title }}</span>
-          <span class="startAction" v-if="option.runningAction"
-            >{{ option.action }} . . .</span
-          >
-          <span
-            class="initiateAction"
-            v-else
-            @click="actionInitiateHandler(option)"
-            >INITIATE</span
-          >
+          <div class="toggleBox">
+            <label class="switch">
+              <input
+                type="checkbox"
+                v-model="option.changeValue"
+                name="check-button"
+                @change="somethingIsChanged()"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
         </div>
       </div>
       <!-- expert mode textarea -->
@@ -176,7 +178,7 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
-  props: ["item", "position"],
+  props: ["item", "position", "prunningWarning"],
   data() {
     return {
       enterPortIsEnabled: false,
@@ -191,10 +193,10 @@ export default {
       editableData: null,
       changed: false,
       nothingsChanged: true,
-      prunningWarning: false,
     };
   },
   computed: {},
+
   mounted() {
     this.readService();
   },
@@ -256,16 +258,52 @@ export default {
     buttonOff(option) {
       option.buttonState = false;
     },
-    prunningWarningModal() {
-      this.prunningWarning = true;
+    //Prunning & Resync Handler
+    actionHandler(el) {
+      if (el.name === "Geth") {
+        el.expertOptions
+          .filter((item) => {
+            return item.title === "Prunning";
+          })
+          .map((item) => {
+            if (item.changeValue) {
+              item.displayWarningModal = true;
+              this.$emit("prunningWarning", item);
+            }
+          });
+      }
+      if (el.category === "execution" || el.category === "consensus") {
+        el.expertOptions
+          .filter((item) => {
+            return item.title === "Resync";
+          })
+          .map((item) => {
+            if (item.changeValue) {
+              item.displayResyncModal = true;
+              this.$emit("resyncWarning", item);
+            }
+          });
+      }
     },
-    actionInitiateHandler(option) {
-      option.runningAction = true;
-      this.somethingIsChanged();
-    },
+    // Resync Handler
+    // actionResyncHandler(el) {
+    //   if (el.category === "execution" || el.category === "consensus") {
+    //     el.expertOptions
+    //       .filter((item) => {
+    //         return item.title === "Resync";
+    //       })
+    //       .map((item) => {
+    //         if (item.changeValue) {
+    //           item.displayResyncModal = true;
+    //           this.$emit("resyncWarning", item);
+    //         }
+    //       });
+    //   }
+    // },
     async confirmExpertChanges(el) {
       await this.writeService();
       el.expertOptionsModal = false;
+      this.actionHandler(el);
     },
   },
 };
@@ -524,6 +562,76 @@ export default {
   color: rgb(239, 239, 239);
   justify-self: end;
   text-align: center;
+}
+.actionBox .toggleBox {
+  grid-column: 5/6;
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  color: rgb(235, 235, 235);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 35%;
+  height: 94%;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  height: 100%;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(173, 173, 173);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 0;
+  bottom: 8%;
+  background-color: #abb0b2;
+  box-shadow: 0 1px 3px 1px rgb(89, 89, 89);
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #e6e6e6;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(24px);
+  -ms-transform: translateX(24px);
+  transform: translateX(24px);
+  background-color: #1ea669;
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 .toggleTextBox .toggleTextInput {
   grid-column: 5/7;

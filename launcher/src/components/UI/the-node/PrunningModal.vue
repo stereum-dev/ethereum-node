@@ -1,142 +1,199 @@
 <template>
-  <div class="logout-modal-parent">
-    <div class="modal-opacity" @click="$emit('closeMe')"></div>
-    <div class="logout-modal-content">
+  <div class="warning-modal-paren">
+    <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
+    <div class="warning-modal-content">
       <div class="title-box">
-        <span>LOG-OUT</span>
-      </div>
-      <div class="messageContent">
         <img
-          src="../../../../public/img/icon/manage-node-icons/stop.png"
-          alt=""
+          src="../../../../public/img/icon/the-staking/stereum-error.png"
+          alt="icon"
         />
-        <span class="question"
-          >ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span
+      </div>
+      <div class="warningMessage">
+        <p>
+          GETH used up storage space GROWs over its operational time. It takes
+          MULTIPLE HOURS to prune the Geth database, removing unnecessary data
+          and freeing up some of the used storage space. This has to be done
+          while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL
+          GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.
+        </p>
+      </div>
+      <div class="check-box">
+        <label for="checkbox">
+          <input id="checkbox" type="checkbox" v-model="isChecked" />
+          I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES
+        </label>
+        <div
+          class="confirmBtn"
+          :class="{ disabled: !isChecked }"
+          @click="$emit('confirmBtn')"
         >
-      </div>
-      <div class="confrimBtn">
-        <div class="confrimBox" @click="$emit('confrimLogout')">
-          <span>Log out</span>
+          <span>Start Prunning</span>
         </div>
+        <span class="close">Click outside to cancel.</span>
       </div>
-      <span class="close">Click outside to cancel</span>
     </div>
   </div>
 </template>
+<script>
+export default {
+  props: ["item"],
+  data() {
+    return {
+      checked: null,
+      isButtonDisabled: false,
+    };
+  },
+  computed: {
+    isChecked: {
+      // getter
+      get: function () {
+        return this.checked ? true : false;
+      },
+      // setter
+      set: function (newValue) {
+        this.checked = newValue;
+      },
+    },
+  },
+};
+</script>
 <style scoped>
-.logout-modal-parent {
+.warning-modal-paren {
   width: 100%;
   height: 100%;
   position: fixed;
   top: 10%;
-  left: 5%;
-  z-index: 310;
+  left: 0;
+  z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .modal-opacity {
   width: 100%;
-  height: 100%;
-  background-color: black;
+  height: 91%;
+  background-color: rgb(3, 3, 3);
+  border-radius: 0 20px 0 0;
   position: fixed;
   left: 0;
-  top: 0;
-  opacity: 0.7;
-  z-index: 311;
+  bottom: 0;
+  opacity: 0.5;
+  z-index: 501;
 }
-.logout-modal-content {
-  width: 50%;
-  height: 50%;
-  border-radius: 1rem;
-  background-color: #343434;
-  border: 4px solid rgb(171, 170, 170);
-  z-index: 312;
-  opacity: 1;
+.warning-modal-content {
+  width: 55%;
+  height: 60%;
+  border-radius: 65px;
+  border: 3px solid #bfbfbf;
   position: absolute;
-  top: 13%;
-  left: 20%;
+  top: 10%;
+  left: 22%;
+  background-color: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
+  z-index: 502;
 }
 .title-box {
   width: 100%;
-  height: 15%;
-  border-radius: 10px 10px 0 0;
+  height: 30%;
+  margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #bf3a3a;
 }
-.title-box span {
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: #c6c6c6;
-  text-align: center;
-  text-transform: uppercase;
+.title-box img {
+  width: 23%;
+  height: 100%;
 }
-.messageContent {
-  width: 100%;
-  height: 50%;
+.warningMessage {
+  width: 95%;
+  height: 35%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
-.messageContent img {
-  width: 20%;
-  height: 80%;
-}
-.messageContent .question {
-  color: rgb(195, 195, 195);
-  font-size: 0.8rem;
+.warningMessage p {
+  width: 90%;
+  color: rgb(156, 156, 156);
+  font-size: 0.75rem;
   font-weight: 600;
-  text-transform: capitalize;
+  word-wrap: break-word;
+  text-align: justify;
+  text-transform: uppercase;
 }
-.confrimBtn {
+.check-box {
   width: 90%;
   height: 35%;
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  z-index: 502;
 }
-.confrimBox {
-  width: 30%;
-  height: 35px;
-  border-radius: 10px;
-  border: 2px solid gray;
-  box-shadow: 0 1px 3px 1px rgb(43, 44, 44);
+.check-box label {
+  width: 100%;
+  height: 30%;
+  margin: 0 auto;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #1b8da4;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
 }
-.confrimBox span {
+.check-box #checkbox {
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: #bfbfbf;
+  justify-self: center;
+  align-self: center;
+  cursor: pointer;
+  outline: none;
+}
+#checkbox[type="checkbox"]:focus {
+  outline: none !important;
+}
+.check-box .confirmBtn {
+  width: 40%;
+  height: 40%;
+  border-radius: 10px;
+  border: 1px solid #8f8f8f;
+  background-color: #127a65;
+  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #bf3a3a;
+  color: rgb(210, 210, 210);
   text-transform: uppercase;
 }
-.confrimBox:hover span {
-  color: #c9c9c9;
+.disabled {
+  opacity: 0.7;
+  pointer-events: none;
 }
-.confrimBox:hover {
-  background-color: #bf3a3a;
-  border: 2px solid #c9c9c9;
-  transform: scale(1.05);
-  transition: all 100ms;
-  color: #d6d6d6;
+.confirmBtn:hover {
+  transform: scale(1.08);
+  transition-duration: 150ms;
+  box-shadow: 0 1px 5px 1px rgb(35, 59, 53);
 }
-
-.confrimBox:active {
+.confirmBtn:active {
   transform: scale(1);
   box-shadow: none;
 }
-
 .close {
-  color: #bf3a3a;
-  font-size: 0.7rem;
-  font-weight: 400;
+  color: rgba(186, 71, 71, 0.826);
+  font-size: 0.6rem;
+  font-weight: 500;
   align-self: center;
 }
 </style>
