@@ -1,6 +1,6 @@
 <template>
   <div class="warning-modal-paren">
-    <div class="modal-opacity" @click="$emit('cancelWarning')"></div>
+    <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
     <div class="warning-modal-content">
       <div class="title-box">
         <img

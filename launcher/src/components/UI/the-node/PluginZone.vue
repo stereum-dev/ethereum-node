@@ -60,19 +60,21 @@
             position="18.8%"
             long="54%"
           ></the-expert>
+          <prunning-modal
+            :item="item"
+            v-if="gethPrunningWarningModal"
+            @cancel-warning="hidePrunningWarningsModal"
+            @confirm-btn="confirmRunningGethPrunning(option)"
+          ></prunning-modal>
+          <resync-modal
+            :item="item"
+            v-if="resyncWarningModal"
+            @cancel-warning="hideResyncWarningsModal"
+            @confirm-btn="confirmRunningResync"
+          >
+          </resync-modal>
         </div>
       </div>
-      <prunning-modal
-        v-if="gethPrunningWarningModal"
-        @cancel-warning="hidePrunningWarningsModal"
-        @confirm-btn="confirmRunningGethPrunning(option)"
-      ></prunning-modal>
-      <resync-modal
-        v-if="resyncWarningModal"
-        @cancel-warning="hideResyncWarningsModal"
-        @confirm-btn="confirmRunningResync"
-      >
-      </resync-modal>
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
@@ -206,20 +208,34 @@ export default {
       }
     },
     // Prunning Functions
-    hidePrunningWarningsModal() {
+    hidePrunningWarningsModal(el) {
       this.gethPrunningWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
     },
     confirmRunningGethPrunning() {
       this.gethPrunningWarningModal = false;
-      this.runGethPrunningWarning({
-        changeValue: false,
-        displayWarningModal: false,
-      });
     },
 
     // Resync Functions
-    hideResyncWarningsModal() {
+    hideResyncWarningsModal(el) {
       this.resyncWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
     },
     confirmRunningResync() {
       this.resyncWarningModal = false;

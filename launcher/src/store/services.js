@@ -457,7 +457,7 @@ export const useServices = defineStore("services", {
             {
               title: "Prunning",
               type: "action",
-              action: "prunning started",
+              action: "prunning",
               changeValue: null,
               displayWarningModal: false,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
