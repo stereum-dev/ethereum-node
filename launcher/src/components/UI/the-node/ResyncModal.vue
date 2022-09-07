@@ -128,8 +128,8 @@ export default {
 .modal-opacity {
   width: 100%;
   height: 91%;
-  background-color: rgb(3, 3, 3);
-  border-radius: 0 20px 0 0;
+  background-color: rgba(3, 3, 3, 0.745);
+  border-radius: 0 35px 0 0;
   position: fixed;
   left: 0;
   bottom: 0;

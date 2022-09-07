@@ -65,7 +65,10 @@
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                    <div
+                      class="seting-icon"
+                      @click.stop="expertModeHandler(item)"
+                    >
                       <img
                         src="/img/icon/plugin-menu-icons/setting8.png"
                         alt="icon"
@@ -77,9 +80,24 @@
               <the-expert
                 @hide-modal="hideExpertMode(item)"
                 v-if="item.expertOptionsModal"
+                @prunning-warning="runGethPrunningWarning"
+                @resync-warning="runResyncWarning"
                 :item="item"
                 position="23.4"
               ></the-expert>
+              <prunning-modal
+                :item="item"
+                v-if="gethPrunningWarningModal"
+                @cancel-warning="hidePrunningWarningsModal"
+                @confirm-btn="confirmRunningGethPrunning(option)"
+              ></prunning-modal>
+              <resync-modal
+                :item="item"
+                v-if="resyncWarningModal"
+                @cancel-warning="hideResyncWarningsModal"
+                @confirm-btn="confirmRunningResync"
+              >
+              </resync-modal>
             </div>
           </div>
           <div class="arrow-down">
@@ -109,6 +127,8 @@ import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
 import TheExpert from "../the-node/TheExpert.vue";
+import PrunningModal from "../the-node/PrunningModal.vue";
+import ResyncModal from "../the-node/ResyncModal.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -120,10 +140,14 @@ export default {
     ControlAlert,
     TaskManager,
     TheExpert,
+    PrunningModal,
+    ResyncModal,
   },
   data() {
     return {
       powerBtnRed: false,
+      gethPrunningWarningModal: false,
+      resyncWarningModal: false,
     };
   },
   create() {
@@ -182,6 +206,55 @@ export default {
         if (item.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
       });
+    },
+    // Check if service is Geth
+    runGethPrunningWarning(option) {
+      if (option.changeValue && option.displayWarningModal) {
+        this.gethPrunningWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.gethPrunningWarningModal = false;
+      }
+    },
+    //Double check & run Resync modal
+    runResyncWarning(option) {
+      if (option.changeValue && option.displayResyncModal) {
+        this.resyncWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.resyncWarningModal = false;
+      }
+    },
+    // Prunning Functions
+    hidePrunningWarningsModal(el) {
+      this.gethPrunningWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    confirmRunningGethPrunning() {
+      this.gethPrunningWarningModal = false;
+    },
+
+    // Resync Functions
+    hideResyncWarningsModal(el) {
+      this.resyncWarningModal = false;
+      el.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+    },
+    confirmRunningResync() {
+      this.resyncWarningModal = false;
     },
   },
 };
