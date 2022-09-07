@@ -1,6 +1,7 @@
 "use strict";
 
 import { app, protocol, BrowserWindow, shell, dialog } from "electron";
+import { autoUpdater } from "electron-updater"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { StereumService } from "./stereumservice.js";
@@ -31,6 +32,8 @@ const validatorAccountManager = new ValidatorAccountManager(
 const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'debug';
 
 let remoteHost = {};
 
@@ -385,6 +388,7 @@ app.on("ready", async () => {
   }
   // }
   createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 // Exit cleanly on request from parent process in development mode.
