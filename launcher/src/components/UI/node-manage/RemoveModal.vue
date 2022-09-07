@@ -41,33 +41,32 @@
   z-index: 311;
 }
 .remove-modal-content {
-  width: 50%;
-  height: 50%;
-  border-radius: 1rem;
-  background-color: #363a41;
-  border: 4px solid rgb(171, 170, 170);
-  z-index: 312;
-  opacity: 1;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
+  border: 3px solid #bfbfbf;
   position: absolute;
-  top: 13%;
-  left: 20%;
+  top: 10%;
+  left: 17%;
+  background-color: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
+  z-index: 502;
 }
 .title-box {
   width: 80%;
-  height: 30%;
+  height: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
 }
 .title-box img {
-  width: 70px;
-  height: 70px;
-  margin-top: 10px;
+  width: 25%;
+  height: 100%;
 }
 .remove-message {
   width: 90%;
@@ -79,13 +78,13 @@
 }
 .remove-message .warning {
   color: rgb(195, 195, 195);
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 1.3rem;
+  font-weight: 800;
   text-transform: uppercase;
 }
 .remove-message .question {
   color: rgb(195, 195, 195);
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 600;
   text-transform: capitalize;
 }
