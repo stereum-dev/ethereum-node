@@ -16,6 +16,14 @@
       that:
       - stereum_ufw_status.stdout.find("9000/tcp") != -1
       - stereum_ufw_status.stdout.find("9000/udp") != -1
+  # Lighthouse graffiti file
+  - stat: path=/opt/app/services/0ca56612-998f-11ec-a28d-f71957ab65a0/graffitis/graffitis.yaml
+    register: graffitis
+  - debug:
+      msg: "{{ graffitis }}"
+  - name: Check for graffiti file
+    assert:
+      that: graffitis.stat.exists
   # Lighthouse api-token
   - stat: path=/opt/app/services/0ca56612-998f-11ec-a28d-f71957ab65a0/validator/validators/api-token.txt
     register: api_token

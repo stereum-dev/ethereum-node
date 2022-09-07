@@ -15,8 +15,6 @@
   - assert:
       that:
       - stereum_ufw_status.stdout.find("9001/tcp") != -1
-      - stereum_ufw_status.stdout.find("9001/udp") != -1
-      - stereum_ufw_status.stdout.find("5052/tcp") != -1
       - stereum_ufw_status.stdout.find("9090/tcp") != -1
       - stereum_ufw_status.stdout.find("3000/tcp") != -1
   # grafana config files

@@ -152,7 +152,7 @@
                 - --p2p-enabled=true
                 - --p2p-port=9001
                 - --validators-keystore-locking-enabled=false
-                - --validators-graffiti="stereum.net"
+                - --validators-graffiti-file=/opt/app/graffitis/graffitis.yaml
                 - --ee-endpoint=http://stereum-{{ geth_service }}:8551
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
@@ -177,3 +177,4 @@
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/data:/opt/app/data"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+                - "/opt/app/services/{{ beacon_service }}/graffitis:/opt/app/graffitis"
