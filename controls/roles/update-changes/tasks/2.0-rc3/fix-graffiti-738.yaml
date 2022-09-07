@@ -1,0 +1,80 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+# Lighthouse
+- name: Remove graffiti (Lighthouse)
+  lineinfile:
+    path: "{{ item.path }}"
+    state: absent
+    regexp: '^\s*- --graffiti='
+  when: service_configuration.service == "LighthouseValidatorService"
+
+- name: Add graffiti file (Lighthouse)
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^\s*- vc$'
+    regexp: '^\s*- --graffiti-file='
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- vc$') | first | split('-') | first }}- --graffiti-file=/opt/app/graffitis/graffitis.yaml"
+  when: service_configuration.service == "LighthouseValidatorService"
+
+- name: Add volume (Lighthouse)
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^volumes:'
+    regexp: '^\s*- .*:\/opt\/app\/graffitis'
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- .*:\\/opt\\/app\\/validator') | last | split('-') | first }}- {{ service_configuration.volumes | select('search', '/opt/app/validator') | first | replace('/validator:', ':') | split(':') | first }}/graffitis:/opt/app/graffitis"
+  when: service_configuration.service == "LighthouseValidatorService"
+
+# Nimbus
+# no graffiti file implemented in nimbus-eth2
+
+# Prysm
+- name: Add graffiti file (Prysm)
+  lineinfile:
+    path: "{{ item.path }}"
+    backrefs: yes
+    regexp: "^(?=command:)(?!.*graffiti)(.*)"
+    line: '\1 --graffiti-file=/opt/app/graffitis/graffitis.yaml'
+  when: service_configuration.service == "PrysmValidatorService"
+
+- name: Add volume (Prysm)
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^volumes:'
+    regexp: '^\s*- .*:\/opt\/app\/graffitis'
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- .*:\\/opt\\/app\\/data\\/db') | last | split('-') | first }}- {{ service_configuration.volumes | select('search', '/opt/app/data/db') | first | replace('/data/db:', ':') | split(':') | first }}/graffitis:/opt/app/graffitis"
+  when: service_configuration.service == "PrysmValidatorService"
+
+# Teku
+- name: Remove graffiti (Teku)
+  lineinfile:
+    path: "{{ item.path }}"
+    state: absent
+    regexp: '^\s*- --validators-graffiti='
+  when: service_configuration.service == "TekuBeaconService"
+
+- name: Add graffiti file (Teku)
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^command:'
+    regexp: '^\s*- --validators-graffiti-file='
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --validators-proposer-default-fee-recipient.*') | first | split('-') | first }}- --validators-graffiti-file=/opt/app/graffitis/graffitis.yaml"
+  when: service_configuration.service == "TekuBeaconService"
+
+- name: Add volume (Teku)
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^volumes:'
+    regexp: '^\s*- .*:\/opt\/app\/graffitis'
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- .*:\\/opt\\/app\\/data') | last | split('-') | first }}- {{ service_configuration.volumes | select('search', '/opt/app/data') | first | replace('/data:', ':') | split(':') | first }}/graffitis:/opt/app/graffitis"
+  when: service_configuration.service == "TekuBeaconService"
+
+# EOF
