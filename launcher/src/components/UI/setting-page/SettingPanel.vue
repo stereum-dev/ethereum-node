@@ -24,7 +24,6 @@
             <div class="general-panel_title"><span>GENERAL</span></div>
             <hr />
             <div class="items-box_general">
-              <setting-itemmv></setting-itemmv>
               <setting-items
                 v-for="item in generalItems"
                 :key="item.id"
@@ -60,7 +59,17 @@
                 :isColor="item.isColor"
                 :itemType="item.itemType"
                 :isLang="item.isLang"
+                :drop1="item.drop1"
+                :referrer="stereumRef"
               ></setting-items>
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Stereum Update Configuration</span>
+                </div>
+                <div class="setting-items_btn">
+                  <select name="stereum-update" id="stereum-update"></select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -85,6 +94,7 @@ export default {
       SIco: "/img/icon/setting-page/setting_icon.png",
       pageName: "",
       pageIcon: "",
+      stereumRef: "manual",
       settingData: {
         name: "stereum setting",
         icon: "/img/icon/setting-page/setting_icon.png",
@@ -123,9 +133,8 @@ export default {
         {
           id: 2,
           title: "Stereum Update Configuration",
-          isColor: "manual",
+          drop1: true,
           itemType: "update",
-          btnValue: "MANUAL",
         },
         {
           id: 3,
@@ -156,6 +165,10 @@ export default {
   },
 
   methods: {
+    test() {
+      this.stereumRef = "manual";
+      alert("This is " + this.stereumRef);
+    },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.current) {
         return true;
@@ -211,6 +224,32 @@ export default {
 </script>
 
 <style scoped>
+.setting-items {
+  width: 95%;
+  display: flex;
+  color: #eee;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  text-decoration: none;
+  margin: 0.5% 0;
+  border-radius: 20px;
+  height: 12%;
+}
+.setting-items_title {
+  width: 60%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+}
+.setting-items_title span {
+  margin: 0 5%;
+}
 #version {
   pointer-events: none;
 }

@@ -9,14 +9,25 @@
       @language-box="langAction"
       :flag="savedFlag"
       :lang="savedLang"
-    ></language-setting
-    ><router-link
+    ></language-setting>
+
+    <router-link
       class="setting-items_btn"
       :style="color()"
       to="/credit"
       v-else-if="link"
       >{{ linkValue }}</router-link
     >
+    <select
+      v-else-if="drop1"
+      class="setting-items_select"
+      name="referrer"
+      id="referrer"
+      v-model="referrer"
+    >
+      <option value="manual">MANUAL</option>
+      <option value="auto">AUTO-UPDATE</option>
+    </select>
     <div
       iv
       class="setting-items_btn"
@@ -74,8 +85,12 @@ export default {
       type: String,
       required: false,
     },
+    drop1: {
+      type: Boolean,
+      required: false,
+    },
   },
-  emits: ["customize-setting", "lang-action"],
+  emits: ["customize-setting", "lang-action", "referrer"],
   data() {
     return {
       colorStyle: this.isColor,
@@ -127,6 +142,9 @@ export default {
     langAction() {
       this.$emit("lang-action");
     },
+    stereumReferrer() {
+      this.$emit("referrer");
+    },
   },
 };
 </script>
@@ -172,11 +190,17 @@ export default {
   margin: 0 2%;
   height: 90%;
   color: #000;
-  font-size: 90%;
+  font-size: 100%;
   font-weight: 500;
   box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
   box-sizing: border-box;
   text-transform: uppercase;
+}
+.setting-items_select {
+  display: flex;
+  width: 25%;
+  height: 90%;
+  margin: 0 2%;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {

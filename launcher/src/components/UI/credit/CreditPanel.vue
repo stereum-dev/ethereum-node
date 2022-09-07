@@ -25,6 +25,7 @@
             <span>TECHNICAL CONTRIBUTION</span>
           </div>
         </div>
+        <financial-box></financial-box>
       </div>
       <div class="credit-panel_box" v-else>
         <div class="credit-panel_title">
@@ -57,10 +58,11 @@
   </div>
 </template>
 <script>
+import FinancialBox from "./FinancialBox";
 import TechnicalBox from "./TechnicalBox.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
-  components: { TaskManager, TechnicalBox },
+  components: { TaskManager, TechnicalBox, FinancialBox },
   data() {
     return {
       financial: false,
