@@ -4,12 +4,15 @@
     <div class="warning-modal-content">
       <div class="title-box">
         <img
-          src="../../../../public/img/icon/click-installation/warning.png"
+          src="../../../../public/img/icon/the-staking/stereum-error.png"
           alt="icon"
         />
       </div>
       <div class="warningMessage">
-        <span>We recommend you to wait until the initial installation is done before applying further changes.</span>
+        <span
+          >We recommend you to wait until the initial installation is done
+          before applying further changes.</span
+        >
       </div>
       <div class="confirm-box">
         <router-link class="confirm-link" :to="{ path: '/node' }">
@@ -46,22 +49,21 @@ export default {
   width: 100%;
   height: 91%;
   background-color: black;
-  border-radius: 0 20px 0 0;
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: 0.8;
+  opacity: 0.6;
   z-index: 501;
 }
 .warning-modal-content {
-  width: 40%;
-  height: 45%;
-  border-radius: 45px;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 20%;
-  left: 30%;
-  background-color: #313941;
+  top: 10%;
+  left: 22%;
+  background-color: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -71,30 +73,31 @@ export default {
 }
 .title-box {
   width: 100%;
-  height: 35%;
+  height: 40%;
   margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .title-box img {
-  width: 20%;
-  height: 90%;
+  width: 25%;
+  height: 100%;
 }
 .warningMessage {
-  width: 95%;
-  height: 40%;
+  width: 100%;
+  height: 45%;
+  padding:10px 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .warningMessage span {
-  width: 80%;
+  width: 95%;
+  font-size: 1.3rem;
   color: #b7b7b7;
-  font-size: .9rem;
   font-weight: 600;
-  margin-top: 5px;
   text-align: center;
   text-transform: uppercase;
 }
@@ -127,12 +130,12 @@ export default {
   border-radius: 10px;
   border: 2px solid #409b94;
   background-color: #409b94;
-  box-shadow:0 1px 2px 1px #1b403d;
+  box-shadow: 0 1px 2px 1px #1b403d;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
@@ -140,7 +143,6 @@ export default {
 
 .confirm-btn:hover {
   transform: scale(1.04);
-  transition-duration: 150ms;
   background-color: #2a6560;
 }
 .confirm-btn:active {

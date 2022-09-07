@@ -207,6 +207,22 @@ export default {
           el.expertOptionsModal = true;
       });
     },
+    // Check if service is Geth
+    runGethPrunningWarning(option) {
+      if (option.changeValue && option.displayWarningModal) {
+        this.gethPrunningWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.gethPrunningWarningModal = false;
+      }
+    },
+    //Double check & run Resync modal
+    runResyncWarning(option) {
+      if (option.changeValue && option.displayResyncModal) {
+        this.resyncWarningModal = true;
+      } else if (!option.changeValue || !option.displayWarningModal) {
+        this.resyncWarningModal = false;
+      }
+    },
     // Prunning Functions
     hidePrunningWarningsModal(el) {
       this.gethPrunningWarningModal = false;
