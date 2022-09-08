@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmValidatorService extends NodeService {
-    static buildByUserInput(network, ports, dir, consensusClients, graffiti) {
+    static buildByUserInput(network, ports, dir, consensusClients) {
         const service = new PrysmValidatorService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -13,11 +13,13 @@ export class PrysmValidatorService extends NodeService {
         const dataDir = '/opt/app/data/db'
         const walletDir = '/opt/app/data/wallets'
         const passwordDir = '/opt/app/data/passwords'
+        const graffitiDir = '/opt/app/graffitis'
 
         const volumes = [
             new ServiceVolume(workingDir + '/data/db', dataDir),
             new ServiceVolume(workingDir + '/data/wallets', walletDir),
-            new ServiceVolume(workingDir + '/data/passwords', passwordDir)
+            new ServiceVolume(workingDir + '/data/passwords', passwordDir),
+            new ServiceVolume(workingDir + '/graffitis', graffitiDir)
         ]
 
         const provider = (consensusClients.map(client => { return client.buildConsensusClientEndpoint() })).shift()
@@ -29,7 +31,7 @@ export class PrysmValidatorService extends NodeService {
             1, // configVersion 
             image,  //image
             'v2.1.4-rc.0', //imageVersion
-            '/app/cmd/validator/validator --accept-terms-of-use=true --beacon-rpc-provider="' + provider + '" --beacon-rpc-gateway-provider="' + providerGateway + '" --web --' + network + '=true --datadir=' + dataDir + ' --wallet-dir=' + walletDir + ' --wallet-password-file=' + passwordDir + '/wallet-password --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0 --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0 --monitoring-port=8081 --suggested-fee-recipient=0x0000000000000000000000000000000000000000',  //command
+            '/app/cmd/validator/validator --accept-terms-of-use=true --beacon-rpc-provider="' + provider + '" --beacon-rpc-gateway-provider="' + providerGateway + '" --web --' + network + '=true --datadir=' + dataDir + ' --wallet-dir=' + walletDir + ' --wallet-password-file=' + passwordDir + '/wallet-password --monitoring-host=0.0.0.0 --grpc-gateway-port=7500 --grpc-gateway-host=0.0.0.0 --grpc-gateway-corsdomain="*"  --monitoring-host=0.0.0.0 --monitoring-port=8081 --suggested-fee-recipient=0x0000000000000000000000000000000000000000' + ' --graffiti-file='+ graffitiDir +'/graffitis.yaml',  //command
             null, // entrypoint
             null, // env
             ports, //ports

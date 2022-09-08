@@ -294,6 +294,10 @@ promiseIpc.on("getOperatorPageURL", async (args) => {
   return await validatorAccountManager.getOperatorPageURL(args);
 });
 
+promiseIpc.on("setGraffitis", async (args) => {
+  return await validatorAccountManager.setGraffitis(args)
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

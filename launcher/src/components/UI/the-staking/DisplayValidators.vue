@@ -578,7 +578,8 @@ export default {
     hideBDialog() {
       this.bDialogVisible = false;
     },
-    confirmEnteredGrafiti() {
+    async confirmEnteredGrafiti(graffiti) {
+      await ControlService.setGraffitis(graffiti)
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },

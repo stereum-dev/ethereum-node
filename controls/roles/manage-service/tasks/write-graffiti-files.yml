@@ -1,0 +1,41 @@
+---
+- name: Set Variables
+  set_fact:
+    service: "{{ stereum_service_configuration.service }}"
+    graffiti_path: "{{ stereum_service_configuration.volumes | select('search', '/graffitis') | first | split(':') | first }}/graffitis.yaml"
+    default_graffiti: "stereum.net"
+
+- name: Lighthouse - Create Graffiti File
+  copy:
+    content: |
+      default: {{ default_graffiti }}
+    dest: "{{ graffiti_path }}"
+    force: no
+    owner: "2000"
+    group: "2000"
+    mode: 0644
+  when:
+    service == "LighthouseValidatorService"
+
+- name: Prysm - Create Graffiti File
+  copy:
+    content: |
+      default: "{{ default_graffiti }}"
+    dest: "{{ graffiti_path }}"
+    force: no
+    owner: "2000"
+    group: "2000"
+    mode: 0644
+  when:
+    service == "PrysmValidatorService"
+
+- name: Teku - Create Graffiti File
+  copy:
+    content: |
+      {{ default_graffiti }}
+    dest: "{{ graffiti_path }}"
+    force: no
+    owner: "2000"
+    group: "2000"
+    mode: 0644
+  when: service == "TekuBeaconService"

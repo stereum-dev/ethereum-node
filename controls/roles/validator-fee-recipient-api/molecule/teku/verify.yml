@@ -16,6 +16,14 @@
       that:
       - stereum_ufw_status.stdout.find("9001/tcp") != -1
       - stereum_ufw_status.stdout.find("9001/udp") != -1
+  # Teku graffiti file
+  - stat: path=/opt/app/services/df8a069a-fca0-11ec-87b6-c3949203ceed/graffitis/graffitis.yaml
+    register: graffitis
+  - debug:
+      msg: "{{ graffitis }}"
+  - name: Check for graffiti file
+    assert:
+      that: graffitis.stat.exists
   # teku API keystore, password & api bearer
   - stat: path=/opt/app/services/df8a069a-fca0-11ec-87b6-c3949203ceed/data/teku_api_keystore
     register: teku_api_keystore
