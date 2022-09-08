@@ -9,8 +9,9 @@
       @language-box="langAction"
       :flag="savedFlag"
       :lang="savedLang"
-    ></language-setting
-    ><router-link
+    ></language-setting>
+
+    <router-link
       class="setting-items_btn"
       :style="color()"
       to="/credit"
@@ -99,18 +100,18 @@ export default {
       return { height: "40%" };
     },
     updateStyle() {
-      return { height: "12%" };
+      return { height: "17%" };
     },
   },
   methods: {
     color() {
       if (this.colorStyle === "alpha") {
         return this.grey;
-      } else if (this.colorStyle === "off") {
+      } else if (this.colorStyle === "red") {
         return this.red;
       } else if (this.colorStyle === "manual") {
         return this.light;
-      } else if (this.colorStyle === "open") {
+      } else if (this.colorStyle === "green") {
         return this.green;
       }
     },
@@ -172,11 +173,16 @@ export default {
   margin: 0 2%;
   height: 90%;
   color: #000;
-  font-size: 90%;
-  font-weight: 500;
+  font-size: 100%;
   box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
   box-sizing: border-box;
   text-transform: uppercase;
+}
+.setting-items_select {
+  display: flex;
+  width: 25%;
+  height: 90%;
+  margin: 0 2%;
 }
 .setting-items_btn:hover,
 setting-items_btn:focus {
