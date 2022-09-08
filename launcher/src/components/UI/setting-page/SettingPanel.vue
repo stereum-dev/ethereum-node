@@ -24,7 +24,6 @@
             <div class="general-panel_title"><span>GENERAL</span></div>
             <hr />
             <div class="items-box_general">
-              <setting-itemmv></setting-itemmv>
               <setting-items
                 v-for="item in generalItems"
                 :key="item.id"
@@ -52,15 +51,49 @@
                 item-type="update"
                 id="version"
               ></setting-items>
-              <setting-items
-                v-for="item in updateItems"
-                :key="item.id"
-                :title="item.title"
-                :btnValue="item.btnValue"
-                :isColor="item.isColor"
-                :itemType="item.itemType"
-                :isLang="item.isLang"
-              ></setting-items>
+
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Stereum - Testing Lane</span>
+                </div>
+                <div
+                  class="setting-items_btn"
+                  @click="switchOnOff"
+                  :style="colorPicker"
+                >
+                  <span>{{ btnStatus }}</span>
+                </div>
+              </div>
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Stereum Update Configuration</span>
+                </div>
+                <div class="setting-items_btn">
+                  <select
+                    name="stereum-update"
+                    id="stereum-update"
+                    v-model="stereumRef"
+                  >
+                    <option value="manual">MANUAL</option>
+                    <option value="auto">AUTO</option>
+                  </select>
+                </div>
+              </div>
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Plug-in / Service Update Configuration</span>
+                </div>
+                <div class="setting-items_btn">
+                  <select
+                    name="stereum-update"
+                    id="stereum-update"
+                    v-model="pluginRef"
+                  >
+                    <option value="manual">MANUAL</option>
+                    <option value="auto">AUTO</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -83,8 +116,12 @@ export default {
   data() {
     return {
       SIco: "/img/icon/setting-page/setting_icon.png",
+      onOff: false,
+      btnStatus: "",
       pageName: "",
       pageIcon: "",
+      stereumRef: "manual",
+      pluginRef: "manual",
       settingData: {
         name: "stereum setting",
         icon: "/img/icon/setting-page/setting_icon.png",
@@ -107,7 +144,7 @@ export default {
           id: 2,
           title: "Credits",
           link: true,
-          isColor: "open",
+          isColor: "green",
           itemType: "general",
           linkValue: "open",
         },
@@ -119,20 +156,6 @@ export default {
           isColor: "off",
           itemType: "update",
           btnValue: "OFF",
-        },
-        {
-          id: 2,
-          title: "Stereum Update Configuration",
-          isColor: "manual",
-          itemType: "update",
-          btnValue: "MANUAL",
-        },
-        {
-          id: 3,
-          title: "Plug-in / Service Update Configuration",
-          isColor: "manual",
-          itemType: "update",
-          btnValue: "Manual",
         },
       ],
     };
@@ -148,14 +171,30 @@ export default {
     this.checkSettings();
     this.selectror();
     this.checkVersion();
+    this.switchOnOff();
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
     }),
+    colorPicker() {
+      if (this.onOff === false) {
+        return { backgroundColor: "#EB5353" };
+      } else {
+        return { backgroundColor: "#316464" };
+      }
+    },
   },
 
   methods: {
+    switchOnOff() {
+      this.onOff = !this.onOff;
+      if (this.onOff === false) {
+        this.btnStatus = "off";
+      } else {
+        this.btnStatus = "on";
+      }
+    },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.current) {
         return true;
@@ -211,6 +250,60 @@ export default {
 </script>
 
 <style scoped>
+.setting-items {
+  width: 95%;
+  display: flex;
+  color: #eee;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  text-decoration: none;
+  margin: 0.5% 0;
+  border-radius: 20px;
+  height: 16%;
+}
+.setting-items_title {
+  width: 60%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+}
+.setting-items_title span {
+  margin: 0 5%;
+}
+.setting-items_btn {
+  width: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  font-weight: 500;
+  border: 1.5px solid #30353a;
+  cursor: pointer;
+  margin: 0 2%;
+  height: 90%;
+  color: #000;
+  font-size: 100%;
+  box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
+  box-sizing: border-box;
+  text-transform: uppercase;
+}
+.setting-items_btn :hover,
+.setting-items_btn :focus {
+  font-weight: 700;
+  outline: none;
+}
+.setting-items_btn select {
+  width: 100%;
+  height: 100%;
+  line-height: 100%;
+  text-align-last: center;
+}
 #version {
   pointer-events: none;
 }
