@@ -1046,4 +1046,18 @@ remove-validator {
   box-shadow: none;
   transition-duration: 100ms;
 }
+
+
+.table-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+
+.table-content::-webkit-scrollbar-thumb {
+  background-color: rgb(60, 152, 140) ;
+  border-radius: 6px;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
 </style>
