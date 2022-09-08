@@ -20,9 +20,14 @@
 </template>
 <script>
 export default {
+  props: ["services"],
   methods: {
     openUploadHandler() {
-      this.$refs.fileInput.click();
+      let validator = this.services.filter((s) =>
+        s.service.includes("Validator")
+      );
+      if(validator && validator.map(e => e.state).includes("running"))
+        this.$refs.fileInput.click();
     },
     signalChangeHandler(event) {
       this.$emit("uploadFile", event);
