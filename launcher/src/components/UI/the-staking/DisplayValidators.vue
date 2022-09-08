@@ -147,6 +147,7 @@
       v-if="insertKeyBoxActive"
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
+      :services="installedServices"
     ></insert-validator>
     <!-- Password box for validator keys -->
     <enter-password
@@ -228,8 +229,6 @@ export default {
       importValidatorKeyActive: true,
       insertKeyBoxActive: true,
       enterPasswordBox: false,
-      insertFilePage: true,
-      enterPasswordPage: false,
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
@@ -412,9 +411,9 @@ export default {
         for (let client of clients) {
           //if there is already a list of keys ()
           if (
-            client.config.keys === undefined ||
+            (client.config.keys === undefined ||
             client.config.keys.length === 0 ||
-            this.forceRefresh
+            this.forceRefresh) && client.state === "running"
           ) {
             //refresh validaotr list
             let result = await ControlService.listValidators(
@@ -434,19 +433,20 @@ export default {
               return service;
             });
           }
-
-          keyStats = keyStats.concat(
-            client.config.keys.map((key) => {
-              return {
-                key: key,
-                validatorID: client.config.serviceID,
-                icon: client.icon,
-                activeSince: "-",
-                status: "loading",
-                balance: "-",
-              };
-            })
-          );
+          if(client.config.keys){
+            keyStats = keyStats.concat(
+              client.config.keys.map((key) => {
+                return {
+                  key: key,
+                  validatorID: client.config.serviceID,
+                  icon: client.icon,
+                  activeSince: "-",
+                  status: "loading",
+                  balance: "-",
+                };
+              })
+            );
+          }
         }
         this.forceRefresh = false;
         this.keys = keyStats.map((key) => {
@@ -467,9 +467,9 @@ export default {
       let network = this.network === "mainnet" ? "mainnet" : "prater";
       try {
         let buffer = this.keys.map((key) => key.key);
-        const chunkSize = 100;
+        const chunkSize = 50;
         for (let i = 0; i < buffer.length; i += chunkSize) {
-          //split validator accounts into chunks of 100 (api limit)
+          //split validator accounts into chunks of 50 (api url limit)
           const chunk = buffer.slice(i, i + chunkSize);
           let response = await axios.get(
             "https://" +
@@ -548,17 +548,27 @@ export default {
       }
     },
     dropFileHandler(event) {
-      let droppedFiles = event.dataTransfer.files;
-      if (droppedFiles[0]["type"] === "application/json") {
-        this.keyFiles.push(...droppedFiles);
-        this.importValidatorKeyActive = false;
-        this.insertKeyBoxActive = false;
-        this.enterPasswordBox = true;
-        this.isDragOver = false;
+      let validator = this.installedServices.filter((s) =>
+        s.service.includes("Validator")
+      );
+      if(validator && validator.map(e => e.state).includes("running")){
+        let droppedFiles = event.dataTransfer.files;
+        if (droppedFiles[0]["type"] === "application/json") {
+          this.keyFiles.push(...droppedFiles);
+          this.importValidatorKeyActive = false;
+          this.insertKeyBoxActive = false;
+          this.enterPasswordBox = true;
+        }
       }
+      this.isDragOver = false;
     },
     removeKeyHandler(key_name) {
       this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
+      if(this.keyFiles.length === 0){
+        this.importValidatorKeyActive = true;
+        this.insertKeyBoxActive = true;
+        this.enterPasswordBox = false;
+      }
     },
     openUploadHandler() {
       this.$refs.fileInput.click();
