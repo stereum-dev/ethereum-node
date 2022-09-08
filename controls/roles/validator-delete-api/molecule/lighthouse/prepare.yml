@@ -60,6 +60,7 @@
             save: true
             state: started
             configuration:
+              service: LighthouseBeaconService
               id: "{{ beacon_service }}"
               image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
               env: {}
@@ -115,7 +116,7 @@
                 - --beacon-nodes=http://stereum-{{ beacon_service }}:5052
                 - --datadir=/opt/app/validator
                 - --init-slashing-protection
-                - --graffiti="stereum.net"
+                - --graffiti-file=/opt/app/graffitis/graffitis.yaml
                 - --metrics
                 - --metrics-address=0.0.0.0
                 - --http
@@ -125,6 +126,7 @@
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ validator_service }}/validator:/opt/app/validator"
+                - "/opt/app/services/{{ validator_service }}/graffitis:/opt/app/graffitis"
 
     - include_role:
         name: "validator-import-api"

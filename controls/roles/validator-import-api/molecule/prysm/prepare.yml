@@ -158,8 +158,10 @@
                 --grpc-gateway-port=7500
                 --grpc-gateway-host=0.0.0.0
                 --grpc-gateway-corsdomain="*"
+                --graffiti-file=/opt/app/graffitis/graffitis.yaml
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ validator_service }}/data/db:/opt/app/data/db"
                 - "/opt/app/services/{{ validator_service }}/data/wallets:/opt/app/data/wallets"
                 - "/opt/app/services/{{ validator_service }}/data/passwords:/opt/app/data/passwords"
+                - "/opt/app/services/{{ validator_service }}/graffitis:/opt/app/graffitis"

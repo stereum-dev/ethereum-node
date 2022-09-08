@@ -228,4 +228,48 @@ export class ValidatorAccountManager {
         return URL
     }
 
+    async setGraffitis(graffiti){
+        let services = await this.serviceManager.readServiceConfigurations()
+        let validators = await services.filter(service => {
+            if(
+                service.service.includes("Teku") ||
+                service.service.includes("Nimbus") ||
+                service.service.includes("Validator")
+            ){
+                return true
+            }
+            return false
+        })
+
+        for(let client of validators){
+            let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
+            
+            const graffitiDir = (client.volumes.find(vol => vol.servicePath === '/opt/app/graffitis')).destinationPath + '/graffitis.yaml'
+            let config = ""
+            switch (service) {
+                case "lighthouse":
+                    config = `default: ${graffiti}`
+                    await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
+                    break;
+            
+                case "prysm":
+                    config = `default: "${graffiti}"`
+                    await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
+                    break;
+            
+                case "nimbus":
+                    //Nimbus only supports Graffiti changes while running via their rest api
+                    break;
+            
+                case "teku":
+                    config = graffiti
+                    await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
 }

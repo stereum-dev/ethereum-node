@@ -27,10 +27,11 @@ test('buildConfiguration', () => {
   
     expect(prysm.command).toMatch(/--beacon-rpc-provider=\"buildConsensusClientEndpoint\"/)
     expect(prysm.command).toMatch(/--beacon-rpc-gateway-provider=\"buildConsensusClientGateway\"/)
-    expect(prysm.volumes).toHaveLength(3)
+    expect(prysm.volumes).toHaveLength(4)
     expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/data/db:/opt/app/data/db')
     expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/data/wallets:/opt/app/data/wallets')
     expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/data/passwords:/opt/app/data/passwords')
+    expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/graffitis:/opt/app/graffitis')
     expect(prysm.ports).toHaveLength(1)
     expect(prysm.id).toHaveLength(36)
     expect(prysm.user).toMatch(/2000/)

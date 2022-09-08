@@ -54,6 +54,7 @@
             save: true
             state: started
             configuration:
+              service: PrysmBeaconService
               id: "{{ beacon_service }}"
               image: prysmaticlabs/prysm-beacon-chain:HEAD-c8a7f6-debug
               ports:
@@ -161,11 +162,13 @@
                 --grpc-gateway-port=7500
                 --grpc-gateway-host=0.0.0.0
                 --grpc-gateway-corsdomain="*"
+                --graffiti-file=/opt/app/graffitis/graffitis.yaml
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ validator_service }}/data/db:/opt/app/data/db"
                 - "/opt/app/services/{{ validator_service }}/data/wallets:/opt/app/data/wallets"
                 - "/opt/app/services/{{ validator_service }}/data/passwords:/opt/app/data/passwords"
+                - "/opt/app/services/{{ validator_service }}/graffitis:/opt/app/graffitis"
 
     - include_role:
         name: "validator-import-api"

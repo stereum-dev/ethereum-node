@@ -78,7 +78,7 @@ test('lighthouse validator import', async () => {
     ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
     ]
-    let lhVC = LighthouseValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [lhBC], 'stereum.net')
+    let lhVC = LighthouseValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [lhBC])
 
     await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
     await serviceManager.manageServiceState(geth.id, 'started')

@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, graffiti, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, checkpointURL) {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -45,7 +45,7 @@ export class NimbusBeaconService extends NodeService {
         '--rest',
         '--rest-address=0.0.0.0',
         '--rest-port=5052',
-        `--graffiti=\"${graffiti}\"`,
+        `--graffiti=\"stereum.net\"`,
         '--keymanager',
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt',

@@ -161,7 +161,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
       ]
-      this.validatorService = LighthouseValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.beaconService], 'stereum.net')
+      this.validatorService = LighthouseValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.beaconService])
     }
 
     if (constellation.includes('PrysmBeaconService')) {
@@ -179,7 +179,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
       ]
-      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService], 'stereum.net')
+      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService])
     }
 
     if (constellation.includes('NimbusBeaconService')) {
@@ -190,7 +190,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], 'stereum.net', checkpointURL)
+      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], checkpointURL)
 
       //generate validator api-token
       const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
@@ -207,7 +207,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       ]
-      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], 'stereum.net', checkpointURL)
+      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], checkpointURL)
 
       //keystore
       const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath

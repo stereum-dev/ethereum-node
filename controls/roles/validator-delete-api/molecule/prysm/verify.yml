@@ -16,6 +16,14 @@
       that:
       - stereum_ufw_status.stdout.find("12000/udp") != -1
       - stereum_ufw_status.stdout.find("13000/tcp") != -1
+  # Prysm graffiti file
+  - stat: path=/opt/app/services/076e91e2-e8bc-11ec-84c1-37b5fd5ea8e1/graffitis/graffitis.yaml
+    register: graffitis
+  - debug:
+      msg: "{{ graffitis }}"
+  - name: Check for graffiti file
+    assert:
+      that: graffitis.stat.exists
   # Wallet & auth-token
   - stat: path=/opt/app/services/076e91e2-e8bc-11ec-84c1-37b5fd5ea8e1/data/wallets/direct/accounts/all-accounts.keystore.json
     register: validator_all_accounts

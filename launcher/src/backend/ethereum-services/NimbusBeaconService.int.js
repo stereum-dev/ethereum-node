@@ -72,7 +72,7 @@ test('nimbus validator import', async () => {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
-    let nimbusClient = NimbusBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [geth], 'stereum.net')
+    let nimbusClient = NimbusBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [geth])
     //change out web3 address for integration test
     // const index = nimbusClient.command.findIndex(element => element.includes('--web3-url='))
     // nimbusClient.command[index] = '--web3-url=ws://10.10.0.2:8545'
