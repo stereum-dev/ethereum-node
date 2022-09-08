@@ -88,7 +88,6 @@ export default {
   updated() {
     this.updateStates();
   },
-  updated() {},
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",

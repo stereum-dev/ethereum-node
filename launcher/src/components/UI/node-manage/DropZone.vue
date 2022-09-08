@@ -8,12 +8,7 @@
         @dragover.prevent
         onmousedown="return false"
       >
-        <div
-          class="items"
-          v-for="(item, index) in list"
-          :key="index"
-          ref="itemsList"
-        >
+        <div class="items" v-for="(item, index) in list" :key="index">
           <img
             :src="item.sIcon"
             alt="icon"
@@ -52,9 +47,10 @@ export default {
   },
   data() {
     return {
-      itemsList: [],
+      itemsList: null,
     };
   },
+
   methods: {
     selectedItem(item) {
       item.active = !item.active;

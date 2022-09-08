@@ -3,8 +3,13 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="manage-parent">
-        <div class="config-box" onmousedown="return false">
+        <div class="config-box">
+          <modify-panel
+            v-if="displayCustomModifier"
+            :items="itemToInstall"
+          ></modify-panel>
           <node-configuration
+            v-else
             :configData="configData"
             @modal-preset="openPresetModal"
           ></node-configuration>
@@ -26,7 +31,11 @@
           >
             <drop-zone
               :title="'execution'"
-              :list="newConfiguration.filter(service => service.category === 'execution')"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'execution'
+                )
+              "
               @modal-view="showModal"
               @itemSelect="serviceItemSelection"
             ></drop-zone>
@@ -39,7 +48,11 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="newConfiguration.filter(service => service.category === 'consensus')"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'consensus'
+                )
+              "
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -51,7 +64,11 @@
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="newConfiguration.filter(service => service.category === 'validator')"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'validator'
+                )
+              "
               @itemSelect="serviceItemSelection"
             ></drop-zone>
           </div>
@@ -67,7 +84,11 @@
             @dragover.prevent
           >
             <service-plugin
-              :list="newConfiguration.filter(service => service.category === 'service')"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'service'
+                )
+              "
               @itemSelect="serviceItemSelection"
             >
             </service-plugin>
@@ -80,10 +101,7 @@
           ></change-confirm>
         </div>
         <div class="sidebar">
-          <sidebar-manage
-            :startDrag="startDrag"
-            :allServices="allServices"
-          >
+          <sidebar-manage :startDrag="startDrag" :allServices="allServices">
           </sidebar-manage>
         </div>
         <div class="footer" onmousedown="return false">
@@ -101,6 +119,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
+import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -116,6 +135,7 @@ export default {
     BaseModal,
     PresetModal,
     TaskManager,
+    ModifyPanel,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -125,6 +145,8 @@ export default {
       isModalActive: false,
       presetModal: false,
       modalItems: [],
+      displayCustomModifier: false,
+      itemToInstall: null,
     };
   },
   computed: {
@@ -139,11 +161,12 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
-    })
+    }),
   },
-  mounted(){
-    this.newConfiguration = this.installedServices
+  mounted() {
+    this.newConfiguration = this.installedServices;
   },
+
   methods: {
     showModal(data) {
       this.isModalActive = true;
@@ -168,14 +191,21 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if(this.newConfiguration.some(item => item.id == itemId)) return;
-        this.newConfiguration.push(item)
+      if (this.newConfiguration.some((item) => item.id == itemId)) return;
+      this.newConfiguration.push(item);
+      item.modifierPanel = true;
+      this.itemToInstall = item;
+      this.displayCustomModifier = item.modifierPanel;
     },
     serviceItemSelection(item) {
-      if(this.selectedItemToRemove.map(element => element.id).includes(item.id)){
-          this.selectedItemToRemove = this.selectedItemToRemove.filter(element => element.id != item.id)
-      }else{
-          this.selectedItemToRemove.push(item)
+      if (
+        this.selectedItemToRemove.map((element) => element.id).includes(item.id)
+      ) {
+        this.selectedItemToRemove = this.selectedItemToRemove.filter(
+          (element) => element.id != item.id
+        );
+      } else {
+        this.selectedItemToRemove.push(item);
       }
     },
   },
