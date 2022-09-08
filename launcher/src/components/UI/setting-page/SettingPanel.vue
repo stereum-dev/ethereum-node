@@ -51,13 +51,19 @@
                 item-type="update"
                 id="version"
               ></setting-items>
-              <setting-items
-                title="Stereum Version"
-                btn-value="off"
-                is-color="off"
-                item-type="update"
-                @customize-setting="switchOnOff"
-              ></setting-items>
+
+              <div class="setting-items">
+                <div class="setting-items_title">
+                  <span>Stereum - Testing Lane</span>
+                </div>
+                <div
+                  class="setting-items_btn"
+                  @click="switchOnOff"
+                  :style="colorPicker"
+                >
+                  <span>{{ btnStatus }}</span>
+                </div>
+              </div>
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>Stereum Update Configuration</span>
@@ -111,6 +117,7 @@ export default {
     return {
       SIco: "/img/icon/setting-page/setting_icon.png",
       onOff: false,
+      btnStatus: "",
       pageName: "",
       pageIcon: "",
       stereumRef: "manual",
@@ -137,7 +144,7 @@ export default {
           id: 2,
           title: "Credits",
           link: true,
-          isColor: "open",
+          isColor: "green",
           itemType: "general",
           linkValue: "open",
         },
@@ -164,16 +171,29 @@ export default {
     this.checkSettings();
     this.selectror();
     this.checkVersion();
+    this.switchOnOff();
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
     }),
+    colorPicker() {
+      if (this.onOff === false) {
+        return { backgroundColor: "#EB5353" };
+      } else {
+        return { backgroundColor: "#316464" };
+      }
+    },
   },
 
   methods: {
     switchOnOff() {
-      alert("test");
+      this.onOff = !this.onOff;
+      if (this.onOff === false) {
+        this.btnStatus = "off";
+      } else {
+        this.btnStatus = "on";
+      }
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.current) {
@@ -243,7 +263,7 @@ export default {
   text-decoration: none;
   margin: 0.5% 0;
   border-radius: 20px;
-  height: 18%;
+  height: 16%;
 }
 .setting-items_title {
   width: 60%;
@@ -272,6 +292,11 @@ export default {
   box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
   box-sizing: border-box;
   text-transform: uppercase;
+}
+.setting-items_btn :hover,
+.setting-items_btn :focus {
+  font-weight: 700;
+  outline: none;
 }
 .setting-items_btn select {
   width: 100%;

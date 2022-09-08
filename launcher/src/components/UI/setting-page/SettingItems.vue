@@ -107,11 +107,11 @@ export default {
     color() {
       if (this.colorStyle === "alpha") {
         return this.grey;
-      } else if (this.colorStyle === "off") {
+      } else if (this.colorStyle === "red") {
         return this.red;
       } else if (this.colorStyle === "manual") {
         return this.light;
-      } else if (this.colorStyle === "open") {
+      } else if (this.colorStyle === "green") {
         return this.green;
       }
     },
