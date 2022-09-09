@@ -417,7 +417,7 @@ export default {
   background-color: #c9c9c9;
   color: #2a2a2a;
   border-radius: 30px;
-  border: 1px solid #c9c9c9;
+  border: 1px solid #a8a8a8;
   display: flex;
   justify-content: center;
   align-items: center;
