@@ -116,9 +116,9 @@ test('lighthouse validator import', async () => {
     const api_token = await nodeConnection.sshService.exec(`cat /opt/stereum/lighthouse-${lhVC.id}/validator/validators/api-token.txt`)
 
     // destroy
-    // await nodeConnection.destroyNode()
-    // await nodeConnection.sshService.disconnect()
-    // await testServer.destroy()
+    await nodeConnection.destroyNode()
+    await nodeConnection.sshService.disconnect()
+    await testServer.destroy()
 
     //check ufw
     expect(ufw.stdout).toMatch(/9000\/tcp/)
