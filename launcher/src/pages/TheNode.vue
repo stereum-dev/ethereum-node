@@ -185,7 +185,7 @@ export default {
   height: 91%;
   border: 4px solid #979797;
   border-radius: 0 35px 10px 10px;
-  grid-template-columns: 18% 46% 20% 16%;
+  grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 32% 32% 31% 5%;
   grid-row-gap: 1px;
   background-color: rgb(0, 0, 0);

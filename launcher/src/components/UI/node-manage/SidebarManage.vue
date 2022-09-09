@@ -18,7 +18,11 @@
         alt=""
       />
     </div>
-    <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
+    <div
+      :class="{ 'run-sidebar': showSidebar }"
+      class="manage-sidebar"
+      @mouseleave="showSidebar = false"
+    >
       <div class="plugin-box">
         <img
           onmousedown="return false"
@@ -95,6 +99,7 @@ export default {
   background-color: gray;
   border-top-left-radius: 35px;
   border-bottom-left-radius: 35px;
+  transition-duration: 0.5s;
 }
 .run-sidebar {
   right: 0;
@@ -108,6 +113,24 @@ export default {
   border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
   cursor: pointer;
+  animation: sidebar 500ms linear;
+}
+@keyframes sidebar {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .show-icon {
   position: fixed;
