@@ -87,11 +87,15 @@
                 --execution-endpoint=http://stereum-{{ besu_service }}:8551
                 --jwt-secret=/engine.jwt
                 --http-mev-relay=http://stereum-{{ mevboost_service }}:18550
+                --suggested-fee-recipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ prysm_beacon_service }}/prysm/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ prysm_beacon_service }}/genesis:/opt/app/genesis"
                 - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+                #      --monitoring-port=8080
+                # --monitoring-host=0.0.0.0
 
     # prysm validator service
     - block:
@@ -132,21 +136,6 @@
           owner: "2000"
           group: "2000"
         become: yes
-      - name: Stop beacon & validator service
-        docker_container:
-          name: "{{ item }}"
-          state: stopped
-        become: yes
-        with_items:
-          - "stereum-{{ prysm_beacon_service }}"
-          - "stereum-{{ prysm_validator_service }}"
-      - name: Restart beacon & validator service
-        command: "docker start {{ item }}"
-        changed_when: false
-        become: yes
-        with_items:
-          - "stereum-{{ prysm_beacon_service }}"
-          - "stereum-{{ prysm_validator_service }}"
       vars:
         stereum_args:
           manage_service:
@@ -209,5 +198,21 @@
                 - "{{ stereum_static.defaults.relay.goerli }}"
               user: "2000"
               volumes: []
+
+    - name: Stop beacon & validator service
+      docker_container:
+        name: "{{ item }}"
+        state: stopped
+      become: yes
+      with_items:
+        - "stereum-{{ prysm_beacon_service }}"
+        - "stereum-{{ prysm_validator_service }}"
+    - name: Restart beacon & validator service
+      command: "docker start {{ item }}"
+      changed_when: false
+      become: yes
+      with_items:
+        - "stereum-{{ prysm_beacon_service }}"
+        - "stereum-{{ prysm_validator_service }}"
 
 # EOF
