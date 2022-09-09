@@ -77,7 +77,6 @@
       - stereum_docker_ps.stdout.find("consensys/teku") != -1
       - stereum_docker_ps.stdout.find("3000->3000") != -1
       - stereum_docker_ps.stdout.find("9100/tcp") != -1
-      - stereum_docker_ps.stdout.find("5052->5052") != -1
       - stereum_docker_ps.stdout.find("9001->9001") != -1
       - stereum_docker_ps.stdout.find("5051/tcp") != -1
       - stereum_docker_ps.stdout.find("8008/tcp") != -1

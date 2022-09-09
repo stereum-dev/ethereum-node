@@ -120,21 +120,6 @@
           owner: "2000"
           group: "2000"
         become: yes
-      - name: Stop beacon & validator service
-        docker_container:
-          name: "{{ item }}"
-          state: stopped
-        become: yes
-        with_items:
-          - "stereum-{{ prysm_beacon_service }}"
-          - "stereum-{{ prysm_validator_service }}"
-      - name: Restart beacon & validator service
-        command: "docker start {{ item }}"
-        changed_when: false
-        become: yes
-        with_items:
-          - "stereum-{{ prysm_beacon_service }}"
-          - "stereum-{{ prysm_validator_service }}"
       vars:
         stereum_args:
           manage_service:
@@ -197,5 +182,21 @@
                 - "{{ stereum_static.defaults.relay.goerli }}"
               user: "2000"
               volumes: []
+
+    - name: Stop beacon & validator service
+      docker_container:
+        name: "{{ item }}"
+        state: stopped
+      become: yes
+      with_items:
+        - "stereum-{{ prysm_beacon_service }}"
+        - "stereum-{{ prysm_validator_service }}"
+    - name: Restart beacon & validator service
+      command: "docker start {{ item }}"
+      changed_when: false
+      become: yes
+      with_items:
+        - "stereum-{{ prysm_beacon_service }}"
+        - "stereum-{{ prysm_validator_service }}"
 
 # EOF
