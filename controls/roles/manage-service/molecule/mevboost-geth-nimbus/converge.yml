@@ -92,7 +92,7 @@
                 - --keymanager
                 - --keymanager-address=0.0.0.0
                 - --keymanager-token-file=/opt/app/validators/api-token.txt
-                - --payload-builder=on
+                - --payload-builder=true
                 - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
               user: "2000"
 

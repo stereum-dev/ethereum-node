@@ -5,10 +5,11 @@
   tasks:
   #  teku beacon logs
   - name: Teku beacon
-    command: "docker logs --tail=20 stereum-d2cf0214-ea78-11ec-bbf0-ab0094207ad6"
+    command: "docker logs stereum-d2cf0214-ea78-11ec-bbf0-ab0094207ad6"
     register: teku_beacon
     until:
-      - teku_beacon.stdout is search("Endpoint http://stereum-d6358d80-ea76-11ec-94b3-2fb45dfeb66a:8551 is INVALID | Still syncing")
+      - teku_beacon.stdout is search("Using execution engine at http://stereum-d6358d80-ea76-11ec-94b3-2fb45dfeb66a:8551")
+      - teku_beacon.stdout is search("JWT secret loaded from /engine.jwt")
     retries: 60
     delay: 10
 

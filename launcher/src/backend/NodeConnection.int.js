@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { NodeConnection } from './NodeConnection'
 import { nodeOS } from './NodeOS'
 import { HetznerServer } from './HetznerServer'
@@ -9,7 +12,6 @@ test('prepareStereumNode on ubuntu', async () => {
   const serverSettings = {
     name: 'NodeConnection--integration-test--ubuntu-2204',
     image: 'ubuntu-22.04',
-    location: 'fsn1',
     server_type: 'cpx21',
     start_after_create: true
   }

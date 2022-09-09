@@ -5,11 +5,10 @@
   tasks:
   #  nimbus beacon logs
   - name: nimbus beacon
-    command: "docker logs --tail=20 stereum-cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1"
+    command: "docker logs stereum-cd1efba0-1401-11ed-b7bc-3b8bd60e0aa1"
     register: nimbus_beacon
     until:
-      - nimbus_beacon.stdout is search("Failed to send POST Request with JSON-RPC")
-      - nimbus_beacon.stdout is search("Eth1 chain monitoring failure, restarting")
+      - nimbus_beacon.stdout is search("Established connection to execution layer")
     retries: 60
     delay: 10
 

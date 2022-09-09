@@ -58,7 +58,7 @@
     until:
       - ssv_network.stdout is search('successfully connected to beacon client')
       - ssv_network.stdout is search('p2p services were configured')
-      - ssv_network.stdout is search('eth1 node is currently syncing')
+      - ssv_network.stdout is search('beacon node is currently syncing')
     retries: 360
     delay: 10
   # container's images & ports

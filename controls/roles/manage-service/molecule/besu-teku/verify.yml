@@ -5,11 +5,11 @@
   tasks:
   #  teku beacon logs
   - name: Teku beacon
-    command: "docker logs --tail=20 stereum-1929168e-e0d6-11ec-9183-97daacc21ea6"
+    command: "docker logs stereum-1929168e-e0d6-11ec-9183-97daacc21ea6"
     register: teku_beacon
     until:
-      - teku_beacon.stdout is search("Endpoint http://stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80:8551 is INVALID | Connection refused")
-      - teku_beacon.stdout is search("Eth1 service down or still syncing for")
+      - teku_beacon.stdout is search("Using execution engine at http://stereum-9c52bfc6-ee3f-11ec-8841-fff909f62b80:8551")
+      - teku_beacon.stdout is search("JWT secret loaded from /engine.jwt")
     retries: 60
     delay: 10
 

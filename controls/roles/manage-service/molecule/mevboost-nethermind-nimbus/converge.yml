@@ -80,9 +80,6 @@
                 - --web3-url=http://stereum-{{ nethermind_service }}:8551
                 - --tcp-port=9000
                 - --udp-port=9000
-                - --metrics
-                - --metrics-port=8008
-                - --metrics-address=0.0.0.0
                 - --rest
                 - --rest-address=0.0.0.0
                 - --rest-port=5052
@@ -91,7 +88,7 @@
                 - --keymanager
                 - --keymanager-address=0.0.0.0
                 - --keymanager-token-file=/opt/app/validators/api-token.txt
-                - --payload-builder=on
+                - --payload-builder=true
                 - --payload-builder-url=http://stereum-{{ mevboost_service }}:18550
               user: "2000"
               volumes:
