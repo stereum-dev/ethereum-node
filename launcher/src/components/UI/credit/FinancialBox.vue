@@ -9,12 +9,12 @@
     </div>
     <div
       class="financial-contributor"
-      v-for="(item, index) in filteredItem"
+      v-for="(item) in filteredItem"
       :key="item.name"
     >
-      <div class="id">
+      <!-- <div class="id">
         <span>#{{ index + 1 }}</span>
-      </div>
+      </div> -->
       <div class="avatar">
         <img :src="item.avatar" />
       </div>
