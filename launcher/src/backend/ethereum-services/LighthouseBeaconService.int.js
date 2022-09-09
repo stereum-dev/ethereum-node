@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -16,8 +19,7 @@ test('lighthouse validator import', async () => {
     const serverSettings = {
         name: 'Lighthouse--integration-test--ubuntu-2204',
         image: 'ubuntu-22.04',
-        location: 'fsn1',
-        server_type: 'cpx21',
+        server_type: 'cpx31',
         start_after_create: true,
     }
     await testServer.create(serverSettings)
@@ -38,10 +40,6 @@ test('lighthouse validator import', async () => {
 
     //change password
     await testServer.passwordAuthentication(testServer.serverRootPassword)
-
-    //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.140')
-    log.info('server attached to network')
 
     //prepare node
     await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -143,6 +141,7 @@ test('lighthouse validator import', async () => {
     //check lighthouse BC logs
     expect(BCstatus.stderr).toMatch(/est_time/)
     expect(BCstatus.stderr).not.toMatch(/Failed to start beacon node/)
+    expect(BCstatus.stderr).toMatch(/The execution endpoint is connected and configured, however it is not yet synced/)
 
     //check lighthouse VC logs
     expect(VCstatus.stderr).toMatch(/pubkey:/)
