@@ -2,7 +2,7 @@
   <div class="modifyParent">
     <div class="modifyBox">
       <div class="service">
-        <img :src="plugin.sIcon" alt="icon" />
+        <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
           <span class="serviceName">{{ plugin.name }}</span>
           <span class="category">{{ plugin.category }} Client</span>
@@ -17,10 +17,15 @@
             <input type="text" v-model="installationPath" />
           </div>
         </div>
-        <div class="fast-sync">
+        <div
+          class="fast-sync"
+          v-if="
+            plugin.category === 'execution' || plugin.category === 'consensus'
+          "
+        >
           <div class="sync-header">
             <div class="headerTitle">
-              <span>SYNCHRONISATION</span>
+              <span>SYNC</span>
             </div>
             <div class="headerContent">
               <img
@@ -29,7 +34,7 @@
                 alt="icon"
               />
               <span v-if="genesisIsActive">GENESIS</span>
-              <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
+              <span v-if="checkPointIsActive">CHECKPOINT</span>
               <img
                 @click="changeTheOption"
                 src="/img/icon/arrows/right-arrow.png"
@@ -43,6 +48,22 @@
             >
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
+            </div>
+          </div>
+        </div>
+        <div class="portModifyBox">
+          <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
+          <div class="portConfig">
+            <span>PORT USED</span>
+            <input type="text" v-model="port" placeholder="9000" />
+          </div>
+        </div>
+        <div class="clientModifyBox">
+          <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+          <div class="connectionConfig">
+            <span>{{ plugin.category }} Client</span>
+            <div class="plusBtn">
+              <span>+</span>
             </div>
           </div>
         </div>
@@ -62,6 +83,8 @@ export default {
       modalActive: false,
       removeServicesModal: false,
       removeIsConfirmed: false,
+      genesisIsActive: true,
+      checkPointIsActive: false,
       plugin: {},
     };
   },
@@ -78,7 +101,17 @@ export default {
   mounted() {
     this.plugin = this.items;
   },
-  methods: {},
+  methods: {
+    changeTheOption() {
+      if (this.genesisIsActive) {
+        this.genesisIsActive = false;
+        this.checkPointIsActive = true;
+      } else {
+        this.checkPointIsActive = false;
+        this.genesisIsActive = true;
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -86,30 +119,29 @@ export default {
   grid-column: 1;
   width: 100%;
   height: 100%;
-  padding: 5px;
   margin-top: 1px;
   display: flex;
-  background-color: #242424;
   background-color: #606060;
+  /* background-color: #606060; */
   justify-content: center;
   align-items: center;
 }
 .modifyBox {
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 98%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #2b2b2b;
+  background-color: #3a3a3a;
   border-radius: 10px;
   margin: 0 auto;
 }
 .service {
-  width: 95%;
+  width: 98%;
   height: 10%;
-  margin-top: 15%;
-  padding: 5px;
+  margin-top: 13%;
+  padding: 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -120,7 +152,7 @@ export default {
 
 .service-details {
   width: 70%;
-  height: 80%;
+  height: 95%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -131,16 +163,17 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 800;
-  color: #aaaaaa;
+  color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: clservicecategory;
+  text-overflow: ellipsis;
+  align-self: center;
 }
 .service-details span:last-child {
-  width: 100%;
+  width: max-content;
   height: 40%;
   text-align: left;
   font-size: 0.6rem;
@@ -149,13 +182,14 @@ export default {
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: clservicecategory;
+  text-overflow: ellipsis;
+  align-self: flex-start;
 }
 
 .configBox {
   width: 95%;
-  height: 30%;
-  margin-top: 10%;
+  height: 80%;
+  margin-top: 5%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -164,9 +198,9 @@ export default {
 
 .configBox .change-installation {
   width: 100%;
-  height: 30%;
+  height: 13%;
   border-radius: 5px;
-  background-color: #3c4540;
+  background-color: #316355;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -180,16 +214,15 @@ export default {
   align-items: center;
 }
 .change-title span {
-  color: #d3d3d3;
-  font-size: 0.6rem;
-  font-weight: 600;
+  color: #c0c0c0;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 .change-installation .change-box {
-  width: 98%;
-  height: 50%;
+  width: 96%;
+  height: 45%;
   background-color: rgb(209, 209, 209);
-  border: 2px solid rgb(68, 68, 68);
-  border-radius: 5px;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -204,19 +237,20 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #232323;
   padding: 0;
-  padding-left: 7px;
+  padding-left: 4px;
   outline: none !important;
   outline-style: none !important;
 }
 .configBox .fast-sync {
   width: 100%;
-  height: 30%;
-  background-color: #3c4540;
-  border-radius: 5px;
+  height: 13%;
+  background-color: #315e45;
+  background-color: #2b2b2b;
+  border-radius: 10px 0 5px 5px;
   margin-top: 5px;
   display: flex;
   flex-direction: column;
@@ -225,8 +259,8 @@ export default {
 }
 .fast-sync .sync-header {
   width: 100%;
-  height: 34%;
-  border: 1px solid #929090;
+  height: 40%;
+  border: 1px solid #2b2b2b;
   border-radius: 15px 0 0 15px;
   display: flex;
   justify-content: space-between;
@@ -237,7 +271,7 @@ export default {
   width: 45%;
   height: 100%;
   border-radius: 15px 0 0 15px;
-  background-color: #1a5443;
+  background-color: #316355;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -245,9 +279,9 @@ export default {
 }
 .headerTitle span {
   width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #cdcdcd;
   text-align: center;
   margin-right: 3px;
 }
@@ -255,8 +289,8 @@ export default {
   width: 55%;
   height: 100%;
   border-radius: 0;
-  padding: 0 5px;
-  background-color: #33393e;
+  padding: 0 2px;
+  background-color: #414649;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -264,15 +298,114 @@ export default {
 }
 .headerContent span {
   width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #cdcdcd;
   text-align: center;
   margin-right: 3px;
 }
 .headerContent img {
-  width: 5%;
+  width: 8%;
   height: 50%;
   cursor: pointer;
+}
+.fast-sync .content {
+  width: 100%;
+  height: 64%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.fast-sync .content span {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+}
+.fast-sync .content .inputBox {
+  width: 95%;
+  height: 70%;
+  background-color: #d1d1d1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+.fast-sync .content input {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #232323;
+  padding: 0;
+  padding-left: 4px;
+}
+.portModifyBox,
+.clientModifyBox {
+  width: 100%;
+  height: 13%;
+  background-color: #2b2b2b;
+  border-radius: 5px;
+  margin-top: 5px;
+  padding: 1px 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.portModifyBox img {
+  width: 18%;
+  opacity: 0.5;
+}
+.clientModifyBox img {
+  width: 16%;
+  opacity: 0.5;
+}
+.portConfig {
+  width: 80%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.portConfig span {
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  margin-right: 3px;
+}
+.portConfig input {
+  width: 99%;
+  height: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #b0b0b0;
+  padding: 0;
+}
+.connectionConfig {
+  width: 80%;
+  height: 100%;
+}
+.connectionConfig span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  margin-right: 3px;
+  text-transform: lowercase;
 }
 </style>
