@@ -14,7 +14,7 @@
             <span>INSTALLATION PATH</span>
           </div>
           <div class="change-box">
-            <input type="text" v-model="installationPath" />
+            <input type="text" v-model="installationPath" maxlength="255" />
           </div>
         </div>
         <div
@@ -86,6 +86,7 @@ export default {
       genesisIsActive: true,
       checkPointIsActive: false,
       plugin: {},
+      port: "",
     };
   },
   computed: {
