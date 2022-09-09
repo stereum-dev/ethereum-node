@@ -2,8 +2,8 @@
   <div class="lang-panel_parent">
     <flag-button
       @setting="setLang(link.langName, link.langSelect)"
-      v-for="link in linkFlags"
-      :key="link.langImg"
+      v-for="link in sortedFlags"
+      :key="link.langName"
       :isActive="link.enable"
     >
       <div class="langIco"><img :src="link.langImg" /></div>
@@ -33,10 +33,21 @@ export default {
   computed: {
     ...mapWritableState(useFlagDialog, {
       linkFlags: "linkFlags",
-      dialogIsVisible: "dialogIsVisible",
     }),
+    sortedFlags() {
+      return this.linkFlags.sort((a, b) => {
+        let fa = a.langName.toLowerCase(),
+          fb = b.langName.toLowerCase();
+        if (fa < fb) {
+          return -1;
+        }
+        if (fa > fb) {
+          return 1;
+        }
+        return 0;
+      });
+    },
   },
-
   methods: {
     setLang(lang, langSelect) {
       this.selectedLanguage.lang = lang;
