@@ -83,6 +83,7 @@ test('teku validator import', async () => {
     //write config and start teku
     await nodeConnection.writeServiceConfiguration(tekuClient.buildConfiguration())
     await serviceManager.manageServiceState(tekuClient.id, 'started')
+    await testServer.Sleep(30000)
 
     const dataDir = ((tekuClient.buildConfiguration().volumes.find(volume => volume.includes('data'))).split(':'))[0]
     log.debug(dataDir)

@@ -91,6 +91,7 @@ test('prysm validator import', async () => {
         serviceManager.manageServiceState(prysmBC.id, 'started'),
         serviceManager.manageServiceState(prysmVC.id, 'started')
     ])
+    await testServer.Sleep(30000)
 
     const wallet_path = ((prysmVC.buildConfiguration().volumes.find(volume => volume.includes('wallets'))).split(':'))[0]
     log.debug(wallet_path)
