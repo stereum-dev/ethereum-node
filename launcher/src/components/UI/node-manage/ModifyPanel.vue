@@ -62,9 +62,7 @@
           <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
           <div class="connectionConfig">
             <span>{{ plugin.category }} Client</span>
-            <div class="plusBtn">
-              <span>+</span>
-            </div>
+            <div class="plusBtn">+</div>
           </div>
         </div>
       </div>
@@ -355,7 +353,7 @@ export default {
   background-color: #2b2b2b;
   border-radius: 5px;
   margin-top: 5px;
-  padding: 1px 3px;
+  padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -383,11 +381,10 @@ export default {
   font-weight: 700;
   color: #b3b3b3;
   text-align: center;
-  margin-right: 3px;
 }
 .portConfig input {
   width: 99%;
-  height: 50%;
+  height: 45%;
   background-color: rgb(20, 20, 20);
   border: none;
   border-radius: 30px;
@@ -399,14 +396,46 @@ export default {
 }
 .connectionConfig {
   width: 80%;
-  height: 100%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
 .connectionConfig span {
-  font-size: 0.7rem;
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
   font-weight: 700;
   color: #b3b3b3;
   text-align: center;
-  margin-right: 3px;
-  text-transform: lowercase;
+  text-transform: uppercase;
+}
+.connectionConfig .plusBtn {
+  width: 100%;
+  height: 45%;
+  background-color: #c9c9c9;
+  color: #2a2a2a;
+  border-radius: 30px;
+  border: 1px solid #c9c9c9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222222;
+  text-align: center;
+}
+.plusBtn:hover {
+  transform: scale(1.01);
+  color: #c9c9c9;
+  font-weight: 600;
+  background-color: #285c4e;
+  transition-duration: 0.2s;
+}
+.plusBtn:active {
+  background-color: #1c3c33;
+  transform: scale(0.9);
 }
 </style>
