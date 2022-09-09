@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -16,8 +19,7 @@ test('prysm validator import', async () => {
     const serverSettings = {
         name: 'Prysm--integration-test--ubuntu-2204',
         image: 'ubuntu-22.04',
-        location: 'fsn1',
-        server_type: 'cpx21',
+        server_type: 'cpx31',
         start_after_create: true,
     }
     await testServer.create(serverSettings)
@@ -38,10 +40,6 @@ test('prysm validator import', async () => {
 
     //change password
     await testServer.passwordAuthentication(testServer.serverRootPassword)
-
-    //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.150')
-    log.info('server attached to network')
 
     //prepare node
     // create stereum settings
@@ -177,9 +175,11 @@ test('prysm validator import', async () => {
 
     //check prysm BC logs
     expect(BCstatus.stderr).toMatch(/estimated time remaining/)
+    expect(BCstatus.stderr).toMatch(/Connected to new endpoint: http:\/\/stereum-.{36}:8551/)
     expect(BCstatus.stderr).not.toMatch(/Could not connect to execution endpoint/)
 
     //check prysm VC logs
     expect(VCstatus.stderr).toMatch(/Beacon chain started/)
+    expect(VCstatus.stderr).toMatch(/Waiting for beacon node to sync to latest chain head/)
     expect(runningValidator).toMatch(/Showing .{1} validator accounts/)
 })

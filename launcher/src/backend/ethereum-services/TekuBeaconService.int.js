@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -16,8 +19,7 @@ test('teku validator import', async () => {
     const serverSettings = {
         name: 'Teku--integration-test--ubuntu-2204',
         image: 'ubuntu-22.04',
-        location: 'fsn1',
-        server_type: 'cpx21',
+        server_type: 'cpx31',
         start_after_create: true,
     }
     await testServer.create(serverSettings)
@@ -39,10 +41,6 @@ test('teku validator import', async () => {
 
     //change password
     await testServer.passwordAuthentication(testServer.serverRootPassword)
-
-    //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.155')
-    log.info('server attached to network')
 
     //prepare node
     await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -94,6 +92,9 @@ test('teku validator import', async () => {
     await nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
     await nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
 
+    await serviceManager.manageServiceState(tekuClient.id, 'stopped')
+    await serviceManager.manageServiceState(tekuClient.id, 'started')
+
     await testServer.Sleep(30000)
     //import validator
     const extraVars = {
@@ -111,7 +112,7 @@ test('teku validator import', async () => {
     await testServer.Sleep(180000)
 
     //get logs
-    const status = await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${tekuClient.id}`)
+    const status = await nodeConnection.sshService.exec(`docker logs stereum-${tekuClient.id}`)
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
     const teku_api_keystore = await nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_keystore`)
@@ -136,10 +137,8 @@ test('teku validator import', async () => {
     expect(validator_api_bearer.stdout).toBeTruthy()
 
     //teku teku logs
-    //expect(status.stdout).toMatch(/Syncing/)
-    //expect(status.stdout).not.toMatch(/Eth1 service down/)
-    //expect(status.stdout).toMatch(/Loading \b(?:[1-9]|[1-9][0-9]{1,3})\b validator keys\.\.\./)
-    //expect(status.stdout).not.toMatch(/Loading \b[0]+\b validator keys\.\.\./)
+    expect(status.stdout).toMatch(/Syncing/)
+    expect(status.stdout).toMatch(/Loaded .{1} Validators/)
     expect(status.stdout).toMatch(/Endpoint http:\/\/stereum-${geth.id}:8551 is INVALID | Still syncing/)
 
     //check docker container

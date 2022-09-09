@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -15,8 +18,7 @@ test('nimbus validator import', async () => {
     const serverSettings = {
         name: 'Nimbus--integration-test--ubuntu-2204',
         image: 'ubuntu-22.04',
-        location: 'fsn1',
-        server_type: 'cpx21',
+        server_type: 'cpx31',
         start_after_create: true,
     }
     await testServer.create(serverSettings)
@@ -38,10 +40,6 @@ test('nimbus validator import', async () => {
 
     //change password
     await testServer.passwordAuthentication(testServer.serverRootPassword)
-
-    //attach to subnetwork
-    await testServer.attachToNetwork('eth2-prater', '10.10.0.145')
-    log.info('server attached to network')
 
     //prepare node
     await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -136,5 +134,6 @@ test('nimbus validator import', async () => {
     //check nimbus service logs
     expect(status.stdout).toMatch(/Eth1 chain monitoring failure, restarting/)
     expect(status.stdout).toMatch(/Parameter \[result\] expected JObject but got JNull/)
+    expect(status.stdout).toMatch(/Local validator attached/)
 
 })

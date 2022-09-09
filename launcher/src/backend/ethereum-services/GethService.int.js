@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
@@ -11,7 +14,6 @@ test('geth installation', async () => {
   const serverSettings = {
     name: 'Geth--integration-test--ubuntu-2204',
     image: 'ubuntu-22.04',
-    location: 'fsn1',
     server_type: 'cpx21',
     start_after_create: true
   }
