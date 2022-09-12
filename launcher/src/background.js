@@ -53,9 +53,11 @@ promiseIpc.on("connect", async (arg) => {
   nodeConnection.nodeConnectionParams = remoteHost;
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
   monitoring.nodeConnection.nodeConnectionParams = remoteHost;
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
+  monitoring.nodeConnectionProm.nodeConnectionParams = remoteHost;
+    await nodeConnection.establish(taskManager);
+    await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
+  await monitoring.nodeConnectionProm.establish();
   return 0;
 });
 
@@ -67,6 +69,8 @@ promiseIpc.on("reconnect", async () => {
       await taskManager.nodeConnection.establish();
     } else if (!monitoring.nodeConnection.sshService.connected) {
       await monitoring.nodeConnection.establish();
+    } else if (!monitoring.nodeConnectionProm.sshService.connected) {
+      await monitoring.nodeConnectionProm.establish();
     }
   } catch (err) {
     log.error("Couldn't reconnect:\n", err);
@@ -78,6 +82,7 @@ promiseIpc.on("checkConnection", async () => {
     await nodeConnection.sshService.exec("ls");
     await taskManager.nodeConnection.sshService.exec("ls");
     await monitoring.nodeConnection.sshService.exec("ls");
+    await monitoring.nodeConnectionProm.sshService.exec("ls");
   } catch (err) {
     return false;
   }
@@ -157,6 +162,11 @@ promiseIpc.on("startOneClickServices", async () => {
   const returnValue = await oneClickInstall.startServices();
   app.showExitPrompt = false;
   return returnValue;
+});
+
+//get data for whatever
+promiseIpc.on("getNodeStats", async () => {
+  return await monitoring.getNodeStats();
 });
 
 //get data for control cpu comp
