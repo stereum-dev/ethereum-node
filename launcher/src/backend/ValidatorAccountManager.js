@@ -244,7 +244,10 @@ export class ValidatorAccountManager {
         for(let client of validators){
             let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
             
-            const graffitiDir = (client.volumes.find(vol => vol.servicePath === '/opt/app/graffitis')).destinationPath + '/graffitis.yaml'
+            const graffitiVolume = (client.volumes.find(vol => vol.servicePath === '/opt/app/graffitis'))
+            let graffitiDir = ""
+            if(graffitiVolume)
+                graffitiDir = graffitiVolume.destinationPath + '/graffitis.yaml'
             let config = ""
             switch (service) {
                 case "lighthouse":
@@ -259,6 +262,10 @@ export class ValidatorAccountManager {
             
                 case "nimbus":
                     //Nimbus only supports Graffiti changes while running via their rest api
+                    let command = client.command.find(c => c.includes("--rest-port="))
+                    let port = command.replace("--rest-port=", "")
+                    config = `curl -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
+                    await this.nodeConnection.sshService.exec(config)
                     break;
             
                 case "teku":
