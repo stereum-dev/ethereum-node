@@ -109,6 +109,10 @@ class ControlService extends EventEmitter {
   async startOneClickServices() {
     return await this.promiseIpc.send("startOneClickServices");
   }
+  
+  async getNodeStats() {
+    return await this.promiseIpc.send("getNodeStats");
+  }
 
   async getServerVitals() {
     return await this.promiseIpc.send("getServerVitals");

@@ -19,7 +19,7 @@ This repository contains the code and scripts for Stereum 2.0
 After installing the launcher start it up and connect to a server of your choice. Take a look at the [guide](https://stereum.net/ethereum-node-setup/) to find out what server operating systems are supported and what you can do with Stereum!
 
 ## Download (latest)
-[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-stack)
+[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-flexible-rc2)
 
 
 ## Contribute
