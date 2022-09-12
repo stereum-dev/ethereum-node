@@ -97,7 +97,7 @@ export default {
       return { backgroundColor: "#316464" };
     },
     generalStyle() {
-      return { height: "40%" };
+      return { height: "55%" };
     },
     updateStyle() {
       return { height: "17%" };

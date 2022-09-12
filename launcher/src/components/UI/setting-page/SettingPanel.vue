@@ -28,7 +28,6 @@
                 v-for="item in generalItems"
                 :key="item.id"
                 :title="item.title"
-                :btnValue="item.btnValue"
                 :isColor="item.isColor"
                 :itemType="item.itemType"
                 :savedFlag="langIco"
@@ -155,7 +154,6 @@ export default {
           title: "Stereum - Testing Lane",
           isColor: "off",
           itemType: "update",
-          btnValue: "OFF",
         },
       ],
     };
