@@ -1,6 +1,6 @@
 <template>
-  <div class="modifyParent">
-    <div class="modifyBox">
+  <div class="addParent" :class="{ activeAddPanel: display }">
+    <div class="addBox">
       <div class="service">
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
@@ -51,20 +51,23 @@
             </div>
           </div>
         </div>
-        <div class="portModifyBox">
+        <div class="portAddBox">
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>PORT USED</span>
             <input type="text" v-model="port" placeholder="9000" />
           </div>
         </div>
-        <div class="clientModifyBox">
+        <div class="clientAddBox">
           <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
           <div class="connectionConfig">
             <span>{{ plugin.category }} Client</span>
             <div class="plusBtn">+</div>
           </div>
         </div>
+      </div>
+      <div class="cancelBtn" @click="$emit('cancelAdd')">
+        <span>Cancel</span>
       </div>
     </div>
   </div>
@@ -73,9 +76,10 @@
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
-  props: ["items"],
+  props: ["items", "display"],
   data() {
     return {
       modalActive: false,
@@ -91,6 +95,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
+    }),
+    ...mapWritableState(useNodeManage, {
+      actionContents: "actionContents",
     }),
     ...mapWritableState(useClickInstall, {
       installationPath: "installationPath",
@@ -114,7 +121,7 @@ export default {
 };
 </script>
 <style scoped>
-.modifyParent {
+.addParent {
   grid-column: 1;
   width: 100%;
   height: 100%;
@@ -124,8 +131,30 @@ export default {
   /* background-color: #606060; */
   justify-content: center;
   align-items: center;
+  position: relative;
+  animation: fadeIn 0.5s linear;
 }
-.modifyBox {
+@keyframes fadeIn {
+  0% {
+    position: absolute;
+    left: -200px;
+    opacity: 0;
+  }
+  50% {
+    position: absolute;
+    left: -100px;
+  }
+  100% {
+    position: absolute;
+    left: 0;
+    opacity: 1;
+  }
+}
+.activeAddPanel {
+  position: relative !important;
+  transition-duration: 2s !important;
+}
+.addBox {
   width: 95%;
   height: 98%;
   display: flex;
@@ -346,8 +375,8 @@ export default {
   padding: 0;
   padding-left: 4px;
 }
-.portModifyBox,
-.clientModifyBox {
+.portAddBox,
+.clientAddBox {
   width: 100%;
   height: 13%;
   background-color: #2b2b2b;
@@ -358,11 +387,11 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.portModifyBox img {
+.portAddBox img {
   width: 18%;
   opacity: 0.5;
 }
-.clientModifyBox img {
+.clientAddBox img {
   width: 16%;
   opacity: 0.5;
 }
@@ -436,6 +465,33 @@ export default {
 }
 .plusBtn:active {
   background-color: #1c3c33;
+  transform: scale(0.9);
+}
+.cancelBtn {
+  width: 80%;
+  height: 6%;
+  background-color: #2a2a2a;
+  color: #a8a8a8;
+  border-radius: 5px;
+  border: 1px solid #a8a8a8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  position: absolute;
+  bottom: 20px;
+}
+.cancelBtn:hover {
+  background-color: #d75442;
+  transition-duration: 0.2s;
+  color: #dfdfdf;
+}
+.cancelBtn:active {
+  background-color: #b84738;
+  transition-duration: 0.2s;
   transform: scale(0.9);
 }
 </style>

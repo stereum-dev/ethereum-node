@@ -4,10 +4,12 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <modify-panel
+          <add-panel
             v-if="displayCustomModifier"
+            :display="displayCustomModifier"
             :items="itemToInstall"
-          ></modify-panel>
+            @cancel-add="cancelAddProcess"
+          ></add-panel>
           <node-configuration
             v-else
             :configData="configData"
@@ -119,7 +121,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
+import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -135,7 +137,7 @@ export default {
     BaseModal,
     PresetModal,
     TaskManager,
-    ModifyPanel,
+    AddPanel,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -208,6 +210,11 @@ export default {
         this.selectedItemToRemove.push(item);
       }
     },
+    cancelAddProcess() {
+      this.itemToInstall = null;
+      this.displayCustomModifier = false;
+      this.newConfiguration.pop();
+    },
   },
 };
 </script>
@@ -241,6 +248,10 @@ export default {
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
+  position: relative;
+}
+.activeAddPanel {
+  left: 0 !important;
 }
 .preset-modal {
   width: 81.5%;
