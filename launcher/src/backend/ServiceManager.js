@@ -144,4 +144,20 @@ export class ServiceManager {
       return []
     })
   }
+
+  async chooseServiceAction(action, service){
+    switch (action) {
+      case "pruneGeth":
+        
+        break;
+    
+      case "reSync":
+        
+        break;
+  
+      default:
+        break;
+    }
+  }
 }
+
