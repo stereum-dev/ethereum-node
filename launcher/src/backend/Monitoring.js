@@ -117,14 +117,14 @@ export class Monitoring {
         serviceConfigs = args.length<1 ? serviceConfigs : serviceConfigs.filter((s) => args.includes(s.service));
         serviceConfigs = serviceConfigs.map((config) => {
           const newState = serviceStates.find(
-            (state) => state.Names.replace("stereum-", "") === config.id
+            (state) => (state.hasOwnProperty("Names") ? state.Names.replace("stereum-", "") : "") === config.id
           );
           return {
             service: config.service,
             state: newState ? newState.State : "exited",
             config: {
               serviceID: config.id,
-              instanceID: newState.Names,
+              instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
               command: config.command,
               configVersion: config.configVersion,
               image: config.image,
