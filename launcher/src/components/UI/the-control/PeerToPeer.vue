@@ -14,23 +14,22 @@
       </div>
     </div>
     <div class="vlaueType">
-      <span>{{ valPeer }}</span>
+      <span>{{ valPeer }} %</span>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
-  data() {
-    return {
-      // data is dummy, for wiring it has to change to null
-      valPeer: 90,
-    };
-  },
   computed: {
     verticalBar() {
       return { height: this.valPeer + "%" };
     },
+    ...mapState(useControlStore, {
+      valPeer: "valPeer",
+    }),
   },
 };
 </script>

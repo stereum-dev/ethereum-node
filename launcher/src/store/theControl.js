@@ -15,6 +15,7 @@ export const useControlStore = defineStore("theControl", {
       tx: null,
       readValue: null,
       writeValue: null,
+      valPeer: null,
     };
   },
   actions: {},
