@@ -12,7 +12,7 @@
           <img
             :src="item.sIcon"
             alt="icon"
-            @click="selectedItem(item)"
+            @dblclick="selectedItem(item)"
             :class="{ 'chosen-plugin': item.active }"
           />
         </div>
@@ -54,7 +54,7 @@ export default {
   methods: {
     selectedItem(item) {
       item.active = !item.active;
-      this.$emit("itemSelect", item);
+      this.$emit("selectItem", item);
     },
   },
 };
@@ -145,7 +145,7 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  border: 2px solid rgb(64, 168, 243);
+  border: 2px solid rgb(252, 107, 102);
   border-radius: 10px;
 }
 </style>

@@ -50,23 +50,24 @@
 </template>
 <script>
 import { mapWritableState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
 import { useNodeStore } from "@/store/theNode";
-import { useServices } from "@/store/services";
 export default {
   props: ["confirmChanges"],
   computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-    }),
     ...mapWritableState(useNodeStore, {
       selectedItemToRemove: "selectedItemToRemove",
+    }),
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
     }),
   },
   methods: {
     clickOnRemoveBtn() {
-      this.installedServices = this.installedServices.filter((item) => {
-        return !this.selectedItemToRemove.map((e) => e.id).includes(item.id);
-      });
+      this.newConfiguration = this.newConfiguration.filter(
+        (item) => !this.selectedItemToRemove.includes(item)
+      );
+      this.selectedItemToRemove = [];
     },
   },
 };

@@ -40,7 +40,7 @@
                 )
               "
               @modal-view="showModal"
-              @itemSelect="serviceItemSelection"
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
           <div
@@ -56,7 +56,7 @@
                   (service) => service.category === 'consensus'
                 )
               "
-              @itemSelect="serviceItemSelection"
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
           <div
@@ -72,7 +72,7 @@
                   (service) => service.category === 'validator'
                 )
               "
-              @itemSelect="serviceItemSelection"
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
         </div>
@@ -92,7 +92,7 @@
                   (service) => service.category === 'service'
                 )
               "
-              @itemSelect="serviceItemSelection"
+              @select-item="selectedServiceToRemove"
             >
             </service-plugin>
           </div>
@@ -217,17 +217,16 @@ export default {
       this.displayCustomModifier = false;
       this.newConfiguration.pop();
     },
-    serviceItemSelection(item) {
-      if (
-        this.selectedItemToRemove.map((element) => element.id).includes(item.id)
-      ) {
-        this.selectedItemToRemove = this.selectedItemToRemove.filter(
-          (element) => element.id != item.id
-        );
-      } else {
+    selectedServiceToRemove(item) {
+      if (item.active) {
         this.selectedItemToRemove.push(item);
+      } else {
+        this.selectedItemToRemove = this.selectedItemToRemove.filter(
+          (el) => el.id !== item.id
+        );
       }
     },
+
     cancelAddProcess() {
       this.itemToInstall = null;
       this.displayCustomModifier = false;

@@ -3,7 +3,7 @@ export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
       newConfiguration: [],
-      selectedItemToRemove: {},
+      selectedItemToRemove: [],
       clickPresets: [
         {
           id: 1,
