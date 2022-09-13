@@ -819,6 +819,8 @@ export class NodeConnection {
   async checkUpdates() {
     try {
       let response = await axios.get('https://stereum.net/downloads/updates.json')
+      if(global.branch === "main")
+        response.data.stereum.push({name: "HEAD", commit: 'main'})
       log.debug(response.data)
       return response.data
     } catch (err) {
