@@ -34,7 +34,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
         },
       ],
-      actionContents: null,
+      actionContents: [],
     };
   },
   getters: {},

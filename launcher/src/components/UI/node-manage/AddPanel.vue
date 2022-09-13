@@ -66,8 +66,13 @@
           </div>
         </div>
       </div>
-      <div class="cancelBtn" @click="$emit('cancelAdd')">
-        <span>Cancel</span>
+      <div class="btnBox">
+        <div class="cancelBtn" @click="$emit('cancelAdd')">
+          <span>Cancel</span>
+        </div>
+        <div class="addBtn" @click="$emit('saveConfig')">
+          <span>ADD</span>
+        </div>
       </div>
     </div>
   </div>
@@ -155,8 +160,8 @@ export default {
   transition-duration: 2s !important;
 }
 .addBox {
-  width: 95%;
-  height: 98%;
+  width: 98%;
+  height: 99%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -229,6 +234,7 @@ export default {
   height: 13%;
   border-radius: 5px;
   background-color: #316355;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -277,9 +283,10 @@ export default {
   width: 100%;
   height: 13%;
   background-color: #315e45;
-  background-color: #2b2b2b;
+  background-color: #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 10px 0 5px 5px;
-  margin-top: 5px;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -379,9 +386,10 @@ export default {
 .clientAddBox {
   width: 100%;
   height: 13%;
-  background-color: #2b2b2b;
+  background-color: #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 5px;
-  margin-top: 5px;
+  margin-top: 8px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
@@ -414,8 +422,8 @@ export default {
 .portConfig input {
   width: 99%;
   height: 45%;
-  background-color: rgb(20, 20, 20);
-  border: none;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
   text-align: center;
   font-size: 0.7rem;
@@ -467,22 +475,58 @@ export default {
   background-color: #1c3c33;
   transform: scale(0.9);
 }
-.cancelBtn {
-  width: 80%;
+.btnBox {
+  width: 100%;
   height: 6%;
-  background-color: #2a2a2a;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  position: absolute;
+  bottom: 20px;
+}
+.addBtn {
+  width: 40%;
+  height: 95%;
+  background-color: #0d4f46;
   color: #a8a8a8;
   border-radius: 5px;
-  border: 1px solid #a8a8a8;
+  border: 1px solid #11675c;
+  box-shadow: 0 1px 3px 1px #262626;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-align: center;
-  position: absolute;
-  bottom: 20px;
+}
+.addBtn:hover {
+  background-color: #116b5f;
+  transition-duration: 0.2s;
+  color: #dfdfdf;
+}
+.addBtn:active {
+  background-color: #0d4f46;
+  transition-duration: 0.2s;
+  transform: scale(0.9);
+}
+.cancelBtn {
+  width: 40%;
+  height: 95%;
+  background-color: #2a2a2a;
+  color: #a8a8a8;
+  border-radius: 5px;
+  border: 1px solid #414141;
+  box-shadow: 0 1px 3px 1px #1c1c1c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
 }
 .cancelBtn:hover {
   background-color: #d75442;

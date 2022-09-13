@@ -9,6 +9,7 @@
             :display="displayCustomModifier"
             :items="itemToInstall"
             @cancel-add="cancelAddProcess"
+            @save-config="saveServiceConfiguration"
           ></add-panel>
           <node-configuration
             v-else
@@ -103,7 +104,11 @@
           ></change-confirm>
         </div>
         <div class="sidebar">
-          <sidebar-manage :startDrag="startDrag" :allServices="allServices">
+          <sidebar-manage
+            :startDrag="startDrag"
+            :allServices="allServices"
+            @add-service="addNewService"
+          >
           </sidebar-manage>
         </div>
         <div class="footer" onmousedown="return false">
@@ -163,6 +168,7 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+      actionContents: "actionContents",
     }),
   },
   mounted() {
@@ -198,6 +204,18 @@ export default {
       item.modifierPanel = true;
       this.itemToInstall = item;
       this.displayCustomModifier = item.modifierPanel;
+    },
+    addNewService(item) {
+      if (this.newConfiguration.some((el) => el.id == item.id)) return;
+      this.newConfiguration.push(item);
+      item.modifierPanel = true;
+      this.itemToInstall = item;
+      this.displayCustomModifier = item.modifierPanel;
+    },
+    saveServiceConfiguration() {
+      this.itemToInstall = null;
+      this.displayCustomModifier = false;
+      this.newConfiguration.pop();
     },
     serviceItemSelection(item) {
       if (

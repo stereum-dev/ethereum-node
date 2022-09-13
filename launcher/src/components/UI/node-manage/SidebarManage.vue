@@ -2,7 +2,7 @@
   <div>
     <div @click="showSidebar = !showSidebar" class="toggle-btn">
       <img
-        onmousedown="return false"
+        @mousedown.prevent.stop
         v-if="showSidebar"
         class="hidden-icon"
         width="88"
@@ -10,7 +10,7 @@
         alt=""
       />
       <img
-        onmousedown="return false"
+        @mousedown.prevent.stop
         v-else
         class="show-icon"
         width="88"
@@ -43,6 +43,7 @@
           </div>
           <div
             @dragstart="startDrag($event, item)"
+            @dblclick="$emit('addService', item)"
             class="cloud-box"
             v-for="item in allServices"
             :key="item.id"
