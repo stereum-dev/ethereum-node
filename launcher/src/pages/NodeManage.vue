@@ -3,8 +3,16 @@
     <node-header id="head" onmousedown="return false"></node-header>
     <node-bg>
       <div class="manage-parent">
-        <div class="config-box" onmousedown="return false">
+        <div class="config-box">
+          <add-panel
+            v-if="displayCustomModifier"
+            :display="displayCustomModifier"
+            :items="itemToInstall"
+            @cancel-add="cancelAddProcess"
+            @save-config="saveServiceConfiguration"
+          ></add-panel>
           <node-configuration
+            v-else
             :configData="configData"
             @modal-preset="openPresetModal"
           ></node-configuration>
@@ -26,9 +34,13 @@
           >
             <drop-zone
               :title="'execution'"
-              :list="newConfiguration.filter(service => service.category === 'execution')"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'execution'
+                )
+              "
               @modal-view="showModal"
-              @itemSelect="serviceItemSelection"
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
           <div
@@ -39,8 +51,12 @@
             <drop-zone
               @modal-view="showModal"
               :title="'consensus'"
-              :list="newConfiguration.filter(service => service.category === 'consensus')"
-              @itemSelect="serviceItemSelection"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'consensus'
+                )
+              "
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
           <div
@@ -51,8 +67,12 @@
             <drop-zone
               @modal-view="showModal"
               :title="'validator'"
-              :list="newConfiguration.filter(service => service.category === 'validator')"
-              @itemSelect="serviceItemSelection"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'validator'
+                )
+              "
+              @select-item="selectedServiceToRemove"
             ></drop-zone>
           </div>
         </div>
@@ -67,8 +87,12 @@
             @dragover.prevent
           >
             <service-plugin
-              :list="newConfiguration.filter(service => service.category === 'service')"
-              @itemSelect="serviceItemSelection"
+              :list="
+                newConfiguration.filter(
+                  (service) => service.category === 'service'
+                )
+              "
+              @select-item="selectedServiceToRemove"
             >
             </service-plugin>
           </div>
@@ -83,6 +107,7 @@
           <sidebar-manage
             :startDrag="startDrag"
             :allServices="allServices"
+            @add-service="addNewService"
           >
           </sidebar-manage>
         </div>
@@ -101,6 +126,7 @@ import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vu
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
+import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -116,6 +142,7 @@ export default {
     BaseModal,
     PresetModal,
     TaskManager,
+    AddPanel,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -125,6 +152,8 @@ export default {
       isModalActive: false,
       presetModal: false,
       modalItems: [],
+      displayCustomModifier: false,
+      itemToInstall: null,
     };
   },
   computed: {
@@ -139,11 +168,13 @@ export default {
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
-    })
+      actionContents: "actionContents",
+    }),
   },
-  mounted(){
-    this.newConfiguration = this.installedServices
+  mounted() {
+    this.newConfiguration = this.installedServices;
   },
+
   methods: {
     showModal(data) {
       this.isModalActive = true;
@@ -168,15 +199,38 @@ export default {
     onDrop(event, list) {
       const itemId = event.dataTransfer.getData("itemId");
       const item = { ...list.find((item) => item.id == itemId) };
-      if(this.newConfiguration.some(item => item.id == itemId)) return;
-        this.newConfiguration.push(item)
+      if (this.newConfiguration.some((item) => item.id == itemId)) return;
+      this.newConfiguration.push(item);
+      item.modifierPanel = true;
+      this.itemToInstall = item;
+      this.displayCustomModifier = item.modifierPanel;
     },
-    serviceItemSelection(item) {
-      if(this.selectedItemToRemove.map(element => element.id).includes(item.id)){
-          this.selectedItemToRemove = this.selectedItemToRemove.filter(element => element.id != item.id)
-      }else{
-          this.selectedItemToRemove.push(item)
+    addNewService(item) {
+      if (this.newConfiguration.some((el) => el.id == item.id)) return;
+      this.newConfiguration.push(item);
+      item.modifierPanel = true;
+      this.itemToInstall = item;
+      this.displayCustomModifier = item.modifierPanel;
+    },
+    saveServiceConfiguration() {
+      this.itemToInstall = null;
+      this.displayCustomModifier = false;
+      this.newConfiguration.pop();
+    },
+    selectedServiceToRemove(item) {
+      if (item.active) {
+        this.selectedItemToRemove.push(item);
+      } else {
+        this.selectedItemToRemove = this.selectedItemToRemove.filter(
+          (el) => el.id !== item.id
+        );
       }
+    },
+
+    cancelAddProcess() {
+      this.itemToInstall = null;
+      this.displayCustomModifier = false;
+      this.newConfiguration.pop();
     },
   },
 };
@@ -199,7 +253,7 @@ export default {
   height: 91%;
   border: 4px solid #979797;
   border-radius: 0 35px 10px 10px;
-  grid-template-columns: 18% 46% 20% 16%;
+  grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 31% 32% 32% 5%;
   grid-row-gap: 1px;
 }
@@ -211,6 +265,10 @@ export default {
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;
+  position: relative;
+}
+.activeAddPanel {
+  left: 0 !important;
 }
 .preset-modal {
   width: 81.5%;

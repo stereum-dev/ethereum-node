@@ -9,9 +9,16 @@
         <div class="title-box">
           <span class="service-name">GRAFANA</span>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" />
+            <img
+              src="/img/icon/service-icons/internet.png"
+              alt="icon"
+              @click="openBrowser"
+            />
+            <img
+              src="/img/icon/service-icons/github1.png"
+              alt="icon"
+              @click="openGitHub"
+            />
           </div>
         </div>
       </div>
@@ -47,6 +54,14 @@ export default {
         if (item.name === "Grafana") this.grafanaService = item;
       });
       this.isGrafanaAvailable = true;
+    },
+    openBrowser() {
+      let url = "https://grafana.com/";
+      window.open(url, "_blank");
+    },
+    openGitHub() {
+      let url = "https://github.com/grafana/grafana";
+      window.open(url, "_blank");
     },
   },
 };
@@ -93,6 +108,7 @@ export default {
 .grafana-header {
   width: 100%;
   height: 20%;
+  margin-top: 7px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   position: relative;
@@ -146,8 +162,9 @@ export default {
 }
 .service-option img {
   width: 11%;
-  height: 70%;
+  height: 75%;
   margin-right: 15px;
+  cursor: pointer;
 }
 
 .btn-box {

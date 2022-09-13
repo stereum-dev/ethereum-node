@@ -17,7 +17,7 @@
         <img
           :src="item.hIcon"
           alt="icon"
-          @click="selectedItem(item)"
+          @dblclick="selectedItem(item)"
           :class="{ 'chosen-plugin': item.active }"
         />
       </div>
@@ -46,7 +46,7 @@ export default {
   methods: {
     selectedItem(item) {
       item.active = !item.active;
-      this.$emit("itemSelect", item);
+      this.$emit("selectItem", item);
     },
   },
 };
