@@ -31,6 +31,7 @@ export default {
       valPeer: "valPeer",
       code: "code",
       syncstatus: "syncstatus",
+      storagestatus: "storagestatus",
     }),
   },
   mounted() {
@@ -52,20 +53,16 @@ export default {
         // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
         const nodeStats = await ControlService.getNodeStats();
 
-        // console.log(
-        //   "@FRONTEND: data for wiring controls",
-        //   nodeStats.data.syncstatus
-        // );
+        // console.log("@FRONTEND: data for wiring controls", nodeStats);
 
         if (nodeStats) {
           try {
-            console.log(nodeStats.data.syncstatus);
             this.code = nodeStats.code;
             this.valPeer = nodeStats.data.p2pstatus.valPeer;
             this.syncstatus = nodeStats.data.syncstatus;
+            this.storagestatus = nodeStats.data.storagestatus;
           } catch (e) {}
         }
-
 
         const response = await ControlService.getServerVitals();
         if (response) {
