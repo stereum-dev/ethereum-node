@@ -43,6 +43,7 @@
               "
               @modal-view="showModal"
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -59,6 +60,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -75,6 +77,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
         </div>
@@ -95,6 +98,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             >
             </service-plugin>
           </div>
@@ -230,6 +234,9 @@ export default {
           (el) => el.id !== item.id
         );
       }
+    },
+    selectedServiceToModify(item) {
+      
     },
 
     cancelAddProcess() {

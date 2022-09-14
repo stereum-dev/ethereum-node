@@ -12,7 +12,8 @@
           <img
             :src="item.sIcon"
             alt="icon"
-            @dblclick="selectedItem(item)"
+            @mouseup.right="selectedItem(item)"
+            @click="modifyItem(item)"
             :class="{ 'chosen-plugin': item.active }"
           />
         </div>
@@ -55,6 +56,9 @@ export default {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    modifyItem(item) {
+      this.$emit("modifyItem", item);
     },
   },
 };

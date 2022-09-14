@@ -11,7 +11,8 @@
         <img
           :src="item.hIcon"
           alt="icon"
-          @dblclick="selectedItem(item)"
+          @mouseup.right="selectedItem(item)"
+          @click="modifyItem(item)"
           :class="{ 'chosen-plugin': item.active }"
         />
       </div>
@@ -25,7 +26,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 
@@ -35,7 +36,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(useServices, {
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
     }),
     ...mapWritableState(useNodeManage, {
@@ -46,6 +47,9 @@ export default {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    modifyItem(item) {
+      this.$emit("modifyItem", item);
     },
   },
 };
@@ -107,9 +111,7 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  width: 55px;
-  height: 55px;
-  border: 2px solid rgb(64, 168, 243);
+  border: 2px solid rgb(255, 70, 70);
   border-radius: 7px;
 }
 .service-arrow {
@@ -118,5 +120,9 @@ export default {
 }
 .service-arrow:active {
   box-shadow: none;
+}
+.modify-plugin {
+  border: 2px solid rgb(221, 206, 78);
+  border-radius: 7px;
 }
 </style>
