@@ -87,7 +87,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
-  props: ["items", "display"],
+  props: ["items"],
   data() {
     return {
       modalActive: false,
@@ -141,7 +141,7 @@ export default {
   align-items: center;
   position: absolute;
   left: 0;
-  transition-duration: 200ms;
+  transition-duration: 500ms;
 }
 
 .activeAddPanel {

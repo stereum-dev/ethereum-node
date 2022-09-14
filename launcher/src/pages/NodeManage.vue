@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide" :duration="{ enter: 500, leave: 500 }">
+          <Transition name="slide" >
             <add-panel
               v-if="displayCustomAddPanel"
               :items="itemToInstall"
@@ -260,12 +260,14 @@ export default {
       });
     },
     cancelModifyProcess() {
+      this.itemToInstall.modifierPanel = false;
+      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
       this.itemToInstall = null;
-      this.displayCustomModifyPanel = false;
     },
     saveServiceModification() {
+      this.itemToInstall.modifierPanel = false;
+      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
       this.itemToInstall = null;
-      this.displayCustomModifyPanel = false;
     },
   },
 };

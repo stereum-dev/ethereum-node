@@ -34,7 +34,7 @@ import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
-  props: ["list"],
+  props: ["list", "modifier"],
   data() {
     return {};
   },

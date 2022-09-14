@@ -35,20 +35,7 @@ export default {
   components: {
     ManageTrapezoid,
   },
-  props: {
-    title: {
-      type: String,
-      required: true,
-      default: "Title",
-    },
-    list: {
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      },
-    },
-  },
+  props: ["title", "list"],
   data() {
     return {
       itemsList: [],
@@ -68,11 +55,12 @@ export default {
             ...i,
             modifierPanel: true,
           };
+        } else {
+          return {
+            ...i,
+            modifierPanel: false,
+          };
         }
-        return {
-          ...i,
-          modifierPanel: false,
-        };
       });
       this.$emit("modifyItem", item);
     },
