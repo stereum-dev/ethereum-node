@@ -18,6 +18,7 @@ export const useControlStore = defineStore("theControl", {
       valPeer: null,
       code: null,
       syncstatus: [],
+      storagestatus: [],
     };
   },
   actions: {},
