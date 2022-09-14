@@ -220,7 +220,7 @@ export default {
   height: 13%;
   border-radius: 5px;
   background-color: #316355;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  box-shadow: 1px 1px 3px 1px rgb(27, 27, 27);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

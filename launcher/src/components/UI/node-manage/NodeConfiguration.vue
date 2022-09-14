@@ -282,7 +282,7 @@ export default {
   background-color: #292929;
   font-size: 0.7rem;
   font-weight: 700;
-  color: rgb(196, 196, 196);
+  color: rgb(144, 144, 144);
   border: 1px solid #787878;
   margin-top: 5px;
   border-radius: 8px;
@@ -298,12 +298,14 @@ export default {
   width: 100%;
   font-size: 0.7rem;
   font-weight: 700;
-  color: rgb(196, 196, 196);
+  color: rgb(147, 147, 147);
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover,
 .config-btns .config-priority:hover {
   background-color: #2c2c2c;
+  border: 1px solid #a0a0a0;
+  color: #a0a0a0;
   transform: scale(1.02);
 }
 .config-btns .config-add:active,
