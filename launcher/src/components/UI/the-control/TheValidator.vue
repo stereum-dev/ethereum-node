@@ -124,6 +124,7 @@ hr {
   align-items: center;
   font-size: 55%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .gewiPart {
   width: 100%;
@@ -156,7 +157,7 @@ hr {
   align-items: center;
   width: 100%;
   height: 50%;
-  font-size: 50%;
+  font-size: 70%;
   font-weight: bold;
   color: #74fa65;
 }
@@ -183,6 +184,7 @@ hr {
   height: 100%;
   font-size: 50%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .theValidatorBox_right {
   display: flex;

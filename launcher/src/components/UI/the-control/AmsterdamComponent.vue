@@ -103,6 +103,7 @@ export default {
   height: 100%;
   justify-content: center;
   align-content: center;
+  color: #c1c1c1;
 }
 .icoTitle {
   display: flex;
