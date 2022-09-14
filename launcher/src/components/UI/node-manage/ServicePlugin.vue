@@ -17,8 +17,12 @@
         <img
           :src="item.hIcon"
           alt="icon"
-          @dblclick="selectedItem(item)"
-          :class="{ 'chosen-plugin': item.active }"
+          @mouseup.right="selectedItem(item)"
+          @click="selectToModify(item)"
+          :class="{
+            'chosen-plugin': item.active,
+            'modifying-plugin': item.modifierPanel,
+          }"
         />
       </div>
     </div>
@@ -31,7 +35,7 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 
 export default {
@@ -39,14 +43,30 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(useServices, {
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
     }),
   },
+  mounted() {},
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    selectToModify(el) {
+      // this.installedServices = this.installedServices.map((i) => {
+      //   if (el.id == i.id) {
+      //     return {
+      //       ...i,
+      //       modifying: true,
+      //     };
+      //   }
+      //   return {
+      //     ...i,
+      //     modifying: false,
+      //   };
+      // });
+      this.$emit("selectModify", el);
     },
   },
 };
@@ -110,7 +130,7 @@ export default {
 .chosen-plugin {
   width: 55px;
   height: 55px;
-  border: 2px solid rgb(64, 168, 243);
+  border: 2px solid rgb(253, 81, 81);
   border-radius: 7px;
 }
 .service-arrow {
@@ -119,5 +139,9 @@ export default {
 }
 .service-arrow:active {
   box-shadow: none;
+}
+.modifying-plugin {
+  border: 2px solid rgb(255, 255, 0);
+  border-radius: 10px;
 }
 </style>

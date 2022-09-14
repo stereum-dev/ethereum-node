@@ -43,6 +43,7 @@
               "
               @modal-view="showModal"
               @select-item="selectedServiceToRemove"
+              @select-modify="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -59,6 +60,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @select-modify="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -75,6 +77,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @select-modify="selectedServiceToModify"
             ></drop-zone>
           </div>
         </div>
@@ -95,6 +98,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @select-modify="selectedServiceToModify"
             >
             </service-plugin>
           </div>
@@ -134,8 +138,8 @@ import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
-import { useNodeManage } from "../store/nodeManage";
 export default {
   components: {
     SidebarManage,
@@ -159,6 +163,7 @@ export default {
       displayCustomAddPanel: false,
       displayCustomModifyPanel: false,
       itemToInstall: null,
+      modifyResult: [],
     };
   },
   computed: {
@@ -176,10 +181,9 @@ export default {
       actionContents: "actionContents",
     }),
   },
-  mounted() {
+  created() {
     this.newConfiguration = this.installedServices;
   },
-
   methods: {
     showModal(data) {
       this.isModalActive = true;
@@ -206,16 +210,16 @@ export default {
       const item = { ...list.find((item) => item.id == itemId) };
       if (this.newConfiguration.some((item) => item.id == itemId)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addServicePanel = true;
       this.itemToInstall = item;
-      this.displayCustomAddPanel = item.modifierPanel;
+      this.displayCustomAddPanel = item.addServicePanel;
     },
     addNewService(item) {
       if (this.newConfiguration.some((el) => el.id == item.id)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addServicePanel = true;
       this.itemToInstall = item;
-      this.displayCustomAddPanel = item.modifierPanel;
+      this.displayCustomAddPanel = item.addServicePanel;
     },
     saveServiceConfiguration() {
       this.itemToInstall = null;
@@ -231,11 +235,22 @@ export default {
         );
       }
     },
-
     cancelAddProcess() {
       this.itemToInstall = null;
       this.displayCustomAddPanel = false;
       this.newConfiguration.pop();
+    },
+    selectedServiceToModify(el) {
+      this.installedServices = this.installedServices.map((i) => {
+        if (i.id == el.id) {
+          i.modiferPanel = true;
+        }
+        // return {
+        //   ...i,
+        //   modifying: false,
+        // };
+      });
+      console.log(this.newConfiguration);
     },
   },
 };
@@ -267,6 +282,7 @@ export default {
   color: white;
   width: 100%;
   height: 100%;
+  background-color: #606060;
   grid-column: 1;
   grid-row: 1/4;
   align-self: center;

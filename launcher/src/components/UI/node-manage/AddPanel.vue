@@ -5,7 +5,10 @@
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
           <span class="serviceName">{{ plugin.name }}</span>
-          <span class="category">{{ plugin.category }} Client</span>
+          <p class="category">
+            {{ plugin.category }}
+            <span v-if="plugin.category !== 'service'">Client</span>
+          </p>
         </div>
       </div>
       <div class="configBox">
@@ -58,10 +61,17 @@
             <input type="text" v-model="port" placeholder="9000" />
           </div>
         </div>
-        <div class="clientAddBox">
+        <div
+          class="clientAddBox"
+          v-if="
+            plugin.category === 'consensus' || plugin.category === 'validator'
+          "
+        >
           <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
           <div class="connectionConfig">
-            <span>{{ plugin.category }} Client</span>
+            <span>
+              {{ plugin.category }}
+            </span>
             <div class="plusBtn">+</div>
           </div>
         </div>
@@ -141,7 +151,6 @@ export default {
   transition-duration: 500ms;
 }
 
-
 .addBox {
   width: 98%;
   height: 99%;
@@ -175,7 +184,7 @@ export default {
   align-items: center;
 }
 
-.service-details span:first-child {
+.service-details span {
   width: 100%;
   height: 60%;
   text-align: left;
@@ -188,7 +197,20 @@ export default {
   text-overflow: ellipsis;
   align-self: center;
 }
-.service-details span:last-child {
+.service-details p {
+  width: max-content;
+  height: 40%;
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: flex-start;
+}
+.service-details p span {
   width: max-content;
   height: 40%;
   text-align: left;
@@ -422,6 +444,7 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
+
 .connectionConfig span {
   width: max-content;
   height: 30%;
