@@ -93,6 +93,7 @@ export default {
 .baseFeeBox_title span {
   font-size: 40%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .feeValue {
   width: 70%;
@@ -103,6 +104,7 @@ export default {
   background: #181717;
   border-radius: 10px;
   padding: 5%;
+  color: #c1c1c1;
 }
 .ethIco {
   width: 30%;

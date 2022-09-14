@@ -89,6 +89,7 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .storageProcPart {
   width: 70%;

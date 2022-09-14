@@ -25,17 +25,15 @@
   </div>
 </template>
 <script>
-import { mapState } from 'pinia';
-import { useControlStore } from '../../../store/theControl';
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
-
   computed: {
     ...mapState(useControlStore, {
-      writeValue:"writeValue",
-      readValue:"readValue"
+      writeValue: "writeValue",
+      readValue: "readValue",
     }),
-    },
-
+  },
 };
 </script>
 <style scoped>
@@ -47,6 +45,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   height: 100%;
+  color: #c1c1c1;
 }
 .dick-speed_box {
   width: 100%;
@@ -115,7 +114,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 35%;
-  font-size: 90%;
+  font-size: 75%;
   font-weight: 800;
 }
 .write_val {

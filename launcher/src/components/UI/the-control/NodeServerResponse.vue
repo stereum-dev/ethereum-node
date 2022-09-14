@@ -50,6 +50,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   height: 100%;
+  color: #c1c1c1;
 }
 .nodeResponse_ttl {
   width: 100%;
@@ -60,6 +61,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  color: #c1c1c1;
 }
 .nodeResponse_ttl span {
   font-size: 10%;

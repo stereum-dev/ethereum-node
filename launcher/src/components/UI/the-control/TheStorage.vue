@@ -86,6 +86,7 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .storage-icon_container {
   display: flex;

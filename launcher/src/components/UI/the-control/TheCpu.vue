@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { mapState } from 'pinia';
-import { useControlStore } from '../../../store/theControl';
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
@@ -38,10 +38,10 @@ export default {
     ...mapState(useControlStore, {
       cpu: "cpu",
     }),
-    getStyle(){
-      return {width: (100-this.cpu)+'%'}
-    }
-  }
+    getStyle() {
+      return { width: 100 - this.cpu + "%" };
+    },
+  },
 };
 </script>
 
@@ -89,6 +89,7 @@ export default {
   align-items: center;
   font-size: 60%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .cpuCountPart {
   display: flex;
@@ -109,6 +110,7 @@ export default {
   font-size: 70%;
   font-weight: bold;
   color: #eee;
+  color: #c1c1c1;
 }
 .cpuProccessBarCont {
   width: 90%;

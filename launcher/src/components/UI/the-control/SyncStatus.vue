@@ -8,11 +8,7 @@
         <span>SYNC STATUS</span>
       </div>
       <div class="sync-box_value">
-        <div
-          v-for="item in syncStatusItems"
-          :key="item.id"
-          class="sync-box_row"
-        >
+        <div v-for="item in syncstatus" :key="item.id" class="sync-box_row">
           <div class="sync-box-row_title">
             <span>{{ item.title }}</span>
           </div>
@@ -25,11 +21,17 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
       syncIcoSituation: false,
       syncIcoError: false,
+      prysm: "",
+      geth: "",
+      lighthaouse: "",
+      teko: "",
       syncIco: [
         {
           id: 1,
@@ -48,23 +50,17 @@ export default {
         },
       ],
       // syncStatusItems are dummy, for wire the have to change but the best stract. for the design is this one
-      syncStatusItems: [
-        {
-          id: 1,
-          title: "GETH",
-          frstVal: 123456,
-          scndVal: 654321,
-        },
-        {
-          id: 2,
-          title: "LIGHTHOUSE",
-          frstVal: 123456,
-          scndVal: 654321,
-        },
-      ],
     };
   },
+
+  updated() {
+    this.syncControler();
+  },
   computed: {
+    ...mapState(useControlStore, {
+      code: "code",
+      syncstatus: "syncstatus",
+    }),
     errorIco() {
       return this.syncIco[0].icon;
     },
@@ -87,6 +83,18 @@ export default {
       } else {
         this.syncIcoError = true;
         return this.errorIco;
+      }
+    },
+    syncControler() {
+      if (this.code === null) {
+        this.syncIcoSituation = false;
+        this.syncIcoError = false;
+      } else if (this.code === 0) {
+        this.syncIcoSituation = true;
+        this.syncIcoError = false;
+      } else if (this.code !== 0 && this.code !== null) {
+        this.syncIcoSituation = false;
+        this.syncIcoError = true;
       }
     },
   },
@@ -126,6 +134,7 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 50%;
+  color: #c1c1c1;
   font-weight: bold;
 }
 .sync-icon_container {
@@ -140,11 +149,13 @@ export default {
 }
 .sync-box_value {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 70%;
-  height: 100%;
+  height: 95%;
   flex-direction: column;
+  overflow-y: auto;
+  color: #c1c1c1;
 }
 .sync-box_row {
   display: flex;
@@ -152,7 +163,7 @@ export default {
   height: 23%;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid #eee;
+  border: 1px solid #c1c1c1;
   border-radius: 5px;
   padding: 2% 2%;
   margin: 1% 0;

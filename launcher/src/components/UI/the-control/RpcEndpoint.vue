@@ -74,6 +74,7 @@ export default {
   height: 95%;
   border-radius: 10px;
   flex-direction: column;
+  color: #c1c1c1;
 }
 .dialogBox {
   display: flex;
