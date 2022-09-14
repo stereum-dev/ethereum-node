@@ -57,6 +57,7 @@ export default {
 
         if (nodeStats) {
           try {
+            console.log(nodeStats.data.syncstatus);
             this.code = nodeStats.code;
             this.valPeer = nodeStats.data.p2pstatus.valPeer;
             this.syncstatus = nodeStats.data.syncstatus;

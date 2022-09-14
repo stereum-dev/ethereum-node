@@ -114,7 +114,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 35%;
-  font-size: 90%;
+  font-size: 75%;
   font-weight: 800;
 }
 .write_val {
