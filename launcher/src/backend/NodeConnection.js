@@ -880,17 +880,16 @@ export class NodeConnection {
   }
 
   async restartServices(seconds){
-    console.log(seconds)
-    // try {
-    //   await this.runPlaybook("Restart Services", {
-    //     stereum_role: 'restart-services',
-    //     stereum_args: {
-    //       restart_time_scope: seconds
-    //     }
-    //   })
-    // } catch (err) {
-    //   log.error("Error occurred during restarting services:\n", err)
-    // }
+    try {
+      await this.runPlaybook("Restart Services", {
+        stereum_role: 'restart-services',
+        stereum_args: {
+          restart_time_scope: seconds
+        }
+      })
+    } catch (err) {
+      log.error("Error occurred during restarting services:\n", err)
+    }
   }
 
   async getCurrentStereumVersion() {
