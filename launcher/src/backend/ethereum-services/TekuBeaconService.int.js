@@ -95,7 +95,7 @@ test('teku validator import', async () => {
     await serviceManager.manageServiceState(tekuClient.id, 'stopped')
     await serviceManager.manageServiceState(tekuClient.id, 'started')
 
-    await testServer.Sleep(30000)
+    await testServer.Sleep(60000)
     //import validator
     const extraVars = {
       stereum_role: 'validator-import-api', validator_service: tekuClient.id , validator_keys:[{

@@ -62,7 +62,7 @@ test('nethermind installationm', async () => {
     await serviceManager.manageServiceState(executionClient.id, 'started')
 
     // get logs
-    await testServer.Sleep(10000)
+    await testServer.Sleep(30000)
     const status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
