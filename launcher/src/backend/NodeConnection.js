@@ -830,11 +830,14 @@ export class NodeConnection {
 
   async runAllUpdates(commit) {
     //stereum and service updates
+    let seconds = 0
     try{
-      await this.updateStereum(commit)
+      seconds = await this.updateStereum(commit)
       await this.updateServices()
     }catch(err){
       log.error("Error occurred running all updates:\n", err)
+    }finally{
+      return seconds
     }
   }
 
@@ -857,10 +860,39 @@ export class NodeConnection {
       }
     }
     try {
+      let before = await this.getTimeStamp()
       await this.runPlaybook("Update Stereum", extraVars)
       await this.runPlaybook("Update Changes", {stereum_role: 'update-changes'})
+      let after = await this.getTimeStamp()
+      return parseInt(after) - parseInt(before)
     } catch (err) {
       log.error("Error occurred running stereum updates:\n", err)
+    }
+  }
+
+  async getTimeStamp(){
+    try {
+      let val = await this.sshService.exec('date +%s')
+      if(val.stdout){
+        return val.stdout
+      }else{
+        throw(val.stderr)
+      }
+    } catch (err) {
+      log.error("Error occurred getting timestamp:\n", err)
+    }
+  }
+
+  async restartServices(seconds){
+    try {
+      await this.runPlaybook("Restart Services", {
+        stereum_role: 'restart-services',
+        stereum_args: {
+          restart_time_scope: seconds
+        }
+      })
+    } catch (err) {
+      log.error("Error occurred during restarting services:\n", err)
     }
   }
 

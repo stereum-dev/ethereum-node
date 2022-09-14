@@ -186,6 +186,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("updateStereum", args);
   }
 
+  async restartServices(args) {
+    return await this.promiseIpc.send("restartServices", args);
+  }
+
   async checkUpdates() {
     return await this.promiseIpc.send("checkUpdates");
   }
