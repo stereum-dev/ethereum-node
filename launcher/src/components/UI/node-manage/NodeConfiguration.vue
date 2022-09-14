@@ -142,6 +142,9 @@ export default {
   grid-template-columns: 1fr;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  left: 0;
+  transition-duration: 500ms;
 }
 .config-bg {
   grid-column: 1;
