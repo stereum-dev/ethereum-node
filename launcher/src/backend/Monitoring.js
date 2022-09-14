@@ -364,7 +364,7 @@ export class Monitoring {
     }
   }
 
-  // Get P2P status
+  // Get P2P status of consensus and execution clients
   async getP2PStatus(){
 
     // Service definitions with type and Prometheus labels for p2p status
@@ -608,9 +608,121 @@ export class Monitoring {
     }
   }
 
+  // Get storage status of consensus, execution and validator clients
+  async getStorageStatus() {
+
+    // Service definitions with type to get storage status based on volumes
+    const services = {
+      'consensus':[
+        'TekuBeaconService',
+        'LighthouseBeaconService',
+        'PrysmBeaconService',
+        'NimbusBeaconService',
+      ],
+      'execution':[
+        'GethService',
+        'BesuService',
+        'NethermindService',
+      ],
+      'validator':[
+        'LighthouseValidatorService',
+        'PrysmValidatorService',
+        'SSVNetworkService',
+      ],
+    };
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 331,
+        "info": "error: service infos for storagestatus not available",
+        "data": "",
+      };
+    }
+
+    // Find consensus, execution and validator service configurations and build ssh command to query client storages 
+    var consensus, execution, validator, sshcmd = '';
+    const clientTypes = Object.keys(services);
+    for(let i=0;i<clientTypes.length;i++){
+      let clientType = clientTypes[i];
+      let clt = serviceInfos.filter((s) => services[clientType].includes(s.service)).pop();
+      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
+        return {
+          "code": 332,
+          "info": "error: " + clientType + " client not found (in storagestatus)",
+          "data": serviceInfos,
+        };
+      }
+      if(Array.isArray(clt.config.volumes) && clt.config.volumes.length){
+        const strVolumes = '"' + clt.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
+        sshcmd += 'du -csh ' + strVolumes + ' | tail -n1 | awk \'{print $1;}\' ; ';
+      }
+      eval(clientType + " = clt;");  // eval objects -> consensus/execution/validator
+    }
+    sshcmd = sshcmd.trim();
+    if(!sshcmd){
+      return {
+        "code": 333,
+        "info": "error: no storage volumes available (detected in storagestatus)",
+        "data": serviceInfos,
+      };
+    }
+
+    // Execute the command on the node
+    let result = null;
+    try {
+      result = await this.nodeConnectionProm.sshService.exec(sshcmd);
+    } catch (err) {
+      return {
+        "code": 334,
+        "info": "error: failed to execute ssh command in storagestatus",
+        "data": err,
+      };
+    }
+
+    // No data in stdout or data in stderr? Executed code above failed to run!
+    if(result.rc || result.stdout == "" /*|| result.stderr != ""*/){
+      var err = "error: ssh command in storagestatus failed with return code " + result.rc;
+      if(result.stderr != ""){
+        err += " (" + result.stderr + ")";
+      }else if(result.stdout == ""){
+        err += " (syntax error)";
+      }
+      return {
+        "code": 335,
+        "info": err,
+        "data": result,
+      };
+    }
+
+    // Parse the result and add the response for "storageDataItems" exact as defined in front-end
+    var data = [];
+    var storagesizes = result.stdout.trim().split("\n");
+    clientTypes.forEach(function (clientType, index) {
+      let clt = '';
+      eval("clt = " + clientType + ";"); // eval clt object from consensus/execution/validator objects
+      data.push({
+        id: index+1,
+        title: clt.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi,"vc").toUpperCase(),
+        storageValue: ( (!(index in storagesizes) || !storagesizes[index] || storagesizes[index] < 1) ? '0 ' : storagesizes[index].replace(/([a-z]+)/si,' $1') ) + "B",
+      });
+    });
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: storagestatus successfully retrieved",
+      "data": data,
+    };
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
+      const storagestatus = await this.getStorageStatus();
+      if(storagestatus.code)
+        return storagestatus;
       const syncstatus = await this.getSyncStatus();
       if(syncstatus.code)
         return syncstatus;
@@ -623,6 +735,7 @@ export class Monitoring {
         "data": {
           'syncstatus':syncstatus.data,
           'p2pstatus':p2pstatus.data,
+          'storagestatus':storagestatus.data,
         }
       };
     } catch (err) {
