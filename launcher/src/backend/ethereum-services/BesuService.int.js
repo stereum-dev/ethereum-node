@@ -60,9 +60,21 @@ test('besu installation', async () => {
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration())
   await serviceManager.manageServiceState(executionClient.id, 'started')
 
-  // get logs
-  await testServer.Sleep(10000)
-  const status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
+  //get logs
+  let condition = false
+  let counter = 0
+  let status = ""
+  while(!condition && counter < 10){
+    await testServer.Sleep(30000)
+    status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
+    if(
+      /Websocket service started/.test(status.stdout) &&
+      /P2P RLPx agent started/.test(status.stdout) &&
+      /Starting peer discovery agent/.test(status.stdout) &&
+      /Starting sync/.test(status.stdout)
+    ){condition = true}
+    counter ++;
+  }
   const ufw = await nodeConnection.sshService.exec('ufw status')
   const docker = await nodeConnection.sshService.exec('docker ps')
 

@@ -9,9 +9,16 @@
         <div class="title-box">
           <span class="service-name">prometheus</span>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" />
+            <img
+              src="/img/icon/service-icons/internet.png"
+              alt="icon"
+              @click="openBrowser"
+            />
+            <img
+              src="/img/icon/service-icons/github1.png"
+              alt="icon"
+              @click="openGitHub"
+            />
           </div>
         </div>
       </div>
@@ -47,6 +54,14 @@ export default {
         if (item.name === "Prometheus") this.prometheusService = item;
       });
       this.isprometheusAvailable = true;
+    },
+    openBrowser() {
+      let url = "https://prometheus.io/";
+      window.open(url, "_blank");
+    },
+    openGitHub() {
+      let url = "https://github.com/prometheus/prometheus";
+      window.open(url, "_blank");
     },
   },
 };
@@ -147,6 +162,7 @@ export default {
 .service-option img {
   width: 11%;
   height: 70%;
+  cursor: pointer;
   margin-right: 15px;
 }
 

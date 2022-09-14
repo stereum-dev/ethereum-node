@@ -107,7 +107,19 @@ test('nimbus validator import', async () => {
     await testServer.Sleep(60000)
 
     //get logs
-    const status = await nodeConnection.sshService.exec(`docker logs --tail=200 stereum-${nimbusClient.id}`)
+    let condition = false
+    let counter = 0
+    let status = ""
+    while(!condition && counter < 10){
+      await testServer.Sleep(30000)
+      status = await nodeConnection.sshService.exec(`docker logs --tail=200 stereum-${nimbusClient.id}`)
+      if(
+        /Eth1 chain monitoring failure, restarting/.test(status.stdout) &&
+        /Parameter \[result\] expected JObject but got JNull/.test(status.stdout) &&
+        /Local validator attached/.test(status.stdout)
+      ){condition = true}
+      counter ++;
+    }
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
 

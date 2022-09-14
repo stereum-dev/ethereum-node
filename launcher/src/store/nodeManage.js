@@ -3,7 +3,7 @@ export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
       newConfiguration: [],
-      selectedItemToRemove: {},
+      selectedItemToRemove: [],
       clickPresets: [
         {
           id: 1,
@@ -34,6 +34,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
         },
       ],
+      actionContents: [],
     };
   },
   getters: {},

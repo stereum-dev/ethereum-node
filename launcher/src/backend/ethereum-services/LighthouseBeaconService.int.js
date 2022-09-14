@@ -105,12 +105,26 @@ test('lighthouse validator import', async () => {
     }
     await nodeConnection.runPlaybook('validator-import-api', extraVars)
 
-    //Waiting for the service to start properly
-    await testServer.Sleep(60000)
-
     //get logs
-    const BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhBC.id}`)
-    const VCstatus = await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${lhVC.id}`)
+    let condition = false
+    let counter = 0
+    let VCstatus = ""
+    let BCstatus = ""
+    while(!condition && counter < 10){
+      await testServer.Sleep(60000)
+      VCstatus = await await nodeConnection.sshService.exec(`docker logs --tail=150 stereum-${lhVC.id}`)
+      BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lhBC.id}`)
+      if(
+        /est_time/.test(BCstatus.stderr) &&
+        /The execution endpoint is connected and configured, however it is not yet synced/.test(BCstatus.stderr) &&
+        !(/Failed to start beacon node/.test(BCstatus.stderr)) &&
+        /pubkey:/.test(VCstatus.stderr) &&
+        /Connected to beacon node/.test(VCstatus.stderr) &&
+        !(/Offline beacon node/.test(VCstatus.stderr))
+      ){condition = true}
+      counter ++;
+    }
+
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
     const api_token = await nodeConnection.sshService.exec(`cat /opt/stereum/lighthouse-${lhVC.id}/validator/validators/api-token.txt`)

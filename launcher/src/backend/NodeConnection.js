@@ -819,6 +819,8 @@ export class NodeConnection {
   async checkUpdates() {
     try {
       let response = await axios.get('https://stereum.net/downloads/updates.json')
+      if(global.branch === "main")
+        response.data.stereum.push({name: "HEAD", commit: 'main'})
       log.debug(response.data)
       return response.data
     } catch (err) {
@@ -826,26 +828,24 @@ export class NodeConnection {
     }
   }
 
-  async runAllUpdates() {
-    const updateRunRef = StringUtils.createRandomString();
-    this.taskManager.tasks.push({ name: "Update", updateRunRef: updateRunRef });
-    const logs = await this.sshService.exec(
-      `cd ${this.settings.stereum.settings.controls_install_path}/ansible/controls && ./stereum-services-update.sh`
-    );
-    this.taskManager.finishedUpdates.push({
-      updateRunRef: updateRunRef,
-      logs: logs,
-    });
+  async runAllUpdates(commit) {
+    //stereum and service updates
+    try{
+      await this.updateStereum(commit)
+      await this.updateServices()
+    }catch(err){
+      log.error("Error occurred running all updates:\n", err)
+    }
   }
 
   async updateServices(services) {
     try {
       await this.runPlaybook("Update Services", {
         stereum_role: 'update-services',
-        services_to_update: services
+        services_to_update: services ? services : undefined
       })
     } catch (err) {
-      log.error("Couldn't update services:\n", err)
+      log.error("Error occurred running service updates:\n", err)
     }
   }
 
@@ -858,8 +858,9 @@ export class NodeConnection {
     }
     try {
       await this.runPlaybook("Update Stereum", extraVars)
+      await this.runPlaybook("Update Changes", {stereum_role: 'update-changes'})
     } catch (err) {
-      log.error("Couldn't update Stereum:\n", err)
+      log.error("Error occurred running stereum updates:\n", err)
     }
   }
 
