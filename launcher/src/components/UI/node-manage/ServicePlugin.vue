@@ -7,7 +7,7 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="service-bg" ref="serviceBg">
-      <div v-for="item in list" :key="item.id" class="service-item">
+      <div v-for="item in itemsList" :key="item.id" class="service-item">
         <img
           :src="item.hIcon"
           alt="icon"
@@ -34,9 +34,11 @@ import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
-  props: ["list", "modifier"],
+  props: ["list"],
   data() {
-    return {};
+    return {
+      itemsList: this.list,
+    };
   },
   computed: {
     ...mapWritableState(useServices, {
@@ -52,6 +54,18 @@ export default {
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
+      this.itemsList = this.itemsList.map((i) => {
+        if (i.id == item.id) {
+          return {
+            ...i,
+            modifierPanel: true,
+          };
+        }
+        return {
+          ...i,
+          modifierPanel: false,
+        };
+      });
       this.$emit("modifyItem", item);
     },
   },

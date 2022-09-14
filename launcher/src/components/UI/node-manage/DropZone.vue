@@ -8,7 +8,7 @@
         @dragover.prevent
         onmousedown="return false"
       >
-        <div class="items" v-for="(item, index) in list" :key="index">
+        <div class="items" v-for="(item, index) in itemsList" :key="index">
           <img
             :src="item.sIcon"
             alt="icon"
@@ -38,7 +38,7 @@ export default {
   props: ["title", "list"],
   data() {
     return {
-      itemsList: [],
+      itemsList: this.list,
     };
   },
 
@@ -48,19 +48,17 @@ export default {
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.itemsList = this.list;
       this.itemsList = this.itemsList.map((i) => {
-        if (i.id === item.id) {
+        if (i.id == item.id) {
           return {
             ...i,
             modifierPanel: true,
           };
-        } else {
-          return {
-            ...i,
-            modifierPanel: false,
-          };
         }
+        return {
+          ...i,
+          modifierPanel: false,
+        };
       });
       this.$emit("modifyItem", item);
     },
