@@ -1,0 +1,36 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_service1: f227371a-a233-46c3-9eaf-523ada2e8cb1
+    lighthouse_service2: 834fb30b-7529-4259-8957-bfd43fb212dc
+    geth_service1: 945c2a4f-e934-4ce0-a56c-8c4e126985e6
+    geth_service2: b7bce898-9d0a-4257-8ffe-e6d2d394db90
+
+  tasks:
+    - set_fact:
+        epoch_before_changes: "{{ lookup('pipe','date +%s') }}"
+
+    - debug:
+        msg: "{{ epoch_before_changes }}"
+
+    - lineinfile:
+        path: "/etc/stereum/services/{{ lighthouse_service2 }}.yaml"
+        regexp: '^justsomeprop: foobar'
+        line: "justsomeprop: foobar"
+
+    - lineinfile:
+        path: "/etc/stereum/services/{{ geth_service1 }}.yaml"
+        regexp: '^justsomeprop2: foobar'
+        line: "justsomeprop2: foobar"
+
+    - debug:
+        msg: "{{ lookup('pipe','date +%s') | int - epoch_before_changes | int }}"
+
+    - include_role:
+        name: "restart-services"
+      vars:
+        restart_time_scope: "{{ lookup('pipe','date +%s') | int - epoch_before_changes | int }}"
+# EOF

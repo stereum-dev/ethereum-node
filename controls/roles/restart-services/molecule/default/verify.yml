@@ -1,0 +1,13 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: docker
+    command: "docker ps -a"
+    register: docker_ps
+
+  - debug:
+      msg: "{{ docker_ps }}"
+
+# EOF
