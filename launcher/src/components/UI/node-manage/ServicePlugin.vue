@@ -11,12 +11,8 @@
         <img
           :src="item.hIcon"
           alt="icon"
-          @mouseup.right="selectedItem(item)"
-          @click="selectToModify(item)"
-          :class="{
-            'chosen-plugin': item.active,
-            'modifying-plugin': item.modifierPanel,
-          }"
+          @dblclick="selectedItem(item)"
+          :class="{ 'chosen-plugin': item.active }"
         />
       </div>
     </div>
@@ -29,7 +25,7 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 
@@ -39,33 +35,17 @@ export default {
     return {};
   },
   computed: {
-    ...mapWritableState(useServices, {
+    ...mapState(useServices, {
       installedServices: "installedServices",
     }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
     }),
   },
-  mounted() {},
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
-    },
-    selectToModify(el) {
-      // this.installedServices = this.installedServices.map((i) => {
-      //   if (el.id == i.id) {
-      //     return {
-      //       ...i,
-      //       modifying: true,
-      //     };
-      //   }
-      //   return {
-      //     ...i,
-      //     modifying: false,
-      //   };
-      // });
-      this.$emit("selectModify", el);
     },
   },
 };
@@ -129,7 +109,7 @@ export default {
 .chosen-plugin {
   width: 55px;
   height: 55px;
-  border: 2px solid rgb(253, 81, 81);
+  border: 2px solid rgb(64, 168, 243);
   border-radius: 7px;
 }
 .service-arrow {
@@ -138,9 +118,5 @@ export default {
 }
 .service-arrow:active {
   box-shadow: none;
-}
-.modifying-plugin {
-  border: 2px solid rgb(255, 255, 0);
-  border-radius: 10px;
 }
 </style>

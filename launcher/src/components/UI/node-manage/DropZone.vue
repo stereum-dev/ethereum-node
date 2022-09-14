@@ -8,16 +8,12 @@
         @dragover.prevent
         onmousedown="return false"
       >
-        <div class="items" v-for="(item, index) in itemsList" :key="index">
+        <div class="items" v-for="(item, index) in list" :key="index">
           <img
             :src="item.sIcon"
             alt="icon"
-            @mouseup.right="selectedItem(item)"
-            @click="selectToModify(item)"
-            :class="{
-              'chosen-plugin': item.active,
-              'modifying-plugin': item.modifierPanel,
-            }"
+            @dblclick="selectedItem(item)"
+            :class="{ 'chosen-plugin': item.active }"
           />
         </div>
       </div>
@@ -31,8 +27,6 @@
 </template>
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
-import { mapWritableState } from "pinia";
-import { useServices } from "@/store/services";
 export default {
   components: {
     ManageTrapezoid,
@@ -53,24 +47,14 @@ export default {
   },
   data() {
     return {
-      itemsList: [],
+      itemsList: null,
     };
   },
-  computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-    }),
-  },
-  mounted() {
-    this.itemsList = this.list;
-  },
+
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
-    },
-    selectToModify(el) {
-      this.$emit("selectModify", el);
     },
   },
 };
@@ -162,10 +146,6 @@ export default {
 }
 .chosen-plugin {
   border: 2px solid rgb(252, 107, 102);
-  border-radius: 10px;
-}
-.modifying-plugin {
-  border: 2px solid rgb(255, 255, 0);
   border-radius: 10px;
 }
 </style>
