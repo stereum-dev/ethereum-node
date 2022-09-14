@@ -105,7 +105,7 @@
             ></exit-validators-modal>
             <remove-validator
               v-if="
-                item.isRemoveBoxActive ||
+                item.toRemove ||
                 exitChainForMultiValidatorsActive ||
                 removeForMultiValidatorsActive
               "
@@ -114,7 +114,7 @@
             <remove-single-modal
               v-if="item.isRemoveBoxActive"
               :item="item"
-              @remove-modal="item.isRemoveBoxActive = false"
+              @remove-modal="item.isRemoveBoxActive = false;item.toRemove = false"
               @delete-key="validatorRemoveConfirm(item)"
             ></remove-single-modal>
           </div>
@@ -171,7 +171,7 @@
     <!-- Remove Box for validator keys -->
     <remove-multiple-validators
       v-if="removeForMultiValidatorsActive"
-      @remove-modal="removeForMultiValidatorsActive = false"
+      @remove-modal="removeForMultiValidatorsActive = false;this.keys.forEach(k => k.toRemove = false)"
       @delete-key="confirmRemoveAllValidators"
     ></remove-multiple-validators>
     <!-- Exit box for validator keys -->
@@ -274,12 +274,14 @@ export default {
           this.exitChainForMultiValidatorsActive = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
+          this.keys.forEach(k => k.toRemove = true)
         } else if (val.name === "exit") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = false;
           this.exitChainForMultiValidatorsActive = true;
+          this.keys.forEach(k => k.toRemove = true)
         }
       },
     },
@@ -332,6 +334,7 @@ export default {
       el.isGrafitiBoxActive = false;
     },
     removeModalDisplay(el) {
+      el.toRemove = true
       el.isRemoveBoxActive = true;
     },
     async validatorRemoveConfirm(el) {
@@ -477,7 +480,8 @@ export default {
               ".beaconcha.in/api/v1/validator/" +
               encodeURIComponent(chunk.join())
           );
-          data = data.concat(response.data.data); //merge all gathered stats in one array
+          if(response.data.data)
+            data = data.concat(response.data.data); //merge all gathered stats in one array
         }
       } catch (err) {
         console.log("Couldn't fetch validator stats:\n", err);
@@ -1057,4 +1061,18 @@ remove-validator {
   box-shadow: none;
   transition-duration: 100ms;
 }
+
+
+.table-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+
+.table-content::-webkit-scrollbar-thumb {
+  background-color: rgb(60, 152, 140) ;
+  border-radius: 6px;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
 </style>

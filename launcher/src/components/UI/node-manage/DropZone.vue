@@ -8,16 +8,11 @@
         @dragover.prevent
         onmousedown="return false"
       >
-        <div
-          class="items"
-          v-for="(item, index) in list"
-          :key="index"
-          ref="itemsList"
-        >
+        <div class="items" v-for="(item, index) in list" :key="index">
           <img
             :src="item.sIcon"
             alt="icon"
-            @click="selectedItem(item)"
+            @dblclick="selectedItem(item)"
             :class="{ 'chosen-plugin': item.active }"
           />
         </div>
@@ -52,13 +47,14 @@ export default {
   },
   data() {
     return {
-      itemsList: [],
+      itemsList: null,
     };
   },
+
   methods: {
     selectedItem(item) {
       item.active = !item.active;
-      this.$emit("itemSelect", item);
+      this.$emit("selectItem", item);
     },
   },
 };
@@ -149,7 +145,7 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  border: 2px solid rgb(64, 168, 243);
+  border: 2px solid rgb(252, 107, 102);
   border-radius: 10px;
 }
 </style>

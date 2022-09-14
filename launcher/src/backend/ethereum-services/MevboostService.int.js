@@ -55,8 +55,20 @@ test('mevboost installation', async () => {
   await serviceManager.manageServiceState(mevboost.id, 'started')
 
   // mevboost logs
-  await testServer.Sleep(10000)
-  const status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`)
+  //get logs
+  let condition = false
+  let counter = 0
+  let status = ""
+  while(!condition && counter < 10){
+    await testServer.Sleep(30000)
+    status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`)
+    if(
+      /listening on 0.0.0.0:18550/.test(status.stdout) &&
+      /using 1 relays/.test(status.stdout) &&
+      /Invalid relay URL/.test(status.stdout)
+    ){condition = true}
+    counter ++;
+  }
   const docker = await nodeConnection.sshService.exec('docker ps')
 
   // destroy

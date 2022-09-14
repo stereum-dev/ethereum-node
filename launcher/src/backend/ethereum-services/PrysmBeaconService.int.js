@@ -133,16 +133,38 @@ test('prysm validator import', async () => {
 
     await nodeConnection.runPlaybook('validator-import-api', extraVars)
 
-    //Waiting for the service to start properly
-    await testServer.Sleep(60000)
-    const VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmVC.id}`)
-    await testServer.Sleep(120000)
+    await Promise.all([
+        serviceManager.manageServiceState(prysmBC.id, 'stopped'),
+        serviceManager.manageServiceState(prysmVC.id, 'stopped')
+    ])
+
+    await Promise.all([
+        serviceManager.manageServiceState(prysmBC.id, 'started'),
+        serviceManager.manageServiceState(prysmVC.id, 'started')
+    ])
 
     //get logs
+    let condition = false
+    let counter = 0
+    let VCstatus = ""
+    let BCstatus = ""
+    while(!condition && counter < 10){
+      await testServer.Sleep(60000)
+      VCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmVC.id}`)
+      BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${prysmBC.id}`)
+      if(
+        /estimated time remaining/.test(BCstatus.stderr) &&
+        /Connected to new endpoint: http:\/\/stereum-.{36}:8551/.test(BCstatus.stderr) &&
+        !(/Could not connect to execution endpoint/.test(BCstatus.stderr)) &&
+        /Beacon chain started/.test(VCstatus.stderr) &&
+        /Waiting for beacon node to sync to latest chain head/.test(VCstatus.stderr)
+      ){condition = true}
+      counter ++;
+    }
+
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const validatorAccounts = await nodeConnection.sshService.exec(`cat ${wallet_path}/direct/accounts/all-accounts.keystore.json`)
     const auth_token = await nodeConnection.sshService.exec(`cat ${wallet_path}/auth-token`)
-    const BCstatus = await nodeConnection.sshService.exec(`docker logs --tail=100 stereum-${prysmBC.id}`)
     const docker = await nodeConnection.sshService.exec('docker ps')
     let responseValidator = await nodeConnection.sshService.exec('docker exec stereum-'+ prysmVC.id +' /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --prater')
     const runningValidator = responseValidator.stdout.replace('\x1B[93m3\x1B[0m','3')   //remove yellow color coding

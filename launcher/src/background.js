@@ -232,7 +232,7 @@ promiseIpc.on("manageServiceState", async (args) => {
 
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true;
-  const returnValue = await nodeConnection.runAllUpdates();
+  const returnValue = await nodeConnection.runAllUpdates(args.commit);
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();

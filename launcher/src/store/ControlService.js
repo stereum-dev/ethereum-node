@@ -174,8 +174,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("manageServiceState", args);
   }
 
-  async runAllUpdates() {
-    return await this.promiseIpc.send("runAllUpdates");
+  async runAllUpdates(args) {
+    return await this.promiseIpc.send("runAllUpdates", args);
   }
 
   async updateServices(args) {

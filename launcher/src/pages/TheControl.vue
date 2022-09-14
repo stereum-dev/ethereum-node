@@ -43,13 +43,15 @@ export default {
     async refresh() {
       try {
         // @FRONTEND - getNodeStats returns an object with 3 keys (code/info/data)
-        // code      : 0 means success all other values means error.
+        // code      : 0 (number!) means success all other values (including null or undefined) means error.
         // info      : a message about the last result.
         // data      : additional data (if available) or empty string
         // At the moment the following data is provided:
-        // data.syncstatus: can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
-        // data.p2pstatus : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
+        // data.syncstatus   : can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
+        // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
+        // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
         const nodeStats = await ControlService.getNodeStats();
+
         // console.log(
         //   "@FRONTEND: data for wiring controls",
         //   nodeStats.data.syncstatus
@@ -63,6 +65,7 @@ export default {
             this.syncstatus = nodeStats.data.syncstatus;
           } catch (e) {}
         }
+
 
         const response = await ControlService.getServerVitals();
         if (response) {

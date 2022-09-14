@@ -15,9 +15,21 @@
         <div class="title-box">
           <span class="service-name">ssv.network</span>
           <div class="service-option">
-            <img src="/img/icon/service-icons/internet.png" alt="icon" />
-            <img src="/img/icon/service-icons/github1.png" alt="icon" />
-            <img src="/img/icon/service-icons/discord.png" alt="icon" />
+            <img
+              src="/img/icon/service-icons/internet.png"
+              alt="icon"
+              @click="openBrowser"
+            />
+            <img
+              src="/img/icon/service-icons/github1.png"
+              alt="icon"
+              @click="openGitHub"
+            />
+            <img
+              src="/img/icon/service-icons/discord.png"
+              alt="icon"
+              @click="openDiscord"
+            />
           </div>
         </div>
       </div>
@@ -106,7 +118,7 @@ export default {
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.ssvDashboardActive = true;
-      window.open("https://app.ssv.network/")
+      window.open("https://app.ssv.network/");
     },
     registerSecretkeyHandler() {
       this.registerModalActive = false;
@@ -119,6 +131,18 @@ export default {
       this.pubkeyModalActive = false;
       this.registerSecretkeyActive = false;
       this.ssvDashboardActive = true;
+    },
+    openBrowser() {
+      let url = "https://ssv.network/";
+      window.open(url, "_blank");
+    },
+    openGitHub() {
+      let url = "https://github.com/bloxapp/ssv";
+      window.open(url, "_blank");
+    },
+    openDiscord() {
+      let url = " https://discord.gg/AbYHBfjkDY";
+      window.open(url, "_blank");
     },
   },
 };
@@ -218,6 +242,7 @@ export default {
   width: 11%;
   height: 70%;
   margin-right: 15px;
+  cursor: pointer;
 }
 .content-box {
   width: 100%;

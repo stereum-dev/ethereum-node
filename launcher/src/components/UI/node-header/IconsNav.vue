@@ -76,6 +76,7 @@ export default {
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
       refresh: "refresh",
+      stereumUpdate: "stereumUpdate",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -88,7 +89,7 @@ export default {
         this.refresh = false
         this.updating = true;
         this.newUpdates.forEach(update => update.running = true)
-        await ControlService.runAllUpdates();
+        await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
       } catch (err) {
         console.log("Running All Updates Failed: ", err)
       } finally {
