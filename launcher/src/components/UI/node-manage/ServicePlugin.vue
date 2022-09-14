@@ -7,13 +7,7 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="service-bg" ref="serviceBg">
-      <div
-        v-for="item in installedServices.filter(
-          (service) => service.category === 'service'
-        )"
-        :key="item.id"
-        class="service-item"
-      >
+      <div v-for="item in list" :key="item.id" class="service-item">
         <img
           :src="item.hIcon"
           alt="icon"
@@ -37,14 +31,19 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 export default {
+  props: ["list"],
   data() {
     return {};
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+    }),
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
     }),
   },
   mounted() {},
