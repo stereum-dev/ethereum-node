@@ -103,6 +103,7 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .totalReceived,
 .totalTransmitted {
@@ -129,6 +130,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #c1c1c1;
 }
 .receiveTitle,
 .transmitTitle {
