@@ -11,7 +11,13 @@
               @cancel-add="cancelAddProcess"
               @save-config="saveServiceConfiguration"
             ></add-panel>
-            <modify-panel v-else-if="displayCustomModifyPanel"> </modify-panel>
+            <modify-panel
+              v-else-if="displayCustomModifyPanel"
+              :items="itemToInstall"
+              @cancel-modify="cancelModifyProcess"
+              @save-modify="saveServiceModification"
+            >
+            </modify-panel>
             <node-configuration
               v-else
               :configData="configData"
@@ -210,16 +216,16 @@ export default {
       const item = { ...list.find((item) => item.id == itemId) };
       if (this.newConfiguration.some((item) => item.id == itemId)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addPanel = true;
       this.itemToInstall = item;
       this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
       if (this.newConfiguration.some((el) => el.id == item.id)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addPanel = true;
       this.itemToInstall = item;
-      this.displayCustomAddPanel = item.modifierPanel;
+      this.displayCustomAddPanel = item.addPanel;
     },
     saveServiceConfiguration() {
       this.itemToInstall = null;
@@ -235,14 +241,31 @@ export default {
         );
       }
     },
-    selectedServiceToModify(item) {
-      
-    },
-
     cancelAddProcess() {
       this.itemToInstall = null;
       this.displayCustomAddPanel = false;
       this.newConfiguration.pop();
+    },
+    selectedServiceToModify(item) {
+      this.newConfiguration = this.newConfiguration.map((el) => {
+        if (el.id === item.id) {
+          el.modifierPanel = true;
+          this.itemToInstall = item;
+          this.displayCustomModifyPanel = el.modifierPanel;
+        }
+        return {
+          ...el,
+          modifierPanel: false,
+        };
+      });
+    },
+    cancelModifyProcess() {
+      this.itemToInstall = null;
+      this.displayCustomModifyPanel = false;
+    },
+    saveServiceModification() {
+      this.itemToInstall = null;
+      this.displayCustomModifyPanel = false;
     },
   },
 };

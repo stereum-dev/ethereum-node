@@ -5,7 +5,10 @@
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
           <span class="serviceName">{{ plugin.name }}</span>
-          <span class="category">{{ plugin.category }} Client</span>
+          <p class="category">
+            {{ plugin.category }}
+            <span v-if="plugin.category !== 'service'">Client</span>
+          </p>
         </div>
       </div>
       <div class="configBox">
@@ -141,7 +144,6 @@ export default {
   transition-duration: 500ms;
 }
 
-
 .addBox {
   width: 98%;
   height: 99%;
@@ -175,7 +177,7 @@ export default {
   align-items: center;
 }
 
-.service-details span:first-child {
+.service-details .serviceName {
   width: 100%;
   height: 60%;
   text-align: left;
@@ -188,7 +190,8 @@ export default {
   text-overflow: ellipsis;
   align-self: center;
 }
-.service-details span:last-child {
+.service-details p,
+.service-details p span {
   width: max-content;
   height: 40%;
   text-align: left;

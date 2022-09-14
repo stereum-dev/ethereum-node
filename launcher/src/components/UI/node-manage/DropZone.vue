@@ -14,7 +14,10 @@
             alt="icon"
             @mouseup.right="selectedItem(item)"
             @click="modifyItem(item)"
-            :class="{ 'chosen-plugin': item.active }"
+            :class="{
+              'chosen-plugin': item.active,
+              'modify-plugin': item.modifierPanel,
+            }"
           />
         </div>
       </div>
@@ -48,7 +51,7 @@ export default {
   },
   data() {
     return {
-      itemsList: null,
+      itemsList: [],
     };
   },
 
@@ -58,6 +61,19 @@ export default {
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
+      this.itemsList = this.list;
+      this.itemsList = this.itemsList.map((i) => {
+        if (i.id === item.id) {
+          return {
+            ...i,
+            modifierPanel: true,
+          };
+        }
+        return {
+          ...i,
+          modifierPanel: false,
+        };
+      });
       this.$emit("modifyItem", item);
     },
   },
@@ -151,5 +167,9 @@ export default {
 .chosen-plugin {
   border: 2px solid rgb(252, 107, 102);
   border-radius: 10px;
+}
+.modify-plugin {
+  border: 2px solid rgb(221, 206, 78);
+  border-radius: 7px;
 }
 </style>

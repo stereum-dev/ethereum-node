@@ -13,7 +13,10 @@
           alt="icon"
           @mouseup.right="selectedItem(item)"
           @click="modifyItem(item)"
-          :class="{ 'chosen-plugin': item.active }"
+          :class="{
+            'chosen-plugin': item.active,
+            'modify-plugin': item.modifierPanel,
+          }"
         />
       </div>
     </div>

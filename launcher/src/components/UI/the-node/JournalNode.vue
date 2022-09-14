@@ -1,11 +1,13 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <span class="title">Server</span>
-      <div class="server-details">
-        <span class="ip">{{ ipAddress }}</span>
-        <span class="name">{{ ServerName }}</span>
+      <div class="details">
+        <span>Server informations</span>
       </div>
+      <span class="ipTitle">ip:</span>
+      <span class="nameTitle">name:</span>
+      <span class="ip">{{ ipAddress }}</span>
+      <span class="name">{{ ServerName }}</span>
     </div>
     <div class="config-bg">
       <div class="edit-btn">
@@ -70,67 +72,95 @@ export default {
   border-radius: 10px;
   margin: 0 auto;
 }
+
 .server {
   grid-column: 1;
   grid-row: 1/3;
   width: 100%;
   height: 100%;
+  padding: 20px 5px 10px 5px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+.server .details {
+  grid-column: 1/6;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-.server .title {
+.server .details span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgb(166, 165, 165);
+  text-transform: uppercase;
+}
+.server .ipTitle {
+  grid-column: 1/2;
+  grid-row: 2/3;
   width: max-content;
   height: 15px;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  color: rgb(138, 138, 138);
+  color: rgb(163, 163, 163);
   text-transform: uppercase;
-  margin-left: 8px;
+  text-align: left;
+  align-self: center;
 }
-.server-details {
-  width: 95%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.server-details span:first-child {
-  width: 100%;
-  height: 29%;
+.server .nameTitle {
+  grid-column: 1/2;
+  grid-row: 3/4;
+  width: max-content;
+  height: 15px;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: rgb(163, 163, 163);
+  text-transform: uppercase;
+  text-align: left;
+  align-self: center;
+}
+.server .name {
+  grid-column: 2/6;
+  grid-row: 3/4;
+  width: 100%;
+  height: 90%;
+  text-align: center;
+  font-size: 0.6rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
-  border: 1px solid #a1a1a1;
-  margin-top: 2px;
+  border: 1px solid #565656;
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
+  align-self: center;
 }
-.server-details span:last-child {
+.server .ip {
+  grid-column: 2/6;
+  grid-row: 2/3;
   width: 100%;
-  height: 29%;
+  height: 90%;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: #8a8a8a;
   text-transform: uppercase;
-  border: 1px solid #a1a1a1;
-  margin-top: 2px;
+  border: 1px solid #565656;
   background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
+  align-self: center;
 }
 
 .config-btns {
