@@ -95,7 +95,7 @@ test('teku validator import', async () => {
     await serviceManager.manageServiceState(tekuClient.id, 'stopped')
     await serviceManager.manageServiceState(tekuClient.id, 'started')
 
-    await testServer.Sleep(60000)
+    await testServer.Sleep(30000)
     //import validator
     const extraVars = {
       stereum_role: 'validator-import-api', validator_service: tekuClient.id , validator_keys:[{
@@ -109,10 +109,23 @@ test('teku validator import', async () => {
   }
     await nodeConnection.runPlaybook('validator-import-api', extraVars)
 
-    await testServer.Sleep(180000)
+
 
     //get logs
-    const status = await nodeConnection.sshService.exec(`docker logs stereum-${tekuClient.id}`)
+    let condition = false
+    let counter = 0
+    let status = ""
+    while(!condition && counter < 10){
+      await testServer.Sleep(60000)
+      status = await nodeConnection.sshService.exec(`docker logs stereum-${tekuClient.id}`)
+      if(
+        /Syncing/.test(status.stdout) &&
+        /Loaded .{1} Validators/.test(status.stdout) &&
+        /Endpoint http:\/\/stereum-${geth.id}:8551 is INVALID | Still syncing/.test(status.stdout)
+      ){condition = true}
+      counter ++;
+    }
+
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
     const teku_api_keystore = await nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_keystore`)

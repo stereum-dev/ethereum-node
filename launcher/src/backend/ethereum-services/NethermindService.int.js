@@ -61,9 +61,23 @@ test('nethermind installationm', async () => {
     await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration())
     await serviceManager.manageServiceState(executionClient.id, 'started')
 
-    // get logs
-    await testServer.Sleep(30000)
-    const status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
+
+    //get logs
+    let condition = false
+    let counter = 0
+    let status = ""
+    while(!condition && counter < 10){
+      await testServer.Sleep(30000)
+      status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`)
+      if(
+        /Old Headers/.test(status.stdout) &&
+        /Sync peers/.test(status.stdout) &&
+        !(/Permission denied/.test(status.stdout)) &&
+        !(/An error occurred while trying to encrypt the provided data/.test(status.stdout))
+      ){condition = true}
+      counter ++;
+    }
+
     const ufw = await nodeConnection.sshService.exec('ufw status')
     const docker = await nodeConnection.sshService.exec('docker ps')
 
