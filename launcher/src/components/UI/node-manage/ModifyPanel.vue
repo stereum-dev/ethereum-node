@@ -666,17 +666,19 @@ export default {
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
-  padding: 2%;
   margin-top: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .optionsName span {
+  height: 100%;
+  padding: 2px;
   font-size: 0.7rem;
   font-weight: 600;
   color: #b3b3b3;
   text-align: center;
+  align-self: center;
   text-transform: uppercase;
 }
 </style>
