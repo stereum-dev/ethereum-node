@@ -74,28 +74,42 @@ export default {
   methods: {
     syncSituation() {
       if (this.syncIcoSituation === false && this.syncIcoError === false) {
-        return this.activeIco;
+        return this.synchedIco;
       } else if (
         this.syncIcoSituation === true &&
         this.syncIcoError === false
       ) {
-        return this.synchedIco;
+        return this.activeIco;
       } else {
         this.syncIcoError = true;
         return this.errorIco;
       }
     },
     syncControler() {
-      if (this.code === null) {
-        this.syncIcoSituation = false;
-        this.syncIcoError = false;
-      } else if (this.code === 0) {
-        this.syncIcoSituation = true;
-        this.syncIcoError = false;
-      } else if (this.code !== 0 && this.code !== null) {
-        this.syncIcoSituation = false;
-        this.syncIcoError = true;
+      let syncIcoError = false;
+      let syncIcoSituation = false;
+      let pooi = [];
+      for(let k in this.syncstatus){
+        let lo = parseInt(this.syncstatus[k].frstVal);
+        let hi = parseInt(this.syncstatus[k].scndVal);
+        pooi[k] = (pooi[k] || lo > hi) ? true : false;
+        if(this.code !== 0 || !hi || !lo){
+          syncIcoError = true;
+          break;
+        }else if(lo < hi){
+          syncIcoSituation = true;
+          break;
+        }
       }
+      // fix: keep client values zero if prometheus is out of info ("pooi") on node start
+      for(let k in pooi){
+        if(pooi[k]){
+          this.syncstatus[k].frstVal = 0;
+          this.syncstatus[k].scndVal = 0;
+        }
+      }
+      this.syncIcoError = syncIcoError;
+      this.syncIcoSituation = syncIcoSituation;
     },
   },
 };
