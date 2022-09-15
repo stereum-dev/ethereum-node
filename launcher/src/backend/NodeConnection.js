@@ -883,9 +883,7 @@ export class NodeConnection {
     try {
       await this.runPlaybook("Restart Services", {
         stereum_role: 'restart-services',
-        stereum_args: {
-          restart_time_scope: seconds
-        }
+        restart_time_scope: seconds,
       })
     } catch (err) {
       log.error("Error occurred during restarting services:\n", err)
