@@ -10,14 +10,14 @@
       <div class="storage-data_box">
         <div
           class="storage-data_row"
-          v-for="item in storageDataItems"
+          v-for="item in storagestatus"
           :key="item.id"
         >
           <div class="storage-data_row_title">
             <span>{{ item.title }}</span>
           </div>
           <div class="storage-data_row_value">
-            <span>{{ item.storageValue }} GB</span>
+            <span>{{ item.storageValue }}</span>
           </div>
         </div>
       </div>
@@ -25,29 +25,19 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
       // datas are dummy, but the best stracture for the design is like this
       //for the wiring use this stracture
-      storageDataItems: [
-        {
-          id: 1,
-          title: "GETH",
-          storageValue: 13.2,
-        },
-        {
-          id: 2,
-          title: "PRYSM",
-          storageValue: 13.2,
-        },
-        {
-          id: 3,
-          title: "PRYSM VC",
-          storageValue: 13.2,
-        },
-      ],
     };
+  },
+  computed: {
+    ...mapState(useControlStore, {
+      storagestatus: "storagestatus",
+    }),
   },
 };
 </script>
@@ -86,6 +76,7 @@ export default {
   align-items: center;
   font-size: 50%;
   font-weight: bold;
+  color: #c1c1c1;
 }
 .storage-icon_container {
   display: flex;
@@ -100,11 +91,12 @@ export default {
 }
 .storage-data_box {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 70%;
   height: 100%;
   flex-direction: column;
+  overflow-y: auto;
 }
 .storage-data_row {
   display: flex;

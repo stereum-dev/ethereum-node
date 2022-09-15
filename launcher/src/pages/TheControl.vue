@@ -28,6 +28,10 @@ export default {
       tx: "tx",
       readValue: "readValue",
       writeValue: "writeValue",
+      valPeer: "valPeer",
+      code: "code",
+      syncstatus: "syncstatus",
+      storagestatus: "storagestatus",
     }),
   },
   mounted() {
@@ -39,29 +43,26 @@ export default {
   methods: {
     async refresh() {
       try {
-
         // @FRONTEND - getNodeStats returns an object with 3 keys (code/info/data)
-        // code      : 0 means success all other values means error.
+        // code      : 0 (number!) means success all other values (including null or undefined) means error.
         // info      : a message about the last result.
         // data      : additional data (if available) or empty string
         // At the moment the following data is provided:
-        // data.syncstatus: can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
-        // data.p2pstatus : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
+        // data.syncstatus   : can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
+        // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
+        // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
         const nodeStats = await ControlService.getNodeStats();
-        console.log("@FRONTEND: data for wiring controls",nodeStats);
-        // if(!nodeStats.code){
-        //   try{
-        //     console.log('syncstatus[0] -> title',nodeStats.data.syncstatus[0].title);
-        //     console.log('syncstatus[0] -> frstVal',nodeStats.data.syncstatus[0].frstVal);
-        //     console.log('syncstatus[0] -> scndVal',nodeStats.data.syncstatus[0].scndVal);
-        //     console.log('syncstatus[1] -> title',nodeStats.data.syncstatus[1].title);
-        //     console.log('syncstatus[1] -> frstVal',nodeStats.data.syncstatus[1].frstVal);
-        //     console.log('syncstatus[1] -> scndVal',nodeStats.data.syncstatus[1].scndVal);
-        //     console.log('p2pstatus -> maxPeer',nodeStats.data.p2pstatus.maxPeer); // maximum number of peer connections
-        //     console.log('p2pstatus -> numPeer',nodeStats.data.p2pstatus.numPeer); // current number of peer connections
-        //     console.log('p2pstatus -> valPeer',nodeStats.data.p2pstatus.valPeer); // current peers in percentage
-        //   }catch(e){}
-        // }
+
+        // console.log("@FRONTEND: data for wiring controls", nodeStats);
+
+        if (nodeStats) {
+          try {
+            this.code = nodeStats.code;
+            this.valPeer = nodeStats.data.p2pstatus.valPeer;
+            this.syncstatus = nodeStats.data.syncstatus;
+            this.storagestatus = nodeStats.data.storagestatus;
+          } catch (e) {}
+        }
 
         const response = await ControlService.getServerVitals();
         if (response) {
@@ -78,7 +79,7 @@ export default {
           this.writeValue = response.writeValue;
         }
       } catch (err) {
-        console.log('some other error occured',err);
+        console.log("some other error occured", err);
       }
     },
   },

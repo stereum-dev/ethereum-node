@@ -1,0 +1,241 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lighthouse_service1: f227371a-a233-46c3-9eaf-523ada2e8cb1
+    lighthouse_service2: 834fb30b-7529-4259-8957-bfd43fb212dc
+    geth_service1: 945c2a4f-e934-4ce0-a56c-8c4e126985e6
+    geth_service2: b7bce898-9d0a-4257-8ffe-e6d2d394db90
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    - name: Write service configuration A
+      copy:
+        dest: "/etc/stereum/services/{{ geth_service1 }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: GethService
+          id: "{{ geth_service1 }}"
+          image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+          entrypoint: ["geth"]
+          env: {}
+          command:
+            - --goerli
+            - --http
+            - --datadir=/opt/app/geth
+            - --http.addr=0.0.0.0
+            - --http.vhosts=*
+            - --http.api="engine,eth,web3,net,debug"
+            - --http.corsdomain=*
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.jwtsecret=/engine.jwt
+          user: "2000"
+          volumes:
+            - "/opt/app/services/{{ geth_service1 }}/data:/opt/app/geth"
+            - "/opt/app/services/{{ geth_service1 }}/engine.jwt:/engine.jwt"
+      become: yes
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ geth_service1 }}"
+
+    - name: Write service configuration B
+      copy:
+        dest: "/etc/stereum/services/{{ geth_service2 }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: GethService
+          id: "{{ geth_service2 }}"
+          image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+          ports:
+            - 0.0.0.0:30304:30303/tcp
+            - 0.0.0.0:30304:30303/udp
+          entrypoint: ["geth"]
+          env: {}
+          command:
+            - --goerli
+            - --http
+            - --datadir=/opt/app/geth
+            - --http.addr=0.0.0.0
+            - --http.vhosts=*
+            - --http.api="engine,eth,web3,net,debug"
+            - --http.corsdomain=*
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.jwtsecret=/engine.jwt
+          user: "2000"
+          volumes:
+            - "/opt/app/services/{{ geth_service2 }}/data:/opt/app/geth"
+            - "/opt/app/services/{{ geth_service2 }}/engine.jwt:/engine.jwt"
+      become: yes
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ geth_service2 }}"
+
+    - name: Write service configuration C
+      copy:
+        dest: "/etc/stereum/services/{{ lighthouse_service1 }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: "{{ lighthouse_service1 }}"
+          image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+          env: {}
+          ports:
+            - 0.0.0.0:9000:9000/tcp
+            - 0.0.0.0:9000:9000/udp
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=info
+            - --network=prater
+            - --execution-endpoints=http://stereum-{{ geth_service1 }}:8551
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+            - --jwt-secrets=/engine.jwt
+          entrypoint: []
+          user: "2000"
+          volumes:
+            - "/opt/app/services/{{ lighthouse_service1 }}/beacon/lighthouse:/opt/app/beacon"
+            - "/opt/app/services/{{ lighthouse_service1 }}/slasher:/opt/app/slasher"
+            - "/opt/app/services/{{ geth_service1 }}/engine.jwt:/engine.jwt"
+      become: yes
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ lighthouse_service1 }}"
+
+    - name: Write service configuration D
+      copy:
+        dest: "/etc/stereum/services/{{ lighthouse_service2 }}.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: LighthouseBeaconService
+          id: "{{ lighthouse_service2 }}"
+          image: "sigp/lighthouse:{{ stereum_static.defaults.versions.lighthouse }}"
+          env: {}
+          ports:
+            - 0.0.0.0:9001:9000/tcp
+            - 0.0.0.0:9001:9000/udp
+          command:
+            - lighthouse
+            - bn
+            - --debug-level=info
+            - --network=prater
+            - --execution-endpoints=http://stereum-{{ geth_service2 }}:8551
+            - --eth1-blocks-per-log-query=150
+            - --datadir=/opt/app/beacon
+            - --http
+            - --http-address=0.0.0.0
+            - --metrics
+            - --metrics-address=0.0.0.0
+            - --disable-upnp
+            - --validator-monitor-auto
+            - --slasher
+            - --slasher-dir=/opt/app/slasher
+            - --slasher-max-db-size=16
+            - --jwt-secrets=/engine.jwt
+          entrypoint: []
+          user: "2000"
+          volumes:
+            - "/opt/app/services/{{ lighthouse_service2 }}/beacon/lighthouse:/opt/app/beacon"
+            - "/opt/app/services/{{ lighthouse_service2 }}/slasher:/opt/app/slasher"
+            - "/opt/app/services/{{ geth_service2 }}/engine.jwt:/engine.jwt"
+      become: yes
+
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: false
+            state: started
+            configuration:
+              id: "{{ lighthouse_service2 }}"
+
+    - debug:
+        msg: "{{ ansible_date_time.epoch }}"
+
+    - pause:
+        seconds: 30
+
+# EOF
