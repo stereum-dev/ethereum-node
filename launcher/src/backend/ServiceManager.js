@@ -145,14 +145,14 @@ export class ServiceManager {
     })
   }
 
-  async chooseServiceAction(action, service){
+  async chooseServiceAction(action, service, data){
     switch (action) {
       case "pruneGeth":
-        
+          //pruning geth
         break;
     
       case "reSync":
-        
+          //initiate resync
         break;
   
       default:

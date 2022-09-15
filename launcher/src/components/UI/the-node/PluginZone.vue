@@ -64,13 +64,13 @@
             :item="item"
             v-if="gethPrunningWarningModal"
             @cancel-warning="hidePrunningWarningsModal"
-            @confirm-btn="confirmRunningGethPrunning(option)"
+            @confirm-btn="confirmRunningGethPrunning(item)"
           ></prunning-modal>
           <resync-modal
             :item="item"
             v-if="resyncWarningModal"
             @cancel-warning="hideResyncWarningsModal"
-            @confirm-btn="confirmRunningResync"
+            @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
         </div>
@@ -84,6 +84,7 @@
   </manage-trapezoid>
 </template>
 <script>
+import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -220,8 +221,9 @@ export default {
           }
         });
     },
-    confirmRunningGethPrunning() {
+    async confirmRunningGethPrunning(service) {
       this.gethPrunningWarningModal = false;
+      await ControlService.chooseServiceAction({action: "pruneGeth", service: toRaw(service), data: {}})
     },
 
     // Resync Functions
@@ -237,8 +239,9 @@ export default {
           }
         });
     },
-    confirmRunningResync() {
+    async confirmRunningResync(data, service) {
       this.resyncWarningModal = false;
+      await ControlService.chooseServiceAction({action: "reSync", service: toRaw(service), data: {checkpointURL: data}})
     },
   },
 };

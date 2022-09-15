@@ -63,7 +63,7 @@
         <div
           v-else
           class="confirmBtn"
-          @click="$emit('confirmBtn')"
+          @click="$emit('confirmBtn',this.checkPointSync)"
         >
           <span>RESYNC</span>
         </div>
