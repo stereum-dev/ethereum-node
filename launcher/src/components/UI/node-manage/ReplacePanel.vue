@@ -1,9 +1,6 @@
 <template>
-  <div class="addParent">
-    <div class="addBox">
-      <div class="replaceService" @click="$emit('changePlugin', items)">
-        <img src="/img/icon/manage-node-icons/replace.png" alt="icon" />
-      </div>
+  <div class="replaceParent">
+    <div class="replaceBox">
       <div class="service">
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
@@ -15,20 +12,26 @@
         </div>
       </div>
       <div class="configBox">
-        <div class="change-installation" v-if="replaceServiceActive">
-          <div class="change-title">
-            <span>INSTALLATION PATH</span>
-          </div>
-          <div class="change-box">
-            <input type="text" v-model="installationPath" maxlength="255" />
+        <div
+          class="pluginBox"
+          v-for="service in allServices.filter(
+            (e) => e.category === plugin.category && e.name !== plugin.name
+          )"
+          :key="service.id"
+        >
+          <img :src="service.icon" alt="icon" />
+          <div class="plugin-details">
+            <span class="pluginName">{{ service.name }}</span>
+            <p class="category">
+              {{ service.category }}
+              <span v-if="service.category !== 'service'">Client</span>
+            </p>
           </div>
         </div>
         <div
           class="fast-sync"
           v-if="
-            (plugin.category === 'execution' ||
-              plugin.category === 'consensus') &&
-            replaceServiceActive
+            plugin.category === 'execution' || plugin.category === 'consensus'
           "
         >
           <div class="sync-header">
@@ -59,55 +62,13 @@
             </div>
           </div>
         </div>
-        <div class="portAddBox">
-          <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
-          <div class="portConfig">
-            <span>PORT USED</span>
-            <input type="text" v-model="port" placeholder="9000" />
-          </div>
-        </div>
-        <template v-for="service in options" :key="service.id">
-          <div class="optionsBox" v-if="!serviceIsSelected">
-            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
-            <div class="optionsDetails">
-              <span class="category">{{ service.category }} Client</span>
-              <div class="optionsName">
-                <span>{{ service.name }}</span>
-              </div>
-            </div>
-          </div>
-        </template>
-        <div
-          class="clientAddBox"
-          v-if="
-            items.category === 'consensus' || items.category === 'validator'
-          "
-        >
-          <img
-            v-if="serviceIsSelected"
-            src="/img/icon/manage-node-icons/connected.png"
-            alt="icon"
-          />
-          <img
-            v-else
-            src="/img/icon/manage-node-icons/connect.png"
-            alt="icon"
-          />
-          <div class="connectionConfig">
-            <div class="connectedService" v-if="serviceIsSelected">
-              <span class="category">{{ selected.category }} Client</span>
-              <span class="name">{{ selected.name }}</span>
-            </div>
-            <div v-else class="plusBtn" @click="chooseServiceToConnect">+</div>
-          </div>
-        </div>
       </div>
       <div class="btnBox">
-        <div class="cancelBtn" @click="$emit('cancelModify')">
+        <div class="cancelBtn" @click="$emit('cancelReplace')">
           <span>Cancel</span>
         </div>
-        <div class="addBtn" @click="$emit('saveModify')">
-          <span>ADD</span>
+        <div class="addBtn" @click="$emit('confirmReplace')">
+          <span>confirm</span>
         </div>
       </div>
     </div>
@@ -116,42 +77,25 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useClickInstall } from "@/store/clickInstallation";
-import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
   props: ["items"],
   data() {
     return {
-      modalActive: false,
-      removeServicesModal: false,
-      removeIsConfirmed: false,
-      genesisIsActive: true,
-      checkPointIsActive: false,
-      replaceServiceActive: false,
-      serviceIsSelected: false,
       plugin: {},
-      port: "",
-      options: [],
       selected: {},
+      genesisIsActive: false,
+      checkPointIsActive: false,
+      checkPointSync: "",
     };
   },
   computed: {
     ...mapWritableState(useServices, {
-      installedServices: "installedServices",
       allServices: "allServices",
-    }),
-    ...mapWritableState(useNodeManage, {
-      actionContents: "actionContents",
-    }),
-    ...mapWritableState(useClickInstall, {
-      installationPath: "installationPath",
-      checkPointSync: "checkPointSync",
     }),
   },
   mounted() {
     this.plugin = this.items;
-    this.optionsToConnect();
   },
   methods: {
     changeTheOption() {
@@ -163,44 +107,11 @@ export default {
         this.genesisIsActive = true;
       }
     },
-    optionsToConnect() {
-      if (this.items.category === "consensus") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "execution") {
-            this.options.push(i);
-          }
-        });
-      } else if (this.items.category === "validator") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "execution" || i.category === "consensus") {
-            this.options.push(i);
-          }
-        });
-      }
-    },
-    chooseServiceToConnect() {
-      if (this.items.category === "consensus") {
-        this.options.forEach((i) => {
-          if (i.category === "execution") {
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "validator") {
-        this.options.forEach((i) => {
-          if (i.category === "consensus") {
-            this.selected = i;
-          }
-        });
-      } else {
-        return;
-      }
-      this.serviceIsSelected = true;
-    },
   },
 };
 </script>
 <style scoped>
-.addParent {
+.replaceParent {
   grid-column: 1;
   width: 100%;
   height: 100%;
@@ -215,11 +126,7 @@ export default {
   transition-duration: 500ms;
 }
 
-.activeAddPanel {
-  position: relative !important;
-  transition-duration: 2s !important;
-}
-.addBox {
+.replaceBox {
   width: 98%;
   height: 99%;
   display: flex;
@@ -231,32 +138,7 @@ export default {
   margin: 0 auto;
   position: relative;
 }
-.replaceService {
-  width: 17%;
-  height: 6%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  margin: 0 auto;
-  position: absolute;
-  top: 1%;
-  right: 3%;
-}
-.replaceService img {
-  width: 90%;
-  height: 90%;
-  object-fit: contain;
-  cursor: pointer;
-}
-.replaceService img:hover {
-  transform: scale(1.1);
-  transition-duration: 200ms;
-}
-.replaceService img:active {
-  transform: scale(1);
-  transition-duration: 200ms;
-}
+
 .service {
   width: 98%;
   height: 10%;
@@ -309,64 +191,65 @@ export default {
 
 .configBox {
   width: 95%;
-  height: 80%;
+  height: 70%;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-
-.configBox .change-installation {
+.configBox .pluginBox {
   width: 100%;
   height: 13%;
-  border-radius: 5px;
-  background-color: #316355;
+  background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.configBox .pluginBox img {
+  width: 20%;
+}
+.pluginBox .plugin-details {
+  width: 70%;
+  height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
-.change-installation .change-title {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.change-title span {
-  color: #c0c0c0;
-  font-size: 0.7rem;
-  font-weight: 700;
-}
-.change-installation .change-box {
-  width: 96%;
-  height: 45%;
-  background-color: rgb(209, 209, 209);
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.change-box input {
+
+.plugin-details .pluginName {
   width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 4px;
-  outline: none !important;
-  outline-style: none !important;
+  height: 60%;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #c8c8c8;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: center;
 }
+.plugin-details p,
+.plugin-details p span {
+  width: max-content;
+  height: 40%;
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: flex-start;
+}
+
 .configBox .fast-sync {
   width: 100%;
   height: 13%;
@@ -374,7 +257,7 @@ export default {
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 10px 0 5px 5px;
-  margin-top: 8px;
+  margin-top: 20%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -470,8 +353,8 @@ export default {
   padding: 0;
   padding-left: 4px;
 }
-.portAddBox,
-.clientAddBox {
+.portreplaceBox,
+.clientreplaceBox {
   width: 100%;
   height: 13%;
   background-color: #242424;
@@ -483,11 +366,11 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.portAddBox img {
+.portreplaceBox img {
   width: 18%;
   opacity: 0.5;
 }
-.clientAddBox img {
+.clientreplaceBox img {
   width: 16%;
   opacity: 0.5;
 }

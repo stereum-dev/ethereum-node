@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide" >
+          <Transition name="slide">
             <add-panel
               v-if="displayCustomAddPanel"
               :items="itemToInstall"
@@ -16,8 +16,15 @@
               :items="itemToInstall"
               @cancel-modify="cancelModifyProcess"
               @save-modify="saveServiceModification"
+              @change-plugin="replacePlugin"
             >
             </modify-panel>
+            <replace-panel
+              v-else-if="displayReplacePanel"
+              @cancel-replace="cancelReplaceProcess"
+              @confirm-replace="confirmReplaceProcess"
+              :items="itemToReplace"
+            ></replace-panel>
             <node-configuration
               v-else
               :configData="configData"
@@ -140,6 +147,7 @@ import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
+import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -157,6 +165,7 @@ export default {
     TaskManager,
     AddPanel,
     ModifyPanel,
+    ReplacePanel,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -168,7 +177,9 @@ export default {
       modalItems: [],
       displayCustomAddPanel: false,
       displayCustomModifyPanel: false,
+      displayReplacePanel: false,
       itemToInstall: null,
+      itemToReplace: null,
     };
   },
   computed: {
@@ -268,6 +279,17 @@ export default {
       this.itemToInstall.modifierPanel = false;
       this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
       this.itemToInstall = null;
+    },
+    replacePlugin(item) {
+      this.itemToReplace = item;
+      this.displayCustomModifyPanel = false;
+      this.displayReplacePanel = true;
+    },
+    cancelReplaceProcess() {
+      this.displayReplacePanel = false;
+    },
+    confirmReplaceProcess() {
+      this.displayReplacePanel = false;
     },
   },
 };
