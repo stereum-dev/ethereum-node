@@ -19,6 +19,12 @@ export const useControlStore = defineStore("theControl", {
       code: null,
       syncstatus: [],
       storagestatus: [],
+      consensusClient: "",
+      consensusNumPeer: null,
+      consensusValPeer: null,
+      executionClient: "",
+      executionNumPeer: null,
+      executionValPeer: null,
     };
   },
   actions: {},

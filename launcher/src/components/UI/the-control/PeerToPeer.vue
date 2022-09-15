@@ -9,12 +9,26 @@
       </div>
       <div class="p2pBarCont">
         <div class="p2pVal">
-          <div class="p2pVal_value" :style="verticalBar"></div>
+          <div class="p2pVal_value" :style="firstBar"></div>
+        </div>
+        <div class="titleVal">
+          <span>{{ consensusClient }}</span>
+        </div>
+      </div>
+      <div class="p2pBarCont">
+        <div class="p2pVal">
+          <div class="p2pVal_value" :style="secondBar"></div>
+        </div>
+        <div class="titleVal">
+          <span>{{ executionClient }}</span>
         </div>
       </div>
     </div>
-    <div class="vlaueType">
-      <span>{{ valPeer }} %</span>
+    <div class="firstVlaueType">
+      <span>{{ consensusNumPeer }}</span>
+    </div>
+    <div class="secondVlaueType">
+      <span>{{ executionNumPeer }}</span>
     </div>
   </div>
 </template>
@@ -23,17 +37,36 @@
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 export default {
+
   computed: {
-    verticalBar() {
-      return { height: this.valPeer + "%" };
+    firstBar() {
+      return { height: this.consensusValPeer + "%" };
+    },
+    secondBar() {
+      return { height: this.executionValPeer + "%" };
     },
     ...mapState(useControlStore, {
-      valPeer: "valPeer",
+      consensusClient: "consensusClient",
+      consensusNumPeer: "consensusNumPeer",
+      consensusValPeer: "consensusValPeer",
+      executionClient: "executionClient",
+      executionNumPeer: "executionNumPeer",
+      executionValPeer: "executionValPeer",
     }),
   },
 };
 </script>
 <style scoped>
+.titleVal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 5%;
+  font-size: 60%;
+  font-weight: 600;
+  color: #c1c1c1;
+}
 .peer2peerParent {
   width: 100%;
   display: flex;
@@ -59,6 +92,8 @@ export default {
   height: 100%;
   display: flex;
   box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
 }
 .p2pIco {
   box-sizing: border-box;
@@ -91,11 +126,12 @@ export default {
 }
 
 .p2pBarCont {
-  width: 70%;
+  width: 30%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  height: 90%;
 }
 .p2pVal {
   width: 80%;
@@ -111,10 +147,19 @@ export default {
   background: #568d50;
   width: 98%;
 }
-.vlaueType {
+.firstVlaueType {
   position: absolute;
-  top: 68%;
-  left: 52%;
+  top: 66.5%;
+  left: 47.2%;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 0 rgb(37, 75, 54);
+  color: #c1c1c1;
+}
+.secondVlaueType {
+  position: absolute;
+  top: 66.5%;
+  left: 56.5%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
