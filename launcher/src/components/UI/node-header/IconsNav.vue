@@ -107,7 +107,9 @@ export default {
         item.running = true;
         this.updating = true;
         if (item && item.id) {
-          await ControlService.updateServices({ services: item.id });
+          let seconds = await ControlService.updateServices({ services: item.id });
+          console.log(seconds)
+          await ControlService.restartServices(seconds)
         } else if (item && item.commit) {
           let seconds = await ControlService.updateStereum({ commit: item.commit });
           await ControlService.restartServices(seconds);
