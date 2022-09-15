@@ -240,7 +240,7 @@ export class Monitoring {
         'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
       },
       'execution':{
-        'GethService' : ['chain_head_header','chain_head_receipt','chain_head_block'], // TODO: which of those keys ​​are correct?
+        'GethService' : ['chain_head_header','chain_head_block'], // OK
         'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK
         'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask)
       },
