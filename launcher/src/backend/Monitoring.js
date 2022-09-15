@@ -240,7 +240,7 @@ export class Monitoring {
         'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
       },
       'execution':{
-        'GethService' : ['chain_head_header','chain_head_receipt','chain_head_block'], // TODO: which of those keys ​​are correct?
+        'GethService' : ['chain_head_header','chain_head_block'], // OK
         'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK
         'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask)
       },
@@ -574,28 +574,8 @@ export class Monitoring {
     }
   }
 
-  // Get storage status of consensus, execution and validator clients
+  // Get storage status of all services
   async getStorageStatus() {
-
-    // Service definitions with type to get storage status based on volumes
-    const services = {
-      'consensus':[
-        'TekuBeaconService',
-        'LighthouseBeaconService',
-        'PrysmBeaconService',
-        'NimbusBeaconService',
-      ],
-      'execution':[
-        'GethService',
-        'BesuService',
-        'NethermindService',
-      ],
-      'validator':[
-        'LighthouseValidatorService',
-        'PrysmValidatorService',
-        'SSVNetworkService',
-      ],
-    };
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
@@ -607,29 +587,21 @@ export class Monitoring {
       };
     }
 
-    // Find consensus, execution and validator service configurations and build ssh command to query client storages 
-    var consensus, execution, validator, sshcmd = '';
-    const clientTypes = Object.keys(services);
-    for(let i=0;i<clientTypes.length;i++){
-      let clientType = clientTypes[i];
-      let clt = serviceInfos.filter((s) => services[clientType].includes(s.service)).pop();
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
-        return {
-          "code": 332,
-          "info": "error: " + clientType + " client not found (in storagestatus)",
-          "data": serviceInfos,
-        };
-      }
-      if(Array.isArray(clt.config.volumes) && clt.config.volumes.length){
-        const strVolumes = '"' + clt.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
-        sshcmd += 'du -csh ' + strVolumes + ' | tail -n1 | awk \'{print $1;}\' ; ';
-      }
-      eval(clientType + " = clt;");  // eval objects -> consensus/execution/validator
+    // Build ssh command to query storages 
+    var sshcmd = '';
+    for(let svc of serviceInfos){
+        if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
+            continue;
+        }
+        if(Array.isArray(svc.config.volumes) && svc.config.volumes.length){
+          const strVolumes = '"' + svc.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
+          sshcmd += 'du -csh ' + strVolumes + ' | tail -n1 | awk \'{print $1;}\' ; ';
+        }
     }
     sshcmd = sshcmd.trim();
     if(!sshcmd){
       return {
-        "code": 333,
+        "code": 332,
         "info": "error: no storage volumes available (detected in storagestatus)",
         "data": serviceInfos,
       };
@@ -641,7 +613,7 @@ export class Monitoring {
       result = await this.nodeConnectionProm.sshService.exec(sshcmd);
     } catch (err) {
       return {
-        "code": 334,
+        "code": 333,
         "info": "error: failed to execute ssh command in storagestatus",
         "data": err,
       };
@@ -656,7 +628,7 @@ export class Monitoring {
         err += " (syntax error)";
       }
       return {
-        "code": 335,
+        "code": 334,
         "info": err,
         "data": result,
       };
@@ -665,12 +637,10 @@ export class Monitoring {
     // Parse the result and add the response for "storageDataItems" exact as defined in front-end
     var data = [];
     var storagesizes = result.stdout.trim().split("\n");
-    clientTypes.forEach(function (clientType, index) {
-      let clt = '';
-      eval("clt = " + clientType + ";"); // eval clt object from consensus/execution/validator objects
+    serviceInfos.forEach(function (svc, index) {
       data.push({
         id: index+1,
-        title: clt.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi,"vc").toUpperCase(),
+        title: svc.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi," vc").replace(/NodeExporter/gi," ne").toUpperCase(),
         storageValue: ( (!(index in storagesizes) || !storagesizes[index] || storagesizes[index] < 1) ? '0 ' : storagesizes[index].replace(/([a-z]+)/si,' $1') ) + "B",
       });
     });
