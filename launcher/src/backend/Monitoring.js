@@ -317,18 +317,19 @@ export class Monitoring {
 
       // Define the response for "syncStatusItems" exact as defined in front-end
       // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
+      // Attention: frstVal needs to be the lower value in frontend, which is in key 1!
       const data = [
         {
           id: 1,
           title: consensus.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          frstVal: results[consensus.service][services.consensus[consensus.service][0]],
-          scndVal: results[consensus.service][services.consensus[consensus.service][1]],
+          frstVal: results[consensus.service][services.consensus[consensus.service][1]],
+          scndVal: results[consensus.service][services.consensus[consensus.service][0]],
         },
         {
           id: 2,
           title: execution.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          frstVal: results[execution.service][services.execution[execution.service][0]],
-          scndVal: results[execution.service][services.execution[execution.service][1]],
+          frstVal: results[execution.service][services.execution[execution.service][1]],
+          scndVal: results[execution.service][services.execution[execution.service][0]],
         },
       ];
 

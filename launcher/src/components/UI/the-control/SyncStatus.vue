@@ -74,28 +74,33 @@ export default {
   methods: {
     syncSituation() {
       if (this.syncIcoSituation === false && this.syncIcoError === false) {
-        return this.activeIco;
+        return this.synchedIco;
       } else if (
         this.syncIcoSituation === true &&
         this.syncIcoError === false
       ) {
-        return this.synchedIco;
+        return this.activeIco;
       } else {
         this.syncIcoError = true;
         return this.errorIco;
       }
     },
     syncControler() {
-      if (this.code === null) {
-        this.syncIcoSituation = false;
-        this.syncIcoError = false;
-      } else if (this.code === 0) {
-        this.syncIcoSituation = true;
-        this.syncIcoError = false;
-      } else if (this.code !== 0 && this.code !== null) {
-        this.syncIcoSituation = false;
-        this.syncIcoError = true;
+      let syncIcoError = false;
+      let syncIcoSituation = false;
+      for(var i in this.syncstatus){
+        let lo = this.syncstatus[i].frstVal;
+        let hi = this.syncstatus[i].scndVal;
+        if(this.code !== 0 || !hi || !lo){
+          syncIcoError = true;
+          break;
+        }else if(lo < hi){
+          syncIcoSituation = true;
+          break;
+        }
       }
+      this.syncIcoError = syncIcoError;
+      this.syncIcoSituation = syncIcoSituation;
     },
   },
 };
