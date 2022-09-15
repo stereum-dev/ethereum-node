@@ -52,6 +52,8 @@ export default {
         // code      : 0 (number!) means success all other values (including null or undefined) means error.
         // info      : a message about the last result.
         // data      : additional data (if available) or empty string
+        // Eeach main element in the "data" response has also the same 3 keys to handle errors indivudually!
+        // For example "data.syncstatus.{code|info|data}" or "data.p2pstatus.{code|info|data}"
         // At the moment the following data is provided:
         // data.syncstatus   : can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
         // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
@@ -62,22 +64,22 @@ export default {
         if (nodeStats) {
           try {
             this.code = nodeStats.code;
-            this.valPeer = nodeStats.data.p2pstatus.valPeer;
-            this.numPeer = nodeStats.data.p2pstatus.numPeer;
-            this.syncstatus = nodeStats.data.syncstatus;
-            this.storagestatus = nodeStats.data.storagestatus;
+            this.valPeer = nodeStats.data.p2pstatus.data.valPeer;
+            this.numPeer = nodeStats.data.p2pstatus.data.numPeer;
+            this.syncstatus = nodeStats.data.syncstatus.data;
+            this.storagestatus = nodeStats.data.storagestatus.data;
             this.consensusClient =
-              nodeStats.data.p2pstatus.details.consensus.client;
+              nodeStats.data.p2pstatus.data.details.consensus.client;
             this.consensusNumPeer =
-              nodeStats.data.p2pstatus.details.consensus.numPeer;
+              nodeStats.data.p2pstatus.data.details.consensus.numPeer;
             this.consensusValPeer =
-              nodeStats.data.p2pstatus.details.consensus.valPeer;
+              nodeStats.data.p2pstatus.data.details.consensus.valPeer;
             this.executionClient =
-              nodeStats.data.p2pstatus.details.execution.client;
+              nodeStats.data.p2pstatus.data.details.execution.client;
             this.executionValPeer =
-              nodeStats.data.p2pstatus.details.execution.valPeer;
+              nodeStats.data.p2pstatus.data.details.execution.valPeer;
             this.executionNumPeer =
-              nodeStats.data.p2pstatus.details.execution.numPeer;
+              nodeStats.data.p2pstatus.data.details.execution.numPeer;
           } catch (e) {}
         }
 
