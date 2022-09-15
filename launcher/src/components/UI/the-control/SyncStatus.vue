@@ -13,7 +13,7 @@
             <span>{{ item.title }}</span>
           </div>
           <div class="sync-box-row_val">
-            <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
+            <span>{{ item.scndVal }} / {{ item.frstVal }}</span>
           </div>
         </div>
       </div>
