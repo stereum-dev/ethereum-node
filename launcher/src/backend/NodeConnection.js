@@ -848,12 +848,16 @@ export class NodeConnection {
 
   async updateServices(services) {
     try {
+      let before = this.getTimeStamp()
       await this.runPlaybook("Update Services", {
         stereum_role: 'update-services',
         services_to_update: services ? services : undefined
       })
+      let after = this.getTimeStamp()
+      return after - before
     } catch (err) {
       log.error("Error occurred running service updates:\n", err)
+      return 0
     }
   }
 
@@ -872,6 +876,7 @@ export class NodeConnection {
       return after - before
     } catch (err) {
       log.error("Error occurred running stereum updates:\n", err)
+      return 0
     }
   }
 

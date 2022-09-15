@@ -15,4 +15,14 @@
   include_tasks: restart-service.yaml
   loop: "{{ service_configs.results | map(attribute='content') | map('b64decode') | map('from_yaml') | map(attribute='id') | list }}"
 
+- name: Docker system prune
+  community.docker.docker_prune:
+    containers: yes
+    images: yes
+    images_filters:
+      dangling: false
+    networks: yes
+    volumes: yes
+    builder_cache: yes
+
 # EOF
