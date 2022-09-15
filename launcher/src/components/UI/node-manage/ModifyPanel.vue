@@ -11,8 +11,8 @@
           </p>
         </div>
       </div>
-      <!-- <div class="configBox">
-        <div class="change-installation">
+      <div class="configBox">
+        <div class="change-installation" v-if="replaceServiceActive">
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
@@ -23,7 +23,9 @@
         <div
           class="fast-sync"
           v-if="
-            plugin.category === 'execution' || plugin.category === 'consensus'
+            (plugin.category === 'execution' ||
+              plugin.category === 'consensus') &&
+            replaceServiceActive
           "
         >
           <div class="sync-header">
@@ -61,14 +63,42 @@
             <input type="text" v-model="port" placeholder="9000" />
           </div>
         </div>
-        <div class="clientAddBox">
-          <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+        <template v-for="service in options" :key="service.id">
+          <div class="optionsBox" v-if="!serviceIsSelected">
+            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+            <div class="optionsDetails">
+              <span class="category">{{ service.category }} Client</span>
+              <div class="optionsName">
+                <span>{{ service.name }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+        <div
+          class="clientAddBox"
+          v-if="
+            items.category === 'consensus' || items.category === 'validator'
+          "
+        >
+          <img
+            v-if="serviceIsSelected"
+            src="/img/icon/manage-node-icons/connected.png"
+            alt="icon"
+          />
+          <img
+            v-else
+            src="/img/icon/manage-node-icons/connect.png"
+            alt="icon"
+          />
           <div class="connectionConfig">
-            <span>{{ plugin.category }} Client</span>
-            <div class="plusBtn">+</div>
+            <div class="connectedService" v-if="serviceIsSelected">
+              <span class="category">{{ selected.category }} Client</span>
+              <span class="name">{{ selected.name }}</span>
+            </div>
+            <div v-else class="plusBtn" @click="chooseServiceToConnect">+</div>
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="btnBox">
         <div class="cancelBtn" @click="$emit('cancelModify')">
           <span>Cancel</span>
@@ -95,8 +125,12 @@ export default {
       removeIsConfirmed: false,
       genesisIsActive: true,
       checkPointIsActive: false,
+      replaceServiceActive: false,
+      serviceIsSelected: false,
       plugin: {},
       port: "",
+      options: [],
+      selected: {},
     };
   },
   computed: {
@@ -114,6 +148,7 @@ export default {
   },
   mounted() {
     this.plugin = this.items;
+    this.optionsToConnect();
   },
   methods: {
     changeTheOption() {
@@ -124,6 +159,39 @@ export default {
         this.checkPointIsActive = false;
         this.genesisIsActive = true;
       }
+    },
+    optionsToConnect() {
+      if (this.items.category === "consensus") {
+        this.installedServices.forEach((i) => {
+          if (i.category === "execution") {
+            this.options.push(i);
+          }
+        });
+      } else if (this.items.category === "validator") {
+        this.installedServices.forEach((i) => {
+          if (i.category === "execution" || i.category === "consensus") {
+            this.options.push(i);
+          }
+        });
+      }
+    },
+    chooseServiceToConnect() {
+      if (this.items.category === "consensus") {
+        this.options.forEach((i) => {
+          if (i.category === "execution") {
+            this.selected = i;
+          }
+        });
+      } else if (this.items.category === "validator") {
+        this.options.forEach((i) => {
+          if (i.category === "consensus") {
+            this.selected = i;
+          }
+        });
+      } else {
+        return;
+      }
+      this.serviceIsSelected = true;
     },
   },
 };
@@ -425,8 +493,7 @@ export default {
   width: 80%;
   height: 95%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 .connectionConfig span {
@@ -464,6 +531,38 @@ export default {
 .plusBtn:active {
   background-color: #1c3c33;
   transform: scale(0.9);
+}
+.connectedService {
+  width: 100%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.connectedService .category {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.connectedService .name {
+  width: 99%;
+  height: 50%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  padding: 2%;
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
 }
 .btnBox {
   width: 100%;
@@ -527,5 +626,57 @@ export default {
   background-color: #b84738;
   transition-duration: 0.2s;
   transform: scale(0.9);
+}
+.optionsBox {
+  width: 100%;
+  height: 13%;
+  background-color: #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.optionsBox img {
+  width: 16%;
+  opacity: 0.5;
+}
+.optionsDetails {
+  width: 80%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.optionsDetails .category {
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.optionsName {
+  width: 99%;
+  height: 45%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  padding: 2%;
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.optionsName span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
 }
 </style>
