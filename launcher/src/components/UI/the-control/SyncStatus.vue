@@ -88,15 +88,24 @@ export default {
     syncControler() {
       let syncIcoError = false;
       let syncIcoSituation = false;
-      for(var i in this.syncstatus){
-        let lo = this.syncstatus[i].frstVal;
-        let hi = this.syncstatus[i].scndVal;
+      let pooi = [];
+      for(let k in this.syncstatus){
+        let lo = parseInt(this.syncstatus[k].frstVal);
+        let hi = parseInt(this.syncstatus[k].scndVal);
+        pooi[k] = (pooi[k] || lo > hi) ? true : false;
         if(this.code !== 0 || !hi || !lo){
           syncIcoError = true;
           break;
         }else if(lo < hi){
           syncIcoSituation = true;
           break;
+        }
+      }
+      // fix: keep client values zero if prometheus is out of info ("pooi") on node start
+      for(let k in pooi){
+        if(pooi[k]){
+          this.syncstatus[k].frstVal = 0;
+          this.syncstatus[k].scndVal = 0;
         }
       }
       this.syncIcoError = syncIcoError;
