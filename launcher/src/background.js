@@ -242,20 +242,26 @@ promiseIpc.on("runAllUpdates", async (args) => {
 
 promiseIpc.on("updateServices", async (args) => {
   app.showExitPrompt = true;
-  await nodeConnection.updateServices(args.services);
+  let seconds = await nodeConnection.updateServices(args.services);
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
+  return seconds
 });
 
 promiseIpc.on("updateStereum", async (args) => {
   app.showExitPrompt = true;
-  await nodeConnection.updateStereum(args.commit);
+  let seconds = await nodeConnection.updateStereum(args.commit);
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
+  return seconds
+});
+
+promiseIpc.on("restartServices", async (args) => {
+  await nodeConnection.restartServices(args);
 });
 
 promiseIpc.on("checkUpdates", async () => {

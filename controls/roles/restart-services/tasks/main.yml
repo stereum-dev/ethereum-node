@@ -1,0 +1,28 @@
+---
+- name: Find service configs modified recently
+  ansible.builtin.find:
+    paths: "/etc/stereum/services"
+    age: "-{{ restart_time_scope }}s"
+  register: restart_service_config_files
+
+- name: Read all matching service configs
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configs
+  with_items: "{{ restart_service_config_files.files }}"
+
+- name: Restart service
+  include_tasks: restart-service.yaml
+  loop: "{{ service_configs.results | map(attribute='content') | map('b64decode') | map('from_yaml') | map(attribute='id') | list }}"
+
+- name: Docker system prune
+  community.docker.docker_prune:
+    containers: yes
+    images: yes
+    images_filters:
+      dangling: false
+    networks: yes
+    volumes: yes
+    builder_cache: yes
+
+# EOF

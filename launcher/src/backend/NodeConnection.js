@@ -830,22 +830,34 @@ export class NodeConnection {
 
   async runAllUpdates(commit) {
     //stereum and service updates
+    let before = 0
+    let after = 0
     try{
+      before = this.getTimeStamp()
       await this.updateStereum(commit)
       await this.updateServices()
+      after = this.getTimeStamp()
     }catch(err){
       log.error("Error occurred running all updates:\n", err)
+    }finally{
+      if(after != 0 && before != 0)
+        return after - before
+      return 30
     }
   }
 
   async updateServices(services) {
     try {
+      let before = this.getTimeStamp()
       await this.runPlaybook("Update Services", {
         stereum_role: 'update-services',
         services_to_update: services ? services : undefined
       })
+      let after = this.getTimeStamp()
+      return after - before
     } catch (err) {
       log.error("Error occurred running service updates:\n", err)
+      return 0
     }
   }
 
@@ -857,10 +869,29 @@ export class NodeConnection {
       }
     }
     try {
+      let before = this.getTimeStamp()
       await this.runPlaybook("Update Stereum", extraVars)
       await this.runPlaybook("Update Changes", {stereum_role: 'update-changes'})
+      let after = this.getTimeStamp()
+      return after - before
     } catch (err) {
       log.error("Error occurred running stereum updates:\n", err)
+      return 0
+    }
+  }
+
+  getTimeStamp(){
+    return Math.floor(Date.now() / 1000)
+  }
+
+  async restartServices(seconds){
+    try {
+      await this.runPlaybook("Restart Services", {
+        stereum_role: 'restart-services',
+        restart_time_scope: seconds,
+      })
+    } catch (err) {
+      log.error("Error occurred during restarting services:\n", err)
     }
   }
 

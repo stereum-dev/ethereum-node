@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include restart-services"
+      include_role:
+        name: "restart-services"

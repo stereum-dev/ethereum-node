@@ -1,0 +1,13 @@
+---
+- name: Restart service
+  include_role:
+    name: manage-service
+  vars:
+    stereum:
+      manage_service:
+        save: false
+        state: restarted
+        configuration:
+          id: "{{ item }}"
+
+# EOF

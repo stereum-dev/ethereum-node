@@ -77,7 +77,6 @@ export class Monitoring {
     return this.nodeConnection.nodeConnectionParams.host
   }
 
-
   // Get service infos (either all or optional limited to specific - case-sensitive - service names)
   // Example A: const serviceInfos = await this.getServiceInfos(); // <- Returns all configs
   // Example B: const serviceInfos = await this.getServiceInfos("PrometheusService","GrafanaService");
@@ -268,28 +267,26 @@ export class Monitoring {
     }
 
     // Find execution and consensus service configurations
-    const consensus = serviceInfos.filter((s) => Object.keys(services.consensus).includes(s.service)).pop();
-    if(typeof consensus !== "object" || !consensus.hasOwnProperty("service") || !consensus.hasOwnProperty("state") ||  consensus.state != "running"){
-      return {
-        "code": 112,
-        "info": "error: consensus client not running (detected in syncstatus)",
-        "data": "",
-      };
-    }
-    const execution = serviceInfos.filter((s) => Object.keys(services.execution).includes(s.service)).pop();
-    if(typeof execution !== "object" || !execution.hasOwnProperty("service") || !execution.hasOwnProperty("state") ||  execution.state != "running"){
-      return {
-        "code": 113,
-        "info": "error: execution client not running (detected in syncstatus)",
-        "data": "",
-      };
+    var consensus, execution;
+    const clientTypes = Object.keys(services);
+    for(let i=0;i<clientTypes.length;i++){
+      let clientType = clientTypes[i];
+      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
+      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
+        return {
+          "code": 112,
+          "info": "error: " + clientType + " client not found (in syncstatus)",
+          "data": serviceInfos,
+        };
+      }
+      eval(clientType + " = clt;");  // eval objects -> consensus/execution
     }
 
     // Query Prometehus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
     if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
       return {
-        "code": 114,
+        "code": 113,
         "info": "error: prometheus query for syncstatus failed",
         "data": prometheus_result,
       };
@@ -297,56 +294,37 @@ export class Monitoring {
 
     // Filter Prometheus result by current used services
     try{
-      var results = [];
-      results[consensus.service] = {};
-      results[execution.service] = {};
-      const cc = prometheus_result.data.result.filter((s) => services.consensus[consensus.service].includes(s.metric.__name__));
-      const ec = prometheus_result.data.result.filter((s) => services.execution[execution.service].includes(s.metric.__name__));
-      services.consensus[consensus.service].forEach(function (item, index) {
-        try{
-          results[consensus.service][item] = cc.filter((s) => s.metric.__name__ == services.consensus[consensus.service][index]).pop().value.pop()
-        }catch(e){}
-      });
-      if(ec.length){
-        services.execution[execution.service].forEach(function (item, index) {
-          try{
-            results[execution.service][item] = ec.filter((s) => s.metric.__name__ == services.execution[execution.service][index]).pop().value.pop()
-          }catch(e){}
-        });
-      }
 
-      // Define the response for "syncStatusItems" exact as defined in front-end
+      // Add the response for "syncStatusItems" exact as defined in front-end
       // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
-      const data = [
-        {
-          id: 1,
-          title: consensus.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          frstVal: results[consensus.service][services.consensus[consensus.service][0]],
-          scndVal: results[consensus.service][services.consensus[consensus.service][1]],
-        },
-        {
-          id: 2,
-          title: execution.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          frstVal: results[execution.service][services.execution[execution.service][0]],
-          scndVal: results[execution.service][services.execution[execution.service][1]],
-        },
-      ];
-
-      // Make sure data is consistent
-      if(data[0].frstVal == null || data[0].scndVal == null){
-        return {
-          "code": 115,
-          "info": "error: execution client value unknown (detected in syncstatus)",
-          "data": data,
-        };
-      }
-      if(data[1].frstVal == null || data[1].scndVal == null){
-        return {
-          "code": 116,
-          "info": "error: consensus client value unknown (detected in syncstatus)",
-          "data": data,
-        };
-      }
+      // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
+      var data = [];
+      clientTypes.forEach(function (clientType, index) {
+        let clt = '';
+        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+        let results = [];
+        let labels = services[clientType][clt.service];
+        let xx = prometheus_result.data.result.filter((s) => labels.includes(s.metric.__name__));
+        if(xx.length){
+          labels.forEach(function (label, index) {
+            try{
+              results[label] = xx.filter((s) => s.metric.__name__ == labels[index]).pop().value.pop()
+            }catch(e){}
+          });
+        }
+        let frstVal = 0, scndVal = 0;
+        try{
+          frstVal = results[labels[1]];
+          scndVal = results[labels[0]];
+        }catch(e){}
+        data.push({
+          id: index+1,
+          title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+          frstVal: frstVal ? frstVal : 0,
+          scndVal: scndVal ? scndVal : 0,
+          state: clt.state,
+        });
+      });
 
       // Respond success
       return {
@@ -357,7 +335,7 @@ export class Monitoring {
 
     }catch(err){
       return {
-        "code": 117,
+        "code": 114,
         "info": "error: no prometheus data for syncstatus available yet",
         "data": err,
       };
@@ -403,60 +381,49 @@ export class Monitoring {
     }
 
     // Find execution and consensus service configurations
-    const consensus = serviceInfos.filter((s) => Object.keys(services.consensus).includes(s.service)).pop();
-    if(typeof consensus !== "object" || !consensus.hasOwnProperty("service") || !consensus.hasOwnProperty("config") || !consensus.hasOwnProperty("state") ||  consensus.state != "running"){
-      return {
-        "code": 222,
-        "info": "error: consensus client not running (detected in p2pstatus)",
-        "data": "",
-      };
-    }
-    const execution = serviceInfos.filter((s) => Object.keys(services.execution).includes(s.service)).pop();
-    if(typeof execution !== "object" || !execution.hasOwnProperty("service") || !execution.hasOwnProperty("config") || !execution.hasOwnProperty("state") ||  execution.state != "running"){
-      return {
-        "code": 223,
-        "info": "error: execution client not running (detected in p2pstatus)",
-        "data": "",
-      };
+    var consensus, execution;
+    const clientTypes = Object.keys(services);
+    for(let i=0;i<clientTypes.length;i++){
+      let clientType = clientTypes[i];
+      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
+      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
+        return {
+          "code": 222,
+          "info": "error: " + clientType + " client not found (in p2pstatus)",
+          "data": serviceInfos,
+        };
+      }
+      eval(clientType + " = clt;");  // eval objects -> consensus/execution
     }
 
     // Setup details
-    const details = {
-      'consensus':{
-        'service': consensus.service,
-        'client': consensus.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-        'numPeer': null,
-        'numPeerBy': {
-          'source': 'prometheus',
-          'fields': [],
-        },
-        'maxPeer': null,
-        'maxPeerBy': {
-          'source': 'config',
-          'fields': [],
-        },
-        'valPeer': null,
+    var details = {};
+    var detailsbase = {
+      'service': 'unknown',
+      'client': "unknown",
+      'state': "unknown",
+      'numPeer': 0,
+      'numPeerBy': {
+        'source': 'prometheus',
+        'fields': [],
       },
-      'execution':{
-        'service': execution.service,
-        'client': execution.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-        'numPeer': null,
-        'numPeerBy': {
-          'source': 'prometheus',
-          'fields': [],
-        },
-        'maxPeer': null,
-        'maxPeerBy': {
-          'source': 'config',
-          'fields': [],
-        },
-        'valPeer': null,
+      'maxPeer': 0,
+      'maxPeerBy': {
+        'source': 'config',
+        'fields': [],
       },
+      'valPeer': 0,
     };
 
     // Get max peers for consensus and execution clients by configuration or their default values
     var opttyp=null, optnam=null, defval=null, optval=null, regexp=null;
-    [consensus,execution].forEach(function (clt, index) {
+    clientTypes.forEach(function (clientType, index) {
+      let clt = '';
+      eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+      details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
+      details[clientType]['service'] = clt.service;
+      details[clientType]['client'] = clt.service.replace(/Beacon|Service/gi,"").toUpperCase();
+      details[clientType]['state'] = clt.state;
       opttyp = Object.keys(services).find(key => services[key].hasOwnProperty(clt.service));
       if(!opttyp){
         return;
@@ -545,7 +512,7 @@ export class Monitoring {
     const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
     if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
       return {
-        "code": 224,
+        "code": 223,
         "info": "error: prometheus query for p2pstatus failed",
         "data": prometheus_result,
       };
@@ -554,54 +521,53 @@ export class Monitoring {
     // Filter Prometheus result by current used services and calculate number of currently used peers per client
     // Note that Prysm requires to match state="Connected"!
     try{
-      const cc = prometheus_result.data.result.filter((s) => 
-        services.consensus[consensus.service].includes(s.metric.__name__) && 
-        consensus.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
-      );
-      const ec = prometheus_result.data.result.filter((s) => services.execution[execution.service].includes(s.metric.__name__));
-      services.consensus[consensus.service].forEach(function (item, index) {
-        try{
-          details['consensus']['numPeer'] = parseInt(cc.filter((s) => s.metric.__name__ == services.consensus[consensus.service][index]).pop().value.pop());
-          details['consensus']['numPeerBy']['fields'].push(item);
-        }catch(e){}
+      var maxPeer = 0, numPeer = 0, valPeer = 0;
+      clientTypes.forEach(function (clientType, index) {
+        let clt = '';
+        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+        let xx = prometheus_result.data.result.filter((s) => 
+          services[clientType][clt.service].includes(s.metric.__name__) && 
+          clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
+        );
+        if(xx.length){
+          services[clientType][clt.service].forEach(function (item, index) {
+            try{
+              details[clientType]['numPeer'] = parseInt(xx.filter((s) => s.metric.__name__ == services[clientType][clt.service][index]).pop().value.pop());
+              details[clientType]['numPeerBy']['fields'].push(item);
+            }catch(e){}
+          });
+        }
+
+        // Summarize details
+        details[clientType]['maxPeer'] = details[clientType]['maxPeer'];
+        details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
+        details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
+        details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
+
+        // Summarize totals
+        maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
+        numPeer = parseInt(numPeer + details[clientType]['numPeer']);
+        valPeer = Math.round((numPeer/maxPeer)*100);
       });
-      if(ec.length){
-        services.execution[execution.service].forEach(function (item, index) {
-          try{
-            details['execution']['numPeer'] = parseInt(ec.filter((s) => s.metric.__name__ == services.execution[execution.service][index]).pop().value.pop());
-            details['execution']['numPeerBy']['fields'].push(item);
-          }catch(e){}
-        });
-      }
-
-      // Summarize details
-      details['consensus']['valPeer'] = Math.round((details['consensus']['numPeer']/details['consensus']['maxPeer'])*100);
-      details['execution']['valPeer'] = Math.round((details['execution']['numPeer']/details['execution']['maxPeer'])*100);
-
-      // Summarize response data:
+      
+      // Respond success
       // Define the response for "valPeer" exact as defined in front-end as percentage (%).
       // Avoid overdues that may happen during peer cleaning. The exact values can be taken
-      // from the details object if really needed.
-      const maxPeer = parseInt(details['consensus']['maxPeer'] + details['execution']['maxPeer']);
-      const numPeer = parseInt(details['consensus']['numPeer'] + details['execution']['numPeer']);
-      const valPeer = Math.round((numPeer/maxPeer)*100);
-      const data = {
-        'details': details,
-        'maxPeer': maxPeer,
-        'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
-        'valPeer': valPeer > 100 ? 100 : valPeer,
-      }
-
-      // Respond success
+      // from the details object if needed.
       return {
         "code": 0,
         "info": "success: p2pstatus successfully retrieved",
-        "data": data,
+        "data": {
+          'details': details,
+          'maxPeer': maxPeer,
+          'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
+          'valPeer': valPeer > 100 ? 100 : valPeer,
+        },
       };
 
     }catch(err){
       return {
-        "code": 225,
+        "code": 224,
         "info": "error: no prometheus data for p2pstatus available yet",
         "data": err,
       };
@@ -721,21 +687,24 @@ export class Monitoring {
   async getNodeStats(){
     try {
       const storagestatus = await this.getStorageStatus();
-      if(storagestatus.code)
-        return storagestatus;
+      // if(storagestatus.code)
+      //   return storagestatus;
       const syncstatus = await this.getSyncStatus();
-      if(syncstatus.code)
-        return syncstatus;
+      // if(syncstatus.code)
+      //   return syncstatus;
       const p2pstatus = await this.getP2PStatus();
-      if(p2pstatus.code)
-        return p2pstatus;
+      // if(p2pstatus.code)
+      //   return p2pstatus;
       return {
         "code": 0,
         "info": "success: data successfully retrieved",
         "data": {
-          'syncstatus':syncstatus.data,
-          'p2pstatus':p2pstatus.data,
-          'storagestatus':storagestatus.data,
+          // 'syncstatus':syncstatus.data,
+          // 'p2pstatus':p2pstatus.data,
+          // 'storagestatus':storagestatus.data,
+          'syncstatus':syncstatus,
+          'p2pstatus':p2pstatus,
+          'storagestatus':storagestatus,
         }
       };
     } catch (err) {

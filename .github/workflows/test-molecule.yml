@@ -62,12 +62,11 @@ jobs:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
           ansible_python_interpreter: "/usr/bin/python3"
 
-  update-os:
+  update-changes:
     strategy:
       matrix:
         tests: [
-          {role: "update-os", test: "default"},
-          {role: "update-os", test: "run-stereum-service-update"}
+          {role: "update-changes", test: "20-rc3"}
         ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
@@ -117,6 +116,117 @@ jobs:
         env:
           HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
           ansible_python_interpreter: "/usr/bin/python3"
+
+  restart-services:
+    strategy:
+      matrix:
+        tests: [
+          {role: "restart-services", test: "default"}
+        ]
+      fail-fast: false
+    concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install depencencies
+        run: |
+          pip install ansible==5.10.0
+          pip install molecule==3.5.2
+          pip install "molecule[docker.lint]"
+          pip install molecule-docker
+          pip install molecule-hetznercloud
+          pip install docker
+          pip install hcloud
+          ansible-galaxy collection install community.docker
+      - name: Install dependency for pipx
+        run: |
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==5.10.0
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==3.5.2
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
+          /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
+      - name: Install ansible-lint
+        run: sudo apt-get install -y ansible-lint
+      - name: Molecule version
+        run: molecule --version
+        env:
+          ansible_python_interpreter: "/usr/bin/python3"
+      - name: Run tests
+        working-directory: ./controls/roles/${{ matrix.tests.role }}
+        run: molecule test -s ${{ matrix.tests.test }}
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          ansible_python_interpreter: "/usr/bin/python3"
+      # destroying is necessary when previous task failed and didn't clean up properly
+      - name: Destroy previous testing VMs
+        if: ${{ failure() || cancelled() }}
+        working-directory: ./controls/roles/${{ matrix.tests.role }}
+        run: molecule destroy -s ${{ matrix.tests.test }}
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          ansible_python_interpreter: "/usr/bin/python3"
+
+  # update-os:
+  #   strategy:
+  #     matrix:
+  #       tests: [
+  #         {role: "update-os", test: "default"},
+  #         {role: "update-os", test: "run-stereum-service-update"}
+  #       ]
+  #     fail-fast: false
+  #   concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
+  #   runs-on: ubuntu-22.04
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.9'
+  #     - name: Install depencencies
+  #       run: |
+  #         pip install ansible==5.10.0
+  #         pip install molecule==3.5.2
+  #         pip install "molecule[docker.lint]"
+  #         pip install molecule-docker
+  #         pip install molecule-hetznercloud
+  #         pip install docker
+  #         pip install hcloud
+  #         ansible-galaxy collection install community.docker
+  #     - name: Install dependency for pipx
+  #       run: |
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install ansible==5.10.0
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule==3.5.2
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install "molecule[docker.lint]"
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-docker
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install molecule-hetznercloud
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install docker
+  #         /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
+  #     - name: Install ansible-lint
+  #       run: sudo apt-get install -y ansible-lint
+  #     - name: Molecule version
+  #       run: molecule --version
+  #       env:
+  #         ansible_python_interpreter: "/usr/bin/python3"
+  #     - name: Run tests
+  #       working-directory: ./controls/roles/${{ matrix.tests.role }}
+  #       run: molecule test -s ${{ matrix.tests.test }}
+  #       env:
+  #         HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+  #         ansible_python_interpreter: "/usr/bin/python3"
+  #     # destroying is necessary when previous task failed and didn't clean up properly
+  #     - name: Destroy previous testing VMs
+  #       if: ${{ failure() || cancelled() }}
+  #       working-directory: ./controls/roles/${{ matrix.tests.role }}
+  #       run: molecule destroy -s ${{ matrix.tests.test }}
+  #       env:
+  #         HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+  #         ansible_python_interpreter: "/usr/bin/python3"
 
   setup:
     strategy:
@@ -183,42 +293,42 @@ jobs:
           {role: "manage-service", test: "start-multiple"},
           {role: "manage-service", test: "start-stop"},
           {role: "manage-service", test: "write-start"},
-          {role: "manage-service", test: "ssv-lighthouse"},
-          {role: "manage-service", test: "ssv-nimbus"},
-          {role: "manage-service", test: "ssv-teku"},
-          {role: "manage-service", test: "ssv-prysm"},
+          # {role: "manage-service", test: "ssv-lighthouse"},
+          # {role: "manage-service", test: "ssv-nimbus"},
+          # {role: "manage-service", test: "ssv-teku"},
+          # {role: "manage-service", test: "ssv-prysm"},
           {role: "manage-service", test: "monitor-geth"},
-          {role: "manage-service", test: "monitor-ssvnetwork"},
-          {role: "manage-service", test: "monitor-besu"},
-          {role: "manage-service", test: "monitor-nethermind"},
-          {role: "manage-service", test: "monitor-lighthouse"},
-          {role: "manage-service", test: "monitor-nimbus"},
-          {role: "manage-service", test: "monitor-prysm"},
-          {role: "manage-service", test: "monitor-teku"},
-          {role: "manage-service", test: "mevboost-besu-lighthouse"},
-          {role: "manage-service", test: "mevboost-besu-nimbus"},
-          {role: "manage-service", test: "mevboost-besu-prysm"},
-          {role: "manage-service", test: "mevboost-besu-teku"},
-          {role: "manage-service", test: "mevboost-geth-lighthouse"},
-          {role: "manage-service", test: "mevboost-geth-nimbus"},
-          {role: "manage-service", test: "mevboost-geth-prysm"},
-          {role: "manage-service", test: "mevboost-geth-teku"},
-          {role: "manage-service", test: "mevboost-nethermind-lighthouse"},
-          {role: "manage-service", test: "mevboost-nethermind-nimbus"},
-          {role: "manage-service", test: "mevboost-nethermind-prysm"},
-          {role: "manage-service", test: "mevboost-nethermind-teku"},
-          {role: "manage-service", test: "besu-lighthouse"},
-          {role: "manage-service", test: "besu-nimbus"},
+          # {role: "manage-service", test: "monitor-ssvnetwork"},
+          # {role: "manage-service", test: "monitor-besu"},
+          # {role: "manage-service", test: "monitor-nethermind"},
+          # {role: "manage-service", test: "monitor-lighthouse"},
+          # {role: "manage-service", test: "monitor-nimbus"},
+          # {role: "manage-service", test: "monitor-prysm"},
+          # {role: "manage-service", test: "monitor-teku"},
+          # {role: "manage-service", test: "mevboost-besu-lighthouse"},
+          # {role: "manage-service", test: "mevboost-besu-nimbus"},
+          # {role: "manage-service", test: "mevboost-besu-prysm"},
+          # {role: "manage-service", test: "mevboost-besu-teku"},
+          # {role: "manage-service", test: "mevboost-geth-lighthouse"},
+          # {role: "manage-service", test: "mevboost-geth-nimbus"},
+          # {role: "manage-service", test: "mevboost-geth-prysm"},
+          # {role: "manage-service", test: "mevboost-geth-teku"},
+          # {role: "manage-service", test: "mevboost-nethermind-lighthouse"},
+          # {role: "manage-service", test: "mevboost-nethermind-nimbus"},
+          # {role: "manage-service", test: "mevboost-nethermind-prysm"},
+          # {role: "manage-service", test: "mevboost-nethermind-teku"},
+          # {role: "manage-service", test: "besu-lighthouse"},
+          # {role: "manage-service", test: "besu-nimbus"},
           {role: "manage-service", test: "besu-prysm"},
-          {role: "manage-service", test: "besu-teku"},
+          # {role: "manage-service", test: "besu-teku"},
           {role: "manage-service", test: "geth-lighthouse"},
-          {role: "manage-service", test: "geth-nimbus"},
-          {role: "manage-service", test: "geth-prysm"},
+          # {role: "manage-service", test: "geth-nimbus"},
+          # {role: "manage-service", test: "geth-prysm"},
           {role: "manage-service", test: "geth-teku"},
-          {role: "manage-service", test: "nethermind-lighthouse"},
+          # {role: "manage-service", test: "nethermind-lighthouse"},
           {role: "manage-service", test: "nethermind-nimbus"},
-          {role: "manage-service", test: "nethermind-prysm"},
-          {role: "manage-service", test: "nethermind-teku"},
+          # {role: "manage-service", test: "nethermind-prysm"},
+          # {role: "manage-service", test: "nethermind-teku"},
           {role: "manage-service", test: "notifications"}
         ]
       fail-fast: false

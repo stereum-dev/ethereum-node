@@ -27,18 +27,4 @@
   include_tasks: update-service.yml
   with_items: "{{ services_to_update }}"
 
-- name: Restart services
-  include_tasks: restart-service.yml
-  with_items: "{{ services_to_update }}"
-
-- name: Docker system prune
-  community.docker.docker_prune:
-    containers: yes
-    images: yes
-    images_filters:
-      dangling: false
-    networks: yes
-    volumes: yes
-    builder_cache: yes
-
 # EOF

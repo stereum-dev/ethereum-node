@@ -89,7 +89,8 @@ export default {
         this.refresh = false
         this.updating = true;
         this.newUpdates.forEach(update => update.running = true)
-        await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
+        let seconds = await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
+        await ControlService.restartServices(seconds);
       } catch (err) {
         console.log("Running All Updates Failed: ", err)
       } finally {
@@ -106,9 +107,11 @@ export default {
         item.running = true;
         this.updating = true;
         if (item && item.id) {
-          await ControlService.updateServices({ services: item.id });
+          let seconds = await ControlService.updateServices({ services: item.id });
+          await ControlService.restartServices(seconds)
         } else if (item && item.commit) {
-          await ControlService.updateStereum({ commit: item.commit });
+          let seconds = await ControlService.updateStereum({ commit: item.commit });
+          await ControlService.restartServices(seconds);
         }
       } catch (err) {
         console.log(JSON.stringify(item) + "\nUpdate Failed", err)
