@@ -14,6 +14,7 @@
       <div class="configBox">
         <div
           class="pluginBox"
+          @click="replacePluginHandler(service)"
           v-for="service in allServices.filter(
             (e) => e.category === plugin.category && e.name !== plugin.name
           )"
@@ -94,8 +95,17 @@ export default {
       allServices: "allServices",
     }),
   },
+  watch: {
+    items: {
+      handler: function (val) {
+        this.plugin = val;
+      },
+      immediate: true,
+    },
+  },
   mounted() {
     this.plugin = this.items;
+    this.genesisIsActive = true;
   },
   methods: {
     changeTheOption() {
@@ -106,6 +116,10 @@ export default {
         this.checkPointIsActive = false;
         this.genesisIsActive = true;
       }
+    },
+    replacePluginHandler(item) {
+      this.plugin = item;
+      this.$emit("replacePlugin", this.plugin);
     },
   },
 };
@@ -201,14 +215,18 @@ export default {
 .configBox .pluginBox {
   width: 100%;
   height: 13%;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  background-color: #2d2d2d;
+  box-shadow: 1px 1px 5px 1px rgb(17, 17, 17);
   border-radius: 5px;
   margin-top: 8px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+}
+.pluginBox:hover {
+  background-color: #242424;
 }
 .configBox .pluginBox img {
   width: 20%;
@@ -226,7 +244,7 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 800;
   color: #c8c8c8;
   text-transform: uppercase;
@@ -252,12 +270,12 @@ export default {
 
 .configBox .fast-sync {
   width: 100%;
-  height: 13%;
+  height: 20%;
   background-color: #315e45;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 10px 0 5px 5px;
-  margin-top: 20%;
+  margin-top: 15%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -323,9 +341,9 @@ export default {
   align-items: center;
 }
 .fast-sync .content span {
-  font-size: 0.55rem;
-  font-weight: 700;
-  color: #b3b3b3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #848484;
   text-align: center;
 }
 .fast-sync .content .inputBox {
@@ -347,7 +365,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #232323;
   padding: 0;

@@ -23,6 +23,7 @@
               v-else-if="displayReplacePanel"
               @cancel-replace="cancelReplaceProcess"
               @confirm-replace="confirmReplaceProcess"
+              @replace-plugin="replacePluginHandler"
               :items="itemToReplace"
             ></replace-panel>
             <node-configuration
@@ -290,6 +291,9 @@ export default {
     },
     confirmReplaceProcess() {
       this.displayReplacePanel = false;
+    },
+    replacePluginHandler(item) {
+      console.log(item);
     },
   },
 };
