@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="vlaueType">
-      <span>{{ valPeer }} %</span>
+      <span>{{ numPeer }} </span>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
     },
     ...mapState(useControlStore, {
       valPeer: "valPeer",
+      numPeer: "numPeer",
     }),
   },
 };

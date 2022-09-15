@@ -32,6 +32,7 @@ export default {
       code: "code",
       syncstatus: "syncstatus",
       storagestatus: "storagestatus",
+      numPeer: "numPeer",
     }),
   },
   mounted() {
@@ -59,6 +60,7 @@ export default {
           try {
             this.code = nodeStats.code;
             this.valPeer = nodeStats.data.p2pstatus.valPeer;
+            this.numPeer = nodeStats.data.p2pstatus.numPeer;
             this.syncstatus = nodeStats.data.syncstatus;
             this.storagestatus = nodeStats.data.storagestatus;
           } catch (e) {}
