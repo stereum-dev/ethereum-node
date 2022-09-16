@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "manage-service--erigon-lodestar--ubuntu-22.04"
+    hostname: ubuntu
+    server_type: cpx31
+    image: ubuntu-22.04
+#  - name: "manage-service--erigon-lodestar--centos-stream-8"
+#    hostname: "centos"
+#    server_type: cpx31
+#    image: centos-stream-8
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      ssh_args: -o ServerAliveInterval=30 -o ControlMaster=auto -o ControlPersist=60s
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - lint
+    - verify
+    - destroy

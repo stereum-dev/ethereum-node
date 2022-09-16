@@ -1,0 +1,105 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lodestar_service: 1cdcfe4e-3540-11ed-9d60-73ad70b8ccc5
+    erigon_service: 1d938f4c-3540-11ed-b4fd-f72a7f412029
+
+  tasks:
+    # erigon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: ErigonService
+              id: "{{ erigon_service }}"
+              image: "thorax/erigon:{{ stereum_static.defaults.versions.erigon }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: []
+              env: {}
+              command:
+                - erigon
+                - --chain=goerli
+                - --datadir=/opt/app/data
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+                - --prune=htc
+                - --ws
+                - --http
+                - --http.vhosts=*
+                - --http.corsdomain=*
+                - --http.addr=0.0.0.0
+                - --http.api=engine,net,eth
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ erigon_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+    # lodestar beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ lodestar_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports:
+                - 0.0.0.0:9000:9000/udp
+                - 0.0.0.0:9000:9000/tcp
+              env: {}
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - beacon
+                - --network=goerli
+                - --dataDir=/opt/app/beacon
+                - --rest.port=5052
+                - --rest.namespace=*
+                - --rest.address=0.0.0.0
+                - --jwt-secret=/engine.jwt
+                - --execution.urls=http://stereum-{{ erigon_service }}:8551
+                - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lodestar_service }}/lodestar/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+# EOF
+
+
+#  env:
+#                 NODE_OPTIONS: --max-old-space-size=4096
+#               entrypoint: ["node", "./packages/cli/bin/lodestar"]
+#               command:
+#                 - beacon
+#                 - --network=goerli
+#                 - --dataDir=/opt/app/beacon
+#                 - --rest.namespace=*
+#                 - --rest.address=0.0.0.0
+#                 - --execution.urls=http://stereum-{{ erigon_service }}:8551
+#                 - --jwt-secret=/engine.jwt
+#                 - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+#               user: "2000"
+#               volumes:
+#                 - "/opt/app/services/{{ lodestar_service }}/lodestar/beacon:/opt/app/beacon"
+#                 - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"

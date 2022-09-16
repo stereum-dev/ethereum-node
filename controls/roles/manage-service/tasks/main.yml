@@ -97,7 +97,7 @@
         hex_chars: '0123456789abcdef'
     become: yes
     when:
-      - stereum_service_configuration.service in ['BesuService', 'GethService', 'NethermindService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService']
+      - stereum_service_configuration.service in ['BesuService', 'GethService', 'NethermindService', 'ErigonService', 'LighthouseBeaconService', 'NimbusBeaconService', 'PrysmBeaconService', 'TekuBeaconService', 'LodestarBeaconService']
       - stereum_service_configuration.volumes | select('search', ':/engine.jwt') | length > 0
 
   - include_tasks: write-graffiti-files.yml

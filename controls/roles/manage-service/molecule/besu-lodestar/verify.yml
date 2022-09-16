@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  Lodestar beacon logs
+  - name: Lodestar beacon
+    command: "docker logs stereum-31323412-35a0-11ed-8923-9b3dbae52b64"
+    register: lodestar_beacon
+    until:
+      - lodestar_beacon.stdout is search("Validated transition configuration with execution client")
+      - lodestar_beacon.stdout is not search("Error updating eth1 chain cache")
+    retries: 60
+    delay: 10
+
+# EOF
