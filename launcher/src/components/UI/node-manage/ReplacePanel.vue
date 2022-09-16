@@ -234,6 +234,7 @@ export default {
 .pluginBox .plugin-details {
   width: 70%;
   height: 95%;
+  padding:5px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -242,7 +243,7 @@ export default {
 
 .plugin-details .pluginName {
   width: 100%;
-  height: 60%;
+  height: 50%;
   text-align: left;
   font-size: 0.8rem;
   font-weight: 800;
@@ -253,10 +254,9 @@ export default {
   text-overflow: ellipsis;
   align-self: center;
 }
-.plugin-details p,
-.plugin-details p span {
+.plugin-details p {
   width: max-content;
-  height: 40%;
+  height: 45%;
   text-align: left;
   font-size: 0.6rem;
   font-weight: 600;
@@ -266,6 +266,12 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   align-self: flex-start;
+}
+.plugin-details p span {
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #8a8a8a;
 }
 
 .configBox .fast-sync {
