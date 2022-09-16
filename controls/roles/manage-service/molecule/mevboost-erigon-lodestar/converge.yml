@@ -1,0 +1,154 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lodestar_beacon_service: f233b682-35a9-11ed-9b29-e3e8b725d5e0
+    lodestar_validator_service: f2c21cba-35a9-11ed-9bbc-ab78df95134f
+    erigon_service: f2fcbc58-35a9-11ed-a1ff-a7584b4fc44a
+    mevboost_service: f331632c-35a9-11ed-94e4-d35bb2edc986
+
+  tasks:
+    # erigon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: ErigonService
+              id: "{{ erigon_service }}"
+              image: "thorax/erigon:{{ stereum_static.defaults.versions.erigon }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: []
+              env: {}
+              command:
+                - erigon
+                - --chain=goerli
+                - --datadir=/opt/app/data
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+                - --prune=htc
+                - --ws
+                - --http
+                - --http.vhosts=*
+                - --http.corsdomain=*
+                - --http.addr=0.0.0.0
+                - --http.api=engine,net,eth
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ erigon_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+    # lodestar beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ lodestar_beacon_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports:
+                - 0.0.0.0:9000:9000/udp
+                - 0.0.0.0:9000:9000/tcp
+              env: {}
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - beacon
+                - --network=goerli
+                - --dataDir=/opt/app/beacon
+                - --rest.port=9596
+                - --rest.namespace=*
+                - --rest.address=0.0.0.0
+                - --jwt-secret=/engine.jwt
+                - --execution.urls=http://stereum-{{ erigon_service }}:8551
+                - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --builder=true
+                - --builder.urls=http://stereum-{{ mevboost_service }}:18550
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lodestar_beacon_service }}/lodestar/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+    # lodestar validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ lodestar_validator_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports: []
+              env:
+                NODE_OPTIONS: --max-old-space-size=2048
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - validator
+                - --network=goerli
+                - --dataDir=/opt/app/validator
+                - --server=http://stereum-{{ lodestar_beacon_service }}:9596
+                - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+                - --keymanager
+                - --builder=true
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lodestar_validator_service }}/lodestar/validator:/opt/app/validator"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+    # mevboost service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: MevBoostService
+              id: "{{ mevboost_service }}"
+              image: flashbots/mev-boost:{{ stereum_static.defaults.versions.mevboost }}
+              env: {}
+              ports: []
+              command: []
+              entrypoint:
+                - /app/mev-boost
+                - -addr
+                - 0.0.0.0:18550
+                - -goerli
+                - -relay-check
+                - -relays
+                - "{{ stereum_static.defaults.relay.goerli }}"
+              user: "2000"
+              volumes: []
+
+# EOF
