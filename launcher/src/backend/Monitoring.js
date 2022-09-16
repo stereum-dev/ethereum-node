@@ -587,18 +587,21 @@ export class Monitoring {
       };
     }
 
-    // Build ssh command to query storages 
-    var sshcmd = '';
+    // Build ssh commands to query storages 
+    var sshcommands = [];
     for(let svc of serviceInfos){
         if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
             continue;
         }
         if(Array.isArray(svc.config.volumes) && svc.config.volumes.length){
           const strVolumes = '"' + svc.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
-          sshcmd += 'du -csh ' + strVolumes + ' | tail -n1 | awk \'{print $1;}\' ; ';
+          sshcommands.push({
+            svc: svc,
+            cmd: "du -csh " + strVolumes + " | tail -n1 | awk '{print $1;}'",
+          });
         }
     }
-    sshcmd = sshcmd.trim();
+    var sshcmd = sshcommands.flatMap(({ cmd }) => cmd).join(' ; ').trim();
     if(!sshcmd){
       return {
         "code": 332,
@@ -637,12 +640,15 @@ export class Monitoring {
     // Parse the result and add the response for "storageDataItems" exact as defined in front-end
     var data = [];
     var storagesizes = result.stdout.trim().split("\n");
-    serviceInfos.forEach(function (svc, index) {
-      data.push({
-        id: index+1,
-        title: svc.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi," vc").replace(/NodeExporter/gi," ne").toUpperCase(),
-        storageValue: ( (!(index in storagesizes) || !storagesizes[index] || storagesizes[index] < 1) ? '0 ' : storagesizes[index].replace(/([a-z]+)/si,' $1') ) + "B",
-      });
+    storagesizes.forEach(function (val, index) {
+      let svc = index in sshcommands ? sshcommands[index].svc : false;
+      if(svc){
+        data.push({
+          id: index+1,
+          title: svc.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi," vc").replace(/NodeExporter/gi," ne").toUpperCase(),
+          storageValue: ( (!val || val < 1) ? '0 ' : val.replace(/([a-z]+)/si,' $1') ) + "B",
+        });
+      }
     });
 
     // Respond success
