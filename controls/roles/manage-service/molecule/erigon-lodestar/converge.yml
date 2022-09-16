@@ -73,7 +73,7 @@
                 - beacon
                 - --network=goerli
                 - --dataDir=/opt/app/beacon
-                - --rest.port=5052
+                - --rest.port=9596
                 - --rest.namespace=*
                 - --rest.address=0.0.0.0
                 - --jwt-secret=/engine.jwt
