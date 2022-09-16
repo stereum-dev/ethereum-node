@@ -1,0 +1,86 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prysm_service: e75f32ee-3537-11ed-915c-f34e4d62ccd9
+    erigon_service: e9c635a0-3537-11ed-adf8-bf11289a5966
+
+  tasks:
+    # erigon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: ErigonService
+              id: "{{ erigon_service }}"
+              image: "thorax/erigon:{{ stereum_static.defaults.versions.erigon }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: []
+              env: {}
+              command:
+                - erigon
+                - --chain=goerli
+                - --datadir=/opt/app/data
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+                - --prune=htc
+                - --ws
+                - --http
+                - --http.vhosts=*
+                - --http.corsdomain=*
+                - --http.addr=0.0.0.0
+                - --http.api=engine,net,eth
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ erigon_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+    # prysm beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrysmBeaconService
+              id: "{{ prysm_service }}"
+              image: "prysmaticlabs/prysm-beacon-chain:{{ stereum_static.defaults.versions.prysm }}"
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env: {}
+              entrypoint: []
+              command: |
+                /app/cmd/beacon-chain/beacon-chain
+                --accept-terms-of-use=true
+                --datadir=/opt/app/beacon
+                --prater=true
+                --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
+                --execution-endpoint=http://stereum-{{ erigon_service }}:8551
+                --jwt-secret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
+                - "/opt/app/services/{{ erigon_service }}/engine.jwt:/engine.jwt"
+
+# EOF
