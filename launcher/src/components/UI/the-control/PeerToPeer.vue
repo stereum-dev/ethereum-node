@@ -37,7 +37,6 @@
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 export default {
-
   computed: {
     firstBar() {
       return { height: this.consensusValPeer + "%" };
@@ -150,19 +149,27 @@ export default {
 .firstVlaueType {
   position: absolute;
   top: 66.5%;
-  left: 47.2%;
+  left: 45.6%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
   color: #c1c1c1;
+  display: flex;
+  width: 7%;
+  justify-content: center;
+  align-items: center;
 }
 .secondVlaueType {
   position: absolute;
   top: 66.5%;
-  left: 56.5%;
+  left: 54.9%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
   color: #c1c1c1;
+  display: flex;
+  width: 7%;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -31,13 +31,6 @@
     assert:
       that:
         - service_container.exists
-        - service_container.container.Config.Image == 'sigp/lighthouse:v2.0.1'
+        - service_container.container.Config.Image == 'sigp/lighthouse:v2.0.0'
 
-  - name: Get docker images
-    docker_image_info:
-    register: docker_images
-
-  - name: Check for images being cleaned up
-    assert:
-      that:
-        - docker_images.images | length == 1
+# EOF
