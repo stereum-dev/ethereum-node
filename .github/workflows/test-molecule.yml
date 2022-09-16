@@ -317,6 +317,7 @@ jobs:
           # {role: "manage-service", test: "mevboost-nethermind-nimbus"},
           # {role: "manage-service", test: "mevboost-nethermind-prysm"},
           # {role: "manage-service", test: "mevboost-nethermind-teku"},
+          # {role: "manage-service", test: "mevboost-erigon-lodestar"},
           # {role: "manage-service", test: "besu-lighthouse"},
           # {role: "manage-service", test: "besu-lodestar"},
           # {role: "manage-service", test: "besu-nimbus"},
