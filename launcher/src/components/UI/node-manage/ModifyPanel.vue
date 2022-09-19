@@ -513,10 +513,12 @@ export default {
 }
 .portAddBox img {
   width: 18%;
+  height: 80%;
   opacity: 0.5;
 }
 .clientAddBox img {
   width: 16%;
+  height: 80%;
   opacity: 0.5;
 }
 .portConfig {
@@ -536,7 +538,7 @@ export default {
   text-align: center;
 }
 .portConfig input {
-  width: 99%;
+  width: 96%;
   height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
@@ -550,16 +552,16 @@ export default {
 }
 .connectionConfig {
   width: 80%;
-  height: 99%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
-  cursor: pointer;
 }
 
 .connectionConfig .category {
+  width: max-content;
   height: 30%;
   font-size: 0.6rem;
   font-weight: 700;
@@ -569,12 +571,12 @@ export default {
 }
 .connectionConfig .name {
   width: 99%;
-  height: 55%;
+  height: 60%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
   margin-top: 3%;
-  padding: 1px;
+  padding: 2px;
   font-size: 0.6rem;
   font-weight: 700;
   color: #34a061;
@@ -665,6 +667,7 @@ export default {
 }
 .optionsBox img {
   width: 16%;
+  height: 80%;
   opacity: 0.5;
 }
 .optionsDetails {
@@ -687,7 +690,7 @@ export default {
 }
 .optionsName {
   width: 99%;
-  height: 55%;
+  height: 60%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;

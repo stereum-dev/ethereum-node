@@ -308,8 +308,8 @@ export default {
 }
 .change-title span {
   color: #c0c0c0;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .change-installation .change-box {
   width: 96%;
@@ -479,7 +479,7 @@ export default {
   text-align: center;
 }
 .portConfig input {
-  width: 99%;
+  width: 96%;
   height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
@@ -491,50 +491,8 @@ export default {
   padding: 0;
   margin-top: 3%;
 }
-.connectionConfig {
-  width: 80%;
-  height: 95%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.connectionConfig span {
-  width: max-content;
-  height: 30%;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #b3b3b3;
-  text-align: center;
-  text-transform: uppercase;
-}
-.connectionConfig .plusBtn {
-  width: 100%;
-  height: 45%;
-  background-color: #c9c9c9;
-  color: #2a2a2a;
-  border-radius: 30px;
-  border: 1px solid #a8a8a8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #222222;
-  text-align: center;
-}
-.plusBtn:hover {
-  transform: scale(1.01);
-  color: #c9c9c9;
-  font-weight: 600;
-  background-color: #285c4e;
-  transition-duration: 0.2s;
-}
-.plusBtn:active {
-  background-color: #1c3c33;
-  transform: scale(0.9);
-}
+
+
 .btnBox {
   width: 100%;
   height: 6%;
@@ -641,7 +599,7 @@ export default {
 }
 .optionsName {
   width: 99%;
-  height: 55%;
+  height: 60%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
@@ -679,24 +637,26 @@ export default {
 }
 .portAddBox img {
   width: 18%;
+  height: 80%;
   opacity: 0.5;
 }
 .clientAddBox img {
   width: 16%;
+  height: 80%;
   opacity: 0.5;
 }
 .connectionConfig {
   width: 80%;
-  height: 99%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
-  cursor: pointer;
 }
 
 .connectionConfig .category {
+  width: max-content;
   height: 30%;
   font-size: 0.6rem;
   font-weight: 700;
@@ -706,12 +666,12 @@ export default {
 }
 .connectionConfig .name {
   width: 99%;
-  height: 55%;
+  height: 60%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
   margin-top: 3%;
-  padding: 1px;
+  padding: 2px;
   font-size: 0.6rem;
   font-weight: 700;
   color: #34a061;
