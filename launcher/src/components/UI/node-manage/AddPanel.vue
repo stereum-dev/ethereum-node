@@ -66,14 +66,14 @@
             </div>
             <div class="headerContent">
               <img
-                @click="changeTheOption"
+                @click="changeResyncOptions"
                 src="/img/icon/arrows/left-arrow.png"
                 alt="icon"
               />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
               <img
-                @click="changeTheOption"
+                @click="changeResyncOptions"
                 src="/img/icon/arrows/right-arrow.png"
                 alt="icon"
               />
@@ -118,13 +118,14 @@ export default {
       serviceIsSelected: false,
       plugin: {},
       port: "",
+      selected: {},
+      options: [],
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
-      options: "options",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
@@ -139,7 +140,7 @@ export default {
     this.optionsToConnect();
   },
   methods: {
-    changeTheOption() {
+    changeResyncOptions() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;
         this.checkPointIsActive = true;
@@ -150,33 +151,42 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "execution") {
-            this.options = [];
-            this.options.push(i);
-          }
+        this.options = this.allServices.filter(
+          (service) => service.category === "execution"
+        );
+        this.options = this.options.map((option) => {
+          return {
+            ...option,
+            selectedServiceToSync: false,
+          };
         });
       } else if (this.items.category === "validator") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "consensus") {
-            this.options = [];
-            this.options.push(i);
-          }
+        this.options = this.allServices.filter(
+          (service) => service.category === "consensus"
+        );
+        this.options = this.options.map((option) => {
+          return {
+            ...option,
+            selectedServiceToSync: false,
+          };
         });
       } else if (this.items.category === "execution") {
+        this.options = [];
         return;
       }
     },
     chooseServiceToConnect(item) {
       if (this.items.category === "consensus") {
-        this.options.forEach((i) => {
-          if (i.category === "execution" && i.id == item.id) {
+        this.options.map((i) => {
+          if (i.category === "execution" && i.id === item.id) {
+            i.selectedServiceToSync = true;
             this.selected = i;
           }
         });
       } else if (this.items.category === "validator") {
         this.options.forEach((i) => {
-          if (i.category === "consensus" && i.id == item.id) {
+          if (i.category === "consensus" && i.id === item.id) {
+            i.selectedServiceToSync = true;
             this.selected = i;
           }
         });

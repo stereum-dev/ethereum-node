@@ -128,13 +128,13 @@ export default {
       plugin: {},
       port: "",
       selected: {},
+      options: [],
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
-      options: "options",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
@@ -160,18 +160,24 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "execution") {
-            this.options = [];
-            this.options.push(i);
-          }
+        this.options = this.allServices.filter(
+          (service) => service.category === "execution"
+        );
+        this.options = this.options.map((option) => {
+          return {
+            ...option,
+            selectedServiceToSync: false,
+          };
         });
       } else if (this.items.category === "validator") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "consensus") {
-            this.options = [];
-            this.options.push(i);
-          }
+        this.options = this.allServices.filter(
+          (service) => service.category === "consensus"
+        );
+        this.options = this.options.map((option) => {
+          return {
+            ...option,
+            selectedServiceToSync: false,
+          };
         });
       } else if (this.items.category === "execution") {
         this.options = [];
@@ -180,14 +186,16 @@ export default {
     },
     chooseServiceToConnect(item) {
       if (this.items.category === "consensus") {
-        this.options.forEach((i) => {
-          if (i.category === "execution" && i.id == item.id) {
+        this.options.map((i) => {
+          if (i.category === "execution" && i.id === item.id) {
+            i.selectedServiceToSync = true;
             this.selected = i;
           }
         });
       } else if (this.items.category === "validator") {
         this.options.forEach((i) => {
-          if (i.category === "consensus" && i.id == item.id) {
+          if (i.category === "consensus" && i.id === item.id) {
+            i.selectedServiceToSync = true;
             this.selected = i;
           }
         });
