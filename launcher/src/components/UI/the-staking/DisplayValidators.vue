@@ -548,7 +548,6 @@ export default {
     //Importing key
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
-      console.log(uploadedFiles);
       if (
         !this.keyFiles.includes(uploadedFiles[0]["name"]) &&
         uploadedFiles[0]["type"] === "application/json"
