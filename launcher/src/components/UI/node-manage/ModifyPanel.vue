@@ -160,7 +160,7 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.allServices.filter(
+        this.options = this.installedServices.filter(
           (service) => service.category === "execution"
         );
         this.options = this.options.map((option) => {
@@ -170,7 +170,7 @@ export default {
           };
         });
       } else if (this.items.category === "validator") {
-        this.options = this.allServices.filter(
+        this.options = this.installedServices.filter(
           (service) => service.category === "consensus"
         );
         this.options = this.options.map((option) => {
@@ -439,6 +439,7 @@ export default {
   margin-right: 3px;
 }
 .headerContent img {
+  padding: 1px;
   width: 8%;
   height: 50%;
   cursor: pointer;
@@ -512,11 +513,13 @@ export default {
   transition-duration: 0.2s;
 }
 .portAddBox img {
+  padding: 1px;
   width: 18%;
   height: 80%;
   opacity: 0.5;
 }
 .clientAddBox img {
+  padding: 1px;
   width: 16%;
   height: 80%;
   opacity: 0.5;
@@ -666,8 +669,9 @@ export default {
   transition-duration: 0.2s;
 }
 .optionsBox img {
-  width: 16%;
-  height: 80%;
+  padding: 1px;
+  width: 17%;
+  height: 90%;
   opacity: 0.5;
 }
 .optionsDetails {
