@@ -557,9 +557,10 @@ export default {
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
   margin-top: 3%;
-  font-size: 0.7rem;
+  padding: 1px;
+  font-size: 0.6rem;
   font-weight: 700;
-  color: #b3b3b3;
+  color: #34a061;
   text-align: center;
   text-transform: uppercase;
 }
@@ -680,9 +681,9 @@ export default {
 }
 .optionsName span {
   padding: 2px;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  color: #b3b3b3;
+  color: #9a9a9a;
   text-align: center;
   align-self: center;
   text-transform: uppercase;
