@@ -148,7 +148,7 @@ export class ServiceManager {
   async chooseServiceAction(action, service, data){
     switch (action) {
       case "pruneGeth":
-          //pruning geth
+          this.nodeConnection.runPlaybook("Pruning Geth", {stereum_role: 'prune-geth', geth_service: service.config.serviceID})
         break;
     
       case "reSync":

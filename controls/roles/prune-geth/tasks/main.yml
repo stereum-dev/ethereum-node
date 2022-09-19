@@ -1,0 +1,50 @@
+---
+#############
+# read config
+- name: Build service configuration's path
+  set_fact:
+    stereum_service_config_path: "/etc/stereum/services/{{ geth_service }}.yaml"
+- name: Read service's configuration
+  slurp:
+    src: "{{ stereum_service_config_path }}"
+  register: stereum_service_configuration_raw
+  become: yes
+- name: Read variable
+  set_fact:
+    stereum_service_configuration: "{{ stereum_service_configuration_raw.content | b64decode | from_yaml }}"
+  become: yes
+
+##############
+# geth pruning
+- name: Stop Geth
+  include_role:
+    name: "manage-service"
+  vars:
+    stereum:
+      manage_service:
+        save: false
+        state: stopped
+        configuration:
+          id: "{{ stereum_service_configuration.id }}"
+
+- name: Start Pruning
+  community.docker.docker_container:
+    command_handling: correct
+    hostname: "geth-prune"
+    name: "geth-prune"
+    user: "{{ stereum_service_configuration.user }}"
+    image: "{{ stereum_service_configuration.image }}"
+    env: "{{ stereum_service_configuration.env | default({}) }}"
+    command:
+      - "{{ stereum_service_configuration.command | select('search', '--datadir=') | first }}"
+      - snapshot
+      - prune-state
+    entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
+    restart_policy: "no"
+    state: started
+    volumes: "{{ stereum_service_configuration.volumes }}"
+    log_driver: "json-file"
+    log_options:
+      max-file: "10"
+      max-size: "100m"
+  become: yes
