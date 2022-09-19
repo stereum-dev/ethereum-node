@@ -238,7 +238,7 @@ export default {
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
-      importIsProcessing: false,
+      importIsProcessing: true,
       importIsDone: false,
       grafitiForMultiValidatorsActive: false,
       exitChainForMultiValidatorsActive: false,
@@ -950,9 +950,9 @@ remove-validator {
 
 .title-box {
   width: 100%;
-  height: 50px;
+  height: 27%;
   background-color: rgb(55, 107, 102);
-  border-radius: 12px 12px 0 0;
+  border-radius: 75px 75px 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -975,8 +975,8 @@ remove-validator {
 }
 
 .processImg img {
-  width: 65px;
-  height: 60px;
+  width: 80px;
+  height: 55px;
   position: absolute;
   animation: move 5s linear infinite;
 }
@@ -984,27 +984,27 @@ remove-validator {
 @keyframes move {
   0% {
     left: 0%;
-    bottom: -10px;
+    bottom: -3px;
   }
 
   25% {
     left: 20%;
-    bottom: -10px;
+    bottom: -3px;
   }
 
   50% {
     left: 40%;
-    bottom: -10px;
+    bottom: -3px;
   }
 
   75% {
     left: 62%;
-    bottom: -10px;
+    bottom: -3px;
   }
 
   100% {
     left: 85%;
-    bottom: -10px;
+    bottom: -3px;
   }
 }
 
