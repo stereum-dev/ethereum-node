@@ -20,6 +20,21 @@
             <input type="text" v-model="installationPath" maxlength="255" />
           </div>
         </div>
+
+        <div class="portAddBox">
+          <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
+          <div class="portConfig">
+            <span>PORT USED</span>
+            <input type="text" v-model="port" placeholder="9000" />
+          </div>
+        </div>
+        <div class="clientAddBox">
+          <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+          <div class="connectionConfig">
+            <span>{{ plugin.category }} Client</span>
+            <div class="plusBtn">+</div>
+          </div>
+        </div>
         <div
           class="fast-sync"
           v-if="
@@ -52,20 +67,6 @@
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
             </div>
-          </div>
-        </div>
-        <div class="portAddBox">
-          <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
-          <div class="portConfig">
-            <span>PORT USED</span>
-            <input type="text" v-model="port" placeholder="9000" />
-          </div>
-        </div>
-        <div class="clientAddBox">
-          <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
-          <div class="connectionConfig">
-            <span>{{ plugin.category }} Client</span>
-            <div class="plusBtn">+</div>
           </div>
         </div>
       </div>
@@ -217,7 +218,7 @@ export default {
 
 .configBox .change-installation {
   width: 100%;
-  height: 13%;
+  height: 10%;
   border-radius: 5px;
   background-color: #316355;
   box-shadow: 1px 1px 3px 1px rgb(27, 27, 27);
@@ -371,7 +372,7 @@ export default {
 .portAddBox,
 .clientAddBox {
   width: 100%;
-  height: 13%;
+  height: 10%;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 5px;
@@ -391,10 +392,10 @@ export default {
 }
 .portConfig {
   width: 80%;
-  height: 95%;
+  height: 99%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
 .portConfig span {
@@ -407,7 +408,7 @@ export default {
 }
 .portConfig input {
   width: 99%;
-  height: 45%;
+  height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
@@ -416,6 +417,7 @@ export default {
   font-weight: 600;
   color: #b0b0b0;
   padding: 0;
+  margin-top: 3%;
 }
 .connectionConfig {
   width: 80%;

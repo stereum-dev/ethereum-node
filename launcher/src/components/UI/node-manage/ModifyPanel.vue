@@ -67,7 +67,11 @@
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
-          <div class="optionsBox" v-if="!serviceIsSelected">
+          <div
+            class="optionsBox"
+            v-if="!serviceIsSelected"
+            @click="chooseServiceToConnect(service)"
+          >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
@@ -79,26 +83,13 @@
         </template>
         <div
           class="clientAddBox"
-          v-if="
-            items.category === 'consensus' || items.category === 'validator'
-          "
+          v-if="serviceIsSelected"
+          @click="changeSelectedServiceToConnect"
         >
-          <img
-            v-if="serviceIsSelected"
-            src="/img/icon/manage-node-icons/connected.png"
-            alt="icon"
-          />
-          <img
-            v-else
-            src="/img/icon/manage-node-icons/connect.png"
-            alt="icon"
-          />
+          <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
           <div class="connectionConfig">
-            <div class="connectedService" v-if="serviceIsSelected">
-              <span class="category">{{ selected.category }} Client</span>
-              <span class="name">{{ selected.name }}</span>
-            </div>
-            <div v-else class="plusBtn" @click="chooseServiceToConnect">+</div>
+            <span class="category">{{ selected.category }} Client</span>
+            <span class="name">{{ selected.name }}</span>
           </div>
         </div>
       </div>
@@ -165,29 +156,29 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.installedServices.forEach((i) => {
+        this.allServices.forEach((i) => {
           if (i.category === "execution") {
             this.options.push(i);
           }
         });
       } else if (this.items.category === "validator") {
-        this.installedServices.forEach((i) => {
-          if (i.category === "execution" || i.category === "consensus") {
+        this.allServices.forEach((i) => {
+          if (i.category === "consensus") {
             this.options.push(i);
           }
         });
       }
     },
-    chooseServiceToConnect() {
+    chooseServiceToConnect(item) {
       if (this.items.category === "consensus") {
         this.options.forEach((i) => {
-          if (i.category === "execution") {
+          if (i.category === "execution" && i.id == item.id) {
             this.selected = i;
           }
         });
       } else if (this.items.category === "validator") {
         this.options.forEach((i) => {
-          if (i.category === "consensus") {
+          if (i.category === "consensus" && i.id == item.id) {
             this.selected = i;
           }
         });
@@ -195,6 +186,9 @@ export default {
         return;
       }
       this.serviceIsSelected = true;
+    },
+    changeSelectedServiceToConnect() {
+      this.serviceIsSelected = false;
     },
   },
 };
@@ -260,7 +254,7 @@ export default {
 .service {
   width: 98%;
   height: 10%;
-  margin-top: 13%;
+  margin-top: 15%;
   padding: 3px;
   display: flex;
   justify-content: space-between;
@@ -283,8 +277,8 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: .9rem;
+  font-weight: 700;
   color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
@@ -319,7 +313,7 @@ export default {
 
 .configBox .change-installation {
   width: 100%;
-  height: 13%;
+  height: 10%;
   border-radius: 5px;
   background-color: #316355;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
@@ -470,10 +464,9 @@ export default {
   padding: 0;
   padding-left: 4px;
 }
-.portAddBox,
-.clientAddBox {
+.portAddBox{
   width: 100%;
-  height: 13%;
+  height: 10%;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 5px;
@@ -482,6 +475,24 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.clientAddBox {
+  width: 100%;
+  height: 10%;
+  background-color: #242424;
+  border: 1px solid #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.clientAddBox:hover {
+  background-color: #2f2f2f;
+  border: 1px solid #464646;
+  transition-duration: 0.2s;
 }
 .portAddBox img {
   width: 18%;
@@ -496,7 +507,7 @@ export default {
   height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
 .portConfig span {
@@ -509,7 +520,7 @@ export default {
 }
 .portConfig input {
   width: 99%;
-  height: 45%;
+  height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
@@ -518,16 +529,20 @@ export default {
   font-weight: 600;
   color: #b0b0b0;
   padding: 0;
+  margin-top: 3%;
 }
 .connectionConfig {
   width: 80%;
-  height: 95%;
+  height: 99%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
+  padding: 2px;
+  cursor: pointer;
 }
-.connectionConfig span {
-  width: max-content;
+
+.connectionConfig .category {
   height: 30%;
   font-size: 0.6rem;
   font-weight: 700;
@@ -535,59 +550,13 @@ export default {
   text-align: center;
   text-transform: uppercase;
 }
-.connectionConfig .plusBtn {
-  width: 100%;
-  height: 45%;
-  background-color: #c9c9c9;
-  color: #2a2a2a;
-  border-radius: 30px;
-  border: 1px solid #a8a8a8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #222222;
-  text-align: center;
-}
-.plusBtn:hover {
-  transform: scale(1.01);
-  color: #c9c9c9;
-  font-weight: 600;
-  background-color: #285c4e;
-  transition-duration: 0.2s;
-}
-.plusBtn:active {
-  background-color: #1c3c33;
-  transform: scale(0.9);
-}
-.connectedService {
-  width: 100%;
-  height: 95%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.connectedService .category {
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #b3b3b3;
-  text-align: center;
-  text-transform: uppercase;
-}
-.connectedService .name {
+.connectionConfig .name {
   width: 99%;
-  height: 50%;
+  height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
-  padding: 2%;
-  margin-top: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-top: 3%;
   font-size: 0.7rem;
   font-weight: 700;
   color: #b3b3b3;
@@ -659,15 +628,22 @@ export default {
 }
 .optionsBox {
   width: 100%;
-  height: 13%;
+  height: 10%;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border: 1px solid #242424;
   border-radius: 5px;
   margin-top: 8px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+}
+.optionsBox:hover {
+  background-color: #2f2f2f;
+  border: 1px solid #464646;
+  transition-duration: 0.2s;
 }
 .optionsBox img {
   width: 16%;
@@ -675,11 +651,12 @@ export default {
 }
 .optionsDetails {
   width: 80%;
-  height: 95%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding: 2px;
 }
 .optionsDetails .category {
   width: max-content;
@@ -692,17 +669,16 @@ export default {
 }
 .optionsName {
   width: 99%;
-  height: 45%;
+  height: 55%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
-  margin-top: 5%;
+  margin-top: 3%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .optionsName span {
-  height: 100%;
   padding: 2px;
   font-size: 0.7rem;
   font-weight: 600;
