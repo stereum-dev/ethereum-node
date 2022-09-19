@@ -15,7 +15,7 @@
             <span>Importing validator key(s)</span>
           </div>
           <div class="processImg" v-if="importIsProcessing">
-            <img src="/img/icon/the-staking/motor3.gif" alt="icon" />
+            <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
           </div>
           <div class="import-message" v-if="importIsProcessing">
             <span>It may take some times</span>
@@ -114,7 +114,10 @@
             <remove-single-modal
               v-if="item.isRemoveBoxActive"
               :item="item"
-              @remove-modal="item.isRemoveBoxActive = false;item.toRemove = false"
+              @remove-modal="
+                item.isRemoveBoxActive = false;
+                item.toRemove = false;
+              "
               @delete-key="validatorRemoveConfirm(item)"
             ></remove-single-modal>
           </div>
@@ -171,7 +174,10 @@
     <!-- Remove Box for validator keys -->
     <remove-multiple-validators
       v-if="removeForMultiValidatorsActive"
-      @remove-modal="removeForMultiValidatorsActive = false;this.keys.forEach(k => k.toRemove = false)"
+      @remove-modal="
+        removeForMultiValidatorsActive = false;
+        this.keys.forEach((k) => (k.toRemove = false));
+      "
       @delete-key="confirmRemoveAllValidators"
     ></remove-multiple-validators>
     <!-- Exit box for validator keys -->
@@ -274,14 +280,14 @@ export default {
           this.exitChainForMultiValidatorsActive = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
-          this.keys.forEach(k => k.toRemove = true)
+          this.keys.forEach((k) => (k.toRemove = true));
         } else if (val.name === "exit") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = false;
           this.exitChainForMultiValidatorsActive = true;
-          this.keys.forEach(k => k.toRemove = true)
+          this.keys.forEach((k) => (k.toRemove = true));
         }
       },
     },
@@ -334,12 +340,12 @@ export default {
       el.isGrafitiBoxActive = false;
     },
     removeModalDisplay(el) {
-      el.toRemove = true
+      el.toRemove = true;
       el.isRemoveBoxActive = true;
     },
     async validatorRemoveConfirm(el) {
       el.isRemoveBoxActive = false;
-      await this.deleteValidators(el.validatorID,[el.key])
+      await this.deleteValidators(el.validatorID, [el.key]);
     },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
@@ -400,8 +406,11 @@ export default {
           return this.depositStatusIcon;
       }
     },
-    async deleteValidators(serviceID, keys){
-      await ControlService.deleteValidators({serviceID: serviceID, keys: keys})
+    async deleteValidators(serviceID, keys) {
+      await ControlService.deleteValidators({
+        serviceID: serviceID,
+        keys: keys,
+      });
       this.forceRefresh = true;
       await this.listKeys();
     },
@@ -415,8 +424,9 @@ export default {
           //if there is already a list of keys ()
           if (
             (client.config.keys === undefined ||
-            client.config.keys.length === 0 ||
-            this.forceRefresh) && client.state === "running"
+              client.config.keys.length === 0 ||
+              this.forceRefresh) &&
+            client.state === "running"
           ) {
             //refresh validaotr list
             let result = await ControlService.listValidators(
@@ -436,7 +446,7 @@ export default {
               return service;
             });
           }
-          if(client.config.keys){
+          if (client.config.keys) {
             keyStats = keyStats.concat(
               client.config.keys.map((key) => {
                 return {
@@ -480,8 +490,7 @@ export default {
               ".beaconcha.in/api/v1/validator/" +
               encodeURIComponent(chunk.join())
           );
-          if(response.data.data)
-            data = data.concat(response.data.data); //merge all gathered stats in one array
+          if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
         }
       } catch (err) {
         console.log("Couldn't fetch validator stats:\n", err);
@@ -555,7 +564,7 @@ export default {
       let validator = this.installedServices.filter((s) =>
         s.service.includes("Validator")
       );
-      if(validator && validator.map(e => e.state).includes("running")){
+      if (validator && validator.map((e) => e.state).includes("running")) {
         let droppedFiles = event.dataTransfer.files;
         if (droppedFiles[0]["type"] === "application/json") {
           this.keyFiles.push(...droppedFiles);
@@ -568,7 +577,7 @@ export default {
     },
     removeKeyHandler(key_name) {
       this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
-      if(this.keyFiles.length === 0){
+      if (this.keyFiles.length === 0) {
         this.importValidatorKeyActive = true;
         this.insertKeyBoxActive = true;
         this.enterPasswordBox = false;
@@ -593,28 +602,28 @@ export default {
       this.bDialogVisible = false;
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis(graffiti)
+      await ControlService.setGraffitis(graffiti);
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
 
     async confirmRemoveAllValidators() {
-      let keys = this.keys.map(key => key.key)
-      let id = ""
-      let changed = 0
-      this.keys.forEach(key => {
-        if(id != key.validatorID) {
-          id = key.validatorID
-          changed++
+      let keys = this.keys.map((key) => key.key);
+      let id = "";
+      let changed = 0;
+      this.keys.forEach((key) => {
+        if (id != key.validatorID) {
+          id = key.validatorID;
+          changed++;
         }
-      })
+      });
       this.removeForMultiValidatorsActive = false;
-      if(changed === 1 && id){
-        await this.deleteValidators(id,keys)
-      }else if(changed === 0){
-        console.log("Nothing to delete!")
-      }else{
-        console.log("Multiple validator services are not supported yet!")
+      if (changed === 1 && id) {
+        await this.deleteValidators(id, keys);
+      } else if (changed === 0) {
+        console.log("Nothing to delete!");
+      } else {
+        console.log("Multiple validator services are not supported yet!");
       }
     },
 
@@ -657,7 +666,7 @@ export default {
 }
 .keys-table {
   width: 100%;
-  height: 100%;
+  height: 95%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -675,7 +684,7 @@ export default {
 
 .table-content {
   width: 100%;
-  height:86%;
+  height: 86%;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
@@ -1062,17 +1071,14 @@ remove-validator {
   transition-duration: 100ms;
 }
 
-
 .table-content::-webkit-scrollbar {
   width: 6px;
 }
 
-
 .table-content::-webkit-scrollbar-thumb {
-  background-color: rgb(60, 152, 140) ;
+  background-color: rgb(60, 152, 140);
   border-radius: 6px;
   border: 2px solid black;
   cursor: pointer;
 }
-
 </style>
