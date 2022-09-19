@@ -881,14 +881,14 @@ export class NodeConnection {
   }
 
   getTimeStamp(){
-    return Math.floor(Date.now() / 1000)
+    return Math.ceil(Date.now() / 1000)
   }
 
   async restartServices(seconds){
     try {
       await this.runPlaybook("Restart Services", {
         stereum_role: 'restart-services',
-        restart_time_scope: seconds,
+        restart_time_scope: seconds + 10,
       })
     } catch (err) {
       log.error("Error occurred during restarting services:\n", err)
