@@ -92,7 +92,7 @@ export default {
   display: flex;
   width: 25%;
   font-size: 80%;
-  height: 60%;
+  height: 1.7rem;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -101,6 +101,10 @@ export default {
   background: rgb(42, 42, 42);
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 10px;
+  position: fixed;
+  left: 70%;
+  top: 11%;
 }
 
 .desc-line-button:hover,

@@ -185,6 +185,7 @@ export default {
   },
 
   methods: {
+    
     switchOnOff() {
       this.onOff = !this.onOff;
       if (this.onOff === false) {
@@ -257,7 +258,7 @@ export default {
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  box-shadow: 1px 1px 10px 1px #171717;
   text-decoration: none;
   margin: 0.5% 0;
   border-radius: 20px;
@@ -290,6 +291,7 @@ export default {
   box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
   box-sizing: border-box;
   text-transform: uppercase;
+  color: #c1c1c1;
 }
 .setting-items_btn :hover,
 .setting-items_btn :focus {
@@ -301,6 +303,7 @@ export default {
   height: 100%;
   line-height: 100%;
   text-align-last: center;
+  color: #171717;
 }
 #version {
   pointer-events: none;

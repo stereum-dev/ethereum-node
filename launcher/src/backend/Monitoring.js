@@ -1,9 +1,9 @@
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
-import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 
 export class Monitoring {
   constructor() {
@@ -74,7 +74,7 @@ export class Monitoring {
   }
 
   getIPAddress() {
-    return this.nodeConnection.nodeConnectionParams.host
+    return this.nodeConnection.nodeConnectionParams.host;
   }
 
   // Get service infos (either all or optional limited to specific - case-sensitive - service names)
@@ -85,65 +85,77 @@ export class Monitoring {
   async getServiceInfos() {
     const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
-    const hash = crypto.createHash('md5').update(args.join("-")).digest('hex'); // cache id
-    const file = path.join(os.tmpdir(), 'server_infos_cache.txt');
+    const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
+    const file = path.join(os.tmpdir(), "server_infos_cache.txt");
     const dnow = new Date();
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
-    try{
+    try {
       cont = fs.readFileSync(file);
       cont = JSON.parse(cont);
-      if(cont.hasOwnProperty(hash)){
+      if (cont.hasOwnProperty(hash)) {
         var uxts = Math.floor(Date.now() / 1000);
         var diff = uxts - cont[hash].uxts;
-        if(diff<cache_max_seconds){
+        if (diff < cache_max_seconds) {
           //console.log('RETURN cache ' + hash, file);
           return cont[hash].data;
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    }catch(e){}
-    if (await this.checkStereumInstallation()){
-      var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
+    } catch (e) {}
+    if (await this.checkStereumInstallation()) {
+      var serviceConfigs =
+        await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
-      if(
+      if (
         serviceConfigs &&
         Array.isArray(serviceConfigs) &&
         serviceConfigs.length > 0 &&
         serviceStates &&
         Array.isArray(serviceStates)
-      ){
-        serviceConfigs = args.length<1 ? serviceConfigs : serviceConfigs.filter((s) => args.includes(s.service));
-        serviceConfigs = serviceConfigs.map((config) => {
-          const newState = serviceStates.find(
-            (state) => (state.hasOwnProperty("Names") ? state.Names.replace("stereum-", "") : "") === config.id
-          );
-          return {
-            service: config.service,
-            state: newState ? newState.State : "exited",
-            config: {
-              serviceID: config.id,
-              instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
-              command: config.command,
-              configVersion: config.configVersion,
-              image: config.image,
-              imageVersion: config.imageVersion,
-              ports: config.ports,
-              volumes: config.volumes,
-              network: config.network,
-            },
-            //fullconfig: config,
-            //fullstate: newState,
-          };
-        }).sort((a, b) => args.indexOf(a.service) - args.indexOf(b.service));
-        if(Array.isArray(serviceConfigs) && serviceConfigs.length > 0){
+      ) {
+        serviceConfigs =
+          args.length < 1
+            ? serviceConfigs
+            : serviceConfigs.filter((s) => args.includes(s.service));
+        serviceConfigs = serviceConfigs
+          .map((config) => {
+            const newState = serviceStates.find(
+              (state) =>
+                (state.hasOwnProperty("Names")
+                  ? state.Names.replace("stereum-", "")
+                  : "") === config.id
+            );
+            return {
+              service: config.service,
+              state: newState ? newState.State : "exited",
+              config: {
+                serviceID: config.id,
+                instanceID:
+                  newState && newState.hasOwnProperty("Names")
+                    ? newState.Names
+                    : "N/A",
+                command: config.command,
+                configVersion: config.configVersion,
+                image: config.image,
+                imageVersion: config.imageVersion,
+                ports: config.ports,
+                volumes: config.volumes,
+                network: config.network,
+              },
+              //fullconfig: config,
+              //fullstate: newState,
+            };
+          })
+          .sort((a, b) => args.indexOf(a.service) - args.indexOf(b.service));
+        if (Array.isArray(serviceConfigs) && serviceConfigs.length > 0) {
           //console.log('REFRESH cache ' + hash, dnow, file);
           cont[hash] = {
             data: serviceConfigs,
             uxts: Math.floor(Date.now() / 1000),
             hash: hash,
           };
-          fs.writeFileSync(file,JSON.stringify(cont));
+          fs.writeFileSync(file, JSON.stringify(cont));
         }
         return serviceConfigs;
       }
@@ -158,36 +170,41 @@ export class Monitoring {
   // time=<rfc3339|unix_timestamp>: Evaluation timestamp. Optional.
   // timeout=<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag.
   // Returns json parsed result as described on Prometheus API reference (even for internal errors)
-  async queryPrometheus(query,time=null,timeout=5){
-
+  async queryPrometheus(query, time = null, timeout = 5) {
     // Get Prometheus connection infos from config
     const serviceInfos = await this.getServiceInfos("PrometheusService");
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": "service infos unavailable",
+        status: "error",
+        errorType: "internal",
+        error: "service infos unavailable",
       };
     }
     const prometheus = serviceInfos.pop();
-    if(typeof prometheus !== "object" || !prometheus.hasOwnProperty("config")){
+    if (
+      typeof prometheus !== "object" ||
+      !prometheus.hasOwnProperty("config")
+    ) {
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": "prometheus config unavailable",
+        status: "error",
+        errorType: "internal",
+        error: "prometheus config unavailable",
       };
     }
     let addr = prometheus.config.ports[0].destinationIp;
     let port = prometheus.config.ports[0].destinationPort;
 
     // Escape single quotes in query for bash command (note the single quotes for curl -d arguments)
-    query = query.replaceAll("'","'\\''");
+    query = query.replaceAll("'", "'\\''");
 
     // Build curl command
-    const cmd = `
+    const cmd =
+      `
       curl -s -X POST http://${addr}:${port}/api/v1/query \
       -H "Content-Type: application/x-www-form-urlencoded" \
-      -d 'query=${query}&timeout=${timeout}` + ( time ? `&time=${time}` : '') + `'
+      -d 'query=${query}&timeout=${timeout}` +
+      (time ? `&time=${time}` : "") +
+      `'
     `.trim();
 
     // Execute the CURL command on the node and return the result
@@ -197,26 +214,26 @@ export class Monitoring {
     } catch (err) {
       //throw err;
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": err,
+        status: "error",
+        errorType: "internal",
+        error: err,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
     // Return error in same format as prometheus does for consistency reasons.
-    if(result.rc || result.stdout == "" || result.stderr != ""){
-      var err = "E:" + result.rc +": executed code failed to run";
-      if(result.stderr != ""){
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      var err = "E:" + result.rc + ": executed code failed to run";
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": err,
-        "data": result,
+        status: "error",
+        errorType: "internal",
+        error: err,
+        data: result,
       };
     }
 
@@ -228,21 +245,26 @@ export class Monitoring {
   }
 
   // Get sync status of consensus and execution clients
-  async getSyncStatus(){
-
+  async getSyncStatus() {
     // Service definitions with type and Prometheus labels for sync status
     // TODO: Verify this keys!
     const services = {
-      'consensus':{
-        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
-        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK
-        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK
-        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
+      consensus: {
+        TekuBeaconService: ["beacon_slot", "beacon_head_slot"], // OK
+        LighthouseBeaconService: [
+          "slotclock_present_slot",
+          "beacon_head_state_slot",
+        ], // OK
+        PrysmBeaconService: ["beacon_clock_time_slot", "beacon_head_slot"], // OK
+        NimbusBeaconService: ["beacon_slot", "beacon_head_slot"], // OK
       },
-      'execution':{
-        'GethService' : ['chain_head_header','chain_head_block'], // OK
-        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK
-        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask)
+      execution: {
+        GethService: ["chain_head_header", "chain_head_block"], // OK
+        BesuService: [
+          "ethereum_best_known_block_number",
+          "ethereum_blockchain_height",
+        ], // OK
+        NethermindService: ["nethermind_blocks", "nethermind_blocks_sealed"], // TODO: N/A (ask)
       },
     };
 
@@ -251,75 +273,92 @@ export class Monitoring {
     for (let property in services) {
       for (let prop in services[property]) {
         for (let p of services[property][prop]) {
-          serviceLabels.push(p)
+          serviceLabels.push(p);
         }
       }
     }
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 111,
-        "info": "error: service infos for syncstatus not available",
-        "data": "",
+        code: 111,
+        info: "error: service infos for syncstatus not available",
+        data: "",
       };
     }
 
     // Find execution and consensus service configurations
     var consensus, execution;
     const clientTypes = Object.keys(services);
-    for(let i=0;i<clientTypes.length;i++){
+    for (let i = 0; i < clientTypes.length; i++) {
       let clientType = clientTypes[i];
-      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
+      let clt = serviceInfos
+        .filter((s) => Object.keys(services[clientType]).includes(s.service))
+        .pop();
+      if (
+        typeof clt !== "object" ||
+        !clt.hasOwnProperty("service") ||
+        !clt.hasOwnProperty("config")
+      ) {
         return {
-          "code": 112,
-          "info": "error: " + clientType + " client not found (in syncstatus)",
-          "data": serviceInfos,
+          code: 112,
+          info: "error: " + clientType + " client not found (in syncstatus)",
+          data: serviceInfos,
         };
       }
-      eval(clientType + " = clt;");  // eval objects -> consensus/execution
+      eval(clientType + " = clt;"); // eval objects -> consensus/execution
     }
 
     // Query Prometehus for all possible labels
-    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
-    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
+    const prometheus_result = await this.queryPrometheus(
+      '{__name__=~"' + serviceLabels.join("|") + '"}'
+    );
+    if (
+      typeof prometheus_result !== "object" ||
+      !prometheus_result.hasOwnProperty("status") ||
+      prometheus_result.status != "success"
+    ) {
       return {
-        "code": 113,
-        "info": "error: prometheus query for syncstatus failed",
-        "data": prometheus_result,
+        code: 113,
+        info: "error: prometheus query for syncstatus failed",
+        data: prometheus_result,
       };
     }
 
     // Filter Prometheus result by current used services
-    try{
-
+    try {
       // Add the response for "syncStatusItems" exact as defined in front-end
       // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
       // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
       var data = [];
       clientTypes.forEach(function (clientType, index) {
-        let clt = '';
+        let clt = "";
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         let results = [];
         let labels = services[clientType][clt.service];
-        let xx = prometheus_result.data.result.filter((s) => labels.includes(s.metric.__name__));
-        if(xx.length){
+        let xx = prometheus_result.data.result.filter((s) =>
+          labels.includes(s.metric.__name__)
+        );
+        if (xx.length) {
           labels.forEach(function (label, index) {
-            try{
-              results[label] = xx.filter((s) => s.metric.__name__ == labels[index]).pop().value.pop()
-            }catch(e){}
+            try {
+              results[label] = xx
+                .filter((s) => s.metric.__name__ == labels[index])
+                .pop()
+                .value.pop();
+            } catch (e) {}
           });
         }
-        let frstVal = 0, scndVal = 0;
-        try{
+        let frstVal = 0,
+          scndVal = 0;
+        try {
           frstVal = results[labels[1]];
           scndVal = results[labels[0]];
-        }catch(e){}
+        } catch (e) {}
         data.push({
-          id: index+1,
-          title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+          id: index + 1,
+          title: clt.service.replace(/Beacon|Service/gi, "").toUpperCase(),
           frstVal: frstVal ? frstVal : 0,
           scndVal: scndVal ? scndVal : 0,
           state: clt.state,
@@ -328,35 +367,33 @@ export class Monitoring {
 
       // Respond success
       return {
-        "code": 0,
-        "info": "success: syncstatus successfully retrieved",
-        "data": data,
+        code: 0,
+        info: "success: syncstatus successfully retrieved",
+        data: data,
       };
-
-    }catch(err){
+    } catch (err) {
       return {
-        "code": 114,
-        "info": "error: no prometheus data for syncstatus available yet",
-        "data": err,
+        code: 114,
+        info: "error: no prometheus data for syncstatus available yet",
+        data: err,
       };
     }
   }
 
   // Get P2P status of consensus and execution clients
-  async getP2PStatus(){
-
+  async getP2PStatus() {
     // Service definitions with type and Prometheus labels for p2p status
     const services = {
-      'consensus':{
-        'TekuBeaconService' : ['beacon_peer_count'],
-        'LighthouseBeaconService' : ['libp2p_peers'],
-        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
-        'NimbusBeaconService' : ['nbc_peers'],
+      consensus: {
+        TekuBeaconService: ["beacon_peer_count"],
+        LighthouseBeaconService: ["libp2p_peers"],
+        PrysmBeaconService: ["p2p_peer_count"], // needs to query for state="Connected"!
+        NimbusBeaconService: ["nbc_peers"],
       },
-      'execution':{
-        'GethService' : ['p2p_peers'],
-        'BesuService' : ['ethereum_peer_count'],
-        'NethermindService' : ['nethermind_sync_peers'],
+      execution: {
+        GethService: ["p2p_peers"],
+        BesuService: ["ethereum_peer_count"],
+        NethermindService: ["nethermind_sync_peers"],
       },
     };
 
@@ -365,248 +402,308 @@ export class Monitoring {
     for (let property in services) {
       for (let prop in services[property]) {
         for (let p of services[property][prop]) {
-          serviceLabels.push(p)
+          serviceLabels.push(p);
         }
       }
     }
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 221,
-        "info": "error: service infos for p2pstatus not available",
-        "data": "",
+        code: 221,
+        info: "error: service infos for p2pstatus not available",
+        data: "",
       };
     }
 
     // Find execution and consensus service configurations
     var consensus, execution;
     const clientTypes = Object.keys(services);
-    for(let i=0;i<clientTypes.length;i++){
+    for (let i = 0; i < clientTypes.length; i++) {
       let clientType = clientTypes[i];
-      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
+      let clt = serviceInfos
+        .filter((s) => Object.keys(services[clientType]).includes(s.service))
+        .pop();
+      if (
+        typeof clt !== "object" ||
+        !clt.hasOwnProperty("service") ||
+        !clt.hasOwnProperty("config")
+      ) {
         return {
-          "code": 222,
-          "info": "error: " + clientType + " client not found (in p2pstatus)",
-          "data": serviceInfos,
+          code: 222,
+          info: "error: " + clientType + " client not found (in p2pstatus)",
+          data: serviceInfos,
         };
       }
-      eval(clientType + " = clt;");  // eval objects -> consensus/execution
+      eval(clientType + " = clt;"); // eval objects -> consensus/execution
     }
 
     // Setup details
     var details = {};
     var detailsbase = {
-      'service': 'unknown',
-      'client': "unknown",
-      'state': "unknown",
-      'numPeer': 0,
-      'numPeerBy': {
-        'source': 'prometheus',
-        'fields': [],
+      service: "unknown",
+      client: "unknown",
+      state: "unknown",
+      numPeer: 0,
+      numPeerBy: {
+        source: "prometheus",
+        fields: [],
       },
-      'maxPeer': 0,
-      'maxPeerBy': {
-        'source': 'config',
-        'fields': [],
+      maxPeer: 0,
+      maxPeerBy: {
+        source: "config",
+        fields: [],
       },
-      'valPeer': 0,
+      valPeer: 0,
     };
 
     // Get max peers for consensus and execution clients by configuration or their default values
-    var opttyp=null, optnam=null, defval=null, optval=null, regexp=null;
+    var opttyp = null,
+      optnam = null,
+      defval = null,
+      optval = null,
+      regexp = null;
     clientTypes.forEach(function (clientType, index) {
-      let clt = '';
+      let clt = "";
       eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
       details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
-      details[clientType]['service'] = clt.service;
-      details[clientType]['client'] = clt.service.replace(/Beacon|Service/gi,"").toUpperCase();
-      details[clientType]['state'] = clt.state;
-      opttyp = Object.keys(services).find(key => services[key].hasOwnProperty(clt.service));
-      if(!opttyp){
+      details[clientType]["service"] = clt.service;
+      details[clientType]["client"] = clt.service
+        .replace(/Beacon|Service/gi, "")
+        .toUpperCase();
+      details[clientType]["state"] = clt.state;
+      opttyp = Object.keys(services).find((key) =>
+        services[key].hasOwnProperty(clt.service)
+      );
+      if (!opttyp) {
         return;
       }
-      if(clt.service == "TekuBeaconService"){
+      if (clt.service == "TekuBeaconService") {
         // --p2p-peer-upper-bound (Default: 100)
-        optnam = '--p2p-peer-upper-bound';
+        optnam = "--p2p-peer-upper-bound";
         defval = 100;
-      }else if(clt.service == "LighthouseBeaconService"){
+      } else if (clt.service == "LighthouseBeaconService") {
         // --target-peers (Default: 80) + 10%
         // See extra dealing with + 10% below!
-        optnam = '--target-peers';
+        optnam = "--target-peers";
         defval = 80;
-      }else if(clt.service == "PrysmBeaconService"){
+      } else if (clt.service == "PrysmBeaconService") {
         // --p2p-max-peers (Default: 45)
-        optnam = '--p2p-max-peers';
+        optnam = "--p2p-max-peers";
         defval = 45;
-      }else if(clt.service == "NimbusBeaconService"){
+      } else if (clt.service == "NimbusBeaconService") {
         // --max-peers (The target number of peers to connect to, default: 160)
         // --hard-max-peers (The maximum number of peers to connect to. Defaults to maxPeers * 1.5)
         // See extra dealing with --hard-max-peers below!
-        optnam = '--max-peers';
+        optnam = "--max-peers";
         defval = 160;
-      }else if(clt.service == "GethService"){
-         // [MAXVAL: --maxpeers (Default: 50)]
-        optnam = '--maxpeers';
+      } else if (clt.service == "GethService") {
+        // [MAXVAL: --maxpeers (Default: 50)]
+        optnam = "--maxpeers";
         defval = 50;
-      }else if(clt.service == "BesuService"){
+      } else if (clt.service == "BesuService") {
         // --max-peers (Default: 25)
-        optnam = '--max-peers';
+        optnam = "--max-peers";
         defval = 25;
-      }else if(clt.service == "NethermindService"){
+      } else if (clt.service == "NethermindService") {
         // --Network.MaxActivePeers (Default: 50)
-        optnam = '--Network.MaxActivePeers';
+        optnam = "--Network.MaxActivePeers";
         defval = 50;
-      }else{
+      } else {
         return;
       }
-      regexp = new RegExp(optnam+"=(\\d+)", "si");
-      if(Array.isArray(clt.config.command)){
-        try{
-          optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
-        }catch(e){
+      regexp = new RegExp(optnam + "=(\\d+)", "si");
+      if (Array.isArray(clt.config.command)) {
+        try {
+          optval = clt.config.command
+            .find((item) => item.match(regexp))
+            .match(regexp)
+            .pop();
+        } catch (e) {
           optval = defval;
         }
-      }else{
-        try{
+      } else {
+        try {
           optval = clt.config.command.match(regexp).pop();
-        }catch(e){
+        } catch (e) {
           optval = defval;
         }
       }
       optval = parseInt(optval);
-      if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
-        optval = Math.round(optval*1.1);
+      if (clt.service == "LighthouseBeaconService") {
+        // Extra calculate Lighthouse --target-peers + 10%
+        optval = Math.round(optval * 1.1);
       }
-      details[opttyp]['maxPeer'] = optval;
-      details[opttyp]['maxPeerBy']['fields'].push(optnam);
-      if(clt.service == "NimbusBeaconService"){ // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
-        if(!opttyp){
+      details[opttyp]["maxPeer"] = optval;
+      details[opttyp]["maxPeerBy"]["fields"].push(optnam);
+      if (clt.service == "NimbusBeaconService") {
+        // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
+        if (!opttyp) {
           return;
         }
-        optnam = '--hard-max-peers'; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
-        defval = Math.round(optval*1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
-        regexp = new RegExp(optnam+"=(\\d+)", "si");
-        if(Array.isArray(clt.config.command)){
-          try{
-            optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
-          }catch(e){
+        optnam = "--hard-max-peers"; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
+        defval = Math.round(optval * 1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
+        regexp = new RegExp(optnam + "=(\\d+)", "si");
+        if (Array.isArray(clt.config.command)) {
+          try {
+            optval = clt.config.command
+              .find((item) => item.match(regexp))
+              .match(regexp)
+              .pop();
+          } catch (e) {
             optval = defval;
           }
-        }else{
-          try{
+        } else {
+          try {
             optval = clt.config.command.match(regexp).pop();
-          }catch(e){
+          } catch (e) {
             optval = defval;
           }
         }
         optval = parseInt(optval);
-        details[opttyp]['maxPeer'] = optval;
-        details[opttyp]['maxPeerBy']['fields'].push(optnam);
+        details[opttyp]["maxPeer"] = optval;
+        details[opttyp]["maxPeerBy"]["fields"].push(optnam);
       }
     });
 
     // Query Prometehus for all possible labels
-    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
-    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
+    const prometheus_result = await this.queryPrometheus(
+      '{__name__=~"' + serviceLabels.join("|") + '"}'
+    );
+    if (
+      typeof prometheus_result !== "object" ||
+      !prometheus_result.hasOwnProperty("status") ||
+      prometheus_result.status != "success"
+    ) {
       return {
-        "code": 223,
-        "info": "error: prometheus query for p2pstatus failed",
-        "data": prometheus_result,
+        code: 223,
+        info: "error: prometheus query for p2pstatus failed",
+        data: prometheus_result,
       };
     }
 
     // Filter Prometheus result by current used services and calculate number of currently used peers per client
     // Note that Prysm requires to match state="Connected"!
-    try{
-      var maxPeer = 0, numPeer = 0, valPeer = 0;
+    try {
+      var maxPeer = 0,
+        numPeer = 0,
+        valPeer = 0;
       clientTypes.forEach(function (clientType, index) {
-        let clt = '';
+        let clt = "";
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-        let xx = prometheus_result.data.result.filter((s) => 
-          services[clientType][clt.service].includes(s.metric.__name__) && 
-          clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
+        let xx = prometheus_result.data.result.filter((s) =>
+          services[clientType][clt.service].includes(s.metric.__name__) &&
+          clt.service == "PrysmBeaconService"
+            ? s.metric.state == "Connected"
+            : true
         );
-        if(xx.length){
+        if (xx.length) {
           services[clientType][clt.service].forEach(function (item, index) {
-            try{
-              details[clientType]['numPeer'] = parseInt(xx.filter((s) => s.metric.__name__ == services[clientType][clt.service][index]).pop().value.pop());
-              details[clientType]['numPeerBy']['fields'].push(item);
-            }catch(e){}
+            try {
+              details[clientType]["numPeer"] = parseInt(
+                xx
+                  .filter(
+                    (s) =>
+                      s.metric.__name__ ==
+                      services[clientType][clt.service][index]
+                  )
+                  .pop()
+                  .value.pop()
+              );
+              details[clientType]["numPeerBy"]["fields"].push(item);
+            } catch (e) {}
           });
         }
 
         // Summarize details
-        details[clientType]['maxPeer'] = details[clientType]['maxPeer'];
-        details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
-        details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
-        details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
+        details[clientType]["maxPeer"] = details[clientType]["maxPeer"];
+        details[clientType]["numPeer"] =
+          details[clientType]["numPeer"] > details[clientType]["maxPeer"]
+            ? details[clientType]["maxPeer"]
+            : details[clientType]["numPeer"];
+        details[clientType]["valPeer"] = Math.round(
+          (details[clientType]["numPeer"] / details[clientType]["maxPeer"]) *
+            100
+        );
+        details[clientType]["valPeer"] =
+          details[clientType]["valPeer"] > 100
+            ? 100
+            : details[clientType]["valPeer"];
 
         // Summarize totals
-        maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
-        numPeer = parseInt(numPeer + details[clientType]['numPeer']);
-        valPeer = Math.round((numPeer/maxPeer)*100);
+        maxPeer = parseInt(maxPeer + details[clientType]["maxPeer"]);
+        numPeer = parseInt(numPeer + details[clientType]["numPeer"]);
+        valPeer = Math.round((numPeer / maxPeer) * 100);
       });
-      
+
       // Respond success
       // Define the response for "valPeer" exact as defined in front-end as percentage (%).
       // Avoid overdues that may happen during peer cleaning. The exact values can be taken
       // from the details object if needed.
       return {
-        "code": 0,
-        "info": "success: p2pstatus successfully retrieved",
-        "data": {
-          'details': details,
-          'maxPeer': maxPeer,
-          'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
-          'valPeer': valPeer > 100 ? 100 : valPeer,
+        code: 0,
+        info: "success: p2pstatus successfully retrieved",
+        data: {
+          details: details,
+          maxPeer: maxPeer,
+          numPeer: numPeer > maxPeer ? maxPeer : numPeer,
+          valPeer: valPeer > 100 ? 100 : valPeer,
         },
       };
-
-    }catch(err){
+    } catch (err) {
       return {
-        "code": 224,
-        "info": "error: no prometheus data for p2pstatus available yet",
-        "data": err,
+        code: 224,
+        info: "error: no prometheus data for p2pstatus available yet",
+        data: err,
       };
     }
   }
 
   // Get storage status of all services
   async getStorageStatus() {
-
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 331,
-        "info": "error: service infos for storagestatus not available",
-        "data": "",
+        code: 331,
+        info: "error: service infos for storagestatus not available",
+        data: "",
       };
     }
 
-    // Build ssh commands to query storages 
+    // Build ssh commands to query storages
     var sshcommands = [];
-    for(let svc of serviceInfos){
-        if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
-            continue;
-        }
-        if(Array.isArray(svc.config.volumes) && svc.config.volumes.length){
-          const strVolumes = '"' + svc.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
-          sshcommands.push({
-            svc: svc,
-            cmd: "du -csh " + strVolumes + " | tail -n1 | awk '{print $1;}'",
-          });
-        }
+    for (let svc of serviceInfos) {
+      if (
+        typeof svc !== "object" ||
+        !svc.hasOwnProperty("service") ||
+        !svc.hasOwnProperty("config")
+      ) {
+        continue;
+      }
+      if (Array.isArray(svc.config.volumes) && svc.config.volumes.length) {
+        const strVolumes =
+          '"' +
+          svc.config.volumes
+            .flatMap(({ destinationPath }) => destinationPath)
+            .join('" "') +
+          '"';
+        sshcommands.push({
+          svc: svc,
+          cmd: "du -csh " + strVolumes + " | tail -n1 | awk '{print $1;}'",
+        });
+      }
     }
-    var sshcmd = sshcommands.flatMap(({ cmd }) => cmd).join(' ; ').trim();
-    if(!sshcmd){
+    var sshcmd = sshcommands
+      .flatMap(({ cmd }) => cmd)
+      .join(" ; ")
+      .trim();
+    if (!sshcmd) {
       return {
-        "code": 332,
-        "info": "error: no storage volumes available (detected in storagestatus)",
-        "data": serviceInfos,
+        code: 332,
+        info: "error: no storage volumes available (detected in storagestatus)",
+        data: serviceInfos,
       };
     }
 
@@ -616,24 +713,26 @@ export class Monitoring {
       result = await this.nodeConnectionProm.sshService.exec(sshcmd);
     } catch (err) {
       return {
-        "code": 333,
-        "info": "error: failed to execute ssh command in storagestatus",
-        "data": err,
+        code: 333,
+        info: "error: failed to execute ssh command in storagestatus",
+        data: err,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
-    if(result.rc || result.stdout == "" /*|| result.stderr != ""*/){
-      var err = "error: ssh command in storagestatus failed with return code " + result.rc;
-      if(result.stderr != ""){
+    if (result.rc || result.stdout == "" /*|| result.stderr != ""*/) {
+      var err =
+        "error: ssh command in storagestatus failed with return code " +
+        result.rc;
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       return {
-        "code": 334,
-        "info": err,
-        "data": result,
+        code: 334,
+        info: err,
+        data: result,
       };
     }
 
@@ -642,25 +741,30 @@ export class Monitoring {
     var storagesizes = result.stdout.trim().split("\n");
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
-      if(svc){
+      if (svc) {
         data.push({
-          id: index+1,
-          title: svc.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi," vc").replace(/NodeExporter/gi," ne").toUpperCase(),
-          storageValue: ( (!val || val < 1) ? '0 ' : val.replace(/([a-z]+)/si,' $1') ) + "B",
+          id: index + 1,
+          title: svc.service
+            .replace(/Beacon|Service/gi, "")
+            .replace(/Validator/gi, " vc")
+            .replace(/NodeExporter/gi, " ne")
+            .toUpperCase(),
+          storageValue:
+            (!val || val < 1 ? "0 " : val.replace(/([a-z]+)/is, " $1")) + "B",
         });
       }
     });
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: storagestatus successfully retrieved",
-      "data": data,
+      code: 0,
+      info: "success: storagestatus successfully retrieved",
+      data: data,
     };
   }
 
   // Get node stats (mostly by Prometheus)
-  async getNodeStats(){
+  async getNodeStats() {
     try {
       const storagestatus = await this.getStorageStatus();
       // if(storagestatus.code)
@@ -672,31 +776,36 @@ export class Monitoring {
       // if(p2pstatus.code)
       //   return p2pstatus;
       return {
-        "code": 0,
-        "info": "success: data successfully retrieved",
-        "data": {
+        code: 0,
+        info: "success: data successfully retrieved",
+        data: {
           // 'syncstatus':syncstatus.data,
           // 'p2pstatus':p2pstatus.data,
           // 'storagestatus':storagestatus.data,
-          'syncstatus':syncstatus,
-          'p2pstatus':p2pstatus,
-          'storagestatus':storagestatus,
-        }
+          syncstatus: syncstatus,
+          p2pstatus: p2pstatus,
+          storagestatus: storagestatus,
+        },
       };
     } catch (err) {
       return {
-        "code": 1,
-        "info": "error: an general error occured",
-        "data": err,
+        code: 1,
+        info: "error: an general error occured",
+        data: err,
       };
     }
   }
 
   // Just a demo how to get all keys from prometheus and how to fetch different services thru getServiceInfos
-  async getAllPrometheusKeysDemo(){
-    const serviceInfos = await this.getServiceInfos("PrometheusService","GrafanaService");
-    const prometheus = serviceInfos.filter((s) => s.service == "PrometheusService").pop();
-    if(typeof prometheus != "object"){
+  async getAllPrometheusKeysDemo() {
+    const serviceInfos = await this.getServiceInfos(
+      "PrometheusService",
+      "GrafanaService"
+    );
+    const prometheus = serviceInfos
+      .filter((s) => s.service == "PrometheusService")
+      .pop();
+    if (typeof prometheus != "object") {
       return "we have a bad day ;)";
     }
     let addr = prometheus.config.ports[0].destinationIp;
@@ -718,7 +827,7 @@ export class Monitoring {
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df --total -h --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
+        df --total -H --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
         sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
         INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
 sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
