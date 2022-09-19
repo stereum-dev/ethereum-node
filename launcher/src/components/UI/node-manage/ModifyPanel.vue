@@ -1,7 +1,11 @@
 <template>
   <div class="addParent">
     <div class="addBox">
-      <div class="replaceService" @click="$emit('changePlugin', items)">
+      <div
+        class="replaceService"
+        v-if="items.category !== 'service'"
+        @click="$emit('changePlugin', items)"
+      >
         <img src="/img/icon/manage-node-icons/replace.png" alt="icon" />
       </div>
       <div class="service">
@@ -123,7 +127,6 @@ export default {
       serviceIsSelected: false,
       plugin: {},
       port: "",
-      options: [],
       selected: {},
     };
   },
@@ -131,6 +134,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
+      options: "options",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
@@ -158,15 +162,20 @@ export default {
       if (this.items.category === "consensus") {
         this.installedServices.forEach((i) => {
           if (i.category === "execution") {
+            this.options = [];
             this.options.push(i);
           }
         });
       } else if (this.items.category === "validator") {
         this.installedServices.forEach((i) => {
           if (i.category === "consensus") {
+            this.options = [];
             this.options.push(i);
           }
         });
+      } else if (this.items.category === "execution") {
+        this.options = [];
+        return;
       }
     },
     chooseServiceToConnect(item) {
@@ -182,7 +191,7 @@ export default {
             this.selected = i;
           }
         });
-      } else {
+      } else if (this.items.category === "execution") {
         return;
       }
       this.serviceIsSelected = true;
@@ -277,7 +286,7 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: .9rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: #c8c8c8;
   text-transform: uppercase;
@@ -464,7 +473,7 @@ export default {
   padding: 0;
   padding-left: 4px;
 }
-.portAddBox{
+.portAddBox {
   width: 100%;
   height: 10%;
   background-color: #242424;
@@ -682,7 +691,7 @@ export default {
 .optionsName span {
   padding: 2px;
   font-size: 0.6rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #9a9a9a;
   text-align: center;
   align-self: center;

@@ -28,11 +28,30 @@
             <input type="text" v-model="port" placeholder="9000" />
           </div>
         </div>
-        <div class="clientAddBox">
-          <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+        <template v-for="service in options" :key="service.id">
+          <div
+            class="optionsBox"
+            v-if="!serviceIsSelected"
+            @click="chooseServiceToConnect(service)"
+          >
+            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+            <div class="optionsDetails">
+              <span class="category">{{ service.category }} Client</span>
+              <div class="optionsName">
+                <span>{{ service.name }}</span>
+              </div>
+            </div>
+          </div>
+        </template>
+        <div
+          class="clientAddBox"
+          v-if="serviceIsSelected"
+          @click="changeSelectedServiceToConnect"
+        >
+          <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
           <div class="connectionConfig">
-            <span>{{ plugin.category }} Client</span>
-            <div class="plusBtn">+</div>
+            <span class="category">{{ selected.category }} Client</span>
+            <span class="name">{{ selected.name }}</span>
           </div>
         </div>
         <div
@@ -96,6 +115,7 @@ export default {
       removeIsConfirmed: false,
       genesisIsActive: true,
       checkPointIsActive: false,
+      serviceIsSelected: false,
       plugin: {},
       port: "",
     };
@@ -104,6 +124,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
+      options: "options",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
@@ -115,6 +136,7 @@ export default {
   },
   mounted() {
     this.plugin = this.items;
+    this.optionsToConnect();
   },
   methods: {
     changeTheOption() {
@@ -125,6 +147,46 @@ export default {
         this.checkPointIsActive = false;
         this.genesisIsActive = true;
       }
+    },
+    optionsToConnect() {
+      if (this.items.category === "consensus") {
+        this.installedServices.forEach((i) => {
+          if (i.category === "execution") {
+            this.options = [];
+            this.options.push(i);
+          }
+        });
+      } else if (this.items.category === "validator") {
+        this.installedServices.forEach((i) => {
+          if (i.category === "consensus") {
+            this.options = [];
+            this.options.push(i);
+          }
+        });
+      } else if (this.items.category === "execution") {
+        return;
+      }
+    },
+    chooseServiceToConnect(item) {
+      if (this.items.category === "consensus") {
+        this.options.forEach((i) => {
+          if (i.category === "execution" && i.id == item.id) {
+            this.selected = i;
+          }
+        });
+      } else if (this.items.category === "validator") {
+        this.options.forEach((i) => {
+          if (i.category === "consensus" && i.id == item.id) {
+            this.selected = i;
+          }
+        });
+      } else if (this.items.category === "execution") {
+        return;
+      }
+      this.serviceIsSelected = true;
+    },
+    changeSelectedServiceToConnect() {
+      this.serviceIsSelected = false;
     },
   },
 };
@@ -525,5 +587,125 @@ export default {
   background-color: #b84738;
   transition-duration: 0.2s;
   transform: scale(0.9);
+}
+.optionsBox {
+  width: 100%;
+  height: 10%;
+  background-color: #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border: 1px solid #242424;
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.optionsBox:hover {
+  background-color: #2f2f2f;
+  border: 1px solid #464646;
+  transition-duration: 0.2s;
+}
+.optionsBox img {
+  width: 16%;
+  opacity: 0.5;
+}
+.optionsDetails {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px;
+}
+.optionsDetails .category {
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.optionsName {
+  width: 99%;
+  height: 55%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.optionsName span {
+  padding: 2px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #9a9a9a;
+  text-align: center;
+  align-self: center;
+  text-transform: uppercase;
+}
+.clientAddBox {
+  width: 100%;
+  height: 10%;
+  background-color: #242424;
+  border: 1px solid #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.clientAddBox:hover {
+  background-color: #2f2f2f;
+  border: 1px solid #464646;
+  transition-duration: 0.2s;
+}
+.portAddBox img {
+  width: 18%;
+  opacity: 0.5;
+}
+.clientAddBox img {
+  width: 16%;
+  opacity: 0.5;
+}
+.connectionConfig {
+  width: 80%;
+  height: 99%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.connectionConfig .category {
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.connectionConfig .name {
+  width: 99%;
+  height: 55%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  margin-top: 3%;
+  padding: 1px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #34a061;
+  text-align: center;
+  text-transform: uppercase;
 }
 </style>
