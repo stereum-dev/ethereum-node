@@ -156,13 +156,13 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.allServices.forEach((i) => {
+        this.installedServices.forEach((i) => {
           if (i.category === "execution") {
             this.options.push(i);
           }
         });
       } else if (this.items.category === "validator") {
-        this.allServices.forEach((i) => {
+        this.installedServices.forEach((i) => {
           if (i.category === "consensus") {
             this.options.push(i);
           }
