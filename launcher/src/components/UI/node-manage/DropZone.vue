@@ -6,9 +6,9 @@
         class="item-box"
         @dragenter.prevent
         @dragover.prevent
-        onmousedown="return false"
+        @mousedown.prevent.stop
       >
-        <div class="items" v-for="(item, index) in itemsList" :key="index">
+        <div class="items" v-for="item in itemsList" :key="item.id">
           <img
             :src="item.sIcon"
             alt="icon"
@@ -31,6 +31,8 @@
 </template>
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: {
     ManageTrapezoid,
@@ -38,27 +40,36 @@ export default {
   props: ["title", "list"],
   data() {
     return {
-      itemsList: this.list,
+      itemsList: [],
     };
   },
-
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
+    }),
+  },
+  watch: {
+    list: {
+      handler() {
+        this.itemsList = this.list;
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    this.itemsList = this.list;
+  },
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.itemsList = this.itemsList.map((i) => {
+      this.installedServices.map((i) => {
         if (i.id == item.id) {
-          return {
-            ...i,
-            modifierPanel: true,
-          };
+          i.modifierPanel = true;
         }
-        return {
-          ...i,
-          modifierPanel: false,
-        };
       });
       this.$emit("modifyItem", item);
     },

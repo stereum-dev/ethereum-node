@@ -104,7 +104,6 @@ export default {
     },
   },
   mounted() {
-    this.plugin = this.items;
     this.genesisIsActive = true;
   },
   methods: {
