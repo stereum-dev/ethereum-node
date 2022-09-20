@@ -101,7 +101,7 @@
             save: true
             state: started
             configuration:
-              service: LodestarBeaconService
+              service: LodestarValidatorService
               id: "{{ lodestar_validator_service }}"
               image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
               ports: []
