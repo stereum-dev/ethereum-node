@@ -31,6 +31,8 @@
 </template>
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: {
     ManageTrapezoid,
@@ -41,24 +43,24 @@ export default {
       itemsList: this.list,
     };
   },
-
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
+    }),
+  },
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.itemsList = this.itemsList.map((i) => {
-        if (i.id == item.id) {
-          return {
-            ...i,
-            modifierPanel: true,
-          };
+      this.installedServices.map((i) => {
+        if (i.id != item.id) {
+          i.modifierPanel = false;
+        } else if (i.id == item.id) {
+          i.modifierPanel = true;
         }
-        return {
-          ...i,
-          modifierPanel: false,
-        };
       });
       this.$emit("modifyItem", item);
     },
