@@ -89,21 +89,21 @@ export default {
       let syncIcoError = false;
       let syncIcoSituation = false;
       let pooi = [];
-      for(let k in this.syncstatus){
+      for (let k in this.syncstatus) {
         let lo = parseInt(this.syncstatus[k].frstVal);
         let hi = parseInt(this.syncstatus[k].scndVal);
-        pooi[k] = (pooi[k] || lo > hi) ? true : false;
-        if(this.code !== 0 || !hi || !lo){
+        pooi[k] = pooi[k] || lo > hi ? true : false;
+        if (this.code !== 0 || !hi || !lo) {
           syncIcoError = true;
           break;
-        }else if(lo < hi){
+        } else if (lo < hi) {
           syncIcoSituation = true;
           break;
         }
       }
       // fix: keep client values zero if prometheus is out of info ("pooi") on node start
-      for(let k in pooi){
-        if(pooi[k]){
+      for (let k in pooi) {
+        if (pooi[k]) {
           this.syncstatus[k].frstVal = 0;
           this.syncstatus[k].scndVal = 0;
         }
@@ -198,5 +198,24 @@ export default {
   font-weight: 400;
   font-size: 50%;
   color: #94deff;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 10px;
 }
 </style>

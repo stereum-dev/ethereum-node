@@ -94,10 +94,10 @@ export default {
       return { backgroundColor: "#FFFFFF" };
     },
     green() {
-      return { backgroundColor: "#316464" };
+      return { backgroundColor: "#316464", color: "#c1c1c1" };
     },
     generalStyle() {
-      return { height: "40%" };
+      return { height: "55%" };
     },
     updateStyle() {
       return { height: "17%" };

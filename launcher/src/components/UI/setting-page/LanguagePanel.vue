@@ -3,7 +3,7 @@
     <flag-button
       @setting="setLang(link.langName, link.langSelect)"
       v-for="link in sortedFlags"
-      :key="link.langName"
+      :key="link.flag"
       :isActive="link.enable"
     >
       <div class="langIco"><img :src="link.langImg" /></div>
