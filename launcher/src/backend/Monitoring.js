@@ -234,15 +234,15 @@ export class Monitoring {
     // TODO: Verify this keys!
     const services = {
       'consensus':{
-        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
-        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK
-        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK
-        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
+        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - optional query for job="teku"
+        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - requires query for job="lighthouse_beacon"!
+        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - requires query for job="prysm_beacon"!
+        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - optional query for job="nimbus"
       },
       'execution':{
-        'GethService' : ['chain_head_header','chain_head_block'], // OK
-        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK
-        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask)
+        'GethService' : ['chain_head_header','chain_head_block'], // OK - optional query for job="geth"
+        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - optional query for job="besu"
+        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask) - optional query for job="nethermind"
       },
     };
 
@@ -304,7 +304,17 @@ export class Monitoring {
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         let results = [];
         let labels = services[clientType][clt.service];
-        let xx = prometheus_result.data.result.filter((s) => labels.includes(s.metric.__name__));
+        let xx = prometheus_result.data.result.filter((s) => 
+          labels.includes(s.metric.__name__) &&
+          clt.config.instanceID == s.metric.instance &&
+          clt.service == "TekuBeaconService" ? s.metric.job == 'teku' : true &&
+          clt.service == "LighthouseBeaconService" ? s.metric.job == 'lighthouse_beacon' : true &&
+          clt.service == "PrysmBeaconService" ? s.metric.job == 'prysm_beacon' : true &&
+          clt.service == "NimbusBeaconService" ? s.metric.job == 'nimbus' : true &&
+          clt.service == "GethService" ? s.metric.job == 'geth' : true &&
+          clt.service == "BesuService" ? s.metric.job == 'besu' : true &&
+          clt.service == "NethermindService" ? s.metric.job == 'nethermind' : true
+        );
         if(xx.length){
           labels.forEach(function (label, index) {
             try{
