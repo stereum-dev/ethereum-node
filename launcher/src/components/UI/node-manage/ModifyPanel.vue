@@ -432,6 +432,7 @@ export default {
 }
 .headerContent span {
   width: 86%;
+  height: 100%;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;

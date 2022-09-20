@@ -293,7 +293,8 @@ export default {
   height: 10%;
   border-radius: 5px;
   background-color: #316355;
-  box-shadow: 1px 1px 3px 1px rgb(27, 27, 27);
+  background-color: #2b2b2b;
+  box-shadow: 1px 1px 3px 1px rgb(18, 18, 18);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -314,7 +315,7 @@ export default {
 .change-installation .change-box {
   width: 96%;
   height: 45%;
-  background-color: rgb(209, 209, 209);
+  background-color: rgb(171, 171, 171);
   border-radius: 3px;
   display: flex;
   justify-content: center;
@@ -324,7 +325,7 @@ export default {
 .change-box input {
   width: 100%;
   height: 100%;
-  background-color: rgb(209, 209, 209);
+  background-color: rgb(171, 171, 171);
   border: none;
   border-radius: 6px;
   display: flex;
@@ -373,6 +374,8 @@ export default {
 }
 .headerTitle span {
   width: 86%;
+  height: 100%;
+  padding:2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -392,6 +395,8 @@ export default {
 }
 .headerContent span {
   width: 86%;
+  height: 100%;
+  padding:2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
