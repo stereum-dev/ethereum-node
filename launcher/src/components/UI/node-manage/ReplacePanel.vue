@@ -1,6 +1,6 @@
 <template>
-  <div class="addParent">
-    <div class="addBox">
+  <div class="replaceParent">
+    <div class="replaceBox">
       <div class="service">
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
@@ -12,46 +12,21 @@
         </div>
       </div>
       <div class="configBox">
-        <div class="change-installation">
-          <div class="change-title">
-            <span>INSTALLATION PATH</span>
-          </div>
-          <div class="change-box">
-            <input type="text" v-model="installationPath" maxlength="255" />
-          </div>
-        </div>
-
-        <div class="portAddBox">
-          <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
-          <div class="portConfig">
-            <span>PORT USED</span>
-            <input type="text" v-model="port" placeholder="9000" />
-          </div>
-        </div>
-        <template v-for="service in options" :key="service.id">
-          <div
-            class="optionsBox"
-            v-if="!serviceIsSelected"
-            @click="chooseServiceToConnect(service)"
-          >
-            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
-            <div class="optionsDetails">
-              <span class="category">{{ service.category }} Client</span>
-              <div class="optionsName">
-                <span>{{ service.name }}</span>
-              </div>
-            </div>
-          </div>
-        </template>
         <div
-          class="clientAddBox"
-          v-if="serviceIsSelected"
-          @click="changeSelectedServiceToConnect"
+          class="pluginBox"
+          @click="replacePluginHandler(service)"
+          v-for="service in allServices.filter(
+            (e) => e.category === plugin.category && e.name !== plugin.name
+          )"
+          :key="service.id"
         >
-          <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
-          <div class="connectionConfig">
-            <span class="category">{{ selected.category }} Client</span>
-            <span class="name">{{ selected.name }}</span>
+          <img :src="service.icon" alt="icon" />
+          <div class="plugin-details">
+            <span class="pluginName">{{ service.name }}</span>
+            <p class="category">
+              {{ service.category }}
+              <span v-if="service.category !== 'service'">Client</span>
+            </p>
           </div>
         </div>
         <div
@@ -66,14 +41,14 @@
             </div>
             <div class="headerContent">
               <img
-                @click="changeResyncOptions"
+                @click="changeTheOption"
                 src="/img/icon/arrows/left-arrow.png"
                 alt="icon"
               />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
               <img
-                @click="changeResyncOptions"
+                @click="changeTheOption"
                 src="/img/icon/arrows/right-arrow.png"
                 alt="icon"
               />
@@ -90,11 +65,11 @@
         </div>
       </div>
       <div class="btnBox">
-        <div class="cancelBtn" @click="$emit('cancelAdd')">
+        <div class="cancelBtn" @click="$emit('cancelReplace')">
           <span>Cancel</span>
         </div>
-        <div class="addBtn" @click="$emit('saveConfig')">
-          <span>ADD</span>
+        <div class="addBtn" @click="$emit('confirmReplace')">
+          <span>confirm</span>
         </div>
       </div>
     </div>
@@ -103,44 +78,37 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useClickInstall } from "@/store/clickInstallation";
-import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
   props: ["items"],
   data() {
     return {
-      modalActive: false,
-      removeServicesModal: false,
-      removeIsConfirmed: false,
-      genesisIsActive: true,
-      checkPointIsActive: false,
-      serviceIsSelected: false,
       plugin: {},
-      port: "",
       selected: {},
-      options: [],
+      genesisIsActive: false,
+      checkPointIsActive: false,
+      checkPointSync: "",
     };
   },
   computed: {
     ...mapWritableState(useServices, {
-      installedServices: "installedServices",
       allServices: "allServices",
     }),
-    ...mapWritableState(useNodeManage, {
-      actionContents: "actionContents",
-    }),
-    ...mapWritableState(useClickInstall, {
-      installationPath: "installationPath",
-      checkPointSync: "checkPointSync",
-    }),
+  },
+  watch: {
+    items: {
+      handler: function (val) {
+        this.plugin = val;
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.plugin = this.items;
-    this.optionsToConnect();
+    this.genesisIsActive = true;
   },
   methods: {
-    changeResyncOptions() {
+    changeTheOption() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;
         this.checkPointIsActive = true;
@@ -149,60 +117,15 @@ export default {
         this.genesisIsActive = true;
       }
     },
-    optionsToConnect() {
-      if (this.items.category === "consensus") {
-        this.options = this.installedServices.filter(
-          (service) => service.category === "execution"
-        );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
-      } else if (this.items.category === "validator") {
-        this.options = this.installedServices.filter(
-          (service) => service.category === "consensus"
-        );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
-      } else if (this.items.category === "execution") {
-        this.options = [];
-        return;
-      }
-    },
-    chooseServiceToConnect(item) {
-      if (this.items.category === "consensus") {
-        this.options.map((i) => {
-          if (i.category === "execution" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "validator") {
-        this.options.forEach((i) => {
-          if (i.category === "consensus" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "execution") {
-        return;
-      }
-      this.serviceIsSelected = true;
-    },
-    changeSelectedServiceToConnect() {
-      this.serviceIsSelected = false;
+    replacePluginHandler(item) {
+      this.plugin = item;
+      this.$emit("replacePlugin", this.plugin);
     },
   },
 };
 </script>
 <style scoped>
-.addParent {
+.replaceParent {
   grid-column: 1;
   width: 100%;
   height: 100%;
@@ -217,7 +140,7 @@ export default {
   transition-duration: 500ms;
 }
 
-.addBox {
+.replaceBox {
   width: 98%;
   height: 99%;
   display: flex;
@@ -227,7 +150,9 @@ export default {
   background-color: #3a3a3a;
   border-radius: 10px;
   margin: 0 auto;
+  position: relative;
 }
+
 .service {
   width: 98%;
   height: 10%;
@@ -280,73 +205,83 @@ export default {
 
 .configBox {
   width: 95%;
-  height: 80%;
+  height: 70%;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-
-.configBox .change-installation {
-  width: 100%;
-  height: 10%;
-  border-radius: 5px;
-  background-color: #316355;
-  background-color: #2b2b2b;
-  box-shadow: 1px 1px 3px 1px rgb(18, 18, 18);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.change-installation .change-title {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.change-title span {
-  color: #c0c0c0;
-  font-size: 0.6rem;
-  font-weight: 600;
-}
-.change-installation .change-box {
-  width: 96%;
-  height: 45%;
-  background-color: rgb(171, 171, 171);
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.change-box input {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(171, 171, 171);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 4px;
-  outline: none !important;
-  outline-style: none !important;
-}
-.configBox .fast-sync {
+.configBox .pluginBox {
   width: 100%;
   height: 13%;
+  background-color: #2d2d2d;
+  box-shadow: 1px 1px 5px 1px rgb(17, 17, 17);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.pluginBox:hover {
+  background-color: #242424;
+}
+.configBox .pluginBox img {
+  width: 20%;
+}
+.pluginBox .plugin-details {
+  width: 70%;
+  height: 95%;
+  padding:5px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plugin-details .pluginName {
+  width: 100%;
+  height: 50%;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #c8c8c8;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: center;
+}
+.plugin-details p {
+  width: max-content;
+  height: 45%;
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #8a8a8a;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-self: flex-start;
+}
+.plugin-details p span {
+  text-align: left;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #8a8a8a;
+}
+
+.configBox .fast-sync {
+  width: 100%;
+  height: 20%;
   background-color: #315e45;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 10px 0 5px 5px;
-  margin-top: 8px;
+  margin-top: 15%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -375,7 +310,7 @@ export default {
 .headerTitle span {
   width: 86%;
   height: 100%;
-  padding:2px;
+  padding:4px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -386,7 +321,7 @@ export default {
   width: 55%;
   height: 100%;
   border-radius: 0;
-  padding: 0 2px;
+
   background-color: #414649;
   display: flex;
   justify-content: space-between;
@@ -396,7 +331,7 @@ export default {
 .headerContent span {
   width: 86%;
   height: 100%;
-  padding:2px;
+  padding:4px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -416,9 +351,9 @@ export default {
   align-items: center;
 }
 .fast-sync .content span {
-  font-size: 0.55rem;
-  font-weight: 700;
-  color: #b3b3b3;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #848484;
   text-align: center;
 }
 .fast-sync .content .inputBox {
@@ -440,16 +375,16 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #232323;
   padding: 0;
   padding-left: 4px;
 }
-.portAddBox,
-.clientAddBox {
+.portreplaceBox,
+.clientreplaceBox {
   width: 100%;
-  height: 10%;
+  height: 13%;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   border-radius: 5px;
@@ -459,20 +394,20 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.portAddBox img {
+.portreplaceBox img {
   width: 18%;
   opacity: 0.5;
 }
-.clientAddBox img {
+.clientreplaceBox img {
   width: 16%;
   opacity: 0.5;
 }
 .portConfig {
   width: 80%;
-  height: 99%;
+  height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
 }
 .portConfig span {
@@ -484,8 +419,8 @@ export default {
   text-align: center;
 }
 .portConfig input {
-  width: 96%;
-  height: 55%;
+  width: 99%;
+  height: 45%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
@@ -494,9 +429,82 @@ export default {
   font-weight: 600;
   color: #b0b0b0;
   padding: 0;
-  margin-top: 3%;
 }
-
+.connectionConfig {
+  width: 80%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.connectionConfig span {
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.connectionConfig .plusBtn {
+  width: 100%;
+  height: 45%;
+  background-color: #c9c9c9;
+  color: #2a2a2a;
+  border-radius: 30px;
+  border: 1px solid #a8a8a8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222222;
+  text-align: center;
+}
+.plusBtn:hover {
+  transform: scale(1.01);
+  color: #c9c9c9;
+  font-weight: 600;
+  background-color: #285c4e;
+  transition-duration: 0.2s;
+}
+.plusBtn:active {
+  background-color: #1c3c33;
+  transform: scale(0.9);
+}
+.connectedService {
+  width: 100%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.connectedService .category {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.connectedService .name {
+  width: 99%;
+  height: 50%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  padding: 2%;
+  margin-top: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
 .btnBox {
   width: 100%;
   height: 6%;
@@ -562,37 +570,27 @@ export default {
 }
 .optionsBox {
   width: 100%;
-  height: 10%;
+  height: 13%;
   background-color: #242424;
   box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border: 1px solid #242424;
   border-radius: 5px;
   margin-top: 8px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-}
-.optionsBox:hover {
-  background-color: #2f2f2f;
-  border: 1px solid #464646;
-  transition-duration: 0.2s;
 }
 .optionsBox img {
-  padding: 1px;
-  width: 17%;
-  height: 90%;
+  width: 16%;
   opacity: 0.5;
 }
 .optionsDetails {
   width: 80%;
-  height: 100%;
+  height: 95%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  padding: 2px;
 }
 .optionsDetails .category {
   width: max-content;
@@ -605,85 +603,23 @@ export default {
 }
 .optionsName {
   width: 99%;
-  height: 60%;
+  height: 45%;
   background-color: rgb(14, 14, 14);
   border: 1px solid rgb(53, 53, 53);
   border-radius: 30px;
-  margin-top: 3%;
+  margin-top: 5%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .optionsName span {
-  padding: 2px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #9a9a9a;
-  text-align: center;
-  align-self: center;
-  text-transform: uppercase;
-}
-.clientAddBox {
-  width: 100%;
-  height: 10%;
-  background-color: #242424;
-  border: 1px solid #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
-  padding: 1px 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.clientAddBox:hover {
-  background-color: #2f2f2f;
-  border: 1px solid #464646;
-  transition-duration: 0.2s;
-}
-.portAddBox img {
-  padding: 1px;
-  width: 18%;
-  height: 80%;
-  opacity: 0.5;
-}
-.clientAddBox img {
-  padding: 1px;
-  width: 16%;
-  height: 80%;
-  opacity: 0.5;
-}
-.connectionConfig {
-  width: 80%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
   padding: 2px;
-}
-
-.connectionConfig .category {
-  width: max-content;
-  height: 30%;
-  font-size: 0.6rem;
-  font-weight: 700;
+  font-size: 0.7rem;
+  font-weight: 600;
   color: #b3b3b3;
   text-align: center;
-  text-transform: uppercase;
-}
-.connectionConfig .name {
-  width: 99%;
-  height: 60%;
-  background-color: rgb(14, 14, 14);
-  border: 1px solid rgb(53, 53, 53);
-  border-radius: 30px;
-  margin-top: 3%;
-  padding: 2px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #34a061;
-  text-align: center;
+  align-self: center;
   text-transform: uppercase;
 }
 </style>

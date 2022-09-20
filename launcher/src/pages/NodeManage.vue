@@ -4,18 +4,34 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <add-panel
-            v-if="displayCustomModifier"
-            :display="displayCustomModifier"
-            :items="itemToInstall"
-            @cancel-add="cancelAddProcess"
-            @save-config="saveServiceConfiguration"
-          ></add-panel>
-          <node-configuration
-            v-else
-            :configData="configData"
-            @modal-preset="openPresetModal"
-          ></node-configuration>
+          <Transition name="slide">
+            <add-panel
+              v-if="displayCustomAddPanel"
+              :items="itemToInstall"
+              @cancel-add="cancelAddProcess"
+              @save-config="saveServiceConfiguration"
+            ></add-panel>
+            <modify-panel
+              v-else-if="displayCustomModifyPanel"
+              :items="itemToInstall"
+              @cancel-modify="cancelModifyProcess"
+              @save-modify="saveServiceModification"
+              @change-plugin="replacePlugin"
+            >
+            </modify-panel>
+            <replace-panel
+              v-else-if="displayReplacePanel"
+              @cancel-replace="cancelReplaceProcess"
+              @confirm-replace="confirmReplaceProcess"
+              @replace-plugin="replacePluginHandler"
+              :items="itemToReplace"
+            ></replace-panel>
+            <node-configuration
+              v-else
+              :configData="configData"
+              @modal-preset="openPresetModal"
+            ></node-configuration>
+          </Transition>
         </div>
         <div class="preset-modal" v-if="presetModal">
           <preset-modal @close-preset="closePresetModal"></preset-modal>
@@ -41,6 +57,7 @@
               "
               @modal-view="showModal"
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -57,6 +74,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
           <div
@@ -73,6 +91,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
         </div>
@@ -93,6 +112,7 @@
                 )
               "
               @select-item="selectedServiceToRemove"
+              @modify-item="selectedServiceToModify"
             >
             </service-plugin>
           </div>
@@ -127,6 +147,8 @@ import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import AddPanel from "../components/UI/node-manage/AddPanel.vue";
+import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
+import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -143,6 +165,8 @@ export default {
     PresetModal,
     TaskManager,
     AddPanel,
+    ModifyPanel,
+    ReplacePanel,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -152,8 +176,11 @@ export default {
       isModalActive: false,
       presetModal: false,
       modalItems: [],
-      displayCustomModifier: false,
+      displayCustomAddPanel: false,
+      displayCustomModifyPanel: false,
+      displayReplacePanel: false,
       itemToInstall: null,
+      itemToReplace: null,
     };
   },
   computed: {
@@ -201,20 +228,20 @@ export default {
       const item = { ...list.find((item) => item.id == itemId) };
       if (this.newConfiguration.some((item) => item.id == itemId)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addPanel = true;
       this.itemToInstall = item;
-      this.displayCustomModifier = item.modifierPanel;
+      this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
       if (this.newConfiguration.some((el) => el.id == item.id)) return;
       this.newConfiguration.push(item);
-      item.modifierPanel = true;
+      item.addPanel = true;
       this.itemToInstall = item;
-      this.displayCustomModifier = item.modifierPanel;
+      this.displayCustomAddPanel = item.addPanel;
     },
     saveServiceConfiguration() {
       this.itemToInstall = null;
-      this.displayCustomModifier = false;
+      this.displayCustomAddPanel = false;
       this.newConfiguration.pop();
     },
     selectedServiceToRemove(item) {
@@ -226,11 +253,47 @@ export default {
         );
       }
     },
-
     cancelAddProcess() {
       this.itemToInstall = null;
-      this.displayCustomModifier = false;
+      this.displayCustomAddPanel = false;
       this.newConfiguration.pop();
+    },
+    selectedServiceToModify(item) {
+      this.newConfiguration = this.newConfiguration.map((el) => {
+        if (el.id === item.id) {
+          el.modifierPanel = true;
+          this.itemToInstall = item;
+          this.displayCustomModifyPanel = el.modifierPanel;
+        }
+        return {
+          ...el,
+          modifierPanel: false,
+        };
+      });
+    },
+    cancelModifyProcess() {
+      this.itemToInstall.modifierPanel = false;
+      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
+      this.itemToInstall = null;
+    },
+    saveServiceModification() {
+      this.itemToInstall.modifierPanel = false;
+      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
+      this.itemToInstall = null;
+    },
+    replacePlugin(item) {
+      this.itemToReplace = item;
+      this.displayCustomModifyPanel = false;
+      this.displayReplacePanel = true;
+    },
+    cancelReplaceProcess() {
+      this.displayReplacePanel = false;
+    },
+    confirmReplaceProcess() {
+      this.displayReplacePanel = false;
+    },
+    replacePluginHandler(item) {
+      console.log(item);
     },
   },
 };
@@ -404,5 +467,11 @@ export default {
   position: fixed;
   left: 4px;
   bottom: -1px;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-200px);
+  transition-duration: 150ms;
 }
 </style>

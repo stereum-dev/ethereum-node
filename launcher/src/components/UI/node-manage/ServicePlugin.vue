@@ -7,18 +7,16 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="service-bg" ref="serviceBg">
-      <div
-        v-for="item in installedServices.filter(
-          (service) => service.category === 'service'
-        )"
-        :key="item.id"
-        class="service-item"
-      >
+      <div v-for="item in itemsList" :key="item.id" class="service-item">
         <img
           :src="item.hIcon"
           alt="icon"
-          @dblclick="selectedItem(item)"
-          :class="{ 'chosen-plugin': item.active }"
+          @mouseup.right="selectedItem(item)"
+          @click="modifyItem(item)"
+          :class="{
+            'chosen-plugin': item.active,
+            'modify-plugin': item.modifierPanel,
+          }"
         />
       </div>
     </div>
@@ -31,22 +29,44 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 export default {
+  props: ["list"],
   data() {
-    return {};
+    return {
+      itemsList: this.list,
+    };
   },
   computed: {
-    ...mapState(useServices, {
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
+    }),
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
     }),
   },
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    modifyItem(item) {
+      this.itemsList = this.itemsList.map((i) => {
+        if (i.id == item.id) {
+          return {
+            ...i,
+            modifierPanel: true,
+          };
+        }
+        return {
+          ...i,
+          modifierPanel: false,
+        };
+      });
+      this.$emit("modifyItem", item);
     },
   },
 };
@@ -108,9 +128,7 @@ export default {
   box-shadow: none;
 }
 .chosen-plugin {
-  width: 55px;
-  height: 55px;
-  border: 2px solid rgb(64, 168, 243);
+  border: 2px solid rgb(255, 70, 70);
   border-radius: 7px;
 }
 .service-arrow {
@@ -119,5 +137,9 @@ export default {
 }
 .service-arrow:active {
   box-shadow: none;
+}
+.modify-plugin {
+  border: 2px solid rgb(221, 206, 78);
+  border-radius: 7px;
 }
 </style>

@@ -22,7 +22,7 @@ export default {
   position: fixed;
   top: 10%;
   left: 5%;
-  z-index: 310;
+  z-index: 998;
 }
 .modal-opacity {
   width: 100%;
@@ -32,24 +32,23 @@ export default {
   left: 0;
   top: 0;
   opacity: 0.7;
-  z-index: 311;
+  z-index: 999;
 }
 .key-modal-content {
-  width: 50%;
-  height: 50%;
-  border-radius: 1rem;
-  background-color: #363a41;
-  border: 4px solid rgb(171, 170, 170);
-  z-index: 312;
-  opacity: 1;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
+  border: 3px solid #bfbfbf;
   position: absolute;
-  top: 13%;
-  left: 20%;
+  top: 10%;
+  left: 18%;
+  background-color: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
+  z-index: 1000;
 }
 
 .close {

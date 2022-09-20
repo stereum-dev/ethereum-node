@@ -8,12 +8,16 @@
         @dragover.prevent
         onmousedown="return false"
       >
-        <div class="items" v-for="(item, index) in list" :key="index">
+        <div class="items" v-for="(item, index) in itemsList" :key="index">
           <img
             :src="item.sIcon"
             alt="icon"
-            @dblclick="selectedItem(item)"
-            :class="{ 'chosen-plugin': item.active }"
+            @mouseup.right="selectedItem(item)"
+            @click="modifyItem(item)"
+            :class="{
+              'chosen-plugin': item.active,
+              'modify-plugin': item.modifierPanel,
+            }"
           />
         </div>
       </div>
@@ -31,23 +35,10 @@ export default {
   components: {
     ManageTrapezoid,
   },
-  props: {
-    title: {
-      type: String,
-      required: true,
-      default: "Title",
-    },
-    list: {
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      },
-    },
-  },
+  props: ["title", "list"],
   data() {
     return {
-      itemsList: null,
+      itemsList: this.list,
     };
   },
 
@@ -55,6 +46,21 @@ export default {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    modifyItem(item) {
+      this.itemsList = this.itemsList.map((i) => {
+        if (i.id == item.id) {
+          return {
+            ...i,
+            modifierPanel: true,
+          };
+        }
+        return {
+          ...i,
+          modifierPanel: false,
+        };
+      });
+      this.$emit("modifyItem", item);
     },
   },
 };
@@ -147,5 +153,9 @@ export default {
 .chosen-plugin {
   border: 2px solid rgb(252, 107, 102);
   border-radius: 10px;
+}
+.modify-plugin {
+  border: 2px solid rgb(221, 206, 78);
+  border-radius: 7px;
 }
 </style>
