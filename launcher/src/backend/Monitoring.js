@@ -236,7 +236,7 @@ export class Monitoring {
       'consensus':{
         'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
         'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK
-        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK
+        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - needs to query for job="prysm_beacon"!
         'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK
       },
       'execution':{
@@ -304,7 +304,10 @@ export class Monitoring {
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         let results = [];
         let labels = services[clientType][clt.service];
-        let xx = prometheus_result.data.result.filter((s) => labels.includes(s.metric.__name__));
+        let xx = prometheus_result.data.result.filter((s) => 
+          labels.includes(s.metric.__name__) &&
+          clt.service == "PrysmBeaconService" ? s.metric.job == 'prysm_beacon' : true
+        );
         if(xx.length){
           labels.forEach(function (label, index) {
             try{
