@@ -1,0 +1,60 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    prometheus_service: 93b6b894-381e-11ed-a905-d7417efc8ddf
+    erigon_service: 945726da-381e-11ed-9e15-5f685d4bd0e4
+    grafana_service: 984fff6e-381e-11ed-99ba-c7d1e77b8b7d
+
+  tasks:
+    # prometheus service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrometheusService
+              id: "{{ prometheus_service }}"
+              image: "prom/prometheus:{{ stereum_static.defaults.versions.prometheus }}"
+              ports:
+                - 127.0.0.1:9090:9090/tcp
+              env: {}
+              command: sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml  --web.enable-lifecycle"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
+                - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
+    # grafana service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GrafanaService
+              id: "{{ grafana_service }}"
+              image: "grafana/grafana:{{ stereum_static.defaults.versions.grafana }}"
+              ports:
+                - 127.0.0.1:3000:3000/tcp
+              command: "/run.sh"
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ grafana_service }}/grafana/provisioning:/etc/grafana/provisioning"
+                - "/opt/app/services/{{ grafana_service }}/grafana/data:/var/lib/grafana"
+                - "/opt/app/services/{{ grafana_service }}/grafana:/etc/grafana"
