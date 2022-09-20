@@ -37,7 +37,7 @@ export default {
   props: ["list"],
   data() {
     return {
-      itemsList: this.list,
+      itemsList: [],
     };
   },
   computed: {
@@ -47,6 +47,14 @@ export default {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
     }),
+  },
+  watch: {
+    list: {
+      handler: function (val) {
+        this.itemsList = val;
+      },
+      immediate: true,
+    },
   },
   methods: {
     selectedItem(item) {
