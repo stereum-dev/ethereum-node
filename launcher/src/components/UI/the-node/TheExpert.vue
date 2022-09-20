@@ -54,8 +54,7 @@
             <select
               v-model="option.changeValue"
               id="value"
-              @change="option.changed = true"
-              @input="somethingIsChanged"
+              @change="somethingIsChanged(option)"
             >
               <option
                 v-for="(rate, idx) in option.value"
@@ -103,10 +102,9 @@
           <input
             class="toggleTextInput"
             type="text"
-            @input="somethingIsChanged"
             v-model="option.changeValue"
             :class="{ disabled: !option.buttonState }"
-            @change="option.changed = true"
+            @input="somethingIsChanged(option)"
           />
         </div>
 
@@ -206,7 +204,9 @@ export default {
   //   },
   // },
   methods: {
-    somethingIsChanged() {
+    somethingIsChanged(item) {
+      if(item && item.title)
+        item.changed = true
       this.nothingsChanged = false;
     },
     async readService() {

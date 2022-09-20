@@ -14,11 +14,13 @@ stereum_static:
       nimbus: multiarch-v22.9.0
       teku: "22.9.0"
       prysm: v3.1.1
+      lodestar: v1.0.0
 
       # execution clients
-      geth: v1.10.23
+      geth: v1.10.25
       besu: "22.7.2"
       nethermind: "1.14.0"
+      erigon: v2022.09.01
 
       # mevboost
       mevboost: v0.8.2

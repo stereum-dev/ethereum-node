@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  Prysm beacon logs
+  - name: Prysm beacon
+    command: "docker logs stereum-e75f32ee-3537-11ed-915c-f34e4d62ccd9"
+    register: prysm_beacon
+    until:
+      - prysm_beacon.stderr is search("Connected to new endpoint")
+      - prysm_beacon.stderr is not search("Could not connect to execution endpoint")
+    retries: 60
+    delay: 10
+
+# EOF

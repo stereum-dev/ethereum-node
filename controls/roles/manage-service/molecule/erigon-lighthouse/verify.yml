@@ -1,0 +1,18 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  lighthouse beacon logs
+  - name: Lighthouse beacon
+    command: "docker logs stereum-160b14dc-34e3-11ed-9f6e-43d6284af2c9"
+    register: lighthouse_beacon
+    until:
+      - lighthouse_beacon.stderr is search("Block production enabled")
+      - lighthouse_beacon.stderr is search("Execution endpoint is not synced")
+      - lighthouse_beacon.stderr is not search("Error connecting to eth1 node endpoint")
+      - lighthouse_beacon.stderr is not search("Error during execution engine upcheck")
+    retries: 60
+    delay: 10
+
+# EOF

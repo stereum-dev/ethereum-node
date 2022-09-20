@@ -1,0 +1,93 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    lodestar_service: 31323412-35a0-11ed-8923-9b3dbae52b64
+    besu_service: 31dc3b92-35a0-11ed-bd1f-67fc5711cd0b
+
+
+  tasks:
+    # besu service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: BesuService
+              id: "{{ besu_service }}"
+              image: hyperledger/besu:{{ stereum_static.defaults.versions.besu }}
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["besu"]
+              env:
+                JAVA_OPTS: -Xmx4g
+              command:
+                - --network=goerli
+                - --data-path=/opt/app/data
+                - --data-storage-format=BONSAI
+                - --sync-mode=X_SNAP
+                - --host-allowlist=*
+                - --rpc-http-enabled=true
+                - --rpc-http-host=0.0.0.0
+                - --rpc-http-cors-origins=*
+                - --rpc-http-api=ETH,NET,WEB3
+                - --rpc-ws-enabled=true
+                - --rpc-ws-api=WEB3,ETH,NET
+                - --rpc-ws-host=0.0.0.0
+                - --engine-rpc-enabled=true
+                - --engine-rpc-port=8551
+                - --engine-jwt-enabled=true
+                - --engine-jwt-secret=/engine.jwt
+                - --engine-host-allowlist=*
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ besu_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+    # lodestar beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ lodestar_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports:
+                - 0.0.0.0:9000:9000/udp
+                - 0.0.0.0:9000:9000/tcp
+              env: {}
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - beacon
+                - --network=goerli
+                - --dataDir=/opt/app/beacon
+                - --rest.port=5052
+                - --rest.namespace=*
+                - --rest.address=0.0.0.0
+                - --jwt-secret=/engine.jwt
+                - --execution.urls=http://stereum-{{ besu_service }}:8551
+                - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ lodestar_service }}/lodestar/beacon:/opt/app/beacon"
+                - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
+
+# EOF
