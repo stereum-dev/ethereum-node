@@ -8,11 +8,11 @@
   slurp:
     src: "{{ stereum_service_config_path }}"
   register: stereum_service_configuration_raw
-  become: yes
+  become: true
 - name: Read variable
   set_fact:
     stereum_service_configuration: "{{ stereum_service_configuration_raw.content | b64decode | from_yaml }}"
-  become: yes
+  become: true
 
 ##############
 # geth pruning
@@ -47,4 +47,4 @@
     log_options:
       max-file: "10"
       max-size: "100m"
-  become: yes
+  become: true
