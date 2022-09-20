@@ -135,8 +135,15 @@ export default {
       checkPointSync: "checkPointSync",
     }),
   },
+  watch: {
+    items: {
+      handler: function (val) {
+        this.plugin = val;
+      },
+      immediate: true,
+    },
+  },
   mounted() {
-    this.plugin = this.items;
     this.optionsToConnect();
   },
   methods: {

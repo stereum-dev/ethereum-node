@@ -6,9 +6,9 @@
         class="item-box"
         @dragenter.prevent
         @dragover.prevent
-        onmousedown="return false"
+        @mousedown.prevent.stop
       >
-        <div class="items" v-for="(item, index) in itemsList" :key="index">
+        <div class="items" v-for="item in itemsList" :key="item.id">
           <img
             :src="item.sIcon"
             alt="icon"
@@ -40,7 +40,7 @@ export default {
   props: ["title", "list"],
   data() {
     return {
-      itemsList: this.list,
+      itemsList: [],
     };
   },
   computed: {
@@ -49,6 +49,17 @@ export default {
       allServices: "allServices",
     }),
   },
+  watch: {
+    list: {
+      handler() {
+        this.itemsList = this.list;
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    this.itemsList = this.list;
+  },
   methods: {
     selectedItem(item) {
       item.active = !item.active;
@@ -56,13 +67,11 @@ export default {
     },
     modifyItem(item) {
       this.installedServices.map((i) => {
-        if (i.id != item.id) {
-          i.modifierPanel = false;
-        } else if (i.id == item.id) {
+        if (i.id == item.id) {
           i.modifierPanel = true;
-          this.$emit("modifyItem", item);
         }
       });
+      this.$emit("modifyItem", item);
     },
   },
 };

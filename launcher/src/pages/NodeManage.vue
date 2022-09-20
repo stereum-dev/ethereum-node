@@ -6,21 +6,21 @@
         <div class="config-box">
           <Transition name="slide">
             <add-panel
-              v-if="displayCustomAddPanel"
+              v-if="itemToInstall.addPanel"
               :items="itemToInstall"
               @cancel-add="cancelAddProcess"
               @save-config="saveServiceConfiguration"
             ></add-panel>
             <modify-panel
-              v-else-if="displayCustomModifyPanel"
-              :items="itemToInstall"
+              v-else-if="itemToModify.modifierPanel"
+              :items="itemToModify"
               @cancel-modify="cancelModifyProcess"
               @save-modify="saveServiceModification"
               @change-plugin="replacePlugin"
             >
             </modify-panel>
             <replace-panel
-              v-else-if="displayReplacePanel"
+              v-else-if="itemToReplace.replacePanel"
               @cancel-replace="cancelReplaceProcess"
               @confirm-replace="confirmReplaceProcess"
               @replace-plugin="replacePluginHandler"
@@ -155,6 +155,7 @@ import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
+import { escapeHtml } from "@intlify/shared";
 export default {
   components: {
     SidebarManage,
@@ -179,8 +180,9 @@ export default {
       displayCustomAddPanel: false,
       displayCustomModifyPanel: false,
       displayReplacePanel: false,
-      itemToInstall: null,
-      itemToReplace: null,
+      itemToInstall: {},
+      itemToModify: {},
+      itemToReplace: {},
     };
   },
   computed: {
@@ -254,39 +256,42 @@ export default {
       }
     },
     cancelAddProcess() {
-      this.itemToInstall = null;
-      this.displayCustomAddPanel = false;
+      this.itemToInstall.addPanel = false;
+      this.itemToInstall = {};
       this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
       this.newConfiguration.map((el) => {
-        if (el.id === item.id) {
-          el.modifierPanel = true;
-          this.itemToInstall = item;
-          this.displayCustomModifyPanel = el.modifierPanel;
+        if (el.id != item.id) {
+          el.modifierPanel = false;
+          this.itemToModify = {};
         }
       });
+      this.itemToModify = item;
     },
     cancelModifyProcess() {
-      this.itemToInstall.modifierPanel = false;
-      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
-      this.itemToInstall = null;
+      this.itemToModify.modifierPanel = false;
+      this.itemToModify = {};
     },
     saveServiceModification() {
-      this.itemToInstall.modifierPanel = false;
-      this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
-      this.itemToInstall = null;
+      // this.itemToInstall.modifierPanel = false;
+      // this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
+      // this.itemToInstall = {};
     },
     replacePlugin(item) {
+      if (item.modifierPanel) {
+        item.modifierPanel = false;
+      }
       this.itemToReplace = item;
-      this.displayCustomModifyPanel = false;
-      this.displayReplacePanel = true;
+      item.replacePanel = true;
     },
     cancelReplaceProcess() {
-      this.displayReplacePanel = false;
+      this.itemToReplace.replacePanel = false;
+      this.itemToReplace = {};
     },
     confirmReplaceProcess() {
-      this.displayReplacePanel = false;
+      this.itemToReplace.replacePanel = false;
+      this.itemToReplace = {};
     },
     replacePluginHandler(item) {
       console.log(item);
