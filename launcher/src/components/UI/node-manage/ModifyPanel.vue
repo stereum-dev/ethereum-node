@@ -1,6 +1,13 @@
 <template>
   <div class="addParent">
     <div class="addBox">
+      <div
+        class="replaceService"
+        v-if="items.category !== 'service'"
+        @click="$emit('changePlugin', items)"
+      >
+        <img src="/img/icon/manage-node-icons/replace.png" alt="icon" />
+      </div>
       <div class="service">
         <img :src="plugin.icon" alt="icon" />
         <div class="service-details">
@@ -12,7 +19,7 @@
         </div>
       </div>
       <div class="configBox">
-        <div class="change-installation">
+        <div class="change-installation" v-if="replaceServiceActive">
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
@@ -20,7 +27,42 @@
             <input type="text" v-model="installationPath" maxlength="255" />
           </div>
         </div>
-
+        <div
+          class="fast-sync"
+          v-if="
+            (plugin.category === 'execution' ||
+              plugin.category === 'consensus') &&
+            replaceServiceActive
+          "
+        >
+          <div class="sync-header">
+            <div class="headerTitle">
+              <span>SYNC</span>
+            </div>
+            <div class="headerContent">
+              <img
+                @click="changeTheOption"
+                src="/img/icon/arrows/left-arrow.png"
+                alt="icon"
+              />
+              <span v-if="genesisIsActive">GENESIS</span>
+              <span v-if="checkPointIsActive">CHECKPOINT</span>
+              <img
+                @click="changeTheOption"
+                src="/img/icon/arrows/right-arrow.png"
+                alt="icon"
+              />
+            </div>
+          </div>
+          <div class="content">
+            <span v-if="genesisIsActive"
+              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
+            >
+            <div class="inputBox" v-if="checkPointIsActive">
+              <input type="text" v-model="checkPointSync" />
+            </div>
+          </div>
+        </div>
         <div class="portAddBox">
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
@@ -54,46 +96,12 @@
             <span class="name">{{ selected.name }}</span>
           </div>
         </div>
-        <div
-          class="fast-sync"
-          v-if="
-            plugin.category === 'execution' || plugin.category === 'consensus'
-          "
-        >
-          <div class="sync-header">
-            <div class="headerTitle">
-              <span>SYNC</span>
-            </div>
-            <div class="headerContent">
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
-              <span v-if="genesisIsActive">GENESIS</span>
-              <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
-            </div>
-          </div>
-          <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
-            <div class="inputBox" v-if="checkPointIsActive">
-              <input type="text" v-model="checkPointSync" />
-            </div>
-          </div>
-        </div>
       </div>
       <div class="btnBox">
-        <div class="cancelBtn" @click="$emit('cancelAdd')">
+        <div class="cancelBtn" @click="$emit('cancelModify')">
           <span>Cancel</span>
         </div>
-        <div class="addBtn" @click="$emit('saveConfig')">
+        <div class="addBtn" @click="$emit('saveModify')">
           <span>ADD</span>
         </div>
       </div>
@@ -115,6 +123,7 @@ export default {
       removeIsConfirmed: false,
       genesisIsActive: true,
       checkPointIsActive: false,
+      replaceServiceActive: false,
       serviceIsSelected: false,
       plugin: {},
       port: "",
@@ -146,8 +155,11 @@ export default {
   mounted() {
     this.optionsToConnect();
   },
+  beforeUpdate() {
+    this.optionsToConnect();
+  },
   methods: {
-    changeResyncOptions() {
+    changeTheOption() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;
         this.checkPointIsActive = true;
@@ -224,6 +236,10 @@ export default {
   transition-duration: 500ms;
 }
 
+.activeAddPanel {
+  position: relative !important;
+  transition-duration: 2s !important;
+}
 .addBox {
   width: 98%;
   height: 99%;
@@ -234,11 +250,38 @@ export default {
   background-color: #3a3a3a;
   border-radius: 10px;
   margin: 0 auto;
+  position: relative;
+}
+.replaceService {
+  width: 17%;
+  height: 6%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  margin: 0 auto;
+  position: absolute;
+  top: 1%;
+  right: 3%;
+}
+.replaceService img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  cursor: pointer;
+}
+.replaceService img:hover {
+  transform: scale(1.1);
+  transition-duration: 200ms;
+}
+.replaceService img:active {
+  transform: scale(1);
+  transition-duration: 200ms;
 }
 .service {
   width: 98%;
   height: 10%;
-  margin-top: 13%;
+  margin-top: 15%;
   padding: 3px;
   display: flex;
   justify-content: space-between;
@@ -261,8 +304,8 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
@@ -300,8 +343,7 @@ export default {
   height: 10%;
   border-radius: 5px;
   background-color: #316355;
-  background-color: #2b2b2b;
-  box-shadow: 1px 1px 3px 1px rgb(18, 18, 18);
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -316,13 +358,13 @@ export default {
 }
 .change-title span {
   color: #c0c0c0;
-  font-size: 0.6rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 .change-installation .change-box {
   width: 96%;
   height: 45%;
-  background-color: rgb(171, 171, 171);
+  background-color: rgb(209, 209, 209);
   border-radius: 3px;
   display: flex;
   justify-content: center;
@@ -332,7 +374,7 @@ export default {
 .change-box input {
   width: 100%;
   height: 100%;
-  background-color: rgb(171, 171, 171);
+  background-color: rgb(209, 209, 209);
   border: none;
   border-radius: 6px;
   display: flex;
@@ -381,8 +423,6 @@ export default {
 }
 .headerTitle span {
   width: 86%;
-  height: 100%;
-  padding:2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -403,7 +443,6 @@ export default {
 .headerContent span {
   width: 86%;
   height: 100%;
-  padding:2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -411,6 +450,7 @@ export default {
   margin-right: 3px;
 }
 .headerContent img {
+  padding: 1px;
   width: 8%;
   height: 50%;
   cursor: pointer;
@@ -453,8 +493,7 @@ export default {
   padding: 0;
   padding-left: 4px;
 }
-.portAddBox,
-.clientAddBox {
+.portAddBox {
   width: 100%;
   height: 10%;
   background-color: #242424;
@@ -466,17 +505,39 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+.clientAddBox {
+  width: 100%;
+  height: 10%;
+  background-color: #242424;
+  border: 1px solid #242424;
+  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
+  border-radius: 5px;
+  margin-top: 8px;
+  padding: 1px 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.clientAddBox:hover {
+  background-color: #2f2f2f;
+  border: 1px solid #464646;
+  transition-duration: 0.2s;
+}
 .portAddBox img {
+  padding: 1px;
   width: 18%;
+  height: 80%;
   opacity: 0.5;
 }
 .clientAddBox img {
+  padding: 1px;
   width: 16%;
+  height: 80%;
   opacity: 0.5;
 }
 .portConfig {
   width: 80%;
-  height: 99%;
+  height: 95%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -503,7 +564,39 @@ export default {
   padding: 0;
   margin-top: 3%;
 }
+.connectionConfig {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px;
+}
 
+.connectionConfig .category {
+  width: max-content;
+  height: 30%;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #b3b3b3;
+  text-align: center;
+  text-transform: uppercase;
+}
+.connectionConfig .name {
+  width: 99%;
+  height: 60%;
+  background-color: rgb(14, 14, 14);
+  border: 1px solid rgb(53, 53, 53);
+  border-radius: 30px;
+  margin-top: 3%;
+  padding: 2px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #34a061;
+  text-align: center;
+  text-transform: uppercase;
+}
 .btnBox {
   width: 100%;
   height: 6%;
@@ -628,69 +721,6 @@ export default {
   color: #9a9a9a;
   text-align: center;
   align-self: center;
-  text-transform: uppercase;
-}
-.clientAddBox {
-  width: 100%;
-  height: 10%;
-  background-color: #242424;
-  border: 1px solid #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
-  padding: 1px 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.clientAddBox:hover {
-  background-color: #2f2f2f;
-  border: 1px solid #464646;
-  transition-duration: 0.2s;
-}
-.portAddBox img {
-  padding: 1px;
-  width: 18%;
-  height: 80%;
-  opacity: 0.5;
-}
-.clientAddBox img {
-  padding: 1px;
-  width: 16%;
-  height: 80%;
-  opacity: 0.5;
-}
-.connectionConfig {
-  width: 80%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 2px;
-}
-
-.connectionConfig .category {
-  width: max-content;
-  height: 30%;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #b3b3b3;
-  text-align: center;
-  text-transform: uppercase;
-}
-.connectionConfig .name {
-  width: 99%;
-  height: 60%;
-  background-color: rgb(14, 14, 14);
-  border: 1px solid rgb(53, 53, 53);
-  border-radius: 30px;
-  margin-top: 3%;
-  padding: 2px;
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: #34a061;
-  text-align: center;
   text-transform: uppercase;
 }
 </style>

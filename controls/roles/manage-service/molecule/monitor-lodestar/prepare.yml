@@ -1,0 +1,66 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: '../'
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: d84f6eb4-3815-11ed-9319-5381e515b301
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+   # lodestar beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ beacon_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports:
+                - 0.0.0.0:9000:9000/udp
+                - 0.0.0.0:9000:9000/tcp
+              env: {}
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - beacon
+                - --network=goerli
+                - --dataDir=/opt/app/beacon
+                # - --rest.port=9596
+                # - --rest.namespace=*
+                # - --rest.address=0.0.0.0
+                - --metrics=true
+                - --metrics.port=8008
+                - --metrics.address=0.0.0.0
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/lodestar/beacon:/opt/app/beacon"

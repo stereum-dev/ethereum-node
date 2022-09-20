@@ -6,14 +6,18 @@
         class="item-box"
         @dragenter.prevent
         @dragover.prevent
-        onmousedown="return false"
+        @mousedown.prevent.stop
       >
-        <div class="items" v-for="(item, index) in list" :key="index">
+        <div class="items" v-for="item in itemsList" :key="item.id">
           <img
             :src="item.sIcon"
             alt="icon"
-            @dblclick="selectedItem(item)"
-            :class="{ 'chosen-plugin': item.active }"
+            @mouseup.right="selectedItem(item)"
+            @click="modifyItem(item)"
+            :class="{
+              'chosen-plugin': item.active,
+              'modify-plugin': item.modifierPanel,
+            }"
           />
         </div>
       </div>
@@ -27,34 +31,47 @@
 </template>
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
+import { mapWritableState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: {
     ManageTrapezoid,
   },
-  props: {
-    title: {
-      type: String,
-      required: true,
-      default: "Title",
-    },
-    list: {
-      type: Array,
-      required: true,
-      default: () => {
-        return [];
-      },
-    },
-  },
+  props: ["title", "list"],
   data() {
     return {
-      itemsList: null,
+      itemsList: [],
     };
   },
-
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
+    }),
+  },
+  watch: {
+    list: {
+      handler() {
+        this.itemsList = this.list;
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    this.itemsList = this.list;
+  },
   methods: {
     selectedItem(item) {
       item.active = !item.active;
       this.$emit("selectItem", item);
+    },
+    modifyItem(item) {
+      this.installedServices.map((i) => {
+        if (i.id == item.id) {
+          i.modifierPanel = true;
+        }
+      });
+      this.$emit("modifyItem", item);
     },
   },
 };
@@ -147,5 +164,9 @@ export default {
 .chosen-plugin {
   border: 2px solid rgb(252, 107, 102);
   border-radius: 10px;
+}
+.modify-plugin {
+  border: 2px solid rgb(221, 206, 78);
+  border-radius: 7px;
 }
 </style>
