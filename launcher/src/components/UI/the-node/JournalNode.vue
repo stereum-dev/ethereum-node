@@ -2,7 +2,7 @@
   <div class="config-node">
     <div class="server">
       <div class="details">
-        <span>Server informations</span>
+        <span>Server infos</span>
       </div>
       <span class="ipTitle">ip:</span>
       <span class="nameTitle">name:</span>
