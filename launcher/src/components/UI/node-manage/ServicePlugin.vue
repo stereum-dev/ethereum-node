@@ -54,19 +54,14 @@ export default {
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.itemsList = this.itemsList.map((i) => {
-        if (i.id == item.id) {
-          return {
-            ...i,
-            modifierPanel: true,
-          };
+      this.installedServices.map((i) => {
+        if (i.id != item.id) {
+          i.modifierPanel = false;
+        } else if (i.id == item.id) {
+          i.modifierPanel = true;
+          this.$emit("modifyItem", item);
         }
-        return {
-          ...i,
-          modifierPanel: false,
-        };
       });
-      this.$emit("modifyItem", item);
     },
   },
 };

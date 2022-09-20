@@ -259,16 +259,12 @@ export default {
       this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
-      this.newConfiguration = this.newConfiguration.map((el) => {
+      this.newConfiguration.map((el) => {
         if (el.id === item.id) {
           el.modifierPanel = true;
           this.itemToInstall = item;
           this.displayCustomModifyPanel = el.modifierPanel;
         }
-        return {
-          ...el,
-          modifierPanel: false,
-        };
       });
     },
     cancelModifyProcess() {

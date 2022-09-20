@@ -60,9 +60,9 @@ export default {
           i.modifierPanel = false;
         } else if (i.id == item.id) {
           i.modifierPanel = true;
+          this.$emit("modifyItem", item);
         }
       });
-      this.$emit("modifyItem", item);
     },
   },
 };
