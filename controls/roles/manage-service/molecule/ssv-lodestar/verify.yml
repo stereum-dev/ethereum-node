@@ -1,0 +1,82 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("30303/tcp") != -1
+      - stereum_ufw_status.stdout.find("30303/udp") != -1
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+      - stereum_ufw_status.stdout.find("12000/udp") != -1
+      - stereum_ufw_status.stdout.find("13000/tcp") != -1
+  # ssv config file
+  - stat: path=/opt/app/services/c7b8fc8e-391c-11ed-bc41-8358d353a687/data/config.yaml
+    register: ssv_config_file
+  - debug:
+      msg: "{{ ssv_config_file }}"
+  - name: Check for ssv config
+    assert:
+      that:
+        - ssv_config_file.stat.exists
+  - name: Check SSV keys
+    lineinfile:
+      path: /etc/stereum/services/c7b8fc8e-391c-11ed-bc41-8358d353a687.yaml
+      regexp: "{{ item }}"
+      state: absent
+    check_mode: yes
+    register: ssv_keys
+    with_items:
+      - '(^ssv_sk: ).*(?=)'
+      - '(^ssv_pk: ).*(?=)'
+    failed_when: not ssv_keys.changed
+  - debug:
+      msg: "{{ ssv_keys }}"
+  - name: Waiting for the services to start properly
+    pause:
+      minutes: 1
+  # lodestar beacon & ssv logs
+  - name: Lodestar beacon node
+    command: "docker logs stereum-c7198c08-391c-11ed-8a07-bb001d9e628d"
+    register: beacon
+    until:
+      - beacon.stdout is search('Syncing')
+      - beacon.stdout is search("Validated transition configuration with execution client")
+      - beacon.stdout is not search("Error updating eth1 chain cache")
+    retries: 360
+    delay: 10
+  - name: SSV-Network connection beacon node
+    command: "docker logs stereum-c7b8fc8e-391c-11ed-bc41-8358d353a687"
+    register: ssv_network
+    until:
+      - ssv_network.stdout is search('successfully connected to beacon client')
+      - ssv_network.stdout is search('p2p services were configured')
+      - ssv_network.stdout is search('beacon node is currently syncing')
+    retries: 360
+    delay: 10
+  # container's images & ports
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("chainsafe/lodestar") != -1
+      - stereum_docker_ps.stdout.find("bloxstaking/ssv-node") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - stereum_docker_ps.stdout.find("12000->12000") != -1
+      - stereum_docker_ps.stdout.find("13000->13000") != -1
+      - stereum_docker_ps.stdout.find("30303->30303") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3
+
+# EOF

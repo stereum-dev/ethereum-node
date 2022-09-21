@@ -69,4 +69,17 @@
     loop: "{{ validator_keys }}"
   when: stereum_service_configuration.service == "TekuBeaconService"
 
+- block:
+  - name: Lodestar - Get validator service's api token
+    command: "docker exec -u 0 -w /opt/app/validator/validator-db stereum-{{ validator_service }} cat api-token.txt"
+    changed_when: false
+    register: api_token_l
+    become: yes
+  - include_tasks: import.yaml
+    vars:
+      validator_port: 5062
+      api_token: "{{ api_token_l.stdout }}"
+    loop: "{{ validator_keys }}"
+  when: stereum_service_configuration.service == "LodestarValidatorService"
+
 # EOF

@@ -294,6 +294,7 @@ jobs:
           {role: "manage-service", test: "start-stop"},
           {role: "manage-service", test: "write-start"},
           # {role: "manage-service", test: "ssv-lighthouse"},
+          # {role: "manage-service", test: "ssv-lodestar"},
           # {role: "manage-service", test: "ssv-nimbus"},
           # {role: "manage-service", test: "ssv-teku"},
           # {role: "manage-service", test: "ssv-prysm"},
@@ -569,6 +570,7 @@ jobs:
       matrix:
         tests: [
           {role: "validator-import-api", test: "lighthouse"},
+          {role: "validator-import-api", test: "lodestar"},
           {role: "validator-import-api", test: "nimbus"},
           {role: "validator-import-api", test: "prysm"},
           {role: "validator-import-api", test: "teku"}
