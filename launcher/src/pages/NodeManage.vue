@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide-fade">
+          <Transition name="slide-fade" mode="out-in">
             <add-panel
               v-if="itemToInstall.addPanel"
               :items="itemToInstall"
@@ -468,9 +468,14 @@ export default {
   bottom: -1px;
 }
 
-.slide-enter-from,
-.slide-leave-to {
+.slide-fade-enter-from,
+.slide-fade-leave-to {
   transform: translateX(-200px);
-  transition-duration: 150ms;
+  transition-duration: 100ms;
+  opacity: 0;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.1s cubic-bezier(1, 0.3, 0.3, 1);
 }
 </style>
