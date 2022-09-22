@@ -10,6 +10,16 @@
         <option value="runds">GRANT ROUNDS</option>
       </select>
     </div>
+    <div class="round-selector">
+      <select name="round" id="round" v-model="choosedRound">
+        <option value="round_15">Round 15</option>
+        <option value="round_14">Round 14</option>
+        <option value="round_13">Round 13</option>
+        <option value="round_12">Round 12</option>
+        <option value="round_11">Round 11</option>
+        <option value="round_10">Round 10</option>
+      </select>
+    </div>
     <div class="search" v-if="socialEth_toggle">
       <input
         type="search"
@@ -20,7 +30,7 @@
     <div class="itemWrapper" v-if="socialEth_toggle">
       <div
         class="financial-contributor"
-        v-for="item in filteredItem"
+        v-for="item in roundAdresses"
         :key="item.name"
       >
         <!-- <div class="id">
@@ -45,6 +55,7 @@
 <script>
 import { mapState } from "pinia";
 import { useFinancialStore } from "../../../store/financialCredit";
+import { useRoundsStore } from "../../../store/roundsCredit";
 export default {
   data() {
     return {
@@ -52,6 +63,8 @@ export default {
       socialEth_toggle: false,
       filteredItem: [],
       searchPayload: "",
+      roundAdresses: [],
+      choosedRound: "round_15",
     };
   },
   computed: {
@@ -59,8 +72,17 @@ export default {
       socialAddresses: "socialAddresses",
       ethAddresses: "ethAddresses",
     }),
+    ...mapState(useRoundsStore, {
+      round_15: "round_15",
+      round_14: "round_14",
+      round_13: "round_13",
+      round_12: "round_12",
+      round_11: "round_11",
+      round_10: "round_10",
+    }),
+
     sortedAddresses() {
-      return this.socialAddresses.sort((a, b) => {
+      return this.roundAdresses.sort((a, b) => {
         let fa = a.name.toLowerCase(),
           fb = b.name.toLowerCase();
         if (fa < fb) {
@@ -75,9 +97,10 @@ export default {
   },
   updated() {
     this.toggleItems();
+    this.roundPicker();
   },
   created() {
-    this.filteredItem = this.sortedAddresses;
+    this.filteredItem = this.roundAdresses;
   },
   watch: {
     searchPayload: function () {
@@ -87,16 +110,39 @@ export default {
     },
   },
   methods: {
+    roundPicker() {
+      let pickedRound;
+      switch (this.choosedRound) {
+        case "round_15":
+          pickedRound = this.round_15;
+          break;
+        case "round_14":
+          pickedRound = this.round_14;
+          break;
+        case "round_13":
+          pickedRound = this.round_13;
+          break;
+        case "round_12":
+          pickedRound = this.round_12;
+          break;
+        case "round_11":
+          pickedRound = this.round_11;
+          break;
+        case "round_10":
+          pickedRound = this.round_10;
+          break;
+      }
+      this.roundAdresses = pickedRound;
+      console.log(this.roundAdresses.name);
+    },
     filterStering(item) {
       item.substr(substr(2, item.length - 1));
     },
     toggleItems() {
       if (this.contributorsRefferer === "allAddresses") {
         return (this.socialEth_toggle = false);
-        alert(this.contributorsRefferer);
       } else if (this.contributorsRefferer === "runds") {
         return (this.socialEth_toggle = true);
-        alert(this.contributorsRefferer);
       }
     },
   },
