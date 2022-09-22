@@ -426,7 +426,7 @@ export default {
   height: 100.2%;
   grid-row: 1/4;
   grid-column: 4;
-  background: #334b3f;
+  background: #3b3b3b;
   border: 5px solid #1a2620;
   border-left: 5px solid #161616;
   border-top-right-radius: 30px;
