@@ -1,0 +1,128 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: 2619583a-3a50-11ed-b406-27b34e936d5d
+    validator_service: 250caf46-3a50-11ed-bb00-0f23d09e0f06
+
+  tasks:
+    - name: Install python for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name: pip
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - name: Install pip, expect (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - python3-pip
+          - expect
+      become: true
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+
+    - name: Install pip, expect (CentOS 8)
+      yum:
+        name:
+          - python3-pip
+          - expect
+        state: latest
+      become: true
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+
+    # lodestar beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarBeaconService
+              id: "{{ beacon_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports:
+                - 0.0.0.0:9000:9000/udp
+                - 0.0.0.0:9000:9000/tcp
+              env: {}
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - beacon
+                - --network=goerli
+                - --dataDir=/opt/app/beacon
+                - --rest.port=9596
+                - --rest.namespace=*
+                - --rest.address=0.0.0.0
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ beacon_service }}/lodestar/beacon:/opt/app/beacon"
+
+    # lodestar validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      - name: Waiting for the services to start properly
+        pause:
+          seconds: 30
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: LodestarValidatorService
+              id: "{{ validator_service }}"
+              image: "chainsafe/lodestar:{{ stereum_static.defaults.versions.lodestar }}"
+              ports: []
+              env:
+                NODE_OPTIONS: --max-old-space-size=4096
+              entrypoint: ["node", "./packages/cli/bin/lodestar"]
+              command:
+                - validator
+                - --network=goerli
+                - --dataDir=/opt/app/validator
+                - --server=http://stereum-{{ beacon_service }}:9596
+                - --keymanager
+                - --keymanager.address=0.0.0.0
+                - --keymanager.port=5062
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ validator_service }}/lodestar/validator:/opt/app/validator"
+
+    - include_role:
+        name: "validator-import-api"
+      vars:
+        validator_keys:
+          - passwords: ["MyTestPassword", "MyTestPassword"]
+            content:
+              [
+                "{\"crypto\": {\"kdf\": {\"function\": \"scrypt\", \"params\": {\"dklen\": 32, \"n\": 262144, \"r\": 8, \"p\": 1, \"salt\": \"de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116\"}, \"message\": \"\"}, \"checksum\": {\"function\": \"sha256\", \"params\": {}, \"message\": \"3691a02425a4607b86292313cc72e31d4866043034ee9cff0b7cab2096105269\"}, \"cipher\": {\"function\": \"aes-128-ctr\", \"params\": {\"iv\": \"a24857026939492f49444679544cb6bb\"}, \"message\": \"e8a184e9d70408acd33459c67632c7bb63cf9c58a175de2030f962da88a2eb4d\"}}, \"description\": \"\", \"pubkey\": \"82ed748ffbc23ee3b730577a81f4cd05fe7dba234b3de5efc31f53de67091de9631d8581d72892351dfad52b65e53fbf\", \"path\": \"m\/12381\/3600\/1\/0\/0\", \"uuid\": \"f712f984-b926-4e90-a603-f3f14703bf4b\", \"version\": 4}",
+                "{\"crypto\": {\"kdf\": {\"function\": \"scrypt\", \"params\": {\"dklen\": 32, \"n\": 262144, \"r\": 8, \"p\": 1, \"salt\": \"de4b32f49572c01146afb11a82c326fdc03be6cf447983daf9eb7ec0f868a116\"}, \"message\": \"\"}, \"checksum\": {\"function\": \"sha256\", \"params\": {}, \"message\": \"fa52987837af01ec48e2b21f2078acef3368983943751013758052e07dae841d\"}, \"cipher\": {\"function\": \"aes-128-ctr\", \"params\": {\"iv\": \"a24857026939492f49444679544cb6bb\"}, \"message\": \"8c055c8c504cd3ad20bcb1101431b2b1a506b1a4d0efdbd294d75c39c0f2268b\"}}, \"description\": \"\", \"pubkey\": \"948f092cb5b5cae121fdc14af0e4e5a90d03ab661266b700ded1c1ca4fd6f0a76f8dac187815409197bf036675571458\", \"path\": \"m\/12381\/3600\/2\/0\/0\", \"uuid\": \"c7521eed-533a-4fd1-90b7-ad1aa0f24a2d\", \"version\": 4}",
+              ]
+
+# EOF
