@@ -80,12 +80,20 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useServices } from "@/store/services";
 export default {
-  props: ["startDrag", "allServices"],
+  props: ["startDrag"],
   data() {
     return {
       showSidebar: false,
     };
+  },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
+    }),
   },
 };
 </script>

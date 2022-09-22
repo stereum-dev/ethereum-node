@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide">
+          <Transition name="slide-fade">
             <add-panel
               v-if="itemToInstall.addPanel"
               :items="itemToInstall"
@@ -124,11 +124,7 @@
           ></change-confirm>
         </div>
         <div class="sidebar">
-          <sidebar-manage
-            :startDrag="startDrag"
-            :allServices="allServices"
-            @add-service="addNewService"
-          >
+          <sidebar-manage :startDrag="startDrag" @add-service="addNewService">
           </sidebar-manage>
         </div>
         <div class="footer" onmousedown="return false">
@@ -222,20 +218,21 @@ export default {
       if (event.type === "dragstart") {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("itemId", item.id);
+        event.dataTransfer.setData("servicId", item.config.serviceID);
       }
     },
     onDrop(event, list) {
-      const itemId = event.dataTransfer.getData("itemId");
-      const item = { ...list.find((item) => item.id == itemId) };
-      if (this.newConfiguration.some((item) => item.id == itemId)) return;
+      const serviceId = event.dataTransfer.getData("servicId");
+      const item = {
+        ...list.find((item) => item.config.serviceID === serviceId),
+      };
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
       this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
-      if (this.newConfiguration.some((el) => el.id == item.id)) return;
+      console.log(item.config.serviceID);
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
@@ -261,8 +258,9 @@ export default {
       this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
+      console.log(item.config.serviceID);
       this.newConfiguration.map((el) => {
-        if (el.id != item.id) {
+        if (el.id != item.id || el.config.serviceID != item.config.serviceID) {
           el.modifierPanel = false;
           this.itemToModify = {};
         }
