@@ -691,6 +691,7 @@ jobs:
       matrix:
         tests: [
           {role: "validator-list-api", test: "lighthouse"},
+          {role: "validator-list-api", test: "lodestar"},
           {role: "validator-list-api", test: "nimbus"},
           {role: "validator-list-api", test: "prysm"},
           {role: "validator-list-api", test: "teku"}
