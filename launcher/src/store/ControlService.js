@@ -229,6 +229,10 @@ class ControlService extends EventEmitter {
   async setGraffitis(args) {
     return await this.promiseIpc.send("setGraffitis", args);
   }
+
+  async chooseServiceAction(args) {
+    return await this.promiseIpc.send("chooseServiceAction", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
