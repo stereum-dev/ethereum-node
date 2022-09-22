@@ -631,6 +631,7 @@ jobs:
       matrix:
         tests: [
           {role: "validator-delete-api", test: "lighthouse"},
+          {role: "validator-delete-api", test: "lodestar"},
           {role: "validator-delete-api", test: "nimbus"},
           {role: "validator-delete-api", test: "prysm"},
           {role: "validator-delete-api", test: "teku"}
