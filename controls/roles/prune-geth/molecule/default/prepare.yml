@@ -1,0 +1,71 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    geth_service: bb2aa30f-8794-4eaa-8144-fb7033aee10f
+
+  tasks:
+    - name: Install pkgs for Ansible (Ubuntu)
+      apt:
+        update_cache: yes
+        name:
+          - pip
+          - python3-pip
+          - expect
+        state: present
+      become: true
+      changed_when: false
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install python for Ansible (CentOS 8)
+      raw: yum install -y python38 tar && yum remove -y python36
+      become: true
+      changed_when: false
+      when: ansible_distribution == "CentOS"
+
+    - include_role:
+        name: "setup"
+
+    - include_role:
+        name: "configure-firewall"
+    
+    # geth service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+#EOF

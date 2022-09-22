@@ -334,10 +334,10 @@ export default {
       this.connections = savedConnections;
     },
     writeSettings: async function () {
-      const savedLanguage = (await ControlService.readConfig()).savedLanguage;
+      const config = await ControlService.readConfig()
       ControlService.writeConfig({
+        ...config,
         savedConnections: this.getstorableConnections(),
-        savedLanguage: savedLanguage,
       });
     },
     checkInput(model) {

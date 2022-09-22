@@ -1,0 +1,23 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # verify geth stopped
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("stereum-bb2aa30f-8794-4eaa-8144-fb7033aee10f") == -1
+  # geth-prune logs
+  - name: geth-prune logs
+    command: "docker logs geth-prune"
+    register: gethPrune
+    until:
+      - (gethPrune.stdout | regex_search("^.*Failed to prune state\s*err=\"snapshot not old enough yet.*") ) != 1
+    retries: 360
+    delay: 10
+
+#EOF

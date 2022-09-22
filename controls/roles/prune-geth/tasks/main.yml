@@ -1,0 +1,70 @@
+---
+#############
+# read config
+- name: Build service configuration's path
+  set_fact:
+    stereum_service_config_path: "/etc/stereum/services/{{ geth_service }}.yaml"
+- name: Read service's configuration
+  slurp:
+    src: "{{ stereum_service_config_path }}"
+  register: stereum_service_configuration_raw
+  become: true
+- name: Read variable
+  set_fact:
+    stereum_service_configuration: "{{ stereum_service_configuration_raw.content | b64decode | from_yaml }}"
+  become: true
+
+##############
+# geth pruning
+- name: add pruning tag
+  lineinfile:
+    path: "{{ stereum_service_config_path }}"
+    line: "isPruning: true"
+
+- name: Stop Geth
+  include_role:
+    name: "manage-service"
+  vars:
+    stereum:
+      manage_service:
+        save: false
+        state: stopped
+        configuration:
+          id: "{{ stereum_service_configuration.id }}"
+
+- name: Start Pruning
+  community.docker.docker_container:
+    command_handling: correct
+    hostname: "geth-prune"
+    name: "geth-prune"
+    user: "{{ stereum_service_configuration.user }}"
+    image: "{{ stereum_service_configuration.image }}"
+    env: "{{ stereum_service_configuration.env | default({}) }}"
+    command:
+      - "{{ stereum_service_configuration.command | select('search', '--datadir=') | first }}"
+      - snapshot
+      - prune-state
+    entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
+    restart_policy: "no"
+    state: started
+    volumes: "{{ stereum_service_configuration.volumes }}"
+  ignore_errors: true
+  become: true
+  register: geth_prune_result
+
+- name: remove pruning tag
+  lineinfile:
+    path: "{{ stereum_service_config_path }}"
+    search_string: "isPruning: true"
+    state: absent
+
+- name: Start Geth
+  include_role:
+    name: "manage-service"
+  vars:
+    stereum:
+      manage_service:
+        save: false
+        state: started
+        configuration:
+          id: "{{ stereum_service_configuration.id }}"
