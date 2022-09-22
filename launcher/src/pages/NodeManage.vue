@@ -9,7 +9,7 @@
               v-if="itemToInstall.addPanel"
               :items="itemToInstall"
               @cancel-add="cancelAddProcess"
-              @save-config="saveServiceConfiguration"
+              @save-config="saveAddedServiceConfig"
             ></add-panel>
             <modify-panel
               v-else-if="itemToModify.modifierPanel"
@@ -238,9 +238,9 @@ export default {
       this.itemToInstall = item;
       this.displayCustomAddPanel = item.addPanel;
     },
-    saveServiceConfiguration() {
-      this.itemToInstall = null;
-      this.displayCustomAddPanel = false;
+    saveAddedServiceConfig() {
+      this.itemToInstall = {};
+      this.itemToInstall.addPanel = false;
       this.newConfiguration.pop();
     },
     selectedServiceToRemove(item) {
