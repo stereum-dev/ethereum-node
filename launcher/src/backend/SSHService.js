@@ -73,14 +73,12 @@ export class SSHService {
     })
   }
 
-  async exec (command, logline = null, useSudo = true) {
-    logline = logline === null ? command : logline;
+  async exec (command, useSudo = true) {
     const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF"
-    return this.execCommand(useSudo ? ensureSudoCommand : command, logline)
+    return this.execCommand(useSudo ? ensureSudoCommand : command)
   }
 
-  async execCommand (command, logline) {
-    log.debug('exec', logline)
+  async execCommand (command) {
 
     return new Promise((resolve, reject) => {
       const data = {
@@ -92,16 +90,14 @@ export class SSHService {
         if (err) return reject(err)
         stream
           .on('close', (code, signal) => {
-            log.debug('stream closed', code)
             data.rc = code
             resolve(data)
           })
           .on('data', (stdout) => {
-            log.debug('stdout got data', stdout.toString('utf8'))
             data.stdout += stdout.toString('utf8')
           })
           .stderr.on('data', (stderr) => {
-            log.debug('stderr got data', stderr.toString('utf8'))
+            log.error('stderr got data', stderr.toString('utf8'))
             data.stderr += stderr.toString('utf8')
           })
       })

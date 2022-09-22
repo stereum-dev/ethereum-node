@@ -3,75 +3,32 @@
     <template #default>
       <span class="title">{{ title }}</span>
       <div class="item-box" @drag.prevent.stop>
-        <div
-          class="items"
-          v-for="(item, index) in list"
-          :key="index"
-          ref="itemsList"
-        >
-          <img
-            :src="item.sIcon"
-            alt="icon"
-            @click.self="pluginMenuHandler(item)"
-            @dblclick.self="openDefaultBrowser(item)"
-          />
+        <div class="items" v-for="(item, index) in list" :key="index" ref="itemsList">
+          <img :src="item.sIcon" alt="icon" @click.self="pluginMenuHandler(item)"
+            @dblclick.self="openDefaultBrowser(item)" />
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
-                <img
-                  v-if="item.serviceIsPending"
-                  class="pending"
-                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
-                  alt="icon"
-                />
-                <img
-                  v-else-if="item.state == 'running'"
-                  @click.stop="stateHandler(item)"
-                  src="/img/icon/plugin-menu-icons/shutdown.png"
-                  alt="icon"
-                />
-                <img
-                  v-else-if="item.state == 'restarting'"
-                  @click="stateHandler(item)"
-                  src="/img/icon/plugin-menu-icons/restart.png"
-                  alt="icon"
-                />
-                <img
-                  v-else
-                  @click.stop="stateHandler(item)"
-                  src="/img/icon/plugin-menu-icons/turn-on.png"
-                  alt="icon"
-                />
+                <img v-if="item.serviceIsPending" class="pending" src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  alt="icon" />
+                <img v-else-if="item.state == 'running'" @click.stop="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" />
+                <img v-else-if="item.state == 'restarting'" @click="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/restart.png" alt="icon" />
+                <img v-else @click.stop="stateHandler(item)" src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" />
               </div>
               <div class="setting" @click="expertModeHandler(item)">
-                <img
-                  src="/img/icon/plugin-menu-icons/setting8.png"
-                  alt="icon"
-                />
+                <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
               </div>
             </div>
           </plugin-menu>
-          <the-expert
-            @hide-modal="hideExpertMode(item)"
-            v-if="item.expertOptionsModal"
-            @prunning-warning="runGethPrunningWarning"
-            @resync-warning="runResyncWarning"
-            :item="item"
-            position="18.8%"
-            long="54%"
-          ></the-expert>
-          <prunning-modal
-            :item="item"
-            v-if="gethPrunningWarningModal"
-            @cancel-warning="hidePrunningWarningsModal"
-            @confirm-btn="confirmRunningGethPrunning(item)"
-          ></prunning-modal>
-          <resync-modal
-            :item="item"
-            v-if="resyncWarningModal"
-            @cancel-warning="hideResyncWarningsModal"
-            @confirm-btn="confirmRunningResync($event, item)"
-          >
+          <the-expert @hide-modal="hideExpertMode(item)" v-if="item.expertOptionsModal"
+            @prunning-warning="runGethPrunningWarning" @resync-warning="runResyncWarning" :item="item" position="18.8%"
+            long="54%"></the-expert>
+          <prunning-modal :item="item" v-if="gethPrunningWarningModal" @cancel-warning="hidePrunningWarningsModal"
+            @confirm-btn="confirmRunningGethPrunning(item)"></prunning-modal>
+          <resync-modal :item="item" v-if="resyncWarningModal" @cancel-warning="hideResyncWarningsModal"
+            @confirm-btn="confirmRunningResync($event, item)">
           </resync-modal>
         </div>
       </div>
@@ -149,23 +106,28 @@ export default {
       });
     },
     stateHandler: async function (item) {
-      this.isServiceOn = false;
-      item.serviceIsPending = true;
-      let state = "stopped";
-      if (item.state === "exited") {
-        state = "started";
-        this.isServiceOn = true;
+      item.yaml = await ControlService.getServiceYAML(
+        item.config.serviceID
+      );
+      if (!item.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
+        this.updateStates();
       }
-      try {
-        await ControlService.manageServiceState({
-          id: item.config.serviceID,
-          state: state,
-        });
-      } catch (err) {
-        console.log(state.replace("ed", "ing") + " service failed:\n", err);
-      }
-      item.serviceIsPending = false;
-      this.updateStates();
     },
     openDefaultBrowser(el) {
       let url = el.linkUrl;
@@ -223,7 +185,16 @@ export default {
     },
     async confirmRunningGethPrunning(service) {
       this.gethPrunningWarningModal = false;
-      await ControlService.chooseServiceAction({action: "pruneGeth", service: toRaw(service), data: {}})
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({ action: "pruneGeth", service: toRaw(service), data: {} })
     },
 
     // Resync Functions
@@ -241,7 +212,16 @@ export default {
     },
     async confirmRunningResync(data, service) {
       this.resyncWarningModal = false;
-      await ControlService.chooseServiceAction({action: "reSync", service: toRaw(service), data: {checkpointURL: data}})
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({ action: "reSync", service: toRaw(service), data: { checkpointURL: data } })
     },
   },
 };
@@ -250,6 +230,7 @@ export default {
 .showModal {
   display: none;
 }
+
 .title {
   width: auto;
   min-width: 70px;
@@ -268,6 +249,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
@@ -279,9 +261,11 @@ export default {
   height: 100px;
   margin: 0 auto;
 }
+
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
+
 .item-box .items {
   width: 95%;
   height: 95%;
@@ -292,6 +276,7 @@ export default {
   align-items: center;
   position: relative;
 }
+
 .item-box .items img {
   width: 48px;
   height: 48px;
@@ -299,6 +284,7 @@ export default {
   align-self: center;
   cursor: pointer;
 }
+
 .plus-icon-box {
   width: 30px;
   height: 20px;
@@ -311,6 +297,7 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+
 .plus-icon-box img {
   width: 17px;
   border-radius: 3px;
@@ -321,6 +308,7 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(27, 27, 27);
   transition-duration: 100ms;
 }
+
 .plus-icon-box img:active {
   transform: scale(1);
   box-shadow: none;
@@ -330,14 +318,17 @@ export default {
 .items img:active {
   box-shadow: none;
 }
+
 .chosen-plugin {
   border: 2px solid rgb(64, 168, 243);
   border-radius: 10px;
 }
+
 .menu-content {
   width: 100%;
   height: 100%;
 }
+
 .menu-content .power {
   width: 17px;
   height: 17px;
@@ -351,23 +342,27 @@ export default {
   z-index: 11;
   animation: power 500ms;
 }
+
 @keyframes power {
   0% {
     opacity: 0;
     top: 29%;
     left: 41%;
   }
+
   100% {
     top: 29%;
     left: 7%;
   }
 }
+
 .menu-content .power img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
+
 .menu-content .power .pending {
   width: 17px;
   height: 17px;
@@ -377,6 +372,7 @@ export default {
   z-index: 1000;
   pointer-events: none;
 }
+
 .menu-content .setting {
   width: 17px;
   height: 17px;
@@ -389,23 +385,27 @@ export default {
   top: 52%;
   animation: setting 500ms;
 }
+
 @keyframes setting {
   0% {
     opacity: 0;
     top: 52%;
     left: 42%;
   }
+
   100% {
     left: 7%;
     top: 52%;
   }
 }
+
 .menu-content .setting img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
+
 .menu-content .restart {
   width: 17px;
   height: 17px;
@@ -419,12 +419,14 @@ export default {
   animation: restart 500ms;
   z-index: 11;
 }
+
 @keyframes restart {
   0% {
     opacity: 0;
     top: 39%;
     left: 42%;
   }
+
   100% {
     top: 39%;
     left: 2%;

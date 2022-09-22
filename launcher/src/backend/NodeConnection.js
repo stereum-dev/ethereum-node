@@ -507,7 +507,7 @@ export class NodeConnection {
       try {
         configStatus = await this.sshService.exec(
           "echo -e " +
-          StringUtils.escapeStringForShell(service.data) +
+          StringUtils.escapeStringForShell(service.data.trim()) +
           " > /etc/stereum/services/" +
           service.id +
           ".yaml"
@@ -645,7 +645,6 @@ export class NodeConnection {
           .split(/\n/)
           .slice(0, -1)
           .map((json) => {
-            log.debug("parsing json: ", json);
             return JSON.parse(json);
           })
       );

@@ -57,35 +57,23 @@ export class ServiceManager {
      */
   readServiceConfigurations () {
     return this.nodeConnection.listServicesConfigurations().then(async services => {
-      log.debug('found services:')
-      log.debug(services)
 
       const serviceConfigurations = new Array()
       for (let i = 0; i < services.length; i++) {
         const service = services[i]
-
-        log.debug('reading config of service <' + service + '>')
-
         await this.nodeConnection.readServiceConfiguration(service).then(config => {
-          log.debug('read config:')
-          log.debug(config)
           serviceConfigurations.push(config)
-          log.debug(serviceConfigurations)
         })
       }
 
       return serviceConfigurations
     }).then(serviceConfigurations => {
-      log.debug('proceeding with service configurations:')
-      log.debug(serviceConfigurations)
 
       const services = new Array()
 
       for (let i = 0; i < serviceConfigurations.length; i++) {
         const config = serviceConfigurations[i]
 
-        log.debug('parsing config:')
-        log.debug(config)
         if (config.service) {
           if (config.service == 'LighthouseBeaconService') {
             services.push(LighthouseBeaconService.buildByConfiguration(config))
@@ -148,6 +136,8 @@ export class ServiceManager {
   async chooseServiceAction(action, service, data){
     switch (action) {
       case "pruneGeth":
+          let data = service.yaml + "\nisPruning: true"
+          await this.nodeConnection.writeServiceYAML({id: service.config.serviceID, data: data , service: service.service})
           this.nodeConnection.runPlaybook("Pruning Geth", {stereum_role: 'prune-geth', geth_service: service.config.serviceID})
         break;
     
