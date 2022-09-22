@@ -50,7 +50,11 @@
                   item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
               >
-              <img class="service-icon" :src="item.icon" alt="icon" />
+              <img
+                class="service-icon"
+                :src="selectedService.icon"
+                alt="icon"
+              />
               <span class="since">{{ item.activeSince }}</span>
               <img
                 class="state-icon"
@@ -122,10 +126,17 @@
             ></remove-single-modal>
           </div>
         </div>
-        <div class="table-header" v-if="enterPasswordBox">
-          <span id="active">FILE NAME</span>
+        <div
+          class="table-header"
+          v-if="enterPasswordBox || selectValidatorServiceForKey"
+        >
+          <span id="pubkey_name">FILE NAME</span>
+          <span id="validator-service">Service</span>
         </div>
-        <div class="table-content" v-if="enterPasswordBox">
+        <div
+          class="table-content"
+          v-if="enterPasswordBox || selectValidatorServiceForKey"
+        >
           <div
             class="key-table-row"
             v-for="(item, index) in keyFiles"
@@ -133,7 +144,10 @@
           >
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
-            <div @click="removeKeyHandler(item.name)" class="key-remove-icon">
+            <div class="chosenService" v-if="enterPasswordBox">
+              <img :src="selectedService.icon" alt="icon" />
+            </div>
+            <div @click="removeKeyHandler(item)" class="key-remove-icon">
               <img
                 src="../../../../public/img/icon/task-manager-icons/close3.png"
                 alt="icon"
@@ -152,6 +166,11 @@
       @upload-file="uploadFileHandler"
       :services="installedServices"
     ></insert-validator>
+    <!-- select specific validator service -->
+    <select-service
+      v-if="selectValidatorServiceForKey"
+      @select-service="selectServiceForKeys"
+    ></select-service>
     <!-- Password box for validator keys -->
     <enter-password
       v-if="enterPasswordBox"
@@ -197,6 +216,7 @@ import RemoveValidator from "./RemoveValidatore.vue";
 import RemoveSingleModal from "./RemoveSingleModal.vue";
 import SearchOptions from "./SearchOptions.vue";
 import EnterPassword from "./EnterPassword.vue";
+import SelectService from "./SelectService.vue";
 import FeeRecipient from "./FeeRecipient.vue";
 import InsertValidator from "./InsertValidator.vue";
 import ControlService from "@/store/ControlService";
@@ -223,6 +243,7 @@ export default {
     GrafitiMultipleValidators,
     RemoveMultipleValidators,
     ExitMultipleValidators,
+    SelectService,
   },
   props: ["button"],
   data() {
@@ -234,6 +255,7 @@ export default {
       keyFiles: [],
       importValidatorKeyActive: true,
       insertKeyBoxActive: true,
+      selectValidatorServiceForKey: false,
       enterPasswordBox: false,
       passwordInputActive: false,
       feeRecipientBoxActive: false,
@@ -259,6 +281,7 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
+      selectedService: {},
     };
   },
   watch: {
@@ -555,7 +578,7 @@ export default {
         this.keyFiles.push(...uploadedFiles);
         this.importValidatorKeyActive = false;
         this.insertKeyBoxActive = false;
-        this.enterPasswordBox = true;
+        this.selectValidatorServiceForKey = true;
         this.isDragOver = false;
       }
     },
@@ -569,17 +592,18 @@ export default {
           this.keyFiles.push(...droppedFiles);
           this.importValidatorKeyActive = false;
           this.insertKeyBoxActive = false;
-          this.enterPasswordBox = true;
+          this.selectValidatorServiceForKey = true;
         }
       }
       this.isDragOver = false;
     },
-    removeKeyHandler(key_name) {
-      this.keyFiles = this.keyFiles.filter((item) => item.name != key_name);
+    removeKeyHandler(item) {
+      this.keyFiles = this.keyFiles.filter((el) => el.name != item.name);
       if (this.keyFiles.length === 0) {
+        this.selectValidatorServiceForKey = false;
+        this.enterPasswordBox = false;
         this.importValidatorKeyActive = true;
         this.insertKeyBoxActive = true;
-        this.enterPasswordBox = false;
       }
     },
     openUploadHandler() {
@@ -624,6 +648,11 @@ export default {
       } else {
         console.log("Multiple validator services are not supported yet!");
       }
+    },
+    selectServiceForKeys(service) {
+      this.selectedService = service;
+      this.selectValidatorServiceForKey = false;
+      this.enterPasswordBox = true;
     },
 
     copyHandler(item) {
@@ -866,7 +895,13 @@ remove-validator {
   display: grid;
   grid-template-columns: 3% 17% 13% 8% 13% 6% 10% 30%;
 }
-
+.table-header #pubkey_name {
+  grid-column: 3;
+}
+.table-header #validator-service {
+  grid-column: 8;
+  justify-self: flex-start;
+}
 .table-header span {
   color: #fff;
   font-size: 10px;
@@ -905,46 +940,69 @@ remove-validator {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 4% 64% 28% 4%;
+  grid-template-rows: 100%;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
   padding: 1px;
 }
 
 .key-table-row .file-name {
-  width: 90%;
+  grid-column: 2/3;
+  width: 100%;
+  height: 95%;
   color: #fff !important;
   font-size: 1rem !important;
   font-weight: 400 !important;
+  justify-self: center;
+  align-self: center;
 }
 
+.key-table-row .chosenService {
+  grid-column: 3/4;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-self: flex-start;
+  align-self: center;
+  justify-self: flex-start;
+  align-self: center;
+}
+.key-table-row .chosenService img {
+  width: 23%;
+  height: 80%;
+  margin-left: 22px;
+  align-self: center;
+}
 .key-table-row .key-remove-icon {
+  grid-column: 4/5;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   border: 1px solid #4a4a4a !important;
   border-radius: 50px !important;
-  width: 20px !important;
-  height: 20px !important;
-  margin-right: 4px;
+  width: 80% !important;
+  height: 80% !important;
   padding: 1px;
   background-color: #343434;
-  box-shadow: 0 0 3px 1px rgb(0, 0, 0);
+  justify-self: center;
+  align-self: center;
 }
 
 .key-table-row .key-remove-icon img {
-  width: 70% !important;
-  height: 70% !important;
+  width: 60% !important;
+  height: 60% !important;
 }
 
 .key-table-row .key-circle {
+  grid-column: 1/2;
   width: 20px !important;
   height: 20px !important;
   border-radius: 50% !important;
   background-color: #fff !important;
-  margin-left: 5px;
+  justify-self: center;
+  align-self: center;
 }
 
 .title-box {
