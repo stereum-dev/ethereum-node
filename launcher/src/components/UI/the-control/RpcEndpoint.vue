@@ -38,11 +38,11 @@ export default {
       copyIcon: "/img/icon/control/ok.png",
       rpcItems: [
         // rpcItems is dummy, for wire the have to change but the best stract. for the design is this one
-        {
-          id: 1,
-          title: "GETH",
-          value: "123456",
-        },
+        // {
+        //   id: 1,
+        //   title: "GETH",
+        //   value: "123456",
+        // },
       ],
     };
   },

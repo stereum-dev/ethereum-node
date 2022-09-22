@@ -38,16 +38,16 @@ export default {
       copyIcon: "/img/icon/control/ok.png",
       dataApiItems: [
         // dataApiItems are dummy, for wire the have to change but the best stract. for the design is this one
-        {
-          id: 1,
-          title: "TEKU",
-          value: "11111",
-        },
-        {
-          id: 2,
-          title: "LIGHTHOUSE",
-          value: "22222",
-        },
+        // {
+        //   id: 1,
+        //   title: "TEKU",
+        //   value: "11111",
+        // },
+        // {
+        //   id: 2,
+        //   title: "LIGHTHOUSE",
+        //   value: "22222",
+        // },
       ],
     };
   },
