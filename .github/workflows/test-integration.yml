@@ -10,7 +10,9 @@ jobs:
   setup:
     runs-on: ubuntu-22.04
     outputs:
-      tests: ${{ steps.get-tests.outputs.tests }}
+      importTests: ${{ steps.get-import-tests.outputs.tests }}
+      ELTests: ${{ steps.get-EL-tests.outputs.tests }}
+      otherTests: ${{ steps.get-other-tests.outputs.tests }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -18,19 +20,72 @@ jobs:
           node-version: '16'
       - run: npm install
         working-directory: ./launcher
-      - id: get-tests
-        name: Get Tests
-        run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int")) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
+      - id: get-import-tests
+        name: Get Import Tests
+        run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int") and contains("Beacon")) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
+        working-directory: ./launcher
+      - id: get-EL-tests
+        name: Get EL Tests
+        run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int") and contains("Service") and (contains("Beacon") | not )) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
+        working-directory: ./launcher
+      - id: get-other-tests
+        name: Get Other Tests
+        run: echo "::set-output name=tests::$(npx jest --listTests --json | jq -cM '[.[] | select(contains(".int") and (contains("Service") | not )) | split("/") | .[length-1:][]] | to_entries | map({id:.key, name:.value})')"
         working-directory: ./launcher
 
-  integration-test:
+  Validator-Import-test:
+    runs-on: ubuntu-22.04
+    name: test ${{ matrix.test.name }}
+    needs:
+      - setup
+      - Other-Integration-test
+      - Execution-Client-test
+    strategy:
+      matrix:
+        test: ${{ fromJson(needs.setup.outputs.importTests) }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test ${{ matrix.test.name }}
+        working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: 'true'
+  
+  Execution-Client-test:
+    runs-on: ubuntu-22.04
+    name: test ${{ matrix.test.name }}
+    needs:
+      - setup
+      - Other-Integration-test
+    strategy:
+      matrix:
+        test: ${{ fromJson(needs.setup.outputs.ELTests) }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm install
+        working-directory: ./launcher
+      - run: npm run test ${{ matrix.test.name }}
+        working-directory: ./launcher
+        env:
+          HCLOUD_TOKEN: ${{ secrets.HCLOUD_TOKEN }}
+          IS_DEV: 'true'
+          
+  Other-Integration-test:
     runs-on: ubuntu-22.04
     name: test ${{ matrix.test.name }}
     needs:
       - setup
     strategy:
       matrix:
-        test: ${{ fromJson(needs.setup.outputs.tests) }}
+        test: ${{ fromJson(needs.setup.outputs.otherTests) }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

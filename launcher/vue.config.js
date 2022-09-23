@@ -18,7 +18,10 @@ module.exports = {
 	  hardenedRuntime  : true,
           entitlements: "./node_modules/@sapien99/vue-cli-plugin-electron-builder-notarize/entitlements.mac.inherit.plist",
           gatekeeperAssess: false
-	}        
+	},
+	win: {
+	  //certificateSubjectName: "put thumbprint here"
+	}
       }
     }
   },
