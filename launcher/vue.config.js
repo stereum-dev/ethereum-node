@@ -20,7 +20,7 @@ module.exports = {
           gatekeeperAssess: false
 	},
 	win: {
-	  certificateSubjectName: "C=AT,L=Stockerau,O=RockLogic GmbH,CN= RockLogic GmbH"
+	  //certificateSubjectName: "put thumbprint here"
 	}
       }
     }
