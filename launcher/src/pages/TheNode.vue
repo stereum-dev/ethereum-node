@@ -18,6 +18,18 @@
           <journal-node></journal-node>
         </div>
         <div class="trapezoid-parent">
+          <div class="switch-network">
+            <div class="switch-network__content">
+              <div class="current">
+                <div class="networkIcon">
+                  <img :src="currentNetwork.icon" alt="icon" />
+                </div>
+                <div class="networkSelect">
+                  <span>{{ currentNetwork.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="modal-parent" v-if="isModalActive">
             <base-modal
               :modalItems="modalItems"
@@ -58,7 +70,7 @@
             ></plugin-zone>
           </div>
         </div>
-        <div class="service" >
+        <div class="service">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
             <node-service
@@ -71,10 +83,10 @@
             </node-service>
           </div>
         </div>
-        <div class="node-side" >
+        <div class="node-side">
           <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
-        <div class="footer" >
+        <div class="footer">
           <div class="footer-content"></div>
         </div>
         <task-manager></task-manager>
@@ -93,6 +105,7 @@ import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
 import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
@@ -125,6 +138,9 @@ export default {
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
     }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
     ...mapWritableState(useTutorialStore, {
       steps: "steps",
     }),
@@ -134,13 +150,13 @@ export default {
     }),
   },
   mounted() {
-    this.updateConnectionStats()
+    this.updateConnectionStats();
   },
   methods: {
-   async updateConnectionStats(){
-      const stats = (await ControlService.getConnectionStats())
-      this.ServerName = stats.ServerName
-      this.ipAddress = stats.ipAddress
+    async updateConnectionStats() {
+      const stats = await ControlService.getConnectionStats();
+      this.ServerName = stats.ServerName;
+      this.ipAddress = stats.ipAddress;
     },
     showModal(data) {
       this.isModalActive = true;
@@ -344,5 +360,66 @@ export default {
   position: fixed;
   left: 4px;
   bottom: -1px;
+}
+.switch-network {
+  width: 98%;
+  height: 10%;
+  margin: 0 auto;
+  padding: 5px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #181818;
+  border: 1px solid #181818;
+}
+.switch-network__content {
+  width: 98%;
+  height: 100%;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #272727;
+  transition-duration: 0.3s;
+}
+.current {
+  width: 98%;
+  height: 98%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: 1fr;
+}
+.current .networkIcon {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  margin-left: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.current .networkIcon img {
+  width: 40%;
+}
+.current .networkSelect {
+  grid-column: 3/5;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: center;
+  margin-right: 10px;
+}
+.current .networkSelect span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgb(128, 181, 205);
+  text-transform: uppercase;
+  margin-right: 10px;
 }
 </style>

@@ -49,6 +49,12 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
         },
       ],
+      currentNetwork: {
+        id: 1,
+        name: "Mainnet",
+        network: "mainnet",
+        icon: "/img/icon/click-installation/mainnet-icon.png",
+      },
     };
   },
   getters: {},

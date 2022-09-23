@@ -350,10 +350,11 @@ export default {
   grid-column: 2;
   grid-row: 1/4;
   margin-top: 1px;
-  background-color: #272727;
+  background-color: rgb(0, 0, 0);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  position: relative;
 }
 .modal-parent {
   grid-column: 2;
