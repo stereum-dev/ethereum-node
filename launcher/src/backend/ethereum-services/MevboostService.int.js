@@ -8,7 +8,7 @@ import { ServiceManager } from '../ServiceManager.js'
 import { MevboostService } from './MevboostService.js'
 const log = require('electron-log')
 
-jest.setTimeout(500000)
+jest.setTimeout(600000)
 
 test('mevboost installation', async () => {
   const serverSettings = {
