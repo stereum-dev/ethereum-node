@@ -10,7 +10,7 @@
         <option value="runds">GRANT ROUNDS</option>
       </select>
     </div>
-    <div class="round-selector">
+    <div class="round-selector" v-if="socialEth_toggle">
       <select name="round" id="round" v-model="choosedRound">
         <option value="round_15">Round 15</option>
         <option value="round_14">Round 14</option>
@@ -20,7 +20,7 @@
         <option value="round_10">Round 10</option>
       </select>
     </div>
-    <div class="search" v-if="socialEth_toggle">
+    <div class="search" v-else>
       <input
         type="search"
         placeholder="Search Contributor"
@@ -46,7 +46,7 @@
     </div>
 
     <div class="itemWrapper" v-else>
-      <div class="ethAddresses" v-for="item in ethAddresses" :key="item">
+      <div class="ethAddresses" v-for="item in filteredItem" :key="item">
         <span>{{ item }}</span>
       </div>
     </div>
@@ -82,9 +82,9 @@ export default {
     }),
 
     sortedAddresses() {
-      return this.roundAdresses.sort((a, b) => {
-        let fa = a.name.toLowerCase(),
-          fb = b.name.toLowerCase();
+      return this.ethAddresses.sort((a, b) => {
+        let fa = a.toLowerCase(),
+          fb = b.toLowerCase();
         if (fa < fb) {
           return -1;
         }
@@ -100,12 +100,13 @@ export default {
     this.roundPicker();
   },
   created() {
-    this.filteredItem = this.roundAdresses;
+    this.filteredItem = this.sortedAddresses;
+    console.log(this.sortedAddresses);
   },
   watch: {
     searchPayload: function () {
       this.filteredItem = this.sortedAddresses.filter((item) =>
-        item.name.toLowerCase().includes(this.searchPayload.toLowerCase())
+        item.toLowerCase().includes(this.searchPayload.toLowerCase())
       );
     },
   },
@@ -157,7 +158,8 @@ export default {
   top: 20%;
   left: 78%;
 }
-.type-selector select {
+.type-selector select,
+.round-selector select {
   max-height: 1.8rem;
   display: flex;
   justify-content: center;
@@ -170,6 +172,15 @@ export default {
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
 }
+.round-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 20%;
+  left: 67%;
+}
+
 .itemWrapper {
   width: 100%;
   height: 99%;

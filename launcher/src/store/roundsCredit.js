@@ -202,7 +202,7 @@ export const useRoundsStore = defineStore("roundsCredit", {
         },
         {
           name: "criptocu",
-          avatar: "https://gitcoin.co/dynamic/avatar/criptocu",
+          avatar: "./img/icon/credit/criptocu.png",
         },
         {
           name: "sushanth9909",
