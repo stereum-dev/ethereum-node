@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide-fade" mode="out-in">
+          <Transition name="fade" mode="default">
             <add-panel
               v-if="itemToInstall.addPanel"
               :items="itemToInstall"
@@ -37,6 +37,7 @@
           <preset-modal @close-preset="closePresetModal"></preset-modal>
         </div>
         <div class="drop-parent">
+          <switch-network></switch-network>
           <div class="modal-parent" v-if="isModalActive">
             <base-modal
               :modalItems="modalItems"
@@ -146,12 +147,13 @@ import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
 import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
+import SwitchNetwork from "../components/UI/node-manage/SwitchNetwork.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
-import { escapeHtml } from "@intlify/shared";
+
 export default {
   components: {
     SidebarManage,
@@ -164,6 +166,7 @@ export default {
     AddPanel,
     ModifyPanel,
     ReplacePanel,
+    SwitchNetwork,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -347,7 +350,7 @@ export default {
   grid-column: 2;
   grid-row: 1/4;
   margin-top: 1px;
-  background-color: #000000;
+  background-color: #272727;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -373,17 +376,18 @@ export default {
   right: 1px;
 }
 .service {
-  width: 99%;
+  width: 100%;
   height: 100.2%;
   grid-column: 3;
   grid-row: 1/4;
-  background: #334b3f;
+  background: #272727;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border: 5px solid #1a2620;
+  border-left: 5px solid #171717;
+  box-sizing: border-box;
 }
 .service-parent {
   display: flex;
@@ -426,7 +430,7 @@ export default {
   height: 100.2%;
   grid-row: 1/4;
   grid-column: 4;
-  background: #3b3b3b;
+  background: #272727;
   border: 5px solid #1a2620;
   border-left: 5px solid #161616;
   border-top-right-radius: 30px;
@@ -467,15 +471,13 @@ export default {
   left: 4px;
   bottom: -1px;
 }
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(-200px);
-  transition-duration: 100ms;
-  opacity: 0;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
 }
 
-.slide-fade-leave-active {
-  transition: all 0.1s cubic-bezier(1, 0.3, 0.3, 1);
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -222,6 +222,7 @@ export default {
   position: absolute;
   left: 0;
   transition-duration: 500ms;
+  box-sizing: border-box;
 }
 
 .addBox {
@@ -255,6 +256,7 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .service-details .serviceName {
@@ -269,6 +271,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   align-self: center;
+  box-sizing: border-box;
 }
 .service-details p,
 .service-details p span {
@@ -283,6 +286,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   align-self: flex-start;
+  box-sizing: border-box;
 }
 
 .configBox {
@@ -293,19 +297,21 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .configBox .change-installation {
   width: 100%;
   height: 10%;
-  border-radius: 5px;
-  background-color: #316355;
-  background-color: #2b2b2b;
-  box-shadow: 1px 1px 3px 1px rgb(18, 18, 18);
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  box-sizing: border-box;
 }
 .change-installation .change-title {
   width: 90%;
@@ -313,21 +319,25 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 .change-title span {
   color: #c0c0c0;
   font-size: 0.6rem;
   font-weight: 600;
+  box-sizing: border-box;
 }
 .change-installation .change-box {
   width: 96%;
   height: 45%;
+  box-sizing: border-box;
   background-color: rgb(171, 171, 171);
   border-radius: 3px;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 0;
+  box-sizing: border-box;
 }
 .change-box input {
   width: 100%;
@@ -345,19 +355,21 @@ export default {
   padding-left: 4px;
   outline: none !important;
   outline-style: none !important;
+  box-sizing: border-box;
 }
 .configBox .fast-sync {
   width: 100%;
   height: 13%;
-  background-color: #315e45;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 10px 0 5px 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  box-sizing: border-box;
 }
 .fast-sync .sync-header {
   width: 100%;
@@ -368,6 +380,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 }
 .fast-sync .sync-header .headerTitle {
   width: 45%;
@@ -378,6 +391,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 }
 .headerTitle span {
   width: 86%;
@@ -388,6 +402,7 @@ export default {
   color: #cdcdcd;
   text-align: center;
   margin-right: 3px;
+  box-sizing: border-box;
 }
 .fast-sync .sync-header .headerContent {
   width: 55%;
@@ -399,6 +414,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: relative;
+  box-sizing: border-box;
 }
 .headerContent span {
   width: 86%;
@@ -409,11 +425,13 @@ export default {
   color: #cdcdcd;
   text-align: center;
   margin-right: 3px;
+  box-sizing: border-box;
 }
 .headerContent img {
   width: 8%;
   height: 50%;
   cursor: pointer;
+  box-sizing: border-box;
 }
 .fast-sync .content {
   width: 100%;
@@ -421,12 +439,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 .fast-sync .content span {
   font-size: 0.55rem;
   font-weight: 700;
   color: #b3b3b3;
   text-align: center;
+  box-sizing: border-box;
 }
 .fast-sync .content .inputBox {
   width: 95%;
@@ -437,6 +457,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 0;
+  box-sizing: border-box;
 }
 .fast-sync .content input {
   width: 100%;
@@ -452,23 +473,27 @@ export default {
   color: #232323;
   padding: 0;
   padding-left: 4px;
+  box-sizing: border-box;
 }
 .portAddBox,
 .clientAddBox {
   width: 100%;
   height: 10%;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 .portAddBox img {
   width: 18%;
   opacity: 0.5;
+  box-sizing: border-box;
 }
 .clientAddBox img {
   width: 16%;
@@ -481,6 +506,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  box-sizing: border-box;
 }
 .portConfig span {
   width: max-content;
@@ -489,6 +515,7 @@ export default {
   font-weight: 700;
   color: #b3b3b3;
   text-align: center;
+  box-sizing: border-box;
 }
 .portConfig input {
   width: 96%;
@@ -502,6 +529,7 @@ export default {
   color: #b0b0b0;
   padding: 0;
   margin-top: 3%;
+  box-sizing: border-box;
 }
 
 .btnBox {
@@ -512,6 +540,7 @@ export default {
   align-items: center;
   position: absolute;
   bottom: 20px;
+  box-sizing: border-box;
 }
 .addBtn {
   width: 40%;
@@ -529,6 +558,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 700;
   text-align: center;
+  box-sizing: border-box;
 }
 .addBtn:hover {
   background-color: #116b5f;
@@ -556,6 +586,7 @@ export default {
   font-size: 0.8rem;
   font-weight: 700;
   text-align: center;
+  box-sizing: border-box;
 }
 .cancelBtn:hover {
   background-color: #d75442;
@@ -570,20 +601,21 @@ export default {
 .optionsBox {
   width: 100%;
   height: 10%;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border: 1px solid #242424;
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  box-sizing: border-box;
 }
 .optionsBox:hover {
-  background-color: #2f2f2f;
-  border: 1px solid #464646;
+  background-color: #31373a;
+  border: 1px solid #3b4246;
   transition-duration: 0.2s;
 }
 .optionsBox img {
@@ -600,6 +632,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
+  box-sizing: border-box;
 }
 .optionsDetails .category {
   width: max-content;
@@ -609,6 +642,7 @@ export default {
   color: #b3b3b3;
   text-align: center;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 .optionsName {
   width: 99%;
@@ -620,6 +654,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box;
 }
 .optionsName span {
   padding: 2px;
@@ -629,23 +664,25 @@ export default {
   text-align: center;
   align-self: center;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 .clientAddBox {
   width: 100%;
   height: 10%;
-  background-color: #242424;
-  border: 1px solid #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border: 1px solid #22272a;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 .clientAddBox:hover {
-  background-color: #2f2f2f;
-  border: 1px solid #464646;
+  background-color: #31373b;
+  border: 1px solid #3f4549;
   transition-duration: 0.2s;
 }
 .portAddBox img {
@@ -668,6 +705,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
+  box-sizing: border-box;
 }
 
 .connectionConfig .category {
@@ -678,6 +716,7 @@ export default {
   color: #b3b3b3;
   text-align: center;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 .connectionConfig .name {
   width: 99%;
@@ -692,5 +731,6 @@ export default {
   color: #34a061;
   text-align: center;
   text-transform: uppercase;
+  box-sizing: border-box;
 }
 </style>
