@@ -73,7 +73,7 @@ export default {
 </script>
 <style scoped>
 .switch-network {
-  width: 98%;
+  width: 95%;
   height: 10%;
   margin: 0 auto;
   padding: 5px;
@@ -81,8 +81,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #181818;
-  border: 1px solid #181818;
+  background: #313334;
 }
 .switch-network__content {
   width: 98%;
@@ -148,20 +147,19 @@ export default {
   z-index: 10;
 }
 .dropdown-parent li {
-  width: 100%;
+  width: 98%;
   height: 50%;
   padding: 5px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
-  background-color: #75c9eb;
-  border-bottom: 2px solid rgb(209, 228, 244);
+  background-color: #414549;
+  border-bottom: 1px solid rgb(93, 93, 93);
   cursor: pointer;
   transition-duration: 0.3s;
 }
 .dropdown-parent li:hover {
   background-color: #22afe7;
-  border-bottom: 2px solid rgb(167, 222, 250);
   transition-duration: 0.3s;
 }
 
@@ -188,7 +186,7 @@ export default {
 .dropdown-parent li .networkSelect span {
   font-size: 1rem;
   font-weight: 600;
-  color: rgb(103, 103, 103);
+  color: rgb(211, 211, 211);
   text-transform: uppercase;
   margin-left: 17px;
 }
