@@ -54,7 +54,7 @@ export default {
   padding: 5px;
   margin-top: 1px;
   display: grid;
-  background-color: #3b3b3b;
+  background: #3a3d40;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
   justify-content: center;

@@ -157,8 +157,8 @@ export default {
 <style scoped>
 .service-container {
   width: 96%;
-  height: 98%;
-  background-color: #3b3b3b;
+  height: 95%;
+  background-color: #494949;
   border-radius: 20px;
   padding: 5px;
   box-sizing: border-box;

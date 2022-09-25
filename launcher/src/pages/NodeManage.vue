@@ -316,7 +316,7 @@ export default {
   display: grid;
   width: 100%;
   height: 91%;
-  border: 4px solid #979797;
+  border: 5px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 31% 32% 32% 5%;
@@ -346,49 +346,43 @@ export default {
 }
 .drop-parent {
   width: 100%;
-  height: 100%;
+  height: 95%;
   grid-column: 2;
-  grid-row: 1/4;
-  margin-top: 1px;
-  background-color: rgb(0, 0, 0);
+  grid-row: 1/5;
+  background: #313334;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   position: relative;
 }
 .modal-parent {
-  grid-column: 2;
-  grid-row: 1/4;
-  width: 45.5%;
-  height: 99%;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 2%;
-  left: 18.5%;
+  top: 0;
+  left: 0;
   z-index: 1;
 }
 .modal-bg {
   width: 100%;
-  height: 86.3%;
-  position: absolute;
-  top: 8%;
-  right: 1px;
+  height: 100%;
 }
 .service {
   width: 100%;
-  height: 100.2%;
+  height: 95%;
   grid-column: 3;
-  grid-row: 1/4;
-  background: #272727;
+  grid-row: 1/5;
+  background: #3a3d40;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border-left: 5px solid #171717;
-  box-sizing: border-box;
+  border-left: 5px solid #1f1f1f;
+  border-right: 5px solid #1f1f1f;
 }
 .service-parent {
   display: flex;
@@ -401,8 +395,8 @@ export default {
 .title {
   width: 70%;
   height: 6%;
-  background: #263529;
-  border: 1px solid #2d4338;
+  background: #272827;
+  border: 1px solid #404142;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
@@ -427,13 +421,13 @@ export default {
 }
 
 .change-menu {
-  width: 99.5%;
-  height: 100.2%;
-  grid-row: 1/4;
+  width: 100%;
+  height: 95%;
+  grid-row: 1/5;
   grid-column: 4;
-  background: #272727;
-  border: 5px solid #1a2620;
-  border-left: 5px solid #161616;
+  background: #3a3d40;
+  border: 5px solid #1f1f1f;
+  border-left: none;
   border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;

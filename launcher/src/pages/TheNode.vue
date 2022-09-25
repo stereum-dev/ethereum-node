@@ -199,7 +199,7 @@ export default {
   display: grid;
   width: 100%;
   height: 91%;
-  border: 4px solid #979797;
+  border: 5px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 32% 32% 31% 5%;
@@ -261,15 +261,15 @@ export default {
   color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
-  border-radius: 0 25px 25px 10px;
+  border-right:5px solid rgb(30, 29, 29);
+  background: #3a3d40;
 }
 .trapezoid-parent {
   width: 100%;
-  height: 100%;
-  margin-top: 1px;
+  height: 95%;
   grid-column: 2;
-  grid-row: 1/4;
-  background-color: #000000;
+  grid-row: 1/5;
+  background: #3a3d40;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -287,18 +287,21 @@ export default {
 .modal-bg {
   height: 100%;
 }
+
 .service {
-  width: 99%;
-  height: 100%;
+  width: 100%;
+  height: 95%;
   grid-column: 3;
-  grid-row: 1/4;
-  background: #334b3f;
+  grid-row: 1/5;
+  background: #3a3d40;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border: 5px solid #1a2620;
+  border-left: 5px solid #171717;
+  border-right: 5px solid #171717;
+  box-sizing: border-box;
 }
 .service-parent {
   display: flex;
@@ -313,8 +316,8 @@ export default {
 .title {
   width: 70%;
   height: 6%;
-  background: #263529;
-  border: 1px solid #2d4338;
+  background: #272827;
+  border: 1px solid #404142;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
@@ -328,6 +331,7 @@ export default {
 .trap-container {
   width: 98%;
   margin: 0 auto;
+  background: #3a3d40;
 }
 .trap-title {
   color: white;
@@ -343,9 +347,10 @@ export default {
   height: 30px;
 }
 .node-side {
-  grid-column: 4;
-  grid-row: 1/4;
-  height: 99.8%;
+  grid-column: 4/5;
+  grid-row: 1/5;
+  width: 100%;
+  height: 95%;
 }
 .footer {
   width: 100%;
@@ -362,7 +367,7 @@ export default {
   bottom: -1px;
 }
 .switch-network {
-  width: 98%;
+  width: 96%;
   height: 10%;
   margin: 0 auto;
   padding: 5px;
@@ -370,8 +375,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #181818;
-  border: 1px solid #181818;
+  background: #3a3d40;
 }
 .switch-network__content {
   width: 98%;
@@ -402,7 +406,7 @@ export default {
   align-items: center;
 }
 .current .networkIcon img {
-  width: 40%;
+  width: 36%;
 }
 .current .networkSelect {
   grid-column: 3/5;
