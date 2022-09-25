@@ -367,15 +367,16 @@ export default {
   bottom: -1px;
 }
 .switch-network {
-  width: 96%;
+  width: 95%;
   height: 10%;
   margin: 0 auto;
-  padding: 5px 4px;
+  padding: 5px 1px;
   border-radius: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: #3a3d40;
+  box-sizing: border-box;
 }
 .switch-network__content {
   width: 98%;
