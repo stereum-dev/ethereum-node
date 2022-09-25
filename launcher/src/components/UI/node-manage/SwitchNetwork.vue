@@ -78,10 +78,12 @@ export default {
   margin: 0 auto;
   padding: 5px;
   border-radius: 2px;
+  border:1px solid #464646;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #313334;
+  background: #3a3d40;
+  box-sizing: border-box;
 }
 .switch-network__content {
   width: 98%;
@@ -106,7 +108,7 @@ export default {
   grid-row: 1/2;
   width: 100%;
   height: 100%;
-  margin-left: 5px;
+  margin-left: 4px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -149,11 +151,12 @@ export default {
 .dropdown-parent li {
   width: 98%;
   height: 50%;
-  padding: 5px;
+  padding: 5px 8px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   background-color: #414549;
+
   border-bottom: 1px solid rgb(93, 93, 93);
   cursor: pointer;
   transition-duration: 0.3s;
@@ -197,6 +200,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #272727;
+  
   cursor: pointer;
 }
 .switch-network .dropdown-box .dropdown-icon {

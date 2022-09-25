@@ -19,7 +19,6 @@ export default {};
   margin: 0 auto;
   height: 130px;
   background: #3a3d40;
-  background: #313334;
   display: flex;
   justify-content: center;
   align-items: center;

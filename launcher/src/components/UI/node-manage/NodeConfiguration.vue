@@ -153,7 +153,7 @@ export default {
   grid-column: 1;
   grid-row: 3/10;
   width: 95%;
-  height: 100%;
+  height: 96%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);

@@ -370,7 +370,7 @@ export default {
   width: 96%;
   height: 10%;
   margin: 0 auto;
-  padding: 5px;
+  padding: 5px 4px;
   border-radius: 2px;
   display: flex;
   justify-content: center;
@@ -392,7 +392,7 @@ export default {
   width: 98%;
   height: 98%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   grid-template-rows: 1fr;
 }
 .current .networkIcon {
@@ -400,24 +400,24 @@ export default {
   grid-row: 1/2;
   width: 100%;
   height: 100%;
-  margin-left: 5px;
+  margin-left: 4px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 .current .networkIcon img {
-  width: 36%;
+  width: 73%;
 }
 .current .networkSelect {
-  grid-column: 3/5;
+  grid-column: 4/7;
   grid-row: 1/2;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   text-align: center;
-  margin-right: 10px;
+  margin-left: 9%;
 }
 .current .networkSelect span {
   font-size: 1.1rem;

@@ -349,7 +349,7 @@ export default {
   height: 95%;
   grid-column: 2;
   grid-row: 1/5;
-  background: #313334;
+  background: #3a3d40;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

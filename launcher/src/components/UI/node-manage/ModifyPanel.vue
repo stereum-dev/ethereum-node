@@ -230,8 +230,8 @@ html {
   height: 100%;
   margin-top: 1px;
   display: flex;
-  background-color: #606060;
-  /* background-color: #606060; */
+  background: #3a3d40;
+  border-right: 5px solid rgb(31, 31, 31);
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -251,7 +251,7 @@ html {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #3a3a3a;
+  background: #3a3d40;
   border-radius: 10px;
   margin: 0 auto;
   position: relative;
