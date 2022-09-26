@@ -28,7 +28,6 @@
             ></replace-panel>
             <node-configuration
               v-else
-              :configData="configData"
               @modal-preset="openPresetModal"
             ></node-configuration>
           </Transition>
@@ -120,8 +119,6 @@
         </div>
         <div class="change-menu" onmousedown="return false">
           <change-confirm
-            :confirmChanges="confirmChanges"
-            @clickOnRemove="clickOnRemoveBtn()"
           ></change-confirm>
         </div>
         <div class="sidebar">
@@ -150,7 +147,6 @@ import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import SwitchNetwork from "../components/UI/node-manage/SwitchNetwork.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
 
@@ -185,11 +181,6 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useNodeStore, {
-      selectedItemToRemove: "selectedItemToRemove",
-      confirmChanges: "confirmChanges",
-      configData: "configData",
-    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
@@ -197,6 +188,7 @@ export default {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
       actionContents: "actionContents",
+      selectedItemToRemove: "selectedItemToRemove",
     }),
   },
   mounted() {

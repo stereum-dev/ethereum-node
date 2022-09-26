@@ -68,9 +68,6 @@ export default {
       headerServices: "runningServices",
       refresh: "refresh",
     }),
-    ...mapWritableState(useNodeStore, {
-      configData: "configData",
-    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",

@@ -6,7 +6,7 @@
     <div class="switch-network__content">
       <div class="current" @click="openDropDown">
         <div class="networkIcon">
-          <img :src="currentNetwork.icon" alt="icon" />
+          <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
         </div>
         <div class="networkSelect">
           <span>{{ currentNetwork.name }}</span>
@@ -45,6 +45,7 @@ export default {
     return {
       closeDropdownActive: false,
       dropdownIsActive: false,
+      loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
     };
   },
   computed: {
@@ -60,8 +61,8 @@ export default {
   },
   methods: {
     openDropDown() {
-      this.dropdownIsActive = !this.dropdownIsActive;
-      this.closeDropdownActive = !this.closeDropdownActive;
+      // this.dropdownIsActive = !this.dropdownIsActive;
+      // this.closeDropdownActive = !this.closeDropdownActive;
     },
     selectNetworkToDisplay(item) {
       this.currentNetwork = item;

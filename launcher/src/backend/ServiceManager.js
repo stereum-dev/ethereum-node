@@ -151,5 +151,22 @@ export class ServiceManager {
         break;
     }
   }
+
+  async deleteService(task){
+    
+  }
+
+  async modifyServices(tasks){
+    for(let task of tasks){
+      switch (task.content) {
+        case "DELETE":
+            await this.deleteService(task)
+          break;
+      
+        default:
+          break;
+      }
+    }
+  }
 }
 

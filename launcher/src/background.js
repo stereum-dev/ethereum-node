@@ -318,6 +318,10 @@ promiseIpc.on("chooseServiceAction", async (args) => {
   return await serviceManager.chooseServiceAction(args.action, args.service, args.data)
 })
 
+promiseIpc.on("modifyServices", async (args) => {
+  return await serviceManager.modifyServices(args)
+})
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

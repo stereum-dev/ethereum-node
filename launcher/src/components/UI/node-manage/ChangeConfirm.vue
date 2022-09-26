@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <button class="confirm-btn">CONFIRM</button>
+      <button class="confirm-btn" @click="confirmHandler">CONFIRM</button>
     </div>
     <div class="table-container">
       <div class="table-header">
@@ -25,7 +25,7 @@
           <span>{{ item.content }}</span>
           <div class="right-icon">
             <img
-              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
+              :src="item.service.sIcon"
               alt="icon"
             />
           </div>
@@ -49,25 +49,38 @@
   </div>
 </template>
 <script>
+import { toRaw } from "vue";
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeStore } from "@/store/theNode";
 export default {
-  props: ["confirmChanges"],
   computed: {
-    ...mapWritableState(useNodeStore, {
-      selectedItemToRemove: "selectedItemToRemove",
-    }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+      selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      actionContents: "actionContents",
     }),
   },
   methods: {
+    getActions(action, service){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: service}
+      return undefined
+    },
     clickOnRemoveBtn() {
       this.newConfiguration = this.newConfiguration.filter(
         (item) => !this.selectedItemToRemove.includes(item)
       );
+      this.selectedItemToRemove.forEach(item => {
+        this.confirmChanges.push(this.getActions("DELETE",item))
+      })
+      console.log(this.confirmChanges)
       this.selectedItemToRemove = [];
+    },
+    async confirmHandler() {
+      await ControlService.modifyServices(toRaw(this.confirmChanges))
     },
   },
 };

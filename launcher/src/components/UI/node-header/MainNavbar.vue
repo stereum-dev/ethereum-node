@@ -13,6 +13,7 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
@@ -30,6 +31,10 @@ export default {
     clearInterval(this.polling);
   },
   computed: {
+    ...mapWritableState(useNodeManage, {
+      networkList: "networkList",
+      currentNetwork: "currentNetwork",
+    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
@@ -101,8 +106,10 @@ export default {
             );
             if (beaconService && beaconService.config.network === "mainnet") {
               this.network = "mainnet";
+              this.currentNetwork = this.networkList.find(item => item.network === "mainnet")
             } else {
               this.network = "testnet";
+              this.currentNetwork = this.networkList.find(item => item.network === "testnet")
             }
             if (needForTunnel.length != 0 && this.refresh) {
               let localPorts = await ControlService.getAvailablePort({

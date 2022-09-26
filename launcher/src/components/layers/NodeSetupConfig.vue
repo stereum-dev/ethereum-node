@@ -6,34 +6,7 @@
   </div>
 </template>
 <script>
-export default {
-  data () {
-    return {
-      configData: [
-        {
-          id: 1,
-          name: 'Node Configuration',
-          status: 'online'
-        },
-        {
-          id: 2,
-          name: 'Node Configuration',
-          status: 'offline'
-        },
-        {
-          id: 3,
-          name: 'Node Configuration',
-          status: 'notOk'
-        },
-        {
-          id: 4,
-          name: 'Node Configuration',
-          status: 'serverOff'
-        }
-      ]
-    }
-  }
-}
+export default {}
 </script>
 <style scoped>
 * {
