@@ -51,6 +51,7 @@
                 }}</span
               >
               <img
+                v-if="Object.keys(this.selectedService).length"
                 class="service-icon"
                 :src="selectedService.icon"
                 alt="icon"
@@ -169,7 +170,7 @@
     <!-- select specific validator service -->
     <select-service
       v-if="selectValidatorServiceForKey"
-      @select-service="selectServiceForKeys"
+      @select-service="checkSelectedService"
     ></select-service>
     <!-- Password box for validator keys -->
     <enter-password
@@ -649,7 +650,7 @@ export default {
         console.log("Multiple validator services are not supported yet!");
       }
     },
-    selectServiceForKeys(service) {
+    checkSelectedService(service) {
       this.selectedService = service;
       this.selectValidatorServiceForKey = false;
       this.enterPasswordBox = true;
