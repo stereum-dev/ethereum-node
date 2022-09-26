@@ -1,5 +1,6 @@
 <template>
   <div class="dataApi-parent">
+    <comming-soon></comming-soon>
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
@@ -38,16 +39,16 @@ export default {
       copyIcon: "/img/icon/control/ok.png",
       dataApiItems: [
         // dataApiItems are dummy, for wire the have to change but the best stract. for the design is this one
-        {
-          id: 1,
-          title: "TEKU",
-          value: "11111",
-        },
-        {
-          id: 2,
-          title: "LIGHTHOUSE",
-          value: "22222",
-        },
+        // {
+        //   id: 1,
+        //   title: "TEKU",
+        //   value: "11111",
+        // },
+        // {
+        //   id: 2,
+        //   title: "LIGHTHOUSE",
+        //   value: "22222",
+        // },
       ],
     };
   },
@@ -79,6 +80,7 @@ export default {
   border-radius: 10px;
   flex-direction: column;
   color: #c1c1c1;
+  position: relative;
 }
 
 .dialogBox {

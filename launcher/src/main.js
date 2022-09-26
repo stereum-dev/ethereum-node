@@ -15,11 +15,13 @@ import ChartBg from "./components/UI/ChartBg.vue";
 import NodeHeader from "./components/layers/NodeHeader";
 import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
 import NodeService from "./components/UI/the-node/NodeService.vue";
+import CommingSoon from "./components/layers/CommingSoon.vue";
 
 Vue.configureCompat({ WATCH_ARRAY: false });
 
 const app = createApp(App);
 
+app.component("comming-soon", CommingSoon);
 app.component("base-button", BaseButton);
 app.component("background-page", BackgroundPage);
 app.component("the-trapezium", TheTrapezium);

@@ -46,10 +46,10 @@ import { useStakingStore } from "../../../store/theStaking";
 export default {
   data() {
     return {
-      activeVal: 1,
+      activeVal: null,
 
-      gewiCount: 1,
-      ratingVal: "S",
+      gewiCount: null,
+      ratingVal: "",
     };
   },
   computed: {

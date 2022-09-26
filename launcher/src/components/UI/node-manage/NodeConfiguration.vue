@@ -21,9 +21,11 @@
           </router-link>
         </div>
         <div class="config-add" @click.stop="$emit('modalPreset')">
+          <comming-soon></comming-soon>
           <span class="btn-text">ADD 1 CLICK PRESET</span>
         </div>
         <div class="config-network">
+          <comming-soon></comming-soon>
           <span class="btn-text">CHANGE NETWORK</span>
         </div>
       </div>
@@ -272,10 +274,12 @@ export default {
   align-items: center;
 }
 .config-btns .config-add,
-.config-btns .config-network {
+.config-btns .config-network
+ {
+  position: relative;
   width: 95%;
   height: 25%;
-  margin-top: 3%;
+  margin-top: 3%
   background-color: #292929;
   font-size: 0.7rem;
   font-weight: 700;
