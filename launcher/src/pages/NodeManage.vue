@@ -4,7 +4,7 @@
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
-          <Transition name="slide">
+          <Transition name="fade" mode="default">
             <add-panel
               v-if="itemToInstall.addPanel"
               :items="itemToInstall"
@@ -37,6 +37,7 @@
           <preset-modal @close-preset="closePresetModal"></preset-modal>
         </div>
         <div class="drop-parent">
+          <switch-network></switch-network>
           <div class="modal-parent" v-if="isModalActive">
             <base-modal
               :modalItems="modalItems"
@@ -124,11 +125,7 @@
           ></change-confirm>
         </div>
         <div class="sidebar">
-          <sidebar-manage
-            :startDrag="startDrag"
-            :allServices="allServices"
-            @add-service="addNewService"
-          >
+          <sidebar-manage :startDrag="startDrag" @add-service="addNewService">
           </sidebar-manage>
         </div>
         <div class="footer" onmousedown="return false">
@@ -150,12 +147,13 @@ import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
 import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
+import SwitchNetwork from "../components/UI/node-manage/SwitchNetwork.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeStore } from "@/store/theNode";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
-import { escapeHtml } from "@intlify/shared";
+
 export default {
   components: {
     SidebarManage,
@@ -168,6 +166,7 @@ export default {
     AddPanel,
     ModifyPanel,
     ReplacePanel,
+    SwitchNetwork,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -222,20 +221,21 @@ export default {
       if (event.type === "dragstart") {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("itemId", item.id);
+        event.dataTransfer.setData("servicId", item.config.serviceID);
       }
     },
     onDrop(event, list) {
-      const itemId = event.dataTransfer.getData("itemId");
-      const item = { ...list.find((item) => item.id == itemId) };
-      if (this.newConfiguration.some((item) => item.id == itemId)) return;
+      const serviceId = event.dataTransfer.getData("servicId");
+      const item = {
+        ...list.find((item) => item.config.serviceID === serviceId),
+      };
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
       this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
-      if (this.newConfiguration.some((el) => el.id == item.id)) return;
+      console.log(item.config.serviceID);
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
@@ -261,8 +261,9 @@ export default {
       this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
+      console.log(item.config.serviceID);
       this.newConfiguration.map((el) => {
-        if (el.id != item.id) {
+        if (el.id != item.id || el.config.serviceID != item.config.serviceID) {
           el.modifierPanel = false;
           this.itemToModify = {};
         }
@@ -315,7 +316,7 @@ export default {
   display: grid;
   width: 100%;
   height: 91%;
-  border: 4px solid #979797;
+  border: 5px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 31% 32% 32% 5%;
@@ -345,47 +346,43 @@ export default {
 }
 .drop-parent {
   width: 100%;
-  height: 100%;
+  height: 95%;
   grid-column: 2;
-  grid-row: 1/4;
-  margin-top: 1px;
-  background-color: #000000;
+  grid-row: 1/5;
+  background: #3a3d40;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  position: relative;
 }
 .modal-parent {
-  grid-column: 2;
-  grid-row: 1/4;
-  width: 45.5%;
-  height: 99%;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 2%;
-  left: 18.5%;
+  top: 0;
+  left: 0;
   z-index: 1;
 }
 .modal-bg {
   width: 100%;
-  height: 86.3%;
-  position: absolute;
-  top: 8%;
-  right: 1px;
+  height: 100%;
 }
 .service {
-  width: 99%;
-  height: 100.2%;
+  width: 100%;
+  height: 95%;
   grid-column: 3;
-  grid-row: 1/4;
-  background: #334b3f;
+  grid-row: 1/5;
+  background: #3a3d40;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border: 5px solid #1a2620;
+  border-left: 5px solid #1f1f1f;
+  border-right: 5px solid #1f1f1f;
 }
 .service-parent {
   display: flex;
@@ -398,8 +395,8 @@ export default {
 .title {
   width: 70%;
   height: 6%;
-  background: #263529;
-  border: 1px solid #2d4338;
+  background: #272827;
+  border: 1px solid #404142;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
@@ -421,16 +418,20 @@ export default {
 .trap-plus-icon img {
   width: 50px;
   height: 30px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .change-menu {
-  width: 99.5%;
-  height: 100.2%;
-  grid-row: 1/4;
+  width: 100%;
+  height: 95%;
+  grid-row: 1/5;
   grid-column: 4;
-  background: #334b3f;
-  border: 5px solid #1a2620;
-  border-left: 5px solid #161616;
+  background: #3a3d40;
+  border: 5px solid #1f1f1f;
+  border-left: none;
   border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -469,10 +470,13 @@ export default {
   left: 4px;
   bottom: -1px;
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
 
-.slide-enter-from,
-.slide-leave-to {
-  transform: translateX(-200px);
-  transition-duration: 150ms;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

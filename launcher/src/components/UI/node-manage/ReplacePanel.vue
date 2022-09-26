@@ -130,8 +130,7 @@ export default {
   height: 100%;
   margin-top: 1px;
   display: flex;
-  background-color: #606060;
-  /* background-color: #606060; */
+  background: #3a3d40;
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -146,7 +145,8 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: #3a3a3a;
+  background: #3a3d40;
+  border-right: 5px solid rgb(31, 31, 31);
   border-radius: 10px;
   margin: 0 auto;
   position: relative;
@@ -155,7 +155,7 @@ export default {
 .service {
   width: 98%;
   height: 10%;
-  margin-top: 13%;
+  margin-top: 15%;
   padding: 3px;
   display: flex;
   justify-content: space-between;
@@ -178,8 +178,8 @@ export default {
   width: 100%;
   height: 60%;
   text-align: left;
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #c8c8c8;
   text-transform: uppercase;
   white-space: nowrap;
@@ -214,10 +214,10 @@ export default {
 .configBox .pluginBox {
   width: 100%;
   height: 13%;
-  background-color: #2d2d2d;
-  box-shadow: 1px 1px 5px 1px rgb(17, 17, 17);
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
@@ -233,7 +233,7 @@ export default {
 .pluginBox .plugin-details {
   width: 70%;
   height: 95%;
-  padding:5px 0;
+  padding: 5px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -276,11 +276,10 @@ export default {
 .configBox .fast-sync {
   width: 100%;
   height: 20%;
-  background-color: #315e45;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 10px 0 5px 5px;
-  margin-top: 15%;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  margin-top: 10px;
+  border-radius: 10px 0 3px 3px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -309,7 +308,7 @@ export default {
 .headerTitle span {
   width: 86%;
   height: 100%;
-  padding:4px;
+  padding: 4px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -330,7 +329,7 @@ export default {
 .headerContent span {
   width: 86%;
   height: 100%;
-  padding:4px;
+  padding: 4px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -384,10 +383,10 @@ export default {
 .clientreplaceBox {
   width: 100%;
   height: 13%;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;
@@ -570,10 +569,10 @@ export default {
 .optionsBox {
   width: 100%;
   height: 13%;
-  background-color: #242424;
-  box-shadow: 1px 1px 3px 1px rgb(10, 10, 10);
-  border-radius: 5px;
-  margin-top: 8px;
+  background-color: #23282b;
+  box-shadow: 1px 1px 3px 1px #16191b;
+  border-radius: 3px;
+  margin-top: 10px;
   padding: 1px 5px;
   display: flex;
   justify-content: space-between;

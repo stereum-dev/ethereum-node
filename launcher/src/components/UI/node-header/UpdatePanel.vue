@@ -253,8 +253,9 @@ export default {
   margin-left: 15px;
 }
 .stereum-updateBox {
-  width: 100%;
+  width: 94%;
   height: 65%;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -452,7 +453,7 @@ export default {
 .btnBox .available .updateIcon {
   grid-column: 2/3;
   grid-row: 1;
-  width: 62%;
+  width: 73%;
   height: 100%;
   background-color: rgb(59, 103, 100);
   border-radius: 100%;
@@ -487,9 +488,10 @@ export default {
   align-self: center;
   text-align: center;
   justify-self: center;
+  margin-left: 5px;
 }
 .circle {
-  grid-column: 2/3;
+  grid-column: 1/2;
   grid-row: 1;
   width: 10px;
   height: 10px;
@@ -497,8 +499,7 @@ export default {
   border-radius: 50%;
   box-shadow: 0px 0px 1px 1px #666666;
   align-self: center;
-  justify-self: flex-start;
-  margin-right: 5px;
+  justify-self: flex-end;
 }
 .pulse {
   animation: pulse-animation 1s infinite;

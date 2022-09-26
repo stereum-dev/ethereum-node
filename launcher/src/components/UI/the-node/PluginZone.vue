@@ -3,32 +3,75 @@
     <template #default>
       <span class="title">{{ title }}</span>
       <div class="item-box" @drag.prevent.stop>
-        <div class="items" v-for="(item, index) in list" :key="index" ref="itemsList">
-          <img :src="item.sIcon" alt="icon" @click.self="pluginMenuHandler(item)"
-            @dblclick.self="openDefaultBrowser(item)" />
+        <div
+          class="items"
+          v-for="(item, index) in list"
+          :key="index"
+          ref="itemsList"
+        >
+          <img
+            :src="item.sIcon"
+            alt="icon"
+            @click.self="pluginMenuHandler(item)"
+            @dblclick.self="openDefaultBrowser(item)"
+          />
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
-                <img v-if="item.serviceIsPending" class="pending" src="/img/icon/plugin-menu-icons/turning_circle.gif"
-                  alt="icon" />
-                <img v-else-if="item.state == 'running'" @click.stop="stateHandler(item)"
-                  src="/img/icon/plugin-menu-icons/shutdown.png" alt="icon" />
-                <img v-else-if="item.state == 'restarting'" @click="stateHandler(item)"
-                  src="/img/icon/plugin-menu-icons/restart.png" alt="icon" />
-                <img v-else @click.stop="stateHandler(item)" src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" />
+                <img
+                  v-if="item.serviceIsPending"
+                  class="pending"
+                  src="/img/icon/plugin-menu-icons/turning_circle.gif"
+                  alt="icon"
+                />
+                <img
+                  v-else-if="item.state == 'running'"
+                  @click.stop="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/shutdown.png"
+                  alt="icon"
+                />
+                <img
+                  v-else-if="item.state == 'restarting'"
+                  @click="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/restart.png"
+                  alt="icon"
+                />
+                <img
+                  v-else
+                  @click.stop="stateHandler(item)"
+                  src="/img/icon/plugin-menu-icons/turn-on.png"
+                  alt="icon"
+                />
               </div>
               <div class="setting" @click="expertModeHandler(item)">
-                <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
+                <img
+                  src="/img/icon/plugin-menu-icons/setting8.png"
+                  alt="icon"
+                />
               </div>
             </div>
           </plugin-menu>
-          <the-expert @hide-modal="hideExpertMode(item)" v-if="item.expertOptionsModal"
-            @prunning-warning="runGethPrunningWarning" @resync-warning="runResyncWarning" :item="item" position="18.8%"
-            long="54%"></the-expert>
-          <prunning-modal :item="item" v-if="gethPrunningWarningModal" @cancel-warning="hidePrunningWarningsModal"
-            @confirm-btn="confirmRunningGethPrunning(item)"></prunning-modal>
-          <resync-modal :item="item" v-if="resyncWarningModal" @cancel-warning="hideResyncWarningsModal"
-            @confirm-btn="confirmRunningResync($event, item)">
+          <the-expert
+            @hide-modal="hideExpertMode(item)"
+            v-if="item.expertOptionsModal"
+            @prunning-warning="runGethPrunningWarning"
+            @resync-warning="runResyncWarning"
+            :item="item"
+            position="18.8%"
+            long="54%"
+          ></the-expert>
+          <prunning-modal
+            :item="item"
+            v-if="gethPrunningWarningModal"
+            @cancel-warning="hidePrunningWarningsModal"
+            @confirm-btn="confirmRunningGethPrunning(item)"
+          ></prunning-modal>
+          <resync-modal
+            :item="item"
+            v-if="resyncWarningModal"
+            @cancel-warning="hideResyncWarningsModal"
+            @confirm-btn="confirmRunningResync($event, item)"
+          >
           </resync-modal>
         </div>
       </div>
@@ -106,9 +149,7 @@ export default {
       });
     },
     stateHandler: async function (item) {
-      item.yaml = await ControlService.getServiceYAML(
-        item.config.serviceID
-      );
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
       if (!item.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         item.serviceIsPending = true;
@@ -194,7 +235,11 @@ export default {
             item.changeValue = false;
           }
         });
-      await ControlService.chooseServiceAction({ action: "pruneGeth", service: toRaw(service), data: {} })
+      await ControlService.chooseServiceAction({
+        action: "pruneGeth",
+        service: toRaw(service),
+        data: {},
+      });
     },
 
     // Resync Functions
@@ -221,7 +266,11 @@ export default {
             item.changeValue = false;
           }
         });
-      await ControlService.chooseServiceAction({ action: "reSync", service: toRaw(service), data: { checkpointURL: data } })
+      await ControlService.chooseServiceAction({
+        action: "reSync",
+        service: toRaw(service),
+        data: { checkpointURL: data },
+      });
     },
   },
 };
@@ -253,12 +302,12 @@ export default {
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 100px);
+  grid-template-rows: repeat(2, 50%);
   row-gap: 1px;
   overflow-x: hidden;
   overflow-y: auto;
   width: 99%;
-  height: 100px;
+  height: 160px;
   margin: 0 auto;
 }
 
@@ -301,6 +350,10 @@ export default {
 .plus-icon-box img {
   width: 17px;
   border-radius: 3px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .plus-icon-box img:hover {

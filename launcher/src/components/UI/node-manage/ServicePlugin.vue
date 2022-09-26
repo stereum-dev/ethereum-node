@@ -77,8 +77,8 @@ export default {
 <style scoped>
 .service-container {
   width: 96%;
-  height: 98%;
-  background-color: #3b3b3b;
+  height: 95%;
+  background: #494949;
   border-radius: 20px;
   overflow: auto;
   padding: 5px;
