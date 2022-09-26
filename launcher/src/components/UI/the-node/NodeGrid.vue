@@ -49,13 +49,11 @@
 </template>
 
 <script>
-import NodeSetupConfig from "../../layers/NodeSetupConfig.vue";
 import SidebarParent from "./NodeSidebarParent.vue";
 import DropZone from "../node-manage/DropZone.vue";
 
 export default {
   components: {
-    NodeSetupConfig,
     SidebarParent,
     DropZone,
   },
