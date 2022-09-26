@@ -64,7 +64,7 @@ export default {
   grid-column: 1;
   grid-row: 3/10;
   width: 95%;
-  height: 100%;
+  height: 96%;
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: repeat(9, 1fr);
@@ -217,11 +217,13 @@ export default {
 .edit-btn {
   grid-column: 1;
   grid-row: 1/2;
+  width: 95%;
+  height: 100%;
+  margin-top: 2%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
-  margin-top: 5px;
+  justify-self: center;
 }
 .edit-btn a:hover {
   background-color: #2c2c2c;
@@ -232,8 +234,8 @@ export default {
   transform: scale(1);
 }
 .edit-btn a {
-  width: 90%;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   background-color: #292929;
   font-size: 0.6rem;
   font-weight: 800;

@@ -380,7 +380,7 @@ export default {
 }
 .switch-network__content {
   width: 98%;
-  height: 100%;
+  height: 95%;
   padding: 2px;
   display: flex;
   flex-direction: column;
