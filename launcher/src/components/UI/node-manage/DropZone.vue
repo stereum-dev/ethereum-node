@@ -145,6 +145,10 @@ export default {
 .plus-icon-box img {
   width: 17px;
   border-radius: 3px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .plus-icon-box img:hover {

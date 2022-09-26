@@ -261,7 +261,7 @@ export default {
   color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
-  border-right:5px solid rgb(30, 29, 29);
+  border-right: 5px solid rgb(30, 29, 29);
   background: #3a3d40;
 }
 .trapezoid-parent {
@@ -345,6 +345,10 @@ export default {
 .trap-plus-icon img {
   width: 50px;
   height: 30px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .node-side {
   grid-column: 4/5;

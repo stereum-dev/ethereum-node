@@ -78,7 +78,7 @@ export default {
   margin: 0 auto;
   padding: 5px;
   border-radius: 2px;
-  border:1px solid #464646;
+  border: 1px solid #464646;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,6 +114,10 @@ export default {
   align-items: center;
 }
 .current .networkIcon img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
   width: 40%;
 }
 .current .networkSelect {
@@ -173,8 +177,16 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .dropdown-parent li .networkIcon img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
   width: 30%;
   margin-left: 5px;
 }
@@ -200,14 +212,22 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #272727;
-  
+
   cursor: pointer;
 }
 .switch-network .dropdown-box .dropdown-icon {
   width: 50%;
   height: 50%;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .close-dropdown {
   transform: rotate(180deg);
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 </style>

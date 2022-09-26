@@ -418,6 +418,10 @@ export default {
 .trap-plus-icon img {
   width: 50px;
   height: 30px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .change-menu {

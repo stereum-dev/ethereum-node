@@ -323,6 +323,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 .edit-btn a {
   width: 100%;
@@ -338,6 +339,10 @@ export default {
   align-items: center;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
@@ -352,6 +357,7 @@ export default {
   height: 18px;
   background-color: transparent;
   margin-right: 10px;
+  pointer-events: none
 }
 .delete-box {
   grid-column: 1/6;
@@ -401,6 +407,7 @@ export default {
   width: 24px;
   height: 24px;
   margin-right: 5px;
+  pointer-events: none
 }
 .btn-icon {
   width: 21px;
@@ -411,6 +418,7 @@ export default {
 .btn-icon img {
   width: 21px;
   height: 21px;
+  pointer-events: none
 }
 
 .config-row {
@@ -449,6 +457,7 @@ export default {
 .testnet-icon img {
   width: 23px;
   height: 23px;
+  pointer-events: none
 }
 
 .title-box {
@@ -462,6 +471,7 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: 10px;
+  pointer-events: none
 }
 
 ::-webkit-scrollbar {
