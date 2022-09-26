@@ -6,10 +6,11 @@
           <span>TOTAL BALANCE</span>
         </div>
         <div class="time-reward-value">
-          <span>{{totalBalance}}</span>
+          <span>{{ totalBalance }}</span>
         </div>
       </div>
       <div class="proposed">
+        <comming-soon></comming-soon>
         <div class="left-side">
           <div class="proposed-title">
             <span>PROPOSED</span>
@@ -54,8 +55,8 @@
   </div>
 </template>
 <script>
-import { mapState } from 'pinia'
-import { useStakingStore } from '../../../store/theStaking'
+import { mapState } from "pinia";
+import { useStakingStore } from "../../../store/theStaking";
 
 export default {
   computed: {
@@ -63,7 +64,7 @@ export default {
       totalBalance: "totalBalance",
     }),
   },
-}
+};
 </script>
 <style scoped>
 .reward-parent {
@@ -78,6 +79,7 @@ export default {
 }
 .time-reward-box {
   width: 90%;
+  position: relative;
   height: 95%;
   background-color: #bfbfbf;
   margin: 0 auto;
@@ -109,7 +111,7 @@ export default {
   border-radius: 25px;
   box-shadow: inset 0 0 5px 1px #060606;
 }
-.time-reward .time-reward-value span{
+.time-reward .time-reward-value span {
   color: #fff;
   font-size: 10px;
   font-weight: 700;
@@ -126,6 +128,7 @@ export default {
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  position: relative;
 }
 .proposed .left-side {
   width: 95%;

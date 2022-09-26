@@ -1,5 +1,6 @@
 <template>
   <div class="dataApi-parent">
+    <comming-soon></comming-soon>
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
@@ -79,6 +80,7 @@ export default {
   border-radius: 10px;
   flex-direction: column;
   color: #c1c1c1;
+  position: relative;
 }
 
 .dialogBox {

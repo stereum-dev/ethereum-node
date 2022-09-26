@@ -68,6 +68,7 @@
                   <span>Stereum Update Configuration</span>
                 </div>
                 <div class="setting-items_btn">
+                  <comming-soon></comming-soon>
                   <select
                     name="stereum-update"
                     id="stereum-update"
@@ -83,6 +84,7 @@
                   <span>Plug-in / Service Update Configuration</span>
                 </div>
                 <div class="setting-items_btn">
+                  <comming-soon></comming-soon>
                   <select
                     name="stereum-update"
                     id="stereum-update"
@@ -185,7 +187,6 @@ export default {
   },
 
   methods: {
-    
     switchOnOff() {
       this.onOff = !this.onOff;
       if (this.onOff === false) {
@@ -276,6 +277,7 @@ export default {
   margin: 0 5%;
 }
 .setting-items_btn {
+  position: relative;
   width: 25%;
   display: flex;
   justify-content: center;

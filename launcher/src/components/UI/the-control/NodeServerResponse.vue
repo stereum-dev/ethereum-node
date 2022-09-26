@@ -1,5 +1,6 @@
 <template>
   <div class="nodeResponse_parent">
+    <comming-soon></comming-soon>
     <div class="nodeResponse_box">
       <div class="success">
         <div class="successValue">
@@ -51,6 +52,7 @@ export default {
   box-sizing: border-box;
   height: 100%;
   color: #c1c1c1;
+  position: relative;
 }
 .nodeResponse_ttl {
   width: 100%;

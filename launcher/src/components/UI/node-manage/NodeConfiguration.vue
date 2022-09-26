@@ -21,9 +21,11 @@
       </div>
       <div class="config-btns">
         <div class="config-add" @click.stop="$emit('modalPreset')">
+          <comming-soon></comming-soon>
           <span class="btn-text">ADD 1 CLICK PRESET</span>
         </div>
         <div class="config-network">
+          <comming-soon></comming-soon>
           <span class="btn-text">CHANGE NETWORK</span>
         </div>
         <div class="config-priority">
@@ -277,6 +279,7 @@ export default {
 .config-btns .config-add,
 .config-btns .config-network,
 .config-btns .config-priority {
+  position: relative;
   width: 90%;
   height: 32px;
   background-color: #292929;

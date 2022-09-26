@@ -1,5 +1,6 @@
 <template>
   <div class="alert-box">
+    <comming-soon></comming-soon>
     <div class="alert-icons">
       <div class="warning">
         <div class="yellow-warning">
@@ -84,6 +85,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
 }
 
 .alert-icons {
