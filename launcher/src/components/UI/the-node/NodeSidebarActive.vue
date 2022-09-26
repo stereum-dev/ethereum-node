@@ -1,5 +1,6 @@
 <template>
   <div class="status-box">
+    <comming-soon></comming-soon>
     <div class="warning-box">
       <div class="yellow-warning">
         <img
@@ -55,6 +56,7 @@ export default {
   margin-top: 5px;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 .status-box .warning-box {
   display: flex;

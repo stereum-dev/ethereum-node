@@ -1,5 +1,6 @@
 <template>
   <div class="nodeResponse_parent">
+    <comming-soon></comming-soon>
     <div class="nodeResponse_box">
       <div class="success">
         <div class="successValue">
@@ -35,8 +36,8 @@ export default {
   data() {
     return {
       // datas are dummy, for wire the have to change to null
-      successVal: 100,
-      lastTimeVal: 120,
+      successVal: null,
+      lastTimeVal: null,
     };
   },
 };
@@ -51,6 +52,7 @@ export default {
   box-sizing: border-box;
   height: 100%;
   color: #c1c1c1;
+  position: relative;
 }
 .nodeResponse_ttl {
   width: 100%;

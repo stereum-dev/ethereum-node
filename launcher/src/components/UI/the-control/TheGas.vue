@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       // fee value data is dummy, for wire the have to change to null
-      feeValue: 85,
+      feeValue: null,
       isGreen: false,
       isGrey: true,
     };

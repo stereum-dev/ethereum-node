@@ -148,8 +148,8 @@ export default {
 }
 .firstVlaueType {
   position: absolute;
-  top: 66.5%;
-  left: 45.6%;
+  top: 15%;
+  left: 46%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
@@ -161,8 +161,8 @@ export default {
 }
 .secondVlaueType {
   position: absolute;
-  top: 66.5%;
-  left: 54.9%;
+  top: 15%;
+  left: 76%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
