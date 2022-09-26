@@ -10,16 +10,16 @@
       <span class="name">{{ ServerName }}</span>
     </div>
     <div class="config-bg">
-      <div class="edit-btn">
-        <router-link to="/node">
-          <span>back to NODE</span>
-          <img
-            src="../../../../public/img/icon/manage-node-icons/undo1.png"
-            alt="icon"
-          />
-        </router-link>
-      </div>
       <div class="config-btns">
+        <div class="edit-btn">
+          <router-link to="/node">
+            <span>back to NODE</span>
+            <img
+              src="../../../../public/img/icon/manage-node-icons/undo1.png"
+              alt="icon"
+            />
+          </router-link>
+        </div>
         <div class="config-add" @click.stop="$emit('modalPreset')">
           <comming-soon></comming-soon>
           <span class="btn-text">ADD 1 CLICK PRESET</span>
@@ -28,13 +28,10 @@
           <comming-soon></comming-soon>
           <span class="btn-text">CHANGE NETWORK</span>
         </div>
-        <div class="config-priority">
-          <span class="btn-text">ADD PRIORITY</span>
-        </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
-          <span class="btn-text">DELETE CONFIGS</span>
+          <span class="btn-text">DELETE ALL CONFIGS</span>
           <img
             src="../../../../public/img/icon/manage-node-icons/bin.png"
             alt="icon"
@@ -141,7 +138,8 @@ export default {
   padding: 5px;
   margin-top: 1px;
   display: grid;
-  background-color: #3b3b3b;
+  background: #3a3d40;
+  border-right: 5px solid #1a1a1b;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
   justify-content: center;
@@ -154,7 +152,7 @@ export default {
   grid-column: 1;
   grid-row: 3/10;
   width: 95%;
-  height: 100%;
+  height: 96%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(9, 1fr);
@@ -269,25 +267,24 @@ export default {
 
 .config-btns {
   grid-column: 1/6;
-  grid-row: 2/5;
+  grid-row: 1/5;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
-  margin-top: 10px;
 }
 .config-btns .config-add,
-.config-btns .config-network,
-.config-btns .config-priority {
+.config-btns .config-network
+ {
   position: relative;
-  width: 90%;
-  height: 32px;
+  width: 95%;
+  height: 25%;
+  margin-top: 3%
   background-color: #292929;
   font-size: 0.7rem;
   font-weight: 700;
   color: rgb(144, 144, 144);
   border: 1px solid #787878;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -296,43 +293,25 @@ export default {
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .config-btns .config-add span,
-.config-btns .config-network span,
-.config-btns .config-priority span {
+.config-btns .config-network span {
   width: 100%;
   font-size: 0.7rem;
   font-weight: 700;
   color: rgb(147, 147, 147);
 }
 .config-btns .config-add:hover,
-.config-btns .config-network:hover,
-.config-btns .config-priority:hover {
+.config-btns .config-network:hover {
   background-color: #2c2c2c;
   border: 1px solid #a0a0a0;
   color: #a0a0a0;
   transform: scale(1.02);
 }
 .config-btns .config-add:active,
-.config-btns .config-network:active,
-.config-btns .config-priority:active {
+.config-btns .config-network:active {
   box-shadow: none;
   transform: scale(1);
 }
-.delete-box {
-  grid-column: 1/6;
-  grid-row: 6/7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.edit-btn {
-  grid-column: 1/7;
-  grid-row: 1/2;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  margin-top: 5px;
-}
+
 .edit-btn a:hover {
   background-color: #2c2c2c;
   transform: scale(1.02);
@@ -341,21 +320,33 @@ export default {
   box-shadow: none;
   transform: scale(1);
 }
+.edit-btn {
+  width: 95%;
+  height: 25%;
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
 .edit-btn a {
-  width: 90%;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   background-color: #292929;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
   border: 1px solid #787878;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .edit-btn span {
   color: rgb(249, 187, 73);
@@ -370,21 +361,29 @@ export default {
   height: 18px;
   background-color: transparent;
   margin-right: 10px;
+  pointer-events: none
 }
 .delete-box {
   grid-column: 1/6;
-  grid-row: 8;
+  grid-row: 8/9;
+  width: 95%;
+  height: 100%;
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
 }
 .delete-box .delete-btn {
-  width: 90%;
-  height: 32px;
+  width: 100%;
+  height: 100%;
   border: 1px solid #828282;
   border-radius: 8px;
   box-shadow: 0 1px 4px #373737;
   background-color: #303030;
   cursor: pointer;
   outline-style: none;
-  color: #d25353;
+  color: #c75555;
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -405,13 +404,14 @@ export default {
 .delete-box .delete-btn:active {
   transform: scale(1);
   border: 1px solid #f46969;
-  color: #ef5252;
+  color: #f04545;
   box-shadow: none;
 }
 .delete-btn img {
   width: 24px;
   height: 24px;
   margin-right: 5px;
+  pointer-events: none
 }
 .btn-icon {
   width: 21px;
@@ -422,6 +422,7 @@ export default {
 .btn-icon img {
   width: 21px;
   height: 21px;
+  pointer-events: none
 }
 
 .config-row {
@@ -460,6 +461,7 @@ export default {
 .testnet-icon img {
   width: 23px;
   height: 23px;
+  pointer-events: none
 }
 
 .title-box {
@@ -473,6 +475,7 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: 10px;
+  pointer-events: none
 }
 
 ::-webkit-scrollbar {

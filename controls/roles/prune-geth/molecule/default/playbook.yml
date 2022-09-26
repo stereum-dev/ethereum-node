@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include prune-geth"
+      include_role:
+        name: "prune-geth"
+
+#EOF

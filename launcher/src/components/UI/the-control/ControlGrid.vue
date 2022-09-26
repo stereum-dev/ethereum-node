@@ -181,22 +181,28 @@ export default {
       });
     },
     stateHandler: async function (item) {
-      item.isServicePending = true;
-      let state = "stopped";
-      if (item.state === "exited") {
-        state = "started";
-        this.isServiceOn = true;
+      item.yaml = await ControlService.getServiceYAML(
+        item.config.serviceID
+      );
+      if (!item.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
+        this.updateStates();
       }
-      try {
-        await ControlService.manageServiceState({
-          id: item.config.serviceID,
-          state: state,
-        });
-      } catch (err) {
-        console.log(state.replace("ed", "ing") + " service failed:\n", err);
-      }
-      item.isServicePending = false;
-      this.updateStates();
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;

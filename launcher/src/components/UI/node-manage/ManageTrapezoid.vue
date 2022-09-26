@@ -17,15 +17,15 @@ export default {};
 .trap-container {
   width: 98%;
   margin: 0 auto;
-  height: 145px;
-  background-color: #181818;
+  height: 130px;
+  background: #3a3d40;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .trap-box {
   width: 95%;
-  height: 84%;
+  height: 98%;
   background-color: rgb(39, 39, 39);
   display: flex;
   justify-content: center;
@@ -35,9 +35,9 @@ export default {};
 .trapezoid {
   width: 95%;
   margin-top: 5px;
-  border-bottom: 100px solid rgb(100, 100, 100);
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
+  border-bottom: 80px solid rgb(100, 100, 100);
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
   height: 0;
 }
 

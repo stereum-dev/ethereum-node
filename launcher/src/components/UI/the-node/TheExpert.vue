@@ -129,6 +129,7 @@
           <div class="toggleBox">
             <label class="switch">
               <input
+                :disabled="option.disabled"
                 type="checkbox"
                 v-model="option.changeValue"
                 name="check-button"
@@ -213,8 +214,12 @@ export default {
       this.item.yaml = await ControlService.getServiceYAML(
         this.item.config.serviceID
       );
-
       this.item.expertOptions = this.item.expertOptions.map((option) => {
+        if(this.item.yaml.includes("isPruning: true")){
+          option.disabled = true
+        }else{
+          option.disabled = false
+        }
         if (option.type === "select" || option.type === "text") {
           option.changeValue = [...this.item.yaml.match(option.pattern)][2];
         }

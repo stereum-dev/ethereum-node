@@ -99,14 +99,14 @@ export default {
   align-items: center;
 }
 .item-box {
+  width: 99%;
+  height: 160px;
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 100px);
+  grid-template-rows: repeat(2, 50%);
   row-gap: 1px;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 99%;
-  height: 100px;
   margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
@@ -145,6 +145,10 @@ export default {
 .plus-icon-box img {
   width: 17px;
   border-radius: 3px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .plus-icon-box img:hover {

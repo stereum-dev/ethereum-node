@@ -1,0 +1,48 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - stat: path=/etc/stereum/services
+    register: stereum_services_dir
+  - debug:
+      msg: "{{ stereum_services_dir }}"
+  # ufw
+  - shell: ufw status
+    register: stereum_ufw_status
+  - debug:
+      msg: "{{ stereum_ufw_status }}"
+  - assert:
+      that:
+      - stereum_ufw_status.stdout.find("9000/tcp") != -1
+      - stereum_ufw_status.stdout.find("9000/udp") != -1
+  # Lodestar api-token
+  - stat: path=/opt/app/services/4f6fe5e0-3b37-11ed-9cfd-a74cc25b5e36/lodestar/validator/validator-db/api-token.txt
+    register: api_token
+  - debug:
+      msg: "{{ api_token }}"
+  - name: Check for api-token
+    assert:
+      that:
+        - api_token.stat.exists
+  # Lodestar validator
+  - name: Lodestar validator
+    command: "docker logs stereum-4f6fe5e0-3b37-11ed-9cfd-a74cc25b5e36"
+    register: validator
+    until:
+      - validator.stdout is search('Genesis available')  # checking connection to beacon
+      - validator.stdout is search('Verified node and validator have same config')  # checking connection to beacon
+      - validator.stdout is search('REST api server keymanager bearer access token located at')
+    retries: 360
+    delay: 10
+  - shell: docker ps
+    register: stereum_docker_ps
+  - debug:
+      msg: "{{ stereum_docker_ps }}"
+  - assert:
+      that:
+      - stereum_docker_ps.stdout.find("chainsafe/lodestar") != -1
+      - stereum_docker_ps.stdout.find("9000->9000") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
+
+# EOF

@@ -64,13 +64,13 @@
             :item="item"
             v-if="gethPrunningWarningModal"
             @cancel-warning="hidePrunningWarningsModal"
-            @confirm-btn="confirmRunningGethPrunning(option)"
+            @confirm-btn="confirmRunningGethPrunning(item)"
           ></prunning-modal>
           <resync-modal
             :item="item"
             v-if="resyncWarningModal"
             @cancel-warning="hideResyncWarningsModal"
-            @confirm-btn="confirmRunningResync"
+            @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
         </div>
@@ -84,6 +84,7 @@
   </manage-trapezoid>
 </template>
 <script>
+import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -148,23 +149,26 @@ export default {
       });
     },
     stateHandler: async function (item) {
-      this.isServiceOn = false;
-      item.serviceIsPending = true;
-      let state = "stopped";
-      if (item.state === "exited") {
-        state = "started";
-        this.isServiceOn = true;
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
+      if (!item.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
+        this.updateStates();
       }
-      try {
-        await ControlService.manageServiceState({
-          id: item.config.serviceID,
-          state: state,
-        });
-      } catch (err) {
-        console.log(state.replace("ed", "ing") + " service failed:\n", err);
-      }
-      item.serviceIsPending = false;
-      this.updateStates();
     },
     openDefaultBrowser(el) {
       let url = el.linkUrl;
@@ -220,8 +224,22 @@ export default {
           }
         });
     },
-    confirmRunningGethPrunning() {
+    async confirmRunningGethPrunning(service) {
       this.gethPrunningWarningModal = false;
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Prunning";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({
+        action: "pruneGeth",
+        service: toRaw(service),
+        data: {},
+      });
     },
 
     // Resync Functions
@@ -237,8 +255,22 @@ export default {
           }
         });
     },
-    confirmRunningResync() {
+    async confirmRunningResync(data, service) {
       this.resyncWarningModal = false;
+      service.expertOptions
+        .filter((item) => {
+          return item.title === "Resync";
+        })
+        .map((item) => {
+          if (item.changeValue) {
+            item.changeValue = false;
+          }
+        });
+      await ControlService.chooseServiceAction({
+        action: "reSync",
+        service: toRaw(service),
+        data: { checkpointURL: data },
+      });
     },
   },
 };
@@ -247,6 +279,7 @@ export default {
 .showModal {
   display: none;
 }
+
 .title {
   width: auto;
   min-width: 70px;
@@ -265,20 +298,23 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 100px);
+  grid-template-rows: repeat(2, 50%);
   row-gap: 1px;
   overflow-x: hidden;
   overflow-y: auto;
   width: 99%;
-  height: 100px;
+  height: 160px;
   margin: 0 auto;
 }
+
 .item-box::-webkit-scrollbar {
   width: 1px;
 }
+
 .item-box .items {
   width: 95%;
   height: 95%;
@@ -289,6 +325,7 @@ export default {
   align-items: center;
   position: relative;
 }
+
 .item-box .items img {
   width: 48px;
   height: 48px;
@@ -296,6 +333,7 @@ export default {
   align-self: center;
   cursor: pointer;
 }
+
 .plus-icon-box {
   width: 30px;
   height: 20px;
@@ -308,9 +346,14 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+
 .plus-icon-box img {
   width: 17px;
   border-radius: 3px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 
 .plus-icon-box img:hover {
@@ -318,6 +361,7 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(27, 27, 27);
   transition-duration: 100ms;
 }
+
 .plus-icon-box img:active {
   transform: scale(1);
   box-shadow: none;
@@ -327,14 +371,17 @@ export default {
 .items img:active {
   box-shadow: none;
 }
+
 .chosen-plugin {
   border: 2px solid rgb(64, 168, 243);
   border-radius: 10px;
 }
+
 .menu-content {
   width: 100%;
   height: 100%;
 }
+
 .menu-content .power {
   width: 17px;
   height: 17px;
@@ -348,23 +395,27 @@ export default {
   z-index: 11;
   animation: power 500ms;
 }
+
 @keyframes power {
   0% {
     opacity: 0;
     top: 29%;
     left: 41%;
   }
+
   100% {
     top: 29%;
     left: 7%;
   }
 }
+
 .menu-content .power img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
+
 .menu-content .power .pending {
   width: 17px;
   height: 17px;
@@ -374,6 +425,7 @@ export default {
   z-index: 1000;
   pointer-events: none;
 }
+
 .menu-content .setting {
   width: 17px;
   height: 17px;
@@ -386,23 +438,27 @@ export default {
   top: 52%;
   animation: setting 500ms;
 }
+
 @keyframes setting {
   0% {
     opacity: 0;
     top: 52%;
     left: 42%;
   }
+
   100% {
     left: 7%;
     top: 52%;
   }
 }
+
 .menu-content .setting img {
   width: 17px;
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
+
 .menu-content .restart {
   width: 17px;
   height: 17px;
@@ -416,12 +472,14 @@ export default {
   animation: restart 500ms;
   z-index: 11;
 }
+
 @keyframes restart {
   0% {
     opacity: 0;
     top: 39%;
     left: 42%;
   }
+
   100% {
     top: 39%;
     left: 2%;

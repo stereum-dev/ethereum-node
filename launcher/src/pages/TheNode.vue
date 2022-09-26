@@ -18,6 +18,18 @@
           <journal-node></journal-node>
         </div>
         <div class="trapezoid-parent">
+          <div class="switch-network">
+            <div class="switch-network__content">
+              <div class="current">
+                <div class="networkIcon">
+                  <img :src="currentNetwork.icon" alt="icon" />
+                </div>
+                <div class="networkSelect">
+                  <span>{{ currentNetwork.name }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="modal-parent" v-if="isModalActive">
             <base-modal
               :modalItems="modalItems"
@@ -58,7 +70,7 @@
             ></plugin-zone>
           </div>
         </div>
-        <div class="service" >
+        <div class="service">
           <div class="title">SERVICE PLUGIN</div>
           <div class="service-parent">
             <node-service
@@ -71,10 +83,10 @@
             </node-service>
           </div>
         </div>
-        <div class="node-side" >
+        <div class="node-side">
           <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
         </div>
-        <div class="footer" >
+        <div class="footer">
           <div class="footer-content"></div>
         </div>
         <task-manager></task-manager>
@@ -93,6 +105,7 @@ import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
 import { useServices } from "../store/services";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
@@ -125,6 +138,9 @@ export default {
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
     }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
     ...mapWritableState(useTutorialStore, {
       steps: "steps",
     }),
@@ -134,13 +150,13 @@ export default {
     }),
   },
   mounted() {
-    this.updateConnectionStats()
+    this.updateConnectionStats();
   },
   methods: {
-   async updateConnectionStats(){
-      const stats = (await ControlService.getConnectionStats())
-      this.ServerName = stats.ServerName
-      this.ipAddress = stats.ipAddress
+    async updateConnectionStats() {
+      const stats = await ControlService.getConnectionStats();
+      this.ServerName = stats.ServerName;
+      this.ipAddress = stats.ipAddress;
     },
     showModal(data) {
       this.isModalActive = true;
@@ -183,7 +199,7 @@ export default {
   display: grid;
   width: 100%;
   height: 91%;
-  border: 4px solid #979797;
+  border: 5px solid #979797;
   border-radius: 0 35px 10px 10px;
   grid-template-columns: 20% 45% 20% 15%;
   grid-template-rows: 32% 32% 31% 5%;
@@ -245,15 +261,15 @@ export default {
   color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
-  border-radius: 0 25px 25px 10px;
+  border-right: 5px solid rgb(30, 29, 29);
+  background: #3a3d40;
 }
 .trapezoid-parent {
   width: 100%;
-  height: 100%;
-  margin-top: 1px;
+  height: 95%;
   grid-column: 2;
-  grid-row: 1/4;
-  background-color: #000000;
+  grid-row: 1/5;
+  background: #3a3d40;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -271,18 +287,21 @@ export default {
 .modal-bg {
   height: 100%;
 }
+
 .service {
-  width: 99%;
-  height: 100%;
+  width: 100%;
+  height: 95%;
   grid-column: 3;
-  grid-row: 1/4;
-  background: #334b3f;
+  grid-row: 1/5;
+  background: #3a3d40;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border: 5px solid #1a2620;
+  border-left: 5px solid #171717;
+  border-right: 5px solid #171717;
+  box-sizing: border-box;
 }
 .service-parent {
   display: flex;
@@ -297,8 +316,8 @@ export default {
 .title {
   width: 70%;
   height: 6%;
-  background: #263529;
-  border: 1px solid #2d4338;
+  background: #272827;
+  border: 1px solid #404142;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
@@ -312,6 +331,7 @@ export default {
 .trap-container {
   width: 98%;
   margin: 0 auto;
+  background: #3a3d40;
 }
 .trap-title {
   color: white;
@@ -325,11 +345,16 @@ export default {
 .trap-plus-icon img {
   width: 50px;
   height: 30px;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
 }
 .node-side {
-  grid-column: 4;
-  grid-row: 1/4;
-  height: 99.8%;
+  grid-column: 4/5;
+  grid-row: 1/5;
+  width: 100%;
+  height: 95%;
 }
 .footer {
   width: 100%;
@@ -344,5 +369,66 @@ export default {
   position: fixed;
   left: 4px;
   bottom: -1px;
+}
+.switch-network {
+  width: 95%;
+  height: 10%;
+  margin: 0 auto;
+  padding: 5px 1px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #3a3d40;
+  box-sizing: border-box;
+}
+.switch-network__content {
+  width: 98%;
+  height: 95%;
+  padding: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #272727;
+  transition-duration: 0.3s;
+}
+.current {
+  width: 98%;
+  height: 98%;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 1fr;
+}
+.current .networkIcon {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  margin-left: 4px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.current .networkIcon img {
+  width: 73%;
+}
+.current .networkSelect {
+  grid-column: 4/7;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-left: 9%;
+}
+.current .networkSelect span {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgb(128, 181, 205);
+  text-transform: uppercase;
+  margin-right: 10px;
 }
 </style>

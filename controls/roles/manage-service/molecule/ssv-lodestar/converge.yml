@@ -1,0 +1,62 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    beacon_service: c7198c08-391c-11ed-8a07-bb001d9e628d
+    ssv_service: c7b8fc8e-391c-11ed-bc41-8358d353a687
+
+  tasks:
+    # ssv service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              id: "{{ ssv_service }}"
+              service: SSVNetworkService
+              image: "bloxstaking/ssv-node:{{ stereum_static.defaults.versions.ssv_network }}"
+              ports:
+                - 0.0.0.0:12000:12000/udp
+                - 0.0.0.0:13000:13000/tcp
+              env:
+                CONFIG_PATH: /data/config.yaml
+              command: bash -c "make BUILD_PATH=/go/bin/ssvnode start-node &&
+                                docker logs ssv_node"
+              entrypoint: []
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ ssv_service }}/data:/data"
+
+    # ssv operator keys
+    - block:
+      - name: "Include ssv-key-generator"
+        include_role:
+          name: "ssv-key-generator"
+      vars:
+        ssv_key_service: "{{ ssv_service }}"
+
+    - name: Get configuration's content in variable
+      slurp:
+        src: "/etc/stereum/services/{{ ssv_service }}.yaml"
+      register: config
+      become: yes
+
+    - name: Read service's configuration
+      set_fact:
+        config_content: "{{ config.content | b64decode | from_yaml }}"
+
+    - name: Write "sk" into SSV-Service's config
+      ansible.builtin.lineinfile:
+        path: "/opt/app/services/{{ ssv_service }}/data/config.yaml"
+        regexp: '^OperatorPrivateKey:*'
+        line: 'OperatorPrivateKey: "{{ config_content.ssv_sk }}"'
+      become: yes

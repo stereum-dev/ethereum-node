@@ -29,6 +29,8 @@ jobs:
           use_vue_cli: true
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
+          windows_certs: ${{ secrets.win_certs }}
+          windows_certs_password: ${{ secrets.win_certs_password }}
 
           # release the app after building - never in this step
           release: never
@@ -43,6 +45,8 @@ jobs:
           use_vue_cli: true        
           mac_certs: ${{ secrets.mac_certs }}
           mac_certs_password: ${{ secrets.mac_certs_password }}
+          windows_certs: ${{ secrets.win_certs }}
+          windows_certs_password: ${{ secrets.win_certs_password }}
 
           # release the app after building - in case of a tag starting with v (in this case always)
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
