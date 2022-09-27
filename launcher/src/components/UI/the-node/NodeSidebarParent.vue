@@ -20,7 +20,6 @@ export default {
   border: 5px solid #1c1d1c;
   border-top-right-radius: 30px;
   display: flex;
-  padding-right: 5px;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-evenly;
