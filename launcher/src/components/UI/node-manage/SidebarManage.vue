@@ -6,7 +6,7 @@
         v-if="showSidebar"
         class="hidden-icon"
         width="88"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-hidden-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-in.png"
         alt=""
       />
       <img
@@ -14,7 +14,7 @@
         v-else
         class="show-icon"
         width="88"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-show-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-out.png"
         alt=""
       />
     </div>

@@ -13,6 +13,7 @@
           alt="icon"
           @click="pluginMenuHandler(item)"
           @dblclick="openDefaultBrowser(item)"
+          @mouseleave="mouseLeaveToHide(item)"
         />
         <plugin-menu v-if="item.displayPluginMenu">
           <div class="menu-content">
@@ -150,6 +151,11 @@ export default {
         if (item.category === el.category && item?.id === el.id)
           el.expertOptionsModal = true;
       });
+    },
+    mouseLeaveToHide(el) {
+      setTimeout(() => {
+        el.displayPluginMenu = false;
+      }, 800);
     },
   },
 };

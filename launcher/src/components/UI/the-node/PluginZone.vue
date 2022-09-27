@@ -8,6 +8,7 @@
           v-for="(item, index) in list"
           :key="index"
           ref="itemsList"
+          @mouseleave="mouseLeaveToHide(item)"
         >
           <img
             :src="item.sIcon"
@@ -15,6 +16,7 @@
             @click.self="pluginMenuHandler(item)"
             @dblclick.self="openDefaultBrowser(item)"
           />
+
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
@@ -272,6 +274,11 @@ export default {
         data: { checkpointURL: data },
       });
     },
+    mouseLeaveToHide(el) {
+      setTimeout(() => {
+        el.displayPluginMenu = false;
+      }, 800);
+    },
   },
 };
 </script>
@@ -390,7 +397,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 29%;
+  top: 23%;
   left: 7%;
   z-index: 11;
   animation: power 500ms;
@@ -399,12 +406,12 @@ export default {
 @keyframes power {
   0% {
     opacity: 0;
-    top: 29%;
+    top: 23%;
     left: 41%;
   }
 
   100% {
-    top: 29%;
+    top: 23%;
     left: 7%;
   }
 }
@@ -457,33 +464,6 @@ export default {
   height: 17px;
   border-radius: 100%;
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
-}
-
-.menu-content .restart {
-  width: 17px;
-  height: 17px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 39%;
-  left: 2%;
-  animation: restart 500ms;
-  z-index: 11;
-}
-
-@keyframes restart {
-  0% {
-    opacity: 0;
-    top: 39%;
-    left: 42%;
-  }
-
-  100% {
-    top: 39%;
-    left: 2%;
-  }
 }
 
 .menu-content .restart img {
