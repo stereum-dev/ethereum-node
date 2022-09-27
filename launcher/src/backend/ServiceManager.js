@@ -153,7 +153,7 @@ export class ServiceManager {
   }
 
   async deleteService(task){
-    
+    this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
   }
 
   async modifyServices(tasks){

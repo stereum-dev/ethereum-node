@@ -66,7 +66,7 @@ export default {
     getActions(action, service){
       let item = this.actionContents.find(item => item.content === action)
       if(item)
-        return {...item, service: service}
+        return {...item, service: toRaw(service)}
       return undefined
     },
     clickOnRemoveBtn() {
@@ -74,7 +74,7 @@ export default {
         (item) => !this.selectedItemToRemove.includes(item)
       );
       this.selectedItemToRemove.forEach(item => {
-        this.confirmChanges.push(this.getActions("DELETE",item))
+        this.confirmChanges.push(toRaw(this.getActions("DELETE",item)))
       })
       console.log(this.confirmChanges)
       this.selectedItemToRemove = [];

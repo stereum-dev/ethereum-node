@@ -1,0 +1,35 @@
+---
+- name: Read service's configuration
+  slurp:
+    src: "/etc/stereum/services/{{ service }}.yaml"
+  register: service_configuration_raw
+  become: yes
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Stop service
+  docker_container:
+    name: "stereum-{{ service }}"
+    state: absent
+    force_kill: yes
+    keep_volumes: no
+  become: yes
+
+- name: Remove Docker Image 
+  community.docker.docker_image:
+    state: absent
+    name: "{{ service_configuration.image | split(':') | first }}"
+
+- name: Remove Service Config File
+  ansible.builtin.file:
+    path: "/etc/stereum/services/{{ service }}.yaml"
+    state: absent
+
+- name: Remove Service Files
+  ansible.builtin.file:
+    path: "{{ service_configuration.volumes | select('search', service) | first | regex_search('.*' + service) }}"
+    state: absent
+
+# EOF
