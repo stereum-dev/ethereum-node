@@ -44,12 +44,13 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
+  justify-content: flex-start;
 }
-.selection-table .buttonRow:last-child {
+/*.selection-table .buttonRow:last-child {
   position: absolute;
   bottom: 2px;
   padding: 5px 8px 3px 8px;
-}
+}*/
 
 .buttonRow {
   width: 99%;
