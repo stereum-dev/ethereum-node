@@ -14,9 +14,9 @@
   border: 1px solid #343434;
   background: rgba(85, 87, 85, 0.7);
   font-weight: 600;
-  z-index: 1000;
   color: aqua;
   font-size: 70%;
   pointer-events: none;
+  z-index: 99;
 }
 </style>
