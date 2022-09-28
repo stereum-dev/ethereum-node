@@ -12,6 +12,7 @@ export const useNodeStore = defineStore("theNode", {
           id: 1,
           content: "INSTALL",
           contentIcon: require("../../public/img/icon/manage-node-icons/plus.png"),
+      
         },
         {
           id: 2,
@@ -175,26 +176,32 @@ export const useNodeStore = defineStore("theNode", {
         {
           id: 1,
           name: "First Steps!",
+          display:false,
         },
         {
           id: 2,
           name: "Stake with 32 ETH",
+          display:true,
         },
         {
           id: 3,
           name: "Use ssv.network",
+          display:true,
         },
         {
           id: 4,
           name: "Alerts on Mobile App",
+          display:false,
         },
         {
           id: 5,
           name: "Switch Clients",
+          display:false,
         },
         {
           id: 6,
           name: "Switch Machine",
+          display:false,
         },
       ],
       configData_nodeSidebarActive: [

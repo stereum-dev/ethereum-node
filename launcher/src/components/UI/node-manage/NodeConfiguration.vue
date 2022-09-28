@@ -1,13 +1,14 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <div class="details">
-        <span>Server infos</span>
+      <div class="serverBox">
+        <div class="details">
+          <span class="ipTitle">server ip:</span>
+          <span class="nameTitle">server name:</span>
+          <span class="ip">{{ ipAddress }}</span>
+          <span class="name">{{ ServerName }}</span>
+        </div>
       </div>
-      <span class="ipTitle">ip:</span>
-      <span class="nameTitle">name:</span>
-      <span class="ip">{{ ipAddress }}</span>
-      <span class="name">{{ ServerName }}</span>
     </div>
     <div class="config-bg">
       <div class="config-btns">
@@ -166,63 +167,79 @@ export default {
   width: 100%;
   height: 100%;
   padding: 20px 5px 10px 5px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.serverBox {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #606060;
+  border-radius: 10px;
 }
 .server .details {
-  grid-column: 1/6;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  width: 95%;
+  height: 85%;
+  border-radius: 8px;
+  background-color: #242529;
+  border: 1px solid #787878;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  grid-template-rows: repeat(2, 1fr);
 }
-.server .details span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(166, 165, 165);
-  text-transform: uppercase;
-}
+
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/3;
-  width: max-content;
-  height: 15px;
+  grid-row: 1/2;
+  width: 100%;
+  height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: rgb(163, 163, 163);
+  color: #959595;
   text-transform: uppercase;
-  text-align: left;
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
   align-self: center;
+  text-align: left;
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 3/4;
-  width: max-content;
-  height: 15px;
-  text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: rgb(163, 163, 163);
-  text-transform: uppercase;
-  text-align: left;
-  align-self: center;
-}
-.server .name {
-  grid-column: 2/6;
-  grid-row: 3/4;
+  grid-row: 2/3;
   width: 100%;
   height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: #8a8a8a;
+  color: #959595;
   text-transform: uppercase;
-  border: 1px solid #565656;
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  align-self: center;
+  text-align: left;
+}
+.server .name {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  width: 100%;
+  height: 90%;
   background-color: #242529;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #408886;
+  text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -231,17 +248,16 @@ export default {
   align-self: center;
 }
 .server .ip {
-  grid-column: 2/6;
-  grid-row: 2/3;
+  grid-column: 2/3;
+  grid-row: 1/2;
   width: 100%;
   height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: #8a8a8a;
+  color: #408886;
   text-transform: uppercase;
-  border: 1px solid #565656;
-  background-color: #242529;
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -249,7 +265,6 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
-
 .config-box .config-title {
   grid-column: 2/7;
   grid-row: 1;
@@ -300,24 +315,22 @@ export default {
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover {
-  background-color: #2c2c2c;
+  background-color: #161619;
   border: 1px solid #a0a0a0;
   color: #a0a0a0;
-  transform: scale(1.02);
 }
 .config-btns .config-add:active,
 .config-btns .config-network:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 
 .edit-btn a:hover {
-  background-color: #2c2c2c;
-  transform: scale(1.02);
+  background-color: #1a1a1d;
 }
 .edit-btn a:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 .edit-btn {
   width: 95%;
@@ -348,7 +361,7 @@ export default {
   -o-user-drag: none;
 }
 .edit-btn span {
-  color: rgb(249, 187, 73);
+  color: #408886;
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;

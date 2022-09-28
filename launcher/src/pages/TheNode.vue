@@ -424,13 +424,12 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: 9%;
+  margin-left: 27%;
 }
 .current .networkSelect span {
   font-size: 1.1rem;
   font-weight: 700;
-  color: rgb(128, 181, 205);
+  color: #408886;
   text-transform: uppercase;
-  margin-right: 10px;
 }
 </style>

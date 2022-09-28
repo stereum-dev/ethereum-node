@@ -6,6 +6,7 @@
         v-for="(item, index) in configData"
         :key="index"
         @click="$emit('showModal')"
+        :class="{ disabled: !item.display }"
       >
         <div class="question-icon">
           <img
@@ -13,7 +14,7 @@
             alt="question-icon"
           />
         </div>
-        <div class="row-content">
+        <div class="row-content" >
           <span>{{ item.name }}</span>
         </div>
       </div>
@@ -54,6 +55,11 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  user-select: none;
 }
 .tutorial-box {
   width: 96%;

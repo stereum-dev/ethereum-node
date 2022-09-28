@@ -225,7 +225,6 @@ export default {
       }
     },
     onDrop(event, list) {
-      console.log(list);
       const itemId = event.dataTransfer.getData("itemId");
       const item = list.find((item) => item.id == itemId);
       if (item.category === "service") {

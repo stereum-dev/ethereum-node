@@ -193,17 +193,21 @@ export default {
 }
 .task-icon .notification {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 40%;
+  top: -1px;
+  right: -1px;
+  width: 13px;
+  height: 13px;
+  max-width: 16px;
+  max-height: 16px;
+  padding: 2px;
   background-color: #ff0000;
-  border-radius: 50%;
+  border-radius: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #fff;
-  font-size: 0.5rem;
+  font-size: 0.6rem;
+  font-weight: 500;
 }
 .task-modal-box {
   width: 25%;

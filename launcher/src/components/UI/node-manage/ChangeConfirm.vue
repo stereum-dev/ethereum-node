@@ -143,23 +143,26 @@ export default {
 .table-footer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 97%;
-  height: 10%;
+  height: 5%;
   margin: 0 auto;
 }
 .table-footer span {
   color: #eee;
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 600;
 }
 .table-box {
   width: 95%;
   height: 90%;
+  background: #242529;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   margin: 2% auto;
+  padding-top: 5px;
   overflow-x: hidden;
   overflow-y: auto;
 }
@@ -168,9 +171,9 @@ export default {
 }
 .tableRow {
   width: 98%;
-  height: 12%;
+  height: 11%;
   margin: 2% auto;
-  background: #242529;
+  background: #48494f;
   border-radius: 50px;
   display: flex;
   justify-content: space-between;

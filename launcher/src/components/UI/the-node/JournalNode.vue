@@ -1,13 +1,14 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <div class="details">
-        <span>Server infos</span>
+      <div class="serverBox">
+        <div class="details">
+          <span class="ipTitle">server ip:</span>
+          <span class="nameTitle">server name:</span>
+          <span class="ip">{{ ipAddress }}</span>
+          <span class="name">{{ ServerName }}</span>
+        </div>
       </div>
-      <span class="ipTitle">ip:</span>
-      <span class="nameTitle">name:</span>
-      <span class="ip">{{ ipAddress }}</span>
-      <span class="name">{{ ServerName }}</span>
     </div>
     <div class="config-bg">
       <div class="edit-btn">
@@ -79,63 +80,79 @@ export default {
   width: 100%;
   height: 100%;
   padding: 20px 5px 10px 5px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.serverBox {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #606060;
+  border-radius: 10px;
 }
 .server .details {
-  grid-column: 1/6;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  width: 95%;
+  height: 85%;
+  border-radius: 8px;
+  background-color: #242529;
+  border: 1px solid #787878;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  grid-template-rows: repeat(2, 1fr);
 }
-.server .details span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(166, 165, 165);
-  text-transform: uppercase;
-}
+
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/3;
-  width: max-content;
-  height: 15px;
+  grid-row: 1/2;
+  width: 100%;
+  height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: rgb(163, 163, 163);
+  color: #959595;
   text-transform: uppercase;
-  text-align: left;
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
   align-self: center;
+  text-align: left;
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 3/4;
-  width: max-content;
-  height: 15px;
-  text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: rgb(163, 163, 163);
-  text-transform: uppercase;
-  text-align: left;
-  align-self: center;
-}
-.server .name {
-  grid-column: 2/6;
-  grid-row: 3/4;
+  grid-row: 2/3;
   width: 100%;
   height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: #8a8a8a;
+  color: #959595;
   text-transform: uppercase;
-  border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  align-self: center;
+  text-align: left;
+}
+.server .name {
+  grid-column: 2/3;
+  grid-row: 2/3;
+  width: 100%;
+  height: 90%;
+  background-color: #242529;
+  text-align: center;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #408886;
+  text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -144,17 +161,16 @@ export default {
   align-self: center;
 }
 .server .ip {
-  grid-column: 2/6;
-  grid-row: 2/3;
+  grid-column: 2/3;
+  grid-row: 1/2;
   width: 100%;
   height: 90%;
+  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
-  color: #8a8a8a;
+  color: #408886;
   text-transform: uppercase;
-  border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -226,17 +242,16 @@ export default {
   justify-self: center;
 }
 .edit-btn a:hover {
-  background-color: #2c2c2c;
-  transform: scale(1.02);
+  background-color: #18191c;
 }
 .edit-btn a:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(.99);
 }
 .edit-btn a {
   width: 100%;
   height: 100%;
-  background-color: #292929;
+  background-color: #242529;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
@@ -250,7 +265,7 @@ export default {
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .edit-btn span {
-  color: rgb(249, 187, 73);
+  color: #408886;
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
