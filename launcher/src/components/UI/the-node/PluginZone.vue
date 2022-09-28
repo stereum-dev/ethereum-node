@@ -310,13 +310,13 @@ export default {
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 50%);
+  grid-auto-rows:minmax(80px, auto);
   row-gap: 1px;
+  width: 99%;
+  min-height: 80px;
+  margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 99%;
-  height: 160px;
-  margin: 0 auto;
 }
 
 .item-box::-webkit-scrollbar {
