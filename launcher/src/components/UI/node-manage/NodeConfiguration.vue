@@ -275,12 +275,15 @@ export default {
 }
 .config-btns .config-add,
 .config-btns .config-network {
+  pointer-events: none !important;
+  user-select: none !important;
   position: relative;
   width: 95%;
   height: 25%;
   margin-top: 3%;
   background-color: #292929;
   font-size: 0.7rem;
+  z-index: 0;
   font-weight: 700;
   color: rgb(144, 144, 144);
   border: 1px solid #787878;
