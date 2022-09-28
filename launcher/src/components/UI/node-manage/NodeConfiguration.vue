@@ -173,11 +173,12 @@ export default {
 }
 .serverBox {
   width: 100%;
-  height: 80%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #606060;
+  box-shadow: 1px 1px 3px 1px rgb(31, 33, 37);
   border-radius: 10px;
 }
 .server .details {
@@ -188,14 +189,14 @@ export default {
   border: 1px solid #787878;
   display: grid;
   grid-template-columns: 45% 55%;
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(6, 1fr);
 }
 
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 1/2;
+  grid-row: 2/4;
   width: 100%;
-  height: 90%;
+  height: 100%;
   background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
@@ -207,14 +208,14 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  align-self: center;
+  align-self: flex-end;
   text-align: left;
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 2/3;
+  grid-row: 4/7;
   width: 100%;
-  height: 90%;
+  height: 100%;
   background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
@@ -226,15 +227,14 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  align-self: center;
+  align-self: flex-end;
   text-align: left;
 }
 .server .name {
   grid-column: 2/3;
-  grid-row: 2/3;
+  grid-row: 4/7;
   width: 100%;
-  height: 90%;
-  background-color: #242529;
+  height: 100%;
   text-align: center;
   font-size: 0.6rem;
   font-weight: 600;
@@ -249,9 +249,9 @@ export default {
 }
 .server .ip {
   grid-column: 2/3;
-  grid-row: 1/2;
+  grid-row: 2/4;
   width: 100%;
-  height: 90%;
+  height: 100%;
   background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
