@@ -38,6 +38,7 @@ export default {
           displayName: "Grafiti",
           icon: "/img/icon/the-staking/option-graffiti.png",
           method: this.grafitiBtn,
+          display:true,
         },
         {
           id: 2,
@@ -45,6 +46,7 @@ export default {
           displayName: "Remove keys",
           icon: "/img/icon/the-staking/option-remove.png",
           method: this.removeBtn,
+          display:true,
         },
         {
           id: 3,
@@ -52,6 +54,7 @@ export default {
           displayName: "change fee recipient",
           icon: "img/icon/the-staking/fee-icon2.png",
           method: this.feeBtn,
+          display:false,
         },
         {
           id: 4,
@@ -59,6 +62,7 @@ export default {
           displayName: "exit chain",
           icon: "img/icon/the-staking/redexit-icon.png",
           method: this.exitBtn,
+          display:false,
         },
       ],
       button: {},
