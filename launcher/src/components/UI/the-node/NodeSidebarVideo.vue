@@ -14,7 +14,7 @@
             alt="question-icon"
           />
         </div>
-        <div class="row-content" >
+        <div class="row-content">
           <span>{{ item.name }}</span>
         </div>
       </div>
@@ -70,8 +70,9 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-radius: 15px 15px 20px 20px;
+  border-radius: 15px;
   background-color: #2e5652;
+  margin-bottom: 9px;
 }
 .tutorial-table {
   display: flex;
