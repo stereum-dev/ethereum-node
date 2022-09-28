@@ -101,6 +101,7 @@ export default {
   },
   methods: {
     runInstalltion: async function () {
+      this.$router.push("/node");
       this.displayInstallationWarning = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       await ControlService.writeOneClickConfiguration({

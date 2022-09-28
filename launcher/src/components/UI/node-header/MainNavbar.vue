@@ -144,6 +144,9 @@ export default {
                 (service) => service.headerOption
               );
             }
+          }else{
+            this.installedServices = []
+            this.headerServices = []
           }
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services);

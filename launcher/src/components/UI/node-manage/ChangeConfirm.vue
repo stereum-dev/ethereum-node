@@ -53,6 +53,7 @@ import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
 export default {
   computed: {
     ...mapWritableState(useNodeManage, {
@@ -60,6 +61,9 @@ export default {
       selectedItemToRemove: "selectedItemToRemove",
       confirmChanges: "confirmChanges",
       actionContents: "actionContents",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
     }),
   },
   methods: {
