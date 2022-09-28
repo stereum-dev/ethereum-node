@@ -480,7 +480,7 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Prunning",
+              title: "Pruning",
               type: "action",
               action: "prunning",
               changeValue: null,
@@ -529,7 +529,7 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Prunning",
+              title: "Pruning",
               type: "action",
               action: "prunning started",
               changeValue: null,
@@ -576,7 +576,7 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Prunning",
+              title: "Pruning",
               type: "action",
               action: "prunning started",
               changeValue: null,
