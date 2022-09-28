@@ -9,7 +9,7 @@
     <div class="item-box" ref="serviceBg">
       <div v-for="(item, index) in list" :key="index" class="items">
         <img
-          :src="item.hIcon"
+          :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
           @dblclick="openDefaultBrowser(item)"

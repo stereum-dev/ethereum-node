@@ -9,7 +9,7 @@
     <div class="service-bg" ref="serviceBg">
       <div v-for="item in itemsList" :key="item.id" class="service-item">
         <img
-          :src="item.hIcon"
+          :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
           @mouseup.right="selectedItem(item)"
           @click="modifyItem(item)"
@@ -116,15 +116,17 @@ export default {
 }
 
 .service-item {
-  width: 100%;
-  height: 100%;
+  width: 65%;
+  height: 70%;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .service-item img {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 .service-item img:active {
