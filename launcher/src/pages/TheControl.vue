@@ -60,13 +60,13 @@ export default {
         // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
         const nodeStats = await ControlService.getNodeStats();
 
-        // console.log("@FRONTEND: data for wiring controls", nodeStats);
+        console.log("@FRONTEND: data for wiring controls", nodeStats);
         if (nodeStats) {
           try {
             this.code = nodeStats.code;
             this.valPeer = nodeStats.data.p2pstatus.data.valPeer;
             this.numPeer = nodeStats.data.p2pstatus.data.numPeer;
-            this.syncstatus = nodeStats.data.syncstatus.data;
+            this.syncstatus = nodeStats.data.syncstatus;
             this.storagestatus = nodeStats.data.storagestatus.data;
             this.consensusClient =
               nodeStats.data.p2pstatus.data.details.consensus.client;

@@ -8,7 +8,7 @@
         <span>SYNC STATUS</span>
       </div>
       <div class="sync-box_value">
-        <div v-for="item in syncstatus" :key="item.id" class="sync-box_row">
+        <div v-show="syncItemsShow" v-for="item in syncstatus.data" :key="item.id" class="sync-box_row">
           <div class="sync-box-row_title">
             <span>{{ item.title }}</span>
           </div>
@@ -26,6 +26,8 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
+      syncItemsShow: false,
+      syncIcoUnknown: true,
       syncIcoSituation: false,
       syncIcoError: false,
       prysm: "",
@@ -48,11 +50,15 @@ export default {
           name: "synched",
           icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
         },
+        {
+          id: 4,
+          name: "unknown",
+          icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+        },
       ],
       // syncStatusItems are dummy, for wire the have to change but the best stract. for the design is this one
     };
   },
-
   updated() {
     this.syncControler();
   },
@@ -70,44 +76,62 @@ export default {
     synchedIco() {
       return this.syncIco[2].icon;
     },
+    unknownIco() {
+      return this.syncIco[3].icon;
+    },
   },
   methods: {
     syncSituation() {
-      if (this.syncIcoSituation === false && this.syncIcoError === false) {
-        return this.synchedIco;
-      } else if (
-        this.syncIcoSituation === true &&
-        this.syncIcoError === false
-      ) {
-        return this.activeIco;
-      } else {
-        this.syncIcoError = true;
+      if(this.syncIcoUnknown){
+        return this.unknownIco;
+      }
+      if(this.syncIcoError){
         return this.errorIco;
       }
+      if(this.syncIcoSituation){
+        return this.activeIco;
+      }
+      return this.synchedIco;
     },
     syncControler() {
+      let syncItemsShow = false;
+      let syncIcoUnknown = true;
       let syncIcoError = false;
       let syncIcoSituation = false;
       let pooi = [];
-      for (let k in this.syncstatus) {
-        let lo = parseInt(this.syncstatus[k].frstVal);
-        let hi = parseInt(this.syncstatus[k].scndVal);
-        pooi[k] = pooi[k] || lo > hi ? true : false;
-        if (this.code !== 0 || !hi || !lo) {
-          syncIcoError = true;
-          break;
-        } else if (lo < hi) {
-          syncIcoSituation = true;
-          break;
+      console.log("uopdate");
+      if(this.code === 0 && this.syncstatus.code === 0 && Array.isArray(this.syncstatus.data) && this.syncstatus.data[0].hasOwnProperty("title")){
+        console.log("xxxxx",this.code,this.syncstatus.code);
+        syncItemsShow = true;
+        syncIcoUnknown = false;
+        for (let k in this.syncstatus.data) {
+          let lo = parseInt(this.syncstatus.data[k].frstVal);
+          let hi = parseInt(this.syncstatus.data[k].scndVal);
+          let st = this.syncstatus.data[k].state;
+          pooi[k] = pooi[k] || lo > hi ? true : false;
+          if (!hi || !lo) {
+            syncIcoError = true;
+            break;
+          } else if (lo < hi) {
+            syncIcoSituation = true;
+            continue; // fix #794
+          }
+        }
+        // fix: keep client values zero if prometheus is out of info ("pooi") on node start
+        let all = 0;
+        for (let k in pooi) {
+          if (pooi[k]) {
+            this.syncstatus.data[k].frstVal = 0;
+            this.syncstatus.data[k].scndVal = 0;
+            all++;
+          }
+        }
+        if(all == this.syncstatus.data.length){
+          syncIcoUnknown = true;
         }
       }
-      // fix: keep client values zero if prometheus is out of info ("pooi") on node start
-      for (let k in pooi) {
-        if (pooi[k]) {
-          this.syncstatus[k].frstVal = 0;
-          this.syncstatus[k].scndVal = 0;
-        }
-      }
+      this.syncItemsShow = syncItemsShow;
+      this.syncIcoUnknown = syncIcoUnknown;
       this.syncIcoError = syncIcoError;
       this.syncIcoSituation = syncIcoSituation;
     },
