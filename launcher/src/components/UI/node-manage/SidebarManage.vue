@@ -36,15 +36,15 @@
               />
             </div>
           </div>
-          <div
-            @dragstart="startDrag($event, item)"
-            @dblclick="$emit('addService', item)"
-            class="cloud-box"
-            v-for="item in allServices"
-            :key="item.id"
-          >
-            <img :src="item.sIcon" alt="" />
-          </div>
+          <template v-for="item in allServices" :key="item.id">
+            <div
+              @dragstart="startDrag($event, item)"
+              @dblclick="$emit('addService', item)"
+              class="cloud-box"
+            >
+              <img :src="item.sIcon" alt="" />
+            </div>
+          </template>
         </div>
         <img
           @mousedown.prevent.stop

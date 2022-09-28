@@ -1,6 +1,6 @@
 <template>
   <section id="parent">
-    <node-header id="head" onmousedown="return false"></node-header>
+    <node-header id="head" @mousedown.prevent.stop></node-header>
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
@@ -221,26 +221,41 @@ export default {
       if (event.type === "dragstart") {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("servicId", item.config.serviceID);
+        event.dataTransfer.setData("itemId", item.id);
       }
     },
     onDrop(event, list) {
-      const serviceId = event.dataTransfer.getData("servicId");
-      const item = {
-        ...list.find((item) => item.config.serviceID === serviceId),
-      };
-      this.newConfiguration.push(item);
-      item.addPanel = true;
-      this.itemToInstall = item;
-      this.displayCustomAddPanel = item.modifierPanel;
+      console.log(list);
+      const itemId = event.dataTransfer.getData("itemId");
+      const item = list.find((item) => item.id == itemId);
+      if (item.category === "service") {
+        this.newConfiguration.forEach((el) => {
+          if (el.id === item.id) {
+            return;
+          }
+        });
+      } else {
+        this.newConfiguration.push(item);
+        item.addPanel = true;
+        this.itemToInstall = item;
+        this.displayCustomAddPanel = item.modifierPanel;
+      }
     },
     addNewService(item) {
-      console.log(item.config.serviceID);
-      this.newConfiguration.push(item);
-      item.addPanel = true;
-      this.itemToInstall = item;
-      this.displayCustomAddPanel = item.addPanel;
+      if (item.category === "service") {
+        this.newConfiguration.forEach((el) => {
+          if (el.id === item.id) {
+            return;
+          }
+        });
+      } else {
+        this.newConfiguration.push(item);
+        item.addPanel = true;
+        this.itemToInstall = item;
+        this.displayCustomAddPanel = item.modifierPanel;
+      }
     },
+
     saveAddedServiceConfig() {
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;

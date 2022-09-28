@@ -1,13 +1,14 @@
 <template>
   <div class="task-parent">
-    <div
-      class="task-icon"
-      @click="taskModalHandler"
-      @mouseenter="isTaskModalActive = true"
-    >
+    <div class="task-icon" @click="taskModalHandler">
       <img :src="mainTaskIcon" alt="icon" />
+      <span class="notification">{{ displayingTasks.length }}</span>
     </div>
-    <div class="task-modal-box" v-if="isTaskModalActive">
+    <div
+      class="task-modal-box"
+      v-if="isTaskModalActive"
+      @mouseleave="this.isTaskModalActive = false"
+    >
       <div class="task-table">
         <div class="table-content">
           <div
@@ -100,9 +101,7 @@ export default {
     clearInterval(this.polling);
     clearInterval(this.refresh);
   },
-  updated() {
-    this.displayTasksTemprory();
-  },
+
   computed: {
     ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
@@ -138,20 +137,21 @@ export default {
         ).status;
       }
     },
-    displayTasksTemprory() {
-      if (this.displayingTasks.length != this.checkNewTasks.length) {
-        this.isTaskModalActive = true;
-        setTimeout(() => {
-          this.checkNewTasks = this.displayingTasks;
-        }, 10000);
-      } else {
+    taskModalHandler() {
+      if (this.isTaskModalActive) {
+        this.checkNewTasks = this.displayingTasks;
         this.isTaskModalActive = false;
+      } else {
+        this.isTaskModalActive = true;
       }
     },
-    taskModalHandler() {
-      this.showDropDownList = false;
-      this.isTaskModalActive = !this.isTaskModalActive;
+    displayTasksTemprory() {
+      this.isTaskModalActive = true;
+      setTimeout(() => {
+        this.isTaskModalActive = false;
+      }, 10000);
     },
+
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
       window.scrollTo(0, 0);
@@ -186,9 +186,24 @@ export default {
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
+  position: relative;
 }
 .task-icon img {
   width: 100%;
+}
+.task-icon .notification {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 40%;
+  background-color: #ff0000;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 0.5rem;
 }
 .task-modal-box {
   width: 25%;
