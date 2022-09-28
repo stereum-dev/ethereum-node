@@ -294,7 +294,9 @@ export default {
   width: 95%;
   height: 25%;
   margin-top: 3%;
+
   background-color: #242529;
+
   font-size: 0.7rem;
   font-weight: 700;
   color: rgb(144, 144, 144);
