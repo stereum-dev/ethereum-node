@@ -61,6 +61,7 @@
             :item="item"
             position="18.8%"
             long="54%"
+            @open-log="displayPluginLogPage"
           ></the-expert>
           <prunning-modal
             :item="item"
@@ -75,6 +76,10 @@
             @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
+          <plugin-logs
+            v-if="isPluginLogPageActive"
+            @close-log="closePluginLogsPage"
+          ></plugin-logs>
         </div>
       </div>
     </template>
@@ -92,6 +97,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
+import PluginLogs from "./PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 import PrunningModal from "./PrunningModal.vue";
 import ResyncModal from "./ResyncModal.vue";
@@ -102,6 +108,7 @@ export default {
     TheExpert,
     PrunningModal,
     ResyncModal,
+    PluginLogs,
   },
   props: {
     title: {
@@ -125,6 +132,7 @@ export default {
       isServicePending: false,
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
+      isPluginLogPageActive: false,
       options: null,
     };
   },
@@ -279,6 +287,13 @@ export default {
         el.displayPluginMenu = false;
       }, 800);
     },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
   },
 };
 </script>
@@ -310,7 +325,7 @@ export default {
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-auto-rows:minmax(80px, auto);
+  grid-auto-rows: minmax(80px, auto);
   row-gap: 1px;
   width: 99%;
   min-height: 80px;
