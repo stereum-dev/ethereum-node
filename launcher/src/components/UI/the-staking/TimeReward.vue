@@ -107,9 +107,8 @@ export default {
   width: 92%;
   height: 22px;
   margin: 0 auto 3px auto;
-  background-color: #181818;
+  background-color: #242529;
   border-radius: 25px;
-  box-shadow: inset 0 0 5px 1px #060606;
 }
 .time-reward .time-reward-value span {
   color: #fff;

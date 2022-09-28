@@ -17,7 +17,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #3a3d40;
-  border: 5px solid #1c1d1c;
+  border: 2px solid #242529b4;
   border-top-right-radius: 30px;
   display: flex;
   flex-direction: column;

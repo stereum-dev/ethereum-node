@@ -2,7 +2,7 @@
   <div class="service-container">
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -54,7 +54,7 @@
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -164,7 +164,7 @@ export default {
 .service-container {
   width: 96%;
   height: 95%;
-  background-color: #494949;
+  background: #4c4c4e;
   border-radius: 20px;
   padding: 5px;
   box-sizing: border-box;
@@ -176,7 +176,12 @@ export default {
 
 .service-arrow {
   width: 50%;
-  height: 25px;
+  height: 10%;
+  cursor: pointer;
+}
+.service-arrow:active {
+  transform: scale(0.9);
+  transition-duration: 0.1s;
 }
 
 .item-box {
@@ -188,7 +193,7 @@ export default {
   height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #707070;
+  background: #797979;
   border-radius: 20px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -212,13 +217,7 @@ export default {
   cursor: pointer;
 }
 
-.service-arrow {
-  border-radius: 50px;
-  box-shadow: 1px 2px 3px 1px rgb(63, 63, 63);
-}
-.service-arrow:active {
-  box-shadow: none;
-}
+
 .menu-content {
   width: 100%;
   height: 100%;

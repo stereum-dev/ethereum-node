@@ -1,6 +1,10 @@
 <template>
   <div class="task-parent">
-    <div class="task-icon" @click="taskModalHandler">
+    <div
+      class="task-icon"
+      @click="taskModalHandler"
+      @mouseenter="isTaskModalActive = true"
+    >
       <img :src="mainTaskIcon" alt="icon" />
     </div>
     <div class="task-modal-box" v-if="isTaskModalActive">
@@ -78,13 +82,16 @@ export default {
       refresh: null,
       Tasks: [],
       displayingTasks: [],
+      checkNewTasks: [],
     };
   },
   created() {
+    this.checkNewTasks = this.displayingTasks;
     if (this.$route.name === "TheNode") {
       this.displayTasksTemprory();
     }
   },
+
   mounted() {
     this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
     this.refresh = setInterval(this.getTasks, 1000); //refresh data
@@ -92,6 +99,9 @@ export default {
   beforeUnmount() {
     clearInterval(this.polling);
     clearInterval(this.refresh);
+  },
+  updated() {
+    this.displayTasksTemprory();
   },
   computed: {
     ...mapWritableState(useTaskManager, {
@@ -129,10 +139,14 @@ export default {
       }
     },
     displayTasksTemprory() {
-      this.isTaskModalActive = true;
-      setTimeout(() => {
+      if (this.displayingTasks.length != this.checkNewTasks.length) {
+        this.isTaskModalActive = true;
+        setTimeout(() => {
+          this.checkNewTasks = this.displayingTasks;
+        }, 10000);
+      } else {
         this.isTaskModalActive = false;
-      }, 10000);
+      }
     },
     taskModalHandler() {
       this.showDropDownList = false;
@@ -167,15 +181,14 @@ export default {
   z-index: 100;
 }
 .task-icon {
-  width: 100%;
+  width: 65%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
 }
 .task-icon img {
-  width: 60%;
-  height: 65%;
+  width: 100%;
 }
 .task-modal-box {
   width: 25%;

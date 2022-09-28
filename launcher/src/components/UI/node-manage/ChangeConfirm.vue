@@ -170,7 +170,7 @@ export default {
   width: 98%;
   height: 12%;
   margin: 2% auto;
-  background: #252729;
+  background: #242529;
   border-radius: 50px;
   display: flex;
   justify-content: space-between;

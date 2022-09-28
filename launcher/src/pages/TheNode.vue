@@ -261,7 +261,7 @@ export default {
   color: rgb(219, 219, 219);
   grid-column: 1;
   grid-row: 1/4;
-  border-right: 5px solid rgb(30, 29, 29);
+  border-right: 2px solid #242529b4;
   background: #3a3d40;
 }
 .trapezoid-parent {
@@ -299,8 +299,9 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border-left: 5px solid #171717;
-  border-right: 5px solid #171717;
+  border-left: 2px solid #24252994;
+  border-right: 2px solid #242529b4;
+  border: 2px solid #242529b4;
   box-sizing: border-box;
 }
 .service-parent {
@@ -314,15 +315,15 @@ export default {
 }
 
 .title {
-  width: 70%;
+  width: max-content;
+  min-width: 110px;
   height: 6%;
-  background: #272827;
-  border: 1px solid #404142;
+  padding: 0 20px;
+  background-color: #264744;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
-  font-size: 0.8rem;
-  box-shadow: 0 1px 3px rgb(19, 40, 31);
+  font-size: 0.7rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -387,10 +388,11 @@ export default {
   height: 95%;
   padding: 2px;
   display: flex;
+  border-radius: 5px;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: #272727;
+  background-color: #242529;
   transition-duration: 0.3s;
 }
 .current {

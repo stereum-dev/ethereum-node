@@ -77,7 +77,7 @@ export default {
   height: 10%;
   margin: 0 auto;
   padding: 5px;
-  border-radius: 2px;
+  border-radius: 5px;
   border: 1px solid #464646;
   display: flex;
   justify-content: center;
@@ -89,11 +89,12 @@ export default {
   width: 98%;
   height: 100%;
   padding: 2px;
+  border-radius: 5px 0 0 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: #272727;
+  background-color: #242529;
   transition-duration: 0.3s;
 }
 .current {
@@ -146,7 +147,6 @@ export default {
   justify-content: flex-start;
   align-items: center;
   margin-top: 2px;
-  border-radius: 2px;
   position: absolute;
   top: 10%;
   left: 2.5%;
@@ -208,10 +208,11 @@ export default {
 .switch-network .dropdown-box {
   width: 10%;
   height: 100%;
+  border-radius: 0 5px 5px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #272727;
+  background-color: #242529;
 
   cursor: pointer;
 }

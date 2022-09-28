@@ -48,9 +48,7 @@ export default {
       showTutorialModal: "showTutorialModal",
     }),
   },
-  methods: {
-
-  },
+  methods: {},
 };
 </script>
 <style scoped>
@@ -66,20 +64,18 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-radius: 20px;
-
-  background-color: #336666;
+  border-radius: 15px 15px 20px 20px;
+  background-color: #2e5652;
 }
 .tutorial-table {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 70%;
+  height: 72%;
   width: 90%;
-  border: 3px solid #232a2a;
-  border-radius: 10px;
-  background: #161b1b;
+  border-radius: 10px 10px 0 0;
+  background-color: #808080;
   overflow-x: hidden;
   overflow-y: auto;
   padding-top: 1px;
@@ -90,43 +86,43 @@ export default {
 
 .table-row {
   display: flex;
-  width: 98%;
+  width: 96%;
   height: 25px;
   margin-top: 2px;
-  background-color: #222c2c;
-  border: 2px solid #314242;
+  background-color: #242529;
+  border: 1px solid #242529;
   border-radius: 3px;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
 }
 .table-row:hover {
-  border: 2px solid #45d1ae;
+  transition-duration: 100ms;
+  transform: scale(1.03);
+  background-color: #338579;
+  border: 1px solid #235750;
 }
-.table-row:hover .question-icon {
-  border-right: 2px solid #45d1ae;
-}
+
 .question-icon {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 23%;
+  width: 15%;
+  height: 100%;
   text-align: left;
-  border-right: 2px solid #314242;
 }
 
 .question-icon img {
-  width: 60%;
-  height: 70%;
+  width: 90%;
+  height: 80%;
 }
 
 .row-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #272a2d;
   height: 100%;
-  width: 77%;
+  width: 85%;
   padding-top: 2px;
 }
 
@@ -134,7 +130,7 @@ export default {
   text-align: center;
   width: 100%;
   color: rgb(208, 208, 208);
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 800;
   overflow-x: hidden;

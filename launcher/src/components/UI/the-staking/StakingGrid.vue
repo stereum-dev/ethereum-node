@@ -88,8 +88,8 @@ export default {
 .staking-green-bg {
   width: 100%;
   height: 100%;
+  background-color: #264744;
   border-radius: 0 0 10px 10px;
-  background-color: #324b3e;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
@@ -99,9 +99,9 @@ export default {
 }
 .staking-black-bg {
   width: 99.95%;
-  height: 95%;
-  background-color: #000000;
-  border: 4px solid #979797;
+  height: 95.8%;
+  background-color: #242529;
+  border: 5px solid #979797;
   border-radius: 0 15px 10px 10px;
   position: absolute;
   bottom: 0px;

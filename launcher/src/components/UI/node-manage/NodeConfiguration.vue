@@ -139,7 +139,7 @@ export default {
   margin-top: 1px;
   display: grid;
   background: #3a3d40;
-  border-right: 5px solid #1a1a1b;
+  border-right: 2px solid #242529b4;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
   justify-content: center;
@@ -222,7 +222,7 @@ export default {
   color: #8a8a8a;
   text-transform: uppercase;
   border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
+  background-color: #242529;
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -241,7 +241,7 @@ export default {
   color: #8a8a8a;
   text-transform: uppercase;
   border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
+  background-color: #242529;
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -279,7 +279,7 @@ export default {
   width: 95%;
   height: 25%;
   margin-top: 3%;
-  background-color: #292929;
+  background-color: #242529;
   font-size: 0.7rem;
   font-weight: 700;
   color: rgb(144, 144, 144);
@@ -331,7 +331,7 @@ export default {
 .edit-btn a {
   width: 100%;
   height: 100%;
-  background-color: #292929;
+  background-color: #242529;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
@@ -379,7 +379,7 @@ export default {
   border: 1px solid #828282;
   border-radius: 8px;
   box-shadow: 0 1px 4px #373737;
-  background-color: #303030;
+  background-color: #242529;
   cursor: pointer;
   outline-style: none;
   color: #c75555;
