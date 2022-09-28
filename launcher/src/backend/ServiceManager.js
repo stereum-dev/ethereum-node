@@ -157,10 +157,14 @@ export class ServiceManager {
   }
 
   async modifyServices(tasks){
+    let done = []
     for(let task of tasks){
       switch (task.content) {
         case "DELETE":
-            await this.deleteService(task)
+            if(!done.includes(task.service.config.serviceID)){
+              await this.deleteService(task)
+              done.push(task.service.config.serviceID)
+            }
           break;
       
         default:

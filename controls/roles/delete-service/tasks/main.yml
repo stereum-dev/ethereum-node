@@ -21,6 +21,7 @@
   community.docker.docker_image:
     state: absent
     name: "{{ service_configuration.image | split(':') | first }}"
+    tag: "{{ service_configuration.image | split(':') | last }}"
 
 - name: Remove Service Config File
   ansible.builtin.file:
@@ -29,7 +30,8 @@
 
 - name: Remove Service Files
   ansible.builtin.file:
-    path: "{{ service_configuration.volumes | select('search', service) | first | regex_search('.*' + service) }}"
+    path: "{{ item | first | regex_search('.*' + service) }}"
     state: absent
+  with_items: "{{ service_configuration.volumes | select('search', service) }}"
 
 # EOF
