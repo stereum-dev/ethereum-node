@@ -100,7 +100,7 @@ export default {
       return { height: "55%" };
     },
     updateStyle() {
-      return { height: "17%" };
+      return { height: "2.5rem" };
     },
   },
   methods: {
