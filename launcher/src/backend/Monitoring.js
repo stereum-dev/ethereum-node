@@ -332,6 +332,7 @@ export class Monitoring {
           title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
           frstVal: frstVal ? frstVal : 0,
           scndVal: scndVal ? scndVal : 0,
+          type: clientType,
           state: clt.state,
         });
       });
