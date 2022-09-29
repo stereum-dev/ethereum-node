@@ -755,20 +755,24 @@ rm -rf disks &&
 rm -rf diskspeeds &&
 rm -rf diskoutput
         `);
-    let arr = serverVitals.stdout.split(/\n/);
-    const data = {
-      ServerName: arr[0],
-      totalRam: arr[1].split(" ")[0],
-      usedRam: arr[1].split(" ")[1],
-      totalDisk: parseInt(arr[2].split(" ")[0]),
-      availDisk: parseInt(arr[2].split(" ")[1]),
-      usedPerc: arr[2].split(" ")[2],
-      cpu: arr[3],
-      rx: arr[4].split(" ")[0],
-      tx: arr[4].split(" ")[1],
-      readValue: arr[5].split(" ")[1],
-      writeValue: arr[5].split(" ")[2],
-    };
-    return data;
+    try{
+      let arr = serverVitals.stdout.split(/\n/);
+      const data = {
+        ServerName: arr[0],
+        totalRam: arr[1].split(" ")[0],
+        usedRam: arr[1].split(" ")[1],
+        totalDisk: parseInt(arr[2].split(" ")[0]),
+        availDisk: parseInt(arr[2].split(" ")[1]),
+        usedPerc: arr[2].split(" ")[2],
+        cpu: arr[3],
+        rx: arr[4].split(" ")[0],
+        tx: arr[4].split(" ")[1],
+        readValue: arr[5].split(" ")[1],
+        writeValue: arr[5].split(" ")[2],
+      };
+      return data;
+    }catch(e){
+      return null;
+    }
   }
 }
