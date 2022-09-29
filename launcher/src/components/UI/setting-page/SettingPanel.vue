@@ -44,7 +44,14 @@
             <hr />
             <div class="items-box_update">
               <setting-items
-                title="Stereum Version"
+                title="Launcher Version"
+                btn-value="Coming soon"
+                is-color="alpha"
+                item-type="update"
+                id="version"
+              ></setting-items>
+              <setting-items
+                title="Node Version"
                 :btn-value="stereumUpdate.current"
                 is-color="alpha"
                 item-type="update"
@@ -263,7 +270,7 @@ export default {
   text-decoration: none;
   margin: 0.5% 0;
   border-radius: 20px;
-  height: 16%;
+  height: 2.5rem;
 }
 .setting-items_title {
   width: 60%;
@@ -277,6 +284,8 @@ export default {
   margin: 0 5%;
 }
 .setting-items_btn {
+  pointer-events: none !important;
+  user-select: none !important;
   position: relative;
   width: 25%;
   display: flex;
@@ -462,6 +471,7 @@ hr {
   align-items: center;
 }
 .items-box_update {
+  overflow-y: auto;
   width: 100%;
   height: 85%;
   display: flex;

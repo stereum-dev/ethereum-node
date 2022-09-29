@@ -1,6 +1,6 @@
 <template>
   <div class="commingsoon-parent">
-    <span>- Comming Soon -</span>
+    <span>- Coming Soon -</span>
   </div>
 </template>
 <style scoped>
