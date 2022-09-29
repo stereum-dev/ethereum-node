@@ -289,12 +289,13 @@ export default {
   align-items: center;
 }
 .config-btns .config-add,
-.config-btns .config-network {
+.config-btns .config-network
+ {
   position: relative;
   width: 95%;
   height: 25%;
   margin-top: 3%;
-  background-color: #242529;
+  background-color: #292929;
   font-size: 0.7rem;
   font-weight: 700;
   color: rgb(144, 144, 144);
@@ -373,7 +374,7 @@ export default {
   height: 18px;
   background-color: transparent;
   margin-right: 10px;
-  pointer-events: none;
+  pointer-events: none
 }
 .delete-box {
   grid-column: 1/6;
@@ -423,7 +424,7 @@ export default {
   width: 24px;
   height: 24px;
   margin-right: 5px;
-  pointer-events: none;
+  pointer-events: none
 }
 .btn-icon {
   width: 21px;
@@ -434,7 +435,7 @@ export default {
 .btn-icon img {
   width: 21px;
   height: 21px;
-  pointer-events: none;
+  pointer-events: none
 }
 
 .config-row {
@@ -473,7 +474,7 @@ export default {
 .testnet-icon img {
   width: 23px;
   height: 23px;
-  pointer-events: none;
+  pointer-events: none
 }
 
 .title-box {
@@ -487,7 +488,7 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: 10px;
-  pointer-events: none;
+  pointer-events: none
 }
 
 ::-webkit-scrollbar {
