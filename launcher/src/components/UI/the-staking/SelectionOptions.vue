@@ -1,17 +1,18 @@
 <template>
   <div class="selection-box">
     <div class="selection-table">
-      <div
-        class="buttonRow"
-        v-for="(button, index) in buttonState"
-        :key="index"
-        @click.stop="$emit('clickBtn', button)"
-      >
-        <div class="btnContent">
-          <img :src="button.icon" alt="icon" />
-          <span>{{ button.displayName }}</span>
+      <template v-for="(button, index) in buttonState" :key="index">
+        <div
+          class="buttonRow"
+          :class="{ disabled: !button.display }"
+          @click.stop="$emit('clickBtn', button)"
+        >
+          <div class="btnContent">
+            <img :src="button.icon" alt="icon" />
+            <span>{{ button.displayName }}</span>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -22,6 +23,11 @@ export default {
 };
 </script>
 <style scoped>
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+  user-select: none;
+}
 .selection-box {
   grid-column: 10/13;
   grid-row: 3/4;
@@ -29,7 +35,7 @@ export default {
   height: 95%;
   border: 4px solid #bfbfbf;
   border-radius: 10px;
-  background-color: #464a44;
+  background-color: #242529;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -91,6 +97,7 @@ export default {
 .buttonRow:hover {
   transition-duration: 100ms;
   background-color: #3d746e;
+  border-color: #3d746e;
   box-shadow: none;
 }
 .buttonRow:hover span {

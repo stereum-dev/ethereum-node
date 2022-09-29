@@ -271,8 +271,8 @@ export default {
   display: grid;
   width: 99.95%;
   height: 91%;
-  background-color: #232323;
-  border: 4px solid #979797;
+  background-color: #242529;
+  border: 5px solid #979797;
   border-radius: 10px 35px 10px 10px;
   grid-template-columns: 24% 59% 17%;
   grid-template-rows: 32% 31% 32% 5%;
