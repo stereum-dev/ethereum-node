@@ -22,7 +22,7 @@
         <img
           @mousedown.prevent.stop
           class="up-arrow"
-          src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
+          src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 0"
         />
@@ -49,7 +49,7 @@
         <img
           @mousedown.prevent.stop
           class="down-arrow"
-          src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
+          src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 1000"
         />

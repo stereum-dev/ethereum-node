@@ -2,7 +2,7 @@
   <div class="service-container" @mousedown.prevent.stop>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
+      src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -22,7 +22,7 @@
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
+      src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
