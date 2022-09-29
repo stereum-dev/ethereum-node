@@ -8,7 +8,7 @@
 .green {
   width: 100vw;
   height: 100vh;
-  background: #324b3f;
+  background-color: #264744;
   z-index: -1;
   display: flex;
   justify-content: center;

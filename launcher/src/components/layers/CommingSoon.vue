@@ -16,8 +16,7 @@
   font-weight: 600;
   color: aqua;
   font-size: 70%;
-  pointer-events: none !important;
-  user-select: none !important;
-  z-index: 1;
+  pointer-events: none;
+  z-index: 99;
 }
 </style>

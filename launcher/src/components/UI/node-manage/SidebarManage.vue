@@ -1,33 +1,28 @@
 <template>
-  <div>
+  <div @mouseleave="showSidebar = false">
     <div @click="showSidebar = !showSidebar" class="toggle-btn">
       <img
         @mousedown.prevent.stop
         v-if="showSidebar"
         class="hidden-icon"
-        width="88"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-hidden-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-in.png"
         alt=""
       />
       <img
         @mousedown.prevent.stop
         v-else
+        @mouseenter="showSidebar = true"
         class="show-icon"
-        width="88"
-        src="../../../../public/img/icon/manage-node-icons/sidebar-show-icon.png"
+        src="../../../../public/img/icon/manage-node-icons/sidebar-out.png"
         alt=""
       />
     </div>
-    <div
-      :class="{ 'run-sidebar': showSidebar }"
-      class="manage-sidebar"
-      @mouseleave="showSidebar = false"
-    >
+    <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
       <div class="plugin-box">
         <img
-          onmousedown="return false"
+          @mousedown.prevent.stop
           class="up-arrow"
-          src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
+          src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 0"
         />
@@ -35,33 +30,33 @@
           <div class="cloud-box">
             <div class="cloud-item">
               <img
-                onmousedown="return false"
+                @mousedown.prevent.stop
                 src="../../../../public/img/icon/manage-node-icons/cloud-1.png"
                 alt="icon"
               />
             </div>
           </div>
-          <div
-            @dragstart="startDrag($event, item)"
-            @dblclick="$emit('addService', item)"
-            class="cloud-box"
-            v-for="item in allServices"
-            :key="item.id"
-          >
-            <img :src="item.sIcon" alt="" />
-          </div>
+          <template v-for="item in allServices" :key="item.id">
+            <div
+              @dragstart="startDrag($event, item)"
+              @dblclick="$emit('addService', item)"
+              class="cloud-box"
+            >
+              <img :src="item.sIcon" alt="" />
+            </div>
+          </template>
         </div>
         <img
-          onmousedown="return false"
+          @mousedown.prevent.stop
           class="down-arrow"
-          src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
+          src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
           alt="icon"
           @click="$refs.pluginCol.scrollTop = 1000"
         />
       </div>
-      <div class="filter-box" onmousedown="return false">
+      <div class="filter-box">
         <input class="filter-inp" type="text" placeholder="Filter..." />
-        <div class="filter-icons">
+        <div class="filter-icons" @mousedown.prevent.stop>
           <img
             src="../../../../public/img/icon/manage-node-icons/filter-icon.png"
             alt="icon"
@@ -100,10 +95,10 @@ export default {
 <style scoped>
 .manage-sidebar {
   position: fixed;
-  top: 9%;
-  right: -200px;
-  width: 120px;
-  height: 86%;
+  top: 9.1%;
+  right: -100%;
+  width: 10%;
+  height: 90%;
   padding: 5px;
   background-color: gray;
   border-top-left-radius: 35px;
@@ -116,10 +111,10 @@ export default {
 .hidden-icon {
   position: fixed;
   top: 41%;
-  right: 93px;
+  right: 7.5%;
   height: 97px;
   width: 50px;
-  border: 2px solid rgb(47, 52, 46);
+  border: 2px solid rgb(130, 149, 126);
   border-radius: 35px;
   cursor: pointer;
   animation: sidebar 500ms linear;
@@ -144,59 +139,51 @@ export default {
 .show-icon {
   position: fixed;
   top: 41%;
-  right: -46px;
-  height: 110px;
-  width: 69px;
+  right: -1.7%;
+  height: 16%;
+  width: 3.5%;
   border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
   cursor: pointer;
 }
 
 .plugin-box {
-  padding: 0;
-  margin: 0;
-  height: 64vh;
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 auto;
   position: relative;
 }
 .plugin-box .up-arrow {
-  position: absolute;
-  top: -9px;
-  right: 10px;
-  width: 90px;
-  height: 25px;
+  width: 80%;
+  height: 8%;
   cursor: pointer;
-  border-radius: 50px;
-  box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
+  transition-duration: 100ms;
   z-index: 1;
 }
 .plugin-box .down-arrow {
-  position: absolute;
-  width: 90px;
-  height: 25px;
-  margin: 0 auto;
-  bottom: -2px;
-  right: 9px;
-  border-radius: 50px;
+  width: 80%;
+  height: 8%;
   cursor: pointer;
-  box-shadow: 0 1px 3px 1px rgb(58, 58, 58);
   z-index: 1;
   transition-duration: 100ms;
 }
-.down-arrow:hover,
-.up-arrow:hover {
-  transform: scale(1.1);
-}
+
 .down-arrow:active,
 .up-arrow:active {
-  transform: scale(1);
+  transform: scale(0.9);
 }
 .plugin-col {
-  margin: 17px auto;
-  padding: 25px 0 30px 0;
+  margin: 0 auto;
+  padding: 5px;
   width: 80%;
-  height: 100%;
+  height: 84%;
   background-color: #565656;
-  border-radius: 15px;
+  border-radius: 5px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 .plugin-col::-webkit-scrollbar {
@@ -244,36 +231,36 @@ export default {
 .filter-box {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   width: 90%;
-  height: 20%;
-  margin: 5px auto;
+  height: 15%;
+  margin: 10px auto;
 }
 .filter-box .filter-inp {
   width: 100%;
-  height: 23px;
+  height: 25%;
   padding: 0;
   padding-left: 5px;
   border: none;
   border-radius: 45px;
   outline-style: none;
   margin-top: 2px;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
 }
 .filter-icons {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  width: 100px;
-  height: 25px;
-  margin: 3px auto;
+  width: 100%;
+  height: 30%;
+  margin: 10px auto;
   padding: 1px;
   border-radius: 45px;
   background-color: #565656;
 }
 .filter-icons img {
   width: 23%;
-  height: 90%;
+  height: 85%;
 }
 </style>

@@ -13,14 +13,14 @@
 import MainNavbar from "../UI/node-header/MainNavbar.vue";
 
 export default {
-  components: {MainNavbar}
+  components: { MainNavbar },
 };
 </script>
 <style scoped>
 .main-header {
   width: 100vw;
   height: 50px;
-  background: #324b3f;
+  background-color: #264744;
   display: flex;
   justify-content: space-between;
   align-content: center;
