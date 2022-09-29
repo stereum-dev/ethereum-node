@@ -8,7 +8,7 @@
         <div class="plugins-table-bg">
           <div class="arrow-up">
             <img
-              src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
               alt=""
             />
           </div>
@@ -102,7 +102,7 @@
           </div>
           <div class="arrow-down">
             <img
-              src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
+              src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
               alt="icon"
             />
           </div>
@@ -181,9 +181,7 @@ export default {
       });
     },
     stateHandler: async function (item) {
-      item.yaml = await ControlService.getServiceYAML(
-        item.config.serviceID
-      );
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
       if (!item.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         item.serviceIsPending = true;
@@ -363,32 +361,27 @@ export default {
 .arrow-down,
 .arrow-up {
   width: 50%;
-  height: 25px;
+  height: 10%;
   margin: 5px;
-  border: 1px solid #464f4b;
-  border-radius: 15px;
-  box-shadow: 0 1px 3px 1px #3b4a43;
 }
 .arrow-up img {
   width: 100%;
   height: 100%;
+  cursor: pointer;
 }
 .arrow-down img {
   width: 100%;
   height: 100%;
+  cursor: pointer;
 }
-.arrow-down:hover,
-.arrow-up:hover {
-  border: 1px solid rgb(100, 109, 100);
-}
+
 .arrow-down:active,
 .arrow-up:active {
-  border: 1px solid rgb(85, 94, 85);
-  box-shadow: none;
+  transform: scale(0.9);
 }
 .plugins-table {
   width: 97%;
-  height: 87%;
+  height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   display: grid;

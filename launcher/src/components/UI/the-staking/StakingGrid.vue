@@ -92,7 +92,7 @@ export default {
 .staking-green-bg {
   width: 100%;
   height: 100%;
-  background-color: #264744;
+  background-color: #324B3E;
   border-radius: 0 0 10px 10px;
   display: flex;
   flex-wrap: nowrap;

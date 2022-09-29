@@ -389,7 +389,7 @@ export default {
   height: 95%;
   grid-column: 3;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;

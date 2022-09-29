@@ -9,7 +9,7 @@
 .plugins-parent {
   width: 90%;
   height: 98%;
-  background-color: #2b4035;
+  background-color: #264744;
   border-radius: 0 35px 35px 35px;
   display: flex;
   flex-direction: column;
