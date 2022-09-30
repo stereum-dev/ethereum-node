@@ -84,6 +84,7 @@
                 @resync-warning="runResyncWarning"
                 :item="item"
                 position="23.4"
+                @open-log="displayPluginLogPage"
               ></the-expert>
               <prunning-modal
                 :item="item"
@@ -98,6 +99,11 @@
                 @confirm-btn="confirmRunningResync"
               >
               </resync-modal>
+              <plugin-logs
+                :item="item"
+                v-if="isPluginLogPageActive"
+                @close-log="closePluginLogsPage"
+              ></plugin-logs>
             </div>
           </div>
           <div class="arrow-down">
@@ -127,6 +133,7 @@ import ControlPlugins from "./ControlPlugins.vue";
 import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
 import TheExpert from "../the-node/TheExpert.vue";
+import PluginLogs from "../the-node/PluginLogs.vue";
 import PrunningModal from "../the-node/PrunningModal.vue";
 import ResyncModal from "../the-node/ResyncModal.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
@@ -142,12 +149,14 @@ export default {
     TheExpert,
     PrunningModal,
     ResyncModal,
+    PluginLogs,
   },
   data() {
     return {
       powerBtnRed: false,
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
+      isPluginLogPageActive: false,
     };
   },
   create() {
@@ -259,6 +268,13 @@ export default {
     },
     confirmRunningResync() {
       this.resyncWarningModal = false;
+    },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
     },
   },
 };

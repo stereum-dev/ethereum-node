@@ -49,7 +49,13 @@
           :item="item"
           position="18.8%"
           wide="39%"
+          @open-log="displayPluginLogPage"
         ></the-expert>
+        <plugin-logs
+          :item="itemToLogs"
+          v-if="isPluginLogPageActive"
+          @close-log="closePluginLogsPage"
+        ></plugin-logs>
       </div>
     </div>
     <img
@@ -65,10 +71,11 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
+import PluginLogs from "../the-node/PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 
 export default {
-  components: { PluginMenu, TheExpert },
+  components: { PluginMenu, TheExpert, PluginLogs },
   props: {
     list: {
       type: Array,
@@ -81,6 +88,8 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      isPluginLogPageActive: false,
+      itemToLogs: {},
     };
   },
   beforeMount() {
@@ -155,7 +164,15 @@ export default {
     mouseLeaveToHide(el) {
       setTimeout(() => {
         el.displayPluginMenu = false;
-      }, 800);
+      }, 2000);
+    },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
     },
   },
 };

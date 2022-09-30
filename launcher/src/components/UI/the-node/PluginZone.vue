@@ -77,6 +77,7 @@
           >
           </resync-modal>
           <plugin-logs
+            :item="itemToLogs"
             v-if="isPluginLogPageActive"
             @close-log="closePluginLogsPage"
           ></plugin-logs>
@@ -134,6 +135,7 @@ export default {
       resyncWarningModal: false,
       isPluginLogPageActive: false,
       options: null,
+      itemToLogs: {},
     };
   },
   computed: {
@@ -285,10 +287,11 @@ export default {
     mouseLeaveToHide(el) {
       setTimeout(() => {
         el.displayPluginMenu = false;
-      }, 800);
+      }, 2000);
     },
     displayPluginLogPage(el) {
       el.expertOptionsModal = false;
+      this.itemToLogs = el;
       this.isPluginLogPageActive = true;
     },
     closePluginLogsPage() {
