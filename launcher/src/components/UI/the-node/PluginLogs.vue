@@ -21,6 +21,9 @@
             <span id="serviceVersion">{{ item.config.imageVersion }}</span>
           </div>
         </div>
+        <div class="closeBox" @click="$emit('closeLog')">
+          <img src="/img/icon/plugin-menu-icons/close12.png" alt="icon" />
+        </div>
       </div>
       <div class="logsTable">
         <div class="tableRow" v-for="(log, idx) in logs" :key="idx">
@@ -30,12 +33,20 @@
         </div>
       </div>
       <div class="logsFooter">
-        <div class="serviceId">
-          <span>{{ item.config.serviceId }}</span>
+        <div class="textBox">
+          <span>Click on the logs to copy</span>
         </div>
-        <div class="searchBox"></div>
-        <div class="closeBtn" @click="$emit('closeLog')">
-          <span>close</span>
+        <div class="searchBox">
+          <input
+            id="search"
+            type="search"
+            placeholder="Filter"
+            v-model="filteredLogs"
+          />
+        </div>
+        <div class="serviceBox">
+          <span>service id:</span>
+          <span>{{ item.config.serviceID }}</span>
         </div>
       </div>
     </div>
@@ -84,7 +95,15 @@ export default {
             "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
       ],
+      filteredLogs: "",
     };
+  },
+  watch: {
+    filterLogs: () => {
+      this.logs = this.logs.filter((el) =>
+        el.toLowerCase().includes(this.filteredLogs.toLowerCase())
+      );
+    },
   },
 };
 </script>
@@ -180,6 +199,22 @@ export default {
   justify-content: space-evenly;
   align-items: flex-start;
 }
+.logsHeader .closeBox {
+  width: 5%;
+  height: 100%;
+  padding: 0.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.logsHeader .closeBox img {
+  width: 100%;
+  height: 100%;
+}
+.logsHeader .closeBox img:active {
+  transform: scale(0.9);
+}
 .categoryBox .category,
 .categoryBox .category span {
   font-size: 0.7rem;
@@ -273,12 +308,6 @@ export default {
   justify-content: flex-start;
   align-items: center;
   white-space: normal;
-  /* overflow-x: hidden;
-  white-space: normal;
-  overflow-x: hidden;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word; */
 }
 
 .rowMsg span {
@@ -303,48 +332,65 @@ export default {
   grid-template-rows: 100%;
   align-items: center;
 }
-.logsFooter .serviceId {
-  grid-column: 2/5;
+.logsFooter .textBox {
+  grid-column: 1/4;
+  grid-row: 1/2;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-left: 1rem;
 }
-.logsFooter .serviceId span {
-  font-size: 1.2rem;
+.logsFooter .textBox span {
+  font-size: .9rem;
+  color: #d8d8d8;
   font-weight: 600;
-  color: rgb(62, 114, 116);
+  margin-left: 20%;
 }
+
 .logsFooter .searchBox {
-  grid-column: 5/11;
+  grid-column: 5/10;
+  grid-row: 1/2;
   width: 100%;
   height: 100%;
-  background-color: rgb(137, 137, 137);
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   padding-right: 1rem;
 }
-.logsFooter .closeBtn {
-  grid-column: 11/13;
-  width: 70%;
+
+.logsFooter .searchBox input {
+  width: 80%;
   height: 70%;
-  background-color: rgb(240, 96, 96);
+  background-color: #d8d8d8;
   border-radius: 5px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-}
-.closeBtn span {
+  border: none;
+  outline: none;
+  color: rgb(101, 101, 101);
   font-size: 1.2rem;
+  font-weight: 600;
+  padding: 0 0.5rem;
+}
+.logsFooter .serviceBox {
+  grid-column: 9/13;
+  grid-row: 1/2;
+  width: 97%;
+  height: 70%;
+  border: 2px solid rgb(156, 156, 156);
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.logsFooter .serviceBox span:first-child {
+  font-size: 0.8rem;
   font-weight: 700;
-  color: rgb(221, 221, 221);
   text-transform: uppercase;
+  color: #d8d8d8;
+}
+.logsFooter .serviceBox span:last-child {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d8d8d8;
 }
 </style>
