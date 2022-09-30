@@ -3,6 +3,7 @@
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
+          <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" />
           <span>PLUG-IN LOGS</span>
         </div>
         <div class="serviceDetails">
@@ -23,17 +24,8 @@
       </div>
       <div class="logsTable">
         <div class="tableRow" v-for="(log, idx) in logs" :key="idx">
-          <div class="rowDate">
-            <span>{{ log.date }}</span>
-          </div>
-          <div class="rowStatus">
-            <span>{{ log.status }}</span>
-          </div>
           <div class="rowMsg">
             <span>{{ log.message }}</span>
-          </div>
-          <div class="rowDescription">
-            <span>{{ log.description }}</span>
           </div>
         </div>
       </div>
@@ -56,95 +48,40 @@ export default {
     return {
       logs: [
         {
-          date: "Sep 29 10:39:31.116",
-          status: "INFO",
-          message: "ENR Initialised",
-          description:
-            " tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvhis is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvhis is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+          message:
+            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
       ],
     };
@@ -191,11 +128,14 @@ export default {
   height: 100%;
   color: rgb(203, 202, 202);
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   font-size: 1.5rem;
   font-weight: 600;
   margin-left: 1rem;
+}
+.logsHeader .title img {
+  width: 7%;
 }
 .logsHeader .serviceDetails {
   width: 40%;
@@ -260,8 +200,8 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-x: hidden;
   overflow-y: auto;
-  overflow-x: auto;
 }
 .logsTable::-webkit-scrollbar {
   width: 5px;
@@ -291,66 +231,67 @@ export default {
   background: transparent;
 }
 .tableRow {
-  min-width: 100%;
-  width: max-content;
-  height: 10%;
-  min-height: 30px;
+  width: 100%;
+  min-height: 35px;
   margin-top: 5px;
   padding: 2px 5px;
-  border-radius: 25px;
-  display: grid;
-  grid-template-columns: 200px 50px 250px auto;
-  grid-template-rows: 100%;
+  border-radius: 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   align-self: flex-start;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.tableRow::-webkit-scrollbar {
+  height: 5px;
+  background: transparent;
+  padding: 0 20px;
+}
+.tableRow::-webkit-scrollbar-thumb {
+  background-color: #3c6283;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0 20px;
+}
+.tableRow::-webkit-scrollbar-thumb:hover {
+  background-color: #3e78ab;
 }
 .logsTable .tableRow:nth-child(odd) {
-  background-color: #424242;
+  background-color: #4c5157;
 }
 .tableRow:nth-child(even) {
   background-color: #2d2e34;
 }
-.rowDate {
-  grid-column: 1/2;
-  grid-row: 1/2;
+.rowMsg {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  white-space: normal;
+  /* overflow-x: hidden;
+  white-space: normal;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word; */
 }
 
-.rowStatus {
-  grid-column: 2/3;
-  grid-row: 1/2;
+.rowMsg span {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-}
-.rowMsg {
-  grid-column: 3/4;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.rowDescription {
-  grid-column: 4/5;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.rowStatus span {
+  white-space: pre;
   font-size: 0.8rem;
-  font-weight: 700;
-  color: rgb(221, 221, 221);
+  font-weight: 600;
+  color: rgb(203, 202, 202);
+  margin-left: 10px;
+
 }
+
 .logsFooter {
   width: 100%;
   height: 10%;
