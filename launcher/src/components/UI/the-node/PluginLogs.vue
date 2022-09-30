@@ -124,21 +124,23 @@ export default {
   align-items: center;
 }
 .logsHeader .title {
-  width: 50%;
+  width: 45%;
   height: 100%;
   color: rgb(203, 202, 202);
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-left: 1rem;
 }
 .logsHeader .title img {
   width: 7%;
 }
+.logsHeader .title span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-left: 10px;
+}
 .logsHeader .serviceDetails {
-  width: 40%;
+  width: 55%;
   height: 100%;
   display: flex;
   justify-content: space-evenly;
@@ -146,14 +148,14 @@ export default {
   padding: 2px 5px;
 }
 .logsHeader .serviceDetails .serviceIcon {
-  width: 10%;
+  width: 7%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .logsHeader .serviceDetails img {
-  width: 90%;
+  width: 95%;
   height: 80%;
 }
 .logsHeader .serviceDetails .serviceName {
@@ -162,34 +164,35 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  text-transform: uppercase;
 }
 .serviceDetails .serviceName span {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: rgb(62, 114, 116);
-  margin-left: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgb(202, 205, 206);
+  margin-left: -5%;
 }
 .logsHeader .serviceDetails .categoryBox {
-  width: 40%;
+  width: 30%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: flex-start;
 }
 .categoryBox .category,
 .categoryBox .category span {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
-  color: rgb(62, 114, 116);
+  color: rgb(202, 205, 206);
   text-transform: uppercase;
 }
 #serviceVersion {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-align: left;
-  color: rgb(62, 114, 116);
+  color: rgb(202, 205, 206);
 }
 .logsTable {
   width: 100%;
@@ -289,7 +292,6 @@ export default {
   font-weight: 600;
   color: rgb(203, 202, 202);
   margin-left: 10px;
-
 }
 
 .logsFooter {
