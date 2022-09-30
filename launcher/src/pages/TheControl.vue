@@ -65,19 +65,19 @@ export default {
       try {
         // Get Node Stats
         this.requestQueued('getNodeStats').then((nodeStats) => {
-          // @FRONTEND - getNodeStats returns an object with 3 keys (code/info/data)
-          // code      : 0 (number!) means success all other values (including null or undefined) means error.
-          // info      : a message about the last result.
-          // data      : additional data (if available) or empty string
-          // On error, the "data" key may or may not holds additional error information.
-          // On success, each main element in the "data" key has the same 3 keys to handle errors individually!
-          // For example "data.syncstatus.{code|info|data}" or "data.p2pstatus.{code|info|data}"
-          // At the moment the following data is provided:
-          // data.syncstatus   : can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
-          // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
-          // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
-          // console.log("@FRONTEND: data for wiring controls", nodeStats);
           if (nodeStats) {
+            // @FRONTEND - getNodeStats returns an object with 3 keys (code/info/data)
+            // code      : 0 (number!) means success all other values (including null or undefined) means error.
+            // info      : a message about the last result.
+            // data      : additional data (if available) or empty string
+            // On error, the "data" key may or may not holds additional error information.
+            // On success, each main element in the "data" key has the same 3 keys to handle errors individually!
+            // For example "data.syncstatus.{code|info|data}" or "data.p2pstatus.{code|info|data}"
+            // At the moment the following data is provided:
+            // data.syncstatus   : can be used for wiring launcher/src/components/UI/the-control/SyncStatus.vue
+            // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
+            // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
+            // console.log("@FRONTEND: data for wiring controls", nodeStats);
             try {
               this.code = nodeStats.code;
               this.valPeer = nodeStats.data.p2pstatus.data.valPeer;

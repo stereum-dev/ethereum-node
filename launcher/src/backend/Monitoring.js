@@ -121,6 +121,7 @@ export class Monitoring {
           return {
             service: config.service,
             state: newState ? newState.State : "exited",
+            createdAt: newState ? newState.CreatedAt : null,
             config: {
               serviceID: config.id,
               instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
@@ -299,6 +300,7 @@ export class Monitoring {
       // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
       // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
       var data = [];
+      const utsNow = Math.floor(Date.now() / 1000);
       clientTypes.forEach(function (clientType, index) {
         let clt = '';
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
@@ -326,7 +328,7 @@ export class Monitoring {
         try{
           frstVal = results[labels[1]];
           scndVal = results[labels[0]];
-        }catch(e){}
+        }catch(e){}        
         data.push({
           id: index+1,
           title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
@@ -334,6 +336,7 @@ export class Monitoring {
           scndVal: scndVal ? scndVal : 0,
           type: clientType,
           state: clt.state,
+          uptime: clt.createdAt ? utsNow - Math.floor(new Date(clt.createdAt).getTime() / 1000) : 0,
         });
       });
 
