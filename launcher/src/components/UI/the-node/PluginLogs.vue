@@ -19,7 +19,12 @@
         </div>
       </div>
       <div class="logsFooter">
-        <span @click="$emit('closeLog')">close</span>
+        <div class="serviceId">
+          <span>876fd876sdf86fgsd8g7f6sg</span>
+        </div>
+        <div class="closeBtn" @click="$emit('closeLog')">
+          <span>close</span>
+        </div>
       </div>
     </div>
   </div>
@@ -30,11 +35,11 @@ export default {
     return {
       logs: [
         {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
+          date: "Sep 29 10:39:31.116",
+          status: "INFO",
+          message: "ENR Initialised",
           description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+            " tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
           date: "Aug 20 2021 12:00:00",
@@ -55,7 +60,21 @@ export default {
           status: "WARN",
           message: "this is a warning message",
           description:
+            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvhis is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvhis is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+        },
+        {
+          date: "Aug 20 2021 12:00:00",
+          status: "WARN",
+          message: "this is a warning message",
+          description:
             "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+        },
+        {
+          date: "Aug 20 2021 12:00:00",
+          status: "WARN",
+          message: "this is a warning message",
+          description:
+            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfva warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
         },
         {
           date: "Aug 20 2021 12:00:00",
@@ -76,21 +95,7 @@ export default {
           status: "WARN",
           message: "this is a warning message",
           description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
-        },
-        {
-          date: "Aug 20 2021 12:00:00",
-          status: "WARN",
-          message: "this is a warning message",
-          description:
-            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfv",
+            "This is a warning message,asdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfvasdfaklsv asvasfdv asfdvasdfvasfv",
         },
         {
           date: "Aug 20 2021 12:00:00",
@@ -169,37 +174,95 @@ export default {
   justify-content: flex-start;
   align-items: center;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 .logsTable::-webkit-scrollbar {
   width: 5px;
+  height: 10px;
 }
+
 .logsTable::-webkit-scrollbar-track {
   background: transparent;
 }
 .logsTable::-webkit-scrollbar-thumb {
   background-color: #32564f;
   border-radius: 10px;
+  cursor: pointer;
+}
+.logsTable::-webkit-scrollbar-thumb:horizontal {
+  background-color: #32564f;
+  border-radius: 10px;
+  cursor: pointer;
 }
 .logsTable::-webkit-scrollbar-thumb:hover {
-  background-color: #242529;
+  background-color: #4a7d73;
+}
+.logsTable::-webkit-scrollbar-thumb:hover {
+  background-color: #4a7d73;
+}
+.logsTable::-webkit-scrollbar-corner {
+  background: transparent;
 }
 .tableRow {
-  width: 100%;
+  min-width: 100%;
+  width: max-content;
   height: 10%;
   min-height: 30px;
   margin-top: 5px;
   padding: 2px 5px;
   border-radius: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 200px 50px 250px auto;
+  grid-template-rows: 100%;
+  align-self: flex-start;
 }
 .logsTable .tableRow:nth-child(odd) {
   background-color: #5a5b61;
 }
 .tableRow:nth-child(even) {
   background-color: #383a43;
+}
+.rowDate {
+  grid-column: 1/2;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.rowStatus {
+  grid-column: 2/3;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rowMsg {
+  grid-column: 3/4;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rowDescription {
+  grid-column: 4/5;
+  grid-row: 1/2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.rowStatus span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgb(221, 221, 221);
 }
 .logsFooter {
   width: 100%;
@@ -208,5 +271,22 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.logsFooter .closeBtn {
+  width: 10%;
+  height: 70%;
+  background-color: rgb(240, 96, 96);
+  border-radius: 5px;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.closeBtn span {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(221, 221, 221);
+  text-transform: uppercase;
 }
 </style>
