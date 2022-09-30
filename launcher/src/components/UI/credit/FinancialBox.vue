@@ -1,16 +1,6 @@
 <template>
   <div class="financial-box_parent">
-    <div class="type-selector">
-      <select
-        name="financial-type-info"
-        id="typeInfo"
-        v-model="contributorsRefferer"
-      >
-        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
-        <option value="runds">GRANT ROUNDS</option>
-      </select>
-    </div>
-    <div class="round-selector" v-if="socialEth_toggle">
+    <div class="round-selector">
       <select name="round" id="round" v-model="choosedRound">
         <option value="round_15">Round 15</option>
         <option value="round_14">Round 14</option>
@@ -18,53 +8,61 @@
         <option value="round_12">Round 12</option>
         <option value="round_11">Round 11</option>
         <option value="round_10">Round 10</option>
+        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
       </select>
     </div>
-    <div class="search" v-else>
+    <div class="search">
       <input
         type="search"
         placeholder="Search Contributor"
         v-model="searchPayload"
       />
     </div>
-    <div class="itemWrapper" v-if="socialEth_toggle">
-      <div
+    <div class="itemWrapper">
+      <!-- <div
         class="financial-contributor"
         v-for="item in roundAdresses"
         :key="item.name"
       >
-        <!-- <div class="id">
+         <div class="id">
         <span>#{{ index + 1 }}</span>
-      </div> -->
+      </div> 
         <div class="avatar">
           <img :src="item.avatar" />
         </div>
         <div class="name">
           <span>{{ item.name }}</span>
         </div>
-      </div>
-    </div>
-
-    <div class="itemWrapper" v-else>
-      <div class="ethAddresses" v-for="item in filteredItem" :key="item">
+      </div> -->
+      <div
+        class="ethAddresses"
+        v-for="(item, index) in filteredItem"
+        :key="index"
+      >
         <span>{{ item }}</span>
       </div>
     </div>
+
+    <!-- <div class="itemWrapper" v-else>
+      <div class="ethAddresses" v-for="item in filteredItem" :key="item">
+        <span>{{ item }}</span>
+      </div>
+    </div> -->
   </div>
 </template>
 <script>
 import { mapState } from "pinia";
 import { useFinancialStore } from "../../../store/financialCredit";
-import { useRoundsStore } from "../../../store/roundsCredit";
+import { useRoundsETHAddresses } from "../../../store/roundsETHAddresses";
 export default {
   data() {
     return {
-      contributorsRefferer: "allAddresses",
       socialEth_toggle: false,
       filteredItem: [],
       searchPayload: "",
       roundAdresses: [],
       choosedRound: "round_15",
+      test: [],
     };
   },
   computed: {
@@ -72,7 +70,7 @@ export default {
       socialAddresses: "socialAddresses",
       ethAddresses: "ethAddresses",
     }),
-    ...mapState(useRoundsStore, {
+    ...mapState(useRoundsETHAddresses, {
       round_15: "round_15",
       round_14: "round_14",
       round_13: "round_13",
@@ -82,7 +80,7 @@ export default {
     }),
 
     sortedAddresses() {
-      return this.ethAddresses.sort((a, b) => {
+      return this.roundAdresses.sort((a, b) => {
         let fa = a.toLowerCase(),
           fb = b.toLowerCase();
         if (fa < fb) {
@@ -96,14 +94,22 @@ export default {
     },
   },
   updated() {
-    this.toggleItems();
     this.roundPicker();
+    this.sortedAddresses;
   },
   created() {
+    this.roundPicker();
     this.filteredItem = this.sortedAddresses;
-    console.log(this.sortedAddresses);
   },
   watch: {
+    choosedRound: {
+      immediate: true,
+      handler(newRound, oldRound) {
+        if (newRound !== oldRound) {
+          this.filteredItem = this.sortedAddresses;
+        }
+      },
+    },
     searchPayload: function () {
       this.filteredItem = this.sortedAddresses.filter((item) =>
         item.toLowerCase().includes(this.searchPayload.toLowerCase())
@@ -132,19 +138,11 @@ export default {
         case "round_10":
           pickedRound = this.round_10;
           break;
+        case "allAddresses":
+          pickedRound = this.ethAddresses;
+          break;
       }
       this.roundAdresses = pickedRound;
-      console.log(this.roundAdresses.name);
-    },
-    filterStering(item) {
-      item.substr(substr(2, item.length - 1));
-    },
-    toggleItems() {
-      if (this.contributorsRefferer === "allAddresses") {
-        return (this.socialEth_toggle = false);
-      } else if (this.contributorsRefferer === "runds") {
-        return (this.socialEth_toggle = true);
-      }
     },
   },
 };
@@ -178,7 +176,7 @@ export default {
   align-items: center;
   position: fixed;
   top: 20%;
-  left: 67%;
+  left: 78%;
 }
 
 .itemWrapper {
