@@ -2,8 +2,13 @@
   <div class="task-parent">
     <div class="task-icon" @click="taskModalHandler">
       <img :src="mainTaskIcon" alt="icon" />
+      <span class="notification">{{ displayingTasks.length }}</span>
     </div>
-    <div class="task-modal-box" v-if="isTaskModalActive">
+    <div
+      class="task-modal-box"
+      v-if="isTaskModalActive"
+      @mouseleave="this.isTaskModalActive = false"
+    >
       <div class="task-table">
         <div class="table-content">
           <div
@@ -78,13 +83,16 @@ export default {
       refresh: null,
       Tasks: [],
       displayingTasks: [],
+      checkNewTasks: [],
     };
   },
   created() {
+    this.checkNewTasks = this.displayingTasks;
     if (this.$route.name === "TheNode") {
       this.displayTasksTemprory();
     }
   },
+
   mounted() {
     this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
     this.refresh = setInterval(this.getTasks, 1000); //refresh data
@@ -93,6 +101,7 @@ export default {
     clearInterval(this.polling);
     clearInterval(this.refresh);
   },
+
   computed: {
     ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
@@ -128,16 +137,21 @@ export default {
         ).status;
       }
     },
+    taskModalHandler() {
+      if (this.isTaskModalActive) {
+        this.checkNewTasks = this.displayingTasks;
+        this.isTaskModalActive = false;
+      } else {
+        this.isTaskModalActive = true;
+      }
+    },
     displayTasksTemprory() {
       this.isTaskModalActive = true;
       setTimeout(() => {
         this.isTaskModalActive = false;
       }, 10000);
     },
-    taskModalHandler() {
-      this.showDropDownList = false;
-      this.isTaskModalActive = !this.isTaskModalActive;
-    },
+
     openDropDown(item) {
       item.showDropDown = !item.showDropDown;
       window.scrollTo(0, 0);
@@ -167,15 +181,33 @@ export default {
   z-index: 100;
 }
 .task-icon {
-  width: 100%;
+  width: 65%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   cursor: pointer;
+  position: relative;
 }
 .task-icon img {
-  width: 60%;
-  height: 65%;
+  width: 100%;
+}
+.task-icon .notification {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 13px;
+  height: 13px;
+  max-width: 16px;
+  max-height: 16px;
+  padding: 2px;
+  background-color: #ff0000;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 500;
 }
 .task-modal-box {
   width: 25%;

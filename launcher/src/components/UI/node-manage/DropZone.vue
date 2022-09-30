@@ -1,7 +1,7 @@
 <template>
   <manage-trapezoid>
     <template #default>
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ title }} client</span>
       <div
         class="item-box"
         @dragenter.prevent
@@ -24,7 +24,7 @@
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
-        <img src="/img/icon/manage-node-icons/fullscreen1.png" alt="icon" />
+        <img src="/img/icon/manage-node-icons/fullscreen.png" alt="icon" />
       </div>
     </template>
   </manage-trapezoid>
@@ -81,33 +81,34 @@ export default {
   display: none;
 }
 .title {
-  width: auto;
+  width: max-content;
   min-width: 70px;
-  height: 20px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 3px 5px;
-  background-color: #285940;
-  border-radius: 20px;
+  height: 16%;
+  color: #d1d1d1;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 2px 1rem 0 1rem;
+  background-color: #264744;
+  border-radius: 0 15px 15px 0;
   position: absolute;
   left: 0;
-  top: -13px;
+  top: -7%;
   box-shadow: 0 1px 3px rgb(47, 47, 47);
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 .item-box {
   width: 99%;
-  height: 160px;
+  height: 80px;
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 50%);
+  grid-auto-rows:minmax(80px, auto);
   row-gap: 1px;
+  margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  margin: 0 auto;
 }
 .item-box::-webkit-scrollbar {
   width: 1px;
@@ -117,7 +118,6 @@ export default {
   height: 95%;
   border-radius: 7px;
   margin: 0 auto;
-
   display: flex;
   justify-content: center;
   align-items: center;

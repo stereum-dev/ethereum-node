@@ -14,11 +14,8 @@
       <button class="confirm-btn">CONFIRM</button>
     </div>
     <div class="table-container">
-      <div class="table-header">
-        <span>CHANGES TO CONFIRM</span>
-      </div>
       <div class="table-box">
-        <div class="table-item" v-for="item in confirmChanges" :key="item.id">
+        <div class="tableRow" v-for="item in confirmChanges" :key="item.id">
           <div class="left-icon">
             <img :src="item.contentIcon" alt="" />
           </div>
@@ -31,7 +28,9 @@
           </div>
         </div>
       </div>
-      <div class="table-footer"></div>
+      <div class="table-footer">
+        <span>CHANGES TO CONFIRM</span>
+      </div>
     </div>
     <div class="trash-box">
       <div class="trash-bg-1">
@@ -129,90 +128,85 @@ export default {
 
 .table-container {
   margin: 5px auto 0 auto;
-  width: 80%;
+  width: 90%;
   height: 45%;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
   border-radius: 15px;
-  box-shadow: 0 0 2px 1px rgb(29, 63, 53);
-  padding: 3px;
+  box-shadow: 0 1px 5px 1px rgb(37, 38, 40);
+  padding: 2px;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.table-header {
+.table-footer {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   width: 97%;
-  height: 20px;
-  background-color: #535353;
-  border: 1px solid rgb(84, 84, 84);
-  border-radius: 13px 13px 0 0;
+  height: 5%;
   margin: 0 auto;
-  position: absolute;
-  top: 1px;
-  right: 1px;
 }
-.table-header span {
+.table-footer span {
   color: #eee;
-  font-size: 0.5rem;
+  font-size: 0.6rem;
   font-weight: 600;
 }
 .table-box {
   width: 95%;
-  height: 83%;
-  margin: 0 auto;
-  background-color: #3b3a3a;
-  border-left: 2px solid gray;
-  border-right: 2px solid gray;
-  border-radius: 10px;
-  padding-top: 22px;
+  height: 90%;
+  background: #242529;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 2% auto;
+  padding-top: 5px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
-.table-item {
-  width: 95%;
-  height: 25px;
-  margin: 5px auto;
-  background-color: #1c1e1f;
+.table-box::-webkit-scrollbar {
+  width: 0.5rem;
+}
+.tableRow {
+  width: 98%;
+  height: 11%;
+  margin: 2% auto;
+  background: #48494f;
+  border-radius: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.table-item .right-icon {
+.tableRow .right-icon {
   width: 20px;
   height: 20px;
   border-radius: 100%;
 }
-.table-item .left-icon {
+.tableRow .left-icon {
   width: 20px;
   height: 20px;
-  background-color: #336666;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.table-item .right-icon img {
+.tableRow .right-icon img {
   width: 15px;
   height: 15px;
   border-radius: 100%;
 }
-.table-item .left-icon img {
+.tableRow .left-icon img {
   width: 14px;
   height: 14px;
 }
-.table-item span {
+.tableRow span {
   color: rgb(194, 191, 191);
   font-size: 8px;
   font-weight: 700;
 }
 
-.table-box img {
-  width: 90%;
-  height: 200px;
-}
+
 .trash-box {
   width: 100%;
   height: 28%;

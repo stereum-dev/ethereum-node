@@ -11,6 +11,17 @@
         <span class="serviceId">ID: {{ item.config.serviceID }}</span>
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
+        <!-- plugin logs row -->
+        <div class="logBox">
+          <img
+            class="titleIcon"
+            src="../../../../public/img/icon/plugin-menu-icons/plugin-log.png"
+            alt="icon"
+          />
+          <span class="logTitle">PLUG-IN LOGS</span>
+          <span class="openBtn" @click="$emit('openLog', item)">open</span>
+        </div>
+        <!-- expert mode row -->
         <div class="dataTitleBox" @click="openExpertMode">
           <img
             class="titleIcon"
@@ -206,8 +217,7 @@ export default {
   // },
   methods: {
     somethingIsChanged(item) {
-      if(item && item.title)
-        item.changed = true
+      if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
     },
     async readService() {
@@ -215,10 +225,10 @@ export default {
         this.item.config.serviceID
       );
       this.item.expertOptions = this.item.expertOptions.map((option) => {
-        if(this.item.yaml.includes("isPruning: true")){
-          option.disabled = true
-        }else{
-          option.disabled = false
+        if (this.item.yaml.includes("isPruning: true")) {
+          option.disabled = true;
+        } else {
+          option.disabled = false;
         }
         if (option.type === "select" || option.type === "text") {
           option.changeValue = [...this.item.yaml.match(option.pattern)][2];
@@ -268,7 +278,7 @@ export default {
       if (el.name === "Geth") {
         el.expertOptions
           .filter((item) => {
-            return item.title === "Prunning";
+            return item.title === "Pruning";
           })
           .map((item) => {
             if (item.changeValue) {
@@ -413,11 +423,59 @@ export default {
   color: #393939;
   font-size: 0.9rem;
   font-weight: 600;
+  text-transform: uppercase;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition-duration: 200ms;
+}
+.expertRow .logBox {
+  width: 100%;
+  height: 25px;
+  margin: 2px auto;
+  padding: 2px 2px 2px 20px;
+  border: 1px solid #8a8a8a;
+  border-radius: 25px;
+  background-color: #8a8a8a;
+  text-align: center;
+  color: #393939;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 100%;
+  transition-duration: 200ms;
+}
+.expertRow .logBox .logTitle {
+  width: 100%;
+  height: 100%;
+  grid-column: 5/8;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.expertRow .logBox .openBtn {
+  grid-column: 9/11;
+  grid-row: 1/2;
+  /* width: 100%;
+  height: 100%; */
+  padding-top: 2px;
+  background-color: #264744;
+  border-radius: 35px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dbdbdb;
+  cursor: pointer;
+}
+.expertRow .logBox .openBtn:hover {
+  background-color: #1a2e2a;
+}
+.expertRow .logBox .openBtn:active {
+  transform: scale(0.95);
 }
 .expertRow .selectBox {
   width: 100%;
@@ -494,7 +552,8 @@ export default {
   border: 1px solid #2d2d2d;
 }
 
-.expertRow .dataTitleBox img {
+.expertRow .dataTitleBox img,
+.expertRow .logBox img {
   width: 20px;
   height: 20px;
 }
@@ -527,6 +586,7 @@ export default {
   grid-row: 1;
   text-align: center;
   margin-left: -14px;
+  text-transform: uppercase;
 }
 .expertRow .actionBox .initiateAction {
   grid-column: 5/6;
