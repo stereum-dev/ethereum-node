@@ -98,10 +98,7 @@ export default {
   transform: scale(0.9);
   transition-duration: 0.1s;
 }
-.service-item {
-  width: 60px;
-  height: 60px;
-}
+
 .service-bg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -121,15 +118,16 @@ export default {
 }
 
 .service-item {
-  width: 100%;
-  height: 100%;
+  width: 65%;
+  height: 70%;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .service-item img {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 .service-item img:active {

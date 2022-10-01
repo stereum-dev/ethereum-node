@@ -75,11 +75,13 @@
             @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
-          <plugin-logs
-            :item="itemToLogs"
-            v-if="isPluginLogPageActive"
-            @close-log="closePluginLogsPage"
-          ></plugin-logs>
+          <Transition>
+            <plugin-logs
+              :item="itemToLogs"
+              v-if="isPluginLogPageActive"
+              @close-log="closePluginLogsPage"
+            ></plugin-logs>
+          </Transition>
         </div>
       </div>
     </template>
@@ -501,5 +503,14 @@ export default {
 .menu-content .restart img:active,
 .menu-content .power img:active {
   transform: scale(1);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

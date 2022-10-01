@@ -96,20 +96,22 @@
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <img
-            class="buttonOff"
-            src="/img/icon/plugin-menu-icons/confirm.png"
-            alt="icon"
-            v-if="option.buttonState"
-            @click="buttonOff(option)"
-          />
-          <img
-            class="buttonOn"
-            src="/img/icon/plugin-menu-icons/edit2.png"
-            alt="icon"
-            v-else
-            @click="buttonOn(option)"
-          />
+          <Transition name="slide-up">
+            <img
+              class="buttonOff"
+              src="/img/icon/plugin-menu-icons/confirm.png"
+              alt="icon"
+              v-if="option.buttonState"
+              @click="buttonOff(option)"
+            />
+            <img
+              class="buttonOn"
+              src="/img/icon/plugin-menu-icons/edit2.png"
+              alt="icon"
+              v-else
+              @click="buttonOn(option)"
+            />
+          </Transition>
           <input
             class="toggleTextInput"
             type="text"
@@ -912,5 +914,19 @@ input:checked + .slider:before {
   align-self: flex-end;
   justify-self: flex-start;
   text-align: center;
+}
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>
