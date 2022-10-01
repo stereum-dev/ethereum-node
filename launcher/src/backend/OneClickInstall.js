@@ -171,7 +171,8 @@ export class OneClickInstall {
       ports = [
         new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
         new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
+        new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
+        new ServicePort('127.0.0.1', 3500, 3500, servicePortProtocol.tcp)
       ]
       this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], checkpointURL)
     }
