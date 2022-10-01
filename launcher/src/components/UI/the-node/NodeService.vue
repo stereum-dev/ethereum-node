@@ -12,7 +12,7 @@
           :src="item.hIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
-          @dblclick="openDefaultBrowser(item)"
+          @dblclick="displayPluginLogPage(item)"
           @mouseleave="mouseLeaveToHide(item)"
         />
         <plugin-menu v-if="item.displayPluginMenu">
@@ -49,7 +49,6 @@
           :item="item"
           position="18.8%"
           wide="39%"
-          @open-log="displayPluginLogPage"
         ></the-expert>
         <plugin-logs
           :item="itemToLogs"
@@ -147,10 +146,12 @@ export default {
       el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
-      this.list.map((i) => {
-        if (i?.id === el.id && i?.name === el.name)
-          el.displayPluginMenu = !el.displayPluginMenu;
-      });
+      setTimeout(() => {
+        this.list.map((i) => {
+          if (i?.id === el.id && i?.name === el.name)
+            el.displayPluginMenu = !el.displayPluginMenu;
+        });
+      }, 300);
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;

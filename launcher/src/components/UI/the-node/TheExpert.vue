@@ -18,8 +18,8 @@
             src="../../../../public/img/icon/plugin-menu-icons/plugin-log.png"
             alt="icon"
           />
-          <span class="logTitle">PLUG-IN LOGS</span>
-          <span class="openBtn" @click="$emit('openLog', item)">open</span>
+          <span class="logTitle">PLUG-IN DOC</span>
+          <span class="openBtn">open</span>
         </div>
         <!-- expert mode row -->
         <div class="dataTitleBox" @click="openExpertMode">

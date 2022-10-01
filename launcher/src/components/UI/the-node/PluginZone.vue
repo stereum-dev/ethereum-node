@@ -13,8 +13,8 @@
           <img
             :src="item.sIcon"
             alt="icon"
-            @click.self="pluginMenuHandler(item)"
-            @dblclick.self="openDefaultBrowser(item)"
+            @click="pluginMenuHandler(item)"
+            @dblclick.self="displayPluginLogPage(item)"
           />
 
           <plugin-menu v-if="item.displayPluginMenu">
@@ -61,7 +61,6 @@
             :item="item"
             position="18.8%"
             long="54%"
-            @open-log="displayPluginLogPage"
           ></the-expert>
           <prunning-modal
             :item="item"
@@ -193,7 +192,7 @@ export default {
           if (item?.category === el.category && item?.id === el.id)
             el.displayPluginMenu = !el.displayPluginMenu;
         });
-      }, 100);
+      }, 300);
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;

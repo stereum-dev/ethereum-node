@@ -143,7 +143,7 @@ export default {
   align-items: center;
 }
 .logsHeader .title {
-  width: 45%;
+  width: 60%;
   height: 100%;
   color: rgb(203, 202, 202);
   display: flex;
@@ -151,7 +151,7 @@ export default {
   align-items: center;
 }
 .logsHeader .title img {
-  width: 7%;
+  width: 5%;
 }
 .logsHeader .title span {
   font-size: 1.5rem;
@@ -159,26 +159,26 @@ export default {
   margin-left: 10px;
 }
 .logsHeader .serviceDetails {
-  width: 55%;
+  width: 40%;
   height: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
   padding: 2px 5px;
 }
 .logsHeader .serviceDetails .serviceIcon {
-  width: 7%;
-  height: 100%;
+  width: 9%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .logsHeader .serviceDetails img {
   width: 95%;
-  height: 80%;
 }
 .logsHeader .serviceDetails .serviceName {
-  width: 50%;
+  min-width:180px;
+  width: max-content;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -189,15 +189,16 @@ export default {
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(202, 205, 206);
-  margin-left: -5%;
+  margin-left: 3%;
 }
 .logsHeader .serviceDetails .categoryBox {
-  width: 30%;
+  width: 40%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: flex-start;
+  margin-left: 3%;
 }
 .logsHeader .closeBox {
   width: 5%;
@@ -222,12 +223,15 @@ export default {
   text-align: left;
   color: rgb(202, 205, 206);
   text-transform: uppercase;
+
 }
 #serviceVersion {
-  font-size: 0.8rem;
+  width: max-content;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
   color: rgb(202, 205, 206);
+
 }
 .logsTable {
   width: 100%;
@@ -273,7 +277,7 @@ export default {
   min-height: 35px;
   margin-top: 5px;
   padding: 2px 5px;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -342,7 +346,7 @@ export default {
   align-items: center;
 }
 .logsFooter .textBox span {
-  font-size: .9rem;
+  font-size: 0.9rem;
   color: #d8d8d8;
   font-weight: 600;
   margin-left: 20%;
@@ -384,13 +388,13 @@ export default {
 }
 .logsFooter .serviceBox span:first-child {
   font-size: 0.8rem;
-  font-weight: 700;
+  font-weight: 500;
   text-transform: uppercase;
-  color: #d8d8d8;
+  color: #c4c4c4;
 }
 .logsFooter .serviceBox span:last-child {
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 400;
   color: #d8d8d8;
 }
 </style>
