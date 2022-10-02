@@ -46,6 +46,9 @@ export default {
           this.results = results;
         });
     },
+    issues() {
+      fetch('')
+    }
   },
 };
 </script>

@@ -66,8 +66,8 @@ export default {
   data() {
     return {
       financial: false,
-      financialIco: ".//public/img/icon/credit/creditIcon.png",
-      technikalIco: ".//public/img/icon/credit/technikal.png",
+      financialIco: "./img/icon/credit/creditFinancial.png",
+      technikalIco: "./img/icon/credit/creditTechnik.png",
     };
   },
 
@@ -115,12 +115,12 @@ export default {
 .desc-line-button_ico {
   display: flex;
   height: 90%;
-  width: 20%;
+  width: 30%;
   justify-content: center;
   align-items: center;
 }
 .desc-line-button_ico img {
-  width: 40%;
+  width: 30%;
 }
 .credit-panel_parent {
   display: flex;
