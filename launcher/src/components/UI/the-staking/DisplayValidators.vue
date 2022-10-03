@@ -51,9 +51,8 @@
                 }}</span
               >
               <img
-                v-if="Object.keys(this.selectedService).length"
                 class="service-icon"
-                :src="selectedService.icon"
+                :src="item.icon"
                 alt="icon"
               />
               <span class="since">{{ item.activeSince }}</span>

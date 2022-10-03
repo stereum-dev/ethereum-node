@@ -3,10 +3,14 @@
     <div class="clickOutside" @click="$emit('clickOut')" v-if="clickBg"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
-        <div class="stereumUpdates-title">
-          <span class="title">Stereum updates</span>
-          <span class="description">Updates for the Launcher & Node </span>
+        <div class="launcherUpdate">
+          <span class="title">launcher updates</span>
+          <div class="launcherBox">
+            <span class="currentLauncher">current:</span>
+            <span class="valueLauncher">ALPHA</span>
+          </div>
         </div>
+        <span class="nodeUpdate-title">node updates</span>
         <div class="stereum-updateBox">
           <div class="versionBox">
             <div id="current">
@@ -228,7 +232,15 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.stereumUpdates-title,
+.nodeUpdate-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #c6c6c6;
+  margin-left: 15px;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+.launcherUpdate,
 .serviceUpdates-title {
   width: 100%;
   height: 50px;
@@ -237,7 +249,7 @@ export default {
   justify-content: center;
   align-items: flex-start;
 }
-.stereumUpdates-title .title,
+.launcherUpdate .title,
 .serviceUpdates-title .title {
   font-size: 1.2rem;
   font-weight: 800;
@@ -251,6 +263,34 @@ export default {
   font-weight: 400;
   color: #9f9f9f;
   margin-left: 15px;
+}
+
+.launcherBox {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.launcherBox .currentLauncher {
+  width: 17%;
+  margin-left: 15px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #c6c6c6;
+  align-self: center;
+}
+.launcherBox .valueLauncher {
+  width: max-content;
+  font-size: 0.8rem;
+  font-weight: 400;
+  margin-left: 33px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #b4b443;
+  text-align: left;
 }
 .stereum-updateBox {
   width: 94%;
@@ -516,7 +556,7 @@ export default {
 
 .service-updateBox {
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   justify-content: center;
   align-self: center;
@@ -537,7 +577,7 @@ export default {
 }
 .service-updateBox .availableTable .tableHeader {
   width: 100%;
-  height: 9%;
+  height: 11%;
   background-color: #356262;
   border-radius: 3px;
   padding: 2px;

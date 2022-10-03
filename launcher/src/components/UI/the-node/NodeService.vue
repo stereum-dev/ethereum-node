@@ -2,7 +2,7 @@
   <div class="service-container">
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -12,7 +12,7 @@
           :src="item.hIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
-          @dblclick="openDefaultBrowser(item)"
+          @dblclick="displayPluginLogPage(item)"
           @mouseleave="mouseLeaveToHide(item)"
         />
         <plugin-menu v-if="item.displayPluginMenu">
@@ -50,11 +50,18 @@
           position="18.8%"
           wide="39%"
         ></the-expert>
+        <Transition>
+          <plugin-logs
+            :item="itemToLogs"
+            v-if="isPluginLogPageActive"
+            @close-log="closePluginLogsPage"
+          ></plugin-logs>
+        </Transition>
       </div>
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -65,10 +72,11 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
+import PluginLogs from "../the-node/PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 
 export default {
-  components: { PluginMenu, TheExpert },
+  components: { PluginMenu, TheExpert, PluginLogs },
   props: {
     list: {
       type: Array,
@@ -81,6 +89,8 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      isPluginLogPageActive: false,
+      itemToLogs: {},
     };
   },
   beforeMount() {
@@ -138,10 +148,12 @@ export default {
       el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
-      this.list.map((i) => {
-        if (i?.id === el.id && i?.name === el.name)
-          el.displayPluginMenu = !el.displayPluginMenu;
-      });
+      setTimeout(() => {
+        this.list.map((i) => {
+          if (i?.id === el.id && i?.name === el.name)
+            el.displayPluginMenu = !el.displayPluginMenu;
+        });
+      }, 300);
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;
@@ -155,7 +167,15 @@ export default {
     mouseLeaveToHide(el) {
       setTimeout(() => {
         el.displayPluginMenu = false;
-      }, 800);
+      }, 2000);
+    },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
     },
   },
 };
@@ -216,7 +236,6 @@ export default {
   height: 100%;
   cursor: pointer;
 }
-
 
 .menu-content {
   width: 100%;
@@ -330,5 +349,14 @@ export default {
 .menu-content .restart img:active,
 .menu-content .power img:active {
   transform: scale(1);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="searchOptions">
+  <div class="searchOptions" @mousedown.prevent.stop>
     <img
       class="rename"
       src="../../../../public/img/icon/the-staking/rename-icon.png"

@@ -96,7 +96,7 @@ export default {
   width: 96%;
   height: 25px;
   margin-top: 2px;
-  background-color: #242529;
+  background-color: #2d3134;
   border: 1px solid #242529;
   border-radius: 3px;
   justify-content: space-between;

@@ -3,8 +3,8 @@
     <div class="server">
       <div class="serverBox">
         <div class="details">
-          <span class="ipTitle">server ip:</span>
-          <span class="nameTitle">server name:</span>
+          <span class="ipTitle">server ip</span>
+          <span class="nameTitle">server name</span>
           <span class="ip">{{ ipAddress }}</span>
           <span class="name">{{ ServerName }}</span>
         </div>
@@ -32,9 +32,9 @@
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
-          <span class="btn-text">DELETE ALL CONFIGS</span>
+          <span class="btn-text">NUKE NODE</span>
           <img
-            src="../../../../public/img/icon/manage-node-icons/bin.png"
+            src="../../../../public/img/icon/manage-node-icons/nuke.png"
             alt="icon"
           />
         </div>
@@ -139,7 +139,7 @@ export default {
   padding: 5px;
   margin-top: 1px;
   display: grid;
-  background: #3a3d40;
+  background: #33393e;
   border-right: 2px solid #242529b4;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
@@ -177,18 +177,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #606060;
-  box-shadow: 1px 1px 3px 1px rgb(31, 33, 37);
+  background-color: #2d3134;
   border-radius: 10px;
 }
 .server .details {
   width: 95%;
   height: 85%;
   border-radius: 8px;
-  background-color: #242529;
-  border: 1px solid #787878;
   display: grid;
-  grid-template-columns: 45% 55%;
+  grid-template-columns: 40% 60%;
   grid-template-rows: repeat(6, 1fr);
 }
 
@@ -197,11 +194,10 @@ export default {
   grid-row: 2/4;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #959595;
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -213,14 +209,13 @@ export default {
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 4/7;
+  grid-row: 4/6;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #959595;
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -232,13 +227,13 @@ export default {
 }
 .server .name {
   grid-column: 2/3;
-  grid-row: 4/7;
+  grid-row: 4/6;
   width: 100%;
   height: 100%;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #408886;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -252,11 +247,10 @@ export default {
   grid-row: 2/4;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #408886;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -289,7 +283,6 @@ export default {
   align-items: center;
 }
 .config-btns .config-add,
-
 .config-btns .config-network {
   pointer-events: none !important;
   user-select: none !important;
@@ -330,7 +323,7 @@ export default {
 }
 
 .edit-btn a:hover {
-  background-color: #1a1a1d;
+  background-color: #18191c;
 }
 .edit-btn a:active {
   box-shadow: none;
@@ -338,8 +331,8 @@ export default {
 }
 .edit-btn {
   width: 95%;
-  height: 25%;
-  margin-top: 3%;
+  height: 23.5%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -377,7 +370,7 @@ export default {
   height: 18px;
   background-color: transparent;
   margin-right: 10px;
-  pointer-events: none
+  pointer-events: none;
 }
 .delete-box {
   grid-column: 1/6;
@@ -399,7 +392,7 @@ export default {
   background-color: #242529;
   cursor: pointer;
   outline-style: none;
-  color: #c75555;
+  color: #c52e2e;
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -407,7 +400,7 @@ export default {
   align-items: center;
 }
 .btn-text {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .router-box .btn-text {
   text-decoration: none;
@@ -420,14 +413,14 @@ export default {
 .delete-box .delete-btn:active {
   transform: scale(1);
   border: 1px solid #f46969;
-  color: #f04545;
+  color: #ff1f1f;
   box-shadow: none;
 }
 .delete-btn img {
   width: 24px;
   height: 24px;
   margin-right: 5px;
-  pointer-events: none
+  pointer-events: none;
 }
 .btn-icon {
   width: 21px;
@@ -438,7 +431,7 @@ export default {
 .btn-icon img {
   width: 21px;
   height: 21px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 .config-row {
@@ -477,7 +470,7 @@ export default {
 .testnet-icon img {
   width: 23px;
   height: 23px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 .title-box {
@@ -491,7 +484,7 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: 10px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 ::-webkit-scrollbar {

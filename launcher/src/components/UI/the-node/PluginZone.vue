@@ -13,8 +13,8 @@
           <img
             :src="item.sIcon"
             alt="icon"
-            @click.self="pluginMenuHandler(item)"
-            @dblclick.self="openDefaultBrowser(item)"
+            @click="pluginMenuHandler(item)"
+            @dblclick.self="displayPluginLogPage(item)"
           />
 
           <plugin-menu v-if="item.displayPluginMenu">
@@ -61,7 +61,6 @@
             :item="item"
             position="18.8%"
             long="54%"
-            @open-log="displayPluginLogPage"
           ></the-expert>
           <prunning-modal
             :item="item"
@@ -76,10 +75,13 @@
             @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
-          <plugin-logs
-            v-if="isPluginLogPageActive"
-            @close-log="closePluginLogsPage"
-          ></plugin-logs>
+          <Transition>
+            <plugin-logs
+              :item="itemToLogs"
+              v-if="isPluginLogPageActive"
+              @close-log="closePluginLogsPage"
+            ></plugin-logs>
+          </Transition>
         </div>
       </div>
     </template>
@@ -134,6 +136,7 @@ export default {
       resyncWarningModal: false,
       isPluginLogPageActive: false,
       options: null,
+      itemToLogs: {},
     };
   },
   computed: {
@@ -191,7 +194,7 @@ export default {
           if (item?.category === el.category && item?.id === el.id)
             el.displayPluginMenu = !el.displayPluginMenu;
         });
-      }, 100);
+      }, 300);
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;
@@ -285,10 +288,11 @@ export default {
     mouseLeaveToHide(el) {
       setTimeout(() => {
         el.displayPluginMenu = false;
-      }, 800);
+      }, 2000);
     },
     displayPluginLogPage(el) {
       el.expertOptionsModal = false;
+      this.itemToLogs = el;
       this.isPluginLogPageActive = true;
     },
     closePluginLogsPage() {
@@ -499,5 +503,14 @@ export default {
 .menu-content .restart img:active,
 .menu-content .power img:active {
   transform: scale(1);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
