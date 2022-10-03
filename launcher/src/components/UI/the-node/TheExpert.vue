@@ -15,7 +15,7 @@
         <div class="logBox">
           <img
             class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/plugin-log.png"
+            src="../../../../public/img/icon/plugin-menu-icons/doc.png"
             alt="icon"
           />
           <span class="logTitle">PLUG-IN DOC</span>

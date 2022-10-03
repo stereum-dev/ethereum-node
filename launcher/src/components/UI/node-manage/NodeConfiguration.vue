@@ -34,7 +34,7 @@
         <div class="delete-btn" @click.stop="openRemoveModal">
           <span class="btn-text">DELETE ALL CONFIGS</span>
           <img
-            src="../../../../public/img/icon/manage-node-icons/bin.png"
+            src="../../../../public/img/icon/manage-node-icons/nuke.png"
             alt="icon"
           />
         </div>
@@ -177,7 +177,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #242529;
+  background-color: #2d3134;
   border-radius: 10px;
 }
 .server .details {
@@ -233,7 +233,7 @@ export default {
   text-align: center;
   font-size: 0.6rem;
   font-weight: 700;
-  color: #2d6962;
+  color:  #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -250,7 +250,7 @@ export default {
   text-align: center;
   font-size: 0.7rem;
   font-weight: 700;
-  color: #2d6962;
+  color:  #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -392,7 +392,7 @@ export default {
   background-color: #242529;
   cursor: pointer;
   outline-style: none;
-  color: #c75555;
+  color: #c52e2e;
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -413,7 +413,7 @@ export default {
 .delete-box .delete-btn:active {
   transform: scale(1);
   border: 1px solid #f46969;
-  color: #f04545;
+  color: #ff1f1f;
   box-shadow: none;
 }
 .delete-btn img {

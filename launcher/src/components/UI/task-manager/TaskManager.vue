@@ -58,7 +58,7 @@
         <span class="footer-text">Click on tasks to display</span>
         <img
           @click="listCleanerHandler"
-          src="../../../../public/img/icon/task-manager-icons/read-empty-list-icon.png"
+          src="../../../../public/img/icon/task-manager-icons/remove-tasks.png"
           alt=""
         />
       </div>

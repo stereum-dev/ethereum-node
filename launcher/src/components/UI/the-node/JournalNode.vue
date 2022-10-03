@@ -15,7 +15,7 @@
         <router-link to="/manage">
           <span>to edit node</span>
           <img
-            src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
+            src="../../../../public/img/icon/node-journal-icons/edit-node.png"
             alt="icon"
           />
         </router-link>
@@ -90,7 +90,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #242529;
+  background-color: #2d3134;
   border-radius: 10px;
 }
 .server .details {
@@ -146,7 +146,7 @@ export default {
   text-align: center;
   font-size: 0.6rem;
   font-weight: 700;
-  color: #2d6962;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -163,7 +163,7 @@ export default {
   text-align: center;
   font-size: 0.7rem;
   font-weight: 700;
-  color: #2d6962;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -240,7 +240,7 @@ export default {
 }
 .edit-btn a:active {
   box-shadow: none;
-  transform: scale(.99);
+  transform: scale(0.99);
 }
 .edit-btn a {
   width: 100%;
@@ -259,7 +259,7 @@ export default {
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .edit-btn span {
-  color: #408886;
+  color: #cfaf65;
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
@@ -267,8 +267,8 @@ export default {
   text-transform: uppercase;
 }
 .edit-btn img {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 30px;
   background-color: transparent;
   margin-right: 10px;
 }
