@@ -184,7 +184,7 @@ export default {
   width: 65%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   cursor: pointer;
   position: relative;
 }
@@ -193,13 +193,13 @@ export default {
 }
 .task-icon .notification {
   position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 13px;
-  height: 13px;
+  top: -10%;
+  right: -5%;
+  width: 40%;
+  height: 40%;
   max-width: 16px;
   max-height: 16px;
-  padding: 2px;
+  padding: .5rem;
   background-color: #ff0000;
   border-radius: 50px;
   display: flex;
@@ -207,7 +207,7 @@ export default {
   align-items: center;
   color: #fff;
   font-size: 0.6rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 .task-modal-box {
   width: 25%;
