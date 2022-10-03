@@ -164,12 +164,22 @@ promiseIpc.on("startOneClickServices", async () => {
   return returnValue;
 });
 
-//get data for whatever
+// close rpc tunnel
+promiseIpc.on("openRpcTunnel", async (args) => {
+  return await monitoring.openRpcTunnel(args);
+});
+
+// open rpc tunnel
+promiseIpc.on("closeRpcTunnel", async () => {
+  return await monitoring.closeRpcTunnel();
+});
+
+// get data for node stats (prometheus, and so on)
 promiseIpc.on("getNodeStats", async () => {
   return await monitoring.getNodeStats();
 });
 
-//get data for control cpu comp
+// get data for control cpu comp
 promiseIpc.on("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });

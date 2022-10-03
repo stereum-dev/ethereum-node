@@ -109,7 +109,15 @@ class ControlService extends EventEmitter {
   async startOneClickServices() {
     return await this.promiseIpc.send("startOneClickServices");
   }
-  
+
+  async openRpcTunnel(args) {
+    return await this.promiseIpc.send("openRpcTunnel",args);
+  }
+
+  async closeRpcTunnel() {
+    return await this.promiseIpc.send("closeRpcTunnel");
+  }
+
   async getNodeStats() {
     return await this.promiseIpc.send("getNodeStats");
   }
