@@ -19,21 +19,30 @@ export class NethermindService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             'nethermind/nethermind',// image
-            '1.13.5',               // imageVersion
+            '1.14.2',               // imageVersion
             [
                 `--config=${network}`,
                 '--log=info',
                 `--datadir=${dataDir}`,
                 '--Network.DiscoveryPort=30303',
                 '--Network.P2PPort=30303',
+                '--Sync.FastSync=true',
+                '--Sync.SnapSync=true',
+                '--Sync.FastBlocks=true',
+                '--Sync.AncientBodiesBarrier=11052984',
+                '--Sync.AncientReceiptsBarrier=11052984',
+                '--Merge.Enabled=true',
                 '--JsonRpc.Enabled=true',
                 '--JsonRpc.JwtSecretFile=/engine.jwt',
                 '--JsonRpc.Host=0.0.0.0',
+                '--JsonRpc.EngineHost=0.0.0.0',
                 '--Init.WebSocketsEnabled=true',
                 '--JsonRpc.WebSocketsPort=8546',
                 '--JsonRpc.EnabledModules=[web3,eth,subscribe,net]',
+                '--JsonRpc.AdditionalRpcUrls=http://0.0.0.0:8551|http;ws|engine;eth;subscribe',
                 '--Metrics.Enabled=true',
-                '--Metrics.ExposePort=6060'
+                '--Metrics.ExposePort=6060',
+                '--HealthChecks.Enabled=true'
             ],                      // command
             ["./Nethermind.Runner"],// entrypoint
             null,                   // env
