@@ -10,6 +10,10 @@
       :name="result.name"
       :avatar="result.avatar"
     ></the-contributor>
+    <the-contributor
+      :name="issuesVal.name"
+      :avatar="issuesVal.avatar"
+    ></the-contributor>
   </transition-group>
 </template>
 <script>
@@ -19,10 +23,12 @@ export default {
   data() {
     return {
       results: [],
+      issuesVal: [],
     };
   },
   created() {
     this.github();
+    this.issues();
   },
   methods: {
     github() {
@@ -47,8 +53,24 @@ export default {
         });
     },
     issues() {
-      fetch('')
-    }
+      fetch("https://api.github.com/repos/stereum-dev/ethereum-node/issues")
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((data) => {
+          const issuesVal = [];
+          for (const id in data) {
+            issuesVal.push({
+              id: id,
+              name: data[id].title,
+              avatar: data[id].number,
+            });
+          }
+          this.issuesVal = issuesVal;
+        });
+    },
   },
 };
 </script>
