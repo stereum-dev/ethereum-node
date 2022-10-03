@@ -32,7 +32,7 @@
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
-          <span class="btn-text">DELETE ALL CONFIGS</span>
+          <span class="btn-text">NUKE NODE</span>
           <img
             src="../../../../public/img/icon/manage-node-icons/nuke.png"
             alt="icon"
@@ -233,7 +233,7 @@ export default {
   text-align: center;
   font-size: 0.6rem;
   font-weight: 700;
-  color:  #cfaf65;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -250,7 +250,7 @@ export default {
   text-align: center;
   font-size: 0.7rem;
   font-weight: 700;
-  color:  #cfaf65;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -400,7 +400,7 @@ export default {
   align-items: center;
 }
 .btn-text {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .router-box .btn-text {
   text-decoration: none;
