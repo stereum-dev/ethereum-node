@@ -22,10 +22,18 @@
           </div>
         </div>
       </div>
-      <div class="btn-box">
-        <a class="btn" :href="prometheusService.linkUrl" target="_blank"
-          >open default browser</a
-        >
+      <div class="content">
+        <div class="browserBox">
+          <div class="title">
+            <span>LOCAL APPLICATION</span>
+            <span>Open up the service on your local machine</span>
+          </div>
+          <div class="btn-box">
+            <a class="btn" :href="prometheusService.linkUrl" target="_blank"
+              >OPEN IN BROWSER</a
+            >
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -92,7 +100,7 @@ export default {
   width: 60%;
   height: 80%;
   background-color: #1b1b1b;
-  border: 5px solid rgb(161, 161, 161);
+  border: 5px solid #a1a1a1;
   box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
   border-radius: 30px;
   position: absolute;
@@ -165,8 +173,7 @@ export default {
   cursor: pointer;
   margin-right: 15px;
 }
-
-.btn-box {
+.content {
   width: 100%;
   height: 70%;
   margin-top: 20px;
@@ -174,34 +181,71 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 103;
 }
-.btn-box .btn {
-  width: 94%;
-  height: 35px;
-  margin-top: 20px;
+
+.browserBox {
+  width: 95%;
+  height: 30%;
+  background-color: #393939;
+  border: 2px solid #656565;
+  box-shadow: 1px 1px 3px 1px #161616;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.browserBox .title {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.title span:first-child {
+  color: #dbdbdb;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-left: 10px;
+}
+.title span:last-child {
+  color: #dbdbdb;
+  font-size: 0.65rem;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
+.browserBox .btn-box {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.browserBox .btn {
+  width: 50%;
+  height: 35%;
+  margin-top: 15px;
+  margin-right: 10px;
   background-color: #f37625;
   text-decoration: none;
-  border-radius: 10px;
+  border-radius: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  color: rgb(59, 59, 59);
-  font-size: 1rem;
-  font-weight: 700;
+  color: #e1e1e1;
+  font-size: 0.7rem;
+  font-weight: 600;
   text-transform: uppercase;
   transition-duration: all 200ms;
 }
-.btn:active {
-  box-shadow: inset 2px 2px 15px #1d130d;
-  transform: scale(0.99);
-}
 .btn:hover {
   transition-duration: 100ms;
-  color: rgb(218, 218, 218);
-  border: 2px solid #f9b88d;
-  box-shadow: none;
-  background-color: rgb(230, 127, 58) 5;
+  background-color: rgb(179, 72, 0);
+}
+.btn:active {
+  transform: scale(0.9);
 }
 </style>

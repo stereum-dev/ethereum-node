@@ -323,7 +323,7 @@ export default {
 }
 
 .edit-btn a:hover {
-  background-color: #1a1a1d;
+  background-color: #18191c;
 }
 .edit-btn a:active {
   box-shadow: none;
@@ -331,8 +331,8 @@ export default {
 }
 .edit-btn {
   width: 95%;
-  height: 25%;
-  margin-top: 3%;
+  height: 23.5%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;

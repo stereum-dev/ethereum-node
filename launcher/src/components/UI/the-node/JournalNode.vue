@@ -216,20 +216,19 @@ export default {
 
 .config-btns .config-update:hover {
   background-color: #2c2c2c;
-  transform: scale(1.02);
 }
 
 .config-btns .config-update:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 
 .edit-btn {
   grid-column: 1;
   grid-row: 1/2;
   width: 95%;
-  height: 100%;
-  margin-top: 2%;
+  height: 95%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,13 +243,12 @@ export default {
 }
 .edit-btn a {
   width: 100%;
-  height: 100%;
+  height: 99%;
   background-color: #242529;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
   border: 1px solid #787878;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
