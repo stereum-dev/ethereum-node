@@ -17,14 +17,11 @@
       <div class="table-box">
         <div class="tableRow" v-for="item in confirmChanges" :key="item.id">
           <div class="left-icon">
-            <img :src="item.contentIcon" alt="" />
+            <img :src="item.contentIcon" alt="icon" />
           </div>
           <span>{{ item.content }}</span>
           <div class="right-icon">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
-              alt="icon"
-            />
+            <!-- <img :src="service.icon" alt="icon" /> -->
           </div>
         </div>
       </div>
@@ -205,7 +202,6 @@ export default {
   font-size: 8px;
   font-weight: 700;
 }
-
 
 .trash-box {
   width: 100%;
