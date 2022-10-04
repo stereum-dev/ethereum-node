@@ -47,13 +47,17 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeStore } from "@/store/theNode";
+import { useServices } from "@/store/services";
 export default {
-  props: ["confirmChanges"],
   computed: {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
       selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      actionContents: "actionContents",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
     }),
   },
   methods: {
