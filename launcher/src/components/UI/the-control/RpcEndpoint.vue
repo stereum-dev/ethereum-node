@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       waitForData: null,
+      toggleAllowed: true,
       showData: false,
       isActive: false,
       copyVal: "click to copy",
@@ -91,23 +92,30 @@ export default {
       }
     },
     async toggle() {
-      if(!this.showData) return;    
+      if(!this.showData) return;  
+      if(!this.toggleAllowed) return;
+      this.toggleAllowed = false;
       let isActive = this.isActive ? false : true;
       let result;
-      if(isActive){
-        const localPorts = await ControlService.getAvailablePort({
-          min: 8545,
-          max: 8999,
-          amount: 1,
-        })
-        result = await ControlService.openRpcTunnel({force_local_port:localPorts.pop()});
-      }else{
-        result = await ControlService.closeRpcTunnel();
+      try{
+        if(isActive){
+          const localPorts = await ControlService.getAvailablePort({
+            min: 8545,
+            max: 8999,
+            amount: 1,
+          })
+          result = await ControlService.openRpcTunnel({force_local_port:localPorts.pop()});
+        }else{
+          result = await ControlService.closeRpcTunnel();
+        }
+      }catch(e){
+        console.log(e);
       }
       this.rpcstatus.data.url = result.data.url;
       this.isActive = !result || result.code ? this.isActive : isActive;
       this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
       this.rpcItems[0].value = this.rpcstatus.data.url;
+      this.toggleAllowed = true;
     },
     rpcControler() {
       this.isActive = false;
