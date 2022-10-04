@@ -2,13 +2,13 @@
   <div class="financial-box_parent">
     <div class="round-selector">
       <select name="round" id="round" v-model="choosedRound">
+        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
         <option value="round_15">Round 15</option>
         <option value="round_14">Round 14</option>
         <option value="round_13">Round 13</option>
         <option value="round_12">Round 12</option>
         <option value="round_11">Round 11</option>
         <option value="round_10">Round 10</option>
-        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
       </select>
     </div>
     <div class="search">
@@ -61,11 +61,14 @@ export default {
       filteredItem: [],
       searchPayload: "",
       roundAdresses: [],
-      choosedRound: "round_15",
-      test: [],
+      choosedRound: "allAddresses",
     };
   },
   computed: {
+    // filterItemHandler() {
+    //   this.filteredItem = this.sortedAddresses;
+    //  return this.filteredItem;
+    // },
     ...mapState(useFinancialStore, {
       socialAddresses: "socialAddresses",
       ethAddresses: "ethAddresses",
@@ -104,8 +107,8 @@ export default {
   watch: {
     choosedRound: {
       immediate: true,
-      handler(newRound, oldRound) {
-        if (newRound !== oldRound) {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
           this.filteredItem = this.sortedAddresses;
         }
       },
