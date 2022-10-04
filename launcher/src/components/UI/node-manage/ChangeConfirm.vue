@@ -21,7 +21,7 @@
           </div>
           <span>{{ item.content }}</span>
           <div class="right-icon">
-            <img :src="item.service.icon" alt="icon" />
+            <img :src="item.service.sIcon" alt="icon" />
           </div>
         </div>
       </div>
@@ -201,7 +201,7 @@ export default {
   align-self: center;
 }
 .tableRow .left-icon {
-  width: 20%;
+  width: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
