@@ -155,6 +155,7 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("importKey", {
       files: files,
       password: args.password,
+      service: args.service,
     });
   }
 

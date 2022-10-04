@@ -80,11 +80,14 @@ export default {
       this.selectedItemToRemove.forEach(item => {
         this.confirmChanges.push(toRaw(this.getActions("DELETE",item)))
       })
-      console.log(this.confirmChanges)
+      this.installedServices.forEach(item => {
+        item.active = false
+      })
       this.selectedItemToRemove = [];
     },
     async confirmHandler() {
-      await ControlService.modifyServices(toRaw(this.confirmChanges))
+      //await ControlService.modifyServices(toRaw(this.confirmChanges))
+      this.confirmChanges = []
     },
   },
 };

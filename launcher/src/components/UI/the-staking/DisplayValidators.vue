@@ -534,6 +534,7 @@ export default {
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
+        service: this.selectedService.config.serviceID
       });
       this.forceRefresh = true;
       this.keyFiles = [];

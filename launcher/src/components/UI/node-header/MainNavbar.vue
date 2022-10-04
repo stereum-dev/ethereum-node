@@ -64,6 +64,7 @@ export default {
             const newServices = services.map((service) => {
               let oldService;
               if (
+                this.installedServices &&
                 this.installedServices
                   .map((s) => s.config.serviceID)
                   .includes(service.config.serviceID)
@@ -100,7 +101,7 @@ export default {
               }
               return oldService;
             });
-            this.installedServices = newServices.concat(otherServices);
+            this.installedServices = newServices.concat(otherServices).map((e,i) => {e.id = i;return e});
             let beaconService = this.installedServices.find(
               (s) => s.category === "consensus"
             );
@@ -145,8 +146,11 @@ export default {
               );
             }
           }else{
-            this.installedServices = []
-            this.headerServices = []
+            if(!this.updating){
+              this.installedServices = []
+              this.headerServices = []
+              this.network = ""
+            } 
           }
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services);

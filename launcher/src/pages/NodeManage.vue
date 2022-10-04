@@ -189,6 +189,7 @@ export default {
       newConfiguration: "newConfiguration",
       actionContents: "actionContents",
       selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
     }),
   },
   mounted() {
@@ -221,13 +222,18 @@ export default {
       const item = {
         ...list.find((item) => item.config.serviceID === serviceId),
       };
+      if(this.itemToInstall.addPanel === true){
+        this.cancelAddProcess()
+      }
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
       this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
-      console.log(item.config.serviceID);
+      if(this.itemToInstall.addPanel === true){
+        this.cancelAddProcess()
+      }
       this.newConfiguration.push(item);
       item.addPanel = true;
       this.itemToInstall = item;
