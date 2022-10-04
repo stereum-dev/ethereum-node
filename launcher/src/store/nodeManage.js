@@ -3,7 +3,6 @@ export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
       newConfiguration: [],
-      selectedItemToRemove: [],
       clickPresets: [
         {
           id: 1,
@@ -34,7 +33,40 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
         },
       ],
-      actionContents: [],
+      selectedItemToRemove: [],
+      actionContents: [
+        {
+          id: 1,
+          content: "INSTALL",
+          contentIcon: require("../../public/img/icon/manage-node-icons/add.png"),
+        },
+        {
+          id: 2,
+          content: "DELETE",
+          contentIcon: require("../../public/img/icon/manage-node-icons/remove-plugin.png"),
+        },
+        {
+          id: 3,
+          content: "LINKED WITH",
+          contentIcon: require("../../public/img/icon/manage-node-icons/connect.png"),
+        },
+        {
+          id: 4,
+          content: "DELINKED FROM",
+          contentIcon: require("../../public/img/icon/manage-node-icons/disconnect.png"),
+        },
+        {
+          id: 5,
+          content: "SWITCH CLIENT",
+          contentIcon: require("../../public/img/icon/manage-node-icons/switch-client.png"),
+        },
+        {
+          id: 6,
+          content: "CHANGE NETWORK",
+          contentIcon: require("../../public/img/icon/manage-node-icons/change-network.png"),
+        },
+      ],
+      confirmChanges: [],
       networkList: [
         {
           id: 1,

@@ -21,7 +21,7 @@
           </div>
           <span>{{ item.content }}</span>
           <div class="right-icon">
-            <!-- <img :src="service.icon" alt="icon" /> -->
+            <img :src="item.service.icon" alt="icon" />
           </div>
         </div>
       </div>
@@ -59,11 +59,23 @@ export default {
     }),
   },
   methods: {
+    getActions(action, service) {
+      let item = this.actionContents.find((item) => item.content === action);
+      if (item) return { ...item, service: toRaw(service) };
+      return undefined;
+    },
     clickOnRemoveBtn() {
       this.newConfiguration = this.newConfiguration.filter(
         (item) => !this.selectedItemToRemove.includes(item)
       );
+      this.selectedItemToRemove.forEach((item) => {
+        this.confirmChanges.push(toRaw(this.getActions("DELETE", item)));
+      });
+      console.log(this.confirmChanges);
       this.selectedItemToRemove = [];
+    },
+    async confirmHandler() {
+      await ControlService.modifyServices(toRaw(this.confirmChanges));
     },
   },
 };
@@ -129,7 +141,7 @@ export default {
   height: 45%;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 1px 5px 1px rgb(37, 38, 40);
   padding: 2px;
   position: relative;
@@ -154,7 +166,7 @@ export default {
   width: 95%;
   height: 90%;
   background: #242529;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -164,43 +176,42 @@ export default {
   overflow-y: auto;
 }
 .table-box::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 2px;
 }
 .tableRow {
   width: 98%;
   height: 11%;
-  margin: 2% auto;
+  margin: 1% auto;
+  padding: 1%;
   background: #48494f;
-  border-radius: 50px;
+  border-radius: 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .tableRow .right-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
 }
 .tableRow .left-icon {
-  width: 20px;
-  height: 20px;
+  width: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .tableRow .right-icon img {
-  width: 15px;
-  height: 15px;
-  border-radius: 100%;
+  width: 100%;
 }
 .tableRow .left-icon img {
-  width: 14px;
-  height: 14px;
+  width: 100%;
 }
 .tableRow span {
-  color: rgb(194, 191, 191);
-  font-size: 8px;
-  font-weight: 700;
+  color: rgb(207, 207, 207);
+  font-size: .6rem;
+  font-weight: 600;
 }
 
 .trash-box {
