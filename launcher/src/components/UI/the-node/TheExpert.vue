@@ -11,6 +11,17 @@
         <span class="serviceId">ID: {{ item.config.serviceID }}</span>
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
+        <!-- plugin docs row -->
+        <div class="docBox">
+          <img
+            class="titleIcon"
+            src="../../../../public/img/icon/plugin-menu-icons/doc.png"
+            alt="icon"
+          />
+          <span class="docTitle">PLUG-IN DOCS</span>
+          <span class="openBtn">open</span>
+        </div>
+        <!-- expert mode row -->
         <div class="dataTitleBox" @click="openExpertMode">
           <img
             class="titleIcon"
@@ -85,20 +96,22 @@
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <img
-            class="buttonOff"
-            src="/img/icon/plugin-menu-icons/confirm.png"
-            alt="icon"
-            v-if="option.buttonState"
-            @click="buttonOff(option)"
-          />
-          <img
-            class="buttonOn"
-            src="/img/icon/plugin-menu-icons/edit2.png"
-            alt="icon"
-            v-else
-            @click="buttonOn(option)"
-          />
+          <Transition name="slide-up">
+            <img
+              class="buttonOff"
+              src="/img/icon/plugin-menu-icons/confirm.png"
+              alt="icon"
+              v-if="option.buttonState"
+              @click="buttonOff(option)"
+            />
+            <img
+              class="buttonOn"
+              src="/img/icon/plugin-menu-icons/edit2.png"
+              alt="icon"
+              v-else
+              @click="buttonOn(option)"
+            />
+          </Transition>
           <input
             class="toggleTextInput"
             type="text"
@@ -206,8 +219,7 @@ export default {
   // },
   methods: {
     somethingIsChanged(item) {
-      if(item && item.title)
-        item.changed = true
+      if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
     },
     async readService() {
@@ -215,10 +227,10 @@ export default {
         this.item.config.serviceID
       );
       this.item.expertOptions = this.item.expertOptions.map((option) => {
-        if(this.item.yaml.includes("isPruning: true")){
-          option.disabled = true
-        }else{
-          option.disabled = false
+        if (this.item.yaml.includes("isPruning: true")) {
+          option.disabled = true;
+        } else {
+          option.disabled = false;
         }
         if (option.type === "select" || option.type === "text") {
           option.changeValue = [...this.item.yaml.match(option.pattern)][2];
@@ -268,7 +280,7 @@ export default {
       if (el.name === "Geth") {
         el.expertOptions
           .filter((item) => {
-            return item.title === "Prunning";
+            return item.title === "Pruning";
           })
           .map((item) => {
             if (item.changeValue) {
@@ -413,11 +425,59 @@ export default {
   color: #393939;
   font-size: 0.9rem;
   font-weight: 600;
+  text-transform: uppercase;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   transition-duration: 200ms;
+}
+.expertRow .docBox {
+  width: 100%;
+  height: 25px;
+  margin: 2px auto;
+  padding: 2px 2px 2px 20px;
+  border: 1px solid #8a8a8a;
+  border-radius: 25px;
+  background-color: #8a8a8a;
+  text-align: center;
+  color: #393939;
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: 100%;
+  transition-duration: 200ms;
+}
+.expertRow .docBox .docTitle {
+  width: 100%;
+  height: 100%;
+  grid-column: 5/8;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.expertRow .docBox .openBtn {
+  grid-column: 9/11;
+  grid-row: 1/2;
+  /* width: 100%;
+  height: 100%; */
+  padding-top: 2px;
+  background-color: #264744;
+  border-radius: 35px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #dbdbdb;
+  cursor: pointer;
+}
+.expertRow .docBox .openBtn:hover {
+  background-color: #1a2e2a;
+}
+.expertRow .docBox .openBtn:active {
+  transform: scale(0.95);
 }
 .expertRow .selectBox {
   width: 100%;
@@ -494,7 +554,8 @@ export default {
   border: 1px solid #2d2d2d;
 }
 
-.expertRow .dataTitleBox img {
+.expertRow .dataTitleBox img,
+.expertRow .docBox img {
   width: 20px;
   height: 20px;
 }
@@ -527,6 +588,7 @@ export default {
   grid-row: 1;
   text-align: center;
   margin-left: -14px;
+  text-transform: uppercase;
 }
 .expertRow .actionBox .initiateAction {
   grid-column: 5/6;
@@ -852,5 +914,19 @@ input:checked + .slider:before {
   align-self: flex-end;
   justify-self: flex-start;
   text-align: center;
+}
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

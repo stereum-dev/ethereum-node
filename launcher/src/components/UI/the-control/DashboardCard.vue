@@ -17,6 +17,7 @@
   align-items: center;
   z-index: 1;
   cursor: pointer;
+  position: relative;
 }
 
 .card:hover {

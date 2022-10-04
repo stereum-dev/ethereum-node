@@ -1,8 +1,8 @@
 <template>
-  <div class="service-container" onmousedown="return false">
+  <div class="service-container" @mousedown.prevent.stop>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -22,7 +22,7 @@
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -78,7 +78,7 @@ export default {
 .service-container {
   width: 96%;
   height: 95%;
-  background: #494949;
+  background: #4c4c4e;
   border-radius: 20px;
   overflow: auto;
   padding: 5px;
@@ -91,12 +91,14 @@ export default {
 
 .service-arrow {
   width: 50%;
-  height: 25px;
+  height: 10%;
+  cursor: pointer;
 }
-.service-item {
-  width: 60px;
-  height: 60px;
+.service-arrow:active {
+  transform: scale(0.9);
+  transition-duration: 0.1s;
 }
+
 .service-bg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -106,7 +108,7 @@ export default {
   height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #707070;
+  background: #797979;
   border-radius: 20px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -136,13 +138,7 @@ export default {
   border: 2px solid rgb(255, 70, 70);
   border-radius: 7px;
 }
-.service-arrow {
-  border-radius: 50px;
-  box-shadow: 1px 2px 3px 1px rgb(63, 63, 63);
-}
-.service-arrow:active {
-  box-shadow: none;
-}
+
 .modify-plugin {
   border: 2px solid rgb(221, 206, 78);
   border-radius: 7px;

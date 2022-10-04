@@ -1,5 +1,6 @@
 <template>
   <div class="timeGasParent">
+    <comming-soon></comming-soon>
     <div class="time_left"><the-time></the-time></div>
     <div class="gas_right"><the-gas></the-gas></div>
   </div>
@@ -21,6 +22,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .time_left {
   display: flex;

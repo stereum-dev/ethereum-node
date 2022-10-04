@@ -27,7 +27,7 @@
           :class="{ disabled: !isChecked }"
           @click="$emit('confirmBtn')"
         >
-          <span>Start Prunning</span>
+          <span>Start Pruning</span>
         </div>
         <span class="close">Click outside to cancel.</span>
       </div>

@@ -26,7 +26,8 @@ export default {};
 .trap-box {
   width: 95%;
   height: 98%;
-  background-color: rgb(39, 39, 39);
+  background-color: #242529;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,7 +45,7 @@ export default {};
 .plus-icon {
   position: absolute;
   top: 3%;
-  right: 1%;
+  right: 0;
   width: 50px;
   height: 30px;
   border-radius: 50px;

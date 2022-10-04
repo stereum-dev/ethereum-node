@@ -1,13 +1,14 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <div class="details">
-        <span>Server infos</span>
+      <div class="serverBox">
+        <div class="details">
+          <span class="ipTitle">server ip</span>
+          <span class="nameTitle">server name</span>
+          <span class="ip">{{ ipAddress }}</span>
+          <span class="name">{{ ServerName }}</span>
+        </div>
       </div>
-      <span class="ipTitle">ip:</span>
-      <span class="nameTitle">name:</span>
-      <span class="ip">{{ ipAddress }}</span>
-      <span class="name">{{ ServerName }}</span>
     </div>
     <div class="config-bg">
       <div class="config-btns">
@@ -21,17 +22,19 @@
           </router-link>
         </div>
         <div class="config-add" @click.stop="$emit('modalPreset')">
+          <comming-soon></comming-soon>
           <span class="btn-text">ADD 1 CLICK PRESET</span>
         </div>
         <div class="config-network">
+          <comming-soon></comming-soon>
           <span class="btn-text">CHANGE NETWORK</span>
         </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
-          <span class="btn-text">DELETE ALL CONFIGS</span>
+          <span class="btn-text">NUKE NODE</span>
           <img
-            src="../../../../public/img/icon/manage-node-icons/bin.png"
+            src="../../../../public/img/icon/manage-node-icons/nuke.png"
             alt="icon"
           />
         </div>
@@ -133,8 +136,8 @@ export default {
   padding: 5px;
   margin-top: 1px;
   display: grid;
-  background: #3a3d40;
-  border-right: 5px solid #1a1a1b;
+  background: #33393e;
+  border-right: 2px solid #242529b4;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
   justify-content: center;
@@ -161,63 +164,74 @@ export default {
   width: 100%;
   height: 100%;
   padding: 20px 5px 10px 5px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.serverBox {
+  width: 100%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2d3134;
+  border-radius: 10px;
 }
 .server .details {
-  grid-column: 1/6;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  width: 95%;
+  height: 85%;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: 40% 60%;
+  grid-template-rows: repeat(6, 1fr);
 }
-.server .details span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(166, 165, 165);
-  text-transform: uppercase;
-}
+
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/3;
-  width: max-content;
-  height: 15px;
+  grid-row: 2/4;
+  width: 100%;
+  height: 100%;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: rgb(163, 163, 163);
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  align-self: flex-end;
   text-align: left;
-  align-self: center;
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 3/4;
-  width: max-content;
-  height: 15px;
+  grid-row: 4/6;
+  width: 100%;
+  height: 100%;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: rgb(163, 163, 163);
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
+  border-radius: 5px;
+  padding: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  align-self: flex-end;
   text-align: left;
-  align-self: center;
 }
 .server .name {
-  grid-column: 2/6;
-  grid-row: 3/4;
+  grid-column: 2/3;
+  grid-row: 4/6;
   width: 100%;
-  height: 90%;
+  height: 100%;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #8a8a8a;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
-  border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -226,17 +240,15 @@ export default {
   align-self: center;
 }
 .server .ip {
-  grid-column: 2/6;
-  grid-row: 2/3;
+  grid-column: 2/3;
+  grid-row: 2/4;
   width: 100%;
-  height: 90%;
+  height: 100%;
   text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #8a8a8a;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
-  border: 1px solid #565656;
-  background-color: rgb(44, 44, 44);
   border-radius: 5px;
   padding: 4px;
   white-space: nowrap;
@@ -244,7 +256,6 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
-
 .config-box .config-title {
   grid-column: 2/7;
   grid-row: 1;
@@ -270,11 +281,15 @@ export default {
 }
 .config-btns .config-add,
 .config-btns .config-network {
+  pointer-events: none !important;
+  user-select: none !important;
+  position: relative;
   width: 95%;
   height: 25%;
   margin-top: 3%;
   background-color: #292929;
   font-size: 0.7rem;
+  z-index: 0;
   font-weight: 700;
   color: rgb(144, 144, 144);
   border: 1px solid #787878;
@@ -294,29 +309,27 @@ export default {
 }
 .config-btns .config-add:hover,
 .config-btns .config-network:hover {
-  background-color: #2c2c2c;
+  background-color: #161619;
   border: 1px solid #a0a0a0;
   color: #a0a0a0;
-  transform: scale(1.02);
 }
 .config-btns .config-add:active,
 .config-btns .config-network:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 
 .edit-btn a:hover {
-  background-color: #2c2c2c;
-  transform: scale(1.02);
+  background-color: #18191c;
 }
 .edit-btn a:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 .edit-btn {
   width: 95%;
-  height: 25%;
-  margin-top: 3%;
+  height: 23.5%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -325,7 +338,7 @@ export default {
 .edit-btn a {
   width: 100%;
   height: 100%;
-  background-color: #292929;
+  background-color: #242529;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
@@ -342,7 +355,7 @@ export default {
   -o-user-drag: none;
 }
 .edit-btn span {
-  color: rgb(249, 187, 73);
+  color: #408886;
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
@@ -354,7 +367,7 @@ export default {
   height: 18px;
   background-color: transparent;
   margin-right: 10px;
-  pointer-events: none
+  pointer-events: none;
 }
 .delete-box {
   grid-column: 1/6;
@@ -373,10 +386,10 @@ export default {
   border: 1px solid #828282;
   border-radius: 8px;
   box-shadow: 0 1px 4px #373737;
-  background-color: #303030;
+  background-color: #242529;
   cursor: pointer;
   outline-style: none;
-  color: #c75555;
+  color: #c52e2e;
   font-size: 0.7rem;
   font-weight: 700;
   display: flex;
@@ -384,7 +397,7 @@ export default {
   align-items: center;
 }
 .btn-text {
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .router-box .btn-text {
   text-decoration: none;
@@ -397,14 +410,14 @@ export default {
 .delete-box .delete-btn:active {
   transform: scale(1);
   border: 1px solid #f46969;
-  color: #f04545;
+  color: #ff1f1f;
   box-shadow: none;
 }
 .delete-btn img {
   width: 24px;
   height: 24px;
   margin-right: 5px;
-  pointer-events: none
+  pointer-events: none;
 }
 .btn-icon {
   width: 21px;
@@ -415,7 +428,7 @@ export default {
 .btn-icon img {
   width: 21px;
   height: 21px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 .config-row {
@@ -454,7 +467,7 @@ export default {
 .testnet-icon img {
   width: 23px;
   height: 23px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 .title-box {
@@ -468,7 +481,7 @@ export default {
   width: 70px;
   height: 70px;
   margin-top: 10px;
-  pointer-events: none
+  pointer-events: none;
 }
 
 ::-webkit-scrollbar {

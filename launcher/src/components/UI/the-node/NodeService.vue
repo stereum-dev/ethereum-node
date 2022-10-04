@@ -2,7 +2,7 @@
   <div class="service-container">
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/up-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
@@ -12,7 +12,8 @@
           :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
-          @dblclick="openDefaultBrowser(item)"
+          @dblclick="displayPluginLogPage(item)"
+          @mouseleave="mouseLeaveToHide(item)"
         />
         <plugin-menu v-if="item.displayPluginMenu">
           <div class="menu-content">
@@ -49,11 +50,18 @@
           position="18.8%"
           wide="39%"
         ></the-expert>
+        <Transition>
+          <plugin-logs
+            :item="itemToLogs"
+            v-if="isPluginLogPageActive"
+            @close-log="closePluginLogsPage"
+          ></plugin-logs>
+        </Transition>
       </div>
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/down-arrow.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -64,10 +72,11 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginMenu from "./PluginMenu.vue";
+import PluginLogs from "../the-node/PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 
 export default {
-  components: { PluginMenu, TheExpert },
+  components: { PluginMenu, TheExpert, PluginLogs },
   props: {
     list: {
       type: Array,
@@ -80,6 +89,8 @@ export default {
       isPluginMenuActive: false,
       isServiceOn: false,
       isServicePending: false,
+      isPluginLogPageActive: false,
+      itemToLogs: {},
     };
   },
   beforeMount() {
@@ -137,10 +148,12 @@ export default {
       el.displayPluginMenu = false;
     },
     pluginMenuHandler(el) {
-      this.list.map((i) => {
-        if (i?.id === el.id && i?.name === el.name)
-          el.displayPluginMenu = !el.displayPluginMenu;
-      });
+      setTimeout(() => {
+        this.list.map((i) => {
+          if (i?.id === el.id && i?.name === el.name)
+            el.displayPluginMenu = !el.displayPluginMenu;
+        });
+      }, 300);
     },
     hideExpertMode(el) {
       el.expertOptionsModal = false;
@@ -151,6 +164,19 @@ export default {
           el.expertOptionsModal = true;
       });
     },
+    mouseLeaveToHide(el) {
+      setTimeout(() => {
+        el.displayPluginMenu = false;
+      }, 2000);
+    },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
   },
 };
 </script>
@@ -158,7 +184,7 @@ export default {
 .service-container {
   width: 96%;
   height: 95%;
-  background-color: #494949;
+  background: #4c4c4e;
   border-radius: 20px;
   padding: 5px;
   box-sizing: border-box;
@@ -170,7 +196,12 @@ export default {
 
 .service-arrow {
   width: 50%;
-  height: 25px;
+  height: 10%;
+  cursor: pointer;
+}
+.service-arrow:active {
+  transform: scale(0.9);
+  transition-duration: 0.1s;
 }
 
 .item-box {
@@ -182,7 +213,7 @@ export default {
   height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
-  background: #707070;
+  background: #797979;
   border-radius: 20px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -206,13 +237,6 @@ export default {
   cursor: pointer;
 }
 
-.service-arrow {
-  border-radius: 50px;
-  box-shadow: 1px 2px 3px 1px rgb(63, 63, 63);
-}
-.service-arrow:active {
-  box-shadow: none;
-}
 .menu-content {
   width: 100%;
   height: 100%;
@@ -325,5 +349,14 @@ export default {
 .menu-content .restart img:active,
 .menu-content .power img:active {
   transform: scale(1);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

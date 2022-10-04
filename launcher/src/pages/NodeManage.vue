@@ -1,6 +1,6 @@
 <template>
   <section id="parent">
-    <node-header id="head" onmousedown="return false"></node-header>
+    <node-header id="head" @mousedown.prevent.stop></node-header>
     <node-bg>
       <div class="manage-parent">
         <div class="config-box">
@@ -214,31 +214,46 @@ export default {
       if (event.type === "dragstart") {
         event.dataTransfer.dropEffect = "move";
         event.dataTransfer.effectAllowed = "move";
-        event.dataTransfer.setData("servicId", item.config.serviceID);
+        event.dataTransfer.setData("itemId", item.id);
       }
     },
     onDrop(event, list) {
-      const serviceId = event.dataTransfer.getData("servicId");
-      const item = {
-        ...list.find((item) => item.config.serviceID === serviceId),
-      };
-      if(this.itemToInstall.addPanel === true){
-        this.cancelAddProcess()
+      const itemId = event.dataTransfer.getData("itemId");
+      const item = list.find((item) => item.id == itemId);
+      if (item.category === "service") {
+        this.newConfiguration.forEach((el) => {
+          if (el.id === item.id) {
+            return;
+          }
+        });
+      } else {
+        if(this.itemToInstall.addPanel === true){
+          this.cancelAddProcess()
+        }
+        this.newConfiguration.push(item);
+        item.addPanel = true;
+        this.itemToInstall = item;
+        this.displayCustomAddPanel = item.modifierPanel;
       }
-      this.newConfiguration.push(item);
-      item.addPanel = true;
-      this.itemToInstall = item;
-      this.displayCustomAddPanel = item.modifierPanel;
     },
     addNewService(item) {
-      if(this.itemToInstall.addPanel === true){
-        this.cancelAddProcess()
+      if (item.category === "service") {
+        this.newConfiguration.forEach((el) => {
+          if (el.id === item.id) {
+            return;
+          }
+        });
+      } else {
+        if(this.itemToInstall.addPanel === true){
+          this.cancelAddProcess()
+        }
+        this.newConfiguration.push(item);
+        item.addPanel = true;
+        this.itemToInstall = item;
+        this.displayCustomAddPanel = item.modifierPanel;
       }
-      this.newConfiguration.push(item);
-      item.addPanel = true;
-      this.itemToInstall = item;
-      this.displayCustomAddPanel = item.addPanel;
     },
+
     saveAddedServiceConfig() {
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;
@@ -373,14 +388,13 @@ export default {
   height: 95%;
   grid-column: 3;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-content: center;
-  border-left: 5px solid #1f1f1f;
-  border-right: 5px solid #1f1f1f;
+  border: 2px solid #242529b4;
 }
 .service-parent {
   display: flex;
@@ -391,15 +405,15 @@ export default {
 }
 
 .title {
-  width: 70%;
+  width: max-content;
+  min-width: 110px;
   height: 6%;
-  background: #272827;
-  border: 1px solid #404142;
+  padding: 0 20px;
+  background-color: #264744;
   border-radius: 15px;
   margin: 10px auto;
   font-weight: 700;
-  font-size: 0.8rem;
-  box-shadow: 0 1px 3px rgb(19, 40, 31);
+  font-size: 0.7rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -428,7 +442,7 @@ export default {
   grid-row: 1/5;
   grid-column: 4;
   background: #3a3d40;
-  border: 5px solid #1f1f1f;
+  border: 2px solid #242529b4;
   border-left: none;
   border-top-right-radius: 30px;
   display: flex;

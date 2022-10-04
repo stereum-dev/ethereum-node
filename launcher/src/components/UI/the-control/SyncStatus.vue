@@ -8,7 +8,7 @@
         <span>SYNC STATUS</span>
       </div>
       <div class="sync-box_value">
-        <div v-for="item in syncstatus" :key="item.id" class="sync-box_row">
+        <div v-show="syncItemsShow" v-for="item in syncstatus.data" :key="item.id" class="sync-box_row" :class="syncItemSytle(item)">
           <div class="sync-box-row_title">
             <span>{{ item.title }}</span>
           </div>
@@ -26,6 +26,8 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
+      syncItemsShow: false,
+      syncIcoUnknown: true,
       syncIcoSituation: false,
       syncIcoError: false,
       prysm: "",
@@ -48,11 +50,14 @@ export default {
           name: "synched",
           icon: "/img/icon/arrows/SynchronisationIconSynchronized.gif",
         },
+        {
+          id: 4,
+          name: "unknown",
+          icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
+        },
       ],
-      // syncStatusItems are dummy, for wire the have to change but the best stract. for the design is this one
     };
   },
-
   updated() {
     this.syncControler();
   },
@@ -70,44 +75,87 @@ export default {
     synchedIco() {
       return this.syncIco[2].icon;
     },
+    unknownIco() {
+      return this.syncIco[3].icon;
+    },
   },
   methods: {
+    syncItemSytle(item) {
+      item = JSON.parse(JSON.stringify(item)); // toRaw()
+      if(!item.hasOwnProperty("style")){
+        return '';
+      }
+      return item.style;
+    },
     syncSituation() {
-      if (this.syncIcoSituation === false && this.syncIcoError === false) {
-        return this.synchedIco;
-      } else if (
-        this.syncIcoSituation === true &&
-        this.syncIcoError === false
-      ) {
-        return this.activeIco;
-      } else {
-        this.syncIcoError = true;
+      if(this.syncIcoError){
         return this.errorIco;
       }
+      if(this.syncIcoUnknown){
+        return this.unknownIco;
+      }
+      if(this.syncIcoSituation){
+        return this.activeIco;
+      }
+      return this.synchedIco;
     },
     syncControler() {
+      let syncItemsShow = false;
+      let syncIcoUnknown = true;
       let syncIcoError = false;
       let syncIcoSituation = false;
-      let pooi = [];
-      for (let k in this.syncstatus) {
-        let lo = parseInt(this.syncstatus[k].frstVal);
-        let hi = parseInt(this.syncstatus[k].scndVal);
-        pooi[k] = pooi[k] || lo > hi ? true : false;
-        if (this.code !== 0 || !hi || !lo) {
-          syncIcoError = true;
-          break;
-        } else if (lo < hi) {
-          syncIcoSituation = true;
-          break;
+      let fonts = {
+        red:[],     // client error (for example docker container not running) - icon red
+        orange:[],  // abnormal client data during init (for example: lowerslot > higherslot) - icon unknown
+        grey:[],    // zero client data: lowerslot and higherslot are zero (usually the case while the EC waits for the CC to go in sync)
+        blue:[],    // client not in-sync, thus currently synchronizing
+        green:[],   // client in-sync, thus synchronized
+      };
+      if(this.code === 0 && this.syncstatus.code === 0 && Array.isArray(this.syncstatus.data) && this.syncstatus.data[0].hasOwnProperty("title")){
+        syncItemsShow = true;
+        syncIcoUnknown = false;
+        for (let k in this.syncstatus.data) {
+          let lo = parseInt(this.syncstatus.data[k].frstVal);
+          let hi = parseInt(this.syncstatus.data[k].scndVal);
+          let st = this.syncstatus.data[k].state;
+          if(st != 'running'){
+            fonts.red.push(k);
+            syncIcoError = true;
+            continue;
+          }
+          if (lo > hi) {
+            fonts.orange.push(k);
+            syncIcoUnknown = true;
+            continue;
+          }
+          if(lo<1 && hi<1){
+            fonts.grey.push(k);
+            syncIcoSituation = true;
+            continue;
+          }
+          if(lo < hi) {
+            fonts.blue.push(k);
+            syncIcoSituation = true;
+            continue;
+          }
+          fonts.green.push(k);
+        }
+        if(fonts.grey.length && fonts.grey.length == this.syncstatus.data.length){
+          syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
+        }
+        for (let col in fonts) {
+          if(fonts[col].length){
+            for(let i=0;i<fonts[col].length;i++){
+              let k = fonts[col][i];
+              // let ct = this.syncstatus.data[k].type;
+              // console.log(ct + " client (" + this.syncstatus.data[k].title + ") needs color " + col + " by class: client" + col + "!)");
+              this.syncstatus.data[k].style = "client" + col;
+            }
+          }
         }
       }
-      // fix: keep client values zero if prometheus is out of info ("pooi") on node start
-      for (let k in pooi) {
-        if (pooi[k]) {
-          this.syncstatus[k].frstVal = 0;
-          this.syncstatus[k].scndVal = 0;
-        }
-      }
+      this.syncItemsShow = syncItemsShow;
+      this.syncIcoUnknown = syncIcoUnknown;
       this.syncIcoError = syncIcoError;
       this.syncIcoSituation = syncIcoSituation;
     },
@@ -217,5 +265,22 @@ export default {
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 10px;
+}
+
+/* Client font colors */
+.clientred * {
+  color: rgb(248, 67, 67);
+}
+.clientorange * {
+  color: darkorange;
+}
+.clientgrey * {
+  color: grey;
+}
+.clientblue * {
+  color: lightblue;
+}
+.clientgreen * {
+  color: rgb(0, 190, 0);
 }
 </style>

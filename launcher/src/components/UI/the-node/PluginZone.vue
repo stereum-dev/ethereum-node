@@ -1,20 +1,22 @@
 <template>
   <manage-trapezoid>
     <template #default>
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ title }} client</span>
       <div class="item-box" @drag.prevent.stop>
         <div
           class="items"
           v-for="(item, index) in list"
           :key="index"
           ref="itemsList"
+          @mouseleave="mouseLeaveToHide(item)"
         >
           <img
             :src="item.sIcon"
             alt="icon"
-            @click.self="pluginMenuHandler(item)"
-            @dblclick.self="openDefaultBrowser(item)"
+            @click="pluginMenuHandler(item)"
+            @dblclick.self="displayPluginLogPage(item)"
           />
+
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
@@ -73,12 +75,19 @@
             @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
+          <Transition>
+            <plugin-logs
+              :item="itemToLogs"
+              v-if="isPluginLogPageActive"
+              @close-log="closePluginLogsPage"
+            ></plugin-logs>
+          </Transition>
         </div>
       </div>
     </template>
     <template #plusIcon>
       <div class="plus-icon-box" @click="$emit('modalView', list)">
-        <img src="/img/icon/manage-node-icons/fullscreen1.png" alt="icon" />
+        <img src="/img/icon/manage-node-icons/fullscreen.png" alt="icon" />
       </div>
     </template>
   </manage-trapezoid>
@@ -90,6 +99,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import ManageTrapezoid from "../node-manage/ManageTrapezoid.vue";
 import PluginMenu from "./PluginMenu.vue";
+import PluginLogs from "./PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 import PrunningModal from "./PrunningModal.vue";
 import ResyncModal from "./ResyncModal.vue";
@@ -100,6 +110,7 @@ export default {
     TheExpert,
     PrunningModal,
     ResyncModal,
+    PluginLogs,
   },
   props: {
     title: {
@@ -123,7 +134,9 @@ export default {
       isServicePending: false,
       gethPrunningWarningModal: false,
       resyncWarningModal: false,
+      isPluginLogPageActive: false,
       options: null,
+      itemToLogs: {},
     };
   },
   computed: {
@@ -181,7 +194,7 @@ export default {
           if (item?.category === el.category && item?.id === el.id)
             el.displayPluginMenu = !el.displayPluginMenu;
         });
-      }, 100);
+      }, 300);
     },
     hidePluginMenu(el) {
       el.displayPluginMenu = false;
@@ -272,6 +285,19 @@ export default {
         data: { checkpointURL: data },
       });
     },
+    mouseLeaveToHide(el) {
+      setTimeout(() => {
+        el.displayPluginMenu = false;
+      }, 2000);
+    },
+    displayPluginLogPage(el) {
+      el.expertOptionsModal = false;
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
   },
 };
 </script>
@@ -281,34 +307,35 @@ export default {
 }
 
 .title {
-  width: auto;
+  width: max-content;
   min-width: 70px;
-  height: 20px;
-  color: white;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 3px 5px;
-  background-color: #285940;
-  border-radius: 20px;
+  height: 16%;
+  color: #d1d1d1;
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 2px 1rem 0 1rem;
+  background-color: #264744;
+  border-radius: 0 15px 15px 0;
   position: absolute;
   left: 0;
-  top: -13px;
+  top: -7%;
   box-shadow: 0 1px 3px rgb(47, 47, 47);
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 
 .item-box {
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-template-rows: repeat(2, 50%);
+  grid-auto-rows: minmax(80px, auto);
   row-gap: 1px;
+  width: 99%;
+  min-height: 80px;
+  margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 99%;
-  height: 160px;
-  margin: 0 auto;
 }
 
 .item-box::-webkit-scrollbar {
@@ -390,7 +417,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  top: 29%;
+  top: 23%;
   left: 7%;
   z-index: 11;
   animation: power 500ms;
@@ -399,12 +426,12 @@ export default {
 @keyframes power {
   0% {
     opacity: 0;
-    top: 29%;
+    top: 23%;
     left: 41%;
   }
 
   100% {
-    top: 29%;
+    top: 23%;
     left: 7%;
   }
 }
@@ -459,33 +486,6 @@ export default {
   box-shadow: 0 1px 2px 1px rgb(48, 48, 48);
 }
 
-.menu-content .restart {
-  width: 17px;
-  height: 17px;
-  border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 39%;
-  left: 2%;
-  animation: restart 500ms;
-  z-index: 11;
-}
-
-@keyframes restart {
-  0% {
-    opacity: 0;
-    top: 39%;
-    left: 42%;
-  }
-
-  100% {
-    top: 39%;
-    left: 2%;
-  }
-}
-
 .menu-content .restart img {
   width: 17px;
   height: 17px;
@@ -503,5 +503,14 @@ export default {
 .menu-content .restart img:active,
 .menu-content .power img:active {
   transform: scale(1);
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

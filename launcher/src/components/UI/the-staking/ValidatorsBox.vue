@@ -1,6 +1,7 @@
 <template>
   <div class="validators-box">
     <div class="validator-table">
+      <comming-soon></comming-soon>
       <div class="validator-table-title">
         <span>DATE</span>
         <span>VALIATOR</span>
@@ -26,12 +27,12 @@
   grid-column: 10/13;
   grid-row: 2/3;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
 }
 .validators-box .validator-title {
   width: 94%;
-  height:15%;
+  height: 15%;
   background-color: #bfbfbf;
   border-radius: 20px 20px 20px 20px;
   display: flex;
@@ -40,7 +41,7 @@
 }
 .validator-title .title {
   width: 80%;
-  height:80%;
+  height: 80%;
   font-size: 14px;
   font-weight: 900;
   color: rgb(36, 36, 36);
@@ -57,6 +58,7 @@
   justify-content: center;
   align-items: center;
   border-radius: 3px;
+  position: relative;
 }
 .validator-table .validator-table-title {
   width: 100%;
