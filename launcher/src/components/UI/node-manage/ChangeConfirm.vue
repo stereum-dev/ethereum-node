@@ -160,13 +160,13 @@ export default {
 .table-footer {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 97%;
-  height: 5%;
+  height: 8%;
   margin: 0 auto;
 }
 .table-footer span {
-  color: #eee;
+  color: rgb(209, 209, 209);
   font-size: 0.6rem;
   font-weight: 600;
 }
