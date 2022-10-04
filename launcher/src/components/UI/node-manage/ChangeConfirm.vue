@@ -45,6 +45,8 @@
   </div>
 </template>
 <script>
+import { toRaw } from "vue";
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
