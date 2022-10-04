@@ -26,11 +26,18 @@
         </div>
       </div>
       <div class="logsTable">
-        <div class="tableRow" v-for="(log, idx) in logs" :key="idx">
-          <div class="rowMsg">
-            <span>{{ log.message }}</span>
+        <template v-if="logsList.length">
+          <div class="tableRow" v-for="(log, idx) in logsList" :key="idx">
+            <div class="rowMsg">
+              <span>{{ log.message }}</span>
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <div class="tableRow">
+            <span>No log found in the list</span>
+          </div>
+        </template>
       </div>
       <div class="logsFooter">
         <div class="textBox">
@@ -41,7 +48,7 @@
             id="search"
             type="text"
             placeholder="Search"
-            v-model="filtered"
+            v-model="searchValue"
           />
         </div>
         <div class="serviceBox">
@@ -75,14 +82,17 @@ export default {
             "Sep 29 10:39:31.116 characters INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
       ],
-      filtered: "",
+      searchValue: "",
     };
   },
-  watch: {
-    filtered: function (val) {
-      this.logs = this.logs.filter((item) => {
-        return item.message.toLowerCase().includes(val.toLowerCase());
-      });
+  computed: {
+    logsList() {
+      if (this.searchValue.trim().length > 0) {
+        return this.logs.filter((log) =>
+          log.message.toLowerCase().includes(this.searchValue.toLowerCase())
+        );
+      }
+      return this.logs;
     },
   },
 };
