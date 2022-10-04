@@ -51,11 +51,9 @@ import { useNodeStore } from "@/store/theNode";
 export default {
   props: ["confirmChanges"],
   computed: {
-    ...mapWritableState(useNodeStore, {
-      selectedItemToRemove: "selectedItemToRemove",
-    }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+      selectedItemToRemove: "selectedItemToRemove",
     }),
   },
   methods: {
@@ -210,7 +208,7 @@ export default {
 }
 .tableRow span {
   color: rgb(207, 207, 207);
-  font-size: .6rem;
+  font-size: 0.6rem;
   font-weight: 600;
 }
 

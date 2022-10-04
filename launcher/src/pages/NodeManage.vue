@@ -186,7 +186,6 @@ export default {
   },
   computed: {
     ...mapWritableState(useNodeStore, {
-      selectedItemToRemove: "selectedItemToRemove",
       confirmChanges: "confirmChanges",
       configData: "configData",
     }),
@@ -197,6 +196,7 @@ export default {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
       actionContents: "actionContents",
+      selectedItemToRemove: "selectedItemToRemove",
     }),
   },
   mounted() {
