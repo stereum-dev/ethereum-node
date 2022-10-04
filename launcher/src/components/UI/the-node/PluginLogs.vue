@@ -133,7 +133,7 @@ export default {
   align-items: center;
 }
 .logsHeader .title {
-  width: 60%;
+  width: 50%;
   height: 100%;
   color: rgb(203, 202, 202);
   display: flex;
@@ -149,46 +149,52 @@ export default {
   margin-left: 10px;
 }
 .logsHeader .serviceDetails {
-  width: 40%;
+  width: 45%;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 1fr;
   justify-content: flex-start;
   align-items: center;
   padding: 2px 5px;
 }
 .logsHeader .serviceDetails .serviceIcon {
-  width: 9%;
-  height: 90%;
+  grid-column: 1/2;
+  width: 95%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .logsHeader .serviceDetails img {
-  width: 95%;
+  width: 60%;
 }
 .logsHeader .serviceDetails .serviceName {
-  min-width: 180px;
+  grid-column: 2/7;
+  grid-row: 1/2;
   width: max-content;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   text-transform: uppercase;
+  margin-left: 3%;
 }
 .serviceDetails .serviceName span {
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(202, 205, 206);
-  margin-left: 3%;
 }
 .logsHeader .serviceDetails .categoryBox {
-  width: 40%;
+  grid-column: 7/10;
+  grid-row: 1/2;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: flex-start;
-  margin-left: 3%;
+  margin-left: 5%;
 }
 .logsHeader .closeBox {
   width: 5%;
@@ -200,7 +206,7 @@ export default {
   cursor: pointer;
 }
 .logsHeader .closeBox img {
-  width: 100%;
+  width: 93%;
   height: 100%;
 }
 .logsHeader .closeBox img:active {
