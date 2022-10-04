@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <button class="confirm-btn">CONFIRM</button>
+      <button class="confirm-btn" @click="confirmHandler">CONFIRM</button>
     </div>
     <div class="table-container">
       <div class="table-box">
