@@ -164,14 +164,24 @@ promiseIpc.on("startOneClickServices", async () => {
   return returnValue;
 });
 
-// close rpc tunnel
+// open rpc tunnel
 promiseIpc.on("openRpcTunnel", async (args) => {
   return await monitoring.openRpcTunnel(args);
 });
 
-// open rpc tunnel
+// close rpc tunnel
 promiseIpc.on("closeRpcTunnel", async () => {
   return await monitoring.closeRpcTunnel();
+});
+
+// open beacon tunnel
+promiseIpc.on("openBeaconTunnel", async (args) => {
+  return await monitoring.openBeaconTunnel(args);
+});
+
+// close beacon tunnel
+promiseIpc.on("closeBeaconTunnel", async () => {
+  return await monitoring.closeBeaconTunnel();
 });
 
 // get data for node stats (prometheus, and so on)

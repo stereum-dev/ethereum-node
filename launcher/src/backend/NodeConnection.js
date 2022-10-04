@@ -771,9 +771,9 @@ export class NodeConnection {
     }
   }
 
-  async closeTunnels(){
+  async closeTunnels(onlySpecificPorts=[]){
     try{
-      await this.sshService.closeTunnels()
+      await this.sshService.closeTunnels(onlySpecificPorts)
     } catch (err) {
       log.error(err)
     }

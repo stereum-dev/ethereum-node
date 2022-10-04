@@ -19,6 +19,7 @@ export const useControlStore = defineStore("theControl", {
       code: null,
       syncstatus: [],
       rpcstatus: null,
+      beaconstatus: null,
       storagestatus: [],
       consensusClient: "",
       consensusNumPeer: null,

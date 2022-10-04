@@ -31,6 +31,7 @@ export default {
       code: "code",
       syncstatus: "syncstatus",
       rpcstatus: "rpcstatus",
+      beaconstatus: "beaconstatus",
       storagestatus: "storagestatus",
       consensusClient: "consensusClient",
       consensusNumPeer: "consensusNumPeer",
@@ -79,6 +80,7 @@ export default {
             // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
             // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
             // data.rpcstatus    : can be used for wiring launcher/src/components/UI/the-control/{RpcEndpoint|NodeConnectionRow}.vue
+            // data.beaconstatus    : can be used for wiring launcher/src/components/UI/the-control/{DataApi|NodeConnectionRow}.vue
             // console.log("@FRONTEND: data for wiring controls", nodeStats);
             try {
               this.code = nodeStats.code;
@@ -86,6 +88,7 @@ export default {
               this.numPeer = nodeStats.data.p2pstatus.data.numPeer;
               this.syncstatus = nodeStats.data.syncstatus;
               this.rpcstatus = nodeStats.data.rpcstatus;
+              this.beaconstatus = nodeStats.data.beaconstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;
               this.consensusClient =
                 nodeStats.data.p2pstatus.data.details.consensus.client;
