@@ -13,6 +13,7 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
@@ -30,6 +31,10 @@ export default {
     clearInterval(this.polling);
   },
   computed: {
+    ...mapWritableState(useNodeManage, {
+      networkList: "networkList",
+      currentNetwork: "currentNetwork",
+    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
@@ -59,6 +64,7 @@ export default {
             const newServices = services.map((service) => {
               let oldService;
               if (
+                this.installedServices &&
                 this.installedServices
                   .map((s) => s.config.serviceID)
                   .includes(service.config.serviceID)
@@ -95,14 +101,16 @@ export default {
               }
               return oldService;
             });
-            this.installedServices = newServices.concat(otherServices);
+            this.installedServices = newServices.concat(otherServices).map((e,i) => {e.id = i;return e});
             let beaconService = this.installedServices.find(
               (s) => s.category === "consensus"
             );
             if (beaconService && beaconService.config.network === "mainnet") {
               this.network = "mainnet";
+              this.currentNetwork = this.networkList.find(item => item.network === "mainnet")
             } else {
               this.network = "testnet";
+              this.currentNetwork = this.networkList.find(item => item.network === "testnet")
             }
             if (needForTunnel.length != 0 && this.refresh) {
               let localPorts = await ControlService.getAvailablePort({
@@ -137,6 +145,12 @@ export default {
                 (service) => service.headerOption
               );
             }
+          }else{
+            if(!this.updating){
+              this.installedServices = []
+              this.headerServices = []
+              this.network = ""
+            } 
           }
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services);

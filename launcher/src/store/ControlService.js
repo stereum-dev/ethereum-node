@@ -155,6 +155,7 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("importKey", {
       files: files,
       password: args.password,
+      service: args.service,
     });
   }
 
@@ -232,6 +233,10 @@ class ControlService extends EventEmitter {
 
   async chooseServiceAction(args) {
     return await this.promiseIpc.send("chooseServiceAction", args);
+  }
+
+  async modifyServices(args) {
+    return await this.promiseIpc.send("modifyServices", args);
   }
 }
 if (!instance) {

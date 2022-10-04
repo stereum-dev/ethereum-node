@@ -3,7 +3,7 @@
     <div class="time-reward-box">
       <div class="time-reward">
         <div class="time-reward-title">
-          <span>TOTAL BALANCE</span>
+          <span>TOTAL BALANCE OF {{ keys.length }} VALIDATORS</span>
         </div>
         <div class="time-reward-value">
           <span>{{ totalBalance }}</span>
@@ -62,6 +62,7 @@ export default {
   computed: {
     ...mapState(useStakingStore, {
       totalBalance: "totalBalance",
+      keys: "keys",
     }),
   },
 };

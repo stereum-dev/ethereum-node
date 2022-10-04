@@ -57,7 +57,7 @@ export default {
   methods: {
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
-      this.$copyText(pubkeyToCopy)
+      navigator.clipboard.writeText(pubkeyToCopy)
         .then(() => {
           console.log("copied!");
         })

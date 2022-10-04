@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-      <button class="confirm-btn">CONFIRM</button>
+      <button class="confirm-btn" @click="confirmHandler">CONFIRM</button>
     </div>
     <div class="table-container">
       <div class="table-box">
@@ -22,7 +22,7 @@
           <span>{{ item.content }}</span>
           <div class="right-icon">
             <img
-              src="../../../../public/img/icon/manage-node-icons/plugin-item-icon.png"
+              :src="item.service.sIcon"
               alt="icon"
             />
           </div>
@@ -48,25 +48,45 @@
   </div>
 </template>
 <script>
+import { toRaw } from "vue";
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { useNodeStore } from "@/store/theNode";
+import { useServices } from "@/store/services";
 export default {
-  props: ["confirmChanges"],
   computed: {
-    ...mapWritableState(useNodeStore, {
-      selectedItemToRemove: "selectedItemToRemove",
-    }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
+      selectedItemToRemove: "selectedItemToRemove",
+      confirmChanges: "confirmChanges",
+      actionContents: "actionContents",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
     }),
   },
   methods: {
+    getActions(action, service){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: toRaw(service)}
+      return undefined
+    },
     clickOnRemoveBtn() {
       this.newConfiguration = this.newConfiguration.filter(
         (item) => !this.selectedItemToRemove.includes(item)
       );
+      this.selectedItemToRemove.forEach(item => {
+        this.confirmChanges.push(toRaw(this.getActions("DELETE",item)))
+      })
+      this.installedServices.forEach(item => {
+        item.active = false
+      })
       this.selectedItemToRemove = [];
+    },
+    async confirmHandler() {
+      //await ControlService.modifyServices(toRaw(this.confirmChanges))
+      this.confirmChanges = []
     },
   },
 };

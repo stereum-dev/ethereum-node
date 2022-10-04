@@ -29,16 +29,11 @@ export class ValidatorAccountManager {
         })
     }
 
-    async importKey(files, password) {
+    async importKey(files, password, serviceID) {
         this.createBatch(files, password)
         let services = await this.serviceManager.readServiceConfigurations()
-        let client = undefined
-        let possibilities = ['Validator', 'Beacon']
-        let i = 0
-        while (client === undefined && i <= 1) {
-            client = (services.find(service => service.service.includes(possibilities[i])))
-            i++
-        }
+        
+        let client = services.find(service => service.id === serviceID)
         let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
 
 

@@ -90,7 +90,7 @@ export default {
     },
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
-      this.$copyText(pubkeyToCopy)
+      navigator.clipboard.writeText(pubkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -100,7 +100,7 @@ export default {
     },
     copySecretKey() {
       let secretkeyToCopy = this.secretkey;
-      this.$copyText(secretkeyToCopy)
+      navigator.clipboard.writeText(secretkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
