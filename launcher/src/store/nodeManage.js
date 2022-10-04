@@ -33,7 +33,6 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
         },
       ],
-      selectedItemToRemove: [],
       actionContents: [
         {
           id: 1,
@@ -81,12 +80,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
         },
       ],
-      currentNetwork: {
-        id: 1,
-        name: "Mainnet",
-        network: "mainnet",
-        icon: "/img/icon/click-installation/mainnet-icon.png",
-      },
+      currentNetwork: {},
     };
   },
   getters: {},

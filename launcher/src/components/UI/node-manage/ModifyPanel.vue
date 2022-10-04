@@ -148,15 +148,10 @@ export default {
     items: {
       handler: function (val) {
         this.plugin = val;
+        this.optionsToConnect();
       },
       immediate: true,
     },
-  },
-  mounted() {
-    this.optionsToConnect();
-  },
-  beforeUpdate() {
-    this.optionsToConnect();
   },
   methods: {
     changeTheOption() {
@@ -189,7 +184,7 @@ export default {
             selectedServiceToSync: false,
           };
         });
-      } else if (this.items.category === "execution") {
+      } else {
         this.options = [];
         return;
       }

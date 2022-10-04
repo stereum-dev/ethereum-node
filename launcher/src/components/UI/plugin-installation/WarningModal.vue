@@ -15,11 +15,9 @@
         >
       </div>
       <div class="confirm-box">
-        <router-link class="confirm-link" :to="{ path: '/node' }">
-          <button @click="$emit('installBtn')" class="confirm-btn">
+        <button @click="$emit('installBtn')" class="confirm-btn">
             INSTALL
-          </button>
-        </router-link>
+        </button>
         <!-- <div class="confirm-btn" >
           <span>Confirm</span>
         </div> -->

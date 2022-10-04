@@ -6,7 +6,6 @@ export const useNodeStore = defineStore("theNode", {
       executionItems: [],
       validatorItems: [],
       servicePlugins: [],
-
       sidebarPlugins: [
         {
           id: 1,
@@ -77,13 +76,6 @@ export const useNodeStore = defineStore("theNode", {
           drag: true,
           category: "consensus",
           active: false,
-        },
-      ],
-      configData: [
-        {
-          id: 1,
-          name: "Configuration",
-          network: "testNet",
         },
       ],
       newUpdates: [

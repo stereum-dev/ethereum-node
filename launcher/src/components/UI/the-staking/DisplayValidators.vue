@@ -399,16 +399,6 @@ export default {
         this.insertKeyBoxActive = true;
       }
     },
-    // copyHandler(item) {
-    //   let toCopy = item.key;
-    //   this.$copyText(toCopy)
-    //     .then(() => {
-    //       console.log("copied!");
-    //     })
-    //     .catch(() => {
-    //       console.log(`can't copy`);
-    //     });
-    // },
     stateIconHandler(item) {
       switch (item.status) {
         case "active_online":
@@ -544,6 +534,7 @@ export default {
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
+        service: this.selectedService.config.serviceID
       });
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -657,7 +648,7 @@ export default {
 
     copyHandler(item) {
       let toCopy = item.key;
-      this.$copyText(toCopy)
+      navigator.clipboard.writeText(toCopy)
         .then(() => {
           console.log("copied!");
         })

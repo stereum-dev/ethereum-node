@@ -21,7 +21,7 @@
           </div>
           <span>{{ item.content }}</span>
           <div class="right-icon">
-            <img :src="item.service.sIcon" alt="icon" />
+            <img :src="item.service.icon" alt="icon" />
           </div>
         </div>
       </div>
@@ -63,23 +63,27 @@ export default {
     }),
   },
   methods: {
-    getActions(action, service) {
-      let item = this.actionContents.find((item) => item.content === action);
-      if (item) return { ...item, service: toRaw(service) };
-      return undefined;
+    getActions(action, service){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: toRaw(service)}
+      return undefined
     },
     clickOnRemoveBtn() {
       this.newConfiguration = this.newConfiguration.filter(
         (item) => !this.selectedItemToRemove.includes(item)
       );
-      this.selectedItemToRemove.forEach((item) => {
-        this.confirmChanges.push(toRaw(this.getActions("DELETE", item)));
-      });
-      console.log(this.confirmChanges);
+      this.selectedItemToRemove.forEach(item => {
+        this.confirmChanges.push(toRaw(this.getActions("DELETE",item)))
+      })
+      this.installedServices.forEach(item => {
+        item.active = false
+      })
       this.selectedItemToRemove = [];
     },
     async confirmHandler() {
-      await ControlService.modifyServices(toRaw(this.confirmChanges));
+      //await ControlService.modifyServices(toRaw(this.confirmChanges))
+      this.confirmChanges = []
     },
   },
 };

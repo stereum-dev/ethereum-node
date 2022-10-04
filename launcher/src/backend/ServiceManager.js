@@ -151,5 +151,26 @@ export class ServiceManager {
         break;
     }
   }
+
+  async deleteService(task){
+    this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
+  }
+
+  async modifyServices(tasks){
+    let done = []
+    for(let task of tasks){
+      switch (task.content) {
+        case "DELETE":
+            if(!done.includes(task.service.config.serviceID)){
+              await this.deleteService(task)
+              done.push(task.service.config.serviceID)
+            }
+          break;
+      
+        default:
+          break;
+      }
+    }
+  }
 }
 
