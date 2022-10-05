@@ -167,6 +167,7 @@ export default {
   flex-direction: column;
   color: #c1c1c1;
   position: relative;
+  pointer-events: none;
 }
 .dialogBox {
   display: flex;

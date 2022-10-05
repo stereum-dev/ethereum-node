@@ -33,7 +33,7 @@
     <div v-show="showData" class="compTtl">
       <span>{{ copyVal }}</span>
     </div>
-     <div v-show="!showData" class="spinner">
+    <div v-show="!showData" class="spinner">
       <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
     </div>
   </div>
@@ -78,10 +78,10 @@ export default {
   },
   methods: {
     async copy(s, t) {
-      if(!s){
+      if (!s) {
         this.dialogValue = "Please turn ON the DATA-API tunnel first!";
         this.openDialog = true;
-      }else{
+      } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " DATA-API-URL copied to clipboard!";
@@ -93,43 +93,45 @@ export default {
       }
     },
     async toggle() {
-      if(!this.showData) return;  
-      if(!this.toggleAllowed) return;
+      if (!this.showData) return;
+      if (!this.toggleAllowed) return;
       this.toggleAllowed = false;
       let isActive = this.isActive ? false : true;
       let result;
-      try{
-        if(isActive){
+      try {
+        if (isActive) {
           const localPorts = await ControlService.getAvailablePort({
             min: 5545,
             max: 5999,
             amount: 1,
-          })
-          result = await ControlService.openBeaconTunnel({force_local_port:localPorts.pop()});
-        }else{
+          });
+          result = await ControlService.openBeaconTunnel({
+            force_local_port: localPorts.pop(),
+          });
+        } else {
           result = await ControlService.closeBeaconTunnel();
         }
-      }catch(e){
+      } catch (e) {
         console.log(e);
       }
       this.beaconstatus.data.url = result.data.url;
       this.isActive = !result || result.code ? this.isActive : isActive;
-      this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+      this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
       this.dataApiItems[0].value = this.beaconstatus.data.url;
       this.toggleAllowed = true;
     },
     beaconControler() {
       this.isActive = false;
       this.showData = false;
-      if(this.code === 0 && this.beaconstatus.code === 0){
+      if (this.code === 0 && this.beaconstatus.code === 0) {
         this.dataApiItems[0].title = this.beaconstatus.data.clt;
         this.dataApiItems[0].value = this.beaconstatus.data.url;
         this.isActive = this.beaconstatus.data.url ? true : false;
-        this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+        this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
         this.showData = true;
         return;
       }
-      if(this.waitForData) clearTimeout(this.waitForData);
+      if (this.waitForData) clearTimeout(this.waitForData);
       this.waitForData = setTimeout(() => {
         this.beaconControler();
       }, 250);
@@ -138,7 +140,7 @@ export default {
 };
 </script>
 <style scoped>
-  .spinner {
+.spinner {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,6 +163,7 @@ export default {
   flex-direction: column;
   color: #c1c1c1;
   position: relative;
+  pointer-events: none;
 }
 
 .dialogBox {
