@@ -145,7 +145,7 @@ export default {
   height: 100%;
 }
 .spinner img {
-  width: 100%;
+  width: 80%;
 }
 .dataApi-parent {
   display: flex;
