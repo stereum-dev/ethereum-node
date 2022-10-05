@@ -88,7 +88,7 @@ export class Monitoring {
     const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
     const hash = crypto.createHash('md5').update(args.join("-")).digest('hex'); // cache id
-    const file = path.join(os.tmpdir(), 'server_infos_cache.txt');
+    const file = path.join(os.tmpdir(), 'server_infos_cache_' + process.getCreationTime() + '.txt');
     const dnow = new Date();
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
@@ -1055,7 +1055,7 @@ export class Monitoring {
 
   // Close RPC tunnel on request
   async closeRpcTunnel(){
-    
+
     // Get current RPC status
     const rpcstatus = await this.getRpcStatus();
     if(rpcstatus.code)
