@@ -34,7 +34,10 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="loading" />
+      <img
+        src="../../../../public/img/icon/control/spinner.gif"
+        alt="loading"
+      />
     </div>
   </div>
 </template>
@@ -59,6 +62,7 @@ export default {
         {
           id: 1,
           title: "DUMMY",
+
           value: "123456",
         },
       ],
@@ -163,6 +167,7 @@ export default {
   flex-direction: column;
   color: #c1c1c1;
   position: relative;
+  pointer-events: none;
 }
 .dialogBox {
   display: flex;
