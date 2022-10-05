@@ -298,6 +298,10 @@ promiseIpc.on("getCurrentStereumVersion", async () => {
   return await nodeConnection.getCurrentStereumVersion();
 });
 
+promiseIpc.on("getCurrentLauncherVersion", async () => {
+  return await nodeConnection.getCurrentLauncherVersion();
+});
+
 promiseIpc.on("getTasks", async () => {
   return await taskManager.getTasks();
 });

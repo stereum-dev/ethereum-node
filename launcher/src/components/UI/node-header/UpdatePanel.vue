@@ -5,7 +5,7 @@
       <div class="stereumUpdates">
         <div class="stereumUpdates-title">
           <span class="title">Stereum updates</span>
-          <span class="description">Updates for the Launcher & Node </span>
+          <span class="description">Updates for the Launcher ({{ launcherVersion }}) & Node </span>
         </div>
         <div class="stereum-updateBox">
           <div class="versionBox">
@@ -150,6 +150,7 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
+      launcherVersion: "launcherVersion",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",

@@ -213,6 +213,10 @@ class ControlService extends EventEmitter {
   async getCurrentStereumVersion() {
     return await this.promiseIpc.send("getCurrentStereumVersion");
   }
+  
+  async getCurrentLauncherVersion() {
+    return await this.promiseIpc.send("getCurrentLauncherVersion");
+  }
 
   async getTasks() {
     return await this.promiseIpc.send("getTasks"); // gets the current available Data
