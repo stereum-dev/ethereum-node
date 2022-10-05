@@ -59,8 +59,9 @@
               />
               <span class="balance">{{ item.balance }}</span>
               <div class="option-box">
-                <div class="grafiti-box">
+                <div class="grafiti-box" >
                   <img
+                  :class="{ disabled: disable }"
                     @click="grafitiDisplayHandler(item)"
                     class="grafiti-icon"
                     src="../../../../public/img/icon/the-staking/option-graffiti.png"
