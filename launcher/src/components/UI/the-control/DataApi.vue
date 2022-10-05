@@ -1,5 +1,6 @@
 <template>
   <div class="dataApi-parent">
+    <comming-soon></comming-soon>
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
