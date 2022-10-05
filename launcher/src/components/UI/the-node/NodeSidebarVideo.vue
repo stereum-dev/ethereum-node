@@ -105,9 +105,13 @@ export default {
 }
 .table-row:hover {
   transition-duration: 100ms;
-  transform: scale(1.03);
-  background-color: #338579;
+  background-color: #81b6ae;
   border: 1px solid #235750;
+}
+.table-row:hover span {
+  transition-duration: 100ms;
+  color: #242529;
+  font-weight: 700;
 }
 
 .question-icon {

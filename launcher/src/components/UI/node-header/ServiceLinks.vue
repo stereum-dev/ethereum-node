@@ -174,8 +174,7 @@ export default {
 .service-icon {
   width: 37px;
   height: 37px;
-  border: 1px solid #a5a5a5;
-  box-shadow: 0 1px 5px 1px rgb(22, 42, 37);
+  border: 1px solid #1d3433;
   border-radius: 5px;
   margin-left: 5px;
   display: flex;
@@ -184,7 +183,7 @@ export default {
   cursor: pointer;
 }
 .service-icon:hover {
-  border: 1px solid #7ed6fc;
+  border: 1px solid #49c7c5;
   box-shadow: none;
 }
 .service-icon .icon-box {
