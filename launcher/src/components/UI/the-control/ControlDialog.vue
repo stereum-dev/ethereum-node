@@ -13,7 +13,7 @@ export default {
 <style scoped>
 dialog {
   border-radius: 10px;
-  z-index: 10;
+  z-index: 100;
   position: fixed;
   top: 15%;
   left: 60%;
