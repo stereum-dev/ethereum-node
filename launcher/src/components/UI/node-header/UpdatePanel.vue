@@ -7,7 +7,7 @@
           <span class="title">launcher updates</span>
           <div class="launcherBox">
             <span class="currentLauncher">current:</span>
-            <span class="valueLauncher">ALPHA</span>
+            <span class="valueLauncher">{{ launcherVersion }}</span>
           </div>
         </div>
         <span class="nodeUpdate-title">node updates</span>
@@ -154,6 +154,7 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
+      launcherVersion: "launcherVersion",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",

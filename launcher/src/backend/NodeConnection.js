@@ -6,6 +6,8 @@ import axios from "axios";
 import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
+const electron = require('electron')
+
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
   log.info("pulling from main branch");
@@ -771,9 +773,9 @@ export class NodeConnection {
     }
   }
 
-  async closeTunnels(){
+  async closeTunnels(onlySpecificPorts=[]){
     try{
-      await this.sshService.closeTunnels()
+      await this.sshService.closeTunnels(onlySpecificPorts)
     } catch (err) {
       log.error(err)
     }
@@ -916,4 +918,11 @@ export class NodeConnection {
     })
 
   }
+
+  async getCurrentLauncherVersion() {
+    const app = electron.app || electron.remote.app
+    return app ? app.getVersion() : 'N/A';
+  }
+
+
 }

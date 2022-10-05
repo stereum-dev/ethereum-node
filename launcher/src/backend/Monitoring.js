@@ -11,6 +11,8 @@ export class Monitoring {
     this.nodeConnectionProm = new NodeConnection();
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
+    this.rpcTunnel = 0;
+    this.beaconTunnel = 0;
   }
 
   async checkStereumInstallation(nodeConnection) {
@@ -84,7 +86,7 @@ export class Monitoring {
     const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
     const hash = crypto.createHash('md5').update(args.join("-")).digest('hex'); // cache id
-    const file = path.join(os.tmpdir(), 'server_infos_cache.txt');
+    const file = path.join(os.tmpdir(), 'server_infos_cache_' + process.getCreationTime() + '.txt');
     const dnow = new Date();
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
@@ -224,6 +226,334 @@ export class Monitoring {
     // {rc: 0, stdout: "{"status":"error","errorType":"bad_data","error":"invalid parameter \"query\": 1:20: parse error: unexpected \"=\""}", stderr: ""}
     // {rc: 0, stdout: "{"status":"error","errorType":"bad_data","error":"… 1:1: parse error: no expression found in input"}", stderr: ""}
     return JSON.parse(result.stdout);
+  }
+
+  // Query RPC API via CURL on the node
+  // https://api.besu.hyperledger.org/
+  // https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/execution-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false
+  // Arguments:
+  // method=<string>: [REQUIRED] RPC method name or raw JSON RPC query string.
+  // params=<array> : [OPTIONAL] RPC parameters associated to the given method
+  // ec_only=<bool> : [OPTIONAL] when true returns only the matched execution client with associated RPC connection infos (default: false)
+  // Returns object with keys:
+  // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
+  // info=<string>: a message about the last result.
+  // data=<mixed> : additional data (if available) or empty string
+  // On success data keys are:
+  // ec=<object>        : the matched execution client object
+  // rpc=<object>       : rpc connection infos taken from the matched execution client
+  // api_reponse=<mixed>: the response result of the RPC api
+  async queryRpcApi(method,params=[],ec_only=false){
+
+    // Setup query
+    var query = method.trim().indexOf("{") < 0 ? JSON.stringify({
+      "jsonrpc": "2.0",
+      "method": method.trim(),
+      "params": params,
+      "id": 1,
+    }) : method;
+
+    // Define default response
+    const data = {
+      "ec":null,
+      "rpc":null,
+      "api_reponse":null,
+    }
+
+    // Make sure query is valid JSON
+    if(!ec_only){
+      try{
+        JSON.parse(query);
+      }catch(e){
+        return {
+          "code": 1,
+          "info": "error: invalid query data specified (valid JSON string expected)",
+          "data": data,
+        };
+      }
+    }
+
+    // Get service that has defined port 8545 (RPC) inside the docker container (aka servicePort)
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 2,
+        "info": "error: service infos unavailable",
+        "data": data,
+      };
+    }
+
+    // Get execution client by finding the service that has defined port 8545 (RPC) inside the docker container (aka servicePort)
+    const execution = serviceInfos.filter((s) => s.config.ports.filter((p) => p.servicePort == 8545).pop()).pop();
+    if(typeof execution !== "object" || !execution.hasOwnProperty("config")){
+      return {
+        "code": 3,
+        "info": "error: execution client not found",
+        "data": data,
+      };
+    }
+
+    // Filter the RPC port configuration and get addr/port that is mapped on docker host
+    const rpc = execution.config.ports.filter((p) => p.servicePort == 8545).pop();
+    let addr = rpc.destinationIp;
+    let port = rpc.destinationPort;
+
+    // Set matched data
+    data.ec = execution;
+    data.rpc = rpc;
+
+    // Option to return solely the matched execution client with connection infos
+    if(ec_only){
+      return {
+        "code": 0,
+        "info": "success: execution client found",
+        "data": data,
+      };
+    }
+
+    // Escape single quotes in query for bash command (note the single quotes for curl --data-raw argument)
+    query = query.replaceAll("'","'\\''");
+
+    // Build curl command
+    const cmd = `
+      curl -s --location --request POST 'http://${addr}:${port}' \
+      -H 'Content-Type: application/json' \
+      --data-raw '${query}'
+    `.trim();
+
+    // Execute the CURL command on the node and return the result
+    let result = null;
+    try {
+      result = await this.nodeConnection.sshService.exec(cmd);
+    } catch (err) {
+      return {
+        "code": 4,
+        "info": "error: could not execute curl command (" + err + ")",
+        "data": data,
+      };
+    }
+
+    // No data in stdout or data in stderr? Executed code above failed to run!
+    if(result.rc || result.stdout == "" || result.stderr != ""){
+      let err = "error:" + result.rc +": executed code failed to run";
+      if(result.stderr != ""){
+        err += " (" + result.stderr + ")";
+      }else if(result.stdout == ""){
+        err += " (syntax error)";
+      }
+      data.api_reponse = result;
+      return {
+        "code": 5,
+        "info": err,
+        "data": data,
+      };
+    }
+
+    // Parse response
+    try{
+      data.api_reponse = JSON.parse(result.stdout);
+    }catch(e){
+      data.api_reponse = result.stdout;
+      return {
+        "code": 6,
+        "info": "error: invalid api response (" + e + ")",
+        "data": data,
+      };
+    }
+
+    // Check response format
+    if(!data.api_reponse.hasOwnProperty("id")){
+      return {
+        "code": 7,
+        "info": "error: invalid api response (format unknown)",
+        "data": data,
+      };
+    }
+
+    // Check for response errors
+    if(data.api_reponse.hasOwnProperty("error")){
+      data.api_reponse = data.api_reponse.error.message + " (" + data.api_reponse.error.code + ")";
+      return {
+        "code": 8,
+        "info": "error: api responded an error -> " + data.api_reponse,
+        "data": data,
+      };
+    }
+
+    // Respond success
+    data.api_reponse = data.api_reponse.result;
+    return {
+      "code": 0,
+      "info": "success: api successfully requested",
+      "data": data,
+    };
+  }
+
+  // Query BEACON API via CURL on the node
+  // https://ethereum.github.io/beacon-APIs/
+  // https://consensys.github.io/teku/
+  // endpoint=<string>: [REQUIRED] API endpoint (relative to the host:port or a full http url)
+  // params=<array> : [OPTIONAL] API parameters associated to the given endpoint
+  // method=<string> : [OPTIONAL] HTTP request method (defaults to GET)
+  // headers=<object> : [OPTIONAL] HTTP headers (defaults to {"Content-Type":"application/json"})
+  // ec_only=<bool> : [OPTIONAL] when true returns only the matched consensus client with associated API connection infos (default: false)
+  // Returns object with keys:
+  // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
+  // info=<string>: a message about the last result.
+  // data=<mixed> : additional data (if available) or empty string
+  // On success data keys are:
+  // cc=<object>        : the matched consensus client object
+  // beacon=<object>    : BEACON api connection infos taken from the matched execution client
+  // api_reponse=<mixed>: the response of the BEACON api
+  // api_httpcode=<int> : the http status code of the BEACON api response
+  async queryBeaconApi(endpoint,params=[],method="GET",headers={},cc_only=false){
+
+    // Service definitions with their associated beacon api (service) port
+    const services = {
+      'TekuBeaconService' : 5051,
+      'LighthouseBeaconService' : 5052,
+      'PrysmBeaconService' : 3500,
+      'NimbusBeaconService' : 5052,
+    };
+
+    // Define default response
+    const data = {
+      "cc":null,
+      "beacon":null,
+      "api_reponse":null,
+      "api_httpcode":null,
+    }
+
+    // Get service that has defined port 3500 (RPC) inside the docker container (aka servicePort)
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 1,
+        "info": "error: service infos unavailable",
+        "data": data,
+      };
+    }
+
+    // Get consensus client by service name
+    const consensus = serviceInfos.filter((s) => Object.keys(services).includes(s.service)).pop();
+    if(typeof consensus !== "object" || !consensus.hasOwnProperty("config")){
+      return {
+        "code": 2,
+        "info": "error: consensus client not found",
+        "data": data,
+      };
+    }
+
+    // Filter the BEACON port configuration and get addr/port that is mapped on docker host
+    const beacon = consensus.config.ports.filter((p) => p.servicePort == services[consensus.service]).pop();
+    let addr = beacon.destinationIp;
+    let port = beacon.destinationPort;
+
+    // Set matched data
+    data.cc = consensus;
+    data.beacon = beacon;
+
+    // Option to return solely the matched consensus client with connection infos
+    if(cc_only){
+      return {
+        "code": 0,
+        "info": "success: consensus client found",
+        "data": data,
+      };
+    }
+
+    // Format endpoint
+    endpoint = typeof endpoint === "string" ? endpoint.trim().replace(/^\//, '').trim() : ''; // /a/b/c/ => a/b/c/ : ''
+    if(!endpoint){
+      return {
+        "code": 3,
+        "info": "error: invalid endpoint specified",
+        "data": data,
+      };
+    }
+
+    // Build request headers
+    headers = typeof headers === "object" && !Array.isArray(headers) && headers !== null ? headers : {};
+    headers = {...Object.fromEntries(Object.entries({
+      "Content-Type":"application/json",
+      //"Content-Type":"application/json; charset=utf-8",
+    }).map(([k, v]) => [k.toLowerCase(), v])), ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])) }
+    let requestheaders = [];
+    for (let [k, v] of Object.entries(headers)) {
+      k = k.replaceAll("'","'\\''");
+      v = v.replaceAll("'","'\\''");
+      requestheaders.push("-H '"+k+": "+v+"'");
+    }
+    requestheaders = requestheaders.length ? requestheaders.join(" ") : '';
+
+    // Build request data
+    let d = Array.isArray(params) && params.length ? JSON.stringify(params).replaceAll("'","'\\''") : '';
+    let requestdata = d ? `-d '${d}'` : '';
+
+    // Build curl command
+    const url = endpoint.startsWith('http') ? endpoint : `http://${addr}:${port}/${endpoint}`;
+    const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
+ 
+    // Execute the CURL command on the node and return the result
+    let result = null;
+    try {
+      result = await this.nodeConnection.sshService.exec(cmd);
+    } catch (err) {
+      return {
+        "code": 4,
+        "info": "error: could not execute curl command (" + err + ")",
+        "data": data,
+      };
+    }
+
+    // No data in stdout or data in stderr? Executed code above failed to run!
+    if(result.rc || result.stdout == "" || result.stderr != ""){
+      let err = "error:" + result.rc +": executed code failed to run";
+      if(result.stderr != ""){
+        err += " (" + result.stderr + ")";
+      }else if(result.stdout == ""){
+        err += " (syntax error)";
+      }
+      data.api_reponse = result;
+      return {
+        "code": 5,
+        "info": err,
+        "data": data,
+      };
+    }
+
+    // Parse response
+    let r = result.stdout.trim().split("\n");
+    let statuscode = r.length > 0 ? parseInt(r.pop()) : data.api_httpcode;
+    let jsonstring = r.length > 0 ? r.join("\n").trim() : '';
+    data.api_httpcode = statuscode;
+    try{
+      data.api_reponse = jsonstring ? JSON.parse(jsonstring) : jsonstring;
+    }catch(e){
+      data.api_reponse = jsonstring ? jsonstring : result.stdout;
+      return {
+        "code": 6,
+        "info": "error: invalid api response (" + e + ")",
+        "data": data,
+      };
+    }
+
+    // Check for response errors
+    if(data.api_reponse.hasOwnProperty("code") && data.api_reponse.hasOwnProperty("message")){
+      data.api_reponse = data.api_reponse.message + " (" + data.api_reponse.code + ")";
+      return {
+        "code": 7,
+        "info": "error: api responded an error -> " + data.api_reponse,
+        "data": data,
+      };
+    }
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: api successfully requested",
+      "data": data,
+    };
   }
 
   // Get sync status of consensus and execution clients
@@ -671,9 +1001,233 @@ export class Monitoring {
     };
   }
 
+  // Open RPC tunnel on request
+  async openRpcTunnel(args){
+
+    // Extract arguments
+    var {force_fresh, force_local_port} = Object.assign({
+      force_fresh:false,
+      force_local_port:0,
+    }, args);
+
+    // Get current RPC status
+    const rpcstatus = await this.getRpcStatus();
+    if(rpcstatus.code)
+      return rpcstatus;
+
+    // Check if the tunnel is already open
+    if(this.rpcTunnel > 0 && !force_fresh){
+      rpcstatus.data.url = 'http://' + rpcstatus.data.rpc.destinationIp + ':' + this.rpcTunnel;
+      return {
+        "code": 0,
+        "info": "success: tunnel alrerady open",
+        "data": rpcstatus.data,
+      };
+    }
+
+    // Open the tunnel
+    try{
+      var localPort = typeof force_local_port == "number" && force_local_port > 0 ? force_local_port : 8545;
+      await this.nodeConnection.openTunnels([{
+        dstHost: rpcstatus.data.rpc.destinationIp,
+        dstPort: rpcstatus.data.rpc.destinationPort,
+        localPort: localPort,
+      }]);
+      this.rpcTunnel = localPort;
+    }catch(e){
+      return {
+        "code": 0,
+        "info": "error: failed to open tunnel (" + e + ")",
+        "data": rpcstatus.data,
+      };
+    }
+
+    // Respond success
+    rpcstatus.data.url = 'http://' + rpcstatus.data.rpc.destinationIp + ':' + this.rpcTunnel;
+    return {
+      "code": 0,
+      "info": "success: tunnel successfully opened",
+      "data": rpcstatus.data,
+    };
+  }
+
+  // Close RPC tunnel on request
+  async closeRpcTunnel(){
+
+    // Get current RPC status
+    const rpcstatus = await this.getRpcStatus();
+    if(rpcstatus.code)
+      return rpcstatus;
+
+    // Check if the tunnel is open at all
+    if(this.rpcTunnel < 1){
+      rpcstatus.data.url = '';
+      return {
+        "code": 0,
+        "info": "success: tunnel alrerady closed",
+        "data": rpcstatus.data,
+      };
+    }
+
+    // Close the tunnel
+    try{
+      await this.nodeConnection.closeTunnels([this.rpcTunnel]);
+      this.rpcTunnel = 0;
+    }catch(e){
+      return {
+        "code": 0,
+        "info": "error: failed to close tunnel (" + e + ")",
+        "data": rpcstatus.data,
+      };
+    }
+
+    // Respond success
+    rpcstatus.data.url = '';
+    return {
+      "code": 0,
+      "info": "success: tunnel successfully closed",
+      "data": rpcstatus.data,
+    };
+  }
+
+  // Get RPC status
+  async getRpcStatus(){
+
+    // Check if RPC port is enabled
+    let result = await this.queryRpcApi("web3_clientVersion");
+    if(result.code)
+      return result;
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: rpcstatus successfully retrieved",
+      "data": {
+        rpc: result.data.rpc,
+        url: this.rpcTunnel > 0 ? 'http://' + result.data.rpc.destinationIp + ':' + this.rpcTunnel : '',
+        clt: result.data.ec.service.replace(/Service/gi,"").toUpperCase(),
+      },
+    };
+  }
+
+  // Open BEACON tunnel on request
+  async openBeaconTunnel(args){
+
+    // Extract arguments
+    var {force_fresh, force_local_port} = Object.assign({
+      force_fresh:false,
+      force_local_port:0,
+    }, args);
+
+    // Get current BEACON status
+    const beaconstatus = await this.getBeaconStatus();
+    if(beaconstatus.code)
+      return beaconstatus;
+
+    // Check if the tunnel is already open
+    if(this.beaconTunnel > 0 && !force_fresh){
+      beaconstatus.data.url = 'http://' + beaconstatus.data.beacon.destinationIp + ':' + this.beaconTunnel;
+      return {
+        "code": 0,
+        "info": "success: tunnel alrerady open",
+        "data": beaconstatus.data,
+      };
+    }
+
+    // Open the tunnel
+    try{
+      var localPort = typeof force_local_port == "number" && force_local_port > 0 ? force_local_port : 5545;
+      await this.nodeConnection.openTunnels([{
+        dstHost: beaconstatus.data.beacon.destinationIp,
+        dstPort: beaconstatus.data.beacon.destinationPort,
+        localPort: localPort,
+      }]);
+      this.beaconTunnel = localPort;
+    }catch(e){
+      return {
+        "code": 0,
+        "info": "error: failed to open tunnel (" + e + ")",
+        "data": beaconstatus.data,
+      };
+    }
+
+    // Respond success
+    beaconstatus.data.url = 'http://' + beaconstatus.data.beacon.destinationIp + ':' + this.beaconTunnel;
+    return {
+      "code": 0,
+      "info": "success: tunnel successfully opened",
+      "data": beaconstatus.data,
+    };
+  }
+
+  // Close BEACON tunnel on request
+  async closeBeaconTunnel(){
+
+    // Get current BEACON status
+    const beaconstatus = await this.getBeaconStatus();
+    if(beaconstatus.code)
+      return beaconstatus;
+
+    // Check if the tunnel is open at all
+    if(this.beaconTunnel < 1){
+      beaconstatus.data.url = '';
+      return {
+        "code": 0,
+        "info": "success: tunnel alrerady closed",
+        "data": beaconstatus.data,
+      };
+    }
+
+    // Close the tunnel
+    try{
+      await this.nodeConnection.closeTunnels([this.beaconTunnel]);
+      this.beaconTunnel = 0;
+    }catch(e){
+      return {
+        "code": 0,
+        "info": "error: failed to close tunnel (" + e + ")",
+        "data": beaconstatus.data,
+      };
+    }
+
+    // Respond success
+    beaconstatus.data.url = '';
+    return {
+      "code": 0,
+      "info": "success: tunnel successfully closed",
+      "data": beaconstatus.data,
+    };
+  }
+
+  // Get BEACON status
+  async getBeaconStatus(){
+
+    // Check if BEACON port is enabled
+    let result = await this.queryBeaconApi("/eth/v1/node/syncing");
+    if(result.code)
+      return result;
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: beaconstatus successfully retrieved",
+      "data": {
+        beacon: result.data.beacon,
+        url: this.beaconTunnel > 0 ? 'http://' + result.data.beacon.destinationIp + ':' + this.beaconTunnel : '',
+        clt: result.data.cc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+      },
+    };
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
+      const beaconstatus = await this.getBeaconStatus();
+      // if(beaconstatus.code)
+      //   return beaconstatus;
+      const rpcstatus = await this.getRpcStatus();
+      // if(rpcstatus.code)
+      //   return rpcstatus;
       const storagestatus = await this.getStorageStatus();
       // if(storagestatus.code)
       //   return storagestatus;
@@ -687,12 +1241,11 @@ export class Monitoring {
         "code": 0,
         "info": "success: data successfully retrieved",
         "data": {
-          // 'syncstatus':syncstatus.data,
-          // 'p2pstatus':p2pstatus.data,
-          // 'storagestatus':storagestatus.data,
           'syncstatus':syncstatus,
           'p2pstatus':p2pstatus,
           'storagestatus':storagestatus,
+          'rpcstatus':rpcstatus,
+          'beaconstatus':beaconstatus,
         }
       };
     } catch (err) {
@@ -704,6 +1257,24 @@ export class Monitoring {
     }
   }
 
+  // Just a demo for the Beacon API
+  async myBeaconApiDemo(){
+    // queryBeaconApi(endpoint,params=[],method="GET",headers={},cc_only=false)
+    //let result = await this.queryBeaconApi("/eth/v1/node/health");
+    //let result = await this.queryBeaconApi("/eth/v1/node/syncingx");
+    let result = await this.queryBeaconApi("/eth/v1/node/syncing");
+    // let result = await this.queryBeaconApi("/eth/v1/validator/sync_committee_subscriptions",[
+    //   {
+    //     "validator_index": "string",
+    //     "sync_committee_indices": [
+    //       "string"
+    //     ],
+    //     "until_epoch": "string"
+    //   }
+    // ],"POST");
+    return result;
+  }
+
   // Just a demo how to get all keys from prometheus and how to fetch different services thru getServiceInfos
   async getAllPrometheusKeysDemo(){
     const serviceInfos = await this.getServiceInfos("PrometheusService","GrafanaService");
@@ -711,10 +1282,10 @@ export class Monitoring {
     if(typeof prometheus != "object"){
       return "we have a bad day ;)";
     }
-    let addr = prometheus.config.ports[0].destinationIp;
-    let port = prometheus.config.ports[0].destinationPort;
-    let service_port = prometheus.config.ports[0].servicePort;
-    let service_prot = prometheus.config.ports[0].servicePortProtocol;
+    let addr = prometheus.config.ports[0].destinationIp;                // the addr on the docker host
+    let port = prometheus.config.ports[0].destinationPort;              // the port on the docker host
+    let service_port = prometheus.config.ports[0].servicePort;          // the port in the docker container
+    let service_prot = prometheus.config.ports[0].servicePortProtocol;  // the protocol on the docker host and in the container
     const cmd = `curl -s http://${addr}:${port}/api/v1/label/__name__/values`;
     const resp = await this.nodeConnection.sshService.exec(cmd);
     return resp;

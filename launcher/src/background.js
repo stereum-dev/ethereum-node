@@ -164,12 +164,32 @@ promiseIpc.on("startOneClickServices", async () => {
   return returnValue;
 });
 
-//get data for whatever
+// open rpc tunnel
+promiseIpc.on("openRpcTunnel", async (args) => {
+  return await monitoring.openRpcTunnel(args);
+});
+
+// close rpc tunnel
+promiseIpc.on("closeRpcTunnel", async () => {
+  return await monitoring.closeRpcTunnel();
+});
+
+// open beacon tunnel
+promiseIpc.on("openBeaconTunnel", async (args) => {
+  return await monitoring.openBeaconTunnel(args);
+});
+
+// close beacon tunnel
+promiseIpc.on("closeBeaconTunnel", async () => {
+  return await monitoring.closeBeaconTunnel();
+});
+
+// get data for node stats (prometheus, and so on)
 promiseIpc.on("getNodeStats", async () => {
   return await monitoring.getNodeStats();
 });
 
-//get data for control cpu comp
+// get data for control cpu comp
 promiseIpc.on("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });
@@ -277,6 +297,10 @@ promiseIpc.on("checkUpdates", async () => {
 
 promiseIpc.on("getCurrentStereumVersion", async () => {
   return await nodeConnection.getCurrentStereumVersion();
+});
+
+promiseIpc.on("getCurrentLauncherVersion", async () => {
+  return await nodeConnection.getCurrentLauncherVersion();
 });
 
 promiseIpc.on("getTasks", async () => {
