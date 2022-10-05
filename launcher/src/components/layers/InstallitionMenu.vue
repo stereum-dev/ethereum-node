@@ -107,13 +107,10 @@ export default {
           // addition to the return code.
           let errnum = parseInt(suData.rc);
           let errmsg = suData.stdout.toLowerCase();
-          if(errnum === 1 && errmsg.indexOf("not in sudo group")){
-            // User needs to added in the group sudo AND the sudoers file with "%<username> ALL = (ALL) NOPASSWD: ALL"
-            this.message += " BUT YOUR USER HAS NO (PASSLESS) SUDO PERMISSION";
-          }else if(errnum === 2 && errmsg.indexOf("can not sudo without password")){
+          if(errnum === 1 && errmsg.indexOf("can not sudo without password")){
             // User needs to added in the sudoers file with "%<username> ALL = (ALL) NOPASSWD: ALL"
             this.message += " BUT YOU NEED TO ENABLE PASSLESS SUDO";
-          }else if(errnum === 3 && errmsg.indexOf("code failed to run")){
+          }else if(errnum === 2 && errmsg.indexOf("code failed to run")){
             // We could not check due to interactive syntax error - allow install but show a warning
             this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
             this.isSupported = true;

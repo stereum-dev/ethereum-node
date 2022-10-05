@@ -59,16 +59,11 @@ export class NodeConnection {
         echo "SUCCESS: user can sudo without password because he is root"
         exit 0
       fi
-      # Check if user is in group sudo (Ubuntu) or "wheel" (CentOS)
-      if ! groups | grep -qwe "sudo" -qwe "wheel"; then
-        echo "FAIL: user can not sudo at all because not in sudo group!"
-        exit 1
-      fi
       # Check if users needs a password for sudo
       msg=$(sudo -l 2>&1)
       if [[ "$msg" == *"sudo: a password is required"* ]]; then
         echo "FAIL: user can not sudo without password!"
-        exit 2
+        exit 1
       fi
       # Success
       echo "SUCCESS: user can sudo without password"
@@ -80,7 +75,7 @@ export class NodeConnection {
 
     // No data in stdout or data in stderr? Executed code above failed to run!
     if(result.stdout == "" || result.stderr != ""){
-      result.rc = 3;
+      result.rc = 2;
       result.stdout = "ERROR: Executed code failed to run";
       if(result.stderr != ""){
         result.stdout += " (" + result.stderr + ")";
