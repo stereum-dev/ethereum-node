@@ -32,8 +32,8 @@
     <div v-show="showData" class="compTtl">
       <span>{{ copyVal }}</span>
     </div>
-    <div v-show="!showData">
-      SPINNER
+     <div v-show="!showData" class="spinner">
+      <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
     </div>
   </div>
 </template>
@@ -137,6 +137,16 @@ export default {
 };
 </script>
 <style scoped>
+  .spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.spinner img {
+  width: 100%;
+}
 .dataApi-parent {
   display: flex;
   justify-content: center;

@@ -32,8 +32,8 @@
     <div v-show="showData" class="compTtl">
       <span>{{ copyVal }}</span>
     </div>
-    <div v-show="!showData">
-      SPINNER
+    <div v-show="!showData" class="spinner">
+      <img src="../../../../public/img/icon/control/spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
@@ -77,10 +77,10 @@ export default {
   },
   methods: {
     async copy(s, t) {
-      if(!s){
+      if (!s) {
         this.dialogValue = "Please turn ON the RPC tunnel first!";
         this.openDialog = true;
-      }else{
+      } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " RPC-URL copied to clipboard!";
@@ -92,43 +92,45 @@ export default {
       }
     },
     async toggle() {
-      if(!this.showData) return;  
-      if(!this.toggleAllowed) return;
+      if (!this.showData) return;
+      if (!this.toggleAllowed) return;
       this.toggleAllowed = false;
       let isActive = this.isActive ? false : true;
       let result;
-      try{
-        if(isActive){
+      try {
+        if (isActive) {
           const localPorts = await ControlService.getAvailablePort({
             min: 8545,
             max: 8999,
             amount: 1,
-          })
-          result = await ControlService.openRpcTunnel({force_local_port:localPorts.pop()});
-        }else{
+          });
+          result = await ControlService.openRpcTunnel({
+            force_local_port: localPorts.pop(),
+          });
+        } else {
           result = await ControlService.closeRpcTunnel();
         }
-      }catch(e){
+      } catch (e) {
         console.log(e);
       }
       this.rpcstatus.data.url = result.data.url;
       this.isActive = !result || result.code ? this.isActive : isActive;
-      this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+      this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
       this.rpcItems[0].value = this.rpcstatus.data.url;
       this.toggleAllowed = true;
     },
     rpcControler() {
       this.isActive = false;
       this.showData = false;
-      if(this.code === 0 && this.rpcstatus.code === 0){
+      if (this.code === 0 && this.rpcstatus.code === 0) {
         this.rpcItems[0].title = this.rpcstatus.data.clt;
         this.rpcItems[0].value = this.rpcstatus.data.url;
         this.isActive = this.rpcstatus.data.url ? true : false;
-        this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+        this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
         this.showData = true;
         return;
       }
-      if(this.waitForData) clearTimeout(this.waitForData);
+      if (this.waitForData) clearTimeout(this.waitForData);
       this.waitForData = setTimeout(() => {
         this.rpcControler();
       }, 250);
@@ -137,6 +139,16 @@ export default {
 };
 </script>
 <style scoped>
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.spinner img {
+  width: 100%;
+}
 .rpc-parent {
   display: flex;
   justify-content: center;
@@ -231,9 +243,6 @@ export default {
   background: #324b3f;
   border-radius: 10px;
 }
-
-
-
 
 /* ON/OFF */
 .rowParent {
