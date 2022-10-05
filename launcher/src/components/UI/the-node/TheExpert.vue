@@ -11,15 +11,15 @@
         <span class="serviceId">ID: {{ item.config.serviceID }}</span>
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
-        <!-- plugin logs row -->
-        <div class="logBox">
+        <!-- plugin docs row -->
+        <div class="docBox">
           <img
             class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/plugin-log.png"
+            src="../../../../public/img/icon/plugin-menu-icons/doc.png"
             alt="icon"
           />
-          <span class="logTitle">PLUG-IN LOGS</span>
-          <span class="openBtn" @click="$emit('openLog', item)">open</span>
+          <span class="docTitle">PLUG-IN DOCS</span>
+          <span class="openBtn">open</span>
         </div>
         <!-- expert mode row -->
         <div class="dataTitleBox" @click="openExpertMode">
@@ -96,20 +96,22 @@
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
-          <img
-            class="buttonOff"
-            src="/img/icon/plugin-menu-icons/confirm.png"
-            alt="icon"
-            v-if="option.buttonState"
-            @click="buttonOff(option)"
-          />
-          <img
-            class="buttonOn"
-            src="/img/icon/plugin-menu-icons/edit2.png"
-            alt="icon"
-            v-else
-            @click="buttonOn(option)"
-          />
+          <Transition name="slide-up">
+            <img
+              class="buttonOff"
+              src="/img/icon/plugin-menu-icons/confirm.png"
+              alt="icon"
+              v-if="option.buttonState"
+              @click="buttonOff(option)"
+            />
+            <img
+              class="buttonOn"
+              src="/img/icon/plugin-menu-icons/edit2.png"
+              alt="icon"
+              v-else
+              @click="buttonOn(option)"
+            />
+          </Transition>
           <input
             class="toggleTextInput"
             type="text"
@@ -430,7 +432,7 @@ export default {
   align-items: center;
   transition-duration: 200ms;
 }
-.expertRow .logBox {
+.expertRow .docBox {
   width: 100%;
   height: 25px;
   margin: 2px auto;
@@ -447,7 +449,7 @@ export default {
   grid-template-rows: 100%;
   transition-duration: 200ms;
 }
-.expertRow .logBox .logTitle {
+.expertRow .docBox .docTitle {
   width: 100%;
   height: 100%;
   grid-column: 5/8;
@@ -456,7 +458,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.expertRow .logBox .openBtn {
+.expertRow .docBox .openBtn {
   grid-column: 9/11;
   grid-row: 1/2;
   /* width: 100%;
@@ -471,10 +473,10 @@ export default {
   color: #dbdbdb;
   cursor: pointer;
 }
-.expertRow .logBox .openBtn:hover {
+.expertRow .docBox .openBtn:hover {
   background-color: #1a2e2a;
 }
-.expertRow .logBox .openBtn:active {
+.expertRow .docBox .openBtn:active {
   transform: scale(0.95);
 }
 .expertRow .selectBox {
@@ -553,7 +555,7 @@ export default {
 }
 
 .expertRow .dataTitleBox img,
-.expertRow .logBox img {
+.expertRow .docBox img {
   width: 20px;
   height: 20px;
 }
@@ -912,5 +914,19 @@ input:checked + .slider:before {
   align-self: flex-end;
   justify-self: flex-start;
   text-align: center;
+}
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.25s ease-out;
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>

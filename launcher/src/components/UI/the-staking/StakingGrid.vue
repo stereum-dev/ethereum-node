@@ -48,22 +48,22 @@ export default {
           method: this.removeBtn,
           display:true,
         },
-        // {
-        //   id: 3,
-        //   name: "fee",
-        //   displayName: "change fee recipient",
-        //   icon: "img/icon/the-staking/fee-icon2.png",
-        //   method: this.feeBtn,
-        //   display:false,
-        // },
-        // {
-        //   id: 4,
-        //   name: "exit",
-        //   displayName: "exit chain",
-        //   icon: "img/icon/the-staking/redexit-icon.png",
-        //   method: this.exitBtn,
-        //   display:false,
-        // },
+        {
+          id: 3,
+          name: "fee",
+          displayName: "change fee recipient",
+          icon: "img/icon/the-staking/fee-icon2.png",
+          method: this.feeBtn,
+          display:false,
+        },
+        {
+          id: 4,
+          name: "exit",
+          displayName: "exit chain",
+          icon: "img/icon/the-staking/redexit-icon.png",
+          method: this.exitBtn,
+          display:false,
+        },
       ],
       button: {},
     };
@@ -92,7 +92,7 @@ export default {
 .staking-green-bg {
   width: 100%;
   height: 100%;
-  background-color: #264744;
+  background-color: #324B3E;
   border-radius: 0 0 10px 10px;
   display: flex;
   flex-wrap: nowrap;

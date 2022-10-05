@@ -111,7 +111,7 @@ export default {
   methods: {
     copyErrorText(item) {
       let errorToCopy = item.data;
-      this.$copyText(errorToCopy)
+      navigator.clipboard.writeText(errorToCopy)
         .then(() => {
           console.log("copied!");
         })

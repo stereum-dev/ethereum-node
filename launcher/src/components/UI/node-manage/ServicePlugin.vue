@@ -2,14 +2,14 @@
   <div class="service-container" @mousedown.prevent.stop>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-up-1.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="service-bg" ref="serviceBg">
       <div v-for="item in itemsList" :key="item.id" class="service-item">
         <img
-          :src="item.hIcon"
+          :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
           @mouseup.right="selectedItem(item)"
           @click="modifyItem(item)"
@@ -22,7 +22,7 @@
     </div>
     <img
       class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/arrow-down-2.png"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 1000"
     />
@@ -98,10 +98,7 @@ export default {
   transform: scale(0.9);
   transition-duration: 0.1s;
 }
-.service-item {
-  width: 60px;
-  height: 60px;
-}
+
 .service-bg {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -121,15 +118,17 @@ export default {
 }
 
 .service-item {
-  width: 100%;
-  height: 100%;
+  width: 65%;
+  height: 70%;
+  margin: 10px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .service-item img {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
 }
 .service-item img:active {

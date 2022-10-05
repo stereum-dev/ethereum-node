@@ -6,40 +6,6 @@ export const useNodeStore = defineStore("theNode", {
       executionItems: [],
       validatorItems: [],
       servicePlugins: [],
-      selectedItemToRemove: [],
-      confirmChanges: [
-        {
-          id: 1,
-          content: "INSTALL",
-          contentIcon: require("../../public/img/icon/manage-node-icons/plus.png"),
-      
-        },
-        {
-          id: 2,
-          content: "DELETE",
-          contentIcon: require("../../public/img/icon/manage-node-icons/minus.png"),
-        },
-        {
-          id: 3,
-          content: "ACTIVATE",
-          contentIcon: require("../../public/img/icon/manage-node-icons/green-power-icon.png"),
-        },
-        {
-          id: 4,
-          content: "DEACTIVATE",
-          contentIcon: require("../../public/img/icon/manage-node-icons/red-power-icon.png"),
-        },
-        {
-          id: 5,
-          content: "LINK WITH",
-          contentIcon: require("../../public/img/icon/manage-node-icons/link-icon.png"),
-        },
-        {
-          id: 6,
-          content: "DELINK FROM",
-          contentIcon: require("../../public/img/icon/manage-node-icons/delink-icon.png"),
-        },
-      ],
       sidebarPlugins: [
         {
           id: 1,
@@ -110,13 +76,6 @@ export const useNodeStore = defineStore("theNode", {
           drag: true,
           category: "consensus",
           active: false,
-        },
-      ],
-      configData: [
-        {
-          id: 1,
-          name: "Configuration",
-          network: "testNet",
         },
       ],
       newUpdates: [

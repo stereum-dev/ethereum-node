@@ -3,8 +3,8 @@
     <div class="server">
       <div class="serverBox">
         <div class="details">
-          <span class="ipTitle">server ip:</span>
-          <span class="nameTitle">server name:</span>
+          <span class="ipTitle">server ip</span>
+          <span class="nameTitle">server name</span>
           <span class="ip">{{ ipAddress }}</span>
           <span class="name">{{ ServerName }}</span>
         </div>
@@ -15,7 +15,7 @@
         <router-link to="/manage">
           <span>to edit node</span>
           <img
-            src="../../../../public/img/icon/node-journal-icons/maintenance3.png"
+            src="../../../../public/img/icon/node-journal-icons/edit-node.png"
             alt="icon"
           />
         </router-link>
@@ -55,7 +55,7 @@ export default {
   padding: 5px;
   margin-top: 1px;
   display: grid;
-  background: #3a3d40;
+  background: #33393e;
   grid-template-rows: repeat(9, 1fr);
   grid-template-columns: 1fr;
   justify-content: center;
@@ -90,18 +90,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #606060;
-  box-shadow: 1px 1px 3px 1px rgb(31, 33, 37);
+  background-color: #2d3134;
   border-radius: 10px;
 }
 .server .details {
   width: 95%;
   height: 85%;
   border-radius: 8px;
-  background-color: #242529;
-  border: 1px solid #787878;
   display: grid;
-  grid-template-columns: 45% 55%;
+  grid-template-columns: 40% 60%;
   grid-template-rows: repeat(6, 1fr);
 }
 
@@ -110,11 +107,10 @@ export default {
   grid-row: 2/4;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #959595;
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -126,14 +122,13 @@ export default {
 }
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 4/7;
+  grid-row: 4/6;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #959595;
+  font-weight: 500;
+  color: #c4c4c4;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -145,13 +140,13 @@ export default {
 }
 .server .name {
   grid-column: 2/3;
-  grid-row: 4/7;
+  grid-row: 4/6;
   width: 100%;
   height: 100%;
   text-align: center;
   font-size: 0.6rem;
-  font-weight: 600;
-  color: #408886;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -165,11 +160,10 @@ export default {
   grid-row: 2/4;
   width: 100%;
   height: 100%;
-  background-color: #242529;
   text-align: center;
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #408886;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #cfaf65;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -222,20 +216,19 @@ export default {
 
 .config-btns .config-update:hover {
   background-color: #2c2c2c;
-  transform: scale(1.02);
 }
 
 .config-btns .config-update:active {
   box-shadow: none;
-  transform: scale(1);
+  transform: scale(0.99);
 }
 
 .edit-btn {
   grid-column: 1;
   grid-row: 1/2;
   width: 95%;
-  height: 100%;
-  margin-top: 2%;
+  height: 95%;
+  margin-top: 4px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -246,17 +239,16 @@ export default {
 }
 .edit-btn a:active {
   box-shadow: none;
-  transform: scale(.99);
+  transform: scale(0.99);
 }
 .edit-btn a {
   width: 100%;
-  height: 100%;
+  height: 99%;
   background-color: #242529;
   font-size: 0.6rem;
   font-weight: 800;
   color: rgb(194, 194, 194);
   border: 1px solid #787878;
-  margin-top: 5px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
@@ -265,7 +257,7 @@ export default {
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
 .edit-btn span {
-  color: #408886;
+  color: #cfaf65;
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
@@ -273,8 +265,8 @@ export default {
   text-transform: uppercase;
 }
 .edit-btn img {
-  width: 18px;
-  height: 18px;
+  width: 30px;
+  height: 30px;
   background-color: transparent;
   margin-right: 10px;
 }

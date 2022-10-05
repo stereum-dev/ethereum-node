@@ -22,7 +22,7 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img :src="currentNetwork.icon" alt="icon" />
+                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
                   <span>{{ currentNetwork.name }}</span>
@@ -128,6 +128,7 @@ export default {
       isModalActive: false,
       isTutorialModalActive: false,
       playFirstVideo: false,
+      loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
     };
   },
   computed: {
@@ -293,7 +294,7 @@ export default {
   height: 95%;
   grid-column: 3;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;

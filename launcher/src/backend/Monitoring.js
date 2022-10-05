@@ -36,9 +36,7 @@ export class Monitoring {
 
   async refreshServiceInfos() {
     if (await this.checkStereumInstallation()) {
-      const serviceConfigs = (
-        await this.serviceManager.readServiceConfigurations()
-      ).filter((s) => s.service != "PrometheusNodeExporterService");
+      const serviceConfigs = await this.serviceManager.readServiceConfigurations()
       const serviceStates = await this.nodeConnection.listServices();
       if (
         serviceConfigs &&
