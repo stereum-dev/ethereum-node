@@ -7,7 +7,6 @@ import net from "net";
 import YAML from "yaml";
 const log = require("electron-log");
 const electron = require('electron')
-const app = electron.app || electron.remote.app
 
 if (process.env.IS_DEV === "true" || process.env.NODE_ENV === "test") {
   global.branch = "main";
@@ -921,6 +920,7 @@ export class NodeConnection {
   }
 
   async getCurrentLauncherVersion() {
+    const app = electron.app || electron.remote.app
     return app ? app.getVersion() : 'N/A';
   }
 
