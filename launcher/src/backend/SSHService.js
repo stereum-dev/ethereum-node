@@ -135,14 +135,17 @@ export class SSHService {
     })
   }
 
-  async closeTunnels () {
+  async closeTunnels (onlySpecificPorts=[]) {
     return new Promise((resolve, reject) => {
       if(this.tunnels.length > 0){
-        for(let tunnel of this.tunnels){
+        for(let [i, tunnel] of this.tunnels.entries()){
+          if(Array.isArray(onlySpecificPorts) && onlySpecificPorts.length && !onlySpecificPorts.includes(tunnel.config.localPort)){
+            continue;
+          }
           tunnel.server.close()
-          log.info(tunnel.config.localPort + " closed!")
+          this.tunnels.splice(i, 1);
+          log.info(`Tunnel Connection closed! (${tunnel.config.localPort})`)
         }
-        this.tunnels = []
         resolve("Tunnels Closed!")
       }else{
         reject("No Tunnels to Close!")

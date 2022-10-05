@@ -122,6 +122,7 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
       ]
       this.executionClient = GethService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/geth')
     }
@@ -131,6 +132,7 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
+        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
       ]
       this.executionClient = BesuService.buildByUserInput(this.networkHandler(true), ports, this.installDir + '/besu')
 
@@ -169,7 +171,8 @@ export class OneClickInstall {
       ports = [
         new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
         new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
+        new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
+        new ServicePort('127.0.0.1', 3500, 3500, servicePortProtocol.tcp)
       ]
       this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], checkpointURL)
     }

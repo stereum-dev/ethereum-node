@@ -1,6 +1,5 @@
 <template>
   <div class="dataApi-parent">
-    <comming-soon></comming-soon>
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
         <div class="dialogIcon"><img :src="copyIcon" /></div>
@@ -9,8 +8,17 @@
         </div>
       </div></control-dialog
     >
-    <div class="dataApi-box">
-      <node-connection-row row-name="DATA-API"></node-connection-row>
+    <div v-show="showData" class="dataApi-box">
+      <!-- removed node-connection-row template start -->
+      <div class="rowParent">
+        <div class="title">
+          <span>DATA-API</span>
+        </div>
+        <div class="btn" :class="{ active: isActive }" @click="toggle">
+          <span>{{ onoff }}</span>
+        </div>
+      </div>
+      <!-- removed node-connection-row template end -->
       <div
         class="dataApi-data"
         v-for="item in dataApiItems"
@@ -21,48 +29,109 @@
         <span>{{ item.title }}</span>
       </div>
     </div>
-    <div class="compTtl">
+    <div v-show="showData" class="compTtl">
       <span>{{ copyVal }}</span>
+    </div>
+    <div v-show="!showData">
+      SPINNER
     </div>
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 import ControlDialog from "./ControlDialog.vue";
-import NodeConnectionRow from "./NodeConnectionRow.vue";
 export default {
-  components: { NodeConnectionRow, ControlDialog },
+  components: { ControlDialog },
   data() {
     return {
+      waitForData: null,
+      toggleAllowed: true,
+      showData: false,
+      isActive: false,
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
       dataApiItems: [
-        // dataApiItems are dummy, for wire the have to change but the best stract. for the design is this one
-        // {
-        //   id: 1,
-        //   title: "TEKU",
-        //   value: "11111",
-        // },
-        // {
-        //   id: 2,
-        //   title: "LIGHTHOUSE",
-        //   value: "22222",
-        // },
+        {
+          id: 1,
+          title: "DUMMY",
+          value: "123456",
+        },
       ],
     };
   },
-
+  created() {
+    this.beaconControler();
+  },
+  computed: {
+    ...mapState(useControlStore, {
+      code: "code",
+      beaconstatus: "beaconstatus",
+    }),
+    onoff() {
+      return this.isActive ? "ON" : "OFF";
+    },
+  },
   methods: {
     async copy(s, t) {
-      await navigator.clipboard.writeText(s);
-      this.openDialog = !this.openDialog;
-      this.dialogValue = t + " Copied to clipboard!";
+      if(!s){
+        this.dialogValue = "Please turn ON the DATA-API tunnel first!";
+        this.openDialog = true;
+      }else{
+        await navigator.clipboard.writeText(s);
+        this.openDialog = !this.openDialog;
+        this.dialogValue = t + " DATA-API-URL copied to clipboard!";
+      }
       if (this.openDialog === true) {
         setTimeout(() => {
           this.openDialog = false;
         }, 3000);
       }
+    },
+    async toggle() {
+      if(!this.showData) return;  
+      if(!this.toggleAllowed) return;
+      this.toggleAllowed = false;
+      let isActive = this.isActive ? false : true;
+      let result;
+      try{
+        if(isActive){
+          const localPorts = await ControlService.getAvailablePort({
+            min: 5545,
+            max: 5999,
+            amount: 1,
+          })
+          result = await ControlService.openBeaconTunnel({force_local_port:localPorts.pop()});
+        }else{
+          result = await ControlService.closeBeaconTunnel();
+        }
+      }catch(e){
+        console.log(e);
+      }
+      this.beaconstatus.data.url = result.data.url;
+      this.isActive = !result || result.code ? this.isActive : isActive;
+      this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+      this.dataApiItems[0].value = this.beaconstatus.data.url;
+      this.toggleAllowed = true;
+    },
+    beaconControler() {
+      this.isActive = false;
+      this.showData = false;
+      if(this.code === 0 && this.beaconstatus.code === 0){
+        this.dataApiItems[0].title = this.beaconstatus.data.clt;
+        this.dataApiItems[0].value = this.beaconstatus.data.url;
+        this.isActive = this.beaconstatus.data.url ? true : false;
+        this.copyVal = this.isActive ? 'click to copy' : 'tunnel closed';
+        this.showData = true;
+        return;
+      }
+      if(this.waitForData) clearTimeout(this.waitForData);
+      this.waitForData = setTimeout(() => {
+        this.beaconControler();
+      }, 250);
     },
   },
 };
@@ -146,9 +215,9 @@ export default {
 }
 .dataApi-data:hover,
 .dataApi-data:active {
-  color: rgb(246, 250, 141);
+  /* color: rgb(246, 250, 141);
   font-weight: 800;
-  background: #313131;
+  background: #313131; */
 }
 /* width */
 ::-webkit-scrollbar {
@@ -168,5 +237,43 @@ export default {
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 10px;
+}
+
+/* ON/OFF */
+.rowParent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 35%;
+  border-radius: 10px;
+  margin: 1% 0;
+}
+.active {
+  color: greenyellow !important;
+}
+.title {
+  display: flex;
+  width: 70%;
+  font-size: 48%;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 4%;
+  font-weight: 600;
+}
+.btn {
+  display: flex;
+  width: 30%;
+  font-size: 50%;
+  font-weight: 800;
+  padding: 0 1px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #eee;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
 }
 </style>

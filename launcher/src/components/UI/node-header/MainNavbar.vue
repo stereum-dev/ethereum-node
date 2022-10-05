@@ -41,6 +41,7 @@ export default {
       allServices: "allServices",
       versions: "versions",
       stereumVersion: "stereumVersion",
+      launcherVersion: "launcherVersion",
       newUpdates: "newUpdates",
       network: "network",
     }),
@@ -166,13 +167,16 @@ export default {
         let services = await ControlService.getServices();
         let response;
         let stereumVersion;
+        let launcherVersion;
         try {
           response = await ControlService.checkUpdates();
           stereumVersion = (
             await ControlService.getCurrentStereumVersion()
           ).replace("\n", "");
+          launcherVersion = await ControlService.getCurrentLauncherVersion();
           this.versions = response;
           this.stereumVersion = stereumVersion;
+          this.launcherVersion = launcherVersion;
         } catch (err) {
           this.failed = true;
           console.log("Couldn't fetch versions...\nError:", err.message);

@@ -109,7 +109,23 @@ class ControlService extends EventEmitter {
   async startOneClickServices() {
     return await this.promiseIpc.send("startOneClickServices");
   }
+
+  async openRpcTunnel(args) {
+    return await this.promiseIpc.send("openRpcTunnel",args);
+  }
+
+  async closeRpcTunnel() {
+    return await this.promiseIpc.send("closeRpcTunnel");
+  }
   
+  async openBeaconTunnel(args) {
+    return await this.promiseIpc.send("openBeaconTunnel",args);
+  }
+
+  async closeBeaconTunnel() {
+    return await this.promiseIpc.send("closeBeaconTunnel");
+  }
+
   async getNodeStats() {
     return await this.promiseIpc.send("getNodeStats");
   }
@@ -197,6 +213,10 @@ class ControlService extends EventEmitter {
 
   async getCurrentStereumVersion() {
     return await this.promiseIpc.send("getCurrentStereumVersion");
+  }
+  
+  async getCurrentLauncherVersion() {
+    return await this.promiseIpc.send("getCurrentLauncherVersion");
   }
 
   async getTasks() {

@@ -635,6 +635,7 @@ export const useServices = defineStore("services", {
       ],
       versions: {},
       stereumVersion: {},
+      launcherVersion: "",
       latestVersion: {},
       newUpdates: [],
     };
