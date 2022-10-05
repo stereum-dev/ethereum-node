@@ -17,14 +17,11 @@
       <div class="table-box">
         <div class="tableRow" v-for="item in confirmChanges" :key="item.id">
           <div class="left-icon">
-            <img :src="item.contentIcon" alt="" />
+            <img :src="item.contentIcon" alt="icon" />
           </div>
           <span>{{ item.content }}</span>
           <div class="right-icon">
-            <img
-              :src="item.service.sIcon"
-              alt="icon"
-            />
+            <img :src="item.service.icon" alt="icon" />
           </div>
         </div>
       </div>
@@ -152,7 +149,7 @@ export default {
   height: 45%;
   background-color: #707070;
   border: 1px solid rgb(63, 63, 63);
-  border-radius: 15px;
+  border-radius: 10px;
   box-shadow: 0 1px 5px 1px rgb(37, 38, 40);
   padding: 2px;
   position: relative;
@@ -163,13 +160,13 @@ export default {
 .table-footer {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 97%;
-  height: 5%;
+  height: 8%;
   margin: 0 auto;
 }
 .table-footer span {
-  color: #eee;
+  color: rgb(209, 209, 209);
   font-size: 0.6rem;
   font-weight: 600;
 }
@@ -177,7 +174,7 @@ export default {
   width: 95%;
   height: 90%;
   background: #242529;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -187,45 +184,43 @@ export default {
   overflow-y: auto;
 }
 .table-box::-webkit-scrollbar {
-  width: 0.5rem;
+  width: 2px;
 }
 .tableRow {
   width: 98%;
   height: 11%;
-  margin: 2% auto;
+  margin: 1% auto;
+  padding: 1%;
   background: #48494f;
-  border-radius: 50px;
+  border-radius: 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .tableRow .right-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 100%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
 }
 .tableRow .left-icon {
-  width: 20px;
-  height: 20px;
+  width: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .tableRow .right-icon img {
-  width: 15px;
-  height: 15px;
-  border-radius: 100%;
+  width: 100%;
 }
 .tableRow .left-icon img {
-  width: 14px;
-  height: 14px;
+  width: 100%;
 }
 .tableRow span {
-  color: rgb(194, 191, 191);
-  font-size: 8px;
-  font-weight: 700;
+  color: rgb(207, 207, 207);
+  font-size: 0.6rem;
+  font-weight: 600;
 }
-
 
 .trash-box {
   width: 100%;

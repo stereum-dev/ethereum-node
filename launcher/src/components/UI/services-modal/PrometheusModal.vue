@@ -99,12 +99,11 @@ export default {
 .browser-modal {
   width: 60%;
   height: 80%;
-  background-color: #1b1b1b;
+  background-color: #212122;
   border: 5px solid #a1a1a1;
-  box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
   border-radius: 30px;
   position: absolute;
-  top: 11%;
+  top: 9%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -187,8 +186,8 @@ export default {
   width: 95%;
   height: 30%;
   background-color: #393939;
-  border: 2px solid #656565;
-  box-shadow: 1px 1px 3px 1px #161616;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 3px 1px #252525;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -204,15 +203,17 @@ export default {
 }
 .title span:first-child {
   color: #dbdbdb;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   margin-left: 10px;
+  margin-top: 5px;
 }
 .title span:last-child {
   color: #dbdbdb;
   font-size: 0.65rem;
   font-weight: 400;
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .browserBox .btn-box {

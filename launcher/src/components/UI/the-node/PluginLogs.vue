@@ -26,11 +26,18 @@
         </div>
       </div>
       <div class="logsTable">
-        <div class="tableRow" v-for="(log, idx) in logs" :key="idx">
-          <div class="rowMsg">
-            <span>{{ log.message }}</span>
+        <template v-if="logsList.length">
+          <div class="tableRow" v-for="(log, idx) in logsList" :key="idx">
+            <div class="rowMsg">
+              <span>{{ log.message }}</span>
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <div class="tableRow">
+            <span>No log found in the list</span>
+          </div>
+        </template>
       </div>
       <div class="logsFooter">
         <div class="textBox">
@@ -39,9 +46,9 @@
         <div class="searchBox">
           <input
             id="search"
-            type="search"
-            placeholder="Filter"
-            v-model="filteredLogs"
+            type="text"
+            placeholder="Search"
+            v-model="searchValue"
           />
         </div>
         <div class="serviceBox">
@@ -68,41 +75,24 @@ export default {
         },
         {
           message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
+            "Sep 29 10:39:31.116 maxi INFO ENR Initialised                         tcp: Some(9000), udp:maxi None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
         {
           message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
+            "Sep 29 10:39:31.116 characters INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
         },
       ],
-      filteredLogs: "",
+      searchValue: "",
     };
   },
-  watch: {
-    filterLogs: () => {
-      this.logs = this.logs.filter((el) =>
-        el.toLowerCase().includes(this.filteredLogs.toLowerCase())
-      );
+  computed: {
+    logsList() {
+      if (this.searchValue.trim().length > 0) {
+        return this.logs.filter((log) =>
+          log.message.toLowerCase().includes(this.searchValue.toLowerCase())
+        );
+      }
+      return this.logs;
     },
   },
 };
@@ -143,7 +133,7 @@ export default {
   align-items: center;
 }
 .logsHeader .title {
-  width: 60%;
+  width: 50%;
   height: 100%;
   color: rgb(203, 202, 202);
   display: flex;
@@ -159,46 +149,52 @@ export default {
   margin-left: 10px;
 }
 .logsHeader .serviceDetails {
-  width: 40%;
+  width: 45%;
   height: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  grid-template-rows: 1fr;
   justify-content: flex-start;
   align-items: center;
   padding: 2px 5px;
 }
 .logsHeader .serviceDetails .serviceIcon {
-  width: 9%;
-  height: 90%;
+  grid-column: 1/2;
+  width: 95%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .logsHeader .serviceDetails img {
-  width: 95%;
+  width: 60%;
 }
 .logsHeader .serviceDetails .serviceName {
-  min-width:180px;
+  grid-column: 2/7;
+  grid-row: 1/2;
   width: max-content;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   text-transform: uppercase;
+  margin-left: 3%;
 }
 .serviceDetails .serviceName span {
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(202, 205, 206);
-  margin-left: 3%;
 }
 .logsHeader .serviceDetails .categoryBox {
-  width: 40%;
+  grid-column: 7/10;
+  grid-row: 1/2;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: flex-start;
-  margin-left: 3%;
+  margin-left: 5%;
 }
 .logsHeader .closeBox {
   width: 5%;
@@ -210,7 +206,7 @@ export default {
   cursor: pointer;
 }
 .logsHeader .closeBox img {
-  width: 100%;
+  width: 93%;
   height: 100%;
 }
 .logsHeader .closeBox img:active {
@@ -223,7 +219,6 @@ export default {
   text-align: left;
   color: rgb(202, 205, 206);
   text-transform: uppercase;
-
 }
 #serviceVersion {
   width: max-content;
@@ -231,7 +226,6 @@ export default {
   font-weight: 600;
   text-align: left;
   color: rgb(202, 205, 206);
-
 }
 .logsTable {
   width: 100%;

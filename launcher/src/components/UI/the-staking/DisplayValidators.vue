@@ -50,11 +50,7 @@
                   item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
               >
-              <img
-                class="service-icon"
-                :src="item.icon"
-                alt="icon"
-              />
+              <img class="service-icon" :src="item.icon" alt="icon" />
               <span class="since">{{ item.activeSince }}</span>
               <img
                 class="state-icon"
@@ -63,29 +59,35 @@
               />
               <span class="balance">{{ item.balance }}</span>
               <div class="option-box">
-                <div class="grafiti-box" @click="grafitiDisplayHandler(item)">
+                <div class="grafiti-box" >
                   <img
+                  :class="{ disabled: disable }"
+                    @click="grafitiDisplayHandler(item)"
                     class="grafiti-icon"
                     src="../../../../public/img/icon/the-staking/option-graffiti.png"
                     alt="icon"
                   />
                 </div>
-                <div class="copy-box" @click="copyHandler(item)">
+                <div class="copy-box">
                   <img
+                    @click="copyHandler(item)"
                     class="copy-icon"
                     src="../../../../public/img/icon/the-staking/copy6.png"
                     alt="icon"
                   />
                 </div>
-                <div class="remove-box" @click="removeModalDisplay(item)">
+                <div class="remove-box">
                   <img
+                    @click="removeModalDisplay(item)"
                     class="remove-icon"
                     src="../../../../public/img/icon/the-staking/option-remove.png"
                     alt="icon"
                   />
                 </div>
-                <div class="exit-box" @click="passwordBoxSingleExitChain(item)">
+                <div class="exit-box">
                   <img
+                    :class="{ disabled: disable }"
+                    @click="passwordBoxSingleExitChain(item)"
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/redexit-icon.png"
                     alt="icon"
@@ -248,6 +250,7 @@ export default {
   props: ["button"],
   data() {
     return {
+      disable: true,
       message: "",
       messageIsError: false,
       bDialogVisible: false,
@@ -534,7 +537,7 @@ export default {
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
-        service: this.selectedService.config.serviceID
+        service: this.selectedService.config.serviceID,
       });
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -648,7 +651,8 @@ export default {
 
     copyHandler(item) {
       let toCopy = item.key;
-      navigator.clipboard.writeText(toCopy)
+      navigator.clipboard
+        .writeText(toCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -1128,5 +1132,9 @@ remove-validator {
   border-radius: 6px;
   border: 2px solid black;
   cursor: pointer;
+}
+.disabled {
+  pointer-events: none;
+  opacity: 0.3;
 }
 </style>

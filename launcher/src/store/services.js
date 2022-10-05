@@ -605,7 +605,7 @@ export const useServices = defineStore("services", {
         },
         {
           id: 15,
-          name: "PrometheusNodeExporter",
+          name: "NodeExporter",
           service: "PrometheusNodeExporterService",
           displayPluginMenu: false,
           serviceIsPending: false,

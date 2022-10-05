@@ -135,76 +135,35 @@ export const useNodeStore = defineStore("theNode", {
         {
           id: 1,
           name: "First Steps!",
-          display:false,
+          display: false,
         },
         {
           id: 2,
           name: "Stake with 32 ETH",
-          display:true,
+          display: true,
         },
         {
           id: 3,
           name: "Use ssv.network",
-          display:true,
+          display: true,
         },
         {
           id: 4,
           name: "Alerts on Mobile App",
-          display:false,
+          display: false,
         },
         {
           id: 5,
           name: "Switch Clients",
-          display:false,
+          display: false,
         },
         {
           id: 6,
           name: "Switch Machine",
-          display:false,
+          display: false,
         },
       ],
-      configData_nodeSidebarActive: [
-        {
-          id: 1,
-          name: "NONE FUNC.",
-          status: "deactive",
-        },
-        {
-          id: 2,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 3,
-          name: "SYNC/PROBLEM",
-          status: "notOk",
-        },
-        {
-          id: 4,
-          name: "INACTIVE",
-          status: "off",
-        },
-        {
-          id: 5,
-          name: "ACTIVE",
-          status: "active",
-        },
-        {
-          id: 6,
-          name: "INACTIVE",
-          status: "off",
-        },
-        {
-          id: 7,
-          name: "SYNC/PROBLEM",
-          status: "notOk",
-        },
-        {
-          id: 8,
-          name: "NONE FUNC.",
-          status: "deactive",
-        },
-      ],
+
       ssvNetworkUrl: {
         operatorUrl: "https://www.google.com/",
         grafanaDashboardUrl: "https://www.google.com",
