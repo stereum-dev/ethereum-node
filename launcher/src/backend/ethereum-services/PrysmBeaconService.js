@@ -28,13 +28,8 @@ export class PrysmBeaconService extends NodeService {
             genesisFile = ''
         }
 
-        // web3provider
-        let fallbackProvider
-        let web3provider
-        if (executionClients[0] !== undefined) {
-            fallbackProvider = executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })
-            web3provider = fallbackProvider.shift() //removes first element of array and returns it
-        }
+        //execution endpoint
+        let executionEndpoint = executionClients[0].buildExecutionClientEngineRPCHttpEndpointUrl()
 
         let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
 
@@ -44,7 +39,7 @@ export class PrysmBeaconService extends NodeService {
             1, // configVersion 
             image,  //image
             'v2.1.4-rc.0', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --fallback-web3provider=' + fallbackProvider + ' --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --http-web3provider='+ web3provider +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand,  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint='+ executionEndpoint +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand,  //command
             null, //entrypoint
             null, //env
             ports,  //ports
