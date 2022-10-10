@@ -152,24 +152,80 @@ export class ServiceManager {
     }
   }
 
-  async deleteService(task){
-    this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
+  removeConnection(command, id){
+    let isString = false
+    if(typeof command === "string"){
+      isString = true
+      command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
+    }
+    let includesID = command.filter(c => c.includes(id))
+    command = command.filter(c => !includesID.includes(c))
+
+    let newProps = includesID.map(c => {
+      let command = c.match(/.*=/)[0]
+      let value = c.replace(command,'')
+      let quotes = false
+      if(value.startsWith('"') && value.endsWith('"')){
+        quotes = true
+        value = value.substring(1, value.length-1)
+      }
+      let newValue = value.split(',').filter(e => !e.includes(id)).join()
+      if(quotes)
+        newValue = '"' + newValue + '"'
+      return command + newValue
+    })
+    if(isString)
+      return (command.concat(newProps)).join(' ')
+    return command.concat(newProps)
   }
 
-  async modifyServices(tasks){
-    let done = []
-    for(let task of tasks){
-      switch (task.content) {
-        case "DELETE":
-            if(!done.includes(task.service.config.serviceID)){
-              await this.deleteService(task)
-              done.push(task.service.config.serviceID)
-            }
-          break;
-      
-        default:
-          break;
+  async deleteService(task, tasks, services){
+    let serviceToDelete = services.find(service => service.id === task.service.config.serviceID)
+    let dependents = []
+    services.forEach(service => {
+      for(const dependency in service.dependencies){
+        service.dependencies[dependency].forEach(s => {
+          if(s.id === serviceToDelete.id)
+            dependents.push(service)
+        })
       }
+    })
+    log.info(dependents)
+    dependents.forEach(service => {
+      service.command = this.removeConnection(service.command, serviceToDelete.id)
+      for(const dependency in service.dependencies){
+        service.dependencies[dependency] = service.dependencies[dependency].filter(s => s.id != serviceToDelete.id)
+      }
+      this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
+    })
+    await this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
+}
+
+  addService(task){
+    switch(task.service.service){
+      
+    }
+  }
+
+  static uniqueByID(job){
+    return (value, index, self) => self.map(t => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index && value.content === job
+  }
+    
+  async modifyServices(tasks){
+    let jobs = tasks.map(t => t.content)
+    let services = await this.readServiceConfigurations()
+    if(jobs.includes("DELETE")){
+      let before = this.nodeConnection.getTimeStamp()
+      try{
+        await Promise.all(tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => {return this.deleteService(task, tasks, services)}))
+      } catch(err){
+        log.error("Deleting Services Failed:", err)
+      } finally {
+        let after = this.nodeConnection.getTimeStamp()
+        await this.nodeConnection.restartServices(after - before)
+      }
+    } else if (jobs.includes("INSTALL")){
+      
     }
   }
 }

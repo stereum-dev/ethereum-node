@@ -17,11 +17,12 @@
     keep_volumes: no
   become: yes
 
-- name: Remove Docker Image 
+- name: Remove Docker Image
   community.docker.docker_image:
     state: absent
     name: "{{ service_configuration.image | split(':') | first }}"
     tag: "{{ service_configuration.image | split(':') | last }}"
+    force_absent: yes
 
 - name: Remove Service Config File
   ansible.builtin.file:
