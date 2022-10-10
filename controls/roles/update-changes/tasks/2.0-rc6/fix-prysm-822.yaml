@@ -1,0 +1,13 @@
+---
+- name: Remove fallback property
+  replace:
+    path: "{{ item.path }}"
+    regexp: "--fallback-web3provider=.* "
+
+- name: Replace EE property
+  replace:
+    path: "{{ item.path }}"
+    regexp: "http-web3provider"
+    replace: "execution-endpoint"
+
+#EOF
