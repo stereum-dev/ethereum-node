@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      link: "stereum-logo-blinking.gif",
+      link: "",
       isLanguageSelected: false,
       hiddenDialogActive: true,
       selectedLanguage: {
@@ -86,8 +86,11 @@ export default {
       this.isLanguageSelected = true;
       this.hideDialog();
       this.hiddenDialogActive = false;
-      this.link = "stereum-logo-extern.png";
+      this.link = "/img/icon/language-animations/languageSelection1.gif";
       this.updateSettings(lang, langSelect);
+      setTimeout(() => {
+        this.link = "/img/icon/language-animations/languageSelection2.gif";
+      }, 1000);
     },
     activePage() {
       if (
@@ -96,7 +99,10 @@ export default {
       ) {
         // return
       } else {
-        this.$emit("page", "SetupServer");
+        this.link = "/img/icon/language-animations/languageSelection3.gif";
+        setTimeout(() => {
+          this.$emit("page", "SetupServer");
+        }, 1100);
       }
     },
     checkSettings: async function () {
@@ -163,12 +169,18 @@ export default {
   top: 0;
   left: 0;
   box-sizing: border-box;
-  background-color: #336666;
+  background-color: #000;
   border: 3px solid #989898;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .baselogo-box {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .text-box {
   width: 50%;

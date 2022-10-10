@@ -6,9 +6,9 @@
 
 <script>
 export default {
-  name: 'BaseLogo',
-  props: ['link']
-}
+  name: "BaseLogo",
+  props: ["link"],
+};
 </script>
 
 <style scoped>
@@ -20,9 +20,8 @@ export default {
   align-items: center;
 }
 img {
-  width: 50%;
+  width: 70%;
   min-width: 40%;
-  opacity: 0.3;
   z-index: 0;
 }
 </style>
