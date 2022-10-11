@@ -1,6 +1,9 @@
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
 import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
+import { LodestarBeaconService } from './ethereum-services/LodestarBeaconService'
+import { LodestarValidatorService } from './ethereum-services/LodestarValidatorService'
 import { GethService } from './ethereum-services/GethService'
+import { ErigonService } from './ethereum-services/ErigonService'
 import { BesuService } from './ethereum-services/BesuService'
 import { SSVNetworkService } from './ethereum-services/SSVNetworkService'
 import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
@@ -79,8 +82,14 @@ export class ServiceManager {
             services.push(LighthouseBeaconService.buildByConfiguration(config))
           } else if (config.service == 'LighthouseValidatorService') {
             services.push(LighthouseValidatorService.buildByConfiguration(config))
+          } else if (config.service == 'LodestarBeaconService') {
+            services.push(LodestarBeaconService.buildByConfiguration(config))
+          } else if (config.service == 'LodestarValidatorService') {
+            services.push(LodestarValidatorService.buildByConfiguration(config))
           } else if (config.service == 'GethService') {
             services.push(GethService.buildByConfiguration(config))
+          } else if (config.service == 'ErigonService') {
+            services.push(ErigonService.buildByConfiguration(config))
           } else if (config.service == 'BesuService') {
             services.push(BesuService.buildByConfiguration(config))
           } else if (config.service == 'NethermindService') {
@@ -99,7 +108,7 @@ export class ServiceManager {
             services.push(PrysmBeaconService.buildByConfiguration(config))
           } else if (config.service == 'PrysmValidatorService') {
             services.push(PrysmValidatorService.buildByConfiguration(config))
-          }else if (config.service == 'TekuBeaconService') {
+          } else if (config.service == 'TekuBeaconService') {
             services.push(TekuBeaconService.buildByConfiguration(config))
           }
         } else {
@@ -142,11 +151,11 @@ export class ServiceManager {
           this.nodeConnection.runPlaybook("Pruning Geth", {stereum_role: 'prune-geth', geth_service: service.config.serviceID})
         }
         break;
-    
+
       case "reSync":
           //initiate resync
         break;
-  
+
       default:
         break;
     }
@@ -166,11 +175,10 @@ export class ServiceManager {
               done.push(task.service.config.serviceID)
             }
           break;
-      
+
         default:
           break;
       }
     }
   }
 }
-
