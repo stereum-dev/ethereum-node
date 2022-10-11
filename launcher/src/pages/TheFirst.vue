@@ -102,7 +102,7 @@ export default {
         this.link = "/img/icon/language-animations/languageSelection3.gif";
         setTimeout(() => {
           this.$emit("page", "SetupServer");
-        }, 1100);
+        }, 650);
       }
     },
     checkSettings: async function () {
