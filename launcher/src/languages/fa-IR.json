@@ -1,6 +1,25 @@
 {
   "formsetup": {
     "login": "ورود",
-    "server": "به سرور خود متصل شوید"
+    "server": "به سرور خود متصل شوید",
+    "servername":"نام سرور ",
+    "iphost":"IP / نام هاست",
+    "username":"نام کاربری",
+    "password":"کلمه عبور",
+    "keylocation":"مکان کلید",
+    "usessh":"SSH استفاده از"
+  },
+  "comingsoon":{
+    "comingsoon":"به زودی"
+  },
+  "journalnode":{
+    "serverip":"سرور IP",
+    "servername":"نام سرور ",
+    "edit":"ویرایش هسته"
+  },
+  "pagesnav":{
+    "node":"هسته",
+    "control":"کنترل",
+    "staking":"استیک"
   }
 }
