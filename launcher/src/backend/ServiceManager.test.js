@@ -130,7 +130,7 @@ test('removeConnection String', () => {
   const id = '42d9f0b4-257f-f71e-10fe-66c342dd4995'
 
   const sm = new ServiceManager()
-  const result = sm.removeConnection(command, id)
+  const result = sm.removeCommandConnection(command, id)
   
   expect(result).not.toMatch(/--beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000"/)
   expect(result).not.toMatch(/--beacon-rpc-gateway-provider=stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:3500/)
@@ -153,7 +153,7 @@ test('removeConnection String multiple endpoints', () => {
   const id = '42d9f0b4-257f-f71e-10fe-66c342dd4995'
 
   const sm = new ServiceManager()
-  const result = sm.removeConnection(command, id)
+  const result = sm.removeCommandConnection(command, id)
   
   expect(result).not.toMatch(/--beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000,stereum-foo:3000,stereum-bar:2000"/)
   expect(result).not.toMatch(/--beacon-rpc-gateway-provider=stereum-foo:3000,stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:3500/)
@@ -183,7 +183,7 @@ test('removeConnection array single endpoint', () => {
   const id = '9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d'
 
   const sm = new ServiceManager()
-  const result = sm.removeConnection(command, id)
+  const result = sm.removeCommandConnection(command, id)
   
   expect(result).not.toContain('--ee-endpoint=http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551')
   expect(result).toContain('--ee-endpoint=')
@@ -211,7 +211,7 @@ test('removeConnection array multiple endpoints', () => {
   const id = '9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d'
 
   const sm = new ServiceManager()
-  const result = sm.removeConnection(command, id)
+  const result = sm.removeCommandConnection(command, id)
   
   expect(result).not.toContain('--ee-endpoint="http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551,foo:3000,bar:2000"')
   expect(result).toContain('--ee-endpoint="foo:3000,bar:2000"')
