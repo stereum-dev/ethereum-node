@@ -1536,22 +1536,78 @@ rm -rf diskoutput
     }
   }
 
-  //Getting service logs by Max
-  async getServiceLogs() {
-    // Get all service configurations
-    const serviceInfos = await this.getServiceInfos();
-    if (serviceInfos.length < 1) {
-      return [];
-    }
-    // Attach container logs to each service
-    for (let i = 0; i < serviceInfos.length; i++) {
-      let containerName = serviceInfos[i].config.instanceID;
-      let log = await this.nodeConnection.sshService.exec(`
-        docker logs ${containerName} 2>&1
-      `);
-      serviceInfos[i].logs = log.stdout;
-    }
-    // Return service infos with logs
-    return serviceInfos;
+ // Get service logs from docker
+// Accepts an optional object of arguments:
+// [OPTIONAL] logs_since=<ISO8601DateString>: Get logs since (must be a valid ISO 8601 date string, e.g. 2013-01-02T13:23:37Z)
+// [OPTIONAL] logs_until=<ISO8601DateString>: Get logs until (must be a valid ISO 8601 date string, e.g. 2013-01-02T13:23:37Z)
+// [OPTIONAL] logs_tail=<number>: Number of lines to show from the end of the logs (if greater 0 logs_since/logs_until arguments are ignored - default 150)
+// [OPTIONAL] logs_ts=<bool>: When true each log line is prefixed with a ISO8601DateString timestamp (default is false)
+// [OPTIONAL] service_name=<string>: When specified only logs for the specified case-sensitive service name (e.g.: "BesuService") are returned
+// Returns array of services including their docker logs on success or empty array on errors
+async getServiceLogs(args){
+
+  // Extract arguments
+  var {logs_since, logs_until, logs_tail, logs_ts,service_name} = Object.assign({
+    logs_since:null,
+    logs_until:null,
+    logs_tail:150,
+    logs_ts:null,
+    service_name:null,
+  }, (typeof args === 'object' ? args : {}));
+
+  // Get all service configurations
+  const serviceInfos = service_name ? await this.getServiceInfos(service_name) : await this.getServiceInfos();
+  if(serviceInfos.length <1){
+    return [];
   }
+
+  // Get container logs from server (currently logs of last 10 minutes by default per container)
+  // Docker log options:
+  // --details        Show extra details provided to logs
+  // -f, --follow         Follow log output
+  //     --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+  // -n, --tail string    Number of lines to show from the end of the logs (default "all")
+  // -t, --timestamps     Show timestamps
+  // --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+  // --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
+  const dateNow = Date.now();
+  const logsSince = typeof logs_since == "string" ? logs_since : new Date(dateNow - 1000*60*10).toISOString();
+  const logsUntil = typeof logs_until == "string" ? logs_until : new Date(dateNow).toISOString();
+  const logsTail = typeof logs_tail == "number" || (typeof logs_tail == "string" && !isNaN(logs_tail)) ? parseInt(logs_tail) : 0;
+  const logsTs= typeof logs_ts == "boolean" && logs_ts ? true : false;
+  var sshcommand = [];
+  var logArgs='';
+  var logTs='';
+  for(let i=0; i<serviceInfos.length; i++){
+    var containerName = serviceInfos[i].config.instanceID;
+    if(logsTail > 0){
+      logArgs = `--tail ${logsTail}`;
+    }else{
+      logArgs = `--since ${logsSince} --until ${logsUntil}`;
+    }
+    logArgs = logsTs ? `--timestamps ${logArgs}` : logArgs;
+    sshcommand.push(`docker logs ${logArgs} ${containerName} 2>&1 ; echo "---STEREUMSTRINGSPLITTER---"`);
+  }
+  sshcommand = sshcommand.join(" && ");
+  var result = await this.nodeConnection.sshService.exec(sshcommand);
+  if(result.rc || result.stdout == "" || result.stderr != ""){
+    return [];
+  }
+  var result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
+
+  // Attach container logs to each service
+  for(let i=0; i<serviceInfos.length; i++){
+    try{
+      var logs = result[i].trim();
+      serviceInfos[i].logs = logs ? logs.split(/\n/) : [];
+    }catch(e){
+      serviceInfos[i].logs = [];
+    }
+    serviceInfos[i].logsSince = logsTail > 0 ? null : logsSince;
+    serviceInfos[i].logsUntil = logsTail > 0 ? null : logsUntil;
+  }
+
+  // Return service infos with logs
+  return serviceInfos;
+}
 }
