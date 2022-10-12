@@ -33,5 +33,23 @@
     "notification":"Notifications",
     "notifText":"You can set up different notification sources and the status you want to be notified of here",
     "cancelText":"Click outside to cancel"
+  },
+  "settingPanel":{
+    "stereumName":"stereum setting",
+    "langName":"language  selection",
+    "confirm":"CONFIRM & APPLY",
+    "general":"GENETAL",
+    "credits":"Credits",
+    "open":"opan",
+    "update":"UPDATE",
+    "launcherVersion":"Launcher Version",
+    "nodeVersion":"Node Version",
+    "lane":"Stereum - Testing Lane",
+    "on":"on",
+    "off":"off",
+    "updateConfig":"Stereum Update Configuration",
+    "servicePlugin":"Plug-in / Service Update Configuration",
+    "manual":"MANUAL",
+    "auto":"AUTO"
   }
 }

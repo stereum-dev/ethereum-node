@@ -11,7 +11,7 @@
           </div>
         </div>
         <div class="confirm-btn" @click="confirm">
-          <span>CONFIRM & APPLY</span>
+          <span>{{ $t("settingPanel.confirm") }}</span>
         </div>
       </div>
       <div class="division-line"></div>
@@ -21,7 +21,9 @@
         </div>
         <div class="base-container" v-else>
           <div class="general-panel">
-            <div class="general-panel_title"><span>GENERAL</span></div>
+            <div class="general-panel_title">
+              <span>{{ $t("settingPanel.general") }}</span>
+            </div>
             <hr />
             <div class="items-box_general">
               <setting-items
@@ -40,18 +42,20 @@
             </div>
           </div>
           <div class="update-panel">
-            <div class="update-panel_title"><span>UPDATE</span></div>
+            <div class="update-panel_title">
+              <span>{{ $t("settingPanel.update") }}</span>
+            </div>
             <hr />
             <div class="items-box_update">
               <setting-items
-                title="Launcher Version"
-                btn-value="Coming soon"
+                :title="launcherItem"
+                :btn-value="commingSoon"
                 is-color="alpha"
                 item-type="update"
                 id="version"
               ></setting-items>
               <setting-items
-                title="Node Version"
+                :title="nodeVersion"
                 :btn-value="stereumUpdate.current"
                 is-color="alpha"
                 item-type="update"
@@ -60,7 +64,7 @@
 
               <div class="setting-items">
                 <div class="setting-items_title">
-                  <span>Stereum - Testing Lane</span>
+                  <span>{{ $t("settingPanel.lane") }}</span>
                 </div>
                 <div
                   class="setting-items_btn"
@@ -72,7 +76,7 @@
               </div>
               <div class="setting-items">
                 <div class="setting-items_title">
-                  <span>Stereum Update Configuration</span>
+                  <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
                 <div class="setting-items_btn">
                   <comming-soon></comming-soon>
@@ -81,14 +85,14 @@
                     id="stereum-update"
                     v-model="stereumRef"
                   >
-                    <option value="manual">MANUAL</option>
-                    <option value="auto">AUTO</option>
+                    <option value="manual">{{ $t("settingPanel.manual") }}</option>
+                    <option value="auto">{{ $t("settingPanel.auto") }}</option>
                   </select>
                 </div>
               </div>
               <div class="setting-items">
                 <div class="setting-items_title">
-                  <span>Plug-in / Service Update Configuration</span>
+                  <span>{{ $t("settingPanel.servicePlugin") }}</span>
                 </div>
                 <div class="setting-items_btn">
                   <comming-soon></comming-soon>
@@ -97,8 +101,10 @@
                     id="stereum-update"
                     v-model="pluginRef"
                   >
-                    <option value="manual">MANUAL</option>
-                    <option value="auto">AUTO</option>
+                    <option value="manual">
+                      {{ $t("settingPanel.manual") }}
+                    </option>
+                    <option value="auto">{{ $t("settingPanel.auto") }}</option>
                   </select>
                 </div>
               </div>
@@ -124,18 +130,16 @@ export default {
   data() {
     return {
       SIco: "/img/icon/setting-page/setting_icon.png",
-      onOff: false,
+      onOff: true,
       btnStatus: "",
       pageName: "",
       pageIcon: "",
       stereumRef: "manual",
       pluginRef: "manual",
       settingData: {
-        name: "stereum setting",
         icon: "/img/icon/setting-page/setting_icon.png",
       },
       languageData: {
-        name: "language - selection",
         icon: "/img/icon/setting-page/language_page.png",
       },
       langActive: false,
@@ -144,17 +148,17 @@ export default {
       generalItems: [
         {
           id: 1,
-          title: "Language Selection",
+          title: this.$t("settingPanel.langName"),
           itemType: "general",
           isLanguage: true,
         },
         {
           id: 2,
-          title: "Credits",
+          title: this.$t("settingPanel.credits"),
           link: true,
           isColor: "green",
           itemType: "general",
-          linkValue: "open",
+          linkValue: this.$t("settingPanel.open"),
         },
       ],
       updateItems: [
@@ -191,15 +195,36 @@ export default {
         return { backgroundColor: "#316464" };
       }
     },
+    stereumTitlePage() {
+      return this.$t("settingPanel.stereumName");
+    },
+    langTitlePage() {
+      return this.$t("settingPanel.langName");
+    },
+    launcherItem() {
+      return this.$t("settingPanel.launcherVersion");
+    },
+    commingSoon() {
+      return this.$t("comingsoon.comingsoon");
+    },
+    nodeVersion() {
+      return this.$t("settingPanel.nodeVersion");
+    },
+    on() {
+      return this.$t("settingPanel.on");
+    },
+    off() {
+      return this.$t("settingPanel.off");
+    },
   },
 
   methods: {
     switchOnOff() {
       this.onOff = !this.onOff;
       if (this.onOff === false) {
-        this.btnStatus = "off";
+        this.btnStatus = this.off;
       } else {
-        this.btnStatus = "on";
+        this.btnStatus = this.on;
       }
     },
     checkStereumUpdate() {
@@ -214,10 +239,10 @@ export default {
     },
     selectror() {
       if (this.langActive === true) {
-        this.pageName = this.languageData.name;
+        this.pageName = this.langTitlePage;
         this.pageIcon = this.languageData.icon;
       } else {
-        this.pageName = this.settingData.name;
+        this.pageName = this.stereumTitlePage;
         this.pageIcon = this.settingData.icon;
       }
     },
