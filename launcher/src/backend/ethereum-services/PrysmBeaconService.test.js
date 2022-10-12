@@ -30,8 +30,7 @@ const ports = [
   })
   const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm/', [new GethService.GethService(),new GethService.GethService()]).buildConfiguration()
 
-  expect(prysm.command).toMatch(/--fallback-web3provider=http-endpoint-string/)
-  expect(prysm.command).toMatch(/--http-web3provider=http-endpoint-string/)
+  expect(prysm.command).toMatch(/--execution-endpoint=http-endpoint-string/)
   expect(prysm.volumes).toHaveLength(3)
   expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/beacon:/opt/app/beacon')
   expect(prysm.volumes).toContain('/opt/stereum/prysm-' + prysm.id + '/genesis:/opt/app/genesis')

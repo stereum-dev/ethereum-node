@@ -1,0 +1,61 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # Prysm
+  - name: Read prysm service file
+    slurp:
+      src: "/etc/stereum/services/22272f4b-6652-b5da-f3b8-69d34a3ea784.yaml"
+    register: prysm_service_configuration_raw
+
+  - name: Parse prysm service's configuration
+    set_fact: 
+      prysm_service_configuration: "{{ prysm_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ prysm_service_configuration }}"
+
+  - assert:
+      that:
+      - prysm_service_configuration.command is search("--execution-endpoint=")
+      - prysm_service_configuration.command is not search("http-web3provider")
+      - prysm_service_configuration.command is not search("--fallback-web3provider=")
+      - prysm_service_configuration.ports is search("127.0.0.1:3500:3500/tcp")
+
+    # Geth
+  - name: Read geth service file
+    slurp:
+      src: "/etc/stereum/services/0dd89db9-a431-5e2f-81a4-b1c5d28ec220.yaml"
+    register: geth_service_configuration_raw
+
+  - name: Parse geth service's configuration
+    set_fact: 
+      geth_service_configuration: "{{ geth_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ geth_service_configuration }}"
+
+  - assert:
+      that:
+      - geth_service_configuration.ports is search("127.0.0.1:8545:8545/tcp")
+
+    # Besu
+  - name: Read besu service file
+    slurp:
+      src: "/etc/stereum/services/7fabf678-eaac-ffe8-adaf-d081d71ddbe3.yaml"
+    register: besu_service_configuration_raw
+
+  - name: Parse besu service's configuration
+    set_fact: 
+      besu_service_configuration: "{{ besu_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ besu_service_configuration }}"
+
+  - assert:
+      that:
+      - besu_service_configuration.ports is search("127.0.0.1:8545:8545/tcp")
+
+
+# EOF

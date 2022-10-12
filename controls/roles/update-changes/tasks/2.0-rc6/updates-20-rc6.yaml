@@ -1,0 +1,23 @@
+---
+- name: Fix prysm (config) PR 822
+  block:
+  - name: Find service configs
+    find:
+      paths: "/etc/stereum/services"
+      contains: ".*PrysmBeaconService.*"
+    register: prysm_config_files
+
+  - include_tasks: fix-prysm-822.yaml
+    loop: "{{ prysm_config_files.files }}"
+
+- name: Adjust exposed ports PR 814
+  block:
+  - name: Find service configs
+    find:
+      paths: "/etc/stereum/services"
+    register: service_config_files
+  
+  - include_tasks: adjust-ports-814.yaml
+    loop: "{{ service_config_files.files }}"
+
+#EOF
