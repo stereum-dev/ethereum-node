@@ -21,7 +21,7 @@ export class GethService extends NodeService {
       service.id, // id
       1,  // configVersion
       'ethereum/client-go', // image
-      'v1.10.21', // imageVersion
+      'v1.10.25', // imageVersion
       [
         `--${network}`,
         `--datadir=${dataDir}`,
