@@ -356,10 +356,9 @@ async function createWindow() {
   // Create the browser window.
 
   const win = new BrowserWindow({
-    width: 1044,
-    height: 609,
-    minWidth: 1044,
-    minHeight: 609,
+    width: 1600,
+    height: 800,
+
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -368,7 +367,6 @@ async function createWindow() {
       preload: path.join(__dirname, "preload.js"),
     },
   });
-  win.setMinimumSize(1044, 609);
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
