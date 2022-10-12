@@ -152,7 +152,21 @@ export class ServiceManager {
     }
   }
 
-  removeConnection(command, id){
+  removeDependencies(service, serviceToDelete){
+    //update command
+    service.command = this.removeCommandConnection(service.command, serviceToDelete.id)
+    
+    //update volumes
+    service.volumes = service.volumes.filter(v => !v.destinationPath.includes(serviceToDelete.id))
+
+    //update dependencies arrays
+    for(const dependency in service.dependencies){
+      service.dependencies[dependency] = service.dependencies[dependency].filter(s => s.id != serviceToDelete.id)
+    }
+    return service
+  }
+  
+  removeCommandConnection(command, id){
     let isString = false
     if(typeof command === "string"){
       isString = true
@@ -192,10 +206,7 @@ export class ServiceManager {
     })
     log.info(dependents)
     dependents.forEach(service => {
-      service.command = this.removeConnection(service.command, serviceToDelete.id)
-      for(const dependency in service.dependencies){
-        service.dependencies[dependency] = service.dependencies[dependency].filter(s => s.id != serviceToDelete.id)
-      }
+      service = this.removeDependencies(service, serviceToDelete)
       this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     })
     await this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
@@ -225,7 +236,7 @@ export class ServiceManager {
         await this.nodeConnection.restartServices(after - before)
       }
     } else if (jobs.includes("INSTALL")){
-      
+      log.info(tasks)
     }
   }
 }

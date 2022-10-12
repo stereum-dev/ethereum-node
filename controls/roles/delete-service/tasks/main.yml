@@ -31,8 +31,8 @@
 
 - name: Remove Service Files
   ansible.builtin.file:
-    path: "{{ item | first | regex_search('.*' + service) }}"
+    path: "{{ service_configuration.volumes | select('search', service) | first | split(':') | first | regex_search('^.*' + service) }}"
     state: absent
-  with_items: "{{ service_configuration.volumes | select('search', service) }}"
+    force: true
 
 # EOF

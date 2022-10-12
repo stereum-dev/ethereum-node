@@ -149,6 +149,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
+import { toRaw } from "vue";
 
 export default {
   components: {
@@ -193,10 +194,17 @@ export default {
     }),
   },
   mounted() {
+    this.confirmChanges = []
     this.newConfiguration = this.installedServices;
   },
 
   methods: {
+    getActions(action, service, data){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: toRaw(service), data: data}
+      return undefined
+    },
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
@@ -254,7 +262,9 @@ export default {
       }
     },
 
-    saveAddedServiceConfig() {
+    saveAddedServiceConfig(data) {
+      console.log(data)
+      this.confirmChanges.push(this.getActions("INSTALL",this.itemToInstall, data))
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;
       this.newConfiguration.pop();
