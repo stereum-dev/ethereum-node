@@ -21,5 +21,17 @@
     "node":"NODE",
     "control":"CONTROL",
     "staking":"STAKING"
+  },
+  "supportModal":{
+    "support":"support",
+    "supportText":"The fastest way to reach a person for support is to join our Discord server!",
+    "bugReport":"BUG REPORT",
+    "bugRepText":"Please take the time to write an issue and let us make the Stereum better!",
+    "emailText":"or write an email to:"
+  },
+  "notifModal":{
+    "notification":"Notifications",
+    "notifText":"You can set up different notification sources and the status you want to be notified of here",
+    "cancelText":"Click outside to cancel"
   }
 }
