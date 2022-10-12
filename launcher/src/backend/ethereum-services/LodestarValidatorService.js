@@ -28,8 +28,7 @@ export class LodestarValidatorService extends NodeService {
       'v1.0.0', //imageVersion
       [
         `validator`,
-        // `--network=${network}`,
-        `--network=goerli`,
+        `--network=${network}`,
         `--dataDir=${dataDir}`,
         `--server=${eth2Nodes}`,
         `--keymanager=true`,
