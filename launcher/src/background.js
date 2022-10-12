@@ -212,9 +212,9 @@ promiseIpc.on("getServices", async () => {
   return await serviceManager.readServiceConfigurations();
 });
 
-//Get all the services logsList
-promiseIpc.on("getServiceLogs", async () => {
-  return await monitoring.getServiceLogs();
+// get data for service logs
+promiseIpc.on("getServiceLogs", async (args) => {
+  return await monitoring.getServiceLogs(args);
 });
 
 promiseIpc.on("getServiceConfig", async (args) => {

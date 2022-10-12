@@ -159,13 +159,20 @@ export default {
   mounted() {
     this.polling = setInterval(this.refresh, 1000);
     this.updateConnectionStats();
-
+    this.updateServiceLogs();
+  },
+  updated() {
+    this.updateServiceLogs();
   },
   methods: {
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
       this.ipAddress = stats.ipAddress;
+    },
+    async updateServiceLogs() {
+      const data = await ControlService.getServiceLogs();
+      this.serviceLogs = data;
     },
     refresh() {
       this.updateConnectionStats();

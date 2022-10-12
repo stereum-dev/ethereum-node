@@ -26,10 +26,15 @@
         </div>
       </div>
       <div class="logsTable">
-        <template v-if="logsList.length">
-          <div class="tableRow" v-for="(log, idx) in logsList" :key="idx">
+        <template v-if="logs.length">
+          <div
+            class="tableRow"
+            v-for="(log, idx) in logs.slice(-150)"
+            :key="idx"
+          >
             <div class="rowMsg">
-              <span>{{ log.message }}</span>
+              <span>#{{ idx + 1 }}</span>
+              <span>{{ log }}</span>
             </div>
           </div>
         </template>
@@ -61,46 +66,48 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useNodeStore } from "@/store/theNode";
 export default {
   props: ["item"],
   data() {
     return {
-      logs: [
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 maxi INFO ENR Initialised                         tcp: Some(9000), udp:maxi None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-        {
-          message:
-            "Sep 29 10:39:31.116 characters INFO ENR Initialised                         tcp: Some(9000), udp: None, ip: None, id: 0xb757..c893, seq: 1, enr: enr:-K24QJU_psLTSbaXi997ykdbRZQNKPHqOoZf8mRGSndOkXOJeKfflg5AIUxSsXe35DPkMhF0LWytEcEXP5r2D6PdU5oBh2F0dG5ldHOIAAAAAAAAAACEZXRoMpDCzjqoAgAQIP__________gmlkgnY0iXNlY3AyNTZrMaEDW90lu54VBNTtjgkGIjb47yrPLlnCQY3k_ME-5crRQTaIc3luY25ldHMAg3RjcIIjKA, service: libp2p",
-        },
-      ],
+      logs: [],
       searchValue: "",
     };
   },
-  computed: {
-    logsList() {
-      if (this.searchValue.trim().length > 0) {
-        return this.logs.filter((log) =>
-          log.message.toLowerCase().includes(this.searchValue.toLowerCase())
-        );
-      }
-      return this.logs;
+  watch: {
+    searchValue() {
+      this.searchLogs();
     },
   },
+  computed: {
+    // logsList() {
+    //   if (this.searchValue.length > 0) {
+    //     return this.logs.filter((i) =>
+    //       i.toLowerCase().includes(this.searchValue.toLowerCase())
+    //     );
+    //   }
+    //   return this.logs;
+    // },
+    ...mapWritableState(useNodeStore, {
+      serviceLogs: "serviceLogs",
+    }),
+  },
   mounted() {
-
+    this.filteredServiceLogs();
+  },
+  beforeUpdate() {
+    this.filteredServiceLogs();
   },
   methods: {
-
+    filteredServiceLogs() {
+      this.serviceLogs.forEach((i) => {
+        if (i.config.serviceID == this.item.config.serviceID) {
+          this.logs = i.logs;
+        }
+      });
+    },
   },
 };
 </script>
@@ -315,8 +322,8 @@ export default {
   white-space: normal;
 }
 
-.rowMsg span {
-  width: 100%;
+.rowMsg span:last-child {
+  width: 98%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -326,6 +333,19 @@ export default {
   font-weight: 600;
   color: rgb(203, 202, 202);
   margin-left: 10px;
+}
+.rowMsg span:first-child {
+  min-width: 2%;
+  max-width: max-content;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: pre;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d9d9d6;
+  margin: 0 5px;
 }
 
 .logsFooter {
