@@ -60,6 +60,7 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   props: ["item"],
   data() {
@@ -94,6 +95,12 @@ export default {
       }
       return this.logs;
     },
+  },
+  mounted() {
+
+  },
+  methods: {
+
   },
 };
 </script>

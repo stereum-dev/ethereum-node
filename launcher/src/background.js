@@ -1,7 +1,7 @@
 "use strict";
 
 import { app, protocol, BrowserWindow, shell, dialog } from "electron";
-import { autoUpdater } from "electron-updater"
+import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
 import { StereumService } from "./stereumservice.js";
@@ -33,7 +33,7 @@ const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
 autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'debug';
+autoUpdater.logger.transports.file.level = "debug";
 
 let remoteHost = {};
 
@@ -54,8 +54,8 @@ promiseIpc.on("connect", async (arg) => {
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
   monitoring.nodeConnection.nodeConnectionParams = remoteHost;
   monitoring.nodeConnectionProm.nodeConnectionParams = remoteHost;
-    await nodeConnection.establish(taskManager);
-    await taskManager.nodeConnection.establish();
+  await nodeConnection.establish(taskManager);
+  await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   await monitoring.nodeConnectionProm.establish();
   return 0;
@@ -197,7 +197,7 @@ promiseIpc.on("getServerVitals", async () => {
 promiseIpc.on("getConnectionStats", async () => {
   const name = await monitoring.getServerName();
   const address = monitoring.getIPAddress();
-  return {ServerName: name, ipAddress: address}
+  return { ServerName: name, ipAddress: address };
 });
 
 promiseIpc.on("getAvailablePort", async (args) => {
@@ -210,6 +210,11 @@ promiseIpc.on("checkStereumInstallation", async () => {
 
 promiseIpc.on("getServices", async () => {
   return await serviceManager.readServiceConfigurations();
+});
+
+//Get all the services logsList
+promiseIpc.on("getServiceLogs", async () => {
+  return await monitoring.getServiceLogs();
 });
 
 promiseIpc.on("getServiceConfig", async (args) => {
@@ -229,7 +234,7 @@ promiseIpc.on("importKey", async (args) => {
   const returnValue = await validatorAccountManager.importKey(
     args.files,
     args.password,
-    args.service,
+    args.service
   );
   app.showExitPrompt = false;
   return returnValue;
@@ -237,7 +242,7 @@ promiseIpc.on("importKey", async (args) => {
 
 promiseIpc.on("deleteValidators", async (args) => {
   await validatorAccountManager.deleteValidators(args.serviceID, args.keys);
-})
+});
 
 promiseIpc.on("listValidators", async (args) => {
   return await validatorAccountManager.listValidators(args);
@@ -268,7 +273,7 @@ promiseIpc.on("updateServices", async (args) => {
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
-  return seconds
+  return seconds;
 });
 
 promiseIpc.on("updateStereum", async (args) => {
@@ -278,7 +283,7 @@ promiseIpc.on("updateStereum", async (args) => {
   await taskManager.nodeConnection.establish();
   await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
-  return seconds
+  return seconds;
 });
 
 promiseIpc.on("restartServices", async (args) => {
@@ -326,26 +331,29 @@ promiseIpc.on("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
-
 promiseIpc.on("addFeeRecipient", async (args) => {
-  return await validatorAccountManager.addFeeRecipient(args.keys, args.address)
-})
+  return await validatorAccountManager.addFeeRecipient(args.keys, args.address);
+});
 
 promiseIpc.on("getOperatorPageURL", async (args) => {
   return await validatorAccountManager.getOperatorPageURL(args);
 });
 
 promiseIpc.on("setGraffitis", async (args) => {
-  return await validatorAccountManager.setGraffitis(args)
-})
+  return await validatorAccountManager.setGraffitis(args);
+});
 
 promiseIpc.on("chooseServiceAction", async (args) => {
-  return await serviceManager.chooseServiceAction(args.action, args.service, args.data)
-})
+  return await serviceManager.chooseServiceAction(
+    args.action,
+    args.service,
+    args.data
+  );
+});
 
 promiseIpc.on("modifyServices", async (args) => {
-  return await serviceManager.modifyServices(args)
-})
+  return await serviceManager.modifyServices(args);
+});
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
