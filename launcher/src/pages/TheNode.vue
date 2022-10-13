@@ -22,7 +22,12 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
+                  <img
+                    :src="
+                      currentNetwork.icon ? currentNetwork.icon : loadingGIF
+                    "
+                    alt="icon"
+                  />
                 </div>
                 <div class="networkSelect">
                   <span>{{ currentNetwork.name }}</span>
@@ -38,7 +43,7 @@
           </div>
           <div>
             <plugin-zone
-              :title="'execution'"
+              :title="$t('theNode.execution')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'execution'
@@ -50,7 +55,7 @@
           <div>
             <plugin-zone
               @modal-view="showModal"
-              :title="'consensus'"
+              :title="$t('theNode.consensus')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'consensus'
@@ -61,7 +66,7 @@
           <div>
             <plugin-zone
               @modal-view="showModal"
-              :title="'validator'"
+              :title="$t('theNode.validator')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'validator'

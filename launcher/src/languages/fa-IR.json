@@ -52,5 +52,21 @@
     "servicePlugin":"پیکربندی به روز رسانی پلاگین / سرویس",
     "manual":"دستی",
     "auto":"اتوماتیک"
+  },
+  "nodeSidebarVideo":{
+    "firstSteps":"قدم های آغازین",
+    "stake":"استیک با ۳۲ اتریوم",
+    "ssv":" ssvاستفاده از شبکه",
+    "alert":"اخطارها در موبایل",
+    "switchC":"انتخاب کاربر",
+    "switchM":"انتخاب ماشین"
+  },
+  "pluginZone":{
+    "client":"کننده"
+  },
+  "theNode":{
+    "execution":"اجرا",
+    "consensus":"توافق",
+    "validator":"ارزش گذاری"
   }
 }

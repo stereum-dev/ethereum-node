@@ -51,5 +51,21 @@
     "servicePlugin":"Plug-in / Service Update Configuration",
     "manual":"MANUAL",
     "auto":"AUTO"
+  },
+  "nodeSidebarVideo":{
+    "firstSteps":"First Steps!",
+    "stake":"Stake with 32 ETH",
+    "ssv":"Use ssv.network",
+    "alert":"Alerts on Mobile App",
+    "switchC":"Switch Clients",
+    "switchM":"Switch Machine"
+  },
+  "pluginZone":{
+    "client":"client"
+  },
+  "theNode":{
+    "execution":"execution",
+    "consensus":"consensus",
+    "validator":"validator"
   }
 }
