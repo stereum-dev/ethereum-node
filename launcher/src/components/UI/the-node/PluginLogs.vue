@@ -32,9 +32,9 @@
             v-for="(log, idx) in logsList.slice(-150)"
             :key="idx"
           >
-            <div class="rowMsg">
+            <div class="rowMsg" @dblclick="copy">
               <span>#{{ idx + 1 }}</span>
-              <span>{{ log }}</span>
+              <span id="log">{{ log }}</span>
             </div>
           </div>
         </template>
@@ -74,6 +74,7 @@ export default {
     return {
       logs: [],
       searchValue: "",
+      logVal: "",
     };
   },
 
@@ -93,7 +94,7 @@ export default {
   mounted() {
     this.filteredServiceLogs();
   },
-  beforeUpdate() {
+  updated() {
     this.filteredServiceLogs();
   },
   methods: {
@@ -103,6 +104,10 @@ export default {
           this.logs = i.logs;
         }
       });
+    },
+    copy(e) {
+      const copyText = e.target.innerText;
+      navigator.clipboard.writeText(copyText);
     },
   },
 };
@@ -316,6 +321,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   white-space: normal;
+  cursor: pointer;
 }
 
 .rowMsg span:last-child {

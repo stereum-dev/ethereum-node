@@ -157,7 +157,6 @@ export default {
     }),
   },
   mounted() {
-    this.polling = setInterval(this.refresh, 1000);
     this.updateConnectionStats();
     this.updateServiceLogs();
   },
@@ -173,9 +172,6 @@ export default {
     async updateServiceLogs() {
       const data = await ControlService.getServiceLogs();
       this.serviceLogs = data;
-    },
-    refresh() {
-      this.updateConnectionStats();
     },
     showModal(data) {
       this.isModalActive = true;
