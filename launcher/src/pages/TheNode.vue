@@ -159,9 +159,10 @@ export default {
   mounted() {
     this.updateConnectionStats();
     this.updateServiceLogs();
+    this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
   },
-  updated() {
-    this.updateServiceLogs();
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   methods: {
     async updateConnectionStats() {
