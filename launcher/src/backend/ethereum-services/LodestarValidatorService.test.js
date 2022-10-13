@@ -1,0 +1,105 @@
+import { LodestarValidatorService } from './LodestarValidatorService.js'
+import { networks } from './NodeService.js'
+import { ServicePort, servicePortProtocol } from './ServicePort.js'
+
+test('LodestarValidatorService buildConfiguration', () => {
+  jest.mock('./LodestarBeaconService')
+  const LodestarBeaconService = require('./LodestarBeaconService')
+  const mMock = jest.fn(() => { return 'http-endpoint-string' })
+  LodestarBeaconService.LodestarBeaconService.mockImplementation(() => {
+    return {
+      buildConsensusClientHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: 'l_bc-id',
+          service: 'LodestarBeaconService'
+        }
+      })
+    }
+  })
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+
+  const lService = LodestarValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [new LodestarBeaconService.LodestarBeaconService()]).buildConfiguration()
+
+
+
+  expect(lService.command).toContain('--server=http-endpoint-string')
+  expect(lService.volumes).toHaveLength(1)
+  expect(lService.volumes).toContain('/opt/stereum/l-' + lService.id + '/validator:/opt/app/validator')
+  expect(lService.ports).toHaveLength(1)
+  expect(lService.id).toHaveLength(36)
+  expect(lService.user).toMatch(/2000/)
+  expect(lService.image).toMatch(/chainsafe\/lodestar/)
+  expect(lService.configVersion).toBe(1)
+
+  expect(lService.service).toMatch(/LodestarValidatorService/)
+})
+
+test('LodestarValidatorService getAvailablePorts', () => {
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lService = LodestarValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [], 'foobar').getAvailablePorts()
+
+  expect(lService).toHaveLength(1)
+})
+
+test('LodestarValidatorService autoupdate', () => {
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lService = LodestarValidatorService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [], 'foobar').buildConfiguration()
+
+  expect(lService.autoupdate).toBe(true)
+})
+
+test('LodestarValidatorService network', () => {
+  const ports = [
+    new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
+  ]
+  const lService = LodestarValidatorService.buildByUserInput(networks.mainnet, ports, '/opt/stereum/l', [], 'foobar').buildConfiguration()
+
+  expect(lService.network).toBe(networks.mainnet)
+})
+
+test('buildByConfiguration', () => {
+  const bn1 = 'http://node1:9596'
+  const bn2 = 'https://node2:999'
+
+  const l = LodestarValidatorService.buildByConfiguration({
+    id: '123',
+    service: 'LodestarValidatorService',
+    configVersion: 333,
+    image: 'lval:v1.0.0',
+    command:[
+      `validator`,
+      `--network=goerli`,
+      `--dataDir=/opt/app/validator`,
+      `--server=${bn1},${bn2}`,
+      `--keymanager=true`,
+      `--keymanager.address=0.0.0.0`,
+      `--keymanager.port=5062`,
+      `--metrics=true`,
+      `--metrics.port=5064`,
+      `--metrics.address=0.0.0.0`,
+      `--logLevel=debug`,
+    ]
+  })
+
+  expect(l.id).toBe('123')
+  expect(l.service).toBe('LodestarValidatorService')
+  expect(l.configVersion).toBe(333)
+  expect(l.image).toBe('lval')
+  expect(l.imageVersion).toBe('v1.0.0')
+  expect(l.ports).toHaveLength(0)
+
+  expect(l.volumes).toHaveLength(0)
+
+  expect(l.command).toBeDefined()
+  expect(l.command).toContain('--logLevel=debug')
+  expect(l.command).toContain('--server=http://node1:9596,https://node2:999')
+})
+
+// EOF
