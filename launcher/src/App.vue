@@ -10,8 +10,11 @@ export default {};
 #app {
   min-width: 1024px;
   min-height: 576px;
+  max-width: 1025px;
+  max-height: 577px;
   width: 100%;
   height: 100%;
+  resize: none;
   position: absolute;
   top: 0;
   left: 0;

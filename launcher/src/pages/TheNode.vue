@@ -22,7 +22,12 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
+                  <img
+                    :src="
+                      currentNetwork.icon ? currentNetwork.icon : loadingGIF
+                    "
+                    alt="icon"
+                  />
                 </div>
                 <div class="networkSelect">
                   <span>{{ currentNetwork.name }}</span>
@@ -138,6 +143,7 @@ export default {
     }),
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
+      serviceLogs: "serviceLogs",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -152,12 +158,21 @@ export default {
   },
   mounted() {
     this.updateConnectionStats();
+    this.updateServiceLogs();
+    this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   methods: {
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
       this.ipAddress = stats.ipAddress;
+    },
+    async updateServiceLogs() {
+      const data = await ControlService.getServiceLogs();
+      this.serviceLogs = data;
     },
     showModal(data) {
       this.isModalActive = true;

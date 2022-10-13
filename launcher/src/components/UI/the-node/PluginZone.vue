@@ -12,7 +12,12 @@
         >
           <!-- double click func to open logs -->
           <!-- @dblclick.self="displayPluginLogPage(item)" -->
-          <img :src="item.sIcon" alt="icon" @click="pluginMenuHandler(item)" />
+          <img
+            :src="item.sIcon"
+            alt="icon"
+            @click="pluginMenuHandler(item)"
+            @dblclick.self="displayPluginLogPage(item)"
+          />
           <plugin-menu v-if="item.displayPluginMenu">
             <div class="menu-content">
               <div class="power">
