@@ -2,23 +2,21 @@ import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
-export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, checkpointURL) {
-    const service = new LighthouseBeaconService()
+export class LodestarBeaconService extends NodeService {
+  static buildByUserInput (network, ports, dir, executionClients, checkpointURL) {
+    const service = new LodestarBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
     const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
-    
-    const image = 'sigp/lighthouse'
+
+    const image = 'chainsafe/lodestar'
 
     const JWTDir = '/engine.jwt'
     const dataDir = '/opt/app/beacon'
-    const slasherDir = '/opt/app/slasher'
 
     // volumes
     const volumes = [
       new ServiceVolume(workingDir + '/beacon', dataDir),
-      new ServiceVolume(workingDir + '/slasher', slasherDir),
       new ServiceVolume(elJWTDir, JWTDir)
     ]
 
@@ -26,31 +24,25 @@ export class LighthouseBeaconService extends NodeService {
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
     service.init(
-      'LighthouseBeaconService',  //service
+      'LodestarBeaconService',  //service
       service.id, //id
       1, // configVersion
       image,  //image
-      'v3.1.2', //imageVersion
+      'v1.0.0', //imageVersion
       [
-        'lighthouse',
-        'bn',
-        '--debug-level=info',
+        `beacon`,
         `--network=${network}`,
-        `--execution-endpoint=${eth1Nodes}`,
-        `--execution-jwt=${JWTDir}`,
-        '--eth1-blocks-per-log-query=150',
-        `--datadir=${dataDir}`,
-        '--http',
-        '--http-address=0.0.0.0',
-        '--metrics',
-        '--metrics-address=0.0.0.0',
-        '--disable-upnp',
-        '--validator-monitor-auto',
-        '--slasher',
-        `--slasher-dir=${slasherDir}`,
-        `--slasher-max-db-size=${slasherDbSize}`
+        `--dataDir=${dataDir}`,
+        `--rest.port=9596`,
+        `--rest.namespace=*`,
+        `--rest.address=0.0.0.0`,
+        `--jwt-secret=${JWTDir}`,
+        `--execution.urls=${eth1Nodes}`,
+        `--metrics=true`,
+        `--metrics.port=8008`,
+        `--metrics.address=0.0.0.0`,
       ],  //command
-      null, //entrypoint
+      ["node", "./packages/cli/bin/lodestar"], //entrypoint
       null, //env
       ports,  //ports
       volumes,  //volumes
@@ -60,13 +52,13 @@ export class LighthouseBeaconService extends NodeService {
       )
 
     if(checkpointURL)
-      service.command.push('--checkpoint-sync-url=' + checkpointURL)
+      service.command.push('--checkpointSyncUrl=' + checkpointURL)
 
     return service
   }
 
   static buildByConfiguration (config) {
-    const service = new LighthouseBeaconService()
+    const service = new LodestarBeaconService()
 
     service.initByConfig(config)
 
@@ -74,22 +66,22 @@ export class LighthouseBeaconService extends NodeService {
   }
 
   buildConsensusClientHttpEndpointUrl () {
-    return 'http://stereum-' + this.id + ':5052'
+    return 'http://stereum-' + this.id + ':9596'
   }
 
   buildConsensusClientMetricsEndpoint () {
-    return 'stereum-' + this.id + ':5054'
+    return 'stereum-' + this.id + ':8008'
   }
 
   buildPrometheusJob () {
-    return `\n  - job_name: stereum-${this.id}\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
+    return `\n  - job_name: stereum-${this.id}\n    metrics_path: /metrics\n    static_configs:\n      - targets: [${this.buildConsensusClientMetricsEndpoint()}]`
   }
 
   getAvailablePorts () {
     return [
       new ServicePortDefinition(9000, 'tcp', 'P2P connections'),
       new ServicePortDefinition(9000, 'udp', 'P2P connections'),
-      new ServicePortDefinition(5052, 'tcp', 'Consensus Client API')
+      new ServicePortDefinition(9596, 'tcp', 'Consensus Client API')
     ]
   }
 }

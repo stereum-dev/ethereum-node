@@ -1,14 +1,14 @@
 import { NodeService } from './NodeService.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
-export class GethService extends NodeService {
+export class ErigonService extends NodeService {
   static buildByUserInput (network, ports, dir) {
-    const service = new GethService()
+    const service = new ErigonService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-      
+
     const JWTDir = '/engine.jwt'
-    const dataDir = '/opt/data/geth'
+    const dataDir = '/opt/data/erigon'
     const volumes = [
       new ServiceVolume(workingDir + '/data', dataDir),
       new ServiceVolume(workingDir + '/engine.jwt', JWTDir)
@@ -17,35 +17,33 @@ export class GethService extends NodeService {
 
 
     service.init(
-      'GethService',  // service
+      'ErigonService',  // service
       service.id, // id
       1,  // configVersion
-      'ethereum/client-go', // image
-      'v1.10.25', // imageVersion
+      'thorax/erigon', // image
+      'v2022.09.03', // imageVersion
       [
-        `--${network}`,
+        `erigon`,
+        `--chain=${network}`,
         `--datadir=${dataDir}`,
-        '--http', 
-        '--http.port=8545', 
-        '--http.addr=0.0.0.0', 
-        '--http.vhosts=*', 
-        '--http.api="engine,eth,web3,net,debug"',
-        '--http.corsdomain=*',
-        '--ws', 
-        '--ws.port=8546',
-        '--ws.addr=0.0.0.0',
-        '--ws.api="debug,eth,net,web3"',
-        '--ws.origins=*',
-        '--authrpc.port=8551',
-        '--authrpc.addr=0.0.0.0',
-        '--authrpc.vhosts=*',
-        '--authrpc.jwtsecret=/engine.jwt',
-        '--metrics',
-        '--metrics.expensive',
-        '--metrics.port=6060',
-        '--metrics.addr=0.0.0.0',
+        `--authrpc.addr=0.0.0.0`,
+        `--authrpc.vhosts=*`,
+        `--authrpc.port=8551`,
+        `--authrpc.jwtsecret=/engine.jwt`,
+        `--prune=htc`,
+        `--ws`,
+        `--http`,
+        `--http.vhosts=*`,
+        `--http.corsdomain=*`,
+        `--http.addr=0.0.0.0`,
+        `--http.port=8545`,
+        `--http.api=engine,net,eth`,
+        `--metrics`,
+        `--metrics.addr=0.0.0.0`,
+        `--metrics.expensive`,
+        `--metrics.port=6060`,
       ], // command
-      ['geth'], // entrypoint
+      [], // entrypoint
       null, // env
       ports,  // ports
       volumes,  // volumes
@@ -59,7 +57,7 @@ export class GethService extends NodeService {
   }
 
   static buildByConfiguration (config) {
-    const service = new GethService()
+    const service = new ErigonService()
 
     service.initByConfig(config)
 
@@ -71,7 +69,7 @@ export class GethService extends NodeService {
   }
 
   buildExecutionClientWsEndpointUrl () {
-    return 'ws://stereum-' + this.id + ':8546'
+    return 'ws://stereum-' + this.id + ':8545'
   }
 
   buildExecutionClientEngineRPCHttpEndpointUrl() {

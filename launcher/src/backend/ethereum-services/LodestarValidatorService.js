@@ -3,49 +3,43 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 
-export class LighthouseValidatorService extends NodeService {
+export class LodestarValidatorService extends NodeService {
   static buildByUserInput (network, ports, dir, consensusClients) {
-    const service = new LighthouseValidatorService()
+    const service = new LodestarValidatorService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
 
-    const image = 'sigp/lighthouse'
+    const image = 'chainsafe/lodestar'
 
     const dataDir = '/opt/app/validator'
-    const graffitiDir = '/opt/app/graffitis'
 
     const volumes = [
       new ServiceVolume(workingDir + '/validator', dataDir),
-      new ServiceVolume(workingDir + '/graffitis', graffitiDir)
     ]
 
     const eth2Nodes = (consensusClients.map(client => { return client.buildConsensusClientHttpEndpointUrl() })).join()
 
     // build service
     service.init(
-      'LighthouseValidatorService', //service
+      'LodestarValidatorService', //service
       service.id, //id
       1, //configVersion
       image,  //image
-      'v3.1.2', //imageVersion
+      'v1.0.0', //imageVersion
       [
-        'lighthouse',
-        'vc',
-        '--debug-level=debug',
+        `validator`,
         `--network=${network}`,
-        `--beacon-nodes=${eth2Nodes}`,
-        '--suggested-fee-recipient=0x0000000000000000000000000000000000000000',
-        `--datadir=${dataDir}`,
-        '--init-slashing-protection',
-        `--graffiti-file=${graffitiDir}/graffitis.yaml`,
-        '--metrics',
-        '--metrics-address=0.0.0.0',
-        '--http',
-        '--http-address=0.0.0.0',
-        '--http-port=5062',
-        '--unencrypted-http-transport'
+        `--dataDir=${dataDir}`,
+        `--server=${eth2Nodes}`,
+        `--keymanager=true`,
+        `--keymanager.address=0.0.0.0`,
+        `--keymanager.port=5062`,
+        `--metrics=true`,
+        `--metrics.port=5064`,
+        `--metrics.address=0.0.0.0`,
+        `--suggestedFeeRecipient=0x0000000000000000000000000000000000000000`,
       ],  //command
-      null, // entrypoint
+      ["node", "./packages/cli/bin/lodestar"], // entrypoint
       null, // env
       ports, //ports
       volumes,  //volumes
@@ -59,7 +53,7 @@ export class LighthouseValidatorService extends NodeService {
   }
 
   static buildByConfiguration (config) {
-    const service = new LighthouseValidatorService()
+    const service = new LodestarValidatorService()
 
     service.initByConfig(config)
 
