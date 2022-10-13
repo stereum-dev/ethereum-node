@@ -26,10 +26,10 @@
         </div>
       </div>
       <div class="logsTable">
-        <template v-if="logs.length">
+        <template v-if="logsList.length">
           <div
             class="tableRow"
-            v-for="(log, idx) in logs.slice(-150)"
+            v-for="(log, idx) in logsList.slice(-150)"
             :key="idx"
           >
             <div class="rowMsg">
@@ -76,20 +76,16 @@ export default {
       searchValue: "",
     };
   },
-  watch: {
-    searchValue() {
-      this.searchLogs();
-    },
-  },
+
   computed: {
-    // logsList() {
-    //   if (this.searchValue.length > 0) {
-    //     return this.logs.filter((i) =>
-    //       i.toLowerCase().includes(this.searchValue.toLowerCase())
-    //     );
-    //   }
-    //   return this.logs;
-    // },
+    logsList() {
+      if (this.searchValue.length > 0) {
+        return this.logs.filter((i) =>
+          i.toLowerCase().includes(this.searchValue.toLowerCase())
+        );
+      }
+      return this.logs;
+    },
     ...mapWritableState(useNodeStore, {
       serviceLogs: "serviceLogs",
     }),
