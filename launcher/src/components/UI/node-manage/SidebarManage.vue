@@ -58,7 +58,7 @@
         <input
           class="filter-inp"
           type="text"
-          placeholder="{{$t('sidebarManage.filter')}}"
+          :placeholder="$t('sidebarManage.filter')"
         />
         <div class="filter-icons" @mousedown.prevent.stop>
           <img

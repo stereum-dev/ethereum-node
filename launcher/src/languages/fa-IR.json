@@ -78,5 +78,10 @@
   },
   "sidebarManage":{
     "filter":"فیلترکردن"
+  },
+  "changeConfirm":{
+    "confirm":"تایید",
+    "change":"تایید تغییرات",
+    "delete":"پاک کردن"
   }
 }

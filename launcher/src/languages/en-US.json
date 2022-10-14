@@ -77,5 +77,10 @@
   },
   "sidebarManage":{
     "filter":"Filter..."
+  },
+  "changeConfirm":{
+    "confirm":"CONFIRM",
+    "change":"CHANGES TO CONFIRM",
+    "delete":"DELETE"
   }
 }
