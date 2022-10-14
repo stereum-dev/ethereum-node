@@ -10,7 +10,7 @@
             <img src="../../../../public/img/icon/control/keyEth.svg" />
           </div>
           <div class="activeValue">
-            <span>{{ activeVal }} ACTIVE</span>
+            <span>{{ activeVal }} {{ $t("controlPage.active") }}</span>
           </div>
         </div>
         <div class="gewiPart">
@@ -32,7 +32,9 @@
       </div>
 
       <div class="theValidatorBox_right">
-        <div class="ratingLabel"><span>RATING</span></div>
+        <div class="ratingLabel">
+          <span>{{ $t("controlPage.rating") }}</span>
+        </div>
         <div class="ratingValue">
           <span>{{ ratingVal }}</span>
         </div>

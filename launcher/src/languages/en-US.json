@@ -95,5 +95,27 @@
     "serviceDesc":"Updates for the installed selection of PLUG-INs",
     "availablePlugin":"AVAILABLE PLUG-IN UPDATES",
     "all":"update all"
+  },
+  "controlPage":{
+    "node":"NODE",
+    "disk":"DISK SPEED",
+    "write":"WRITE",
+    "read":"READ",
+    "inclusionDistance":"INCLUSION DISTANCE",
+    "rpc":"RPC-ENDPOINT",
+    "syncStatus":"SYNC STATUS",
+    "hard":"HARD DISK",
+    "free":"FREE",
+    "total":"TOTAL",
+    "network":"NETWORK",
+    "receive":"Receiving Data",
+    "transmit":"Transmitting Data",
+    "ram":"RAM",
+    "used":"used",
+    "totalram":"total",
+    "storage":"STORAGE",
+    "active":"ACTIVE",
+    "rating":"RATING",
+    "usage":"Usage"
   }
 }

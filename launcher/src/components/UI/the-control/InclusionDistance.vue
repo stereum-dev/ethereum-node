@@ -1,7 +1,7 @@
 <template>
   <div class="parentGuage">
     <div class="guageTitle" v-on:click="test">
-      <span>INCLUSION DISTANCE</span>
+      <span>{{$t('controlPage.inclusionDistance')}}</span>
     </div>
     <div class="guageBox">
       <div

@@ -13,7 +13,7 @@
       <!-- removed node-connection-row template start -->
       <div class="rowParent">
         <div class="title">
-          <span>RPC-ENDPOINT</span>
+          <span>{{$t('controlPage.rpc')}}</span>
         </div>
         <div class="btn" :class="{ active: isActive }" @click="toggle">
           <span>{{ onoff }}</span>

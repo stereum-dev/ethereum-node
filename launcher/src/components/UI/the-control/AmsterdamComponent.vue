@@ -4,7 +4,7 @@
       <div class="icoContainer">
         <img :src="networkIcon" />
       </div>
-      <span>NODE</span>
+      <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
       <div class="upSide">
