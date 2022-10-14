@@ -102,8 +102,8 @@ export default {
     this.testnetNetworkHandler();
   },
   mounted() {
-    this.selectedNetworks = ""
-    this.selectedPreset = undefined
+    this.selectedNetworks = "";
+    this.selectedPreset = undefined;
   },
   methods: {
     mainnetNetworkHandler() {
@@ -156,8 +156,9 @@ export default {
 </script>
 <style scoped>
 .plugin-parent {
-  width: 100%;
-  height: 70%;
+  width: 97%;
+  height: 75%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -214,8 +215,8 @@ export default {
   height: 100%;
 }
 .plugin-table {
-  width: 94%;
-  height: 77%;
+  width: 99%;
+  height: 72%;
   border-radius: 20px;
   overflow-y: auto;
   box-shadow: 0 1px 2px 1px rgb(21, 45, 41);
@@ -231,12 +232,45 @@ export default {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 50%);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   overflow-x: hidden;
   overflow-y: auto;
   align-items: center;
   justify-items: center;
+}
+/* .mainnet-container::-webkit-scrollbar,
+.testnet-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+}
+.mainnet-container::-webkit-scrollbar-track,
+.testnet-container::-webkit-scrollbar-track {
+  width: 10px;
+  height: 50px;
+  background-color: transparent;
+}
+.mainnet-container::-webkit-scrollbar-thumb,
+.testnet-container::-webkit-scrollbar {
+  background: transparent;
+  border-radius: 100px;
+  border-top: 60px solid green;
+
+} */
+::-webkit-scrollbar {
+    width: 8px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    background: rgb(11, 156, 151);
 }
 .plugin-box {
   width: 100%;
@@ -253,8 +287,8 @@ export default {
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width: 52%;
-  height: 75%;
+  width:65%;
+  height: 77%;
   cursor: pointer;
 }
 .mainnet-plugin img:hover,
@@ -276,5 +310,4 @@ export default {
   opacity: 0.2;
   pointer-events: none;
 }
-
 </style>
