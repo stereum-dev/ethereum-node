@@ -82,5 +82,18 @@
     "confirm":"CONFIRM",
     "change":"CHANGES TO CONFIRM",
     "delete":"DELETE"
+  },
+  "updatePanel":{
+    "launcherTitle":"launcher updates",
+    "current":"current",
+    "nodeTitle":"node updates",
+    "latest":"latest",
+    "auto":"auto-update",
+    "available":"available",
+    "searching":"searching new updates",
+    "serviceTitle":"Service updates",
+    "serviceDesc":"Updates for the installed selection of PLUG-INs",
+    "availablePlugin":"AVAILABLE PLUG-IN UPDATES",
+    "all":"update all"
   }
 }
