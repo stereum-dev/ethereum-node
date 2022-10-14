@@ -225,7 +225,7 @@ export default {
 .table-content {
   width: 100%;
   height: 100%;
-  background-color: rgb(47, 114, 112);
+  background-color: #2f7270;
 }
 .mainnet-container,
 .testnet-container {
@@ -260,17 +260,20 @@ export default {
 } */
 ::-webkit-scrollbar {
     width: 8px;
+    background: #2f7270;
 }
  
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.392); 
     border-radius: 10px;
 }
  
 ::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-    background: rgb(11, 156, 151);
+    border-radius: 100px;
+    border-top: 20px solid #2f7270;
+    border-bottom: 20px solid #2f7270;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.542); 
+    background: rgb(24, 201, 195);
 }
 .plugin-box {
   width: 100%;
