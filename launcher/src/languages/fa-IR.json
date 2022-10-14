@@ -67,6 +67,16 @@
   "theNode":{
     "execution":"اجرا",
     "consensus":"توافق",
-    "validator":"ارزش گذاری"
+    "validator":"ارزش گذاری",
+    "servicePlugin":"خدمات پلاگین"
+  },
+  "modifyPanel":{
+    "backNode":"بازگشت به گره",
+    "addPreset":"اضافه کردن پیش فرض ۱ کلیک",
+    "changeNetwork":"تغییر شبکه",
+    "nukeNode":"از بین بردن گره"
+  },
+  "sidebarManage":{
+    "filter":"فیلترکردن"
   }
 }

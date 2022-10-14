@@ -394,7 +394,7 @@ export default {
 .headerTitle span {
   width: 86%;
   height: 100%;
-  padding:2px;
+  padding: 2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;
@@ -417,7 +417,7 @@ export default {
 .headerContent span {
   width: 86%;
   height: 100%;
-  padding:2px;
+  padding: 2px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #cdcdcd;

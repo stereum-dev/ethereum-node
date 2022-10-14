@@ -1,7 +1,7 @@
 <template>
   <manage-trapezoid>
     <template #default>
-      <span class="title">{{ title }} client</span>
+      <span class="title">{{ title }} {{ $t("pluginZone.client") }}</span>
       <div
         class="item-box"
         @dragenter.prevent
@@ -104,7 +104,7 @@ export default {
   height: 80px;
   display: grid;
   grid-template-columns: repeat(3, 33.33%);
-  grid-auto-rows:minmax(80px, auto);
+  grid-auto-rows: minmax(80px, auto);
   row-gap: 1px;
   margin: 0 auto;
   overflow-x: hidden;

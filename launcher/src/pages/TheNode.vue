@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="service">
-          <div class="title">SERVICE PLUGIN</div>
+          <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
             <node-service
               :list="

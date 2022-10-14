@@ -66,6 +66,16 @@
   "theNode":{
     "execution":"execution",
     "consensus":"consensus",
-    "validator":"validator"
+    "validator":"validator",
+    "servicePlugin":"SERVICE PLUGIN"
+  },
+  "modifyPanel":{
+    "backNode":"back to NODE",
+    "addPreset":"ADD 1 CLICK PRESET",
+    "changeNetwork":"CHANGE NETWORK",
+    "nukeNode":"NUKE NODE"
+  },
+  "sidebarManage":{
+    "filter":"Filter..."
   }
 }
