@@ -7,7 +7,7 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span>{{ selectedPreset.name }}</span>
+                <span></span>
               </div>
             </div>
           </div>
@@ -16,126 +16,15 @@
               <div class="option-title">
                 <span>OPTION</span>
               </div>
-              <div class="option-content">
-                <div class="network-parent">
-                  <div class="network-box">
-                    <div class="choose">
-                      <span>CHOSEN NETWORK</span>
-                    </div>
-                    <div class="none">
-                      <span>{{ selectedPreset.network }}</span>
-                    </div>
-                  </div>
-                  <div class="circle-box">
-                    <img
-                      :src="
-                        selectedPreset.network === 'mainnet'
-                          ? this.mainnetIcon
-                          : this.testnetIcon
-                      "
-                      alt="icon"
-                    />
-                  </div>
-                </div>
-                <div class="change-installation">
-                  <div class="change-title">
-                    <span>INSTALLATION PATH</span>
-                  </div>
-                  <div class="change-box">
-                    <input type="text" v-model="installationPath" />
-                  </div>
-                </div>
-                <div class="fast-sync">
-                  <div class="sync-header">
-                    <div class="headerTitle">
-                      <span>SYNCHRONISATION</span>
-                    </div>
-                    <div class="headerContent">
-                      <img
-                        @click="changeTheOption"
-                        src="/img/icon/arrows/left-arrow.png"
-                        alt="icon"
-                      />
-                      <span v-if="genesisIsActive">GENESIS</span>
-                      <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
-                      <img
-                        @click="changeTheOption"
-                        src="/img/icon/arrows/right-arrow.png"
-                        alt="icon"
-                      />
-                    </div>
-                  </div>
-                  <div class="content">
-                    <span v-if="genesisIsActive"
-                      >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-                    >
-                    <div class="inputBox" v-if="checkPointIsActive">
-                      <input type="text" v-model="checkPointSync" />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <div class="option-content"></div>
             </div>
-            <div class="included-box">
-              <div class="included-title">
-                <span>PLUGINS</span>
-              </div>
-              <div class="info-box">
-                <div
-                  class="info-row"
-                  v-for="(plugin, index) in selectedPreset.includedPlugins"
-                  :key="index"
-                >
-                  <change-modal v-if="plugin.showChangeModal">
-                    <div class="replaced-plugins">
-                      <div
-                        class="item"
-                        v-for="(item, idx) in filteredPluginsOnCategory"
-                        :key="idx"
-                        @click="pluginChangeHandler(plugin, item, index)"
-                      >
-                        <img
-                          :src="item.icon"
-                          alt="icon"
-                          @mouseover="runningTooltip(item)"
-                          @mouseleave="item.displayTooltip = false"
-                        />
-                        <span class="tooltip" v-if="item.displayTooltip">{{
-                          item.name
-                        }}</span>
-                      </div>
-                    </div>
-                  </change-modal>
-                  <div class="row" @click="pluginExChange(plugin)">
-                    <div class="icon-box">
-                      <div class="plugin-icon">
-                        <img :src="plugin.icon" alt="icon" />
-                      </div>
-                    </div>
-                    <div class="content">
-                      <div class="plugin-name">
-                        <span>{{ plugin.name }}</span>
-                      </div>
-                      <div class="category">
-                        <span>{{ plugin.displayCategory }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="included-box"></div>
           </div>
           <div class="btn-box">
-            <router-link :to="{ path: '/selectPlugin' }">
+            <router-link :to="{ path: '/install' }">
               <span>BACK</span>
             </router-link>
-            <router-link
-              v-if="selectedPreset.name === 'mev boost'"
-              :to="{ path: '/mevboost' }"
-            >
-              <span>NEXT</span>
-            </router-link>
-            <router-link v-else :to="{ path: '/verify' }">
+            <router-link :to="{ path: '/verify' }">
               <span>NEXT</span>
             </router-link>
           </div>
@@ -145,31 +34,15 @@
   </div>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "../../../store/services";
 export default {
-  components: { ToggleButton, ChangeModal },
+  components: { ChangeModal },
 
   data() {
-    return {
-      genesisIsActive: true,
-      checkPointIsActive: false,
-      toggleActive: false,
-      requirementPassed: false,
-      requirementFailed: false,
-      activeExecutionClient: false,
-      activeConsensusClient: false,
-      activeValidatorClient: false,
-      exchangeModalActive: false,
-      filteredPluginsOnCategory: [],
-      filteredPluginsOnName: [],
-      categoryDisplayName: "",
-      testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
-      mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
-    };
+    return {};
   },
   computed: {
     ...mapWritableState(useClickInstall, {
@@ -181,132 +54,6 @@ export default {
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
-  },
-  mounted() {
-    this.selectedPluginsValidation();
-    this.pushNewProperthyToPresets();
-    this.sortPlugins();
-  },
-  methods: {
-    selectedPluginsValidation() {
-      if (Object.keys(this.selectedPreset.includedPlugins).length === 0) {
-        this.$router.push("/selectPlugin");
-      }
-    },
-    pushNewProperthyToPresets() {
-      this.selectedPreset.includedPlugins =
-        this.selectedPreset.includedPlugins.map((item) => {
-          return {
-            showChangeModal: false,
-            ...item,
-          };
-        });
-    },
-    pluginChangeHandler(el, item, idx) {
-      el.showChangeModal = false;
-      this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (this.selectedPreset.name === "staking") {
-        //if the preset is staking:
-        if (item.category === "consensus") {
-          //and you just changed the consensus client
-          let valIndex = this.selectedPreset.includedPlugins.findIndex(
-            (e) => e.category === "validator"
-          ); //find the index of the current validator service
-          this.selectedPreset.includedPlugins[valIndex] = this.allPlugins.find(
-            (e) => e.service === item.name + "ValidatorService"
-          ); //change the validator service to the matching one
-        } else if (item.category === "validator") {
-          //otherwise if you changed the validator client do the same for the consensus client
-          let conIndex = this.selectedPreset.includedPlugins.findIndex(
-            (e) => e.category === "consensus"
-          );
-          this.selectedPreset.includedPlugins[conIndex] = this.allPlugins.find(
-            (e) => e.service === item.name + "BeaconService"
-          );
-        }
-      }
-    },
-    sortPlugins() {
-      //sorts includedPlugins in this order: EXECUTION -> CONSENSUS -> VALIDATOR -> SERVICE
-      if (this.selectedPreset.includedPlugins) {
-        const ec = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "execution"
-        );
-        const cc = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "consensus"
-        );
-        const vc = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "validator"
-        );
-        const services = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "service"
-        );
-        this.selectedPreset.includedPlugins = new Array().concat(
-          ec,
-          cc,
-          vc,
-          services
-        );
-      }
-    },
-    pluginExChange(el) {
-      if (el.category !== "service") {
-        this.selectedPreset.includedPlugins.filter((item) => {
-          item.showChangeModal = false;
-          if (item?.service === el.service) {
-            this.checkPluginCategory(item);
-          }
-        });
-        el.showChangeModal = true;
-      }
-    },
-    checkPluginCategory(element) {
-      let filter;
-      switch (
-        this.selectedPreset.name //apply filter depending on which preset was chosen
-      ) {
-        case "staking":
-          filter = (item) =>
-            item.category === element.category &&
-            item.service !== "SSVNetworkService";
-          break;
-        case "ssv.network":
-          filter = (item) => {
-            if (element.category === "validator") {
-              return item.service === "SSVNetworkService";
-            }
-            return item.category === element.category;
-          };
-          break;
-        case "obol ssv":
-          //filter = (item) => item.category === element.category
-          break;
-        case "rocketpool":
-          //filter = (item) => item.category === element.category
-          break;
-        default:
-          break;
-      }
-      this.filteredPluginsOnCategory = this.allPlugins.filter(filter);
-    },
-    runningTooltip(el) {
-      this.allPlugins.filter((i) => {
-        i.category === el.category && i.id == el.id;
-        el.displayTooltip = true;
-      });
-    },
-    backToHistoryHandler() {
-      history.back();
-    },
-    changeTheOption() {
-      if (this.genesisIsActive) {
-        this.genesisIsActive = false;
-        this.checkPointIsActive = true;
-      } else {
-        this.checkPointIsActive = false;
-        this.genesisIsActive = true;
-      }
-    },
   },
 };
 </script>
