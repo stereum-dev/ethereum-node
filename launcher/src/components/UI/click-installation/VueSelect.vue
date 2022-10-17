@@ -259,21 +259,21 @@ export default {
 
 } */
 ::-webkit-scrollbar {
-    width: 8px;
-    background: #2f7270;
+  width: 8px;
+  background: #2f7270;
 }
- 
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.392); 
-    border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.392);
+  border-radius: 10px;
 }
- 
+
 ::-webkit-scrollbar-thumb {
-    border-radius: 100px;
-    border-top: 20px solid #2f7270;
-    border-bottom: 20px solid #2f7270;
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.542); 
-    background: rgb(24, 201, 195);
+  border-radius: 100px;
+  border-top: 20px solid #2f7270;
+  border-bottom: 20px solid #2f7270;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.542);
+  background: rgb(24, 201, 195);
 }
 .plugin-box {
   width: 100%;
@@ -290,25 +290,25 @@ export default {
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width:65%;
+  width: 65%;
   height: 77%;
+  border-radius: 5px;
+  border: 2px solid transparent;
   cursor: pointer;
+  transition-duration: 0.2s;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
   transform: scale(1.1);
-  transition-duration: 0.1s;
+  box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);
+  transition-duration: 0.3s;
 }
-.mainnet-plugin img:active,
-.testnet-plugin img:active {
-  transform: scale(1);
-  transition-duration: 0.1s;
-}
+
 .selectedItem {
+  transform: scale(1.1);
   border: 2px solid rgb(53, 178, 246) !important;
-  border-radius: 6px !important;
-  box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
+
 .notAvailable {
   opacity: 0.2;
   pointer-events: none;
