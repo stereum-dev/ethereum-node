@@ -67,7 +67,10 @@
             <router-link :to="{ path: '/install' }">
               <span>BACK</span>
             </router-link>
-            <router-link :to="{ path: '/verify' }">
+            <router-link
+              :to="{ path: '/verify' }"
+              :class="{ disabled: !usedBlocks.length }"
+            >
               <span>NEXT</span>
             </router-link>
           </div>
@@ -469,5 +472,9 @@ export default {
 .selectedItemToRemove {
   background-color: #1a3535;
   border: 2px solid #e83d3d;
+}
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
 </style>
