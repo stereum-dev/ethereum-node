@@ -115,7 +115,7 @@ export default {
           savedConfig.savedLanguage.language,
           savedConfig.savedLanguage.flag
         );
-        this.activePage();
+        this.$emit("page", "SetupServer");
       }
     },
     updateSettings: async function (lang, langSelect) {

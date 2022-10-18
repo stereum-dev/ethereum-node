@@ -117,5 +117,8 @@
     "active":"ACTIVE",
     "rating":"RATING",
     "usage":"Usage"
+  },
+  "taskManager":{
+    "clickDisplay":"Click on tasks to display"
   }
 }
