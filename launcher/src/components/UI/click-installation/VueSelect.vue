@@ -102,8 +102,8 @@ export default {
     this.testnetNetworkHandler();
   },
   mounted() {
-    this.selectedNetworks = ""
-    this.selectedPreset = undefined
+    this.selectedNetworks = "";
+    this.selectedPreset = undefined;
   },
   methods: {
     mainnetNetworkHandler() {
@@ -156,8 +156,9 @@ export default {
 </script>
 <style scoped>
 .plugin-parent {
-  width: 100%;
-  height: 70%;
+  width: 97%;
+  height: 75%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -214,8 +215,8 @@ export default {
   height: 100%;
 }
 .plugin-table {
-  width: 94%;
-  height: 77%;
+  width: 99%;
+  height: 72%;
   border-radius: 20px;
   overflow-y: auto;
   box-shadow: 0 1px 2px 1px rgb(21, 45, 41);
@@ -224,19 +225,55 @@ export default {
 .table-content {
   width: 100%;
   height: 100%;
-  background-color: rgb(47, 114, 112);
+  background-color: #2f7270;
 }
 .mainnet-container,
 .testnet-container {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 50%);
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   overflow-x: hidden;
   overflow-y: auto;
   align-items: center;
   justify-items: center;
+}
+/* .mainnet-container::-webkit-scrollbar,
+.testnet-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background-color: transparent;
+}
+.mainnet-container::-webkit-scrollbar-track,
+.testnet-container::-webkit-scrollbar-track {
+  width: 10px;
+  height: 50px;
+  background-color: transparent;
+}
+.mainnet-container::-webkit-scrollbar-thumb,
+.testnet-container::-webkit-scrollbar {
+  background: transparent;
+  border-radius: 100px;
+  border-top: 60px solid green;
+
+} */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #2f7270;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.392);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border-top: 20px solid #2f7270;
+  border-bottom: 20px solid #2f7270;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.542);
+  background: rgb(24, 201, 195);
 }
 .plugin-box {
   width: 100%;
@@ -253,28 +290,27 @@ export default {
 }
 .mainnet-plugin img,
 .testnet-plugin img {
-  width: 52%;
-  height: 75%;
+  width: 65%;
+  height: 77%;
+  border-radius: 5px;
+  border: 2px solid transparent;
   cursor: pointer;
+  transition-duration: 0.2s;
 }
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
   transform: scale(1.1);
-  transition-duration: 0.1s;
+  box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);
+  transition-duration: 0.3s;
 }
-.mainnet-plugin img:active,
-.testnet-plugin img:active {
-  transform: scale(1);
-  transition-duration: 0.1s;
-}
+
 .selectedItem {
+  transform: scale(1.1);
   border: 2px solid rgb(53, 178, 246) !important;
-  border-radius: 6px !important;
-  box-shadow: 0px 1px 5px 2px rgb(31, 31, 31) !important;
 }
+
 .notAvailable {
   opacity: 0.2;
   pointer-events: none;
 }
-
 </style>

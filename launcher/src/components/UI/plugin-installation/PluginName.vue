@@ -129,7 +129,13 @@
             <router-link :to="{ path: '/selectPlugin' }">
               <span>BACK</span>
             </router-link>
-            <router-link :to="{ path: '/verify' }">
+            <router-link
+              v-if="selectedPreset.name === 'mev boost'"
+              :to="{ path: '/mevboost' }"
+            >
+              <span>NEXT</span>
+            </router-link>
+            <router-link v-else :to="{ path: '/verify' }">
               <span>NEXT</span>
             </router-link>
           </div>
