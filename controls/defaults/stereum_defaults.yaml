@@ -10,29 +10,29 @@ stereum_static:
         install: false
     versions:
       # consensus clients
-      lighthouse: v3.1.0
-      nimbus: multiarch-v22.9.0
-      teku: "22.9.1"
+      lighthouse: v3.1.2
+      nimbus: multiarch-v22.10.1
+      teku: "22.10.1"
       prysm: v3.1.1
-      lodestar: v1.0.0
+      lodestar: v1.1.0
 
       # execution clients
       geth: v1.10.25
       besu: "22.7.2"
-      nethermind: "1.14.2"
-      erigon: v2022.09.03
+      nethermind: "1.14.3"
+      erigon: v2.28.1
 
       # mevboost
-      mevboost: v1.3.1
+      mevboost: v1.3.2
 
       # ssv
-      ssv_network: v0.3.0
+      ssv_network: v0.3.3
 
       # tools
       curl: "7.85.0"
-      grafana: "9.1.6"
-      node_exporter: v1.3.1
-      prometheus: v2.37.1
+      grafana: "9.2.1"
+      node_exporter: v1.4.0
+      prometheus: v2.39.1
       notifications: v1.1.0
 
     # mevboost - relay
