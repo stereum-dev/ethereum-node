@@ -173,7 +173,6 @@ export default {
   height: 80%;
   background-color: #1b1b1b;
   border: 5px solid rgb(161, 161, 161);
-  box-shadow: inset 2px 2px 15px rgb(0, 0, 0);
   border-radius: 30px;
   position: absolute;
   top: 11%;
@@ -253,6 +252,18 @@ export default {
   justify-content: flex-start;
   align-items: center;
   z-index: 103;
+}
+.operator-parent,
+.insert-parent {
+  width: 95%;
+  height: 45%;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 3px 1px #252525;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .network-icon {
   grid-column: 1/2;
