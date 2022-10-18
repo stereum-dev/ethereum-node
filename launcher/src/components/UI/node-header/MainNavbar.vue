@@ -56,6 +56,7 @@ export default {
   },
   methods: {
     refreshServiceStates: async function () {
+      const allServices = JSON.parse(JSON.stringify(this.allServices));
       if (await this.checkConnection()) {
         if (this.refresh) {
           let services = await ControlService.refreshServiceInfos();
@@ -77,7 +78,7 @@ export default {
                     s.config.serviceID === service.config.serviceID
                 );
               } else {
-                oldService = this.allServices.find(
+                oldService = allServices.find(
                   (s) => s.service === service.service
                 );
                 needForTunnel.push(oldService);
@@ -92,10 +93,16 @@ export default {
               }
               oldService.state = service.state;
               if (oldService.name === "Teku" || oldService.name === "Nimbus") {
-                let vs = this.allServices.find(
-                  (element) =>
-                    element.service === oldService.name + "ValidatorService"
-                );
+                let existing = this.installedServices.find(s => s.config.serviceID === oldService.config.serviceID && s.service === oldService.name + "ValidatorService")
+                let vs
+                if(existing){
+                  vs = existing
+                }else{
+                  vs = allServices.find(
+                   (element) =>
+                     element.service === oldService.name + "ValidatorService"
+                 );
+                }
                 vs.config = oldService.config;
                 vs.state = oldService.state;
                 otherServices.push(vs);
@@ -103,10 +110,8 @@ export default {
               return oldService;
             });
             this.installedServices = newServices.concat(otherServices).map((e,i) => {e.id = i;return e});
-            let beaconService = this.installedServices.find(
-              (s) => s.category === "consensus"
-            );
-            if (beaconService && beaconService.config.network === "mainnet") {
+            let networks = this.installedServices.map(s => s.config.network);
+            if (networks && networks.includes("mainnet") ) {
               this.network = "mainnet";
               this.currentNetwork = this.networkList.find(item => item.network === "mainnet")
             } else {
@@ -185,6 +190,8 @@ export default {
         this.isUpdateAvailable = false;
         if (response && services && services.length > 0) {
           services.forEach((service) => {
+            if(!response[service.network][service.service])
+              service.network = "prater"
             if (
               service.imageVersion !=
               response[service.network][service.service][

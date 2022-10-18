@@ -133,12 +133,9 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      allServices: "allServices",
-    }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
+      newConfiguration: "newConfiguration",
     }),
   },
   watch: {
@@ -168,11 +165,11 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "execution"
         );
       } else if (this.items.category === "validator") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );
       } else {

@@ -7,7 +7,6 @@ export class LighthouseBeaconService extends NodeService {
     const service = new LighthouseBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-    const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
     
     const image = 'sigp/lighthouse'
 
@@ -19,8 +18,11 @@ export class LighthouseBeaconService extends NodeService {
     const volumes = [
       new ServiceVolume(workingDir + '/beacon', dataDir),
       new ServiceVolume(workingDir + '/slasher', slasherDir),
-      new ServiceVolume(elJWTDir, JWTDir)
     ]
+    if(executionClients && executionClients.length > 0){
+      const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
+      volumes.push(new ServiceVolume(elJWTDir, JWTDir))
+    }
 
     // eth1 nodes
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()

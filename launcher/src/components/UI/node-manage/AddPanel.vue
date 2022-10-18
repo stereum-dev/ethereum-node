@@ -127,10 +127,11 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
-      allServices: "allServices",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
+      newConfiguration: "newConfiguration",
+      configNetwork: "configNetwork",
     }),
   },
   watch: {
@@ -153,11 +154,15 @@ export default {
       this.$emit('cancelAdd')
     },
     saveConfig(){
+      let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
       this.$emit('saveConfig',{
-        installPath: this.installationPath, 
-        RPCPort: this.port,
-        checkpointURL: this.checkPointSync, 
-        dependencies: this.options.filter(s => s.selectedForConnection)})
+        network: (this.configNetwork.network === "testnet") ? "goerli" : "mainnet",
+        installDir: this.installationPath ? this.installationPath : "/opt/stereum", 
+        port: parseInt(this.port),
+        executionClients: dependencies.filter(s => s.category === "execution"),
+        beaconServices: dependencies.filter(s => s.category === "consensus"),
+        checkpointURL: this.checkPointSync ? this.checkPointSync : false
+      })
     },
     changeResyncOptions() {
       if (this.genesisIsActive) {
@@ -170,11 +175,11 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "execution"
         );
       } else if (this.items.category === "validator") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );
       } else {

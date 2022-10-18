@@ -7,13 +7,12 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div class="item-box" ref="serviceBg">
-      <div v-for="(item, index) in list" :key="index" class="items">
+      <div v-for="(item, index) in list" :key="index" class="items" @mouseleave="mouseLeaveToHide(item)">
         <img
           :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
           @click="pluginMenuHandler(item)"
           @dblclick="displayPluginLogPage(item)"
-          @mouseleave="mouseLeaveToHide(item)"
         />
         <plugin-menu v-if="item.displayPluginMenu">
           <div class="menu-content">

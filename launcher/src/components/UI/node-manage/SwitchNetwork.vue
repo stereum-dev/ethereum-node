@@ -6,10 +6,10 @@
     <div class="switch-network__content">
       <div class="current" @click="openDropDown">
         <div class="networkIcon">
-          <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
+          <img :src="configNetwork.icon ? configNetwork.icon : loadingGIF" alt="icon" />
         </div>
         <div class="networkSelect">
-          <span>{{ currentNetwork.name }}</span>
+          <span>{{ configNetwork.name }}</span>
         </div>
       </div>
       <ul class="dropdown-parent" v-if="dropdownIsActive">
@@ -38,8 +38,9 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services"
 export default {
   data() {
     return {
@@ -49,23 +50,42 @@ export default {
     };
   },
   computed: {
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
     ...mapWritableState(useNodeManage, {
       networkList: "networkList",
       currentNetwork: "currentNetwork",
+      configNetwork: "configNetwork",
+      newConfiguration: "newConfiguration",
     }),
   },
   watch: {
     dropdownIsActive() {
       this.closeDropdownActive = this.dropdownIsActive;
     },
+    configNetwork:{
+      handler: function (val) {
+        this.changeConfig(val)
+      },
+      immediate: true,
+    },
   },
   methods: {
+    changeConfig(val){
+      const installed = JSON.parse(JSON.stringify(this.installedServices))
+      if(val.network === "mainnet"){
+        this.newConfiguration = installed.filter(s => s.config.network === "mainnet")
+      }else{
+        this.newConfiguration = installed
+      }
+    },
     openDropDown() {
-      // this.dropdownIsActive = !this.dropdownIsActive;
-      // this.closeDropdownActive = !this.closeDropdownActive;
+      this.dropdownIsActive = !this.dropdownIsActive;
+      this.closeDropdownActive = !this.closeDropdownActive;
     },
     selectNetworkToDisplay(item) {
-      this.currentNetwork = item;
+      this.configNetwork = item;
       this.dropdownIsActive = false;
       this.closeDropdownActive = false;
     },

@@ -82,6 +82,7 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       currentNetwork: {},
+      configNetwork: {},
     };
   },
   getters: {},

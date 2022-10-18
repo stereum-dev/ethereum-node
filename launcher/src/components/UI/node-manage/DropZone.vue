@@ -32,7 +32,7 @@
 <script>
 import ManageTrapezoid from "./ManageTrapezoid.vue";
 import { mapWritableState } from "pinia";
-import { useServices } from "../../../store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   components: {
     ManageTrapezoid,
@@ -44,9 +44,8 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      allServices: "allServices",
+    ...mapWritableState(useNodeManage, {
+      newConfiguration: "newConfiguration",
     }),
   },
   watch: {
@@ -62,11 +61,16 @@ export default {
   },
   methods: {
     selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("selectItem", item);
+      if(item.config.serviceID){
+        this.newConfiguration.forEach(s => {
+          if(s.config.serviceID === item.config.serviceID)
+            s.active = !s.active; 
+        });
+      }
+        this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.installedServices.map((i) => {
+      this.newConfiguration.map((i) => {
         if (i.id == item.id) {
           i.modifierPanel = true;
         }

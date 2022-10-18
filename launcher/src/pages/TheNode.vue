@@ -42,7 +42,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'execution'
-                )
+                ).sort(sortByName)
               "
               @modal-view="showModal"
             ></plugin-zone>
@@ -54,7 +54,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'consensus'
-                )
+                ).sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -65,7 +65,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'validator'
-                )
+                ).sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -151,9 +151,19 @@ export default {
     }),
   },
   mounted() {
+    console.log(this.installedServices)
     this.updateConnectionStats();
   },
   methods: {
+    sortByName( a, b ){
+    if ( a.service.toLowerCase() < b.service.toLowerCase()){
+      return -1;
+    }
+    if ( a.service.toLowerCase() > b.service.toLowerCase()){
+      return 1;
+    }
+      return 0;
+    },
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
