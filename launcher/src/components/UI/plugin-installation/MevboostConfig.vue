@@ -7,18 +7,61 @@
           <div class="name-box">
             <div class="name-title-box">
               <div class="name-title">
-                <span></span>
+                <span>{{ selectedPreset.name }}</span>
               </div>
             </div>
           </div>
           <div class="content-box">
             <div class="options-box">
               <div class="option-title">
-                <span>OPTION</span>
+                <span>AVAILABLE BLOCK RELAYS</span>
               </div>
-              <div class="option-content"></div>
+              <div class="option-table">
+                <div
+                  class="row"
+                  :class="{ selectedItemToAdd: item.isSelected }"
+                  v-for="item in availableBlocks"
+                  :key="item.id"
+                  @click="selectItemToAdd(item)"
+                >
+                  <div class="rowIcon">
+                    <img :src="item.icon" alt="icon" />
+                  </div>
+                  <div class="rowText">
+                    <span>{{ item.name }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="included-box"></div>
+            <div class="arrowBox">
+              <div class="select" @click="addBlocksToUse">
+                <img src="/img/icon/arrows/right-1.png" alt="icon" />
+              </div>
+              <div class="remove" @click="removeFromUsedBlocks">
+                <img src="/img/icon/arrows/left-1.png" alt="icon" />
+              </div>
+            </div>
+            <div class="included-box">
+              <div class="included-title">
+                <span>USED BLOCK RELAYS</span>
+              </div>
+              <div class="included-table">
+                <div
+                  class="row"
+                  :class="{ selectedItemToRemove: item.isRemoved }"
+                  v-for="item in usedBlocks"
+                  :key="item.id"
+                  @click="selectItemToRemove(item)"
+                >
+                  <div class="rowIcon">
+                    <img :src="item.icon" alt="icon" />
+                  </div>
+                  <div class="rowText">
+                    <span>{{ item.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="btn-box">
             <router-link :to="{ path: '/install' }">
@@ -34,15 +77,72 @@
   </div>
 </template>
 <script>
-import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "../../../store/services";
 export default {
-  components: { ChangeModal },
-
   data() {
-    return {};
+    return {
+      availableBlocks: [
+        {
+          icon: "/img/icon/click-installation/flashbot-icon.png",
+          name: "FLASHBOTS",
+          id: 1,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute MAX PROFIT",
+          id: 2,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute ETHICAL",
+          id: 3,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute REGULATED",
+          id: 4,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/blocknative.png",
+          name: "BLOCKNATIVE",
+          id: 5,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "MANIFOLD",
+          id: 6,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "MANIFOLD",
+          id: 6,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "MANIFOLD",
+          id: 6,
+          isSelected: false,
+          isRemoved: false,
+        },
+      ],
+      usedBlocks: [],
+    };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
@@ -54,6 +154,39 @@ export default {
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
+  },
+  methods: {
+    selectItemToAdd(el) {
+      this.availableBlocks.forEach((item) => {
+        if (item.id == el.id) {
+          item.isSelected = true;
+        }
+      });
+    },
+    selectItemToRemove(el) {
+      this.usedBlocks.forEach((item) => {
+        if (item.id == el.id) {
+          item.isSelected = false;
+          item.isRemoved = true;
+        }
+      });
+    },
+    addBlocksToUse() {
+      this.availableBlocks.forEach((i) => {
+        if (i.isSelected && !this.usedBlocks.includes(i)) {
+          i.isSelected = false;
+          this.usedBlocks.push(i);
+        }
+      });
+    },
+    removeFromUsedBlocks() {
+      this.usedBlocks.forEach((item) => {
+        if (item.isRemoved) {
+          item.isRemoved = false;
+          this.usedBlocks.splice(this.usedBlocks.indexOf(item), 1);
+        }
+      });
+    },
   },
 };
 </script>
@@ -95,159 +228,6 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
-.included-box {
-  width: 49%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 15% 85%;
-  position: relative;
-}
-.included-title {
-  width: 61%;
-  height: 71%;
-  border: 1px solid rgb(98, 98, 98);
-  margin: 0 auto;
-  border-radius: 10px;
-  display: flex;
-  background-color: #30483b;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
-}
-.info-box {
-  width: 94%;
-  height: 91%;
-  margin: 10px auto;
-  padding: 2px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  border: 2px solid #343434;
-  background-color: #282828;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.info-box::-webkit-scrollbar {
-  width: 1px;
-}
-.info-row {
-  width: 100%;
-  height: 45px;
-  margin-top: 5px;
-  border-radius: 10px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.row {
-  width: 100%;
-  height: 100%;
-  background-color: #33393e;
-  box-shadow: 0 1px 3px 1px rgb(19, 19, 19);
-  border: 2px solid #33393e;
-  border-radius: 10px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  cursor: pointer;
-  transition-duration: 50ms;
-}
-.row:hover {
-  border: 2px solid #1d7ecd;
-  transition-duration: 50ms;
-}
-.content {
-  width: 85%;
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.plugin-name {
-  width: 83%;
-  height: 90%;
-  margin-left: 5px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.plugin-name span {
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-align: center;
-  color: rgb(203, 203, 203);
-  margin-left: 2px;
-}
-.icon-box {
-  width: 15%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-left: 4px;
-}
-
-.plugin-icon {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.plugin-icon img {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  border: 2px solid rgb(133, 133, 133);
-}
-
-.category {
-  width: 17%;
-  height: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.category span {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: rgb(89, 136, 101);
-  border-radius: 100%;
-  text-transform: uppercase;
-}
-
-.replaced-plugins {
-  width: 100%;
-  height: 43px;
-  border-radius: 10px 10px 0 0;
-  background-color: #2b3034;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 1fr;
-}
-.replaced-plugins .item {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  position: relative;
-}
-.replaced-plugins .item img {
-  width: 30px;
-  height: 30px;
-  border: 2px solid rgb(175, 175, 175);
-  box-shadow: 0 1px 3px 1px rgb(47, 47, 47);
-  border-radius: 100%;
-}
 
 .name-box {
   width: 95%;
@@ -275,24 +255,6 @@ export default {
   color: #d7d7d7;
   text-transform: uppercase;
 }
-.option-title {
-  width: 60%;
-  height: 11%;
-  border: 1px solid rgb(98, 98, 98);
-  border-radius: 10px;
-  display: flex;
-  background-color: #30483b;
-  justify-content: center;
-  align-items: center;
-  margin-top: 5px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
-}
-.option-title span,
-.included-title span {
-  color: #d3d3d3;
-  font-size: 0.9rem;
-  font-weight: 700;
-}
 .content-box {
   width: 95%;
   height: 63%;
@@ -300,246 +262,103 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.options-box {
-  width: 49%;
+.content-box .included-box {
+  width: 43%;
+  height: 95%;
+  background-color: #5b5b5b;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.included-title {
+  width: max-content;
+  height: 11%;
+  border: 1px solid rgb(98, 98, 98);
+  margin: 0 auto;
+  border-radius: 25px;
+  display: flex;
+  background-color: #30483b;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+  padding: 0 10px;
+  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
+}
+
+.content-box .options-box {
+  width: 43%;
   height: 95%;
   background-color: #5b5b5b;
   border-radius: 20px;
   box-shadow: 0 1px 3px 1px rgb(35, 56, 50);
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
-.options-box .option-content {
-  width: 94%;
-  height: 90%;
+.option-title {
+  width: max-content;
+  height: 11%;
+  border: 1px solid rgb(98, 98, 98);
+  border-radius: 25px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.option-content .network-parent {
-  width: 100%;
-  height: 30%;
-  background-color: transparent;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-.network-parent .network-box {
-  width: 85%;
-  height: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.network-box .choose {
-  width: 90%;
-  height: 51%;
-  border: 2px solid #7f7d7d;
-  border-radius: 15px;
   background-color: #30483b;
-  margin-bottom: 2px;
-  color: #d3d3d3;
-  text-align: left;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.choose span {
-  font-size: 0.7rem;
-  font-weight: 700;
-  margin-left: 10px;
-}
-.network-box .none {
-  width: 70%;
-  height: 45%;
-  border: 2px solid #838383;
-  border-radius: 30px;
-  background-color: #2a2a2a;
-  align-self: flex-end;
-  color: #d3d3d3;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-.none span {
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-left: 25px;
-  color: rgba(171, 180, 92, 0.982);
-  text-transform: capitalize;
-}
-.network-parent .circle-box {
-  width: 24%;
-  height: 93%;
-  border: 2px solid #5b5b5b;
-  border-radius: 50%;
-  background-color: #1f1f1f;
-  position: absolute;
-  right: 3%;
-  display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 5px;
+  padding: 0 10px;
+  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
-.network-parent .circle-box img {
-  width: 90%;
-  height: 90%;
-  border: 2px solid #5b5b5b;
-  border-radius: 100%;
+.option-title span,
+.included-title span {
+  color: #dfdfdf;
+  font-size: 0.7rem;
+  font-weight: 600;
 }
 
-.option-content .fast-sync {
-  width: 100%;
-  height: 30%;
-  background-color: #343434;
-  border-radius: 10px;
+.content-box .arrowBox {
+  width: 10%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.fast-sync .sync-header {
-  width: 100%;
-  height: 34%;
-  border: 1px solid #929090;
-  border-radius: 15px 0 0 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.fast-sync .sync-header .headerTitle {
-  width: 45%;
-  height: 100%;
-  border-radius: 15px 0 0 15px;
-  background-color: #1a5443;
-  display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
 }
-.headerTitle span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
-}
-.fast-sync .sync-header .headerContent {
-  width: 55%;
-  height: 100%;
-  border-radius: 0;
-  padding: 0 5px;
-  background-color: #33393e;
+.select {
+  width: 100%;
+  height: 40%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
+  justify-content: center;
+  align-items: flex-end;
 }
-.headerContent span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
+
+.remove {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
-.headerContent img {
-  width: 5%;
-  height: 50%;
+.select img,
+.remove img {
+  width: 60%;
   cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background-color: rgb(43, 48, 53);
+  margin: 10px;
+  padding: 5px;
 }
-.fast-sync .content {
-  width: 100%;
-  height: 64%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.select img:hover,
+.remove img:hover {
+  border: 1px solid #e5e5e5;
 }
-.fast-sync .content span {
-  font-size: 0.5rem;
-  font-weight: 400;
-  color: #aaaaaa;
-}
-.fast-sync .content .inputBox {
-  width: 96%;
-  height: 74%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.fast-sync .content input {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
-}
-.option-content .change-installation {
-  width: 100%;
-  height: 30%;
-  border-radius: 10px;
-  background-color: #30483b;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.change-installation .change-title {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.change-title span {
-  color: #d3d3d3;
-  font-size: 0.6rem;
-  font-weight: 600;
-}
-.change-installation .change-box {
-  width: 96%;
-  height: 50%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.change-box input {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
+.select img:active,
+.remove img:active {
+  transform: scale(0.9);
 }
 
 .btn-box {
@@ -582,28 +401,73 @@ export default {
   font-size: 0.8rem;
 }
 
-.passedreq {
-  color: #16d26e !important;
+.options-box .option-table,
+.included-box .included-table {
+  width: 95%;
+  height: 85%;
+  border-radius: 0 0 15px 15px;
+  padding: 5px 1px 2px 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.faildreq {
-  color: rgb(225, 54, 54) !important;
-  border: 1px solid rgb(225, 54, 54) !important;
+.row {
+  width: 100%;
+  height: 30px;
+  max-height: 18%;
+  border-radius: 5px;
+  border: 2px solid #272c36;
+  display: flex;
+  justify-content: flex-start;
+  background: #2d3034;
+  align-items: center;
+  margin-top: 3px;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.1s ease;
 }
-.tooltip {
-  width: max-content;
-  height: 15px;
-  background-color: rgb(42, 42, 42);
-  border: 1px solid #a0a0a0;
-  border-radius: 3px;
-  padding: 0 3px 3px 3px;
-  position: absolute;
-  top: 5px;
-  left: 25%;
-  transform: translate(-5px, -5px);
-  font-size: 0.6rem;
-  font-weight: 400;
-  color: #dce2e9;
-  text-align: center;
-  display: inline-block;
+.row:hover {
+  background: #1a1a1a;
+}
+.row .rowIcon {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.row .rowIcon img {
+  width: 80%;
+}
+.row .rowText {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.row .rowText span {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #dedede;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.selectedItemToAdd {
+  background-color: #1a3535;
+  border: 2px solid #bfc4d3;
+}
+.selectedItemToRemove {
+  background-color: #1a3535;
+  border: 2px solid #e83d3d;
 }
 </style>
