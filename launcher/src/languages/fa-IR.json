@@ -15,10 +15,10 @@
   "journalnode":{
     "serverip":"سرور IP",
     "servername":"نام سرور ",
-    "edit":"ویرایش گره"
+    "edit":"NODE ویرایش"
   },
   "pagesnav":{
-    "node":"گره",
+    "node":"NODE",
     "control":"کنترل",
     "staking":"استیک"
   },
@@ -44,7 +44,7 @@
     "open":"باز کردن",
     "update":"بروزرسانی",
     "launcherVersion":"نسخه لانچر",
-    "nodeVersion":"نسخه گره",
+    "nodeVersion":"NODE نسخه",
     "lane":"استریوم - تست مسیر",
     "on":"روشن",
     "off":"خاموش",
@@ -71,10 +71,10 @@
     "servicePlugin":"خدمات پلاگین"
   },
   "modifyPanel":{
-    "backNode":"بازگشت به گره",
+    "backNode":" NODE بازگشت به",
     "addPreset":"اضافه کردن پیش فرض ۱ کلیک",
     "changeNetwork":"تغییر شبکه",
-    "nukeNode":"از بین بردن گره"
+    "nukeNode":"NODE از بین بردن "
   },
   "sidebarManage":{
     "filter":"فیلترکردن"
@@ -87,7 +87,7 @@
   "updatePanel":{
     "launcherTitle":"بروز رسانی لانچر",
     "current":"کنونی",
-    "nodeTitle":"بروز رسانی گره",
+    "nodeTitle":"NODE بروز رسانی",
     "latest":"آخرین نسخه",
     "auto":"بروزرسانی اتوماتیک",
     "available":"در دسترس",
@@ -98,7 +98,7 @@
     "all":"بروزرسانی همه چیز"
   },
   "controlPage":{
-    "node":"گره",
+    "node":"NODE",
     "disk":"سرعت دیسک",
     "write":"نوشتن",
     "read":"خواندن",
