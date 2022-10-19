@@ -157,7 +157,6 @@ export default {
     }),
   },
   mounted() {
-    console.log(this.installedServices)
     this.updateConnectionStats();
     this.updateServiceLogs();
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs

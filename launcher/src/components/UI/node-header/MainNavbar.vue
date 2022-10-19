@@ -192,6 +192,7 @@ export default {
           services.forEach((service) => {
             if(!response[service.network][service.service])
               service.network = "prater"
+            if(response[service.network][service.service]){
             if (
               service.imageVersion !=
               response[service.network][service.service][
@@ -212,6 +213,7 @@ export default {
               });
               console.log("Service Update Available!");
             }
+          }
           });
         }
 

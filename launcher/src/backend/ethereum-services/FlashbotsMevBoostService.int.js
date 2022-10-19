@@ -5,7 +5,7 @@ import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 import { ServiceManager } from '../ServiceManager.js'
-import { MevboostService } from './MevboostService.js'
+import { FlashbotsMevBoostService } from './FlashbotsMevBoostService.js'
 const log = require('electron-log')
 
 jest.setTimeout(600000)
@@ -50,7 +50,7 @@ test('mevboost installation', async () => {
   await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  const mevboost = MevboostService.buildByUserInput('goerli', nodeConnection.settings.stereum.settings.controls_install_path + '/mevboost')
+  const mevboost = FlashbotsMevBoostService.buildByUserInput('goerli', nodeConnection.settings.stereum.settings.controls_install_path + '/mevboost')
   await nodeConnection.writeServiceConfiguration(mevboost.buildConfiguration())
   await serviceManager.manageServiceState(mevboost.id, 'started')
 

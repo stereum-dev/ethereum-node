@@ -36,7 +36,7 @@
               />
             </div>
           </div>
-          <template v-for="item in allServices" :key="item.id">
+          <template v-for="item in allServices.filter(s => s.service != 'SSVNetworkService')" :key="item.id">
             <div
               @dragstart="startDrag($event, item)"
               @dblclick="$emit('addService', item)"

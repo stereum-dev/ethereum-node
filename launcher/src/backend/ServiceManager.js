@@ -14,6 +14,7 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
+import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
 import { StringUtils } from './StringUtils'
 
@@ -112,6 +113,8 @@ export class ServiceManager {
             services.push(PrysmValidatorService.buildByConfiguration(config))
           } else if (config.service == 'TekuBeaconService') {
             services.push(TekuBeaconService.buildByConfiguration(config))
+          } else if (config.service == 'FlashbotsMevBoostService') {
+            services.push(FlashbotsMevBoostService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')
@@ -311,6 +314,9 @@ export class ServiceManager {
           new ServicePort('127.0.0.1', args.port ? args.port : 3000, 3000, servicePortProtocol.tcp)
         ]
         return GrafanaService.buildByUserInput(args.network, ports, args.installDir + '/grafana')
+
+      case "FlashbotsMevBoostService":
+        return FlashbotsMevBoostService.buildByUserInput(args.network)
     }
   }
 

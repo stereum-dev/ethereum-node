@@ -34,5 +34,6 @@
     path: "{{ service_configuration.volumes | select('search', service) | first | split(':') | first | regex_search('^.*' + service) }}"
     state: absent
     force: true
+  when: "{{ service_configuration.volumes | length }}"
 
 # EOF

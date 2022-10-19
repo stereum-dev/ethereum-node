@@ -232,7 +232,7 @@ export default {
       const itemId = event.dataTransfer.getData("itemId");
       let item = allServices.find((item) => item.id == itemId);
       if (item.category === "service" &&
-      this.newConfiguration.map(s => s.id).includes(item.id)) {
+      this.newConfiguration.map(s => s.service).includes(item.service)) {
         return;
       } else {
         if(this.itemToInstall.addPanel === true){
@@ -260,7 +260,7 @@ export default {
       const allServices = JSON.parse(JSON.stringify(this.allServices))
       let item = JSON.parse(JSON.stringify(i))
       if (item.category === "service" &&
-      this.newConfiguration.map(s => s.id).includes(item.id)) {
+      this.newConfiguration.map(s => s.servce).includes(item.service)) {
         return;
       } else {
         if(this.itemToInstall.addPanel === true){

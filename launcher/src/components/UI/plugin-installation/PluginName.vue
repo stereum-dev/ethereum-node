@@ -130,7 +130,7 @@
               <span>BACK</span>
             </router-link>
             <router-link
-              v-if="selectedPreset.name === 'mev boost'"
+              v-if="selectedPreset.name === 'Flashbots Mev Boost'"
               :to="{ path: '/mevboost' }"
             >
               <span>NEXT</span>
