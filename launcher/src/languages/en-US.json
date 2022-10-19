@@ -162,5 +162,30 @@
   },
   "removeMultipleValidators":{
     "sureText":"Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+  },
+  "timeReward":{
+    "totalText":"TOTAL BALANCE OF",
+    "validators":"VALIDATORS",
+    "proposed":"PROPOSED",
+    "attestRate":"ATTESTATION RATE",
+    "attention":"ATTENTIONS",
+    "missed":"MISSED",
+    "aggregations":"AGGREGATIONS",
+    "slashed":"SLASHED"
+  },
+  "validatorsBox":{
+    "date":"DATE",
+    "validator":"VALIATOR",
+    "attestRate":"ATTEST.RATE",
+    "reward":"REWARD"
+  },
+  "installOption":{
+    "installText":"ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "back":"BACK",
+    "install":"INSTALL"
+  },
+  "removeModal":{
+    "removeText":"All services will be removed.",
+    "sure":"Are you sure?"
   }
 }

@@ -15,7 +15,7 @@
         <div class="remove-btn" @click="$emit('deleteKey')">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
-        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
+        <span class="close">{{ $t("removeMultiModal.clickClose") }}</span>
       </div>
     </div>
   </div>

@@ -9,15 +9,15 @@
         />
       </div>
       <div class="removeMessage">
-        <span>Are you sure you want to remove</span>
+        <span>{{ $t("removeMultiModal.sure") }}</span>
         <p>{{ item.key }}</p>
-        <span>FROM THIS MACHINE?</span>
+        <span>{{ $t("removeMultiModal.from") }}</span>
       </div>
       <div class="remove-box">
         <div class="remove-btn" @click="$emit('deleteKey')">
-          <span>Remove</span>
+          <span>{{ $t("removeMultiModal.removeMultiModal") }}</span>
         </div>
-        <span class="close">Click outside to close.</span>
+        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: .8;
+  opacity: 0.8;
   z-index: 501;
 }
 .remove-modal-content {

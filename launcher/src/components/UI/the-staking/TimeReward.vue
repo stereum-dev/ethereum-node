@@ -3,7 +3,10 @@
     <div class="time-reward-box">
       <div class="time-reward">
         <div class="time-reward-title">
-          <span>TOTAL BALANCE OF {{ keys.length }} VALIDATORS</span>
+          <span
+            >{{ $t("timeReward.totalText") }} {{ keys.length }}
+            {{ $t("timeReward.validators") }}</span
+          >
         </div>
         <div class="time-reward-value">
           <span>{{ totalBalance }}</span>
@@ -13,7 +16,7 @@
         <comming-soon></comming-soon>
         <div class="left-side">
           <div class="proposed-title">
-            <span>PROPOSED</span>
+            <span>{{ $t("timeReward.proposed") }}</span>
           </div>
           <div class="cube">
             <img
@@ -25,7 +28,7 @@
             </div>
           </div>
           <div class="rate-title">
-            <span>ATTESTATION RATE</span>
+            <span>{{ $t("timeReward.attestRate") }}</span>
           </div>
           <div class="attention-rate">
             <span>%</span>
@@ -34,19 +37,23 @@
         </div>
         <div class="right-side">
           <div class="attentions">
-            <span class="attentions-text">ATTENTIONS</span>
+            <span class="attentions-text">{{
+              $t("timeReward.attention")
+            }}</span>
             <span class="attentions-value"></span>
           </div>
           <div class="missed">
-            <span class="missed-text">MISSED</span>
+            <span class="missed-text">{{ $t("timeReward.missed") }}</span>
             <span class="missed-value"></span>
           </div>
           <div class="agregations">
-            <span class="agregations-text">AGGREGATIONS</span>
+            <span class="agregations-text">{{
+              $t("timeReward.aggregations")
+            }}</span>
             <span class="agregations-value"></span>
           </div>
           <div class="slashed">
-            <span class="slashed-text">SLASHED</span>
+            <span class="slashed-text">{{ $t("timeReward.slashed") }}</span>
             <span class="slashed-value"></span>
           </div>
         </div>

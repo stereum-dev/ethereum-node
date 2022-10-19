@@ -3,9 +3,7 @@
     <div class="header">ONE CLICK INSTALLATION</div>
     <div class="containerOption">
       <div class="text">
-        ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER
-        CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO
-        SERVE YOUR USE CASE
+        {{ $t("installOption.installText") }}
       </div>
       <div class="plugin-container">
         <vue-select @disable-btn="enableButtonHandler"> </vue-select>
@@ -13,11 +11,11 @@
     </div>
     <div class="btn-container">
       <router-link class="back-box" :to="{ path: '/welcome' }">
-        <button id="back">BACK</button>
+        <button id="back">{{ $t("installOption.back") }}</button>
       </router-link>
       <div class="install-box">
         <button v-if="isButtonEnabled" @click="clickedToInstall" class="instal">
-          INSTALL
+          {{ $t("installOption.install") }}
         </button>
       </div>
     </div>

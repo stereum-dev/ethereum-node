@@ -3,17 +3,17 @@
     <div class="validator-table">
       <comming-soon></comming-soon>
       <div class="validator-table-title">
-        <span>DATE</span>
-        <span>VALIATOR</span>
-        <span>ATTEST.RATE</span>
-        <span>REWARD</span>
+        <span>{{ $t("validatorsBox.date") }}</span>
+        <span>{{ $t("validatorsBox.validator") }}</span>
+        <span>{{ $t("validatorsBox.attestRate") }}</span>
+        <span>{{ $t("validatorsBox.reward") }}</span>
       </div>
       <div class="validator-table-content">
         <div class="validator-table-row">
-          <span>DATE</span>
-          <span>VALIATOR</span>
-          <span>ATTEST.RATE</span>
-          <span>REWARD</span>
+          <span>{{ $t("validatorsBox.date") }}</span>
+          <span>{{ $t("validatorsBox.validator") }}</span>
+          <span>{{ $t("validatorsBox.attestRate") }}</span>
+          <span>{{ $t("validatorsBox.reward") }}</span>
         </div>
       </div>
     </div>
