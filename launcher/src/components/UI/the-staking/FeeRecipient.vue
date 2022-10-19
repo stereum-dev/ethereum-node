@@ -2,7 +2,7 @@
   <div class="feeBox">
     <div class="enter-fee" @click="$emit('enterFee')">
       <input
-        placeholder="Enter a valid Ethereum address to send your block rewards to ... "
+        placeholder="$t('feeRecipient.textPlaceHolder')"
         v-model="password"
         v-if="activeFee"
         type="text"
@@ -12,9 +12,9 @@
         @click="$emit('confirmBtn')"
         v-if="activeFee"
       >
-        CONFIRM
+        {{ $t("exitMultipleValidator.confirm") }}
       </button>
-      <span v-else>SET A BLOCK FEE RECIPIENT ADDRESS</span>
+      <span v-else>{{ $t("feeRecipient.setBlock") }}</span>
     </div>
   </div>
 </template>

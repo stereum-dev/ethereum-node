@@ -144,5 +144,12 @@
     "exitApprove":"I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
     "exitChain":"EXIT CHAIN",
     "clickClose":"Click outside to close."
+  },
+  "feeRecipient":{
+    "textPlaceHolder":"Enter a valid Ethereum address to send your block rewards to ... ",
+    "setBlock":"SET A BLOCK FEE RECIPIENT ADDRESS"
+  },
+  "grafitiMultipleValidator":{
+    "textPlaceHolder":"Enter up 32 characters to add to the chain when you create a block!"
   }
 }
