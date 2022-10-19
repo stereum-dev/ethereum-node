@@ -9,7 +9,7 @@
       >
         CONFIRM
       </button>
-      <span v-else>ENTER PASSWORD & IMPORT</span>
+      <span v-else>{{ $t("enterPass.enterPass") }}</span>
     </div>
   </div>
 </template>

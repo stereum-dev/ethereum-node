@@ -10,11 +10,11 @@
     <div class="inputBox">
       <input
         type="password"
-        placeholder="ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY..."
+        placeholder="$t('exitMultipleValidator.passMessage')"
       />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmPassword')">Confrim</button>
+      <button class="confirmBtn" @click="$emit('confirmPassword')">{{$t('exitMultipleValidator.confirm')}}</button>
     </div>
   </div>
 </template>

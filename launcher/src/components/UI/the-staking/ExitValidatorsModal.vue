@@ -10,24 +10,22 @@
       </div>
       <div class="exitMessage">
         <p>
-          Are you sure you want to exit the chain with THE SELECTED validator
-          KEYS? This stops your validator duty & CAN NOT be reversed. Your fund
-          are also only withdrawable, if the chain allows it.
+          {{ $t("exitValidatorModal.modalMessage") }}
         </p>
       </div>
       <div class="check-box">
         <label for="checkbox">
           <input id="checkbox" type="checkbox" v-model="isChecked" />
-          I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES
+          {{ $t("exitValidatorModal.exitApprove") }}
         </label>
         <div
           class="confirmBtn"
           :class="{ disabled: !isChecked }"
           @click="$emit('confirmBtn')"
         >
-          <span>EXIT CHAIN</span>
+          <span>{{ $t("exitValidatorModal.exitChain") }}</span>
         </div>
-        <span class="close">Click outside to close.</span>
+        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>
@@ -164,7 +162,7 @@ export default {
   height: 40%;
   border-radius: 10px;
   border: 1px solid #8f8f8f;
-  background-color: #B81717;
+  background-color: #b81717;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;

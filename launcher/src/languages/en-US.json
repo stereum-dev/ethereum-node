@@ -120,5 +120,29 @@
   },
   "taskManager":{
     "clickDisplay":"Click on tasks to display"
+  },
+  "displayValidator":{
+    "pk":"Public Key",
+    "service":"SERVICE",
+    "active":"ACTIVE SINCE",
+    "state":"STATE",
+    "balance":"BALANCE",
+    "option":"OPTIONS",
+    "importKey":"Importing validator key(s)",
+    "waitMessage":"It may take some times",
+    "waitForImport":"Please wait until the key is imported"
+  },
+  "enterPass":{
+    "enterPass":"ENTER PASSWORD & IMPORT"
+  },
+  "exitMultipleValidator":{
+    "passMessage":"ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
+    "confirm":"Confrim"
+  },
+  "exitValidatorModal":{
+    "modalMessage":"Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
+    "exitApprove":"I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "exitChain":"EXIT CHAIN",
+    "clickClose":"Click outside to close."
   }
 }
