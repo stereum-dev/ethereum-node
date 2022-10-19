@@ -10,11 +10,13 @@
     <div class="inputBox">
       <input
         type="password"
-        placeholder="$t('exitMultipleValidator.passMessage')"
+        :placeholder="$t('exitMultipleValidator.passMessage')"
       />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmPassword')">{{$t('exitMultipleValidator.confirm')}}</button>
+      <button class="confirmBtn" @click="$emit('confirmPassword')">
+        {{ $t("exitMultipleValidator.confirm") }}
+      </button>
     </div>
   </div>
 </template>
@@ -30,7 +32,7 @@ export default {};
   display: grid;
   grid-template-columns: 5% 85% 10%;
   grid-template-rows: 1fr;
-  background-color: #B81717;
+  background-color: #b81717;
   border-radius: 50px;
   position: absolute;
   z-index: 100;
@@ -64,7 +66,7 @@ export default {};
   height: 95%;
   padding: 0;
   padding-left: 10px;
-  background-color: #5D0000;
+  background-color: #5d0000;
   border: 1px solid #958797;
   border-radius: 35px;
   color: #ababab;

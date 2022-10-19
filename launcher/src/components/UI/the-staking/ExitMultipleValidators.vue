@@ -11,11 +11,13 @@
       <div class="inputBox">
         <input
           type="text"
-          placeholder="$t('exitMultipleValidator.passMessage')"
+          :placeholder="$t('exitMultipleValidator.passMessage')"
         />
       </div>
       <div class="confirmBox">
-        <button class="confirmBtn" @click="$emit('confirmBtn')">{{$t('exitMultipleValidator.confirm')}}</button>
+        <button class="confirmBtn" @click="$emit('confirmBtn')">
+          {{ $t("exitMultipleValidator.confirm") }}
+        </button>
       </div>
     </div>
   </div>

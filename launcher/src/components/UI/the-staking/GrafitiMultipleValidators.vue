@@ -11,7 +11,7 @@
       <div class="inputBox">
         <input
           type="text"
-          placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
+          :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
           v-model="graffiti"
         />
       </div>

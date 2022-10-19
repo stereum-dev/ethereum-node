@@ -2,7 +2,7 @@
   <div class="feeBox">
     <div class="enter-fee" @click="$emit('enterFee')">
       <input
-        placeholder="$t('feeRecipient.textPlaceHolder')"
+        :placeholder="$t('feeRecipient.textPlaceHolder')"
         v-model="password"
         v-if="activeFee"
         type="text"
