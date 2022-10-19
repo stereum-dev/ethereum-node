@@ -3,13 +3,12 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, checkpointURL) {
+    static buildByUserInput(network, ports, dir, executionClients, mevboostURL, checkpointURL) {
         const service = new PrysmBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
         const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
 
-        
         const image = 'prysmaticlabs/prysm-beacon-chain'
 
         const JWTDir = '/engine.jwt'
@@ -33,20 +32,23 @@ export class PrysmBeaconService extends NodeService {
 
         let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
 
+        let mevboostEndpoint = mevboostURL[0].buildMevboostEndpointURL()
+
         service.init(
             'PrysmBeaconService',  //service
             service.id, //id
-            1, // configVersion 
+            1, // configVersion
             image,  //image
             'v3.1.1', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint='+ executionEndpoint +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand,  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint='+ executionEndpoint +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand + ' --http-mev-relay=' + mevboostEndpoint,  //command
             null, //entrypoint
             null, //env
             ports,  //ports
             volumes,  //volumes
             null, //user
             network,  //network
-            executionClients  //executionClients
+            executionClients,  //executionClients
+            // mevboost //mevboost
         )
         return service
 

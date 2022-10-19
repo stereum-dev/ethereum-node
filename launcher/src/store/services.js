@@ -635,7 +635,7 @@ export const useServices = defineStore("services", {
         {
           id: 16,
           name: "mev boost",
-          service: "MevBoostService",
+          service: "MevboostService",
           displayPluginMenu: false,
           serviceIsPending: false,
           modifierPanel: false,

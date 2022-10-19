@@ -14,6 +14,7 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
+import { MevboostService } from './ethereum-services/MevboostService'
 
 const log = require('electron-log')
 
@@ -110,6 +111,8 @@ export class ServiceManager {
             services.push(PrysmValidatorService.buildByConfiguration(config))
           } else if (config.service == 'TekuBeaconService') {
             services.push(TekuBeaconService.buildByConfiguration(config))
+          } else if (config.service == 'MevboostService') {
+            services.push(MevboostService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')

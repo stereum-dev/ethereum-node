@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class TekuBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, checkpointURL) {
+    static buildByUserInput(network, ports, dir, executionClients, mevboostURL, checkpointURL) {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -12,6 +12,8 @@ export class TekuBeaconService extends NodeService {
         const image = 'consensys/teku'
 
         const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
+
+        let mevboostEndpoint = mevboostURL[0].buildMevboostEndpointURL()
 
         const JWTDir = '/engine.jwt'
         const dataDir = '/opt/app/data'
@@ -59,6 +61,9 @@ export class TekuBeaconService extends NodeService {
                 '--validator-api-cors-origins=*',
                 `--validator-api-keystore-file=${dataDir}/teku_api_keystore`,
                 `--validator-api-keystore-password-file=${dataDir}/teku_api_password.txt`,
+                '--validators-builder-registration-default-enabled=true',
+                '--validators-proposer-blinded-blocks-enabled=true',
+                `--builder-endpoint=${mevboostEndpoint}`
             ],                      // command
             ["/opt/teku/bin/teku"], // entrypoint
             {JAVA_OPTS: '-Xmx4g'},  // env

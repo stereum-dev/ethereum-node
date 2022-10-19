@@ -14,6 +14,7 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
+import { MevboostService } from './ethereum-services/MevboostService'
 
 const YAML = require('yaml')
 const log = require('electron-log')
@@ -79,7 +80,7 @@ export class OneClickInstall {
     return winner.name.toLowerCase()
   }
 
-  clearSetup(){
+  clearSetup() {
     this.beaconService = undefined
     this.validatorService = undefined
     this.installDir = undefined
@@ -90,6 +91,7 @@ export class OneClickInstall {
     this.setup = undefined
     this.choosenClient = undefined
     this.network = undefined
+    this.mevboost = undefined
   }
 
   getConfigurations() {
@@ -98,18 +100,19 @@ export class OneClickInstall {
     const prometheusNodeExporter = this.prometheusNodeExporter.buildConfiguration()
     const prometheus = this.prometheus.buildConfiguration()
     const grafana = this.grafana.buildConfiguration()
+    const mevboost = this.mevboost.buildConfiguration()
     if (!this.validatorService) {
-      return [executionClient, beacon, prometheusNodeExporter, prometheus, grafana]
+      return [executionClient, beacon, prometheusNodeExporter, prometheus, grafana, mevboost]
     }
     const validator = this.validatorService.buildConfiguration()
-    return [executionClient, beacon, validator, prometheusNodeExporter, prometheus, grafana]
+    return [executionClient, beacon, validator, prometheusNodeExporter, prometheus, grafana, mevboost]
   }
 
-  networkHandler(eth1){
-    if(this.network === "mainnet"){
+  networkHandler(eth1) {
+    if (this.network === "mainnet") {
       return "mainnet"
-    }else if(this.network === "testnet"){
-      if(eth1)
+    } else if (this.network === "testnet") {
+      if (eth1)
         return "goerli"
       return "prater"
     }
@@ -148,6 +151,11 @@ export class OneClickInstall {
 
     }
 
+    if (constellation.includes('MevboostService')) {
+      //MevboostService
+      this.mevboost = MevboostService.buildByUserInput(this.networkHandler(true))
+    }
+
     if (constellation.includes('LighthouseBeaconService')) {
       //LighthouseBeaconService
       ports = [
@@ -155,7 +163,7 @@ export class OneClickInstall {
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16', checkpointURL)
+      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16', [this.mevboost], checkpointURL)
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -174,7 +182,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 3500, 3500, servicePortProtocol.tcp)
       ]
-      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], checkpointURL)
+      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], [this.mevboost], checkpointURL)
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -182,7 +190,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
       ]
-      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService])
+      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService], [this.mevboost])
     }
 
     if (constellation.includes('NimbusBeaconService')) {
@@ -193,7 +201,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], checkpointURL)
+      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], [this.mevboost], checkpointURL)
 
       //generate validator api-token
       const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
@@ -210,7 +218,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       ]
-      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], checkpointURL)
+      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], [this.mevboost], checkpointURL)
 
       //keystore
       const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
@@ -244,9 +252,9 @@ export class OneClickInstall {
     this.grafana = GrafanaService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/grafana')
 
     let versions
-    try{
+    try {
       versions = await this.nodeConnection.checkUpdates()
-    }catch(err){
+    } catch (err) {
       log.error(`Couldn't fetch versions in OneClickInstallation...
       Installing with predefined Versions
       ${err.name}: ${err.message}
@@ -256,30 +264,30 @@ export class OneClickInstall {
       timeout: ${err.config.timeout}
       `)
     }
-    if(versions){
+    if (versions) {
       this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient)
       this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService)
       this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus)
       this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter)
       this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana)
-      if(this.validatorService){
+      if (this.validatorService) {
         this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService)
       }
     }
   }
 
-  getLatestVersion(versions, service){
+  getLatestVersion(versions, service) {
     return versions[service.network][service.service].slice(-1).pop()
   }
 
-  async generateSSVKeys(){
+  async generateSSVKeys() {
     await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
     const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
     let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(false), [this.executionClient], [this.beaconService])
 
     // prepare service's config file
     const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm,"OperatorPrivateKey: \"" + config.ssv_sk + "\""))
+    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: \"" + config.ssv_sk + "\""))
     this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
   }
 
@@ -301,7 +309,7 @@ export class OneClickInstall {
     const runRefs = []
     if (services[0] !== undefined) {
       await Promise.all(services.map(async (service, index) => {
-        Sleep(index*1000).then(() => runRefs.push(this.serviceManager.manageServiceState(service.id, 'started')))
+        Sleep(index * 1000).then(() => runRefs.push(this.serviceManager.manageServiceState(service.id, 'started')))
       }))
     }
     this.clearSetup()
@@ -322,6 +330,9 @@ export class OneClickInstall {
 
     switch (setup) {
       case 'staking':
+        break
+      case 'mev boost':
+        services.push('MevboostService')
         break
       case 'ssv.network':
         services.push('SSVNetworkService')
