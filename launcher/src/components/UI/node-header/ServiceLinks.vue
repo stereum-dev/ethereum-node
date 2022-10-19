@@ -1,31 +1,15 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div
-        class="service-icon"
-        v-for="(service, idx) in runningServices"
-        :key="idx"
-      >
+      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
         <div class="icon-box" onmousedown="return false">
-          <img
-            @click="openServiceBrowser(service.service)"
-            v-show="isImgExists"
-            :src="service.hIcon"
-            alt="service-icon"
-          />
+          <img @click="openServiceBrowser(service.service)" v-show="isImgExists" :src="service.hIcon"
+            alt="service-icon" />
         </div>
-        <grafana-modal
-          v-if="showGrafanaWindow"
-          @close-window="closeServiceBrowser"
-        ></grafana-modal>
-        <ssv-modal
-          @close-window="closeServiceBrowser"
-          v-if="showSsvWindow"
-        ></ssv-modal>
-        <prometheus-modal
-          @close-window="closeServiceBrowser"
-          v-if="showPrometheusWindow"
-        ></prometheus-modal>
+        <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
+        <ssv-modal @close-window="closeServiceBrowser" v-if="showSsvWindow"></ssv-modal>
+        <prometheus-modal @close-window="closeServiceBrowser" v-if="showPrometheusWindow"></prometheus-modal>
+        <mevboost-modal @close-window="closeServiceBrowser" v-if="showMevboostWindow"></mevboost-modal>
       </div>
       <div class="arrow-box">
         <div class="right-arrow left-paddle paddle" @click="scrollRight">
@@ -45,8 +29,9 @@ import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
+import MevboostModal from "../services-modal//MevboostModal.vue";
 export default {
-  components: { GrafanaModal, SsvModal, PrometheusModal },
+  components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
     return {
       isServiceAvailable: true,
@@ -54,9 +39,10 @@ export default {
       showGrafanaWindow: false,
       showSsvWindow: false,
       showPrometheusWindow: false,
+      showMevboostWindow: false,
     };
   },
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
@@ -106,6 +92,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
+
 .arrow-box {
   width: 25px;
   height: 90%;
@@ -118,6 +105,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .right-arrow {
   width: 90%;
   height: 40%;
@@ -131,6 +119,7 @@ export default {
   margin: 1px 5px;
   cursor: pointer;
 }
+
 .left-arrow {
   width: 90%;
   height: 40%;
@@ -144,19 +133,23 @@ export default {
   margin: 1px 5px;
   cursor: pointer;
 }
+
 .left-arrow:hover,
 .right-arrow:hover {
   background-color: rgb(28, 59, 51);
 }
+
 .left-arrow:active,
 .right-arrow:active {
   border: 1px solid #616161;
   background-color: rgb(28, 59, 51);
   box-shadow: none;
 }
+
 .arrow-box img {
   width: 70%;
 }
+
 .services {
   width: max-content;
   max-width: 213px;
@@ -168,9 +161,11 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+
 .services::-webkit-scrollbar {
   height: 1px;
 }
+
 .service-icon {
   width: 37px;
   height: 37px;
@@ -182,10 +177,12 @@ export default {
   align-items: center;
   cursor: pointer;
 }
+
 .service-icon:hover {
   border: 1px solid #49c7c5;
   box-shadow: none;
 }
+
 .service-icon .icon-box {
   width: 35px;
   height: 35px;
@@ -193,6 +190,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .service-icon img {
   width: 35px;
   height: 35px;

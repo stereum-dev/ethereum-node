@@ -65,14 +65,14 @@ export default {
 }
 .operator-box .operator-content .title,
 .insert-box .insert-content .title {
-  color: #dbdbdb;
+  color: #c4c4c4;
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
 }
 .operator-box .operator-content .description,
 .insert-box .insert-content .description {
-  color: #cacaca;
+  color: #c4c4c4;
   font-size: 0.7rem;
   font-weight: 500;
   margin-top: 10px;

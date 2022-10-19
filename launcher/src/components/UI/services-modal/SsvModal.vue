@@ -7,54 +7,25 @@
           <img src="/img/icon/service-icons/ssv-network.png" alt="icon" />
         </div>
         <div class="network-icon">
-          <img
-            src="/img/icon/click-installation/testnet-circle.png"
-            alt="icon"
-          />
+          <img src="/img/icon/click-installation/testnet-circle.png" alt="icon" />
         </div>
         <div class="title-box">
           <span class="service-name">ssv.network</span>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
-            <img
-              src="/img/icon/service-icons/discord.png"
-              alt="icon"
-              @click="openDiscord"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
       <div class="content-box">
-        <frontpage-ssv
-          v-if="pubkeyModalActive"
-          @open-pubkey="operatorModalHandler"
-          @open-secretkey="registerSecretkeyHandler"
-          :pubkey="pubkey"
-        ></frontpage-ssv>
-        <register-ssv
-          v-if="registerModalActive"
-          :pubkey="pubkey"
-          :secretkey="secretkey"
-          @register-pubkey="registerSsvPubkeyHandler"
-        ></register-ssv>
-        <secretkey-register
-          v-if="registerSecretkeyActive"
-          :ssvService="ssvService"
-          @login-secretkey="loginWithSecretkeyHandler"
-        ></secretkey-register>
-        <ssv-dashboard
-          :pubkey="pubkey"
-          v-if="ssvDashboardActive"
-        ></ssv-dashboard>
+        <frontpage-ssv v-if="pubkeyModalActive" @open-pubkey="operatorModalHandler"
+          @open-secretkey="registerSecretkeyHandler" :pubkey="pubkey"></frontpage-ssv>
+        <register-ssv v-if="registerModalActive" :pubkey="pubkey" :secretkey="secretkey"
+          @register-pubkey="registerSsvPubkeyHandler"></register-ssv>
+        <secretkey-register v-if="registerSecretkeyActive" :ssvService="ssvService"
+          @login-secretkey="loginWithSecretkeyHandler"></secretkey-register>
+        <ssv-dashboard :pubkey="pubkey" v-if="ssvDashboardActive"></ssv-dashboard>
       </div>
     </div>
   </div>
@@ -158,6 +129,7 @@ export default {
   left: 0;
   top: 0;
 }
+
 .bg-dark {
   width: 100%;
   height: 100%;
@@ -168,10 +140,11 @@ export default {
   top: 0;
   z-index: 100;
 }
+
 .browser-modal {
   width: 60%;
   height: 80%;
-  background-color: #1b1b1b;
+  background-color: #1b1c20;
   border: 5px solid rgb(161, 161, 161);
   border-radius: 30px;
   position: absolute;
@@ -191,6 +164,7 @@ export default {
   position: relative;
   z-index: 102;
 }
+
 .icon-box {
   grid-column: 1;
   grid-row: 1;
@@ -201,11 +175,13 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+
 .icon-box img {
   margin: 10px 0 0 15px;
   width: 58%;
   height: 86%;
 }
+
 .title-box {
   grid-column: 1/5;
   margin-left: 85px;
@@ -217,6 +193,7 @@ export default {
   justify-content: space-evenly;
   align-items: flex-start;
 }
+
 .title-box span {
   width: 70%;
   height: 35%;
@@ -226,6 +203,7 @@ export default {
   font-size: 1.7rem;
   font-weight: 600;
 }
+
 .service-option {
   width: 60%;
   height: 35%;
@@ -237,12 +215,14 @@ export default {
   align-items: center;
   padding-left: 10px;
 }
+
 .service-option img {
   width: 11%;
   height: 70%;
   margin-right: 15px;
   cursor: pointer;
 }
+
 .content-box {
   width: 100%;
   height: 70%;
@@ -253,18 +233,20 @@ export default {
   align-items: center;
   z-index: 103;
 }
+
 .operator-parent,
 .insert-parent {
   width: 95%;
   height: 45%;
-  background-color: #393939;
-  border: 1px solid #444444;
+  background-color: #32383e;
+  border: 1px solid #32383e;
   box-shadow: 1px 1px 3px 1px #252525;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .network-icon {
   grid-column: 1/2;
   grid-row: 1/2;
@@ -277,6 +259,7 @@ export default {
   left: 37%;
   top: 47%;
 }
+
 .network-icon img {
   width: 68%;
   height: 68%;
