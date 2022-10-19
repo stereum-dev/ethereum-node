@@ -57,7 +57,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           defaultPath: "/opt/stereum",
           icon: require("../../public/img/icon/presets-icons/mev-staking.png"),
           showDropDown: false,
-          serviceAvailable: true,
+          serviceAvailable: false,
           includedPlugins: [],
         },
         {
@@ -67,7 +67,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           defaultPath: "/opt/stereum",
           networkIcon: require("../../public/img/icon/click-installation/mainnet-icon.png"),
           icon: require("../../public/img/icon/presets-icons/mev-staking.png"),
-          serviceAvailable: true,
+          serviceAvailable: false,
           showDropDown: false,
           includedPlugins: [],
         },

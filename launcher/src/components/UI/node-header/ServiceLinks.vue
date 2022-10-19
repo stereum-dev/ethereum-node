@@ -70,7 +70,10 @@ export default {
           this.showSsvWindow = true;
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
-        } else {
+        } else if (serviceName == "MevBoostService") {
+          this.showMevboostWindow = true;
+        }
+        else {
           return;
         }
       });
@@ -79,6 +82,7 @@ export default {
       this.showGrafanaWindow = false;
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;
+      this.showMevboostWindow = false;
     },
   },
 };

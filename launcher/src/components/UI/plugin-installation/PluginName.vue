@@ -657,7 +657,7 @@ export default {
 .fast-sync .sync-header {
   width: 100%;
   height: 34%;
-  border: 1px solid #929090;
+  border: 1px solid #707070;
   border-radius: 15px 0 0 15px;
   display: flex;
   justify-content: space-between;
