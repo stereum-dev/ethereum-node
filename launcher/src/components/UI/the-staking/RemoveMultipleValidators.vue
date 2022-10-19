@@ -9,16 +9,13 @@
         />
       </div>
       <div class="removeMessage">
-        <span
-          >Are you sure you want to remove All Validator keys FROM THIS
-          MACHINE?</span
-        >
+        <span>{{ $t("removeMultipleValidators.sureText") }}</span>
       </div>
       <div class="remove-box">
         <div class="remove-btn" @click="$emit('deleteKey')">
-          <span>Remove</span>
+          <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
-        <span class="close">Click outside to close.</span>
+        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>

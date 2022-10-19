@@ -154,5 +154,13 @@
   },
   "insertValidator":{
     "insertText":"CLICK OR DRAG TO INSERT KEY"
+  },
+  "removeMultiModal":{
+    "sure":"Are you sure you want to remove",
+    "from":"FROM THIS MACHINE?",
+    "remove":"Remove"
+  },
+  "removeMultipleValidators":{
+    "sureText":"Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
   }
 }
