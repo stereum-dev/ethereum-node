@@ -35,7 +35,8 @@ export class PrysmBeaconService extends NodeService {
 
         let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
 
-        let mevboostEndpoint = mevboostURL[0].buildMevboostEndpointURL()
+        // mevboost endpoint
+        const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
         service.init(
             'PrysmBeaconService',  //service

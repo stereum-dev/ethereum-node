@@ -12,7 +12,8 @@ export class NimbusBeaconService extends NodeService {
 
     const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCWsEndpointUrl() })).join()
 
-    let mevboostEndpoint = mevboostURL[0].buildMevboostEndpointURL()
+    // mevboost endpoint
+    const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
     const JWTDir = '/engine.jwt'
     const dataDir = '/opt/app/beacon'

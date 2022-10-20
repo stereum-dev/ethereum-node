@@ -14,7 +14,7 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
-import { MevboostService } from './ethereum-services/MevboostService'
+import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 
 const YAML = require('yaml')
 const log = require('electron-log')
@@ -151,9 +151,9 @@ export class OneClickInstall {
 
     }
 
-    if (constellation.includes('MevboostService')) {
-      //MevboostService
-      this.mevboost = MevboostService.buildByUserInput(this.networkHandler(true))
+    if (constellation.includes('FlashbotsMevBoostService')) {
+      //FlashbotsMevBoostService
+      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(true))
     }
 
     if (constellation.includes('LighthouseBeaconService')) {

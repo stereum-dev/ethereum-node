@@ -28,7 +28,8 @@ const ports = [
       ]
     }
   })
-  const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm/', [new GethService.GethService(),new GethService.GethService()]).buildConfiguration()
+
+  const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm/', [new GethService.GethService(),new GethService.GethService()], []).buildConfiguration()
 
   expect(prysm.command).toMatch(/--execution-endpoint=http-endpoint-string/)
   expect(prysm.volumes).toHaveLength(3)
@@ -41,33 +42,33 @@ const ports = [
   expect(prysm.configVersion).toBe(1)
 })
 
-test('buildConsensusClientHttpEndpointUrl', () => {
-  jest.mock('./GethService')
-  const GethService = require('./GethService')
-  const mMock = jest.fn(() => { return 'http-endpoint-string' })
-  GethService.GethService.mockImplementation(() => {
-    return {
-      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
-      buildMinimalConfiguration: jest.fn(() => {
-        return {
-          id: 'geth-id',
-          service: 'GethService'
-        }
-      }),
-      volumes: [
-        new ServiceVolume('some/path/data', 'some/path/other/data'),
-        new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
-      ]
-    }
-  })
+  test('buildConsensusClientHttpEndpointUrl', () => {
+    jest.mock('./GethService')
+    const GethService = require('./GethService')
+    const mMock = jest.fn(() => { return 'http-endpoint-string' })
+    GethService.GethService.mockImplementation(() => {
+      return {
+        buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
+        buildMinimalConfiguration: jest.fn(() => {
+          return {
+            id: 'geth-id',
+            service: 'GethService'
+          }
+        }),
+        volumes: [
+          new ServiceVolume('some/path/data', 'some/path/other/data'),
+          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
+        ]
+      }
+    })
     const ports = [
       new ServicePort(null, 100, 200, servicePortProtocol.tcp),
       new ServicePort(null, 101, 202, servicePortProtocol.udp),
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientHttpEndpointUrl()
-  
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()], []).buildConsensusClientHttpEndpointUrl()
+
     expect(prysm).toMatch(/http:\/\/stereum-.{36}:3500/)
   })
 
@@ -96,8 +97,8 @@ test('buildConsensusClientHttpEndpointUrl', () => {
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientGateway()
-  
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()], []).buildConsensusClientGateway()
+
     expect(prysm).toMatch(/stereum-.{36}:3500/)
   })
 
@@ -126,8 +127,17 @@ test('buildConsensusClientHttpEndpointUrl', () => {
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
 
-    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()]).buildConsensusClientEndpoint()
-  
+    jest.mock('./FlashbotsMevBoostService')
+    const FlashbotsMevBoostService = require('./FlashbotsMevBoostService')
+    const mevMock = jest.fn(() => { return 'mevboost-http-endpoint-string' })
+    FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
+      return {
+        buildMevboostEndpointURL: mevMock,
+      }
+    })
+
+    const prysm = PrysmBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/prysm', [new GethService.GethService()], []).buildConsensusClientEndpoint()
+
     expect(prysm).toMatch(/stereum-.{36}:4000/)
   })
 
@@ -150,8 +160,9 @@ test('buildConsensusClientHttpEndpointUrl', () => {
         ]
       }
     })
-    const prysmPorts = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()]).getAvailablePorts()
-  
+
+    const prysmPorts = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()], []).getAvailablePorts()
+
     expect(prysmPorts).toHaveLength(3)
   })
 
@@ -174,8 +185,9 @@ test('buildConsensusClientHttpEndpointUrl', () => {
         ]
       }
     })
-    const prysmNetwork = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()]).buildConfiguration()
-  
+
+    const prysmNetwork = PrysmBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/prysm', [new GethService.GethService()], []).buildConfiguration()
+
     expect(prysmNetwork.network).toMatch(/prater/)
   })
 
@@ -188,7 +200,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
       ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
       volumes: ['/opt/stereum/foo:/opt/app/data']
     })
-  
+
     expect(prysm.id).toBe('321')
     expect(prysm.service).toBe('PrysmBeaconService')
     expect(prysm.configVersion).toBe(216)
@@ -197,10 +209,10 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     expect(prysm.ports).toHaveLength(2)
     expect(prysm.ports[0].destinationPort).toBe('1234')
     expect(prysm.ports[1].servicePort).toBe('5678')
-  
+
     expect(prysm.volumes).toHaveLength(1)
     expect(prysm.volumes[0]).toBeDefined()
   })
-  
+
   // EOF
-  
+

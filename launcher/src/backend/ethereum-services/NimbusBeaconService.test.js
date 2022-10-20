@@ -29,7 +29,16 @@ test('buildConfiguration', () => {
     }
   })
 
-  const nimbusService = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', [new GethService.GethService()]).buildConfiguration()
+  jest.mock('./FlashbotsMevBoostService')
+  const FlashbotsMevBoostService = require('./FlashbotsMevBoostService')
+  const mevMock = jest.fn(() => { return 'mevboost-http-endpoint-string' })
+  FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
+    return {
+      buildMevboostEndpointURL: mevMock,
+    }
+  })
+
+  const nimbusService = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', [new GethService.GethService()], []).buildConfiguration()
 
   expect(nimbusService.command).toContain('--web3-url=Ws-endpoint-string')
   expect(nimbusService.command).toContain('--network=prater')
@@ -71,7 +80,7 @@ test('buildConsensusClientWsEndpointUrl', () => {
     }
   })
 
-  const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', [new GethService.GethService()]).buildConsensusClientHttpEndpointUrl()
+  const nimbusEndpoint = NimbusBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/nimbus', [new GethService.GethService()], []).buildConsensusClientHttpEndpointUrl()
 
   expect(nimbusEndpoint).toMatch(/http:\/\/stereum-.{36}:5052/)
 })
@@ -96,7 +105,7 @@ test('getAvailablePorts', () => {
       ]
     }
   })
-  const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/nimbus', [new GethService.GethService()]).getAvailablePorts()
+  const nimbusServicePorts = NimbusBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/nimbus', [new GethService.GethService()], []).getAvailablePorts()
 
   expect(nimbusServicePorts).toHaveLength(4)
 })
@@ -121,7 +130,7 @@ test('network', () => {
       ]
     }
   })
-  const nimbusService = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', [new GethService.GethService()]).buildConfiguration()
+  const nimbusService = NimbusBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/nimbus', [new GethService.GethService()], []).buildConfiguration()
 
   expect(nimbusService.network).toMatch(/goerli/)
 })

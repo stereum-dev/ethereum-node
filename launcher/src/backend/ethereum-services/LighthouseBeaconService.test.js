@@ -29,7 +29,16 @@ test('buildConfiguration', () => {
     }
   })
 
-  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16).buildConfiguration()
+  jest.mock('./FlashbotsMevBoostService')
+  const FlashbotsMevBoostService = require('./FlashbotsMevBoostService')
+  const mevMock = jest.fn(() => { return 'mevboost-http-endpoint-string' })
+  FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
+    return {
+      buildMevboostEndpointURL: mevMock,
+    }
+  })
+
+  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16, []).buildConfiguration()
 
   expect(lhService.command).toContain('--execution-endpoint=http-endpoint-string')
   expect(lhService.volumes).toHaveLength(3)
@@ -67,7 +76,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
 
-  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16).buildConsensusClientHttpEndpointUrl()
+  const lhService = LighthouseBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/lh', [new GethService.GethService()], 16, []).buildConsensusClientHttpEndpointUrl()
 
   expect(lhService).toMatch(/http:\/\/stereum-.{36}:5052/)
 })
@@ -91,7 +100,7 @@ test('getAvailablePorts', () => {
       ]
     }
   })
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/lh', [new GethService.GethService()], 16).getAvailablePorts()
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/lh', [new GethService.GethService()], 16, []).getAvailablePorts()
 
   expect(lhServicePorts).toHaveLength(3)
 })
@@ -115,7 +124,7 @@ test('network', () => {
       ]
     }
   })
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 16).buildConfiguration()
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 16, []).buildConfiguration()
 
   expect(lhServicePorts.network).toMatch(/goerli/)
 })
@@ -139,7 +148,7 @@ test('slasherDbSize', () => {
       ]
     }
   })
-  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 123).buildConfiguration()
+  const lhServicePorts = LighthouseBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/lh', [new GethService.GethService()], 123, []).buildConfiguration()
 
   expect(lhServicePorts.command).toContain('--slasher-max-db-size=123')
 })
