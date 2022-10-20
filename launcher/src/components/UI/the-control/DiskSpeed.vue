@@ -5,17 +5,21 @@
         <div class="disk-speed_icon_container">
           <img src="../../../../public/img/icon/control/Speedmeter.png" />
         </div>
-        <span>DISK SPEED</span>
+        <span>{{ $t("controlPage.disk") }}</span>
       </div>
       <div class="disk-speed_valueBox">
         <div class="disk-speed_value">
-          <div class="disk-speed_value_title"><span>WRITE</span></div>
+          <div class="disk-speed_value_title">
+            <span>{{ $t("controlPage.write") }}</span>
+          </div>
           <div class="write_val">
             <span>{{ writeValue }} kb</span>
           </div>
         </div>
         <div class="disk-speed_value">
-          <div class="disk-speed_value_title"><span>READ</span></div>
+          <div class="disk-speed_value_title">
+            <span>{{ $t("controlPage.read") }}</span>
+          </div>
           <div class="read_val">
             <span>{{ readValue }} kb</span>
           </div>

@@ -1,0 +1,206 @@
+{
+  "formsetup": {
+    "login": "ورود",
+    "server": "به سرور خود متصل شوید",
+    "servername":"نام سرور ",
+    "iphost":"IP / نام هاست",
+    "username":"نام کاربری",
+    "password":"کلمه عبور",
+    "keylocation":"مکان کلید",
+    "usessh":"SSH استفاده از"
+  },
+  "comingsoon":{
+    "comingsoon":"به زودی"
+  },
+  "journalnode":{
+    "serverip":"سرور IP",
+    "servername":"نام سرور ",
+    "edit":"NODE ویرایش"
+  },
+  "pagesnav":{
+    "node":"NODE",
+    "control":"کنترل",
+    "staking":"استیک"
+  },
+  "supportModal":{
+    "support":"پشتیبانی",
+    "supportText":"سریعترین راه برای دسترسی به یک شخص برای پشتیبانی، پیوستن به سرور دیسکورد ما است",
+    "bugReport":"گزارش خطا",
+    "bugRepText":"لطفاً برای نوشتن این موضوع کمی وقت بگذارید و اجازه دهید استریوم را بهتر کنیم",
+    "emailText":"یا ایمیل بنویسید به آدرس"
+  },
+  "notifModal":{
+    "notification":"اعلانات",
+    "notifText":"می‌توانید منابع مختلف اعلانات و وضعیتی را که می‌خواهید از آن مطلع شوید تنظیم کنید",
+    "cancelText":"برای خروج بیرون از کادر کلیک کنید"
+  },
+  "settingPanel":{
+    "stereumName":"تنظیمات استریوم",
+    "langName":"انتخاب زبان",
+    "confirm":"تایید و ثبت",
+    "general":"تنظیمات عمومی",
+    "langItem":"انتخاب زبان",
+    "credits":"پشتیبان ها",
+    "open":"باز کردن",
+    "update":"بروزرسانی",
+    "launcherVersion":"نسخه لانچر",
+    "nodeVersion":"NODE نسخه",
+    "lane":"استریوم - تست مسیر",
+    "on":"روشن",
+    "off":"خاموش",
+    "updateConfig":"پیکربندی به روز رسانی استریوم",
+    "servicePlugin":"پیکربندی به روز رسانی پلاگین / سرویس",
+    "manual":"دستی",
+    "auto":"اتوماتیک"
+  },
+  "nodeSidebarVideo":{
+    "firstSteps":"قدم های آغازین",
+    "stake":"استیک با ۳۲ اتریوم",
+    "ssv":" ssvاستفاده از شبکه",
+    "alert":"اخطارها در موبایل",
+    "switchC":"انتخاب کاربر",
+    "switchM":"انتخاب ماشین"
+  },
+  "pluginZone":{
+    "client":"کننده"
+  },
+  "theNode":{
+    "execution":"اجرا",
+    "consensus":"توافق",
+    "validator":"ارزش گذاری",
+    "servicePlugin":"خدمات پلاگین"
+  },
+  "modifyPanel":{
+    "backNode":" NODE بازگشت به",
+    "addPreset":"اضافه کردن پیش فرض ۱ کلیک",
+    "changeNetwork":"تغییر شبکه",
+    "nukeNode":"NODE از بین بردن "
+  },
+  "sidebarManage":{
+    "filter":"فیلترکردن"
+  },
+  "changeConfirm":{
+    "confirm":"تایید",
+    "change":"تایید تغییرات",
+    "delete":"پاک کردن"
+  },
+  "updatePanel":{
+    "launcherTitle":"بروز رسانی لانچر",
+    "current":"کنونی",
+    "nodeTitle":"NODE بروز رسانی",
+    "latest":"آخرین نسخه",
+    "auto":"بروزرسانی اتوماتیک",
+    "available":"در دسترس",
+    "searching":"جستجوی بروزرسانی جدید",
+    "serviceTitle":"بروزرسانی خدمات",
+    "serviceDesc":"انتخاب بروز رسانی برای پلاگین های نصب شده",
+    "availablePlugin":"بروزرسانی برای پلاگین های موجود",
+    "all":"بروزرسانی همه چیز"
+  },
+  "controlPage":{
+    "node":"NODE",
+    "disk":"سرعت دیسک",
+    "write":"نوشتن",
+    "read":"خواندن",
+    "inclusionDistance":"فاصله گنجاندن",
+    "rpc":"RPC - نقطه پایانی",
+    "syncStatus":"وضعیت همگام سازی",
+    "hard":"هارد دیسک",
+    "free":"آزاد",
+    "total":"تمامی",
+    "network":"شبکه",
+    "receive":"داده دریافتی",
+    "transmit":"داده ارسالی",
+    "ram":"رام",
+    "used":"استفاده",
+    "totalram":"تمامی",
+    "storage":"ذخیره سازی",
+    "active":"فعال",
+    "rating":"رده بندی",
+    "usage":"استفاده شده"
+  },
+  "taskManager":{
+    "clickDisplay":"برای نمایش روی وظایف کلیک کنید"
+  },
+  "displayValidator":{
+    "pk":"کلید عمومی",
+    "service":"خدمات",
+    "active":"فعال از",
+    "state":"کیفیت",
+    "balance":"تعادل",
+    "option":"گزینه ها",
+    "importKey":"وارد کردن کلید(های) اعتبارسنجی",
+    "waitMessage":"ممکن است کمی طول بکشد",
+    "waitForImport":"لطفا صبر کنید تا کلید وارد شود"
+  },
+  "enterPass":{
+    "enterPass":"بعد از نوشتن رمز عبور وارد کنید"
+  },
+  "exitMultipleValidator":{
+    "passMessage":"رمز عبور اعتبارسنجی خود را برای خروج از زنجیره با این کلید وارد کنید",
+    "confirm":"تائید کنید"
+  },
+  "exitValidatorModal":{
+    "modalMessage":"آیا مطمئن هستید که می‌خواهید با کلیدهای اعتبارسنجی انتخاب شده از زنجیره خارج شوید؟ این وظیفه اعتبارسنجی شما را متوقف می کند و نمی توان آن را معکوس کرد. وجوه شما نیز فقط در صورتی قابل برداشت است که زنجیره اجازه دهد",
+    "exitApprove":"من متن را خواندم و از عواقب آن آگاهم",
+    "exitChain":"خروج از زنجیره",
+    "clickClose":"برای بستن اینجا بیرون از کادر کلیک کنید"
+  },
+  "feeRecipient":{
+    "textPlaceHolder":"یک آدرس اتریوم معتبر وارد کنید تا پاداش بلوک خود را به آن ارسال کنید",
+    "setBlock":"یک آدرس گیرنده هزینه بلوک تنظیم کنید"
+  },
+  "grafitiMultipleValidator":{
+    "textPlaceHolder":"سی و دو کاراکتر را وارد کنید تا هنگام ایجاد یک بلوک به زنجیره اضافه شود"
+  },
+  "insertValidator":{
+    "insertText":"برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
+  },
+  "removeMultiModal":{
+    "sure":"آیا اطمینان دارید که",
+    "from":"از این ماشین حذف کنید",
+    "remove":"حذف  کردن"
+  },
+  "removeMultipleValidators":{
+    "sureText":"آیا مطمئن هستید که می خواهید همه کلیدهای اعتبار سنجی را از این ماشین حذف کنید؟"
+  },
+  "timeReward":{
+    "totalText":"کل موجودی",
+    "validators":"تایید کننده",
+    "proposed":"پیشنهاد شده",
+    "attestRate":"نرخ تصدیق",
+    "attention":"توجه",
+    "missed":"از دست رفته",
+    "aggregations":"تراکم",
+    "slashed":"شکاف ها"
+  },
+  "validatorsBox":{
+    "date":"تاریخ",
+    "validator":"تایید کننده",
+    "attestRate":"نرخ تصدیق",
+    "reward":"پاداش"
+  },
+  "installOption":{
+    "installText":"در این صفحه می توانید آنچه را که می خواهید با نود خود انجام دهید را انتخاب کنید. پس ازانتخاب و فشار دادن استارت، یک انتخاب تصادفی کلاینت برای سرویس دهی به مورد استفاده شما انجام می شود",
+    "back":"بازگشت",
+    "install":"نصب"
+  },
+  "removeModal":{
+    "removeText":".تمام خدمات حذف خواهد شد",
+    "sure":"آیا مطمئن هستید؟"
+  },
+  "installitionMenu":{
+    "welcome":"خوش آمدید",
+    "installText":"در این مرحله شما نحوه نصب نود خود را انتخاب می کنید. اگر در راه‌اندازی به کمک نیاز دارید، به دیسکورد ما بپیوندید - خوشحال می‌شویم به شما کمک کنیم",
+    "osCheck":"بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر"
+  },
+  "pluginName":{
+    "option":"گزینه انتخاب",
+    "chosen":"شبکه انتخاب شده",
+    "path":"مسیر نصب",
+    "syncClient":"کلاینت خود را از ابتدای زنجیره همگام سازی می کند",
+    "plugin":"پلاگین ها",
+    "back":"بازگشت",
+    "next":"بعدی"
+  }
+}

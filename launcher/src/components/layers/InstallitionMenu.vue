@@ -3,14 +3,12 @@
     <div class="empty1"></div>
     <div class="empty2"></div>
     <div id="welcome-header">
-      <h2 class="welcome-title">WELCOME</h2>
+      <h2 class="welcome-title">{{ $t("installitionMenu.welcome") }}</h2>
     </div>
     <div class="middle-box">
       <div id="txt">
         <p>
-          IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED
-          ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU
-          OUT
+          {{ $t("installitionMenu.installText") }}
         </p>
       </div>
       <!-- <div class="progress-container">
@@ -39,7 +37,7 @@
     </div>
     <div class="message-box" v-if="active">
       <p class="msg-title">
-        CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED
+        {{ $t("installitionMenu.osCheck") }}
         <span class="dot-flashing"></span>
       </p>
     </div>
@@ -107,25 +105,31 @@ export default {
           // addition to the return code.
           let errnum = parseInt(suData.rc);
           let errmsg = suData.stdout.toLowerCase();
-          if(errnum === 1 && errmsg.indexOf("can not sudo without password")){
+          if (errnum === 1 && errmsg.indexOf("can not sudo without password")) {
             // User needs to added in the sudoers file with "%<username> ALL = (ALL) NOPASSWD: ALL"
             this.message += " BUT YOU NEED TO ENABLE PASSLESS SUDO";
-          }else if(errnum === 2 && errmsg.indexOf("code failed to run")){
+          } else if (errnum === 2 && errmsg.indexOf("code failed to run")) {
             // We could not check due to interactive syntax error - allow install but show a warning
-            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.message +=
+              " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
             this.isSupported = true;
-          }else{
+          } else {
             // We could not check due to unknonw error - allow install but show a warning
-            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.message +=
+              " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
             this.isSupported = true;
           }
-        }else{
+        } else {
           // OS supported, passless sudo avail - allow install :)
           this.isSupported = true;
         }
-      } else if (osData && osData.hasOwnProperty("name") && osData.name !== undefined) {
+      } else if (
+        osData &&
+        osData.hasOwnProperty("name") &&
+        osData.name !== undefined
+      ) {
         this.message =
-          osData.name.toUpperCase() + ": " + osData.message.toUpperCase(); 
+          osData.name.toUpperCase() + ": " + osData.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }

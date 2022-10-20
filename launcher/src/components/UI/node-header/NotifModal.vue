@@ -4,12 +4,11 @@
     <div class="notif-modal-content">
       <div class="content">
         <div class="title-box">
-          <span>Notifications</span>
+          <span>{{ $t("notifModal.notification") }}</span>
         </div>
         <div class="text">
           <p>
-            You can set up different notification sources and the status you
-            want to be notified of here
+            {{ $t("notifModal.notifText") }}
           </p>
         </div>
         <div class="messageContent">
@@ -18,7 +17,7 @@
             alt="icon"
           />
         </div>
-        <span class="close">Click outside to cancel</span>
+        <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
     </div>
   </div>

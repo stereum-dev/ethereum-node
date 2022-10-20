@@ -49,7 +49,7 @@
             @dragover.prevent
           >
             <drop-zone
-              :title="'execution'"
+              :title="$t('theNode.execution')"
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'execution'
@@ -67,7 +67,7 @@
           >
             <drop-zone
               @modal-view="showModal"
-              :title="'consensus'"
+              :title="$t('theNode.consensus')"
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'consensus'
@@ -84,7 +84,7 @@
           >
             <drop-zone
               @modal-view="showModal"
-              :title="'validator'"
+              :title="$t('theNode.validator')"
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'validator'
@@ -97,7 +97,7 @@
         </div>
         <div class="service" onmousedown="return false">
           <div class="title">
-            <span>SERVICE PLUGIN</span>
+            <span>{{ $t("theNode.servicePlugin") }}</span>
           </div>
           <div
             class="service-parent"
@@ -118,8 +118,7 @@
           </div>
         </div>
         <div class="change-menu" onmousedown="return false">
-          <change-confirm
-          ></change-confirm>
+          <change-confirm></change-confirm>
         </div>
         <div class="sidebar">
           <sidebar-manage :startDrag="startDrag" @add-service="addNewService">
@@ -235,8 +234,8 @@ export default {
       this.newConfiguration.map(s => s.service).includes(item.service)) {
         return;
       } else {
-        if(this.itemToInstall.addPanel === true){
-          this.cancelAddProcess()
+        if (this.itemToInstall.addPanel === true) {
+          this.cancelAddProcess();
         }
         item.id = this.newConfiguration.length
         this.newConfiguration.push(item);
@@ -263,8 +262,8 @@ export default {
       this.newConfiguration.map(s => s.servce).includes(item.service)) {
         return;
       } else {
-        if(this.itemToInstall.addPanel === true){
-          this.cancelAddProcess()
+        if (this.itemToInstall.addPanel === true) {
+          this.cancelAddProcess();
         }
         item.id = this.newConfiguration.length
         this.newConfiguration.push(item);

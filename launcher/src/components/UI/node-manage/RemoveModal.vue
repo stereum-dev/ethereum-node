@@ -3,21 +3,18 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/manage-node-icons/stop.png"
-          alt=""
-        />
+        <img src="../../../../public/img/icon/manage-node-icons/stop.png" />
       </div>
       <div class="remove-message">
-        <span class="warning">All services will be removed.</span>
-        <span class="question">Are you sure?</span>
+        <span class="warning">{{ $t("removeModal.removeText") }}</span>
+        <span class="question">{{ $t("removeModal.sure") }}</span>
       </div>
       <div class="remove-btn">
         <div class="yes-box" @click="$emit('removeItems')">
-          <span>Remove</span>
+          <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
       </div>
-      <span class="close">Click outside to cancel</span>
+      <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
   </div>
 </template>

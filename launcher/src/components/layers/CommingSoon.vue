@@ -1,6 +1,6 @@
 <template>
   <div class="commingsoon-parent">
-    <span>- Coming Soon -</span>
+    <span>- {{ $t("comingsoon.comingsoon") }} -</span>
   </div>
 </template>
 <style scoped>

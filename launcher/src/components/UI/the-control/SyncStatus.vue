@@ -5,7 +5,7 @@
         <div class="sync-icon_container">
           <img :src="syncSituation()" />
         </div>
-        <span>SYNC STATUS</span>
+        <span>{{$t('controlPage.syncStatus')}}</span>
       </div>
       <div class="sync-box_value">
         <div v-show="syncItemsShow" v-for="item in syncstatus.data" :key="item.id" class="sync-box_row" :class="syncItemSytle(item)">

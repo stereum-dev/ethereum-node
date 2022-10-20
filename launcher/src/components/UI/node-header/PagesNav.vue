@@ -1,15 +1,15 @@
 <template>
   <ul class="router__items">
     <li class="router__item">
-      <router-link to="/node">NODE</router-link>
+      <router-link to="/node">{{ $t("pagesnav.node") }}</router-link>
     </li>
     <span class="border"></span>
     <li class="router__item">
-      <router-link to="/control">CONTROL</router-link>
+      <router-link to="/control">{{ $t("pagesnav.control") }}</router-link>
     </li>
     <span class="border"></span>
     <li class="router__item">
-      <router-link to="/staking">STAKING</router-link>
+      <router-link to="/staking">{{ $t("pagesnav.staking") }}</router-link>
     </li>
   </ul>
 </template>

@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="list-cleaner">
-        <span class="footer-text">Click on tasks to display</span>
+        <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
         <img
           @click="listCleanerHandler"
           src="../../../../public/img/icon/task-manager-icons/remove-tasks.png"
@@ -199,7 +199,7 @@ export default {
   height: 40%;
   max-width: 16px;
   max-height: 16px;
-  padding: .5rem;
+  padding: 0.5rem;
   background-color: #ff0000;
   border-radius: 50px;
   display: flex;

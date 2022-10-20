@@ -3,8 +3,8 @@
     <div class="server">
       <div class="serverBox">
         <div class="details">
-          <span class="ipTitle">server ip</span>
-          <span class="nameTitle">server name</span>
+          <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
+          <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
           <span class="ip">{{ ipAddress }}</span>
           <span class="name">{{ ServerName }}</span>
         </div>
@@ -13,7 +13,7 @@
     <div class="config-bg">
       <div class="edit-btn">
         <router-link to="/manage">
-          <span>to edit node</span>
+          <span>{{ $t("journalnode.edit") }}</span>
           <img
             src="../../../../public/img/icon/node-journal-icons/edit-node.png"
             alt="icon"

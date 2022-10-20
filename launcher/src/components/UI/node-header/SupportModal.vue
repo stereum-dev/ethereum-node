@@ -5,12 +5,11 @@
       <div class="content">
         <div class="supportBox">
           <div class="title">
-            <span>support</span>
+            <span>{{ $t("supportModal.support") }}</span>
           </div>
           <div class="text">
             <p>
-              The fastest way to reach a person for support is to join our
-              Discord server!
+              {{ $t("supportModal.supportText") }}
             </p>
           </div>
           <div class="btnBox" @click="OpenStereumDiscord">
@@ -22,12 +21,11 @@
         </div>
         <div class="reportBox">
           <div class="title">
-            <span>BUG REPORT</span>
+            <span>{{ $t("supportModal.bugReport") }}</span>
           </div>
           <div class="text">
             <p>
-              Please take the time to write an issue and let us make the Stereum
-              better!
+              {{ $t("supportModal.bugRepText") }}
             </p>
           </div>
           <div class="btnBox">
@@ -40,7 +38,8 @@
         </div>
       </div>
       <span class="email"
-        >or write an email to: <strong>support@stereum.net</strong></span
+        >{{ $t("supportModal.emailText")
+        }}<a href="mailto:support@stereum.net">support@stereum.net</a></span
       >
     </div>
   </div>
@@ -174,8 +173,9 @@ export default {
   color: #c6c6c6c6;
   text-align: center;
 }
-.email strong {
+.email a {
   color: #83bbee;
+  font-weight: 600;
 }
 .close {
   color: #bf3a3a;

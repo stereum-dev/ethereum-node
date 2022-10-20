@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="cpuTemp">
-          <span>Usage: {{ cpu }} %</span>
+          <span>{{ $t("controlPage.usage") }} : {{ cpu }} %</span>
         </div>
       </div>
     </div>
