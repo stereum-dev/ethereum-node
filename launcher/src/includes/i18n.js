@@ -1,15 +1,15 @@
 import { createI18n } from "vue-i18n";
 
-import en from "../languages/en-US.json";
-import de from "../languages/de-GR.json";
-import fa from "../languages/fa-IR.json";
+import en from "../languages/en.json";
+import de from "../languages/de.json";
+import fa from "../languages/fa.json";
 
 const i18n = createI18n({
-  locale: "fa-IR", //focus lang
+  locale: "", //focus lang
   messages: {
-    "en-US": en,
-    "de-GR": de,
-    "fa-IR": fa,
+    en,
+    de,
+    fa,
   },
 });
 export default i18n;

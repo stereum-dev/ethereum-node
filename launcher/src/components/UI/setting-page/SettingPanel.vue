@@ -34,6 +34,7 @@
                 :itemType="item.itemType"
                 :savedFlag="langIco"
                 :savedLang="langName"
+                :savedLabel="langLabel"
                 :link="item.link"
                 :isLanguage="item.isLanguage"
                 :linkValue="item.linkValue"
@@ -85,7 +86,9 @@
                     id="stereum-update"
                     v-model="stereumRef"
                   >
-                    <option value="manual">{{ $t("settingPanel.manual") }}</option>
+                    <option value="manual">
+                      {{ $t("settingPanel.manual") }}
+                    </option>
                     <option value="auto">{{ $t("settingPanel.auto") }}</option>
                   </select>
                 </div>
@@ -145,6 +148,7 @@ export default {
       langActive: false,
       langIco: "",
       langName: "",
+      langLabel: "",
       generalItems: [
         {
           id: 1,
@@ -180,7 +184,7 @@ export default {
   },
   created() {
     this.checkSettings();
-    this.selectror();
+    this.selector();
     this.checkVersion();
     this.switchOnOff();
   },
@@ -237,7 +241,7 @@ export default {
       // confirm method have to write here
       // alert("Done!");
     },
-    selectror() {
+    selector() {
       if (this.langActive === true) {
         this.pageName = this.langTitlePage;
         this.pageIcon = this.languageData.icon;
@@ -248,7 +252,7 @@ export default {
     },
     langActiveBox() {
       this.langActive = !this.langActive;
-      this.selectror();
+      this.selector();
     },
     checkSettings: async function () {
       const savedConfig = await ControlService.readConfig();
@@ -258,6 +262,7 @@ export default {
       ) {
         this.langIco = savedConfig.savedLanguage.flag;
         this.langName = savedConfig.savedLanguage.language;
+        this.langLabel = savedConfig.savedLanguage.label;
       }
     },
     checkVersion: async function () {

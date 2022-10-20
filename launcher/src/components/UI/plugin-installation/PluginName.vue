@@ -14,13 +14,13 @@
           <div class="content-box">
             <div class="options-box">
               <div class="option-title">
-                <span>OPTION</span>
+                <span>{{ $t("pluginName.option") }}</span>
               </div>
               <div class="option-content">
                 <div class="network-parent">
                   <div class="network-box">
                     <div class="choose">
-                      <span>CHOSEN NETWORK</span>
+                      <span>{{ $t("pluginName.chosen") }}</span>
                     </div>
                     <div class="none">
                       <span>{{ selectedPreset.network }}</span>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>INSTALLATION PATH</span>
+                    <span>{{ $t("pluginName.path") }}</span>
                   </div>
                   <div class="change-box">
                     <input type="text" v-model="installationPath" />
@@ -66,9 +66,9 @@
                     </div>
                   </div>
                   <div class="content">
-                    <span v-if="genesisIsActive"
-                      >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-                    >
+                    <span v-if="genesisIsActive">{{
+                      $t("pluginName.syncClient")
+                    }}</span>
                     <div class="inputBox" v-if="checkPointIsActive">
                       <input type="text" v-model="checkPointSync" />
                     </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="included-box">
               <div class="included-title">
-                <span>PLUGINS</span>
+                <span>{{ $t("pluginName.plugin") }}</span>
               </div>
               <div class="info-box">
                 <div
@@ -127,10 +127,10 @@
           </div>
           <div class="btn-box">
             <router-link :to="{ path: '/selectPlugin' }">
-              <span>BACK</span>
+              <span>{{ $t("pluginName.back") }}</span>
             </router-link>
             <router-link :to="{ path: '/verify' }">
-              <span>NEXT</span>
+              <span>{{ $t("pluginName.next") }}</span>
             </router-link>
           </div>
         </div>

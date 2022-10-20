@@ -12,7 +12,7 @@
       </div>
       <lang-dialog @close="hideDialog" :open="dialogIsVisible">
         <flag-button
-          @setting="setLang(link.langName, link.langSelect)"
+          @setting="setLang(link.langName, link.langSelect, link.label)"
           v-for="link in linkFlags"
           :key="link.langImg"
           id="flag-btn"
@@ -63,6 +63,7 @@ export default {
       selectedLanguage: {
         lang: "",
         flag: "",
+        label: "",
       },
     };
   },
@@ -80,14 +81,15 @@ export default {
       showDialog: "showDialog",
       hideDialog: "hideDialog",
     }),
-    setLang(lang, langSelect) {
+    setLang(lang, langSelect, label) {
       this.selectedLanguage.lang = lang;
       this.selectedLanguage.flag = langSelect;
       this.isLanguageSelected = true;
       this.hideDialog();
       this.hiddenDialogActive = false;
+      this.$i18n.locale = label;
       this.link = "/img/icon/language-animations/languageSelection1.gif";
-      this.updateSettings(lang, langSelect);
+      this.updateSettings(lang, langSelect, label);
       setTimeout(() => {
         this.link = "/img/icon/language-animations/languageSelection2.gif";
       }, 1000);
@@ -113,16 +115,17 @@ export default {
       ) {
         this.setLang(
           savedConfig.savedLanguage.language,
-          savedConfig.savedLanguage.flag
+          savedConfig.savedLanguage.flag,
+          savedConfig.savedLanguage.label
         );
         this.$emit("page", "SetupServer");
       }
     },
-    updateSettings: async function (lang, langSelect) {
+    updateSettings: async function (lang, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect },
+        savedLanguage: { language: lang, flag: langSelect, label: langLabel },
       };
       await ControlService.writeConfig(conf);
     },

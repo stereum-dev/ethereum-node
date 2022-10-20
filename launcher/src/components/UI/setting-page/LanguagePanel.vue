@@ -1,7 +1,7 @@
 <template>
   <div class="lang-panel_parent">
     <flag-button
-      @setting="setLang(link.langName, link.langSelect)"
+      @setting="setLang(link.langName, link.langSelect, link.label)"
       v-for="link in sortedFlags"
       :key="link.flag"
       :isActive="link.enable"
@@ -26,6 +26,7 @@ export default {
       selectedLanguage: {
         lang: "",
         flag: "",
+        label: "",
       },
     };
   },
@@ -49,19 +50,22 @@ export default {
     },
   },
   methods: {
-    setLang(lang, langSelect) {
+    setLang(lang, langSelect, langLabel) {
       this.selectedLanguage.lang = lang;
       this.selectedLanguage.flag = langSelect;
+      this.$i18n.locale = langLabel;
       this.isLanguageSelected = true;
-      this.updateSettings(lang, langSelect);
+      this.updateSettings(lang, langSelect, langLabel);
       this.$emit("back");
-      location.reload();
+
+      vm.$forceUpdate();
+      // location.reload();
     },
-    updateSettings: async function (lang, langSelect) {
+    updateSettings: async function (lang, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect },
+        savedLanguage: { language: lang, flag: langSelect, label: langLabel },
       };
       await ControlService.writeConfig(conf);
     },
