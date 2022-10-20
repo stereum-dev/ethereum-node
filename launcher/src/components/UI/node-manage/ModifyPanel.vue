@@ -73,8 +73,8 @@
         <template v-for="service in options" :key="service.id">
           <div
             class="optionsBox"
-            v-if="!serviceIsSelected"
-            @click="chooseServiceToConnect(service)"
+            v-if="!switchHandler(service)"
+            @click="changeSelectedServiceToConnect(service)"
           >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="optionsDetails">
@@ -84,18 +84,18 @@
               </div>
             </div>
           </div>
-        </template>
-        <div
-          class="clientAddBox"
-          v-if="serviceIsSelected"
-          @click="changeSelectedServiceToConnect"
-        >
-          <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
-          <div class="connectionConfig">
-            <span class="category">{{ selected.category }} Client</span>
-            <span class="name">{{ selected.name }}</span>
+          <div
+            class="clientAddBox"
+            v-if="switchHandler(service)"
+            @click="changeSelectedServiceToConnect(service)"
+          >
+            <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
+            <div class="connectionConfig">
+              <span class="category">{{ service.category }} Client</span>
+              <span class="name">{{ service.name }}</span>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
       <div class="btnBox">
         <div class="cancelBtn" @click="$emit('cancelModify')">
@@ -111,7 +111,6 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
@@ -125,6 +124,8 @@ export default {
       checkPointIsActive: false,
       replaceServiceActive: false,
       serviceIsSelected: false,
+      installationPath: "",
+      checkPointSync: "",
       plugin: {},
       port: "",
       selected: {},
@@ -132,16 +133,9 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      allServices: "allServices",
-    }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
-    }),
-    ...mapWritableState(useClickInstall, {
-      installationPath: "installationPath",
-      checkPointSync: "checkPointSync",
+      newConfiguration: "newConfiguration",
     }),
   },
   watch: {
@@ -154,6 +148,12 @@ export default {
     },
   },
   methods: {
+    switchHandler(service){
+      if(service.selectedForConnection){
+        return service.selectedForConnection
+      }
+      return false
+    },
     changeTheOption() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;
@@ -165,52 +165,25 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "execution"
         );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
       } else if (this.items.category === "validator") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
       } else {
         this.options = [];
-        return;
       }
-    },
-    chooseServiceToConnect(item) {
-      if (this.items.category === "consensus") {
-        this.options.map((i) => {
-          if (i.category === "execution" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
+      this.options = this.options.map((option) => {
+          return {
+            ...option,
+            selectedForConnection: false,
+          };
         });
-      } else if (this.items.category === "validator") {
-        this.options.forEach((i) => {
-          if (i.category === "consensus" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "execution") {
-        return;
-      }
-      this.serviceIsSelected = true;
     },
-    changeSelectedServiceToConnect() {
-      this.serviceIsSelected = false;
+    changeSelectedServiceToConnect(service) {
+      service.selectedForConnection = !service.selectedForConnection;
     },
   },
 };

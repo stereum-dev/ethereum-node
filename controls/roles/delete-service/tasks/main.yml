@@ -17,11 +17,12 @@
     keep_volumes: no
   become: yes
 
-- name: Remove Docker Image 
+- name: Remove Docker Image
   community.docker.docker_image:
     state: absent
     name: "{{ service_configuration.image | split(':') | first }}"
     tag: "{{ service_configuration.image | split(':') | last }}"
+    force_absent: yes
 
 - name: Remove Service Config File
   ansible.builtin.file:
@@ -30,8 +31,9 @@
 
 - name: Remove Service Files
   ansible.builtin.file:
-    path: "{{ item | first | regex_search('.*' + service) }}"
+    path: "{{ service_configuration.volumes | select('search', service) | first | split(':') | first | regex_search('^.*' + service) }}"
     state: absent
-  with_items: "{{ service_configuration.volumes | select('search', service) }}"
+    force: true
+  when: "{{ service_configuration.volumes | length }}"
 
 # EOF

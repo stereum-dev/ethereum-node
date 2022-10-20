@@ -41,9 +41,6 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-    }),
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
     }),
@@ -58,11 +55,13 @@ export default {
   },
   methods: {
     selectedItem(item) {
-      item.active = !item.active;
-      this.$emit("selectItem", item);
+      if(item.config.serviceID){
+        item.active = !item.active;
+      }
+        this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.installedServices.map((i) => {
+      this.newConfiguration.map((i) => {
         if (i.id != item.id) {
           i.modifierPanel = false;
         } else if (i.id == item.id) {
