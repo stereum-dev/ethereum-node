@@ -6,8 +6,8 @@
         <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
-        <span>We recommend you to wait until the initial installation is done
-          before applying further changes.</span>
+        <p>We recommend you to wait until the initial installation is done
+          before applying further changes.</p>
       </div>
       <div class="confirm-box">
         <span @click="$emit('installBtn')" class="confirm-btn">
@@ -84,16 +84,15 @@ export default {
 .warningMessage {
   width: 100%;
   height: 45%;
-  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
 
-.warningMessage span {
-  width: 95%;
-  font-size: 1.3rem;
+.warningMessage p {
+  width: 74%;
+  font-size: 1rem;
   color: #b7b7b7;
   font-weight: 600;
   text-align: center;

@@ -54,6 +54,7 @@ dialog {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -100,27 +101,36 @@ dialog {
   animation-fill-mode: forwards;
   box-shadow: inset 1px 2px 5px #acd5fc, 0 0 1px 1px rgb(52, 52, 52);
 }
+
 .check-msg {
   text-align: center;
 }
+
 @keyframes progres {
   0% {
     width: 0%;
   }
+
   10% {
     width: 10%;
   }
+
   25% {
     width: 25%;
   }
+
   50% {
     width: 50%;
   }
+
   75% {
     width: 85%;
   }
+
   100% {
     width: 100%;
   }
-} ;
+}
+
+;
 </style>

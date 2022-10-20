@@ -523,8 +523,8 @@ export default {
   align-items: center;
 }
 .name-title-box span {
-  font-size: 2rem;
-  font-weight: 900;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #d7d7d7;
   text-transform: uppercase;
 }
