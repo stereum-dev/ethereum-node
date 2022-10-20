@@ -186,8 +186,6 @@ export default {
     this.selector();
     this.checkVersion();
     this.switchOnOff();
-    this.$i18n.locale = this.langLabel;
-    console.log(this.langLabel);
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
@@ -263,7 +261,7 @@ export default {
       ) {
         this.langIco = savedConfig.savedLanguage.flag;
         this.langName = savedConfig.savedLanguage.language;
-        this.langLabel = savedConfig.savedLanguage.label;
+        this.$i18n.locale = savedConfig.savedLanguage.label;
       }
     },
     checkVersion: async function () {

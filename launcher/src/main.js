@@ -31,9 +31,7 @@ app.component("node-header", NodeHeader);
 app.component("service-plugin", ServicePlugin);
 app.component("node-service", NodeService);
 
-
 app.use(createPinia());
 app.use(router);
 app.use(i18n);
-console.log("test =>" + i18n);
 app.mount("#app");
