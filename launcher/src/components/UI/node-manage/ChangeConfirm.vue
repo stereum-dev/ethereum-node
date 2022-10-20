@@ -82,7 +82,7 @@ export default {
       this.selectedItemToRemove = [];
     },
     async confirmHandler() {
-      //await ControlService.modifyServices(toRaw(this.confirmChanges))
+      await ControlService.modifyServices(toRaw(this.confirmChanges))
       this.confirmChanges = []
     },
   },

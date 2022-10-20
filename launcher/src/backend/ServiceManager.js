@@ -14,6 +14,9 @@ import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
 import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
+import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
+import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
+import { StringUtils } from './StringUtils'
 
 const log = require('electron-log')
 
@@ -27,7 +30,7 @@ export const serivceState = {
 }
 
 export class ServiceManager {
-  constructor (nodeConnection) {
+  constructor(nodeConnection) {
     this.nodeConnection = nodeConnection
   }
 
@@ -38,7 +41,7 @@ export class ServiceManager {
      * @param state a string with the desired state, see serivceState
      * @returns an object containing a reference to the ansible process output, usable with NodeConnection.playbookStatus
      */
-  manageServiceState (serviceId, state) {
+  manageServiceState(serviceId, state) {
     const extraVars = {
       stereum_role: 'manage-service',
       stereum_args: {
@@ -50,7 +53,7 @@ export class ServiceManager {
         }
       }
     }
-    return this.nodeConnection.runPlaybook(state.replace("ed","ing Service"), extraVars)
+    return this.nodeConnection.runPlaybook(state.replace("ed", "ing Service"), extraVars)
   }
 
   /**
@@ -58,7 +61,7 @@ export class ServiceManager {
      *
      * @returns an array of all service configurations
      */
-  readServiceConfigurations () {
+  readServiceConfigurations() {
     return this.nodeConnection.listServicesConfigurations().then(async services => {
 
       const serviceConfigurations = new Array()
@@ -110,6 +113,8 @@ export class ServiceManager {
             services.push(PrysmValidatorService.buildByConfiguration(config))
           } else if (config.service == 'TekuBeaconService') {
             services.push(TekuBeaconService.buildByConfiguration(config))
+          } else if (config.service == 'FlashbotsMevBoostService') {
+            services.push(FlashbotsMevBoostService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')
@@ -119,17 +124,17 @@ export class ServiceManager {
       }
       //retrieve full service out of minimal config
       services.forEach(service => {
-        if(service.dependencies.executionClients.length > 0){
+        if (service.dependencies.executionClients.length > 0) {
           service.dependencies.executionClients = service.dependencies.executionClients.map(client => {
             return services.find(dependency => dependency.id === client.id)
           })
         }
-        if(service.dependencies.consensusClients.length > 0){
+        if (service.dependencies.consensusClients.length > 0) {
           service.dependencies.consensusClients = service.dependencies.consensusClients.map(client => {
             return services.find(dependency => dependency.id === client.id)
           })
         }
-        if(service.dependencies.prometheusNodeExporterClients.length > 0){
+        if (service.dependencies.prometheusNodeExporterClients.length > 0) {
           service.dependencies.prometheusNodeExporterClients = service.dependencies.prometheusNodeExporterClients.map(client => {
             return services.find(dependency => dependency.id === client.id)
           })
@@ -142,18 +147,18 @@ export class ServiceManager {
     })
   }
 
-  async chooseServiceAction(action, service, data){
+  async chooseServiceAction(action, service, data) {
     switch (action) {
       case "pruneGeth":
-        if(service.service === "GethService"){
+        if (service.service === "GethService") {
           let data = service.yaml + "\nisPruning: true"
-          await this.nodeConnection.writeServiceYAML({id: service.config.serviceID, data: data , service: service.service})
-          this.nodeConnection.runPlaybook("Pruning Geth", {stereum_role: 'prune-geth', geth_service: service.config.serviceID})
+          await this.nodeConnection.writeServiceYAML({ id: service.config.serviceID, data: data, service: service.service })
+          this.nodeConnection.runPlaybook("Pruning Geth", { stereum_role: 'prune-geth', geth_service: service.config.serviceID })
         }
         break;
 
       case "reSync":
-          //initiate resync
+        //initiate resync
         break;
 
       default:
@@ -161,24 +166,290 @@ export class ServiceManager {
     }
   }
 
-  async deleteService(task){
-    this.nodeConnection.runPlaybook("Delete Service", {stereum_role: 'delete-service', service: task.service.config.serviceID})
+  removeDependencies(service, serviceToDelete) {
+    //update command
+    service.command = this.removeCommandConnection(service.command, serviceToDelete.id)
+
+    //update volumes
+    service.volumes = service.volumes.filter(v => !v.destinationPath.includes(serviceToDelete.id))
+
+    //update dependencies arrays
+    for (const dependency in service.dependencies) {
+      service.dependencies[dependency] = service.dependencies[dependency].filter(s => s.id != serviceToDelete.id)
+    }
+    return service
   }
 
-  async modifyServices(tasks){
-    let done = []
-    for(let task of tasks){
-      switch (task.content) {
-        case "DELETE":
-            if(!done.includes(task.service.config.serviceID)){
-              await this.deleteService(task)
-              done.push(task.service.config.serviceID)
-            }
-          break;
+  removeCommandConnection(command, id) {
+    let isString = false
+    if (typeof command === "string") {
+      isString = true
+      command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
+    }
+    let includesID = command.filter(c => c.includes(id))
+    command = command.filter(c => !includesID.includes(c))
 
-        default:
-          break;
+    let newProps = includesID.map(c => {
+      let command = c.match(/.*=/)[0]
+      let value = c.replace(command, '')
+      let quotes = false
+      if (value.startsWith('"') && value.endsWith('"')) {
+        quotes = true
+        value = value.substring(1, value.length - 1)
       }
+      let newValue = value.split(',').filter(e => !e.includes(id)).join()
+      if (quotes)
+        newValue = '"' + newValue + '"'
+      return command + newValue
+    })
+    if (isString)
+      return (command.concat(newProps)).join(' ')
+    return command.concat(newProps)
+  }
+
+  async deleteService(task, tasks, services) {
+    let serviceToDelete = services.find(service => service.id === task.service.config.serviceID)
+    let dependents = []
+    services.forEach(service => {
+      for (const dependency in service.dependencies) {
+        service.dependencies[dependency].forEach(s => {
+          if (s.id === serviceToDelete.id)
+            dependents.push(service)
+        })
+      }
+    })
+    log.info(dependents)
+    dependents.forEach(service => {
+      service = this.removeDependencies(service, serviceToDelete)
+      this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
+    })
+    await this.nodeConnection.runPlaybook("Delete Service", { stereum_role: 'delete-service', service: task.service.config.serviceID })
+  }
+  //args: network, installDir, port, executionClients, checkpointURL, beaconServices
+  getService(name, args) {
+    let ports
+    switch (name) {
+      case "GethService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+        ]
+        return GethService.buildByUserInput(args.network, ports, args.installDir + '/geth')
+
+      case "BesuService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+        ]
+        return BesuService.buildByUserInput(args.network, ports, args.installDir + '/besu')
+
+      case "NethermindService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+        ]
+        return NethermindService.buildByUserInput(args.network, ports, args.installDir + '/nethermind')
+
+      case "LighthouseBeaconService":
+        ports = [
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp),
+        ]
+        return LighthouseBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.executionClients, '16', args.checkpointURL)
+
+      case "LighthouseValidatorService":
+        ports = [
+          new ServicePort('127.0.0.1', args.port ? args.port : 5062, 5062, servicePortProtocol.tcp),
+        ]
+        return LighthouseValidatorService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.beaconServices)
+
+      case "PrysmBeaconService":
+        ports = [
+          new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
+          new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 3500, 3500, servicePortProtocol.tcp)
+        ]
+        return PrysmBeaconService.buildByUserInput(args.network, ports, args.installDir + '/prysm', args.executionClients, args.checkpointURL)
+
+      case "PrysmValidatorService":
+        ports = [
+          new ServicePort('127.0.0.1', args.port ? args.port : 7500, 7500, servicePortProtocol.tcp),
+        ]
+        return PrysmValidatorService.buildByUserInput(args.network, ports, args.installDir + '/prysm', args.beaconServices)
+
+      case "NimbusBeaconService":
+        ports = [
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
+        ]
+        return NimbusBeaconService.buildByUserInput(args.network, ports, args.installDir + '/nimbus', args.executionClients, args.checkpointURL)
+
+      case "TekuBeaconService":
+        ports = [
+          new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
+          new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
+        ]
+        return TekuBeaconService.buildByUserInput(args.network, ports, args.installDir + '/teku', args.executionClients, args.checkpointURL)
+
+      case "PrometheusNodeExporterService":
+        return PrometheusNodeExporterService.buildByUserInput(args.network)
+
+      case "PrometheusService":
+        ports = [
+          new ServicePort('127.0.0.1', args.port ? args.port : 9090, 9090, servicePortProtocol.tcp)
+        ]
+        return PrometheusService.buildByUserInput(args.network, ports, args.installDir + '/prometheus')
+
+      case "GrafanaService":
+        ports = [
+          new ServicePort('127.0.0.1', args.port ? args.port : 3000, 3000, servicePortProtocol.tcp)
+        ]
+        return GrafanaService.buildByUserInput(args.network, ports, args.installDir + '/grafana')
+
+      case "FlashbotsMevBoostService":
+        return FlashbotsMevBoostService.buildByUserInput(args.network)
+    }
+  }
+
+  async createKeystores(services){
+    for(const service of services){
+      if(service.service.includes("Nimbus")){
+        const valDir = (service.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
+        log.info(valDir)
+        const token = StringUtils.createRandomString()
+        await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`)
+        await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`)
+      } else if(service.service.includes("Teku")) {
+        const dataDir = (service.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
+        const password = StringUtils.createRandomString()
+        await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
+        await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`)
+        await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
+        await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
+      }
+    }
+  }
+
+  async addServices(tasks, services) {
+    let newServices = []
+    let ELInstalls = tasks.filter(t => t.service.category === "execution")
+    ELInstalls.forEach(t => {
+      let service = this.getService(t.service.service, t.data)
+      t.service.config.serviceID = service.id
+      newServices.push(service)
+    })
+    let CLInstalls = tasks.filter(t => t.service.category === "consensus")
+    CLInstalls.forEach(t => {
+      if(t.data.executionClients.length > 0){
+        t.data.executionClients = t.data.executionClients.map(ec => {
+          let id = ec.config.serviceID
+          if(id){
+            return services.find(s => s.id === id)
+          }
+          id = (ELInstalls.find(el => el.service.id === ec.id)).service.config.serviceID
+          return newServices.find(s => s.id === id)
+        })
+      }
+      let service = this.getService(t.service.service, t.data)
+      t.service.config.serviceID = service.id
+      newServices.push(service)
+    })
+    let VLInstalls = tasks.filter(t => t.service.category === "validator")
+    VLInstalls.forEach(t => {
+      if(t.data.beaconServices.length > 0){
+        t.data.beaconServices = t.data.beaconServices.map(bc => {
+          let id = bc.config.serviceID
+          if(id){
+            return services.find(s => s.id === id)
+          }
+          id = CLInstalls.find(el => el.service.id === bc.id).service.config.serviceID
+          return newServices.find(s => s.id === id)
+        })
+      }
+      let service = this.getService(t.service.service, t.data)
+      t.service.config.serviceID = service.id
+      newServices.push(service)
+    })
+    let PInstalls = tasks.filter(t => t.service.category === "service")
+    PInstalls.forEach(t => {
+      let service = this.getService(t.service.service, t.data)
+      newServices.push(service)
+    })
+    
+    let allPorts = services.map(s => s.ports).flat(1).map(p => p.destinationPort + '/' + p.servicePortProtocol)
+    let changed
+    do{
+      changed = false
+        newServices.forEach(service => {
+          service.ports.forEach(newPort => {
+            if(allPorts.includes(newPort.destinationPort + '/' + newPort.servicePortProtocol)){
+              newPort.destinationPort++
+              changed = true
+            }
+          })
+        })
+    }while(changed === true)
+
+    await this.createKeystores(newServices.filter(s => s.service.includes("Teku") || s.service.includes("Nimbus")))
+    let versions
+    try{
+      versions = await this.nodeConnection.checkUpdates()
+    }catch(err){
+      log.error(`Couldn't fetch versions in OneClickInstallation...
+      Installing with predefined Versions
+      ${err.name}: ${err.message}
+      url: ${err.config.url}
+      method: ${err.config.method}
+      headers: ${err.config.headers}
+      timeout: ${err.config.timeout}
+      `)
+    }
+    newServices.forEach(service => {
+      if(versions[service.network][service.service]){
+        service.imageVersion = versions[service.network][service.service].slice(-1).pop()
+      }else{
+        service.imageVersion = versions["prater"][service.service].slice(-1).pop()
+      }
+    })
+
+    await Promise.all(newServices.map(async (service) => {
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
+    }))
+    
+    //TODO: write config, 
+
+  }
+
+  static uniqueByID(job) {
+    return (value, index, self) => self.map(t => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index && value.content === job
+  }
+
+  async modifyServices(tasks) {
+    let jobs = tasks.map(t => t.content)
+    if (jobs.includes("DELETE")) {
+      let services = await this.readServiceConfigurations()
+      let before = this.nodeConnection.getTimeStamp()
+      try {
+        await Promise.all(tasks.filter(ServiceManager.uniqueByID("DELETE")).map((task, index, tasks) => { return this.deleteService(task, tasks, services) }))
+      } catch (err) {
+        log.error("Deleting Services Failed:", err)
+      } finally {
+        let after = this.nodeConnection.getTimeStamp()
+        await this.nodeConnection.restartServices(after - before)
+      }
+    } else if (jobs.includes("INSTALL")) {
+      let services = await this.readServiceConfigurations()
+      let installTasks = tasks.filter(t => t.content === "INSTALL")
+      await this.addServices(installTasks, services)
     }
   }
 }

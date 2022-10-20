@@ -37,7 +37,7 @@ export class NodeService {
     this.imageVersion = imageVersion
     this.command = (command === undefined || command === null) ? [] : command
     this.entrypoint = (entrypoint === undefined || entrypoint === null) ? [] : entrypoint
-    this.env = (env === undefined || env === null) ? { STEREUM_DUMMY: 'foobar' } : env
+    this.env = (env === undefined || env === null) ? {} : env
     this.ports = (ports === undefined || ports === null) ? [] : ports
     this.volumes = (volumes === undefined || volumes === null) ? [] : volumes
     this.user = (user === undefined || user === null) ? '2000' : user

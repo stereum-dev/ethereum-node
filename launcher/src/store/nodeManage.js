@@ -38,12 +38,12 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           id: 1,
           content: "INSTALL",
-          contentIcon: require("../../public/img/icon/manage-node-icons/add.png"),
+          contentIcon: require("../../public/img/icon/manage-node-icons/ADD_PLUGIN.png"),
         },
         {
           id: 2,
           content: "DELETE",
-          contentIcon: require("../../public/img/icon/manage-node-icons/remove-plugin.png"),
+          contentIcon: require("../../public/img/icon/manage-node-icons/REMOVE_PLUGIN.png"),
         },
         {
           id: 3,
@@ -82,6 +82,7 @@ export const useNodeManage = defineStore("nodeManage", {
         },
       ],
       currentNetwork: {},
+      configNetwork: {},
     };
   },
   getters: {},

@@ -31,7 +31,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/ram.png",
-              pattern: new RegExp(/(- --slasher-max-db-size=)(\d+)(\n)/),
+              pattern: "(- --slasher-max-db-size=)(\\d+)(\\n)",
             },
             // {
             //   title: "Resync",
@@ -78,7 +78,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
             },
           ],
           drag: true,
@@ -157,7 +157,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(/(--suggested-fee-recipient=)(.*)(\n)/),
+              pattern: "(--suggested-fee-recipient=)(.*)(\\n)",
             },
           ],
           drag: true,
@@ -196,7 +196,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
             },
             // {
             //   title: "Resync",
@@ -243,7 +243,7 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(/(- --suggested-fee-recipient=)(.*)(\n)/),
+              pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
             },
           ],
           drag: true,
@@ -284,16 +284,14 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
-              pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+              pattern: "(JAVA_OPTS: -Xmx)(\\d+)(g)",
             },
             {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(
-                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
-              ),
+              pattern: "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)"
             },
             // {
             //   title: "Resync",
@@ -342,16 +340,14 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
-              pattern: new RegExp(/(JAVA_OPTS: -Xmx)(\d+)(g)/),
+              pattern: "(JAVA_OPTS: -Xmx)(\\d+)(g)",
             },
             {
               title: "Default Fee Recipient",
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: new RegExp(
-                /(- --validators-proposer-default-fee-recipient=)(.*)(\n)/
-              ),
+              pattern: "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)"
             },
           ],
           drag: true,
@@ -634,15 +630,15 @@ export const useServices = defineStore("services", {
         },
         {
           id: 16,
-          name: "mev boost",
-          service: "MevBoostService",
+          name: "Flashbots Mev Boost",
+          service: "FlashbotsMevBoostService",
           displayPluginMenu: false,
           serviceIsPending: false,
           modifierPanel: false,
           replacePanel: false,
           addPanel: false,
           category: "service",
-          path: "/mevboost",
+          path: "/flashbotsmevboost",
           icon: "/img/icon/plugin-icons/Other/mev-icon.png",
           sIcon: "/img/icon/plugin-icons/Other/mev-sIcon.png",
           linkUrl: "https://github.com/",
