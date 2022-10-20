@@ -44,7 +44,7 @@
             ></base-modal>
           </div>
           <div
-            @drop="onDrop($event, allServices)"
+            @drop="onDrop($event)"
             @dragenter.prevent
             @dragover.prevent
           >
@@ -61,7 +61,7 @@
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, allServices)"
+            @drop="onDrop($event)"
             @dragenter.prevent
             @dragover.prevent
           >
@@ -78,7 +78,7 @@
             ></drop-zone>
           </div>
           <div
-            @drop="onDrop($event, allServices)"
+            @drop="onDrop($event)"
             @dragenter.prevent
             @dragover.prevent
           >
@@ -101,7 +101,7 @@
           </div>
           <div
             class="service-parent"
-            @drop="onDrop($event, allServices)"
+            @drop="onDrop($event)"
             @dragenter.prevent
             @dragover.prevent
           >
@@ -149,6 +149,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
+import { toRaw } from "vue";
 
 export default {
   components: {
@@ -190,13 +191,22 @@ export default {
       actionContents: "actionContents",
       selectedItemToRemove: "selectedItemToRemove",
       confirmChanges: "confirmChanges",
+      currentNetwork: "currentNetwork",
+      configNetwork: "configNetwork",
     }),
   },
   mounted() {
-    this.newConfiguration = this.installedServices;
+    this.confirmChanges = []
+    this.configNetwork = this.currentNetwork
   },
 
   methods: {
+    getActions(action, service, data){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: toRaw(service), data: data}
+      return undefined
+    },
     showModal(data) {
       this.isModalActive = true;
       this.modalItems = data;
@@ -217,64 +227,95 @@ export default {
         event.dataTransfer.setData("itemId", item.id);
       }
     },
-    onDrop(event, list) {
+    onDrop(event) {
+      const allServices = JSON.parse(JSON.stringify(this.allServices))
       const itemId = event.dataTransfer.getData("itemId");
-      const item = list.find((item) => item.id == itemId);
-      if (item.category === "service") {
-        this.newConfiguration.forEach((el) => {
-          if (el.id === item.id) {
-            return;
-          }
-        });
+      let item = allServices.find((item) => item.id == itemId);
+      if (item.category === "service" &&
+      this.newConfiguration.map(s => s.service).includes(item.service)) {
+        return;
       } else {
         if(this.itemToInstall.addPanel === true){
           this.cancelAddProcess()
         }
+        item.id = this.newConfiguration.length
         this.newConfiguration.push(item);
+        if(item.name === "Nimbus" || item.name === "Teku"){
+          let counterPart = allServices.find(s => s.service === item.service.replace(/(Beacon)|(Validator)/,match => {
+            if(match === "Beacon")
+              return "Validator"
+            return "Beacon"
+            }))
+          this.newConfiguration.push(counterPart)
+          if(counterPart.service.includes("Beacon")){
+            item = counterPart
+          }
+        }
         item.addPanel = true;
         this.itemToInstall = item;
         this.displayCustomAddPanel = item.modifierPanel;
       }
     },
-    addNewService(item) {
-      if (item.category === "service") {
-        this.newConfiguration.forEach((el) => {
-          if (el.id === item.id) {
-            return;
-          }
-        });
+    addNewService(i) {
+      const allServices = JSON.parse(JSON.stringify(this.allServices))
+      let item = JSON.parse(JSON.stringify(i))
+      if (item.category === "service" &&
+      this.newConfiguration.map(s => s.servce).includes(item.service)) {
+        return;
       } else {
         if(this.itemToInstall.addPanel === true){
           this.cancelAddProcess()
         }
+        item.id = this.newConfiguration.length
         this.newConfiguration.push(item);
+        if(item.name === "Nimbus" || item.name === "Teku"){
+          let counterPart = allServices.find(s => s.service === item.service.replace(/(Beacon)|(Validator)/,match => {
+            if(match === "Beacon")
+              return "Validator"
+            return "Beacon"
+            }))
+          counterPart.id = this.newConfiguration.length
+          this.newConfiguration.push(counterPart)
+          if(counterPart.service.includes("Beacon")){
+            item = counterPart
+          }
+        }
         item.addPanel = true;
         this.itemToInstall = item;
         this.displayCustomAddPanel = item.modifierPanel;
       }
     },
 
-    saveAddedServiceConfig() {
+    saveAddedServiceConfig(data) {
+      this.confirmChanges.push(JSON.parse(JSON.stringify(this.getActions("INSTALL",this.itemToInstall, data))))
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;
-      this.newConfiguration.pop();
     },
     selectedServiceToRemove(item) {
       if (item.active) {
-        this.selectedItemToRemove.push(item);
+          this.selectedItemToRemove = this.selectedItemToRemove.concat(
+            this.newConfiguration.filter(el => el.config.serviceID === item.config.serviceID)
+          )
       } else {
+        if(!item.config.serviceID){
+          this.newConfiguration = this.newConfiguration.filter(
+          (el) => el.id !== item.id);
+          this.confirmChanges = this.confirmChanges.filter(
+            (el) => el.service.id !== item.id)
+        }
         this.selectedItemToRemove = this.selectedItemToRemove.filter(
-          (el) => el.id !== item.id
+          (el) => el.config.serviceID !== item.config.serviceID
         );
       }
     },
     cancelAddProcess() {
       this.itemToInstall.addPanel = false;
       this.itemToInstall = {};
-      this.newConfiguration.pop();
+      let item = this.newConfiguration.pop();
+      if(item.name === "Nimbus" || item.name === "Teku")
+        this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
-      console.log(item.config.serviceID);
       this.newConfiguration.map((el) => {
         if (el.id != item.id || el.config.serviceID != item.config.serviceID) {
           el.modifierPanel = false;
@@ -308,7 +349,6 @@ export default {
       this.itemToReplace = {};
     },
     replacePluginHandler(item) {
-      console.log(item);
     },
   },
 };

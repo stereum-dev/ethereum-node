@@ -40,7 +40,7 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
@@ -52,13 +52,13 @@ export default {
     this.filterprometheusService();
   },
   computed: {
-    ...mapState(useServices, {
-      allServices: "allServices",
+    ...mapState(useNodeHeader, {
+      runningServices: "runningServices",
     }),
   },
   methods: {
     filterprometheusService() {
-      this.allServices.forEach((item) => {
+      this.runningServices.forEach((item) => {
         if (item.name === "Prometheus") this.prometheusService = item;
       });
       this.isprometheusAvailable = true;

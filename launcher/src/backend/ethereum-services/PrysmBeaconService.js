@@ -7,7 +7,6 @@ export class PrysmBeaconService extends NodeService {
         const service = new PrysmBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
-        const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
 
         const image = 'prysmaticlabs/prysm-beacon-chain'
 
@@ -19,8 +18,12 @@ export class PrysmBeaconService extends NodeService {
         const volumes = [
             new ServiceVolume(workingDir + '/beacon', dataDir),
             new ServiceVolume(workingDir + '/genesis', genesisDir),
-            new ServiceVolume(elJWTDir, JWTDir)
         ]
+
+        if(executionClients && executionClients.length > 0){
+            const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
+            volumes.push(new ServiceVolume(elJWTDir, JWTDir))
+        }
 
         let genesisFile = ' --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz'
         if(network === "mainnet"){

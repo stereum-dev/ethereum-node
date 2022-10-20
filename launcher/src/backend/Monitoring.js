@@ -59,6 +59,7 @@ export class Monitoring {
               ports: config.ports,
               volumes: config.volumes,
               network: config.network,
+              dependencies : config.dependencies,
             },
           };
         });

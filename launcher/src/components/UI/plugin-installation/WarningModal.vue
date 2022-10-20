@@ -3,21 +3,16 @@
     <div class="modal-opacity" @click="$emit('closeModal')"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
-        <span
-          >We recommend you to wait until the initial installation is done
-          before applying further changes.</span
-        >
+        <span>We recommend you to wait until the initial installation is done
+          before applying further changes.</span>
       </div>
       <div class="confirm-box">
-        <button @click="$emit('installBtn')" class="confirm-btn">
-            INSTALL
-        </button>
+        <span @click="$emit('installBtn')" class="confirm-btn">
+          INSTALL
+        </span>
         <!-- <div class="confirm-btn" >
           <span>Confirm</span>
         </div> -->
@@ -43,6 +38,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .modal-opacity {
   width: 100%;
   height: 91%;
@@ -53,15 +49,16 @@ export default {
   opacity: 0.6;
   z-index: 501;
 }
+
 .warning-modal-content {
-  width: 55%;
+  width: 54%;
   height: 60%;
   border-radius: 75px;
   border: 3px solid #bfbfbf;
   position: absolute;
   top: 10%;
-  left: 22%;
-  background-color: #33393e;
+  left: 23%;
+  background-color: #272b2e;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -69,6 +66,7 @@ export default {
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
   z-index: 502;
 }
+
 .title-box {
   width: 100%;
   height: 40%;
@@ -77,14 +75,16 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .title-box img {
   width: 25%;
   height: 100%;
 }
+
 .warningMessage {
   width: 100%;
   height: 45%;
-  padding:10px 20px;
+  padding: 10px 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -99,6 +99,7 @@ export default {
   text-align: center;
   text-transform: uppercase;
 }
+
 /* .warningMessage span {
     color: rgb(195, 195, 195);
     font-size: 1rem;
@@ -113,6 +114,7 @@ export default {
   align-items: center;
   z-index: 502;
 }
+
 .confirm-link {
   width: 100%;
   height: 100%;
@@ -122,11 +124,11 @@ export default {
   outline-style: none;
   text-decoration: none;
 }
+
 .confirm-btn {
   width: 35%;
-  height: 80%;
+  height: 60%;
   border-radius: 10px;
-  border: 2px solid #409b94;
   background-color: #409b94;
   box-shadow: 0 1px 2px 1px #1b403d;
   display: flex;
@@ -140,13 +142,14 @@ export default {
 }
 
 .confirm-btn:hover {
-  transform: scale(1.04);
   background-color: #2a6560;
 }
+
 .confirm-btn:active {
-  transform: scale(1);
+  transform: scale(.95);
   box-shadow: none;
 }
+
 .close {
   color: rgb(237, 95, 95);
   font-size: 0.6rem;
