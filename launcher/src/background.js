@@ -363,14 +363,11 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
   // Create the browser window.
 
-  const win = new BrowserWindow({
-    width: 1024,
-    height: 576,
-    minHeight: 576,
-    maxHeight: 576,
-    minWidth: 1024,
-    maxWidth: 1024,
-
+  const initwin = {
+    width: 1044,
+    height: 609,
+    minHeight: 609,
+    minWidth: 1044,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -378,7 +375,13 @@ async function createWindow() {
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     },
-  });
+  }
+  if(!isDevelopment){
+    initwin['maxHeight'] = 609;
+    initwin['maxWidth'] = 1044;
+  }
+
+  const win = new BrowserWindow(initwin);
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
