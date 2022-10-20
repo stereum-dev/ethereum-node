@@ -29,11 +29,7 @@
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
-          <div
-            class="optionsBox"
-            v-if="!serviceIsSelected"
-            @click="chooseServiceToConnect(service)"
-          >
+          <div class="optionsBox" v-if="!switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
@@ -42,47 +38,30 @@
               </div>
             </div>
           </div>
-        </template>
-        <div
-          class="clientAddBox"
-          v-if="serviceIsSelected"
-          @click="changeSelectedServiceToConnect"
-        >
-          <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
-          <div class="connectionConfig">
-            <span class="category">{{ selected.category }} Client</span>
-            <span class="name">{{ selected.name }}</span>
+          <div class="clientAddBox" v-if="switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
+            <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
+            <div class="connectionConfig">
+              <span class="category">{{ service.category }} Client</span>
+              <span class="name">{{ service.name }}</span>
+            </div>
           </div>
-        </div>
-        <div
-          class="fast-sync"
-          v-if="
-            plugin.category === 'execution' || plugin.category === 'consensus'
-          "
-        >
+        </template>
+        <div class="fast-sync" v-if="
+          plugin.category === 'execution' || plugin.category === 'consensus'
+        ">
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
+              <img @click="changeResyncOptions" src="/img/icon/arrows/left-arrow.png" alt="icon" />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
+              <img @click="changeResyncOptions" src="/img/icon/arrows/right-arrow.png" alt="icon" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
+            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
             </div>
@@ -90,10 +69,10 @@
         </div>
       </div>
       <div class="btnBox">
-        <div class="cancelBtn" @click="$emit('cancelAdd')">
+        <div class="cancelBtn" @click="cancelConfig">
           <span>Cancel</span>
         </div>
-        <div class="addBtn" @click="$emit('saveConfig')">
+        <div class="addBtn" @click="saveConfig">
           <span>ADD</span>
         </div>
       </div>
@@ -103,8 +82,8 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
-import { useClickInstall } from "@/store/clickInstallation";
 import { useNodeManage } from "../../../store/nodeManage";
+import { toRaw } from "vue";
 
 export default {
   props: ["items"],
@@ -116,6 +95,8 @@ export default {
       genesisIsActive: true,
       checkPointIsActive: false,
       serviceIsSelected: false,
+      installationPath: "",
+      checkPointSync: "",
       plugin: {},
       port: "",
       selected: {},
@@ -125,14 +106,11 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
-      allServices: "allServices",
     }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
-    }),
-    ...mapWritableState(useClickInstall, {
-      installationPath: "installationPath",
-      checkPointSync: "checkPointSync",
+      newConfiguration: "newConfiguration",
+      configNetwork: "configNetwork",
     }),
   },
   watch: {
@@ -145,6 +123,26 @@ export default {
     },
   },
   methods: {
+    switchHandler(service) {
+      if (service.selectedForConnection) {
+        return service.selectedForConnection
+      }
+      return false
+    },
+    cancelConfig() {
+      this.$emit('cancelAdd')
+    },
+    saveConfig() {
+      let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
+      this.$emit('saveConfig', {
+        network: (this.configNetwork.network === "testnet") ? "goerli" : "mainnet",
+        installDir: this.installationPath ? this.installationPath : "/opt/stereum",
+        port: parseInt(this.port),
+        executionClients: dependencies.filter(s => s.category === "execution"),
+        beaconServices: dependencies.filter(s => s.category === "consensus"),
+        checkpointURL: this.checkPointSync ? this.checkPointSync : false
+      })
+    },
     changeResyncOptions() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;
@@ -156,52 +154,25 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "execution"
         );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
       } else if (this.items.category === "validator") {
-        this.options = this.installedServices.filter(
+        this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );
-        this.options = this.options.map((option) => {
-          return {
-            ...option,
-            selectedServiceToSync: false,
-          };
-        });
       } else {
         this.options = [];
-        return;
       }
+      this.options = this.options.map((option) => {
+        return {
+          ...option,
+          selectedForConnection: false,
+        };
+      });
     },
-    chooseServiceToConnect(item) {
-      if (this.items.category === "consensus") {
-        this.options.map((i) => {
-          if (i.category === "execution" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "validator") {
-        this.options.forEach((i) => {
-          if (i.category === "consensus" && i.id === item.id) {
-            i.selectedServiceToSync = true;
-            this.selected = i;
-          }
-        });
-      } else if (this.items.category === "execution") {
-        return;
-      }
-      this.serviceIsSelected = true;
-    },
-    changeSelectedServiceToConnect() {
-      this.serviceIsSelected = false;
+    changeSelectedServiceToConnect(service) {
+      service.selectedForConnection = !service.selectedForConnection;
     },
   },
 };
@@ -234,6 +205,7 @@ export default {
   border-radius: 10px;
   margin: 0 auto;
 }
+
 .service {
   width: 98%;
   height: 10%;
@@ -243,6 +215,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .service img {
   width: 25%;
 }
@@ -271,6 +244,7 @@ export default {
   align-self: center;
   box-sizing: border-box;
 }
+
 .service-details p,
 .service-details p span {
   width: max-content;
@@ -311,6 +285,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .change-installation .change-title {
   width: 90%;
   height: 15%;
@@ -319,12 +294,14 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .change-title span {
   color: #c0c0c0;
   font-size: 0.6rem;
   font-weight: 600;
   box-sizing: border-box;
 }
+
 .change-installation .change-box {
   width: 96%;
   height: 45%;
@@ -337,6 +314,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+
 .change-box input {
   width: 100%;
   height: 100%;
@@ -355,6 +333,7 @@ export default {
   outline-style: none !important;
   box-sizing: border-box;
 }
+
 .configBox .fast-sync {
   width: 100%;
   height: 13%;
@@ -369,6 +348,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .fast-sync .sync-header {
   width: 100%;
   height: 40%;
@@ -380,6 +360,7 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
+
 .fast-sync .sync-header .headerTitle {
   width: 45%;
   height: 100%;
@@ -391,6 +372,7 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
+
 .headerTitle span {
   width: 86%;
   height: 100%;
@@ -402,6 +384,7 @@ export default {
   margin-right: 3px;
   box-sizing: border-box;
 }
+
 .fast-sync .sync-header .headerContent {
   width: 55%;
   height: 100%;
@@ -414,6 +397,7 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
+
 .headerContent span {
   width: 86%;
   height: 100%;
@@ -425,12 +409,14 @@ export default {
   margin-right: 3px;
   box-sizing: border-box;
 }
+
 .headerContent img {
   width: 8%;
   height: 50%;
   cursor: pointer;
   box-sizing: border-box;
 }
+
 .fast-sync .content {
   width: 100%;
   height: 64%;
@@ -439,6 +425,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .fast-sync .content span {
   font-size: 0.55rem;
   font-weight: 700;
@@ -446,6 +433,7 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
+
 .fast-sync .content .inputBox {
   width: 95%;
   height: 70%;
@@ -457,6 +445,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
 }
+
 .fast-sync .content input {
   width: 100%;
   height: 100%;
@@ -473,6 +462,7 @@ export default {
   padding-left: 4px;
   box-sizing: border-box;
 }
+
 .portAddBox,
 .clientAddBox {
   width: 100%;
@@ -488,15 +478,18 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .portAddBox img {
   width: 18%;
   opacity: 0.5;
   box-sizing: border-box;
 }
+
 .clientAddBox img {
   width: 16%;
   opacity: 0.5;
 }
+
 .portConfig {
   width: 80%;
   height: 99%;
@@ -506,6 +499,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .portConfig span {
   width: max-content;
   height: 30%;
@@ -515,6 +509,7 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
+
 .portConfig input {
   width: 96%;
   height: 55%;
@@ -540,6 +535,7 @@ export default {
   bottom: 20px;
   box-sizing: border-box;
 }
+
 .addBtn {
   width: 40%;
   height: 95%;
@@ -558,16 +554,19 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
+
 .addBtn:hover {
   background-color: #116b5f;
   transition-duration: 0.2s;
   color: #dfdfdf;
 }
+
 .addBtn:active {
   background-color: #0d4f46;
   transition-duration: 0.2s;
   transform: scale(0.9);
 }
+
 .cancelBtn {
   width: 40%;
   height: 95%;
@@ -586,16 +585,19 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
+
 .cancelBtn:hover {
   background-color: #d75442;
   transition-duration: 0.2s;
   color: #dfdfdf;
 }
+
 .cancelBtn:active {
   background-color: #b84738;
   transition-duration: 0.2s;
   transform: scale(0.9);
 }
+
 .optionsBox {
   width: 100%;
   height: 10%;
@@ -611,17 +613,20 @@ export default {
   cursor: pointer;
   box-sizing: border-box;
 }
+
 .optionsBox:hover {
   background-color: #31373a;
   border: 1px solid #3b4246;
   transition-duration: 0.2s;
 }
+
 .optionsBox img {
   padding: 1px;
   width: 17%;
   height: 90%;
   opacity: 0.5;
 }
+
 .optionsDetails {
   width: 80%;
   height: 100%;
@@ -632,6 +637,7 @@ export default {
   padding: 2px;
   box-sizing: border-box;
 }
+
 .optionsDetails .category {
   width: max-content;
   height: 30%;
@@ -642,6 +648,7 @@ export default {
   text-transform: uppercase;
   box-sizing: border-box;
 }
+
 .optionsName {
   width: 99%;
   height: 60%;
@@ -654,8 +661,10 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .optionsName span {
   padding: 2px;
+  margin-top: 2%;
   font-size: 0.6rem;
   font-weight: 700;
   color: #9a9a9a;
@@ -664,6 +673,7 @@ export default {
   text-transform: uppercase;
   box-sizing: border-box;
 }
+
 .clientAddBox {
   width: 100%;
   height: 10%;
@@ -678,23 +688,27 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+
 .clientAddBox:hover {
   background-color: #31373b;
   border: 1px solid #3f4549;
   transition-duration: 0.2s;
 }
+
 .portAddBox img {
   padding: 1px;
   width: 18%;
   height: 80%;
   opacity: 0.5;
 }
+
 .clientAddBox img {
   padding: 1px;
   width: 16%;
   height: 80%;
   opacity: 0.5;
 }
+
 .connectionConfig {
   width: 80%;
   height: 100%;
@@ -716,6 +730,7 @@ export default {
   text-transform: uppercase;
   box-sizing: border-box;
 }
+
 .connectionConfig .name {
   width: 99%;
   height: 60%;

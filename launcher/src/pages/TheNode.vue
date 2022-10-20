@@ -47,7 +47,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'execution'
-                )
+                ).sort(sortByName)
               "
               @modal-view="showModal"
             ></plugin-zone>
@@ -59,7 +59,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'consensus'
-                )
+                ).sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -70,7 +70,7 @@
               :list="
                 installedServices.filter(
                   (service) => service.category === 'validator'
-                )
+                ).sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -143,6 +143,7 @@ export default {
     }),
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
+      serviceLogs: "serviceLogs",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -157,12 +158,30 @@ export default {
   },
   mounted() {
     this.updateConnectionStats();
+    this.updateServiceLogs();
+    this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   methods: {
+    sortByName( a, b ){
+    if ( a.service.toLowerCase() < b.service.toLowerCase()){
+      return -1;
+    }
+    if ( a.service.toLowerCase() > b.service.toLowerCase()){
+      return 1;
+    }
+      return 0;
+    },
     async updateConnectionStats() {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
       this.ipAddress = stats.ipAddress;
+    },
+    async updateServiceLogs() {
+      const data = await ControlService.getServiceLogs();
+      this.serviceLogs = data;
     },
     showModal(data) {
       this.isModalActive = true;

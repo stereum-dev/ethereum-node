@@ -129,8 +129,14 @@
             <router-link :to="{ path: '/selectPlugin' }">
               <span>{{ $t("pluginName.back") }}</span>
             </router-link>
-            <router-link :to="{ path: '/verify' }">
-              <span>{{ $t("pluginName.next") }}</span>
+            <router-link
+              v-if="selectedPreset.name === 'Flashbots Mev Boost'"
+              :to="{ path: '/mevboost' }"
+            >
+              <span>NEXT</span>
+            </router-link>
+            <router-link v-else :to="{ path: '/verify' }">
+              <span>NEXT</span>
             </router-link>
           </div>
         </div>
@@ -517,8 +523,8 @@ export default {
   align-items: center;
 }
 .name-title-box span {
-  font-size: 2rem;
-  font-weight: 900;
+  font-size: 1.5rem;
+  font-weight: 800;
   color: #d7d7d7;
   text-transform: uppercase;
 }
@@ -651,7 +657,7 @@ export default {
 .fast-sync .sync-header {
   width: 100%;
   height: 34%;
-  border: 1px solid #929090;
+  border: 1px solid #707070;
   border-radius: 15px 0 0 15px;
   display: flex;
   justify-content: space-between;

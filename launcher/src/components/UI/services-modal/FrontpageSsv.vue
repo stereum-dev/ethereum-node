@@ -1,13 +1,27 @@
 <template>
-  <div class="pubkey-parent" @click="$emit('openPubkey')">
+  <div class="pubkey-parent">
     <div class="operator-box">
-      <div class="operator-btn">
-        <span> Register New Operator</span>
+      <div class="operator-content">
+        <span class="title">REGISTER A NEW OPERATOR</span>
+        <span class="description"
+          >Use the newly generated operator key to register a new node operator
+          into the SSV Network</span
+        >
+      </div>
+      <div class="operator-btn" @click="$emit('openPubkey')">
+        <span> Register</span>
       </div>
     </div>
     <div class="insert-box">
+      <div class="insert-content">
+        <span class="title">insert operator key for existing operator</span>
+        <span class="description"
+          >Use an existing operator private key to recover your existing node
+          operator's processes</span
+        >
+      </div>
       <div class="insert-btn" @click="$emit('openSecretkey')">
-        <span>Insert Operator Secret Key</span>
+        <span>Register</span>
       </div>
     </div>
   </div>
@@ -28,51 +42,79 @@ export default {
 }
 .operator-box,
 .insert-box {
-  width: 90%;
-  height: 42px;
-  margin-top: 10px;
+  width: 97%;
+  height: 30%;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 3px 1px #252525;
+  border-radius: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
 }
+.operator-box .operator-content,
+.insert-box .insert-content {
+  width: 70%;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.operator-box .operator-content .title,
+.insert-box .insert-content .title {
+  color: #c4c4c4;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.operator-box .operator-content .description,
+.insert-box .insert-content .description {
+  color: #c4c4c4;
+  font-size: 0.7rem;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
 .operator-btn,
 .insert-btn {
-  width: 100%;
-  height: 85%;
-  border-radius: 10px;
+  width: 25%;
+  height: 100%;
+  padding: 8px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #20a9f8;
-  box-shadow: 1px 1px 2px 1px rgb(21, 21, 21);
-  transition-duration: 50ms;
+  justify-content: flex-end;
+  align-items: flex-start;
+  box-sizing: border-box;
 }
+
 .operator-btn span,
 .insert-btn span {
-  width: max-content;
-  font-size: 1rem;
+  width: 90%;
+  height: 42%;
+  border-radius: 55px;
+  padding: 5px;
+  border: 2px solid #0b8fdc;
+  background-color: #0b8fdc;
+  box-shadow: 1px 1px 8px 1px rgb(28, 42, 60);
+  font-size: 0.8rem;
   font-weight: 600;
-  color: rgb(57, 57, 57);
+  color: #dddddd;
   transition-duration: 50ms;
+  text-align: center;
+  text-transform: uppercase;
 }
-.operator-btn:hover,
-.insert-btn:hover {
-  transform: scale(1.01);
-  background-color: rgb(9, 140, 216);
-  border: 1px solid #91caf3;
-  border-radius: 10px;
-  transition-duration: 50ms;
+.operator-btn span:hover,
+.insert-btn span:hover {
+  background-color: #06669e;
+  border: 2px solid #06669e;
+  transition-duration: 0.2s;
 }
-.operator-btn:hover span,
-.insert-btn:hover span {
-  color: rgb(222, 222, 222);
-}
-.operator-btn:active,
-.insert-btn:active {
-  transform: scale(1);
-  background-color: rgb(6, 116, 180);
-  box-shadow: none;
-  border: none;
+
+.operator-btn span:active,
+.insert-btn span:active {
+  transform: scale(0.9);
 }
 .operator-btn:active span,
 .insert-btn:active span {

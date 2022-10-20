@@ -7,7 +7,6 @@ export class NimbusBeaconService extends NodeService {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-    const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
     
     const image = 'statusim/nimbus-eth2'
 
@@ -21,15 +20,19 @@ export class NimbusBeaconService extends NodeService {
       new ServiceVolume(workingDir + '/beacon', dataDir),
       new ServiceVolume(workingDir + '/validator/validators', validatorsDir),
       new ServiceVolume(workingDir + '/validator/secrets', secretsDir),
-      new ServiceVolume(elJWTDir, JWTDir),
     ]
+
+    if(executionClients && executionClients.length > 0){
+      const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
+      volumes.push(new ServiceVolume(elJWTDir, JWTDir))
+    }
 
     service.init(
       'NimbusBeaconService',  //service
       service.id, // id,
       1, // configVersion
       image, // image,
-      'multiarch-v22.7.0', // imageVersion,
+      'multiarch-v22.10.0', // imageVersion,
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,

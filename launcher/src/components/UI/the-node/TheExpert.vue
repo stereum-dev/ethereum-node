@@ -233,7 +233,7 @@ export default {
           option.disabled = false;
         }
         if (option.type === "select" || option.type === "text") {
-          option.changeValue = [...this.item.yaml.match(option.pattern)][2];
+          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
         }
         return {
           ...option,
@@ -247,9 +247,10 @@ export default {
         if (option.changeValue) {
           if (option.changed) {
             this.item.yaml = this.item.yaml.replace(
-              option.pattern,
+              new RegExp(option.pattern),
               "$1" + option.changeValue + "$3"
             );
+
           }
           option.changed = false;
         }

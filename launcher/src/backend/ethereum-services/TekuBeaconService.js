@@ -7,7 +7,6 @@ export class TekuBeaconService extends NodeService {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
-        const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
 
         const image = 'consensys/teku'
 
@@ -19,16 +18,20 @@ export class TekuBeaconService extends NodeService {
 
         const volumes = [
             new ServiceVolume(workingDir + '/data', dataDir),
-            new ServiceVolume(elJWTDir, JWTDir),
             new ServiceVolume(workingDir + '/graffitis', graffitiDir)
         ]
+
+        if(executionClients && executionClients.length > 0){
+            const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
+            volumes.push(new ServiceVolume(elJWTDir, JWTDir))
+        }
 
         service.init(
             'TekuBeaconService',    // service
             service.id,             // id
             1,                      // configVersion
             image,                  // image
-            '22.8.0',               // imageVersion
+            '22.10.1',               // imageVersion
             [
                 `--network=${network}`,
                 '--logging=INFO',
