@@ -5,7 +5,7 @@ import de from "../languages/de.json";
 import fa from "../languages/fa.json";
 
 const i18n = createI18n({
-  locale: "", //focus lang
+  locale: "en", //focus lang
   messages: {
     en,
     de,

@@ -58,8 +58,8 @@ export default {
       this.updateSettings(lang, langSelect, langLabel);
       this.$emit("back");
 
-      vm.$forceUpdate();
-      // location.reload();
+      this.$forceUpdate();
+      location.reload();
     },
     updateSettings: async function (lang, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();

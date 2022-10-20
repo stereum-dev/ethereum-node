@@ -34,7 +34,6 @@
                 :itemType="item.itemType"
                 :savedFlag="langIco"
                 :savedLang="langName"
-                :savedLabel="langLabel"
                 :link="item.link"
                 :isLanguage="item.isLanguage"
                 :linkValue="item.linkValue"
@@ -187,6 +186,8 @@ export default {
     this.selector();
     this.checkVersion();
     this.switchOnOff();
+    this.$i18n.locale = this.langLabel;
+    console.log(this.langLabel);
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
