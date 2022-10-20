@@ -1,4 +1,4 @@
-import { MevboostService } from './MevboostService.js'
+import { MevboostService } from './FlashbotsMevBoostService.js'
 
 test('buildConfiguration', () => {
   const mbService = MevboostService.buildByUserInput().buildConfiguration()

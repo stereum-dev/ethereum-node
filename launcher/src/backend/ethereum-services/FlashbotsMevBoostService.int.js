@@ -5,7 +5,7 @@ import { HetznerServer } from '../HetznerServer.js'
 import { NodeConnection } from '../NodeConnection.js'
 import { ServicePort, servicePortProtocol } from './ServicePort.js'
 import { ServiceManager } from '../ServiceManager.js'
-import { MevboostService } from './MevboostService.js'
+import { MevboostService } from './FlashbotsMevBoostService.js'
 const log = require('electron-log')
 
 jest.setTimeout(600000)
