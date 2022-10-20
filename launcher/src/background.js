@@ -380,6 +380,12 @@ async function createWindow() {
     initwin['maxHeight'] = 609;
     initwin['maxWidth'] = 1044;
   }
+  if (process.platform === "win32"){
+    initwin['minHeight'] = 650
+    initwin['minWidth'] = 1100
+    initwin['maxHeight'] = 650
+    initwin['maxWidth'] = 1100
+  }
 
   const win = new BrowserWindow(initwin);
   win.setMenuBarVisibility(false);
