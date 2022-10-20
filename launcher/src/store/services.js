@@ -291,7 +291,8 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)"
+              pattern:
+                "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)",
             },
             // {
             //   title: "Resync",
@@ -347,7 +348,8 @@ export const useServices = defineStore("services", {
               type: "text",
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)"
+              pattern:
+                "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)",
             },
           ],
           drag: true,
