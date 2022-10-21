@@ -119,9 +119,9 @@ test('teku validator import', async () => {
       await testServer.Sleep(60000)
       status = await nodeConnection.sshService.exec(`docker logs stereum-${tekuClient.id}`)
       if(
-        /Syncing/.test(status.stdout) &&
-        /Loaded .{1} Validators/.test(status.stdout) &&
-        /Endpoint http:\/\/stereum-${geth.id}:8551 is INVALID | Still syncing/.test(status.stdout)
+        /Syncing started/.test(status.stdout) &&
+        /Added validator:/.test(status.stdout) &&
+        /Execution Client is online/.test(status.stdout)
       ){condition = true}
       counter ++;
     }
@@ -150,9 +150,9 @@ test('teku validator import', async () => {
     expect(validator_api_bearer.stdout).toBeTruthy()
 
     //teku teku logs
-    expect(status.stdout).toMatch(/Syncing/)
-    expect(status.stdout).toMatch(/Loaded .{1} Validators/)
-    expect(status.stdout).toMatch(/Endpoint http:\/\/stereum-${geth.id}:8551 is INVALID | Still syncing/)
+    expect(status.stdout).toMatch(/Syncing started/)
+    expect(status.stdout).toMatch(/Added validator:/)
+    expect(status.stdout).toMatch(/Execution Client is online/)
 
     //check docker container
     expect(docker.stdout).toMatch(/consensys\/teku/)
@@ -166,3 +166,4 @@ test('teku validator import', async () => {
 })
 
 // EOF
+ 

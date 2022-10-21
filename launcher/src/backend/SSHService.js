@@ -97,7 +97,7 @@ export class SSHService {
             data.stdout += stdout.toString('utf8')
           })
           .stderr.on('data', (stderr) => {
-            log.error('stderr got data', stderr.toString('utf8'))
+            log.debug('stderr got data', stderr.toString('utf8'))
             data.stderr += stderr.toString('utf8')
           })
       })
