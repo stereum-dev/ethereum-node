@@ -1,7 +1,7 @@
 <template>
   <manage-trapezoid>
     <template #default>
-      <span class="title">{{ title }} client</span>
+      <span class="title">{{ title }} {{ $t("pluginZone.client") }}</span>
       <div class="item-box" @drag.prevent.stop>
         <div
           class="items"

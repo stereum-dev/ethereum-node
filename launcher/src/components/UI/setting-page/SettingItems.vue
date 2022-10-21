@@ -9,6 +9,7 @@
       @language-box="langAction"
       :flag="savedFlag"
       :lang="savedLang"
+      :label="savedLabel"
     ></language-setting>
 
     <router-link
@@ -60,6 +61,10 @@ export default {
       required: false,
     },
     savedLang: {
+      type: String,
+      required: false,
+    },
+    savedLabel: {
       type: String,
       required: false,
     },

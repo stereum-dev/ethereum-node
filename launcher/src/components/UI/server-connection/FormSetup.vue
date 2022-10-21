@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="server-group" :class="{ errors: !model.name.isFilled }">
-            <label for="servername">SERVERNAME</label>
+            <label for="servername">{{ $t("formsetup.servername") }}</label>
             <input
               :class="{
                 notFilled: !model.host.isFilled,
@@ -73,7 +73,7 @@
             />
           </div>
           <div class="server-group" :class="{ errors: !model.host.isFilled }">
-            <label for="host">IP / HOSTNAME</label>
+            <label for="host">{{ $t("formsetup.iphost") }}</label>
             <input
               :class="{
                 notFilled: !model.host.isFilled,
@@ -94,7 +94,7 @@
               isFilled: model.user.isFilled,
             }"
           >
-            <label for="user">USERNAME</label>
+            <label for="user">{{ $t("formsetup.username") }}</label>
             <input
               :class="{
                 notFilled: !model.user.isFilled,
@@ -117,8 +117,12 @@
               : !model.pass.isFilled,
           }"
         >
-          <label class="keyLocation_title" v-if="keyAuth">KEYLOCATION</label>
-          <label class="keyLocation_title" v-if="!keyAuth">PASSWORD</label>
+          <label class="keyLocation_title" v-if="keyAuth">{{
+            $t("formsetup.keylocation")
+          }}</label>
+          <label class="keyLocation_title" v-if="!keyAuth">{{
+            $t("formsetup.password")
+          }}</label>
           <div class="locationPicker" v-if="keyAuth">
             <div class="chooseFile" @click="openUploadHandler">
               <input
@@ -162,7 +166,9 @@
             />
             <span class="slider round"></span>
           </label>
-          <label id="lbl" for="" style="margin-right: 10px">USE SSH KEY</label>
+          <label id="lbl" for="" style="margin-right: 10px">{{
+            $t("formsetup.usessh")
+          }}</label>
         </div>
         <button id="login">
           {{ $t("formsetup.login") }}
@@ -334,7 +340,7 @@ export default {
       this.connections = savedConnections;
     },
     writeSettings: async function () {
-      const config = await ControlService.readConfig()
+      const config = await ControlService.readConfig();
       ControlService.writeConfig({
         ...config,
         savedConnections: this.getstorableConnections(),

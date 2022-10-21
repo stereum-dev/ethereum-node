@@ -43,7 +43,7 @@
           </div>
           <div>
             <plugin-zone
-              :title="'execution'"
+              :title="$t('theNode.execution')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'execution'
@@ -55,7 +55,7 @@
           <div>
             <plugin-zone
               @modal-view="showModal"
-              :title="'consensus'"
+              :title="$t('theNode.consensus')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'consensus'
@@ -66,7 +66,7 @@
           <div>
             <plugin-zone
               @modal-view="showModal"
-              :title="'validator'"
+              :title="$t('theNode.validator')"
               :list="
                 installedServices.filter(
                   (service) => service.category === 'validator'
@@ -76,7 +76,7 @@
           </div>
         </div>
         <div class="service">
-          <div class="title">SERVICE PLUGIN</div>
+          <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
             <node-service
               :list="

@@ -55,7 +55,11 @@
         />
       </div>
       <div class="filter-box">
-        <input class="filter-inp" type="text" placeholder="Filter..." />
+        <input
+          class="filter-inp"
+          type="text"
+          :placeholder="$t('sidebarManage.filter')"
+        />
         <div class="filter-icons" @mousedown.prevent.stop>
           <img
             src="../../../../public/img/icon/manage-node-icons/filter-icon.png"

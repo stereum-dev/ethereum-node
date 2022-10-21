@@ -5,7 +5,7 @@
         <div class="ramIco-container">
           <img src="../../../../public/img/icon/control/ramStick.svg" />
         </div>
-        <span>RAM</span>
+        <span>{{ $t("controlPage.ram") }}</span>
       </div>
       <div class="ramValue">
         <div class="valDigits">
@@ -14,14 +14,17 @@
           </div>
           <span>MB</span>
         </div>
-        <div class="valLbl"><span>used</span><span>total</span></div>
+        <div class="valLbl">
+          <span>{{ $t("controlPage.used") }}</span
+          ><span>{{ $t("controlPage.totalram") }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { mapState } from 'pinia';
-import { useControlStore } from '../../../store/theControl';
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {};
@@ -30,8 +33,8 @@ export default {
     ...mapState(useControlStore, {
       usedRam: "usedRam",
       totalRam: "totalRam",
-    })
-  }
+    }),
+  },
 };
 </script>
 

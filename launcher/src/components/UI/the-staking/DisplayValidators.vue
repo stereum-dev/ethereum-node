@@ -3,23 +3,23 @@
     <div class="keys-table-box">
       <div class="keys-table">
         <div class="table-header" v-if="importValidatorKeyActive">
-          <span id="name">Public Key</span>
-          <span id="service">SERVICE</span>
-          <span id="active">ACTIVE SINCE</span>
-          <span id="state">STATE</span>
-          <span id="balance">BALANCE</span>
-          <span id="option">OPTIONS</span>
+          <span id="name">{{ $t("displayValidator.pk") }}</span>
+          <span id="service">{{ $t("displayValidator.service") }}</span>
+          <span id="active">{{ $t("displayValidator.active") }}</span>
+          <span id="state">{{ $t("displayValidator.state") }}</span>
+          <span id="balance">{{ $t("displayValidator.balance") }}</span>
+          <span id="option">{{ $t("displayValidator.option") }}</span>
         </div>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
           <div class="title-box">
-            <span>Importing validator key(s)</span>
+            <span>{{ $t("displayValidator.importKey") }}</span>
           </div>
           <div class="processImg" v-if="importIsProcessing">
             <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
           </div>
           <div class="import-message" v-if="importIsProcessing">
-            <span>It may take some times</span>
-            <span>Please wait until the key is imported</span>
+            <span>{{ $t("displayValidator.waitMessage") }}</span>
+            <span>{{ $t("displayValidator.waitForImport") }}</span>
           </div>
           <div class="import-message" v-if="importIsDone">
             <span :class="importingErrorMessage">{{ message }}</span>
@@ -59,9 +59,9 @@
               />
               <span class="balance">{{ item.balance }}</span>
               <div class="option-box">
-                <div class="grafiti-box" >
+                <div class="grafiti-box">
                   <img
-                  :class="{ disabled: disable }"
+                    :class="{ disabled: disable }"
                     @click="grafitiDisplayHandler(item)"
                     class="grafiti-icon"
                     src="../../../../public/img/icon/the-staking/option-graffiti.png"

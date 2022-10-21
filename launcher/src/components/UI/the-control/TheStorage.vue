@@ -5,7 +5,7 @@
         <div class="storage-icon_container">
           <img src="../../../../public/img/icon/control/ServiceIcon.png" />
         </div>
-        <span>STORAGE</span>
+        <span>{{ $t("controlPage.storage") }}</span>
       </div>
       <div class="storage-data_box">
         <div
@@ -119,7 +119,6 @@ export default {
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
-  
 }
 
 /* Track */

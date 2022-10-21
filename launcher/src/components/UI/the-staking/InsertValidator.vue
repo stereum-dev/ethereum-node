@@ -9,7 +9,7 @@
         multiple="true"
         accept="application/json"
       />
-      <span>CLICK OR DRAG TO INSERT KEY</span>
+      <span>{{ $t("insertValidator.insertText") }}</span>
       <img
         class="black-key"
         src="../../../../public/img/icon/the-staking/black-key.png"
@@ -26,7 +26,7 @@ export default {
       let validator = this.services.filter((s) =>
         s.service.includes("Validator")
       );
-      if(validator && validator.map(e => e.state).includes("running"))
+      if (validator && validator.map((e) => e.state).includes("running"))
         this.$refs.fileInput.click();
     },
     signalChangeHandler(event) {

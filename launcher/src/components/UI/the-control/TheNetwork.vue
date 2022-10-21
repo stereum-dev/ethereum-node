@@ -6,14 +6,14 @@
         <div class="networkIco-container">
           <img src="../../../../public/img/icon/control/wifiIcon.svg" />
         </div>
-        <span>NETWORK</span>
+        <span>{{ $t("controlPage.network") }}</span>
       </div>
       <div class="totalReceived">
         <div class="receivePerSecond">
           <span>{{ rx }}</span>
         </div>
         <div class="mbit"><span>kB/s</span></div>
-        <div class="receiveTitle">Receiving Data</div>
+        <div class="receiveTitle">{{ $t("controlPage.receive") }}</div>
         <!-- <div class="totalReceiveValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowOrange.png" />
@@ -28,7 +28,7 @@
           <span>{{ tx }}</span>
         </div>
         <div class="mbit"><span>kB/s</span></div>
-        <div class="transmitTitle">Transmitting Data</div>
+        <div class="transmitTitle">{{ $t("controlPage.transmit") }}</div>
         <!-- <div class="totalTransmitValue">
           <div class="arrow">
             <img src="../../../../public/img/icon/arrows/arrowGreen.png" />

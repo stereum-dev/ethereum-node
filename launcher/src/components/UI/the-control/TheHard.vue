@@ -5,14 +5,14 @@
         <div class="icoContainer">
           <img src="../../../../public/img/icon/control/hdd.svg" />
         </div>
-        <span>HARD DISK</span>
+        <span>{{ $t("controlPage.hard") }}</span>
       </div>
       <div class="storageProcPart">
         <div class="freePart">
-          <span>{{ availDisk }} GB FREE</span>
+          <span>{{ availDisk }} GB {{ $t("controlPage.free") }}</span>
         </div>
         <div class="totalPart">
-          <span>/ {{ totalDisk }} GB TOTAL</span>
+          <span>/ {{ totalDisk }} GB {{ $t("controlPage.total") }}</span>
         </div>
         <div class="valueBarPart">
           <div class="valueBarPart_loader">

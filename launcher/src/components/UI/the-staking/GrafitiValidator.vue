@@ -10,11 +10,13 @@
     <div class="inputBox">
       <input
         type="text"
-        placeholder="Enter up 32 characters to add to the chain whenever you create a block!"
+        :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
       />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmChange')">Confrim</button>
+      <button class="confirmBtn" @click="$emit('confirmChange')">
+        {{ $t("exitMultipleValidator.confirm") }}
+      </button>
     </div>
   </div>
 </template>

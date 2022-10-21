@@ -7,9 +7,9 @@
         @click="$emit('importKey', this.enteredPassword)"
         v-if="activePassword"
       >
-        CONFIRM
+        {{ $t("exitMultipleValidator.confirm") }}
       </button>
-      <span v-else>ENTER PASSWORD & IMPORT</span>
+      <span v-else>{{ $t("enterPass.enterPass") }}</span>
     </div>
   </div>
 </template>

@@ -11,13 +11,13 @@
       <div class="inputBox">
         <input
           type="text"
-          placeholder="Enter up 32 characters to add to the chain when you create a block!"
+          :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
           v-model="graffiti"
         />
       </div>
       <div class="confirmBox">
         <button class="confirmBtn" @click="$emit('confirmBtn', this.graffiti)">
-          Confrim
+          {{ $t("exitMultipleValidator.confirm") }}
         </button>
       </div>
     </div>
@@ -25,9 +25,9 @@
 </template>
 <script>
 export default {
-  data(){
-    return{
-      graffiti: ""
+  data() {
+    return {
+      graffiti: "",
     };
   },
 };

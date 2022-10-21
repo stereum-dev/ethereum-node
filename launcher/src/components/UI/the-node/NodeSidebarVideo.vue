@@ -26,12 +26,45 @@
 </template>
 <script>
 import { mapWritableState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
+//import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
 
 export default {
   data() {
-    return {};
+    return {
+      configData: [
+        {
+          id: 1,
+          name: this.$t("nodeSidebarVideo.firstSteps"),
+          display: false,
+        },
+        {
+          id: 2,
+          name: this.$t("nodeSidebarVideo.stake"),
+          display: true,
+        },
+        {
+          id: 3,
+          name: this.$t("nodeSidebarVideo.ssv"),
+          display: true,
+        },
+        {
+          id: 4,
+          name: this.$t("nodeSidebarVideo.alert"),
+          display: false,
+        },
+        {
+          id: 5,
+          name: this.$t("nodeSidebarVideo.switchC"),
+          display: false,
+        },
+        {
+          id: 6,
+          name: this.$t("nodeSidebarVideo.switchM"),
+          display: false,
+        },
+      ],
+    };
   },
   mounted() {
     this.configData = this.configData.map((item) => {
@@ -42,9 +75,9 @@ export default {
     });
   },
   computed: {
-    ...mapWritableState(useNodeStore, {
-      configData: "configData_nodeSidebarVideo",
-    }),
+    // ...mapWritableState(useNodeStore, {
+    //   configData: "configData_nodeSidebarVideo",
+    // }),
     ...mapWritableState(useTutorialStore, {
       showTutorialModal: "showTutorialModal",
     }),

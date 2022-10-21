@@ -12,7 +12,7 @@
       </div>
       <lang-dialog @close="hideDialog" :open="dialogIsVisible">
         <flag-button
-          @setting="setLang(link.langName, link.langSelect)"
+          @setting="setLang(link.langName, link.langSelect, link.label)"
           v-for="link in linkFlags"
           :key="link.langImg"
           id="flag-btn"
@@ -57,12 +57,13 @@ export default {
   },
   data() {
     return {
-      link: "stereum-logo-blinking.gif",
+      link: "",
       isLanguageSelected: false,
       hiddenDialogActive: true,
       selectedLanguage: {
         lang: "",
         flag: "",
+        label: "",
       },
     };
   },
@@ -80,14 +81,18 @@ export default {
       showDialog: "showDialog",
       hideDialog: "hideDialog",
     }),
-    setLang(lang, langSelect) {
+    setLang(lang, langSelect, label) {
       this.selectedLanguage.lang = lang;
       this.selectedLanguage.flag = langSelect;
       this.isLanguageSelected = true;
       this.hideDialog();
       this.hiddenDialogActive = false;
-      this.link = "stereum-logo-extern.png";
-      this.updateSettings(lang, langSelect);
+      this.$i18n.locale = label;
+      this.link = "/img/icon/language-animations/languageSelection1.gif";
+      this.updateSettings(lang, langSelect, label);
+      setTimeout(() => {
+        this.link = "/img/icon/language-animations/languageSelection2.gif";
+      }, 1000);
     },
     activePage() {
       if (
@@ -96,7 +101,10 @@ export default {
       ) {
         // return
       } else {
-        this.$emit("page", "SetupServer");
+        this.link = "/img/icon/language-animations/languageSelection3.gif";
+        setTimeout(() => {
+          this.$emit("page", "SetupServer");
+        }, 650);
       }
     },
     checkSettings: async function () {
@@ -107,16 +115,17 @@ export default {
       ) {
         this.setLang(
           savedConfig.savedLanguage.language,
-          savedConfig.savedLanguage.flag
+          savedConfig.savedLanguage.flag,
+          savedConfig.savedLanguage.label
         );
-        this.activePage();
+        this.$emit("page", "SetupServer");
       }
     },
-    updateSettings: async function (lang, langSelect) {
+    updateSettings: async function (lang, langSelect, langLabel) {
       const prevConf = await ControlService.readConfig();
       const conf = {
         ...prevConf,
-        savedLanguage: { language: lang, flag: langSelect },
+        savedLanguage: { language: lang, flag: langSelect, label: langLabel },
       };
       await ControlService.writeConfig(conf);
     },
@@ -163,12 +172,18 @@ export default {
   top: 0;
   left: 0;
   box-sizing: border-box;
-  background-color: #336666;
+  background-color: #000;
   border: 3px solid #989898;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .baselogo-box {
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .text-box {
   width: 50%;

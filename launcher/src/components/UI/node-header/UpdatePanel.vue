@@ -4,23 +4,25 @@
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="launcherUpdate">
-          <span class="title">launcher updates</span>
+          <span class="title">{{ $t("updatePanel.launcherTitle") }}</span>
           <div class="launcherBox">
-            <span class="currentLauncher">current:</span>
+            <span class="currentLauncher"
+              >{{ $t("updatePanel.current") }}:</span
+            >
             <span class="valueLauncher">{{ launcherVersion }}</span>
           </div>
         </div>
-        <span class="nodeUpdate-title">node updates</span>
+        <span class="nodeUpdate-title">{{ $t("updatePanel.nodeTitle") }}</span>
         <div class="stereum-updateBox">
           <div class="versionBox">
             <div id="current">
-              <span>current:</span>
+              <span>{{ $t("updatePanel.current") }}:</span>
             </div>
             <div id="latest">
-              <span>latest:</span>
+              <span>{{ $t("updatePanel.latest") }}:</span>
             </div>
             <div id="autoUpdate">
-              <span>auto-update:</span>
+              <span>{{ $t("updatePanel.auto") }}:</span>
             </div>
             <div id="currentValue">
               <span>{{ stereumUpdate.current }}</span>
@@ -52,7 +54,8 @@
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
               <span class="availableText"
-                >{{ stereumUpdate.version }} available</span
+                >{{ stereumUpdate.version }}
+                {{ $t("updatePanel.available") }}</span
               >
             </div>
             <div
@@ -60,17 +63,17 @@
               v-if="forceUpdateCheck && !checkStereumUpdate()"
             >
               <span class="circle pulse"></span>
-              <span class="searchingText">searching new updates</span>
+              <span class="searchingText">{{
+                $t("updatePanel.searching")
+              }}</span>
             </div>
           </div>
         </div>
       </div>
       <div class="serviceUpdates">
         <div class="serviceUpdates-title">
-          <span class="title">Service updates</span>
-          <span class="description"
-            >Updates for the installed selection of PLUG-INs</span
-          >
+          <span class="title">{{ $t("updatePanel.serviceTitle") }}</span>
+          <span class="description">{{ $t("updatePanel.serviceDesc") }}</span>
         </div>
         <div class="service-updateBox">
           <div class="availableTable">
@@ -78,7 +81,7 @@
               <div class="tableUpdateIcon">
                 <img src="/img/icon/header-icons/update-green.png" alt="icon" />
               </div>
-              <span>AVAILABLE PLUG-IN UPDATES</span>
+              <span>{{ $t("updatePanel.availablePlugin") }}</span>
             </div>
             <div class="tableContent">
               <div
@@ -114,7 +117,7 @@
               </div>
             </div>
             <div class="autoUpdateText">
-              <span>auto-update: OFF</span>
+              <span>{{ $t("updatePanel.auto") }} : OFF</span>
             </div>
           </div>
         </div>
@@ -129,7 +132,7 @@
               updating,
           }"
         >
-          <span>update all</span>
+          <span>{{ $t("updatePanel.all") }}</span>
           <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
         </div>
       </div>
@@ -397,7 +400,7 @@ export default {
   grid-column: 1/2;
   grid-row: 3/4;
   width: 100%;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #c6c6c6;
@@ -752,7 +755,7 @@ export default {
   max-height: 15px;
 }
 .updateAllBtnBox .confirmUpdate span {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #c6c6c6;
   text-transform: uppercase;
