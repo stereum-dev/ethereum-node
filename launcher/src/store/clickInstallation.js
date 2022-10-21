@@ -57,7 +57,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           defaultPath: "/opt/stereum",
           icon: require("../../public/img/icon/presets-icons/mev-staking.png"),
           showDropDown: false,
-          serviceAvailable: true,
+          serviceAvailable: false,
           includedPlugins: [],
         },
         {
