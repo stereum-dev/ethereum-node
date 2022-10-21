@@ -332,7 +332,7 @@ export class OneClickInstall {
       case 'staking':
         break
       case 'mev boost':
-        services.push('MevboostService')
+        services.push('FlashbotsMevBoostService')
         break
       case 'ssv.network':
         services.push('SSVNetworkService')
