@@ -93,13 +93,13 @@
     "searching": "searching new updates",
     "serviceTitle": "Service updates",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
+    "all": "актуализиране на всички"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "НОД/ВЪЗЕЛ",
     "disk": "СКОРОСТ НА ДИСКА",
-    "write": "WRITE",
+    "write": "ЗАПИСВАНЕ",
     "read": "READ",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
