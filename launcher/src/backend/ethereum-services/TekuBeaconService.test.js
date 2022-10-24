@@ -11,7 +11,7 @@ test('buildConfiguration', () => {
       new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
       new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
     ]
-  
+
     jest.mock('./GethService')
     const GethService = require('./GethService')
     const mMock = jest.fn(() => { return 'http-endpoint-string' })
@@ -30,9 +30,9 @@ test('buildConfiguration', () => {
         ]
       }
     })
-  
-    const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()]).buildConfiguration()
-  
+
+    const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], []).buildConfiguration()
+
     expect(tekuService.command).toContain('--ee-endpoint=http-endpoint-string')
     expect(tekuService.command).toContain('--network=prater')
     expect(tekuService.volumes).toHaveLength(3)
@@ -50,7 +50,7 @@ test('buildConfiguration', () => {
       new ServicePort(null, 101, 202, servicePortProtocol.udp),
       new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
     ]
-  
+
     jest.mock('./GethService')
     const GethService = require('./GethService')
     const mMock = jest.fn(() => { return 'http-endpoint-string' })
@@ -69,9 +69,18 @@ test('buildConfiguration', () => {
         ]
       }
     })
-  
-    const tekuEndpoint = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConsensusClientHttpEndpointUrl()
-  
+
+    jest.mock('./FlashbotsMevBoostService')
+    const FlashbotsMevBoostService = require('./FlashbotsMevBoostService')
+    const mevMock = jest.fn(() => { return 'mevboost-http-endpoint-string' })
+    FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
+      return {
+        buildMevboostEndpointURL: mevMock,
+      }
+    })
+
+    const tekuEndpoint = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').buildConsensusClientHttpEndpointUrl()
+
     expect(tekuEndpoint).toMatch(/http:\/\/stereum-.{36}:5051/)
   })
 
@@ -94,8 +103,8 @@ test('buildConfiguration', () => {
         ]
       }
     })
-    const tekuServicePorts = TekuBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').getAvailablePorts()
-  
+    const tekuServicePorts = TekuBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').getAvailablePorts()
+
     expect(tekuServicePorts).toHaveLength(5)
   })
 
@@ -118,8 +127,8 @@ test('buildConfiguration', () => {
         ]
       }
     })
-    const tekuService = TekuBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/teku', [new GethService.GethService()], 'stereum.net').buildConfiguration()
-  
+    const tekuService = TekuBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').buildConfiguration()
+
     expect(tekuService.network).toMatch(/goerli/)
   })
 
@@ -132,7 +141,7 @@ test('buildConfiguration', () => {
       ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
       volumes: ['/opt/stereum/foo:/opt/app/data']
     })
-  
+
     expect(tekuService.id).toBe('423')
     expect(tekuService.service).toBe('TekuBeaconService')
     expect(tekuService.configVersion).toBe(926)
@@ -141,7 +150,7 @@ test('buildConfiguration', () => {
     expect(tekuService.ports).toHaveLength(2)
     expect(tekuService.ports[0].destinationPort).toBe('1234')
     expect(tekuService.ports[1].servicePort).toBe('5678')
-  
+
     expect(tekuService.volumes).toHaveLength(1)
     expect(tekuService.volumes[0]).toBeDefined()
   })

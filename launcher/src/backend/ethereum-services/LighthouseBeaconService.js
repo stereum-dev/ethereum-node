@@ -3,11 +3,10 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, mevboostURL, checkpointURL) {
     const service = new LighthouseBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-    
     const image = 'sigp/lighthouse'
 
     const JWTDir = '/engine.jwt'
@@ -26,6 +25,9 @@ export class LighthouseBeaconService extends NodeService {
 
     // eth1 nodes
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
+
+    // mevboost endpoint
+    const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
     service.init(
       'LighthouseBeaconService',  //service
@@ -50,7 +52,8 @@ export class LighthouseBeaconService extends NodeService {
         '--validator-monitor-auto',
         '--slasher',
         `--slasher-dir=${slasherDir}`,
-        `--slasher-max-db-size=${slasherDbSize}`
+        `--slasher-max-db-size=${slasherDbSize}`,
+        `--builder=${mevboostEndpoint}`
       ],  //command
       null, //entrypoint
       null, //env

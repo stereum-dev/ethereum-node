@@ -43,7 +43,8 @@ export class LighthouseValidatorService extends NodeService {
         '--http',
         '--http-address=0.0.0.0',
         '--http-port=5062',
-        '--unencrypted-http-transport'
+        '--unencrypted-http-transport',
+        '--builder-proposals'
       ],  //command
       null, // entrypoint
       null, // env

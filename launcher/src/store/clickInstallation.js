@@ -51,7 +51,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 9,
-          name: "Flashbots Mev Boost",
+          name: "mev boost",
           networkIcon: require("../../public/img/icon/click-installation/testnet-icon.png"),
           network: "testnet",
           defaultPath: "/opt/stereum",
@@ -62,7 +62,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 10,
-          name: "Flashbots Mev Boost",
+          name: "mev boost",
           network: "mainnet",
           defaultPath: "/opt/stereum",
           networkIcon: require("../../public/img/icon/click-installation/mainnet-icon.png"),

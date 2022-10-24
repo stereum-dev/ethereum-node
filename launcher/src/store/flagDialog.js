@@ -65,7 +65,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langImg: "img/flag/portugal.png",
           langSelect: "img/flag/portugal.png",
           langName: "Português",
-          label: "pr",
+          label: "po",
           enable: false,
         },
         {
