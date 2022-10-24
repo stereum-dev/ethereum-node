@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog, Menu } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -28,6 +28,7 @@ const validatorAccountManager = new ValidatorAccountManager(
   nodeConnection,
   serviceManager
 );
+const { globalShortcut } = require('electron');
 
 const log = require("electron-log");
 log.transports.console.level = "info";
@@ -419,6 +420,22 @@ async function createWindow() {
   });
 }
 
+// Disable CTRL+R and F5 in build
+if(!isDevelopment){
+  app.on('browser-window-focus', function () {
+    globalShortcut.register("CommandOrControl+R", () => {
+        // console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+    });
+    globalShortcut.register("F5", () => {
+        // console.log("F5 is pressed: Shortcut Disabled");
+    });
+  });
+  app.on('browser-window-blur', function () {
+    globalShortcut.unregister('CommandOrControl+R');
+    globalShortcut.unregister('F5');
+  });
+}
+
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
   // On macOS it is common for applications and their menu bar
@@ -459,6 +476,13 @@ app.on("ready", async () => {
     log.error("Vue Devtools failed to install:", e.toString());
   }
   // }
+  // Disable "View" and "Window" Menu items in build (since CTRL+R and F5 is disabled also)
+  if(!isDevelopment){
+    const hideMenuItems = ["viewmenu","windowmenu"];
+    var menu = Menu.getApplicationMenu();
+    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => item.visible = false);
+    Menu.setApplicationMenu(menu);
+  }
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
