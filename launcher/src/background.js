@@ -1,6 +1,6 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog, Menu } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
@@ -476,6 +476,13 @@ app.on("ready", async () => {
     log.error("Vue Devtools failed to install:", e.toString());
   }
   // }
+  // Disable "View" and "Window" Menu items in build (since CTRL+R and F5 is disabled also)
+  if(!isDevelopment){
+    const hideMenuItems = ["viewmenu","windowmenu"];
+    var menu = Menu.getApplicationMenu();
+    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => item.visible = false);
+    Menu.setApplicationMenu(menu);
+  }
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
