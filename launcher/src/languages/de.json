@@ -1,6 +1,205 @@
 {
   "formsetup": {
-    "login": "Einloggen",
-    "server": "Verbinden Sie mit Ihrem Server"
+    "login": "einloggen",
+    "server": "Verbinden Sie mit Ihrem Server",
+    "servername": "SERVERNAME",
+    "iphost": "IP / HOSTNAME",
+    "username": "BENUTZERNAME",
+    "password": "PASSWORT",
+    "keylocation": "SCHLÜSSELPFAD",
+    "usessh": "SSH KEY BENUTZEN"
+  },
+  "comingsoon": {
+    "comingsoon": "KOMMT BALD"
+  },
+  "journalnode": {
+    "serverip": "server ip",
+    "servername": "SERVERNAME",
+    "edit": "Node bearbeiten"
+  },
+  "pagesnav": {
+    "node": "NODE",
+    "control": "KONTROLLE",
+    "staking": "STAKING"
+  },
+  "supportModal": {
+    "support": "Hilfestellung",
+    "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
+    "bugReport": "BUG BERICHTE",
+    "bugRepText": "Bitte nehmen Sie sich die Zeit ein Problem auf Github festzuhalten und lassen Sie uns Stereum besser machen!",
+    "emailText": "oder eine E-Mail schreiben an:"
+  },
+  "notifModal": {
+    "notification": "Benachrichtigungen",
+    "notifText": "Sie können verschiedene Benachrichtigungsquellen einrichten, über die Sie benachrichtigt werden möchten",
+    "cancelText": "Außerhalb klicken, um abzubrechen"
+  },
+  "settingPanel": {
+    "stereumName": "stereum einstellungen",
+    "langName": "Sprachwahl",
+    "confirm": "BESTÄTIGEN & ANWENDEN",
+    "general": "GENETAL",
+    "credits": "Credits",
+    "open": "öffnen",
+    "update": "UPDATE",
+    "launcherVersion": "Launcher Version",
+    "nodeVersion": "Node Version",
+    "lane": "Stereum - Testquelle",
+    "on": "ein",
+    "off": "aus",
+    "updateConfig": "Stereum Update Konfiguration",
+    "servicePlugin": "Plug-in / Service Update Konfiguration",
+    "manual": "MANUELL",
+    "auto": "AUTO"
+  },
+  "nodeSidebarVideo": {
+    "firstSteps": "Erste Schritte!",
+    "stake": "Staken mit 32 ETH",
+    "ssv": "SSV Network verwenden",
+    "alert": "Mobile App Benachrichtigungen",
+    "switchC": "Clients wechseln",
+    "switchM": "Maschine migrieren"
+  },
+  "pluginZone": {
+    "client": "client"
+  },
+  "theNode": {
+    "execution": "execution",
+    "consensus": "consensus",
+    "validator": "validator",
+    "servicePlugin": "SERVICE PLUGIN"
+  },
+  "modifyPanel": {
+    "backNode": "zurück zu NODE",
+    "addPreset": "1 KLICK-PRESET hinzufügen",
+    "changeNetwork": "CHANGE NETWORK",
+    "nukeNode": "NUKE NODE"
+  },
+  "sidebarManage": {
+    "filter": "Filter..."
+  },
+  "changeConfirm": {
+    "confirm": "CONFIRM",
+    "change": "CHANGES TO CONFIRM",
+    "delete": "DELETE"
+  },
+  "updatePanel": {
+    "launcherTitle": "launcher updates",
+    "current": "current",
+    "nodeTitle": "node updates",
+    "latest": "latest",
+    "auto": "auto-update",
+    "available": "available",
+    "searching": "searching new updates",
+    "serviceTitle": "Service updates",
+    "serviceDesc": "Updates for the installed selection of PLUG-INs",
+    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
+    "all": "update all"
+  },
+  "controlPage": {
+    "node": "NODE",
+    "disk": "DISK SPEED",
+    "write": "WRITE",
+    "read": "READ",
+    "inclusionDistance": "INCLUSION DISTANCE",
+    "rpc": "RPC-ENDPOINT",
+    "syncStatus": "SYNC STATUS",
+    "hard": "HARD DISK",
+    "free": "FREE",
+    "total": "TOTAL",
+    "network": "NETWORK",
+    "receive": "Receiving Data",
+    "transmit": "Transmitting Data",
+    "ram": "RAM",
+    "used": "used",
+    "totalram": "total",
+    "storage": "STORAGE",
+    "active": "ACTIVE",
+    "rating": "RATING",
+    "usage": "Usage"
+  },
+  "taskManager": {
+    "clickDisplay": "Click on tasks to display"
+  },
+  "displayValidator": {
+    "pk": "Public Key",
+    "service": "SERVICE",
+    "active": "ACTIVE SINCE",
+    "state": "STATE",
+    "balance": "BALANCE",
+    "option": "OPTIONS",
+    "importKey": "Importing validator key(s)",
+    "waitMessage": "It may take some times",
+    "waitForImport": "Please wait until the key is imported"
+  },
+  "enterPass": {
+    "enterPass": "ENTER PASSWORD & IMPORT"
+  },
+  "exitMultipleValidator": {
+    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
+    "confirm": "Confrim"
+  },
+  "exitValidatorModal": {
+    "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validator Key(s) verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
+    "exitApprove": "ICH HABE DEN TEXT GELESEN UND BIN MIR DEN KONSEQUENZEN BEWUSST",
+    "exitChain": "BLOCKCHAIN VERLASSEN",
+    "clickClose": "Zum Schließen außerhalb klicken."
+  },
+  "feeRecipient": {
+    "textPlaceHolder": "Gib eine gültige Ethereum-Adresse ein, um Blockbelohnungen zu erhalten ... ",
+    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+  },
+  "grafitiMultipleValidator": {
+    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+  },
+  "insertValidator": {
+    "insertText": "CLICK OR DRAG TO INSERT KEY"
+  },
+  "removeMultiModal": {
+    "sure": "Are you sure you want to remove",
+    "from": "FROM THIS MACHINE?",
+    "remove": "Remove"
+  },
+  "removeMultipleValidators": {
+    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+  },
+  "timeReward": {
+    "totalText": "TOTAL BALANCE OF",
+    "validators": "VALIDATORS",
+    "proposed": "PROPOSED",
+    "attestRate": "ATTESTATION RATE",
+    "attention": "ATTENTIONS",
+    "missed": "MISSED",
+    "aggregations": "AGGREGATIONS",
+    "slashed": "SLASHED"
+  },
+  "validatorsBox": {
+    "date": "DATE",
+    "validator": "VALIATOR",
+    "attestRate": "ATTEST.RATE",
+    "reward": "REWARD"
+  },
+  "installOption": {
+    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "back": "BACK",
+    "install": "INSTALL"
+  },
+  "removeModal": {
+    "removeText": "All services will be removed.",
+    "sure": "Are you sure?"
+  },
+  "installitionMenu": {
+    "welcome": "WELCOME",
+    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
+    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+  },
+  "pluginName": {
+    "option": "OPTION",
+    "chosen": "CHOSEN NETWORK",
+    "path": "INSTALLATION PATH",
+    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "plugin": "PLUGINS",
+    "back": "BACK",
+    "next": "NEXT"
   }
 }

@@ -1,11 +1,11 @@
 {
   "formsetup": {
-    "login": " connexion",
-    "server": " Connectez-vous à votre serveur",
+    "login": "нэвтрэх",
+    "server": "Connect to your server",
     "servername": "SERVER NAME",
     "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
+    "username": "Хэрэглэгчийн нэр",
+    "password": "Нууц үг",
     "keylocation": "KEY LOCATION",
     "usessh": "USE SSH KEY"
   },
@@ -30,7 +30,7 @@
     "emailText": "or write an email to:"
   },
   "notifModal": {
-    "notification": "Notifications",
+    "notification": "Мэдэгдэл",
     "notifText": "You can set up different notification sources and the status you want to be notified of here",
     "cancelText": "Click outside to cancel"
   },
@@ -43,14 +43,14 @@
     "open": "open",
     "update": "UPDATE",
     "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
+    "nodeVersion": "Node хувилбар",
     "lane": "Stereum - Testing Lane",
     "on": "on",
     "off": "off",
     "updateConfig": "Stereum Update Configuration",
     "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
-    "auto": "AUTO"
+    "auto": "АВТОМАТ"
   },
   "nodeSidebarVideo": {
     "firstSteps": "First Steps!",
@@ -181,7 +181,7 @@
   },
   "installOption": {
     "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
+    "back": "БУЦАХ",
     "install": "INSTALL"
   },
   "removeModal": {
@@ -199,7 +199,7 @@
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "PLUGINS",
-    "back": "BACK",
+    "back": "БУЦАХ",
     "next": "NEXT"
   }
 }
