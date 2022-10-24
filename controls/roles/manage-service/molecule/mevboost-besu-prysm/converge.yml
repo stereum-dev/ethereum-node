@@ -94,9 +94,6 @@
                 - "/opt/app/services/{{ prysm_beacon_service }}/genesis:/opt/app/genesis"
                 - "/opt/app/services/{{ besu_service }}/engine.jwt:/engine.jwt"
 
-                #      --monitoring-port=8080
-                # --monitoring-host=0.0.0.0
-
     # prysm validator service
     - block:
       - set_fact:

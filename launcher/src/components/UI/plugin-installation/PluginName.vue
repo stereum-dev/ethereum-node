@@ -284,6 +284,11 @@ export default {
         case "rocketpool":
           //filter = (item) => item.category === element.category
           break;
+        case "mev boost":
+          filter = (item) =>
+            item.category === element.category &&
+            item.service !== "SSVNetworkService";
+          break;
         default:
           break;
       }

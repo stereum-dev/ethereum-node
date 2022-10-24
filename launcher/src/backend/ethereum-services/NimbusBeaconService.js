@@ -3,14 +3,17 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, mevboostURL, checkpointURL) {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-    
+
     const image = 'statusim/nimbus-eth2'
 
     const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCWsEndpointUrl() })).join()
+
+    // mevboost endpoint
+    const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
     const JWTDir = '/engine.jwt'
     const dataDir = '/opt/app/beacon'
@@ -53,6 +56,8 @@ export class NimbusBeaconService extends NodeService {
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt',
         '--jwt-secret=/engine.jwt',
+        '--payload-builder=true',
+        `--payload-builder-url=${mevboostEndpoint}`,
       ], // command,
       ["/home/user/nimbus-eth2/build/nimbus_beacon_node"], // entrypoint,
       null, // env,
