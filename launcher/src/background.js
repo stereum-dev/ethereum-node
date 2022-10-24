@@ -424,10 +424,10 @@ async function createWindow() {
 if(!isDevelopment){
   app.on('browser-window-focus', function () {
     globalShortcut.register("CommandOrControl+R", () => {
-        console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+        // console.log("CommandOrControl+R is pressed: Shortcut Disabled");
     });
     globalShortcut.register("F5", () => {
-        console.log("F5 is pressed: Shortcut Disabled");
+        // console.log("F5 is pressed: Shortcut Disabled");
     });
   });
   app.on('browser-window-blur', function () {
