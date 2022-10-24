@@ -1,64 +1,64 @@
 {
   "formsetup": {
-    "login": "Einloggen",
+    "login": "einloggen",
     "server": "Verbinden Sie mit Ihrem Server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "servername": "SERVERNAME",
+    "iphost": "IP / HOSTNAME",
+    "username": "BENUTZERNAME",
+    "password": "PASSWORT",
+    "keylocation": "SCHLÜSSELPFAD",
+    "usessh": "SSH KEY BENUTZEN"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "KOMMT BALD"
   },
   "journalnode": {
     "serverip": "server ip",
-    "servername": "SERVER NAME",
-    "edit": "to edit node"
+    "servername": "SERVERNAME",
+    "edit": "Node bearbeiten"
   },
   "pagesnav": {
     "node": "NODE",
-    "control": "CONTROL",
+    "control": "KONTROLLE",
     "staking": "STAKING"
   },
   "supportModal": {
-    "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
-    "emailText": "or write an email to:"
+    "support": "Hilfestellung",
+    "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
+    "bugReport": "BUG BERICHTE",
+    "bugRepText": "Bitte nehmen Sie sich die Zeit ein Problem auf Github festzuhalten und lassen Sie uns Stereum besser machen!",
+    "emailText": "oder eine E-Mail schreiben an:"
   },
   "notifModal": {
-    "notification": "Notifications",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "notification": "Benachrichtigungen",
+    "notifText": "Sie können verschiedene Benachrichtigungsquellen einrichten, über die Sie benachrichtigt werden möchten",
+    "cancelText": "Außerhalb klicken, um abzubrechen"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
-    "langName": "language  selection",
-    "confirm": "CONFIRM & APPLY",
+    "stereumName": "stereum einstellungen",
+    "langName": "Sprachwahl",
+    "confirm": "BESTÄTIGEN & ANWENDEN",
     "general": "GENETAL",
     "credits": "Credits",
-    "open": "opan",
+    "open": "öffnen",
     "update": "UPDATE",
     "launcherVersion": "Launcher Version",
     "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
+    "lane": "Stereum - Testquelle",
+    "on": "ein",
+    "off": "aus",
+    "updateConfig": "Stereum Update Konfiguration",
+    "servicePlugin": "Plug-in / Service Update Konfiguration",
+    "manual": "MANUELL",
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "First Steps!",
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "switchM": "Switch Machine"
+    "firstSteps": "Erste Schritte!",
+    "stake": "Staken mit 32 ETH",
+    "ssv": "SSV Network verwenden",
+    "alert": "Mobile App Benachrichtigungen",
+    "switchC": "Clients wechseln",
+    "switchM": "Maschine migrieren"
   },
   "pluginZone": {
     "client": "client"
@@ -70,8 +70,8 @@
     "servicePlugin": "SERVICE PLUGIN"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
+    "backNode": "zurück zu NODE",
+    "addPreset": "1 KLICK-PRESET hinzufügen",
     "changeNetwork": "CHANGE NETWORK",
     "nukeNode": "NUKE NODE"
   },
@@ -140,13 +140,13 @@
     "confirm": "Confrim"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validator Key(s) verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
+    "exitApprove": "ICH HABE DEN TEXT GELESEN UND BIN MIR DEN KONSEQUENZEN BEWUSST",
+    "exitChain": "BLOCKCHAIN VERLASSEN",
+    "clickClose": "Zum Schließen außerhalb klicken."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
+    "textPlaceHolder": "Gib eine gültige Ethereum-Adresse ein, um Blockbelohnungen zu erhalten ... ",
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
