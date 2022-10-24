@@ -28,6 +28,7 @@ const validatorAccountManager = new ValidatorAccountManager(
   nodeConnection,
   serviceManager
 );
+const { globalShortcut } = require('electron');
 
 const log = require("electron-log");
 log.transports.console.level = "info";
@@ -416,6 +417,22 @@ async function createWindow() {
         win.close();
       }
     }
+  });
+}
+
+// Disable CTRL+R and F5 in build
+if(!isDevelopment){
+  app.on('browser-window-focus', function () {
+    globalShortcut.register("CommandOrControl+R", () => {
+        console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+    });
+    globalShortcut.register("F5", () => {
+        console.log("F5 is pressed: Shortcut Disabled");
+    });
+  });
+  app.on('browser-window-blur', function () {
+    globalShortcut.unregister('CommandOrControl+R');
+    globalShortcut.unregister('F5');
   });
 }
 
