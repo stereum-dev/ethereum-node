@@ -97,11 +97,11 @@
     "all": "актуализиране на всички"
   },
   "controlPage": {
-    "node": "НОД/ВЪЗЕЛ",
+    "node": "НОД",
     "disk": "СКОРОСТ НА ДИСКА",
     "write": "ЗАПИСВАНЕ",
-    "read": "READ",
-    "inclusionDistance": "INCLUSION DISTANCE",
+    "read": "ПРОЧИТАНЕ",
+    "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "SYNC STATUS",
     "hard": "ХАРД ДИСК",
