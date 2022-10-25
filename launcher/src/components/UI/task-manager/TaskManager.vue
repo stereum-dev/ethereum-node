@@ -7,7 +7,6 @@
     <div
       class="task-modal-box"
       v-if="isTaskModalActive"
-      @mouseleave="this.isTaskModalActive = false"
     >
       <div class="task-table">
         <div class="table-content">
