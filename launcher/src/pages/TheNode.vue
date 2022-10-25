@@ -384,7 +384,7 @@ export default {
 }
 .footer {
   width: 100%;
-  height: 88%;
+  height: 90%;
   margin: 0 auto;
   grid-column: 1/5;
   grid-row: 4;
