@@ -19,13 +19,13 @@
   },
   "pagesnav": {
     "node": "NODE",
-    "control": "CONTROL",
+    "control": "КОНТРОЛ",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "съпорт",
     "supportText": "Най-бързият начин да се свържете с човек за поддръжка е да се присъедините към нашия сървър в Дискорд!",
-    "bugReport": "BUG REPORT",
+    "bugReport": "ДОКЛАД ЗА ГРЕШКИ",
     "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
     "emailText": "или пишете E-Mail на:"
   },
@@ -38,19 +38,19 @@
     "stereumName": "stereum setting",
     "langName": "избиране на език",
     "confirm": "CONFIRM & APPLY",
-    "general": "GENETAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
+    "general": "ОБЩО",
+    "credits": "Заслуги",
+    "open": "отвори",
+    "update": "АКТУАЛИЗАЦИЯ",
+    "launcherVersion": "Версия на стартиране",
+    "nodeVersion": "Версия на Нода",
     "lane": "Stereum - Testing Lane",
     "on": "включен",
     "off": "изключен",
-    "updateConfig": "Stereum Update Configuration",
+    "updateConfig": "Конфигурация на Стереум актуализациите",
     "servicePlugin": "Plug-in / Service Update Configuration",
     "manual": "MANUAL",
-    "auto": "AUTO"
+    "auto": "АВТОМАТИЧНО"
   },
   "nodeSidebarVideo": {
     "firstSteps": "Първи стъпки!",
@@ -64,7 +64,7 @@
     "client": "клиент"
   },
   "theNode": {
-    "execution": "execution",
+    "execution": "изпълнение",
     "consensus": "consensus",
     "validator": "validator",
     "servicePlugin": "SERVICE PLUGIN"
@@ -76,22 +76,22 @@
     "nukeNode": "NUKE NODE"
   },
   "sidebarManage": {
-    "filter": "Filter..."
+    "filter": "Филтър..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "ПОТВЪРДИ",
+    "change": "ПРОМЕНИ ЗА ПОТВЪРЖДАВАНЕ",
+    "delete": "ИЗТРИЙ"
   },
   "updatePanel": {
-    "launcherTitle": "launcher updates",
+    "launcherTitle": "актуализации на лаунчъра",
     "current": "current",
     "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "auto-update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "Service updates",
+    "latest": "последни",
+    "auto": "автоматично обновяване",
+    "available": "налично",
+    "searching": "търсене за актуализации",
+    "serviceTitle": "Актуализиране на услугите",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
     "all": "актуализиране на всички"
