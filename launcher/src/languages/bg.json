@@ -146,59 +146,59 @@
     "clickClose": "Клинкете извън прозореца за да затворите/прекратите."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Въведете валиден адрес в Етериум, за да изпратите блок наградите си на... ",
+    "setBlock": "ЗАДАВАНЕ НА АДРЕС НА ПОЛУЧАТЕЛ НА БЛОКОВА ТАКСА"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "КЛИКНЕТЕ ИЛИ ПЛЪЗНЕТЕ, ЗА ДА ДОБАВИТЕ КЛЮЧ"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Сигурни ли сте, че искате за изтриете",
+    "from": "ОТ ТАЗИ МАШИНА?",
+    "remove": "Премахване"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Сигурни ли сте, че искате да премахнете всички ключове на Validator ОТ ТАЗИ МАШИНА?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTENTIONS",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "totalText": "ОБЩ БАЛАНС НА",
+    "validators": "ВАЛИДАТОРИ",
+    "proposed": "ПРЕДЛОЖЕНО",
+    "attestRate": "КОЕФИЦИЕНТ НА АТЕСТАЦИЯ",
+    "attention": "ВНИМАНИЕ",
+    "missed": "ИЗПУСНАТИ",
+    "aggregations": "АГРЕГАЦИИ",
+    "slashed": "НАРЯЗАНИ"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "date": "ДАТА",
+    "validator": "ВАЛИДАТОР",
+    "attestRate": "АТЕСТ.ТАРИФА",
+    "reward": "НАГРАДА"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
+    "installText": "НА ТАЗИ СТРАНИЦА МОЖЕТЕ ДА ИЗБЕРЕТЕ КАКВО ИСКАТЕ ДА НАПРАВИТЕ С НОД-а СИ. СЛЕД КАТО ИЗБЕРЕТЕ И НАТИСНЕТЕ СТАРТ, ЩЕ БЪДЕ ИЗБРАН СЛУЧАЕН КЛИЕНТ, КОЙТО ДА ОБСЛУЖВА ВАШИЯ СЛУЧАЙ НА УПОТРЕБА",
+    "back": "НАЗАД",
     "install": "ИНСТАЛИРАЙ"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
+    "removeText": "Всички услуги ще бъдат премахнати.",
     "sure": "Сигурен ли сте?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "welcome": "ДОБРЕ ДОШЛИ",
+    "installText": "В ТАЗИ СТЪПКА ИЗБИРАТЕ НАЧИНА НА ИНСТАЛИРАНЕ НА НОД-а. АКО ИМАТЕ НУЖДА ОТ ПОМОЩ ПРИ ИНСТАЛИРАНЕТО, ПРИСЪЕДИНЕТЕ СЕ КЪМ НАШИЯ ДИСКОРД - С УДОВОЛСТВИЕ ЩЕ ВИ ПОМОГНЕМ",
+    "osCheck": "ПРОВЕРКА ДАЛИ ОПЕРАЦИОННАТА СИСТЕМА НА ВАШИЯ СЪРВЪР СЕ ПОДДЪРЖА"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "PLUGINS",
+    "option": "ОПЦИИ",
+    "chosen": "ИЗБИРАНЕ НА МРЕЖА",
+    "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
+    "syncClient": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "plugin": "ПЛЪГИНИ",
     "back": "НАЗАД",
     "next": "СЛЕДВАЩ"
   }
