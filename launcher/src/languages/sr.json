@@ -30,35 +30,35 @@
     "emailText": "ili napišite email na:"
   },
   "notifModal": {
-    "notification": "Notifications",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "notification": "Obavještenja",
+    "notifText": "Ovdje možete podesiti različite izvore obavještenja i status o kojem želite da budete obavješteni",
+    "cancelText": "Klikni vani da otkažete"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
-    "langName": "language  selection",
-    "confirm": "CONFIRM & APPLY",
+    "stereumName": "stereum postavljanje",
+    "langName": "izbor jezika",
+    "confirm": "POTVRDI i PRIMJENI",
     "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
+    "credits": "Zasluge",
+    "open": "otvoren",
     "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
+    "launcherVersion": "Launcher Verzija",
+    "nodeVersion": "Node Verzija",
+    "lane": "Stereum - Testna traka",
+    "on": "otvoreno",
+    "off": "isključeno",
+    "updateConfig": "Stereum Konfiguracija Ažuriranja",
+    "servicePlugin": "Plug-in / Stereum Konfiguracija Ažuriranja",
     "manual": "MANUAL",
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "First Steps!",
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "switchM": "Switch Machine"
+    "firstSteps": "Prvi koraci!",
+    "stake": "Stake sa 32 ETH",
+    "ssv": "Koristi ssv.network",
+    "alert": "Upozorenja na Mobilnoj Aplikaciji",
+    "switchC": "Promijenite Client",
+    "switchM": "Promijenite Mašinu"
   },
   "pluginZone": {
     "client": "client"
@@ -70,7 +70,7 @@
     "servicePlugin": "SERVICE PLUGIN"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
+    "backNode": "nazad na NODE",
     "addPreset": "ADD 1 CLICK PRESET",
     "changeNetwork": "CHANGE NETWORK",
     "nukeNode": "NUKE NODE"
