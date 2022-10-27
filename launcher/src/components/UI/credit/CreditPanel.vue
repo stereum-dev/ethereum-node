@@ -8,21 +8,18 @@
               <img :src="financialIco" />
             </div>
             <div class="credit-panel_title_ttl">
-              <span>CREDITS - FINANCIAL CONTRIBUTORS</span>
+              <span>{{ $t("creditPanel.creditTitle") }}</span>
             </div>
           </div>
         </div>
         <div class="division-line"></div>
         <div class="desc-line">
-          <small
-            >GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE
-            DEVELOPMENT!
-          </small>
+          <small>{{ $t("creditPanel.fincialTitle") }} </small>
           <div class="desc-line-button" @click="creditToggle">
             <div class="desc-line-button_ico">
               <img :src="technikalIco" />
             </div>
-            <span>TECHNICAL CONTRIBUTION</span>
+            <span>{{ $t("creditPanel.technicPage") }}</span>
           </div>
         </div>
         <financial-box></financial-box>
@@ -34,20 +31,18 @@
               <img :src="technikalIco" />
             </div>
             <div class="credit-panel_title_ttl">
-              <span>CREDITS - TECHNICAL CONTRIBUTORS</span>
+              <span>{{ $t("creditPanel.techTitle") }}</span>
             </div>
           </div>
         </div>
         <div class="division-line"></div>
         <div class="desc-line">
-          <small
-            >EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!
-          </small>
+          <small>{{ $t("creditPanel.techText") }} </small>
           <div class="desc-line-button" @click="creditToggle">
             <div class="desc-line-button_ico">
               <img :src="financialIco" alt="" />
             </div>
-            <span>FINANCIAL CONTRIBUTION</span>
+            <span>{{ $t("creditPanel.financialPage") }}</span>
           </div>
         </div>
         <technical-box></technical-box>

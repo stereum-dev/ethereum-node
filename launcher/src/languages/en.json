@@ -201,5 +201,13 @@
     "plugin":"PLUGINS",
     "back":"BACK",
     "next":"NEXT"
+  },
+  "creditPanel":{
+    "creditTitle":"CREDITS - FINANCIAL CONTRIBUTORS",
+    "fincialTitle":"GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "technicPage":"TECHNICAL CONTRIBUTION",
+    "techTitle":"CREDITS - TECHNICAL CONTRIBUTORS",
+    "techText":"EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "financialPage":"FINANCIAL CONTRIBUTION"
   }
 }
