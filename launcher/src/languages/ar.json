@@ -38,7 +38,7 @@
     "stereumName": "stereum setting",
     "langName": "language  selection",
     "confirm": "CONFIRM & APPLY",
-    "general": "GENETAL",
+    "general": "GENERAL",
     "credits": "Credits",
     "open": "open",
     "update": "UPDATE",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
@@ -175,7 +175,7 @@
   },
   "validatorsBox": {
     "date": "DATE",
-    "validator": "VALIATOR",
+    "validator": "VALIDATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "REWARD"
   },
