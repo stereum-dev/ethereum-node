@@ -101,7 +101,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/bulgaria.png",
           langName: "български",
           label: "bg",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/mongolia.png",
