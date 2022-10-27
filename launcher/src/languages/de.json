@@ -38,7 +38,7 @@
     "stereumName": "stereum einstellungen",
     "langName": "Sprachwahl",
     "confirm": "BESTÄTIGEN & ANWENDEN",
-    "general": "GENETAL",
+    "general": "ALLGEMEIN",
     "credits": "Credits",
     "open": "öffnen",
     "update": "UPDATE",
@@ -72,72 +72,72 @@
   "modifyPanel": {
     "backNode": "zurück zu NODE",
     "addPreset": "1 KLICK-PRESET hinzufügen",
-    "changeNetwork": "CHANGE NETWORK",
+    "changeNetwork": "NETZWERK ÄNDERN",
     "nukeNode": "NUKE NODE"
   },
   "sidebarManage": {
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "BESTÄTIGEN",
+    "change": "BESTÄTIGE ÄNDERUNGEN",
+    "delete": "LÖSCHEN"
   },
   "updatePanel": {
-    "launcherTitle": "launcher updates",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "auto-update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "Service updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "launcherTitle": "Launcher Updates",
+    "current": "aktuelle",
+    "nodeTitle": "Node Updates",
+    "latest": "neueste",
+    "auto": "Auto-Update",
+    "available": "verfügbar",
+    "searching": "Suche nach Updates...",
+    "serviceTitle": "Service-Updates",
+    "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
+    "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
+    "all": "Alle aktualisieren"
   },
   "controlPage": {
     "node": "NODE",
     "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
-    "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-ENDPOINT",
+    "write": "SCHREIBEN",
+    "read": "LESEN",
+    "inclusionDistance": "INKLUSIONSDISTANZ",
+    "rpc": "RPC-Endpunkt",
     "syncStatus": "SYNC STATUS",
     "hard": "HARD DISK",
-    "free": "FREE",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
+    "free": "KOSTENLOS",
+    "total": "GESAMT",
+    "network": "NETZWERK",
+    "receive": "Empfangene Daten",
+    "transmit": "Übertragene Daten",
     "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage"
+    "used": "verwendet",
+    "totalram": "gesamt",
+    "storage": "SPEICHER",
+    "active": "AKTIV",
+    "rating": "BEWERTUNG",
+    "usage": "Nutzung"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Klicke auf Aufgaben zum Anzeigen"
   },
   "displayValidator": {
-    "pk": "Public Key",
+    "pk": "Öffentlicher Schlüssel",
     "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "STATE",
-    "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some times",
-    "waitForImport": "Please wait until the key is imported"
+    "active": "AKTIV SEIT",
+    "state": "ZUSTAND",
+    "balance": "KONTOSTAND",
+    "option": "OPTIONEN",
+    "importKey": "Importiere Validatorschlüssel",
+    "waitMessage": "Dies kann einige Zeit dauern",
+    "waitForImport": "Bitte warte bis der Schlüssel importiert ist"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "PASSWORT EINGEBEN & IMPORTIEREN"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "passMessage": "GEBEN SIE IHR VALIDATOR PASSWORT EIN UM IHR STAKING KONTO AUFZULÖSEN...",
+    "confirm": "Bestätigen"
   },
   "exitValidatorModal": {
     "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validator Key(s) verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
@@ -147,59 +147,59 @@
   },
   "feeRecipient": {
     "textPlaceHolder": "Gib eine gültige Ethereum-Adresse ein, um Blockbelohnungen zu erhalten ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "setBlock": "SETZE EINE BLOCK FEE EMPFÄNGERADRESSE"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Geben Sie 32 Zeichen ein um sie zur Blockchain hinzuzufügen, wenn Sie einen Block erstellen!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Bist du dir sicher, dass du",
+    "from": "VON DIESER MASCHINE ENTFERNEN MÖCHTEN?",
+    "remove": "Entfernen"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Sind Sie sicher, dass Sie alle Validatorschlüssel von DIESER MACHINE entfernen möchten?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
+    "totalText": "GESAMTE BILANZ VON",
+    "validators": "VALIDATOREN",
+    "proposed": "VORGESCHLAGEN",
     "attestRate": "ATTESTATION RATE",
     "attention": "ATTENTIONS",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
+    "missed": "VERPASST",
+    "aggregations": "AGREGIERUNGEN",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIATOR",
+    "date": "DATUM",
+    "validator": "VALIDATOR",
     "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "reward": "BELOHNUNG"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL"
+    "installText": "AUF DIESER SEITE KÖNNEN SIE ENTSCHEIDEN WAS SIE MIT IHRER NODE MACHEN MÖCHTEN. NACHDEM SIE GEWÄHLT HABEN UND START GEDRÜCKT, WIRD IHNEN EINE ZUFÄLLIGE CLIENT AUSWAHL PRÄSENTIERT UM SIE IN IHREM ANWENDUNGSFALL ZU UNTERSTÜTZEN",
+    "back": "ZURÜCK",
+    "install": "INSTALLIEREN"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Alle Services werden entfernt.",
+    "sure": "Sind Sie sicher?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "welcome": "WILLKOMMEN",
+    "installText": "IN DIESEM SCHRITT ENTSCHEIDEN SIE, WIE SIE IHRE NODE INSTALLIEREN MÖCHTEN. WENN SIE HILFE BRAUCHEN BEIM AUFSETZEN, TRETTEN SIE UNSEREM DISCORD SERVER BEI - WIR HELFEN IHNEN GERNE AUS",
+    "osCheck": "ÜBERPRÜFE OB DAS OS UNTERSTÜTZT WIRD"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "PLUGINS",
-    "back": "BACK",
-    "next": "NEXT"
+    "option": "OPTIONEN",
+    "chosen": "NETZWERK ÄNDERN",
+    "path": "INSTALLATIONSPFAD",
+    "syncClient": "SYNCHRONISIERT IHREN CLIENT VOM BEGINN DER BLOCKCHAIN AN",
+    "plugin": "PLUG-INS",
+    "back": "ZURÜCK",
+    "next": "WEITER"
   }
 }

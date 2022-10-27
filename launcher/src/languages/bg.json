@@ -3,30 +3,30 @@
     "login": "вход",
     "server": "Свържете се с вашия сървър",
     "servername": "ИМЕ НА СЪРВЪРА",
-    "iphost": "IP / HOST NAME",
+    "iphost": "IP / ИМЕ НА ХОСТ",
     "username": "ПОТРЕБИТЕЛСКО ИМЕ",
     "password": "ПАРОЛА",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "keylocation": "КЛЮЧОВО МЕСТОПОЛОЖЕНИЕ",
+    "usessh": "ИЗПОЛЗВАЙТЕ SSH КЛЮЧ"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "ОЧАКВАЙТЕ СКОРО"
   },
   "journalnode": {
-    "serverip": "server ip",
+    "serverip": "сървър ip",
     "servername": "ИМЕ НА СЪРВЪРА",
-    "edit": "to edit node"
+    "edit": "редактиране на нод"
   },
   "pagesnav": {
-    "node": "NODE",
+    "node": "НОД",
     "control": "КОНТРОЛ",
-    "staking": "STAKING"
+    "staking": "СТАКИНГ"
   },
   "supportModal": {
     "support": "съпорт",
     "supportText": "Най-бързият начин да се свържете с човек за поддръжка е да се присъедините към нашия сървър в Дискорд!",
     "bugReport": "ДОКЛАД ЗА ГРЕШКИ",
-    "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
+    "bugRepText": "Моля, отделете време, за да напишете въпрос и да ни позволите да направим Стереум по-добър!",
     "emailText": "или пишете E-Mail на:"
   },
   "notifModal": {
@@ -35,44 +35,44 @@
     "cancelText": "Кликнете извън прозореца за прекратите процеса"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
+    "stereumName": "настройка на стереум",
     "langName": "избиране на език",
-    "confirm": "CONFIRM & APPLY",
+    "confirm": "ПОТВЪРЖДАВАНЕ И ПРИЛАГАНЕ",
     "general": "ОБЩО",
     "credits": "Заслуги",
     "open": "отвори",
     "update": "АКТУАЛИЗАЦИЯ",
     "launcherVersion": "Версия на стартиране",
     "nodeVersion": "Версия на Нода",
-    "lane": "Stereum - Testing Lane",
+    "lane": "Стереум - лента за тестване",
     "on": "включен",
     "off": "изключен",
     "updateConfig": "Конфигурация на Стереум актуализациите",
-    "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
+    "servicePlugin": "Конфигурация за актуализация на плъгини / услуги",
+    "manual": "РЪКОВОДСТВО",
     "auto": "АВТОМАТИЧНО"
   },
   "nodeSidebarVideo": {
     "firstSteps": "Първи стъпки!",
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "switchM": "Switch Machine"
+    "stake": "Залог с 32 ETH",
+    "ssv": "Използвайте ssv мрежа",
+    "alert": "Сигнали в мобилното приложение",
+    "switchC": "Превключване на клиенти",
+    "switchM": "Смяна на машина"
   },
   "pluginZone": {
     "client": "клиент"
   },
   "theNode": {
     "execution": "изпълнение",
-    "consensus": "consensus",
-    "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN"
+    "consensus": "консенсус",
+    "validator": "валидатор",
+    "servicePlugin": "СЪРВИС ПЛЪГИН"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
+    "backNode": "обратно към НОД-а",
+    "addPreset": "ДОБАВЯНЕ НА ПРЕДВАРИТЕЛНА НАСТРОЙКА С 1 КЛИК",
+    "changeNetwork": "СМЯНА НА МРЕЖАТА",
     "nukeNode": "NUKE NODE"
   },
   "sidebarManage": {
@@ -85,14 +85,14 @@
   },
   "updatePanel": {
     "launcherTitle": "актуализации на лаунчъра",
-    "current": "current",
-    "nodeTitle": "node updates",
+    "current": "текущ",
+    "nodeTitle": "нод актуализации",
     "latest": "последни",
     "auto": "автоматично обновяване",
     "available": "налично",
     "searching": "търсене за актуализации",
     "serviceTitle": "Актуализиране на услугите",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
+    "serviceDesc": "Актуализации за инсталираната селекция плъгин-и",
     "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
     "all": "актуализиране на всички"
   },
@@ -102,104 +102,104 @@
     "write": "ЗАПИСВАНЕ",
     "read": "ПРОЧИТАНЕ",
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
-    "rpc": "RPC-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
+    "rpc": "RPC-крайна връзка",
+    "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",
     "hard": "ХАРД ДИСК",
     "free": "БЕСПЛАТНО",
-    "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
-    "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage"
+    "total": "ОБЩО",
+    "network": "МРЕЖА",
+    "receive": "Получаване на данни",
+    "transmit": "Предаване на данни",
+    "ram": "РАМ",
+    "used": "използван",
+    "totalram": "общо",
+    "storage": "СКЛАД",
+    "active": "АКТИВЕН",
+    "rating": "РЕЙТИНГ",
+    "usage": "Използване"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Кликнете върху задачите, за да ги покажете"
   },
   "displayValidator": {
-    "pk": "Public Key",
-    "service": "SERVICE",
-    "active": "ACTIVE SINCE",
-    "state": "STATE",
-    "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some times",
-    "waitForImport": "Please wait until the key is imported"
+    "pk": "Публичен ключ",
+    "service": "СЪРВИС",
+    "active": "АКТИВЕН ОТ",
+    "state": "СЪСТОЯНИЕ",
+    "balance": "БАЛАНС",
+    "option": "ОПЦИИ",
+    "importKey": "Импортиране на валидаторни ключ(ове)",
+    "waitMessage": "Може да отнеме малко време",
+    "waitForImport": "Моля изчакайте, докато ключ(овете) бъдат импортирани"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "ВЪВЕДЕТЕ ПАРОЛА & ИМПОРТИРАЙТЕ"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "passMessage": "ВЪВЕДЕТЕ ПАРОЛАТА СИ ЗА ВАЛИДИРАНЕ, ЗА ДА ИЗЛЕЗЕТЕ ОТ ВЕРИГАТА С ТОЗИ КЛЮЧ...",
+    "confirm": "Потвърдете"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
+    "modalMessage": "Сигурни ли сте, че искате да излезете от веригата с ИЗБРАНИТЕ КЛЮЧОВЕ ЗА УТВЪРЖДАВАНЕ? Това прекратява работата на валидатора и НЕ МОЖЕ да бъде върнато назад. Вашите средства също могат да се изтеглят само ако веригата го позволява.",
     "exitApprove": "ПРОЧЕТОХ ТЕКСТА И СЪМ НАЯСНО С ПОСЛЕДСТВИЯТА",
-    "exitChain": "EXIT CHAIN",
+    "exitChain": "ИЗЛИЗАНЕ ОТ ВЕРИГАТА",
     "clickClose": "Клинкете извън прозореца за да затворите/прекратите."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Въведете валиден адрес в Етериум, за да изпратите блок наградите си на... ",
+    "setBlock": "ЗАДАВАНЕ НА АДРЕС НА ПОЛУЧАТЕЛ НА БЛОКОВА ТАКСА"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "КЛИКНЕТЕ ИЛИ ПЛЪЗНЕТЕ, ЗА ДА ДОБАВИТЕ КЛЮЧ"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Сигурни ли сте, че искате за изтриете",
+    "from": "ОТ ТАЗИ МАШИНА?",
+    "remove": "Премахване"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Сигурни ли сте, че искате да премахнете всички ключове на Validator ОТ ТАЗИ МАШИНА?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTENTIONS",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "totalText": "ОБЩ БАЛАНС НА",
+    "validators": "ВАЛИДАТОРИ",
+    "proposed": "ПРЕДЛОЖЕНО",
+    "attestRate": "КОЕФИЦИЕНТ НА АТЕСТАЦИЯ",
+    "attention": "ВНИМАНИЕ",
+    "missed": "ИЗПУСНАТИ",
+    "aggregations": "АГРЕГАЦИИ",
+    "slashed": "НАРЯЗАНИ"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIATOR",
-    "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "date": "ДАТА",
+    "validator": "ВАЛИДАТОР",
+    "attestRate": "АТЕСТ.ТАРИФА",
+    "reward": "НАГРАДА"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
+    "installText": "НА ТАЗИ СТРАНИЦА МОЖЕТЕ ДА ИЗБЕРЕТЕ КАКВО ИСКАТЕ ДА НАПРАВИТЕ С НОД-а СИ. СЛЕД КАТО ИЗБЕРЕТЕ И НАТИСНЕТЕ СТАРТ, ЩЕ БЪДЕ ИЗБРАН СЛУЧАЕН КЛИЕНТ, КОЙТО ДА ОБСЛУЖВА ВАШИЯ СЛУЧАЙ НА УПОТРЕБА",
+    "back": "НАЗАД",
     "install": "ИНСТАЛИРАЙ"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
+    "removeText": "Всички услуги ще бъдат премахнати.",
     "sure": "Сигурен ли сте?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "welcome": "ДОБРЕ ДОШЛИ",
+    "installText": "В ТАЗИ СТЪПКА ИЗБИРАТЕ НАЧИНА НА ИНСТАЛИРАНЕ НА НОД-а. АКО ИМАТЕ НУЖДА ОТ ПОМОЩ ПРИ ИНСТАЛИРАНЕТО, ПРИСЪЕДИНЕТЕ СЕ КЪМ НАШИЯ ДИСКОРД - С УДОВОЛСТВИЕ ЩЕ ВИ ПОМОГНЕМ",
+    "osCheck": "ПРОВЕРКА ДАЛИ ОПЕРАЦИОННАТА СИСТЕМА НА ВАШИЯ СЪРВЪР СЕ ПОДДЪРЖА"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "PLUGINS",
-    "back": "BACK",
-    "next": "NEXT"
+    "option": "ОПЦИИ",
+    "chosen": "ИЗБИРАНЕ НА МРЕЖА",
+    "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
+    "syncClient": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
+    "plugin": "ПЛЪГИНИ",
+    "back": "НАЗАД",
+    "next": "СЛЕДВАЩ"
   }
 }
