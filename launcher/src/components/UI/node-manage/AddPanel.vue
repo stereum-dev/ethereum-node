@@ -598,11 +598,11 @@ export default {
 .addBtn {
   width: 40%;
   height: 95%;
-  background-color: #0d4f46;
-  color: #a8a8a8;
+  background-color: #116b5f;
+  color: #dfdfdf;
   border-radius: 5px;
   border: 1px solid #11675c;
-  box-shadow: 0 1px 3px 1px #262626;
+  box-shadow: 0 1px 3px 1px #2d2f31;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -613,27 +613,23 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
-
 .addBtn:hover {
-  background-color: #116b5f;
+  background-color: #0d4f46;
   transition-duration: 0.2s;
-  color: #dfdfdf;
 }
-
 .addBtn:active {
   background-color: #0d4f46;
   transition-duration: 0.2s;
   transform: scale(0.9);
 }
-
 .cancelBtn {
   width: 40%;
   height: 95%;
-  background-color: #2a2a2a;
-  color: #a8a8a8;
+  background-color: #d75442;
+  color: #dfdfdf;
   border-radius: 5px;
-  border: 1px solid #414141;
-  box-shadow: 0 1px 3px 1px #1c1c1c;
+  border: 1px solid #d75442;
+  box-shadow: 0 1px 3px 1px #2d2f31;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -644,13 +640,10 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
-
 .cancelBtn:hover {
-  background-color: #d75442;
+  background-color: #b84738;
   transition-duration: 0.2s;
-  color: #dfdfdf;
 }
-
 .cancelBtn:active {
   background-color: #b84738;
   transition-duration: 0.2s;
@@ -659,7 +652,7 @@ export default {
 
 .optionsBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -808,6 +801,7 @@ export default {
 .relaysBox {
   width: 100%;
   height: 100%;
+  padding: 2px;
   background-color: #23282b;
   border: 1px solid #22272a;
   border-radius: 5px;
@@ -837,23 +831,57 @@ export default {
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
+.relaysBoxContent::-webkit-scrollbar {
+  width: 5px;
+}
+.relaysBoxContent::-webkit-scrollbar-track {
+  background: #23282b;
+}
+.relaysBoxContent::-webkit-scrollbar-thumb {
+  background: #42a5de;
+  border-radius: 5px;
+}
+
 .relaysBoxContent .relay {
   width: 100%;
   height: 12%;
+  min-height: 35px;
   background-color: #2e3438;
   border: 1px solid #22272a;
   border-radius: 5px;
   margin-top: 2px;
-  padding: 2px;
+  padding: 3px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  cursor: pointer;
 }
 .relaysBoxContent .relay:hover {
   background-color: #3b4246;
   border: 1px solid #3b4246;
   transition-duration: 0.2s;
+}
+.relaysBoxContent .relay input {
+  width: 10%;
+  height: 60%;
+  border-radius: 2px;
+  background-color: rgb(81, 89, 96);
+}
+.relaysBoxContent .relay label {
+  width: 80%;
+  height: 100%;
+  margin-left: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #aaaaaa;
+  cursor: pointer;
 }
 </style>
