@@ -128,7 +128,7 @@
           <span>Cancel</span>
         </div>
         <div class="addBtn" @click="$emit('saveModify')">
-          <span>ADD</span>
+          <span>SAVE</span>
         </div>
       </div>
     </div>
