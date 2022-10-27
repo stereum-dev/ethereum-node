@@ -2,6 +2,51 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      checkedRelays: [],
+      relaysList: [
+        {
+          icon: "/img/icon/click-installation/flashbot-icon.png",
+          name: "FLASHBOTS",
+          id: 1,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute MAX PROFIT",
+          id: 2,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute ETHICAL",
+          id: 3,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "BloXroute REGULATED",
+          id: 4,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/blocknative.png",
+          name: "BLOCKNATIVE",
+          id: 5,
+          isSelected: false,
+          isRemoved: false,
+        },
+        {
+          icon: "/img/icon/click-installation/bloxRoute-icon.png",
+          name: "MANIFOLD",
+          id: 6,
+          isSelected: false,
+          isRemoved: false,
+        },
+      ],
       newConfiguration: [],
       selectedItemToRemove: [],
       clickPresets: [

@@ -11,8 +11,29 @@
           </p>
         </div>
       </div>
+
       <div class="configBox">
-        <div class="change-installation">
+        <div
+          class="relaysBox"
+          v-if="plugin.service === 'FlashbotsMevBoostService'"
+        >
+          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxContent">
+            <div class="relay" v-for="relay in relaysList" :key="relay.id">
+              <input
+                type="checkbox"
+                :id="relay.id"
+                :value="relay"
+                v-model="checkedRelays"
+              />
+              <label :for="relay.id">{{ relay.name }}</label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="change-installation"
+          v-if="plugin.service !== 'FlashbotsMevBoostService'"
+        >
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
@@ -20,8 +41,10 @@
             <input type="text" v-model="installationPath" maxlength="255" />
           </div>
         </div>
-
-        <div class="portAddBox">
+        <div
+          class="portAddBox"
+          v-if="plugin.service !== 'FlashbotsMevBoostService'"
+        >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>PORT USED</span>
@@ -29,7 +52,14 @@
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
-          <div class="optionsBox" v-if="!switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
+          <div
+            class="optionsBox"
+            v-if="
+              !switchHandler(service) &&
+              service.service !== 'FlashbotsMevBoostService'
+            "
+            @click="changeSelectedServiceToConnect(service)"
+          >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
@@ -38,7 +68,14 @@
               </div>
             </div>
           </div>
-          <div class="clientAddBox" v-if="switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
+          <div
+            class="clientAddBox"
+            v-if="
+              switchHandler(service) &&
+              service.service !== 'FlashbotsMevBoostService'
+            "
+            @click="changeSelectedServiceToConnect(service)"
+          >
             <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
             <div class="connectionConfig">
               <span class="category">{{ service.category }} Client</span>
@@ -46,22 +83,35 @@
             </div>
           </div>
         </template>
-        <div class="fast-sync" v-if="
-          plugin.category === 'execution' || plugin.category === 'consensus'
-        ">
+        <div
+          class="fast-sync"
+          v-if="
+            plugin.category === 'execution' || plugin.category === 'consensus'
+          "
+        >
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img @click="changeResyncOptions" src="/img/icon/arrows/left-arrow.png" alt="icon" />
+              <img
+                @click="changeResyncOptions"
+                src="/img/icon/arrows/left-arrow.png"
+                alt="icon"
+              />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img @click="changeResyncOptions" src="/img/icon/arrows/right-arrow.png" alt="icon" />
+              <img
+                @click="changeResyncOptions"
+                src="/img/icon/arrows/right-arrow.png"
+                alt="icon"
+              />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <span v-if="genesisIsActive"
+              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
+            >
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
             </div>
@@ -111,6 +161,8 @@ export default {
       actionContents: "actionContents",
       newConfiguration: "newConfiguration",
       configNetwork: "configNetwork",
+      relaysList: "relaysList",
+      checkedRelays: "checkedRelays",
     }),
   },
   watch: {
@@ -125,23 +177,30 @@ export default {
   methods: {
     switchHandler(service) {
       if (service.selectedForConnection) {
-        return service.selectedForConnection
+        return service.selectedForConnection;
       }
-      return false
+      return false;
     },
     cancelConfig() {
-      this.$emit('cancelAdd')
+      this.$emit("cancelAdd");
     },
     saveConfig() {
-      let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
-      this.$emit('saveConfig', {
-        network: (this.configNetwork.network === "testnet") ? "goerli" : "mainnet",
-        installDir: this.installationPath ? this.installationPath : "/opt/stereum",
+      let dependencies = toRaw(this.options).filter(
+        (s) => s.selectedForConnection
+      );
+      this.$emit("saveConfig", {
+        network:
+          this.configNetwork.network === "testnet" ? "goerli" : "mainnet",
+        installDir: this.installationPath
+          ? this.installationPath
+          : "/opt/stereum",
         port: parseInt(this.port),
-        executionClients: dependencies.filter(s => s.category === "execution"),
-        beaconServices: dependencies.filter(s => s.category === "consensus"),
-        checkpointURL: this.checkPointSync ? this.checkPointSync : false
-      })
+        executionClients: dependencies.filter(
+          (s) => s.category === "execution"
+        ),
+        beaconServices: dependencies.filter((s) => s.category === "consensus"),
+        checkpointURL: this.checkPointSync ? this.checkPointSync : false,
+      });
     },
     changeResyncOptions() {
       if (this.genesisIsActive) {
@@ -263,7 +322,7 @@ export default {
 
 .configBox {
   width: 95%;
-  height: 80%;
+  height: 70%;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
@@ -274,7 +333,7 @@ export default {
 
 .configBox .change-installation {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -466,7 +525,7 @@ export default {
 .portAddBox,
 .clientAddBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -745,5 +804,56 @@ export default {
   text-align: center;
   text-transform: uppercase;
   box-sizing: border-box;
+}
+.relaysBox {
+  width: 100%;
+  height: 100%;
+  background-color: #23282b;
+  border: 1px solid #22272a;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+.relaysBoxTitle {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #aaaaaa;
+}
+.relaysBoxContent {
+  width: 100%;
+  height: 90%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+.relaysBoxContent .relay {
+  width: 100%;
+  height: 12%;
+  background-color: #2e3438;
+  border: 1px solid #22272a;
+  border-radius: 5px;
+  margin-top: 2px;
+  padding: 2px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+.relaysBoxContent .relay:hover {
+  background-color: #3b4246;
+  border: 1px solid #3b4246;
+  transition-duration: 0.2s;
 }
 </style>
