@@ -1,7 +1,7 @@
 {
   "formsetup": {
     "login": "einloggen",
-    "server": "Verbinden Sie mit Ihrem Server",
+    "server": "Verbinden Sie sich mit Ihrem Server",
     "servername": "SERVERNAME",
     "iphost": "IP / HOSTNAME",
     "username": "BENUTZERNAME",
