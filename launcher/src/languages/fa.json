@@ -15,10 +15,10 @@
   "journalnode": {
     "serverip": "سرور IP",
     "servername": "نام سرور ",
-    "edit": "NODE ویرایش"
+    "edit": "ویرایش نود"
   },
   "pagesnav": {
-    "node": "NODE",
+    "node": "نود",
     "control": "کنترل",
     "staking": "استیک"
   },
@@ -43,7 +43,7 @@
     "open": "باز کردن",
     "update": "بروزرسانی",
     "launcherVersion": "نسخه لانچر",
-    "nodeVersion": "NODE نسخه",
+    "nodeVersion": "نسخه نود",
     "lane": "استریوم - تست مسیر",
     "on": "روشن",
     "off": "خاموش",
@@ -70,10 +70,10 @@
     "servicePlugin": "خدمات پلاگین"
   },
   "modifyPanel": {
-    "backNode": " NODE بازگشت به",
+    "backNode": "بازگشت به نود",
     "addPreset": "اضافه کردن پیش فرض ۱ کلیک",
     "changeNetwork": "تغییر شبکه",
-    "nukeNode": "NODE از بین بردن "
+    "nukeNode": "از بین بردن نود"
   },
   "sidebarManage": {
     "filter": "فیلترکردن"
@@ -86,7 +86,7 @@
   "updatePanel": {
     "launcherTitle": "بروز رسانی لانچر",
     "current": "کنونی",
-    "nodeTitle": "NODE بروز رسانی",
+    "nodeTitle": "بروز رسانی نود",
     "latest": "آخرین نسخه",
     "auto": "بروزرسانی اتوماتیک",
     "available": "در دسترس",
@@ -97,26 +97,26 @@
     "all": "بروزرسانی همه چیز"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "نود",
     "disk": "سرعت دیسک",
     "write": "نوشتن",
     "read": "خواندن",
     "inclusionDistance": "فاصله گنجاندن",
-    "rpc": "RPC - نقطه پایانی",
+    "rpc": "RPC-ENDPOINT",
     "syncStatus": "وضعیت همگام سازی",
-    "hard": "هارد دیسک",
-    "free": "آزاد",
-    "total": "تمامی",
+    "hard": "HARD DISK",
+    "free": "FREE",
+    "total": "TOTAL",
     "network": "شبکه",
     "receive": "داده دریافتی",
     "transmit": "داده ارسالی",
-    "ram": "رام",
-    "used": "استفاده",
-    "totalram": "تمامی",
-    "storage": "ذخیره سازی",
+    "ram": "RAM",
+    "used": "used",
+    "totalram": "total",
+    "storage": "STORAGE",
     "active": "فعال",
     "rating": "رده بندی",
-    "usage": "استفاده شده"
+    "usage": "Usage"
   },
   "taskManager": {
     "clickDisplay": "برای نمایش روی وظایف کلیک کنید"
