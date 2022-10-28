@@ -215,5 +215,8 @@
     "name":"NAME",
     "cat":"CATEGORY",
     "path":"PATH"
+  },
+  "warningModal":{
+    "warningText":"We recommend you to wait until the initial installation is done before applying further changes"
   }
 }
