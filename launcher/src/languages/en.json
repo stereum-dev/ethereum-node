@@ -209,5 +209,11 @@
     "techTitle":"CREDITS - TECHNICAL CONTRIBUTORS",
     "techText":"EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
     "financialPage":"FINANCIAL CONTRIBUTION"
+  },
+  "verifyInstallation":{
+    "verifyTitle":"VERIFY & INSTALL",
+    "name":"NAME",
+    "cat":"CATEGORY",
+    "path":"PATH"
   }
 }
