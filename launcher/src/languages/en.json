@@ -168,7 +168,7 @@
     "validators":"VALIDATORS",
     "proposed":"PROPOSED",
     "attestRate":"ATTESTATION RATE",
-    "attention":"ATTENTIONS",
+    "attention":"ATTESTATION",
     "missed":"MISSED",
     "aggregations":"AGGREGATIONS",
     "slashed":"SLASHED"
