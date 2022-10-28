@@ -110,6 +110,13 @@ export const useFlagDialog = defineStore("flagDialog", {
           label: "mo",
           enable: false,
         },
+        {
+          langImg: "img/flag/sr.png",
+          langSelect: "img/flag/sr.png",
+          langName: "Српски",
+          label: "sr",
+          enable: true,
+        },
       ],
     };
   },
