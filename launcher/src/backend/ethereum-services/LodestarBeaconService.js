@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LodestarBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, mevboost, checkpointURL) {
     const service = new LodestarBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -23,6 +23,9 @@ export class LodestarBeaconService extends NodeService {
     // eth1 nodes
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
+    // mevboost endpoint
+    const mevboostEndpoint = (mevboost.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+
     service.init(
       'LodestarBeaconService',  //service
       service.id, //id
@@ -41,6 +44,7 @@ export class LodestarBeaconService extends NodeService {
         `--metrics=true`,
         `--metrics.port=8008`,
         `--metrics.address=0.0.0.0`,
+        `--builder`
       ],  //command
       ["node", "./packages/cli/bin/lodestar"], //entrypoint
       null, //env
@@ -48,12 +52,16 @@ export class LodestarBeaconService extends NodeService {
       volumes,  //volumes
       null, //user
       network,  //network
-      executionClients  //executionClients
+      executionClients,  //executionClients
+      null, //consensusClients
+      null,  //prometheusNodeExporterClients
+      mevboost  //mevboost
       )
 
     if(checkpointURL)
       service.command.push('--checkpointSyncUrl=' + checkpointURL)
-
+    if(mevboostEndpoint)
+      service.command.push(`--builder.urls=${mevboostEndpoint}`)
     return service
   }
 

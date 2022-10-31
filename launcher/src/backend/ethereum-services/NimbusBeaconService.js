@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class NimbusBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, mevboostURL, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, mevboost, checkpointURL) {
     const service = new NimbusBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -13,7 +13,7 @@ export class NimbusBeaconService extends NodeService {
     const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCWsEndpointUrl() })).join()
 
     // mevboost endpoint
-    const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+    const mevboostEndpoint = (mevboost.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
     const JWTDir = '/engine.jwt'
     const dataDir = '/opt/app/beacon'
@@ -56,8 +56,6 @@ export class NimbusBeaconService extends NodeService {
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt',
         '--jwt-secret=/engine.jwt',
-        '--payload-builder=true',
-        `--payload-builder-url=${mevboostEndpoint}`,
       ], // command,
       ["/home/user/nimbus-eth2/build/nimbus_beacon_node"], // entrypoint,
       null, // env,
@@ -65,10 +63,15 @@ export class NimbusBeaconService extends NodeService {
       volumes, // volumes,
       null, // user,
       network, // network,
-      executionClients // executionClients,
+      executionClients,  //executionClients
+      null, //consensusClients
+      null,  //prometheusNodeExporterClients
+      mevboost  //mevboost
     )
     if(checkpointURL)
       service.command.push('--trusted-node-url=' + checkpointURL)
+    if(mevboostEndpoint)
+      service.command.push('--payload-builder=true',`--payload-builder-url=${mevboostEndpoint}`)
     return service
   }
 

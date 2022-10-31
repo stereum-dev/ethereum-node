@@ -29,7 +29,7 @@ test('buildConfiguration', () => {
     }
   })
 
-  const lService = LodestarBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [new GethService.GethService()], 16).buildConfiguration()
+  const lService = LodestarBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [new GethService.GethService()], []).buildConfiguration()
 
   expect(lService.command).toContain('--execution.urls=http-endpoint-string')
   expect(lService.volumes).toHaveLength(2)
@@ -66,7 +66,7 @@ test('buildConsensusClientHttpEndpointUrl', () => {
     new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
   ]
 
-  const lService = LodestarBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [new GethService.GethService()], 16).buildConsensusClientHttpEndpointUrl()
+  const lService = LodestarBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/l', [new GethService.GethService()], []).buildConsensusClientHttpEndpointUrl()
 
   expect(lService).toMatch(/http:\/\/stereum-.{36}:9596/)
 })
@@ -90,7 +90,7 @@ test('getAvailablePorts', () => {
       ]
     }
   })
-  const lServicePorts = LodestarBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/l', [new GethService.GethService()], 16).getAvailablePorts()
+  const lServicePorts = LodestarBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/l', [new GethService.GethService()], []).getAvailablePorts()
 
   expect(lServicePorts).toHaveLength(3)
 })
@@ -114,7 +114,7 @@ test('network', () => {
       ]
     }
   })
-  const lServicePorts = LodestarBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/l', [new GethService.GethService()], 16).buildConfiguration()
+  const lServicePorts = LodestarBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/l', [new GethService.GethService()], []).buildConfiguration()
 
   expect(lServicePorts.network).toMatch(/goerli/)
 })
