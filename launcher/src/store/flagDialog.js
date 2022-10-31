@@ -17,7 +17,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/germany.png",
           langName: "deutsch",
           label: "de",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/france.png",
@@ -58,7 +58,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langImg: "img/flag/netherlands.png",
           langSelect: "img/flag/netherlands.png",
           langName: "dutch",
-          label: "du",
+          label: "nl",
           enable: false,
         },
         {
@@ -101,7 +101,7 @@ export const useFlagDialog = defineStore("flagDialog", {
           langSelect: "img/flag/bulgaria.png",
           langName: "български",
           label: "bg",
-          enable: false,
+          enable: true,
         },
         {
           langImg: "img/flag/mongolia.png",
@@ -109,6 +109,13 @@ export const useFlagDialog = defineStore("flagDialog", {
           langName: "монгол хэл",
           label: "mo",
           enable: false,
+        },
+        {
+          langImg: "img/flag/sr.png",
+          langSelect: "img/flag/sr.png",
+          langName: "Српски",
+          label: "sr",
+          enable: true,
         },
       ],
     };

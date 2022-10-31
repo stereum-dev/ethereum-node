@@ -7,20 +7,22 @@
         </div>
         <span>P2P</span>
       </div>
-      <div class="p2pBarCont">
-        <div class="p2pVal">
-          <div class="p2pVal_value" :style="firstBar"></div>
+      <div class="p2pBarBox">
+        <div class="p2pBarCont">
+          <div class="p2pVal">
+            <div class="p2pVal_value" :style="firstBar"></div>
+          </div>
+          <div class="titleVal">
+            <span>{{ consensusClient }}</span>
+          </div>
         </div>
-        <div class="titleVal">
-          <span>{{ consensusClient }}</span>
-        </div>
-      </div>
-      <div class="p2pBarCont">
-        <div class="p2pVal">
-          <div class="p2pVal_value" :style="secondBar"></div>
-        </div>
-        <div class="titleVal">
-          <span>{{ executionClient }}</span>
+        <div class="p2pBarCont">
+          <div class="p2pVal">
+            <div class="p2pVal_value" :style="secondBar"></div>
+          </div>
+          <div class="titleVal">
+            <span>{{ executionClient }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -56,6 +58,13 @@ export default {
 };
 </script>
 <style scoped>
+.p2pBarBox {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .titleVal {
   display: flex;
   justify-content: center;
@@ -121,11 +130,11 @@ export default {
   height: 80%;
 }
 .p2pIco-container img {
-  width: 65%;
+  width: 60%;
 }
 
 .p2pBarCont {
-  width: 30%;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

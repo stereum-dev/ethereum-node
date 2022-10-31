@@ -3,20 +3,22 @@
     <div class="modal-opacity" @click="$emit('closeModal')"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img
+          src="../../../../public/img/icon/the-staking/stereum-error.png"
+          alt="icon"
+        />
       </div>
       <div class="warningMessage">
-        <p>We recommend you to wait until the initial installation is done
-          before applying further changes.</p>
+        <p>{{ $t("warningModal.warningText") }}</p>
       </div>
       <div class="confirm-box">
         <span @click="$emit('installBtn')" class="confirm-btn">
-          INSTALL
+          {{ $t("installOption.install") }}
         </span>
         <!-- <div class="confirm-btn" >
           <span>Confirm</span>
         </div> -->
-        <span class="close">Click outside to close.</span>
+        <span class="close">{{$t('exitValidatorModal.clickClose')}}</span>
       </div>
     </div>
   </div>
@@ -145,7 +147,7 @@ export default {
 }
 
 .confirm-btn:active {
-  transform: scale(.95);
+  transform: scale(0.95);
   box-shadow: none;
 }
 
