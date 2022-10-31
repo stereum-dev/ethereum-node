@@ -140,7 +140,7 @@
     "confirm": "Bestätigen"
   },
   "exitValidatorModal": {
-    "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validator Key(s) verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
+    "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validatorschlüsseln verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
     "exitApprove": "ICH HABE DEN TEXT GELESEN UND BIN MIR DEN KONSEQUENZEN BEWUSST",
     "exitChain": "BLOCKCHAIN VERLASSEN",
     "clickClose": "Zum Schließen außerhalb klicken."
