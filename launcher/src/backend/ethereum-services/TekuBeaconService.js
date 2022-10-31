@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class TekuBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, mevboostURL, checkpointURL) {
+    static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
         const service = new TekuBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -13,7 +13,7 @@ export class TekuBeaconService extends NodeService {
         const executionLayer = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
         // mevboost endpoint
-        const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+        const mevboostEndpoint = (mevboost.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
         const JWTDir = '/engine.jwt'
         const dataDir = '/opt/app/data'
@@ -67,7 +67,6 @@ export class TekuBeaconService extends NodeService {
                 `--validator-api-keystore-password-file=${dataDir}/teku_api_password.txt`,
                 '--validators-builder-registration-default-enabled=true',
                 '--validators-proposer-blinded-blocks-enabled=true',
-                `--builder-endpoint=${mevboostEndpoint}`
             ],                      // command
             ["/opt/teku/bin/teku"], // entrypoint
             {JAVA_OPTS: '-Xmx4g'},  // env
@@ -76,11 +75,15 @@ export class TekuBeaconService extends NodeService {
             null,                   // user
             network,                // network
             executionClients,       // executionClients
-            // consensusClients
-            // prometheusNodeExporterClients
+            executionClients,  //executionClients
+            null, //consensusClients
+            null,  //prometheusNodeExporterClients
+            mevboost  //mevboost
         )
         if(checkpointURL)
             service.command.push('--initial-state=' + checkpointURL)
+        if(mevboostEndpoint)
+            service.command.push(`--builder-endpoint=${mevboostEndpoint}`)
         return service
     }
 

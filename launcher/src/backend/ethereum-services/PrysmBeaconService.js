@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class PrysmBeaconService extends NodeService {
-    static buildByUserInput(network, ports, dir, executionClients, mevboostURL, checkpointURL) {
+    static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
         const service = new PrysmBeaconService()
         service.setId()
         const workingDir = service.buildWorkingDir(dir)
@@ -36,7 +36,9 @@ export class PrysmBeaconService extends NodeService {
         let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
 
         // mevboost endpoint
-        const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+        const mevboostEndpoint = (mevboost.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+
+        let builderCommand = mevboostEndpoint ? ' --http-mev-relay=' + mevboostEndpoint : ''
 
         service.init(
             'PrysmBeaconService',  //service
@@ -44,7 +46,7 @@ export class PrysmBeaconService extends NodeService {
             1, // configVersion
             image,  //image
             'v3.1.1', //imageVersion
-            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint='+ executionEndpoint +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand + ' --http-mev-relay=' + mevboostEndpoint,  //command
+            '/app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true --datadir=' + dataDir + ' --p2p-host-ip="" --p2p-host-dns="" --' + network + '=true --block-batch-limit=512' + genesisFile + ' --rpc-host=0.0.0.0 --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100 --execution-endpoint='+ executionEndpoint +' --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001 --p2p-udp-port=12001 --jwt-secret=' + JWTDir + checkpointCommand + builderCommand,  //command
             null, //entrypoint
             null, //env
             ports,  //ports
@@ -52,7 +54,9 @@ export class PrysmBeaconService extends NodeService {
             null, //user
             network,  //network
             executionClients,  //executionClients
-            // mevboost //mevboost
+            null, //consensusClients
+            null,  //prometheusNodeExporterClients
+            mevboost  //mevboost
         )
         return service
 

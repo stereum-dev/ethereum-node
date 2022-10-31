@@ -95,17 +95,19 @@ export class OneClickInstall {
   }
 
   getConfigurations() {
-    const beacon = this.beaconService.buildConfiguration()
-    const executionClient = this.executionClient.buildConfiguration()
-    const prometheusNodeExporter = this.prometheusNodeExporter.buildConfiguration()
-    const prometheus = this.prometheus.buildConfiguration()
-    const grafana = this.grafana.buildConfiguration()
-    const mevboost = this.mevboost.buildConfiguration()
-    if (!this.validatorService) {
-      return [executionClient, beacon, prometheusNodeExporter, prometheus, grafana, mevboost]
-    }
-    const validator = this.validatorService.buildConfiguration()
-    return [executionClient, beacon, validator, prometheusNodeExporter, prometheus, grafana, mevboost]
+    let serviceList = []
+    serviceList.push(this.beaconService.buildConfiguration(),
+    this.executionClient.buildConfiguration(),
+    this.prometheusNodeExporter.buildConfiguration(),
+    this.prometheus.buildConfiguration(),
+    this.grafana.buildConfiguration()
+    )
+    if(this.mevboost)
+      serviceList.push(this.mevboost.buildConfiguration())
+    if(this.validatorService)
+      serviceList.push(this.validatorService.buildConfiguration())
+
+    return serviceList
   }
 
   networkHandler(eth1) {
@@ -163,7 +165,7 @@ export class OneClickInstall {
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16', [this.mevboost], checkpointURL)
+      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/lighthouse', [this.executionClient], '16', this.mevboost ? [this.mevboost] : [], checkpointURL)
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
@@ -182,7 +184,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 3500, 3500, servicePortProtocol.tcp)
       ]
-      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], [this.mevboost], checkpointURL)
+      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
     }
 
     if (constellation.includes('PrysmValidatorService')) {
@@ -190,7 +192,7 @@ export class OneClickInstall {
       ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
       ]
-      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService], [this.mevboost])
+      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/prysm', [this.beaconService])
     }
 
     if (constellation.includes('NimbusBeaconService')) {
@@ -201,7 +203,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], [this.mevboost], checkpointURL)
+      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
 
       //generate validator api-token
       const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
@@ -218,7 +220,7 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       ]
-      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], [this.mevboost], checkpointURL)
+      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/teku', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
 
       //keystore
       const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
