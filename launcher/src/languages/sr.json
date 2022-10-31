@@ -30,35 +30,35 @@
     "emailText": "ili napišite email na:"
   },
   "notifModal": {
-    "notification": "Notifications",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "notification": "Obavještenja",
+    "notifText": "Ovdje možete podesiti različite izvore obavještenja i status o kojem želite da budete obavješteni",
+    "cancelText": "Klikni vani da otkažete"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
-    "langName": "language  selection",
-    "confirm": "CONFIRM & APPLY",
-    "general": "GENETAL",
-    "credits": "Credits",
-    "open": "open",
+    "stereumName": "stereum postavljanje",
+    "langName": "izbor jezika",
+    "confirm": "POTVRDI i PRIMJENI",
+    "general": "GENERAL",
+    "credits": "Zasluge",
+    "open": "otvoren",
     "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
+    "launcherVersion": "Launcher Verzija",
+    "nodeVersion": "Node Verzija",
+    "lane": "Stereum - Testna traka",
+    "on": "otvoreno",
+    "off": "isključeno",
+    "updateConfig": "Stereum Konfiguracija Ažuriranja",
+    "servicePlugin": "Plug-in / Stereum Konfiguracija Ažuriranja",
     "manual": "MANUAL",
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "First Steps!",
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "switchM": "Switch Machine"
+    "firstSteps": "Prvi koraci!",
+    "stake": "Stake sa 32 ETH",
+    "ssv": "Koristi ssv.network",
+    "alert": "Upozorenja na Mobilnoj Aplikaciji",
+    "switchC": "Promijenite Client",
+    "switchM": "Promijenite Mašinu"
   },
   "pluginZone": {
     "client": "client"
@@ -70,136 +70,136 @@
     "servicePlugin": "SERVICE PLUGIN"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
-    "nukeNode": "NUKE NODE"
+    "backNode": "nazad na NODE",
+    "addPreset": "DODATI 1 CLICK PRESET",
+    "changeNetwork": "PROMIJENTI NETWORK",
+    "nukeNode": "IZBRISATI NODE"
   },
   "sidebarManage": {
     "filter": "Filter..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "POTVRDI",
+    "change": "PROMJENE ZA POTVRDU",
+    "delete": "IZBRIŠI"
   },
   "updatePanel": {
-    "launcherTitle": "launcher updates",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "auto-update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "Service updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "launcherTitle": "launcher ažuriranja",
+    "current": "struja",
+    "nodeTitle": "node ažuriranja",
+    "latest": "najnovije",
+    "auto": "auto-ažuriranja",
+    "available": "dostupan",
+    "searching": "traženje novih ažuriranja",
+    "serviceTitle": "Service ažuriranja",
+    "serviceDesc": "Ažuriranja za instalirani izbor od PLUG-INs",
+    "availablePlugin": "DOSTUPNA AŽURIRANJA PLUG-INA",
+    "all": "ažuriraj sve"
   },
   "controlPage": {
     "node": "NODE",
-    "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
-    "inclusionDistance": "INCLUSION DISTANCE",
+    "disk": "BRZINA DISKA",
+    "write": "PISAT",
+    "read": "PROČITAT",
+    "inclusionDistance": "INKLUZIJSKA UDALJENOST",
     "rpc": "RPC-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
+    "syncStatus": "STATUS SINHRONIZACIJE",
     "hard": "HARD DISK",
     "free": "FREE",
-    "total": "TOTAL",
+    "total": "UKUPNO",
     "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
+    "receive": "Primanje Podataka",
+    "transmit": "Prijenos podataka",
     "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
+    "used": "korišteno",
+    "totalram": "ukupno",
+    "storage": "SKLADIŠTE",
+    "active": "AKTIVNO",
     "rating": "RATING",
-    "usage": "Usage"
+    "usage": "Upotreba"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Kliknite na zadatke za prikaz"
   },
   "displayValidator": {
     "pk": "Public Key",
     "service": "SERVICE",
-    "active": "ACTIVE SINCE",
+    "active": "AKTIVAN OD",
     "state": "STATE",
     "balance": "BALANCE",
-    "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some times",
-    "waitForImport": "Please wait until the key is imported"
+    "option": "OPCIJE",
+    "importKey": "Uvoz validator key(s)",
+    "waitMessage": "Može potrajati nekoliko vremena",
+    "waitForImport": "Pričekajte dok se key ne uveze"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "UNESITE LOZINKU I UVOZ"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "passMessage": "UNESITE VAŠU LOZINKU VALIDATORA DA IZAČETE IZ CHAINa OVIM KEYom...",
+    "confirm": "Potvrdi"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "modalMessage": "Jeste li sigurni da želite izaći iz CHAINa sa ODABRANIM KEYom validatora? Ovo zaustavlja vašu dužnost validatora i NE MOŽE se poništiti. Vaš FUND se također može povući samo ako CHAIN to dozvoljava.",
+    "exitApprove": "PROČITO SAM TEKST I SVJESAN SAM POSLJEDICA",
+    "exitChain": "IZLAZ CHAINa",
+    "clickClose": "Kliknite vani da zatvorite."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Unesite važeću Ethereum adresu da pošaljete svoje blok nagrade na... ",
+    "setBlock": "POSTAVITE BLOCK FEE RECIPIENT ADRESU"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Unesite najviše 32 znaka za dodavanje u chain kada kreirate blok!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "KLIKNITE ILI PREVUČITE DA UMETATE KEY"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Jeste li sigurni da želite ukloniti",
+    "from": "SA OVE MAŠINE?",
+    "remove": "Ukloni"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Jeste li sigurni da želite ukloniti sve keys validatora SA OVE MAŠINE?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
+    "totalText": "UKUPNO BALANCE OD",
     "validators": "VALIDATORS",
     "proposed": "PROPOSED",
     "attestRate": "ATTESTATION RATE",
     "attention": "ATTENTIONS",
     "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
+    "aggregations": "AGGREGACIJA",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIATOR",
+    "date": "DATUM",
+    "validator": "VALIDATOR",
     "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "reward": "NAGRADA"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL"
+    "installText": "NA OVOJ STRANICI MOŽETE DA BIRATE ŠTA ŽELITE DA RADITE SA SVOJIM NODEOM. NAKON ODABRA I PRITISKA ZAPOČNI SLUČAJNI IZBOR CLIENTA ĆE SE PODUZET DA SE USLUŽI VAŠEM SLUČAJU UPOTREBE",
+    "back": "NAZAD",
+    "install": "INSTALIRATI"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Sve services će biti uklonjene.",
+    "sure": "Jesi li siguran?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "welcome": "DOBRODOŠLI",
+    "installText": "U OVOM KORAKU BIRATE KAKO ŽELITE INSTALIRATI SVOJ NODE-om. AKO VAM JE POTREBNA POMOĆ U POSTAVLJANJU, PRIDRUŽITE SE NAŠEM DISCORD-u - TAMO VAM MOŽEMO POMOĆI",
+    "osCheck": "PROVJERA DA LI JE OS VAŠEG SERVERA PODRŽAN"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "option": "OPCIJA",
+    "chosen": "IZABRANI NETWORK",
+    "path": "INSTALACIJSKI PUT",
+    "syncClient": "SINHRONIZUJE VAŠEG CLIENTA OD POČETKA CHAINa",
     "plugin": "PLUGINS",
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "NAZAD",
+    "next": "SLJEDEĆI"
   }
 }
