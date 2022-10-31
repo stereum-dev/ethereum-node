@@ -38,7 +38,7 @@
     "stereumName": "stereum postavljanje",
     "langName": "izbor jezika",
     "confirm": "POTVRDI i PRIMJENI",
-    "general": "GENERAL",
+    "general": "GENETAL",
     "credits": "Zasluge",
     "open": "otvoren",
     "update": "UPDATE",
@@ -129,7 +129,7 @@
     "balance": "BALANCE",
     "option": "OPCIJE",
     "importKey": "Uvoz validator key(s)",
-    "waitMessage": "Može potrajati nekoliko vremena",
+    "waitMessage": "It may take some time",
     "waitForImport": "Pričekajte dok se key ne uveze"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "UNESITE VAŠU LOZINKU VALIDATORA DA IZAČETE IZ CHAINa OVIM KEYom...",
-    "confirm": "Potvrdi"
+    "confirm": "Confrim"
   },
   "exitValidatorModal": {
     "modalMessage": "Jeste li sigurni da želite izaći iz CHAINa sa ODABRANIM KEYom validatora? Ovo zaustavlja vašu dužnost validatora i NE MOŽE se poništiti. Vaš FUND se također može povući samo ako CHAIN to dozvoljava.",
@@ -168,14 +168,14 @@
     "validators": "VALIDATORS",
     "proposed": "PROPOSED",
     "attestRate": "ATTESTATION RATE",
-    "attention": "ATTENTIONS",
+    "attention": "ATTESTATION",
     "missed": "MISSED",
     "aggregations": "AGGREGACIJA",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
     "date": "DATUM",
-    "validator": "VALIDATOR",
+    "validator": "VALIATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "NAGRADA"
   },
@@ -201,5 +201,22 @@
     "plugin": "PLUGINS",
     "back": "NAZAD",
     "next": "SLJEDEĆI"
+  },
+  "creditPanel": {
+    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
+    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "technicPage": "TECHNICAL CONTRIBUTION",
+    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
+    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "financialPage": "FINANCIAL CONTRIBUTION"
+  },
+  "verifyInstallation": {
+    "verifyTitle": "VERIFY & INSTALL",
+    "name": "NAME",
+    "cat": "CATEGORY",
+    "path": "PATH"
+  },
+  "warningModal": {
+    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
   }
 }
