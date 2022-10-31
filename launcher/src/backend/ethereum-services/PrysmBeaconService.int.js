@@ -68,7 +68,7 @@ test('prysm validator import', async () => {
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
     ]
-    let prysmBC = PrysmBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [geth])
+    let prysmBC = PrysmBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [geth], [])
     //change out http address for integration test
     // prysmBC.command = prysmBC.command.replace('--http-web3provider=' + geth.buildExecutionClientHttpEndpointUrl(),'--http-web3provider=http://10.10.0.3:8545')
     prysmBC.command = prysmBC.command.replace('--fallback-web3provider=undefined','--fallback-web3provider=[]')

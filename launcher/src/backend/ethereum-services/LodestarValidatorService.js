@@ -37,6 +37,7 @@ export class LodestarValidatorService extends NodeService {
         `--metrics=true`,
         `--metrics.port=5064`,
         `--metrics.address=0.0.0.0`,
+        `--builder`,
         `--suggestedFeeRecipient=0x0000000000000000000000000000000000000000`,
       ],  //command
       ["node", "./packages/cli/bin/lodestar"], // entrypoint
