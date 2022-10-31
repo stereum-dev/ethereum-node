@@ -603,19 +603,19 @@ export default {
   justify-self: center;
 }
 .tableHeader .tableUpdateIcon img {
-  width: 8px;
-  height: 8px;
+  width: 80%;
+  height: 80%;
 }
 .tableHeader span {
   grid-column: 5/10;
   grid-row: 1;
-  width: 100%;
-  font-size: 0.6rem;
+  width: max-content;
+  font-size: 60%;
   font-weight: 600;
   color: #c6c6c6;
   text-transform: uppercase;
   align-self: center;
-  justify-self: flex-end;
+  justify-self: flex-start;
 }
 .service-updateBox .availableTable .tableContent {
   width: 100%;

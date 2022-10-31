@@ -159,7 +159,8 @@ export default {
   text-align: right;
 }
 .instal {
-  width: auto;
+  width: max-content;
+  padding: 0 0.7%;
   min-width: 120px;
   height: 70%;
   resize: both;

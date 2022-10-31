@@ -166,7 +166,7 @@
             />
             <span class="slider round"></span>
           </label>
-          <label id="lbl" for="" style="margin-right: 10px">{{
+          <label id="lbl" for="" style="margin-right: 5%">{{
             $t("formsetup.usessh")
           }}</label>
         </div>
@@ -456,8 +456,7 @@ export default {
   grid-row: 2/3;
   border: 5px solid #929292;
   margin: 0 auto;
-  width: 40%;
-  max-width: 50%;
+  width: max-content;
   height: 59%;
   border-radius: 40px;
   background-color: #194747;
@@ -467,9 +466,10 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 0 0.7%;
 }
 #header span {
-  width: 95%;
+  width: max-content;
   max-width: auto;
   height: 89%;
   font-size: 1.4rem !important;
@@ -663,7 +663,7 @@ select {
 }
 .keyLocation_title {
   clear: both;
-  font-size: 1.1rem;
+  font-size: 90%;
   font-weight: 700;
   color: #cecece !important;
   margin-left: 24px;
@@ -759,11 +759,12 @@ input {
   align-items: center;
 }
 #lbl {
-  width: 68%;
+  width: max-content;
   text-align: center;
   clear: both;
   font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 70%;
+  display: flex;
 }
 .switch {
   position: relative;
