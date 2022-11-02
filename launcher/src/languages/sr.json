@@ -129,7 +129,7 @@
     "balance": "BALANCE",
     "option": "OPCIJE",
     "importKey": "Uvoz validator key(s)",
-    "waitMessage": "It may take some time",
+    "waitMessage": "Može potrajati neko vrijeme",
     "waitForImport": "Pričekajte dok se key ne uveze"
   },
   "enterPass": {
