@@ -38,7 +38,7 @@
     "stereumName": "stereum setting",
     "langName": "language  selection",
     "confirm": "CONFIRM & APPLY",
-    "general": "GENERAL",
+    "general": "GENETAL",
     "credits": "Credits",
     "open": "open",
     "update": "UPDATE",
@@ -129,7 +129,7 @@
     "balance": "BALANCE",
     "option": "OPTIONS",
     "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some times",
+    "waitMessage": "It may take some time",
     "waitForImport": "Please wait until the key is imported"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confirm"
+    "confirm": "Confrim"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
@@ -168,14 +168,14 @@
     "validators": "VALIDATORS",
     "proposed": "PROPOSED",
     "attestRate": "ATTESTATION RATE",
-    "attention": "ATTENTIONS",
+    "attention": "ATTESTATION",
     "missed": "MISSED",
     "aggregations": "AGGREGATIONS",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
     "date": "DATE",
-    "validator": "VALIDATOR",
+    "validator": "VALIATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "REWARD"
   },
@@ -201,5 +201,22 @@
     "plugin": "PLUGINS",
     "back": "БУЦАХ",
     "next": "NEXT"
+  },
+  "creditPanel": {
+    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
+    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "technicPage": "TECHNICAL CONTRIBUTION",
+    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
+    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "financialPage": "FINANCIAL CONTRIBUTION"
+  },
+  "verifyInstallation": {
+    "verifyTitle": "VERIFY & INSTALL",
+    "name": "NAME",
+    "cat": "CATEGORY",
+    "path": "PATH"
+  },
+  "warningModal": {
+    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
   }
 }

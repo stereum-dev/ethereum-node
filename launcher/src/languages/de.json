@@ -38,7 +38,7 @@
     "stereumName": "stereum einstellungen",
     "langName": "Sprachwahl",
     "confirm": "BESTÄTIGEN & ANWENDEN",
-    "general": "ALLGEMEIN",
+    "general": "GENETAL",
     "credits": "Credits",
     "open": "öffnen",
     "update": "UPDATE",
@@ -129,7 +129,7 @@
     "balance": "KONTOSTAND",
     "option": "OPTIONEN",
     "importKey": "Importiere Validatorschlüssel",
-    "waitMessage": "Dies kann einige Zeit dauern",
+    "waitMessage": "It may take some time",
     "waitForImport": "Bitte warte bis der Schlüssel importiert ist"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "GEBEN SIE IHR VALIDATOR PASSWORT EIN UM IHR STAKING KONTO AUFZULÖSEN...",
-    "confirm": "Bestätigen"
+    "confirm": "Confrim"
   },
   "exitValidatorModal": {
     "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validatorschlüsseln verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
@@ -168,14 +168,14 @@
     "validators": "VALIDATOREN",
     "proposed": "VORGESCHLAGEN",
     "attestRate": "ATTESTATION RATE",
-    "attention": "ATTENTIONS",
+    "attention": "ATTESTATION",
     "missed": "VERPASST",
     "aggregations": "AGREGIERUNGEN",
     "slashed": "SLASHED"
   },
   "validatorsBox": {
     "date": "DATUM",
-    "validator": "VALIDATOR",
+    "validator": "VALIATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "BELOHNUNG"
   },
@@ -201,5 +201,22 @@
     "plugin": "PLUG-INS",
     "back": "ZURÜCK",
     "next": "WEITER"
+  },
+  "creditPanel": {
+    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
+    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "technicPage": "TECHNICAL CONTRIBUTION",
+    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
+    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "financialPage": "FINANCIAL CONTRIBUTION"
+  },
+  "verifyInstallation": {
+    "verifyTitle": "VERIFY & INSTALL",
+    "name": "NAME",
+    "cat": "CATEGORY",
+    "path": "PATH"
+  },
+  "warningModal": {
+    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
   }
 }
