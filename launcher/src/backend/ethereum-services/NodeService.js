@@ -66,7 +66,7 @@ export class NodeService {
     this.volumes = (config.volumes || []).map(volumeString => ServiceVolume.buildByConfig(volumeString))
     this.user = config.user
     this.network = config.network
-
+    config.dependencies = config.dependencies ? config.dependencies : {}
     this.dependencies = {
       executionClients: config.dependencies.executionClients ? config.dependencies.executionClients : [],
       consensusClients: config.dependencies.consensusClients ? config.dependencies.consensusClients : [],
