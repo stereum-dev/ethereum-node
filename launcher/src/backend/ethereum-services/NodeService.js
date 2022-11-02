@@ -68,10 +68,10 @@ export class NodeService {
     this.network = config.network
 
     this.dependencies = {
-      executionClients: config.dependencies ? config.dependencies.executionClients : [],
-      consensusClients: config.dependencies ? config.dependencies.consensusClients : [],
-      prometheusNodeExporterClients: config.dependencies ? config.dependencies.prometheusNodeExporterClients : [],
-      mevboost: config.dependencies ? config.dependencies.mevboost : []
+      executionClients: config.dependencies.executionClients ? config.dependencies.executionClients : [],
+      consensusClients: config.dependencies.consensusClients ? config.dependencies.consensusClients : [],
+      prometheusNodeExporterClients: config.dependencies.prometheusNodeExporterClients ? config.dependencies.prometheusNodeExporterClients : [],
+      mevboost: config.dependencies.mevboost ? config.dependencies.mevboost : []
     }
   }
 

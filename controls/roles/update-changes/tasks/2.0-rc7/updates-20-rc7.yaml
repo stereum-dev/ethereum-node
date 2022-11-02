@@ -1,0 +1,16 @@
+---
+- name: Add mevboost dependency PR 869
+  block:
+  - name: Find service configs
+    find:
+      paths: "/etc/stereum/services"
+    register: service_config_files
+
+  - name: Add Dependency
+    lineinfile:
+      path: "{{ item.path }}"
+      insertafter: '^\s*prometheusNodeExporterClients: '
+      regexp: '^\s*mevboost:'
+      line: "  mevboost: []"
+    with_items: "{{ service_config_files.files }}"
+#EOF
