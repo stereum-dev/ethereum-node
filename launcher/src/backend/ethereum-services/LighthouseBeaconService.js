@@ -3,7 +3,7 @@ import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, mevboostURL, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, mevboost, checkpointURL) {
     const service = new LighthouseBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -27,7 +27,7 @@ export class LighthouseBeaconService extends NodeService {
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
     // mevboost endpoint
-    const mevboostEndpoint = (mevboostURL.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
+    const mevboostEndpoint = (mevboost.map(mevboost => { return mevboost.buildMevboostEndpointURL() })).join()
 
     service.init(
       'LighthouseBeaconService',  //service
@@ -53,7 +53,6 @@ export class LighthouseBeaconService extends NodeService {
         '--slasher',
         `--slasher-dir=${slasherDir}`,
         `--slasher-max-db-size=${slasherDbSize}`,
-        `--builder=${mevboostEndpoint}`
       ],  //command
       null, //entrypoint
       null, //env
@@ -61,11 +60,16 @@ export class LighthouseBeaconService extends NodeService {
       volumes,  //volumes
       null, //user
       network,  //network
-      executionClients  //executionClients
+      executionClients,  //executionClients
+      null, //consensusClients
+      null,  //prometheusNodeExporterClients
+      mevboost  //mevboost
       )
 
     if(checkpointURL)
       service.command.push('--checkpoint-sync-url=' + checkpointURL)
+    if(mevboostEndpoint)
+      service.command.push(`--builder=${mevboostEndpoint}`)
 
     return service
   }

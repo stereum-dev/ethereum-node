@@ -104,6 +104,7 @@ export default {
   font-size: 50%;
   font-weight: bold;
   color: #c1c1c1;
+  flex-wrap: nowrap;
 }
 .totalReceived,
 .totalTransmitted {

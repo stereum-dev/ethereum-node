@@ -5,10 +5,16 @@
         <div class="sync-icon_container">
           <img :src="syncSituation()" />
         </div>
-        <span>{{$t('controlPage.syncStatus')}}</span>
+        <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="sync-box_value">
-        <div v-show="syncItemsShow" v-for="item in syncstatus.data" :key="item.id" class="sync-box_row" :class="syncItemSytle(item)">
+        <div
+          v-show="syncItemsShow"
+          v-for="item in syncstatus.data"
+          :key="item.id"
+          class="sync-box_row"
+          :class="syncItemSytle(item)"
+        >
           <div class="sync-box-row_title">
             <span>{{ item.title }}</span>
           </div>
@@ -82,19 +88,19 @@ export default {
   methods: {
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
-      if(!item.hasOwnProperty("style")){
-        return '';
+      if (!item.hasOwnProperty("style")) {
+        return "";
       }
       return item.style;
     },
     syncSituation() {
-      if(this.syncIcoError){
+      if (this.syncIcoError) {
         return this.errorIco;
       }
-      if(this.syncIcoUnknown){
+      if (this.syncIcoUnknown) {
         return this.unknownIco;
       }
-      if(this.syncIcoSituation){
+      if (this.syncIcoSituation) {
         return this.activeIco;
       }
       return this.synchedIco;
@@ -105,20 +111,25 @@ export default {
       let syncIcoError = false;
       let syncIcoSituation = false;
       let fonts = {
-        red:[],     // client error (for example docker container not running) - icon red
-        orange:[],  // abnormal client data during init (for example: lowerslot > higherslot) - icon unknown
-        grey:[],    // zero client data: lowerslot and higherslot are zero (usually the case while the EC waits for the CC to go in sync)
-        blue:[],    // client not in-sync, thus currently synchronizing
-        green:[],   // client in-sync, thus synchronized
+        red: [], // client error (for example docker container not running) - icon red
+        orange: [], // abnormal client data during init (for example: lowerslot > higherslot) - icon unknown
+        grey: [], // zero client data: lowerslot and higherslot are zero (usually the case while the EC waits for the CC to go in sync)
+        blue: [], // client not in-sync, thus currently synchronizing
+        green: [], // client in-sync, thus synchronized
       };
-      if(this.code === 0 && this.syncstatus.code === 0 && Array.isArray(this.syncstatus.data) && this.syncstatus.data[0].hasOwnProperty("title")){
+      if (
+        this.code === 0 &&
+        this.syncstatus.code === 0 &&
+        Array.isArray(this.syncstatus.data) &&
+        this.syncstatus.data[0].hasOwnProperty("title")
+      ) {
         syncItemsShow = true;
         syncIcoUnknown = false;
         for (let k in this.syncstatus.data) {
           let lo = parseInt(this.syncstatus.data[k].frstVal);
           let hi = parseInt(this.syncstatus.data[k].scndVal);
           let st = this.syncstatus.data[k].state;
-          if(st != 'running'){
+          if (st != "running") {
             fonts.red.push(k);
             syncIcoError = true;
             continue;
@@ -128,24 +139,27 @@ export default {
             syncIcoUnknown = true;
             continue;
           }
-          if(lo<1 && hi<1){
+          if (lo < 1 && hi < 1) {
             fonts.grey.push(k);
             syncIcoSituation = true;
             continue;
           }
-          if(lo < hi) {
+          if (lo < hi) {
             fonts.blue.push(k);
             syncIcoSituation = true;
             continue;
           }
           fonts.green.push(k);
         }
-        if(fonts.grey.length && fonts.grey.length == this.syncstatus.data.length){
+        if (
+          fonts.grey.length &&
+          fonts.grey.length == this.syncstatus.data.length
+        ) {
           syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
         }
         for (let col in fonts) {
-          if(fonts[col].length){
-            for(let i=0;i<fonts[col].length;i++){
+          if (fonts[col].length) {
+            for (let i = 0; i < fonts[col].length; i++) {
               let k = fonts[col][i];
               // let ct = this.syncstatus.data[k].type;
               // console.log(ct + " client (" + this.syncstatus.data[k].title + ") needs color " + col + " by class: client" + col + "!)");
@@ -195,7 +209,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50%;
+  font-size: 43%;
   color: #c1c1c1;
   font-weight: bold;
 }

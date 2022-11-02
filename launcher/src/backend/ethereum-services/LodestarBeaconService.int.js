@@ -68,7 +68,7 @@ test('lodestar validator import', async () => {
         new ServicePort('127.0.0.1', 9596, 9596, servicePortProtocol.tcp)
     ]
 
-    let lBC = LodestarBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lodestar', [geth], 'https://goerli.beaconstate.info')
+    let lBC = LodestarBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lodestar', [geth], [], 'https://goerli.beaconstate.info')
     //change out http address for integration test
 
     ports = [

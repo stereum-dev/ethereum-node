@@ -421,7 +421,7 @@ export default {
   align-items: center;
 }
 .confirm-btn {
-  width: 18%;
+  width: max-content;
   height: 65%;
   background: #48e148;
   border: 1px solid #707070;
@@ -432,6 +432,7 @@ export default {
   font-size: 100%;
   font-weight: 600;
   color: #fff;
+  padding: 0 0.7%;
   border-radius: 20px;
   cursor: pointer;
   margin: 5% 0;

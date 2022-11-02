@@ -139,6 +139,11 @@ export class ServiceManager {
             return services.find(dependency => dependency.id === client.id)
           })
         }
+        if (service.dependencies.mevboost.length > 0) {
+          service.dependencies.mevboost = service.dependencies.mevboost.map(client => {
+            return services.find(dependency => dependency.id === client.id)
+          })
+        }
       })
       return services
     }).catch(err => {

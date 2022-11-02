@@ -29,7 +29,7 @@ export class NodeService {
     }
   }
 
-  init (service, id, configVersion, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients) {
+  init (service, id, configVersion, image, imageVersion, command, entrypoint, env, ports, volumes, user, network, executionClients, consensusClients, prometheusNodeExporterClients, mevboost) {
     this.service = service
     this.setId(id)
     this.configVersion = configVersion
@@ -46,7 +46,8 @@ export class NodeService {
     this.dependencies = {
       executionClients: executionClients,
       consensusClients: consensusClients,
-      prometheusNodeExporterClients: prometheusNodeExporterClients
+      prometheusNodeExporterClients: prometheusNodeExporterClients,
+      mevboost: mevboost
     }
   }
 
@@ -69,7 +70,8 @@ export class NodeService {
     this.dependencies = {
       executionClients: config.dependencies ? config.dependencies.executionClients : [],
       consensusClients: config.dependencies ? config.dependencies.consensusClients : [],
-      prometheusNodeExporterClients: config.dependencies ? config.dependencies.prometheusNodeExporterClients : []
+      prometheusNodeExporterClients: config.dependencies ? config.dependencies.prometheusNodeExporterClients : [],
+      mevboost: config.dependencies ? config.dependencies.mevboost : []
     }
   }
 
@@ -96,7 +98,8 @@ export class NodeService {
       dependencies: {
         executionClients: (this.dependencies.executionClients || []).map(service => service.buildMinimalConfiguration()),
         consensusClients: (this.dependencies.consensusClients || []).map(service => service.buildMinimalConfiguration()),
-        prometheusNodeExporterClients: (this.dependencies.prometheusNodeExporterClients || []).map(service => service.buildMinimalConfiguration())
+        prometheusNodeExporterClients: (this.dependencies.prometheusNodeExporterClients || []).map(service => service.buildMinimalConfiguration()),
+        mevboost: (this.dependencies.mevboost || []).map(service => service.buildMinimalConfiguration())
       }
     }
   }

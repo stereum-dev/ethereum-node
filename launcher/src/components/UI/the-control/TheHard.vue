@@ -105,8 +105,8 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-size: 90%;
+  font-weight: 800;
   color: #448f49;
   text-align: center;
   margin-top: 10px;
@@ -118,8 +118,8 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 0.6rem;
-  font-weight: 700;
+  font-size: 80%;
+  font-weight: 600;
   color: #c1c1c1;
 }
 .valueBarPart {

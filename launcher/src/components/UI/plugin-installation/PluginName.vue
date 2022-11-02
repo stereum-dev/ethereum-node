@@ -133,10 +133,10 @@
               v-if="selectedPreset.name === 'Flashbots Mev Boost'"
               :to="{ path: '/mevboost' }"
             >
-              <span>NEXT</span>
+              <span>{{ $t("pluginName.next") }}</span>
             </router-link>
             <router-link v-else :to="{ path: '/verify' }">
-              <span>NEXT</span>
+              <span>{{ $t("pluginName.next") }}</span>
             </router-link>
           </div>
         </div>

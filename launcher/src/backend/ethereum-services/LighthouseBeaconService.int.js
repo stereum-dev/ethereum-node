@@ -68,7 +68,7 @@ test('lighthouse validator import', async () => {
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
 
-    let lhBC = LighthouseBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16')
+    let lhBC = LighthouseBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16', [])
     //change out http address for integration test
     // const index = lhBC.command.findIndex(element => element.includes('--execution-endpoint='))
     // lhBC.command[index] = '--execution-endpoint=http://10.10.0.3:8545'

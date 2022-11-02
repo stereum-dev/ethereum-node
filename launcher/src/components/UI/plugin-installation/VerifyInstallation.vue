@@ -7,7 +7,7 @@
           <div class="verify-box">
             <div class="verify-title-box">
               <div class="verify-title">
-                <span>VERIFY & INSTALL</span>
+                <span>{{ $t("verifyInstallation.verifyTitle") }}</span>
               </div>
             </div>
           </div>
@@ -15,9 +15,9 @@
             <div class="table-box">
               <div class="table">
                 <div class="table-header">
-                  <span>NAME</span>
-                  <span>CATEGORY</span>
-                  <span>PATH</span>
+                  <span>{{ $t("verifyInstallation.name") }}</span>
+                  <span>{{ $t("verifyInstallation.cat") }}</span>
+                  <span>{{ $t("verifyInstallation.path") }}</span>
                 </div>
                 <div class="table-content">
                   <div
@@ -42,14 +42,14 @@
           </div>
           <div class="btn-box">
             <router-link :to="{ path: '/install' }">
-              <button class="back-btn">BACK</button>
+              <button class="back-btn">{{ $t("pluginName.back") }}</button>
             </router-link>
             <!-- <router-link :to="{ path: '/node' }">
               <button @click="runInstalltion" class="next-btn">INSTALL</button>
             </router-link> -->
             <a>
               <button class="next-btn" @click="displayWarningHandler">
-                NEXT
+                {{ $t("pluginName.next") }}
               </button>
             </a>
             <warning-modal
