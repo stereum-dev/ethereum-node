@@ -38,7 +38,7 @@
     "stereumName":"stereum setting",
     "langName":"language  selection",
     "confirm":"CONFIRM & APPLY",
-    "general":"GENETAL",
+    "general":"GENERAL",
     "credits":"Credits",
     "open":"open",
     "update":"UPDATE",
@@ -175,7 +175,7 @@
   },
   "validatorsBox":{
     "date":"DATE",
-    "validator":"VALIATOR",
+    "validator":"VALIDATOR",
     "attestRate":"ATTEST.RATE",
     "reward":"REWARD"
   },

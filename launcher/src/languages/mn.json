@@ -129,7 +129,7 @@
     "balance": "BALANCE",
     "option": "OPTIONS",
     "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some times",
+    "waitMessage": "It may take some time",
     "waitForImport": "Please wait until the key is imported"
   },
   "enterPass": {
