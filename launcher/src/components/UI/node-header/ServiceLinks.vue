@@ -1,15 +1,35 @@
 <template>
   <div class="links-box">
     <div class="services" ref="service">
-      <div class="service-icon" v-for="(service, idx) in runningServices" :key="idx">
+      <div
+        class="service-icon"
+        v-for="(service, idx) in runningServices"
+        :key="idx"
+      >
         <div class="icon-box" onmousedown="return false">
-          <img @click="openServiceBrowser(service.service)" v-show="isImgExists" :src="service.hIcon"
-            alt="service-icon" />
+          <img
+            @click="openServiceBrowser(service.service)"
+            v-show="isImgExists"
+            :src="service.hIcon"
+            alt="service-icon"
+          />
         </div>
-        <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
-        <ssv-modal @close-window="closeServiceBrowser" v-if="showSsvWindow"></ssv-modal>
-        <prometheus-modal @close-window="closeServiceBrowser" v-if="showPrometheusWindow"></prometheus-modal>
-        <mevboost-modal @close-window="closeServiceBrowser" v-if="showMevboostWindow"></mevboost-modal>
+        <grafana-modal
+          v-if="showGrafanaWindow"
+          @close-window="closeServiceBrowser"
+        ></grafana-modal>
+        <ssv-modal
+          @close-window="closeServiceBrowser"
+          v-if="showSsvWindow"
+        ></ssv-modal>
+        <prometheus-modal
+          @close-window="closeServiceBrowser"
+          v-if="showPrometheusWindow"
+        ></prometheus-modal>
+        <mevboost-modal
+          @close-window="closeServiceBrowser"
+          v-if="showMevboostWindow"
+        ></mevboost-modal>
       </div>
       <div class="arrow-box">
         <div class="right-arrow left-paddle paddle" @click="scrollRight">
@@ -42,7 +62,7 @@ export default {
       showMevboostWindow: false,
     };
   },
-  mounted() { },
+  mounted() {},
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
@@ -72,8 +92,7 @@ export default {
           this.showPrometheusWindow = true;
         } else if (serviceName == "MevBoostService") {
           this.showMevboostWindow = true;
-        }
-        else {
+        } else {
           return;
         }
       });

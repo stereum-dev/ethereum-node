@@ -27,22 +27,26 @@
           @click="$refs.pluginCol.scrollTop = 0"
         />
         <div class="plugin-col" ref="pluginCol">
-          <div class="cloud-box">
-            <div class="cloud-item">
-              <img
-                @mousedown.prevent.stop
-                src="../../../../public/img/icon/manage-node-icons/cloud-1.png"
-                alt="icon"
-              />
-            </div>
-          </div>
-          <template v-for="item in allServices.filter(s => s.service != 'SSVNetworkService')" :key="item.id">
+          <template
+            v-for="item in allServices.filter(
+              (s) => s.service != 'SSVNetworkService'
+            )"
+            :key="item.id"
+          >
             <div
               @dragstart="startDrag($event, item)"
               @dblclick="$emit('addService', item)"
-              class="cloud-box"
+              class="itemBox"
             >
-              <img :src="item.sIcon" alt="" />
+              <div class="tooltip" v-if="item.displayNameTooltip">
+                <span class="tooltipText">{{ item.name }}</span>
+              </div>
+              <img
+                :src="item.sIcon"
+                alt="icon"
+                @mouseover="showTooltipHandler(item)"
+                @mouseleave="item.displayNameTooltip = false"
+              />
             </div>
           </template>
         </div>
@@ -54,27 +58,6 @@
           @click="$refs.pluginCol.scrollTop = 1000"
         />
       </div>
-      <div class="filter-box">
-        <input
-          class="filter-inp"
-          type="text"
-          :placeholder="$t('sidebarManage.filter')"
-        />
-        <div class="filter-icons" @mousedown.prevent.stop>
-          <img
-            src="../../../../public/img/icon/manage-node-icons/filter-icon.png"
-            alt="icon"
-          />
-          <img
-            src="../../../../public/img/icon/manage-node-icons/filter-fav.png"
-            alt="icon"
-          />
-          <img
-            src="../../../../public/img/icon/manage-node-icons/filter-confirm.png"
-            alt="icon"
-          />
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -85,14 +68,31 @@ export default {
   props: ["startDrag"],
   data() {
     return {
-      showSidebar: false,
+      showSidebar: true,
     };
+  },
+  mounted() {
+    this.allServices = this.allServices.map((item) => {
+      return {
+        ...item,
+        displayNameTooltip: false,
+      };
+    });
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
     }),
+  },
+  methods: {
+    showTooltipHandler(item) {
+      this.allServices.map((i) => {
+        if (i.id === item.id) {
+          i.displayNameTooltip = true;
+        }
+      });
+    },
   },
 };
 </script>
@@ -153,26 +153,27 @@ export default {
 
 .plugin-box {
   width: 80%;
-  height: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   margin: 0 auto;
   position: relative;
+  z-index: 1;
 }
 .plugin-box .up-arrow {
   width: 80%;
   height: 8%;
   cursor: pointer;
   transition-duration: 100ms;
-  z-index: 1;
+  z-index: 2;
 }
 .plugin-box .down-arrow {
   width: 80%;
   height: 8%;
   cursor: pointer;
-  z-index: 1;
+  z-index: 2;
   transition-duration: 100ms;
 }
 
@@ -184,7 +185,7 @@ export default {
   margin: 0 auto;
   padding: 5px;
   width: 80%;
-  height: 84%;
+  height: 98%;
   background-color: #565656;
   border-radius: 5px;
   overflow-x: hidden;
@@ -193,7 +194,7 @@ export default {
 .plugin-col::-webkit-scrollbar {
   display: none;
 }
-.cloud-box {
+.itemBox {
   width: 50px;
   height: 50px;
   margin: 5px auto;
@@ -203,9 +204,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
-.cloud-box:hover img {
+.itemBox:hover img {
   transform: scale(0.99);
   border: 2px solid rgb(74, 168, 219);
   border-radius: 5px;
@@ -266,5 +268,50 @@ export default {
 .filter-icons img {
   width: 23%;
   height: 85%;
+}
+
+.tooltip {
+  position: absolute;
+  top: -50%;
+  left: -10%;
+  width: max-content;
+  height: 5vh;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.8;
+  border: 1px solid rgb(7, 7, 7);
+  border-radius: 5px;
+  z-index: 10;
+}
+
+.tooltip .tooltipText {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: rgb(30, 29, 29);
+  text-align: center;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip .tooltiptext::after {
+  content: " ";
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
 }
 </style>
