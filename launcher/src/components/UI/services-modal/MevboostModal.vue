@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="title-box">
-                    <span class="service-name">mev boost</span>
+                    <span class="service-name">Flashbots Mev Boost</span>
                     <div class="service-option">
                         <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
                         <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
