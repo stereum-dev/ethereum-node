@@ -740,7 +740,7 @@ export default {
 
 .clientAddBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
