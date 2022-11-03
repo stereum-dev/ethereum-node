@@ -39,7 +39,7 @@ export default {
       showGrafanaWindow: false,
       showSsvWindow: false,
       showPrometheusWindow: false,
-      showMevboostWindow: false,
+      showMevboostWindow: true,
     };
   },
   mounted() { },
