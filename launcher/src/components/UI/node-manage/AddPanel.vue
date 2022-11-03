@@ -14,6 +14,12 @@
 
       <div class="configBox">
         <div
+          class="exporterBox"
+          v-if="plugin.service === 'PrometheusNodeExporterService'"
+        >
+          <div class="exporterBoxTitle">Click on ADD</div>
+        </div>
+        <div
           class="relaysBox"
           v-if="plugin.service === 'FlashbotsMevBoostService'"
         >
@@ -32,7 +38,10 @@
         </div>
         <div
           class="change-installation"
-          v-if="plugin.service !== 'FlashbotsMevBoostService'"
+          v-if="
+            plugin.service !== 'FlashbotsMevBoostService' &&
+            plugin.service !== 'PrometheusNodeExporterService'
+          "
         >
           <div class="change-title">
             <span>INSTALLATION PATH</span>
@@ -43,7 +52,10 @@
         </div>
         <div
           class="portAddBox"
-          v-if="plugin.service !== 'FlashbotsMevBoostService'"
+          v-if="
+            plugin.service !== 'FlashbotsMevBoostService' &&
+            plugin.service !== 'PrometheusNodeExporterService'
+          "
         >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
@@ -798,7 +810,8 @@ export default {
   text-transform: uppercase;
   box-sizing: border-box;
 }
-.relaysBox {
+.relaysBox,
+.exporterBox {
   width: 100%;
   height: 100%;
   padding: 2px;
@@ -821,6 +834,18 @@ export default {
   font-size: 0.7rem;
   font-weight: 600;
   color: #aaaaaa;
+}
+.exporterBoxTitle {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #aaaaaa;
+  text-align: center;
 }
 .relaysBoxContent {
   width: 100%;
