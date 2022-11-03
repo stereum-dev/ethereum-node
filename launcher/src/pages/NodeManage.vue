@@ -6,9 +6,7 @@
         <div class="config-box">
           <Transition name="fade" mode="default">
             <add-panel
-              v-if="
-                itemToInstall.addPanel
-              "
+              v-if="itemToInstall.addPanel"
               :items="itemToInstall"
               @cancel-add="cancelAddProcess"
               @save-config="saveAddedServiceConfig"
@@ -192,12 +190,7 @@ export default {
   mounted() {
     this.confirmChanges = [];
     this.configNetwork = this.currentNetwork;
-    console.log(this.itemToInstall);
   },
-  updated() {
-    console.log(this.itemToInstall);
-  },
-
   methods: {
     getActions(action, service, data) {
       let item = this.actionContents.find((item) => item.content === action);

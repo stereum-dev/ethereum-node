@@ -25,7 +25,7 @@
       </div>
       <div class="content">
         <div class="relaysParent" v-if="showRelaysBox">
-            <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
               <div class="relay" v-for="relay in relaysList" :key="relay.id">
@@ -54,12 +54,10 @@
   </div>
 </template>
 <script>
-import RelaysCheck from "./RelaysCheck.vue";
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 export default {
-  component: { RelaysCheck },
   data() {
     return {
       mevService: {},
@@ -95,7 +93,7 @@ export default {
       window.open(url, "_blank");
     },
     displayRelaysBlock() {
-      this.showRelaysBox = !this.showRelaysBox;
+      this.showRelaysBox = true;
     },
   },
 };
