@@ -45,19 +45,18 @@
       src: "/etc/stereum/services/7fabf678-eaac-ffe8-adaf-d081d71ddbe3.yaml"
     register: besu_service_configuration_raw
 
+  - debug:
+     msg: "{{ besu_service_configuration_raw['content'] | b64decode }}"
+
   - name: Parse besu service's configuration
     set_fact: 
       besu_service_configuration: "{{ besu_service_configuration_raw['content'] | b64decode | from_yaml }}"
 
-  - debug:
-     msg: "{{ besu_service_configuration_raw['content'] | b64decode }}"
-
   - assert:
       that:
       - besu_service_configuration.dependencies.mevboost is defined
-      - besu_service_configuration.dependencies.mevboost | length == 1
-      - besu_service_configuration.dependencies.mevboost.0.service == "FooService"
-      - besu_service_configuration.dependencies.mevboost.0.id == "Bar-ID"
+      - besu_service_configuration.dependencies.mevboost | length == 0
+      - (besu_service_configuration.command | select('match', "^--Xmerge-support=true") | length) == 0
 
 
 
