@@ -43,7 +43,6 @@ export class BesuService extends NodeService {
                 '--engine-rpc-port=8551',
                 '--engine-jwt-enabled=true',
                 '--engine-jwt-secret=/engine.jwt',
-                '--Xmerge-support=true',
             ],          // command
             ["besu"],   // entrypoint
             { JAVA_OPTS: '-Xmx4g' },  // env

@@ -162,9 +162,7 @@
             executionClients: []
             consensusClients: []
             prometheusNodeExporterClients: []
-            mevboost:
-              - service: FooService
-                id: Bar-ID
+            mevboost: []
       become: yes
 
 # EOF
