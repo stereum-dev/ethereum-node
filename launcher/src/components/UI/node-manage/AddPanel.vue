@@ -161,6 +161,10 @@ export default {
         this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );
+      } else if (this.items.service === "FlashbotsMevBoostService") {
+        this.options = this.newConfiguration.filter(
+          (service) => service.category === "consensus"
+        );
       } else {
         this.options = [];
       }

@@ -17,6 +17,7 @@ import { NethermindService } from './ethereum-services/NethermindService'
 import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
 import { StringUtils } from './StringUtils'
+import { ServiceVolume } from './ethereum-services/ServiceVolume'
 
 const log = require('electron-log')
 
@@ -171,6 +172,113 @@ export class ServiceManager {
     }
   }
 
+  addDependencies(service, dependencies) {
+    let command = ""
+    let filter
+
+      switch(service.service.replace(/(Beacon|Validator|Service)/gm, '')){
+        case "Lighthouse":
+          if(service.service.includes("Beacon")){
+            filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl()
+            command = "--execution-endpoint="
+          }
+          if(service.service.includes("Validator")){
+            filter = (e) => e.buildConsensusClientHttpEndpointUrl()
+            command = "--beacon-nodes="
+          }
+          break;
+        case "Prysm":
+          if(service.service.includes("Beacon")){
+            filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl()
+            command = "--execution-endpoint="
+          }
+          if(service.service.includes("Validator")){
+            filter = (e) => e.buildConsensusClientEndpoint()
+            command = "--beacon-rpc-provider="
+            service.command = this.addCommandConnection(service, command, dependencies, filter)
+            filter = (e) => e.buildConsensusClientGateway()
+            command = "--beacon-rpc-gateway-provider="
+          }
+          break;
+        case "Nimbus":
+            filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl()
+            command = "--web3-url="
+          break;
+        case "Teku":
+            filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl()
+            command = "--ee-endpoint="
+          break;
+        case "FlashbotsMevBoost":
+          return dependencies.map(client => {
+            client.command = this.addMevBoostConnection(service, client)
+            client.dependencies.mevboost.push(service)
+            return client
+          })
+      }
+      service.command = this.addCommandConnection(service, command, dependencies, filter)
+
+      if(service.service.includes("Beacon")){
+        service.dependencies.executionClients = dependencies
+        let volumes = dependencies.map(client => new ServiceVolume(client.volumes.find(vol => vol.servicePath === '/engine.jwt').destinationPath, '/engine.jwt'))
+        service.volumes = service.volumes.concat(volumes)
+      } else if(service.service.includes("Validator")){
+        service.dependencies.executionClients = dependencies
+      }
+      return service
+  }
+
+  addCommandConnection(service, endpointCommand, dependencies, filter){
+    let isString = false
+    let command = service.command
+    if (typeof command === "string") {
+      isString = true
+      command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
+    }
+
+    let fullCommand = command.find(c => c.includes(endpointCommand))
+    command = command.filter(c => !c.includes(endpointCommand))
+    let newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)]
+    if (isString)
+      return (command.concat(newProps)).join(' ')
+    return command.concat(newProps)
+  }
+
+  addMevBoostConnection(service, dependency){
+      let command = dependency.command
+      let isString = false
+      if (typeof command === "string") {
+        isString = true
+        command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
+      }
+      let builderCommand = ""
+      switch(dependency.service){
+        case'LighthouseBeaconService':
+          builderCommand = "--builder="
+          break;
+        case'PrysmBeaconService':
+          builderCommand = "--http-mev-relay="
+          break;
+        case'NimbusBeaconService':
+          builderCommand = "--payload-builder-url="
+          break;
+        case'TekuBeaconService':
+          builderCommand = "--builder-endpoint="
+          break;
+
+      }
+      let fullCommand = command.find(c => c.includes(builderCommand))
+      command = command.filter(c => !c.includes(builderCommand))
+      if(fullCommand){
+        fullCommand = this.formatCommand(fullCommand, builderCommand, undefined, [service.buildMevboostEndpointURL()])
+      } else {
+        fullCommand = builderCommand + service.buildMevboostEndpointURL()
+      }
+
+      if (isString)
+        return (command.concat([fullCommand])).join(' ')
+      return command.concat([fullCommand])
+  }
+
   removeDependencies(service, serviceToDelete) {
     //update command
     service.command = this.removeCommandConnection(service.command, serviceToDelete.id)
@@ -196,20 +304,31 @@ export class ServiceManager {
 
     let newProps = includesID.map(c => {
       let command = c.match(/.*=/)[0]
-      let value = c.replace(command, '')
-      let quotes = false
-      if (value.startsWith('"') && value.endsWith('"')) {
-        quotes = true
-        value = value.substring(1, value.length - 1)
-      }
-      let newValue = value.split(',').filter(e => !e.includes(id)).join()
-      if (quotes)
-        newValue = '"' + newValue + '"'
-      return command + newValue
+      return this.formatCommand(c,command,(e) => !e.includes(id))
     })
     if (isString)
       return (command.concat(newProps)).join(' ')
     return command.concat(newProps)
+  }
+
+  formatCommand(fullCommand, command, filter, dependencies) {
+    let value = fullCommand.replace(command, '')
+    let quotes = false
+    if (value.startsWith('"') && value.endsWith('"')) {
+      quotes = true
+      value = value.substring(1, value.length - 1)
+    }
+    let newValue
+    if(dependencies && filter){
+      newValue = dependencies.map(filter).join()
+    } else if (dependencies){
+      newValue = value.split(',').concat(dependencies).join()
+    } else {
+      newValue = value.split(',').filter(filter).join()
+    }
+    if (quotes)
+      newValue = '"' + newValue + '"'
+    return command + newValue
   }
 
   async deleteService(task, tasks, services) {
@@ -264,7 +383,7 @@ export class ServiceManager {
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp),
         ]
-        return LighthouseBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.executionClients, '16', args.checkpointURL)
+        return LighthouseBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.executionClients, '16', [], args.checkpointURL)
 
       case "LighthouseValidatorService":
         ports = [
@@ -279,7 +398,7 @@ export class ServiceManager {
           new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
           new ServicePort('127.0.0.1', args.port ? args.port : 3500, 3500, servicePortProtocol.tcp)
         ]
-        return PrysmBeaconService.buildByUserInput(args.network, ports, args.installDir + '/prysm', args.executionClients, args.checkpointURL)
+        return PrysmBeaconService.buildByUserInput(args.network, ports, args.installDir + '/prysm', args.executionClients, [], args.checkpointURL)
 
       case "PrysmValidatorService":
         ports = [
@@ -294,7 +413,7 @@ export class ServiceManager {
           new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
           new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
         ]
-        return NimbusBeaconService.buildByUserInput(args.network, ports, args.installDir + '/nimbus', args.executionClients, args.checkpointURL)
+        return NimbusBeaconService.buildByUserInput(args.network, ports, args.installDir + '/nimbus', args.executionClients, [], args.checkpointURL)
 
       case "TekuBeaconService":
         ports = [
@@ -303,7 +422,7 @@ export class ServiceManager {
           new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
           new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
         ]
-        return TekuBeaconService.buildByUserInput(args.network, ports, args.installDir + '/teku', args.executionClients, args.checkpointURL)
+        return TekuBeaconService.buildByUserInput(args.network, ports, args.installDir + '/teku', args.executionClients, [], args.checkpointURL)
 
       case "PrometheusNodeExporterService":
         return PrometheusNodeExporterService.buildByUserInput(args.network)
@@ -329,7 +448,6 @@ export class ServiceManager {
     for(const service of services){
       if(service.service.includes("Nimbus")){
         const valDir = (service.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
-        log.info(valDir)
         const token = StringUtils.createRandomString()
         await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`)
         await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`)
@@ -386,6 +504,19 @@ export class ServiceManager {
     })
     let PInstalls = tasks.filter(t => t.service.category === "service")
     PInstalls.forEach(t => {
+      if(t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService"){
+        t.data.beaconServices = t.data.beaconServices.map(bc => {
+          let id = bc.config.serviceID
+          if(id){
+            return services.find(s => s.id === id)
+          }
+          id = CLInstalls.find(el => el.service.id === bc.id).service.config.serviceID
+          return newServices.find(s => s.id === id)
+        })
+      }
+      t.data.beaconServices.forEach(service => {
+        
+      })
       let service = this.getService(t.service.service, t.data)
       newServices.push(service)
     })
@@ -429,9 +560,6 @@ export class ServiceManager {
     await Promise.all(newServices.map(async (service) => {
       await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     }))
-    
-    //TODO: write config, 
-
   }
 
   static uniqueByID(job) {
@@ -451,7 +579,8 @@ export class ServiceManager {
         let after = this.nodeConnection.getTimeStamp()
         await this.nodeConnection.restartServices(after - before)
       }
-    } else if (jobs.includes("INSTALL")) {
+    } 
+    if (jobs.includes("INSTALL")) {
       let services = await this.readServiceConfigurations()
       let installTasks = tasks.filter(t => t.content === "INSTALL")
       await this.addServices(installTasks, services)

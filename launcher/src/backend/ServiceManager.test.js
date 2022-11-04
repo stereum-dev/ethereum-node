@@ -1,5 +1,9 @@
 import { serivceState, ServiceManager } from './ServiceManager'
 import { NodeConnection } from './NodeConnection'
+import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { GethService } from './ethereum-services/GethService'
+import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
+import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 
 test('manageServiceState success', async () => {
   jest.mock('./NodeConnection')
@@ -113,6 +117,36 @@ test('readServiceConfigurations success empty', async () => {
   const serviceConfigs = await sm.readServiceConfigurations()
 
   expect(serviceConfigs.length).toBe(0)
+})
+
+test('addDependencies LighthouseBeaconService', () => {
+  const sm = new ServiceManager()
+  const geth1 = GethService.buildByUserInput('goerli', [], '/opt/stereum/geth1')
+  const geth2 = GethService.buildByUserInput('goerli', [], '/opt/stereum/geth2')
+  const lhService = LighthouseBeaconService.buildByUserInput('prater', [], '/opt/stereum/lh', [], 16, [])
+  const result = sm.addDependencies(lhService, [geth1,geth2])
+})
+
+test('addDependencies FlashbotsMevBoost', () => {
+  const sm = new ServiceManager()
+  const lhService1 = LighthouseBeaconService.buildByUserInput('prater', [], '/opt/stereum/lh1', [], 16, [])
+  const lhService2 = LighthouseBeaconService.buildByUserInput('prater', [], '/opt/stereum/lh2', [], 16, [])
+  const mevboost = FlashbotsMevBoostService.buildByUserInput('goerli')
+  const result = sm.addDependencies(mevboost, [lhService1,lhService2])
+})
+
+test('addConnection String', () => {
+  const geth1 = GethService.buildByUserInput('goerli', [], '/opt/stereum/geth')
+  const geth2 = GethService.buildByUserInput('goerli', [], '/opt/stereum/geth')
+  const prysm = PrysmBeaconService.buildByUserInput('prater', [], '/opt/stereum/prysm', [geth1], [])
+  const dependencies = prysm.dependencies.executionClients.concat([geth2])
+  const endpointCommand = "--execution-endpoint="
+  const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl()
+
+  const sm = new ServiceManager()
+  const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter)
+  
+  expect(result).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/)
 })
 
 test('removeConnection String', () => {
