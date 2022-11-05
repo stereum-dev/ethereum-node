@@ -32,6 +32,23 @@
     <div class="secondVlaueType">
       <span>{{ executionNumPeer }}</span>
     </div>
+    <div class="arrowBox">
+      <div class="arrowUp" @click="nextPage">
+        <img
+          src="../../../../public/img/icon/control/arrowIcon.png"
+          alt="arrow"
+        />
+      </div>
+      <div class="pageNumber">
+        <span>{{ pageNumber }}</span>
+      </div>
+      <div class="arrowDown" @click="backPage">
+        <img
+          src="../../../../public/img/icon/control/arrowIcon.png"
+          alt="arrow"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,6 +56,11 @@
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 export default {
+  data() {
+    return {
+      pageNumber: 1,
+    };
+  },
   computed: {
     firstBar() {
       return { height: this.consensusValPeer + "%" };
@@ -55,9 +77,52 @@ export default {
       executionValPeer: "executionValPeer",
     }),
   },
+  methods: {
+    nextPage() {
+      if (this.pageNumber >= 99) {
+        this.pageNumber = 99;
+      } else {
+        this.pageNumber++;
+      }
+    },
+    backPage() {
+      if (this.pageNumber <= 1) {
+        this.pageNumber = 1;
+      } else {
+        this.pageNumber--;
+      }
+    },
+  },
 };
 </script>
 <style scoped>
+.pageNumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 70%;
+  width: 98%;
+  height: 30%;
+}
+.arrowBox {
+  width: 6%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.arrowUp,
+.arrowDown {
+  height: 30%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+}
+.arrowDown img {
+  transform: rotate(180deg);
+}
 .p2pBarBox {
   width: 70%;
   height: 100%;
@@ -78,9 +143,8 @@ export default {
 .peer2peerParent {
   width: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
   box-sizing: border-box;
 }
@@ -96,7 +160,7 @@ export default {
 }
 
 .p2pBox {
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   box-sizing: border-box;
@@ -105,10 +169,10 @@ export default {
 }
 .p2pIco {
   box-sizing: border-box;
-  width: 30%;
+  width: 37%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   flex-direction: column;
 }
@@ -158,7 +222,7 @@ export default {
 .firstVlaueType {
   position: absolute;
   top: 15%;
-  left: 46%;
+  left: 42%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);
@@ -171,7 +235,7 @@ export default {
 .secondVlaueType {
   position: absolute;
   top: 15%;
-  left: 76%;
+  left: 72%;
   font-size: 1.5rem;
   font-weight: bold;
   text-shadow: 2px 2px 0 rgb(37, 75, 54);

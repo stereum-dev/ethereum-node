@@ -105,10 +105,18 @@ export default {
   },
   methods: {
     nextPage() {
-      this.pageNumber++;
+      if (this.pageNumber >= 99) {
+        this.pageNumber = 99;
+      } else {
+        this.pageNumber++;
+      }
     },
     backPage() {
-      this.pageNumber--;
+      if (this.pageNumber <= 1) {
+        this.pageNumber = 1;
+      } else {
+        this.pageNumber--;
+      }
     },
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
