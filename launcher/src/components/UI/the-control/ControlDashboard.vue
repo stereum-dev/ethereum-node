@@ -30,6 +30,7 @@
     <dashboard-card class="the-network"
       ><the-network></the-network
     ></dashboard-card>
+    <!-- <dashboard-card class="test"><the-slider></the-slider></dashboard-card> -->
 
     <div class="half-card">
       <rpc-endpoint></rpc-endpoint>
@@ -55,8 +56,10 @@ import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
+import TheSlider from "./TheSlider.vue";
 export default {
   components: {
+    TheSlider,
     TheStorage,
     DataApi,
     SyncStatus,
@@ -78,6 +81,14 @@ export default {
 </script>
 
 <style scoped>
+.test {
+  grid-column: 2/3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+}
 .link {
   text-decoration: none;
   color: #eee;
