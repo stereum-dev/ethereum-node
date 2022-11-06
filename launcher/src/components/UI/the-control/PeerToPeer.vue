@@ -9,28 +9,28 @@
       </div>
       <div class="p2pBarBox">
         <div class="p2pBarCont">
-          <div class="p2pVal">
-            <div class="p2pVal_value" :style="firstBar"></div>
-          </div>
           <div class="titleVal">
             <span>{{ consensusClient }}</span>
           </div>
+          <div class="p2pVal">
+            <div class="p2pVal_value" :style="firstBar"></div>
+          </div>
+          <div class="valNo">
+            <span>{{ consensusNumPeer }}</span>
+          </div>
         </div>
         <div class="p2pBarCont">
-          <div class="p2pVal">
-            <div class="p2pVal_value" :style="secondBar"></div>
-          </div>
           <div class="titleVal">
             <span>{{ executionClient }}</span>
           </div>
+          <div class="p2pVal">
+            <div class="p2pVal_value" :style="secondBar"></div>
+          </div>
+          <div class="valNo">
+            <span>{{ executionNumPeer }}</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="firstVlaueType">
-      <span>{{ consensusNumPeer }}</span>
-    </div>
-    <div class="secondVlaueType">
-      <span>{{ executionNumPeer }}</span>
     </div>
     <div class="arrowBox">
       <div class="arrowUp" @click="nextPage">
@@ -63,10 +63,10 @@ export default {
   },
   computed: {
     firstBar() {
-      return { height: this.consensusValPeer + "%" };
+      return { width: this.consensusValPeer + "%" };
     },
     secondBar() {
-      return { height: this.executionValPeer + "%" };
+      return { width: this.executionValPeer + "%" };
     },
     ...mapState(useControlStore, {
       consensusClient: "consensusClient",
@@ -96,6 +96,15 @@ export default {
 };
 </script>
 <style scoped>
+.valNo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 80%;
+  font-weight: 800;
+  width: 15%;
+  height: 100%;
+}
 .pageNumber {
   display: flex;
   justify-content: center;
@@ -127,17 +136,18 @@ export default {
   width: 70%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  flex-direction: column;
 }
 .titleVal {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 5%;
-  font-size: 60%;
-  font-weight: 600;
+  width: 30%;
+  height: 100%;
+  font-size: 50%;
+  font-weight: 500;
   color: #c1c1c1;
 }
 .peer2peerParent {
@@ -198,51 +208,23 @@ export default {
 }
 
 .p2pBarCont {
-  width: 50%;
+  width: 100%;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  height: 90%;
+  height: 40%;
 }
 .p2pVal {
-  width: 80%;
+  width: 55%;
   height: 80%;
   background: #33393e;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }
 .p2pVal_value {
   background: #568d50;
-  width: 98%;
-}
-.firstVlaueType {
-  position: absolute;
-  top: 15%;
-  left: 42%;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 0 rgb(37, 75, 54);
-  color: #c1c1c1;
-  display: flex;
-  width: 7%;
-  justify-content: center;
-  align-items: center;
-}
-.secondVlaueType {
-  position: absolute;
-  top: 15%;
-  left: 72%;
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 0 rgb(37, 75, 54);
-  color: #c1c1c1;
-  display: flex;
-  width: 7%;
-  justify-content: center;
-  align-items: center;
+  height: 98%;
 }
 </style>
