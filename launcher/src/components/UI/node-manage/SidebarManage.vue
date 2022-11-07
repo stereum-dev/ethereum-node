@@ -18,21 +18,16 @@
       />
     </div>
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
+      <div class="categoryBox">
+        <div class="category" @click="selectCategoryTitle">
+          <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+          <span :style="{ ...fontSize }">{{ currentCategory }}</span>
+          <img src="/img/icon/arrows/right-arrow.png" alt="icon" />
+        </div>
+      </div>
       <div class="plugin-box">
-        <img
-          @mousedown.prevent.stop
-          class="up-arrow"
-          src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
-          alt="icon"
-          @click="$refs.pluginCol.scrollTop = 0"
-        />
-        <div class="plugin-col" ref="pluginCol">
-          <template
-            v-for="item in allServices.filter(
-              (s) => s.service != 'SSVNetworkService'
-            )"
-            :key="item.id"
-          >
+        <div class="plugin-col">
+          <template v-for="item in plugins" :key="item.id">
             <div
               @dragstart="startDrag($event, item)"
               @dblclick="$emit('addService', item)"
@@ -50,13 +45,6 @@
             </div>
           </template>
         </div>
-        <img
-          @mousedown.prevent.stop
-          class="down-arrow"
-          src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
-          alt="icon"
-          @click="$refs.pluginCol.scrollTop = 1000"
-        />
       </div>
     </div>
   </div>
@@ -69,29 +57,77 @@ export default {
   data() {
     return {
       showSidebar: true,
+      currentCategory: "",
+      plugins: [],
     };
   },
   mounted() {
-    this.allServices = this.allServices.map((item) => {
+    this.currentCategory = "all";
+    this.plugins = this.allServices.map((item) => {
       return {
         ...item,
         displayNameTooltip: false,
       };
     });
   },
+
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
     }),
+
+    fontSize() {
+      if (this.currentCategory.length > 7) {
+        return {
+          "font-size": "0.6rem",
+          padding: "6px",
+          " white-space": "nowrap",
+          " -o-text-overflow": " ellipsis",
+          "-ms-text-overflow": "ellipsis",
+          "text-overflow": "ellipsis",
+        };
+      }
+    },
   },
   methods: {
+    selectCategoryTitle() {
+      switch (this.currentCategory) {
+        case "all":
+          this.currentCategory = "execution client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "execution";
+          });
+          break;
+        case "execution client":
+          this.currentCategory = "consensus client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "consensus";
+          });
+          break;
+        case "consensus client":
+          this.currentCategory = "validator client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "validator";
+          });
+          break;
+        case "validator client":
+          this.currentCategory = "service";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "service";
+          });
+          break;
+        case "service":
+          this.currentCategory = "all";
+          this.plugins = this.allServices;
+          break;
+        default:
+          this.plugins = this.allServices;
+          break;
+      }
+    },
     showTooltipHandler(item) {
-      this.allServices.map((i) => {
-        if (i.id === item.id) {
-          i.displayNameTooltip = true;
-        }
-      });
+      item.displayNameTooltip = true;
     },
   },
 };
@@ -99,29 +135,36 @@ export default {
 <style scoped>
 .manage-sidebar {
   position: fixed;
-  top: 9.1%;
+  top: 9%;
   right: -100%;
-  width: 10%;
-  height: 90%;
+  width: 12%;
+  height: 91%;
   padding: 5px;
   background-color: gray;
-  border-top-left-radius: 35px;
-  border-bottom-left-radius: 35px;
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
   transition-duration: 0.5s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: -1;
 }
 .run-sidebar {
   right: 0;
+  z-index: -1;
 }
 .hidden-icon {
   position: fixed;
   top: 41%;
-  right: 7.5%;
+  right: 9.5%;
   height: 97px;
   width: 50px;
   border: 2px solid rgb(130, 149, 126);
   border-radius: 35px;
   cursor: pointer;
   animation: sidebar 500ms linear;
+  z-index: -2;
 }
 @keyframes sidebar {
   0% {
@@ -149,44 +192,70 @@ export default {
   border: 2px solid rgb(47, 52, 46);
   border-radius: 35px;
   cursor: pointer;
+  z-index: -2;
+}
+.categoryBox {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+.category {
+  width: 95%;
+  height: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.category span {
+  width: 75%;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+  background-color: #24272b;
+  text-transform: uppercase;
+  padding: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+  overflow: hidden;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+}
+
+.category img {
+  width: 10%;
+  height: 50%;
+  cursor: pointer;
+}
+.category img:active {
+  transform: scale(0.9);
 }
 
 .plugin-box {
-  width: 80%;
-  height: 100%;
+  width: 90%;
+  height: 89%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-.plugin-box .up-arrow {
-  width: 80%;
-  height: 8%;
-  cursor: pointer;
-  transition-duration: 100ms;
-  z-index: 2;
-}
-.plugin-box .down-arrow {
-  width: 80%;
-  height: 8%;
-  cursor: pointer;
-  z-index: 2;
-  transition-duration: 100ms;
+  z-index: 0;
 }
 
-.down-arrow:active,
-.up-arrow:active {
-  transform: scale(0.9);
-}
 .plugin-col {
   margin: 0 auto;
-  padding: 5px;
+  padding: 15px 5px;
   width: 80%;
   height: 98%;
-  background-color: #565656;
+  background-color: #454d55;
   border-radius: 5px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -205,6 +274,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+  z-index: 101;
 }
 
 .itemBox:hover img {
@@ -213,101 +283,45 @@ export default {
   border-radius: 5px;
   transition-duration: 50ms;
 }
-.cloud-item {
-  width: 50px;
-  height: 50px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition-duration: 100ms;
-}
-.cloud-item img {
-  width: 95%;
-  height: 86%;
-  border-radius: 5px;
-  border: 2px solid transparent;
-  background: rgb(11, 148, 206);
-}
-.cloud-item img:hover {
-  transform: scale(0.99);
-  border: 2px solid rgb(145, 243, 202);
-  transition-duration: 50ms;
-}
-.filter-box {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 90%;
-  height: 15%;
-  margin: 10px auto;
-}
-.filter-box .filter-inp {
-  width: 100%;
-  height: 25%;
-  padding: 0;
-  padding-left: 5px;
-  border: none;
-  border-radius: 45px;
-  outline-style: none;
-  margin-top: 2px;
-  font-size: 0.6rem;
-}
-.filter-icons {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  height: 30%;
-  margin: 10px auto;
-  padding: 1px;
-  border-radius: 45px;
-  background-color: #565656;
-}
-.filter-icons img {
-  width: 23%;
-  height: 85%;
-}
 
 .tooltip {
   position: absolute;
-  top: -50%;
-  left: -10%;
-  width: max-content;
-  height: 5vh;
-  padding: 5px 10px;
+  top: -40%;
+  left: -38%;
+  border: 1px solid rgb(157, 157, 157);
+  width: 80px;
+  height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0.8;
-  border: 1px solid rgb(7, 7, 7);
+  background-color: rgba(0, 0, 0, 0.988);
+  opacity: 0.9;
   border-radius: 5px;
-  z-index: 10;
+  padding: 2px;
+  z-index: 120;
+  overflow: hidden;
+  transition-duration: 200ms;
 }
 
 .tooltip .tooltipText {
-  font-size: 0.7rem;
+  width: 100%;
+  font-size: 0.6rem;
   font-weight: 500;
-  color: rgb(30, 29, 29);
   text-align: center;
-  width: 120px;
-  background-color: black;
-  color: #fff;
+  color: rgb(245, 208, 106);
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
-
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+  -o-text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
 }
-
 .tooltip .tooltiptext::after {
-  content: " ";
+  content: "";
   position: absolute;
-  top: 100%; /* At the bottom of the tooltip */
+  top: 100%;
   left: 50%;
   margin-left: -5px;
   border-width: 5px;
