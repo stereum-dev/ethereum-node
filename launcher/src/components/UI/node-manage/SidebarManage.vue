@@ -56,7 +56,7 @@ export default {
   props: ["startDrag"],
   data() {
     return {
-      showSidebar: true,
+      showSidebar: false,
       currentCategory: "",
       plugins: [],
     };
