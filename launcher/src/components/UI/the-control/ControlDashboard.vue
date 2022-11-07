@@ -30,7 +30,9 @@
     <dashboard-card class="the-network"
       ><the-network></the-network
     ></dashboard-card>
-    <!-- <dashboard-card class="test"><the-slider></the-slider></dashboard-card> -->
+    <dashboard-card class="portlist_card"
+      ><port-list></port-list
+    ></dashboard-card>
 
     <div class="half-card">
       <rpc-endpoint></rpc-endpoint>
@@ -56,10 +58,10 @@ import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
-import TheSlider from "./TheSlider.vue";
+import PortList from "./PortList.vue";
 export default {
   components: {
-    TheSlider,
+    PortList,
     TheStorage,
     DataApi,
     SyncStatus,
@@ -81,7 +83,7 @@ export default {
 </script>
 
 <style scoped>
-.test {
+.portlist_card {
   grid-column: 2/3;
   display: flex;
   justify-content: center;
