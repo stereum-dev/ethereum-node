@@ -104,6 +104,7 @@ export default {
   font-weight: 800;
   width: 15%;
   height: 100%;
+  color: #c1c1c1;
 }
 .pageNumber {
   display: flex;
@@ -112,6 +113,7 @@ export default {
   font-size: 70%;
   width: 98%;
   height: 30%;
+  color: #c1c1c1;
 }
 .arrowBox {
   width: 6%;
@@ -133,16 +135,17 @@ export default {
   transform: rotate(180deg);
 }
 .p2pBarBox {
-  width: 70%;
+  width: 60%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: column;
+  overflow-y: auto;
 }
 .titleVal {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 30%;
   height: 100%;
@@ -226,5 +229,24 @@ export default {
 .p2pVal_value {
   background: #568d50;
   height: 98%;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 10px;
 }
 </style>
