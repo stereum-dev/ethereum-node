@@ -21,6 +21,7 @@
     - gnupg2
     - pass
     - sysstat
+    - python3-jmespath
 
 - name: Add Docker GPG apt Key
   apt_key:
