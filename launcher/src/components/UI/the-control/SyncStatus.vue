@@ -24,6 +24,23 @@
         </div>
       </div>
     </div>
+    <div class="arrowBox">
+      <div class="arrowUp" @click="nextPage">
+        <img
+          src="../../../../public/img/icon/control/arrowIcon.png"
+          alt="arrow"
+        />
+      </div>
+      <div class="pageNumber">
+        <span>{{ pageNumber }}</span>
+      </div>
+      <div class="arrowDown" @click="backPage">
+        <img
+          src="../../../../public/img/icon/control/arrowIcon.png"
+          alt="arrow"
+        />
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -32,6 +49,7 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
+      pageNumber: 1,
       syncItemsShow: false,
       syncIcoUnknown: true,
       syncIcoSituation: false,
@@ -86,6 +104,20 @@ export default {
     },
   },
   methods: {
+    nextPage() {
+      if (this.pageNumber >= 99) {
+        this.pageNumber = 99;
+      } else {
+        this.pageNumber++;
+      }
+    },
+    backPage() {
+      if (this.pageNumber <= 1) {
+        this.pageNumber = 1;
+      } else {
+        this.pageNumber--;
+      }
+    },
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
       if (!item.hasOwnProperty("style")) {
@@ -177,17 +209,43 @@ export default {
 };
 </script>
 <style scoped>
-.Sync-parent {
+.pageNumber {
   display: flex;
-  width: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 70%;
+  width: 98%;
+  height: 30%;
+}
+.arrowBox {
+  width: 6%;
+  height: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.arrowUp,
+.arrowDown {
+  height: 30%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+}
+.arrowDown img {
+  transform: rotate(180deg);
+}
+.Sync-parent {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: flex-start;
   box-sizing: border-box;
   height: 100%;
 }
 .sync-box {
-  width: 100%;
+  width: 90%;
   height: 100%;
   display: flex;
   box-sizing: border-box;
@@ -196,7 +254,7 @@ export default {
 }
 .sync-icon {
   box-sizing: border-box;
-  width: 30%;
+  width: 31%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -227,11 +285,12 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 70%;
+  width: 69%;
   height: 95%;
   flex-direction: column;
   overflow-y: auto;
   color: #c1c1c1;
+  overflow-y: auto;
 }
 .sync-box_row {
   display: flex;
@@ -296,5 +355,23 @@ export default {
 }
 .clientgreen * {
   color: rgb(0, 190, 0);
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 10px;
 }
 </style>
