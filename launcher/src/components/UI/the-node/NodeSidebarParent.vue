@@ -5,8 +5,8 @@
   </div>
 </template>
 <script>
-import SidebarActive from "./NodeSidebarActive.vue";
-import SidebarVideo from "./NodeSidebarVideo.vue";
+import SidebarActive from "./NodeAlert.vue";
+import SidebarVideo from "./NodeTutorial.vue";
 
 export default {
   components: { SidebarActive, SidebarVideo },
