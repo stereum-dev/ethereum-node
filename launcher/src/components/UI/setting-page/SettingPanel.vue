@@ -62,7 +62,7 @@
                 id="version"
               ></setting-items>
 
-              <div class="setting-items">
+              <!-- <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.lane") }}</span>
                 </div>
@@ -73,13 +73,13 @@
                 >
                   <span>{{ btnStatus }}</span>
                 </div>
-              </div>
+              </div> -->
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
                 <div class="setting-items_btn">
-                  <comming-soon></comming-soon>
+                  <!-- <comming-soon></comming-soon> -->
                   <select
                     name="stereum-update"
                     id="stereum-update"
@@ -313,8 +313,8 @@ export default {
   margin: 0 5%;
 }
 .setting-items_btn {
-  pointer-events: none !important;
-  user-select: none !important;
+  /*pointer-events: none !important;
+  user-select: none !important;*/
   position: relative;
   width: 25%;
   display: flex;

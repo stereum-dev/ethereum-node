@@ -1,6 +1,6 @@
 <template>
   <div class="portlist_parent">
-    <comming-soon></comming-soon>
+    <!-- <comming-soon></comming-soon> -->
     <div class="portlist_box">
       <div class="portlist_icon">
         <div class="portlist_icon_contaniner">
@@ -11,7 +11,13 @@
         </div>
         <span>PORT-LIST</span>
       </div>
-      <div class="portlist-data_box"></div>
+      <div class="portlist-data_box">
+        <div class="portlist-data_row">
+          <div class="rowName"><span>NAME</span></div>
+          <div class="rowStatus"><span>PORT</span></div>
+          <div class="portNo"><span>1111</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
