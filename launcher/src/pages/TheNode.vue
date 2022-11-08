@@ -7,7 +7,7 @@
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos></the-videos>
+          <the-videos :videoUrl="itemToTutorial.videosLink"></the-videos>
         </div>
         <TutorialModal
           @hide-modal="closeTutorialModalHandler"

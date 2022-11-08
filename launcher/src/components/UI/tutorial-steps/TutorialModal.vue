@@ -24,15 +24,8 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
-import { useTutorialStore } from "@/store/tutorialSteps";
 export default {
-  props: {
-    itemToTutorial: {
-      type: Object,
-      default: () => {},
-    },
-  },
+  props: ["itemToTutorial"],
   data() {
     return {
       steps: [
@@ -67,12 +60,17 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(useTutorialStore, {}),
-  },
-  mounted() {
-    console.log("====================================");
-    this.steps.forEach((item) => console.log(item.videosLink));
-    console.log("====================================");
+    checkLinks() {
+      this.steps.map((item) => {
+        if (item.name == "videos") {
+          item.videosLink = this.itemToTutorial.videosLink;
+        } else if (item.name == "walkthrough") {
+          item.guideLink = this.itemToTutorial.guideLink;
+        } else if (item.name == "text guide") {
+          item.writtenLink = this.itemToTutorial.writtenLink;
+        }
+      });
+    },
   },
   methods: {},
 };

@@ -36,7 +36,7 @@ export default {
         {
           id: 2,
           name: this.$t("nodeSidebarVideo.stake"),
-          videosLink: "https://youtu.be/bfToZ_wTh_Q",
+          videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
           writtenLink:
             "https://stereum.net/eth-solo-staking-step-by-step-guide/",
           guideLink: "https://stereum.net/",
@@ -45,7 +45,7 @@ export default {
         {
           id: 3,
           name: this.$t("nodeSidebarVideo.ssv"),
-          videosLink: "https://youtu.be/ccKoalZtjlA",
+          videosLink: "https://www.youtube.com/embed/ccKoalZtjlA",
           writtenLink: "https://stereum.net/ssv-network-node-operator-guide/",
           guideLink: "",
           display: true,
@@ -78,7 +78,7 @@ export default {
         {
           id: 1,
           name: this.$t("nodeSidebarVideo.rpc"),
-          videosLink: "https://youtu.be/iFzSdjg9r6U",
+          videosLink: "https://www.youtube.com/embed/iFzSdjg9r6U",
           writtenLink:
             "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
           guideLink: "https://stereum.net/",
