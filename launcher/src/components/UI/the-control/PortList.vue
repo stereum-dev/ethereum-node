@@ -1,6 +1,6 @@
 <template>
   <div class="portlist_parent">
-    <!-- <comming-soon></comming-soon> -->
+    <comming-soon></comming-soon>
     <div class="portlist_box">
       <div class="portlist_icon">
         <div class="portlist_icon_contaniner">
