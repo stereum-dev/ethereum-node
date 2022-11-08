@@ -27,7 +27,12 @@
       </div>
       <div class="plugin-box">
         <div class="plugin-col">
-          <template v-for="item in plugins" :key="item.id">
+          <template
+            v-for="item in plugins.filter(
+              (ser) => ser.service != 'SSVNetworkService'
+            )"
+            :key="item.id"
+          >
             <div
               @dragstart="startDrag($event, item)"
               @dblclick="$emit('addService', item)"
