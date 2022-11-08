@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="arrowBox">
+    <div class="arrowBox" v-if="isMultiService">
       <div class="arrowUp" @click="nextPage">
         <img
           src="../../../../public/img/icon/control/arrowIcon.png"
@@ -49,6 +49,7 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
+      isMultiService: true,
       pageNumber: 1,
       syncItemsShow: false,
       syncIcoUnknown: true,

@@ -5,7 +5,7 @@
         <div class="p2pIco-container">
           <img src="../../../../public/img/icon/control/PeerToPeerIcon.svg" />
         </div>
-        <span>P2P</span>
+        <span>PEER NETWORK</span>
       </div>
       <div class="p2pBarBox">
         <div class="p2pBarCont">
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="arrowBox">
+    <div class="arrowBox" v-if="isMultiService">
       <div class="arrowUp" @click="nextPage">
         <img
           src="../../../../public/img/icon/control/arrowIcon.png"
@@ -59,6 +59,7 @@ export default {
   data() {
     return {
       pageNumber: 1,
+      isMultiService: true,
     };
   },
   computed: {
@@ -100,9 +101,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 80%;
+  font-size: 65%;
   font-weight: 800;
-  width: 15%;
+  width: 12%;
   height: 100%;
   color: #c1c1c1;
 }
@@ -177,15 +178,15 @@ export default {
   height: 100%;
   display: flex;
   box-sizing: border-box;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 .p2pIco {
   box-sizing: border-box;
-  width: 37%;
+  width: 30%;
   height: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
 }
@@ -195,7 +196,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 60%;
+  font-size: 50%;
   font-weight: bold;
   color: #c1c1c1;
 }
@@ -207,7 +208,8 @@ export default {
   height: 80%;
 }
 .p2pIco-container img {
-  width: 60%;
+  width: 70%;
+  height: 90%;
 }
 
 .p2pBarCont {

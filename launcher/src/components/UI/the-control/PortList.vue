@@ -9,7 +9,7 @@
             alt="portlist"
           />
         </div>
-        <span>PORT LIST</span>
+        <span>PORT-LIST</span>
       </div>
       <div class="portlist-data_box"></div>
     </div>
