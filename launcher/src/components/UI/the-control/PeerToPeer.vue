@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       pageNumber: 1,
-      isMultiService: true,
+      isMultiService: false,
     };
   },
   computed: {
@@ -136,7 +136,7 @@ export default {
   transform: rotate(180deg);
 }
 .p2pBarBox {
-  width: 60%;
+  width: 70%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -220,7 +220,7 @@ export default {
   height: 40%;
 }
 .p2pVal {
-  width: 55%;
+  width: 60%;
   height: 80%;
   background: #33393e;
   display: flex;

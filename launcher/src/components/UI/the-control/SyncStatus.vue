@@ -49,7 +49,7 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
-      isMultiService: true,
+      isMultiService: false,
       pageNumber: 1,
       syncItemsShow: false,
       syncIcoUnknown: true,

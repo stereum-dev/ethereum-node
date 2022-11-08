@@ -16,9 +16,6 @@
           <div class="rowName">
             <span>{{ item.name }}</span>
           </div>
-          <div class="rowStatus">
-            <span>{{ item.status }}</span>
-          </div>
           <div class="portNo">
             <span>{{ item.portNo }}</span>
           </div>
@@ -35,37 +32,31 @@ export default {
         {
           id: 1,
           name: "name1",
-          status: "PORT",
           portNo: 1111,
         },
         {
           id: 2,
           name: "name2",
-          status: "PORT",
           portNo: 22,
         },
         {
           id: 3,
           name: "name3",
-          status: "PORT",
           portNo: 333,
         },
         {
           id: 4,
           name: "name4",
-          status: "PORT",
           portNo: 4,
         },
         {
           id: 5,
           name: "name5",
-          status: "PORT",
           portNo: 1515,
         },
         {
           id: 6,
           name: "name6",
-          status: "PORT",
           portNo: 123,
         },
       ],
@@ -144,25 +135,17 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 30%;
+  width: 55%;
   height: 100%;
   font-size: 50%;
   color: #c1c1c1;
 }
-.rowStatus {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 30%;
-  height: 100%;
-  font-size: 50%;
-  color: #c1c1c1;
-}
+
 .portNo {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30%;
+  width: 40%;
   height: 100%;
   font-size: 50%;
   color: #c1c1c1;
