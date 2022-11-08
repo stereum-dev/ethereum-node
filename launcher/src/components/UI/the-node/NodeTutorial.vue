@@ -5,7 +5,7 @@
         class="table-row"
         v-for="(item, index) in configData"
         :key="index"
-        @click="$emit('showModal')"
+        @click="$emit('showModal', item)"
         :class="{ disabled: !item.display }"
       >
         <div class="question-icon">
@@ -34,34 +34,55 @@ export default {
     return {
       configData: [
         {
-          id: 1,
-          name: this.$t("nodeSidebarVideo.firstSteps"),
-          display: false,
-        },
-        {
           id: 2,
           name: this.$t("nodeSidebarVideo.stake"),
+          videosLink: "https://youtu.be/bfToZ_wTh_Q",
+          writtenLink:
+            "https://stereum.net/eth-solo-staking-step-by-step-guide/",
+          guideLink: "https://stereum.net/",
           display: true,
         },
         {
           id: 3,
           name: this.$t("nodeSidebarVideo.ssv"),
+          videosLink: "https://youtu.be/ccKoalZtjlA",
+          writtenLink: "https://stereum.net/ssv-network-node-operator-guide/",
+          guideLink: "",
           display: true,
         },
+
         {
           id: 4,
           name: this.$t("nodeSidebarVideo.alert"),
+          videosLink: "",
+          writtenLink: "",
+          guideLink: "https://stereum.net/",
           display: false,
         },
         {
           id: 5,
           name: this.$t("nodeSidebarVideo.switchC"),
+          videosLink: "",
+          writtenLink: "",
+          guideLink: "https://stereum.net/",
           display: false,
         },
         {
           id: 6,
-          name: this.$t("nodeSidebarVideo.switchM"),
+          name: this.$t("nodeSidebarVideo.migrate"),
+          videosLink: "",
+          writtenLink: "",
+          guideLink: "https://stereum.net/",
           display: false,
+        },
+        {
+          id: 1,
+          name: this.$t("nodeSidebarVideo.rpc"),
+          videosLink: "https://youtu.be/iFzSdjg9r6U",
+          writtenLink:
+            "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
+          guideLink: "https://stereum.net/",
+          display: true,
         },
       ],
     };
