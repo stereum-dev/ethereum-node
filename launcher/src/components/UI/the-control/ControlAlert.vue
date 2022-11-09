@@ -1,5 +1,6 @@
 <template>
   <div class="alert-box_parent">
+    <comming-soon></comming-soon>
     <div class="alert-box">
       <div class="alert-box_header"></div>
       <div class="alert-box_messages">
