@@ -352,8 +352,8 @@ promiseIpc.on("chooseServiceAction", async (args) => {
   );
 });
 
-promiseIpc.on("modifyServices", async (args) => {
-  return await serviceManager.modifyServices(args);
+promiseIpc.on("handleServiceChanges", async (args) => {
+  return await serviceManager.handleServiceChanges(args);
 });
 
 // Scheme must be registered before the app is ready

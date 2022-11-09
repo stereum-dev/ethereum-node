@@ -47,13 +47,8 @@ export const useNodeManage = defineStore("nodeManage", {
         },
         {
           id: 3,
-          content: "LINKED WITH",
-          contentIcon: require("../../public/img/icon/manage-node-icons/connect.png"),
-        },
-        {
-          id: 4,
-          content: "DELINKED FROM",
-          contentIcon: require("../../public/img/icon/manage-node-icons/disconnect.png"),
+          content: "MODIFY",
+          contentIcon: require("../../public/img/icon/manage-node-icons/manage-item-icon.png"),
         },
         {
           id: 5,

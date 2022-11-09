@@ -15,7 +15,7 @@ import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
 import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
-import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
+import { ServicePort, servicePortProtocol, changeablePorts } from './ethereum-services/ServicePort'
 import { StringUtils } from './StringUtils'
 import { ServiceVolume } from './ethereum-services/ServiceVolume'
 
@@ -172,6 +172,42 @@ export class ServiceManager {
     }
   }
 
+  changePort(service, port){
+    let portIndex = service.ports.findIndex(p => p.servicePort == changeablePorts[service.service])
+    if(portIndex != -1){
+      service.ports[portIndex].destinationPort = port
+    }
+    return service
+  }
+
+  async modifyServices(tasks, services){
+    let modifiedServices = []
+
+    tasks.forEach(task => {
+      let service = services.find(s => s.id === task.service.config.serviceID)
+      let dependencies = task.data.executionClients.concat(task.data.beaconServices).map(s => services.find(e => e.id === s.config.serviceID))
+      if(task.data.port){
+        service = this.changePort(service, task.data.port)
+      }
+      let updated = this.addDependencies(service, dependencies)
+      if(!Array.isArray(updated))
+        updated = [updated]
+      updated.forEach(dep => {
+        let index = modifiedServices.findIndex(s => s.id === dep.id)
+        if(index != -1){
+          modifiedServices[index] = dep
+        }else{
+          modifiedServices.push(dep)
+        }
+      })
+    })
+
+    await Promise.all(modifiedServices.map(async (service) => {
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
+    }))
+
+  }
+
   addDependencies(service, dependencies) {
     let command = ""
     let filter
@@ -259,6 +295,7 @@ export class ServiceManager {
           builderCommand = "--http-mev-relay="
           break;
         case'NimbusBeaconService':
+          command.push('--payload-builder=true')
           builderCommand = "--payload-builder-url="
           break;
         case'TekuBeaconService':
@@ -305,7 +342,8 @@ export class ServiceManager {
     let newProps = includesID.map(c => {
       let command = c.match(/.*=/)[0]
       return this.formatCommand(c,command,(e) => !e.includes(id))
-    })
+    }).filter(c => c !== undefined)
+
     if (isString)
       return (command.concat(newProps)).join(' ')
     return command.concat(newProps)
@@ -325,6 +363,9 @@ export class ServiceManager {
       newValue = value.split(',').concat(dependencies).join()
     } else {
       newValue = value.split(',').filter(filter).join()
+    }
+    if(!newValue){
+      return undefined
     }
     if (quotes)
       newValue = '"' + newValue + '"'
@@ -410,7 +451,6 @@ export class ServiceManager {
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
           new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
         ]
         return NimbusBeaconService.buildByUserInput(args.network, ports, args.installDir + '/nimbus', args.executionClients, [], args.checkpointURL)
@@ -419,8 +459,8 @@ export class ServiceManager {
         ports = [
           new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
           new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
-          new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
-          new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp)
+          new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 5051, 5051, servicePortProtocol.tcp)
         ]
         return TekuBeaconService.buildByUserInput(args.network, ports, args.installDir + '/teku', args.executionClients, [], args.checkpointURL)
 
@@ -514,10 +554,17 @@ export class ServiceManager {
           return newServices.find(s => s.id === id)
         })
       }
-      t.data.beaconServices.forEach(service => {
-        
-      })
       let service = this.getService(t.service.service, t.data)
+      let changed = this.addDependencies(service, t.data.beaconServices)
+      log.info(changed)
+      changed.forEach(dep => {
+        let index = newServices.findIndex(s => s.id === dep.id)
+        if(index != -1){
+          newServices[index] = dep
+        }else{
+          newServices.push(dep)
+        }
+      })
       newServices.push(service)
     })
     
@@ -566,7 +613,7 @@ export class ServiceManager {
     return (value, index, self) => self.map(t => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index && value.content === job
   }
 
-  async modifyServices(tasks) {
+  async handleServiceChanges(tasks) {
     let jobs = tasks.map(t => t.content)
     if (jobs.includes("DELETE")) {
       let services = await this.readServiceConfigurations()
@@ -584,6 +631,11 @@ export class ServiceManager {
       let services = await this.readServiceConfigurations()
       let installTasks = tasks.filter(t => t.content === "INSTALL")
       await this.addServices(installTasks, services)
+    }
+    if (jobs.includes("MODIFY")) {
+      let services = await this.readServiceConfigurations()
+      let modifyTasks = tasks.filter(t => t.content === "MODIFY")
+      await this.modifyServices(modifyTasks, services)
     }
   }
 }

@@ -53,7 +53,7 @@
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'execution'
-                )
+                ).sort(sortByName)
               "
               @modal-view="showModal"
               @select-item="selectedServiceToRemove"
@@ -71,7 +71,7 @@
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'consensus'
-                )
+                ).sort(sortByName)
               "
               @select-item="selectedServiceToRemove"
               @modify-item="selectedServiceToModify"
@@ -88,7 +88,7 @@
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'validator'
-                )
+                ).sort(sortByName)
               "
               @select-item="selectedServiceToRemove"
               @modify-item="selectedServiceToModify"
@@ -109,7 +109,7 @@
               :list="
                 newConfiguration.filter(
                   (service) => service.category === 'service'
-                )
+                ).sort(sortByName)
               "
               @select-item="selectedServiceToRemove"
               @modify-item="selectedServiceToModify"
@@ -200,6 +200,15 @@ export default {
   },
 
   methods: {
+    sortByName( a, b ){
+    if ( a.service.toLowerCase() < b.service.toLowerCase()){
+      return -1;
+    }
+    if ( a.service.toLowerCase() > b.service.toLowerCase()){
+      return 1;
+    }
+      return 0;
+    },
     getActions(action, service, data){
       let item = this.actionContents.find(item => item.content === action)
       if(item)
@@ -315,22 +324,22 @@ export default {
         this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
-      this.newConfiguration.map((el) => {
-        if (el.id != item.id || el.config.serviceID != item.config.serviceID) {
-          el.modifierPanel = false;
-          this.itemToModify = {};
+      if(item.config.serviceID){
+        if(item.name === "Nimbus" || item.name === "Teku"){
+          let servicePair = this.newConfiguration.filter(s => s.config.serviceID === item.config.serviceID)
+          this.itemToModify = servicePair.find(s => s.service.includes('Beacon'))
+        }else{
+          this.itemToModify = item;
         }
-      });
-      this.itemToModify = item;
+      }
     },
     cancelModifyProcess() {
-      this.itemToModify.modifierPanel = false;
+      this.newConfiguration.forEach(s => s.modifierPanel = false)
       this.itemToModify = {};
     },
-    saveServiceModification() {
-      // this.itemToInstall.modifierPanel = false;
-      // this.displayCustomModifyPanel = this.itemToInstall.modifierPanel;
-      // this.itemToInstall = {};
+    saveServiceModification(data) {
+      this.confirmChanges.push(JSON.parse(JSON.stringify(this.getActions("MODIFY",this.itemToModify, data))))
+      this.cancelModifyProcess()
     },
     replacePlugin(item) {
       if (item.modifierPanel) {

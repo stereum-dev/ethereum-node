@@ -61,6 +61,10 @@ export default {
         this.$emit("selectItem", item);
     },
     modifyItem(item) {
+      if(item.modifierPanel){
+        this.newConfiguration.forEach(s => s.modifierPanel = false)
+        return
+      }
       this.newConfiguration.map((i) => {
         if (i.id != item.id) {
           i.modifierPanel = false;

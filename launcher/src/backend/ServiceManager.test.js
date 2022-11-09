@@ -168,8 +168,8 @@ test('removeConnection String', () => {
   
   expect(result).not.toMatch(/--beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000"/)
   expect(result).not.toMatch(/--beacon-rpc-gateway-provider=stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:3500/)
-  expect(result).toMatch(/--beacon-rpc-provider=""/)
-  expect(result).toMatch(/--beacon-rpc-gateway-provider=/)
+  expect(result).not.toMatch(/--beacon-rpc-provider=""/)
+  expect(result).not.toMatch(/--beacon-rpc-gateway-provider=/)
 })
 
 test('removeConnection String multiple endpoints', () => {
@@ -220,7 +220,7 @@ test('removeConnection array single endpoint', () => {
   const result = sm.removeCommandConnection(command, id)
   
   expect(result).not.toContain('--ee-endpoint=http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551')
-  expect(result).toContain('--ee-endpoint=')
+  expect(result).not.toContain('--ee-endpoint=')
 })
 
 test('removeConnection array multiple endpoints', () => {

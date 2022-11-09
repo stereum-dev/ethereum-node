@@ -101,7 +101,7 @@
         <div class="cancelBtn" @click="$emit('cancelModify')">
           <span>Cancel</span>
         </div>
-        <div class="addBtn" @click="$emit('saveModify')">
+        <div class="addBtn" @click="saveModify">
           <span>ADD</span>
         </div>
       </div>
@@ -109,9 +109,10 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
+import { toRaw } from "vue";
 
 export default {
   props: ["items"],
@@ -133,6 +134,9 @@ export default {
     };
   },
   computed: {
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
     ...mapWritableState(useNodeManage, {
       actionContents: "actionContents",
       newConfiguration: "newConfiguration",
@@ -148,6 +152,14 @@ export default {
     },
   },
   methods: {
+    saveModify(){
+    let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
+    this.$emit('saveModify', {
+        port: parseInt(this.port),
+        executionClients: dependencies.filter(s => s.category === "execution"),
+        beaconServices: dependencies.filter(s => s.category === "consensus"),
+      })
+    },
     switchHandler(service){
       if(service.selectedForConnection){
         return service.selectedForConnection
@@ -180,11 +192,28 @@ export default {
         this.options = [];
       }
       this.options = this.options.map((option) => {
+        let connected = false
+        if(this.items.config?.dependencies){
+          let buffer = this.items.config.dependencies.consensusClients.concat(this.items.config.dependencies.executionClients)
+          connected = this.getMevBoostConnections(this.items.config.serviceID,option.config.serviceID)
+          if(buffer.map(s => s.id).includes(option.config.serviceID)){
+            connected = true
+          }
+        }
           return {
             ...option,
-            selectedForConnection: false,
+            selectedForConnection: connected,
           };
         });
+    },
+    getMevBoostConnections(mevID,clientID){
+      let connected = false
+      let client = this.installedServices.find(c => c.config.serviceID === clientID)
+        if(client?.config.dependencies.mevboost?.length > 0){
+          if(client.config.dependencies.mevboost.map(c => c.id).includes(mevID))
+            connected = true
+        }  
+      return connected
     },
     changeSelectedServiceToConnect(service) {
       service.selectedForConnection = !service.selectedForConnection;

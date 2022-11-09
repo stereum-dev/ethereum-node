@@ -259,8 +259,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("chooseServiceAction", args);
   }
 
-  async modifyServices(args) {
-    return await this.promiseIpc.send("modifyServices", args);
+  async handleServiceChanges(args) {
+    return await this.promiseIpc.send("handleServiceChanges", args);
   }
 }
 if (!instance) {

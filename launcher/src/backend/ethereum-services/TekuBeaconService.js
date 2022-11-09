@@ -99,6 +99,14 @@ export class TekuBeaconService extends NodeService {
         return 'http://stereum-' + this.id + ':5051'
     }
 
+    buildConsensusClientEndpoint () {
+        return 'stereum-' + this.id + ':5051'
+      }
+    
+    buildConsensusClientGateway () {
+        return 'stereum-' + this.id + ':5051'
+      }
+    
     buildConsensusClientMetricsEndpoint () {
         return 'stereum-' + this.id + ':8008'
     }
