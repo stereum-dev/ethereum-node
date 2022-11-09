@@ -1,47 +1,69 @@
 <template>
-  <div class="alert-box">
-    <comming-soon></comming-soon>
-    <div class="alert-icons">
-      <div class="warning">
-        <div class="yellow-warning">
-          <img
-            src="../../../../public/img/icon//node-journal-icons/yellow-warning1.png"
-            alt="icon"
-          />
-        </div>
-        <div class="red-warning">
-          <img
-            src="../../../../public/img/icon//node-journal-icons/red-warning.png"
-            alt="icon"
-          />
-        </div>
-      </div>
-      <span>ALERTS</span>
-    </div>
-    <div class="alert-table">
-      <div class="table-row" v-for="item in systemWarning" :key="item.id">
-        <div class="table-row-yellow" v-if="item.description === 'SYSTEM LOAD'">
-          <div class="warning-icon">
+  <div class="alert-box_parent">
+    <div class="alert-box">
+      <div class="alert-box_header"></div>
+      <div class="alert-box_messages">
+        <div class="alert-message_yellow">
+          <div class="icon-box">
             <img
-              src="../../../../public/img/icon//node-journal-icons/yellow-warning1.png"
-              alt="icon"
+              src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png"
+              alt="warn_storage"
             />
           </div>
-          <div class="warning-content">
-            <span class="alert-text">{{ item.description }}</span>
-            <span class="alert-title">{{ item.title }}</span>
+          <div class="message-box">
+            <div class="warning"><span>WARNING</span></div>
+            <div class="main-message"><span>LOW STORAGE SPACE</span></div>
+            <div class="val-message">200 GB</div>
           </div>
         </div>
-        <div class="table-row-red" v-else>
-          <div class="warning-icon">
+        <div class="alert-message_yellow">
+          <div class="icon-box">
             <img
-              src="../../../../public/img/icon//node-journal-icons/red-warning.png"
-              alt="icon"
+              src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png"
+              alt="warn_storage"
             />
           </div>
-          <div class="warning-content">
-            <span class="alert-text">{{ item.description }}</span>
-            <span class="alert-title">{{ item.title }}</span>
+          <div class="message-box">
+            <div class="warning"><span>WARNING</span></div>
+            <div class="main-message"><span>CPU USAGE</span></div>
+            <div class="val-message"><span> > 80%</span></div>
+          </div>
+        </div>
+        <div class="alert-message_red">
+          <div class="icon-box">
+            <img
+              src="../../../../public/img/icon/control/red_warning_cpu.png"
+              alt="warn_storage"
+            />
+          </div>
+          <div class="message-box">
+            <div class="warning"><span>CRITICAL WARNING</span></div>
+            <div class="main-message"><span>CPU USAGE</span></div>
+            <div class="val-message"><span> > 90%</span></div>
+          </div>
+        </div>
+        <div class="alert-message_red">
+          <div class="icon-box">
+            <img
+              src="../../../../public/img/icon/control/key-rot.png"
+              alt="warn_storage"
+            />
+          </div>
+          <div class="message-box">
+            <div class="warning"><span>CRITICAL WARNING</span></div>
+            <div class="main-message"><span>MISSED ATTESTATION</span></div>
+          </div>
+        </div>
+        <div class="alert-message_green">
+          <div class="icon-box">
+            <img
+              src="../../../../public/img/icon/control/logo-icon.png"
+              alt="warn_storage"
+            />
+          </div>
+          <div class="message-box">
+            <div class="warning"><span>NOTIFICATION</span></div>
+            <div class="main-message"><span>STEREUM UPDATE</span></div>
           </div>
         </div>
       </div>
@@ -49,32 +71,10 @@
   </div>
 </template>
 <script>
-export default {
-  data() {
-    return {
-      systemWarning: [
-        {
-          id: 1,
-          title: "WARNING",
-          description: "SYSTEM LOAD",
-        },
-        {
-          id: 2,
-          title: "WARNING",
-          description: "HEAVY SYSTEM LOAD",
-        },
-        {
-          id: 3,
-          title: "WARNING",
-          description: "SYSTEM LOAD",
-        },
-      ],
-    };
-  },
-};
+export default {};
 </script>
 <style scoped>
-.alert-box {
+.alert-box_parent {
   width: 90%;
   height: 99%;
   margin-left: 3px;
@@ -83,159 +83,120 @@ export default {
   background-color: #464a44;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   position: relative;
 }
-
-.alert-icons {
-  width: 65%;
-  height: 18%;
-  background-color: #586860;
-  border-radius: 10px;
+.alert-box {
   display: flex;
+  width: 95%;
+  height: 95%;
+  justify-content: space-between;
+  align-items: center;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  margin-top: 10px;
-  border: 2px solid #747474;
-  box-shadow: 0 1px 3px 1px #393939;
 }
-.warning {
-  width: 85%;
-  height: 80%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.alert-icons .yellow-warning {
-  width: 30px;
-  height: 30px;
-  background-color: #d5cb5e;
-  border-radius: 5px;
+.alert-box_header {
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #f6efaa;
-}
-.alert-icons .yellow-warning img {
-  width: 25px;
-  height: 25px;
-}
-.alert-icons .red-warning {
-  width: 30px;
-  height: 30px;
+  width: 90%;
+  height: 12%;
+  background: #23272a;
+  border: 1px solid #707070;
   border-radius: 5px;
-  background-color: #ea5d5d;
+  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
+}
+.alert-box_messages {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 1px 3px 1px #393939, inset 0 1px 3px 1px #f28b8b;
-}
-.alert-icons .red-warning img {
-  width: 25px;
-  height: 25px;
-}
-.alert-icons span {
-  width: 75%;
-  border: 1px solid #434343;
-  background-color: #47594a;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 800;
-  color: #fff;
-}
-.alert-table {
-  width: 93%;
-  height: 70%;
-  background-color: #353535;
-  border-radius: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-}
-.table-row {
-  width: 95%;
-  height: 13%;
-  margin: 0 auto;
-}
-.table-row-yellow {
-  width: 95%;
+  width: 90%;
   height: 85%;
-  background-color: #aea038;
-  margin: 5px auto;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  border: 1px solid #515151;
+  background: #23272a;
+  border: 1px solid #707070;
   border-radius: 5px;
-  box-shadow: 0 1px 3px 1px #151515;
+  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
+  flex-direction: column;
 }
-.table-row-yellow .warning-icon {
-  width: 20%;
-  height: 100%;
+.alert-message_yellow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  height: 12%;
+  background: #ffd924;
+  border: 1px solid #707070;
+  border-radius: 5px;
+  margin: 2px 0;
+}
+.alert-message_red {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  height: 12%;
+  background: #be3635;
+  border: 1px solid #707070;
+  border-radius: 5px;
+  margin: 2px 0;
+  color: #eee;
+}
+.alert-message_green {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+  height: 12%;
+  background: #5f7e6a;
+  border: 1px solid #707070;
+  border-radius: 5px;
+  margin: 2px 0;
+  color: #eee;
+}
+.icon-box {
+  width: 25%;
+  height: 95%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.table-row-yellow .warning-icon img {
-  width: 20px;
-  height: 20px;
-}
-.table-row-yellow .warning-content {
-  width: 80%;
-  height: 100%;
-  margin-right: 7px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.table-row-red {
+.icon-box img {
   width: 95%;
-  height: 85%;
-  background-color: #ea564e;
-  margin: 5px auto;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  border: 1px solid #515151;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px 1px #151515;
+  height: 99%;
 }
-.table-row-red .warning-icon {
-  width: 20%;
-  height: 100%;
+.message-box {
+  width: 70%;
+  height: 75%;
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.table-row-red .warning-icon img {
-  width: 22px;
-  height: 22px;
-}
-.table-row-red .warning-content {
-  width: 80%;
-  height: 100%;
-  margin-right: 7px;
-  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   flex-direction: column;
-  justify-content: space-evenly;
+}
+.warning {
+  display: flex;
+  width: 80%;
+  height: 10%;
+  font-size: 10%;
+  justify-content: flex-start;
   align-items: center;
-  overflow: hidden;
+  font-weight: 500;
 }
-
-.alert-text {
-  font-size: 8px;
-  font-weight: 700;
-  color: rgb(255, 255, 255);
+.main-message {
+  display: flex;
+  width: 95%;
+  height: 50%;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 40%;
+  font-weight: 800;
 }
-.alert-title {
-  font-size: 7px;
-  font-weight: 400;
+.val-message {
+  display: flex;
+  width: 95%;
+  height: 35%;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 45%;
+  font-weight: 800;
 }
 </style>
