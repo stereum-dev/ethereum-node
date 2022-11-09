@@ -38,7 +38,7 @@
     "stereumName": "настройка на стереум",
     "langName": "избиране на език",
     "confirm": "ПОТВЪРЖДАВАНЕ И ПРИЛАГАНЕ",
-    "general": "GENETAL",
+    "general": "GENERAL",
     "credits": "Заслуги",
     "open": "отвори",
     "update": "АКТУАЛИЗАЦИЯ",
@@ -53,12 +53,12 @@
     "auto": "АВТОМАТИЧНО"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "Първи стъпки!",
     "stake": "Залог с 32 ETH",
     "ssv": "Използвайте ssv мрежа",
     "alert": "Сигнали в мобилното приложение",
     "switchC": "Превключване на клиенти",
-    "switchM": "Смяна на машина"
+    "migrate": "Nodes Migration",
+    "rpc": "RPC Connection"
   },
   "pluginZone": {
     "client": "клиент"
@@ -175,7 +175,7 @@
   },
   "validatorsBox": {
     "date": "ДАТА",
-    "validator": "VALIATOR",
+    "validator": "VALIDATOR",
     "attestRate": "АТЕСТ.ТАРИФА",
     "reward": "НАГРАДА"
   },
