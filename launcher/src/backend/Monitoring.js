@@ -1220,9 +1220,58 @@ export class Monitoring {
     };
   }
 
+  // Used for fast debug/dev purposes
+  async getDebugStatus(){
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 9999,
+        "info": "error: service infos for debugstatus not available",
+        "data": "",
+      };
+    }
+
+    // Get all dependency infos
+    const dependencyInfos = []
+    for(let i=0;i<serviceInfos.length;i++){
+      dependencyInfos.push({
+        service: serviceInfos[i].service,
+        instanceID: serviceInfos[i].config.instanceID,
+        dependencies: serviceInfos[i].config.dependencies,
+      })
+    }
+
+    // Make an easy dependency view
+    const easyInfos = []
+    for(let i=0;i<serviceInfos.length;i++){
+      const hashDependencies = serviceInfos[i].config.dependencies.consensusClients.length || serviceInfos[i].config.dependencies.executionClients.length ? 'yes' : 'no';
+      easyInfos.push({
+        hashDependencies: hashDependencies,
+        service: serviceInfos[i].service,
+        instanceID: serviceInfos[i].config.instanceID,
+        dependencies: serviceInfos[i].config.dependencies,
+      })
+    }
+
+    return {
+      serviceInfos:serviceInfos,
+      dependencyInfos:dependencyInfos,
+      easyInfos:easyInfos,
+    }
+
+    // Nothign else, just string info..
+    return "debugstatus"
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
+      
+      const debugstatus = await this.getDebugStatus();
+      // if(debugstatus.code)
+      //   return debugstatus;
       const beaconstatus = await this.getBeaconStatus();
       // if(beaconstatus.code)
       //   return beaconstatus;
@@ -1235,6 +1284,9 @@ export class Monitoring {
       const syncstatus = await this.getSyncStatus();
       // if(syncstatus.code)
       //   return syncstatus;
+      const syncstatusnew = await this.getSyncStatusNew();
+      // if(syncstatusnew.code)
+      //   return syncstatusnew;
       const p2pstatus = await this.getP2PStatus();
       // if(p2pstatus.code)
       //   return p2pstatus;
@@ -1242,7 +1294,9 @@ export class Monitoring {
         "code": 0,
         "info": "success: data successfully retrieved",
         "data": {
+          'debugstatus':debugstatus,
           'syncstatus':syncstatus,
+          'syncstatusnew':syncstatusnew,
           'p2pstatus':p2pstatus,
           'storagestatus':storagestatus,
           'rpcstatus':rpcstatus,
