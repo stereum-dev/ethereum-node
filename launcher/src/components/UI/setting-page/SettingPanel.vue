@@ -91,7 +91,7 @@
                   </select>
                 </div>
               </div>
-             <!-- <div class="setting-items">
+              <!-- <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.servicePlugin") }}</span>
                 </div>
@@ -176,7 +176,7 @@ export default {
     };
   },
   mounted() {
-    this.getSettings()
+    this.getSettings();
     this.forceUpdateCheck = true;
   },
   updated() {
@@ -226,13 +226,13 @@ export default {
     },
   },
   methods: {
-    async getSettings(){
-      this.settings = await ControlService.getStereumSettings()
-      if(this.settings.stereum?.settings.updates.unattended.install){
-          this.stereumRef = "auto"
-        }else{
-          this.stereumRef = "manual"
-        }
+    async getSettings() {
+      this.settings = await ControlService.getStereumSettings();
+      if (this.settings.stereum?.settings.updates.unattended.install) {
+        this.stereumRef = "auto";
+      } else {
+        this.stereumRef = "manual";
+      }
     },
     switchOnOff() {
       this.onOff = !this.onOff;
@@ -249,8 +249,9 @@ export default {
       return false;
     },
     async confirm() {
-      this.settings.stereum.settings.updates.unattended.install = this.stereumRef === "auto"
-      await ControlService.setStereumSettings(toRaw(this.settings))
+      this.settings.stereum.settings.updates.unattended.install =
+        this.stereumRef === "auto";
+      await ControlService.setStereumSettings(toRaw(this.settings));
       alert("Done!");
     },
     selector() {
@@ -349,11 +350,19 @@ export default {
   outline: none;
 }
 .setting-items_btn select {
-  width: 100%;
-  height: 100%;
-  line-height: 100%;
+  width: 95%;
+  height: 90%;
+  line-height: 90%;
   text-align-last: center;
   color: #171717;
+  border-radius: 10px;
+  color: #232323;
+}
+.setting-items_btn select:hover,
+.setting-items_btn select:active,
+.setting-items_btn select:focus {
+  outline: none;
+  border: none;
 }
 #version {
   pointer-events: none;
