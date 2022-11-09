@@ -1,4 +1,0 @@
-{
-  "keystores": {{ item.content | to_json }},
-  "passwords": {{ item.passwords | to_json }}
-}

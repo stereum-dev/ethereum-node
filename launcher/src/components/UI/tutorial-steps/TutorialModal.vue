@@ -2,10 +2,15 @@
   <div class="modal-bg" @click="$emit('hideModal')">
     <div class="modal-box">
       <div class="modal-box-title">
-        <span>INTRODUCTION</span>
+        <span>{{ itemToTutorial.name }}</span>
       </div>
       <div class="modal-items">
-        <div class="item" v-for="(item, index) in steps" :key="index" @click="$emit('showItem')">
+        <div
+          class="item"
+          v-for="(item, index) in steps"
+          :key="index"
+          @click="$emit('showItem', item)"
+        >
           <div class="icon-box">
             <img :src="item.icon" alt="icon" />
           </div>
@@ -19,18 +24,55 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
-import { useTutorialStore } from "@/store/tutorialSteps";
 export default {
+  props: ["itemToTutorial"],
+  data() {
+    return {
+      steps: [
+        {
+          id: 1,
+          name: "videos",
+          title: "video",
+          icon: "/img/icon/tutorial-icons/big-camera.png",
+          videosLink: this.itemToTutorial.videosLink,
+          route: "/videos",
+          displayItem: false,
+        },
+        {
+          id: 2,
+          name: "walkthrough",
+          title: "WALKTHROUGH",
+          icon: "/img/icon/tutorial-icons/guide-icon.png",
+          guideLink: this.itemToTutorial.guideLink,
+          route: "/guide",
+          displayItem: false,
+        },
+        {
+          id: 3,
+          name: "text guide",
+          title: "WRITTEN GUIDE",
+          icon: "/img/icon/tutorial-icons/manual-icon.png",
+          writtenLink: this.itemToTutorial.writtenLink,
+          route: "/guide/text",
+          displayItem: false,
+        },
+      ],
+    };
+  },
   computed: {
-    ...mapWritableState(useTutorialStore, {
-      modalIsVisible: "modalIsVisible",
-      steps: "steps",
-    }),
+    checkLinks() {
+      this.steps.map((item) => {
+        if (item.name == "videos") {
+          item.videosLink = this.itemToTutorial.videosLink;
+        } else if (item.name == "walkthrough") {
+          item.guideLink = this.itemToTutorial.guideLink;
+        } else if (item.name == "text guide") {
+          item.writtenLink = this.itemToTutorial.writtenLink;
+        }
+      });
+    },
   },
-  methods: {
-
-  },
+  methods: {},
 };
 </script>
 <style scoped>
@@ -41,13 +83,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius:0 35px 5px 5px;
-
+  border-radius: 0 35px 5px 5px;
   z-index: 200;
   position: absolute;
   top: 0;
   left: 0;
-  cursor: pointer;
+  cursor: default;
 }
 .modal-box {
   width: 45%;
@@ -75,6 +116,7 @@ export default {
   font-size: 1rem;
   font-weight: 600;
   color: #c3c3c3;
+  text-transform: uppercase;
 }
 .modal-items {
   width: 90%;
@@ -98,15 +140,12 @@ export default {
   box-shadow: 0 1px 3px 1px rgb(68, 68, 68);
 }
 .item:hover {
-  border: 2px solid rgb(79, 174, 160);
-  box-shadow: 0 1px 5px 1px rgb(68, 68, 68);
-  transition-duration: 200ms;
-  transform: scale(1.02);
+  border: 2px solid rgb(54, 174, 248);
+  opacity: 0.8;
 }
 .item:active {
-  border: 2px solid rgb(79, 174, 160);
   transition-duration: 200ms;
-  transform: scale(1);
+  transform: scale(0.95);
 }
 .item .icon-box {
   background-color: #33393e;
@@ -118,7 +157,7 @@ export default {
   align-items: center;
 }
 .icon-box img {
-  width: 100px;
+  width: 65%;
 }
 .item-text {
   width: 100%;
@@ -133,6 +172,7 @@ export default {
   font-size: 0.9rem;
   font-weight: 700;
   color: #303030;
+  text-transform: uppercase;
 }
 .modal-items::-webkit-scrollbar {
   display: none;

@@ -212,7 +212,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 1rem 0 0 1rem;
-  background-color: #343434;
+  background-color: #2a2f32;
   border: 2px solid rgb(107, 107, 107);
   border-right: none;
   z-index: 312;
@@ -237,9 +237,9 @@ export default {
   align-items: center;
 }
 .nodeUpdate-title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  color: #c6c6c6;
+  color: #375b5c;
   margin-left: 15px;
   margin-top: 10px;
   text-transform: uppercase;
@@ -255,9 +255,9 @@ export default {
 }
 .launcherUpdate .title,
 .serviceUpdates-title .title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
-  color: #c6c6c6;
+  color: #375b5c;
   margin-left: 15px;
   text-transform: uppercase;
 }
@@ -633,7 +633,7 @@ export default {
 .availableTable .tableContent .tableRow {
   width: 100%;
   height: 30px;
-  background-color: #343434;
+  background-color: #2a2f32;
   margin-top: 3px;
   border: 2px solid rgb(107, 107, 107);
   border-radius: 5px;

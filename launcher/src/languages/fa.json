@@ -15,10 +15,10 @@
   "journalnode": {
     "serverip": "سرور IP",
     "servername": "نام سرور ",
-    "edit": "ویرایش نود"
+    "edit": "NODE ویرایش"
   },
   "pagesnav": {
-    "node": "نود",
+    "node": "NODE",
     "control": "کنترل",
     "staking": "استیک"
   },
@@ -38,12 +38,12 @@
     "stereumName": "تنظیمات استریوم",
     "langName": "انتخاب زبان",
     "confirm": "تایید و ثبت",
-    "general": "تنظیمات عمومی",
-    "credits": "حامیان",
+    "general": "GENETAL",
+    "credits": "پشتیبان ها",
     "open": "باز کردن",
     "update": "بروزرسانی",
     "launcherVersion": "نسخه لانچر",
-    "nodeVersion": "نسخه نود",
+    "nodeVersion": "NODE نسخه",
     "lane": "استریوم - تست مسیر",
     "on": "روشن",
     "off": "خاموش",
@@ -70,10 +70,10 @@
     "servicePlugin": "خدمات پلاگین"
   },
   "modifyPanel": {
-    "backNode": "بازگشت به نود",
+    "backNode": " NODE بازگشت به",
     "addPreset": "اضافه کردن پیش فرض ۱ کلیک",
     "changeNetwork": "تغییر شبکه",
-    "nukeNode": "از بین بردن نود"
+    "nukeNode": "NODE از بین بردن "
   },
   "sidebarManage": {
     "filter": "فیلترکردن"
@@ -86,7 +86,7 @@
   "updatePanel": {
     "launcherTitle": "بروز رسانی لانچر",
     "current": "کنونی",
-    "nodeTitle": "بروز رسانی نود",
+    "nodeTitle": "NODE بروز رسانی",
     "latest": "آخرین نسخه",
     "auto": "بروزرسانی اتوماتیک",
     "available": "در دسترس",
@@ -97,26 +97,26 @@
     "all": "بروزرسانی همه چیز"
   },
   "controlPage": {
-    "node": "نود",
+    "node": "NODE",
     "disk": "سرعت دیسک",
     "write": "نوشتن",
     "read": "خواندن",
     "inclusionDistance": "فاصله گنجاندن",
-    "rpc": "RPC-ENDPOINT",
+    "rpc": "RPC - نقطه پایانی",
     "syncStatus": "وضعیت همگام سازی",
-    "hard": "HARD DISK",
-    "free": "FREE",
-    "total": "TOTAL",
+    "hard": "هارد دیسک",
+    "free": "آزاد",
+    "total": "تمامی",
     "network": "شبکه",
     "receive": "داده دریافتی",
     "transmit": "داده ارسالی",
-    "ram": "RAM",
-    "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
+    "ram": "رام",
+    "used": "استفاده",
+    "totalram": "تمامی",
+    "storage": "ذخیره سازی",
     "active": "فعال",
     "rating": "رده بندی",
-    "usage": "Usage"
+    "usage": "استفاده شده"
   },
   "taskManager": {
     "clickDisplay": "برای نمایش روی وظایف کلیک کنید"
@@ -129,7 +129,7 @@
     "balance": "تعادل",
     "option": "گزینه ها",
     "importKey": "وارد کردن کلید(های) اعتبارسنجی",
-    "waitMessage": "ممکن است کمی طول بکشد",
+    "waitMessage": "It may take some time",
     "waitForImport": "لطفا صبر کنید تا کلید وارد شود"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "رمز عبور اعتبارسنجی خود را برای خروج از زنجیره با این کلید وارد کنید",
-    "confirm": "تائید کنید"
+    "confirm": "Confrim"
   },
   "exitValidatorModal": {
     "modalMessage": "آیا مطمئن هستید که می‌خواهید با کلیدهای اعتبارسنجی انتخاب شده از زنجیره خارج شوید؟ این وظیفه اعتبارسنجی شما را متوقف می کند و نمی توان آن را معکوس کرد. وجوه شما نیز فقط در صورتی قابل برداشت است که زنجیره اجازه دهد",
@@ -168,14 +168,14 @@
     "validators": "تایید کننده",
     "proposed": "پیشنهاد شده",
     "attestRate": "نرخ تصدیق",
-    "attention": "تصدیق",
+    "attention": "ATTESTATION",
     "missed": "از دست رفته",
     "aggregations": "تراکم",
     "slashed": "شکاف ها"
   },
   "validatorsBox": {
     "date": "تاریخ",
-    "validator": "تایید کننده",
+    "validator": "VALIATOR",
     "attestRate": "نرخ تصدیق",
     "reward": "پاداش"
   },
@@ -202,21 +202,21 @@
     "back": "بازگشت",
     "next": "بعدی"
   },
-  "creditPanel":{
-    "creditTitle":"حامیان - مشارکت کنندگان مالی",
-    "fincialTitle":"نام خود را در لیست قرار دهید! با تشکر از شما برای حمایت از توسعه",
-    "technicPage":"مشارکت فنی",
-    "techTitle":"حامیان - مشارکت کنندگان فنی",
-    "techText":" یک گیت پاپ دریافت کنید! با بازدید از گیت هاب ما یاد بگیرید که چگونه درگیر شوید",
-    "financialPage":"مشارکت مالی"
+  "creditPanel": {
+    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
+    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "technicPage": "TECHNICAL CONTRIBUTION",
+    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
+    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "financialPage": "FINANCIAL CONTRIBUTION"
   },
-  "verifyInstallation":{
-    "verifyTitle":"تأیید و نصب کنید",
-    "name":"نام",
-    "cat":"دسته بندی",
-    "path":"مسیر"
+  "verifyInstallation": {
+    "verifyTitle": "VERIFY & INSTALL",
+    "name": "NAME",
+    "cat": "CATEGORY",
+    "path": "PATH"
   },
-  "warningModal":{
-    "warningText":"ما توصیه می کنیم قبل از اعمال تغییرات بیشتر صبر کنید تا نصب اولیه انجام شود"
+  "warningModal": {
+    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
   }
 }

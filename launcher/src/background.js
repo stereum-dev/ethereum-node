@@ -356,6 +356,15 @@ promiseIpc.on("handleServiceChanges", async (args) => {
   return await serviceManager.handleServiceChanges(args);
 });
 
+promiseIpc.on("getStereumSettings", async () => {
+  await nodeConnection.findStereumSettings();
+  return nodeConnection.settings
+});
+
+promiseIpc.on("setStereumSettings", async (args) => {
+  return await nodeConnection.setStereumSettings(args);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

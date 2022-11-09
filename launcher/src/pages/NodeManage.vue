@@ -12,7 +12,10 @@
               @save-config="saveAddedServiceConfig"
             ></add-panel>
             <modify-panel
-              v-else-if="itemToModify.modifierPanel"
+              v-else-if="
+                itemToModify.modifierPanel &&
+                itemToModify.service !== 'PrometheusNodeExporterService'
+              "
               :items="itemToModify"
               @cancel-modify="cancelModifyProcess"
               @save-modify="saveServiceModification"
@@ -25,7 +28,8 @@
               @confirm-replace="confirmReplaceProcess"
               @replace-plugin="replacePluginHandler"
               :items="itemToReplace"
-            ></replace-panel>
+            >
+            </replace-panel>
             <node-configuration
               v-else
               @modal-preset="openPresetModal"
@@ -43,11 +47,7 @@
               @close-me="closeModal"
             ></base-modal>
           </div>
-          <div
-            @drop="onDrop($event)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
+          <div @drop="onDrop($event)" @dragenter.prevent @dragover.prevent>
             <drop-zone
               :title="$t('theNode.execution')"
               :list="
@@ -58,13 +58,10 @@
               @modal-view="showModal"
               @select-item="selectedServiceToRemove"
               @modify-item="selectedServiceToModify"
-            ></drop-zone>
+            >
+            </drop-zone>
           </div>
-          <div
-            @drop="onDrop($event)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
+          <div @drop="onDrop($event)" @dragenter.prevent @dragover.prevent>
             <drop-zone
               @modal-view="showModal"
               :title="$t('theNode.consensus')"
@@ -77,11 +74,7 @@
               @modify-item="selectedServiceToModify"
             ></drop-zone>
           </div>
-          <div
-            @drop="onDrop($event)"
-            @dragenter.prevent
-            @dragover.prevent
-          >
+          <div @drop="onDrop($event)" @dragenter.prevent @dragover.prevent>
             <drop-zone
               @modal-view="showModal"
               :title="$t('theNode.validator')"
@@ -195,10 +188,9 @@ export default {
     }),
   },
   mounted() {
-    this.confirmChanges = []
-    this.configNetwork = this.currentNetwork
+    this.confirmChanges = [];
+    this.configNetwork = this.currentNetwork;
   },
-
   methods: {
     sortByName( a, b ){
     if ( a.service.toLowerCase() < b.service.toLowerCase()){
@@ -236,27 +228,32 @@ export default {
       }
     },
     onDrop(event) {
-      const allServices = JSON.parse(JSON.stringify(this.allServices))
+      const allServices = JSON.parse(JSON.stringify(this.allServices));
       const itemId = event.dataTransfer.getData("itemId");
       let item = allServices.find((item) => item.id == itemId);
-      if (item.category === "service" &&
-      this.newConfiguration.map(s => s.service).includes(item.service)) {
+      if (
+        item.category === "service" &&
+        this.newConfiguration.map((s) => s.service).includes(item.service)
+      ) {
         return;
       } else {
         if (this.itemToInstall.addPanel === true) {
           this.cancelAddProcess();
         }
-        item.id = this.newConfiguration.length
+        item.id = this.newConfiguration.length;
         this.newConfiguration.push(item);
-        if(item.name === "Nimbus" || item.name === "Teku"){
-          let counterPart = allServices.find(s => s.service === item.service.replace(/(Beacon)|(Validator)/,match => {
-            if(match === "Beacon")
-              return "Validator"
-            return "Beacon"
-            }))
-          this.newConfiguration.push(counterPart)
-          if(counterPart.service.includes("Beacon")){
-            item = counterPart
+        if (item.name === "Nimbus" || item.name === "Teku") {
+          let counterPart = allServices.find(
+            (s) =>
+              s.service ===
+              item.service.replace(/(Beacon)|(Validator)/, (match) => {
+                if (match === "Beacon") return "Validator";
+                return "Beacon";
+              })
+          );
+          this.newConfiguration.push(counterPart);
+          if (counterPart.service.includes("Beacon")) {
+            item = counterPart;
           }
         }
         item.addPanel = true;
@@ -265,27 +262,32 @@ export default {
       }
     },
     addNewService(i) {
-      const allServices = JSON.parse(JSON.stringify(this.allServices))
-      let item = JSON.parse(JSON.stringify(i))
-      if (item.category === "service" &&
-      this.newConfiguration.map(s => s.servce).includes(item.service)) {
+      const allServices = JSON.parse(JSON.stringify(this.allServices));
+      let item = JSON.parse(JSON.stringify(i));
+      if (
+        item.category === "service" &&
+        this.newConfiguration.map((s) => s.servce).includes(item.service)
+      ) {
         return;
       } else {
         if (this.itemToInstall.addPanel === true) {
           this.cancelAddProcess();
         }
-        item.id = this.newConfiguration.length
+        item.id = this.newConfiguration.length;
         this.newConfiguration.push(item);
-        if(item.name === "Nimbus" || item.name === "Teku"){
-          let counterPart = allServices.find(s => s.service === item.service.replace(/(Beacon)|(Validator)/,match => {
-            if(match === "Beacon")
-              return "Validator"
-            return "Beacon"
-            }))
-          counterPart.id = this.newConfiguration.length
-          this.newConfiguration.push(counterPart)
-          if(counterPart.service.includes("Beacon")){
-            item = counterPart
+        if (item.name === "Nimbus" || item.name === "Teku") {
+          let counterPart = allServices.find(
+            (s) =>
+              s.service ===
+              item.service.replace(/(Beacon)|(Validator)/, (match) => {
+                if (match === "Beacon") return "Validator";
+                return "Beacon";
+              })
+          );
+          counterPart.id = this.newConfiguration.length;
+          this.newConfiguration.push(counterPart);
+          if (counterPart.service.includes("Beacon")) {
+            item = counterPart;
           }
         }
         item.addPanel = true;
@@ -295,21 +297,29 @@ export default {
     },
 
     saveAddedServiceConfig(data) {
-      this.confirmChanges.push(JSON.parse(JSON.stringify(this.getActions("INSTALL",this.itemToInstall, data))))
+      this.confirmChanges.push(
+        JSON.parse(
+          JSON.stringify(this.getActions("INSTALL", this.itemToInstall, data))
+        )
+      );
       this.itemToInstall = {};
       this.itemToInstall.addPanel = false;
     },
     selectedServiceToRemove(item) {
       if (item.active) {
-          this.selectedItemToRemove = this.selectedItemToRemove.concat(
-            this.newConfiguration.filter(el => el.config.serviceID === item.config.serviceID)
+        this.selectedItemToRemove = this.selectedItemToRemove.concat(
+          this.newConfiguration.filter(
+            (el) => el.config.serviceID === item.config.serviceID
           )
+        );
       } else {
-        if(!item.config.serviceID){
+        if (!item.config.serviceID) {
           this.newConfiguration = this.newConfiguration.filter(
-          (el) => el.id !== item.id);
+            (el) => el.id !== item.id
+          );
           this.confirmChanges = this.confirmChanges.filter(
-            (el) => el.service.id !== item.id)
+            (el) => el.service.id !== item.id
+          );
         }
         this.selectedItemToRemove = this.selectedItemToRemove.filter(
           (el) => el.config.serviceID !== item.config.serviceID
@@ -320,7 +330,7 @@ export default {
       this.itemToInstall.addPanel = false;
       this.itemToInstall = {};
       let item = this.newConfiguration.pop();
-      if(item.name === "Nimbus" || item.name === "Teku")
+      if (item.name === "Nimbus" || item.name === "Teku")
         this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
@@ -356,8 +366,7 @@ export default {
       this.itemToReplace.replacePanel = false;
       this.itemToReplace = {};
     },
-    replacePluginHandler(item) {
-    },
+    replacePluginHandler(item) {},
   },
 };
 </script>
@@ -373,6 +382,7 @@ export default {
   top: 0;
   z-index: 100;
 }
+
 .manage-parent {
   display: grid;
   width: 100%;
@@ -393,9 +403,11 @@ export default {
   align-self: center;
   position: relative;
 }
+
 .activeAddPanel {
   left: 0 !important;
 }
+
 .preset-modal {
   width: 81.5%;
   height: 86.4%;
@@ -405,6 +417,7 @@ export default {
   top: 9%;
   left: 18%;
 }
+
 .drop-parent {
   width: 100%;
   height: 95%;
@@ -416,6 +429,7 @@ export default {
   justify-content: space-evenly;
   position: relative;
 }
+
 .modal-parent {
   width: 100%;
   height: 100%;
@@ -427,10 +441,12 @@ export default {
   left: 0;
   z-index: 1;
 }
+
 .modal-bg {
   width: 100%;
   height: 100%;
 }
+
 .service {
   width: 100%;
   height: 95%;
@@ -444,6 +460,7 @@ export default {
   align-content: center;
   border: 2px solid #242529b4;
 }
+
 .service-parent {
   display: flex;
   justify-content: center;
@@ -466,15 +483,18 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .trap-title {
   color: rgb(210, 210, 210);
   font-size: 1rem;
   font-weight: 800;
 }
+
 .trap-plus-icon {
   width: 50px;
   height: 30px;
 }
+
 .trap-plus-icon img {
   width: 50px;
   height: 30px;
@@ -498,6 +518,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .sidebar {
   z-index: 6;
 }
@@ -520,6 +541,7 @@ export default {
   background-color: rgb(160, 160, 160);
   border-radius: 50px;
 }
+
 ::-webkit-scrollbar-track {
   background-color: transparent;
   margin: 10px;
@@ -530,6 +552,7 @@ export default {
   left: 4px;
   bottom: -1px;
 }
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s ease;

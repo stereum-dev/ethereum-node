@@ -1,31 +1,18 @@
 <template>
   <div class="service-container" @mousedown.prevent.stop>
-    <img
-      class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
-      alt="icon"
-      @click="$refs.serviceBg.scrollTop = 0"
-    />
+    <img class="service-arrow" src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png" alt="icon"
+      @click="$refs.serviceBg.scrollTop = 0" />
     <div class="service-bg" ref="serviceBg">
       <div v-for="item in itemsList" :key="item.id" class="service-item">
-        <img
-          :src="item.hIcon ? item.hIcon : item.sIcon"
-          alt="icon"
-          @mouseup.right="selectedItem(item)"
-          @click="modifyItem(item)"
-          :class="{
+        <img :src="item.hIcon ? item.hIcon : item.sIcon" alt="icon" @mouseup.right="selectedItem(item)"
+          @click="modifyItem(item)" :class="{
             'chosen-plugin': item.active,
             'modify-plugin': item.modifierPanel,
-          }"
-        />
+          }" />
       </div>
     </div>
-    <img
-      class="service-arrow"
-      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
-      alt="icon"
-      @click="$refs.serviceBg.scrollTop = 1000"
-    />
+    <img class="service-arrow" src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png" alt="icon"
+      @click="$refs.serviceBg.scrollTop = 1000" />
   </div>
 </template>
 <script>
@@ -55,10 +42,10 @@ export default {
   },
   methods: {
     selectedItem(item) {
-      if(item.config.serviceID){
+      if (item.config.serviceID) {
         item.active = !item.active;
       }
-        this.$emit("selectItem", item);
+      this.$emit("selectItem", item);
     },
     modifyItem(item) {
       if(item.modifierPanel){
@@ -68,7 +55,7 @@ export default {
       this.newConfiguration.map((i) => {
         if (i.id != item.id) {
           i.modifierPanel = false;
-        } else if (i.id == item.id) {
+        } else if (i.id == item.id && i.service !== 'PrometheusNodeExporterService') {
           i.modifierPanel = true;
           this.$emit("modifyItem", item);
         }
@@ -97,6 +84,7 @@ export default {
   height: 10%;
   cursor: pointer;
 }
+
 .service-arrow:active {
   transform: scale(0.9);
   transition-duration: 0.1s;
@@ -116,6 +104,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
 .service-bg::-webkit-scrollbar {
   display: none;
 }
@@ -129,14 +118,17 @@ export default {
   align-items: center;
   position: relative;
 }
+
 .service-item img {
   width: 100%;
   height: 100%;
   cursor: pointer;
 }
+
 .service-item img:active {
   box-shadow: none;
 }
+
 .chosen-plugin {
   border: 2px solid rgb(255, 70, 70);
   border-radius: 7px;

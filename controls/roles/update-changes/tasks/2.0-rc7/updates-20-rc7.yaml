@@ -1,0 +1,27 @@
+---
+- name: Add mevboost dependency PR 869
+  block:
+  - name: Find service configs
+    find:
+      paths: "/etc/stereum/services"
+    register: service_config_files
+
+  - include_tasks: add-mevboost-dependency.yaml
+    loop: "{{ service_config_files.files }}"
+
+- name: Remove Besu Attribute
+  block:
+  - name: Find Besu Services
+    find:
+      paths: "/etc/stereum/services"
+      contains: ".*BesuService.*"
+    register: besu_config_files
+
+  - name: Remove Xmerge Attribute
+    lineinfile:
+      path: "{{ item.path }}"
+      state: absent
+      regexp: '^\s*- --Xmerge-support=true'
+    with_items: "{{ besu_config_files.files }}"
+
+#EOF

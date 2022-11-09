@@ -11,8 +11,38 @@
           </p>
         </div>
       </div>
+
       <div class="configBox">
-        <div class="change-installation">
+        <div
+          class="exporterBox"
+          v-if="plugin.service === 'PrometheusNodeExporterService'"
+        >
+          <div class="exporterBoxTitle">Click on ADD</div>
+        </div>
+        <div
+          class="relaysBox"
+          v-if="plugin.service === 'FlashbotsMevBoostService'"
+        >
+          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxContent">
+            <div class="relay" v-for="relay in relaysList" :key="relay.id">
+              <input
+                type="checkbox"
+                :id="relay.id"
+                :value="relay"
+                v-model="checkedRelays"
+              />
+              <label :for="relay.id">{{ relay.name }}</label>
+            </div>
+          </div>
+        </div>
+        <div
+          class="change-installation"
+          v-if="
+            plugin.service !== 'FlashbotsMevBoostService' &&
+            plugin.service !== 'PrometheusNodeExporterService'
+          "
+        >
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
@@ -20,8 +50,13 @@
             <input type="text" v-model="installationPath" maxlength="255" />
           </div>
         </div>
-
-        <div class="portAddBox">
+        <div
+          class="portAddBox"
+          v-if="
+            plugin.service !== 'FlashbotsMevBoostService' &&
+            plugin.service !== 'PrometheusNodeExporterService'
+          "
+        >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>PORT USED</span>
@@ -29,7 +64,14 @@
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
-          <div class="optionsBox" v-if="!switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
+          <div
+            class="optionsBox"
+            v-if="
+              !switchHandler(service) &&
+              service.service !== 'FlashbotsMevBoostService'
+            "
+            @click="changeSelectedServiceToConnect(service)"
+          >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
@@ -38,7 +80,14 @@
               </div>
             </div>
           </div>
-          <div class="clientAddBox" v-if="switchHandler(service)" @click="changeSelectedServiceToConnect(service)">
+          <div
+            class="clientAddBox"
+            v-if="
+              switchHandler(service) &&
+              service.service !== 'FlashbotsMevBoostService'
+            "
+            @click="changeSelectedServiceToConnect(service)"
+          >
             <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
             <div class="connectionConfig">
               <span class="category">{{ service.category }} Client</span>
@@ -46,22 +95,35 @@
             </div>
           </div>
         </template>
-        <div class="fast-sync" v-if="
-          plugin.category === 'execution' || plugin.category === 'consensus'
-        ">
+        <div
+          class="fast-sync"
+          v-if="
+            plugin.category === 'execution' || plugin.category === 'consensus'
+          "
+        >
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img @click="changeResyncOptions" src="/img/icon/arrows/left-arrow.png" alt="icon" />
+              <img
+                @click="changeResyncOptions"
+                src="/img/icon/arrows/left-arrow.png"
+                alt="icon"
+              />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img @click="changeResyncOptions" src="/img/icon/arrows/right-arrow.png" alt="icon" />
+              <img
+                @click="changeResyncOptions"
+                src="/img/icon/arrows/right-arrow.png"
+                alt="icon"
+              />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <span v-if="genesisIsActive"
+              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
+            >
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
             </div>
@@ -111,6 +173,8 @@ export default {
       actionContents: "actionContents",
       newConfiguration: "newConfiguration",
       configNetwork: "configNetwork",
+      relaysList: "relaysList",
+      checkedRelays: "checkedRelays",
     }),
   },
   watch: {
@@ -125,23 +189,30 @@ export default {
   methods: {
     switchHandler(service) {
       if (service.selectedForConnection) {
-        return service.selectedForConnection
+        return service.selectedForConnection;
       }
-      return false
+      return false;
     },
     cancelConfig() {
-      this.$emit('cancelAdd')
+      this.$emit("cancelAdd");
     },
     saveConfig() {
-      let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
-      this.$emit('saveConfig', {
-        network: (this.configNetwork.network === "testnet") ? "goerli" : "mainnet",
-        installDir: this.installationPath ? this.installationPath : "/opt/stereum",
+      let dependencies = toRaw(this.options).filter(
+        (s) => s.selectedForConnection
+      );
+      this.$emit("saveConfig", {
+        network:
+          this.configNetwork.network === "testnet" ? "goerli" : "mainnet",
+        installDir: this.installationPath
+          ? this.installationPath
+          : "/opt/stereum",
         port: parseInt(this.port),
-        executionClients: dependencies.filter(s => s.category === "execution"),
-        beaconServices: dependencies.filter(s => s.category === "consensus"),
-        checkpointURL: this.checkPointSync ? this.checkPointSync : false
-      })
+        executionClients: dependencies.filter(
+          (s) => s.category === "execution"
+        ),
+        beaconServices: dependencies.filter((s) => s.category === "consensus"),
+        checkpointURL: this.checkPointSync ? this.checkPointSync : false,
+      });
     },
     changeResyncOptions() {
       if (this.genesisIsActive) {
@@ -189,7 +260,7 @@ export default {
   margin-top: 1px;
   display: flex;
   background: #3a3d40;
-  border-right: 5px solid rgb(31, 31, 31);
+  border-right: 2px solid rgb(31, 31, 31);
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -267,7 +338,7 @@ export default {
 
 .configBox {
   width: 95%;
-  height: 80%;
+  height: 70%;
   margin-top: 5%;
   display: flex;
   flex-direction: column;
@@ -278,7 +349,7 @@ export default {
 
 .configBox .change-installation {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -470,7 +541,7 @@ export default {
 .portAddBox,
 .clientAddBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -543,11 +614,11 @@ export default {
 .addBtn {
   width: 40%;
   height: 95%;
-  background-color: #0d4f46;
-  color: #a8a8a8;
+  background-color: #116b5f;
+  color: #dfdfdf;
   border-radius: 5px;
   border: 1px solid #11675c;
-  box-shadow: 0 1px 3px 1px #262626;
+  box-shadow: 0 1px 3px 1px #2d2f31;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -558,27 +629,23 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
-
 .addBtn:hover {
-  background-color: #116b5f;
+  background-color: #0d4f46;
   transition-duration: 0.2s;
-  color: #dfdfdf;
 }
-
 .addBtn:active {
   background-color: #0d4f46;
   transition-duration: 0.2s;
   transform: scale(0.9);
 }
-
 .cancelBtn {
   width: 40%;
   height: 95%;
-  background-color: #2a2a2a;
-  color: #a8a8a8;
+  background-color: #d75442;
+  color: #dfdfdf;
   border-radius: 5px;
-  border: 1px solid #414141;
-  box-shadow: 0 1px 3px 1px #1c1c1c;
+  border: 1px solid #d75442;
+  box-shadow: 0 1px 3px 1px #2d2f31;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -589,13 +656,10 @@ export default {
   text-align: center;
   box-sizing: border-box;
 }
-
 .cancelBtn:hover {
-  background-color: #d75442;
+  background-color: #b84738;
   transition-duration: 0.2s;
-  color: #dfdfdf;
 }
-
 .cancelBtn:active {
   background-color: #b84738;
   transition-duration: 0.2s;
@@ -604,7 +668,7 @@ export default {
 
 .optionsBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -680,7 +744,7 @@ export default {
 
 .clientAddBox {
   width: 100%;
-  height: 10%;
+  height: 12%;
   background-color: #23282b;
   box-shadow: 1px 1px 3px 1px #16191b;
   border: 1px solid #22272a;
@@ -749,5 +813,104 @@ export default {
   text-align: center;
   text-transform: uppercase;
   box-sizing: border-box;
+}
+.relaysBox,
+.exporterBox {
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  background-color: #23282b;
+  border: 1px solid #22272a;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+.relaysBoxTitle {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #aaaaaa;
+}
+.exporterBoxTitle {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #aaaaaa;
+  text-align: center;
+}
+.relaysBoxContent {
+  width: 100%;
+  height: 90%;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.relaysBoxContent::-webkit-scrollbar {
+  width: 5px;
+}
+.relaysBoxContent::-webkit-scrollbar-track {
+  background: #23282b;
+}
+.relaysBoxContent::-webkit-scrollbar-thumb {
+  background: #42a5de;
+  border-radius: 5px;
+}
+
+.relaysBoxContent .relay {
+  width: 100%;
+  height: 12%;
+  min-height: 35px;
+  background-color: #2e3438;
+  border: 1px solid #22272a;
+  border-radius: 5px;
+  margin-top: 2px;
+  padding: 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.relaysBoxContent .relay:hover {
+  background-color: #3b4246;
+  border: 1px solid #3b4246;
+  transition-duration: 0.2s;
+}
+.relaysBoxContent .relay input {
+  width: 10%;
+  height: 60%;
+  border-radius: 2px;
+  background-color: rgb(81, 89, 96);
+}
+.relaysBoxContent .relay label {
+  width: 80%;
+  height: 100%;
+  margin-left: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #aaaaaa;
+  cursor: pointer;
 }
 </style>

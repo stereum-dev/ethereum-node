@@ -49,9 +49,11 @@
     "vue-draggable-next": "^2.1.1",
     "vue-form-wizard": "^0.8.4",
     "vue-i18n": "9.2.0-beta.2",
+    "vue-image-slider": "^1.0.2",
     "vue-router": "^4.0.15",
     "vue-toasted": "^1.1.28",
     "vue3-jest": "^27.0.0-alpha.1",
+    "vueperslides": "^3.3.2",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
@@ -59,6 +61,7 @@
     "@babel/eslint-parser": "^7.12.16",
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.2",
+    "@volar-plugins/vetur": "latest",
     "@vue/cli-plugin-babel": "~5.0.4",
     "@vue/cli-plugin-router": "~5.0.4",
     "@vue/cli-plugin-unit-jest": "~5.0.4",
@@ -78,8 +81,7 @@
     "tailwindcss": "^3.0.24",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-loader": "^17.0.0",
-    "vue-template-compiler": "^2.6.14",
-    "@volar-plugins/vetur": "latest"
+    "vue-template-compiler": "^2.6.14"
   },
   "license": "https://wrapbootstrap.com/help/licenses",
   "overrides": {

@@ -6,6 +6,10 @@
   gather_facts: false
   tasks:
 
+  - name: Waiting for updates to finish (reboot, script after reboot "stereum-services-update.sh")
+    pause:
+      seconds: 60
+
   # Stereum config files
   - stat: path=/etc/stereum/stereum.yaml
     register: stereum_config_file

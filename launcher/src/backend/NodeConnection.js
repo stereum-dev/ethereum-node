@@ -32,7 +32,7 @@ export class NodeConnection {
    */
   async findOS() {
     // Run the command without sudo wrapper
-    const uname = await this.sshService.exec("cat /etc/*-release",null,false);
+    const uname = await this.sshService.exec("cat /etc/*-release", null, false);
     log.debug("result uname: ", uname);
     if (uname.rc == 0) {
       if (uname.stdout && uname.stdout.toLowerCase().search("centos") >= 0) {
@@ -71,15 +71,15 @@ export class NodeConnection {
     `;
 
     // Run the command (without sudo wrapper!)
-    let result =  await this.sshService.exec(cmd,null,false);
+    let result = await this.sshService.exec(cmd, null, false);
 
     // No data in stdout or data in stderr? Executed code above failed to run!
-    if(result.stdout == "" || result.stderr != ""){
+    if (result.stdout == "" || result.stderr != "") {
       result.rc = 2;
       result.stdout = "ERROR: Executed code failed to run";
-      if(result.stderr != ""){
+      if (result.stderr != "") {
         result.stdout += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         result.stdout += " (syntax error)";
       }
     }
@@ -95,7 +95,6 @@ export class NodeConnection {
     const stereumConfig = await this.sshService.exec(
       "cat /etc/stereum/stereum.yaml"
     );
-
     if (stereumConfig.rc == 0) {
       this.settings = {
         stereum: YAML.parse(stereumConfig.stdout).stereum_settings,
@@ -216,7 +215,7 @@ export class NodeConnection {
       }
       if (versions) {
         commit = versions["stereum"].slice(-1).pop().commit
-      }else{
+      } else {
         commit = "main"
       }
       log.info("CommitHash:", commit)
@@ -768,8 +767,8 @@ export class NodeConnection {
     }
   }
 
-  async closeTunnels(onlySpecificPorts=[]){
-    try{
+  async closeTunnels(onlySpecificPorts = []) {
+    try {
       await this.sshService.closeTunnels(onlySpecificPorts)
     } catch (err) {
       log.error(err)
@@ -815,8 +814,8 @@ export class NodeConnection {
   async checkUpdates() {
     try {
       let response = await axios.get('https://stereum.net/downloads/updates.json')
-      if(global.branch === "main")
-        response.data.stereum.push({name: "HEAD", commit: 'main'})
+      if (global.branch === "main")
+        response.data.stereum.push({ name: "HEAD", commit: 'main' })
       log.debug(response.data)
       return response.data
     } catch (err) {
@@ -828,15 +827,15 @@ export class NodeConnection {
     //stereum and service updates
     let before = 0
     let after = 0
-    try{
+    try {
       before = this.getTimeStamp()
       await this.updateStereum(commit)
       await this.updateServices()
       after = this.getTimeStamp()
-    }catch(err){
+    } catch (err) {
       log.error("Error occurred running all updates:\n", err)
-    }finally{
-      if(after != 0 && before != 0)
+    } finally {
+      if (after != 0 && before != 0)
         return after - before
       return 30
     }
@@ -867,7 +866,7 @@ export class NodeConnection {
     try {
       let before = this.getTimeStamp()
       await this.runPlaybook("Update Stereum", extraVars)
-      await this.runPlaybook("Update Changes", {stereum_role: 'update-changes'})
+      await this.runPlaybook("Update Changes", { stereum_role: 'update-changes' })
       let after = this.getTimeStamp()
       return after - before
     } catch (err) {
@@ -876,11 +875,11 @@ export class NodeConnection {
     }
   }
 
-  getTimeStamp(){
+  getTimeStamp() {
     return Math.ceil(Date.now() / 1000)
   }
 
-  async restartServices(seconds){
+  async restartServices(seconds) {
     try {
       await this.runPlaybook("Restart Services", {
         stereum_role: 'restart-services',
@@ -919,5 +918,67 @@ export class NodeConnection {
     return app ? app.getVersion() : 'N/A';
   }
 
+  async setStereumSettings(settings) {
+    let value = {stereum_settings: settings.stereum}
+    return new Promise(async (resolve, reject) => {
+      let result;
+      const ref = StringUtils.createRandomString();
+      this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
+      try {
+        result = await this.sshService.exec(
+          "echo -e " +
+          StringUtils.escapeStringForShell(
+            YAML.stringify(value)
+          ) +
+          " > /etc/stereum/stereum.yaml"
+        );
+      } catch (err) {
+        this.taskManager.otherSubTasks.push({
+          name: "write stereum config",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        log.error(
+          "Can't write stereum config",
+          err
+        );
+        return reject(
+          "Can't write stereum config: " +
+          err
+        );
+      }
 
+      if (SSHService.checkExecError(result)) {
+        this.taskManager.otherSubTasks.push({
+          name: "write stereum config",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        return reject(
+          "Can't write stereum config: " +
+          SSHService.extractExecError(result)
+        );
+      }
+      this.taskManager.otherSubTasks.push({
+        name: "write stereum config",
+        otherRunRef: ref,
+        status: true,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      try {
+          await this.runPlaybook("configure-updates", {
+            stereum_role: "configure-updates",
+            stereum_args: settings.stereum.settings
+          })
+      } catch (err) {
+        log.error("foo", err);
+        return reject("Can't run setup playbook: " + err);
+      }
+      
+      return resolve(settings);
+    });
+  }
 }
+

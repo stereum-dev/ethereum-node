@@ -262,6 +262,14 @@ class ControlService extends EventEmitter {
   async handleServiceChanges(args) {
     return await this.promiseIpc.send("handleServiceChanges", args);
   }
+
+  async getStereumSettings() {
+    return await this.promiseIpc.send("getStereumSettings");
+  }
+
+  async setStereumSettings(args) {
+    return await this.promiseIpc.send("setStereumSettings", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
