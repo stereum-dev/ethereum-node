@@ -1,10 +1,35 @@
 <template>
   <div class="alert-box_parent">
-    <comming-soon></comming-soon>
+    <!-- <comming-soon></comming-soon> -->
     <div class="alert-box">
-      <div class="alert-box_header"></div>
+      <div class="alert-box_header">
+        <div class="icon_alarm" v-if="perfect">
+          <img
+            src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png"
+            alt="green"
+          />
+        </div>
+        <div class="icon_alarm" v-if="warning">
+          <img
+            src="../../../../public/img/icon/control/WARNSCHILD_GELB.png"
+            alt="green"
+          />
+        </div>
+        <div class="icon_alarm" v-if="alarm">
+          <img
+            src="../../../../public/img/icon/control/WARNSCHILD_ROT.png"
+            alt="green"
+          />
+        </div>
+        <div class="icon_alarm" v-if="notification">
+          <img
+            src="../../../../public/img/icon/control/SETTINGS.png"
+            alt="green"
+          />
+        </div>
+      </div>
       <div class="alert-box_messages">
-        <div class="alert-message_yellow">
+        <div class="alert-message_yellow" v-if="storageWarning">
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png"
@@ -14,10 +39,10 @@
           <div class="message-box">
             <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>LOW STORAGE SPACE</span></div>
-            <div class="val-message">200 GB</div>
+            <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
         </div>
-        <div class="alert-message_yellow">
+        <div class="alert-message_yellow" v-if="cpuWarning">
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png"
@@ -27,10 +52,12 @@
           <div class="message-box">
             <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
-            <div class="val-message"><span> > 80%</span></div>
+            <div class="val-message">
+              <span> > {{ cpu }}%</span>
+            </div>
           </div>
         </div>
-        <div class="alert-message_red">
+        <div class="alert-message_red" v-if="cpuAlarm">
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/red_warning_cpu.png"
@@ -40,10 +67,12 @@
           <div class="message-box">
             <div class="warning"><span>CRITICAL WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
-            <div class="val-message"><span> > 90%</span></div>
+            <div class="val-message">
+              <span> > {{ cpu }}%</span>
+            </div>
           </div>
         </div>
-        <div class="alert-message_red">
+        <div class="alert-message_red" v-if="missedAttest">
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/key-rot.png"
@@ -55,7 +84,7 @@
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
         </div>
-        <div class="alert-message_green">
+        <div class="alert-message_green" v-if="newUpdate">
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/logo-icon.png"
@@ -72,7 +101,77 @@
   </div>
 </template>
 <script>
-export default {};
+import { useControlStore } from "../../../store/theControl";
+import { mapState } from "pinia";
+export default {
+  data() {
+    return {
+      storageWarning: false,
+      cpuWarning: false,
+      cpuAlarm: false,
+      perfect: false,
+      warning: false,
+      alarm: false,
+      notification: false,
+      newUpdate: false,
+      missedAttest: false,
+    };
+  },
+  computed: {
+    ...mapState(useControlStore, {
+      availDisk: "availDisk",
+      usedPerc: "usedPerc",
+      cpu: "cpu",
+    }),
+    usedPercInt() {
+      return parseInt(this.usedPerc);
+    },
+  },
+  watch: {
+    usedPercInt(newVal, oldVal) {
+      if (newVal > 80) {
+        this.storageCheck();
+      }
+    },
+    cpu(newVal, oldVal) {
+      if (newVal >= 80 && newVal < 90) {
+        this.cpuWarning = true;
+        this.cpuAlarm = false;
+        this.perfect = false;
+        this.warning = true;
+        this.alarm = false;
+      } else if (newVal >= 90) {
+        this.cpuWarning = false;
+        this.cpuAlarm = true;
+        this.perfect = false;
+        this.warning = false;
+        this.alarm = true;
+      } else if (newVal < 80) {
+        this.cpuWarning = false;
+        this.cpuAlarm = false;
+        this.perfect = true;
+        this.warning = false;
+        this.alarm = false;
+      }
+    },
+  },
+  created() {
+    this.storageCheck();
+  },
+  methods: {
+    storageCheck() {
+      if (this.usedPercInt > 80) {
+        this.storageWarning = true;
+        this.warning = true;
+        this.perfect = false;
+      } else {
+        this.storageWarning = false;
+        this.warning = false;
+        this.perfect = true;
+      }
+    },
+  },
+};
 </script>
 <style scoped>
 .alert-box_parent {
@@ -98,7 +197,7 @@ export default {};
 }
 .alert-box_header {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 90%;
   height: 12%;
@@ -106,6 +205,20 @@ export default {};
   border: 1px solid #707070;
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
+  padding: 1px;
+}
+.icon_alarm {
+  width: 23%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0 1.5px;
+}
+.icon_alarm img {
+  width: 100%;
+  height: 100%;
 }
 .alert-box_messages {
   display: flex;
