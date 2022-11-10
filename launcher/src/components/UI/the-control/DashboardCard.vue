@@ -10,7 +10,7 @@
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  box-shadow: 1px 1px 10px 1px #171717;
   text-decoration: none;
   display: flex;
   justify-content: space-between;

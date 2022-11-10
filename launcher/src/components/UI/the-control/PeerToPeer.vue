@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       pageNumber: 1,
-      isMultiService: false,
+      isMultiService: true,
     };
   },
   computed: {

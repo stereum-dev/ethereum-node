@@ -178,14 +178,15 @@ export default {
   width: 90%;
   height: 99%;
   margin-left: 3px;
-  border: 5px solid rgb(55, 55, 55);
+  border: 5px solid grey;
   border-radius: 20px;
-  background-color: #464a44;
+  background-color: #264744;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
+  box-shadow: 0px 0px 5px 2px #001717;
 }
 .alert-box {
   display: flex;
@@ -202,9 +203,9 @@ export default {
   width: 90%;
   height: 12%;
   background: #23272a;
-  border: 1px solid #707070;
+  border: 1px solid grey;
   border-radius: 5px;
-  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
+  box-shadow: 1px 1px 5px 1px #001717;
   padding: 1px;
 }
 .icon_alarm {
