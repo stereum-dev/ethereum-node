@@ -14,8 +14,8 @@
         <span>{{ $t("removeMultiModal.from") }}</span>
       </div>
       <div class="remove-box">
-        <div class="remove-btn" @click="$emit('deleteKey')">
-          <span>{{ $t("removeMultiModal.removeMultiModal") }}</span>
+        <div class="remove-btn" @click.stop="$emit('deleteKey')">
+          <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
         <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
@@ -25,6 +25,9 @@
 <script>
 export default {
   props: ["item"],
+  data() {
+    return {};
+  },
 };
 </script>
 <style scoped>
@@ -51,20 +54,20 @@ export default {
   z-index: 501;
 }
 .remove-modal-content {
-  width: 40%;
-  height: 45%;
-  border-radius: 45px;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 20%;
-  left: 30%;
+  top: 10%;
+  left: 22%;
   background-color: #336666;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
-  z-index: 502;
+  z-index: 1000;
 }
 .title-box {
   width: 100%;
@@ -74,22 +77,28 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.title-box span {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #bfbfbf;
+}
 .title-box img {
-  width: 30%;
+  width: 27%;
   height: 100%;
 }
-.removeMessage {
+.removeMessage,
+.downloadMessage {
   width: 95%;
   height: 40%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
 }
 .removeMessage p {
   width: 85%;
   color: rgb(156, 156, 156);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
   word-break: break-all;
   text-align: center;
@@ -116,6 +125,7 @@ export default {
   align-items: center;
   z-index: 502;
 }
+
 .remove-btn {
   width: 30%;
   height: 50%;
@@ -127,7 +137,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
@@ -144,7 +154,7 @@ export default {
 }
 .close {
   color: rgba(136, 6, 6, 0.588);
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 500;
   align-self: center;
 }
