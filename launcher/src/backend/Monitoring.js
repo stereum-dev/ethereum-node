@@ -637,7 +637,7 @@ export class Monitoring {
         ec = cc.config.dependencies.executionClients[0];
         if(typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id"))
           continue;
-        ec = serviceInfos.find(item => item.config.serviceID = ec.id)
+        ec = serviceInfos.find(item => item.config.serviceID == ec.id)
       }catch(e){
         continue;
       }
