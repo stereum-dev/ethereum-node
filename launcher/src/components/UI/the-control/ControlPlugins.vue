@@ -15,6 +15,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 1px 1px 10px 1px #171717;
 }
 .shape {
   width: 36.5%;

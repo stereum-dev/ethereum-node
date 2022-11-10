@@ -62,7 +62,7 @@
                 id="version"
               ></setting-items>
 
-              <!--<div class="setting-items">
+              <!-- <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.lane") }}</span>
                 </div>
@@ -73,7 +73,8 @@
                 >
                   <span>{{ btnStatus }}</span>
                 </div>
-              </div>-->
+              </div> -->
+
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>

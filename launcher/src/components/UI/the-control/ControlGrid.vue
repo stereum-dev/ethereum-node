@@ -301,6 +301,7 @@ export default {
   z-index: 0;
   border: 4px solid grey;
   border-radius: 20px 27px 20px 20px;
+  box-shadow: 1px 1px 10px 1px #171717;
 }
 
 .control-panel {
@@ -333,7 +334,7 @@ export default {
 .plugins-title {
   width: 40%;
   height: 25px;
-  background-color: #1c3326;
+  background-color: #23272a;
   padding: 2px;
   border: 1px solid #4a5150;
   border-radius: 7px;
@@ -351,7 +352,9 @@ export default {
 .plugins-table-bg {
   width: 90%;
   height: 86%;
-  background-color: #527162;
+  background-color: #23272a;
+  border: 1px solid #707070;
+  box-shadow: 1px 1px 5px 1px rgb(0, 23, 23);
   border-radius: 30px;
   display: flex;
   flex-direction: column;
@@ -441,8 +444,8 @@ export default {
 .row-category {
   width: 98%;
   height: 40%;
-  color: #333;
-  background-color: #fff;
+  color: #eee;
+  background-color: #464a44;
   display: flex;
   justify-content: center;
   align-items: center;
