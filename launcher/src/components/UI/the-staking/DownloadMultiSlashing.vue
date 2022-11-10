@@ -1,32 +1,35 @@
 <template>
-  <div class="remove-modal-parent">
-    <div class="modal-opacity" @click="$emit('removeModal')"></div>
-    <div class="remove-modal-content">
+  <div class="download-modal-parent">
+    <div class="modal-opacity" @click="$emit('closeModal')"></div>
+    <div class="downloadContent">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <span>?</span>
       </div>
-      <div class="removeMessage">
-        <span>{{ $t("removeMultipleValidators.sureText") }}</span>
+      <div class="downloadMessage">
+        <p>{{ $t("removeSingleModal.question") }}</p>
+        <p>{{ $t("removeSingleModal.description") }}</p>
       </div>
-      <div class="remove-box">
-        <div class="remove-btn" @click="$emit('deleteKey')">
-          <span>{{ $t("removeMultiModal.remove") }}</span>
+      <div class="download-box">
+        <div class="download-btn" @click="$emit('download')">
+          <span>{{ $t("removeSingleModal.btn") }}</span>
         </div>
         <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   props: ["item"],
+  data() {
+    return {};
+  },
 };
 </script>
+
 <style scoped>
-.remove-modal-parent {
+.download-modal-parent {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -45,10 +48,11 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: 0.7;
+  opacity: 0.8;
   z-index: 501;
 }
-.remove-modal-content {
+
+.downloadContent {
   width: 55%;
   height: 60%;
   border-radius: 75px;
@@ -66,46 +70,47 @@ export default {
 }
 .title-box {
   width: 100%;
-  height: 35%;
+  height: 30%;
   margin-top: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.title-box img {
-  width: 28%;
-  height: 100%;
+.title-box span {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #bfbfbf;
 }
-.removeMessage {
-  width: 85%;
-  height: 40%;
+
+.downloadMessage {
+  width: 95%;
+  height: 45%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
-.removeMessage p {
-  width: 85%;
-  color: rgb(156, 156, 156);
-  font-size: 0.7rem;
-  font-weight: 700;
-  word-break: break-all;
-  text-align: center;
-}
-.removeMessage span {
-  color: rgb(197, 197, 197);
+
+.downloadMessage p:first-child {
+  width: 90%;
+  height: 30%;
+  color: #c1c1c1;
   font-size: 1rem;
   font-weight: 700;
-  margin-top: 5px;
+  text-align: center;
+}
+.downloadMessage p:last-child {
+  font-family: "sans-serif";
+  width: 90%;
+  height: 60%;
+  color: #c1c1c1;
+  font-size: .9rem;
+  font-weight: 600;
   text-align: center;
   text-transform: uppercase;
 }
-/* .removeMessage span {
-  color: rgb(195, 195, 195);
-  font-size: 1rem;
-  font-weight: 700;
-} */
-.remove-box {
+
+.download-box {
   width: 100%;
   height: 25%;
   display: flex;
@@ -114,12 +119,12 @@ export default {
   align-items: center;
   z-index: 502;
 }
-.remove-btn {
+.download-btn {
   width: 30%;
   height: 50%;
   border-radius: 10px;
-  border: 1px solid #8f8f8f;
-  background-color: #c93d24;
+  border: 1px solid #b6c3b5;
+  background-color: #56bc37;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
@@ -131,18 +136,18 @@ export default {
   text-transform: uppercase;
 }
 
-.remove-btn:hover {
+.download-btn:hover {
   transform: scale(1.08);
   transition-duration: 150ms;
   box-shadow: 0 1px 5px 1px rgb(35, 59, 53);
 }
-.remove-btn:active {
+.download-btn:active {
   transform: scale(1);
   box-shadow: none;
 }
 .close {
   color: rgba(136, 6, 6, 0.588);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 500;
   align-self: center;
 }
