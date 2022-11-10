@@ -133,6 +133,7 @@ export class Monitoring {
               ports: config.ports,
               volumes: config.volumes,
               network: config.network,
+              dependencies: config.dependencies,
             },
             //fullconfig: config,
             //fullstate: newState,
@@ -561,19 +562,29 @@ export class Monitoring {
   async getSyncStatus(){
 
     // Service definitions with type and Prometheus labels for sync status
-    // TODO: Verify this keys!
     const services = {
       'consensus':{
-        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - optional query for job="teku"
-        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - requires query for job="lighthouse_beacon"!
-        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - requires query for job="prysm_beacon"!
-        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - optional query for job="nimbus"
+        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="teku"
+        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - query for job="lighthouse_beacon"!
+        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - query for job="prysm_beacon"!
+        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="nimbus"
       },
       'execution':{
-        'GethService' : ['chain_head_header','chain_head_block'], // OK - optional query for job="geth"
-        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - optional query for job="besu"
-        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A (ask) - optional query for job="nethermind"
+        'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
+        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - query for job="besu"
+        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A - query for job="nethermind"
       },
+    };
+
+    // Prometheus job definitions
+    const jobs = {
+      'TekuBeaconService' : 'teku',
+      'LighthouseBeaconService' : 'lighthouse_beacon',
+      'PrysmBeaconService' : 'prysm_beacon',
+      'NimbusBeaconService' : 'nimbus',
+      'GethService' : 'geth',
+      'BesuService' : 'besu',
+      'NethermindService' : 'nethermind',
     };
 
     // Merge all labels for Prometheus query
@@ -596,22 +607,6 @@ export class Monitoring {
       };
     }
 
-    // Find execution and consensus service configurations
-    var consensus, execution;
-    const clientTypes = Object.keys(services);
-    for(let i=0;i<clientTypes.length;i++){
-      let clientType = clientTypes[i];
-      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
-        return {
-          "code": 112,
-          "info": "error: " + clientType + " client not found (in syncstatus)",
-          "data": serviceInfos,
-        };
-      }
-      eval(clientType + " = clt;");  // eval objects -> consensus/execution
-    }
-
     // Query Prometehus for all possible labels
     const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
     if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
@@ -622,67 +617,98 @@ export class Monitoring {
       };
     }
 
-    // Filter Prometheus result by current used services
-    try{
+    // Build pairs for the FrontEnd (cc and ec member)
+    const clientTypes = Object.keys(services);
+    const groups = [];
+    const utsNow = Math.floor(Date.now() / 1000);
+    for(let i=0;i<serviceInfos.length;i++){
 
-      // Add the response for "syncStatusItems" exact as defined in front-end
-      // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
-      // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
-      var data = [];
-      const utsNow = Math.floor(Date.now() / 1000);
-      clientTypes.forEach(function (clientType, index) {
-        let clt = '';
-        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-        let results = [];
-        let labels = services[clientType][clt.service];
-        let xx = prometheus_result.data.result.filter((s) => 
-          labels.includes(s.metric.__name__) &&
-          clt.config.instanceID == s.metric.instance &&
-          clt.service == "TekuBeaconService" ? s.metric.job == 'teku' : true &&
-          clt.service == "LighthouseBeaconService" ? s.metric.job == 'lighthouse_beacon' : true &&
-          clt.service == "PrysmBeaconService" ? s.metric.job == 'prysm_beacon' : true &&
-          clt.service == "NimbusBeaconService" ? s.metric.job == 'nimbus' : true &&
-          clt.service == "GethService" ? s.metric.job == 'geth' : true &&
-          clt.service == "BesuService" ? s.metric.job == 'besu' : true &&
-          clt.service == "NethermindService" ? s.metric.job == 'nethermind' : true
-        );
-        if(xx.length){
-          labels.forEach(function (label, index) {
+      // Find execution and consensus service configurations for this group
+      let clt = serviceInfos[i];
+      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
+        continue;
+      let isConsensus = clt.service in services.consensus;
+      let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
+      if(!isConsensus || !hasMembers)
+        continue;
+      let cc = clt;
+      let ec = null;
+      try{
+        ec = cc.config.dependencies.executionClients[0];
+        if(typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id"))
+          continue;
+        ec = serviceInfos.find(item => item.config.serviceID = ec.id)
+      }catch(e){
+        continue;
+      }
+
+      // Filter Prometheus result by current used services
+      try{
+        
+        // Add the response for "syncStatusItems" exact as defined in front-end
+        // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
+        // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
+        let data = [];
+        let consensus = cc;
+        let execution = ec;
+        clientTypes.forEach(function (clientType, index) {
+          let clt = '';
+          eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+          let results = [];
+          let labels = services[clientType][clt.service];
+          let xx = prometheus_result.data.result.filter((s) => 
+            labels.includes(s.metric.__name__) &&
+            s.metric.instance.includes(clt.config.instanceID) &&
+            s.metric.job == jobs[clt.service]
+          );
+          let frstVal = 0, scndVal = 0;
+          if(xx.length){
+            labels.forEach(function (label, index) {              
+              try{
+                results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
+              }catch(e){}
+            });
             try{
-              results[label] = xx.filter((s) => s.metric.__name__ == labels[index]).pop().value.pop()
-            }catch(e){}
+              frstVal = results[labels[1]];
+              scndVal = results[labels[0]];
+            }catch(e){}   
+          }
+          data.push({
+            id: index+1,
+            title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+            frstVal: frstVal ? frstVal : 0,
+            scndVal: scndVal ? scndVal : 0,
+            type: clientType,
+            state: clt.state,
+            uptime: clt.createdAt ? utsNow - Math.floor(new Date(clt.createdAt).getTime() / 1000) : 0,
           });
-        }
-        let frstVal = 0, scndVal = 0;
-        try{
-          frstVal = results[labels[1]];
-          scndVal = results[labels[0]];
-        }catch(e){}        
-        data.push({
-          id: index+1,
-          title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          frstVal: frstVal ? frstVal : 0,
-          scndVal: scndVal ? scndVal : 0,
-          type: clientType,
-          state: clt.state,
-          uptime: clt.createdAt ? utsNow - Math.floor(new Date(clt.createdAt).getTime() / 1000) : 0,
         });
-      });
+        groups.push(data);
 
-      // Respond success
-      return {
-        "code": 0,
-        "info": "success: syncstatus successfully retrieved",
-        "data": data,
-      };
+      }catch(err){
+        return {
+          "code": 114,
+          "info": "error: no prometheus data for syncstatus available yet",
+          "data": err,
+        };
+      }
+    }
 
-    }catch(err){
+    // Make sure at least one pair of consensus and execution service configurations exists
+    if(groups.length < 1){
       return {
-        "code": 114,
-        "info": "error: no prometheus data for syncstatus available yet",
-        "data": err,
+        "code": 115,
+        "info": "error: a pair of consensus and execution client does not exist (in syncstatus)",
+        "data": serviceInfos,
       };
     }
+
+    // success
+    return {
+      "code": 0,
+      "info": "success: syncstatus successfully retrieved",
+      "data": groups,
+    };
   }
 
   // Get P2P status of consensus and execution clients
@@ -1220,9 +1246,58 @@ export class Monitoring {
     };
   }
 
+  // Used for fast debug/dev purposes
+  async getDebugStatus(){
+
+    // Get all service configurations
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 9999,
+        "info": "error: service infos for debugstatus not available",
+        "data": "",
+      };
+    }
+
+    // Get all dependency infos
+    const dependencyInfos = []
+    for(let i=0;i<serviceInfos.length;i++){
+      dependencyInfos.push({
+        service: serviceInfos[i].service,
+        instanceID: serviceInfos[i].config.instanceID,
+        dependencies: serviceInfos[i].config.dependencies,
+      })
+    }
+
+    // Make an easy dependency view
+    const easyInfos = []
+    for(let i=0;i<serviceInfos.length;i++){
+      const hashDependencies = serviceInfos[i].config.dependencies.consensusClients.length || serviceInfos[i].config.dependencies.executionClients.length ? 'yes' : 'no';
+      easyInfos.push({
+        hashDependencies: hashDependencies,
+        service: serviceInfos[i].service,
+        instanceID: serviceInfos[i].config.instanceID,
+        dependencies: serviceInfos[i].config.dependencies,
+      })
+    }
+
+    return {
+      serviceInfos:serviceInfos,
+      dependencyInfos:dependencyInfos,
+      easyInfos:easyInfos,
+    }
+
+    // Nothign else, just string info..
+    return "debugstatus"
+  }
+
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
+      
+      const debugstatus = await this.getDebugStatus();
+      // if(debugstatus.code)
+      //   return debugstatus;
       const beaconstatus = await this.getBeaconStatus();
       // if(beaconstatus.code)
       //   return beaconstatus;
@@ -1242,6 +1317,7 @@ export class Monitoring {
         "code": 0,
         "info": "success: data successfully retrieved",
         "data": {
+          'debugstatus':debugstatus,
           'syncstatus':syncstatus,
           'p2pstatus':p2pstatus,
           'storagestatus':storagestatus,

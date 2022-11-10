@@ -10,7 +10,7 @@
       <div class="sync-box_value">
         <div
           v-show="syncItemsShow"
-          v-for="item in syncstatus.data"
+          v-for="item in clients"
           :key="item.id"
           class="sync-box_row"
           :class="syncItemSytle(item)"
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="arrowBox" v-if="isMultiService">
-      <div class="arrowUp" @click="nextPage">
+      <div class="arrowUp" @click="backPage">
         <img
           src="../../../../public/img/icon/control/arrowIcon.png"
           alt="arrow"
@@ -34,7 +34,7 @@
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
-      <div class="arrowDown" @click="backPage">
+      <div class="arrowDown" @click="nextPage">
         <img
           src="../../../../public/img/icon/control/arrowIcon.png"
           alt="arrow"
@@ -49,8 +49,9 @@ import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
-      isMultiService: true,
+      isMultiService: false,
       pageNumber: 1,
+      clients: [],
       syncItemsShow: false,
       syncIcoUnknown: true,
       syncIcoSituation: false,
@@ -83,7 +84,7 @@ export default {
       ],
     };
   },
-  updated() {
+  mounted() {
     this.syncControler();
   },
   computed: {
@@ -106,18 +107,10 @@ export default {
   },
   methods: {
     nextPage() {
-      if (this.pageNumber >= 99) {
-        this.pageNumber = 99;
-      } else {
-        this.pageNumber++;
-      }
+      this.refresh(true,'next');
     },
     backPage() {
-      if (this.pageNumber <= 1) {
-        this.pageNumber = 1;
-      } else {
-        this.pageNumber--;
-      }
+      this.refresh(true,'prev');
     },
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
@@ -138,7 +131,46 @@ export default {
       }
       return this.synchedIco;
     },
-    syncControler() {
+    refresh(instant = false, loadPage='') {
+      if(this.refresher)
+        clearTimeout(this.refresher)
+      if(instant)
+        return this.syncControler(loadPage);
+      this.refresher = setTimeout(() => {
+        this.syncControler(loadPage);
+      }, 3000);
+    },
+    syncControler(loadPage=''){
+      let pageNum = this.pageNumber;
+      if(loadPage == 'next'){
+        if (pageNum >= 99) {
+          pageNum = 1; // cycle to first page
+        } else {
+          pageNum++;
+        }
+      }else if(loadPage == 'prev'){
+        pageNum--;
+      }
+      let gid = pageNum-1;
+      let clients = Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data ? this.syncstatus.data[gid] : false;
+      if (!clients){
+        let clients_first = Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0 ? this.syncstatus.data[0] : false;
+        let clients_last = Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0 ? this.syncstatus.data[this.syncstatus.data.length-1] : false;
+        if(pageNum < 1 && clients_last !== false){ // first page-1 reached when clicked on prev page, reset to last page
+          pageNum = this.syncstatus.data.length;
+          gid = pageNum - 1;
+          clients = this.syncstatus.data[gid];
+        }else if(clients_first){ // last page+1 reached when clicked on next page, reset to first page
+          pageNum = 1;
+          gid = pageNum - 1;
+          clients = this.syncstatus.data[gid];
+        }else{ // waiting for data on page load
+          this.refresh();
+          return;
+        }
+      }
+      //console.log('pageNum final',pageNum)
+      let isMultiService = false;
       let syncItemsShow = false;
       let syncIcoUnknown = true;
       let syncIcoError = false;
@@ -154,14 +186,16 @@ export default {
         this.code === 0 &&
         this.syncstatus.code === 0 &&
         Array.isArray(this.syncstatus.data) &&
-        this.syncstatus.data[0].hasOwnProperty("title")
+        Array.isArray(this.syncstatus.data[gid]) &&
+        this.syncstatus.data[gid][0].hasOwnProperty("title")
       ) {
+        isMultiService = this.syncstatus.data.length>1 ? true : false;
         syncItemsShow = true;
         syncIcoUnknown = false;
-        for (let k in this.syncstatus.data) {
-          let lo = parseInt(this.syncstatus.data[k].frstVal);
-          let hi = parseInt(this.syncstatus.data[k].scndVal);
-          let st = this.syncstatus.data[k].state;
+        for (let k in this.syncstatus.data[gid]) {
+          let lo = parseInt(this.syncstatus.data[gid][k].frstVal);
+          let hi = parseInt(this.syncstatus.data[gid][k].scndVal);
+          let st = this.syncstatus.data[gid][k].state;
           if (st != "running") {
             fonts.red.push(k);
             syncIcoError = true;
@@ -186,7 +220,7 @@ export default {
         }
         if (
           fonts.grey.length &&
-          fonts.grey.length == this.syncstatus.data.length
+          fonts.grey.length == this.syncstatus.data[gid].length
         ) {
           syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
         }
@@ -194,9 +228,9 @@ export default {
           if (fonts[col].length) {
             for (let i = 0; i < fonts[col].length; i++) {
               let k = fonts[col][i];
-              // let ct = this.syncstatus.data[k].type;
-              // console.log(ct + " client (" + this.syncstatus.data[k].title + ") needs color " + col + " by class: client" + col + "!)");
-              this.syncstatus.data[k].style = "client" + col;
+              // let ct = this.syncstatus.data[gid][k].type;
+              // console.log(ct + " client (" + this.syncstatus.data[gid][k].title + ") needs color " + col + " by class: client" + col + "!)");
+              this.syncstatus.data[gid][k].style = "client" + col;
             }
           }
         }
@@ -205,6 +239,10 @@ export default {
       this.syncIcoUnknown = syncIcoUnknown;
       this.syncIcoError = syncIcoError;
       this.syncIcoSituation = syncIcoSituation;
+      this.pageNumber = pageNum;
+      this.clients = clients;
+      this.isMultiService = isMultiService;
+      this.refresh();
     },
   },
 };
