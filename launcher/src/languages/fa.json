@@ -38,7 +38,7 @@
     "stereumName": "تنظیمات استریوم",
     "langName": "انتخاب زبان",
     "confirm": "تایید و ثبت",
-    "general": "GENETAL",
+    "general": "GENERAL",
     "credits": "پشتیبان ها",
     "open": "باز کردن",
     "update": "بروزرسانی",
@@ -53,12 +53,12 @@
     "auto": "اتوماتیک"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "قدم های آغازین",
     "stake": "استیک با ۳۲ اتریوم",
     "ssv": " ssvاستفاده از شبکه",
     "alert": "اخطارها در موبایل",
     "switchC": "انتخاب کاربر",
-    "switchM": "انتخاب ماشین"
+    "migrate": "Nodes Migration",
+    "rpc": "RPC Connection"
   },
   "pluginZone": {
     "client": "کننده"
@@ -175,7 +175,7 @@
   },
   "validatorsBox": {
     "date": "تاریخ",
-    "validator": "VALIATOR",
+    "validator": "VALIDATOR",
     "attestRate": "نرخ تصدیق",
     "reward": "پاداش"
   },
