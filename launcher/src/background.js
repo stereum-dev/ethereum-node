@@ -150,11 +150,13 @@ promiseIpc.on("prepareOneClickInstallation", async (arg) => {
 });
 
 promiseIpc.on("writeOneClickConfiguration", async (args) => {
+  log.info(args)
   await oneClickInstall.createServices(
     args.array.map((service) => {
       return service.service;
     }),
-    args.checkpointURL
+    args.checkpointURL,
+    args.relayURL,
   );
   return await oneClickInstall.writeConfig();
 });
@@ -220,6 +222,10 @@ promiseIpc.on("getServiceLogs", async (args) => {
 
 promiseIpc.on("getServiceConfig", async (args) => {
   return await nodeConnection.readServiceConfiguration(args);
+});
+
+promiseIpc.on("writeServiceConfig", async (args) => {
+  return await nodeConnection.writeServiceConfiguration(args);
 });
 
 promiseIpc.on("getServiceYAML", async (args) => {
@@ -352,8 +358,8 @@ promiseIpc.on("chooseServiceAction", async (args) => {
   );
 });
 
-promiseIpc.on("modifyServices", async (args) => {
-  return await serviceManager.modifyServices(args);
+promiseIpc.on("handleServiceChanges", async (args) => {
+  return await serviceManager.handleServiceChanges(args);
 });
 
 promiseIpc.on("getStereumSettings", async () => {

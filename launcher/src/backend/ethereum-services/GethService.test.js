@@ -60,7 +60,7 @@ test('workingDir', () => {
     new ServiceVolume('/opt/stereum/foo', '/opt/app/bar')
   ]
 
-  const gethConfig = GethService.buildByUserInput(networks.goerli, null, '/opt/stereum/geth').buildConfiguration()
+  const gethConfig = GethService.buildByUserInput(networks.goerli, null, 'opt//stereum/geth/').buildConfiguration()
 
   expect(gethConfig.volumes).toHaveLength(2)
   expect(gethConfig.volumes).toContain('/opt/stereum/geth-' + gethConfig.id + '/data:/opt/data/geth')

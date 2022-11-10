@@ -25,7 +25,7 @@
         >
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in relaysList" :key="relay.id">
+            <div class="relay" v-for="relay in relaysList.filter(r => r[configNetwork.name.toLowerCase()])" :key="relay.id">
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -163,6 +163,7 @@ export default {
       port: "",
       selected: {},
       options: [],
+      checkedRelays: [],
     };
   },
   computed: {
@@ -174,7 +175,6 @@ export default {
       newConfiguration: "newConfiguration",
       configNetwork: "configNetwork",
       relaysList: "relaysList",
-      checkedRelays: "checkedRelays",
     }),
   },
   watch: {
@@ -197,7 +197,7 @@ export default {
       this.$emit("cancelAdd");
     },
     saveConfig() {
-      let dependencies = toRaw(this.options).filter(
+     let dependencies = toRaw(this.options).filter(
         (s) => s.selectedForConnection
       );
       this.$emit("saveConfig", {
@@ -212,6 +212,7 @@ export default {
         ),
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
+        relays: this.checkedRelays.map(r => r[this.configNetwork.name.toLowerCase()]).join()
       });
     },
     changeResyncOptions() {
@@ -229,6 +230,10 @@ export default {
           (service) => service.category === "execution"
         );
       } else if (this.items.category === "validator") {
+        this.options = this.newConfiguration.filter(
+          (service) => service.category === "consensus"
+        );
+      } else if (this.items.service === "FlashbotsMevBoostService") {
         this.options = this.newConfiguration.filter(
           (service) => service.category === "consensus"
         );

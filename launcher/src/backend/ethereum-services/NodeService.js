@@ -1,6 +1,7 @@
 import { ServicePort } from './ServicePort.js'
 import { ServiceVolume } from './ServiceVolume.js'
 import { StringUtils } from '../StringUtils.js'
+import * as path from 'path'
 
 export const networks = {
   goerli: 'goerli',
@@ -112,7 +113,12 @@ export class NodeService {
   }
 
   buildWorkingDir (dir) {
-    if(dir && dir[dir.length-1] === '/') 
+    if(!dir)
+      dir = '/opt/stereum'
+    dir = path.normalize(dir)
+    if(!path.isAbsolute(dir))
+      dir = '/' + dir
+    if(dir.endsWith('/')) 
        return dir.slice(0,-1,'') + '-' + this.id
     return dir + '-' + this.id
   }

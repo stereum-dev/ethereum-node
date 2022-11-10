@@ -87,6 +87,14 @@ export class NimbusBeaconService extends NodeService {
     return 'http://stereum-' + this.id + ':5052'
   }
 
+  buildConsensusClientEndpoint () {
+    return 'stereum-' + this.id + ':5052'
+  }
+
+  buildConsensusClientGateway () {
+    return 'stereum-' + this.id + ':5052'
+  }
+  
   buildConsensusClientMetricsEndpoint () {
     return 'stereum-' + this.id + ':8008'
   }

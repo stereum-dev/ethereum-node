@@ -3,6 +3,23 @@ export const servicePortProtocol = {
   udp: 'udp'
 }
 
+export const changeablePorts = {
+  BesuService: 8545,
+  ErigonService: 8545,
+  GethService: 8545,
+  NethermindService: 8545,
+  LighthouseBeaconService: 5052,
+  LighthouseValidatorService: 5062,
+  LodestarBeaconService: 9596,
+  LodestarValidatorService: 5062,
+  PrysmBeaconService: 3500,
+  PrysmValidatorService: 7500,
+  NimbusBeaconService: 5052,
+  TekuBeaconService: 5051,
+  GrafanaService: 3000,
+  PrometheusService: 9090,
+}
+
 export class ServicePort {
   constructor (destinationIp, destinationPort, servicePort, servicePortProtocol) {
     this.destinationIp = destinationIp

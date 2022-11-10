@@ -81,6 +81,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useClickInstall, {
+      relayURL: "relayURL",
       installationPath: "installationPath",
       selectedPreset: "selectedPreset",
       checkPointSync: "checkPointSync",
@@ -107,6 +108,7 @@ export default {
       await ControlService.writeOneClickConfiguration({
         services: this.selectedPreset.includedPlugins,
         checkpointURL: this.checkPointSync,
+        relayURL: this.relayURL,
       });
       await ControlService.startOneClickServices();
     },
