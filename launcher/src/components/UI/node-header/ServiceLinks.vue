@@ -90,7 +90,7 @@ export default {
           this.showSsvWindow = true;
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
-        } else if (serviceName == "MevBoostService") {
+        } else if (serviceName == "FlashbotsMevBoostService") {
           this.showMevboostWindow = true;
         } else {
           return;

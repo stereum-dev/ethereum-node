@@ -130,7 +130,7 @@
               <span>{{ $t("pluginName.back") }}</span>
             </router-link>
             <router-link
-              v-if="selectedPreset.name === 'Flashbots Mev Boost'"
+              v-if="selectedPreset.name === 'mev boost'"
               :to="{ path: '/mevboost' }"
             >
               <span>{{ $t("pluginName.next") }}</span>

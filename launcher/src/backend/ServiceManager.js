@@ -186,6 +186,16 @@ export class ServiceManager {
     tasks.forEach(task => {
       let service = services.find(s => s.id === task.service.config.serviceID)
       let dependencies = task.data.executionClients.concat(task.data.beaconServices).map(s => services.find(e => e.id === s.config.serviceID))
+      
+      if(service.service === "FlashbotsMevBoostService"){
+        service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1] = task.data.relays
+        modifiedServices.push(service)
+        let dependenciesToRemove = (services.filter(s => s.dependencies.mevboost.map(m => m.id).includes(service.id))).filter(m => !dependencies.map(d => d.id).includes(m.id))
+        dependenciesToRemove.forEach(dependency => {
+          modifiedServices.push(this.removeDependencies(dependency,service))
+        })
+      }
+
       if(task.data.port){
         service = this.changePort(service, task.data.port)
       }
@@ -256,6 +266,7 @@ export class ServiceManager {
       if(service.service.includes("Beacon")){
         service.dependencies.executionClients = dependencies
         let volumes = dependencies.map(client => new ServiceVolume(client.volumes.find(vol => vol.servicePath === '/engine.jwt').destinationPath, '/engine.jwt'))
+        service.volumes = service.volumes.filter(v => v.destinationPath.includes(service.id))
         service.volumes = service.volumes.concat(volumes)
       } else if(service.service.includes("Validator")){
         service.dependencies.executionClients = dependencies
@@ -270,12 +281,18 @@ export class ServiceManager {
       isString = true
       command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
     }
-
+    log.info(command)
     let fullCommand = command.find(c => c.includes(endpointCommand))
     command = command.filter(c => !c.includes(endpointCommand))
-    let newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)]
-    if (isString)
-      return (command.concat(newProps)).join(' ')
+    let newProps
+    if(fullCommand){
+      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)]
+    }else{
+      newProps = endpointCommand + dependencies.map(filter).join()
+    }
+    if (isString){
+      return (command.concat(newProps)).join(' ').trim()
+    }
     return command.concat(newProps)
   }
 
@@ -383,7 +400,6 @@ export class ServiceManager {
         })
       }
     })
-    log.info(dependents)
     dependents.forEach(service => {
       service = this.removeDependencies(service, serviceToDelete)
       this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
@@ -480,7 +496,7 @@ export class ServiceManager {
         return GrafanaService.buildByUserInput(args.network, ports, args.installDir + '/grafana')
 
       case "FlashbotsMevBoostService":
-        return FlashbotsMevBoostService.buildByUserInput(args.network)
+        return FlashbotsMevBoostService.buildByUserInput(args.network, args.relays)
     }
   }
 
@@ -556,7 +572,6 @@ export class ServiceManager {
       }
       let service = this.getService(t.service.service, t.data)
       let changed = this.addDependencies(service, t.data.beaconServices)
-      log.info(changed)
       changed.forEach(dep => {
         let index = newServices.findIndex(s => s.id === dep.id)
         if(index != -1){

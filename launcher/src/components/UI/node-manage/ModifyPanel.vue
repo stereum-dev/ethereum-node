@@ -25,7 +25,7 @@
         >
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in relaysList" :key="relay.id">
+            <div class="relay" v-for="relay in relaysList.filter(r => r[configNetwork.name.toLowerCase()])" :key="relay.id">
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -139,6 +139,7 @@ import { mapState, mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 import { toRaw } from "vue";
+import ControlService from "@/store/ControlService";
 
 export default {
   props: ["items"],
@@ -157,6 +158,7 @@ export default {
       port: "",
       selected: {},
       options: [],
+      checkedRelays: [],
     };
   },
   computed: {
@@ -167,7 +169,7 @@ export default {
       actionContents: "actionContents",
       newConfiguration: "newConfiguration",
       relaysList: "relaysList",
-      checkedRelays: "checkedRelays",
+      configNetwork: "configNetwork",
     }),
   },
   watch: {
@@ -179,6 +181,18 @@ export default {
       immediate: true,
     },
   },
+  mounted() {
+    if (this.items.service === "FlashbotsMevBoostService") {
+      ControlService.getServiceConfig(this.items.config.serviceID).then(service => {
+        let relayURLs = service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1].split(',')
+        relayURLs.forEach(relay => {
+          let relayData = this.relaysList.find(r => r[this.configNetwork.name.toLowerCase()] === relay)
+          if(relayData)
+            this.checkedRelays.push(relayData)
+        });
+      })
+    }
+  },
   methods: {
     saveModify(){
     let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
@@ -186,6 +200,7 @@ export default {
         port: parseInt(this.port),
         executionClients: dependencies.filter(s => s.category === "execution"),
         beaconServices: dependencies.filter(s => s.category === "consensus"),
+        relays: this.checkedRelays.map(r => r[this.configNetwork.name.toLowerCase()]).join()
       })
     },
     switchHandler(service){

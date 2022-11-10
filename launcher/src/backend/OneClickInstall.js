@@ -120,7 +120,7 @@ export class OneClickInstall {
     }
   }
 
-  async createServices(constellation, checkpointURL) {
+  async createServices(constellation, checkpointURL, relayURL) {
     let ports = []
     if (constellation.includes('GethService')) {
       ports = [
@@ -155,7 +155,8 @@ export class OneClickInstall {
 
     if (constellation.includes('FlashbotsMevBoostService')) {
       //FlashbotsMevBoostService
-      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(true))
+      log.info(relayURL)
+      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(true), relayURL)
     }
 
     if (constellation.includes('LighthouseBeaconService')) {

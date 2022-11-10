@@ -83,72 +83,20 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "../../../store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   data() {
     return {
-      availableBlocks: [
-        {
-          icon: "/img/icon/click-installation/flashbot-icon.png",
-          name: "FLASHBOTS",
-          id: 1,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "BloXroute MAX PROFIT",
-          id: 2,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "BloXroute ETHICAL",
-          id: 3,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "BloXroute REGULATED",
-          id: 4,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/blocknative.png",
-          name: "BLOCKNATIVE",
-          id: 5,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "MANIFOLD",
-          id: 6,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "MANIFOLD",
-          id: 6,
-          isSelected: false,
-          isRemoved: false,
-        },
-        {
-          icon: "/img/icon/click-installation/bloxRoute-icon.png",
-          name: "MANIFOLD",
-          id: 6,
-          isSelected: false,
-          isRemoved: false,
-        },
-      ],
+      availableBlocks: [],
       usedBlocks: [],
     };
   },
   computed: {
+    ...mapWritableState(useNodeManage, {
+      relaysList: "relaysList",
+    }),
     ...mapWritableState(useClickInstall, {
+      relayURL: "relayURL",
       selectedPreset: "selectedPreset",
       plugins: "presets",
       installationPath: "installationPath",
@@ -157,6 +105,9 @@ export default {
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
+  },
+  mounted(){
+    this.availableBlocks = this.relaysList.filter(r => r[this.selectedPreset.network])
   },
   methods: {
     selectItemToAdd(el) {
@@ -181,6 +132,7 @@ export default {
           this.usedBlocks.push(i);
         }
       });
+      this.relayURL = this.usedBlocks.map(r => r[this.selectedPreset.network]).join()
     },
     removeFromUsedBlocks() {
       this.usedBlocks.forEach((item) => {
@@ -189,6 +141,7 @@ export default {
           this.usedBlocks.splice(this.usedBlocks.indexOf(item), 1);
         }
       });
+      this.relayURL = this.usedBlocks.map(r => r[this.selectedPreset.network]).join()
     },
   },
 };

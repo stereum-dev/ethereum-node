@@ -103,6 +103,7 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeOneClickConfiguration", {
       array: buffer,
       checkpointURL: args.checkpointURL,
+      relayURL: args.relayURL,
     });
   }
 
@@ -156,6 +157,10 @@ class ControlService extends EventEmitter {
 
   async getServiceConfig(args) {
     return await this.promiseIpc.send("getServiceConfig", args);
+  }
+
+  async writeServiceConfig(args) {
+    return await this.promiseIpc.send("writeServiceConfig", args);
   }
 
   async getServiceYAML(args) {
