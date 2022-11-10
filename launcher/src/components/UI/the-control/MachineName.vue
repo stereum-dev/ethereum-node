@@ -9,8 +9,8 @@
   </div>
 </template>
 <script>
-import { useControlStore } from '../../../store/theControl';
-import { mapState } from 'pinia';
+import { useControlStore } from "../../../store/theControl";
+import { mapState } from "pinia";
 export default {
   data() {
     return {};
@@ -18,8 +18,8 @@ export default {
   computed: {
     ...mapState(useControlStore, {
       ServerName: "ServerName",
-    })
-  }
+    }),
+  },
 };
 </script>
 
@@ -34,7 +34,8 @@ export default {
 }
 .machineNam {
   background: #33393e;
-  border: 2px solid #c1c1c1;
+  border: 1px solid #c1c1c1;
+  box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 4px;
   left: -5%;
   position: relative;
@@ -62,12 +63,16 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 2px solid #b7c2c2;
+  border: 1px solid #b7c2c2;
   border-radius: 18px;
   z-index: 3;
   width: 10%;
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px #171717;
 }
 .ubuntuIcon img {
   width: 100%;
+  height: 100%;
+  box-sizing: border-box;
 }
 </style>

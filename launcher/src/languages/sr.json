@@ -38,7 +38,7 @@
     "stereumName": "stereum postavljanje",
     "langName": "izbor jezika",
     "confirm": "POTVRDI i PRIMJENI",
-    "general": "GENETAL",
+    "general": "GENERAL",
     "credits": "Zasluge",
     "open": "otvoren",
     "update": "UPDATE",
@@ -53,12 +53,12 @@
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "Prvi koraci!",
     "stake": "Stake sa 32 ETH",
     "ssv": "Koristi ssv.network",
     "alert": "Upozorenja na Mobilnoj Aplikaciji",
     "switchC": "Promijenite Client",
-    "switchM": "Promijenite Mašinu"
+    "migrate": "Nodes Migration",
+    "rpc": "RPC Connection"
   },
   "pluginZone": {
     "client": "client"
@@ -175,7 +175,7 @@
   },
   "validatorsBox": {
     "date": "DATUM",
-    "validator": "VALIATOR",
+    "validator": "VALIDATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "NAGRADA"
   },

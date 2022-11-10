@@ -146,8 +146,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   background: #3a3d40;
-  border-right: 5px solid rgb(31, 31, 31);
-  border-radius: 10px;
+  border-right: 2px solid rgb(31, 31, 31);
   margin: 0 auto;
   position: relative;
 }

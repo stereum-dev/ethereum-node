@@ -38,7 +38,7 @@
     "stereumName": "stereum einstellungen",
     "langName": "Sprachwahl",
     "confirm": "BESTÄTIGEN & ANWENDEN",
-    "general": "GENETAL",
+    "general": "GENERAL",
     "credits": "Credits",
     "open": "öffnen",
     "update": "UPDATE",
@@ -53,12 +53,12 @@
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
-    "firstSteps": "Erste Schritte!",
     "stake": "Staken mit 32 ETH",
     "ssv": "SSV Network verwenden",
     "alert": "Mobile App Benachrichtigungen",
     "switchC": "Clients wechseln",
-    "switchM": "Maschine migrieren"
+    "migrate": "Nodes Migration",
+    "rpc": "RPC Connection"
   },
   "pluginZone": {
     "client": "client"
@@ -175,7 +175,7 @@
   },
   "validatorsBox": {
     "date": "DATUM",
-    "validator": "VALIATOR",
+    "validator": "VALIDATOR",
     "attestRate": "ATTEST.RATE",
     "reward": "BELOHNUNG"
   },

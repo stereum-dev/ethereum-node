@@ -9,12 +9,61 @@
             alt="portlist"
           />
         </div>
-        <span>PORT LIST</span>
+        <span>OPEN PORTS</span>
       </div>
-      <div class="portlist-data_box"></div>
+      <div class="portlist-data_box">
+        <div class="portlist-data_row" v-for="item in portsInfo" :key="item.id">
+          <div class="rowName">
+            <span>{{ item.name }}</span>
+          </div>
+          <div class="portNo">
+            <span>{{ item.portNo }}</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      portsInfo: [
+        {
+          id: 1,
+          name: "name1",
+          portNo: 1111,
+        },
+        {
+          id: 2,
+          name: "name2",
+          portNo: 22,
+        },
+        {
+          id: 3,
+          name: "name3",
+          portNo: 333,
+        },
+        {
+          id: 4,
+          name: "name4",
+          portNo: 4,
+        },
+        {
+          id: 5,
+          name: "name5",
+          portNo: 1515,
+        },
+        {
+          id: 6,
+          name: "name6",
+          portNo: 123,
+        },
+      ],
+    };
+  },
+};
+</script>
 <style scoped>
 .portlist_parent {
   display: flex;
@@ -66,10 +115,58 @@
 .portlist-data_box {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   width: 70%;
   height: 100%;
   flex-direction: column;
   overflow-y: auto;
+}
+.portlist-data_row {
+  width: 90%;
+  height: 25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #c1c1c1;
+  border-radius: 10px;
+  margin: 2px 0;
+}
+.rowName {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 55%;
+  height: 100%;
+  font-size: 50%;
+  color: #c1c1c1;
+}
+
+.portNo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 100%;
+  font-size: 50%;
+  color: #c1c1c1;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 10px;
 }
 </style>

@@ -3,19 +3,20 @@
     <node-header id="head" @mousedown.prevent></node-header>
     <node-bg>
       <div class="node-parent">
-        <div class="play-box" v-if="playFirstVideo">
+        <div class="play-box" v-if="playYoutubeVideo">
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos></the-videos>
+          <the-videos :videoUrl="itemToTutorial.videosLink"></the-videos>
         </div>
-        <tutorial-modal
-          @hide-modal="hideFirstStepModal"
-          @show-item="displaySingleModal(steps)"
+        <TutorialModal
+          @hide-modal="closeTutorialModalHandler"
+          @show-item="openTutorialStep"
           v-if="isTutorialModalActive"
-        ></tutorial-modal>
+          :itemToTutorial="itemToTutorial"
+        />
         <div class="journal-box" @mousedown.prevent>
-          <journal-node></journal-node>
+          <JournalNode />
         </div>
         <div class="trapezoid-parent">
           <div class="switch-network">
@@ -45,9 +46,9 @@
             <plugin-zone
               :title="$t('theNode.execution')"
               :list="
-                installedServices.filter(
-                  (service) => service.category === 'execution'
-                ).sort(sortByName)
+                installedServices
+                  .filter((service) => service.category === 'execution')
+                  .sort(sortByName)
               "
               @modal-view="showModal"
             ></plugin-zone>
@@ -57,9 +58,9 @@
               @modal-view="showModal"
               :title="$t('theNode.consensus')"
               :list="
-                installedServices.filter(
-                  (service) => service.category === 'consensus'
-                ).sort(sortByName)
+                installedServices
+                  .filter((service) => service.category === 'consensus')
+                  .sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -68,9 +69,9 @@
               @modal-view="showModal"
               :title="$t('theNode.validator')"
               :list="
-                installedServices.filter(
-                  (service) => service.category === 'validator'
-                ).sort(sortByName)
+                installedServices
+                  .filter((service) => service.category === 'validator')
+                  .sort(sortByName)
               "
             ></plugin-zone>
           </div>
@@ -89,7 +90,10 @@
           </div>
         </div>
         <div class="node-side">
-          <node-sidebar @show-modal="showFirstStepModal"></node-sidebar>
+          <div class="sidebar-container">
+            <NodeAlert />
+            <NodeTutorial @show-modal="openTutorialModalHandler" />
+          </div>
         </div>
         <div class="footer">
           <div class="footer-content"></div>
@@ -104,7 +108,6 @@
 import JournalNode from "../components/UI/the-node/JournalNode.vue";
 import PluginZone from "../components/UI/the-node/PluginZone.vue";
 import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import NodeSidebar from "../components/UI/the-node/NodeSidebarParent.vue";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";
@@ -115,16 +118,19 @@ import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
+import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
+import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 
 export default {
   components: {
     JournalNode,
     PluginZone,
     BaseModal,
-    NodeSidebar,
     TaskManager,
     TheVideos,
     TutorialModal,
+    NodeAlert,
+    NodeTutorial,
   },
   emits: ["startDrag", "closeMe", "modalView"],
 
@@ -132,8 +138,9 @@ export default {
     return {
       isModalActive: false,
       isTutorialModalActive: false,
-      playFirstVideo: false,
+      playYoutubeVideo: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
+      itemToTutorial: [],
     };
   },
   computed: {
@@ -165,13 +172,13 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
-    sortByName( a, b ){
-    if ( a.service.toLowerCase() < b.service.toLowerCase()){
-      return -1;
-    }
-    if ( a.service.toLowerCase() > b.service.toLowerCase()){
-      return 1;
-    }
+    sortByName(a, b) {
+      if (a.service.toLowerCase() < b.service.toLowerCase()) {
+        return -1;
+      }
+      if (a.service.toLowerCase() > b.service.toLowerCase()) {
+        return 1;
+      }
       return 0;
     },
     async updateConnectionStats() {
@@ -190,24 +197,32 @@ export default {
     closeModal() {
       this.isModalActive = false;
     },
-    showFirstStepModal() {
+
+    openTutorialModalHandler(data) {
       this.isTutorialModalActive = true;
+      data.displayModal = true;
+      this.itemToTutorial = data;
     },
-    hideFirstStepModal() {
+    closeTutorialModalHandler() {
       this.isTutorialModalActive = false;
-    },
-    displaySingleModal(el) {
-      this.steps.filter((item) => {
-        item.displayModal = false;
-        item?.id === el.id;
-      });
-      this.playFirstVideo = true;
-      this.isTutorialModalActive = false;
-      el.displayModal = true;
     },
     hideVideoDisplay() {
-      this.playFirstVideo = false;
       this.isTutorialModalActive = false;
+      this.playYoutubeVideo = false;
+    },
+    openTutorialStep(data) {
+      if (data.name === "videos" && data.videosLink.length > 0) {
+        this.isTutorialModalActive = false;
+        this.playYoutubeVideo = true;
+      } else if (data.name === "walkthrough" && data.guideLink.length > 0) {
+        this.isTutorialModalActive = false;
+        let url = data.guideLink;
+        window.open(url, "_blank");
+      } else if (data.name === "text guide" && data.writtenLink.length > 0) {
+        this.isTutorialModalActive = false;
+        let url = data.writtenLink;
+        window.open(url, "_blank");
+      }
     },
   },
 };
@@ -381,6 +396,23 @@ export default {
   grid-row: 1/5;
   width: 100%;
   height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sidebar-container {
+  width: 100%;
+  height: 100%;
+  background: #3a3d40;
+  border: 2px solid #242529b4;
+  border-top-right-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow: hidden;
+  border-left: none;
 }
 .footer {
   width: 100%;
