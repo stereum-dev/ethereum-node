@@ -1,7 +1,7 @@
 ---
 - name: Write API data
   template:
-    src: "validator-import-api-data.json"
+    src: "validator-import-api-data.json.j2"
     dest: "/tmp/validator-import-api-data"
     owner: "2000"
     group: "2000"

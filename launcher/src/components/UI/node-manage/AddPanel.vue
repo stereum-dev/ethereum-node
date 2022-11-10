@@ -256,7 +256,7 @@ export default {
   margin-top: 1px;
   display: flex;
   background: #3a3d40;
-  border-right: 5px solid rgb(31, 31, 31);
+  border-right: 2px solid rgb(31, 31, 31);
   justify-content: center;
   align-items: center;
   position: absolute;

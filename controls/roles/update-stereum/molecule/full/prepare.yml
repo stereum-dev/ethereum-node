@@ -66,7 +66,7 @@
       - "git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git" # FIXME
       - "git config core.sparseCheckout true"
       - "echo 'controls' >> .git/info/sparse-checkout"
-      - "git checkout 8544bf99fb62b44d0efe4cd8f981c31663335c21"
+      - "git checkout 41243797c96a36e3c9b3331e146761bee7f16ad1"
 
     # spin up some services to update
     - name: Write service configuration lighthouse beacon

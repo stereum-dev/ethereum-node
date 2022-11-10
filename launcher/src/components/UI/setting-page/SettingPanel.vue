@@ -49,7 +49,7 @@
             <div class="items-box_update">
               <setting-items
                 :title="launcherItem"
-                :btn-value="commingSoon"
+                :btn-value="launcherVersion"
                 is-color="alpha"
                 item-type="update"
                 id="version"
@@ -74,12 +74,12 @@
                   <span>{{ btnStatus }}</span>
                 </div>
               </div> -->
+
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
                 <div class="setting-items_btn">
-                  <!-- <comming-soon></comming-soon> -->
                   <select
                     name="stereum-update"
                     id="stereum-update"
@@ -92,12 +92,11 @@
                   </select>
                 </div>
               </div>
-              <div class="setting-items">
+              <!-- <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.servicePlugin") }}</span>
                 </div>
                 <div class="setting-items_btn">
-                  <comming-soon></comming-soon>
                   <select
                     name="stereum-update"
                     id="stereum-update"
@@ -109,7 +108,7 @@
                     <option value="auto">{{ $t("settingPanel.auto") }}</option>
                   </select>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -125,8 +124,10 @@ import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 import SettingItems from "./SettingItems.vue";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
+import { toRaw } from "vue";
 export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
@@ -148,6 +149,7 @@ export default {
       langIco: "",
       langName: "",
       langLabel: "",
+      settings: undefined,
       generalItems: [
         {
           id: 1,
@@ -175,6 +177,7 @@ export default {
     };
   },
   mounted() {
+    this.getSettings();
     this.forceUpdateCheck = true;
   },
   updated() {
@@ -188,6 +191,9 @@ export default {
     this.switchOnOff();
   },
   computed: {
+    ...mapState(useServices, {
+      launcherVersion: "launcherVersion",
+    }),
     ...mapWritableState(useNodeHeader, {
       stereumUpdate: "stereumUpdate",
     }),
@@ -220,8 +226,15 @@ export default {
       return this.$t("settingPanel.off");
     },
   },
-
   methods: {
+    async getSettings() {
+      this.settings = await ControlService.getStereumSettings();
+      if (this.settings.stereum?.settings.updates.unattended.install) {
+        this.stereumRef = "auto";
+      } else {
+        this.stereumRef = "manual";
+      }
+    },
     switchOnOff() {
       this.onOff = !this.onOff;
       if (this.onOff === false) {
@@ -236,9 +249,11 @@ export default {
       }
       return false;
     },
-    confirm() {
-      // confirm method have to write here
-      // alert("Done!");
+    async confirm() {
+      this.settings.stereum.settings.updates.unattended.install =
+        this.stereumRef === "auto";
+      await ControlService.setStereumSettings(toRaw(this.settings));
+      alert("Done!");
     },
     selector() {
       if (this.langActive === true) {
@@ -268,7 +283,7 @@ export default {
       try {
         let stereumVersion = await ControlService.getCurrentStereumVersion();
         this.stereumVersion = stereumVersion;
-      } catch (error) {
+      } catch (err) {
         console.log("Couldn't fetch versions...\nError:", err.message);
       }
     },
@@ -313,8 +328,6 @@ export default {
   margin: 0 5%;
 }
 .setting-items_btn {
-  /*pointer-events: none !important;
-  user-select: none !important;*/
   position: relative;
   width: 25%;
   display: flex;
@@ -322,7 +335,6 @@ export default {
   align-items: center;
   border-radius: 5px;
   font-weight: 500;
-  border: 1.5px solid #30353a;
   cursor: pointer;
   margin: 0 2%;
   height: 90%;
@@ -339,11 +351,19 @@ export default {
   outline: none;
 }
 .setting-items_btn select {
-  width: 100%;
-  height: 100%;
-  line-height: 100%;
+  width: 95%;
+  height: 90%;
+  line-height: 90%;
   text-align-last: center;
   color: #171717;
+  border-radius: 10px;
+  color: #232323;
+}
+.setting-items_btn select:hover,
+.setting-items_btn select:active,
+.setting-items_btn select:focus {
+  outline: none;
+  border: none;
 }
 #version {
   pointer-events: none;
