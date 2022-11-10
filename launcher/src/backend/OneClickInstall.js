@@ -120,7 +120,7 @@ export class OneClickInstall {
     }
   }
 
-  async createServices(constellation, checkpointURL) {
+  async createServices(constellation, checkpointURL, relayURL) {
     let ports = []
     if (constellation.includes('GethService')) {
       ports = [
@@ -155,7 +155,8 @@ export class OneClickInstall {
 
     if (constellation.includes('FlashbotsMevBoostService')) {
       //FlashbotsMevBoostService
-      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(true))
+      log.info(relayURL)
+      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(true), relayURL)
     }
 
     if (constellation.includes('LighthouseBeaconService')) {
@@ -200,7 +201,6 @@ export class OneClickInstall {
       ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
       this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(false), ports, this.installDir + '/nimbus', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)

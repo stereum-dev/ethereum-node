@@ -31,7 +31,7 @@ export class PrysmBeaconService extends NodeService {
         }
 
         //execution endpoint
-        let executionEndpoint = executionClients[0].buildExecutionClientEngineRPCHttpEndpointUrl()
+        let executionEndpoint = executionClients.length > 0 ? executionClients[0].buildExecutionClientEngineRPCHttpEndpointUrl() : ''
 
         let checkpointCommand = checkpointURL ? ' --checkpoint-sync-url=' + checkpointURL : ''
 

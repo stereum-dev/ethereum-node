@@ -70,11 +70,19 @@ export default {
         this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      this.newConfiguration.map((i) => {
-        if (i.id == item.id) {
-          i.modifierPanel = true;
-        }
-      });
+      if(item.modifierPanel){
+        this.newConfiguration.forEach(s => s.modifierPanel = false)
+        return
+      }
+      if(item.config.serviceID){
+        this.newConfiguration.forEach(s => {
+          if(s.config.serviceID === item.config.serviceID){
+            s.modifierPanel = true
+          }else{
+            s.modifierPanel = false
+          }
+        });
+      }
       this.$emit("modifyItem", item);
     },
   },

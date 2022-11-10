@@ -77,6 +77,14 @@ export class LodestarBeaconService extends NodeService {
     return 'http://stereum-' + this.id + ':9596'
   }
 
+  buildConsensusClientEndpoint () {
+    return 'stereum-' + this.id + ':9596'
+  }
+
+  buildConsensusClientGateway () {
+    return 'stereum-' + this.id + ':9596'
+  }
+
   buildConsensusClientMetricsEndpoint () {
     return 'stereum-' + this.id + ':8008'
   }

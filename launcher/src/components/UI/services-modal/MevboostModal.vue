@@ -1,6 +1,6 @@
 <template>
   <div class="service-modal_parent">
-    <div class="bg-dark" @click="$emit('closeWindow')"></div>
+    <div class="bg-dark" @click="closeWindow"></div>
     <div class="browser-modal">
       <div class="mev-header">
         <div class="icon-box">
@@ -28,7 +28,7 @@
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
-              <div class="relay" v-for="relay in relaysList" :key="relay.id">
+              <div class="relay" v-for="relay in relaysList.filter(r => r[this.currentNetwork.name.toLowerCase()])" :key="relay.id">
                 <input
                   type="checkbox"
                   :id="relay.id"
@@ -37,6 +37,14 @@
                 />
                 <label :for="relay.id">{{ relay.name }}</label>
               </div>
+            </div>
+            <img src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="icon" v-if="loading"/>
+            <div class="btn-box">
+              <button
+                @click="applyRelays"
+              >
+                APPLY
+              </button>
             </div>
           </div>
         </div>
@@ -57,12 +65,17 @@
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
+import ControlService from "@/store/ControlService";
+import { toRaw } from "vue";
 export default {
   data() {
     return {
       mevService: {},
       isMevAvailable: false,
       showRelaysBox: false,
+      checkedRelays: [],
+      serviceConfig: {},
+      loading: false,
     };
   },
   mounted() {
@@ -70,19 +83,28 @@ export default {
   },
   computed: {
     ...mapState(useServices, {
-      allServices: "allServices",
+      installedServices: "installedServices",
     }),
     ...mapWritableState(useNodeManage, {
       relaysList: "relaysList",
-      checkedRelays: "checkedRelays",
+      currentNetwork: "currentNetwork",
     }),
   },
   methods: {
     filtermevService() {
-      this.allServices.forEach((item) => {
+      this.installedServices.forEach((item) => {
         if (item.name === "Flashbots Mev Boost") this.mevService = item;
       });
       this.isMevAvailable = true;
+      ControlService.getServiceConfig(this.mevService.config.serviceID).then(service => {
+      let relayURLs = service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1].split(',')
+      relayURLs.forEach(relay => {
+        let relayData = this.relaysList.find(r => r[this.currentNetwork.name.toLowerCase()] === relay)
+        if(relayData)
+          this.checkedRelays.push(relayData)
+      });
+      this.serviceConfig = service
+    })
     },
     openBrowser() {
       let url = "https://www.mevboost.org/";
@@ -95,6 +117,18 @@ export default {
     displayRelaysBlock() {
       this.showRelaysBox = true;
     },
+    applyRelays(){
+      this.loading = true
+      if(this.serviceConfig.entrypoint){
+        this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex(e => e === "-relays")+1] = this.checkedRelays.map(r => r[this.currentNetwork.name.toLowerCase()]).join()
+        ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(() => {
+          this.loading = false
+        })
+      }
+    },
+    closeWindow(){
+      this.$emit('closeWindow')
+    }
   },
 };
 </script>
@@ -364,6 +398,10 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
+.relaysBox img {
+  width: 20px;
+  height: 20px;
+}
 .relaysBoxTitle {
   width: 100%;
   height: 10%;
@@ -436,5 +474,44 @@ export default {
   font-weight: 600;
   color: #aaaaaa;
   cursor: pointer;
+}
+.btn-box {
+  width: 100%;
+  height: 16%;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-box button {
+  width: 25%;
+  height: 70%;
+  border-radius: 10px;
+  background-color: #404851;
+  box-shadow: 1px 1px 5px 1px rgb(12, 12, 12);
+  color: #aaaaaa;
+  font-size: 1rem;
+  font-weight: 600;
+  outline-style: none;
+  transition-duration: 80ms;
+}
+.btn-box .btn-disabled {
+  border: none;
+  background-color: #1f2d37 !important;
+  color: #2f383d;
+  z-index: -1;
+}
+.btn-box button:hover {
+  transform: scale(1.07);
+  border: 2px solid #364a59;
+  background-color: #283742;
+  color: #42c8f1;
+}
+.btn-box button:active {
+  transform: scale(1);
+  border: none;
+  background-color: #1f2d37;
+  color: #42c8f1;
+  box-shadow: none;
 }
 </style>

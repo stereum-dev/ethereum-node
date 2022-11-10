@@ -22,8 +22,8 @@ export class PrysmValidatorService extends NodeService {
             new ServiceVolume(workingDir + '/graffitis', graffitiDir)
         ]
 
-        const provider = (consensusClients.map(client => { return client.buildConsensusClientEndpoint() })).shift()
-        const providerGateway = (consensusClients.map(client => { return client.buildConsensusClientGateway() })).shift()
+        const provider = consensusClients.length > 0 ? (consensusClients.map(client => { return client.buildConsensusClientEndpoint() })).shift() : ""
+        const providerGateway = consensusClients.length > 0 ? (consensusClients.map(client => { return client.buildConsensusClientGateway() })).shift() : ""
 
         service.init(
             'PrysmValidatorService', //service
