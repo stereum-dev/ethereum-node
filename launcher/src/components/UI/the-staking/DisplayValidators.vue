@@ -45,7 +45,7 @@
           <div class="table-row" v-for="(item, index) in keys" :key="index">
             <div class="rowContent">
               <span class="circle"></span>
-              <span class="category"
+              <span class="category" ref="valKey" @click="logEvent"
                 >{{ item.key.substring(0, 20) }}...{{
                   item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
@@ -109,15 +109,15 @@
               @exit-modal="closeExitChainModal(item)"
               @confirm-btn="confirmExitChainForValidators(item)"
             ></exit-validators-modal>
-            <remove-validator
+            <RemoveValidator
               v-if="
                 item.toRemove ||
                 exitChainForMultiValidatorsActive ||
                 removeForMultiValidatorsActive
               "
-            >
-            </remove-validator>
-            <remove-single-modal
+            />
+
+            <RemoveSingleModal
               v-if="item.isRemoveBoxActive"
               :item="item"
               @remove-modal="
@@ -125,7 +125,13 @@
                 item.toRemove = false;
               "
               @delete-key="validatorRemoveConfirm(item)"
-            ></remove-single-modal>
+            />
+            <DownloadSlashing
+              v-if="item.isDownloadModalActive"
+              :item="item"
+              @download="downloadValidatorHandler(item)"
+              @close-modal="item.isDownloadModalActive = false"
+            />
           </div>
         </div>
         <div
@@ -160,52 +166,56 @@
       </div>
     </div>
     <!-- Small search icons -->
-    <search-options></search-options>
+    <SearchOptions />
     <!-- Click box to import key -->
-    <insert-validator
+    <InsertValidator
       v-if="insertKeyBoxActive"
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
       :services="installedServices"
-    ></insert-validator>
+    />
     <!-- select specific validator service -->
-    <select-service
+    <SelectService
       v-if="selectValidatorServiceForKey"
       @select-service="checkSelectedService"
-    ></select-service>
+    />
     <!-- Password box for validator keys -->
-    <enter-password
+    <EnterPassword
       v-if="enterPasswordBox"
       :activePassword="passwordInputActive"
       @confirm-password="confirmPasswordHandler"
       @import-key="importKey"
-    ></enter-password>
+    />
     <!-- Fee Recipient box for validator keys -->
-    <fee-recipient
+    <FeeRecipient
       v-if="feeRecipientBoxActive"
       @enter-fee="enterFeeHandler"
       :activeFee="feeInputActive"
       @confirm-btn="confirmFeeRecipientAddress"
-    ></fee-recipient>
+    />
     <!-- Grafiti box for validator keys -->
-    <grafiti-multiple-validators
+    <GrafitiMultipleValidators
       v-if="grafitiForMultiValidatorsActive"
       @confirm-btn="confirmEnteredGrafiti"
-    ></grafiti-multiple-validators>
+    />
     <!-- Remove Box for validator keys -->
-    <remove-multiple-validators
+    <RemoveMultipleValidators
       v-if="removeForMultiValidatorsActive"
       @remove-modal="
         removeForMultiValidatorsActive = false;
         this.keys.forEach((k) => (k.toRemove = false));
       "
       @delete-key="confirmRemoveAllValidators"
-    ></remove-multiple-validators>
+    />
+    <DownloadMultiSlashing
+      v-if="downloadForMultiValidatorsActive"
+      @close-modal="downloadForMultiValidatorsActive = false"
+    />
     <!-- Exit box for validator keys -->
-    <exit-multiple-validators
+    <ExitMultipleValidators
       v-if="exitChainForMultiValidatorsActive"
       @confirm-btn="confirmPasswordMultiExitChain"
-    ></exit-multiple-validators>
+    />
   </div>
 </template>
 <script>
@@ -229,6 +239,8 @@ import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
+import DownloadSlashing from "./DownloadSlashing.vue";
+import DownloadMultiSlashing from "./DownloadMultiSlashing.vue";
 export default {
   components: {
     DropZone,
@@ -246,6 +258,8 @@ export default {
     RemoveMultipleValidators,
     ExitMultipleValidators,
     SelectService,
+    DownloadSlashing,
+    DownloadMultiSlashing,
   },
   props: ["button"],
   data() {
@@ -269,6 +283,7 @@ export default {
       exitChainForMultiValidatorsActive: false,
       exitChainModalForMultiValidators: false,
       removeForMultiValidatorsActive: false,
+      downloadForMultiValidatorsActive: false,
       password: this.enteredPassword,
       fileInput: "",
       displayRemoveValidatorModal: false,
@@ -343,6 +358,7 @@ export default {
         isRemoveModalActive: false,
         isExitBoxActive: false,
         displayExitModal: false,
+        isDownloadModalActive: false,
         ...item,
       };
     });
@@ -358,6 +374,17 @@ export default {
     this.checkKeyExists();
   },
   methods: {
+    logEvent(event) {
+      let url = event.target.baseURI;
+      fetch(url)
+        .then((res) => res.json())
+        .then((out) => {
+          console.log("Checkout this JSON! ", out);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    },
     grafitiDisplayHandler(el) {
       el.isGrafitiBoxActive = true;
       el.isRemoveModalActive = true;
@@ -371,8 +398,10 @@ export default {
     },
     async validatorRemoveConfirm(el) {
       el.isRemoveBoxActive = false;
+      el.isDownloadModalActive = true;
       await this.deleteValidators(el.validatorID, [el.key]);
     },
+
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
     },
@@ -635,6 +664,7 @@ export default {
         }
       });
       this.removeForMultiValidatorsActive = false;
+      this.downloadForMultiValidatorsActive = true;
       if (changed === 1 && id) {
         await this.deleteValidators(id, keys);
       } else if (changed === 0) {
