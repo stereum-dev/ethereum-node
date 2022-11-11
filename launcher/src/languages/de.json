@@ -155,6 +155,11 @@
   "insertValidator": {
     "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
   },
+  "removeSingleModal": {
+    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
+    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
+    "btn": "pick path"
+  },
   "removeMultiModal": {
     "sure": "Bist du dir sicher, dass du",
     "from": "VON DIESER MASCHINE ENTFERNEN MÖCHTEN?",
