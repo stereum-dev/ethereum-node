@@ -70,8 +70,8 @@ export default {
       p2pIco: [
         {
           id: 1,
-          name: "default",       
-          icon: "/img/icon/control/PeerToPeerIcon.svg",   
+          name: "default",
+          icon: "/img/icon/control/PeerToPeerIcon.svg",
         },
         {
           id: 2,
@@ -97,19 +97,19 @@ export default {
     },
     firstBar() {
       return { width: this.consensusValPeer + "%" };
-      return 'width: 100%';
+      return "width: 100%";
     },
     secondBar() {
       return { width: this.executionValPeer + "%" };
-      return 'width: 100%';
+      return "width: 100%";
     },
   },
   methods: {
     nextPage() {
-      this.refresh(true,'next');
+      this.refresh(true, "next");
     },
     backPage() {
-      this.refresh(true,'prev');
+      this.refresh(true, "prev");
     },
     p2pSituation() {
       if (this.p2pIcoUnknown) {
@@ -117,40 +117,50 @@ export default {
       }
       return this.defaultIco;
     },
-    refresh(instant = false, loadPage='') {
-      if(this.refresher)
-        clearTimeout(this.refresher)
-      if(instant)
-        return this.p2pControler(loadPage);
+    refresh(instant = false, loadPage = "") {
+      if (this.refresher) clearTimeout(this.refresher);
+      if (instant) return this.p2pControler(loadPage);
       this.refresher = setTimeout(() => {
         this.p2pControler(loadPage);
       }, 3000);
     },
-    p2pControler(loadPage=''){
+    p2pControler(loadPage = "") {
       let pageNumber = this.pageNumber;
-      if(loadPage == 'next'){
+      if (loadPage == "next") {
         if (pageNumber >= 99) {
           pageNumber = 1; // cycle to first page
         } else {
           pageNumber++;
         }
-      }else if(loadPage == 'prev'){
+      } else if (loadPage == "prev") {
         pageNumber--;
       }
-      let gid = pageNumber-1;
-      let clients = Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data ? this.p2pstatus.data[gid] : false;
-      if (!clients){
-        let clients_first = Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0 ? this.p2pstatus.data[0] : false;
-        let clients_last = Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0 ? this.p2pstatus.data[this.p2pstatus.data.length-1] : false;
-        if(pageNumber < 1 && clients_last !== false){ // first page-1 reached when clicked on prev page, reset to last page
+      let gid = pageNumber - 1;
+      let clients =
+        Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data
+          ? this.p2pstatus.data[gid]
+          : false;
+      if (!clients) {
+        let clients_first =
+          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+            ? this.p2pstatus.data[0]
+            : false;
+        let clients_last =
+          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+            ? this.p2pstatus.data[this.p2pstatus.data.length - 1]
+            : false;
+        if (pageNumber < 1 && clients_last !== false) {
+          // first page-1 reached when clicked on prev page, reset to last page
           pageNumber = this.p2pstatus.data.length;
           gid = pageNumber - 1;
           clients = this.p2pstatus.data[gid];
-        }else if(clients_first){ // last page+1 reached when clicked on next page, reset to first page
+        } else if (clients_first) {
+          // last page+1 reached when clicked on next page, reset to first page
           pageNumber = 1;
           gid = pageNumber - 1;
           clients = this.p2pstatus.data[gid];
-        }else{ // waiting for data on page load
+        } else {
+          // waiting for data on page load
           this.refresh();
           return;
         }
@@ -161,7 +171,7 @@ export default {
       let consensusClient = this.consensusClient;
       let consensusNumPeer = this.consensusNumPeer;
       let consensusValPeer = this.consensusValPeer;
-      let executionClient = this.executionClient
+      let executionClient = this.executionClient;
       let executionNumPeer = this.executionNumPeer;
       let executionValPeer = this.executionValPeer;
       if (
@@ -169,10 +179,10 @@ export default {
         this.p2pstatus.code === 0 &&
         Array.isArray(this.p2pstatus.data) &&
         //Array.isArray(this.p2pstatus.data[gid]) &&
-        typeof this.p2pstatus.data[gid] === 'object' &&
+        typeof this.p2pstatus.data[gid] === "object" &&
         this.p2pstatus.data[gid].hasOwnProperty("details")
       ) {
-        isMultiService = this.p2pstatus.data.length>1 ? true : false;
+        isMultiService = this.p2pstatus.data.length > 1 ? true : false;
         p2pItemsShow = true;
         p2pIcoUnknown = false;
         consensusClient = clients.details.consensus.client;
@@ -189,7 +199,7 @@ export default {
       this.consensusClient = consensusClient;
       this.consensusNumPeer = consensusNumPeer;
       this.consensusValPeer = consensusValPeer;
-      this.executionClient = executionClient
+      this.executionClient = executionClient;
       this.executionNumPeer = executionNumPeer;
       this.executionValPeer = executionValPeer;
       this.refresh();
@@ -251,8 +261,8 @@ export default {
   align-items: center;
   width: 30%;
   height: 100%;
-  font-size: 50%;
-  font-weight: 500;
+  font-size: 40%;
+  font-weight: 600;
   color: #c1c1c1;
 }
 .peer2peerParent {
@@ -316,14 +326,14 @@ export default {
 .p2pBarCont {
   width: 95%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   height: 40%;
 }
 .p2pVal {
   width: 60%;
   height: 80%;
-  margin-right:5px;
+  margin-right: 5px;
   background: #33393e;
   display: flex;
   justify-content: flex-start;
