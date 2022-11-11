@@ -410,7 +410,7 @@ html {
 }
 
 .configBox {
-  width: 95%;
+  width: 98%;
   height: 70%;
   margin-top: 5%;
   display: flex;
@@ -602,10 +602,9 @@ html {
   box-sizing: border-box;
 }
 .portAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
   border-radius: 3px;
   margin-top: 10px;
   padding: 1px 5px;
@@ -615,14 +614,12 @@ html {
   box-sizing: border-box;
 }
 .clientAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #25282d;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -630,7 +627,7 @@ html {
 }
 .clientAddBox:hover {
   background-color: #2d3336;
-  border: 1px solid #32363b;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 .portAddBox img {
@@ -778,14 +775,12 @@ html {
   transform: scale(0.9);
 }
 .optionsBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #242424;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -794,7 +789,7 @@ html {
 }
 .optionsBox:hover {
   background-color: #2d3336;
-  border: 1px solid #32363b;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 .optionsBox img {
