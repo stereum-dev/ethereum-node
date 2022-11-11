@@ -333,7 +333,6 @@ export default {
 .p2pVal {
   width: 60%;
   height: 80%;
-  margin-right: 5px;
   background: #33393e;
   display: flex;
   justify-content: flex-start;
