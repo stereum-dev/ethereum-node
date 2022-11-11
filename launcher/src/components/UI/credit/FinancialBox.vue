@@ -159,9 +159,8 @@ export default {
   top: 20%;
   left: 78%;
 }
-.type-selector select,
 .round-selector select {
-  max-height: 1.8rem;
+  height: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -181,7 +180,12 @@ export default {
   top: 20%;
   left: 78%;
 }
-
+.round-selector select:hover,
+.round-selector select:focus,
+.round-selector select:active {
+  outline: none;
+  border: none;
+}
 .itemWrapper {
   width: 100%;
   height: 99%;
@@ -193,7 +197,7 @@ export default {
 }
 .search input {
   position: fixed;
-  height: 5%;
+  height: 4.3%;
   width: 15%;
   left: 62%;
   top: 20%;
@@ -201,6 +205,7 @@ export default {
   border-radius: 10px;
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  padding: 5px;
 }
 .search input:focus {
   outline: none;
