@@ -127,7 +127,7 @@
     "active": "ACTIVE SINCE",
     "state": "STATE",
     "balance": "BALANCE",
-    "option": "OPTIONS",
+    "option": "СОНГОЛТУУД",
     "importKey": "Importing validator key(s)",
     "waitMessage": "It may take some time",
     "waitForImport": "Please wait until the key is imported"
@@ -137,13 +137,13 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "confirm": "Баталгаажуулах"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
     "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "exitChain": "CHAIN - ЭЭС ГАРАХ",
+    "clickClose": "Хаахын тулд гадна талд товшино уу."
   },
   "feeRecipient": {
     "textPlaceHolder": "Таны Блокийн урамшуулалыг илгээхийн тулд хүчинтэй Ethereum хаягаа оруулна уу ... ",
