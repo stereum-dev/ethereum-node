@@ -123,9 +123,9 @@ export default {
   width: 30%;
   height: 50%;
   border-radius: 10px;
-  border: 1px solid #b6c3b5;
-  background-color: #56bc37;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
+  border: 1px solid #3d4f3c;
+  background-color: #6db258;
+  box-shadow: 0 1px 3px 1px rgb(55, 85, 77);
   display: flex;
   justify-content: center;
   align-items: center;

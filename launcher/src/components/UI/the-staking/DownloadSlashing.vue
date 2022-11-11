@@ -95,10 +95,11 @@ export default {
   width: 80%;
   height: 30%;
   color: #c1c1c1;
-  font-size: .9rem;
+  font-size: 0.9rem;
   font-weight: 700;
   word-break: break-all;
   text-align: center;
+  text-transform: uppercase;
 }
 .downloadMessage p:last-child {
   font-family: "Times New Roman", Times, serif;
@@ -109,6 +110,7 @@ export default {
   font-weight: 700;
   word-break: break-all;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .download-box {
@@ -124,9 +126,9 @@ export default {
   width: 30%;
   height: 50%;
   border-radius: 10px;
-  border: 1px solid #093d05;
-  background-color: #56bc37;
-  box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
+  border: 1px solid #3d4f3c;
+  background-color: #6db258;
+  box-shadow: 0 1px 3px 1px rgb(55, 85, 77);
   display: flex;
   justify-content: center;
   align-items: center;
