@@ -668,8 +668,6 @@ jobs:
           /opt/pipx/venvs/ansible-core/bin/python -m pip install hcloud
       - name: Install ansible-lint
         run: sudo apt-get install -y ansible-lint
-      - name: install jmespath
-        run: sudo apt-get install -y python3-jmespath
       - name: Molecule version
         run: molecule --version
         env:
