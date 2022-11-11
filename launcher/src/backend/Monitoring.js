@@ -729,6 +729,17 @@ export class Monitoring {
       },
     };
 
+    // Prometheus job definitions
+    const jobs = {
+      'TekuBeaconService' : 'teku',
+      'LighthouseBeaconService' : 'lighthouse_beacon',
+      'PrysmBeaconService' : 'prysm_beacon',
+      'NimbusBeaconService' : 'nimbus',
+      'GethService' : 'geth',
+      'BesuService' : 'besu',
+      'NethermindService' : 'nethermind',
+    };
+
     // Merge all labels for Prometheus query
     const serviceLabels = [];
     for (let property in services) {
@@ -749,114 +760,109 @@ export class Monitoring {
       };
     }
 
-    // Find execution and consensus service configurations
-    var consensus, execution;
-    const clientTypes = Object.keys(services);
-    for(let i=0;i<clientTypes.length;i++){
-      let clientType = clientTypes[i];
-      let clt = serviceInfos.filter((s) => Object.keys(services[clientType]).includes(s.service)).pop();
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")){
-        return {
-          "code": 222,
-          "info": "error: " + clientType + " client not found (in p2pstatus)",
-          "data": serviceInfos,
-        };
-      }
-      eval(clientType + " = clt;");  // eval objects -> consensus/execution
+    // Query Prometehus for all possible labels
+    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
+    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
+      return {
+        "code": 223,
+        "info": "error: prometheus query for p2pstatus failed",
+        "data": prometheus_result,
+      };
     }
 
-    // Setup details
-    var details = {};
-    var detailsbase = {
-      'service': 'unknown',
-      'client': "unknown",
-      'state': "unknown",
-      'numPeer': 0,
-      'numPeerBy': {
-        'source': 'prometheus',
-        'fields': [],
-      },
-      'maxPeer': 0,
-      'maxPeerBy': {
-        'source': 'config',
-        'fields': [],
-      },
-      'valPeer': 0,
-    };
+    // Build pairs for the FrontEnd (cc and ec member)
+    const clientTypes = Object.keys(services);
+    const groups = [];
+    const utsNow = Math.floor(Date.now() / 1000);
+    for(let i=0;i<serviceInfos.length;i++){
 
-    // Get max peers for consensus and execution clients by configuration or their default values
-    var opttyp=null, optnam=null, defval=null, optval=null, regexp=null;
-    clientTypes.forEach(function (clientType, index) {
-      let clt = '';
-      eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-      details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
-      details[clientType]['service'] = clt.service;
-      details[clientType]['client'] = clt.service.replace(/Beacon|Service/gi,"").toUpperCase();
-      details[clientType]['state'] = clt.state;
-      opttyp = Object.keys(services).find(key => services[key].hasOwnProperty(clt.service));
-      if(!opttyp){
-        return;
+      // Find execution and consensus service configurations for this group
+      let clt = serviceInfos[i];
+      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
+        continue;
+      let isConsensus = clt.service in services.consensus;
+      let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
+      if(!isConsensus || !hasMembers)
+        continue;
+      let cc = clt;
+      let ec = null;
+      try{
+        ec = cc.config.dependencies.executionClients[0];
+        if(typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id"))
+          continue;
+        ec = serviceInfos.find(item => item.config.serviceID == ec.id)
+      }catch(e){
+        continue;
       }
-      if(clt.service == "TekuBeaconService"){
-        // --p2p-peer-upper-bound (Default: 100)
-        optnam = '--p2p-peer-upper-bound';
-        defval = 100;
-      }else if(clt.service == "LighthouseBeaconService"){
-        // --target-peers (Default: 80) + 10%
-        // See extra dealing with + 10% below!
-        optnam = '--target-peers';
-        defval = 80;
-      }else if(clt.service == "PrysmBeaconService"){
-        // --p2p-max-peers (Default: 45)
-        optnam = '--p2p-max-peers';
-        defval = 45;
-      }else if(clt.service == "NimbusBeaconService"){
-        // --max-peers (The target number of peers to connect to, default: 160)
-        // --hard-max-peers (The maximum number of peers to connect to. Defaults to maxPeers * 1.5)
-        // See extra dealing with --hard-max-peers below!
-        optnam = '--max-peers';
-        defval = 160;
-      }else if(clt.service == "GethService"){
-         // [MAXVAL: --maxpeers (Default: 50)]
-        optnam = '--maxpeers';
-        defval = 50;
-      }else if(clt.service == "BesuService"){
-        // --max-peers (Default: 25)
-        optnam = '--max-peers';
-        defval = 25;
-      }else if(clt.service == "NethermindService"){
-        // --Network.MaxActivePeers (Default: 50)
-        optnam = '--Network.MaxActivePeers';
-        defval = 50;
-      }else{
-        return;
-      }
-      regexp = new RegExp(optnam+"=(\\d+)", "si");
-      if(Array.isArray(clt.config.command)){
-        try{
-          optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
-        }catch(e){
-          optval = defval;
-        }
-      }else{
-        try{
-          optval = clt.config.command.match(regexp).pop();
-        }catch(e){
-          optval = defval;
-        }
-      }
-      optval = parseInt(optval);
-      if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
-        optval = Math.round(optval*1.1);
-      }
-      details[opttyp]['maxPeer'] = optval;
-      details[opttyp]['maxPeerBy']['fields'].push(optnam);
-      if(clt.service == "NimbusBeaconService"){ // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
+
+      // Setup details
+      var details = {};
+      var detailsbase = {
+        'service': 'unknown',
+        'client': "unknown",
+        'state': "unknown",
+        'numPeer': 0,
+        'numPeerBy': {
+          'source': 'prometheus',
+          'fields': [],
+        },
+        'maxPeer': 0,
+        'maxPeerBy': {
+          'source': 'config',
+          'fields': [],
+        },
+        'valPeer': 0,
+      };
+  
+      // Get max peers for consensus and execution clients by configuration or their default values
+      let consensus = cc;
+      let execution = ec;
+      var data = {}, opttyp=null, optnam=null, defval=null, optval=null, regexp=null;
+      clientTypes.forEach(function (clientType, index) {
+        let clt = '';
+        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+        details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
+        details[clientType]['service'] = clt.service;
+        details[clientType]['client'] = clt.service.replace(/Beacon|Service/gi,"").toUpperCase();
+        details[clientType]['state'] = clt.state;
+        opttyp = Object.keys(services).find(key => services[key].hasOwnProperty(clt.service));
         if(!opttyp){
           return;
         }
-        optnam = '--hard-max-peers'; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
-        defval = Math.round(optval*1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
+        if(clt.service == "TekuBeaconService"){
+          // --p2p-peer-upper-bound (Default: 100)
+          optnam = '--p2p-peer-upper-bound';
+          defval = 100;
+        }else if(clt.service == "LighthouseBeaconService"){
+          // --target-peers (Default: 80) + 10%
+          // See extra dealing with + 10% below!
+          optnam = '--target-peers';
+          defval = 80;
+        }else if(clt.service == "PrysmBeaconService"){
+          // --p2p-max-peers (Default: 45)
+          optnam = '--p2p-max-peers';
+          defval = 45;
+        }else if(clt.service == "NimbusBeaconService"){
+          // --max-peers (The target number of peers to connect to, default: 160)
+          // --hard-max-peers (The maximum number of peers to connect to. Defaults to maxPeers * 1.5)
+          // See extra dealing with --hard-max-peers below!
+          optnam = '--max-peers';
+          defval = 160;
+        }else if(clt.service == "GethService"){
+            // [MAXVAL: --maxpeers (Default: 50)]
+          optnam = '--maxpeers';
+          defval = 50;
+        }else if(clt.service == "BesuService"){
+          // --max-peers (Default: 25)
+          optnam = '--max-peers';
+          defval = 25;
+        }else if(clt.service == "NethermindService"){
+          // --Network.MaxActivePeers (Default: 50)
+          optnam = '--Network.MaxActivePeers';
+          defval = 50;
+        }else{
+          return;
+        }
         regexp = new RegExp(optnam+"=(\\d+)", "si");
         if(Array.isArray(clt.config.command)){
           try{
@@ -872,75 +878,107 @@ export class Monitoring {
           }
         }
         optval = parseInt(optval);
+        if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
+          optval = Math.round(optval*1.1);
+        }
         details[opttyp]['maxPeer'] = optval;
         details[opttyp]['maxPeerBy']['fields'].push(optnam);
-      }
-    });
-
-    // Query Prometehus for all possible labels
-    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
-    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
-      return {
-        "code": 223,
-        "info": "error: prometheus query for p2pstatus failed",
-        "data": prometheus_result,
-      };
-    }
-
-    // Filter Prometheus result by current used services and calculate number of currently used peers per client
-    // Note that Prysm requires to match state="Connected"!
-    try{
-      var maxPeer = 0, numPeer = 0, valPeer = 0;
-      clientTypes.forEach(function (clientType, index) {
-        let clt = '';
-        eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-        let xx = prometheus_result.data.result.filter((s) => 
-          services[clientType][clt.service].includes(s.metric.__name__) && 
-          clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
-        );
-        if(xx.length){
-          services[clientType][clt.service].forEach(function (item, index) {
+        if(clt.service == "NimbusBeaconService"){ // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
+          if(!opttyp){
+            return;
+          }
+          optnam = '--hard-max-peers'; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
+          defval = Math.round(optval*1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
+          regexp = new RegExp(optnam+"=(\\d+)", "si");
+          if(Array.isArray(clt.config.command)){
             try{
-              details[clientType]['numPeer'] = parseInt(xx.filter((s) => s.metric.__name__ == services[clientType][clt.service][index]).pop().value.pop());
-              details[clientType]['numPeerBy']['fields'].push(item);
-            }catch(e){}
-          });
+              optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
+            }catch(e){
+              optval = defval;
+            }
+          }else{
+            try{
+              optval = clt.config.command.match(regexp).pop();
+            }catch(e){
+              optval = defval;
+            }
+          }
+          optval = parseInt(optval);
+          details[opttyp]['maxPeer'] = optval;
+          details[opttyp]['maxPeerBy']['fields'].push(optnam);
         }
-
-        // Summarize details
-        details[clientType]['maxPeer'] = details[clientType]['maxPeer'];
-        details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
-        details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
-        details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
-
-        // Summarize totals
-        maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
-        numPeer = parseInt(numPeer + details[clientType]['numPeer']);
-        valPeer = Math.round((numPeer/maxPeer)*100);
       });
-      
-      // Respond success
-      // Define the response for "valPeer" exact as defined in front-end as percentage (%).
-      // Avoid overdues that may happen during peer cleaning. The exact values can be taken
-      // from the details object if needed.
-      return {
-        "code": 0,
-        "info": "success: p2pstatus successfully retrieved",
-        "data": {
+  
+      // Filter Prometheus result by current used services and calculate number of currently used peers per client
+      // Note that Prysm requires to match state="Connected"!
+      try{
+        var maxPeer = 0, numPeer = 0, valPeer = 0;
+        clientTypes.forEach(function (clientType, index) {
+          let clt = '';
+          eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
+          let xx = prometheus_result.data.result.filter((s) => 
+            services[clientType][clt.service].includes(s.metric.__name__) && 
+            s.metric.instance.includes(clt.config.instanceID) &&
+            s.metric.job == jobs[clt.service] &&
+            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
+          );
+          if(xx.length){
+            services[clientType][clt.service].forEach(function (item, index) {
+              try{
+                details[clientType]['numPeer'] = parseInt(xx.filter((s) => s.metric.__name__ == services[clientType][clt.service][index]).pop().value.pop());
+                details[clientType]['numPeerBy']['fields'].push(item);
+              }catch(e){}
+            });
+          }
+
+          // Summarize details
+          details[clientType]['maxPeer'] = details[clientType]['maxPeer'];
+          details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
+          details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
+          details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
+  
+          // Summarize totals
+          maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
+          numPeer = parseInt(numPeer + details[clientType]['numPeer']);
+          valPeer = Math.round((numPeer/maxPeer)*100);
+        });
+        
+        // Respond success for this group
+        // Define the response for "valPeer" exact as defined in front-end as percentage (%).
+        // Avoid overdues that may happen during peer cleaning. The exact values can be taken
+        // from the details object if needed.
+        data = {
           'details': details,
           'maxPeer': maxPeer,
           'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
           'valPeer': valPeer > 100 ? 100 : valPeer,
-        },
-      };
+        };
+  
+      }catch(err){
+        return {
+          "code": 224,
+          "info": "error: no prometheus data for p2pstatus available yet",
+          "data": err,
+        };
+      }
+      groups.push(data);
+    }
 
-    }catch(err){
+    // Make sure at least one pair of consensus and execution service configurations exists
+    if(groups.length < 1){
       return {
-        "code": 224,
-        "info": "error: no prometheus data for p2pstatus available yet",
-        "data": err,
+        "code": 225,
+        "info": "error: a pair of consensus and execution client does not exist (in p2pstatus)",
+        "data": serviceInfos,
       };
     }
+
+    // success
+    return {
+      "code": 0,
+      "info": "success: p2pstatus successfully retrieved",
+      "data": groups,
+    };
   }
 
   // Get storage status of all services
