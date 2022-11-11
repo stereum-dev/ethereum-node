@@ -135,7 +135,7 @@ export default {
 
 <style scoped>
 #flag-btn {
-  height: 60%;
+  height: 75%;
   background: #1d3d3ad7;
 }
 .langIco {
@@ -146,7 +146,7 @@ export default {
   height: 100%;
 }
 .langIco img {
-  width: 75%;
+  width: 80%;
 }
 .langName {
   display: flex;

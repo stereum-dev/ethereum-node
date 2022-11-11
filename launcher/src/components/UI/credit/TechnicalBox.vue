@@ -112,7 +112,7 @@ export default {
   align-items: center;
 }
 .techToggl {
-  max-height: 1.8rem;
+  height: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,6 +126,12 @@ export default {
   position: fixed;
   top: 20%;
   left: 85%;
+}
+.techToggl:hover,
+.techToggl:focus,
+.techToggl:active {
+  outline: none;
+  border: none;
 }
 .wrapper {
   display: grid;
