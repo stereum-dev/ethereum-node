@@ -50,7 +50,7 @@ test('mevboost installation', async () => {
   await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  const mevboost = FlashbotsMevBoostService.buildByUserInput('goerli', nodeConnection.settings.stereum.settings.controls_install_path + '/mevboost')
+  const mevboost = FlashbotsMevBoostService.buildByUserInput('goerli', "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-goerli.flashbots.net")
   await nodeConnection.writeServiceConfiguration(mevboost.buildConfiguration())
   await serviceManager.manageServiceState(mevboost.id, 'started')
 
