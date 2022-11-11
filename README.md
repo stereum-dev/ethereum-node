@@ -1,8 +1,12 @@
 ![GitHub - Stereum 2 0 - ReadMe](https://user-images.githubusercontent.com/82385103/175423093-03d28d7b-3c2e-44b7-8be1-7f2a5946fcc6.png)
 
 ---
+[![IE](https://img.shields.io/badge/Website-0076D6?style=for-the-badge&logo=Internet%20Explorer&logoColor=white)](https://stereum.net) [![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/8Znj8K6GjN)
+[![Twitter](https://img.shields.io/badge/Twitter-%231DA1F2.svg?style=for-the-badge&logo=Twitter&logoColor=white)](https://twitter.com/stereumdev)
+[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/channel/UCq_LYa0idkQcSnxBUmiJm3Q)
+[![Gmail](https://img.shields.io/badge/EMail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:stereum@stereum.net) [![App Store](https://img.shields.io/badge/App_Store-0D96F6?style=for-the-badge&logo=app-store&logoColor=white)](https://apps.apple.com/nz/app/stereum-node-monitor/id1605910573) [![Play Store](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=cloud.stereum.monitor&hl=en_US&gl=US&pli=1)
 
-[![Support Server](https://img.shields.io/badge/Discord-Stereum-blue?style=flat-square)](https://discord.gg/8Znj8K6GjN) [![Support Email](https://img.shields.io/badge/Email-Stereum-brightgreen?style=flat-square)](mailto:stereum@stereum.net) [![GitPOAP Badge](https://public-api.gitpoap.io/v1/repo/stereum-dev/ethereum-node/badge)](https://www.gitpoap.io/gh/stereum-dev/ethereum-node)
+[![GitPOAP Badge](https://public-api.gitpoap.io/v1/repo/stereum-dev/ethereum-node/badge)](https://www.gitpoap.io/gh/stereum-dev/ethereum-node)
 
 ---
 This repository contains the code and scripts for Stereum 2.0
@@ -12,24 +16,23 @@ This repository contains the code and scripts for Stereum 2.0
 
 🍄 Stereum 2.0 aims to be the most flexible way to leverage your Ethereum node for staking, data science, development or your own personal use case. We hope to explore every hermit’s dream with you!
 
-🍄 With Stereum you are able to participate in the Ethereum network and its various protocols (like SSV)!
+🍄 With Stereum you are able to participate in the Ethereum network and its various protocols (like SSV Network, MEV Boost, ...)!
 
 
 ## Get Started
 After installing the launcher start it up and connect to a server of your choice. Take a look at the [guide](https://stereum.net/ethereum-node-setup/) to find out what server operating systems are supported and what you can do with Stereum!
-
-## Download (latest)
-[![GitHub release](https://img.shields.io/github/v/release/stereum-dev/ethereum-node?color=%23a1c1ad&style=for-the-badge)](https://github.com/stereum-dev/ethereum-node/releases/tag/v2.0.0-rc.6)
-
 
 ## Contribute
 Want to get involved? Create a pull request and we'll have a look at it!
 
 Not sure how to help or where to start? Then visit us on [Discord](https://discord.gg/8Znj8K6GjN) or drop us an email to [stereum@stereum.net](mailto:stereum@stereum.net).
 
+### Tech Stack
+![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white) ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white) ![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white) ![Grafana](https://img.shields.io/badge/grafana-%23F46800.svg?style=for-the-badge&logo=grafana&logoColor=white) ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white) ![Jinja](https://img.shields.io/badge/jinja-white.svg?style=for-the-badge&logo=jinja&logoColor=black) ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=Prometheus&logoColor=white) ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white) ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+
 ## Branches
 ### `main`
-For development, automated tests running for each commit and merge.
+For development, automated tests running for each commit.
 
 #### Tests
 - [![Security: Shellcheck](https://github.com/stereum-dev/ethereum-node/actions/workflows/shellcheck.yml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/shellcheck.yml) Security checking shell scripts
@@ -39,54 +42,3 @@ For development, automated tests running for each commit and merge.
 
 #### Build
 - [![Build: Release](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml/badge.svg)](https://github.com/stereum-dev/ethereum-node/actions/workflows/electron.yaml) Building Stereum Launcher
-
-### `stable`
-Stable version of launcher for build from source & stable version of controls for the launcher to install on the host system.
-
-
-## Milestones
-Milestones build on top of the features of previous milestones.
-
-- [![alpha2.0](https://img.shields.io/badge/milestone-alpha2.0-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/1): First release of Stereum 2.0 with the goal to connect to a server and run services. Not properly useable for any use-case yet.
-- [![beta2.0-solo](https://img.shields.io/badge/milestone-beta2.0--solo-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/2): Suitable for testnet, supporting use cases:
-  - Solo staking: Staking validator accounts on Lighthouse, Nimbus, Prysm and Teku
-  - Basic monitoring capabilities
-- [![beta2.0-bloxssv](https://img.shields.io/badge/milestone-beta2.0--bloxssv-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/3): Suitable for testnet, adding e. g. use cases & features:
-  - ssv.network: Setup an operator and connect to Lighthouse, Nimbus, Prysm or Teku
-  - ssv.network dashboard
-  - Fix Grafana dashboards
-  - Besu support
-  - Nethermind support
-  - Update button
-- [![beta2.0-stack](https://img.shields.io/badge/milestone-beta2.0--stack-green?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/4): Suitable for testnet, adding e. g. use cases & features:
-  - [x] Advanced service configuration by user ("Expert Mode")
-  - [x] Install latest versions
-  - [x] Updates (os, services, stereum)
-  - [x] Validator account stats
-  - [x] Technical documentation (preparation for security audit)
-  - [x] Enhanced plugin actions via mouse over menu
-  - [x] Fully support [The Merge](https://ethereum.org/en/upgrades/merge/)
-  - [x] Mainnet support (not recommended to use yet!)
-- [![beta2.0-flexible](https://img.shields.io/badge/milestone-beta2.0--flexible-orange?style=flat-square)](https://github.com/stereum-dev/ethereum-node/milestone/5): Suitable for testnet, adding features:
-  - [x] Improve usability of handling validator accounts
-  - [x] Add, wire & remove plugins easily
-  - [ ] In-App notifications, settings & support
-  - [x] In-App tutorials & guides
-  - [ ] Review Grafana dashboards
-  - [x] Automatic launcher updates
-  - [ ] Unattended updates
-- ![unnamed](https://img.shields.io/badge/milestone-unnamed-inactive?style=flat-square): Suitable for testnet, adding use cases & features:
-  - tba
-
-### Goal
-- ![stable2.0](https://img.shields.io/badge/milestone-stable2.0-inactive?style=flat-square): Suitable for mainnet, supporting main use cases
-  - i18n support
-  - in-launcher tutorials
-  - flexible selection of services
-  - switch clients/networks on the fly
-  - multiple exeuction/consensus clients
-  - ssv support (ssv.network/obol)
-  - one-click-installation
-  - enhanced slashing protection on import
-  - naming & grouping validators
-  - unattended updates
