@@ -25,7 +25,13 @@
         >
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in relaysList.filter(r => r[configNetwork.name.toLowerCase()])" :key="relay.id">
+            <div
+              class="relay"
+              v-for="relay in relaysList.filter(
+                (r) => r[configNetwork.name.toLowerCase()]
+              )"
+              :key="relay.id"
+            >
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -197,7 +203,7 @@ export default {
       this.$emit("cancelAdd");
     },
     saveConfig() {
-     let dependencies = toRaw(this.options).filter(
+      let dependencies = toRaw(this.options).filter(
         (s) => s.selectedForConnection
       );
       this.$emit("saveConfig", {
@@ -212,7 +218,9 @@ export default {
         ),
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
-        relays: this.checkedRelays.map(r => r[this.configNetwork.name.toLowerCase()]).join()
+        relays: this.checkedRelays
+          .map((r) => r[this.configNetwork.name.toLowerCase()])
+          .join(),
       });
     },
     changeResyncOptions() {
@@ -346,8 +354,19 @@ export default {
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
-
+.configBox::-webkit-scrollbar {
+  width: 5px;
+}
+.configBox::-webkit-scrollbar-track {
+  background: #23282b;
+}
+.configBox::-webkit-scrollbar-thumb {
+  background: #47de42;
+  border-radius: 5px;
+}
 .configBox .change-installation {
   width: 100%;
   height: 12%;
@@ -541,14 +560,12 @@ export default {
 
 .portAddBox,
 .clientAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -668,14 +685,12 @@ export default {
 }
 
 .optionsBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -684,8 +699,8 @@ export default {
 }
 
 .optionsBox:hover {
-  background-color: #31373a;
-  border: 1px solid #3b4246;
+  background-color: #2d3336;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 
@@ -744,14 +759,12 @@ export default {
 }
 
 .clientAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -759,8 +772,8 @@ export default {
 }
 
 .clientAddBox:hover {
-  background-color: #31373b;
-  border: 1px solid #3f4549;
+  background-color: #2d3336;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 
@@ -818,7 +831,7 @@ export default {
 .relaysBox,
 .exporterBox {
   width: 100%;
-  height: 100%;
+  height: 58%;
   padding: 2px;
   background-color: #23282b;
   border: 1px solid #22272a;

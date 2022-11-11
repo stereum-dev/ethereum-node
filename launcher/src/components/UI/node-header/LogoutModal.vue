@@ -49,7 +49,7 @@
   border: 3px solid #bfbfbf;
   position: absolute;
   top: 10%;
-  left: 22%;
+  left: 18%;
   background-color: #bf3a3a;
   display: flex;
   flex-direction: column;
