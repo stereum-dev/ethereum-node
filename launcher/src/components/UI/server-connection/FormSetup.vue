@@ -641,8 +641,9 @@ select {
   background-color: #eaeaea;
   border: 2px solid #979797;
   border-radius: 40px;
-  font-weight: 600;
-  font-size: 0.9rem;
+  padding-left: 10px;
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
   outline-style: none !important;
   color: #242424;
 }

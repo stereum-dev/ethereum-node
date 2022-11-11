@@ -271,6 +271,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .plugin-name img {
   width: 15%;
@@ -284,6 +287,9 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   margin-left: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .category {
@@ -313,6 +319,9 @@ export default {
   font-size: 0.7rem;
   font-weight: 500;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .btn-box {

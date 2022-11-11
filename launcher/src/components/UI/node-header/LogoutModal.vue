@@ -43,33 +43,30 @@
   z-index: 311;
 }
 .logout-modal-content {
-  width: 50%;
-  height: 50%;
-  border-radius: 1rem;
-  background-color: #343434;
-  border: 4px solid rgb(171, 170, 170);
-  z-index: 312;
-  opacity: 1;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
+  border: 3px solid #bfbfbf;
   position: absolute;
-  top: 13%;
-  left: 20%;
+  top: 10%;
+  left: 22%;
+  background-color: #bf3a3a;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
+  z-index: 1000;
 }
 .title-box {
   width: 100%;
-  height: 15%;
-  border-radius: 10px 10px 0 0;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #bf3a3a;
 }
 .title-box span {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #c6c6c6;
   text-align: center;
@@ -85,11 +82,12 @@
 }
 .messageContent img {
   width: 20%;
-  height: 80%;
+  height: 72%;
 }
 .messageContent .question {
+  width: 80%;
   color: rgb(195, 195, 195);
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
   text-transform: capitalize;
 }
@@ -103,8 +101,9 @@
 .confrimBox {
   width: 30%;
   height: 35px;
+  background-color: #c9c9c9;
   border-radius: 10px;
-  border: 2px solid gray;
+  border: 2px solid #c9c9c9;
   box-shadow: 0 1px 3px 1px rgb(43, 44, 44);
   display: flex;
   justify-content: center;
@@ -112,16 +111,16 @@
   cursor: pointer;
 }
 .confrimBox span {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #bf3a3a;
+  color: #b22020;
   text-transform: uppercase;
 }
 .confrimBox:hover span {
   color: #c9c9c9;
 }
 .confrimBox:hover {
-  background-color: #bf3a3a;
+  background-color: #b22020;
   border: 2px solid #c9c9c9;
   transform: scale(1.05);
   transition: all 100ms;
