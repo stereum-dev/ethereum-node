@@ -29,7 +29,6 @@
         name:
           - python3-pip
           - expect
-          - python3-jmespath
       become: true
       when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
@@ -38,7 +37,6 @@
         name:
           - python3-pip
           - expect
-          - python3-jmespath
         state: latest
       become: true
       when: ansible_distribution == "CentOS"

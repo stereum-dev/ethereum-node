@@ -32,21 +32,18 @@
   debug:
     msg: "{{ validator_delete_api_result.container.Output }}"
 
-- name: Log delete result in Variable
-  set_fact:
-    slashing_protection_var: "{{ validator_delete_api_result.container.Output }}"
-
 - name: initialize slashing protection file path
   set_fact:
     slashing_protection_path: "/tmp/slashing-protection"
 
 - name: Save slashing protection data into a file
   copy:
-    content: "{{ slashing_protection_var | community.general.json_query('slashing_protection') | to_json }}"
+    content: "{{ validator_delete_api_result.container.Output | regex_search(regexp) }}"
     dest: "{{ slashing_protection_path }}"
-  become: yes
+  vars:
+    regexp: '"\{.*\}"'
 
-- name: Remove AIP data file
+- name: Remove API data file
   ansible.builtin.file:
     path: "/tmp/validator-delete-api-data"
     state: absent
