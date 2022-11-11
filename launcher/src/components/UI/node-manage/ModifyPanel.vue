@@ -25,7 +25,13 @@
         >
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in relaysList.filter(r => r[configNetwork.name.toLowerCase()])" :key="relay.id">
+            <div
+              class="relay"
+              v-for="relay in relaysList.filter(
+                (r) => r[configNetwork.name.toLowerCase()]
+              )"
+              :key="relay.id"
+            >
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -183,29 +189,41 @@ export default {
   },
   mounted() {
     if (this.items.service === "FlashbotsMevBoostService") {
-      ControlService.getServiceConfig(this.items.config.serviceID).then(service => {
-        let relayURLs = service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1].split(',')
-        relayURLs.forEach(relay => {
-          let relayData = this.relaysList.find(r => r[this.configNetwork.name.toLowerCase()] === relay)
-          if(relayData)
-            this.checkedRelays.push(relayData)
-        });
-      })
+      ControlService.getServiceConfig(this.items.config.serviceID).then(
+        (service) => {
+          let relayURLs =
+            service.entrypoint[
+              service.entrypoint.findIndex((e) => e === "-relays") + 1
+            ].split(",");
+          relayURLs.forEach((relay) => {
+            let relayData = this.relaysList.find(
+              (r) => r[this.configNetwork.name.toLowerCase()] === relay
+            );
+            if (relayData) this.checkedRelays.push(relayData);
+          });
+        }
+      );
     }
   },
   methods: {
-    saveModify(){
-    let dependencies = toRaw(this.options).filter(s => s.selectedForConnection)
-    this.$emit('saveModify', {
+    saveModify() {
+      let dependencies = toRaw(this.options).filter(
+        (s) => s.selectedForConnection
+      );
+      this.$emit("saveModify", {
         port: parseInt(this.port),
-        executionClients: dependencies.filter(s => s.category === "execution"),
-        beaconServices: dependencies.filter(s => s.category === "consensus"),
-        relays: this.checkedRelays.map(r => r[this.configNetwork.name.toLowerCase()]).join()
-      })
+        executionClients: dependencies.filter(
+          (s) => s.category === "execution"
+        ),
+        beaconServices: dependencies.filter((s) => s.category === "consensus"),
+        relays: this.checkedRelays
+          .map((r) => r[this.configNetwork.name.toLowerCase()])
+          .join(),
+      });
     },
-    switchHandler(service){
-      if(service.selectedForConnection){
-        return service.selectedForConnection
+    switchHandler(service) {
+      if (service.selectedForConnection) {
+        return service.selectedForConnection;
       }
       return false;
     },
@@ -235,28 +253,37 @@ export default {
         this.options = [];
       }
       this.options = this.options.map((option) => {
-        let connected = false
-        if(this.items.config?.dependencies){
-          let buffer = this.items.config.dependencies.consensusClients.concat(this.items.config.dependencies.executionClients)
-          connected = this.getMevBoostConnections(this.items.config.serviceID,option.config.serviceID)
-          if(buffer.map(s => s.id).includes(option.config.serviceID)){
-            connected = true
+        let connected = false;
+        if (this.items.config?.dependencies) {
+          let buffer = this.items.config.dependencies.consensusClients.concat(
+            this.items.config.dependencies.executionClients
+          );
+          connected = this.getMevBoostConnections(
+            this.items.config.serviceID,
+            option.config.serviceID
+          );
+          if (buffer.map((s) => s.id).includes(option.config.serviceID)) {
+            connected = true;
           }
         }
-          return {
-            ...option,
-            selectedForConnection: connected,
-          };
-        });
+        return {
+          ...option,
+          selectedForConnection: connected,
+        };
+      });
     },
-    getMevBoostConnections(mevID,clientID){
-      let connected = false
-      let client = this.installedServices.find(c => c.config.serviceID === clientID)
-        if(client?.config.dependencies.mevboost?.length > 0){
-          if(client.config.dependencies.mevboost.map(c => c.id).includes(mevID))
-            connected = true
-        }  
-      return connected
+    getMevBoostConnections(mevID, clientID) {
+      let connected = false;
+      let client = this.installedServices.find(
+        (c) => c.config.serviceID === clientID
+      );
+      if (client?.config.dependencies.mevboost?.length > 0) {
+        if (
+          client.config.dependencies.mevboost.map((c) => c.id).includes(mevID)
+        )
+          connected = true;
+      }
+      return connected;
     },
     changeSelectedServiceToConnect(service) {
       service.selectedForConnection = !service.selectedForConnection;
@@ -391,6 +418,18 @@ html {
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.configBox::-webkit-scrollbar {
+  width: 5px;
+}
+.configBox::-webkit-scrollbar-track {
+  background: #23282b;
+}
+.configBox::-webkit-scrollbar-thumb {
+  background: #47de42;
+  border-radius: 5px;
 }
 
 .configBox .change-installation {
@@ -808,7 +847,7 @@ html {
 }
 .relaysBox {
   width: 100%;
-  height: 100%;
+  height: 58%;
   padding: 2px;
   background-color: #23282b;
   border: 1px solid #22272a;

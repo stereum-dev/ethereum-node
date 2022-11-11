@@ -25,7 +25,13 @@
         >
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in relaysList.filter(r => r[configNetwork.name.toLowerCase()])" :key="relay.id">
+            <div
+              class="relay"
+              v-for="relay in relaysList.filter(
+                (r) => r[configNetwork.name.toLowerCase()]
+              )"
+              :key="relay.id"
+            >
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -197,7 +203,7 @@ export default {
       this.$emit("cancelAdd");
     },
     saveConfig() {
-     let dependencies = toRaw(this.options).filter(
+      let dependencies = toRaw(this.options).filter(
         (s) => s.selectedForConnection
       );
       this.$emit("saveConfig", {
@@ -212,7 +218,9 @@ export default {
         ),
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
-        relays: this.checkedRelays.map(r => r[this.configNetwork.name.toLowerCase()]).join()
+        relays: this.checkedRelays
+          .map((r) => r[this.configNetwork.name.toLowerCase()])
+          .join(),
       });
     },
     changeResyncOptions() {
@@ -346,8 +354,19 @@ export default {
   justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
-
+.configBox::-webkit-scrollbar {
+  width: 5px;
+}
+.configBox::-webkit-scrollbar-track {
+  background: #23282b;
+}
+.configBox::-webkit-scrollbar-thumb {
+  background: #47de42;
+  border-radius: 5px;
+}
 .configBox .change-installation {
   width: 100%;
   height: 12%;
@@ -818,7 +837,7 @@ export default {
 .relaysBox,
 .exporterBox {
   width: 100%;
-  height: 100%;
+  height: 58%;
   padding: 2px;
   background-color: #23282b;
   border: 1px solid #22272a;
