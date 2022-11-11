@@ -213,15 +213,15 @@
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "financialPage": "САНХҮҮГИЙН ХУВЬ НЭМЭР"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "БАТЛАХ & СУУЛГАХ",
+    "name": "НЭР",
+    "cat": "АНГИЛАЛ",
+    "path": "ЗАМ \"path\""
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Нэмэлт өөрчлөлт оруулахаасаа өмнө анхны суулгалт \"инстал\" дуустал хүлээхийг зөвлөж байна"
   }
 }
