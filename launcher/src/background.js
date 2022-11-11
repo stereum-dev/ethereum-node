@@ -117,6 +117,16 @@ promiseIpc.on("closeTunnels", async () => {
   return await nodeConnection.closeTunnels();
 });
 
+promiseIpc.on("logout", async () => {
+  await taskManager.nodeConnection.logout();
+  await monitoring.nodeConnection.logout();
+  await monitoring.nodeConnectionProm.logout();
+  await serviceManager.nodeConnection.logout();
+  await monitoring.serviceManager.nodeConnection.logout();
+  await monitoring.serviceManagerProm.nodeConnection.logout();
+  return await nodeConnection.logout();
+});
+
 // called via promiseIpc as an async function
 promiseIpc.on("setApikey", async (arg) => {
   return stereumService.setApikey(arg);

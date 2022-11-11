@@ -129,7 +129,7 @@ export default {
       this.logoutModalIsActive = true;
     },
     async loggingOut() {
-      await ControlService.closeTunnels();
+      await ControlService.logout();
       this.$router.push("/").then(() => {
         location.reload()
       });
