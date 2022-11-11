@@ -49,7 +49,6 @@
     command: "docker logs --tail=150 stereum-957fd49a-e63d-11ec-8d13-8f5d1bf7c1ca"
     register: validator
     until:
-      - validator.stderr is search('pubkey:')
       - validator.stderr is search('Connected to beacon node')
       - validator.stderr is not search('Offline beacon node')
     retries: 360
