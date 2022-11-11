@@ -13,7 +13,7 @@
 
     - name: Waiting for the services to start properly
       pause:
-        seconds: 30
+        seconds: 100
 
     - name: "Include validator-list-api"
       include_role:
