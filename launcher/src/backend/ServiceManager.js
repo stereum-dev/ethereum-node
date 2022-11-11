@@ -180,12 +180,19 @@ export class ServiceManager {
     return service
   }
 
-  async modifyServices(tasks, services){
+  async modifyServices(tasks, services, newInstallTasks){
     let modifiedServices = []
 
     tasks.forEach(task => {
       let service = services.find(s => s.id === task.service.config.serviceID)
-      let dependencies = task.data.executionClients.concat(task.data.beaconServices).map(s => services.find(e => e.id === s.config.serviceID))
+      let dependencies = task.data.executionClients.concat(task.data.beaconServices).map(s => services.find(e => {
+        if(e.id === s.config.serviceID){
+          return true
+        }else if(e.id === newInstallTasks.find(i => i.service.id === s.id).service.config.serviceID){
+          return true
+        }
+        return false
+      }))
       
       if(service.service === "FlashbotsMevBoostService"){
         service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1] = task.data.relays
@@ -622,6 +629,7 @@ export class ServiceManager {
     await Promise.all(newServices.map(async (service) => {
       await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     }))
+    return ELInstalls.concat(CLInstalls,VLInstalls)
   }
 
   static uniqueByID(job) {
@@ -641,16 +649,17 @@ export class ServiceManager {
         let after = this.nodeConnection.getTimeStamp()
         await this.nodeConnection.restartServices(after - before)
       }
-    } 
+    }
+    let newInstallTasks
     if (jobs.includes("INSTALL")) {
       let services = await this.readServiceConfigurations()
       let installTasks = tasks.filter(t => t.content === "INSTALL")
-      await this.addServices(installTasks, services)
+      newInstallTasks = await this.addServices(installTasks, services)
     }
     if (jobs.includes("MODIFY")) {
       let services = await this.readServiceConfigurations()
       let modifyTasks = tasks.filter(t => t.content === "MODIFY")
-      await this.modifyServices(modifyTasks, services)
+      await this.modifyServices(modifyTasks, services, newInstallTasks)
     }
   }
 }

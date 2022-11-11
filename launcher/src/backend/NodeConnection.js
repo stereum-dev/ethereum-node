@@ -24,6 +24,7 @@ export class NodeConnection {
 
   async establish(taskManager) {
     await this.sshService.connect(this.nodeConnectionParams);
+    await this.findStereumSettings()
     this.taskManager = taskManager;
   }
 
@@ -753,7 +754,7 @@ export class NodeConnection {
     });
 
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-    this.settings = undefined;
+    await this.logout()
     return "Node destroyed";
   }
 
@@ -979,6 +980,11 @@ export class NodeConnection {
       
       return resolve(settings);
     });
+  }
+
+  async logout(){
+    this.settings = undefined
+    await this.closeTunnels()
   }
 }
 

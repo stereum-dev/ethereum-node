@@ -115,8 +115,8 @@ export class NodeService {
   buildWorkingDir (dir) {
     if(!dir)
       dir = '/opt/stereum'
-    dir = path.normalize(dir)
-    if(!path.isAbsolute(dir))
+    dir = path.posix.normalize(dir)
+    if(!path.posix.isAbsolute(dir))
       dir = '/' + dir
     if(dir.endsWith('/')) 
        return dir.slice(0,-1,'') + '-' + this.id
