@@ -146,6 +146,7 @@ export class NodeConnection {
             "apt update &&\
                     apt install -y software-properties-common &&\
                     add-apt-repository --yes --update ppa:ansible/ansible &&\
+                    apt update &&\
                     apt install -y pip ansible tar gzip wget git"
           );
         } catch (err) {
@@ -976,7 +977,7 @@ export class NodeConnection {
         log.error("foo", err);
         return reject("Can't run setup playbook: " + err);
       }
-      
+
       return resolve(settings);
     });
   }
