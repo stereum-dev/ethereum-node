@@ -30,15 +30,10 @@ export default {
       writeValue: "writeValue",
       code: "code",
       syncstatus: "syncstatus",
+      p2pstatus: "p2pstatus",
       rpcstatus: "rpcstatus",
       beaconstatus: "beaconstatus",
       storagestatus: "storagestatus",
-      consensusClient: "consensusClient",
-      consensusNumPeer: "consensusNumPeer",
-      consensusValPeer: "consensusValPeer",
-      executionClient: "executionClient",
-      executionNumPeer: "executionNumPeer",
-      executionValPeer: "executionValPeer",
     }),
   },
   mounted() {
@@ -84,24 +79,11 @@ export default {
             // console.log("@FRONTEND: data for wiring controls", nodeStats);
             try {
               this.code = nodeStats.code;
-              this.valPeer = nodeStats.data.p2pstatus.data.valPeer;
-              this.numPeer = nodeStats.data.p2pstatus.data.numPeer;
               this.syncstatus = nodeStats.data.syncstatus;
+              this.p2pstatus = nodeStats.data.p2pstatus;
               this.rpcstatus = nodeStats.data.rpcstatus;
               this.beaconstatus = nodeStats.data.beaconstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;
-              this.consensusClient =
-                nodeStats.data.p2pstatus.data.details.consensus.client;
-              this.consensusNumPeer =
-                nodeStats.data.p2pstatus.data.details.consensus.numPeer;
-              this.consensusValPeer =
-                nodeStats.data.p2pstatus.data.details.consensus.valPeer;
-              this.executionClient =
-                nodeStats.data.p2pstatus.data.details.execution.client;
-              this.executionValPeer =
-                nodeStats.data.p2pstatus.data.details.execution.valPeer;
-              this.executionNumPeer =
-                nodeStats.data.p2pstatus.data.details.execution.numPeer;
             } catch (e) {}
           }
         });
