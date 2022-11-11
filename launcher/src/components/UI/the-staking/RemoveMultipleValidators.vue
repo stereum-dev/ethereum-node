@@ -15,7 +15,7 @@
         <div class="remove-btn" @click="$emit('deleteKey')">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
-        <span class="close">{{ $t("removeMultiModal.clickClose") }}</span>
+        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>
@@ -49,20 +49,20 @@ export default {
   z-index: 501;
 }
 .remove-modal-content {
-  width: 40%;
-  height: 45%;
-  border-radius: 45px;
+  width: 55%;
+  height: 60%;
+  border-radius: 75px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 20%;
-  left: 30%;
+  top: 10%;
+  left: 22%;
   background-color: #336666;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
-  z-index: 502;
+  z-index: 1000;
 }
 .title-box {
   width: 100%;
@@ -77,7 +77,7 @@ export default {
   height: 100%;
 }
 .removeMessage {
-  width: 95%;
+  width: 85%;
   height: 40%;
   display: flex;
   flex-direction: column;
@@ -125,7 +125,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
@@ -142,7 +142,7 @@ export default {
 }
 .close {
   color: rgba(136, 6, 6, 0.588);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   align-self: center;
 }

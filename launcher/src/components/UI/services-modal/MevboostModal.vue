@@ -28,24 +28,41 @@
           <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
-              <div class="relay" v-for="relay in relaysList.filter(r => r[this.currentNetwork.name.toLowerCase()])" :key="relay.id">
+              <div
+                class="relay"
+                v-for="relay in relaysList.filter(
+                  (r) => r[this.currentNetwork.name.toLowerCase()]
+                )"
+                :key="relay.id"
+              >
                 <input
                   type="checkbox"
                   :id="relay.id"
                   :value="relay"
                   v-model="checkedRelays"
+                  @change="enableBtn"
                 />
                 <label :for="relay.id">{{ relay.name }}</label>
               </div>
             </div>
-            <img src="/img/icon/task-manager-icons/turning_circle_blue.gif" alt="icon" v-if="loading"/>
-            <div class="btn-box">
-              <button
-                @click="applyRelays"
-              >
-                APPLY
-              </button>
+          </div>
+
+          <div class="btn-box">
+            <div class="process" v-if="loading">
+              Processing...
+              <img
+                class="animate-spin"
+                src="/img/icon/arrows/loading.png"
+                alt="icon"
+              />
             </div>
+            <span
+              class="btn"
+              :class="{ disabled: applyBtnDisabled }"
+              v-else
+              @click="applyRelays"
+              >APPLY</span
+            >
           </div>
         </div>
         <div class="browserBox" v-else>
@@ -76,6 +93,7 @@ export default {
       checkedRelays: [],
       serviceConfig: {},
       loading: false,
+      applyBtnDisabled: true,
     };
   },
   mounted() {
@@ -91,20 +109,33 @@ export default {
     }),
   },
   methods: {
+    enableBtn() {
+      if (this.checkedRelays.length > 0) {
+        this.applyBtnDisabled = false;
+      } else {
+        this.applyBtnDisabled = true;
+      }
+    },
     filtermevService() {
       this.installedServices.forEach((item) => {
         if (item.name === "Flashbots Mev Boost") this.mevService = item;
       });
       this.isMevAvailable = true;
-      ControlService.getServiceConfig(this.mevService.config.serviceID).then(service => {
-      let relayURLs = service.entrypoint[service.entrypoint.findIndex(e => e === "-relays")+1].split(',')
-      relayURLs.forEach(relay => {
-        let relayData = this.relaysList.find(r => r[this.currentNetwork.name.toLowerCase()] === relay)
-        if(relayData)
-          this.checkedRelays.push(relayData)
-      });
-      this.serviceConfig = service
-    })
+      ControlService.getServiceConfig(this.mevService.config.serviceID).then(
+        (service) => {
+          let relayURLs =
+            service.entrypoint[
+              service.entrypoint.findIndex((e) => e === "-relays") + 1
+            ].split(",");
+          relayURLs.forEach((relay) => {
+            let relayData = this.relaysList.find(
+              (r) => r[this.currentNetwork.name.toLowerCase()] === relay
+            );
+            if (relayData) this.checkedRelays.push(relayData);
+          });
+          this.serviceConfig = service;
+        }
+      );
     },
     openBrowser() {
       let url = "https://www.mevboost.org/";
@@ -117,18 +148,26 @@ export default {
     displayRelaysBlock() {
       this.showRelaysBox = true;
     },
-    applyRelays(){
-      this.loading = true
-      if(this.serviceConfig.entrypoint){
-        this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex(e => e === "-relays")+1] = this.checkedRelays.map(r => r[this.currentNetwork.name.toLowerCase()]).join()
-        ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(() => {
-          this.loading = false
-        })
+    applyRelays() {
+      this.loading = true;
+      if (this.serviceConfig.entrypoint) {
+        this.serviceConfig.entrypoint[
+          this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1
+        ] = this.checkedRelays
+          .map((r) => r[this.currentNetwork.name.toLowerCase()])
+          .join();
+        ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(
+          () => {
+            setTimeout(() => {
+              this.loading = false;
+            }, 5000);
+          }
+        );
       }
     },
-    closeWindow(){
-      this.$emit('closeWindow')
-    }
+    closeWindow() {
+      this.$emit("closeWindow");
+    },
   },
 };
 </script>
@@ -295,7 +334,7 @@ export default {
 }
 
 .browserBox .btn-box {
-  width: 25%;
+  width: 30%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -387,8 +426,8 @@ export default {
   align-items: center;
 }
 .relaysBox {
-  width: 85%;
-  height: 92%;
+  width: 50%;
+  height: 70%;
   padding: 2px;
   border: 1px solid #2b3439;
   border-radius: 15px;
@@ -414,8 +453,8 @@ export default {
   color: #aaaaaa;
 }
 .relaysBoxContent {
-  width: 55%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
@@ -437,7 +476,7 @@ export default {
 }
 
 .relaysBoxContent .relay {
-  width: 80%;
+  width: 90%;
   height: 12%;
   min-height: 35px;
   background-color: #32383e;
@@ -457,7 +496,7 @@ export default {
   transition-duration: 0.2s;
 }
 .relaysBoxContent .relay input {
-  width: 9%;
+  width: 8%;
   height: 60%;
   border-radius: 2px;
   background-color: rgb(81, 89, 96);
@@ -477,41 +516,61 @@ export default {
 }
 .btn-box {
   width: 100%;
-  height: 16%;
-  margin-top: 20px;
+  height: 20%;
+  margin: 0 auto;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.btn-box .btn {
+  width: 50%;
+  height: 70%;
+  background-color: #227ee7;
+  text-decoration: none;
+  border: 1px solid #227ee7;
+  border-radius: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  color: #e1e1e1;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition-duration: all 200ms;
 }
-.btn-box button {
-  width: 25%;
-  height: 70%;
-  border-radius: 10px;
-  background-color: #404851;
-  box-shadow: 1px 1px 5px 1px rgb(12, 12, 12);
-  color: #aaaaaa;
-  font-size: 1rem;
-  font-weight: 600;
-  outline-style: none;
-  transition-duration: 80ms;
+.disabled {
+  background-color: #031624 !important;
+  pointer-events: none;
+  opacity: 0.5;
 }
-.btn-box .btn-disabled {
-  border: none;
-  background-color: #1f2d37 !important;
-  color: #2f383d;
-  z-index: -1;
+.btn-box span:hover {
+  background-color: #1661b7;
+  color: #dddddd;
+  transition-duration: 200ms;
 }
-.btn-box button:hover {
-  transform: scale(1.07);
-  border: 2px solid #364a59;
-  background-color: #283742;
-  color: #42c8f1;
-}
-.btn-box button:active {
-  transform: scale(1);
-  border: none;
-  background-color: #1f2d37;
-  color: #42c8f1;
+.btn-box span:active {
+  transform: scale(0.9);
   box-shadow: none;
+}
+.btn-box .process {
+  width: 50%;
+  height: 70%;
+  background-color: #227ee7;
+  text-decoration: none;
+  border: 1px solid #227ee7;
+  border-radius: 50px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #e1e1e1;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  pointer-events: none;
+}
+.process img {
+  width: 10%;
 }
 </style>
