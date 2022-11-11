@@ -127,7 +127,7 @@
     "active": "ACTIVE SINCE",
     "state": "STATE",
     "balance": "BALANCE",
-    "option": "OPTIONS",
+    "option": "СОНГОЛТУУД",
     "importKey": "Importing validator key(s)",
     "waitMessage": "It may take some time",
     "waitForImport": "Please wait until the key is imported"
@@ -137,91 +137,91 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "confirm": "Баталгаажуулах"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
     "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "exitChain": "CHAIN - ЭЭС ГАРАХ",
+    "clickClose": "Хаахын тулд гадна талд товшино уу."
   },
   "feeRecipient": {
-    "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
-    "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
+    "textPlaceHolder": "Таны Блокийн урамшуулалыг илгээхийн тулд хүчинтэй Ethereum хаягаа оруулна уу ... ",
+    "setBlock": "БЛОК ТӨЛБӨР ХҮЛЭЭН АВАГЧИЙН ХАЯГИЙГ ТОХИРУУЛАХ"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Блок үүсгэхдээ 32 тэмдэгтийг chain-д оруулаарай!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "ТҮЛХҮҮР ОРУУЛАХ БОЛ ТОВШИХ БУЮУ ЧИРНЭ ҮҮ"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "ТА SLASHING ӨГӨГДЛИЙН САНГАА ТАТАХЫГ ХҮССЭН БАЙНА УУ?",
+    "description": "Та ВАЛИДАТОР ТҮЛХҮҮРЭЭ ШИЛЖҮҮЛЭХ ҮЕДЭЭ НЭМЭЛТ АЮУЛГҮЙ БАЙДЛЫГ БАТАЛГААЖУУЛАХЫН ТУЛД ВАЛИДАТОР ТҮЛХҮҮРТЭЙГЭЭ ХАМТ ИМПОРТЛОХ БОЛОМЖТОЙ",
+    "btn": "зам сонгох"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Та устгахдаа итгэлтэй байна уу",
+    "from": "ЭНЭ МАШИНААС?",
+    "remove": "Устгах"
   },
   "removeMultipleValidators": {
-    "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
+    "sureText": "Та ЭНЭ МАШИНААС Бүх Валидатор түлхүүрүүдийг устгахдаа итгэлтэй байна уу?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
-    "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
-    "attention": "ATTESTATION",
-    "missed": "MISSED",
-    "aggregations": "AGGREGATIONS",
-    "slashed": "SLASHED"
+    "totalText": "-НИЙ НИЙТ ҮЛДЭГДЭЛ",
+    "validators": "ВАЛИДАТОРУУД",
+    "proposed": "САНАЛ БОЛГОСОН",
+    "attestRate": "БАТАЛГААЖУУЛАЛТЫН ҮНЭЛГЭЭ",
+    "attention": "БАТАЛГААЖУУЛАЛТ",
+    "missed": "АЛДСАН",
+    "aggregations": "AGGREGATIONS \"НЭГТГЭЛҮҮД\"",
+    "slashed": "SLASHED \"ХАСАГДСАН\""
   },
   "validatorsBox": {
-    "date": "DATE",
-    "validator": "VALIDATOR",
+    "date": "ОГНОО",
+    "validator": "ВАЛИДАТОР",
     "attestRate": "ATTEST.RATE",
-    "reward": "REWARD"
+    "reward": "УРАМШУУЛАЛ"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "installText": "ЭНЭ ХУУДАС ДЭЭР ТА ӨӨРИЙН NODE - ДОО ХИЙХ ЗҮЙЛЭЭ СОНГОХ БОЛОМЖТОЙ. СОНГОЛТОО ХИЙГЭЭД, ЭХЛҮҮЛЭХ ТОВЧИЙГ ДАРСНЫ ДАРАА CLIENT САНАМСАРГҮЙГЭЭР СОНГОГДОЖ, ТАНЫ USE CASE - ИЙН ДАГУУ ҮЙЛЧЛЭХ БОЛНО",
     "back": "БУЦАХ",
-    "install": "INSTALL"
+    "install": "СУУЛГАХ"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Бүх service-үүд устгагдах болно.",
+    "sure": "Та итгэлтэй байна уу?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
-    "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "welcome": "ТАВТАЙ МОРИЛНО УУ",
+    "installText": "ЭНЭ АЛХАМД ТА NODE - оо ХЭРХЭН СУУЛГАХЫГ ХҮССЭНЭЭ СОНГОХ БОЛОМЖТОЙ. ХЭРВЭЭ ТАНД ТУСЛАМЖ ШААРДЛАГАТАЙ БОЛ МАНАЙ DISCORD СУВАГТ НЭГДЭЭРЭЙ",
+    "osCheck": "ТАНЫ СЕРВЕРИЙН ҮЙЛДЛИЙН СИСТЕМИЙГ ДЭМЖИЖ БАЙГАА ЭСЭХИЙГ ШАЛГАЖ БАЙНА"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
-    "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "option": "СОНГОЛТ",
+    "chosen": "СОНГОСОН СҮЛЖЭЭ",
+    "path": "СУУЛГАХ ЗАМ",
+    "syncClient": "Таны Client-ийг Chain-ний эхнээс синк хийх",
     "plugin": "PLUGINS",
     "back": "БУЦАХ",
-    "next": "NEXT"
+    "next": "ДАРААГИЙНХ"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "creditTitle": "НЭР ДУРДАЛТ - САНХҮҮГИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
+    "fincialTitle": "ЖАГСААЛТАНД НЭРЭЭ ОРУУЛЦГААЯ! ХӨГЖҮҮЛЭЛТИЙГ ДЭМЖИЖ БАЙГАА ТАНД БАЯРЛАЛАА!",
+    "technicPage": "ТЕХНИКИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
+    "techTitle": "НЭР ДУРДАЛТ - ТЕХНИКИЙН ХУВЬ НЭМЭР ОРУУЛАГЧИД",
+    "techText": "GITPOAP ОЛОХ! МАНАЙ GITHUB-Д ЗОЧИЛЖ ХЭРХЭН ОРОЛЦОХЫГ СУРАЛЦААРАЙ!",
+    "financialPage": "САНХҮҮГИЙН ХУВЬ НЭМЭР"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "БАТЛАХ & СУУЛГАХ",
+    "name": "НЭР",
+    "cat": "АНГИЛАЛ",
+    "path": "ЗАМ \"path\""
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Нэмэлт өөрчлөлт оруулахаасаа өмнө анхны суулгалт \"инстал\" дуустал хүлээхийг зөвлөж байна"
   }
 }
