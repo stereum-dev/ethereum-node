@@ -607,7 +607,7 @@ html {
   background-color: #23282b;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;

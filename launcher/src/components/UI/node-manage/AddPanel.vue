@@ -560,14 +560,12 @@ export default {
 
 .portAddBox,
 .clientAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -687,14 +685,12 @@ export default {
 }
 
 .optionsBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -703,8 +699,8 @@ export default {
 }
 
 .optionsBox:hover {
-  background-color: #31373a;
-  border: 1px solid #3b4246;
+  background-color: #2d3336;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 
@@ -763,14 +759,12 @@ export default {
 }
 
 .clientAddBox {
-  width: 100%;
+  width: 99%;
   height: 12%;
   background-color: #23282b;
-  box-shadow: 1px 1px 3px 1px #16191b;
-  border: 1px solid #22272a;
   border-radius: 3px;
   margin-top: 10px;
-  padding: 1px 5px;
+  padding: 1px 3px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -778,8 +772,8 @@ export default {
 }
 
 .clientAddBox:hover {
-  background-color: #31373b;
-  border: 1px solid #3f4549;
+  background-color: #2d3336;
+  box-shadow: 0 1px 5px 1px #111111;
   transition-duration: 0.2s;
 }
 
