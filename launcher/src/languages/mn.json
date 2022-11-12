@@ -2,12 +2,12 @@
   "formsetup": {
     "login": "нэвтрэх",
     "server": "Connect to your server",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
+    "servername": "СЕРВЕРИЙН НЭР",
+    "iphost": "IP / ХОСТЫН НЭР",
     "username": "Хэрэглэгчийн нэр",
     "password": "Нууц үг",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "keylocation": "ТҮЛХҮҮРИЙН БАЙРШИЛ",
+    "usessh": "SSH түлхүүрийг ашиглана уу"
   },
   "comingsoon": {
     "comingsoon": "COMING SOON"
