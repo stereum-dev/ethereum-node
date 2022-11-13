@@ -1,7 +1,7 @@
 {
   "formsetup": {
     "login": "нэвтрэх",
-    "server": "Connect to your server",
+    "server": "Сервертэйгээ холбогдоно уу",
     "servername": "СЕРВЕРИЙН НЭР",
     "iphost": "IP / ХОСТЫН НЭР",
     "username": "Хэрэглэгчийн нэр",
@@ -10,11 +10,11 @@
     "usessh": "SSH түлхүүрийг ашиглана уу"
   },
   "comingsoon": {
-    "comingsoon": "COMING SOON"
+    "comingsoon": "ТУН УДАХГҮЙ"
   },
   "journalnode": {
-    "serverip": "server ip",
-    "servername": "SERVER NAME",
+    "serverip": "сервер ip",
+    "servername": "СЕРВЕРИЙН НЭР",
     "edit": "to edit node"
   },
   "pagesnav": {
@@ -81,7 +81,7 @@
   "changeConfirm": {
     "confirm": "CONFIRM",
     "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "delete": "УСТГАХ"
   },
   "updatePanel": {
     "launcherTitle": "launcher updates",
@@ -99,8 +99,8 @@
   "controlPage": {
     "node": "NODE",
     "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
+    "write": "БИЧИХ",
+    "read": "УНШИХ",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "SYNC STATUS",
