@@ -104,16 +104,16 @@
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "SYNC STATUS",
-    "hard": "HARD DISK",
+    "hard": "ХАТУУ ДИСК",
     "free": "FREE",
     "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
+    "network": "СҮЛЖЭЭ",
+    "receive": "Өгөгдлийн хүлээн авалт",
+    "transmit": "Өгөгдөл Дамжуулалт",
     "ram": "RAM",
     "used": "used",
-    "totalram": "total",
-    "storage": "STORAGE",
+    "totalram": "нийт",
+    "storage": "САНАХ БАЙГУУЛАМЖ",
     "active": "ACTIVE",
     "rating": "RATING",
     "usage": "Usage"
@@ -122,15 +122,15 @@
     "clickDisplay": "Click on tasks to display"
   },
   "displayValidator": {
-    "pk": "Public Key",
-    "service": "SERVICE",
+    "pk": "Нийтийн түлхүүр",
+    "service": "СЕРВИС",
     "active": "ACTIVE SINCE",
-    "state": "STATE",
+    "state": "НӨХЦӨЛ БАЙДАЛ",
     "balance": "BALANCE",
     "option": "СОНГОЛТУУД",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some time",
-    "waitForImport": "Please wait until the key is imported"
+    "importKey": "Валидатор түлхүүр(үүд)-ийг импортлох",
+    "waitMessage": "Үүнд хэсэг хугацаа зарцуулагдаж магадгүй",
+    "waitForImport": "Түлхүүрийг импортлох хүртэл хүлээнэ үү"
   },
   "enterPass": {
     "enterPass": "НУУЦ ҮГ ОРУУЛАХ & ИМПОРТЛОХ"
