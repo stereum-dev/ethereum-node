@@ -23,110 +23,110 @@
     "staking": "STAKING"
   },
   "supportModal": {
-    "support": "support",
+    "support": "тусламж",
     "supportText": "The fastest way to reach a person for support is to join our Discord server!",
     "bugReport": "BUG REPORT",
     "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
-    "emailText": "or write an email to:"
+    "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:"
   },
   "notifModal": {
     "notification": "Мэдэгдэл",
     "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "cancelText": "Цуцлахын тулд гадна талд товшино уу"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
-    "langName": "language  selection",
-    "confirm": "CONFIRM & APPLY",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
+    "stereumName": "стереум тохируулга",
+    "langName": "хэл сонгох",
+    "confirm": "БАТАЛГААЖУУЛАХ & ХЭРЭГЛЭХ",
+    "general": "ЕРӨНХИЙ",
+    "credits": "Нэр дурьдалт",
+    "open": "нээх",
+    "update": "ШИНЭЧЛЭЛТ",
+    "launcherVersion": "Лаунчерийн Хувилбар",
     "nodeVersion": "Node хувилбар",
-    "lane": "Stereum - Testing Lane",
-    "on": "on",
-    "off": "off",
-    "updateConfig": "Stereum Update Configuration",
-    "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
+    "lane": "Стереум - Тестлэх зам",
+    "on": "асаах",
+    "off": "унтраах",
+    "updateConfig": "Стереум Шинэчлэлт Тохиргоо",
+    "servicePlugin": "Плаг-ин / Сервис Шинэчлэлт Тохиргоо",
+    "manual": "ГАР АЖИЛЛАГАА",
     "auto": "АВТОМАТ"
   },
   "nodeSidebarVideo": {
-    "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "stake": "32 ETH - тай стак хийх",
+    "ssv": "ссв.сүлжээг хэрэглэх",
+    "alert": "Мобайл апп дээрх сэрэмжлүүлэг",
+    "switchC": "Клиентийг солих",
+    "migrate": "Нодуудын шилжилт",
+    "rpc": "РПС Холболт"
   },
   "pluginZone": {
-    "client": "client"
+    "client": "клиент"
   },
   "theNode": {
-    "execution": "execution",
-    "consensus": "consensus",
-    "validator": "validator",
-    "servicePlugin": "SERVICE PLUGIN"
+    "execution": "эксекүшион",
+    "consensus": "консенсус",
+    "validator": "валидатор",
+    "servicePlugin": "СЕРВИС ПЛАГИН"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
-    "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
-    "nukeNode": "NUKE NODE"
+    "backNode": "НОД руу буцах",
+    "addPreset": "УРЬДААС ТОГТООСОН 1 ТОВШИЛТИЙГ НЭМЭХ",
+    "changeNetwork": "СҮЛЖЭЭГ СОЛИХ",
+    "nukeNode": "ЦӨМ НОД"
   },
   "sidebarManage": {
-    "filter": "Filter..."
+    "filter": "Шүүлтүүр..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
+    "confirm": "БАТАЛГААЖУУЛАХ",
+    "change": "БАТАЛГААЖУУЛАХ ӨӨРЛӨЛТҮҮД",
     "delete": "УСТГАХ"
   },
   "updatePanel": {
-    "launcherTitle": "launcher updates",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "auto-update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "Service updates",
-    "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "launcherTitle": "лаунчерийн шинэчлэлтүүд",
+    "current": "одоогийн",
+    "nodeTitle": "нод шинэчлэлтүүд",
+    "latest": "сүүлийн",
+    "auto": "авто-шинэчлэлтүүд",
+    "available": "боломжтой",
+    "searching": "шинэ шинэчлэлтүүдийг хайж байна",
+    "serviceTitle": "Сервисийн шинэчлэлтүүд",
+    "serviceDesc": "Суулгасан ПЛАГ-ИН-үүдийн шинэчлэлтүүд",
+    "availablePlugin": "БОЛОТЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
+    "all": "бүгдийг шинэчлэх"
   },
   "controlPage": {
-    "node": "NODE",
-    "disk": "DISK SPEED",
+    "node": "НОД",
+    "disk": "ДИСКНИЙ ХУРД",
     "write": "БИЧИХ",
     "read": "УНШИХ",
-    "inclusionDistance": "INCLUSION DISTANCE",
-    "rpc": "RPC-ENDPOINT",
-    "syncStatus": "SYNC STATUS",
+    "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
+    "rpc": "РПС-ТӨГСГӨЛИЙН ЦЭГ",
+    "syncStatus": "СИНК СТАТУС",
     "hard": "ХАТУУ ДИСК",
-    "free": "FREE",
-    "total": "TOTAL",
+    "free": "ЧӨЛӨӨТЭЙ",
+    "total": "НИЙТ",
     "network": "СҮЛЖЭЭ",
     "receive": "Өгөгдлийн хүлээн авалт",
     "transmit": "Өгөгдөл Дамжуулалт",
-    "ram": "RAM",
-    "used": "used",
+    "ram": "РАМ",
+    "used": "ашиглагдсан",
     "totalram": "нийт",
     "storage": "САНАХ БАЙГУУЛАМЖ",
-    "active": "ACTIVE",
-    "rating": "RATING",
-    "usage": "Usage"
+    "active": "Идэвхитэй",
+    "rating": "ЗЭРЭГЛЭЛ",
+    "usage": "Хэрэглээ"
   },
   "taskManager": {
-    "clickDisplay": "Click on tasks to display"
+    "clickDisplay": "Таск дээр товшиж харна уу"
   },
   "displayValidator": {
     "pk": "Нийтийн түлхүүр",
     "service": "СЕРВИС",
-    "active": "ACTIVE SINCE",
+    "active": "ХОЙШ ИДЭВХИТЭЙ",
     "state": "НӨХЦӨЛ БАЙДАЛ",
-    "balance": "BALANCE",
+    "balance": "БАЛАНС",
     "option": "СОНГОЛТУУД",
     "importKey": "Валидатор түлхүүр(үүд)-ийг импортлох",
     "waitMessage": "Үүнд хэсэг хугацаа зарцуулагдаж магадгүй",
@@ -140,7 +140,7 @@
     "confirm": "Баталгаажуулах"
   },
   "exitValidatorModal": {
-    "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
+    "modalMessage": "Та СОНГОГДСОН валидатор ТҮЛХҮҮРҮҮД-ээг гинжээс гарахдаа итгэлтэй байна уу?\nЭнэ нь таны валидаторын ажилгааг зогсоох ба энэ үйлдлийг БУЦААХ БОЛОМЖГҮЙ. Сүлжээ зөвшөөрсөн тохиолдолд л та өөрийн хөрөнгө оруулөлтыг татан авах боломжтой.",
     "exitApprove": "БИ ТЕКСТИЙГ УНШСАН БӨГӨӨД ҮР ДАГАВАРЫГ МЭДЭЖ БАЙНА",
     "exitChain": "CHAIN - ЭЭС ГАРАХ",
     "clickClose": "Хаахын тулд гадна талд товшино уу."
