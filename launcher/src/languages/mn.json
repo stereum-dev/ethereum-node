@@ -18,20 +18,20 @@
     "edit": "to edit node"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
-    "staking": "STAKING"
+    "node": "НОД",
+    "control": "УДИРДЛАГА",
+    "staking": "СТЭЙКИНГ"
   },
   "supportModal": {
     "support": "тусламж",
     "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
+    "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
     "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:"
   },
   "notifModal": {
     "notification": "Мэдэгдэл",
-    "notifText": "You can set up different notification sources and the status you want to be notified of here",
+    "notifText": "Та энд өөр өөр мэдэгдлийн эх сурвалж болон мэдэгдэл авахыг хүсч буй статусаа тохируулж болно",
     "cancelText": "Цуцлахын тулд гадна талд товшино уу"
   },
   "settingPanel": {
