@@ -133,15 +133,15 @@
     "waitForImport": "Please wait until the key is imported"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "НУУЦ ҮГ ОРУУЛАХ & ИМПОРТЛОХ"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
+    "passMessage": "ЭНЭ ТҮЛХҮҮРИЙГ ГИНЖНЭЭС ГАРГАХЫН ТУЛД ТҮЛХҮҮРИЙН НУУЦ ҮГИЙГ ОРУУЛНА УУ...",
     "confirm": "Баталгаажуулах"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "exitApprove": "БИ ТЕКСТИЙГ УНШСАН БӨГӨӨД ҮР ДАГАВАРЫГ МЭДЭЖ БАЙНА",
     "exitChain": "CHAIN - ЭЭС ГАРАХ",
     "clickClose": "Хаахын тулд гадна талд товшино уу."
   },
