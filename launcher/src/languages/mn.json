@@ -15,7 +15,7 @@
   "journalnode": {
     "serverip": "сервер ip",
     "servername": "СЕРВЕРИЙН НЭР",
-    "edit": "to edit node"
+    "edit": "нод хянах"
   },
   "pagesnav": {
     "node": "НОД",
@@ -24,9 +24,9 @@
   },
   "supportModal": {
     "support": "тусламж",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
+    "supportText": "Тусламж авах хүнтэй холбогдох хамгийн хурдан арга бол манай Discord серверт нэгдэх юм!",
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
-    "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
+    "bugRepText": "Асуудал бичихэд цаг гаргаж, Stereum-ийг илүү сайн болгоё!",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:"
   },
   "notifModal": {
