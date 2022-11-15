@@ -13,7 +13,31 @@
         <p>{{ item.key }}</p>
         <span>{{ $t("removeMultiModal.from") }}</span>
       </div>
-      <div class="remove-box">
+      <div class="slashingParent">
+        <div class="pickSlashing">
+          <label for="two">
+            <input type="radio" id="two" value="Two" v-model="picked" />
+            With out
+          </label>
+
+          <label for="one">
+            <input type="radio" id="one" value="One" v-model="picked" />
+            With
+          </label>
+        </div>
+        <div class="pathBox" v-if="displayPathBox">
+          <div class="pathBoxInput">
+            <input
+              type="text"
+              v-model="path"
+              placeholder="choose a path to save exported slashing db "
+              @change="checkPath"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="remove-box" :class="{ disabled: !disabledBtn }">
         <div class="remove-btn" @click.stop="$emit('deleteKey')">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
@@ -26,7 +50,29 @@
 export default {
   props: ["item"],
   data() {
-    return {};
+    return {
+      picked: "",
+      path: "",
+      displayPathBox: false,
+      disabledBtn: false,
+    };
+  },
+  watch: {
+    path: function () {
+      if (this.path.trim().length > 0) {
+        this.disabledBtn = true;
+      } else {
+        this.disabledBtn = false;
+      }
+    },
+    picked: function () {
+      if (this.picked === "Two") {
+        this.displayPathBox = false;
+        this.disabledBtn = true;
+      } else {
+        this.displayPathBox = true;
+      }
+    },
   },
 };
 </script>
@@ -116,6 +162,48 @@ export default {
   font-size: 1rem;
   font-weight: 700;
 } */
+
+.slashingParent {
+  width: 95%;
+  height: 20%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.pickSlashing {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.pickSlashing label {
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: rgb(197, 197, 197);
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-top: 5px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.pickSlashing label input {
+  width: 5%;
+  height: 100%;
+  margin-right: 5px;
+}
+.pathBox {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .remove-box {
   width: 100%;
   height: 25%;
@@ -157,5 +245,10 @@ export default {
   font-size: 0.65rem;
   font-weight: 500;
   align-self: center;
+}
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>
