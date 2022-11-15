@@ -45,7 +45,13 @@
           <div class="table-row" v-for="(item, index) in keys" :key="index">
             <div class="rowContent">
               <span class="circle"></span>
-              <span class="category" ref="valKey" @click="logEvent"
+              <span
+                class="category"
+                v-if="item.displayName != '' && item.displayName != null"
+                >{{ item.displayName }}</span
+              >
+
+              <span class="category" @click="logEvent" v-else
                 >{{ item.key.substring(0, 20) }}...{{
                   item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
@@ -105,7 +111,8 @@
             </div>
             <RenameValidator
               v-if="item.isRenameActive"
-              @confirm-change="renameValidatorHandler(item)"
+              @change-name="renameValidatorHandler"
+              :item="item"
             />
             <GrafitiValidator
               v-if="item.isGrafitiBoxActive"
@@ -137,12 +144,6 @@
                 item.toRemove = false;
               "
               @delete-key="validatorRemoveConfirm(item)"
-            />
-            <DownloadSlashing
-              v-if="item.isDownloadModalActive"
-              :item="item"
-              @download="downloadValidatorHandler(item)"
-              @close-modal="item.isDownloadModalActive = false"
             />
           </div>
         </div>
@@ -219,10 +220,7 @@
       "
       @delete-key="confirmRemoveAllValidators"
     />
-    <DownloadMultiSlashing
-      v-if="downloadForMultiValidatorsActive"
-      @close-modal="downloadForMultiValidatorsActive = false"
-    />
+
     <!-- Exit box for validator keys -->
     <ExitMultipleValidators
       v-if="exitChainForMultiValidatorsActive"
@@ -252,8 +250,7 @@ import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
-import DownloadSlashing from "./DownloadSlashing.vue";
-import DownloadMultiSlashing from "./DownloadMultiSlashing.vue";
+
 export default {
   components: {
     DropZone,
@@ -272,8 +269,6 @@ export default {
     RemoveMultipleValidators,
     ExitMultipleValidators,
     SelectService,
-    DownloadSlashing,
-    DownloadMultiSlashing,
   },
   props: ["button"],
   data() {
@@ -314,6 +309,7 @@ export default {
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
       selectedService: {},
+      validatorName: "",
     };
   },
   watch: {
@@ -363,6 +359,13 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
+    pickValidatorName(el) {
+      if (el.displayName !== "") {
+        this.validatorName = el.displayName;
+      } else {
+        this.validatorName = el.key;
+      }
+    },
   },
   created() {
     this.keys = this.keys.map((item) => {
@@ -411,9 +414,19 @@ export default {
     renameDisplayHandler(el) {
       el.isRenameActive = true;
     },
-    renameConfirmHandler(el) {
+    renameValidatorHandler(el, name) {
       el.isRenameActive = false;
+      this.keys = this.keys.map((item) => {
+        if (item.key === el.key) {
+          return {
+            ...item,
+            displayName: name,
+          };
+        }
+        return item;
+      });
     },
+
     removeModalDisplay(el) {
       el.toRemove = true;
       el.isRemoveBoxActive = true;

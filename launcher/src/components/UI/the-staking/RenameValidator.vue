@@ -8,7 +8,7 @@
       />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmChange')">
+      <button class="confirmBtn" @click="checkEnteredName">
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
     </div>
@@ -16,14 +16,25 @@
 </template>
 <script>
 export default {
+  props: {
+    item: {
+      type: Object,
+      required: true,
+      default: () => {},
+    },
+  },
   data() {
     return {
       newName: "",
     };
   },
-  watch: {
-    newName: function (newName) {
-      this.$emit("newName", this.newName);
+  methods: {
+    checkEnteredName() {
+      if (this.newName.trim().length > 0) {
+        this.$emit("changeName", this.item, this.newName);
+      } else {
+        return false;
+      }
     },
   },
 };
