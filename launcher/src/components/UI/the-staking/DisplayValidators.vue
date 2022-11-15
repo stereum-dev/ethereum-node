@@ -76,6 +76,14 @@
                     alt="icon"
                   />
                 </div>
+                <div class="rename-box">
+                  <img
+                    @click="renameDisplayHandler(item)"
+                    class="rename-icon"
+                    src="../../../../public/img/icon/the-staking/rename.png"
+                    alt="icon"
+                  />
+                </div>
                 <div class="remove-box">
                   <img
                     @click="removeModalDisplay(item)"
@@ -95,20 +103,24 @@
                 </div>
               </div>
             </div>
-            <grafiti-validator
+            <RenameValidator
+              v-if="item.isRenameActive"
+              @confirm-change="renameValidatorHandler(item)"
+            />
+            <GrafitiValidator
               v-if="item.isGrafitiBoxActive"
               @confirm-change="grafitiConfirmHandler(item)"
-            ></grafiti-validator>
-            <exit-validator
+            />
+            <ExitValidator
               v-if="item.isExitBoxActive"
               @confirm-password="confirmPasswordSingleExitChain(item)"
-            ></exit-validator>
-            <exit-validators-modal
+            />
+            <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
               @exit-modal="closeExitChainModal(item)"
               @confirm-btn="confirmExitChainForValidators(item)"
-            ></exit-validators-modal>
+            />
             <RemoveValidator
               v-if="
                 item.toRemove ||
@@ -222,6 +234,7 @@
 import DropZone from "./DropZone.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
+import RenameValidator from "./RenameValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
@@ -247,6 +260,7 @@ export default {
     KeyModal,
     FeeRecipient,
     GrafitiValidator,
+    RenameValidator,
     ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
@@ -359,6 +373,7 @@ export default {
         isExitBoxActive: false,
         displayExitModal: false,
         isDownloadModalActive: false,
+        isRenameActive: false,
         ...item,
       };
     });
@@ -389,8 +404,15 @@ export default {
       el.isGrafitiBoxActive = true;
       el.isRemoveModalActive = true;
     },
+
     grafitiConfirmHandler(el) {
       el.isGrafitiBoxActive = false;
+    },
+    renameDisplayHandler(el) {
+      el.isRenameActive = true;
+    },
+    renameConfirmHandler(el) {
+      el.isRenameActive = false;
     },
     removeModalDisplay(el) {
       el.toRemove = true;
@@ -889,6 +911,22 @@ remove-validator {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+.option-box .rename-box {
+  width: max-content;
+  height: 100%;
+  margin: 0 auto;
+  grid-column: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.rename-box img {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  cursor: pointer;
 }
 
 .option-box .remove-box {
