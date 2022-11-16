@@ -164,10 +164,11 @@
     "btn": "pick path"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove FROM THIS MACHINE?",
-    "from": "Slashing Protection Database",
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
     "remove": "Remove",
-    "path": "choose a path to save exported slashing db "
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
