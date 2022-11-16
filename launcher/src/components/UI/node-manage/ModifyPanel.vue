@@ -108,7 +108,7 @@
             v-if="!switchHandler(service)"
             @click="changeSelectedServiceToConnect(service)"
           >
-            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
               <div class="optionsName">
@@ -121,7 +121,7 @@
             v-if="switchHandler(service)"
             @click="changeSelectedServiceToConnect(service)"
           >
-            <img src="/img/icon/manage-node-icons/connected.png" alt="icon" />
+            <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
             <div class="connectionConfig">
               <span class="category">{{ service.category }} Client</span>
               <span class="name">{{ service.name }}</span>
