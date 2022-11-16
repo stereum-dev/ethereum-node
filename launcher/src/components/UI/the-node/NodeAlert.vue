@@ -1,40 +1,14 @@
 <template>
   <div class="status-box">
-    <comming-soon></comming-soon>
-    <div class="warning-box">
-      <div class="yellow-warning">
-        <img
-          src="../../../../public/img/icon/node-journal-icons/yellow-warning.png"
-          alt=""
-        />
-        <span>002</span>
-      </div>
-      <div class="red-warning">
-        <img
-          src="../../../../public/img/icon/node-journal-icons/red-warning.png"
-          alt=""
-        />
-        <span>002</span>
-      </div>
-    </div>
-    <div class="status-table">
-      <div class="status-table-content">
-        <div
-          class="status-table-row"
-          v-for="item in statusContents"
-          :key="item.id"
-        >
-          <div v-if="item.status == 'yellow'" class="status-yellow"></div>
-          <div else class="status-red"></div>
-        </div>
-      </div>
-    </div>
+    <control-alert></control-alert>
   </div>
 </template>
 <script>
+import ControlAlert from "../the-control/ControlAlert.vue";
 import { mapState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 export default {
+  components: { ControlAlert },
   data() {
     return {};
   },
