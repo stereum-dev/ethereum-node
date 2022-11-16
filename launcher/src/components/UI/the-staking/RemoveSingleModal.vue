@@ -251,4 +251,9 @@ export default {
   cursor: not-allowed;
   pointer-events: none;
 }
+.deactivated {
+  pointer-events: none;
+  background-color: rgb(17, 17, 17);
+  opacity: 0.3;
+}
 </style>

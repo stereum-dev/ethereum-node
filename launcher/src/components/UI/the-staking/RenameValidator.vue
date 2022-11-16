@@ -7,9 +7,16 @@
         :placeholder="$t('renameValidator.textPlaceHolder')"
       />
     </div>
-    <div class="confirmBox">
-      <button class="confirmBtn" @click="checkEnteredName">
-        {{ $t("exitMultipleValidator.confirm") }}
+    <div class="buttonBox">
+      <button class="cancelBtn" @click="$emit('closeRename', item)">
+        <img src="/img/icon/the-staking/close.png" alt="icon" />
+      </button>
+      <button
+        class="confirmBtn"
+        :class="{ disabled: newName.trim().length === 0 }"
+        @click="checkEnteredName"
+      >
+        <img src="/img/icon/the-staking/done.png" alt="icon" />
       </button>
     </div>
   </div>
@@ -55,7 +62,7 @@ export default {
 }
 
 .inputBox {
-  width: 80%;
+  width: 85%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -66,8 +73,8 @@ export default {
   height: 100%;
   padding: 0;
   padding-left: 10px;
-  background-color: #7f8593;
-  border: 1px solid #8e96a7;
+  background-color: #3f4551;
+  border: 1px solid #464b57;
   border-radius: 35px 0 0 35px;
   color: #dfdfdf;
   font-size: 0.8rem;
@@ -76,35 +83,69 @@ export default {
 .inputBox input:focus {
   outline: none;
 }
-.confirmBox {
-  width: 20%;
+.buttonBox {
+  width: 15%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .confirmBtn {
-  width: 100%;
+  width: 60%;
   height: 100%;
   border-radius: 0 35px 35px 0;
-  background-color: #1277e3;
-  border: 1px solid #1277e3;
-  color: #dedede;
-  font-size: 0.7rem;
-  font-weight: 700;
+  background-color: #2e333d;
+  border: 1px solid #464b57;
   cursor: pointer;
-  text-transform: uppercase;
+  padding: 2px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.confirmBtn:focus {
+.cancelBtn {
+  width: 40%;
+  height: 100%;
+  padding: 2px auto;
+  /* border-radius: 0 35px 35px 0; */
+  background-color: #2e333d;
+  border: 1px solid #464b57;
+  border-right: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.confirmBtn img {
+  width: 45%;
+}
+.cancelBtn img {
+  width:50%;
+}
+.confirmBtn:focus,
+.cancelBtn:focus {
   outline: none;
 }
 .confirmBtn:hover {
-  border: 1px solid #a6c8ed;
-  background-color: #0167d5;
+  background-color: #21252e;
   transition-duration: 0.2s;
 }
-.confirmBtn:active {
-  background-color: #055ab4;
-  font-size: 0.67rem;
+.cancelBtn:hover {
+  background-color: #21252e;
+  transition-duration: 0.2s;
+}
+.confirmBtn:hover img,
+.cancelBtn:hover img {
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+}
+.confirmBtn:active img,
+.cancelBtn:active img {
+  transform: scale(1);
+  transition-duration: 0.2s;
+}
+.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>

@@ -42,7 +42,12 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="table-row" v-for="(item, index) in keys" :key="index">
+          <div
+            class="tableRow"
+            v-for="(item, index) in keys"
+            :key="index"
+            :class="[]"
+          >
             <div class="rowContent">
               <span class="circle"></span>
               <span
@@ -112,6 +117,7 @@
             <RenameValidator
               v-if="item.isRenameActive"
               @change-name="renameValidatorHandler"
+              @close-rename="closeRenameHandler"
               :item="item"
             />
             <GrafitiValidator
@@ -159,7 +165,7 @@
           v-if="enterPasswordBox || selectValidatorServiceForKey"
         >
           <div
-            class="key-table-row"
+            class="key-tableRow"
             v-for="(item, index) in keyFiles"
             :key="index"
           >
@@ -377,6 +383,7 @@ export default {
         displayExitModal: false,
         isDownloadModalActive: false,
         isRenameActive: false,
+        displayRow: false,
         ...item,
       };
     });
@@ -413,9 +420,11 @@ export default {
     },
     renameDisplayHandler(el) {
       el.isRenameActive = true;
+      el.displayRow = true;
     },
     renameValidatorHandler(el, name) {
       el.isRenameActive = false;
+      el.displayRow = null;
       this.keys = this.keys.map((item) => {
         if (item.key === el.key) {
           return {
@@ -426,7 +435,9 @@ export default {
         return item;
       });
     },
-
+    closeRenameHandler(el) {
+      el.isRenameActive = false;
+    },
     removeModalDisplay(el) {
       el.toRemove = true;
       el.isRemoveBoxActive = true;
@@ -784,7 +795,7 @@ export default {
 remove-validator {
   z-index: 10000;
 }
-.table-row {
+.tableRow {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
@@ -793,7 +804,7 @@ remove-validator {
   align-items: center;
   position: relative;
 }
-.table-row .rowContent {
+.tableRow .rowContent {
   width: 100%;
   height: 100%;
   display: grid;
@@ -806,7 +817,7 @@ remove-validator {
   z-index: 3;
 }
 
-.table-row span {
+.tableRow span {
   align-self: center;
   width: max-content;
   color: #fff;
@@ -816,7 +827,7 @@ remove-validator {
   box-sizing: border-box;
 }
 
-.table-row .circle {
+.tableRow .circle {
   grid-column: 1;
   width: 19px;
   height: 19px;
@@ -826,7 +837,7 @@ remove-validator {
   align-self: center;
 }
 
-.table-row .category {
+.tableRow .category {
   width: 100%;
   grid-column: 2;
   font-size: 0.8rem;
@@ -836,28 +847,28 @@ remove-validator {
   color: #d7d7d7;
 }
 
-.table-row .service-icon {
+.tableRow .service-icon {
   width: 20px;
   grid-column: 3;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .since {
+.tableRow .since {
   grid-column: 4;
   font-size: 10px;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .state-icon {
+.tableRow .state-icon {
   width: 24px;
   grid-column: 5;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .balance {
+.tableRow .balance {
   grid-column: 6;
   justify-self: center;
   align-self: center;
@@ -1012,7 +1023,7 @@ remove-validator {
   grid-column: 8;
 }
 
-.key-table-row {
+.key-tableRow {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
@@ -1024,7 +1035,7 @@ remove-validator {
   padding: 1px;
 }
 
-.key-table-row .file-name {
+.key-tableRow .file-name {
   grid-column: 2/3;
   width: 100%;
   height: 95%;
@@ -1035,7 +1046,7 @@ remove-validator {
   align-self: center;
 }
 
-.key-table-row .chosenService {
+.key-tableRow .chosenService {
   grid-column: 3/4;
   width: 50%;
   height: 100%;
@@ -1045,13 +1056,13 @@ remove-validator {
   justify-self: flex-start;
   align-self: center;
 }
-.key-table-row .chosenService img {
+.key-tableRow .chosenService img {
   width: 23%;
   height: 80%;
   margin-left: 22px;
   align-self: center;
 }
-.key-table-row .key-remove-icon {
+.key-tableRow .key-remove-icon {
   grid-column: 4/5;
   display: flex !important;
   justify-content: center !important;
@@ -1066,12 +1077,12 @@ remove-validator {
   align-self: center;
 }
 
-.key-table-row .key-remove-icon img {
+.key-tableRow .key-remove-icon img {
   width: 60% !important;
   height: 60% !important;
 }
 
-.key-table-row .key-circle {
+.key-tableRow .key-circle {
   grid-column: 1/2;
   width: 20px !important;
   height: 20px !important;
