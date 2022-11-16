@@ -11,7 +11,13 @@ export class Monitoring {
     this.nodeConnectionProm = new NodeConnection();
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
-    this.rpcTunnel = 0;
+    this.rpcTunnel = {};
+    this.beaconTunnel = 0;
+  }
+
+  // Cleanup on logout
+  async onLogout(){
+    this.rpcTunnel = {};
     this.beaconTunnel = 0;
   }
 
@@ -234,92 +240,83 @@ export class Monitoring {
   // https://api.besu.hyperledger.org/
   // https://playground.open-rpc.org/?schemaUrl=https://raw.githubusercontent.com/ethereum/execution-apis/assembled-spec/openrpc.json&uiSchema%5BappBar%5D%5Bui:splitView%5D=false&uiSchema%5BappBar%5D%5Bui:input%5D=false&uiSchema%5BappBar%5D%5Bui:examplesDropdown%5D=false
   // Arguments:
-  // method=<string>: [REQUIRED] RPC method name or raw JSON RPC query string.
-  // params=<array> : [OPTIONAL] RPC parameters associated to the given method
-  // ec_only=<bool> : [OPTIONAL] when true returns only the matched execution client with associated RPC connection infos (default: false)
+  // url=<string> .     : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // rpc_method=<string>: [REQUIRED] RPC method name or raw JSON RPC query string.
+  // rpc_params=<array> : [OPTIONAL] RPC parameters associated to the given RPC method
+  // method=<string>    : [OPTIONAL] HTTP request method (defaults to POST)
+  // headers=<object>   : [OPTIONAL] HTTP headers (defaults to {"Content-Type":"application/json"})
   // Returns object with keys:
   // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
   // info=<string>: a message about the last result.
   // data=<mixed> : additional data (if available) or empty string
   // On success data keys are:
-  // ec=<object>        : the matched execution client object
-  // rpc=<object>       : rpc connection infos taken from the matched execution client
-  // api_reponse=<mixed>: the response result of the RPC api
-  async queryRpcApi(method,params=[],ec_only=false){
-
+  // api_reponse=<mixed>: the response of the RPC api
+  // api_httpcode=<int> : the http status code of the RPC api response
+  async queryRpcApi(url,rpc_method,rpc_params=[],method="POST",headers={}){
+    
     // Setup query
-    var query = method.trim().indexOf("{") < 0 ? JSON.stringify({
+    var query = rpc_method.trim().indexOf("{") < 0 ? JSON.stringify({
       "jsonrpc": "2.0",
-      "method": method.trim(),
-      "params": params,
+      "method": rpc_method.trim(),
+      "params": rpc_params,
       "id": 1,
-    }) : method;
+    }) : rpc_method;
 
     // Define default response
     const data = {
-      "ec":null,
-      "rpc":null,
       "api_reponse":null,
+      "api_httpcode":null,
     }
 
     // Make sure query is valid JSON
-    if(!ec_only){
-      try{
-        JSON.parse(query);
-      }catch(e){
-        return {
-          "code": 1,
-          "info": "error: invalid query data specified (valid JSON string expected)",
-          "data": data,
-        };
-      }
-    }
-
-    // Get service that has defined port 8545 (RPC) inside the docker container (aka servicePort)
-    const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    try{
+      JSON.parse(query);
+    }catch(e){
       return {
-        "code": 2,
-        "info": "error: service infos unavailable",
+        "code": 1,
+        "info": "error: invalid query data specified (valid JSON string expected)",
         "data": data,
       };
     }
 
-    // Get execution client by finding the service that has defined port 8545 (RPC) inside the docker container (aka servicePort)
-    const execution = serviceInfos.filter((s) => s.config.ports.filter((p) => p.servicePort == 8545).pop()).pop();
-    if(typeof execution !== "object" || !execution.hasOwnProperty("config")){
+    // Format url
+    if(typeof url === "string"){
+      url = url.trim();
+    }else if(typeof url === "object"){
+      let def = {'addr': '127.0.0.1','port':0};
+      url = {...def, ...url}
+      url = `http://${url.addr}:${url.port}`
+    }
+
+    // Check url
+    if(!url.startsWith('http')){
       return {
         "code": 3,
-        "info": "error: execution client not found",
+        "info": "error: invalid url specified",
         "data": data,
       };
     }
 
-    // Filter the RPC port configuration and get addr/port that is mapped on docker host
-    const rpc = execution.config.ports.filter((p) => p.servicePort == 8545).pop();
-    let addr = rpc.destinationIp;
-    let port = rpc.destinationPort;
-
-    // Set matched data
-    data.ec = execution;
-    data.rpc = rpc;
-
-    // Option to return solely the matched execution client with connection infos
-    if(ec_only){
-      return {
-        "code": 0,
-        "info": "success: execution client found",
-        "data": data,
-      };
+    // Build request headers
+    headers = typeof headers === "object" && !Array.isArray(headers) && headers !== null ? headers : {};
+    headers = {...Object.fromEntries(Object.entries({
+      "Content-Type":"application/json",
+      //"Content-Type":"application/json; charset=utf-8",
+    }).map(([k, v]) => [k.toLowerCase(), v])), ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])) }
+    let requestheaders = [];
+    for (let [k, v] of Object.entries(headers)) {
+      k = k.replaceAll("'","'\\''");
+      v = v.replaceAll("'","'\\''");
+      requestheaders.push("-H '"+k+": "+v+"'");
     }
+    requestheaders = requestheaders.length ? requestheaders.join(" ") : '';
 
     // Escape single quotes in query for bash command (note the single quotes for curl --data-raw argument)
     query = query.replaceAll("'","'\\''");
 
     // Build curl command
     const cmd = `
-      curl -s --location --request POST 'http://${addr}:${port}' \
-      -H 'Content-Type: application/json' \
+      curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} \
       --data-raw '${query}'
     `.trim();
 
@@ -352,10 +349,14 @@ export class Monitoring {
     }
 
     // Parse response
+    let r = result.stdout.trim().split("\n");
+    let statuscode = r.length > 0 ? parseInt(r.pop()) : data.api_httpcode;
+    let jsonstring = r.length > 0 ? r.join("\n").trim() : '';
+    data.api_httpcode = statuscode;
     try{
-      data.api_reponse = JSON.parse(result.stdout);
+      data.api_reponse = jsonstring ? JSON.parse(jsonstring) : jsonstring;
     }catch(e){
-      data.api_reponse = result.stdout;
+      data.api_reponse = jsonstring ? jsonstring : result.stdout;
       return {
         "code": 6,
         "info": "error: invalid api response (" + e + ")",
@@ -813,7 +814,7 @@ export class Monitoring {
         },
         'valPeer': 0,
       };
-  
+
       // Get max peers for consensus and execution clients by configuration or their default values
       let consensus = cc;
       let execution = ec;
@@ -908,7 +909,7 @@ export class Monitoring {
           details[opttyp]['maxPeerBy']['fields'].push(optnam);
         }
       });
-  
+
       // Filter Prometheus result by current used services and calculate number of currently used peers per client
       // Note that Prysm requires to match state="Connected"!
       try{
@@ -1066,13 +1067,12 @@ export class Monitoring {
     };
   }
 
-  // Open RPC tunnel on request
+  // Open RPC tunnel(s) on request
   async openRpcTunnel(args){
 
     // Extract arguments
-    var {force_fresh, force_local_port} = Object.assign({
+    var {force_fresh} = Object.assign({
       force_fresh:false,
-      force_local_port:0,
     }, args);
 
     // Get current RPC status
@@ -1080,98 +1080,162 @@ export class Monitoring {
     if(rpcstatus.code)
       return rpcstatus;
 
-    // Check if the tunnel is already open
-    if(this.rpcTunnel > 0 && !force_fresh){
-      rpcstatus.data.url = 'http://' + rpcstatus.data.rpc.destinationIp + ':' + this.rpcTunnel;
+    // Get available ports
+    const localPorts = await this.nodeConnection.checkAvailablePorts({
+      min: 8545,
+      max: 8999,
+      amount: rpcstatus.data.length,
+    });
+
+    // Make sure there are enough ports available
+    if(localPorts.length != rpcstatus.data.length){
       return {
-        "code": 0,
-        "info": "success: tunnel alrerady open",
-        "data": rpcstatus.data,
+        "code": 1,
+        "info": "error: not enough local ports availbe for all RPC services",
+        "data": '',
       };
     }
 
-    // Open the tunnel
-    try{
-      var localPort = typeof force_local_port == "number" && force_local_port > 0 ? force_local_port : 8545;
-      await this.nodeConnection.openTunnels([{
-        dstHost: rpcstatus.data.rpc.destinationIp,
-        dstPort: rpcstatus.data.rpc.destinationPort,
-        localPort: localPort,
-      }]);
-      this.rpcTunnel = localPort;
-    }catch(e){
-      return {
-        "code": 0,
-        "info": "error: failed to open tunnel (" + e + ")",
-        "data": rpcstatus.data,
-      };
+    // Create a tunnel for each service
+    for(let i=0; i < rpcstatus.data.length; i++){
+
+      // Setup details for this service
+      let sid = rpcstatus.data[i].sid;
+      let rpc = rpcstatus.data[i].rpc;
+      let addr = rpc.destinationIp;
+      let port = rpc.destinationPort;
+
+      // Check if the tunnel is already open
+      if(this.rpcTunnel[sid] > 0 && !force_fresh){
+        continue;
+      }
+
+      // Open the tunnel
+      try{
+        var localPort = localPorts.shift();
+        await this.nodeConnection.openTunnels([{
+          dstHost: addr,
+          dstPort: port,
+          localPort: localPort,
+        }]);
+      }catch(e){
+        // On any error stop opening further tunnels and close all already opened
+        await this.closeRpcTunnel()
+        const freshrpcstatus = await this.getRpcStatus();
+        freshrpcstatus.info = freshrpcstatus.info + '(fresh after failed attempt to open rpc tunnels)';
+        return {
+          "code": 2,
+          "info": "error: failed to open tunnels (" + e + ")",
+          "data": freshrpcstatus,
+        };
+      }
+
+      // Update tunnel with opened port
+      this.rpcTunnel[sid] = localPort;
     }
 
-    // Respond success
-    rpcstatus.data.url = 'http://' + rpcstatus.data.rpc.destinationIp + ':' + this.rpcTunnel;
+    // Respond success with fresh RPC status data
+    const freshrpcstatus = await this.getRpcStatus();
+    freshrpcstatus.info = freshrpcstatus.info + '(fresh after opening rpc tunnels)';
     return {
       "code": 0,
-      "info": "success: tunnel successfully opened",
-      "data": rpcstatus.data,
+      "info": "success: tunnels successfully opened",
+      "data": freshrpcstatus,
     };
   }
 
-  // Close RPC tunnel on request
+  // Close RPC tunnel(s) on request
   async closeRpcTunnel(){
 
-    // Get current RPC status
-    const rpcstatus = await this.getRpcStatus();
-    if(rpcstatus.code)
-      return rpcstatus;
-
-    // Check if the tunnel is open at all
-    if(this.rpcTunnel < 1){
-      rpcstatus.data.url = '';
-      return {
-        "code": 0,
-        "info": "success: tunnel alrerady closed",
-        "data": rpcstatus.data,
-      };
-    }
-
-    // Close the tunnel
+    // Close all open tunnels, ignore any errors
     try{
-      await this.nodeConnection.closeTunnels([this.rpcTunnel]);
-      this.rpcTunnel = 0;
-    }catch(e){
-      return {
-        "code": 0,
-        "info": "error: failed to close tunnel (" + e + ")",
-        "data": rpcstatus.data,
-      };
-    }
+      const openTunnels = Object.values(this.rpcTunnel);
+      if(openTunnels.length){
+        await this.nodeConnection.closeTunnels(openTunnels);
+        this.rpcTunnel = {};
+      }
+    }catch(e){}
 
-    // Respond success
-    rpcstatus.data.url = '';
+    // Respond success with fresh RPC status data
+    const freshrpcstatus = await this.getRpcStatus();
+    freshrpcstatus.info = freshrpcstatus.info + '(fresh after closing rpc tunnels)';
     return {
       "code": 0,
-      "info": "success: tunnel successfully closed",
-      "data": rpcstatus.data,
+      "info": "success: tunnels successfully closed",
+      "data": freshrpcstatus,
     };
   }
 
   // Get RPC status
   async getRpcStatus(){
 
-    // Check if RPC port is enabled
-    let result = await this.queryRpcApi("web3_clientVersion");
-    if(result.code)
-      return result;
+    // Service definitions with their associated rpc api (service) port
+    const services = {
+      'GethService' : 8545,
+      'BesuService' : 8545,
+      'NethermindService' : 8545,
+    };
+
+    // Set timestamp in micro seconds
+    var now = Date.now();
+
+    // Get service infos
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 1,
+        "info": "error: service infos unavailable",
+        "data": '',
+      };
+    }
+
+    // Get execution clients with RPC data by service name
+    const data = [];
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    for(let i = 0; i < executions.length; i++){
+
+      // Make sure execution client is valid and running
+      let execution = executions[i]
+      if(typeof execution !== "object" || !execution.hasOwnProperty("config") ||  !execution.hasOwnProperty("state") || execution.state != 'running'){
+        continue;
+      }
+
+      // Filter the RPC port configuration and get addr/port that is mapped on docker host
+      const sid = execution.config.serviceID;
+      const rpc = execution.config.ports.filter((p) => p.servicePort == services[execution.service]).slice(-1).pop();
+      rpc.destinationIp = rpc.destinationIp == '0.0.0.0' ? '127.0.0.1' : rpc.destinationIp; // FIX: rpc.destinationIp could be 0.0.0.0 if config was changed in expert mode
+      let addr = rpc.destinationIp;
+      let port = rpc.destinationPort;
+
+      // Check if RPC port is enabled
+      let result = await this.queryRpcApi({'addr':addr,'port':port},"web3_clientVersion");
+      if(result.code)
+        continue;
+      
+      // Add valid client to final result
+      data.push({
+        now: now,
+        sid: sid,
+        rpc: rpc,
+        url: this.rpcTunnel[sid] > 0 ? 'http://' + addr + ':' + this.rpcTunnel[sid] : '',
+        clt: execution.service.replace(/Service/gi,"").toUpperCase(),
+      });
+    }
+
+    // Final check
+    if(data.length < 1){
+      return {
+        "code": 2,
+        "info": "error: no running execution client with enabled RPC port found",
+        "data": '',
+      };
+    }
 
     // Respond success
     return {
       "code": 0,
       "info": "success: rpcstatus successfully retrieved",
-      "data": {
-        rpc: result.data.rpc,
-        url: this.rpcTunnel > 0 ? 'http://' + result.data.rpc.destinationIp + ':' + this.rpcTunnel : '',
-        clt: result.data.ec.service.replace(/Service/gi,"").toUpperCase(),
-      },
+      "data": data,
     };
   }
 
