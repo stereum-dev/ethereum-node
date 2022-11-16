@@ -137,8 +137,10 @@ export class SSHService {
 
   async closeTunnels (onlySpecificPorts=[]) {
     return new Promise((resolve, reject) => {
-      if(this.tunnels.length > 0){
-        for(let [i, tunnel] of this.tunnels.entries()){
+      let i = this.tunnels.length;
+      if(i > 0){
+        while (i--){ // loop backwards to splice array from specific ports
+          let tunnel = this.tunnels[i];
           if(Array.isArray(onlySpecificPorts) && onlySpecificPorts.length && !onlySpecificPorts.includes(tunnel.config.localPort)){
             continue;
           }
