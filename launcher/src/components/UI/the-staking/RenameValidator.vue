@@ -16,7 +16,11 @@
         :class="{ disabled: newName.trim().length === 0 }"
         @click="checkEnteredName"
       >
-        <img src="/img/icon/the-staking/done.png" alt="icon" />
+        <img
+          src="/img/icon/the-staking/done.png"
+          alt="icon"
+          :class="{ disabledIcon: newName.trim().length === 0 }"
+        />
       </button>
     </div>
   </div>
@@ -119,7 +123,7 @@ export default {
   width: 45%;
 }
 .cancelBtn img {
-  width:50%;
+  width: 50%;
 }
 .confirmBtn:focus,
 .cancelBtn:focus {
@@ -144,8 +148,10 @@ export default {
   transition-duration: 0.2s;
 }
 .disabled {
-  opacity: 0.7;
   cursor: not-allowed;
   pointer-events: none;
+}
+.disabledIcon {
+  opacity: 0.4;
 }
 </style>
