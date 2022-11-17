@@ -1,6 +1,5 @@
 <template>
   <div class="portlist_parent">
-    <comming-soon></comming-soon>
     <div class="portlist_box">
       <div class="portlist_icon">
         <div class="portlist_icon_contaniner">
@@ -12,12 +11,15 @@
         <span>OPEN PORTS</span>
       </div>
       <div class="portlist-data_box">
-        <div class="portlist-data_row" v-for="item in portsInfo" :key="item.id">
+        <div class="portlist-data_row" v-for="item in portstatus.data" :key="item.id">
           <div class="rowName">
             <span>{{ item.name }}</span>
           </div>
           <div class="portNo">
-            <span>{{ item.portNo }}</span>
+            <span>{{ item.port }}</span>
+          </div>
+          <div class="protocol">
+            <span>{{ item.prot }}</span>
           </div>
         </div>
       </div>
@@ -25,6 +27,8 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useControlStore } from "../../../store/theControl";
 export default {
   data() {
     return {
@@ -32,35 +36,46 @@ export default {
         {
           id: 1,
           name: "name1",
-          portNo: 1111,
+          port: 1111,
+          prot: "tcp",
         },
         {
           id: 2,
           name: "name2",
-          portNo: 22,
+          port: 22,
+          prot: "udp",
         },
         {
           id: 3,
           name: "name3",
-          portNo: 333,
+          port: 333,
+          prot: "tcp",
         },
         {
           id: 4,
           name: "name4",
-          portNo: 4,
+          port: 4,
+          prot: "udp",
         },
         {
           id: 5,
           name: "name5",
-          portNo: 1515,
+          port: 1515,
+          prot: "tcp",
         },
         {
           id: 6,
           name: "name6",
-          portNo: 123,
+          port: 123,
+          prot: "udp",
         },
       ],
     };
+  },
+  computed: {
+    ...mapState(useControlStore, {
+      portstatus: "portstatus",
+    }),
   },
 };
 </script>
@@ -135,7 +150,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 55%;
+  width: 45%;
   height: 100%;
   font-size: 50%;
   color: #c1c1c1;
@@ -146,6 +161,15 @@ export default {
   justify-content: center;
   align-items: center;
   width: 40%;
+  height: 100%;
+  font-size: 50%;
+  color: #c1c1c1;
+}
+.protocol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 5%;
   height: 100%;
   font-size: 50%;
   color: #c1c1c1;
