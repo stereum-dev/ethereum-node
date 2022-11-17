@@ -288,7 +288,6 @@ export class ServiceManager {
       isString = true
       command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
     }
-    log.info(command)
     let fullCommand = command.find(c => c.includes(endpointCommand))
     command = command.filter(c => !c.includes(endpointCommand))
     let newProps
@@ -336,7 +335,7 @@ export class ServiceManager {
       }
 
       if (isString)
-        return (command.concat([fullCommand])).join(' ')
+        return (command.concat([fullCommand])).join(' ').trim()
       return command.concat([fullCommand])
   }
 
@@ -369,7 +368,7 @@ export class ServiceManager {
     }).filter(c => c !== undefined)
 
     if (isString)
-      return (command.concat(newProps)).join(' ')
+      return (command.concat(newProps)).join(' ').trim()
     return command.concat(newProps)
   }
 
@@ -632,8 +631,71 @@ export class ServiceManager {
     return ELInstalls.concat(CLInstalls,VLInstalls)
   }
 
+  //make sure there are no double tasks (for example: TekuBeaconService, TekuValidatorService share the same id)
   static uniqueByID(job) {
     return (value, index, self) => self.map(t => t.service.config.serviceID).indexOf(value.service.config.serviceID) === index && value.content === job
+  }
+
+  //remove all service data
+  async removeServiceData(services){
+    services = [].concat(services)
+    for(const service of services){
+      if(service.volumes.length > 0){
+        //get service data path
+        let path = service.volumes.find(v => v.destinationPath.includes(service.id)).destinationPath.replace(new RegExp(`(?<=${service.id}).*`), '')
+        await this.nodeConnection.sshService.exec('rm -rf ' + path)
+      }
+    }
+  }
+
+  changeNetworkCommand(newNetwork, service){
+    let command = service.command
+    let isString = false
+    if (typeof command === "string") {
+      isString = true
+      command = command.replaceAll(/\n/gm, '').replaceAll(/\s\s+/gm, ' ').split(' ')
+    }
+    if(service.service === "FlashbotsMevBoostService"){
+      command = service.entrypoint
+      let index = command.findIndex(c => /^-(mainnet|prater|goerli$)/.test(c))
+      command[index] = '-' + newNetwork
+      index = command.findIndex(c => c === "-relays")+1
+      command[index] = '""'
+    }else if(service.service === "PrysmBeaconService"){
+      let index = command.findIndex(c => /--(mainnet|prater|goerli)/.test(c))
+      command[index] = '--' + newNetwork
+      if(newNetwork === "mainnet" && command.includes('--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz')){
+        command.splice(command.indexOf('--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz'), 1)
+      }else if(!newNetwork === "mainnet" && !command.includes('--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz')){
+        command.push('--genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz')
+      }
+    }else{
+      command = command.map(c => {
+        if(/mainnet|prater|goerli/.test(c)){
+          c = c.replace(/mainnet|prater|goerli/, newNetwork)
+        }
+        return c
+      })
+    }
+    if (isString)
+      return command.join(' ').trim()
+    return command
+  }
+
+  async changeNetwork(newNetwork, services){
+    await this.removeServiceData(services)
+    for(let service of services){
+      if(service.service === "FlashbotsMevBoostService"){
+        service.entrypoint = this.changeNetworkCommand(newNetwork, service)
+      }else{
+        service.command = this.changeNetworkCommand(newNetwork, service)
+      }
+      service.network = newNetwork
+    }
+    await this.createKeystores(services)
+    await Promise.all(services.map(async (service) => {
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
+    }))
   }
 
   async handleServiceChanges(tasks) {
@@ -652,14 +714,39 @@ export class ServiceManager {
     }
     let newInstallTasks
     if (jobs.includes("INSTALL")) {
-      let services = await this.readServiceConfigurations()
-      let installTasks = tasks.filter(t => t.content === "INSTALL")
-      newInstallTasks = await this.addServices(installTasks, services)
+      try {
+        let services = await this.readServiceConfigurations()
+        let installTasks = tasks.filter(t => t.content === "INSTALL")
+        newInstallTasks = await this.addServices(installTasks, services)
+      } catch (err) {
+        log.error("Installing Services Failed:", err)
+      } finally {
+
+      }
     }
     if (jobs.includes("MODIFY")) {
+      try {
+        let services = await this.readServiceConfigurations()
+        let modifyTasks = tasks.filter(t => t.content === "MODIFY")
+        await this.modifyServices(modifyTasks, services, newInstallTasks)
+      } catch (err) {
+        log.error("Modifying Services Failed:", err)
+      } finally {
+
+      }
+    }
+    if (jobs.includes("CHANGE NETWORK")) {
+      let before = this.nodeConnection.getTimeStamp()
       let services = await this.readServiceConfigurations()
-      let modifyTasks = tasks.filter(t => t.content === "MODIFY")
-      await this.modifyServices(modifyTasks, services, newInstallTasks)
+      try {
+        let changeNetworkTask = tasks.find(t => t.content === "CHANGE NETWORK")
+        await this.changeNetwork(changeNetworkTask.data.network, services.filter(s => s.service !== "SSVNetworkService"))
+      } catch (err) {
+        log.error("Changing Network Failed:", err)
+      } finally {
+        let after = this.nodeConnection.getTimeStamp()
+        await this.nodeConnection.restartServices(after - before)
+      }
     }
   }
 }
