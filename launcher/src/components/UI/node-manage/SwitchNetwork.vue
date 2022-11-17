@@ -58,6 +58,8 @@ export default {
       currentNetwork: "currentNetwork",
       configNetwork: "configNetwork",
       newConfiguration: "newConfiguration",
+      confirmChanges: "confirmChanges",
+      actionContents: "actionContents",
     }),
   },
   watch: {
@@ -74,17 +76,32 @@ export default {
   methods: {
     changeConfig(val){
       const installed = JSON.parse(JSON.stringify(this.installedServices))
-      if(val.network === "mainnet"){
-        this.newConfiguration = installed.filter(s => s.config.network === "mainnet")
-      }else{
-        this.newConfiguration = installed
-      }
+      this.newConfiguration = installed
+    },
+    getActions(action, service, data){
+      let item = this.actionContents.find(item => item.content === action)
+      if(item)
+        return {...item, service: service, data: data}
+      return undefined
     },
     openDropDown() {
       this.dropdownIsActive = !this.dropdownIsActive;
       this.closeDropdownActive = !this.closeDropdownActive;
     },
     selectNetworkToDisplay(item) {
+      if(!(item.network == this.configNetwork.network)){
+        if(this.confirmChanges.map(j => j.content).includes('CHANGE NETWORK')){
+          let index = this.confirmChanges.findIndex(j => j.content.includes('CHANGE NETWORK'))
+          if(this.currentNetwork.network === item.network){
+            this.confirmChanges.splice(index, 1)
+          }else{
+            this.confirmChanges[index].data.network = (item.network === "testnet" ? "goerli" : "mainnet")
+            this.confirmChanges[index].service.icon = item.icon
+          }
+        }else{
+          this.confirmChanges.push(this.getActions("CHANGE NETWORK", {icon: item.icon}, {network: (item.network === "testnet" ? "goerli" : "mainnet")}))
+        }
+      }
       this.configNetwork = item;
       this.dropdownIsActive = false;
       this.closeDropdownActive = false;

@@ -1,8 +1,19 @@
-import { serivceState, ServiceManager } from './ServiceManager'
-import { NodeConnection } from './NodeConnection'
-import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { SSVNetworkService } from './ethereum-services/SSVNetworkService'
 import { GethService } from './ethereum-services/GethService'
+import { BesuService } from './ethereum-services/BesuService'
+import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
+import { PrometheusService } from './ethereum-services/PrometheusService'
+import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
+import { GrafanaService } from './ethereum-services/GrafanaService'
+import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
+import { StringUtils } from './StringUtils.js'
+import { ServiceManager, serivceState} from './ServiceManager'
 import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
+import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
+import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
+import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
+import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
+import { NethermindService } from './ethereum-services/NethermindService'
 import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 
 test('manageServiceState success', async () => {
@@ -250,3 +261,39 @@ test('removeConnection array multiple endpoints', () => {
   expect(result).not.toContain('--ee-endpoint="http://stereum-9adfdb2e-9f5b-aba4-cfde-f3483d7aac8d:8551,foo:3000,bar:2000"')
   expect(result).toContain('--ee-endpoint="foo:3000,bar:2000"')
 })
+
+test('change network', () => {
+  let services = []
+  let installDir = '/opt/stereum'
+  let checkpointURL = undefined
+  let relayURL = 'https://0x8f7b17a74569b7a57e9bdafd2e159380759f5dc3ccbd4bf600414147e8c4e1dc6ebada83c0139ac15850eb6c975e82d0@builder-relay-goerli.blocknative.com'
+  let oldNetwork = 'goerli'
+  let newNetwork = 'mainnet'
+  const sm = new ServiceManager()
+  services.push(GethService.buildByUserInput(oldNetwork, [], installDir + '/geth'))
+  services.push(BesuService.buildByUserInput(oldNetwork, [], installDir + '/besu'))
+  services.push(NethermindService.buildByUserInput(oldNetwork, [], installDir + '/nethermind'))
+  services.push(FlashbotsMevBoostService.buildByUserInput(oldNetwork, relayURL))
+  services.push(LighthouseBeaconService.buildByUserInput(oldNetwork, [], installDir + '/lighthouse', [], '16', [], checkpointURL))
+  services.push(LighthouseValidatorService.buildByUserInput(oldNetwork, [], installDir + '/lighthouse', []))
+  services.push(PrysmBeaconService.buildByUserInput(oldNetwork, [], installDir + '/prysm', [], [], checkpointURL))
+  services.push(PrysmValidatorService.buildByUserInput(oldNetwork, [], installDir + '/prysm', []))
+  services.push(NimbusBeaconService.buildByUserInput(oldNetwork, [], installDir + '/nimbus', [], [], checkpointURL))
+  services.push(TekuBeaconService.buildByUserInput(oldNetwork, [], installDir + '/teku', [], [], checkpointURL))
+  services.push(PrometheusNodeExporterService.buildByUserInput(oldNetwork))
+  services.push(PrometheusService.buildByUserInput(oldNetwork, [], installDir + '/prometheus'))
+  services.push(GrafanaService.buildByUserInput(oldNetwork, [], installDir + '/grafana'))
+  for(let service of services){
+    if(service.service === 'FlashbotsMevBoostService'){
+      service.entrypoint = sm.changeNetworkCommand(newNetwork, service)
+    }else {
+      service.command = sm.changeNetworkCommand(newNetwork, service)
+    }
+    service.network = newNetwork
+  }
+    expect(services.map(s => s.network)).not.toContain('goerli')
+    expect(services.find(s => s.service === 'FlashbotsMevBoostService').entrypoint).toContain('-mainnet')
+    expect(services.find(s => s.service === 'PrysmBeaconService').command).toMatch(/--mainnet/)
+    expect(services.find(s => s.service === 'PrysmBeaconService').command).not.toMatch(/--genesis-state=\/opt\/app\/genesis\/prysm\-prater\-genesis\.ssz/)
+    expect(services.find(s => s.service === 'LighthouseBeaconService').command).toContain('--network=mainnet')
+  })
