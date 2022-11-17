@@ -42,19 +42,12 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div
-            class="tableRow"
-            v-for="(item, index) in keys"
-            :key="index"
-            :class="[]"
-          >
+          <div class="tableRow" v-for="(item, index) in keys" :key="index">
             <div class="rowContent">
               <span class="circle"></span>
-              <span
-                class="category"
-                v-if="item.displayName != '' && item.displayName != null"
-                >{{ item.displayName }}</span
-              >
+              <span class="category" v-if="item.displayName">{{
+                item.displayName
+              }}</span>
 
               <span class="category" @click="logEvent" v-else
                 >{{ item.key.substring(0, 20) }}...{{
@@ -316,6 +309,8 @@ export default {
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
       selectedService: {},
       validatorName: "",
+      storingKeys: [],
+      keysInStorage: [],
     };
   },
   watch: {
@@ -365,15 +360,15 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
-    pickValidatorName(el) {
-      if (el.displayName !== "") {
-        this.validatorName = el.displayName;
-      } else {
-        this.validatorName = el.key;
-      }
+    updateDisplayName() {
+      this.keys = this.keys.map((item) => {
+        if (Object.keys(localStorage).includes(item.key)) {
+          item.displayName = localStorage.getItem(item.key);
+        }
+      });
     },
   },
-  created() {
+  beforeMount() {
     this.keys = this.keys.map((item) => {
       return {
         isGrafitiBoxActive: false,
@@ -383,7 +378,7 @@ export default {
         displayExitModal: false,
         isDownloadModalActive: false,
         isRenameActive: false,
-        displayRow: false,
+        displayName: "",
         ...item,
       };
     });
@@ -391,6 +386,12 @@ export default {
   mounted() {
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
+    this.keys.map((item) => {
+      const store = Object.keys(localStorage).find((i) => i == item.key);
+      if (item.key === store && store !== undefined) {
+        item.displayName = localStorage.getItem(item.key);
+      }
+    });
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -398,6 +399,7 @@ export default {
   updated() {
     this.checkKeyExists();
   },
+
   methods: {
     logEvent(event) {
       let url = event.target.baseURI;
@@ -420,20 +422,11 @@ export default {
     },
     renameDisplayHandler(el) {
       el.isRenameActive = true;
-      el.displayRow = true;
     },
     renameValidatorHandler(el, name) {
       el.isRenameActive = false;
-      el.displayRow = null;
-      this.keys = this.keys.map((item) => {
-        if (item.key === el.key) {
-          return {
-            ...item,
-            displayName: name,
-          };
-        }
-        return item;
-      });
+      localStorage.setItem(el.key, name);
+      el.displayName = localStorage.getItem(el.key);
     },
     closeRenameHandler(el) {
       el.isRenameActive = false;
