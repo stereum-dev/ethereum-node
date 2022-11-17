@@ -21,7 +21,9 @@
           <div class="left-icon">
             <img :src="item.contentIcon" alt="icon" />
           </div>
-          <span>{{ item.content }}</span>
+          <div class="taskName">
+            <span>{{ item.content }}</span>
+          </div>
           <div class="right-icon">
             <img :src="item.service.icon" alt="icon" />
           </div>
@@ -85,8 +87,8 @@ export default {
       this.selectedItemToRemove = [];
     },
     async confirmHandler() {
-      await ControlService.handleServiceChanges(toRaw(this.confirmChanges))
-      this.confirmChanges = []
+      await ControlService.handleServiceChanges(toRaw(this.confirmChanges));
+      this.confirmChanges = [];
     },
   },
 };
@@ -219,10 +221,19 @@ export default {
 .tableRow .left-icon img {
   width: 100%;
 }
-.tableRow span {
+.tableRow .taskName {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.taskName span {
   color: rgb(207, 207, 207);
-  font-size: 0.6rem;
-  font-weight: 600;
+  font-size: 0.5rem;
+  font-weight: 500;
+  word-wrap: unset;
 }
 
 .trash-box {
