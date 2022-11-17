@@ -152,6 +152,9 @@
   "grafitiMultipleValidator": {
     "textPlaceHolder": "Та блок үүсгээд chain-д нэмэхдээ 32 хүртэлх тэмдэгтийг оруулна уу!"
   },
+  "renameValidator": {
+    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+  },
   "insertValidator": {
     "insertText": "ТҮЛХҮҮР ОРУУЛАХ БОЛ ТОВШИХ БУЮУ ЧИРНЭ ҮҮ"
   },
@@ -161,9 +164,11 @@
     "btn": "зам сонгох"
   },
   "removeMultiModal": {
-    "sure": "Та устгахдаа итгэлтэй байна уу",
-    "from": "ЭНЭ МАШИНААС?",
-    "remove": "Хасах"
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
+    "remove": "Хасах",
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "Та ЭНЭ МАШИНААС Бүх Валидатор түлхүүрүүдийг хасахдаа итгэлтэй байна уу?"
