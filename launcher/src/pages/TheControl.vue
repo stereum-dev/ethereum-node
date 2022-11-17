@@ -33,6 +33,7 @@ export default {
       p2pstatus: "p2pstatus",
       rpcstatus: "rpcstatus",
       beaconstatus: "beaconstatus",
+      portstatus: "portstatus",
       storagestatus: "storagestatus",
     }),
   },
@@ -43,25 +44,25 @@ export default {
     clearInterval(this.polling);
   },
   methods: {
-    async requestQueued(){
-        this.request = Array.isArray(this.request) ? this.request : [];
-        const ARGUMENTS = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
-        const meth = ARGUMENTS.length ? ARGUMENTS.shift() : null;
-        const args = ARGUMENTS.length ? ARGUMENTS : null;
-        if(meth in this.request && this.request[meth]){
-          return;
-        }
-        this.request[meth] = true;
-        const csvc = ControlService;
-        const func = eval("async () => {return await csvc."+meth+"()}")
-        const resp = await func();
-        this.request[meth] = false;
-        return resp;
+    async requestQueued() {
+      this.request = Array.isArray(this.request) ? this.request : [];
+      const ARGUMENTS = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
+      const meth = ARGUMENTS.length ? ARGUMENTS.shift() : null;
+      const args = ARGUMENTS.length ? ARGUMENTS : null;
+      if (meth in this.request && this.request[meth]) {
+        return;
+      }
+      this.request[meth] = true;
+      const csvc = ControlService;
+      const func = eval("async () => {return await csvc." + meth + "()}");
+      const resp = await func();
+      this.request[meth] = false;
+      return resp;
     },
     async refresh() {
       try {
         // Get Node Stats
-        this.requestQueued('getNodeStats').then((nodeStats) => {
+        this.requestQueued("getNodeStats").then((nodeStats) => {
           if (nodeStats) {
             // @FRONTEND - getNodeStats returns an object with 3 keys (code/info/data)
             // code      : 0 (number!) means success all other values (including null or undefined) means error.
@@ -75,7 +76,8 @@ export default {
             // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
             // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
             // data.rpcstatus    : can be used for wiring launcher/src/components/UI/the-control/{RpcEndpoint|NodeConnectionRow}.vue
-            // data.beaconstatus    : can be used for wiring launcher/src/components/UI/the-control/{DataApi|NodeConnectionRow}.vue
+            // data.beaconstatus : can be used for wiring launcher/src/components/UI/the-control/{DataApi|NodeConnectionRow}.vue
+            // data.portstatus   : can be used for wiring launcher/src/components/UI/the-control/PortList.vue
             // console.log("@FRONTEND: data for wiring controls", nodeStats);
             try {
               this.code = nodeStats.code;
@@ -83,12 +85,13 @@ export default {
               this.p2pstatus = nodeStats.data.p2pstatus;
               this.rpcstatus = nodeStats.data.rpcstatus;
               this.beaconstatus = nodeStats.data.beaconstatus;
+              this.portstatus = nodeStats.data.portstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;
             } catch (e) {}
           }
         });
         // Get Server Vitals
-        this.requestQueued('getServerVitals').then((response) => {
+        this.requestQueued("getServerVitals").then((response) => {
           if (response) {
             this.ServerName = response.ServerName;
             this.totalRam = response.totalRam;

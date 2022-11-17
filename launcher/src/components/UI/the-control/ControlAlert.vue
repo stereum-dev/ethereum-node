@@ -1,6 +1,11 @@
 <template>
   <div class="alert-box_parent">
     <!-- <comming-soon></comming-soon> -->
+    <update-panel
+      :clickBg="displayUpdatePanel"
+      :class="{ 'updatePanel-show': displayUpdatePanel }"
+      @click-out="removeUpdateModal"
+    ></update-panel>
     <div class="alert-box">
       <div class="alert-box_header">
         <div class="icon_alarm" v-if="perfect">
@@ -21,7 +26,7 @@
             alt="green"
           />
         </div>
-        <div class="icon_alarm" v-if="notification">
+        <div class="icon_alarm" v-if="checkStereumUpdate">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -84,7 +89,11 @@
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
         </div>
-        <div class="alert-message_green" v-if="newUpdate">
+        <div
+          class="alert-message_green"
+          v-if="checkStereumUpdate"
+          @click="showUpdate()"
+        >
           <div class="icon-box">
             <img
               src="../../../../public/img/icon/control/logo-icon.png"
@@ -94,6 +103,9 @@
           <div class="message-box">
             <div class="warning"><span>NOTIFICATION</span></div>
             <div class="main-message"><span>STEREUM UPDATE</span></div>
+            <div class="val-message">
+              <span>{{ stereumUpdate.version }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -101,11 +113,18 @@
   </div>
 </template>
 <script>
+import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
+  components: {
+    UpdatePanel,
+  },
   data() {
     return {
+      displayUpdatePanel: false,
       storageWarning: false,
       cpuWarning: false,
       cpuAlarm: false,
@@ -122,6 +141,11 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
+    }),
+    ...mapWritableState(useNodeHeader, {
+      forceUpdateCheck: "forceUpdateCheck",
+      stereumUpdate: "stereumUpdate",
+      updating: "updating",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -157,8 +181,26 @@ export default {
   },
   created() {
     this.storageCheck();
+    this.cpuMeth();
+    this.checkStereumUpdate();
   },
   methods: {
+    showUpdate() {
+      this.displayUpdatePanel = true;
+    },
+    removeUpdateModal() {
+      this.displayUpdatePanel = false;
+    },
+    checkStereumUpdate() {
+      if (this.stereumUpdate && this.stereumUpdate.version) {
+        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
+        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
+        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
+          ? true
+          : false;
+      }
+      return false;
+    },
     storageCheck() {
       if (this.usedPercInt > 80) {
         this.storageWarning = true;
@@ -170,12 +212,36 @@ export default {
         this.perfect = true;
       }
     },
+    cpuMeth() {
+      if (this.cpu >= 80 && this.cpu < 90) {
+        this.cpuWarning = true;
+        this.cpuAlarm = false;
+        this.perfect = false;
+        this.warning = true;
+        this.alarm = false;
+      } else if (this.cpu >= 90) {
+        this.cpuWarning = false;
+        this.cpuAlarm = true;
+        this.perfect = false;
+        this.warning = false;
+        this.alarm = true;
+      } else if (this.cpu < 80) {
+        this.cpuWarning = false;
+        this.cpuAlarm = false;
+        this.perfect = true;
+        this.warning = false;
+        this.alarm = false;
+      }
+    },
   },
 };
 </script>
 <style scoped>
+.updatePanel-show {
+  right: 0 !important;
+}
 .alert-box_parent {
-  width: 90%;
+  width: 97%;
   height: 99%;
   margin-left: 3px;
   border: 5px solid grey;
@@ -207,10 +273,11 @@ export default {
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px #001717;
   padding: 1px;
+  box-sizing: border-box;
 }
 .icon_alarm {
   width: 23%;
-  height: 95%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -238,7 +305,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 12%;
+  height: 15%;
   background: #ffd924;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -249,7 +316,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 12%;
+  height: 15%;
   background: #be3635;
   border: 1px solid #707070;
   border-radius: 5px;
@@ -261,15 +328,16 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 12%;
+  height: 15%;
   background: #5f7e6a;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
   color: #eee;
+  cursor: pointer;
 }
 .icon-box {
-  width: 25%;
+  width: 28%;
   height: 95%;
   display: flex;
   justify-content: center;

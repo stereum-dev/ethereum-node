@@ -172,7 +172,7 @@ export default {
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
         // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        // console.log(this.stereumUpdate.current_commit)  // current installed commit on the os
+        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
         return this.stereumUpdate.commit != this.stereumUpdate.current_commit
           ? true
           : false;

@@ -160,7 +160,8 @@ export default {
           () => {
             setTimeout(() => {
               this.loading = false;
-            }, 5000);
+              this.$emit("closeWindow");
+            }, 2000);
           }
         );
       }

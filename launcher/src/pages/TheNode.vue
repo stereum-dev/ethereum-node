@@ -141,6 +141,7 @@ export default {
       playYoutubeVideo: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
+      serverVitals: {},
     };
   },
   computed: {
@@ -161,15 +162,22 @@ export default {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
+      cpu: "cpu",
+      availDisk: "availDisk",
+      usedPerc: "usedPerc",
     }),
   },
   mounted() {
     this.updateConnectionStats();
     this.updateServiceLogs();
+    this.rr = setInterval(this.refresh, 100); //refresh services
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
+    this.pollingVitals = setInterval(this.updateServerVitals, 1000); // refresh server vitals
   },
   beforeUnmount() {
+    clearInterval(this.rr);
     clearInterval(this.polling);
+    clearInterval(this.pollingVitals);
   },
   methods: {
     sortByName(a, b) {
@@ -185,10 +193,16 @@ export default {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
       this.ipAddress = stats.ipAddress;
+      this.cpu = this.cpu;
     },
     async updateServiceLogs() {
       const data = await ControlService.getServiceLogs();
       this.serviceLogs = data;
+    },
+    async updateServerVitals() {
+      const data = await ControlService.getServerVitals();
+      this.serverVitals = data;
+      //console.log("_-----____--__-_-->",this.serverVitals);
     },
     showModal(data) {
       this.isModalActive = true;
