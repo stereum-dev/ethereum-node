@@ -1398,6 +1398,52 @@ export class Monitoring {
     };
   }
 
+  // Get a list of all publicly available ports (including the associated service and protocol)
+  async getPortStatus(){
+
+    // Get service infos
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 1,
+        "info": "error: service infos unavailable",
+        "data": '',
+      };
+    }
+
+    // Get ports that are bound to a public network
+    let data = [];
+    const ignore = ["127.0.0.1","localhost"];
+    for(let i = 0; i < serviceInfos.length; i++){
+      let svc = serviceInfos[i];
+      let ports = svc.config.ports
+      if(ports.length < 1) continue;
+      for(let n = 0; n < ports.length; n++){
+        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+          continue;
+        data.push({
+          name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+          port: ports[n].destinationPort,
+          prot: ports[n].servicePortProtocol,
+        });
+      }
+    }
+
+    // Remove equal ports values (usually the case with equal udp/tcp ports)
+    // data = data.filter((value, index, self) =>
+    //   index === self.findIndex((t) => (
+    //     t.port === value.port
+    //   ))
+    // );
+
+    // Return success
+    return {
+      "code": 0,
+      "info": "success: open ports retrieved",
+      "data": data,
+    };
+  }
+
   // Used for fast debug/dev purposes
   async getDebugStatus(){
 
@@ -1450,6 +1496,9 @@ export class Monitoring {
       const debugstatus = await this.getDebugStatus();
       // if(debugstatus.code)
       //   return debugstatus;
+      const portstatus = await this.getPortStatus();
+      // if(portstatus.code)
+      //   return portstatus;
       const beaconstatus = await this.getBeaconStatus();
       // if(beaconstatus.code)
       //   return beaconstatus;
@@ -1475,6 +1524,7 @@ export class Monitoring {
           'storagestatus':storagestatus,
           'rpcstatus':rpcstatus,
           'beaconstatus':beaconstatus,
+          'portstatus':portstatus,
         }
       };
     } catch (err) {

@@ -33,6 +33,7 @@ export default {
       p2pstatus: "p2pstatus",
       rpcstatus: "rpcstatus",
       beaconstatus: "beaconstatus",
+      portstatus: "portstatus",
       storagestatus: "storagestatus",
     }),
   },
@@ -75,7 +76,8 @@ export default {
             // data.p2pstatus    : can be used for wiring launcher/src/components/UI/the-control/PeerToPeer.vue
             // data.storagestatus: can be used for wiring launcher/src/components/UI/the-control/TheStorage.vue
             // data.rpcstatus    : can be used for wiring launcher/src/components/UI/the-control/{RpcEndpoint|NodeConnectionRow}.vue
-            // data.beaconstatus    : can be used for wiring launcher/src/components/UI/the-control/{DataApi|NodeConnectionRow}.vue
+            // data.beaconstatus : can be used for wiring launcher/src/components/UI/the-control/{DataApi|NodeConnectionRow}.vue
+            // data.portstatus   : can be used for wiring launcher/src/components/UI/the-control/PortList.vue
             // console.log("@FRONTEND: data for wiring controls", nodeStats);
             try {
               this.code = nodeStats.code;
@@ -83,6 +85,7 @@ export default {
               this.p2pstatus = nodeStats.data.p2pstatus;
               this.rpcstatus = nodeStats.data.rpcstatus;
               this.beaconstatus = nodeStats.data.beaconstatus;
+              this.portstatus = nodeStats.data.portstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;
             } catch (e) {}
           }
