@@ -152,6 +152,9 @@
   "grafitiMultipleValidator": {
     "textPlaceHolder": "سی و دو کاراکتر را وارد کنید تا هنگام ایجاد یک بلوک به زنجیره اضافه شود"
   },
+  "renameValidator": {
+    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+  },
   "insertValidator": {
     "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
   },
@@ -161,9 +164,11 @@
     "btn": "pick path"
   },
   "removeMultiModal": {
-    "sure": "آیا اطمینان دارید که",
-    "from": "از این ماشین حذف کنید",
-    "remove": "حذف  کردن"
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
+    "remove": "حذف  کردن",
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "آیا مطمئن هستید که می خواهید همه کلیدهای اعتبار سنجی را از این ماشین حذف کنید؟"
