@@ -51,10 +51,11 @@
         <div class="searchBox">
           <input
             id="search"
-            type="text"
+            type="search"
             placeholder="Search"
             v-model="searchValue"
           />
+          <img src="/img/icon/arrows/search.png" alt="icon" />
         </div>
         <div class="serviceBox">
           <span>service id:</span>
@@ -376,25 +377,29 @@ export default {
 }
 
 .logsFooter .searchBox {
-  grid-column: 5/10;
+  grid-column: 5/9;
   grid-row: 1/2;
-  width: 100%;
-  height: 100%;
+  width: 98%;
+  height: 76%;
+  background-color: #eaeaea;
+  border-radius: 5px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  padding-right: 1rem;
 }
-
+.searchBox img {
+  width: 9%;
+  margin-right: 5px;
+}
 .logsFooter .searchBox input {
-  width: 80%;
-  height: 70%;
-  background-color: #d8d8d8;
+  width: 95%;
+  height: 90%;
+  background-color: #eaeaea;
   border-radius: 5px;
   border: none;
   outline: none;
   color: rgb(101, 101, 101);
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 600;
   padding: 0 0.5rem;
 }

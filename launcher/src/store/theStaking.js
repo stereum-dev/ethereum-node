@@ -6,6 +6,7 @@ export const useStakingStore = defineStore("theStaking", {
       totalBalance: 0,
       keys: [],
       forceRefresh: false,
+      storedValidatorKeys: [],
     };
   },
   actions: {},
