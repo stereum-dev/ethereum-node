@@ -141,6 +141,7 @@ export default {
       playYoutubeVideo: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
+      serverVitals: {},
     };
   },
   computed: {
@@ -167,9 +168,11 @@ export default {
     this.updateConnectionStats();
     this.updateServiceLogs();
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
+    this.pollingVitals = setInterval(this.updateServerVitals, 1000); // refresh server vitals
   },
   beforeUnmount() {
     clearInterval(this.polling);
+    clearInterval(this.pollingVitals);
   },
   methods: {
     sortByName(a, b) {
@@ -189,6 +192,11 @@ export default {
     async updateServiceLogs() {
       const data = await ControlService.getServiceLogs();
       this.serviceLogs = data;
+    },
+    async updateServerVitals() {
+      const data = await ControlService.getServerVitals();
+      this.serverVitals = data;
+      //console.log("_-----____--__-_-->",this.serverVitals);
     },
     showModal(data) {
       this.isModalActive = true;
