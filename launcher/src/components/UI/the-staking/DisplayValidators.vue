@@ -42,10 +42,14 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="table-row" v-for="(item, index) in keys" :key="index">
+          <div class="tableRow" v-for="(item, index) in keys" :key="index">
             <div class="rowContent">
               <span class="circle"></span>
-              <span class="category" ref="valKey" @click="logEvent"
+              <span class="category" v-if="item.displayName">{{
+                item.displayName
+              }}</span>
+
+              <span class="category" @click="logEvent" v-else
                 >{{ item.key.substring(0, 20) }}...{{
                   item.key.substring(item.key.length - 6, item.key.length)
                 }}</span
@@ -76,6 +80,14 @@
                     alt="icon"
                   />
                 </div>
+                <div class="rename-box">
+                  <img
+                    @click="renameDisplayHandler(item)"
+                    class="rename-icon"
+                    src="../../../../public/img/icon/the-staking/rename.png"
+                    alt="icon"
+                  />
+                </div>
                 <div class="remove-box">
                   <img
                     @click="removeModalDisplay(item)"
@@ -95,20 +107,26 @@
                 </div>
               </div>
             </div>
-            <grafiti-validator
+            <RenameValidator
+              v-if="item.isRenameActive"
+              @change-name="renameValidatorHandler"
+              @close-rename="closeRenameHandler"
+              :item="item"
+            />
+            <GrafitiValidator
               v-if="item.isGrafitiBoxActive"
               @confirm-change="grafitiConfirmHandler(item)"
-            ></grafiti-validator>
-            <exit-validator
+            />
+            <ExitValidator
               v-if="item.isExitBoxActive"
               @confirm-password="confirmPasswordSingleExitChain(item)"
-            ></exit-validator>
-            <exit-validators-modal
+            />
+            <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
               @exit-modal="closeExitChainModal(item)"
               @confirm-btn="confirmExitChainForValidators(item)"
-            ></exit-validators-modal>
+            />
             <RemoveValidator
               v-if="
                 item.toRemove ||
@@ -126,12 +144,6 @@
               "
               @delete-key="validatorRemoveConfirm(item)"
             />
-            <DownloadSlashing
-              v-if="item.isDownloadModalActive"
-              :item="item"
-              @download="downloadValidatorHandler(item)"
-              @close-modal="item.isDownloadModalActive = false"
-            />
           </div>
         </div>
         <div
@@ -146,7 +158,7 @@
           v-if="enterPasswordBox || selectValidatorServiceForKey"
         >
           <div
-            class="key-table-row"
+            class="key-tableRow"
             v-for="(item, index) in keyFiles"
             :key="index"
           >
@@ -207,10 +219,7 @@
       "
       @delete-key="confirmRemoveAllValidators"
     />
-    <DownloadMultiSlashing
-      v-if="downloadForMultiValidatorsActive"
-      @close-modal="downloadForMultiValidatorsActive = false"
-    />
+
     <!-- Exit box for validator keys -->
     <ExitMultipleValidators
       v-if="exitChainForMultiValidatorsActive"
@@ -222,6 +231,7 @@
 import DropZone from "./DropZone.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
+import RenameValidator from "./RenameValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
 import RemoveValidator from "./RemoveValidatore.vue";
@@ -239,14 +249,14 @@ import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
-import DownloadSlashing from "./DownloadSlashing.vue";
-import DownloadMultiSlashing from "./DownloadMultiSlashing.vue";
+
 export default {
   components: {
     DropZone,
     KeyModal,
     FeeRecipient,
     GrafitiValidator,
+    RenameValidator,
     ExitValidator,
     RemoveValidator,
     RemoveSingleModal,
@@ -258,8 +268,6 @@ export default {
     RemoveMultipleValidators,
     ExitMultipleValidators,
     SelectService,
-    DownloadSlashing,
-    DownloadMultiSlashing,
   },
   props: ["button"],
   data() {
@@ -300,6 +308,9 @@ export default {
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
       selectedService: {},
+      validatorName: "",
+      storingKeys: [],
+      keysInStorage: [],
     };
   },
   watch: {
@@ -349,8 +360,15 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
+    updateDisplayName() {
+      this.keys = this.keys.map((item) => {
+        if (Object.keys(localStorage).includes(item.key)) {
+          item.displayName = localStorage.getItem(item.key);
+        }
+      });
+    },
   },
-  created() {
+  beforeMount() {
     this.keys = this.keys.map((item) => {
       return {
         isGrafitiBoxActive: false,
@@ -359,6 +377,8 @@ export default {
         isExitBoxActive: false,
         displayExitModal: false,
         isDownloadModalActive: false,
+        isRenameActive: false,
+        displayName: "",
         ...item,
       };
     });
@@ -366,6 +386,12 @@ export default {
   mounted() {
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
+    this.keys.map((item) => {
+      const store = Object.keys(localStorage).find((i) => i == item.key);
+      if (item.key === store && store !== undefined) {
+        item.displayName = localStorage.getItem(item.key);
+      }
+    });
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -373,6 +399,7 @@ export default {
   updated() {
     this.checkKeyExists();
   },
+
   methods: {
     logEvent(event) {
       let url = event.target.baseURI;
@@ -389,8 +416,20 @@ export default {
       el.isGrafitiBoxActive = true;
       el.isRemoveModalActive = true;
     },
+
     grafitiConfirmHandler(el) {
       el.isGrafitiBoxActive = false;
+    },
+    renameDisplayHandler(el) {
+      el.isRenameActive = true;
+    },
+    renameValidatorHandler(el, name) {
+      el.isRenameActive = false;
+      localStorage.setItem(el.key, name);
+      el.displayName = localStorage.getItem(el.key);
+    },
+    closeRenameHandler(el) {
+      el.isRenameActive = false;
     },
     removeModalDisplay(el) {
       el.toRemove = true;
@@ -749,7 +788,7 @@ export default {
 remove-validator {
   z-index: 10000;
 }
-.table-row {
+.tableRow {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
@@ -758,7 +797,7 @@ remove-validator {
   align-items: center;
   position: relative;
 }
-.table-row .rowContent {
+.tableRow .rowContent {
   width: 100%;
   height: 100%;
   display: grid;
@@ -771,7 +810,7 @@ remove-validator {
   z-index: 3;
 }
 
-.table-row span {
+.tableRow span {
   align-self: center;
   width: max-content;
   color: #fff;
@@ -781,7 +820,7 @@ remove-validator {
   box-sizing: border-box;
 }
 
-.table-row .circle {
+.tableRow .circle {
   grid-column: 1;
   width: 19px;
   height: 19px;
@@ -791,7 +830,7 @@ remove-validator {
   align-self: center;
 }
 
-.table-row .category {
+.tableRow .category {
   width: 100%;
   grid-column: 2;
   font-size: 0.8rem;
@@ -801,28 +840,28 @@ remove-validator {
   color: #d7d7d7;
 }
 
-.table-row .service-icon {
+.tableRow .service-icon {
   width: 20px;
   grid-column: 3;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .since {
+.tableRow .since {
   grid-column: 4;
   font-size: 10px;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .state-icon {
+.tableRow .state-icon {
   width: 24px;
   grid-column: 5;
   justify-self: center;
   align-self: center;
 }
 
-.table-row .balance {
+.tableRow .balance {
   grid-column: 6;
   justify-self: center;
   align-self: center;
@@ -889,6 +928,22 @@ remove-validator {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+.option-box .rename-box {
+  width: max-content;
+  height: 100%;
+  margin: 0 auto;
+  grid-column: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.rename-box img {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto;
+  cursor: pointer;
 }
 
 .option-box .remove-box {
@@ -961,7 +1016,7 @@ remove-validator {
   grid-column: 8;
 }
 
-.key-table-row {
+.key-tableRow {
   width: 99%;
   height: 30px;
   margin: 5px auto 0 auto;
@@ -973,7 +1028,7 @@ remove-validator {
   padding: 1px;
 }
 
-.key-table-row .file-name {
+.key-tableRow .file-name {
   grid-column: 2/3;
   width: 100%;
   height: 95%;
@@ -984,7 +1039,7 @@ remove-validator {
   align-self: center;
 }
 
-.key-table-row .chosenService {
+.key-tableRow .chosenService {
   grid-column: 3/4;
   width: 50%;
   height: 100%;
@@ -994,13 +1049,13 @@ remove-validator {
   justify-self: flex-start;
   align-self: center;
 }
-.key-table-row .chosenService img {
+.key-tableRow .chosenService img {
   width: 23%;
   height: 80%;
   margin-left: 22px;
   align-self: center;
 }
-.key-table-row .key-remove-icon {
+.key-tableRow .key-remove-icon {
   grid-column: 4/5;
   display: flex !important;
   justify-content: center !important;
@@ -1015,12 +1070,12 @@ remove-validator {
   align-self: center;
 }
 
-.key-table-row .key-remove-icon img {
+.key-tableRow .key-remove-icon img {
   width: 60% !important;
   height: 60% !important;
 }
 
-.key-table-row .key-circle {
+.key-tableRow .key-circle {
   grid-column: 1/2;
   width: 20px !important;
   height: 20px !important;

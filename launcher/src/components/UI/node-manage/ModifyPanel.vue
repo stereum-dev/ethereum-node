@@ -842,7 +842,7 @@ html {
 }
 .relaysBox {
   width: 100%;
-  height: 58%;
+  height: 78%;
   padding: 2px;
   background-color: #23282b;
   border: 1px solid #22272a;
