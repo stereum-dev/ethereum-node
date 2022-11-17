@@ -161,14 +161,19 @@ export default {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
+      cpu: "cpu",
+      availDisk: "availDisk",
+      usedPerc: "usedPerc",
     }),
   },
   mounted() {
     this.updateConnectionStats();
     this.updateServiceLogs();
+    this.rr = setInterval(this.refresh, 100); //refresh services
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
   },
   beforeUnmount() {
+    clearInterval(this.rr);
     clearInterval(this.polling);
   },
   methods: {
@@ -185,6 +190,7 @@ export default {
       const stats = await ControlService.getConnectionStats();
       this.ServerName = stats.ServerName;
       this.ipAddress = stats.ipAddress;
+      this.cpu = this.cpu;
     },
     async updateServiceLogs() {
       const data = await ControlService.getServiceLogs();
