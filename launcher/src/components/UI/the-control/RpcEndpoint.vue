@@ -16,17 +16,20 @@
         </div>
         <div class="btn" :class="{ active: isActive }" @click="toggle">
           <span>{{ onoff }}</span>
+          <img v-show="!toggleAllowed" class="bttnLoading" :src="bttnLoading" />
         </div>
       </div>
       <!-- removed node-connection-row template end -->
-      <div
-        class="rpc-data"
-        v-for="item in rpcItems"
-        :key="item.id"
-        ref="clone"
-        @click="copy(item.value, item.title)"
-      >
-        <span>{{ item.title }}</span>
+      <div class="scrollable">
+        <div
+          class="rpc-data"
+          v-for="item in rpcItems"
+          :key="item.id"
+          ref="clone"
+          @click="copy(item.value, item.title)"
+        >
+          <span>{{ item.title }}</span>
+        </div>
       </div>
     </div>
     <div v-show="showData" class="compTtl">
@@ -42,7 +45,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
@@ -53,34 +56,34 @@ export default {
       toggleAllowed: true,
       showData: false,
       isActive: false,
+      refreshId: undefined,
+      lastKnownMts: 0.0,
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
-      rpcItems: [
-        {
-          id: 1,
-          title: "DUMMY",
-
-          value: "123456",
-        },
-      ],
+      bttnLoading: "/img/icon/control/loading.gif",
+      rpcItems: [],
     };
   },
-  created() {
+  mounted() {
     this.rpcControler();
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       code: "code",
       rpcstatus: "rpcstatus",
     }),
     onoff() {
+      if(!this.toggleAllowed)
+        return "";
       return this.isActive ? "ON" : "OFF";
     },
   },
   methods: {
     async copy(s, t) {
+      if(!this.toggleAllowed)
+        return;
       if (!s) {
         this.dialogValue = "Please turn ON the RPC tunnel first!";
         this.openDialog = true;
@@ -95,49 +98,101 @@ export default {
         }, 3000);
       }
     },
-    async toggle() {
-      if (!this.showData) return;
-      if (!this.toggleAllowed) return;
+    async refresh(timeout = 3000, async = false) {
+      let instant = isNaN(timeout) ? true : false;
+      if(this.refreshId){
+        clearTimeout(this.refreshId);
+        this.refreshId = undefined;
+      }
+      if(instant){
+        if(async){
+          await this.rpcControler();
+        }else{
+          this.rpcControler();
+        }
+        return;
+      }
+      this.refreshId = setTimeout(async () => {
+        if(async){
+          await this.rpcControler();
+        }else{
+          this.rpcControler();
+        }
+      }, timeout);
+    },
+    clearRefresh() {
+      if(this.refreshId){
+        clearTimeout(this.refreshId);
+        this.refreshId = undefined;
+      }
+    },
+    createHashByKey(arr,key=null){
+      let hash = '';
+      if(Array.isArray(arr) && arr.length > 0 && typeof key === 'string' && key != ''){
+        arr.sort((a,b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0))
+        for(let i=0;i<arr.length;i++){
+          hash += arr[i].hasOwnProperty(key) ? arr[i][key] : '';
+        }
+      }
+      return hash;
+    },
+    async toggle(clientListChanged=null) {
+      if(clientListChanged !== true){
+        if (!this.showData) return;
+        if (!this.toggleAllowed) return;
+      }
       this.toggleAllowed = false;
-      let isActive = this.isActive ? false : true;
-      let result;
+      this.clearRefresh();
+      let isActive = clientListChanged === true ? this.isActive : (this.isActive ? false : true);
+      let result = {
+        'code': 9999,
+        'info': 'error: unknown issue on toggling tunnels',
+        'data': '',
+      };
       try {
         if (isActive) {
-          const localPorts = await ControlService.getAvailablePort({
-            min: 8545,
-            max: 8999,
-            amount: 1,
-          });
-          result = await ControlService.openRpcTunnel({
-            force_local_port: localPorts.pop(),
-          });
+          result = await ControlService.openRpcTunnel();
         } else {
           result = await ControlService.closeRpcTunnel();
         }
       } catch (e) {
         console.log(e);
       }
-      this.rpcstatus.data.url = result.data.url;
-      this.isActive = !result || result.code ? this.isActive : isActive;
-      this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
-      this.rpcItems[0].value = this.rpcstatus.data.url;
+      this.rpcstatus = result.data;
+      await this.refresh(true,true);
       this.toggleAllowed = true;
     },
-    rpcControler() {
-      this.isActive = false;
-      this.showData = false;
+    async rpcControler() {
+      let isActive = false;
+      let rpcItems = []
+      let rpcItemsHashBefore = this.createHashByKey(this.rpcItems,'id');
       if (this.code === 0 && this.rpcstatus.code === 0) {
-        this.rpcItems[0].title = this.rpcstatus.data.clt;
-        this.rpcItems[0].value = this.rpcstatus.data.url;
-        this.isActive = this.rpcstatus.data.url ? true : false;
-        this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
-        this.showData = true;
+        for(let i = 0; i < this.rpcstatus.data.length; i++){
+          if(this.rpcstatus.data[i].now < this.lastKnownMts){
+            //console.log("---------------> DENY OUTDATED RPC STATUS!");
+            this.refresh();
+            return;
+          }
+          this.lastKnownMts = this.rpcstatus.data[i].now;
+          rpcItems.push({
+            id: this.rpcstatus.data[i].sid,
+            title: this.rpcstatus.data[i].clt,
+            value: this.rpcstatus.data[i].url,
+          });
+          isActive = this.rpcstatus.data[i].url ? true : isActive;
+        }
+      }
+      let rpcItemsHashAfter = this.createHashByKey(rpcItems,'id');
+      this.isActive = isActive;
+      this.copyVal = isActive ? "click to copy" : "tunnel closed";
+      this.rpcItems = rpcItems;
+      if(rpcItemsHashBefore != rpcItemsHashAfter){
+        //console.log("RPC TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
+        this.toggle(true);
         return;
       }
-      if (this.waitForData) clearTimeout(this.waitForData);
-      this.waitForData = setTimeout(() => {
-        this.rpcControler();
-      }, 250);
+      this.showData = rpcItems.length > 0 ? true : false;
+      this.refresh();
     },
   },
 };
@@ -200,6 +255,18 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.scrollable{
+  width: 100%;
+  padding-left:4%;
+  padding-right:2%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.bttnLoading{
+  width: 50%;
+}
 .compTtl {
   display: flex;
   width: 100%;
@@ -215,7 +282,7 @@ export default {
   width: 98%;
   height: 27%;
   margin: 2% 0;
-  padding: 2%;
+  padding: 8%;
   font-size: 55%;
   border: 1px solid #707070;
   border-radius: 5px;

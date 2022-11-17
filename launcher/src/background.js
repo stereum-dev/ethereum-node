@@ -124,6 +124,7 @@ promiseIpc.on("logout", async () => {
   await serviceManager.nodeConnection.logout();
   await monitoring.serviceManager.nodeConnection.logout();
   await monitoring.serviceManagerProm.nodeConnection.logout();
+  await monitoring.onLogout();
   return await nodeConnection.logout();
 });
 

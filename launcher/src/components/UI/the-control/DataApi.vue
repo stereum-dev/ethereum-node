@@ -16,17 +16,20 @@
         </div>
         <div class="btn" :class="{ active: isActive }" @click="toggle">
           <span>{{ onoff }}</span>
+          <img v-show="!toggleAllowed" class="bttnLoading" :src="bttnLoading" />
         </div>
       </div>
       <!-- removed node-connection-row template end -->
-      <div
-        class="dataApi-data"
-        v-for="item in dataApiItems"
-        :key="item.id"
-        ref="clone"
-        @click="copy(item.value, item.title)"
-      >
-        <span>{{ item.title }}</span>
+      <div class="scrollable">
+        <div
+          class="dataApi-data"
+          v-for="item in dataApiItems"
+          :key="item.id"
+          ref="clone"
+          @click="copy(item.value, item.title)"
+        >
+          <span>{{ item.title }}</span>
+        </div>
       </div>
     </div>
     <div v-show="showData" class="compTtl">
@@ -39,7 +42,7 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
@@ -50,33 +53,34 @@ export default {
       toggleAllowed: true,
       showData: false,
       isActive: false,
+      refreshId: undefined,
+      lastKnownMts: 0.0,
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
-      dataApiItems: [
-        {
-          id: 1,
-          title: "DUMMY",
-          value: "123456",
-        },
-      ],
+      bttnLoading: "/img/icon/control/loading.gif",
+      dataApiItems: [],
     };
   },
   created() {
     this.beaconControler();
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       code: "code",
       beaconstatus: "beaconstatus",
     }),
     onoff() {
+      if(!this.toggleAllowed)
+        return "";
       return this.isActive ? "ON" : "OFF";
     },
   },
   methods: {
     async copy(s, t) {
+      if(!this.toggleAllowed)
+        return;
       if (!s) {
         this.dialogValue = "Please turn ON the DATA-API tunnel first!";
         this.openDialog = true;
@@ -91,49 +95,101 @@ export default {
         }, 3000);
       }
     },
-    async toggle() {
-      if (!this.showData) return;
-      if (!this.toggleAllowed) return;
+    async refresh(timeout = 3000, async = false) {
+      let instant = isNaN(timeout) ? true : false;
+      if(this.refreshId){
+        clearTimeout(this.refreshId);
+        this.refreshId = undefined;
+      }
+      if(instant){
+        if(async){
+          await this.beaconControler();
+        }else{
+          this.beaconControler();
+        }
+        return;
+      }
+      this.refreshId = setTimeout(async () => {
+        if(async){
+          await this.beaconControler();
+        }else{
+          this.beaconControler();
+        }
+      }, timeout);
+    },
+    clearRefresh() {
+      if(this.refreshId){
+        clearTimeout(this.refreshId);
+        this.refreshId = undefined;
+      }
+    },
+    createHashByKey(arr,key=null){
+      let hash = '';
+      if(Array.isArray(arr) && arr.length > 0 && typeof key === 'string' && key != ''){
+        arr.sort((a,b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0))
+        for(let i=0;i<arr.length;i++){
+          hash += arr[i].hasOwnProperty(key) ? arr[i][key] : '';
+        }
+      }
+      return hash;
+    },
+    async toggle(clientListChanged=null) {
+      if(clientListChanged !== true){
+        if (!this.showData) return;
+        if (!this.toggleAllowed) return;
+      }
       this.toggleAllowed = false;
-      let isActive = this.isActive ? false : true;
-      let result;
+      this.clearRefresh();
+      let isActive = clientListChanged === true ? this.isActive : (this.isActive ? false : true);
+      let result = {
+        'code': 9999,
+        'info': 'error: unknown issue on toggling tunnels',
+        'data': '',
+      };
       try {
         if (isActive) {
-          const localPorts = await ControlService.getAvailablePort({
-            min: 5545,
-            max: 5999,
-            amount: 1,
-          });
-          result = await ControlService.openBeaconTunnel({
-            force_local_port: localPorts.pop(),
-          });
+          result = await ControlService.openBeaconTunnel();
         } else {
           result = await ControlService.closeBeaconTunnel();
         }
       } catch (e) {
         console.log(e);
       }
-      this.beaconstatus.data.url = result.data.url;
-      this.isActive = !result || result.code ? this.isActive : isActive;
-      this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
-      this.dataApiItems[0].value = this.beaconstatus.data.url;
+      this.beaconstatus = result.data;
+      await this.refresh(true,true);
       this.toggleAllowed = true;
     },
-    beaconControler() {
-      this.isActive = false;
-      this.showData = false;
+    async beaconControler() {
+      let isActive = false;
+      let dataApiItems = []
+      let dataApiItemsHashBefore = this.createHashByKey(this.dataApiItems,'id');
       if (this.code === 0 && this.beaconstatus.code === 0) {
-        this.dataApiItems[0].title = this.beaconstatus.data.clt;
-        this.dataApiItems[0].value = this.beaconstatus.data.url;
-        this.isActive = this.beaconstatus.data.url ? true : false;
-        this.copyVal = this.isActive ? "click to copy" : "tunnel closed";
-        this.showData = true;
+        for(let i = 0; i < this.beaconstatus.data.length; i++){
+          if(this.beaconstatus.data[i].now < this.lastKnownMts){
+            //console.log("---------------> DENY OUTDATED BEACON STATUS!");
+            this.refresh();
+            return;
+          }
+          this.lastKnownMts = this.beaconstatus.data[i].now;
+          dataApiItems.push({
+            id: this.beaconstatus.data[i].sid,
+            title: this.beaconstatus.data[i].clt,
+            value: this.beaconstatus.data[i].url,
+          });
+          isActive = this.beaconstatus.data[i].url ? true : isActive;
+        }
+      }
+      let dataApiItemsHashAfter = this.createHashByKey(dataApiItems,'id');
+      this.isActive = isActive;
+      this.copyVal = isActive ? "click to copy" : "tunnel closed";
+      this.dataApiItems = dataApiItems;
+      if(dataApiItemsHashBefore != dataApiItemsHashAfter){
+        //console.log("BEACON TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
+        this.toggle(true);
         return;
       }
-      if (this.waitForData) clearTimeout(this.waitForData);
-      this.waitForData = setTimeout(() => {
-        this.beaconControler();
-      }, 250);
+      this.showData = dataApiItems.length > 0 ? true : false;
+      this.refresh();
     },
   },
 };
@@ -191,17 +247,24 @@ export default {
   font-weight: 600;
   font-size: 80%;
 }
-.rpc-box {
-  width: 100%;
-  height: 75%;
-  display: flex;
-  flex-direction: column;
-}
+
 .dataApi-box {
   width: 100%;
   height: 75%;
   display: flex;
   flex-direction: column;
+}
+.scrollable{
+  width: 100%;
+  padding-left:4%;
+  padding-right:2%;
+  height: 75%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.bttnLoading{
+  width: 50%;
 }
 .compTtl {
   display: flex;
@@ -218,7 +281,7 @@ export default {
   width: 98%;
   height: 27%;
   margin: 2% 0;
-  padding: 2%;
+  padding: 8%;
   font-size: 55%;
   border: 1px solid #707070;
   border-radius: 5px;
