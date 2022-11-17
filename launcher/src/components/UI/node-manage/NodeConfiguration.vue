@@ -1,7 +1,7 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <div class="serverBox">
+      <div class="">
         <div class="details">
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
@@ -14,7 +14,7 @@
       <div class="config-btns">
         <div class="edit-btn">
           <router-link to="/node">
-            <span>{{$t('modifyPanel.backNode')}}</span>
+            <span>{{ $t("modifyPanel.backNode") }}</span>
             <img
               src="../../../../public/img/icon/manage-node-icons/undo1.png"
               alt="icon"
@@ -23,16 +23,16 @@
         </div>
         <div class="config-add" @click.stop="$emit('modalPreset')">
           <comming-soon></comming-soon>
-          <span class="btn-text">{{$t('modifyPanel.addPreset')}}</span>
+          <span class="btn-text">{{ $t("modifyPanel.addPreset") }}</span>
         </div>
         <div class="config-network">
           <comming-soon></comming-soon>
-          <span class="btn-text">{{$t('modifyPanel.changeNetwork')}}</span>
+          <span class="btn-text">{{ $t("modifyPanel.changeNetwork") }}</span>
         </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
-          <span class="btn-text">{{$t('modifyPanel.nukeNode')}}</span>
+          <span class="btn-text">{{ $t("modifyPanel.nukeNode") }}</span>
           <img
             src="../../../../public/img/icon/manage-node-icons/nuke.png"
             alt="icon"
