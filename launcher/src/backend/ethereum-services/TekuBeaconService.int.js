@@ -56,12 +56,15 @@ test('teku validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    let versions = await nodeConnection.checkUpdates()
+
     let ports = [
       new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
       new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
       new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
     ]
     let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+    geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop()
 
     ports = [
       new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
@@ -70,7 +73,9 @@ test('teku validator import', async () => {
       new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
       new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
     ]
-    let tekuClient = TekuBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [geth], [])
+    let tekuClient = TekuBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/teku', [geth], [])
+    //tekuClient.imageVersion = versions[tekuClient.network][tekuClient.service].slice(-1).pop()
+    tekuClient.imageVersion = versions['prater'][tekuClient.service].slice(-1).pop()
     //change out eth1 endpoint address for integration test
     // const index = tekuClient.command.findIndex(element => element.includes('--ee-endpoint='))
     // tekuClient.command[index] = '--ee-endpoint==http://10.10.0.3:8545'
