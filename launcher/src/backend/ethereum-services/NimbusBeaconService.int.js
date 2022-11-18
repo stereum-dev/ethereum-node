@@ -54,6 +54,8 @@ test('nimbus validator import', async () => {
     " > /etc/stereum/stereum.yaml`)
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
+    
+    let versions = await nodeConnection.checkUpdates()
 
     //install geth
     let ports = [
@@ -62,6 +64,7 @@ test('nimbus validator import', async () => {
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
     let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+    geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop()
 
     //install nimbus
     ports = [
@@ -70,7 +73,9 @@ test('nimbus validator import', async () => {
         new ServicePort('127.0.0.1', 9190, 9190, servicePortProtocol.tcp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
-    let nimbusClient = NimbusBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [geth], [])
+    let nimbusClient = NimbusBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/nimbus', [geth], [])
+    //nimbusClient.imageVersion = versions[nimbusClient.network][nimbusClient.service].slice(-1).pop()
+    nimbusClient.imageVersion = versions['prater'][nimbusClient.service].slice(-1).pop()
     //change out web3 address for integration test
     // const index = nimbusClient.command.findIndex(element => element.includes('--web3-url='))
     // nimbusClient.command[index] = '--web3-url=ws://10.10.0.2:8545'

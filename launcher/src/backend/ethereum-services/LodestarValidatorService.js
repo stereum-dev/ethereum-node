@@ -25,7 +25,7 @@ export class LodestarValidatorService extends NodeService {
       service.id, //id
       1, //configVersion
       image,  //image
-      'v1.0.0', //imageVersion
+      'v1.2.1', //imageVersion
       [
         `validator`,
         `--network=${network}`,
