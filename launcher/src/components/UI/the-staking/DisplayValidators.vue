@@ -360,13 +360,6 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
-    updateDisplayName() {
-      this.keys = this.keys.map((item) => {
-        if (Object.keys(localStorage).includes(item.key)) {
-          item.displayName = localStorage.getItem(item.key);
-        }
-      });
-    },
   },
   beforeMount() {
     this.keys = this.keys.map((item) => {
@@ -386,12 +379,6 @@ export default {
   mounted() {
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
-    this.keys.map((item) => {
-      const store = Object.keys(localStorage).find((i) => i == item.key);
-      if (item.key === store && store !== undefined) {
-        item.displayName = localStorage.getItem(item.key);
-      }
-    });
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -423,10 +410,16 @@ export default {
     renameDisplayHandler(el) {
       el.isRenameActive = true;
     },
-    renameValidatorHandler(el, name) {
+    async renameValidatorHandler(el, name) {
       el.isRenameActive = false;
-      localStorage.setItem(el.key, name);
-      el.displayName = localStorage.getItem(el.key);
+      el.displayName = name
+      const keys = await ControlService.readKeys()
+      if(keys){
+        keys[el.key] = name
+        await ControlService.writeKeys(keys)
+      }else{
+        console.log("Couldn't read KeyFile!")
+      }
     },
     closeRenameHandler(el) {
       el.isRenameActive = false;
@@ -546,9 +539,11 @@ export default {
           }
         }
         this.forceRefresh = false;
+        let alias = await ControlService.readKeys()
         this.keys = keyStats.map((key) => {
           return {
             ...key,
+            displayName: alias[key.key],
             showGrafitiText: false,
             showCopyText: false,
             showRemoveText: false,

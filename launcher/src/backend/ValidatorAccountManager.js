@@ -1,4 +1,3 @@
-import ElectronLog from "electron-log";
 import { readFileSync } from "fs";
 import { StringUtils } from './StringUtils.js'
 import YAML from "yaml";
@@ -136,6 +135,7 @@ export class ValidatorAccountManager {
             let run = await this.nodeConnection.runPlaybook('validator-list-api', { stereum_role: 'validator-list-api', validator_service: serviceID })
             let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
             let result = (JSON.parse(logs[1])).msg
+            await this.writeKeys(result.data.map(k => k.validating_pubkey))
             return result
         } catch (err) {
             log.error("Listing Validators Failed:\n", err)
@@ -272,6 +272,30 @@ export class ValidatorAccountManager {
                     break;
             }
         }
+    }
+
+    async writeKeys(keys){
+        let obj = keys
+        if(Array.isArray(keys)){
+            obj = {}
+            const existing = await this.readKeys()
+            keys.forEach(key => {
+                if(existing && existing[key]){
+                    obj[key] = existing[key]
+                }else{
+                    obj[key] = ""
+                }
+            })
+        }
+        await this.nodeConnection.sshService.exec("echo -e " + StringUtils.escapeStringForShell(YAML.stringify(obj)) + " > /etc/stereum/keys.yaml")
+    }
+
+    async readKeys(){
+        const result = await this.nodeConnection.sshService.exec('cat /etc/stereum/keys.yaml')
+        if(result.rc ==  0)
+            return YAML.parse(result.stdout)
+        log.error(result.stderr)
+        return undefined
     }
 
 }

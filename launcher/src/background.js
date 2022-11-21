@@ -382,6 +382,14 @@ promiseIpc.on("setStereumSettings", async (args) => {
   return await nodeConnection.setStereumSettings(args);
 });
 
+promiseIpc.on("writeKeys", async (args) => {
+  return await validatorAccountManager.writeKeys(args);
+});
+
+promiseIpc.on("readKeys", async () => {
+  return await validatorAccountManager.readKeys();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
