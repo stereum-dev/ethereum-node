@@ -259,7 +259,7 @@ promiseIpc.on("importKey", async (args) => {
 });
 
 promiseIpc.on("deleteValidators", async (args) => {
-  await validatorAccountManager.deleteValidators(args.serviceID, args.keys);
+  await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
 });
 
 promiseIpc.on("listValidators", async (args) => {

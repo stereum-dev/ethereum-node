@@ -142,7 +142,7 @@
                 item.isRemoveBoxActive = false;
                 item.toRemove = false;
               "
-              @delete-key="validatorRemoveConfirm(item)"
+              @delete-key="validatorRemoveConfirm"
             />
           </div>
         </div>
@@ -435,10 +435,10 @@ export default {
       el.toRemove = true;
       el.isRemoveBoxActive = true;
     },
-    async validatorRemoveConfirm(el) {
-      el.isRemoveBoxActive = false;
-      el.isDownloadModalActive = true;
-      await this.deleteValidators(el.validatorID, [el.key]);
+    async validatorRemoveConfirm(item, picked) {
+      item.isRemoveBoxActive = false;
+      item.isDownloadModalActive = true;
+      await this.deleteValidators(item.validatorID, [item.key], picked);
     },
 
     confirmPasswordSingleExitChain(el) {
@@ -490,10 +490,11 @@ export default {
           return this.depositStatusIcon;
       }
     },
-    async deleteValidators(serviceID, keys) {
+    async deleteValidators(serviceID, keys, picked) {
       await ControlService.deleteValidators({
         serviceID: serviceID,
         keys: keys,
+        picked: picked === 'yes' ? true : false
       });
       this.forceRefresh = true;
       await this.listKeys();

@@ -19,7 +19,7 @@
         }}</span>
       </div>
       <div class="slashingParent">
-        <Transition name="slide-up">
+        <!-- <Transition name="slide-up">
           <div class="pathBox" v-if="displayPathBox">
             <div class="pathBoxInput">
               <input
@@ -30,8 +30,8 @@
                 @change="checkPath"
               />
             </div>
-          </div>
-          <div class="pickSlashing" v-else>
+          </div> -->
+          <div class="pickSlashing">
             <label for="no" class="inline-flex items-center">
               <input
                 class="form-radio"
@@ -54,11 +54,12 @@
               YES
             </label>
           </div>
-        </Transition>
+        <!-- </Transition> -->
       </div>
 
+      <!-- <div class="remove-box" :class="{ disabled: !disabledBtn }"> -->
       <div class="remove-box" :class="{ disabled: !disabledBtn }">
-        <div class="remove-btn" @click.stop="$emit('deleteKey')">
+        <div class="remove-btn" @click.stop="$emit('deleteKey', item, picked)">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
         <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
@@ -73,34 +74,34 @@ export default {
     return {
       picked: "",
       path: "",
-      displayPathBox: false,
+      // displayPathBox: false,
       disabledBtn: false,
     };
   },
   watch: {
-    path: function () {
-      if (this.path.trim().length > 0) {
-        this.disabledBtn = true;
-      } else {
-        this.disabledBtn = false;
-      }
-    },
+    // path: function () {
+    //   if (this.path.trim().length > 0) {
+    //     this.disabledBtn = true;
+    //   } else {
+    //     this.disabledBtn = false;
+    //   }
+    // },
     picked: function () {
       if (this.picked === "yes") {
-        this.displayPathBox = true;
+        this.disabledBtn = true;
       } else {
-        this.displayPathBox = true;
+        this.disabledBtn = true;
       }
     },
   },
   computed: {},
   methods: {
-    getPath(event) {
-      const filePath = event.target.files[0].path;
-      let pathToString = new String(filePath);
-      let result = pathToString.toString();
-      this.path = result;
-    },
+    // getPath(event) {
+    //   const filePath = event.target.files[0].path;
+    //   let pathToString = new String(filePath);
+    //   let result = pathToString.toString();
+    //   this.path = result;
+    // },
   },
 };
 </script>

@@ -32,7 +32,7 @@ export class ValidatorAccountManager {
     async importKey(files, password, serviceID) {
         this.createBatch(files, password)
         let services = await this.serviceManager.readServiceConfigurations()
-        
+
         let client = services.find(service => service.id === serviceID)
         let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
 
@@ -143,17 +143,21 @@ export class ValidatorAccountManager {
         }
     }
 
-    async deleteValidators(serviceID, keys){
+    async deleteValidators(serviceID, keys, picked){
         try {
-            let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
-            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-            let result = (JSON.parse(logs[1])).msg
-            return result
+                console.log(picked)
+                let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
+                let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+                let result = (JSON.parse(logs[1])).msg
+                if (picked) {
+                    const slashing_protection_db = { slashing_protection: '\"' + result.slashing_protection + '\"' };
+                }
+                return result
         } catch(err) {
             log.error("Deleting Validators Failed:\n", err)
             return err
         }
-    } 
+    }
 
     async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
@@ -193,7 +197,7 @@ export class ValidatorAccountManager {
         })
 
     }
-    
+
     async addFeeRecipient(keys, address){
         if(keys && keys.length != 0 && address){
             const serviceID = keys[0].validatorID
@@ -238,7 +242,7 @@ export class ValidatorAccountManager {
 
         for(let client of validators){
             let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
-            
+
             const graffitiVolume = (client.volumes.find(vol => vol.servicePath === '/opt/app/graffitis'))
             let graffitiDir = ""
             if(graffitiVolume)
@@ -249,12 +253,12 @@ export class ValidatorAccountManager {
                     config = `default: ${graffiti}`
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 case "prysm":
                     config = `default: "${graffiti}"`
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 case "nimbus":
                     //Nimbus only supports Graffiti changes while running via their rest api
                     let command = client.command.find(c => c.includes("--rest-port="))
@@ -262,12 +266,12 @@ export class ValidatorAccountManager {
                     config = `curl -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
                     await this.nodeConnection.sshService.exec(config)
                     break;
-            
+
                 case "teku":
                     config = graffiti
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 default:
                     break;
             }
