@@ -56,19 +56,24 @@ test('prysm validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    let versions = await nodeConnection.checkUpdates()
+
     let ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+      geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop()
 
     ports = [
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp)
     ]
-    let prysmBC = PrysmBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [geth], [])
+    let prysmBC = PrysmBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [geth], [])
+    //prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop()
+    prysmBC.imageVersion = versions['prater'][prysmBC.service].slice(-1).pop()
     //change out http address for integration test
     // prysmBC.command = prysmBC.command.replace('--http-web3provider=' + geth.buildExecutionClientHttpEndpointUrl(),'--http-web3provider=http://10.10.0.3:8545')
     prysmBC.command = prysmBC.command.replace('--fallback-web3provider=undefined','--fallback-web3provider=[]')
@@ -76,7 +81,9 @@ test('prysm validator import', async () => {
     ports = [
         new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
     ]
-    let prysmVC = PrysmValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [prysmBC])
+    let prysmVC = PrysmValidatorService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/prysm', [prysmBC])
+    //prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop()
+    prysmVC.imageVersion = versions['prater'][prysmVC.service].slice(-1).pop()
     
     await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
     await serviceManager.manageServiceState(geth.id, 'started')
@@ -103,7 +110,7 @@ test('prysm validator import', async () => {
     await nodeConnection.sshService.exec(`chmod 700 ${passwords_path}/wallet-password`)
     await nodeConnection.sshService.exec(`chown 2000:2000 ${passwords_path}/wallet-password`)
     //Prysm - Create wallet for account(s)
-    await nodeConnection.sshService.exec(`docker exec stereum-${prysmVC.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct --prater`)
+    await nodeConnection.sshService.exec(`docker exec stereum-${prysmVC.id} /app/cmd/validator/validator wallet create --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --keymanager-kind=direct`)
 
     await nodeConnection.sshService.exec(`chown -R 2000:2000 ${wallet_path}`)
 
@@ -166,7 +173,7 @@ test('prysm validator import', async () => {
     const validatorAccounts = await nodeConnection.sshService.exec(`cat ${wallet_path}/direct/accounts/all-accounts.keystore.json`)
     const auth_token = await nodeConnection.sshService.exec(`cat ${wallet_path}/auth-token`)
     const docker = await nodeConnection.sshService.exec('docker ps')
-    let responseValidator = await nodeConnection.sshService.exec('docker exec stereum-'+ prysmVC.id +' /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use --prater')
+    let responseValidator = await nodeConnection.sshService.exec('docker exec stereum-'+ prysmVC.id +' /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use')
     const runningValidator = responseValidator.stdout.replace('\x1B[93m3\x1B[0m','3')   //remove yellow color coding
 
     // destroy

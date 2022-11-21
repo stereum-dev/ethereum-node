@@ -152,6 +152,9 @@
   "grafitiMultipleValidator": {
     "textPlaceHolder": "Geben Sie 32 Zeichen ein um sie zur Blockchain hinzuzufügen, wenn Sie einen Block erstellen!"
   },
+  "renameValidator": {
+    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+  },
   "insertValidator": {
     "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
   },
@@ -161,9 +164,11 @@
     "btn": "pick path"
   },
   "removeMultiModal": {
-    "sure": "Bist du dir sicher, dass du",
-    "from": "VON DIESER MASCHINE ENTFERNEN MÖCHTEN?",
-    "remove": "Entfernen"
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
+    "remove": "Entfernen",
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "Sind Sie sicher, dass Sie alle Validatorschlüssel von DIESER MACHINE entfernen möchten?"

@@ -55,12 +55,15 @@ test('lighthouse validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    let versions = await nodeConnection.checkUpdates()
+
     let ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+      geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop()
 
     ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
@@ -68,7 +71,9 @@ test('lighthouse validator import', async () => {
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
 
-    let lhBC = LighthouseBeaconService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16', [])
+    let lhBC = LighthouseBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16', [])
+    //lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop()
+    lhBC.imageVersion = versions['prater'][lhBC.service].slice(-1).pop()
     //change out http address for integration test
     // const index = lhBC.command.findIndex(element => element.includes('--execution-endpoint='))
     // lhBC.command[index] = '--execution-endpoint=http://10.10.0.3:8545'
@@ -76,7 +81,9 @@ test('lighthouse validator import', async () => {
     ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
     ]
-    let lhVC = LighthouseValidatorService.buildByUserInput('prater', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [lhBC])
+    let lhVC = LighthouseValidatorService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [lhBC])
+    //lhVC.imageVersion = versions[lhVC.network][lhVC.service].slice(-1).pop()
+    lhVC.imageVersion = versions['prater'][lhVC.service].slice(-1).pop()
 
     await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
     await serviceManager.manageServiceState(geth.id, 'started')

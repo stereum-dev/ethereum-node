@@ -152,6 +152,9 @@
   "grafitiMultipleValidator": {
     "textPlaceHolder": "Unesite najviše 32 znaka za dodavanje u chain kada kreirate blok!"
   },
+  "renameValidator": {
+    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+  },
   "insertValidator": {
     "insertText": "KLIKNITE ILI PREVUČITE DA UMETATE KEY"
   },
@@ -161,9 +164,11 @@
     "btn": "pick path"
   },
   "removeMultiModal": {
-    "sure": "Jeste li sigurni da želite ukloniti",
-    "from": "SA OVE MAŠINE?",
-    "remove": "Ukloni"
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
+    "remove": "Ukloni",
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "Jeste li sigurni da želite ukloniti sve keys validatora SA OVE MAŠINE?"

@@ -55,7 +55,9 @@ test('erigon installation', async () => {
     new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
     new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
   ]
-  const executionClient = ErigonService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/erigon')
+  let executionClient = ErigonService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/erigon')
+  //let versions = await nodeConnection.checkUpdates()
+  //executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop()
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration())
   await serviceManager.manageServiceState(executionClient.id, 'started')
 
