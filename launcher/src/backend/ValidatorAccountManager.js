@@ -17,16 +17,20 @@ export class ValidatorAccountManager {
         this.batches = []
     }
 
-    createBatch(files, password) {
+    createBatch(files, password, slashing_protection_content) { // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
+        slashing_protection_content = '"{"metadata":{"interchange_format_version":"5","genesis_validators_root":"0x043db0d9a83813551ee2f33450d23797757d430911a9320530ad8a0eabc43efb"},"data":[{"pubkey":"0xa3cecaacb72eb5c12a8657a8dbe1d4853ce44b248637f66c3ca3c60fd74a228899858b3a630dadd1dfb1f7fd33156175","signed_blocks":[],"signed_attestations":[]}]}"'// dummy for testing, can be commented out, then keys will be imported without slashing db ----> README & REMOVE ME!!!
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
         const passwords = Array(content.length).fill(password)
-        this.batches.push({
+
+        let batch = {
             name: "batch" + this.batches.length,
             passwords: passwords,
-            content: content
-        })
+            content: content,
+            ...(slashing_protection_content && {slashing_protection: slashing_protection_content}) // READ ME & REMOVE ME short explanation !!! ---> for Martin, if slashing protection data is defined, then batch will use pass, content also slashing_p_db, if not defined, then only pass and content will be used ----> short explanation for Martin
+        }
+        this.batches.push(batch)
     }
 
     async importKey(files, password, serviceID) {
