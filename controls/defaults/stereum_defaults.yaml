@@ -19,7 +19,7 @@ stereum_static:
       # execution clients
       geth: v1.10.26
       besu: "22.10.0"
-      nethermind: "1.14.3"
+      nethermind: "v1.14.6"
       erigon: v2.30.0
 
       # mevboost
