@@ -438,9 +438,21 @@ export default {
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
-      await this.deleteValidators(item.validatorID, [item.key], picked);
+      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
+      if(picked === 'yes'){
+        this.downloadFile(returnVal)
+      }
     },
-
+    downloadFile(data){
+      let json = JSON.stringify(data);
+      let blob = new Blob([json], {type: "application/json"});
+      let url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'slashingDB')
+      link.click()
+      window.URL.revokeObjectURL(url)
+    },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
     },
@@ -491,13 +503,14 @@ export default {
       }
     },
     async deleteValidators(serviceID, keys, picked) {
-      await ControlService.deleteValidators({
+      const result = await ControlService.deleteValidators({
         serviceID: serviceID,
         keys: keys,
         picked: picked === 'yes' ? true : false
       });
       this.forceRefresh = true;
       await this.listKeys();
+      return result
     },
     listKeys: async function () {
       let keyStats = [];

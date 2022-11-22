@@ -11,11 +11,8 @@
       <div class="removeMessage">
         <span>{{ $t("removeMultiModal.sure") }}</span>
         <p>{{ item.key }}</p>
-        <span v-if="!displayPathBox">{{
+        <span>{{
           $t("removeMultiModal.slashing")
-        }}</span>
-        <span v-if="displayPathBox">{{
-          $t("removeMultiModal.writePath")
         }}</span>
       </div>
       <div class="slashingParent">

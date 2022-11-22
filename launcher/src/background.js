@@ -259,7 +259,7 @@ promiseIpc.on("importKey", async (args) => {
 });
 
 promiseIpc.on("deleteValidators", async (args) => {
-  await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
+  return await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
 });
 
 promiseIpc.on("listValidators", async (args) => {
@@ -512,6 +512,23 @@ app.on("ready", async () => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
+
+autoUpdater.on('error', (error) => {
+  dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
+})
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    type: "question",
+    buttons: ["Yes", "No"],
+    title: "Install Update",
+    message: "Update downloaded!\n Do you want to restart and apply updates now?",
+  }).then((result) => {
+    if(result.response == 0){
+      autoUpdater.quitAndInstall()
+    }
+  })
+})
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
