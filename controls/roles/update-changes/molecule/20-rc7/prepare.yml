@@ -162,7 +162,9 @@
             executionClients: []
             consensusClients: []
             prometheusNodeExporterClients: []
-            mevboost: []
+            mevboost:
+              - service: FlashbotsMevBoostService
+                id: 470fb37f-ad98-1ea7-f89e-e4a6b20cb3c0
       become: yes
 
 # EOF

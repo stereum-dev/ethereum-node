@@ -15,3 +15,6 @@
     insertafter: '^\s*prometheusNodeExporterClients: '
     regexp: '^\s*mevboost:'
     line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*prometheusNodeExporterClients:.*$') | first | split('p') | first }}mevboost: []"
+  when: service_configuration.dependencies.mevboost is not defined
+
+#EOF

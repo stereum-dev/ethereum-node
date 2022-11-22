@@ -55,7 +55,7 @@
   - assert:
       that:
       - besu_service_configuration.dependencies.mevboost is defined
-      - besu_service_configuration.dependencies.mevboost | length == 0
+      - besu_service_configuration.dependencies.mevboost | length >= 0
       - (besu_service_configuration.command | select('match', "^--Xmerge-support=true") | length) == 0
 
 
