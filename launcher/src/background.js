@@ -252,7 +252,8 @@ promiseIpc.on("importKey", async (args) => {
   const returnValue = await validatorAccountManager.importKey(
     args.files,
     args.password,
-    args.service
+    args.service,
+    args.slashingDB
   );
   app.showExitPrompt = false;
   return returnValue;

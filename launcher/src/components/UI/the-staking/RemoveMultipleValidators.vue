@@ -10,9 +10,50 @@
       </div>
       <div class="removeMessage">
         <span>{{ $t("removeMultipleValidators.sureText") }}</span>
+        <span>{{
+          $t("removeMultiModal.slashing")
+        }}</span>
+      </div>
+      <div class="slashingParent">
+        <!-- <Transition name="slide-up">
+          <div class="pathBox" v-if="displayPathBox">
+            <div class="pathBoxInput">
+              <input
+                class="form-input block w-full"
+                type="text"
+                v-model="path"
+                placeholder="choose a path to save exported slashing db "
+                @change="checkPath"
+              />
+            </div>
+          </div> -->
+          <div class="pickSlashing">
+            <label for="no" class="inline-flex items-center">
+              <input
+                class="form-radio"
+                type="radio"
+                id="no"
+                value="no"
+                v-model="picked"
+              />
+              NO
+            </label>
+
+            <label for="yes" class="inline-flex items-center">
+              <input
+                class="form-radio"
+                type="radio"
+                id="yes"
+                value="yes"
+                v-model="picked"
+              />
+              YES
+            </label>
+          </div>
+        <!-- </Transition> -->
       </div>
       <div class="remove-box">
-        <div class="remove-btn" @click="$emit('deleteKey')">
+        <div class="remove-btn" @click="$emit('deleteKey',picked)">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
         <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
@@ -23,6 +64,11 @@
 <script>
 export default {
   props: ["item"],
+  data(){
+    return{
+      picked: "",
+    }
+  }
 };
 </script>
 <style scoped>
@@ -145,5 +191,43 @@ export default {
   font-size: 0.7rem;
   font-weight: 500;
   align-self: center;
+}
+.pickSlashing {
+  width: 30%;
+  height: max-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+}
+.pickSlashing label {
+  width: 30%;
+  height: 40%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: rgb(209, 211, 210);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.pickSlashing label input {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+.pickSlashing label input:hover {
+  border: 2px solid rgb(17, 172, 255);
+  border-radius: 100%;
+}
+.slashingParent {
+  width: 95%;
+  height: 20%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 </style>

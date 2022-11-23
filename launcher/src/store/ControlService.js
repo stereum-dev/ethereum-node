@@ -185,6 +185,7 @@ class ControlService extends EventEmitter {
       files: files,
       password: args.password,
       service: args.service,
+      slashingDB: args.slashingDB
     });
   }
 
