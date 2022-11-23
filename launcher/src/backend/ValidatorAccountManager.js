@@ -16,22 +16,27 @@ export class ValidatorAccountManager {
         this.batches = []
     }
 
-    createBatch(files, password) {
+    createBatch(files, password, slashingDB) { // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
+        if(slashingDB)
+            var slashing_protection_content = readFileSync(slashingDB, { encoding: "utf8", })
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
         const passwords = Array(content.length).fill(password)
-        this.batches.push({
+
+        let batch = {
             name: "batch" + this.batches.length,
             passwords: passwords,
-            content: content
-        })
+            content: content,
+            ...(slashing_protection_content && {slashing_protection_content: slashing_protection_content}) // READ ME & REMOVE ME short explanation !!! ---> for Martin, if slashing protection data is defined, then batch will use pass, content also slashing_p_db, if not defined, then only pass and content will be used ----> short explanation for Martin
+        }
+        this.batches.push(batch)
     }
 
-    async importKey(files, password, serviceID) {
-        this.createBatch(files, password)
+    async importKey(files, password, serviceID, slashingDB) {
+        this.createBatch(files, password, slashingDB)
         let services = await this.serviceManager.readServiceConfigurations()
-        
+
         let client = services.find(service => service.id === serviceID)
         let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
 
@@ -143,17 +148,20 @@ export class ValidatorAccountManager {
         }
     }
 
-    async deleteValidators(serviceID, keys){
+    async deleteValidators(serviceID, keys, picked){
         try {
-            let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
-            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-            let result = (JSON.parse(logs[1])).msg
-            return result
+                let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
+                let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
+                let result = (JSON.parse(logs[1])).msg
+                if (picked) {
+                    return JSON.parse(result.slashing_protection);
+                }
+                return result
         } catch(err) {
             log.error("Deleting Validators Failed:\n", err)
             return err
         }
-    } 
+    }
 
     async insertSSVNetworkKeys(service, sk) {
         return new Promise(async (resolve, reject) => {
@@ -193,7 +201,7 @@ export class ValidatorAccountManager {
         })
 
     }
-    
+
     async addFeeRecipient(keys, address){
         if(keys && keys.length != 0 && address){
             const serviceID = keys[0].validatorID
@@ -238,7 +246,7 @@ export class ValidatorAccountManager {
 
         for(let client of validators){
             let service = (client.service.replace(/(Beacon|Validator|Service)/gm, '')).toLowerCase()
-            
+
             const graffitiVolume = (client.volumes.find(vol => vol.servicePath === '/opt/app/graffitis'))
             let graffitiDir = ""
             if(graffitiVolume)
@@ -249,12 +257,12 @@ export class ValidatorAccountManager {
                     config = `default: ${graffiti}`
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 case "prysm":
                     config = `default: "${graffiti}"`
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 case "nimbus":
                     //Nimbus only supports Graffiti changes while running via their rest api
                     let command = client.command.find(c => c.includes("--rest-port="))
@@ -262,12 +270,12 @@ export class ValidatorAccountManager {
                     config = `curl -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
                     await this.nodeConnection.sshService.exec(config)
                     break;
-            
+
                 case "teku":
                     config = graffiti
                     await this.nodeConnection.sshService.exec('echo ' + StringUtils.escapeStringForShell(config) + ' > ' + graffitiDir)
                     break;
-            
+
                 default:
                     break;
             }
