@@ -17,12 +17,16 @@ export class Monitoring {
   }
 
   // Cleanup on logout
-  async onLogout(){
+  async logout(){
     this.rpcTunnel = {};
     this.beaconTunnel = {};
     try{
       fs.unlinkSync(this.serviceInfosCacheFile)
     }catch(e){}
+    await this.nodeConnection.logout();
+    await this.nodeConnectionProm.logout();
+    await this.serviceManager.nodeConnection.logout();
+    await this.serviceManagerProm.nodeConnection.logout();
   }
 
   async checkStereumInstallation(nodeConnection) {

@@ -118,13 +118,9 @@ promiseIpc.on("closeTunnels", async () => {
 });
 
 promiseIpc.on("logout", async () => {
+  await monitoring.logout();
   await taskManager.nodeConnection.logout();
-  await monitoring.nodeConnection.logout();
-  await monitoring.nodeConnectionProm.logout();
   await serviceManager.nodeConnection.logout();
-  await monitoring.serviceManager.nodeConnection.logout();
-  await monitoring.serviceManagerProm.nodeConnection.logout();
-  await monitoring.onLogout();
   return await nodeConnection.logout();
 });
 
