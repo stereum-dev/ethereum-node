@@ -92,7 +92,9 @@
         <div
           class="alert-message_green"
           v-if="checkStereumUpdate"
-          @click="showUpdate()"
+          @click="showUpdate"
+          @mouseover="iconShow"
+          @mouseleave="iconHide"
         >
           <div class="icon-box">
             <img
@@ -106,6 +108,12 @@
             <div class="val-message">
               <span>{{ stereumUpdate.version }}</span>
             </div>
+          </div>
+          <div class="close" v-if="closeNotif">
+            <img
+              src="../../../../public/img/icon/control/close.png"
+              alt="close"
+            />
           </div>
         </div>
       </div>
@@ -134,6 +142,7 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
     };
   },
   computed: {
@@ -185,6 +194,12 @@ export default {
     this.checkStereumUpdate();
   },
   methods: {
+    iconShow() {
+      this.closeNotif = true;
+    },
+    iconHide() {
+      this.closeNotif = false;
+    },
     showUpdate() {
       this.displayUpdatePanel = true;
     },
@@ -237,6 +252,12 @@ export default {
 };
 </script>
 <style scoped>
+.close {
+  position: absolute;
+  left: 88%;
+  top: 5%;
+  width: 8%;
+}
 .updatePanel-show {
   right: 0 !important;
 }
@@ -335,6 +356,7 @@ export default {
   margin: 2px 0;
   color: #eee;
   cursor: pointer;
+  position: relative;
 }
 .icon-box {
   width: 28%;
