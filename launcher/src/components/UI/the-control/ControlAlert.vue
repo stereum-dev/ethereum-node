@@ -26,7 +26,7 @@
             alt="green"
           />
         </div>
-        <div class="icon_alarm" v-if="checkStereumUpdate">
+        <div class="icon_alarm" v-if="notification">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -91,8 +91,8 @@
         </div>
         <div
           class="alert-message_green"
-          v-if="checkStereumUpdate"
-          @click="showUpdate"
+          v-if="notification"
+          @click="closeNotification"
           @mouseover="iconShow"
           @mouseleave="iconHide"
         >
@@ -159,6 +159,9 @@ export default {
     usedPercInt() {
       return parseInt(this.usedPerc);
     },
+    closeNotification() {
+      return (this.notification = false);
+    },
   },
   watch: {
     usedPercInt(newVal, oldVal) {
@@ -188,10 +191,13 @@ export default {
       }
     },
   },
+
   created() {
     this.storageCheck();
     this.cpuMeth();
     this.checkStereumUpdate();
+    this.notifHandler();
+    console.log(this.notification);
   },
   methods: {
     iconShow() {
@@ -215,6 +221,11 @@ export default {
           : false;
       }
       return false;
+    },
+    notifHandler() {
+      if (this.checkStereumUpdate() === true) {
+        this.notification = true;
+      }
     },
     storageCheck() {
       if (this.usedPercInt > 80) {
@@ -257,6 +268,7 @@ export default {
   left: 88%;
   top: 5%;
   width: 8%;
+  cursor: pointer;
 }
 .updatePanel-show {
   right: 0 !important;
