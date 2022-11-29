@@ -499,6 +499,9 @@ app.on("web-contents-created", (event, contents) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  if(process.platform === "linux"){
+    app.commandLine.appendSwitch('--no-sandbox')
+  }
   // if (isDevelopment && !process.env.IS_TEST) {
   // Install Vue Devtools
   try {
