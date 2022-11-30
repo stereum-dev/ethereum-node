@@ -92,7 +92,7 @@
         <div
           class="alert-message_green"
           v-if="notification"
-          @click="closeNotification"
+          @click="showUpdate"
           @mouseover="iconShow"
           @mouseleave="iconHide"
         >
@@ -109,7 +109,7 @@
               <span>{{ stereumUpdate.version }}</span>
             </div>
           </div>
-          <div class="close" v-if="closeNotif">
+          <div class="close" v-if="closeNotif" @click="closeNotification">
             <img
               src="../../../../public/img/icon/control/close.png"
               alt="close"
