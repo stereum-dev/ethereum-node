@@ -12,31 +12,15 @@
         <div class="receivePerSecond">
           <span>{{ rx }}</span>
         </div>
-        <div class="mbit"><span>kB/s</span></div>
+        <div class="mbit"><span>KB/s</span></div>
         <div class="receiveTitle">{{ $t("controlPage.receive") }}</div>
-        <!-- <div class="totalReceiveValue">
-          <div class="arrow">
-            <img src="../../../../public/img/icon/arrows/arrowOrange.png" />
-          </div>
-          <div class="totalReceiveValue_data">
-            <span>{{ totalReceive }} GB</span>
-          </div>
-        </div> -->
       </div>
       <div class="totalTransmitted">
         <div class="transPerSecond">
           <span>{{ tx }}</span>
         </div>
-        <div class="mbit"><span>kB/s</span></div>
+        <div class="mbit"><span>KB/s</span></div>
         <div class="transmitTitle">{{ $t("controlPage.transmit") }}</div>
-        <!-- <div class="totalTransmitValue">
-          <div class="arrow">
-            <img src="../../../../public/img/icon/arrows/arrowGreen.png" />
-          </div>
-          <div class="totalTransmitValue_data">
-            <span>{{ totalTransmit }} GB</span>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -112,13 +96,13 @@ export default {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   height: 80%;
 }
 .receivePerSecond {
   width: 100%;
-  height: 50%;
+  height: 40%;
   font-size: 100%;
   font-weight: bold;
   color: #ec590a;
@@ -136,7 +120,7 @@ export default {
 .receiveTitle,
 .transmitTitle {
   width: 100%;
-  height: 10%;
+  height: 25%;
   font-size: 50%;
   display: flex;
   justify-content: center;
@@ -173,7 +157,7 @@ export default {
 }
 .transPerSecond {
   width: 100%;
-  height: 50%;
+  height: 40%;
   font-size: 100%;
   font-weight: bold;
   color: #336666;
