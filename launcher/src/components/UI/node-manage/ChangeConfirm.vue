@@ -88,6 +88,10 @@ export default {
     },
     async confirmHandler() {
       await ControlService.handleServiceChanges(toRaw(this.confirmChanges));
+      setTimeout(() => {
+        this.newConfiguration = this.installedServices
+      }, 4000);
+      
       this.confirmChanges = [];
     },
   },
