@@ -25,7 +25,7 @@
             alt="green"
           />
         </div>
-        <div class="status-icon" v-if="checkStereumUpdate">
+        <div class="status-icon" v-if="notification">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -91,29 +91,28 @@
       </div>
       <div
         class="status-message_green"
-        v-if="checkStereumUpdate"
+        v-if="notification"
         @mouseover="iconShow"
         @mouseleave="iconHide"
-        @click="showUpdate"
       >
-        <div class="message-icon">
+        <div class="message-icon" @click="showUpdate">
           <img
             src="../../../../public/img/icon/control/logo-icon.png"
             alt="warn_storage"
           />
         </div>
-        <div class="message-text_container">
+        <div class="message-text_container" @click="showUpdate">
           <div class="warning"><span>NOTIFICATION</span></div>
           <div class="main-message"><span>STEREUM UPDATE</span></div>
           <div class="val-message">
             <span>{{ stereumUpdate.version }}</span>
           </div>
-          <div class="close" v-if="closeNotif" @click="closeNotification">
-            <img
-              src="../../../../public/img/icon/control/close.png"
-              alt="close"
-            />
-          </div>
+        </div>
+        <div class="close" v-if="closeNotif" @click="closeNotification">
+          <img
+            src="../../../../public/img/icon/control/close.png"
+            alt="close"
+          />
         </div>
       </div>
     </div>
@@ -159,6 +158,9 @@ export default {
     usedPercInt() {
       return parseInt(this.usedPerc);
     },
+    closeNotification() {
+      return (this.notification = false);
+    },
   },
   watch: {
     usedPercInt(newVal, oldVal) {
@@ -192,6 +194,7 @@ export default {
     this.storageCheck();
     this.cpuMeth();
     this.checkStereumUpdate();
+    this.notifHandler();
   },
   methods: {
     iconShow() {
@@ -215,6 +218,11 @@ export default {
           : false;
       }
       return false;
+    },
+    notifHandler() {
+      if (this.checkStereumUpdate() === true) {
+        this.notification = true;
+      }
     },
     storageCheck() {
       if (this.usedPercInt > 80) {

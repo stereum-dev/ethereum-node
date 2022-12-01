@@ -92,17 +92,16 @@
         <div
           class="alert-message_green"
           v-if="notification"
-          @click="showUpdate"
           @mouseover="iconShow"
           @mouseleave="iconHide"
         >
-          <div class="icon-box">
+          <div class="icon-box" @click="showUpdate">
             <img
               src="../../../../public/img/icon/control/logo-icon.png"
               alt="warn_storage"
             />
           </div>
-          <div class="message-box">
+          <div class="message-box" @click="showUpdate">
             <div class="warning"><span>NOTIFICATION</span></div>
             <div class="main-message"><span>STEREUM UPDATE</span></div>
             <div class="val-message">
