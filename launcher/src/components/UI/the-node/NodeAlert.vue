@@ -141,7 +141,6 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
-      closeNotif: false,
     };
   },
   computed: {
@@ -149,6 +148,7 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
+      closeNotif: "closeNotif",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
