@@ -196,7 +196,6 @@ export default {
     this.cpuMeth();
     this.checkStereumUpdate();
     this.notifHandler();
-    console.log(this.notification);
   },
   methods: {
     iconShow() {
