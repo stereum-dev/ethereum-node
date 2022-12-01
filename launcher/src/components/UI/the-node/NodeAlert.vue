@@ -89,7 +89,13 @@
           <div class="main-message"><span>MISSED ATTESTATION</span></div>
         </div>
       </div>
-      <div class="status-message_green" v-if="checkStereumUpdate">
+      <div
+        class="status-message_green"
+        v-if="checkStereumUpdate"
+        @mouseover="iconShow"
+        @mouseleave="iconHide"
+        @click="showUpdate"
+      >
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/logo-icon.png"
@@ -101,6 +107,12 @@
           <div class="main-message"><span>STEREUM UPDATE</span></div>
           <div class="val-message">
             <span>{{ stereumUpdate.version }}</span>
+          </div>
+          <div class="close" v-if="closeNotif" @click="closeNotification">
+            <img
+              src="../../../../public/img/icon/control/close.png"
+              alt="close"
+            />
           </div>
         </div>
       </div>
@@ -130,6 +142,7 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
     };
   },
   computed: {
@@ -181,6 +194,12 @@ export default {
     this.checkStereumUpdate();
   },
   methods: {
+    iconShow() {
+      this.closeNotif = true;
+    },
+    iconHide() {
+      this.closeNotif = false;
+    },
     showUpdate() {
       this.displayUpdatePanel = true;
     },
@@ -235,6 +254,16 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.close {
+  position: absolute;
+  left: 88%;
+  top: 5%;
+  width: 8%;
+  cursor: pointer;
+}
+.updatePanel-show {
+  right: 0 !important;
 }
 .status-box {
   width: 100%;
@@ -294,11 +323,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 18%;
+  height: 22%;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
   color: #eee;
+  position: relative;
 }
 .status-message_yellow {
   background: #ffd924;
@@ -308,6 +338,7 @@ export default {
 }
 .status-message_green {
   background: #5f7e6a;
+  cursor: pointer;
 }
 .message-icon {
   width: 28%;

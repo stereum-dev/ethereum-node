@@ -269,6 +269,7 @@ export default {
   top: 5%;
   width: 8%;
   cursor: pointer;
+  z-index: 100;
 }
 .updatePanel-show {
   right: 0 !important;
