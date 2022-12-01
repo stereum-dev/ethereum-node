@@ -72,15 +72,13 @@ export default {
       beaconstatus: "beaconstatus",
     }),
     onoff() {
-      if(!this.toggleAllowed)
-        return "";
+      if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
     },
   },
   methods: {
     async copy(s, t) {
-      if(!this.toggleAllowed)
-        return;
+      if (!this.toggleAllowed) return;
       if (!s) {
         this.dialogValue = "Please turn ON the DATA-API tunnel first!";
         this.openDialog = true;
@@ -97,54 +95,64 @@ export default {
     },
     async refresh(timeout = 3000, async = false) {
       let instant = isNaN(timeout) ? true : false;
-      if(this.refreshId){
+      if (this.refreshId) {
         clearTimeout(this.refreshId);
         this.refreshId = undefined;
       }
-      if(instant){
-        if(async){
+      if (instant) {
+        if (async) {
           await this.beaconControler();
-        }else{
+        } else {
           this.beaconControler();
         }
         return;
       }
       this.refreshId = setTimeout(async () => {
-        if(async){
+        if (async) {
           await this.beaconControler();
-        }else{
+        } else {
           this.beaconControler();
         }
       }, timeout);
     },
     clearRefresh() {
-      if(this.refreshId){
+      if (this.refreshId) {
         clearTimeout(this.refreshId);
         this.refreshId = undefined;
       }
     },
-    createHashByKey(arr,key=null){
-      let hash = '';
-      if(Array.isArray(arr) && arr.length > 0 && typeof key === 'string' && key != ''){
-        arr.sort((a,b) => (a[key] > b[key]) ? 1 : ((b[key] > a[key]) ? -1 : 0))
-        for(let i=0;i<arr.length;i++){
-          hash += arr[i].hasOwnProperty(key) ? arr[i][key] : '';
+    createHashByKey(arr, key = null) {
+      let hash = "";
+      if (
+        Array.isArray(arr) &&
+        arr.length > 0 &&
+        typeof key === "string" &&
+        key != ""
+      ) {
+        arr.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
+        for (let i = 0; i < arr.length; i++) {
+          hash += arr[i].hasOwnProperty(key) ? arr[i][key] : "";
         }
       }
       return hash;
     },
-    async toggle(clientListChanged=null) {
-      if(clientListChanged !== true){
+    async toggle(clientListChanged = null) {
+      if (clientListChanged !== true) {
         if (!this.showData) return;
         if (!this.toggleAllowed) return;
       }
       this.toggleAllowed = false;
       this.clearRefresh();
-      let isActive = clientListChanged === true ? this.isActive : (this.isActive ? false : true);
+      let isActive =
+        clientListChanged === true
+          ? this.isActive
+          : this.isActive
+          ? false
+          : true;
       let result = {
-        'code': 9999,
-        'info': 'error: unknown issue on toggling tunnels',
-        'data': '',
+        code: 9999,
+        info: "error: unknown issue on toggling tunnels",
+        data: "",
       };
       try {
         if (isActive) {
@@ -156,16 +164,19 @@ export default {
         console.log(e);
       }
       this.beaconstatus = result.data;
-      await this.refresh(true,true);
+      await this.refresh(true, true);
       this.toggleAllowed = true;
     },
     async beaconControler() {
       let isActive = false;
-      let dataApiItems = []
-      let dataApiItemsHashBefore = this.createHashByKey(this.dataApiItems,'id');
+      let dataApiItems = [];
+      let dataApiItemsHashBefore = this.createHashByKey(
+        this.dataApiItems,
+        "id"
+      );
       if (this.code === 0 && this.beaconstatus.code === 0) {
-        for(let i = 0; i < this.beaconstatus.data.length; i++){
-          if(this.beaconstatus.data[i].now < this.lastKnownMts){
+        for (let i = 0; i < this.beaconstatus.data.length; i++) {
+          if (this.beaconstatus.data[i].now < this.lastKnownMts) {
             //console.log("---------------> DENY OUTDATED BEACON STATUS!");
             this.refresh();
             return;
@@ -179,11 +190,11 @@ export default {
           isActive = this.beaconstatus.data[i].url ? true : isActive;
         }
       }
-      let dataApiItemsHashAfter = this.createHashByKey(dataApiItems,'id');
+      let dataApiItemsHashAfter = this.createHashByKey(dataApiItems, "id");
       this.isActive = isActive;
       this.copyVal = isActive ? "click to copy" : "tunnel closed";
       this.dataApiItems = dataApiItems;
-      if(dataApiItemsHashBefore != dataApiItemsHashAfter){
+      if (dataApiItemsHashBefore != dataApiItemsHashAfter) {
         //console.log("BEACON TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
         this.toggle(true);
         return;
@@ -212,7 +223,8 @@ export default {
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
   box-sizing: border-box;
-  width: 38%;
+  box-shadow: 1px 1px 10px 1px #171717;
+  width: 35%;
   height: 95%;
   border-radius: 10px;
   flex-direction: column;
@@ -254,16 +266,16 @@ export default {
   display: flex;
   flex-direction: column;
 }
-.scrollable{
+.scrollable {
   width: 100%;
-  padding-left:4%;
-  padding-right:2%;
+  padding-left: 4%;
+  padding-right: 2%;
   height: 75%;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
 }
-.bttnLoading{
+.bttnLoading {
   width: 50%;
 }
 .compTtl {
