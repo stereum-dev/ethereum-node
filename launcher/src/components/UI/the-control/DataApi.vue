@@ -336,7 +336,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 95%;
+  width: 97%;
   height: 35%;
   border-radius: 10px;
   margin: 1% 0;

@@ -334,7 +334,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 95%;
+  width: 97%;
   height: 35%;
   border-radius: 10px;
   margin: 1% 0;
@@ -348,7 +348,7 @@ export default {
 .title {
   display: flex;
   width: 70%;
-  font-size: 44%;
+  font-size: 43%;
   justify-content: flex-start;
   align-items: center;
   margin: 0 4%;

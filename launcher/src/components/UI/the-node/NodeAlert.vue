@@ -89,32 +89,34 @@
           <div class="main-message"><span>MISSED ATTESTATION</span></div>
         </div>
       </div>
-      <div
-        class="status-message_green"
-        v-if="notification"
-        @mouseover="iconShow"
-        @mouseleave="iconHide"
-      >
-        <div class="message-icon" @click="showUpdate">
-          <img
-            src="../../../../public/img/icon/control/logo-icon.png"
-            alt="warn_storage"
-          />
-        </div>
-        <div class="message-text_container" @click="showUpdate">
-          <div class="warning"><span>NOTIFICATION</span></div>
-          <div class="main-message"><span>STEREUM UPDATE</span></div>
-          <div class="val-message">
-            <span>{{ stereumUpdate.version }}</span>
+      <transition>
+        <div
+          class="status-message_green"
+          v-if="notification"
+          @mouseover="iconShow"
+          @mouseleave="iconHide"
+        >
+          <div class="message-icon" @click="showUpdate">
+            <img
+              src="../../../../public/img/icon/control/logo-icon.png"
+              alt="warn_storage"
+            />
+          </div>
+          <div class="message-text_container" @click="showUpdate">
+            <div class="warning"><span>NOTIFICATION</span></div>
+            <div class="main-message"><span>STEREUM UPDATE</span></div>
+            <div class="val-message">
+              <span>{{ stereumUpdate.version }}</span>
+            </div>
+          </div>
+          <div class="close" v-if="closeNotif" @click="closeNotification">
+            <img
+              src="../../../../public/img/icon/control/close.png"
+              alt="close"
+            />
           </div>
         </div>
-        <div class="close" v-if="closeNotif" @click="closeNotification">
-          <img
-            src="../../../../public/img/icon/control/close.png"
-            alt="close"
-          />
-        </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -141,6 +143,7 @@ export default {
       newUpdate: false,
       missedAttest: false,
       closeNotif: false,
+      notification: false,
     };
   },
   computed: {
@@ -156,9 +159,6 @@ export default {
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
-    },
-    closeNotification() {
-      return (this.notification = false);
     },
   },
   watch: {
@@ -189,6 +189,7 @@ export default {
       }
     },
   },
+
   created() {
     this.storageCheck();
     this.cpuMeth();
@@ -196,6 +197,9 @@ export default {
     this.notifHandler();
   },
   methods: {
+    closeNotification() {
+      this.notification = false;
+    },
     iconShow() {
       this.closeNotif = true;
     },
@@ -219,8 +223,10 @@ export default {
       return false;
     },
     notifHandler() {
-      if (this.checkStereumUpdate() === true) {
+      if (this.checkStereumUpdate == true) {
         this.notification = true;
+      } else {
+        this.notification = false;
       }
     },
     storageCheck() {
@@ -261,6 +267,17 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.v-leave-active {
+  transition: all 0.1s ease-in;
+}
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(80%);
 }
 .close {
   position: absolute;
