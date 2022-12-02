@@ -2,7 +2,7 @@
   <div class="dataApi-parent">
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
-        <div class="dialogIcon"><img :src="copyIcon" /></div>
+        <div class="dialogIcon"><img :src="dialogIcon" /></div>
         <div class="dialogMessage">
           <span>{{ dialogValue }}</span>
         </div>
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div v-show="showData" class="compTtl">
+    <div v-show="showData" class="compTtl" :class="{ active: isActive }">
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
@@ -59,8 +59,10 @@ export default {
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
+      infoIcon: "/img/icon/control/info.png",
       bttnLoading: "/img/icon/control/loading.gif",
       dataApiItems: [],
+      dialogIcon: "",
     };
   },
   created() {
@@ -81,10 +83,12 @@ export default {
       if (!this.toggleAllowed) return;
       if (!s) {
         this.dialogValue = "Please turn ON the DATA-API tunnel first!";
+        this.dialogIcon = this.infoIcon;
         this.openDialog = true;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
+        this.dialogIcon = this.copyIcon;
         this.dialogValue = t + " DATA-API-URL copied to clipboard!";
       }
       if (this.openDialog === true) {
@@ -256,8 +260,9 @@ export default {
   align-items: center;
   width: 80%;
   height: 100%;
-  font-weight: 600;
-  font-size: 80%;
+  font-weight: 500;
+  font-size: 65%;
+  color: #eee;
 }
 
 .dataApi-box {
@@ -331,13 +336,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 95%;
   height: 35%;
   border-radius: 10px;
   margin: 1% 0;
 }
 .active {
-  color: greenyellow !important;
+  color: #adff2f !important;
 }
 .title {
   display: flex;
@@ -361,6 +366,6 @@ export default {
   align-items: center;
   height: 90%;
   border: 1px solid #343434;
-  background: rgb(42, 42, 42);
+  background: #2a2a2a;
 }
 </style>

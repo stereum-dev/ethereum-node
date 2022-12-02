@@ -138,17 +138,16 @@ export default {
       perfect: false,
       warning: false,
       alarm: false,
-      notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
     };
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
-      closeNotif: "closeNotif",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",

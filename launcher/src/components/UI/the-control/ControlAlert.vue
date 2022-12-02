@@ -26,7 +26,7 @@
             alt="green"
           />
         </div>
-        <div class="icon_alarm" v-if="notification">
+        <div class="icon_alarm" v-if="checkStereumUpdate">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -91,7 +91,7 @@
         </div>
         <div
           class="alert-message_green"
-          v-if="notification"
+          v-if="checkStereumUpdate"
           @mouseover="iconShow"
           @mouseleave="iconHide"
         >
@@ -141,14 +141,15 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
+      removeNotification: false,
     };
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
-      closeNotif: "closeNotif",
     }),
     ...mapWritableState(useNodeHeader, {
       forceUpdateCheck: "forceUpdateCheck",
@@ -157,9 +158,6 @@ export default {
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
-    },
-    closeNotification() {
-      return (this.notification = false);
     },
   },
   watch: {
@@ -190,14 +188,16 @@ export default {
       }
     },
   },
-
   created() {
     this.storageCheck();
     this.cpuMeth();
     this.checkStereumUpdate();
-    this.notifHandler();
   },
   methods: {
+    closeNotification() {
+      this.checkStereumUpdate = false;
+      console.log(this.removeNotification);
+    },
     iconShow() {
       this.closeNotif = true;
     },
@@ -212,17 +212,11 @@ export default {
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
-          ? true
-          : false;
-      }
-      return false;
-    },
-    notifHandler() {
-      if (this.checkStereumUpdate() === true) {
-        this.notification = true;
+        if (this.stereumUpdate.commit != this.stereumUpdate.current_commit) {
+          return true;
+        } else {
+          return false;
+        }
       }
     },
     storageCheck() {

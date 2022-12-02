@@ -2,7 +2,7 @@
   <div class="rpc-parent">
     <control-dialog :open="openDialog"
       ><div class="dialogBox">
-        <div class="dialogIcon"><img :src="copyIcon" /></div>
+        <div class="dialogIcon"><img :src="dialogIcon" /></div>
         <div class="dialogMessage">
           <span>{{ dialogValue }}</span>
         </div>
@@ -32,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div v-show="showData" class="compTtl">
+    <div v-show="showData" class="compTtl" :class="{ active: isActive }">
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
@@ -62,8 +62,10 @@ export default {
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
+      infoIcon: "/img/icon/control/info.png",
       bttnLoading: "/img/icon/control/loading.gif",
       rpcItems: [],
+      dialogIcon: "",
     };
   },
   mounted() {
@@ -85,10 +87,12 @@ export default {
       if (!s) {
         this.dialogValue = "Please turn ON the RPC tunnel first!";
         this.openDialog = true;
+        this.dialogIcon = this.infoIcon;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " RPC-URL copied to clipboard!";
+        this.dialogIcon = this.copyIcon;
       }
       if (this.openDialog === true) {
         setTimeout(() => {
@@ -255,8 +259,9 @@ export default {
   align-items: center;
   width: 80%;
   height: 100%;
-  font-weight: 600;
-  font-size: 90%;
+  font-weight: 500;
+  font-size: 70%;
+  color: #eee;
 }
 .rpc-box {
   width: 100%;
@@ -292,7 +297,7 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 55%;
+  font-size: 50%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
@@ -329,7 +334,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 95%;
   height: 35%;
   border-radius: 10px;
   margin: 1% 0;
@@ -337,10 +342,13 @@ export default {
 .active {
   color: greenyellow !important;
 }
+.copyactiv {
+  color: greenyellow;
+}
 .title {
   display: flex;
   width: 70%;
-  font-size: 48%;
+  font-size: 44%;
   justify-content: flex-start;
   align-items: center;
   margin: 0 4%;
