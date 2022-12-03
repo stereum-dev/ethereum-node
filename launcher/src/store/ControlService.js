@@ -185,6 +185,7 @@ class ControlService extends EventEmitter {
       files: files,
       password: args.password,
       service: args.service,
+      slashingDB: args.slashingDB
     });
   }
 
@@ -278,6 +279,14 @@ class ControlService extends EventEmitter {
 
   async setStereumSettings(args) {
     return await this.promiseIpc.send("setStereumSettings", args);
+  }
+
+  async writeKeys(args){
+    return await this.promiseIpc.send("writeKeys", args);
+  }
+
+  async readKeys(){
+    return await this.promiseIpc.send("readKeys");
   }
 }
 if (!instance) {

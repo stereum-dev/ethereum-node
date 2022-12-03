@@ -152,6 +152,9 @@
   "grafitiMultipleValidator": {
     "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
   },
+  "renameValidator": {
+    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+  },
   "insertValidator": {
     "insertText": "CLICK OR DRAG TO INSERT KEY"
   },
@@ -161,9 +164,11 @@
     "btn": "pick path"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove",
-    "from": "FROM THIS MACHINE?",
-    "remove": "Remove"
+    "sure": "Are you sure you want to remove this key from your machine?",
+    "slashing": "With slashing Protection Database?",
+    "remove": "Remove",
+    "path": "choose a path to save exported slashing db ",
+    "writePath": "Please write down your path"
   },
   "removeMultipleValidators": {
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"

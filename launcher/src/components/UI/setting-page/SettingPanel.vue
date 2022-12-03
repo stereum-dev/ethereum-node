@@ -253,7 +253,6 @@ export default {
       this.settings.stereum.settings.updates.unattended.install =
         this.stereumRef === "auto";
       await ControlService.setStereumSettings(toRaw(this.settings));
-      alert("Done!");
     },
     selector() {
       if (this.langActive === true) {

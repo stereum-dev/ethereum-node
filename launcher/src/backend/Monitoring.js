@@ -13,12 +13,20 @@ export class Monitoring {
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.rpcTunnel = {};
     this.beaconTunnel = {};
+    this.serviceInfosCacheFile = path.join(os.tmpdir(), 'server_infos_cache_' + process.getCreationTime() + '.txt');
   }
 
   // Cleanup on logout
-  async onLogout(){
+  async logout(){
     this.rpcTunnel = {};
     this.beaconTunnel = {};
+    try{
+      fs.unlinkSync(this.serviceInfosCacheFile)
+    }catch(e){}
+    await this.nodeConnection.logout();
+    await this.nodeConnectionProm.logout();
+    await this.serviceManager.nodeConnection.logout();
+    await this.serviceManagerProm.nodeConnection.logout();
   }
 
   async checkStereumInstallation(nodeConnection) {
@@ -93,7 +101,7 @@ export class Monitoring {
     const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
     const hash = crypto.createHash('md5').update(args.join("-")).digest('hex'); // cache id
-    const file = path.join(os.tmpdir(), 'server_infos_cache_' + process.getCreationTime() + '.txt');
+    const file = this.serviceInfosCacheFile;
     const dnow = new Date();
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);

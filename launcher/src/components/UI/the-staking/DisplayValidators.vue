@@ -30,6 +30,11 @@
             </div>
           </div>
         </key-modal>
+        <ImportSlashingModal
+            v-if="ImportSlashingActive"
+            @remove-modal="removeImportSlashingHandler"
+            @import-slashing="setSlashingDB"
+            />
         <div
           class="table-content"
           v-if="importValidatorKeyActive"
@@ -134,7 +139,6 @@
                 removeForMultiValidatorsActive
               "
             />
-
             <RemoveSingleModal
               v-if="item.isRemoveBoxActive"
               :item="item"
@@ -142,20 +146,20 @@
                 item.isRemoveBoxActive = false;
                 item.toRemove = false;
               "
-              @delete-key="validatorRemoveConfirm(item)"
+              @delete-key="validatorRemoveConfirm"
             />
           </div>
         </div>
         <div
           class="table-header"
-          v-if="enterPasswordBox || selectValidatorServiceForKey"
+          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
         >
           <span id="pubkey_name">FILE NAME</span>
           <span id="validator-service">Service</span>
         </div>
         <div
           class="table-content"
-          v-if="enterPasswordBox || selectValidatorServiceForKey"
+          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
         >
           <div
             class="key-tableRow"
@@ -249,7 +253,7 @@ import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
-
+import ImportSlashingModal from "./ImportSlashingModal.vue";
 export default {
   components: {
     DropZone,
@@ -268,6 +272,7 @@ export default {
     RemoveMultipleValidators,
     ExitMultipleValidators,
     SelectService,
+    ImportSlashingModal,
   },
   props: ["button"],
   data() {
@@ -308,9 +313,8 @@ export default {
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
       selectedService: {},
-      validatorName: "",
-      storingKeys: [],
-      keysInStorage: [],
+      ImportSlashingActive: false,
+      slashingDB: "",
     };
   },
   watch: {
@@ -360,13 +364,6 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
-    updateDisplayName() {
-      this.keys = this.keys.map((item) => {
-        if (Object.keys(localStorage).includes(item.key)) {
-          item.displayName = localStorage.getItem(item.key);
-        }
-      });
-    },
   },
   beforeMount() {
     this.keys = this.keys.map((item) => {
@@ -386,12 +383,6 @@ export default {
   mounted() {
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
-    this.keys.map((item) => {
-      const store = Object.keys(localStorage).find((i) => i == item.key);
-      if (item.key === store && store !== undefined) {
-        item.displayName = localStorage.getItem(item.key);
-      }
-    });
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -423,10 +414,16 @@ export default {
     renameDisplayHandler(el) {
       el.isRenameActive = true;
     },
-    renameValidatorHandler(el, name) {
+    async renameValidatorHandler(el, name) {
       el.isRenameActive = false;
-      localStorage.setItem(el.key, name);
-      el.displayName = localStorage.getItem(el.key);
+      el.displayName = name
+      const keys = await ControlService.readKeys()
+      if(keys){
+        keys[el.key] = name
+        await ControlService.writeKeys(keys)
+      }else{
+        console.log("Couldn't read KeyFile!")
+      }
     },
     closeRenameHandler(el) {
       el.isRenameActive = false;
@@ -435,12 +432,24 @@ export default {
       el.toRemove = true;
       el.isRemoveBoxActive = true;
     },
-    async validatorRemoveConfirm(el) {
-      el.isRemoveBoxActive = false;
-      el.isDownloadModalActive = true;
-      await this.deleteValidators(el.validatorID, [el.key]);
+    async validatorRemoveConfirm(item, picked) {
+      item.isRemoveBoxActive = false;
+      item.isDownloadModalActive = true;
+      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
+      if(picked === 'yes'){
+        this.downloadFile(returnVal)
+      }
     },
-
+    downloadFile(data){
+      let json = JSON.stringify(data);
+      let blob = new Blob([json], {type: "application/json"});
+      let url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', 'slashingDB')
+      link.click()
+      window.URL.revokeObjectURL(url)
+    },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
     },
@@ -490,13 +499,15 @@ export default {
           return this.depositStatusIcon;
       }
     },
-    async deleteValidators(serviceID, keys) {
-      await ControlService.deleteValidators({
+    async deleteValidators(serviceID, keys, picked) {
+      const result = await ControlService.deleteValidators({
         serviceID: serviceID,
         keys: keys,
+        picked: picked === 'yes' ? true : false
       });
       this.forceRefresh = true;
       await this.listKeys();
+      return result
     },
     listKeys: async function () {
       let keyStats = [];
@@ -546,9 +557,11 @@ export default {
           }
         }
         this.forceRefresh = false;
+        let alias = await ControlService.readKeys()
         this.keys = keyStats.map((key) => {
           return {
             ...key,
+            displayName: alias[key.key],
             showGrafitiText: false,
             showCopyText: false,
             showRemoveText: false,
@@ -606,7 +619,9 @@ export default {
         files: this.keyFiles,
         password: this.password,
         service: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB
       });
+      this.slashingDB = ""
       this.forceRefresh = true;
       this.keyFiles = [];
       await this.listKeys();
@@ -692,7 +707,7 @@ export default {
       this.insertKeyBoxActive = true;
     },
 
-    async confirmRemoveAllValidators() {
+    async confirmRemoveAllValidators(picked) {
       let keys = this.keys.map((key) => key.key);
       let id = "";
       let changed = 0;
@@ -705,7 +720,10 @@ export default {
       this.removeForMultiValidatorsActive = false;
       this.downloadForMultiValidatorsActive = true;
       if (changed === 1 && id) {
-        await this.deleteValidators(id, keys);
+        const returnVal = await this.deleteValidators(id, keys, picked);
+        if(picked === 'yes'){
+          this.downloadFile(returnVal)
+        }
       } else if (changed === 0) {
         console.log("Nothing to delete!");
       } else {
@@ -715,7 +733,7 @@ export default {
     checkSelectedService(service) {
       this.selectedService = service;
       this.selectValidatorServiceForKey = false;
-      this.enterPasswordBox = true;
+      this.ImportSlashingActive = true;
     },
 
     copyHandler(item) {
@@ -729,6 +747,20 @@ export default {
           console.log(`can't copy`);
         });
     },
+    removeImportSlashingHandler(){
+      this.ImportSlashingActive = false;
+      this.keyFiles = []
+      this.insertKeyBoxActive = true;
+    },
+    setSlashingDB(slashingDB, picked){
+      if(picked){
+        this.slashingDB = slashingDB
+      }else{
+        this.slashingDB = ""
+      }
+      this.ImportSlashingActive = false;
+      this.enterPasswordBox = true
+    }
   },
 };
 </script>

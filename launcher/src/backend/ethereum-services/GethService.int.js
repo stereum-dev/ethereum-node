@@ -55,7 +55,9 @@ test('geth installation', async () => {
     new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
     new ServicePort(null, 30303, 30303, servicePortProtocol.udp)
   ]
-  const executionClient = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+  let executionClient = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+  let versions = await nodeConnection.checkUpdates()
+  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop()
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration())
   await serviceManager.manageServiceState(executionClient.id, 'started')
 

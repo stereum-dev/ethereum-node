@@ -55,12 +55,15 @@ test('lodestar validator import', async () => {
     await nodeConnection.findStereumSettings()
     await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
+    let versions = await nodeConnection.checkUpdates()
+
     let ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
       ]
       let geth = GethService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/geth')
+      geth.imageVersion = versions[geth.network][geth.service].slice(-1).pop()
 
     ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
@@ -69,12 +72,13 @@ test('lodestar validator import', async () => {
     ]
 
     let lBC = LodestarBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lodestar', [geth], [], 'https://goerli.beaconstate.info')
-    //change out http address for integration test
+    //lBC.imageVersion = versions[lBC.network][lBC.service].slice(-1).pop()
 
     ports = [
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
     ]
     let lVC = LodestarValidatorService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lodestar', [lBC])
+    //lVC.imageVersion = versions[lVC.network][lVC.service].slice(-1).pop()
 
     await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
     await serviceManager.manageServiceState(geth.id, 'started')
@@ -113,9 +117,9 @@ test('lodestar validator import', async () => {
       VCstatus = await await nodeConnection.sshService.exec(`docker logs stereum-${lVC.id}`)
       BCstatus = await nodeConnection.sshService.exec(`docker logs stereum-${lBC.id}`)
       if(
-        /Started REST api server address/.test(BCstatus.stdout) &&
-        /Genesis available/.test(VCstatus.stdout) &&
-        /Verified node and validator have same config/.test(VCstatus.stdout) &&
+        /Started REST API server address/.test(BCstatus.stdout) &&
+        /Genesis fetched from the beacon node/.test(VCstatus.stdout) &&
+        /Verified connected beacon node and validator have same the config/.test(VCstatus.stdout) &&
         /REST api server keymanager bearer access token located at/.test(VCstatus.stdout)
       ){condition = true}
       counter ++;
@@ -149,11 +153,11 @@ test('lodestar validator import', async () => {
     }
 
     //check lighthouse BC logs
-    expect(BCstatus.stdout).toMatch(/Started REST api server address/)
+    expect(BCstatus.stdout).toMatch(/Started REST API server address/)
 
     //check lighthouse VC logs
-    expect(VCstatus.stdout).toMatch(/Genesis available/)
-    expect(VCstatus.stdout).toMatch(/Verified node and validator have same config/)
+    expect(VCstatus.stdout).toMatch(/Genesis fetched from the beacon node/)
+    expect(VCstatus.stdout).toMatch(/Verified connected beacon node and validator have same the config/)
     expect(VCstatus.stdout).toMatch(/REST api server keymanager bearer access token located at/)
 
 })

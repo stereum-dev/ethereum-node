@@ -50,7 +50,9 @@ test('mevboost installation', async () => {
   await nodeConnection.findStereumSettings()
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  const mevboost = FlashbotsMevBoostService.buildByUserInput('goerli', "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-goerli.flashbots.net")
+  let mevboost = FlashbotsMevBoostService.buildByUserInput('goerli', "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-goerli.flashbots.net")
+  let versions = await nodeConnection.checkUpdates()
+  mevboost.imageVersion = versions[mevboost.network][mevboost.service].slice(-1).pop()
   await nodeConnection.writeServiceConfiguration(mevboost.buildConfiguration())
   await serviceManager.manageServiceState(mevboost.id, 'started')
 
@@ -63,9 +65,9 @@ test('mevboost installation', async () => {
     await testServer.Sleep(30000)
     status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`)
     if(
-      /listening on 0.0.0.0:18550/.test(status.stdout) &&
-      /using 1 relays/.test(status.stdout) &&
-      /Invalid relay URL/.test(status.stdout)
+      /listening on 0.0.0.0:18550/.test(status.stderr) &&
+      /using 1 relays/.test(status.stderr) &&
+     !/Invalid relay URL/.test(status.stderr)
     ){condition = true}
     counter ++;
   }
@@ -84,7 +86,7 @@ test('mevboost installation', async () => {
   }
 
   // check if Mevboost service is running properly
-  expect(status.stdout).toMatch(/listening on 0.0.0.0:18550/)
-  expect(status.stdout).toMatch(/using 1 relays/)
-  expect(status.stdout).not.toMatch(/Invalid relay URL/)
+  expect(status.stderr).toMatch(/listening on 0.0.0.0:18550/)
+  expect(status.stderr).toMatch(/using 1 relays/)
+  expect(status.stderr).not.toMatch(/Invalid relay URL/)
 })

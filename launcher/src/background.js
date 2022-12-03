@@ -118,13 +118,9 @@ promiseIpc.on("closeTunnels", async () => {
 });
 
 promiseIpc.on("logout", async () => {
+  await monitoring.logout();
   await taskManager.nodeConnection.logout();
-  await monitoring.nodeConnection.logout();
-  await monitoring.nodeConnectionProm.logout();
   await serviceManager.nodeConnection.logout();
-  await monitoring.serviceManager.nodeConnection.logout();
-  await monitoring.serviceManagerProm.nodeConnection.logout();
-  await monitoring.onLogout();
   return await nodeConnection.logout();
 });
 
@@ -252,14 +248,15 @@ promiseIpc.on("importKey", async (args) => {
   const returnValue = await validatorAccountManager.importKey(
     args.files,
     args.password,
-    args.service
+    args.service,
+    args.slashingDB
   );
   app.showExitPrompt = false;
   return returnValue;
 });
 
 promiseIpc.on("deleteValidators", async (args) => {
-  await validatorAccountManager.deleteValidators(args.serviceID, args.keys);
+  return await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
 });
 
 promiseIpc.on("listValidators", async (args) => {
@@ -382,6 +379,14 @@ promiseIpc.on("setStereumSettings", async (args) => {
   return await nodeConnection.setStereumSettings(args);
 });
 
+promiseIpc.on("writeKeys", async (args) => {
+  return await validatorAccountManager.writeKeys(args);
+});
+
+promiseIpc.on("readKeys", async () => {
+  return await validatorAccountManager.readKeys();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
@@ -494,6 +499,9 @@ app.on("web-contents-created", (event, contents) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
+  if(process.platform === "linux"){
+    app.commandLine.appendSwitch('--no-sandbox')
+  }
   // if (isDevelopment && !process.env.IS_TEST) {
   // Install Vue Devtools
   try {
@@ -512,6 +520,23 @@ app.on("ready", async () => {
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
+
+autoUpdater.on('error', (error) => {
+  dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
+})
+
+autoUpdater.on('update-downloaded', () => {
+  dialog.showMessageBox({
+    type: "question",
+    buttons: ["Yes", "No"],
+    title: "Install Update",
+    message: "Update downloaded!\n Do you want to restart and apply updates now?",
+  }).then((result) => {
+    if(result.response == 0){
+      autoUpdater.quitAndInstall()
+    }
+  })
+})
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

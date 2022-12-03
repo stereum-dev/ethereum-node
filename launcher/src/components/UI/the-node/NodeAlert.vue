@@ -7,25 +7,25 @@
     ></update-panel>
     <div class="status-box_header">
       <div class="icon-line">
-        <div class="status-icon">
+        <div class="status-icon" v-if="perfect">
           <img
             src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png"
             alt="green"
           />
         </div>
-        <div class="status-icon">
+        <div class="status-icon" v-if="warning">
           <img
             src="../../../../public/img/icon/control/WARNSCHILD_GELB.png"
             alt="green"
           />
         </div>
-        <div class="status-icon">
+        <div class="status-icon" v-if="alarm">
           <img
             src="../../../../public/img/icon/control/WARNSCHILD_ROT.png"
             alt="green"
           />
         </div>
-        <div class="status-icon">
+        <div class="status-icon" v-if="checkStereumUpdate">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="status-box_messages">
-      <div class="status-message_yellow">
+      <div class="status-message_yellow" v-if="storageWarning">
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png"
@@ -47,7 +47,7 @@
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
-      <div class="status-message_yellow">
+      <div class="status-message_yellow" v-if="cpuWarning">
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png"
@@ -62,32 +62,47 @@
           </div>
         </div>
       </div>
-      <div class="status-message_red">
+      <div class="status-message_red" v-if="cpuAlarm">
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/red_warning_cpu.png"
             alt="warn_storage"
           />
         </div>
-        <div class="message-text_container"></div>
+        <div class="message-text_container">
+          <div class="warning"><span>CRITICAL WARNING</span></div>
+          <div class="main-message"><span>CPU USAGE</span></div>
+          <div class="val-message">
+            <span> > {{ cpu }}%</span>
+          </div>
+        </div>
       </div>
-      <div class="status-message_red">
+      <div class="status-message_red" v-if="missedAttest">
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/key-rot.png"
             alt="warn_storage"
           />
         </div>
-        <div class="message-text_container"></div>
+        <div class="message-text_container">
+          <div class="warning"><span>CRITICAL WARNING</span></div>
+          <div class="main-message"><span>MISSED ATTESTATION</span></div>
+        </div>
       </div>
-      <div class="status-message_green">
+      <div class="status-message_green" v-if="checkStereumUpdate">
         <div class="message-icon">
           <img
             src="../../../../public/img/icon/control/logo-icon.png"
             alt="warn_storage"
           />
         </div>
-        <div class="message-text_container"></div>
+        <div class="message-text_container">
+          <div class="warning"><span>NOTIFICATION</span></div>
+          <div class="main-message"><span>STEREUM UPDATE</span></div>
+          <div class="val-message">
+            <span>{{ stereumUpdate.version }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -246,7 +261,7 @@ export default {
   width: 100%;
   height: 82%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   background: #23272a;
@@ -270,7 +285,7 @@ export default {
 }
 .status-icon img {
   width: 95%;
-  height: 95%;
+  height: 98%;
 }
 .status-message_yellow,
 .status-message_red,
@@ -279,7 +294,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 15%;
+  height: 18%;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
