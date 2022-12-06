@@ -31,10 +31,10 @@
           </div>
         </key-modal>
         <ImportSlashingModal
-            v-if="ImportSlashingActive"
-            @remove-modal="removeImportSlashingHandler"
-            @import-slashing="setSlashingDB"
-            />
+          v-if="ImportSlashingActive"
+          @remove-modal="removeImportSlashingHandler"
+          @import-slashing="setSlashingDB"
+        />
         <div
           class="table-content"
           v-if="importValidatorKeyActive"
@@ -152,14 +152,22 @@
         </div>
         <div
           class="table-header"
-          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
+          v-if="
+            enterPasswordBox ||
+            selectValidatorServiceForKey ||
+            ImportSlashingActive
+          "
         >
           <span id="pubkey_name">FILE NAME</span>
           <span id="validator-service">Service</span>
         </div>
         <div
           class="table-content"
-          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
+          v-if="
+            enterPasswordBox ||
+            selectValidatorServiceForKey ||
+            ImportSlashingActive
+          "
         >
           <div
             class="key-tableRow"
@@ -182,7 +190,7 @@
       </div>
     </div>
     <!-- Small search icons -->
-    <SearchOptions />
+    <SearchOptions :isPubkeyVisible="isPubkeyVisible" @toggle-pubkey=" togglePubkeyView"/>
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
@@ -315,6 +323,7 @@ export default {
       selectedService: {},
       ImportSlashingActive: false,
       slashingDB: "",
+      isPubkeyVisible: false,
     };
   },
   watch: {
@@ -416,13 +425,13 @@ export default {
     },
     async renameValidatorHandler(el, name) {
       el.isRenameActive = false;
-      el.displayName = name
-      const keys = await ControlService.readKeys()
-      if(keys){
-        keys[el.key] = name
-        await ControlService.writeKeys(keys)
-      }else{
-        console.log("Couldn't read KeyFile!")
+      el.displayName = name;
+      const keys = await ControlService.readKeys();
+      if (keys) {
+        keys[el.key] = name;
+        await ControlService.writeKeys(keys);
+      } else {
+        console.log("Couldn't read KeyFile!");
       }
     },
     closeRenameHandler(el) {
@@ -435,20 +444,24 @@ export default {
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
-      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
-      if(picked === 'yes'){
-        this.downloadFile(returnVal)
+      const returnVal = await this.deleteValidators(
+        item.validatorID,
+        [item.key],
+        picked
+      );
+      if (picked === "yes") {
+        this.downloadFile(returnVal);
       }
     },
-    downloadFile(data){
+    downloadFile(data) {
       let json = JSON.stringify(data);
-      let blob = new Blob([json], {type: "application/json"});
+      let blob = new Blob([json], { type: "application/json" });
       let url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', 'slashingDB')
-      link.click()
-      window.URL.revokeObjectURL(url)
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "slashingDB");
+      link.click();
+      window.URL.revokeObjectURL(url);
     },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
@@ -503,11 +516,11 @@ export default {
       const result = await ControlService.deleteValidators({
         serviceID: serviceID,
         keys: keys,
-        picked: picked === 'yes' ? true : false
+        picked: picked === "yes" ? true : false,
       });
       this.forceRefresh = true;
       await this.listKeys();
-      return result
+      return result;
     },
     listKeys: async function () {
       let keyStats = [];
@@ -557,7 +570,7 @@ export default {
           }
         }
         this.forceRefresh = false;
-        let alias = await ControlService.readKeys()
+        let alias = await ControlService.readKeys();
         this.keys = keyStats.map((key) => {
           return {
             ...key,
@@ -619,9 +632,9 @@ export default {
         files: this.keyFiles,
         password: this.password,
         service: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB
+        slashingDB: this.slashingDB,
       });
-      this.slashingDB = ""
+      this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
       await this.listKeys();
@@ -721,8 +734,8 @@ export default {
       this.downloadForMultiValidatorsActive = true;
       if (changed === 1 && id) {
         const returnVal = await this.deleteValidators(id, keys, picked);
-        if(picked === 'yes'){
-          this.downloadFile(returnVal)
+        if (picked === "yes") {
+          this.downloadFile(returnVal);
         }
       } else if (changed === 0) {
         console.log("Nothing to delete!");
@@ -747,20 +760,23 @@ export default {
           console.log(`can't copy`);
         });
     },
-    removeImportSlashingHandler(){
+    removeImportSlashingHandler() {
       this.ImportSlashingActive = false;
-      this.keyFiles = []
+      this.keyFiles = [];
       this.insertKeyBoxActive = true;
     },
-    setSlashingDB(slashingDB, picked){
-      if(picked){
-        this.slashingDB = slashingDB
-      }else{
-        this.slashingDB = ""
+    setSlashingDB(slashingDB, picked) {
+      if (picked) {
+        this.slashingDB = slashingDB;
+      } else {
+        this.slashingDB = "";
       }
       this.ImportSlashingActive = false;
-      this.enterPasswordBox = true
-    }
+      this.enterPasswordBox = true;
+    },
+    togglePubkeyView() {
+      this.isPubkeyVisible = !this.isPubkeyVisible;
+    },
   },
 };
 </script>
