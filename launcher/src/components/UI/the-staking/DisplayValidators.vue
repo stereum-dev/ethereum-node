@@ -190,7 +190,10 @@
       </div>
     </div>
     <!-- Small search icons -->
-    <SearchOptions :isPubkeyVisible="isPubkeyVisible" @toggle-pubkey=" togglePubkeyView"/>
+    <SearchOptions
+      :isPubkeyVisible="isPubkeyVisible"
+      @toggle-pubkey="togglePubkeyView"
+    />
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
@@ -356,6 +359,16 @@ export default {
         }
       },
     },
+    isPubkeyVisible: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.keys.map((k) => (k.displayName = ""));
+        }else{
+          this.listKeys();
+        }
+      },
+    },
   },
   computed: {
     ...mapWritableState(useServices, {
@@ -433,6 +446,9 @@ export default {
       } else {
         console.log("Couldn't read KeyFile!");
       }
+    },
+    togglePubkeyView() {
+      this.isPubkeyVisible = !this.isPubkeyVisible;
     },
     closeRenameHandler(el) {
       el.isRenameActive = false;
@@ -773,9 +789,6 @@ export default {
       }
       this.ImportSlashingActive = false;
       this.enterPasswordBox = true;
-    },
-    togglePubkeyView() {
-      this.isPubkeyVisible = !this.isPubkeyVisible;
     },
   },
 };
