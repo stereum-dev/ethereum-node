@@ -141,6 +141,13 @@
               @blur="checkInput(model.keylocation)"
               required
             />
+            <input
+              type="text"
+              class="port"
+              placeholder="PORT"
+              v-model="sshPort"
+              @blur="sshPort"
+            />
           </div>
           <input
             :class="{
@@ -193,6 +200,7 @@ export default {
   emits: ["page"],
   data() {
     return {
+      sshPort: null,
       keyAuth: false,
       link: "stereumLogoExtern.png",
       connectingAnimActive: false,
@@ -705,7 +713,14 @@ select {
 }
 #keyInput {
   height: 100% !important;
-  width: 100% !important;
+  width: 80% !important;
+  border-radius: 0 0 0 0 !important;
+  margin: 0 !important;
+}
+.port {
+  background: red;
+  width: 20% !important;
+  height: 100% !important;
   border-radius: 0 30px 30px 0 !important;
 }
 #login {
