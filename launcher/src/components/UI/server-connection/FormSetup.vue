@@ -59,33 +59,49 @@
             </div>
           </div>
           <div class="server-group" :class="{ errors: !model.name.isFilled }">
-            <label for="servername">{{ $t("formsetup.servername") }}</label>
-            <input
-              :class="{
-                notFilled: !model.host.isFilled,
-                isFilled: model.host.isFilled,
-              }"
-              name="servername"
-              id="servername"
-              type="text"
-              v-model="model.name.value"
-              @blur="checkInput(model.name)"
-            />
+            <div class="labelBox">
+              <label for="servername">{{ $t("formsetup.servername") }}</label>
+            </div>
+            <div class="server-group_input">
+              <input
+                :class="{
+                  notFilled: !model.host.isFilled,
+                  isFilled: model.host.isFilled,
+                }"
+                name="servername"
+                id="servername"
+                type="text"
+                v-model="model.name.value"
+                @blur="checkInput(model.name)"
+              />
+            </div>
           </div>
           <div class="server-group" :class="{ errors: !model.host.isFilled }">
-            <label for="host">{{ $t("formsetup.iphost") }}</label>
-            <input
-              :class="{
-                notFilled: !model.host.isFilled,
-                isFilled: model.host.isFilled,
-              }"
-              name="host"
-              id="iporhostname"
-              type="text"
-              v-model="model.host.value"
-              @blur="checkInput(model.host)"
-              required
-            />
+            <div class="labelBox">
+              <label for="host">{{ $t("formsetup.iphost") }}</label>
+            </div>
+            <div class="server-group_input">
+              <input
+                :class="{
+                  notFilled: !model.host.isFilled,
+                  isFilled: model.host.isFilled,
+                }"
+                name="host"
+                id="iporhostname"
+                type="text"
+                v-model="model.host.value"
+                @blur="checkInput(model.host)"
+                required
+              />
+              <input
+                type="text"
+                class="ipPort"
+                placeholder="PORT"
+                v-model="sshPort"
+                @blur="sshPort"
+                optional
+              />
+            </div>
           </div>
           <div
             class="server-group"
@@ -94,19 +110,23 @@
               isFilled: model.user.isFilled,
             }"
           >
-            <label for="user">{{ $t("formsetup.username") }}</label>
-            <input
-              :class="{
-                notFilled: !model.user.isFilled,
-                isFilled: model.user.isFilled,
-              }"
-              type="text"
-              name="user"
-              id="username"
-              v-model="model.user.value"
-              @blur="checkInput(model.user)"
-              required
-            />
+            <div class="labelBox">
+              <label for="user">{{ $t("formsetup.username") }}</label>
+            </div>
+            <div class="server-group_input">
+              <input
+                :class="{
+                  notFilled: !model.user.isFilled,
+                  isFilled: model.user.isFilled,
+                }"
+                type="text"
+                name="user"
+                id="username"
+                v-model="model.user.value"
+                @blur="checkInput(model.user)"
+                required
+              />
+            </div>
           </div>
         </div>
         <div
@@ -140,13 +160,6 @@
               v-model="model.keylocation.value"
               @blur="checkInput(model.keylocation)"
               required
-            />
-            <input
-              type="text"
-              class="port"
-              placeholder="PORT"
-              v-model="sshPort"
-              @blur="sshPort"
             />
           </div>
           <input
@@ -425,6 +438,9 @@ export default {
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .ssvBtn {
   display: none;
 }
@@ -626,26 +642,36 @@ select {
   transition-duration: 100ms;
 }
 .server-group {
-  margin: 0;
-  height: 50px;
-  padding: 5px;
+  height: 20%;
+  width: 100%;
   display: flex;
   border: none;
   align-items: center;
   justify-content: space-between;
   font-weight: bold;
+  box-sizing: border-box;
 }
-
-.server-group label {
-  clear: both;
-  font-size: 1.1rem;
+.labelBox {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 30%;
+  font-size: 100%;
   font-weight: 700;
-  margin-left: 10px;
   color: #dfdfdf !important;
 }
-.server-group input {
-  width: 60%;
-  height: 75%;
+.server-group_input {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.server-group_input input {
+  width: 86%;
+  height: 80%;
   background-color: #eaeaea;
   border: 2px solid #979797;
   border-radius: 40px;
@@ -655,8 +681,17 @@ select {
   outline-style: none !important;
   color: #242424;
 }
-.server-group input:hover {
+.server-group_input input:hover {
   border: 2px solid rgb(54, 54, 54);
+}
+#iporhostname {
+  width: 70%;
+  border-radius: 30px 0 0 30px;
+}
+.ipPort {
+  width: 16% !important;
+  height: 80% !important;
+  border-radius: 0 30px 30px 0 !important;
 }
 #keyLocation {
   width: 65%;
@@ -714,16 +749,11 @@ select {
 }
 #keyInput {
   height: 100% !important;
-  width: 80% !important;
-  border-radius: 0 0 0 0 !important;
+  width: 88.8% !important;
+  border-radius: 0 30px 30px 0 !important;
   margin: 0 !important;
 }
-.port {
-  background: red;
-  width: 20% !important;
-  height: 100% !important;
-  border-radius: 0 30px 30px 0 !important;
-}
+
 #login {
   width: 120px;
   min-width: 120px;
