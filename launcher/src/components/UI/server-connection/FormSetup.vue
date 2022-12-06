@@ -685,11 +685,12 @@ select {
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 8%;
+  width: 7%;
   border-radius: 30px 0 0 30px;
+  box-sizing: border-box;
 }
 .chooseFile img {
-  width: 60%;
+  width: 50%;
 }
 #keyLocation input {
   width: 57%;
