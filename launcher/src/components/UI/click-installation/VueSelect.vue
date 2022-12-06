@@ -16,7 +16,6 @@
         />
       </div>
       <select
-        class="ring-0"
         id="selector"
         @change="pluginNetworkHandler"
         v-model="selectedNetworks"
@@ -191,6 +190,9 @@ export default {
   cursor: pointer;
   box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
     var(--tw-ring-color);
+}
+.select-box #selector:focus {
+  outline: none;
 }
 .select-box #selector option {
   width: 100%;

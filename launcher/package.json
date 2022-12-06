@@ -6,7 +6,7 @@
   "author": "stereum.net",
   "scripts": {
     "serve": "vue-cli-service serve --port 8081",
-    "watch:css": "tailwindcss -i ./src/input.css -o ./public/output.css --watch",
+    "watch:css": "npx tailwindcss -i ./src/main.css -o ./public/output.css --watch",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
