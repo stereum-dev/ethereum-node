@@ -37,6 +37,7 @@
             </div>
           </div>
         </div>
+        <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
     </div>
   </div>
