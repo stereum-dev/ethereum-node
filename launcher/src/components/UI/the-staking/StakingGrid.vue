@@ -10,7 +10,7 @@
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
-        <TaskManager/>
+        <TaskManager />
       </div>
     </div>
   </div>
@@ -49,17 +49,9 @@ export default {
           display: true,
         },
         {
-          id: 3,
-          name: "fee",
-          displayName: "change fee recipient",
-          icon: "img/icon/the-staking/fee-icon2.png",
-          method: this.feeBtn,
-          display: false,
-        },
-        {
           id: 4,
-          name: "exit",
-          displayName: "exit chain",
+          name: "withdraw",
+          displayName: "withdrawal",
           icon: "img/icon/the-staking/redexit-icon.png",
           method: this.exitBtn,
           display: false,
