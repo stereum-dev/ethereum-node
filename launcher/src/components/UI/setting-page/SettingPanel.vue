@@ -61,20 +61,6 @@
                 item-type="update"
                 id="version"
               ></setting-items>
-
-              <!-- <div class="setting-items">
-                <div class="setting-items_title">
-                  <span>{{ $t("settingPanel.lane") }}</span>
-                </div>
-                <div
-                  class="setting-items_btn"
-                  @click="switchOnOff"
-                  :style="colorPicker"
-                >
-                  <span>{{ btnStatus }}</span>
-                </div>
-              </div> -->
-
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
@@ -92,15 +78,16 @@
                   </select>
                 </div>
               </div>
-              <!-- <div class="setting-items">
+              <div class="setting-items">
                 <div class="setting-items_title">
-                  <span>{{ $t("settingPanel.servicePlugin") }}</span>
+                  <span>Stereum Services Update Configuration</span>
                 </div>
                 <div class="setting-items_btn">
+                  <comming-soon></comming-soon>
                   <select
-                    name="stereum-update"
-                    id="stereum-update"
-                    v-model="pluginRef"
+                    name="stereum-services-update"
+                    id="stereum-services-update"
+                    v-model="stereumServiceRef"
                   >
                     <option value="manual">
                       {{ $t("settingPanel.manual") }}
@@ -108,7 +95,7 @@
                     <option value="auto">{{ $t("settingPanel.auto") }}</option>
                   </select>
                 </div>
-              </div> -->
+              </div>
             </div>
           </div>
         </div>
@@ -132,6 +119,7 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
       onOff: true,
       btnStatus: "",

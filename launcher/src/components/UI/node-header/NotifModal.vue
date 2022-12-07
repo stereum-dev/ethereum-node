@@ -21,7 +21,7 @@
         <div class="qrContent">
           <div class="qrCode-boxes">
             <span
-              >1- VISIT THE APPSTORE OR OUR WEBSITE & DOWNLOAD "STEREUM NODE
+              >1- VISIT THE APPSTORE OR OUR WEBSITE & DOWNLOAD "STEREUM NODE
               MONITOR"
             </span>
             <span>2. OPEN "STEREUM MONITOR" ON YOUR SMARTPHONE </span>
