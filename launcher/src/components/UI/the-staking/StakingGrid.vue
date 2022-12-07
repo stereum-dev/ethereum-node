@@ -3,14 +3,14 @@
     <div class="staking-green-bg">
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
-        <time-reward></time-reward>
+        <ValidatorState />
         <selection-options
           :buttonState="buttonState"
           @click-btn="clickBtnHandler"
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
-        <task-manager></task-manager>
+        <TaskManager/>
       </div>
     </div>
   </div>
@@ -19,14 +19,14 @@
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
-import TimeReward from "./TimeReward.vue";
+import ValidatorState from "./ValidatorState.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     DisplayValidators,
     SelectionOptions,
     ValidatorsBox,
-    TimeReward,
+    ValidatorState,
     TaskManager,
   },
   data() {
@@ -38,7 +38,7 @@ export default {
           displayName: "Grafiti",
           icon: "/img/icon/the-staking/option-graffiti.png",
           method: this.grafitiBtn,
-          display:true,
+          display: true,
         },
         {
           id: 2,
@@ -46,7 +46,7 @@ export default {
           displayName: "Remove keys",
           icon: "/img/icon/the-staking/option-remove.png",
           method: this.removeBtn,
-          display:true,
+          display: true,
         },
         {
           id: 3,
@@ -54,7 +54,7 @@ export default {
           displayName: "change fee recipient",
           icon: "img/icon/the-staking/fee-icon2.png",
           method: this.feeBtn,
-          display:false,
+          display: false,
         },
         {
           id: 4,
@@ -62,7 +62,7 @@ export default {
           displayName: "exit chain",
           icon: "img/icon/the-staking/redexit-icon.png",
           method: this.exitBtn,
-          display:false,
+          display: false,
         },
       ],
       button: {},
@@ -92,7 +92,7 @@ export default {
 .staking-green-bg {
   width: 100%;
   height: 100%;
-  background-color: #324B3E;
+  background-color: #324b3e;
   border-radius: 0 0 10px 10px;
   display: flex;
   flex-wrap: nowrap;
