@@ -34,7 +34,7 @@
                 alt="icon"
               />
               <div class="cube-value">
-                <span></span>
+                <span>135456456456456</span>
               </div>
             </div>
             <div class="meet">
@@ -54,7 +54,7 @@
                 alt="icon"
               />
               <div class="percentage-value">
-                <span></span>
+                <span>100</span>
               </div>
             </div>
             <div class="percentage">
@@ -63,7 +63,7 @@
                 alt="icon"
               />
               <div class="percentage-value">
-                <span></span>
+                <span>95</span>
               </div>
             </div>
             <div class="slashing">
@@ -230,9 +230,24 @@ export default {
 .meet .meet-value {
   width: 70%;
   height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #242424;
   border-radius: 20px;
   text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #dadada;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cube-value span,
+.view-value span,
+.meet-value span {
+  padding-top: 2px;
+  padding-left: 10%;
 }
 .right-side .percentage,
 .right-side .slashing {
@@ -244,20 +259,34 @@ export default {
 }
 .percentage .percentage-value,
 .slashing .slashing-value {
-  width: 65%;
-  height: 100%;
+  width: 45%;
+  height: 90%;
   background-color: #242424;
   border-radius: 20px;
   text-align: center;
   margin-right: 5%;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #dadada;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
+  
+.percentage-value span,
+.slashing-value span {
+  padding-top: 1px;
+  padding-left: 10%;
+}
 .right-side img {
   width: 20%;
-  margin-left: 2%;
+  margin-left: 10%;
 }
 .slashing img {
   width: 23%;
-  margin-left: 2%;
+  margin-left: 10%;
 }
 </style>
