@@ -337,12 +337,7 @@ export default {
     button: {
       deep: true,
       handler(val) {
-        if (val.name === "fee") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.feeRecipientBoxActive = true;
-          this.feeInputActive = true;
-        } else if (val.name === "grafiti") {
+        if (val.name === "grafiti") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.exitChainForMultiValidatorsActive = false;
@@ -353,7 +348,7 @@ export default {
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
           this.keys.forEach((k) => (k.toRemove = true));
-        } else if (val.name === "exit") {
+        } else if (val.name === "withdraw") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.grafitiForMultiValidatorsActive = false;
