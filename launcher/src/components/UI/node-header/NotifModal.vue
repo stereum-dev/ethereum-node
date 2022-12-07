@@ -21,12 +21,12 @@
         <div class="qrContent">
           <div class="qrCode-boxes">
             <span
-              >1- VISIT THE APPSTORE OR OUR WEBSITE & DOWNLOAD "STEREUM NODE
-              MONITOR"
+              >1. Visit the app store or our website to download "STEREUM Node
+              Monitor"
             </span>
-            <span>2. OPEN "STEREUM MONITOR" ON YOUR SMARTPHONE </span>
-            <span>3. SCAN THE QR CODE AT: </span>
-            <span>4. SEND A TEST NOTIFICATION</span>
+            <span>2. Open the app on your smartphone</span>
+            <span>3. Scan the QR Code</span>
+            <span>X. Send a test notification</span>
           </div>
           <div class="qrCode-boxes">
             <div class="qrCode-place-holder">

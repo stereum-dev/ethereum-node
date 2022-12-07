@@ -78,24 +78,6 @@
                   </select>
                 </div>
               </div>
-              <div class="setting-items">
-                <div class="setting-items_title">
-                  <span>Stereum Services Update Configuration</span>
-                </div>
-                <div class="setting-items_btn">
-                  <comming-soon></comming-soon>
-                  <select
-                    name="stereum-services-update"
-                    id="stereum-services-update"
-                    v-model="stereumServiceRef"
-                  >
-                    <option value="manual">
-                      {{ $t("settingPanel.manual") }}
-                    </option>
-                    <option value="auto">{{ $t("settingPanel.auto") }}</option>
-                  </select>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -342,7 +324,6 @@ export default {
   height: 90%;
   line-height: 90%;
   text-align-last: center;
-  color: #171717;
   border-radius: 10px;
   color: #232323;
 }
