@@ -240,6 +240,7 @@
       v-if="exitChainForMultiValidatorsActive"
       @confirm-btn="confirmPasswordMultiExitChain"
     />
+    <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
 <script>
@@ -265,6 +266,7 @@ import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
+import DisabledStaking from "./DisabledStaking.vue";
 export default {
   components: {
     DropZone,
@@ -284,10 +286,12 @@ export default {
     ExitMultipleValidators,
     SelectService,
     ImportSlashingModal,
+    DisabledStaking,
   },
   props: ["button"],
   data() {
     return {
+      stakingIsDisabled: false,
       disable: true,
       message: "",
       messageIsError: false,
@@ -364,7 +368,7 @@ export default {
       handler(val) {
         if (val) {
           this.keys.map((k) => (k.displayName = ""));
-        }else{
+        } else {
           this.listKeys();
         }
       },
@@ -403,6 +407,7 @@ export default {
     });
   },
   mounted() {
+    this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
@@ -414,6 +419,16 @@ export default {
   },
 
   methods: {
+    checkValidatorClientsExist() {
+      const clients = this.installedServices.filter(
+        (service) => service.category === "validator"
+      );
+      if (clients.length > 0) {
+        this.stakingIsDisabled = false;
+      } else {
+        this.stakingIsDisabled = true;
+      }
+    },
     logEvent(event) {
       let url = event.target.baseURI;
       fetch(url)
