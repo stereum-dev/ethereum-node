@@ -1588,7 +1588,7 @@ export class Monitoring {
     const serverVitals = await this.nodeConnection.sshService.exec(`
         hostname &&
         free --mega | sed -n '2p' | awk '{print $2" "$3}' &&
-        df --total -h --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
+        df --total -BG --exclude-type=overlay | grep ^total | awk '{print $2" "$4" "$5}'
         sar -u 1 1 | awk '{if ($7 != "%idle") print 100.000-$NF}' | tail -1 &&
         INTERFACE=\`ip route get 8.8.8.8 | head -n1 | awk '{print $5}'\` &&
 sar -n DEV 1 1 | awk -v var="$INTERFACE" '{ if($2 == var) print $5" "$6}' | sed -n '1p' &&
