@@ -11,7 +11,7 @@
       <div class="disabledMessage">
         <span>There is no validator client installed!</span>
         <p>
-          Install at least one validator client to active importing validator
+          Install at least one validator client to activate importing validator
           keys.
         </p>
       </div>
