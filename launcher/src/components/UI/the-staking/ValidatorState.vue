@@ -34,7 +34,7 @@
                 alt="icon"
               />
               <div class="cube-value">
-                <span>135456456456456</span>
+                <span>135456456</span>
               </div>
             </div>
             <div class="meet">
@@ -163,7 +163,7 @@ export default {
   height: 25%;
   padding: 3px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -171,14 +171,16 @@ export default {
   font-size: 0.6rem;
   font-weight: 600;
   color: #dadada;
+  margin-left: 2%;
 }
 .proposedHeader .header-counter {
   font-size: 0.7rem;
   font-weight: 600;
   text-align: center;
   color: rgb(159, 230, 136);
-  width: 20%;
+  width: 18%;
   height: 100%;
+  margin-right: 1%;
   background-color: #242529;
   border-radius: 25px;
 }
@@ -275,7 +277,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-  
+
 .percentage-value span,
 .slashing-value span {
   padding-top: 1px;
