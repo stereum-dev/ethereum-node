@@ -86,6 +86,16 @@
           icon: string (path)
           }
         -->
+        <div class="actionBox">
+          <span class="actionBoxTitle">Services Update Configuration</span>
+          <div class="updateService">
+            <comming-soon></comming-soon>
+            <select name="update" id="updateService" v-model="updateSelect">
+              <option value="auto">AUTO</option>
+              <option value="manual">MANUAL</option>
+            </select>
+          </div>
+        </div>
         <div
           class="toggleTextBox"
           v-for="(option, index) in item.expertOptions.filter(
@@ -129,6 +139,7 @@
           icon: string (path)
           }
         -->
+
         <div
           class="actionBox"
           v-for="(option, index) in item.expertOptions.filter(
@@ -151,14 +162,6 @@
               <span class="slider round"></span>
             </label>
           </div>
-        </div>
-        <div class="actionBox">
-          <span class="actionBoxTitle">Services Update Configuration</span>
-
-          <select name="update" id="updateService" v-model="updateSelect">
-            <option value="auto">AUTO</option>
-            <option value="manual">MANUAL</option>
-          </select>
         </div>
       </div>
       <!-- expert mode textarea -->
@@ -587,6 +590,7 @@ export default {
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
+  position: relative;
 }
 .expertRow .actionBox img {
   grid-column: 1/2;
@@ -601,17 +605,24 @@ export default {
   margin-left: -14px;
   text-transform: uppercase;
 }
-#updateService {
+.updateService {
   grid-column: 5/6;
   grid-row: 1;
-  width: 99%;
-  height: 94%;
-  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   justify-content: center;
   align-items: center;
+  position: relative;
+  border-radius: 10px;
+}
+.updateService select {
   text-align-last: center;
   color: #232323;
   font-size: 85%;
+  border-radius: 10px;
+  height: 85%;
+  width: 100%;
 }
 
 *:focus {
