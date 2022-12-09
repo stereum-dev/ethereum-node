@@ -255,14 +255,14 @@ export default {
   text-align: center;
   color: rgb(226, 226, 226);
   text-transform: uppercase;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 600;
 }
 
 .service-option {
   width: 60%;
-  height: 45%;
-  margin-left: 16px;
+  height: 38%;
+  margin-left: 14px;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
@@ -272,8 +272,8 @@ export default {
 }
 
 .service-option img {
-  width: 11%;
-  height: 75%;
+  width: 8%;
+  height: 72%;
   margin-right: 15px;
   cursor: pointer;
 }
