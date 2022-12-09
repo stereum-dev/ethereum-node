@@ -87,9 +87,9 @@
           }
         -->
         <div class="actionBox">
+          <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
           <span class="actionBoxTitle">Services Update Configuration</span>
           <div class="updateService">
-            <comming-soon></comming-soon>
             <select name="update" id="updateService" v-model="updateSelect">
               <option value="auto">AUTO</option>
               <option value="manual">MANUAL</option>
