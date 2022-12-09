@@ -802,7 +802,7 @@ input {
   height: 19px;
   border: 1px solid #228bb1;
   width: 19px;
-  left: 1px;
+  left: 2px;
   bottom: 1px;
   background-color: #25acde;
   -webkit-transition: 0.4s;
