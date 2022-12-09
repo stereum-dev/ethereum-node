@@ -233,11 +233,11 @@ export default {
   width: 70%;
   height: 90%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-color: #242424;
   border-radius: 20px;
-  text-align: center;
+  text-align: left;
   font-size: 0.7rem;
   font-weight: 600;
   color: #dadada;
@@ -248,6 +248,7 @@ export default {
 .cube-value span,
 .view-value span,
 .meet-value span {
+  width: max-content;
   padding-top: 2px;
   padding-left: 10%;
 }
