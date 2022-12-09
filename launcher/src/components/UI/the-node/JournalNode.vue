@@ -258,4 +258,11 @@ export default {
   width: 10%;
   margin-right: 8px;
 }
+.state-btn:hover {
+  background-color: #18191c;
+}
+.state-btn:active {
+  box-shadow: none;
+  transform: scale(0.99);
+}
 </style>
