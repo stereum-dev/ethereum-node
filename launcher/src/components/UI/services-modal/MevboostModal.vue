@@ -43,6 +43,11 @@
                   @change="enableBtn"
                 />
                 <label :for="relay.id">{{ relay.name }}</label>
+                <img
+                  src="/img/icon/header-icons/usa1.png"
+                  alt="flag-icon"
+                  v-if="relay.freeCencorship == false"
+                />
               </div>
             </div>
           </div>
