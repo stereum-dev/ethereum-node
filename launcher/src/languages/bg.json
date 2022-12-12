@@ -26,7 +26,7 @@
     "support": "съпорт",
     "supportText": "Най-бързият начин да се свържете с човек за поддръжка е да се присъедините към нашия сървър в Дискорд!",
     "bugReport": "ДОКЛАД ЗА ГРЕШКИ",
-    "bugRepText": "Моля, отделете време, за да напишете въпрос и да ни позволите да направим Стереум по-добър!",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "или пишете E-Mail на:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Кликнете извън прозореца за прекратите процеса"
   },
   "settingPanel": {
-    "stereumName": "настройка на стереум",
-    "langName": "избиране на език",
-    "confirm": "ПОТВЪРЖДАВАНЕ И ПРИЛАГАНЕ",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "Заслуги",
     "open": "отвори",
@@ -104,7 +104,7 @@
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
     "rpc": "RPC-крайна връзка",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",
-    "hard": "ХАРД ДИСК",
+    "hard": "STORAGE VOLUME",
     "free": "БЕСПЛАТНО",
     "total": "ОБЩО",
     "network": "МРЕЖА",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ВЪВЕДЕТЕ ПАРОЛАТА СИ ЗА ВАЛИДИРАНЕ, ЗА ДА ИЗЛЕЗЕТЕ ОТ ВЕРИГАТА С ТОЗИ КЛЮЧ...",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Сигурни ли сте, че искате да излезете от веригата с ИЗБРАНИТЕ КЛЮЧОВЕ ЗА УТВЪРЖДАВАНЕ? Това прекратява работата на валидатора и НЕ МОЖЕ да бъде върнато назад. Вашите средства също могат да се изтеглят само ако веригата го позволява.",
