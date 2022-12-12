@@ -10,6 +10,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       selectedPreset: [],
       testnetPlugins: [],
       mainnetPlugins: [],
+      gnosisPlugins: [],
       installation: [
         {
           img: "/img/icon/one-click-installer.png",
@@ -69,6 +70,17 @@ export const useClickInstall = defineStore("clickInstallation", {
           networkIcon: require("../../public/img/icon/click-installation/mainnet-icon.png"),
           icon: require("../../public/img/icon/presets-icons/mev-staking.png"),
           serviceAvailable: true,
+          showDropDown: false,
+          includedPlugins: [],
+        },
+        {
+          id: 11,
+          name: "staking",
+          network: "gnosis",
+          defaultPath: "/opt/stereum",
+          networkIcon: require("../../public/img/icon/click-installation/mainnet-icon.png"),
+          icon: require("../../public/img/icon/click-installation/staking-icon.png"),
+          serviceAvailable: false,
           showDropDown: false,
           includedPlugins: [],
         },

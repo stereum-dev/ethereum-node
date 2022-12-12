@@ -11,7 +11,11 @@
         <span>OPEN PORTS</span>
       </div>
       <div class="portlist-data_box">
-        <div class="portlist-data_row" v-for="item in portstatus.data" :key="item.id">
+        <div
+          class="portlist-data_row"
+          v-for="item in portstatus.data"
+          :key="item.id"
+        >
           <div class="rowName">
             <span>{{ item.name }}</span>
           </div>
@@ -30,48 +34,6 @@
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 export default {
-  data() {
-    return {
-      portsInfo: [
-        {
-          id: 1,
-          name: "name1",
-          port: 1111,
-          prot: "tcp",
-        },
-        {
-          id: 2,
-          name: "name2",
-          port: 22,
-          prot: "udp",
-        },
-        {
-          id: 3,
-          name: "name3",
-          port: 333,
-          prot: "tcp",
-        },
-        {
-          id: 4,
-          name: "name4",
-          port: 4,
-          prot: "udp",
-        },
-        {
-          id: 5,
-          name: "name5",
-          port: 1515,
-          prot: "tcp",
-        },
-        {
-          id: 6,
-          name: "name6",
-          port: 123,
-          prot: "udp",
-        },
-      ],
-    };
-  },
   computed: {
     ...mapState(useControlStore, {
       portstatus: "portstatus",

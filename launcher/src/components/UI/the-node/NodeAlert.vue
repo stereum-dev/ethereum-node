@@ -25,7 +25,7 @@
             alt="green"
           />
         </div>
-        <div class="status-icon" v-if="checkStereumUpdate">
+        <div class="status-icon" v-if="notification">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -89,21 +89,34 @@
           <div class="main-message"><span>MISSED ATTESTATION</span></div>
         </div>
       </div>
-      <div class="status-message_green" v-if="checkStereumUpdate">
-        <div class="message-icon">
-          <img
-            src="../../../../public/img/icon/control/logo-icon.png"
-            alt="warn_storage"
-          />
-        </div>
-        <div class="message-text_container">
-          <div class="warning"><span>NOTIFICATION</span></div>
-          <div class="main-message"><span>STEREUM UPDATE</span></div>
-          <div class="val-message">
-            <span>{{ stereumUpdate.version }}</span>
+      <transition>
+        <div
+          class="status-message_green"
+          v-if="notification"
+          @mouseover="iconShow"
+          @mouseleave="iconHide"
+        >
+          <div class="message-icon" @click="showUpdate">
+            <img
+              src="../../../../public/img/icon/control/logo-icon.png"
+              alt="warn_storage"
+            />
+          </div>
+          <div class="message-text_container" @click="showUpdate">
+            <div class="warning"><span>NOTIFICATION</span></div>
+            <div class="main-message"><span>STEREUM UPDATE</span></div>
+            <div class="val-message">
+              <span>{{ stereumUpdate.version }}</span>
+            </div>
+          </div>
+          <div class="close" v-if="closeNotif" @click="closeNotification">
+            <img
+              src="../../../../public/img/icon/control/close.png"
+              alt="close"
+            />
           </div>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -127,13 +140,14 @@ export default {
       perfect: false,
       warning: false,
       alarm: false,
-      notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
+      notification: false,
     };
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
@@ -175,12 +189,23 @@ export default {
       }
     },
   },
+
   created() {
     this.storageCheck();
     this.cpuMeth();
     this.checkStereumUpdate();
+    this.notifHandler();
   },
   methods: {
+    closeNotification() {
+      this.notification = false;
+    },
+    iconShow() {
+      this.closeNotif = true;
+    },
+    iconHide() {
+      this.closeNotif = false;
+    },
     showUpdate() {
       this.displayUpdatePanel = true;
     },
@@ -196,6 +221,13 @@ export default {
           : false;
       }
       return false;
+    },
+    notifHandler() {
+      if (this.checkStereumUpdate == true) {
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
     },
     storageCheck() {
       if (this.usedPercInt > 80) {
@@ -235,6 +267,27 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.v-leave-active {
+  transition: all 0.1s ease-in;
+}
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(80%);
+}
+.close {
+  position: absolute;
+  left: 88%;
+  top: 5%;
+  width: 8%;
+  cursor: pointer;
+}
+.updatePanel-show {
+  right: 0 !important;
 }
 .status-box {
   width: 100%;
@@ -294,11 +347,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 18%;
+  height: 22%;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
   color: #eee;
+  position: relative;
 }
 .status-message_yellow {
   background: #ffd924;
@@ -308,6 +362,7 @@ export default {
 }
 .status-message_green {
   background: #5f7e6a;
+  cursor: pointer;
 }
 .message-icon {
   width: 28%;
