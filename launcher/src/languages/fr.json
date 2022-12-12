@@ -26,7 +26,7 @@
     "support": "support",
     "supportText": "The fastest way to reach a person for support is to join our Discord server!",
     "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make the Stereum better!",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "or write an email to:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Click outside to cancel"
   },
   "settingPanel": {
-    "stereumName": "stereum setting",
-    "langName": "language  selection",
-    "confirm": "CONFIRM & APPLY",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "Credits",
     "open": "open",
@@ -104,7 +104,7 @@
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "SYNC STATUS",
-    "hard": "HARD DISK",
+    "hard": "STORAGE VOLUME",
     "free": "FREE",
     "total": "TOTAL",
     "network": "NETWORK",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
