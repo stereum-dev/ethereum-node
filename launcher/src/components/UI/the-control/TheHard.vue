@@ -5,7 +5,9 @@
         <div class="icoContainer">
           <img src="../../../../public/img/icon/control/hdd.svg" />
         </div>
-        <span>{{ $t("controlPage.hard") }}</span>
+        <div class="icoTitle">
+          <span>{{ $t("controlPage.hard") }}</span>
+        </div>
       </div>
       <div class="storageProcPart">
         <div class="freePart">
@@ -81,13 +83,13 @@ export default {
   width: 80%;
   height: 80%;
 }
-.storageIco span {
+.icoTitle {
   width: 100%;
   height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 50%;
+  font-size: 45%;
   font-weight: bold;
   color: #c1c1c1;
 }

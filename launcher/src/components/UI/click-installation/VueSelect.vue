@@ -14,6 +14,12 @@
           src="../../../../public/img/icon/click-installation/mainnet-icon.png"
           alt="icon"
         />
+        <img
+          v-if="isGnosisActive"
+          class="gnosis-icon"
+          src="../../../../public/img/icon/click-installation/gnosis-icon.png"
+          alt="icon"
+        />
       </div>
       <select
         id="selector"
@@ -23,6 +29,7 @@
         <option class="ring-0" value="" selected>CHOOSE A NETWORK</option>
         <option class="ring-0" value="mainnet">Mainnet</option>
         <option class="ring-0" value="testnet">Testnet</option>
+        <option class="ring-0" value="gnosis">Gnosis Mainnet</option>
       </select>
     </div>
     <div class="plugin-table">
@@ -67,6 +74,26 @@
               />
             </div>
           </div>
+          <div class="gnosis-container" v-if="isGnosisActive">
+            <div
+              class="gnosis-plugin"
+              v-for="(item, index) in this.gnosisPlugins"
+              :key="index"
+            >
+              <img
+                @mousedown.stop
+                :src="item.icon"
+                alt="icon"
+                :class="{
+                  selectedItem:
+                    item.id === this.selectedPreset?.id &&
+                    item.serviceAvailable,
+                  notAvailable: !item.serviceAvailable,
+                }"
+                @click="selectItemToInstall(item)"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -84,6 +111,8 @@ export default {
       mainnetPlugins: [],
       isTestnetActive: false,
       testnetPlugins: [],
+      isGnosisActive: false,
+      gnosisPlugins: [],
     };
   },
   computed: {
@@ -99,6 +128,7 @@ export default {
   beforeUpdate() {
     this.mainnetNetworkHandler();
     this.testnetNetworkHandler();
+    this.gnosisMainnetHandler();
   },
   mounted() {
     this.selectedNetworks = "";
@@ -112,6 +142,7 @@ export default {
         );
         this.isMainnetActive = true;
         this.isTestnetActive = false;
+        this.isGnosisActive = false;
       }
     },
 
@@ -122,6 +153,17 @@ export default {
         );
         this.isMainnetActive = false;
         this.isTestnetActive = true;
+        this.isGnosisActive = false;
+      }
+    },
+    gnosisMainnetHandler() {
+      if (this.selectedNetworks == "gnosis") {
+        this.gnosisPlugins = this.plugins.filter(
+          (item) => item.network == "gnosis"
+        );
+        this.isMainnetActive = false;
+        this.isTestnetActive = false;
+        this.isGnosisActive = true;
       }
     },
     selectItemToInstall: async function (item) {
@@ -229,6 +271,7 @@ export default {
   height: 100%;
   background-color: #2f7270;
 }
+.gnosis-container,
 .mainnet-container,
 .testnet-container {
   width: 100%;
@@ -281,6 +324,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+.gnosis-plugin,
 .mainnet-plugin,
 .testnet-plugin {
   width: 100%;
@@ -290,6 +334,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.gnosis-plugin img,
 .mainnet-plugin img,
 .testnet-plugin img {
   width: 65%;
@@ -299,6 +344,7 @@ export default {
   cursor: pointer;
   transition-duration: 0.2s;
 }
+.gnosis-plugin img:hover,
 .mainnet-plugin img:hover,
 .testnet-plugin img:hover {
   transform: scale(1.1);

@@ -22,6 +22,7 @@ export const useControlStore = defineStore("theControl", {
       beaconstatus: null,
       portstatus: [],
       storagestatus: [],
+      
     };
   },
   actions: {},

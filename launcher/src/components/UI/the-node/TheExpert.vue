@@ -86,6 +86,16 @@
           icon: string (path)
           }
         -->
+        <div class="actionBox">
+          <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
+          <span class="actionBoxTitle">Services Update Configuration</span>
+          <div class="updateService">
+            <select name="update" id="updateService" v-model="updateSelect">
+              <option value="auto">AUTO</option>
+              <option value="manual">MANUAL</option>
+            </select>
+          </div>
+        </div>
         <div
           class="toggleTextBox"
           v-for="(option, index) in item.expertOptions.filter(
@@ -129,6 +139,7 @@
           icon: string (path)
           }
         -->
+
         <div
           class="actionBox"
           v-for="(option, index) in item.expertOptions.filter(
@@ -193,6 +204,7 @@ export default {
   props: ["item", "position", "prunningWarning"],
   data() {
     return {
+      updateSelect: "manual",
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ramUsage: null,
@@ -233,7 +245,9 @@ export default {
           option.disabled = false;
         }
         if (option.type === "select" || option.type === "text") {
-          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
+          option.changeValue = [
+            ...this.item.yaml.match(new RegExp(option.pattern)),
+          ][2];
         }
         return {
           ...option,
@@ -250,7 +264,6 @@ export default {
               new RegExp(option.pattern),
               "$1" + option.changeValue + "$3"
             );
-
           }
           option.changed = false;
         }
@@ -577,6 +590,7 @@ export default {
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 1fr;
   transition-duration: 200ms;
+  position: relative;
 }
 .expertRow .actionBox img {
   grid-column: 1/2;
@@ -585,11 +599,34 @@ export default {
   height: 20px;
 }
 .expertRow .actionBox .actionBoxTitle {
-  grid-column: 3/4;
+  grid-column: 2/5;
   grid-row: 1;
   text-align: center;
   margin-left: -14px;
   text-transform: uppercase;
+}
+.updateService {
+  grid-column: 5/6;
+  grid-row: 1;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 10px;
+}
+.updateService select {
+  text-align-last: center;
+  color: #232323;
+  font-size: 85%;
+  border-radius: 10px;
+  height: 85%;
+  width: 100%;
+}
+
+*:focus {
+  outline: none;
 }
 .expertRow .actionBox .initiateAction {
   grid-column: 5/6;

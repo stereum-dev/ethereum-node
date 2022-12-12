@@ -31,29 +31,27 @@ export default {
   align-items: center;
   width: 100%;
   height: 70%;
+  position: relative;
 }
 .machineNam {
   background: #33393e;
   border: 1px solid #c1c1c1;
   box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 4px;
-  left: -5%;
-  position: relative;
-  z-index: 2;
-  width: 80%;
+  width: 90%;
   height: 75%;
-  padding-left: 5%;
-  padding-top: 1px;
-  outline: none;
-  font-size: 0.8rem;
+  font-size: 65%;
   font-weight: bold;
   color: rgb(122, 204, 255);
   text-transform: uppercase;
+  position: absolute;
+  left: 10%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 0 0 3%;
 }
-.machineNam span {
-  width: 100%;
-  height: 100%;
-}
+
 .machineNam:hover,
 .machineNam:active {
   outline: none;
@@ -69,6 +67,8 @@ export default {
   width: 10%;
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px #171717;
+  position: absolute;
+  left: 1%;
 }
 .ubuntuIcon img {
   width: 100%;

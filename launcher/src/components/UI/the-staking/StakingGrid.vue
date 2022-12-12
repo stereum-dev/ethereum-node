@@ -43,11 +43,19 @@ export default {
         {
           id: 2,
           name: "remove",
-          displayName: "Remove keys",
+          displayName: "Remove all keys",
           icon: "/img/icon/the-staking/option-remove.png",
           method: this.removeBtn,
           display: true,
         },
+        // {
+        //   id: 3,
+        //   name: "fee",
+        //   displayName: "change fee recipient",
+        //   icon: "img/icon/the-staking/fee-icon2.png",
+        //   method: this.feeBtn,
+        //   display: false,
+        // },
         {
           id: 4,
           name: "withdraw",
