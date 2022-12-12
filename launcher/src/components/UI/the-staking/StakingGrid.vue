@@ -60,7 +60,7 @@ export default {
           id: 4,
           name: "withdraw",
           displayName: "withdrawal",
-          icon: "img/icon/the-staking/redexit-icon.png",
+          icon: "img/icon/the-staking/withdraw.png",
           method: this.exitBtn,
           display: false,
         },

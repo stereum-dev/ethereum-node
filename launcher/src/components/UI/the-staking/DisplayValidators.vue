@@ -101,12 +101,12 @@
                     alt="icon"
                   />
                 </div>
-                <div class="exit-box">
+                <div class="withdraw-box">
                   <img
                     :class="{ disabled: disable }"
                     @click="passwordBoxSingleExitChain(item)"
                     class="exit-icon"
-                    src="../../../../public/img/icon/the-staking/redexit-icon.png"
+                    src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
                   />
                 </div>
@@ -1028,7 +1028,7 @@ remove-validator {
   position: relative;
 }
 
-.option-box .exit-box {
+.option-box .withdraw-box {
   width: max-content;
   height: 100%;
   margin: 0 auto;
