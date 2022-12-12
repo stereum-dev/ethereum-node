@@ -26,7 +26,7 @@
     "support": "Hilfestellung",
     "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
     "bugReport": "BUG BERICHTE",
-    "bugRepText": "Bitte nehmen Sie sich die Zeit ein Problem auf Github festzuhalten und lassen Sie uns Stereum besser machen!",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "oder eine E-Mail schreiben an:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Außerhalb klicken, um abzubrechen"
   },
   "settingPanel": {
-    "stereumName": "stereum einstellungen",
-    "langName": "Sprachwahl",
-    "confirm": "BESTÄTIGEN & ANWENDEN",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "Credits",
     "open": "öffnen",
@@ -104,7 +104,7 @@
     "inclusionDistance": "INKLUSIONSDISTANZ",
     "rpc": "RPC-Endpunkt",
     "syncStatus": "SYNC STATUS",
-    "hard": "HARD DISK",
+    "hard": "STORAGE VOLUME",
     "free": "KOSTENLOS",
     "total": "GESAMT",
     "network": "NETZWERK",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "GEBEN SIE IHR VALIDATOR PASSWORT EIN UM IHR STAKING KONTO AUFZULÖSEN...",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validatorschlüsseln verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
