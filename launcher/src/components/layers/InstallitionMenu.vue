@@ -182,7 +182,7 @@ export default {
   position: relative;
   border-radius: 40px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }
 .item-column {

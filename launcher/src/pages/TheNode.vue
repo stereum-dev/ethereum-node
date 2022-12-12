@@ -174,7 +174,6 @@ export default {
     this.pollingVitals = setInterval(this.updateServerVitals, 1000); // refresh server vitals
   },
   beforeUnmount() {
-    clearInterval(this.rr);
     clearInterval(this.polling);
     clearInterval(this.pollingVitals);
   },
