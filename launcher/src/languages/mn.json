@@ -26,7 +26,7 @@
     "support": "тусламж",
     "supportText": "Тусламж авах хүнтэй холбогдох хамгийн хурдан арга бол манай Discord серверт нэгдэх юм!",
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
-    "bugRepText": "Асуудал бичихэд цаг гаргаж, Stereum-ийг илүү сайн болгоё!",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Цуцлахын тулд гадна талд товшино уу"
   },
   "settingPanel": {
-    "stereumName": "стереум тохируулга",
-    "langName": "хэл сонголт",
-    "confirm": "БАТАЛГААЖУУЛАХ & ХЭРЭГЛЭХ",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "ЕРӨНХИЙ",
     "credits": "Нэр дурьдалт",
     "open": "нээх",
@@ -104,7 +104,7 @@
     "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
     "rpc": "RPC-ТӨГСГӨЛИЙН ЦЭГ",
     "syncStatus": "СИНК СТАТУС",
-    "hard": "ХАТУУ ДИСК",
+    "hard": "STORAGE VOLUME",
     "free": "ЧӨЛӨӨТЭЙ",
     "total": "НИЙТ",
     "network": "СҮЛЖЭЭ",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "ЭНЭ ТҮЛХҮҮРИЙГ ГИНЖНЭЭС ГАРГАХЫН ТУЛД ВАЛИДАТОРИЙН НУУЦ ҮГИЙГ ОРУУЛНА УУ...",
-    "confirm": "Баталгаажуулах"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Та СОНГОГДСОН валидатор ТҮЛХҮҮРҮҮД-ийг гинжээс гаргахдаа итгэлтэй байна уу?\nЭнэ нь таны валидаторын ажилгааг зогсоох ба энэ үйлдлийг БУЦААХ БОЛОМЖГҮЙ. Зөвхөн сүлжээ зөвшөөрсөн тохиолдолд л та өөрийн хөрөнгө оруулалтыг татан авах боломжтой.",
