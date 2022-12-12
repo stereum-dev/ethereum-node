@@ -26,7 +26,7 @@
     "support": "پشتیبانی",
     "supportText": "سریعترین راه برای دسترسی به یک شخص برای پشتیبانی، پیوستن به سرور دیسکورد ما است",
     "bugReport": "گزارش خطا",
-    "bugRepText": "لطفاً برای نوشتن این موضوع کمی وقت بگذارید و اجازه دهید استریوم را بهتر کنیم",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "یا ایمیل بنویسید به آدرس"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "برای خروج بیرون از کادر کلیک کنید"
   },
   "settingPanel": {
-    "stereumName": "تنظیمات استریوم",
-    "langName": "انتخاب زبان",
-    "confirm": "تایید و ثبت",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "پشتیبان ها",
     "open": "باز کردن",
@@ -104,7 +104,7 @@
     "inclusionDistance": "فاصله گنجاندن",
     "rpc": "RPC - نقطه پایانی",
     "syncStatus": "وضعیت همگام سازی",
-    "hard": "هارد دیسک",
+    "hard": "STORAGE VOLUME",
     "free": "آزاد",
     "total": "تمامی",
     "network": "شبکه",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "رمز عبور اعتبارسنجی خود را برای خروج از زنجیره با این کلید وارد کنید",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "آیا مطمئن هستید که می‌خواهید با کلیدهای اعتبارسنجی انتخاب شده از زنجیره خارج شوید؟ این وظیفه اعتبارسنجی شما را متوقف می کند و نمی توان آن را معکوس کرد. وجوه شما نیز فقط در صورتی قابل برداشت است که زنجیره اجازه دهد",
