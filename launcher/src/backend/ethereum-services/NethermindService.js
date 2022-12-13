@@ -21,7 +21,7 @@ export class NethermindService extends NodeService {
             'nethermind/nethermind',// image
             '1.14.3',               // imageVersion
             [
-                `--config=${network}`,
+                `--config=${network === "gnosis" ? "xdai" : network}`,
                 '--log=info',
                 `--datadir=${dataDir}`,
                 '--Network.DiscoveryPort=30303',

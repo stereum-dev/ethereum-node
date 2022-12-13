@@ -3,15 +3,8 @@
     <div class="select-box">
       <div class="icon-box">
         <img
-          v-if="isTestnetActive"
-          class="testnet-icon"
-          src="../../../../public/img/icon/click-installation/testnet-icon.png"
-          alt="icon"
-        />
-        <img
-          v-if="isMainnetActive"
-          class="mainnet-icon"
-          src="../../../../public/img/icon/click-installation/mainnet-icon.png"
+          v-if="networkIcon"
+          :src="networkIcon"
           alt="icon"
         />
       </div>
@@ -19,43 +12,24 @@
         class="ring-0"
         id="selector"
         @change="pluginNetworkHandler"
-        v-model="selectedNetworks"
+        v-model="selectedNetworkName"
       >
         <option class="ring-0" value="" selected>CHOOSE A NETWORK</option>
         <option class="ring-0" value="mainnet">Mainnet</option>
         <option class="ring-0" value="testnet">Testnet</option>
+        <option class="ring-0" value="gnosis">Gnosis</option>
       </select>
     </div>
     <div class="plugin-table">
       <div class="table-content">
         <div class="plugin-box">
-          <div class="mainnet-container" v-if="isMainnetActive">
+          <div class="network-container">
             <div
-              class="mainnet-plugin"
-              v-for="(item, index) in this.mainnetPlugins"
+              class="plugin"
+              v-for="(item, index) in this.plugins.filter(p => p.network === selectedNetworkName)"
               :key="index"
             >
               <img
-                :src="item.icon"
-                alt="icon"
-                :class="{
-                  selectedItem:
-                    item.id === this.selectedPreset?.id &&
-                    item.serviceAvailable,
-                  notAvailable: !item.serviceAvailable,
-                }"
-                @click="selectItemToInstall(item)"
-              />
-            </div>
-          </div>
-          <div class="testnet-container" v-if="isTestnetActive">
-            <div
-              class="testnet-plugin"
-              v-for="(item, index) in this.testnetPlugins"
-              :key="index"
-            >
-              <img
-                @mousedown.stop
                 :src="item.icon"
                 alt="icon"
                 :class="{
@@ -81,54 +55,34 @@ import { useServices } from "@/store/services";
 export default {
   data() {
     return {
-      isMainnetActive: false,
-      mainnetPlugins: [],
-      isTestnetActive: false,
-      testnetPlugins: [],
+      networkIcon: "",
+      selectedNetworkName: "",
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
-      selectedNetworks: "selectedNetworks",
+      selectedNetwork: "selectedNetwork",
+      networks: "networks",
     }),
     ...mapWritableState(useServices, {
       allServices: "allServices",
     }),
   },
-  beforeUpdate() {
-    this.mainnetNetworkHandler();
-    this.testnetNetworkHandler();
-  },
   mounted() {
-    this.selectedNetworks = "";
     this.selectedPreset = undefined;
   },
   methods: {
-    mainnetNetworkHandler() {
-      if (this.selectedNetworks == "mainnet") {
-        this.mainnetPlugins = this.plugins.filter(
-          (item) => item.network == "mainnet"
-        );
-        this.isMainnetActive = true;
-        this.isTestnetActive = false;
-      }
-    },
-
-    testnetNetworkHandler() {
-      if (this.selectedNetworks == "testnet") {
-        this.testnetPlugins = this.plugins.filter(
-          (item) => item.network == "testnet"
-        );
-        this.isMainnetActive = false;
-        this.isTestnetActive = true;
-      }
+    pluginNetworkHandler(){
+      let network = this.networks.find(item => item.name === this.selectedNetworkName)
+      this.networkIcon = network ? network.icon : ""
+      this.selectedNetwork = network
     },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({
         setup: item.name,
-        network: this.selectedNetworks,
+        network: this.selectedNetworkName,
       });
       let includedPlugins = this.allServices.filter((service) =>
         constellation.includes(service.service)
@@ -227,8 +181,7 @@ export default {
   height: 100%;
   background-color: #2f7270;
 }
-.mainnet-container,
-.testnet-container {
+.network-container {
   width: 100%;
   height: 100%;
   display: grid;
@@ -279,8 +232,7 @@ export default {
   width: 100%;
   height: 100%;
 }
-.mainnet-plugin,
-.testnet-plugin {
+.plugin {
   width: 100%;
   height: 100%;
   margin-top: 10px;
@@ -288,8 +240,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.mainnet-plugin img,
-.testnet-plugin img {
+.plugin img {
   width: 65%;
   height: 77%;
   border-radius: 5px;
@@ -297,8 +248,7 @@ export default {
   cursor: pointer;
   transition-duration: 0.2s;
 }
-.mainnet-plugin img:hover,
-.testnet-plugin img:hover {
+.plugin img:hover {
   transform: scale(1.1);
   box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);
   transition-duration: 0.3s;

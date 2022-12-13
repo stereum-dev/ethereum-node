@@ -14,7 +14,7 @@
       </div>
       <ul class="dropdown-parent" v-if="dropdownIsActive">
         <li
-          v-for="item in networkList"
+          v-for="item in networkList.filter(n => n.network != 'gnosis')"
           :key="item.id"
           @click="selectNetworkToDisplay(item)"
         >
@@ -85,8 +85,10 @@ export default {
       return undefined
     },
     openDropDown() {
+    if(this.configNetwork.network != "gnosis"){
       this.dropdownIsActive = !this.dropdownIsActive;
       this.closeDropdownActive = !this.closeDropdownActive;
+    }
     },
     selectNetworkToDisplay(item) {
       if(!(item.network == this.configNetwork.network)){

@@ -28,9 +28,7 @@
       <div class="plugin-box">
         <div class="plugin-col">
           <template
-            v-for="item in plugins.filter(
-              (ser) => ser.service != 'SSVNetworkService'
-            )"
+            v-for="item in plugins"
             :key="item.id"
           >
             <div
@@ -57,6 +55,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   props: ["startDrag"],
   data() {
@@ -67,13 +66,14 @@ export default {
     };
   },
   mounted() {
-    this.currentCategory = "all";
+    this.currentCategory = "service";
     this.plugins = this.allServices.map((item) => {
       return {
         ...item,
         displayNameTooltip: false,
       };
     });
+    this.selectCategoryTitle()
   },
 
   computed: {
@@ -81,7 +81,9 @@ export default {
       installedServices: "installedServices",
       allServices: "allServices",
     }),
-
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
     fontSize() {
       if (this.currentCategory.length > 7) {
         return {
@@ -96,38 +98,49 @@ export default {
     },
   },
   methods: {
+    getFilterbyNetwork(){
+      switch (this.currentNetwork.network) {
+        case "mainnet":
+        case "testnet":
+          return (item) => item.service != 'SSVNetworkService'
+        case "gnosis":
+          return (item) => /(Lighthouse|Nethermind|Grafana|Prometheus)/.test(item.service)
+        default:
+          break;
+      }
+    },
     selectCategoryTitle() {
       switch (this.currentCategory) {
         case "all":
           this.currentCategory = "execution client";
           this.plugins = this.allServices.filter((item) => {
             return item.category === "execution";
-          });
+          }).filter(this.getFilterbyNetwork());
           break;
         case "execution client":
           this.currentCategory = "consensus client";
           this.plugins = this.allServices.filter((item) => {
             return item.category === "consensus";
-          });
+          }).filter(this.getFilterbyNetwork());
           break;
         case "consensus client":
           this.currentCategory = "validator client";
           this.plugins = this.allServices.filter((item) => {
             return item.category === "validator";
-          });
+          }).filter(this.getFilterbyNetwork());
           break;
         case "validator client":
           this.currentCategory = "service";
           this.plugins = this.allServices.filter((item) => {
             return item.category === "service";
-          });
+          }).filter(this.getFilterbyNetwork());
           break;
         case "service":
           this.currentCategory = "all";
-          this.plugins = this.allServices;
+          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
           break;
         default:
-          this.plugins = this.allServices;
+          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
           break;
       }
     },

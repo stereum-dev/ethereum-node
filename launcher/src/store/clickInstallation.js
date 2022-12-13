@@ -5,11 +5,9 @@ export const useClickInstall = defineStore("clickInstallation", {
     return {
       relayURL: "",
       checkPointSync: "",
-      selectedNetworks: "",
+      selectedNetwork: {},
       installationPath: "/opt/stereum",
       selectedPreset: [],
-      testnetPlugins: [],
-      mainnetPlugins: [],
       installation: [
         {
           img: "/img/icon/one-click-installer.png",
@@ -25,6 +23,20 @@ export const useClickInstall = defineStore("clickInstallation", {
           img: "/img/icon/IMPORT_CONFIGURATIONS.png",
           img2: "/img/icon/click-installation/import.png",
           path: "/",
+        },
+      ],
+      networks: [
+        {
+          name: "mainnet",
+          icon: require("../../public/img/icon/click-installation/mainnet-icon.png"),
+        },
+        {
+          name: "testnet",
+          icon: require("../../public/img/icon/click-installation/testnet-icon.png"),
+        },
+        {
+          name: "gnosis",
+          icon: require("../../public/img/icon/click-installation/gnosis_mainnet_icon.png"),
         },
       ],
       presets: [
@@ -45,6 +57,17 @@ export const useClickInstall = defineStore("clickInstallation", {
           network: "mainnet",
           defaultPath: "/opt/stereum",
           networkIcon: require("../../public/img/icon/click-installation/mainnet-icon.png"),
+          icon: require("../../public/img/icon/click-installation/staking-icon.png"),
+          serviceAvailable: true,
+          showDropDown: false,
+          includedPlugins: [],
+        },
+        {
+          id: 8,
+          name: "staking",
+          network: "gnosis",
+          defaultPath: "/opt/stereum",
+          networkIcon: require("../../public/img/icon/click-installation/gnosis_mainnet_icon.png"),
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
           serviceAvailable: true,
           showDropDown: false,

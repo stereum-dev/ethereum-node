@@ -1,7 +1,7 @@
 <template>
   <div class="config-node">
     <div class="server">
-      <div class="">
+      <div class="serverBox">
         <div class="details">
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
