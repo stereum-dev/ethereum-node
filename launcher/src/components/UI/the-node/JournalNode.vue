@@ -20,8 +20,22 @@
           />
         </router-link>
       </div>
-      <div class="state-btn">
-        <span>Trun node off</span>
+      <div class="state-btn-loading" v-if="isloading">
+        <span>loading new states</span>
+        <img
+          src="/img/icon/plugin-menu-icons/turning_circle.gif"
+          alt="icon"
+        />
+      </div>
+      <div class="state-btn-on" v-else-if="checkStatus()" @click="stateButtonHandler('started')">
+        <span>Turn Node on</span>
+        <img
+        src="../../../../public/img/icon/node-journal-icons/turn_on.png"
+        alt="icon"
+        />
+      </div>
+      <div class="state-btn-off" v-else @click="stateButtonHandler('stopped')">
+        <span>Turn Node off</span>
         <img
           src="../../../../public/img/icon/node-journal-icons/power2.png"
           alt="icon"
@@ -35,21 +49,56 @@ import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
+import { useServices } from "../../../store/services";
 
 export default {
   components: { UpdateTable },
   data() {
     return {
+      loading: false,
       updateTableIsOpen: false,
     };
   },
   computed: {
+    isloading: {
+      // getter
+      get: function () {
+        return this.loading ? true : false;
+      },
+      // setter
+      set: function (newValue) {
+        this.loading = newValue;
+      },
+    },
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
     ...mapState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
   },
-  methods: {},
+  methods: {
+    checkStatus(){
+      return !this.installedServices.some(s => s.state == "running")
+    },
+    async stateButtonHandler(state){
+      this.loading = true
+        try {
+          let promises = this.installedServices.map(async (service, index) => {
+            new Promise(resolve => setTimeout(resolve, index * 1000)).then(() => {
+              ControlService.manageServiceState({
+                  id: service.config.serviceID,
+                  state: state,
+              });
+            })})
+          promises.push(new Promise(resolve => setTimeout(() => {this.loading = false; resolve()}, (promises.length * (state == "running" ? 8000 : 4000)))))
+          Promise.all(promises)
+          } catch (err) {
+            console.log(state.replace("ed", "ing") + " services failed:\n", err);
+          }
+    }
+  },
 };
 </script>
 <style scoped>
@@ -233,7 +282,28 @@ export default {
   text-decoration: none;
   color: #4eb051;
 }
-.state-btn {
+.state-btn-on {
+  grid-column: 1;
+  grid-row: 2/3;
+  width: 95%;
+  height: 80%;
+  padding: 0 10px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-self: center;
+  background-color: #242529;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: rgb(64, 238, 29);
+  border: 1px solid #787878;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.state-btn-off {
   grid-column: 1;
   grid-row: 2/3;
   width: 95%;
@@ -254,7 +324,28 @@ export default {
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
-.state-btn img {
+.state-btn-loading {
+  grid-column: 1;
+  grid-row: 2/3;
+  width: 95%;
+  height: 80%;
+  padding: 0 10px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-self: center;
+  background-color: #242529;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #9b9b9b;
+  border: 1px solid #787878;
+  border-radius: 8px;
+  cursor: default;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.state-btn-loading img,.state-btn-on img,.state-btn-off img {
   width: 10%;
   margin-right: 8px;
 }
