@@ -51,7 +51,7 @@ export class NimbusBeaconService extends NodeService {
         '--rest',
         '--rest-address=0.0.0.0',
         '--rest-port=5052',
-        `--graffiti=\"stereum.net\"`,
+        `--graffiti=stereum.net`,
         '--keymanager',
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt',

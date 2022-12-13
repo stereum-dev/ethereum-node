@@ -64,15 +64,10 @@ promiseIpc.on("connect", async (arg) => {
 
 promiseIpc.on("reconnect", async () => {
   try {
-    if (!nodeConnection.sshService.connected) {
       await nodeConnection.establish(taskManager);
-    } else if (!taskManager.nodeConnection.sshService.connected) {
       await taskManager.nodeConnection.establish();
-    } else if (!monitoring.nodeConnection.sshService.connected) {
       await monitoring.nodeConnection.establish();
-    } else if (!monitoring.nodeConnectionProm.sshService.connected) {
       await monitoring.nodeConnectionProm.establish();
-    }
   } catch (err) {
     log.error("Couldn't reconnect:\n", err);
   }
@@ -274,9 +269,6 @@ promiseIpc.on("manageServiceState", async (args) => {
 promiseIpc.on("runAllUpdates", async (args) => {
   app.showExitPrompt = true;
   const returnValue = await nodeConnection.runAllUpdates(args.commit);
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
   return returnValue;
 });
@@ -284,9 +276,6 @@ promiseIpc.on("runAllUpdates", async (args) => {
 promiseIpc.on("updateServices", async (args) => {
   app.showExitPrompt = true;
   let seconds = await nodeConnection.updateServices(args.services);
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
   return seconds;
 });
@@ -294,9 +283,6 @@ promiseIpc.on("updateServices", async (args) => {
 promiseIpc.on("updateStereum", async (args) => {
   app.showExitPrompt = true;
   let seconds = await nodeConnection.updateStereum(args.commit);
-  await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
   app.showExitPrompt = false;
   return seconds;
 });

@@ -98,6 +98,10 @@ export default {
     async confirmHandler() {
       this.disableBtn = true;
       await ControlService.handleServiceChanges(toRaw(this.confirmChanges));
+      setTimeout(() => {
+        this.newConfiguration = this.installedServices
+      }, 4000);
+      
       this.confirmChanges = [];
       this.disableBtn = false;
     },
