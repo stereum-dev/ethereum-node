@@ -98,7 +98,7 @@ export default {
             this.confirmChanges[index].data.network = (item.network === "testnet" ? "goerli" : "mainnet")
             this.confirmChanges[index].service.icon = item.icon
           }
-        }else{
+        }else if(this.newConfiguration.length > 0){
           this.confirmChanges.push(this.getActions("CHANGE NETWORK", {icon: item.icon}, {network: (item.network === "testnet" ? "goerli" : "mainnet")}))
         }
       }

@@ -288,6 +288,10 @@ class ControlService extends EventEmitter {
   async readKeys(){
     return await this.promiseIpc.send("readKeys");
   }
+
+  async prepareStereumNode(args){
+    return await this.promiseIpc.send("prepareStereumNode", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
