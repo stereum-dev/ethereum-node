@@ -3,14 +3,14 @@
     <div class="staking-green-bg">
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
-        <time-reward></time-reward>
+        <ValidatorState />
         <selection-options
           :buttonState="buttonState"
           @click-btn="clickBtnHandler"
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
-        <task-manager></task-manager>
+        <TaskManager />
       </div>
     </div>
   </div>
@@ -19,14 +19,14 @@
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
-import TimeReward from "./TimeReward.vue";
+import ValidatorState from "./ValidatorState.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     DisplayValidators,
     SelectionOptions,
     ValidatorsBox,
-    TimeReward,
+    ValidatorState,
     TaskManager,
   },
   data() {
@@ -58,9 +58,9 @@ export default {
         // },
         {
           id: 4,
-          name: "exit",
-          displayName: "exit chain",
-          icon: "img/icon/the-staking/redexit-icon.png",
+          name: "withdraw",
+          displayName: "withdrawal",
+          icon: "img/icon/the-staking/withdraw.png",
           method: this.exitBtn,
           display: false,
         },

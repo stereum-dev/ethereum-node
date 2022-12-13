@@ -527,8 +527,8 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.name-title-box span {
-  font-size: 1.5rem;
+.name-title span {
+  font-size: 2rem;
   font-weight: 800;
   color: #d7d7d7;
   text-transform: uppercase;

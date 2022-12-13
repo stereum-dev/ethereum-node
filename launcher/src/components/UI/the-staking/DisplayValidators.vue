@@ -31,10 +31,10 @@
           </div>
         </key-modal>
         <ImportSlashingModal
-            v-if="ImportSlashingActive"
-            @remove-modal="removeImportSlashingHandler"
-            @import-slashing="setSlashingDB"
-            />
+          v-if="ImportSlashingActive"
+          @remove-modal="removeImportSlashingHandler"
+          @import-slashing="setSlashingDB"
+        />
         <div
           class="table-content"
           v-if="importValidatorKeyActive"
@@ -101,12 +101,12 @@
                     alt="icon"
                   />
                 </div>
-                <div class="exit-box">
+                <div class="withdraw-box">
                   <img
                     :class="{ disabled: disable }"
                     @click="passwordBoxSingleExitChain(item)"
                     class="exit-icon"
-                    src="../../../../public/img/icon/the-staking/redexit-icon.png"
+                    src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
                   />
                 </div>
@@ -152,14 +152,22 @@
         </div>
         <div
           class="table-header"
-          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
+          v-if="
+            enterPasswordBox ||
+            selectValidatorServiceForKey ||
+            ImportSlashingActive
+          "
         >
           <span id="pubkey_name">FILE NAME</span>
           <span id="validator-service">Service</span>
         </div>
         <div
           class="table-content"
-          v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive"
+          v-if="
+            enterPasswordBox ||
+            selectValidatorServiceForKey ||
+            ImportSlashingActive
+          "
         >
           <div
             class="key-tableRow"
@@ -182,7 +190,10 @@
       </div>
     </div>
     <!-- Small search icons -->
-    <SearchOptions />
+    <SearchOptions
+      :isPubkeyVisible="isPubkeyVisible"
+      @toggle-pubkey="togglePubkeyView"
+    />
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
@@ -229,6 +240,7 @@
       v-if="exitChainForMultiValidatorsActive"
       @confirm-btn="confirmPasswordMultiExitChain"
     />
+    <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
 <script>
@@ -254,6 +266,7 @@ import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
+import DisabledStaking from "./DisabledStaking.vue";
 export default {
   components: {
     DropZone,
@@ -273,10 +286,12 @@ export default {
     ExitMultipleValidators,
     SelectService,
     ImportSlashingModal,
+    DisabledStaking,
   },
   props: ["button"],
   data() {
     return {
+      stakingIsDisabled: false,
       disable: true,
       message: "",
       messageIsError: false,
@@ -315,18 +330,14 @@ export default {
       selectedService: {},
       ImportSlashingActive: false,
       slashingDB: "",
+      isPubkeyVisible: false,
     };
   },
   watch: {
     button: {
       deep: true,
       handler(val) {
-        if (val.name === "fee") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.feeRecipientBoxActive = true;
-          this.feeInputActive = true;
-        } else if (val.name === "grafiti") {
+        if (val.name === "grafiti") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.exitChainForMultiValidatorsActive = false;
@@ -337,13 +348,23 @@ export default {
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = true;
           this.keys.forEach((k) => (k.toRemove = true));
-        } else if (val.name === "exit") {
+        } else if (val.name === "withdraw") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.grafitiForMultiValidatorsActive = false;
           this.removeForMultiValidatorsActive = false;
           this.exitChainForMultiValidatorsActive = true;
           this.keys.forEach((k) => (k.toRemove = true));
+        }
+      },
+    },
+    isPubkeyVisible: {
+      deep: true,
+      handler(val) {
+        if (val) {
+          this.keys.map((k) => (k.displayName = ""));
+        } else {
+          this.listKeys();
         }
       },
     },
@@ -381,6 +402,7 @@ export default {
     });
   },
   mounted() {
+    this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
@@ -392,6 +414,16 @@ export default {
   },
 
   methods: {
+    checkValidatorClientsExist() {
+      const clients = this.installedServices.filter(
+        (service) => service.category === "validator"
+      );
+      if (clients.length > 0) {
+        this.stakingIsDisabled = false;
+      } else {
+        this.stakingIsDisabled = true;
+      }
+    },
     logEvent(event) {
       let url = event.target.baseURI;
       fetch(url)
@@ -416,14 +448,17 @@ export default {
     },
     async renameValidatorHandler(el, name) {
       el.isRenameActive = false;
-      el.displayName = name
-      const keys = await ControlService.readKeys()
-      if(keys){
-        keys[el.key] = name
-        await ControlService.writeKeys(keys)
-      }else{
-        console.log("Couldn't read KeyFile!")
+      el.displayName = name;
+      const keys = await ControlService.readKeys();
+      if (keys) {
+        keys[el.key] = name;
+        await ControlService.writeKeys(keys);
+      } else {
+        console.log("Couldn't read KeyFile!");
       }
+    },
+    togglePubkeyView() {
+      this.isPubkeyVisible = !this.isPubkeyVisible;
     },
     closeRenameHandler(el) {
       el.isRenameActive = false;
@@ -435,20 +470,24 @@ export default {
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
-      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
-      if(picked === 'yes'){
-        this.downloadFile(returnVal)
+      const returnVal = await this.deleteValidators(
+        item.validatorID,
+        [item.key],
+        picked
+      );
+      if (picked === "yes") {
+        this.downloadFile(returnVal);
       }
     },
-    downloadFile(data){
+    downloadFile(data) {
       let json = JSON.stringify(data);
-      let blob = new Blob([json], {type: "application/json"});
+      let blob = new Blob([json], { type: "application/json" });
       let url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', 'slashingDB')
-      link.click()
-      window.URL.revokeObjectURL(url)
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "slashingDB");
+      link.click();
+      window.URL.revokeObjectURL(url);
     },
     confirmPasswordSingleExitChain(el) {
       el.displayExitModal = true;
@@ -503,11 +542,11 @@ export default {
       const result = await ControlService.deleteValidators({
         serviceID: serviceID,
         keys: keys,
-        picked: picked === 'yes' ? true : false
+        picked: picked === "yes" ? true : false,
       });
       this.forceRefresh = true;
       await this.listKeys();
-      return result
+      return result;
     },
     listKeys: async function () {
       let keyStats = [];
@@ -557,7 +596,7 @@ export default {
           }
         }
         this.forceRefresh = false;
-        let alias = await ControlService.readKeys()
+        let alias = await ControlService.readKeys();
         this.keys = keyStats.map((key) => {
           return {
             ...key,
@@ -619,9 +658,9 @@ export default {
         files: this.keyFiles,
         password: this.password,
         service: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB
+        slashingDB: this.slashingDB,
       });
-      this.slashingDB = ""
+      this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
       await this.listKeys();
@@ -721,8 +760,8 @@ export default {
       this.downloadForMultiValidatorsActive = true;
       if (changed === 1 && id) {
         const returnVal = await this.deleteValidators(id, keys, picked);
-        if(picked === 'yes'){
-          this.downloadFile(returnVal)
+        if (picked === "yes") {
+          this.downloadFile(returnVal);
         }
       } else if (changed === 0) {
         console.log("Nothing to delete!");
@@ -747,20 +786,20 @@ export default {
           console.log(`can't copy`);
         });
     },
-    removeImportSlashingHandler(){
+    removeImportSlashingHandler() {
       this.ImportSlashingActive = false;
-      this.keyFiles = []
+      this.keyFiles = [];
       this.insertKeyBoxActive = true;
     },
-    setSlashingDB(slashingDB, picked){
-      if(picked){
-        this.slashingDB = slashingDB
-      }else{
-        this.slashingDB = ""
+    setSlashingDB(slashingDB, picked) {
+      if (picked) {
+        this.slashingDB = slashingDB;
+      } else {
+        this.slashingDB = "";
       }
       this.ImportSlashingActive = false;
-      this.enterPasswordBox = true
-    }
+      this.enterPasswordBox = true;
+    },
   },
 };
 </script>
@@ -989,7 +1028,7 @@ remove-validator {
   position: relative;
 }
 
-.option-box .exit-box {
+.option-box .withdraw-box {
   width: max-content;
   height: 100%;
   margin: 0 auto;
