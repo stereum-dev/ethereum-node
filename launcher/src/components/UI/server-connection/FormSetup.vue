@@ -94,11 +94,15 @@
                 required
               />
               <input
+                :class="{
+                  notFilled: !model.port.isFilled,
+                  isFilled: model.port.isFilled,
+                }"
                 type="text"
                 class="ipPort"
-                placeholder="PORT"
-                v-model="sshPort"
-                @blur="sshPort"
+                placeholder="22"
+                v-model="model.port.value"
+                @blur="checkInput(model.port)"
                 optional
               />
             </div>
@@ -227,6 +231,7 @@ export default {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
         user: { value: "", isFilled: true },
+        port: { value: "", isFilled: true},
         pass: { value: "", isFilled: true },
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
@@ -280,6 +285,7 @@ export default {
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
       this.model.user.value = this.selectedConnection.user;
+      this.model.port.value = this.selectedConnection.port;
       this.model.keylocation.value = this.selectedConnection.keylocation;
       this.model.useAuthKey = this.selectedConnection.useAuthKey;
       this.keyAuth = this.selectedConnection.useAuthKey;
@@ -317,6 +323,7 @@ export default {
           name: e.name,
           host: e.host,
           user: e.user,
+          port: e.port,
           keylocation: e.keylocation,
           useAuthKey: e.useAuthKey,
         });
@@ -333,6 +340,7 @@ export default {
       this.model.name.value = "";
       this.model.host.value = "";
       this.model.user.value = "";
+      this.model.port.value = "";
       this.model.pass.value = "";
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
@@ -343,6 +351,7 @@ export default {
         name: this.model.name.value,
         host: this.model.host.value,
         user: this.model.user.value,
+        port: this.model.port.value,
         keylocation: this.model.keylocation.value,
         useAuthKey: this.model.useAuthKey,
       };
@@ -411,6 +420,7 @@ export default {
         await ControlService.connect({
           host: this.model.host.value,
           user: this.model.user.value,
+          port: this.model.port.value,
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
           keyfileLocation: this.model.keylocation.value,
@@ -880,12 +890,6 @@ input:checked + .slider:before {
 
 input:optional {
   border-color: gray;
-}
-input:required {
-  border-color: rgb(222, 207, 93);
-}
-input:invalid {
-  border-color: rgb(233, 100, 100);
 }
 .error-box {
   width: 100%;

@@ -51,7 +51,7 @@ export class SSHService {
         resolve(this.conn)
       }).connect({
         host: connectionInfo.host,
-        port: connectionInfo.port || 22,
+        port: parseInt(connectionInfo.port) || 22,
         username: connectionInfo.user || 'root',
         password: connectionInfo.password || undefined,
         privateKey: connectionInfo.privateKey || undefined,
