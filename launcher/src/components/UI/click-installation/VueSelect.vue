@@ -9,7 +9,6 @@
         />
       </div>
       <select
-        class="ring-0"
         id="selector"
         @change="pluginNetworkHandler"
         v-model="selectedNetworkName"
@@ -146,6 +145,9 @@ export default {
   box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
     var(--tw-ring-color);
 }
+.select-box #selector:focus {
+  outline: none;
+}
 .select-box #selector option {
   width: 100%;
   height: 100%;
@@ -232,6 +234,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .plugin {
   width: 100%;
   height: 100%;
@@ -240,6 +243,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .plugin img {
   width: 65%;
   height: 77%;
@@ -248,6 +252,7 @@ export default {
   cursor: pointer;
   transition-duration: 0.2s;
 }
+
 .plugin img:hover {
   transform: scale(1.1);
   box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);

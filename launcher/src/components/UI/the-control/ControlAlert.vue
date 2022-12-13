@@ -26,7 +26,7 @@
             alt="green"
           />
         </div>
-        <div class="icon_alarm" v-if="checkStereumUpdate">
+        <div class="icon_alarm" v-if="notification">
           <img
             src="../../../../public/img/icon/control/SETTINGS.png"
             alt="green"
@@ -89,25 +89,36 @@
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
         </div>
-        <div
-          class="alert-message_green"
-          v-if="checkStereumUpdate"
-          @click="showUpdate()"
-        >
-          <div class="icon-box">
-            <img
-              src="../../../../public/img/icon/control/logo-icon.png"
-              alt="warn_storage"
-            />
-          </div>
-          <div class="message-box">
-            <div class="warning"><span>NOTIFICATION</span></div>
-            <div class="main-message"><span>STEREUM UPDATE</span></div>
-            <div class="val-message">
-              <span>{{ stereumUpdate.version }}</span>
+        <transition>
+          <transition>
+            <div
+              class="alert-message_green"
+              v-if="notification"
+              @mouseover="iconShow"
+              @mouseleave="iconHide"
+            >
+              <div class="icon-box" @click="showUpdate">
+                <img
+                  src="../../../../public/img/icon/control/logo-icon.png"
+                  alt="warn_storage"
+                />
+              </div>
+              <div class="message-box" @click="showUpdate">
+                <div class="warning"><span>NOTIFICATION</span></div>
+                <div class="main-message"><span>STEREUM UPDATE</span></div>
+                <div class="val-message">
+                  <span>{{ stereumUpdate.version }}</span>
+                </div>
+              </div>
+              <div class="close" v-if="closeNotif" @click="closeNotification">
+                <img
+                  src="../../../../public/img/icon/control/close.png"
+                  alt="close"
+                />
+              </div>
             </div>
-          </div>
-        </div>
+          </transition>
+        </transition>
       </div>
     </div>
   </div>
@@ -134,10 +145,11 @@ export default {
       notification: false,
       newUpdate: false,
       missedAttest: false,
+      closeNotif: false,
     };
   },
   computed: {
-    ...mapState(useControlStore, {
+    ...mapWritableState(useControlStore, {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
       cpu: "cpu",
@@ -183,8 +195,18 @@ export default {
     this.storageCheck();
     this.cpuMeth();
     this.checkStereumUpdate();
+    this.notifHandler();
   },
   methods: {
+    closeNotification() {
+      this.notification = false;
+    },
+    iconShow() {
+      this.closeNotif = true;
+    },
+    iconHide() {
+      this.closeNotif = false;
+    },
     showUpdate() {
       this.displayUpdatePanel = true;
     },
@@ -193,13 +215,19 @@ export default {
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
-        // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
-        //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
-          ? true
-          : false;
+        if (this.stereumUpdate.commit != this.stereumUpdate.current_commit) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      return false;
+    },
+    notifHandler() {
+      if (this.checkStereumUpdate == true) {
+        this.notification = true;
+      } else {
+        this.notification = false;
+      }
     },
     storageCheck() {
       if (this.usedPercInt > 80) {
@@ -237,6 +265,25 @@ export default {
 };
 </script>
 <style scoped>
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.v-leave-active {
+  transition: all 0.1s ease-in;
+}
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(80%);
+}
+.close {
+  position: absolute;
+  left: 88%;
+  top: 5%;
+  width: 8%;
+  cursor: pointer;
+  z-index: 10;
+}
 .updatePanel-show {
   right: 0 !important;
 }
@@ -335,6 +382,7 @@ export default {
   margin: 2px 0;
   color: #eee;
   cursor: pointer;
+  position: relative;
 }
 .icon-box {
   width: 28%;

@@ -39,6 +39,11 @@
                 v-model="checkedRelays"
               />
               <label :for="relay.id">{{ relay.name }}</label>
+              <img
+                src="/img/icon/header-icons/usa1.png"
+                alt="flag-icon"
+                v-if="relay.freeCencorship == false"
+              />
             </div>
           </div>
         </div>
@@ -108,7 +113,10 @@
             v-if="!switchHandler(service)"
             @click="changeSelectedServiceToConnect(service)"
           >
-            <img src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
+            <img
+              src="/img/icon/manage-node-icons/not-connected.png"
+              alt="icon"
+            />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
               <div class="optionsName">
@@ -925,5 +933,10 @@ html {
   font-weight: 600;
   color: #aaaaaa;
   cursor: pointer;
+}
+.relaysBoxContent .relay img {
+  width: 10%;
+  height: 65%;
+  margin-right: 5px;
 }
 </style>

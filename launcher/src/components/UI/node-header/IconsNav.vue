@@ -85,12 +85,12 @@ export default {
   },
   methods: {
     updateConfirmationHandler: async function () {
+      let seconds = 0
       try {
         this.refresh = false
         this.updating = true;
         this.newUpdates.forEach(update => update.running = true)
-        let seconds = await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
-        await ControlService.restartServices(seconds);
+        seconds = await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
       } catch (err) {
         console.log("Running All Updates Failed: ", err)
       } finally {
@@ -99,27 +99,34 @@ export default {
         this.versions = {};
         this.newUpdates = [];
         this.refresh = true
+        await ControlService.restartServices(seconds);
       }
     },
     async runUpdate(item) {
+      let seconds = 0
       try {
         this.refresh = false
         item.running = true;
         this.updating = true;
         if (item && item.id) {
-          let seconds = await ControlService.updateServices({ services: item.id });
-          await ControlService.restartServices(seconds)
+          seconds = await ControlService.updateServices({ services: item.id });
         } else if (item && item.commit) {
-          let seconds = await ControlService.updateStereum({ commit: item.commit });
-          await ControlService.restartServices(seconds);
+          seconds = await ControlService.updateStereum({ commit: item.commit });
         }
       } catch (err) {
         console.log(JSON.stringify(item) + "\nUpdate Failed", err)
       } finally {
-        this.updating = false;
         this.forceUpdateCheck = true;
         this.refresh = true;
-        this.newUpdates = [];
+        this.newUpdates = this.newUpdates.filter(u => {
+          if (item && item.id) {
+            return u.id != item.id
+          } else if (item && item.commit) {
+            return u.commit != item.commit
+          }
+        });
+        await ControlService.restartServices(seconds);
+        this.updating = false;
       }
     },
     clickToCancelLogout() {

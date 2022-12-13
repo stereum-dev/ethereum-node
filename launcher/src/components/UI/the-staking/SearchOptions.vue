@@ -1,8 +1,17 @@
 <template>
   <div class="searchOptions" @mousedown.prevent.stop>
     <img
-      class="rename"
-      src="../../../../public/img/icon/the-staking/rename-icon.png"
+      @click="togglePubkeyView"
+      v-if="isPubkeyVisible"
+      class="pubkeyView"
+      src="../../../../public/img/icon/the-staking/view2.png"
+      alt="icon"
+    />
+    <img
+      @click="togglePubkeyView"
+      v-if="!isPubkeyVisible"
+      class="pubkeyView"
+      src="../../../../public/img/icon/the-staking/unview2.png"
       alt="icon"
     />
     <img
@@ -15,9 +24,23 @@
       src="../../../../public/img/icon/the-staking/staking-filter.png"
       alt="icon"
     />
-    <comming-soon class="fixStyle"></comming-soon>
   </div>
 </template>
+<script>
+export default {
+  props: {
+    isPubkeyVisible: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    togglePubkeyView() {
+      this.$emit("togglePubkey");
+    },
+  },
+};
+</script>
 <style scoped>
 .fixStyle {
   top: 65%;
@@ -32,10 +55,17 @@
   justify-content: space-evenly;
   align-items: center;
 }
-.searchOptions .rename,
+.searchOptions .pubkeyView {
+  margin-top: 50px;
+  width: 24px;
+  border: 1px solid rgb(149, 149, 149);
+  border-radius: 100%;
+  cursor: pointer;
+}
 .searchOptions .folder,
 .searchOptions .filter {
   margin-top: 50px;
   width: 23px;
+  cursor: pointer;
 }
 </style>

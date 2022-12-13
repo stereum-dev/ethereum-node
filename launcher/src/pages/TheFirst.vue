@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <div id="container">
-      <div class="baselogo-box" @click="activePage">
+      <div class="baselogo-box" @click="activePage" v-if="!dialogIsVisible">
         <base-logo :link="link"> </base-logo>
       </div>
 
@@ -25,7 +25,7 @@
         </flag-button>
       </lang-dialog>
 
-      <div class="selected-flag" v-if="isLanguageSelected">
+      <div class="selected-flag" v-if="isLanguageSelected" @click="showDialog">
         <div class="flag-box">
           <img :src="selectedLanguage.flag" class="selected-icon" />
         </div>

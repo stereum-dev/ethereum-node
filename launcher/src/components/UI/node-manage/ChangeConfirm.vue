@@ -11,7 +11,11 @@
           </div>
         </div>
       </div>
-      <button class="confirm-btn" @click="confirmHandler">
+      <button
+        class="confirm-btn"
+        @click="confirmHandler"
+        :class="{ disabled: disableBtn }"
+      >
         {{ $t("changeConfirm.confirm") }}
       </button>
     </div>
@@ -57,6 +61,11 @@ import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
 export default {
+  data() {
+    return {
+      disableBtn: false,
+    };
+  },
   computed: {
     ...mapWritableState(useNodeManage, {
       newConfiguration: "newConfiguration",
@@ -87,8 +96,14 @@ export default {
       this.selectedItemToRemove = [];
     },
     async confirmHandler() {
+      this.disableBtn = true;
       await ControlService.handleServiceChanges(toRaw(this.confirmChanges));
+      setTimeout(() => {
+        this.newConfiguration = this.installedServices
+      }, 4000);
+      
       this.confirmChanges = [];
+      this.disableBtn = false;
     },
   },
 };
@@ -302,5 +317,10 @@ button:active {
 ::-webkit-scrollbar {
   width: 1px;
   background-color: transparent;
+}
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>

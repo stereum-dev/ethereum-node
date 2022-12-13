@@ -61,20 +61,6 @@
                 item-type="update"
                 id="version"
               ></setting-items>
-
-              <!-- <div class="setting-items">
-                <div class="setting-items_title">
-                  <span>{{ $t("settingPanel.lane") }}</span>
-                </div>
-                <div
-                  class="setting-items_btn"
-                  @click="switchOnOff"
-                  :style="colorPicker"
-                >
-                  <span>{{ btnStatus }}</span>
-                </div>
-              </div> -->
-
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
@@ -92,23 +78,6 @@
                   </select>
                 </div>
               </div>
-              <!-- <div class="setting-items">
-                <div class="setting-items_title">
-                  <span>{{ $t("settingPanel.servicePlugin") }}</span>
-                </div>
-                <div class="setting-items_btn">
-                  <select
-                    name="stereum-update"
-                    id="stereum-update"
-                    v-model="pluginRef"
-                  >
-                    <option value="manual">
-                      {{ $t("settingPanel.manual") }}
-                    </option>
-                    <option value="auto">{{ $t("settingPanel.auto") }}</option>
-                  </select>
-                </div>
-              </div> -->
             </div>
           </div>
         </div>
@@ -132,6 +101,7 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
       onOff: true,
       btnStatus: "",
@@ -354,7 +324,6 @@ export default {
   height: 90%;
   line-height: 90%;
   text-align-last: center;
-  color: #171717;
   border-radius: 10px;
   color: #232323;
 }

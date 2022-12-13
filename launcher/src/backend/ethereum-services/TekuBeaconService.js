@@ -40,7 +40,7 @@ export class TekuBeaconService extends NodeService {
                 '--logging=INFO',
                 '--p2p-enabled=true',
                 '--p2p-port=9001',
-                '--validators-keystore-locking-enabled=false',
+                '--validators-keystore-locking-enabled=true',
                 `--validators-graffiti-file=${graffitiDir}/graffitis.yaml`,
                 //`--eth1-endpoints=${executionLayer}`,
                 `--ee-endpoint=${executionLayer}`,
