@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  #  teku beacon logs
+  - name: Teku beacon
+    command: "docker logs --tail=20 stereum-8c15fd62-6a8b-11ed-b8a7-2fc72afc5dff"
+    register: teku_beacon
+    until:
+      - teku_beacon.stdout is search("Endpoint http://stereum-a610bbf8-6a8b-11ed-8d9a-27063ca0a489:8551 is INVALID | Still syncing")
+    retries: 60
+    delay: 10
+
+# EOF

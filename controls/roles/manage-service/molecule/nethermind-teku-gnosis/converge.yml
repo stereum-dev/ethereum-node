@@ -1,0 +1,102 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+  vars:
+    teku_gnosis_service: 8c15fd62-6a8b-11ed-b8a7-2fc72afc5dff
+    nethermind_gnosis_service: a610bbf8-6a8b-11ed-8d9a-27063ca0a489
+
+  tasks:
+    # nethermind service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NethermindService
+              id: "{{ nethermind_gnosis_service }}"
+              image: "nethermind/nethermind:{{ stereum_static.defaults.versions.nethermind }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["./Nethermind.Runner"]
+              env: {}
+              command:
+              - --config=xdai
+              - --log=debug
+              - --datadir=/opt/app/data
+              - --Network.DiscoveryPort=30303
+              - --Network.P2PPort=30303
+              - --JsonRpc.Enabled=true
+              - --JsonRpc.Host=0.0.0.0
+              - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+              - --JsonRpc.JwtSecretFile=/engine.jwt
+              - --JsonRpc.WebSocketsPort=8546
+              - --Init.WebSocketsEnabled=true
+              - --Metrics.Enabled=true
+              - --JsonRpc.EnginePort=8551
+              - --JsonRpc.EngineHost=0.0.0.0
+              user: "root"
+              volumes:
+                - "/opt/app/services/{{ nethermind_gnosis_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_gnosis_service }}/engine.jwt:/engine.jwt"
+
+    # teku beacon service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: TekuBeaconService
+              id: "{{ teku_gnosis_service }}"
+              image: "consensys/teku:{{ stereum_static.defaults.versions.teku }}"
+              ports:
+                - 0.0.0.0:9001:9001/tcp
+                - 0.0.0.0:9001:9001/udp
+              env:
+                JAVA_OPTS: -Xmx4g
+              entrypoint: ["/opt/teku/bin/teku"]
+              command:
+                - --network=gnosis
+                - --initial-state=https://checkpoint.gnosischain.com
+                - --logging=INFO
+                - --p2p-enabled=true
+                - --p2p-port=9001
+                - --ee-endpoint=http://stereum-{{ nethermind_gnosis_service }}:8551
+                - --ee-jwt-secret-file=/engine.jwt
+                - --eth1-deposit-contract-max-request-size=8000
+                - --metrics-enabled=true
+                - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+                - --metrics-port=8008
+                - --metrics-interface=0.0.0.0
+                - --metrics-host-allowlist="*"
+                - --metrics-publish-interval=10
+                - --rest-api-port=5051
+                - --rest-api-host-allowlist="*"
+                - --rest-api-interface=0.0.0.0
+                - --rest-api-docs-enabled=true
+                - --rest-api-enabled=true
+                - --data-path=/opt/app/data
+                - --data-storage-mode=prune
+                - --log-destination=CONSOLE
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ teku_gnosis_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ nethermind_gnosis_service }}/engine.jwt:/engine.jwt"
+
+# EOF
