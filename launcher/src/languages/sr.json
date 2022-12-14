@@ -26,7 +26,7 @@
     "support": "potpora",
     "supportText": "Najbrži način da dođete do osobe za podršku je da se pridružite našem Discord serveru!",
     "bugReport": "BUG PRIJAVA",
-    "bugRepText": "Odvojite vrijeme da napišete problem i dopustite nam da učinimo Stereum boljim!",
+    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "ili napišite email na:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Klikni vani da otkažete"
   },
   "settingPanel": {
-    "stereumName": "stereum postavljanje",
-    "langName": "izbor jezika",
-    "confirm": "POTVRDI i PRIMJENI",
+    "stereumName": "stereum settings",
+    "langName": "Language  Selection",
+    "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "Zasluge",
     "open": "otvoren",
@@ -104,7 +104,7 @@
     "inclusionDistance": "INKLUZIJSKA UDALJENOST",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "STATUS SINHRONIZACIJE",
-    "hard": "HARD DISK",
+    "hard": "STORAGE VOLUME",
     "free": "FREE",
     "total": "UKUPNO",
     "network": "NETWORK",
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "UNESITE VAŠU LOZINKU VALIDATORA DA IZAČETE IZ CHAINa OVIM KEYom...",
-    "confirm": "Confrim"
+    "confirm": "Confirm"
   },
   "exitValidatorModal": {
     "modalMessage": "Jeste li sigurni da želite izaći iz CHAINa sa ODABRANIM KEYom validatora? Ovo zaustavlja vašu dužnost validatora i NE MOŽE se poništiti. Vaš FUND se također može povući samo ako CHAIN to dozvoljava.",
