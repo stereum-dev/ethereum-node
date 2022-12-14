@@ -196,6 +196,13 @@ export class Monitoring {
     }
     let addr = prometheus.config.ports[0].destinationIp;
     let port = prometheus.config.ports[0].destinationPort;
+    if(!prometheus.hasOwnProperty("state") || prometheus.state != "running"){
+      return {
+        "status": "error",
+        "errorType": "internal",
+        "error": "prometheus service not running",
+      };
+    }
 
     // Escape single quotes in query for bash command (note the single quotes for curl -d arguments)
     query = query.replaceAll("'","'\\''");
