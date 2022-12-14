@@ -577,15 +577,17 @@ export class ServiceManager {
         })
       }
       let service = this.getService(t.service.service, t.data)
-      let changed = this.addDependencies(service, t.data.beaconServices)
-      changed.forEach(dep => {
-        let index = newServices.findIndex(s => s.id === dep.id)
-        if(index != -1){
-          newServices[index] = dep
-        }else{
-          newServices.push(dep)
-        }
-      })
+      if(t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService"){
+        let changed = this.addDependencies(service, t.data.beaconServices)
+        changed.forEach(dep => {
+          let index = newServices.findIndex(s => s.id === dep.id)
+          if(index != -1){
+            newServices[index] = dep
+          }else{
+            newServices.push(dep)
+          }
+        })
+      }
       newServices.push(service)
     })
     

@@ -21,7 +21,7 @@
               <div class="textbox">
                 <input
                   type="text"
-                  placeholder="/opt/Stereum"
+                  placeholder="/opt/stereum"
                   v-model="installPath"
                 />
               </div>
@@ -31,22 +31,35 @@
       </div>
     </div>
     <router-link class="back" to="/welcome">back</router-link>
-    <router-link class="install" :class="activeBtn()" to="/node"
+    <router-link @click="prepareStereum" class="install" :class="activeBtn()" to="/node"
       >install</router-link
     >
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
-      installPath: "/opt/Stereum",
+      installPath: "/opt/stereum",
     };
   },
   created() {
     this.activeBtn();
   },
+  computed: {
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+      networkList: "networkList",
+    }),
+  },
   methods: {
+    async prepareStereum(){
+      this.currentNetwork = this.networkList.find(item => item.network === "testnet")
+      await ControlService.prepareStereumNode(this.installPath);
+    },
     activeBtn() {
       if (this.installPath === "") {
         return "deactivated";

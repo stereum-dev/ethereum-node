@@ -373,6 +373,13 @@ promiseIpc.on("readKeys", async () => {
   return await validatorAccountManager.readKeys();
 });
 
+promiseIpc.on("prepareStereumNode", async (arg) => {
+  app.showExitPrompt = true;
+  await oneClickInstall.prepareNode(arg, nodeConnection);
+  app.showExitPrompt = false;
+  return 0
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
