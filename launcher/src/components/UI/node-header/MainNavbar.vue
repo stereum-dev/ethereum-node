@@ -114,6 +114,9 @@ export default {
             if (networks && networks.includes("mainnet") ) {
               this.network = "mainnet";
               this.currentNetwork = this.networkList.find(item => item.network === "mainnet")
+            }else if (networks && networks.includes("gnosis") ) {
+              this.network = "gnosis";
+              this.currentNetwork = this.networkList.find(item => item.network === "gnosis")
             } else {
               this.network = "testnet";
               this.currentNetwork = this.networkList.find(item => item.network === "testnet")
@@ -190,7 +193,7 @@ export default {
         this.isUpdateAvailable = false;
         if (response && services && services.length > 0) {
           services.forEach((service) => {
-            if(!response[service.network][service.service])
+            if(!response[service.network] || !response[service.network][service.service])
               service.network = "prater"
             if(response[service.network][service.service]){
             if (

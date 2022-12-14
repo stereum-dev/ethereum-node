@@ -145,6 +145,12 @@ export const useNodeManage = defineStore("nodeManage", {
           network: "testnet",
           icon: "/img/icon/click-installation/testnet-icon.png",
         },
+        {
+          id: 2,
+          name: "Gnosis",
+          network: "gnosis",
+          icon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
+        },
       ],
       currentNetwork: {},
       configNetwork: {},

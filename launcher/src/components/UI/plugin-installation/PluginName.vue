@@ -28,11 +28,7 @@
                   </div>
                   <div class="circle-box">
                     <img
-                      :src="
-                        selectedPreset.network === 'mainnet'
-                          ? this.mainnetIcon
-                          : this.testnetIcon
-                      "
+                      :src="selectedNetwork.icon"
                       alt="icon"
                     />
                   </div>
@@ -167,8 +163,6 @@ export default {
       filteredPluginsOnCategory: [],
       filteredPluginsOnName: [],
       categoryDisplayName: "",
-      testnetIcon: require("../../../../public/img/icon/click-installation/testnet-circle.png"),
-      mainnetIcon: require("../../../../public/img/icon/click-installation/mainnet-circle.png"),
     };
   },
   computed: {
@@ -177,6 +171,7 @@ export default {
       plugins: "presets",
       installationPath: "installationPath",
       checkPointSync: "checkPointSync",
+      selectedNetwork: "selectedNetwork",
     }),
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
@@ -257,7 +252,8 @@ export default {
             this.checkPluginCategory(item);
           }
         });
-        el.showChangeModal = true;
+        if(this.selectedNetwork.name != "gnosis")
+          el.showChangeModal = true;
       }
     },
     checkPluginCategory(element) {
