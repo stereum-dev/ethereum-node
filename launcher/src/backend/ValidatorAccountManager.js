@@ -61,12 +61,10 @@ export class ValidatorAccountManager {
 
 
                     await Promise.all([
-                        this.serviceManager.manageServiceState(client.dependencies.consensusClients[0].id, 'stopped'),
                         this.serviceManager.manageServiceState(client.id, 'stopped')
                     ])
 
                     await Promise.all([
-                        this.serviceManager.manageServiceState(client.dependencies.consensusClients[0].id, 'started'),
                         this.serviceManager.manageServiceState(client.id, 'started')
                     ])
                     await this.nodeConnection.sshService.exec(`chmod 600 ${wallet_path}/direct/accounts/all-accounts.keystore.json`)
@@ -94,7 +92,9 @@ export class ValidatorAccountManager {
                     const password = StringUtils.createRandomString()
                     await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
                     await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
-                    await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
+                    await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${client.id}"`)
+                    await this.serviceManager.manageServiceState(client.id, 'stopped')
+                    await this.serviceManager.manageServiceState(client.id, 'started')
                     await Sleep(30000)
                 }
                 break;
@@ -109,8 +109,12 @@ export class ValidatorAccountManager {
             })
 
             let result = output.map(log => {
-                if(log.msg.data === undefined)
+                if(log.msg.data === undefined){
+                    if(log.msg.code === undefined || log.msg.message === undefined){
+                        throw log.msg
+                    }
                     throw log.msg.code + " " + log.msg.message
+                }
                 return log.msg.data
             })
 
