@@ -7,7 +7,8 @@
         </div>
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
-      <div class="sync-box_value">
+      <no-data></no-data>
+      <!-- <div class="sync-box_value">
         <div
           v-show="syncItemsShow"
           v-for="item in clients"
@@ -22,7 +23,7 @@
             <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="arrowBox" v-if="isMultiService">
       <div class="arrowUp" @click="backPage">
@@ -46,7 +47,9 @@
 <script>
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
+import NoData from "./NoData.vue";
 export default {
+  components: { NoData },
   data() {
     return {
       isMultiService: false,
@@ -88,8 +91,7 @@ export default {
     this.syncControler();
   },
   unmounted() {
-    if(this.refresher)
-        clearTimeout(this.refresher)
+    if (this.refresher) clearTimeout(this.refresher);
   },
   computed: {
     ...mapState(useControlStore, {
@@ -111,10 +113,10 @@ export default {
   },
   methods: {
     nextPage() {
-      this.refresh(true,'next');
+      this.refresh(true, "next");
     },
     backPage() {
-      this.refresh(true,'prev');
+      this.refresh(true, "prev");
     },
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
@@ -135,42 +137,57 @@ export default {
       }
       return this.synchedIco;
     },
-    refresh(instant = false, loadPage='') {
-      if(this.refresher)
-        clearTimeout(this.refresher)
-      if(instant)
-        return this.syncControler(loadPage);
+    refresh(instant = false, loadPage = "") {
+      if (this.refresher) clearTimeout(this.refresher);
+      if (instant) return this.syncControler(loadPage);
       this.refresher = setTimeout(() => {
         this.syncControler(loadPage);
       }, 3000);
     },
-    syncControler(loadPage=''){
+    syncControler(loadPage = "") {
       let pageNum = this.pageNumber;
-      if(loadPage == 'next'){
+      if (loadPage == "next") {
         if (pageNum >= 99) {
           pageNum = 1; // cycle to first page
         } else {
           pageNum++;
         }
-      }else if(loadPage == 'prev'){
+      } else if (loadPage == "prev") {
         pageNum--;
       }
-      let gid = pageNum-1;
-      let clients = Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data ? this.syncstatus.data[gid] : false;
-      if (!clients){
-        let clients_first = Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0 ? this.syncstatus.data[0] : false;
-        let clients_last = Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0 ? this.syncstatus.data[this.syncstatus.data.length-1] : false;
-        if(pageNum < 1 && clients_last !== false){ // first page-1 reached when clicked on prev page, reset to last page
+      let gid = pageNum - 1;
+      let clients =
+        Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
+          ? this.syncstatus.data[gid]
+          : false;
+      if (!clients) {
+        let clients_first =
+          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+            ? this.syncstatus.data[0]
+            : false;
+        let clients_last =
+          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+            ? this.syncstatus.data[this.syncstatus.data.length - 1]
+            : false;
+        if (pageNum < 1 && clients_last !== false) {
+          // first page-1 reached when clicked on prev page, reset to last page
           pageNum = this.syncstatus.data.length;
           gid = pageNum - 1;
           clients = this.syncstatus.data[gid];
-        }else if(clients_first){ // last page+1 reached when clicked on next page, reset to first page
+        } else if (clients_first) {
+          // last page+1 reached when clicked on next page, reset to first page
           pageNum = 1;
           gid = pageNum - 1;
           clients = this.syncstatus.data[gid];
-        }else{ // waiting for data on page load (or while invalid data is retrieved)
-          if(this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")){
-            if(this.syncstatus.data.error == "prometheus service not running"){
+        } else {
+          // waiting for data on page load (or while invalid data is retrieved)
+          if (
+            this.syncstatus.hasOwnProperty("data") &&
+            this.syncstatus.data.hasOwnProperty("error")
+          ) {
+            if (
+              this.syncstatus.data.error == "prometheus service not running"
+            ) {
               this.syncItemsShow = false;
               this.syncIcoUnknown = true;
               this.syncIcoError = false;
@@ -204,7 +221,7 @@ export default {
         Array.isArray(this.syncstatus.data[gid]) &&
         this.syncstatus.data[gid][0].hasOwnProperty("title")
       ) {
-        isMultiService = this.syncstatus.data.length>1 ? true : false;
+        isMultiService = this.syncstatus.data.length > 1 ? true : false;
         syncItemsShow = true;
         syncIcoUnknown = false;
         for (let k in this.syncstatus.data[gid]) {
