@@ -164,7 +164,7 @@ export default {
           gid = pageNumber - 1;
           clients = this.p2pstatus.data[gid];
         } else {
-          // waiting for data on page load (or invalid data)
+          // waiting for data on page load (or while invalid data is retrieved)
           if(this.p2pstatus.hasOwnProperty("data") && this.p2pstatus.data.hasOwnProperty("error")){
             if(this.p2pstatus.data.error == "prometheus service not running"){
               this.p2pItemsShow = false;

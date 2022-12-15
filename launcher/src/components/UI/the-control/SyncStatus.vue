@@ -168,7 +168,7 @@ export default {
           pageNum = 1;
           gid = pageNum - 1;
           clients = this.syncstatus.data[gid];
-        }else{ // waiting for data on page load (or invalid data)
+        }else{ // waiting for data on page load (or while invalid data is retrieved)
           if(this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")){
             if(this.syncstatus.data.error == "prometheus service not running"){
               this.syncItemsShow = false;
