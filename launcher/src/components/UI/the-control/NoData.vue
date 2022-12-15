@@ -4,8 +4,8 @@
       <span class="big-sign"> &gt; no data &lt; </span>
       <div class="bottom-part">
         <div class="comment-part">
-          <span class="comment-row1">test1</span>
-          <span class="comment-row2">test2</span>
+          <span class="comment-row1">PLEASE TURN ON A</span>
+          <span class="comment-row2">NODE CLIENT &</span>
         </div>
         <div class="icon-part">
           <img
@@ -70,7 +70,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 90%;
+  font-size: 40%;
   font-weight: 500;
 }
 .comment-row2 {
@@ -79,7 +79,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 90%;
+  font-size: 40%;
   font-weight: 600;
 }
 .icon-part {

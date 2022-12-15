@@ -7,8 +7,9 @@
         </div>
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
-      <no-data></no-data>
-      <!-- <div class="sync-box_value">
+      <!-- <no-data></no-data> -->
+      <div class="sync-box_value">
+        <no-data v-show="!syncItemsShow"></no-data>
         <div
           v-show="syncItemsShow"
           v-for="item in clients"
@@ -23,7 +24,7 @@
             <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
     <div class="arrowBox" v-if="isMultiService">
       <div class="arrowUp" @click="backPage">

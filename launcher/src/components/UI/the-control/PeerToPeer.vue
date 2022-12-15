@@ -7,6 +7,7 @@
         </div>
         <span>PEER NETWORK</span>
       </div>
+      <no-data v-show="!p2pItemsShow"></no-data>
       <div class="p2pBarBox" v-show="p2pItemsShow">
         <div class="p2pBarCont">
           <div class="titleVal">
@@ -54,7 +55,9 @@
 <script>
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
+import NoData from "./NoData.vue";
 export default {
+  components: { NoData },
   data() {
     return {
       pageNumber: 1,
