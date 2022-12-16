@@ -8,20 +8,21 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <!-- <no-data></no-data> -->
-      <div class="sync-box_value">
-        <no-data v-show="!syncItemsShow"></no-data>
-        <div
-          v-show="syncItemsShow"
-          v-for="item in clients"
-          :key="item.id"
-          class="sync-box_row"
-          :class="syncItemSytle(item)"
-        >
-          <div class="sync-box-row_title">
-            <span>{{ item.title }}</span>
-          </div>
-          <div class="sync-box-row_val">
-            <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
+      <div class="wrapper">
+        <no-data v-if="!syncItemsShow"></no-data>
+        <div class="sync-box_value" v-if="syncItemsShow">
+          <div
+            v-for="item in clients"
+            :key="item.id"
+            class="sync-box_row"
+            :class="syncItemSytle(item)"
+          >
+            <div class="sync-box-row_title">
+              <span>{{ item.title }}</span>
+            </div>
+            <div class="sync-box-row_val">
+              <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -281,6 +282,9 @@ export default {
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .pageNumber {
   display: flex;
   justify-content: center;
@@ -357,12 +361,20 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 69%;
-  height: 95%;
+  width: 100%;
+  height: 100%;
   flex-direction: column;
   overflow-y: auto;
   color: #c1c1c1;
   overflow-y: auto;
+  position: relative;
+}
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 69%;
+  height: 95%;
   position: relative;
 }
 .sync-box_row {
@@ -380,15 +392,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35%;
+  width: max-content;
   font-weight: 600;
-  font-size: 50%;
+  font-size: 45%;
+  margin-left: 1%;
 }
 .sync-box-row_val {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 65%;
+  width: 60%;
   font-weight: 400;
   font-size: 50%;
   color: #94deff;
