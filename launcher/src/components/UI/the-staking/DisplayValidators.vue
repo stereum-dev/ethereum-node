@@ -22,7 +22,7 @@
             <span>{{ $t("displayValidator.waitForImport") }}</span>
           </div>
           <div class="import-message" v-if="importIsDone">
-            <span :class="importingErrorMessage">{{ message }}</span>
+            <p :class="importingErrorMessage">{{ message }}</p>
           </div>
           <div class="confirm-btn" v-if="importIsDone">
             <div class="confirm-box" @click="hideBDialog">
@@ -1237,6 +1237,21 @@ remove-validator {
   text-overflow: clip;
   word-wrap: break-word;
   text-align: center;
+}
+.import-message p {
+  width: 85%;
+  color: rgb(211, 211, 211);
+  background-color: rgb(47, 51, 55);
+  border: 1px solid rgb(211, 211, 211);
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  word-break: break-all;
+  text-align: left;
+  white-space: pre-wrap;
+  overflow: scroll;
+  font-family: "Courier New";
 }
 
 .text-danger {
