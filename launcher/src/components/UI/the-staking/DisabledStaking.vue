@@ -86,8 +86,8 @@ export default {};
   color: rgb(197, 197, 197);
   font-size: 1rem;
   font-weight: 600;
-  word-break: break-all;
-  text-align: left;
+  word-break: break-word;
+  text-align: center;
 }
 .disabledMessage span {
   color: rgb(213, 213, 213);

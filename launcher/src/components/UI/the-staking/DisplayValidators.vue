@@ -416,7 +416,7 @@ export default {
   methods: {
     checkValidatorClientsExist() {
       const clients = this.installedServices.filter(
-        (service) => service.category === "validator"
+        (service) => service.category === "validator" && service.state === "running"
       );
       if (clients.length > 0) {
         this.stakingIsDisabled = false;
