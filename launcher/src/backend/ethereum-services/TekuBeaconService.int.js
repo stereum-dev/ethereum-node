@@ -95,7 +95,7 @@ test('teku validator import', async () => {
     const password = StringUtils.createRandomString()
     await nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
     await nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
-    await nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU' -ext san=dns:localhost,ip:127.0.0.1`)
+    await nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${tekuClient.id}"`)
 
     await serviceManager.manageServiceState(tekuClient.id, 'stopped')
     await serviceManager.manageServiceState(tekuClient.id, 'started')

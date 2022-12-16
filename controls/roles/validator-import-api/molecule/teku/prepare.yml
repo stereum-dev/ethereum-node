@@ -121,8 +121,8 @@
                           -keyalg RSA
                           -keysize 2048
                           -validity 109500
-                          -dname 'CN=localhost, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU'
-                          -ext san=dns:localhost,ip:127.0.0.1"
+                          -dname 'CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU'
+                          -ext 'SAN=DNS:stereum-{{ beacon_service }}'"
         args:
           chdir: /opt/app/services/{{ beacon_service }}/data
         changed_when: false

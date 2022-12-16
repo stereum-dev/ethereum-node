@@ -1228,6 +1228,7 @@ remove-validator {
 
 .import-message span {
   width: 90%;
+  height: 90%;
   margin: 0 auto;
   color: rgb(156, 156, 156);
   font-size: 1rem;
