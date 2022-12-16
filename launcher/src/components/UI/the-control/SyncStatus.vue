@@ -9,7 +9,7 @@
       </div>
       <!-- <no-data></no-data> -->
       <div class="sync-box_value">
-        <no-data v-show="!syncItemsShow"></no-data>
+        <no-data showNoData="!syncItemsShow"></no-data>
         <div
           v-show="syncItemsShow"
           v-for="item in clients"
@@ -363,6 +363,7 @@ export default {
   overflow-y: auto;
   color: #c1c1c1;
   overflow-y: auto;
+  position: relative;
 }
 .sync-box_row {
   display: flex;

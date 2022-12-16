@@ -1,5 +1,5 @@
 <template>
-  <div class="no-data_parent">
+  <div class="no-data_parent" v-if="showNoData">
     <div class="no-data_box">
       <span class="big-sign"> &gt; no data &lt; </span>
       <div class="bottom-part">
@@ -17,6 +17,11 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  props: ["showNoData"],
+};
+</script>
 <style scoped>
 * {
   box-sizing: border-box;
@@ -36,6 +41,7 @@
   height: 100%;
   flex-direction: column;
   color: aqua;
+  position: absolute;
 }
 .big-sign {
   display: flex;
@@ -70,7 +76,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 40%;
+  font-size: 60%;
   font-weight: 500;
 }
 .comment-row2 {
@@ -79,7 +85,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 40%;
+  font-size: 60%;
   font-weight: 600;
 }
 .icon-part {
@@ -97,7 +103,7 @@
     opacity: 0;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.6;
   }
   100% {
     opacity: 1;

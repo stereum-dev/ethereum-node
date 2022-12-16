@@ -7,28 +7,30 @@
         </div>
         <span>PEER NETWORK</span>
       </div>
-      <no-data v-show="!p2pItemsShow"></no-data>
-      <div class="p2pBarBox" v-show="p2pItemsShow">
-        <div class="p2pBarCont">
-          <div class="titleVal">
-            <span>{{ consensusClient }}</span>
+      <div class="wrapper">
+        <no-data showNoData="!p2pItemsShow"></no-data>
+        <div class="p2pBarBox" v-show="p2pItemsShow">
+          <div class="p2pBarCont">
+            <div class="titleVal">
+              <span>{{ consensusClient }}</span>
+            </div>
+            <div class="p2pVal">
+              <div class="p2pVal_value" :style="firstBar"></div>
+            </div>
+            <div class="valNo">
+              <span>{{ consensusNumPeer }}</span>
+            </div>
           </div>
-          <div class="p2pVal">
-            <div class="p2pVal_value" :style="firstBar"></div>
-          </div>
-          <div class="valNo">
-            <span>{{ consensusNumPeer }}</span>
-          </div>
-        </div>
-        <div class="p2pBarCont">
-          <div class="titleVal">
-            <span>{{ executionClient }}</span>
-          </div>
-          <div class="p2pVal">
-            <div class="p2pVal_value" :style="secondBar"></div>
-          </div>
-          <div class="valNo">
-            <span>{{ executionNumPeer }}</span>
+          <div class="p2pBarCont">
+            <div class="titleVal">
+              <span>{{ executionClient }}</span>
+            </div>
+            <div class="p2pVal">
+              <div class="p2pVal_value" :style="secondBar"></div>
+            </div>
+            <div class="valNo">
+              <span>{{ executionNumPeer }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -88,8 +90,7 @@ export default {
     this.p2pControler();
   },
   unmounted() {
-    if(this.refresher)
-        clearTimeout(this.refresher)
+    if (this.refresher) clearTimeout(this.refresher);
   },
   computed: {
     ...mapState(useControlStore, {
@@ -168,8 +169,11 @@ export default {
           clients = this.p2pstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if(this.p2pstatus.hasOwnProperty("data") && this.p2pstatus.data.hasOwnProperty("error")){
-            if(this.p2pstatus.data.error == "prometheus service not running"){
+          if (
+            this.p2pstatus.hasOwnProperty("data") &&
+            this.p2pstatus.data.hasOwnProperty("error")
+          ) {
+            if (this.p2pstatus.data.error == "prometheus service not running") {
               this.p2pItemsShow = false;
               this.p2pIcoUnknown = true;
               //this.pageNumber = 1;
@@ -262,13 +266,21 @@ export default {
   transform: rotate(180deg);
 }
 .p2pBarBox {
-  width: 70%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
   flex-direction: column;
   overflow-y: auto;
+}
+.wrapper {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
 }
 .titleVal {
   display: flex;
@@ -287,6 +299,7 @@ export default {
   align-items: flex-start;
   height: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 .p2pTtl {
   width: 100%;
@@ -348,7 +361,7 @@ export default {
 .p2pVal {
   width: 60%;
   height: 80%;
-  margin-right:5px;
+  margin-right: 5px;
   background: #33393e;
   display: flex;
   justify-content: flex-start;
