@@ -1,5 +1,5 @@
 <template>
-  <div class="no-data_parent" v-if="showNoData">
+  <div class="no-data_parent">
     <div class="no-data_box">
       <span class="big-sign"> &gt; no data &lt; </span>
       <div class="bottom-part">
@@ -17,11 +17,7 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: ["showNoData"],
-};
-</script>
+
 <style scoped>
 * {
   box-sizing: border-box;

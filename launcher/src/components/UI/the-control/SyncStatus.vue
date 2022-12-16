@@ -9,7 +9,7 @@
       </div>
       <!-- <no-data></no-data> -->
       <div class="sync-box_value">
-        <no-data showNoData="!syncItemsShow"></no-data>
+        <no-data v-show="!syncItemsShow"></no-data>
         <div
           v-show="syncItemsShow"
           v-for="item in clients"

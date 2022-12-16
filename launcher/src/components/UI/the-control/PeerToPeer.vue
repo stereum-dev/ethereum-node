@@ -8,7 +8,7 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data showNoData="!p2pItemsShow"></no-data>
+        <no-data v-show="!p2pItemsShow"></no-data>
         <div class="p2pBarBox" v-show="p2pItemsShow">
           <div class="p2pBarCont">
             <div class="titleVal">
