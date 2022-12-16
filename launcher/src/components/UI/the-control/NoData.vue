@@ -7,7 +7,7 @@
           <span class="comment-row1">PLEASE TURN ON A</span>
           <span class="comment-row2">NODE CLIENT &</span>
         </div>
-        <div class="icon-part">
+        <div class="icon-part" data-tooltip="peometheus">
           <img
             src="../../../../public/img/icon/control/PrometheusServiceCircle.png"
             alt=""
@@ -21,6 +21,34 @@
 <style scoped>
 * {
   box-sizing: border-box;
+}
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: calc(50%-25%);
+  bottom: 110%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 10% 15%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
 }
 .no-data_parent {
   width: 70%;
