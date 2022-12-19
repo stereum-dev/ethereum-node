@@ -124,7 +124,6 @@ export default {
       this.isServiceOn = false;
       item.serviceIsPending = true;
       let state = "stopped";
-      console.log("2", this.installedServices[4].state);
       if (item.state === "exited") {
         state = "started";
         this.isServiceOn = true;

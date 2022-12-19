@@ -620,10 +620,10 @@ export class ServiceManager {
       `)
     }
     newServices.forEach(service => {
-      if(versions[service.network][service.service]){
+      if(versions[service.network] && versions[service.network][service.service]){
         service.imageVersion = versions[service.network][service.service].slice(-1).pop()
       }else{
-        service.imageVersion = versions["prater"][service.service].slice(-1).pop()
+        service.imageVersion = versions["mainnet"][service.service].slice(-1).pop()
       }
     })
 

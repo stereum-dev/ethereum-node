@@ -1,5 +1,6 @@
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
+import * as log from 'electron-log'
 import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
@@ -38,11 +39,10 @@ export class Monitoring {
       let settings;
       try {
         settings = await nodeConnection.sshService.exec("ls /etc/stereum");
-        services = await nodeConnection.listServicesConfigurations();
-      } catch {
-        services = [];
+      } catch(err){
+        log.debug("checking stereum installation failed:", err)
       }
-      if (services.length != 0 && settings.stdout.includes("stereum.yaml"))
+      if (settings.stdout.includes("stereum.yaml"))
         return true;
     }
     return false;

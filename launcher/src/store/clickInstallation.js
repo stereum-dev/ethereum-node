@@ -69,7 +69,7 @@ export const useClickInstall = defineStore("clickInstallation", {
           defaultPath: "/opt/stereum",
           networkIcon: require("../../public/img/icon/click-installation/gnosis_mainnet_icon.png"),
           icon: require("../../public/img/icon/click-installation/staking-icon.png"),
-          serviceAvailable: false,
+          serviceAvailable: true,
           showDropDown: false,
           includedPlugins: [],
         },

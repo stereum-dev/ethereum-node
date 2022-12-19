@@ -1,6 +1,7 @@
 import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
+import { CL_BootNodes } from './GnosisBootNodes.js'
 
 export class TekuBeaconService extends NodeService {
     static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
@@ -40,6 +41,7 @@ export class TekuBeaconService extends NodeService {
                 '--logging=INFO',
                 '--p2p-enabled=true',
                 '--p2p-port=9001',
+                `--p2p-discovery-bootnodes=${CL_BootNodes.join()}`,
                 '--validators-keystore-locking-enabled=true',
                 `--validators-graffiti-file=${graffitiDir}/graffitis.yaml`,
                 //`--eth1-endpoints=${executionLayer}`,

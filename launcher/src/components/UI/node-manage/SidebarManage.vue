@@ -75,14 +75,19 @@ export default {
     });
     this.selectCategoryTitle()
   },
-
+  watch: {
+    showSidebar(){
+      this.currentCategory = "service"
+      this.selectCategoryTitle()
+    },
+  },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       allServices: "allServices",
     }),
     ...mapWritableState(useNodeManage, {
-      currentNetwork: "currentNetwork",
+      configNetwork: "configNetwork",
     }),
     fontSize() {
       if (this.currentCategory.length > 7) {
@@ -99,14 +104,15 @@ export default {
   },
   methods: {
     getFilterbyNetwork(){
-      switch (this.currentNetwork.network) {
+      switch (this.configNetwork.network) {
         case "mainnet":
         case "testnet":
           return (item) => item.service != 'SSVNetworkService'
         case "gnosis":
-          return (item) => /(Lighthouse|Nethermind|Grafana|Prometheus)/.test(item.service)
+          return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service)
         default:
-          break;
+          return (item) => item.service != 'SSVNetworkService'
+
       }
     },
     selectCategoryTitle() {

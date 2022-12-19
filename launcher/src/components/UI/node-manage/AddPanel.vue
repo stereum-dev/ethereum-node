@@ -216,7 +216,7 @@ export default {
       );
       this.$emit("saveConfig", {
         network:
-          this.configNetwork.network === "testnet" ? "goerli" : "mainnet",
+          this.configNetwork.network === "testnet" ? "goerli" : this.configNetwork.network,
         installDir: this.installationPath
           ? this.installationPath
           : "/opt/stereum",

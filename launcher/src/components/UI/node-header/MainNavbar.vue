@@ -161,6 +161,10 @@ export default {
               this.network = ""
             } 
           }
+          if (!this.network){
+            this.network = "testnet";
+            this.currentNetwork = this.networkList.find(item => item.network === "testnet")
+          }
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services);
           }
@@ -194,7 +198,7 @@ export default {
         if (response && services && services.length > 0) {
           services.forEach((service) => {
             if(!response[service.network] || !response[service.network][service.service])
-              service.network = "prater"
+              service.network = "mainnet"
             if(response[service.network][service.service]){
             if (
               service.imageVersion !=
