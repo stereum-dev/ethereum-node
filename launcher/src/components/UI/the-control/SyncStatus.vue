@@ -7,7 +7,6 @@
         </div>
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
-      <!-- <no-data></no-data> -->
       <div class="wrapper">
         <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
@@ -62,10 +61,6 @@ export default {
       syncIcoSituation: false,
       syncIcoError: false,
       noDataLayerShow: false,
-      prysm: "",
-      geth: "",
-      lighthaouse: "",
-      teko: "",
       syncIco: [
         {
           id: 1,
