@@ -8,7 +8,7 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-show="!p2pItemsShow"></no-data>
+        <no-data v-if="!p2pItemsShow"></no-data>
         <div class="p2pBarBox" v-show="p2pItemsShow">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -286,9 +286,9 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 30%;
+  width: 40%;
   height: 100%;
-  font-size: 40%;
+  font-size: 42%;
   font-weight: 600;
   color: #c1c1c1;
 }
@@ -354,7 +354,7 @@ export default {
 .p2pBarCont {
   width: 95%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: 40%;
 }
