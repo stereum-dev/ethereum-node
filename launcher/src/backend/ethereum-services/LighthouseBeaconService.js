@@ -1,6 +1,7 @@
 import { NodeService } from './NodeService.js'
 import { ServicePortDefinition } from './SerivcePortDefinition.js'
 import { ServiceVolume } from './ServiceVolume.js'
+import { CL_BootNodes } from './GnosisBootNodes.js'
 
 export class LighthouseBeaconService extends NodeService {
   static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, mevboost, checkpointURL) {
@@ -40,6 +41,7 @@ export class LighthouseBeaconService extends NodeService {
         'bn',
         '--debug-level=info',
         `--network=${network}`,
+        `--boot-nodes=${CL_BootNodes.join()}`,
         `--execution-endpoint=${eth1Nodes}`,
         `--execution-jwt=${JWTDir}`,
         '--eth1-blocks-per-log-query=150',

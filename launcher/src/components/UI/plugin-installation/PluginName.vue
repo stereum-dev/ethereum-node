@@ -252,7 +252,6 @@ export default {
             this.checkPluginCategory(item);
           }
         });
-        if(this.selectedNetwork.name != "gnosis")
           el.showChangeModal = true;
       }
     },
@@ -265,6 +264,9 @@ export default {
           filter = (item) =>
             item.category === element.category &&
             item.service !== "SSVNetworkService";
+          if(this.selectedNetwork.name == "gnosis"){
+            filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service)
+          }
           break;
         case "ssv.network":
           filter = (item) => {

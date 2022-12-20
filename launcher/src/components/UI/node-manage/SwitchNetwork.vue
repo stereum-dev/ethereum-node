@@ -14,7 +14,7 @@
       </div>
       <ul class="dropdown-parent" v-if="dropdownIsActive">
         <li
-          v-for="item in networkList.filter(n => n.network != 'gnosis')"
+          v-for="item in networkList"
           :key="item.id"
           @click="selectNetworkToDisplay(item)"
         >
@@ -85,10 +85,8 @@ export default {
       return undefined
     },
     openDropDown() {
-    if(this.configNetwork.network != "gnosis"){
       this.dropdownIsActive = !this.dropdownIsActive;
       this.closeDropdownActive = !this.closeDropdownActive;
-    }
     },
     selectNetworkToDisplay(item) {
       if(!(item.network == this.configNetwork.network)){
@@ -97,16 +95,17 @@ export default {
           if(this.currentNetwork.network === item.network){
             this.confirmChanges.splice(index, 1)
           }else{
-            this.confirmChanges[index].data.network = (item.network === "testnet" ? "goerli" : "mainnet")
+            this.confirmChanges[index].data.network = (item.network === "testnet" ? "goerli" : item.network)
             this.confirmChanges[index].service.icon = item.icon
           }
         }else if(this.newConfiguration.length > 0){
-          this.confirmChanges.push(this.getActions("CHANGE NETWORK", {icon: item.icon}, {network: (item.network === "testnet" ? "goerli" : "mainnet")}))
+          this.confirmChanges.push(this.getActions("CHANGE NETWORK", {icon: item.icon}, {network: (item.network === "testnet" ? "goerli" : item.network)}))
         }
       }
       this.configNetwork = item;
       this.dropdownIsActive = false;
       this.closeDropdownActive = false;
+      console.log(this.configNetwork)
     },
   },
 };
