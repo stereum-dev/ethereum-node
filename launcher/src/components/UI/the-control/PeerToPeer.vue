@@ -8,7 +8,7 @@
         <span>PEER NETWORK</span>
       </div>
       <div class="wrapper">
-        <no-data v-if="!p2pItemsShow"></no-data>
+        <no-data v-if="noDataLayerShow"></no-data>
         <div class="p2pBarBox" v-show="p2pItemsShow">
           <div class="p2pBarCont">
             <div class="titleVal">
@@ -66,6 +66,7 @@ export default {
       isMultiService: false,
       p2pItemsShow: false,
       p2pIcoUnknown: true,
+      noDataLayerShow: false,
       consensusClient: "CC",
       consensusNumPeer: "100",
       consensusValPeer: "0",
@@ -176,6 +177,7 @@ export default {
             if (this.p2pstatus.data.error == "prometheus service not running") {
               this.p2pItemsShow = false;
               this.p2pIcoUnknown = true;
+              this.noDataLayerShow = true;
               //this.pageNumber = 1;
               //this.isMultiService = false;
             }
@@ -187,6 +189,7 @@ export default {
       let isMultiService = false;
       let p2pItemsShow = false;
       let p2pIcoUnknown = true;
+      let noDataLayerShow = false;
       let consensusClient = this.consensusClient;
       let consensusNumPeer = this.consensusNumPeer;
       let consensusValPeer = this.consensusValPeer;
@@ -215,6 +218,7 @@ export default {
       this.isMultiService = isMultiService;
       this.p2pItemsShow = p2pItemsShow;
       this.p2pIcoUnknown = p2pIcoUnknown;
+      this.noDataLayerShow = noDataLayerShow;
       this.consensusClient = consensusClient;
       this.consensusNumPeer = consensusNumPeer;
       this.consensusValPeer = consensusValPeer;
