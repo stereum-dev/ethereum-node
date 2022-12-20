@@ -108,7 +108,7 @@ export class ValidatorAccountManager {
                 return (JSON.parse(log[1]))
             })
 
-            let result = output.map(log => {
+            let result = (output.map(log => {
                 if(log.msg.data === undefined){
                     if(log.msg.code === undefined || log.msg.message === undefined){
                         throw log.msg
@@ -116,22 +116,20 @@ export class ValidatorAccountManager {
                     throw log.msg.code + " " + log.msg.message
                 }
                 return log.msg.data
-            })
-
-            result.forEach(batch => {
-                if(batch.some(run => run.status === "error")){
-                    throw batch.find(run => run.message != undefined).message
-                }
-            })
-
+            })).flat()
             let imported = 0
             let duplicate = 0
-            result.forEach(batch => batch.forEach(run => {
-                if(run.status === "imported")imported ++
-                if(run.status === "duplicate")duplicate ++
-            }))
+            let error = 0
+            let pubkeys = this.batches.map(b => b.content.map(c => JSON.parse(c).pubkey)).flat()
+            let message = (result.map((key, index, arr) => {
+                if(key.status === "imported")imported ++
+                if(key.status === "duplicate")duplicate ++
+                if(key.status === "error")error ++
+                return ((`${pubkeys[index].substring(0, 20)}...${pubkeys[index].substring(pubkeys[index].length - 6, pubkeys[index].length)}:\t${key.status}`) + (key.status == "error" ? `:\n${key.message}\n` : ""))
+            })).join('\n')
+
             this.batches = []
-            return imported + " key(s) imported ...\n" + duplicate + " duplicate(s) ..."
+            return message + `\n${imported} key(s) imported...\n${duplicate} duplicate(s)...\n${error} import(s) failed...`
         } catch (err) {
             log.error("Validator Import Failed:\n", err)
             this.batches = []
