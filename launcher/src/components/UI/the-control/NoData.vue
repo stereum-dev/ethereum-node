@@ -7,7 +7,7 @@
           <span class="comment-row1">PLEASE TURN ON A</span>
           <span class="comment-row2">NODE CLIENT &</span>
         </div>
-        <div class="icon-part" data-tooltip="peometheus">
+        <div class="icon-part" :data-tooltip="serviceName">
           <img
             src="../../../../public/img/icon/control/PrometheusServiceCircle.png"
             alt=""
@@ -17,6 +17,15 @@
     </div>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      serviceName: "Prometheus",
+    };
+  },
+};
+</script>
 
 <style scoped>
 * {
