@@ -188,7 +188,7 @@ export class ServiceManager {
       let dependencies = task.data.executionClients.concat(task.data.beaconServices).map(s => services.find(e => {
         if(e.id === s.config.serviceID){
           return true
-        }else if(e.id === newInstallTasks.find(i => i.service.id === s.id).service.config.serviceID){
+        }else if(newInstallTasks && newInstallTasks.length > 0 && e.id === newInstallTasks.find(i => i.service.id === s.id).service.config.serviceID){
           return true
         }
         return false
@@ -714,7 +714,7 @@ export class ServiceManager {
         await this.nodeConnection.restartServices(after - before)
       }
     }
-    let newInstallTasks
+    let newInstallTasks = []
     if (jobs.includes("INSTALL")) {
       try {
         let services = await this.readServiceConfigurations()
