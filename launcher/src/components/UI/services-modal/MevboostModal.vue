@@ -43,11 +43,13 @@
                   @change="enableBtn"
                 />
                 <label :for="relay.id">{{ relay.name }}</label>
-                <img
-                  src="/img/icon/header-icons/usa1.png"
-                  alt="flag-icon"
-                  v-if="relay.freeCencorship == false"
-                />
+                <div class="iconBox" data-tooltip="OFAC Compliant - censored">
+                  <img
+                    src="/img/icon/header-icons/usa1.png"
+                    alt="flag-icon"
+                    v-if="relay.freeCencorship == false"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -178,6 +180,37 @@ export default {
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: -700%;
+  top: 180%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: rgba(170, 0, 30, 0.8);
+  border-radius: 5px;
+  font-size: 70%;
+  font-weight: 600;
+  padding: 20% 35%;
+  border: 1px solid #929292;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .service-modal_parent {
   width: 100vw;
   height: 100vh;
@@ -443,9 +476,13 @@ export default {
   align-items: center;
   box-sizing: border-box;
 }
-.relaysBox img {
+.iconBox {
   width: 20px;
   height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 2%;
 }
 .relaysBoxTitle {
   width: 100%;

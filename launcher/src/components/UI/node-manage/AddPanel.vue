@@ -39,11 +39,13 @@
                 v-model="checkedRelays"
               />
               <label :for="relay.id">{{ relay.name }}</label>
-              <img
-                src="/img/icon/header-icons/usa1.png"
-                alt="flag-icon"
-                v-if="relay.freeCencorship == false"
-              />
+              <div class="iconBox" data-tooltip="OFAC Compliant - censored">
+                <img
+                  src="/img/icon/header-icons/usa1.png"
+                  alt="flag-icon"
+                  v-if="relay.freeCencorship == false"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -216,7 +218,9 @@ export default {
       );
       this.$emit("saveConfig", {
         network:
-          this.configNetwork.network === "testnet" ? "goerli" : this.configNetwork.network,
+          this.configNetwork.network === "testnet"
+            ? "goerli"
+            : this.configNetwork.network,
         installDir: this.installationPath
           ? this.installationPath
           : "/opt/stereum",
@@ -270,6 +274,37 @@ export default {
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: -950%;
+  top: 180%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: rgba(170, 0, 30, 0.8);
+  border-radius: 5px;
+  font-size: 70%;
+  font-weight: 600;
+  padding: 20% 35%;
+  border: 1px solid #929292;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .addParent {
   grid-column: 1;
   width: 100%;
@@ -935,7 +970,10 @@ export default {
   color: #aaaaaa;
   cursor: pointer;
 }
-.relaysBoxContent .relay img {
+.iconBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 10%;
   height: 65%;
   margin-right: 5px;
