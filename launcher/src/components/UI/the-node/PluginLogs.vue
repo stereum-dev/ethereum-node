@@ -202,7 +202,7 @@ export default {
   color: rgb(202, 205, 206);
 }
 .logsHeader .serviceDetails .categoryBox {
-  grid-column: 7/10;
+  grid-column: 9/10;
   grid-row: 1/2;
   width: 100%;
   height: 100%;
