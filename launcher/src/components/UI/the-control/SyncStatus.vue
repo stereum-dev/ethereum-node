@@ -7,9 +7,8 @@
         </div>
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
-      <!-- <no-data></no-data> -->
       <div class="wrapper">
-        <no-data v-if="!syncItemsShow"></no-data>
+        <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -61,10 +60,7 @@ export default {
       syncIcoUnknown: true,
       syncIcoSituation: false,
       syncIcoError: false,
-      prysm: "",
-      geth: "",
-      lighthaouse: "",
-      teko: "",
+      noDataLayerShow: false,
       syncIco: [
         {
           id: 1,
@@ -194,6 +190,7 @@ export default {
               this.syncIcoUnknown = true;
               this.syncIcoError = false;
               this.syncIcoSituation = false;
+              this.noDataLayerShow = true;
               //this.pageNumber = 1;
               //this.clients = [];
               //this.isMultiService = false;
@@ -209,6 +206,7 @@ export default {
       let syncIcoUnknown = true;
       let syncIcoError = false;
       let syncIcoSituation = false;
+      let noDataLayerShow = false;
       let fonts = {
         red: [], // client error (for example docker container not running) - icon red
         orange: [], // abnormal client data during init (for example: lowerslot > higherslot) - icon unknown
@@ -276,6 +274,7 @@ export default {
       this.pageNumber = pageNum;
       this.clients = clients;
       this.isMultiService = isMultiService;
+      this.noDataLayerShow = noDataLayerShow;
       this.refresh();
     },
   },
