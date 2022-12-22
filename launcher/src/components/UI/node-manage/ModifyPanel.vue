@@ -118,6 +118,9 @@
         <template v-for="service in options" :key="service.id">
           <div
             class="optionsBox"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="!switchHandler(service)"
             @click="changeSelectedServiceToConnect(service)"
           >
@@ -134,7 +137,9 @@
           </div>
           <div
             class="clientAddBox"
-            :serviceId-tooltip="service.config.serviceID"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="switchHandler(service)"
             @click="changeSelectedServiceToConnect(service)"
           >
@@ -324,12 +329,12 @@ export default {
   color: #eee;
   background: #000;
   bottom: 90%;
-  left: 0;
+  left: calc(40%-10px);
   padding: 2% 5%;
   border: 1px solid #929292;
   border-radius: 5px;
   font-weight: 400;
-  font-size: 50%;
+  font-size: 53%;
   visibility: hidden;
   opacity: 0;
   transform: translateY(20%);

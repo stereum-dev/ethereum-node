@@ -79,6 +79,9 @@
         <template v-for="service in options" :key="service.id">
           <div
             class="optionsBox"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="
               !switchHandler(service) &&
               service.service !== 'FlashbotsMevBoostService'
@@ -98,6 +101,9 @@
           </div>
           <div
             class="clientAddBox"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="
               switchHandler(service) &&
               service.service !== 'FlashbotsMevBoostService'
@@ -276,6 +282,34 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+[serviceId-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[serviceId-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  text-align: center;
+  content: attr(serviceId-tooltip);
+  color: #eee;
+  background: #000;
+  bottom: 90%;
+  left: 0;
+  padding: 2% 5%;
+  border: 1px solid #929292;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 50%;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[serviceId-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
 }
 [data-tooltip] {
   position: relative;
