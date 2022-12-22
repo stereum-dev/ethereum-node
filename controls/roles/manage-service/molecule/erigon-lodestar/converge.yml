@@ -37,6 +37,7 @@
                 - --authrpc.vhosts=*
                 - --authrpc.jwtsecret=/engine.jwt
                 - --prune=htc
+                - --externalcl
                 - --ws
                 - --http
                 - --http.vhosts=*

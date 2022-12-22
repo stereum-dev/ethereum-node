@@ -31,6 +31,7 @@ export class ErigonService extends NodeService {
         `--authrpc.port=8551`,
         `--authrpc.jwtsecret=/engine.jwt`,
         `--prune=htc`,
+        `--externalcl`,
         `--ws`,
         `--http`,
         `--http.vhosts=*`,
