@@ -162,20 +162,15 @@ export default {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
-      cpu: "cpu",
-      availDisk: "availDisk",
-      usedPerc: "usedPerc",
     }),
   },
   mounted() {
     this.updateConnectionStats();
     this.updateServiceLogs();
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
-    this.pollingVitals = setInterval(this.updateServerVitals, 1000); // refresh server vitals
   },
   beforeUnmount() {
     clearInterval(this.polling);
-    clearInterval(this.pollingVitals);
   },
   methods: {
     sortByName(a, b) {
@@ -193,15 +188,10 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      const data = await ControlService.getServiceLogs();
-      this.serviceLogs = data;
-    },
-    async updateServerVitals() {
-      const data = await ControlService.getServerVitals();
-      this.serverVitals = data;
-      this.cpu = this.serverVitals.cpu;
-      this.availDisk = this.serverVitals.availDisk;
-      this.usedPerc = this.serverVitals.usedPerc;
+      if(this.installedServices && this.installedServices.length){
+        const data = await ControlService.getServiceLogs();
+        this.serviceLogs = data;
+      }
     },
     showModal(data) {
       this.isModalActive = true;

@@ -93,6 +93,7 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
+      refresh: "refresh",
     }),
   },
   mounted() {
@@ -104,7 +105,11 @@ export default {
     runInstalltion: async function () {
       this.$router.push("/node");
       this.displayInstallationWarning = false;
+      this.refresh = false
       await ControlService.prepareOneClickInstallation(this.installationPath);
+      if(await ControlService.restartServer())
+        await new Promise(resolve => setTimeout(resolve, 20000))
+      this.refresh = true
       await ControlService.writeOneClickConfiguration({
         services: this.selectedPreset.includedPlugins,
         checkpointURL: this.checkPointSync,

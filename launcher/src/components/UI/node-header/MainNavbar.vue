@@ -57,8 +57,8 @@ export default {
   methods: {
     refreshServiceStates: async function () {
       const allServices = JSON.parse(JSON.stringify(this.allServices));
-      if (await this.checkConnection()) {
-        if (this.refresh) {
+      if (this.refresh) {
+        if (await this.checkConnection()) {
           let services = await ControlService.refreshServiceInfos();
           if (services && services.length != 0 && this.refresh) {
             let otherServices = [];

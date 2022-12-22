@@ -40,6 +40,7 @@
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
     return {
@@ -54,11 +55,18 @@ export default {
       currentNetwork: "currentNetwork",
       networkList: "networkList",
     }),
+    ...mapWritableState(useNodeHeader, {
+      refresh: "refresh",
+    }),
   },
   methods: {
     async prepareStereum(){
       this.currentNetwork = this.networkList.find(item => item.network === "testnet")
+      this.refresh = false
       await ControlService.prepareStereumNode(this.installPath);
+      if(await ControlService.restartServer())
+        await new Promise(resolve => setTimeout(resolve, 20000))      
+      this.refresh = true
     },
     activeBtn() {
       if (this.installPath === "") {

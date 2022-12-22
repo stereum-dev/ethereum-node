@@ -380,6 +380,10 @@ promiseIpc.on("prepareStereumNode", async (arg) => {
   return 0
 });
 
+promiseIpc.on("restartServer", async () => {
+  return await nodeConnection.restartServer()
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
