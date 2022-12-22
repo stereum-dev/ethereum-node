@@ -79,6 +79,9 @@
         <template v-for="service in options" :key="service.id">
           <div
             class="optionsBox"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="
               !switchHandler(service) &&
               service.service !== 'FlashbotsMevBoostService'
@@ -98,7 +101,9 @@
           </div>
           <div
             class="clientAddBox"
-            :serviceId-tooltip="service.config.serviceID"
+            :serviceId-tooltip="
+              service.config.serviceID ? service.config.serviceID : service.id
+            "
             v-if="
               switchHandler(service) &&
               service.service !== 'FlashbotsMevBoostService'
