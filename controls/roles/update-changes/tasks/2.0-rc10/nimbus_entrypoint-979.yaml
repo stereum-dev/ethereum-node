@@ -1,0 +1,17 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Replace Entrypoint
+  replace:
+    path: "{{ item.path }}"
+    regexp: "/home/user/nimbus-eth2/build/nimbus_beacon_node"
+    replace: "/home/user/nimbus_beacon_node"
+  when: service_configuration.service == "NimbusBeaconService"
+#EOF

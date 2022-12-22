@@ -1,0 +1,27 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # Nimbus
+  - name: Read nimbus service file
+    slurp:
+      src: "/etc/stereum/services/71a410be-c555-b226-294b-8d8439c6ae74.yaml"
+    register: nimbus_service_configuration_raw
+
+  - name: Parse nimbus service's configuration
+    set_fact: 
+      nimbus_service_configuration: "{{ nimbus_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+     msg: "{{ nimbus_service_configuration_raw['content'] | b64decode }}"
+
+  - assert:
+      that:
+      - (nimbus_service_configuration.entrypoint | select('match', "/home/user/nimbus-eth2/build/nimbus_beacon_node") | length) == 0
+      - (nimbus_service_configuration.entrypoint | select('match', "/home/user/nimbus_beacon_node") | length) == 1
+  
+
+
+
+# EOF
