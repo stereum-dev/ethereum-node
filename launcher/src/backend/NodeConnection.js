@@ -986,5 +986,28 @@ export class NodeConnection {
     this.settings = undefined
     await this.closeTunnels()
   }
+
+  async restartServer(){
+    let status = await this.sshService.exec('cat /var/run/reboot-required')
+    if(status.rc == 0){
+      await new Promise(resolve => setTimeout(resolve, 10000))
+      await this.sshService.exec('/sbin/shutdown -r now')
+      const retry = { connected: false, counter: 0, maxTries: 300 }
+      log.info('Connecting via SSH')
+      while (!retry.connected) {
+        try {
+          await this.sshService.connect(this.nodeConnectionParams);
+          retry.connected = true
+          log.info('Connected!')
+        } catch (e) {
+          if (++retry.counter == retry.maxTries) throw e
+          log.info(' Could not connect.\n' + (retry.maxTries - retry.counter) + ' tries left.')
+          await new Promise(resolve => setTimeout(resolve, 5000))
+        }
+      }
+      return true
+    }
+    return false
+  }
 }
 

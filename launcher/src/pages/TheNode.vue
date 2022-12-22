@@ -120,6 +120,7 @@ import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
+import { useNodeHeader } from "../store/nodeHeader";
 
 export default {
   components: {
@@ -166,6 +167,9 @@ export default {
       availDisk: "availDisk",
       usedPerc: "usedPerc",
     }),
+    ...mapWritableState(useNodeHeader, {
+      refresh: "refresh",
+    })
   },
   mounted() {
     this.updateConnectionStats();
@@ -193,15 +197,19 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      const data = await ControlService.getServiceLogs();
-      this.serviceLogs = data;
+      if(this.installedServices && this.installedServices.length > 0){
+        const data = await ControlService.getServiceLogs();
+        this.serviceLogs = data;
+      }
     },
     async updateServerVitals() {
-      const data = await ControlService.getServerVitals();
-      this.serverVitals = data;
-      this.cpu = this.serverVitals.cpu;
-      this.availDisk = this.serverVitals.availDisk;
-      this.usedPerc = this.serverVitals.usedPerc;
+      if(this.installedServices && this.installedServices.length > 0){
+        const data = await ControlService.getServerVitals();
+        this.serverVitals = data;
+        this.cpu = this.serverVitals.cpu;
+        this.availDisk = this.serverVitals.availDisk;
+        this.usedPerc = this.serverVitals.usedPerc;
+      }
     },
     showModal(data) {
       this.isModalActive = true;
