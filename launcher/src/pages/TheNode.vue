@@ -120,6 +120,7 @@ import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
+import { useNodeHeader } from "../store/nodeHeader";
 
 export default {
   components: {
@@ -162,15 +163,23 @@ export default {
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
+      cpu: "cpu",
+      availDisk: "availDisk",
+      usedPerc: "usedPerc",
     }),
+    ...mapWritableState(useNodeHeader, {
+      refresh: "refresh",
+    })
   },
   mounted() {
     this.updateConnectionStats();
     this.updateServiceLogs();
     this.polling = setInterval(this.updateServiceLogs, 10000); // refresh logs
+    this.pollingVitals = setInterval(this.updateServerVitals, 1000); // refresh server vitals
   },
   beforeUnmount() {
     clearInterval(this.polling);
+    clearInterval(this.pollingVitals);
   },
   methods: {
     sortByName(a, b) {
@@ -188,9 +197,18 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      if(this.installedServices && this.installedServices.length){
+      if(this.installedServices && this.installedServices.length > 0){
         const data = await ControlService.getServiceLogs();
         this.serviceLogs = data;
+      }
+    },
+    async updateServerVitals() {
+      if(this.installedServices && this.installedServices.length > 0){
+        const data = await ControlService.getServerVitals();
+        this.serverVitals = data;
+        this.cpu = this.serverVitals.cpu;
+        this.availDisk = this.serverVitals.availDisk;
+        this.usedPerc = this.serverVitals.usedPerc;
       }
     },
     showModal(data) {

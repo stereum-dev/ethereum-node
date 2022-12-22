@@ -64,9 +64,10 @@ export default {
       this.currentNetwork = this.networkList.find(item => item.network === "testnet")
       this.refresh = false
       await ControlService.prepareStereumNode(this.installPath);
-      if(await ControlService.restartServer())
-        await new Promise(resolve => setTimeout(resolve, 20000))      
+      const restarted = await ControlService.restartServer()
       this.refresh = true
+      if(restarted)
+        await new Promise(resolve => setTimeout(resolve, 20000))      
     },
     activeBtn() {
       if (this.installPath === "") {
