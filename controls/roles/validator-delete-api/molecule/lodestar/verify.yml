@@ -30,8 +30,8 @@
     command: "docker logs stereum-250caf46-3a50-11ed-bb00-0f23d09e0f06"
     register: validator
     until:
-      - validator.stdout is search('Genesis available')  # checking connection to beacon
-      - validator.stdout is search('Verified node and validator have same config')  # checking connection to beacon
+      - validator.stdout is search('Genesis fetched from the beacon node')  # checking connection to beacon
+      - validator.stdout is search('Verified connected beacon node and validator have same the config')  # checking connection to beacon
       - validator.stdout is search('REST api server keymanager bearer access token located at')
     retries: 360
     delay: 10

@@ -31,6 +31,6 @@
   - name: Check for correct git hash
     assert:
       that:
-        - git_hash.stdout == "de04f527b5de44ab6feb127d810238240fcc33be"
+        - git_hash.stdout == "409e345c6ed0eec802461bb2689648b28e09fbd7"
 
 # EOF
