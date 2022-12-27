@@ -5,7 +5,7 @@
   - ../../../../defaults/stereum_defaults.yaml
 
   vars:
-    validator_service: b5312c38-e8dd-11ec-9ddc-f331ef501d8f
+    validator_service: dc36a361-a67e-4159-85a6-934aad985335
 
   tasks:
     - set_fact:

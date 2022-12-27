@@ -29,7 +29,7 @@
     command: "docker logs stereum-680ac194-39aa-11ed-a39a-07f685f7a876"
     register: lodestar_beacon
     until:
-      - lodestar_beacon.stdout is search("Started REST api server address=http://0.0.0.0:9596")
+      - lodestar_beacon.stdout is search("Started REST API server address")
     retries: 60
     delay: 10
   - name: Lodestar validator

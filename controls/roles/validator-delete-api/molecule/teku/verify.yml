@@ -17,7 +17,7 @@
       - stereum_ufw_status.stdout.find("9001/tcp") != -1
       - stereum_ufw_status.stdout.find("9001/udp") != -1
   # Teku graffiti file
-  - stat: path=/opt/app/services/b5312c38-e8dd-11ec-9ddc-f331ef501d8f/graffitis/graffitis.yaml
+  - stat: path=/opt/app/services/1924a8c3-6b38-41ff-9227-049554c018e9/graffitis/graffitis.yaml
     register: graffitis
   - debug:
       msg: "{{ graffitis }}"
@@ -25,11 +25,11 @@
     assert:
       that: graffitis.stat.exists
   # teku API keystore, password & api bearer
-  - stat: path=/opt/app/services/b5312c38-e8dd-11ec-9ddc-f331ef501d8f/data/teku_api_keystore
+  - stat: path=/opt/app/services/1924a8c3-6b38-41ff-9227-049554c018e9/data/teku_api_keystore
     register: teku_api_keystore
-  - stat: path=/opt/app/services/b5312c38-e8dd-11ec-9ddc-f331ef501d8f/data/teku_api_password.txt
+  - stat: path=/opt/app/services/1924a8c3-6b38-41ff-9227-049554c018e9/data/teku_api_password.txt
     register: teku_api_password
-  - stat: path=/opt/app/services/b5312c38-e8dd-11ec-9ddc-f331ef501d8f/data/validator/key-manager/validator-api-bearer
+  - stat: path=/opt/app/services/1924a8c3-6b38-41ff-9227-049554c018e9/data/validator/key-manager/validator-api-bearer
     register: validator_api_bearer
   - debug:
       msg: "{{ validator_api_bearer }}"
@@ -38,12 +38,9 @@
         - teku_api_keystore.stat.exists
         - teku_api_password.stat.exists
         - validator_api_bearer.stat.exists
-  - name: Waiting for the services to start properly
-    pause:
-      minutes: 3
   # teku beacon & validator logs
   - name: teku beacon & validator node
-    command: "docker logs --tail=150 stereum-b5312c38-e8dd-11ec-9ddc-f331ef501d8f"
+    command: "docker logs --tail=150 stereum-1924a8c3-6b38-41ff-9227-049554c018e9"
     register: beacon
     until:
       - beacon.stdout is search('Syncing')
@@ -61,4 +58,4 @@
       that:
       - stereum_docker_ps.stdout.find("consensys/teku") != -1
       - stereum_docker_ps.stdout.find("9001->9001") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
