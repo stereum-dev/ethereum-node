@@ -4,7 +4,9 @@
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
-    beacon_service: b5312c38-e8dd-11ec-9ddc-f331ef501d8f
+    consClient: "teku"
+    beacon_service: 1924a8c3-6b38-41ff-9227-049554c018e9
+    geth_service: 21bde1e1-fc46-4677-b503-1cceccabef07
 
   tasks:
     - name: Install pkgs for Ansible (Ubuntu)
@@ -12,8 +14,8 @@
         update_cache: yes
         name:
           - pip
-          - openjdk-8-jre-headless
           - python3-pip
+          - openjdk-8-jre-headless
           - expect
         state: present
       become: true
@@ -47,13 +49,55 @@
     - include_role:
         name: "configure-firewall"
 
-    # teku beacon & validator service
+    # geth service
     - block:
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
       - name: "Include manage-service"
         include_role:
           name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: GethService
+              id: "{{ geth_service }}"
+              image: "ethereum/client-go:{{ stereum_static.defaults.versions.geth }}"
+              ports:
+                - 0.0.0.0:30303:30303/tcp
+                - 0.0.0.0:30303:30303/udp
+              entrypoint: ["geth"]
+              env: {}
+              command:
+                - --goerli
+                - --http
+                - --datadir=/opt/app/geth
+                - --http.addr=0.0.0.0
+                - --http.vhosts=*
+                - --http.api="engine,eth,web3,net,debug"
+                - --http.corsdomain=*
+                - --authrpc.addr=0.0.0.0
+                - --authrpc.vhosts=*
+                - --authrpc.jwtsecret=/engine.jwt
+              user: "2000"
+              volumes:
+                - "/opt/app/services/{{ geth_service }}/data:/opt/app/geth"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
+
+
+    # teku beacon & validator service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      
+      - name: Create data dir
+        file:
+          path: "/opt/app/services/{{ beacon_service }}/data"
+          state: directory
+        become: yes
+
 
       - name: Create keystore password
         copy:
@@ -86,6 +130,10 @@
           chdir: /opt/app/services/{{ beacon_service }}/data
         changed_when: false
         become: yes
+        
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
 
       vars:
         stereum_args:
@@ -108,7 +156,8 @@
                 - --p2p-port=9001
                 - --validators-keystore-locking-enabled=false
                 - --validators-graffiti-file=/opt/app/graffitis/graffitis.yaml
-                - --ee-endpoint=http://10.10.0.3:8545
+                - --ee-endpoint=http://stereum-{{ geth_service }}:8551
+                - --ee-jwt-secret-file=/engine.jwt
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 - --metrics-port=8008
@@ -128,15 +177,15 @@
                 - --validator-api-cors-origins=*
                 - --validator-api-keystore-file=/opt/app/data/teku_api_keystore
                 - --validator-api-keystore-password-file=/opt/app/data/teku_api_password.txt
-                - --validators-proposer-default-fee-recipient=0x0000000000000000000000000000000000000000
               user: "2000"
               volumes:
                 - "/opt/app/services/{{ beacon_service }}/data:/opt/app/data"
+                - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
                 - "/opt/app/services/{{ beacon_service }}/graffitis:/opt/app/graffitis"
 
     - name: Waiting for the services to start properly
       pause:
-        seconds: 100
+        seconds: 10
 
     - include_role:
         name: "validator-import-api"

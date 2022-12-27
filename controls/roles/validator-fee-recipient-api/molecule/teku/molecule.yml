@@ -6,7 +6,7 @@ driver:
 platforms:
   - name: "validator-fee-recipient-api--teku--ubuntu-22.04"
     hostname: ubuntu
-    server_type: cpx21
+    server_type: cpx31
     image: ubuntu-22.04
 #  - name: "validator-fee-recipient-api--teku--centos-stream-8"
 #    hostname: "centos"

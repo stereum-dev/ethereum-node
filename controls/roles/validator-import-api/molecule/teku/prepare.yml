@@ -92,9 +92,12 @@
       - set_fact:
           stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
 
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+      - name: Create data dir
+        file:
+          path: "/opt/app/services/{{ beacon_service }}/data"
+          state: directory
+        become: yes
+
 
       - name: Create keystore password
         copy:
@@ -128,9 +131,13 @@
         changed_when: false
         become: yes
 
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+
       - name: Waiting for the services to start properly
         pause:
-          seconds: 15
+          seconds: 100
 
       vars:
         stereum_args:
@@ -154,6 +161,7 @@
                 - --validators-keystore-locking-enabled=false
                 - --validators-graffiti-file=/opt/app/graffitis/graffitis.yaml
                 - --ee-endpoint=http://stereum-{{ geth_service }}:8551
+                - --ee-jwt-secret-file=/engine.jwt
                 - --metrics-enabled=true
                 - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
                 - --metrics-port=8008

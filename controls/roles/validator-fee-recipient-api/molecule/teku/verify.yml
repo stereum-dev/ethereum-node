@@ -38,9 +38,6 @@
         - teku_api_keystore.stat.exists
         - teku_api_password.stat.exists
         - validator_api_bearer.stat.exists
-  - name: Waiting for the services to start properly
-    pause:
-      minutes: 3
   # # teku beacon & validator logs
   # - name: teku beacon & validator node
   #   command: "docker logs --tail=150 stereum-df8a069a-fca0-11ec-87b6-c3949203ceed"
@@ -61,5 +58,4 @@
       that:
       - stereum_docker_ps.stdout.find("consensys/teku") != -1
       - stereum_docker_ps.stdout.find("9001->9001") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 1
-
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 2
