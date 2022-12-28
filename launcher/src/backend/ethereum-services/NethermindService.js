@@ -23,7 +23,6 @@ export class NethermindService extends NodeService {
             '1.14.3',               // imageVersion
             [
                 `--config=${network === "gnosis" ? "xdai" : network}`,
-                `--Discovery.Bootnodes=${EL_BootNodes.join()}`,
                 '--log=info',
                 `--datadir=${dataDir}`,
                 '--Network.DiscoveryPort=30303',
@@ -55,7 +54,10 @@ export class NethermindService extends NodeService {
             // executionClients
             // consensusClients
         )
-    return service
+        if(network == "gnosis")
+          service.command.push(`--Discovery.Bootnodes=${EL_BootNodes.join()}`)
+
+      return service
     }
 
 
