@@ -118,6 +118,7 @@
 
   - include_tasks: nimbus-checkpoint-sync.yml
     when: >
+      stereum_service_configuration.command is defined and
       (stereum_service_configuration.command | select('match', "^--trusted-node-url=") | length) == 1 and
       stereum_service_configuration.service is match("NimbusBeaconService") and
       (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
