@@ -185,7 +185,7 @@
 
     - name: Waiting for the services to start properly
       pause:
-        seconds: 10
+        seconds: 120
 
     - include_role:
         name: "validator-import-api"

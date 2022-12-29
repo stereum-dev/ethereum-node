@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: hetznercloud
+platforms:
+  - name: "manage-service--nimbus-checkpointsync--ubuntu-22.04"
+    hostname: ubuntu
+    server_type: cpx21
+    image: ubuntu-22.04
+#  - name: "nimbus-checkpointsync--default--centos-stream-8"
+#    hostname: "centos"
+#    server_type: cpx21
+#    image: centos-stream-8
+provisioner:
+  name: ansible
+  env:
+    ANSIBLE_PIPELINING: "True"
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    #- idempotence
+    - lint
+    - verify
+    - destroy
+
+#EOF
