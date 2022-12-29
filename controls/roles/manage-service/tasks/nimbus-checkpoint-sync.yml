@@ -1,0 +1,61 @@
+---
+- name: Set Variables
+  set_fact:
+    checkpoint_url: "{{ stereum_service_configuration.command | select('match', '^--trusted-node-url=') | first }}"
+
+- name: remove command from config
+  ansible.utils.update_fact:
+    updates:
+    - path: stereum_service_configuration.command
+      value: "{{ stereum_service_configuration.command | reject('match', '^--trusted-node-url=') }}"
+  register: updated
+
+- name: update config
+  set_fact:
+    stereum_service_configuration: "{{ updated.stereum_service_configuration }}"
+
+##############
+# initaite checkpoint snyc
+- name: Start checkpoint snyc
+  community.docker.docker_container:
+    command_handling: correct
+    hostname: "nimbus-checkpointsync"
+    name: "nimbus-checkpointsync"
+    user: "{{ stereum_service_configuration.user }}"
+    image: "{{ stereum_service_configuration.image }}"
+    env: "{{ stereum_service_configuration.env | default({}) }}"
+    command:
+      - "trustedNodeSync"
+      - "{{ stereum_service_configuration.command | select('search', '--data-dir=') | first }}"
+      - "{{ stereum_service_configuration.command | select('search', '--network=') | first }}"
+      - "{{ checkpoint_url }}"
+    entrypoint: "{{ stereum_service_configuration.entrypoint | default([]) }}"
+    restart_policy: "no"
+    state: started
+    volumes: "{{ stereum_service_configuration.volumes }}"
+    log_driver: "json-file"
+    log_options:
+      max-file: "10"
+      max-size: "100m"
+  failed_when: false
+  become: true
+
+- name: wait till container stopped
+  command: "docker ps"
+  register: stereum_docker_ps
+  until:
+    - stereum_docker_ps.stdout.find("nimbus-checkpointsync") == -1
+  retries: 20
+  delay: 10
+  changed_when: false
+
+- name: nimbus checkpointsync logs
+  command: "docker logs nimbus-checkpointsync"
+  register: logs
+  changed_when: false
+
+- name: log checkpoint sync result
+  debug:
+    msg: "{{ logs }}"
+  failed_when: logs.stdout is not search("Done, your beacon node is ready to serve you!")
+#EOF
