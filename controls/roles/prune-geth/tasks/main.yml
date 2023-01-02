@@ -52,6 +52,20 @@
   become: true
   register: geth_prune_result
 
+- name: wait till container stopped
+  command: "docker ps"
+  register: stereum_docker_ps
+  until:
+    - stereum_docker_ps.stdout.find("geth-prune") == -1
+  retries: 36
+  delay: 600
+  changed_when: false
+
+- name: geth pruning logs
+  command: "docker logs geth-prune"
+  register: logs
+  changed_when: false
+
 - name: remove pruning tag
   lineinfile:
     path: "{{ stereum_service_config_path }}"
@@ -68,3 +82,8 @@
         state: started
         configuration:
           id: "{{ stereum_service_configuration.id }}"
+
+- name: log geth pruning result
+  debug:
+    msg: "{{ logs }}"
+  failed_when: logs.stdout is not search("State pruning successful")
