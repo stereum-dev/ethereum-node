@@ -2,6 +2,7 @@ import { SSHService } from "./SSHService";
 import { StringUtils } from "./StringUtils";
 import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
+import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import axios from "axios";
 import net from "net";
 import YAML from "yaml";
@@ -488,6 +489,84 @@ export class NodeConnection {
       }
 
       return resolve(serviceYAML.stdout);
+    });
+  }
+
+  async readSSVNetworkConfig(serviceID){
+    return new Promise(async (resolve, reject) => {
+      let SSVNetworkConfig;
+      try {
+        const service = await this.readServiceConfiguration(serviceID)
+        let configPath = ServiceVolume.buildByConfig(service.volumes.find(v => v.split(":").slice(-1) == "/data")).destinationPath
+        if(configPath.endsWith('/')) 
+          configPath = configPath.slice(0,-1,'')  //if path ends with '/' remove it 
+
+        SSVNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
+      } catch (err) {
+        log.error("Can't read SSV config " + serviceID, err);
+        return reject(
+          "Can't read SSV config " + serviceID + ": " + err
+        );
+      }
+
+      if (SSHService.checkExecError(SSVNetworkConfig)) {
+        return reject(
+          "Failed reading SSV config " +
+          serviceID +
+          ": " +
+          SSHService.extractExecError(SSVNetworkConfig)
+        );
+      }
+
+      return resolve(SSVNetworkConfig.stdout);
+    });
+  }
+
+  async writeSSVNetworkConfig(serviceID, config){
+    return new Promise(async (resolve, reject) => {
+      let configStatus;
+      const ref = StringUtils.createRandomString();
+      this.taskManager.tasks.push({ name: "write SSV config", otherRunRef: ref });
+      const service = await this.readServiceConfiguration(serviceID)
+      try {
+        let configPath = ServiceVolume.buildByConfig(service.volumes.find(v => v.split(":").slice(-1) == "/data")).destinationPath
+        if(configPath.endsWith('/')) 
+          configPath = configPath.slice(0,-1,'')  //if path ends with '/' remove it 
+        configStatus = await this.sshService.exec(
+          "echo -e " +
+          StringUtils.escapeStringForShell(config.trim()) +
+          ` > ${configPath}/config.yaml`
+        );
+      } catch (err) {
+        this.taskManager.otherSubTasks.push({
+          name: "write SSV config yaml",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        log.error("Can't write SSV config",err);
+        return reject("Can't write SSV config: " + err);
+      }
+
+      if (SSHService.checkExecError(configStatus)) {
+        this.taskManager.otherSubTasks.push({
+          name: "write SSV config yaml",
+          otherRunRef: ref,
+          status: false,
+        });
+        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+        return reject(
+          "Can't write SSV config: " +
+          SSHService.extractExecError(configStatus)
+        );
+      }
+      this.taskManager.otherSubTasks.push({
+        name: "write SSV config yaml",
+        otherRunRef: ref,
+        status: true,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      return resolve();
     });
   }
 

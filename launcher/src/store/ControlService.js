@@ -296,6 +296,14 @@ class ControlService extends EventEmitter {
   async restartServer(){
     return await this.promiseIpc.send("restartServer");
   }
+
+  async readSSVNetworkConfig(args){
+    return await this.promiseIpc.send("readSSVNetworkConfig", args);
+  }
+
+  async writeSSVNetworkConfig(args){
+    return await this.promiseIpc.send("writeSSVNetworkConfig", args);
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

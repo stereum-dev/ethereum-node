@@ -278,6 +278,8 @@ export class OneClickInstall {
     let network = service.network
     if(!versions[service.network] || !versions[service.network][service.service])
       network = "mainnet"
+    if(!versions[network][service.service])
+      network = "prater"
     return versions[network][service.service].slice(-1).pop()
   }
 

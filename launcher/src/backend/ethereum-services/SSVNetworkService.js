@@ -17,7 +17,7 @@ global:
 MetricsAPIPort: 15000
         */
     return `eth2:
-  Network: "${network}"
+  Network: "prater"
   BeaconNodeAddr: "${consensusClients.map(client => client.buildConsensusClientHttpEndpointUrl())[0]}"
 eth1:
   ETH1Addr: "${executionClients.map(client => client.buildExecutionClientWsEndpointUrl())[0]}"
@@ -45,7 +45,7 @@ MetricsAPIPort: 15000`
       service.id, // id
       1,  // configVersion
       image, //image
-      'v0.3.2',  //imageVersion
+      'v0.3.4',  //imageVersion
       'make BUILD_PATH=/go/bin/ssvnode start-node && docker logs ssv_node', // command
       null, // entrypoint
       {
