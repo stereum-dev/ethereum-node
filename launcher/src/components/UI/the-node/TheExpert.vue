@@ -12,7 +12,7 @@
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- plugin docs row -->
-        <div class="docBox">
+        <div class="docBox" v-if="!isExpertModeActive && !ssvExpertModeActive">
           <img
             class="titleIcon"
             src="../../../../public/img/icon/plugin-menu-icons/doc.png"
@@ -22,7 +22,7 @@
           <span class="openBtn">open</span>
         </div>
         <!-- expert mode row -->
-        <div class="dataTitleBox" @click="openExpertMode">
+        <div class="dataTitleBox" @click="openExpertMode" v-if="!ssvExpertModeActive">
           <img
             class="titleIcon"
             src="../../../../public/img/icon/plugin-menu-icons/crown2.png"
@@ -31,6 +31,24 @@
           <span>Expert Mode</span>
           <img
             v-if="isExpertModeActive"
+            src="../../../../public/img/icon/task-manager-icons/up.png"
+            alt=""
+          />
+          <img
+            v-else
+            src="../../../../public/img/icon/task-manager-icons/down.png"
+            alt=""
+          />
+        </div>
+        <div class="dataTitleBox" @click="openSSVExpertMode" v-if="item.service === 'SSVNetworkService' && !isExpertModeActive">
+          <img
+            class="titleIcon"
+            src="../../../../public/img/icon/plugin-menu-icons/ssv-config.png"
+            alt="icon"
+          />
+          <span>SSV Configuration</span>
+          <img
+            v-if="ssvExpertModeActive"
             src="../../../../public/img/icon/task-manager-icons/up.png"
             alt=""
           />
@@ -86,7 +104,7 @@
           icon: string (path)
           }
         -->
-        <div class="actionBox">
+        <div class="actionBox" v-if="!isExpertModeActive && !ssvExpertModeActive">
           <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
           <span class="actionBoxTitle">Services Update Configuration</span>
           <div class="updateService">
@@ -196,6 +214,13 @@
             v-model="item.yaml"
           ></textarea>
         </div>
+        <div class="expertMode" v-if="ssvExpertModeActive">
+          <textarea
+            class="editContent"
+            @input="somethingIsChanged"
+            v-model="item.ssvConfig"
+          ></textarea>
+        </div>
       </div>
       <div class="btn-box">
         <!-- service version -->
@@ -230,6 +255,7 @@ export default {
       updateSelect: "auto",
       enterPortIsEnabled: false,
       isExpertModeActive: false,
+      ssvExpertModeActive: false,
       ramUsage: null,
       editableData: null,
       isRamUsageActive: false,
@@ -261,7 +287,11 @@ export default {
       this.item.yaml = await ControlService.getServiceYAML(
         this.item.config.serviceID
       );
+
       this.updateSelect = this.checkAutoUpdate([...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2])
+
+      if(this.item.service === "SSVNetworkService")
+        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID)
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
@@ -300,6 +330,8 @@ export default {
           option.changed = false;
         }
       });
+      if(this.item.service === "SSVNetworkService")
+        await ControlService.writeSSVNetworkConfig({serviceID: this.item.config.serviceID, config: this.item.ssvConfig})
       await ControlService.writeServiceYAML({
         id: this.item.config.serviceID,
         data: this.item.yaml,
@@ -315,6 +347,9 @@ export default {
     },
     openExpertMode() {
       this.isExpertModeActive = !this.isExpertModeActive;
+    },
+    openSSVExpertMode() {
+      this.ssvExpertModeActive = !this.ssvExpertModeActive;
     },
     endpointPortTrunOff() {
       this.enterPortIsEnabled = false;
