@@ -6,3 +6,6 @@
 
 - include_tasks: besu_pruning.yaml
   loop: "{{ service_config_files.files }}"
+
+- include_tasks: nethermind_pruning.yaml
+  loop: "{{ service_config_files.files }}"

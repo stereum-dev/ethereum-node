@@ -574,11 +574,13 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Pruning",
-              type: "action",
-              action: "prunning started",
+              title: "Pruning Mode",
+              type: "select",
+              value: ["Hybrid", "Memory", "Full", "None"],
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
+              unit: "",
+              pattern: "(--Pruning.Mode=)(.*)(\\n)",
             },
             // {
             //   title: "Resync",

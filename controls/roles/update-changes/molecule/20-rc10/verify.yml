@@ -19,7 +19,23 @@
   - assert:
       that:
       - (besu_service_configuration.command | select('match', "--pruning-enabled=true") | length) == 1
-  
+
+  # Nethermind
+  - name: Read Nethermind service file
+    slurp:
+      src: "/etc/stereum/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d.yaml"
+    register: nethermind_service_configuration_raw
+
+  - name: Parse nethermind service's configuration
+    set_fact: 
+      nethermind_service_configuration: "{{ nethermind_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+      msg: "{{ nethermind_service_configuration }}"
+
+  - assert:
+      that:
+      - (nethermind_service_configuration.command | select('match', "--Pruning.Mode=Hybrid") | length) == 1
 
 
 

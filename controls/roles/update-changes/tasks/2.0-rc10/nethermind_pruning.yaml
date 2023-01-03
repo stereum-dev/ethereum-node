@@ -9,10 +9,10 @@
     service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
     service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
 
-- name: Add Auto Pruning to Besu
+- name: Add Pruning Mode to Nethermind
   lineinfile:
     path: "{{ item.path }}"
     insertafter: '^command:'
-    regexp: '^\s*- --pruning-enabled='
-    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --data-path.*') | first | split('-') | first }}- --pruning-enabled=true"
-  when: service_configuration.service == "BesuService"
+    regexp: '^\s*- --Pruning.Mode='
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --config.*') | first | split('-') | first }}- --Pruning.Mode=Hybrid"
+  when: service_configuration.service == "NethermindService"
