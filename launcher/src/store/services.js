@@ -480,7 +480,7 @@ export const useServices = defineStore("services", {
             {
               title: "Pruning",
               type: "action",
-              action: "prunning",
+              action: "pruning",
               changeValue: null,
               displayWarningModal: false,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
@@ -527,11 +527,11 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Pruning",
-              type: "action",
-              action: "prunning started",
-              changeValue: null,
+              title: "Auto Pruning",
+              type: "toggle",
+              changeValue: true,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
+              pattern: "(- --pruning-enabled=)(.*)(\\n)",
             },
             // {
             //   title: "Resync",

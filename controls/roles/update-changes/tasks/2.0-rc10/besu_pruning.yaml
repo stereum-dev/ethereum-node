@@ -1,0 +1,18 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+    service_configuration_text: "{{ service_configuration_raw['content'] | b64decode }}"
+
+- name: Add Auto Prunging to Besu
+  lineinfile:
+    path: "{{ item.path }}"
+    insertafter: '^command:'
+    regexp: '^\s*- --pruning-enabled='
+    line: "{{ service_configuration_text | split('\n') | select('match', '^\\s*- --data-path.*') | first | split('-') | first }}- --pruning-enabled=true"
+  when: service_configuration.service == "BesuService"

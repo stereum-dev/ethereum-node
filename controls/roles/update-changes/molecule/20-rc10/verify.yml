@@ -1,0 +1,26 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  # Besu
+  - name: Read besu service file
+    slurp:
+      src: "/etc/stereum/services/7fabf678-eaac-ffe8-adaf-d081d71ddbe3.yaml"
+    register: besu_service_configuration_raw
+
+  - name: Parse besu service's configuration
+    set_fact: 
+      besu_service_configuration: "{{ besu_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+      msg: "{{ besu_service_configuration }}"
+
+  - assert:
+      that:
+      - (besu_service_configuration.command | select('match', "--pruning-enabled=true") | length) == 1
+  
+
+
+
+# EOF
