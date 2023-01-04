@@ -49,7 +49,7 @@
       nimbus_service_configuration: "{{ nimbus_service_configuration_raw['content'] | b64decode | from_yaml }}"
 
   - debug:
-     msg: "{{ nimbus_service_configuration_raw['content'] | b64decode }}"
+     msg: "{{ nimbus_service_configuration }}"
 
   - assert:
       that:

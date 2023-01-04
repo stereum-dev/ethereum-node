@@ -1,5 +1,4 @@
 ---
-
 - name: Find service configs
   find:
     paths: "/etc/stereum/services"
