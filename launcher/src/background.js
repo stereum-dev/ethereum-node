@@ -384,6 +384,14 @@ promiseIpc.on("restartServer", async () => {
   return await nodeConnection.restartServer()
 });
 
+promiseIpc.on("readSSVNetworkConfig", async (args) => {
+  return await nodeConnection.readSSVNetworkConfig(args)
+});
+
+promiseIpc.on("writeSSVNetworkConfig", async (args) => {
+  return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config)
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },

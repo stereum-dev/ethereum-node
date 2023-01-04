@@ -1,0 +1,52 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+  - ../../../../defaults/stereum_defaults.yaml
+
+  vars:
+    nimbus_service: a5bc5cda-728f-476b-85e6-57f94f9fa869
+
+  tasks:
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: NimbusBeaconService
+              id: "{{ nimbus_service }}"
+              image: "statusim/nimbus-eth2:multiarch-v22.12.0"
+              ports:
+                - 0.0.0.0:9000:9000/tcp
+                - 0.0.0.0:9000:9000/udp
+              entrypoint: ["/home/user/nimbus_beacon_node"]
+              env: {}
+              command:
+                - --network=goerli
+                - --data-dir=/opt/app/beacon
+                - --validators-dir=/opt/app/validators
+                - --secrets-dir=/opt/app/secrets
+                - --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+                - --tcp-port=9000
+                - --udp-port=9000
+                - --metrics
+                - --metrics-port=8008
+                - --metrics-address=0.0.0.0
+                - --rest
+                - --rest-address=0.0.0.0
+                - --rest-port=5052
+                - --graffiti=stereum.net
+                - --trusted-node-url=https://checkpoint-sync.goerli.ethpandaops.io
+              user: "2000"
+              volumes:
+                - "/opt/stereum/nimbus-{{ nimbus_service }}/beacon:/opt/app/beacon"
+                - "/opt/stereum/nimbus-{{ nimbus_service }}/validator/validators:/opt/app/validators"
+                - "/opt/stereum/nimbus-{{ nimbus_service }}/validator/secrets:/opt/app/secrets"
+#EOF

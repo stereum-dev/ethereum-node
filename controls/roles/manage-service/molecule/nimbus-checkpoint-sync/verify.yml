@@ -1,0 +1,15 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  - name: nimbus checkpointsync logs
+    command: "docker logs nimbus-checkpointsync"
+    register: logs
+  - debug:
+      msg: "{{ logs }}"
+  - assert:
+      that: logs.stdout.find("Done, your beacon node is ready to serve you!")
+
+#EOF

@@ -41,7 +41,6 @@ export class LighthouseBeaconService extends NodeService {
         'bn',
         '--debug-level=info',
         `--network=${network}`,
-        `--boot-nodes=${CL_BootNodes.join()}`,
         `--execution-endpoint=${eth1Nodes}`,
         `--execution-jwt=${JWTDir}`,
         '--eth1-blocks-per-log-query=150',
@@ -72,6 +71,8 @@ export class LighthouseBeaconService extends NodeService {
       service.command.push('--checkpoint-sync-url=' + checkpointURL)
     if(mevboostEndpoint)
       service.command.push(`--builder=${mevboostEndpoint}`)
+    if(network == "gnosis")
+      service.command.push(`--boot-nodes=${CL_BootNodes.join()}`)
 
     return service
   }

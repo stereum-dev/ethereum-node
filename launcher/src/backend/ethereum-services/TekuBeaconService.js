@@ -41,7 +41,6 @@ export class TekuBeaconService extends NodeService {
                 '--logging=INFO',
                 '--p2p-enabled=true',
                 '--p2p-port=9001',
-                `--p2p-discovery-bootnodes=${CL_BootNodes.join()}`,
                 '--validators-keystore-locking-enabled=true',
                 `--validators-graffiti-file=${graffitiDir}/graffitis.yaml`,
                 //`--eth1-endpoints=${executionLayer}`,
@@ -86,6 +85,8 @@ export class TekuBeaconService extends NodeService {
             service.command.push('--initial-state=' + checkpointURL)
         if(mevboostEndpoint)
             service.command.push(`--builder-endpoint=${mevboostEndpoint}`)
+        if(network == "gnosis")
+            service.command.push(`--p2p-discovery-bootnodes=${CL_BootNodes.join()}`)
         return service
     }
 

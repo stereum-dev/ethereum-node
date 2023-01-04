@@ -13,4 +13,14 @@
     retries: 60
     delay: 10
 
+  #  Erigon Service logs
+  - name: Erigon Service
+    command: "docker logs stereum-1d938f4c-3540-11ed-b4fd-f72a7f412029"
+    register: erigon_logs
+    until:
+      - erigon_logs.stderr is search("HTTP endpoint opened for Engine API")
+      - erigon_logs.stderr is search("Started P2P networking")
+    retries: 60
+    delay: 10
+
 # EOF
