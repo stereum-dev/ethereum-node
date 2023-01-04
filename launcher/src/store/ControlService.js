@@ -304,6 +304,7 @@ class ControlService extends EventEmitter {
   async writeSSVNetworkConfig(args){
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
+
 }
 if (!instance) {
   instance = new ControlService(window.electron);

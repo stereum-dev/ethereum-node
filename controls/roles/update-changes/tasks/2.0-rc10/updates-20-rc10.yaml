@@ -1,0 +1,10 @@
+---
+- name: Replace Nimbus Entrypoint
+  block:
+  - name: Find service configs
+    find:
+      paths: "/etc/stereum/services"
+    register: service_config_files
+
+  - include_tasks: nimbus_entrypoint-979.yaml
+    loop: "{{ service_config_files.files }}"
