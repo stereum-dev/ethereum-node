@@ -280,4 +280,60 @@
             prometheusNodeExporterClients: []
             mevboost: []
       become: yes
+
+    - name: Create Nimbus service config
+      copy:
+        dest: "/etc/stereum/services/71a410be-c555-b226-294b-8d8439c6ae74.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: 71a410be-c555-b226-294b-8d8439c6ae74
+          configVersion: 1
+          command:
+            - --network=goerli
+            - --data-dir=/opt/app/beacon
+            - --validators-dir=/opt/app/validators
+            - --secrets-dir=/opt/app/secrets
+            - --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+            - --tcp-port=9000
+            - --udp-port=9000
+            - --metrics
+            - --metrics-port=8008
+            - --metrics-address=0.0.0.0
+            - --rest
+            - --rest-address=0.0.0.0
+            - --rest-port=5052
+            - --graffiti=stereum.net
+            - --keymanager
+            - --keymanager-address=0.0.0.0
+            - --keymanager-token-file=/opt/app/validators/api-token.txt
+            - --jwt-secret=/engine.jwt
+            - --web3-url=ws:foo-bar:8551
+          entrypoint:
+            - /home/user/nimbus-eth2/build/nimbus_beacon_node
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v22.12.0
+          ports:
+            - 0.0.0.0:9001:9000/tcp
+            - 0.0.0.0:9001:9000/udp
+            - 127.0.0.1:5053:5052/tcp
+          restart_policy: null
+          volumes:
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/beacon:/opt/app/beacon
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/validator/validators:/opt/app/validators
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/validator/secrets:/opt/app/secrets
+            - /opt/stereum/geth-foo-bar/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients:
+              - service: FooBarService
+                id: foo-bar
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
 # EOF

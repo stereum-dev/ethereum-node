@@ -1,4 +1,5 @@
 ---
+
 - name: Find service configs
   find:
     paths: "/etc/stereum/services"
@@ -8,4 +9,7 @@
   loop: "{{ service_config_files.files }}"
 
 - include_tasks: nethermind_pruning.yaml
+  loop: "{{ service_config_files.files }}"
+
+- include_tasks: nimbus_entrypoint-979.yaml
   loop: "{{ service_config_files.files }}"
