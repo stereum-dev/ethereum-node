@@ -17,7 +17,8 @@
       <the-cpu></the-cpu>
     </dashboard-card>
     <dashboard-card class="amsterdam"
-      ><amsterdam-component></amsterdam-component>
+      ><comming-soon></comming-soon>
+      <amsterdam-component></amsterdam-component>
     </dashboard-card>
     <dashboard-card class="sync-status"
       ><sync-status></sync-status
@@ -59,6 +60,7 @@ import TimeGas from "./TimeGas.vue";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
+import CommingSoon from "../../layers/CommingSoon.vue";
 export default {
   components: {
     PortList,
@@ -78,6 +80,7 @@ export default {
     NodeServerResponse,
     RpcEndpoint,
     DiskSpeed,
+    CommingSoon,
   },
 };
 </script>
