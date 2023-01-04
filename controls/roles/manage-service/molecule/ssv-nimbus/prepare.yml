@@ -121,7 +121,7 @@
                 - 0.0.0.0:9000:9000/tcp
                 - 0.0.0.0:9000:9000/udp
               env: {}
-              entrypoint: ["/home/user/nimbus-eth2/build/nimbus_beacon_node"]
+              entrypoint: ["/home/user/nimbus_beacon_node"]
               command:
                 - --network=prater
                 - --data-dir=/opt/app/beacon
