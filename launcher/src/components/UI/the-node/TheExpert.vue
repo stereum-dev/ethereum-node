@@ -108,7 +108,7 @@
           <img src="/img/icon/plugin-menu-icons/ServiceAutoUpdate.png" alt="" />
           <span class="actionBoxTitle">Services Update Configuration</span>
           <div class="updateService">
-            <select name="update" id="updateService" v-model="updateSelect">
+            <select name="update" id="updateService" v-model="updateSelect" @change="somethingIsChanged()">
               <option value="auto">AUTO</option>
               <option value="manual">MANUAL</option>
             </select>
@@ -181,6 +181,29 @@
             </label>
           </div>
         </div>
+        <div
+          class="actionBox"
+          v-for="(option, index) in item.expertOptions.filter(
+            (option) => option.type === 'toggle'
+          )"
+          :key="index"
+          :class="{ unvisible: isExpertModeActive }"
+        >
+          <img :src="option.icon" alt="icon" />
+          <span class="actionBoxTitle">{{ option.title }}</span>
+          <div class="toggleBox">
+            <label class="switch">
+              <input
+                :disabled="option.disabled"
+                type="checkbox"
+                v-model="option.changeValue"
+                name="check-button"
+                @change="somethingIsChanged(option)"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
       </div>
       <!-- expert mode textarea -->
       <div class="expertTable">
@@ -229,7 +252,7 @@ export default {
   props: ["item", "position", "prunningWarning"],
   data() {
     return {
-      updateSelect: "manual",
+      updateSelect: "auto",
       enterPortIsEnabled: false,
       isExpertModeActive: false,
       ssvExpertModeActive: false,
@@ -264,15 +287,22 @@ export default {
       this.item.yaml = await ControlService.getServiceYAML(
         this.item.config.serviceID
       );
+
+      this.updateSelect = this.checkAutoUpdate([...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2])
+
       if(this.item.service === "SSVNetworkService")
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID)
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
+          if(option.type === "action")
+            option.changeValue = true
         } else {
+          if(option.type === "action")
+            option.changeValue = false
           option.disabled = false;
         }
-        if (option.type === "select" || option.type === "text") {
+        if (option.type === "select" || option.type === "text" || option.type === "toggle") {
           option.changeValue = [
             ...this.item.yaml.match(new RegExp(option.pattern)),
           ][2];
@@ -284,9 +314,13 @@ export default {
         };
       });
     },
-    async writeService() {
+    async writeService() {  
+      this.item.yaml = this.item.yaml.replace(
+            new RegExp("(autoupdate: )(.*)(\\n)"),
+            "$1" + this.checkAutoUpdate() + "$3"
+          );
       this.item.expertOptions.forEach((option) => {
-        if (option.changeValue) {
+        if (option.changeValue != undefined && option.changeValue != null && option.changeValue != NaN) {
           if (option.changed) {
             this.item.yaml = this.item.yaml.replace(
               new RegExp(option.pattern),
@@ -303,6 +337,13 @@ export default {
         data: this.item.yaml,
         service: this.item.service,
       });
+    },
+    checkAutoUpdate(val) {
+      if(val != undefined && val != null && val != NaN){
+        val = val == "true"
+        return val ? "auto" : "manual"
+      }
+      return this.updateSelect == "manual" ? "false" : "true"
     },
     openExpertMode() {
       this.isExpertModeActive = !this.isExpertModeActive;

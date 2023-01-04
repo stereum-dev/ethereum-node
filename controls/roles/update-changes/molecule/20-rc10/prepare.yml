@@ -72,26 +72,6 @@
           volumes:
             - /opt/stereum/teku-61cb4672-f069-4416-bf2a-db53a0776395/data:/opt/app/data
       become: yes
-    
-    - name: create volume directory
-      file:
-        path: /opt/stereum/teku-61cb4672-f069-4416-bf2a-db53a0776395/data
-        state: directory
-      become: yes
-    
-    - name: create teku keystore password
-      copy:
-        content: "{{ lookup('password', '/dev/null', seed=inventory_hostname) }}"
-        dest: /opt/stereum/teku-61cb4672-f069-4416-bf2a-db53a0776395/data/teku_api_password.txt
-        force: no
-      become: yes
-
-    - name: create teku keystore dummy file
-      copy:
-        content: "dummy_keystore"
-        dest: /opt/stereum/teku-61cb4672-f069-4416-bf2a-db53a0776395/data/teku_api_keystore
-        force: no
-      become: yes
 
     - name: Create Prysm service config
       copy:
@@ -249,6 +229,58 @@
                 id: 470fb37f-ad98-1ea7-f89e-e4a6b20cb3c0
       become: yes
 
+    - name: Create Nethermmind service config
+      copy:
+        dest: "/etc/stereum/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NethermindService
+          id: 8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d
+          image: "nethermind/nethermind:1.14.6"
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+          entrypoint: ["./Nethermind.Runner"]
+          env: {}
+          command:
+            - --config=gnosis
+            - --log=info
+            - --datadir=/opt/app/data
+            - --Network.DiscoveryPort=30303
+            - --Network.P2PPort=30303
+            - --Sync.FastSync=true
+            - --Sync.SnapSync=true
+            - --Sync.FastBlocks=true
+            - --Sync.AncientBodiesBarrier=11052984
+            - --Sync.AncientReceiptsBarrier=11052984
+            - --Merge.Enabled=true
+            - --JsonRpc.Enabled=true
+            - --JsonRpc.JwtSecretFile=/engine.jwt
+            - --JsonRpc.Host=0.0.0.0
+            - --JsonRpc.EngineHost=0.0.0.0
+            - --Init.WebSocketsEnabled=true
+            - --JsonRpc.WebSocketsPort=8546
+            - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+            - --JsonRpc.AdditionalRpcUrls=http://0.0.0.0:8551|http;ws|engine;eth;subscribe
+            - --Metrics.Enabled=true
+            - --Metrics.ExposePort=6060
+            - --HealthChecks.Enabled=true
+          user: "root"
+          restart_policy: null
+          volumes:
+            - "/opt/app/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d/data:/opt/app/data"
+            - "/opt/app/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d/engine.jwt:/engine.jwt"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
+
     - name: Create Nimbus service config
       copy:
         dest: "/etc/stereum/services/71a410be-c555-b226-294b-8d8439c6ae74.yaml"
@@ -304,6 +336,4 @@
             prometheusNodeExporterClients: []
             mevboost: []
       become: yes
-
-
 # EOF

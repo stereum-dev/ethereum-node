@@ -23,6 +23,7 @@ export class BesuService extends NodeService {
                 `--network=${network}`,
                 `--data-path=${dataDir}`,
                 '--data-storage-format=BONSAI',
+                '--pruning-enabled=true',
                 '--sync-mode=X_SNAP',
                 '--p2p-port=30303',
                 '--p2p-host=0.0.0.0',

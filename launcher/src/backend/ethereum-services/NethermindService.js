@@ -43,7 +43,8 @@ export class NethermindService extends NodeService {
                 '--JsonRpc.AdditionalRpcUrls=http://0.0.0.0:8551|http;ws|engine;eth;subscribe',
                 '--Metrics.Enabled=true',
                 '--Metrics.ExposePort=6060',
-                '--HealthChecks.Enabled=true'
+                '--HealthChecks.Enabled=true',
+                '--Pruning.Mode=Hybrid'
             ],                      // command
             ["./Nethermind.Runner"],// entrypoint
             null,                   // env
