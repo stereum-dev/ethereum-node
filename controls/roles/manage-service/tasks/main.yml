@@ -114,7 +114,8 @@
   - include_tasks: write-prometheus-configuration.yml
     when: >
       stereum_service_configuration.image is match("prom/prometheus:*") and
-      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted")
+      (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and
+      stereum_service_configuration.overwrite | default(true)
 
   - include_tasks: nimbus-checkpoint-sync.yml
     when: >
