@@ -71,6 +71,36 @@ export const useNodeManage = defineStore("nodeManage", {
           isRemoved: false,
           freeCencorship: true,
         },
+        {
+          icon: "/img/icon/click-installation/testnet-circle.png",
+          name: "Ultrasound money",
+          testnet:
+            "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money",
+          id: 7,
+          isSelected: false,
+          isRemoved: false,
+          freeCencorship: true,
+        },
+        {
+          icon: "/img/icon/click-installation/testnet-circle.png",
+          name: "Aestus",
+          testnet:
+            "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live",
+          id: 8,
+          isSelected: false,
+          isRemoved: false,
+          freeCencorship: true,
+        },
+        {
+          icon: "/img/icon/click-installation/testnet-circle.png",
+          name: "Agnostic",
+          testnet:
+            "https://0xa6bcad37b5d647152a93c2807d8a56055f1e0d7480eb6505d46edc21593e400f0f13738bf2e892f85946234629a3036a@goerli.agnostic-relay.net",
+          id: 9,
+          isSelected: false,
+          isRemoved: false,
+          freeCencorship: true,
+        },
       ],
       newConfiguration: [],
       selectedItemToRemove: [],
