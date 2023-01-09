@@ -360,6 +360,9 @@ export default {
 .status-message_red {
   background: #be3635;
 }
+.status-message_red .message-text_container {
+  color: #eee;
+}
 .status-message_green {
   background: #5f7e6a;
   cursor: pointer;
