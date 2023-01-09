@@ -120,6 +120,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
@@ -264,21 +265,26 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 * {
   box-sizing: border-box;
 }
+
 .v-leave-from {
   opacity: 1;
   transform: translateY(0);
 }
+
 .v-leave-active {
   transition: all 0.1s ease-in;
 }
+
 .v-leave-to {
   opacity: 0;
   transform: translateY(80%);
 }
+
 .close {
   position: absolute;
   left: 88%;
@@ -286,9 +292,11 @@ export default {
   width: 8%;
   cursor: pointer;
 }
+
 .updatePanel-show {
   right: 0 !important;
 }
+
 .status-box {
   width: 100%;
   height: 45%;
@@ -299,6 +307,7 @@ export default {
   align-items: flex-start;
   padding: 5% 5%;
 }
+
 .status-box_header {
   width: 90%;
   height: 15%;
@@ -310,6 +319,7 @@ export default {
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px #171717;
 }
+
 .status-box_messages {
   width: 100%;
   height: 82%;
@@ -322,6 +332,7 @@ export default {
   border-radius: 5px;
   box-shadow: 1px 1px 5px 1px #171717;
 }
+
 .icon-line {
   display: flex;
   width: 100%;
@@ -336,10 +347,12 @@ export default {
   align-items: center;
   margin: 0 1.5px;
 }
+
 .status-icon img {
   width: 95%;
   height: 98%;
 }
+
 .status-message_yellow,
 .status-message_red,
 .status-message_green {
@@ -354,19 +367,24 @@ export default {
   color: #eee;
   position: relative;
 }
+
 .status-message_yellow {
   background: #ffd924;
 }
+
 .status-message_red {
   background: #be3635;
 }
+
 .status-message_red .message-text_container {
   color: #eee;
 }
+
 .status-message_green {
   background: #5f7e6a;
   cursor: pointer;
 }
+
 .message-icon {
   width: 28%;
   height: 95%;
@@ -374,10 +392,12 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .message-icon img {
   width: 88%;
   height: 99%;
 }
+
 .message-text_container {
   width: 70%;
   height: 75%;
@@ -387,6 +407,7 @@ export default {
   flex-direction: column;
   color: #23272a;
 }
+
 .warning {
   display: flex;
   width: 80%;
@@ -396,6 +417,7 @@ export default {
   align-items: center;
   font-weight: 500;
 }
+
 .main-message {
   display: flex;
   width: 95%;
@@ -405,6 +427,7 @@ export default {
   font-size: 40%;
   font-weight: 800;
 }
+
 .val-message {
   display: flex;
   width: 95%;
