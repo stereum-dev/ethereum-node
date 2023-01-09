@@ -171,12 +171,12 @@ export const useNodeManage = defineStore("nodeManage", {
         },
         {
           id: 2,
-          name: "Testnet",
+          name: "Ethereum Testnetwork",
           network: "testnet",
           icon: "/img/icon/click-installation/testnet-icon.png",
         },
         {
-          id: 2,
+          id: 3,
           name: "Gnosis",
           network: "gnosis",
           icon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
