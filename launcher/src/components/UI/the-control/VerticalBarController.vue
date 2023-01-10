@@ -2,7 +2,7 @@
   <div class="verticalBar-parent">
     <div class="verticalBar-container">
       <div
-        v-for="(number, index) in numbers"
+        v-for="(number, index) in arrayWith18Ones"
         :key="index"
         :style="{ backgroundColor: getColor(number) }"
         class="bar"
@@ -15,10 +15,14 @@ export default {
   data() {
     return {
       inputValue: [],
-      // every 6 sec update
-      //it's defult and fix stracture!
-      numbers: [0, 1, 1, 1, 1, 2, 3, 4, 1, 1, 1, 1, 2, 3, 1, 2, 1, 1],
     };
+  },
+  computed: {
+    // every 6 sec update
+    //it's defult and fix stracture!
+    arrayWith18Ones() {
+      return Array(18).fill(0);
+    },
   },
   methods: {
     getColor(number) {
@@ -47,14 +51,13 @@ export default {
   height: 100%;
 }
 .verticalBar-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
   width: 100%;
   height: 100%;
 }
 .bar {
   width: 2.8%;
-  height: 100%;
+  height: 90%;
+  display: inline-block;
+  margin: 0 1%;
 }
 </style>

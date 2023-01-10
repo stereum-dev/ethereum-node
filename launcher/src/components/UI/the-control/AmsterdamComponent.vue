@@ -198,14 +198,16 @@ export default {
   border-radius: 0 10px 10px 0;
 }
 .line-squares {
-  width: 97%;
-  height: 18%;
-  display: flex;
+  width: 100%;
+  height: 20%;
+  justify-content: center;
   align-items: center;
+  display: flex;
 }
 .square {
-  width: 1.9%;
-  height: 30%;
-  margin-right: 1.7%;
+  width: 1.5%;
+  height: 20%;
+  margin: 0 0.7%;
+  display: inline-block;
 }
 </style>
