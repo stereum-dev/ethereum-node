@@ -11,7 +11,7 @@
         class="line-squares"
         v-for="obj in array"
         :key="obj"
-        :data-tooltip="obj.slot"
+        :data-tooltip="'EPOCH: ' + obj.slot"
       >
         <div
           class="square"
