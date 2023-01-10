@@ -14,7 +14,10 @@
 export default {
   data() {
     return {
-      numbers: [0, 1, 1, 1, 1, 1, 1, 2, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1],
+      inputValue: [],
+      // every 6 sec update
+      //it's defult and fix stracture!
+      numbers: [0, 1, 1, 1, 1, 2, 3, 4, 1, 1, 1, 1, 2, 3, 1, 2, 1, 1],
     };
   },
   methods: {

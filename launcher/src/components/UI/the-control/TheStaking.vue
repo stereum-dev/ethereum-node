@@ -31,6 +31,7 @@
             <span>VALIDATOR</span>
           </div>
           <div class="controller">
+            <span>INCLUSION DISTANCE</span>
             <vertical-bar-controller></vertical-bar-controller>
           </div>
         </div>
@@ -44,6 +45,7 @@ export default {
   components: { VerticalBarController },
   data() {
     return {
+      //dummy value o test
       ethValue: 32.0000001,
       numberOfValidators: 1,
     };
@@ -162,6 +164,12 @@ export default {
 }
 .controller {
   width: 45%;
-  height: 70%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  font-size: 10%;
+  font-weight: 600;
+  justify-content: center;
+  align-items: center;
 }
 </style>
