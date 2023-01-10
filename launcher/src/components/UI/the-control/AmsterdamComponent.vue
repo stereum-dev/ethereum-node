@@ -201,11 +201,11 @@ export default {
   width: 97%;
   height: 18%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 .square {
   width: 1.9%;
   height: 30%;
+  margin-right: 1.7%;
 }
 </style>
