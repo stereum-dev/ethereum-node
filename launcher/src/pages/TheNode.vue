@@ -169,7 +169,7 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       refresh: "refresh",
-    })
+    }),
   },
   mounted() {
     this.updateConnectionStats();
@@ -197,13 +197,13 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      if(this.installedServices && this.installedServices.length > 0){
+      if (this.installedServices && this.installedServices.length > 0) {
         const data = await ControlService.getServiceLogs();
         this.serviceLogs = data;
       }
     },
     async updateServerVitals() {
-      if(this.installedServices && this.installedServices.length > 0){
+      if (this.installedServices && this.installedServices.length > 0) {
         const data = await ControlService.getServerVitals();
         this.serverVitals = data;
         this.cpu = this.serverVitals.cpu;
@@ -494,7 +494,7 @@ export default {
   width: 73%;
 }
 .current .networkSelect {
-  grid-column: 4/7;
+  grid-column: 2/7;
   grid-row: 1/2;
   width: 100%;
   height: 100%;
@@ -505,7 +505,7 @@ export default {
   margin-left: 27%;
 }
 .current .networkSelect span {
-  font-size: 1.1rem;
+  font-size: 95%;
   font-weight: 700;
   color: #408886;
   text-transform: uppercase;

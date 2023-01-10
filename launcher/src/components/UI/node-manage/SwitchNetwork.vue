@@ -6,7 +6,10 @@
     <div class="switch-network__content">
       <div class="current" @click="openDropDown">
         <div class="networkIcon">
-          <img :src="configNetwork.icon ? configNetwork.icon : loadingGIF" alt="icon" />
+          <img
+            :src="configNetwork.icon ? configNetwork.icon : loadingGIF"
+            alt="icon"
+          />
         </div>
         <div class="networkSelect">
           <span>{{ configNetwork.name }}</span>
@@ -40,7 +43,7 @@
 <script>
 import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
-import { useServices } from "@/store/services"
+import { useServices } from "@/store/services";
 export default {
   data() {
     return {
@@ -66,46 +69,56 @@ export default {
     dropdownIsActive() {
       this.closeDropdownActive = this.dropdownIsActive;
     },
-    configNetwork:{
+    configNetwork: {
       handler: function (val) {
-        this.changeConfig(val)
+        this.changeConfig(val);
       },
       immediate: true,
     },
   },
   methods: {
-    changeConfig(val){
-      const installed = JSON.parse(JSON.stringify(this.installedServices))
-      this.newConfiguration = installed
+    changeConfig(val) {
+      const installed = JSON.parse(JSON.stringify(this.installedServices));
+      this.newConfiguration = installed;
     },
-    getActions(action, service, data){
-      let item = this.actionContents.find(item => item.content === action)
-      if(item)
-        return {...item, service: service, data: data}
-      return undefined
+    getActions(action, service, data) {
+      let item = this.actionContents.find((item) => item.content === action);
+      if (item) return { ...item, service: service, data: data };
+      return undefined;
     },
     openDropDown() {
       this.dropdownIsActive = !this.dropdownIsActive;
       this.closeDropdownActive = !this.closeDropdownActive;
     },
     selectNetworkToDisplay(item) {
-      if(!(item.network == this.configNetwork.network)){
-        if(this.confirmChanges.map(j => j.content).includes('CHANGE NETWORK')){
-          let index = this.confirmChanges.findIndex(j => j.content.includes('CHANGE NETWORK'))
-          if(this.currentNetwork.network === item.network){
-            this.confirmChanges.splice(index, 1)
-          }else{
-            this.confirmChanges[index].data.network = (item.network === "testnet" ? "goerli" : item.network)
-            this.confirmChanges[index].service.icon = item.icon
+      if (!(item.network == this.configNetwork.network)) {
+        if (
+          this.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")
+        ) {
+          let index = this.confirmChanges.findIndex((j) =>
+            j.content.includes("CHANGE NETWORK")
+          );
+          if (this.currentNetwork.network === item.network) {
+            this.confirmChanges.splice(index, 1);
+          } else {
+            this.confirmChanges[index].data.network =
+              item.network === "testnet" ? "goerli" : item.network;
+            this.confirmChanges[index].service.icon = item.icon;
           }
-        }else if(this.newConfiguration.length > 0){
-          this.confirmChanges.push(this.getActions("CHANGE NETWORK", {icon: item.icon}, {network: (item.network === "testnet" ? "goerli" : item.network)}))
+        } else if (this.newConfiguration.length > 0) {
+          this.confirmChanges.push(
+            this.getActions(
+              "CHANGE NETWORK",
+              { icon: item.icon },
+              { network: item.network === "testnet" ? "goerli" : item.network }
+            )
+          );
         }
       }
       this.configNetwork = item;
       this.dropdownIsActive = false;
       this.closeDropdownActive = false;
-      console.log(this.configNetwork)
+      console.log(this.configNetwork);
     },
   },
 };
@@ -161,17 +174,17 @@ export default {
   width: 40%;
 }
 .current .networkSelect {
-  grid-column: 3/5;
+  grid-column: 2/5;
   grid-row: 1/2;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   text-align: center;
 }
 .current .networkSelect span {
-  font-size: 1.1rem;
+  font-size: 100%;
   font-weight: 700;
   color: #408886;
   text-transform: uppercase;
@@ -229,11 +242,11 @@ export default {
   margin-left: 5px;
 }
 .dropdown-parent li .networkSelect {
-  grid-column: 3/5;
+  grid-column: 2/5;
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .dropdown-parent li .networkSelect span {
