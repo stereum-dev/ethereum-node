@@ -25,7 +25,7 @@
     ></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <comming-soon></comming-soon>
-      <validator-container-box></validator-container-box>
+      <the-staking></the-staking>
     </dashboard-card>
     <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
     <dashboard-card class="the-network"
@@ -47,7 +47,6 @@ import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
 import NodeServerResponse from "./NodeServerResponse.vue";
-import ValidatorContainerBox from "./ValidatorContainerBox.vue";
 import TheCpu from "./TheCpu.vue";
 import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
@@ -60,6 +59,7 @@ import TimeGas from "./TimeGas.vue";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
+import TheStaking from "./TheStaking.vue";
 import CommingSoon from "../../layers/CommingSoon.vue";
 export default {
   components: {
@@ -75,11 +75,11 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
-    ValidatorContainerBox,
     TimeGas,
     NodeServerResponse,
     RpcEndpoint,
     DiskSpeed,
+    TheStaking,
     CommingSoon,
   },
 };
