@@ -417,7 +417,7 @@ async function createWindow() {
     initwin['maxHeight'] = 609;
     initwin['maxWidth'] = 1044;
   }
-  if (process.platform === "win32"){
+  if (!isDevelopment && process.platform === "win32"){
     initwin['minHeight'] = 650
     initwin['minWidth'] = 1100
     initwin['maxHeight'] = 650
