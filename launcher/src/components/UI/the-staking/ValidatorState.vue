@@ -9,7 +9,7 @@
           >
         </div>
         <div class="balance-value">
-          <span>{{ totalBalance }}</span>
+          <span>{{ totalBalances }}</span>
         </div>
       </div>
       <div class="proposed">
@@ -88,9 +88,12 @@ import { useStakingStore } from "../../../store/theStaking";
 export default {
   computed: {
     ...mapState(useStakingStore, {
-      totalBalance: "totalBalance",
+      validatorBalances: "validatorBalances",
       keys: "keys",
     }),
+    totalBalances(){
+      return this.validatorBalances.reduce((acc,curr)=>acc+curr.validatorBalance,0)
+    }
   },
 };
 </script>

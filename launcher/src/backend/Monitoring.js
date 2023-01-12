@@ -5,6 +5,8 @@ import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
+import YAML from "yaml";
+import { Console } from "console";
 
 export class Monitoring {
   constructor() {
@@ -268,7 +270,7 @@ export class Monitoring {
   // api_reponse=<mixed>: the response of the RPC api
   // api_httpcode=<int> : the http status code of the RPC api response
   async queryRpcApi(url,rpc_method,rpc_params=[],method="POST",headers={}){
-    
+
     // Setup query
     var query = rpc_method.trim().indexOf("{") < 0 ? JSON.stringify({
       "jsonrpc": "2.0",
@@ -497,7 +499,7 @@ export class Monitoring {
 
     // Build curl command
     const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
- 
+
     // Execute the CURL command on the node and return the result
     let result = null;
     try {
@@ -646,7 +648,7 @@ export class Monitoring {
 
       // Filter Prometheus result by current used services
       try{
-        
+
         // Add the response for "syncStatusItems" exact as defined in front-end
         // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
@@ -658,14 +660,14 @@ export class Monitoring {
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let results = [];
           let labels = services[clientType][clt.service];
-          let xx = prometheus_result.data.result.filter((s) => 
+          let xx = prometheus_result.data.result.filter((s) =>
             labels.includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service]
           );
           let frstVal = 0, scndVal = 0;
           if(xx.length){
-            labels.forEach(function (label, index) {              
+            labels.forEach(function (label, index) {
               try{
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
               }catch(e){}
@@ -673,7 +675,7 @@ export class Monitoring {
             try{
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            }catch(e){}   
+            }catch(e){}
           }
           data.push({
             id: index+1,
@@ -721,7 +723,7 @@ export class Monitoring {
       'consensus':{
         'TekuBeaconService' : ['beacon_peer_count'],
         'LighthouseBeaconService' : ['libp2p_peers'],
-        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
+        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"!
         'NimbusBeaconService' : ['nbc_peers'],
       },
       'execution':{
@@ -918,8 +920,8 @@ export class Monitoring {
         clientTypes.forEach(function (clientType, index) {
           let clt = '';
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-          let xx = prometheus_result.data.result.filter((s) => 
-            services[clientType][clt.service].includes(s.metric.__name__) && 
+          let xx = prometheus_result.data.result.filter((s) =>
+            services[clientType][clt.service].includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
             clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
@@ -938,13 +940,13 @@ export class Monitoring {
           details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
           details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
           details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
-  
+
           // Summarize totals
           maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
           numPeer = parseInt(numPeer + details[clientType]['numPeer']);
           valPeer = Math.round((numPeer/maxPeer)*100);
         });
-        
+
         // Respond success for this group
         // Define the response for "valPeer" exact as defined in front-end as percentage (%).
         // Avoid overdues that may happen during peer cleaning. The exact values can be taken
@@ -955,7 +957,7 @@ export class Monitoring {
           'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
           'valPeer': valPeer > 100 ? 100 : valPeer,
         };
-  
+
       }catch(err){
         return {
           "code": 224,
@@ -996,7 +998,7 @@ export class Monitoring {
       };
     }
 
-    // Build ssh commands to query storages 
+    // Build ssh commands to query storages
     var sshcommands = [];
     for(let svc of serviceInfos){
         if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
@@ -1192,7 +1194,7 @@ export class Monitoring {
 
     // Get execution clients with RPC data by service name
     const data = [];
-    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < executions.length; i++){
 
       // Make sure execution client is valid and running
@@ -1212,7 +1214,7 @@ export class Monitoring {
       let result = await this.queryRpcApi({'addr':addr,'port':port},"web3_clientVersion");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1365,7 +1367,7 @@ export class Monitoring {
 
     // Get consensus clients with BEACON data by service name
     const data = [];
-    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < consensusclients.length; i++){
 
       // Make sure consensus client is valid and running
@@ -1385,7 +1387,7 @@ export class Monitoring {
       let result = await this.queryBeaconApi({'addr':addr,'port':port},"/eth/v1/node/syncing");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1507,7 +1509,7 @@ export class Monitoring {
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
-      
+
       const debugstatus = await this.getDebugStatus();
       // if(debugstatus.code)
       //   return debugstatus;
@@ -1715,5 +1717,94 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
+  }
+
+  // Get a list of all localhost (127.0.0.1) available ports (including the associated service and protocol)
+  async getLocalPortStatus(){
+
+    // Get service infos
+    const serviceInfos = await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 1,
+        "info": "error: service infos unavailable",
+        "data": '',
+      };
+    }
+
+    // Get ports that are bound to a public network
+    let data = [];
+    const ignore = ["0.0.0.0"];
+    for(let i = 0; i < serviceInfos.length; i++){
+      let svc = serviceInfos[i];
+      let ports = svc.config.ports
+      if(ports.length < 1) continue;
+      for(let n = 0; n < ports.length; n++){
+        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+          continue;
+        data.push({
+          name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+          port: ports[n].destinationPort,
+          prot: ports[n].servicePortProtocol,
+        });
+      }
+    }
+
+    // Return success
+    return {
+      "code": 0,
+      "info": "success: open ports retrieved",
+      "data": data,
+    };
+  }
+
+  // get States of Validators
+  async getValidatorState(){
+    let validatorBalances = [];
+    let validatorBalancesObject = {};
+    const beaconStatus = await this.getBeaconStatus();      // get beacaon node status
+
+    if (beaconStatus.code === 0) {    // do --->  if the beacon container is currently running, because of using beacon-API
+
+      var beaconAPIPort = "";
+      const curlCheckCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl"`;
+      const curlCheckRunCmd = await this.nodeConnection.sshService.exec(curlCheckCmd);      // check whether "CURL" is already installed on the beacon-container
+
+      if (curlCheckRunCmd.stderr.includes("curl: not found")) {     // do ---> if curl is not already installed on the beacon container
+        const installCurlCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "apt-get update && apt-get install curl -y"`;
+        const installCurlRunCmd = await this.nodeConnection.sshService.exec(installCurlCmd);
+      }
+
+      const localPortStatus = await this.getLocalPortStatus();      // get a list of local-(127.0.0.1) ports
+      for(let i = 0; i < localPortStatus.data.length; i++){
+        if (localPortStatus.data[i].name === "LIGHTHOUSE" || localPortStatus.data[i].name === "NIMBUS" || localPortStatus.data[i].name === "PRYSM" || localPortStatus.data[i].name === "TEKU"){
+          beaconAPIPort = localPortStatus.data[i].port;
+        }
+      }
+
+      const validatorPublicKeys = await this.nodeConnection.sshService.exec('cat /etc/stereum/keys.yaml');
+
+      if (localPortStatus.code === 0 && beaconAPIPort !== "" && validatorPublicKeys.rc ===  0) {
+        var beaconAPIRunCmd = "";
+        var id = 1;
+        for (const [key, ] of Object.entries(YAML.parse(validatorPublicKeys.stdout))) {
+          // const beaconAPICmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconAPIPort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'"`     // using beacon container to run beacon API
+          const beaconAPICmd = `curl -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'`     // using localhost to run beacon API
+          // const beaconAPICmd = `curl -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators/0xb4a59f9f65eafc09c0246606670f86b6049788d0601048362bc0178b7299665907b3257121a64a5a4795b16cac6f3f25' -H 'accept: application/json'`     // for testing
+          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
+
+          validatorBalancesObject = {     // create Object
+            id: id,
+            validatorPubkey: key,
+            validatorBalance: parseFloat(JSON.parse(beaconAPIRunCmd.stdout).data.balance/1000000000),
+          };
+          id++;
+          validatorBalances.push(validatorBalancesObject);
+        }
+      }
+      // return array of objects
+      return validatorBalances;
+      // 0xb4a59f9f65eafc09c0246606670f86b6049788d0601048362bc0178b7299665907b3257121a64a5a4795b16cac6f3f25     ---> test validator !!! active staking !!!
+    }
   }
 }

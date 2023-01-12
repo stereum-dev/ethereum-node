@@ -305,6 +305,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
 
+  async getValidatorState() {
+    return await this.promiseIpc.send("getValidatorState");
+  }
+
 }
 if (!instance) {
   instance = new ControlService(window.electron);

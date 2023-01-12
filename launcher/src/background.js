@@ -557,3 +557,7 @@ if (isDevelopment) {
     });
   }
 }
+
+promiseIpc.on("getValidatorState", async () => {
+  return await monitoring.getValidatorState();
+});

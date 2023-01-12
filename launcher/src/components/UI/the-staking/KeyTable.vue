@@ -212,11 +212,11 @@ export default {
   },
   mounted() {
     this.listKeys();
-    this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
+    // this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
   },
-  beforeUnmount() {
-    clearInterval(this.polling);
-  },
+  // beforeUnmount() {
+  //   clearInterval(this.polling);
+  // },
   updated() {
     this.checkKeyExists();
   },
@@ -314,57 +314,57 @@ export default {
           );
         }
         this.forceRefresh = false;
-        this.keys = keyStats.map((key) => {
-          return {
-            ...key,
-            showGrafitiText: false,
-            showCopyText: false,
-            showRemoveText: false,
-            showExitText: false,
-          };
-        });
-        this.updateValidatorStats();
+        // this.keys = keyStats.map((key) => {
+        //   return {
+        //     ...key,
+        //     showGrafitiText: false,
+        //     showCopyText: false,
+        //     showRemoveText: false,
+        //     showExitText: false,
+        //   };
+        // });
+        // this.updateValidatorStats();
       }
     },
-    async updateValidatorStats() {
-      let totalBalance = 0;
-      let data = [];
-      let network = this.network === "mainnet" ? "mainnet" : "prater";
-      try {
-        let buffer = this.keys.map((key) => key.key);
-        const chunkSize = 100;
-        for (let i = 0; i < buffer.length; i += chunkSize) {
-          //split validator accounts into chunks of 100 (api limit)
-          const chunk = buffer.slice(i, i + chunkSize);
-          let response = await axios.get(
-            "https://" +
-              network +
-              ".beaconcha.in/api/v1/validator/" +
-              encodeURIComponent(chunk.join())
-          );
-          data = data.concat(response.data.data); //merge all gathered stats in one array
-        }
-      } catch (err) {
-        console.log("Couldn't fetch validator stats:\n", err);
-        this.keys.forEach((key) => {
-          key.status = "NA";
-        });
-        return;
-      }
+    // async updateValidatorStats() {
+    //   let totalBalance = 0;
+    //   let data = [];
+    //   let network = this.network === "mainnet" ? "mainnet" : "prater";
+    //   try {
+    //     let buffer = this.keys.map((key) => key.key);
+    //     const chunkSize = 100;
+    //     for (let i = 0; i < buffer.length; i += chunkSize) {
+    //       //split validator accounts into chunks of 100 (api limit)
+    //       const chunk = buffer.slice(i, i + chunkSize);
+    //       let response = await axios.get(
+    //         "https://" +
+    //           network +
+    //           ".beaconcha.in/api/v1/validator/" +
+    //           encodeURIComponent(chunk.join())
+    //       );
+    //       data = data.concat(response.data.data); //merge all gathered stats in one array
+    //     }
+    //   } catch (err) {
+    //     console.log("Couldn't fetch validator stats:\n", err);
+    //     this.keys.forEach((key) => {
+    //       key.status = "NA";
+    //     });
+    //     return;
+    //   }
 
-      this.keys.forEach((key) => {
-        let info = data.find((k) => k.pubkey === key.key);
-        if (info) {
-          key.status = info.status;
-          key.balance = info.balance / 1000000000;
-          totalBalance += key.balance;
-        } else {
-          key.status = "deposit";
-          key.balance = "-";
-        }
-      });
-      this.totalBalance = totalBalance;
-    },
+    //   this.keys.forEach((key) => {
+    //     let info = data.find((k) => k.pubkey === key.key);
+    //     if (info) {
+    //       key.status = info.status;
+    //       key.balance = info.balance / 1000000000;
+    //       totalBalance += key.balance;
+    //     } else {
+    //       key.status = "deposit";
+    //       key.balance = "-";
+    //     }
+    //   });
+    //   this.totalBalance = totalBalance;
+    // },
     importKey: async function () {
       this.bDialogVisible = true;
       this.importIsProcessing = true;
