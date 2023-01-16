@@ -16,15 +16,13 @@
     <dashboard-card class="the-cpu">
       <the-cpu></the-cpu>
     </dashboard-card>
-    <dashboard-card class="amsterdam"
-      ><comming-soon></comming-soon>
+    <dashboard-card class="amsterdam">
       <amsterdam-component></amsterdam-component>
     </dashboard-card>
     <dashboard-card class="sync-status"
       ><sync-status></sync-status
     ></dashboard-card>
     <dashboard-card class="validatorComment_cell">
-      <comming-soon></comming-soon>
       <the-staking></the-staking>
     </dashboard-card>
     <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>

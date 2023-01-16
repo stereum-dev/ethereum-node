@@ -273,8 +273,8 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   overflow-y: auto;
 }
@@ -371,6 +371,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 1px 1px 11px 1px #1f1f1f;
 }
 .p2pVal_value {
   background: #568d50;

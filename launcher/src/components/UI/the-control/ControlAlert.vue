@@ -65,7 +65,7 @@
         <div class="alert-message_red" v-if="cpuAlarm">
           <div class="icon-box">
             <img
-              src="../../../../public/img/icon/control/red_warning_cpu.png"
+              src="../../../../public/img/icon/control/Warnschild-rot.svg"
               alt="warn_storage"
             />
           </div>

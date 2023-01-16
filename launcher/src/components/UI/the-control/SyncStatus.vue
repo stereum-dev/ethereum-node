@@ -358,7 +358,7 @@ export default {
 }
 .sync-box_value {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -378,14 +378,14 @@ export default {
 }
 .sync-box_row {
   display: flex;
-  width: 90%;
-  height: 23%;
+  width: 95%;
+  height: 27%;
   justify-content: space-between;
   align-items: center;
   border: 1px solid #c1c1c1;
   border-radius: 5px;
   padding: 2% 2%;
-  margin: 1% 0;
+  margin: 2% 0;
 }
 .sync-box-row_title {
   display: flex;
