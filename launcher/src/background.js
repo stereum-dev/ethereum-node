@@ -392,6 +392,10 @@ promiseIpc.on("writeSSVNetworkConfig", async (args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config)
 });
 
+promiseIpc.on("getValidatorState", async () => {
+  return await monitoring.getValidatorState();
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } },
