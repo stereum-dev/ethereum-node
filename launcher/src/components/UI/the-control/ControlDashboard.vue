@@ -17,7 +17,6 @@
       <the-cpu></the-cpu>
     </dashboard-card>
     <dashboard-card class="amsterdam">
-      <comming-soon></comming-soon>
       <amsterdam-component></amsterdam-component>
     </dashboard-card>
     <dashboard-card class="sync-status"

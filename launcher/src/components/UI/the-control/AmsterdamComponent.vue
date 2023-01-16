@@ -7,6 +7,7 @@
       <span>{{ $t("controlPage.node") }}</span>
     </div>
     <div class="docBox">
+      <comming-soon></comming-soon>
       <div
         class="line-squares"
         v-for="obj in array"
@@ -34,8 +35,10 @@ export default {
       showSyncInfo: false,
       counter: null,
       networkIcon: "",
-      mainnetIcon: "/img/icon/control/mainnetIconControl.png",
-      testnetIcon: "/img/icon/control/testnetIconControl.png",
+      mainnetIcon: "/img/icon/click-installation/mainnet-icon.png",
+      testnetIcon: "/img/icon/click-installation/testnet-icon.png",
+      gnosisIcon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
+      defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
     };
@@ -44,8 +47,12 @@ export default {
   mounted() {
     if (this.network === "mainnet") {
       this.networkIcon = this.mainnetIcon;
-    } else {
+    } else if (this.network === "testnet") {
       this.networkIcon = this.testnetIcon;
+    } else if (this.network === "gnosis") {
+      this.networkIcon = this.gnosisIcon;
+    } else {
+      this.networkIcon = this.defaultIcon;
     }
   },
   computed: {
@@ -196,6 +203,7 @@ export default {
   justify-content: center;
   align-items: flex-start;
   border-radius: 0 10px 10px 0;
+  position: relative;
 }
 .line-squares {
   width: 100%;
