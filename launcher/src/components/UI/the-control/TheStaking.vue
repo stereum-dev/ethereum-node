@@ -19,12 +19,12 @@
             />
           </div>
           <div class="top-value">
-            <span>{{ ethValue }}</span>
+            <span>{{ totalBalance }}</span>
           </div>
         </div>
         <div class="side-bottom">
           <div class="number-of-validators">
-            <span>{{ numberOfValidators }}</span>
+            <span>{{ keys.length }}</span>
           </div>
           <div class="number-of-validators_title">
             <span>IMPORTED</span>
@@ -40,15 +40,21 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "../../../store/theStaking";
 import VerticalBarController from "./VerticalBarController.vue";
 export default {
   components: { VerticalBarController },
   data() {
     return {
       //dummy value o test
-      ethValue: 32.0000001,
-      numberOfValidators: 1,
     };
+  },
+  computed: {
+    ...mapState(useStakingStore, {
+      totalBalance: "totalBalance",
+      keys: "keys",
+    }),
   },
 };
 </script>

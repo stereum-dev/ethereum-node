@@ -1,5 +1,6 @@
 <template>
   <div class="verticalBar-parent">
+    <comming-soon></comming-soon>
     <div class="verticalBar-container">
       <div
         v-for="(number, index) in arrayWith18Ones"
@@ -49,6 +50,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .verticalBar-container {
   width: 100%;

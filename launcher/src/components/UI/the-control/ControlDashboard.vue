@@ -24,7 +24,6 @@
       ><sync-status></sync-status
     ></dashboard-card>
     <dashboard-card class="validatorComment_cell">
-      <comming-soon></comming-soon>
       <the-staking></the-staking>
     </dashboard-card>
     <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
