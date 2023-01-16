@@ -17,7 +17,6 @@ export class StringUtils {
   }
 
   static createRandomString () {
-    //fallback if crypto breaks on us
     const randomString = crypto.randomBytes(18).toString('hex')
     let result = ''
     for (let i = 0; i < 36; i++) {

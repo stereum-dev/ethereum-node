@@ -80,4 +80,14 @@
     loop: "{{ validator_public_keys }}"
   when: stereum_service_configuration.service == "LodestarValidatorService"
 
+- block:
+  - include_tasks: delete.yaml
+    vars:
+      validator_port: 9000
+      api_token: ""
+    loop: "{{ validator_public_keys }}"
+  - name: Reload Web3Signer
+    command: "docker exec stereum-{{ validator_service }} curl -X POST http://localhost:9000/reload"
+    become: yes
+  when: stereum_service_configuration.service == "Web3SignerService"
 # EOF
