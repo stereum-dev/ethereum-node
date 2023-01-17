@@ -1777,7 +1777,7 @@ rm -rf diskoutput
         const installCurlRunCmd = await this.nodeConnection.sshService.exec(installCurlCmd);
       }
 
-      // get beacon API port ---> should be defined as privately: 127.0.0.1
+      // get beacon API port ---> should be defined as private: 127.0.0.1
       const localPortStatus = await this.getLocalPortStatus();
 
       if (localPortStatus.code === 0) {
