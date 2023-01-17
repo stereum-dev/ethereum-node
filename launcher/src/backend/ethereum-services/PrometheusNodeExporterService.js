@@ -1,22 +1,24 @@
 import { NodeService } from './NodeService'
-import { ServicePortDefinition } from './SerivcePortDefinition'
 import { ServiceVolume } from './ServiceVolume'
 
 export class PrometheusNodeExporterService extends NodeService {
   static buildByUserInput (network) {
     const image = 'prom/node-exporter'
     const service = new PrometheusNodeExporterService()
+    const volumes = [
+      new ServiceVolume('/', '/host', 'ro,rslave'),
+    ]
     service.init(
       'PrometheusNodeExporterService',
       null, // id
       1, // configVersion
       image, // image
       'v1.3.1', // imageVersion
-      null, // command
+      ['--path.rootfs=/host'], // command
       ['/bin/node_exporter'], // entrypoint
       null, // env
       null, // ports
-      null, // volumes
+      volumes, // volumes
       null, // user
       network // network
       // executionClients
