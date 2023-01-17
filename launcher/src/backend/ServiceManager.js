@@ -18,6 +18,7 @@ import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostS
 import { ServicePort, servicePortProtocol, changeablePorts } from './ethereum-services/ServicePort'
 import { StringUtils } from './StringUtils'
 import { ServiceVolume } from './ethereum-services/ServiceVolume'
+import { Web3SignerService } from './ethereum-services/Web3SignerService'
 
 const log = require('electron-log')
 
@@ -116,6 +117,8 @@ export class ServiceManager {
             services.push(TekuBeaconService.buildByConfiguration(config))
           } else if (config.service == 'FlashbotsMevBoostService') {
             services.push(FlashbotsMevBoostService.buildByConfiguration(config))
+          } else if (config.service == 'Web3SignerService') {
+            services.push(Web3SignerService.buildByConfiguration(config))
           }
         } else {
           log.error('found configuration without service!')
@@ -170,6 +173,15 @@ export class ServiceManager {
       default:
         break;
     }
+  }
+
+  getWorkindDir(service){
+    if(service.volumes.length > 0){
+      let volumeWithID = service.volumes.find(v => v.destinationPath.includes(service.id))
+      if(volumeWithID && volumeWithID.destinationPath)
+        return volumeWithID.destinationPath.replace(new RegExp(`(?<=${service.id}).*`), '')
+    }
+    return undefined
   }
 
   changePort(service, port){
@@ -410,6 +422,9 @@ export class ServiceManager {
       service = this.removeDependencies(service, serviceToDelete)
       this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     })
+    if(serviceToDelete.service === "Web3SignerService"){
+      await this.nodeConnection.sshService.exec(`docker stop slashingdb-${serviceToDelete.id} && docker rm slashingdb-${serviceToDelete.id}`)
+    }
     await this.nodeConnection.runPlaybook("Delete Service", { stereum_role: 'delete-service', service: task.service.config.serviceID })
   }
   //args: network, installDir, port, executionClients, checkpointURL, beaconServices
@@ -503,6 +518,40 @@ export class ServiceManager {
 
       case "FlashbotsMevBoostService":
         return FlashbotsMevBoostService.buildByUserInput(args.network, args.relays)
+
+      case "Web3SignerService":
+        return Web3SignerService.buildByUserInput(args.network, [], args.installDir + '/web3signer')
+    }
+  }
+
+  async createSlashingDB(web3signer, workingDir){
+    try{
+      const dbPass = StringUtils.createRandomString()
+      const dbUser = 'postgres'
+      const dbName = 'web3signer'
+      await this.nodeConnection.sshService.exec(`docker run --name=slashingdb-${web3signer.id} --network=stereum -v ${workingDir}/postgresql:/opt/app/schemas -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`)
+      const schemas = await this.nodeConnection.sshService.exec(`sleep 10s && ls -1 ${workingDir}/postgresql`)
+      for(const schema of schemas.stdout.split('\n').filter(s => s)){
+        log.info("loading " + schema + " schema...")
+        const result = await this.nodeConnection.sshService.exec(`docker exec -u 0 -w /opt/app/schemas slashingdb-${web3signer.id} psql --echo-all --host=localhost --port=5432 --dbname=web3signer --username=postgres -f ${schema}`)
+        log.info(`\nstdout: ${result.stdout}\nstderr: ${result.stderr}\n`)
+      }
+      web3signer.command.push('--slashing-protection-enabled=true',`--slashing-protection-db-url=jdbc:postgresql://slashingdb-${web3signer.id}/${dbName}`,`--slashing-protection-db-username=${dbUser}`,`--slashing-protection-db-password=${dbPass}`,'--slashing-protection-pruning-enabled=true')
+    }catch(err){
+      log.error("Creating SlashingDB failed: ", err)
+      await this.nodeConnection.sshService.exec(`docker stop slashingdb-${web3signer.id} && docker rm slashingdb-${web3signer.id}`)
+    }
+  }
+
+  async initWeb3Signer(services){
+    for(const service of services){
+      await this.manageServiceState(service.id, 'started')
+      const workingDir = this.getWorkindDir(service)
+      await this.nodeConnection.sshService.exec('docker cp stereum-' + service.id + ':/opt/web3signer/migrations/postgresql ' + workingDir)
+      await this.manageServiceState(service.id, 'stopped')
+      service.command = service.command.filter(c => c != "--slashing-protection-enabled=false")
+      await this.createSlashingDB(service, workingDir)
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     }
   }
 
@@ -622,14 +671,17 @@ export class ServiceManager {
     newServices.forEach(service => {
       if(versions[service.network] && versions[service.network][service.service]){
         service.imageVersion = versions[service.network][service.service].slice(-1).pop()
-      }else{
+      }else if(versions["mainnet"] && versions["mainnet"][service.service]){
         service.imageVersion = versions["mainnet"][service.service].slice(-1).pop()
+      }else if(versions["prater"] && versions["prater"][service.service]){
+        service.imageVersion = versions["prater"][service.service].slice(-1).pop()
       }
     })
 
     await Promise.all(newServices.map(async (service) => {
       await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration())
     }))
+    await this.initWeb3Signer(newServices.filter(s => s.service === "Web3SignerService"))
     return ELInstalls.concat(CLInstalls,VLInstalls)
   }
 
@@ -644,7 +696,7 @@ export class ServiceManager {
     for(const service of services){
       if(service.volumes.length > 0){
         //get service data path
-        let path = service.volumes.find(v => v.destinationPath.includes(service.id)).destinationPath.replace(new RegExp(`(?<=${service.id}).*`), '')
+        let path = this.getWorkindDir(service)
         await this.nodeConnection.sshService.exec('rm -rf ' + path)
       }
     }

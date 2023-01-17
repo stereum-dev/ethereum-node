@@ -211,4 +211,17 @@ scrape_configs:
 {% endfor %}
         ]
 
+# Web3Signer
+  - job_name: web3signer
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "Web3SignerService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:9001"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
 # EOF

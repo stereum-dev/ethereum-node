@@ -81,7 +81,8 @@ export default {
                 oldService = allServices.find(
                   (s) => s.service === service.service
                 );
-                needForTunnel.push(oldService);
+                if(oldService.tunnelLink)
+                  needForTunnel.push(oldService);
               }
               if (oldService.config.keys) {
                 oldService.config = {
@@ -125,7 +126,7 @@ export default {
               let localPorts = await ControlService.getAvailablePort({
                 min: 9000,
                 max: 9999,
-                amount: this.installedServices.filter(
+                amount: needForTunnel.filter(
                   (s) => s.headerOption && s.tunnelLink
                 ).length,
               });
@@ -199,7 +200,9 @@ export default {
           services.forEach((service) => {
             if(!response[service.network] || !response[service.network][service.service])
               service.network = "mainnet"
-            if(response[service.network][service.service]){
+            if(!response[service.network] || !response[service.network][service.service])
+              service.network = "prater"
+            if(response[service.network] && response[service.network][service.service]){
             if (
               service.imageVersion !=
               response[service.network][service.service][
