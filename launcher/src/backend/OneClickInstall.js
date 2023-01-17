@@ -276,11 +276,15 @@ export class OneClickInstall {
 
   getLatestVersion(versions, service) {
     let network = service.network
-    if(!versions[service.network] || !versions[service.network][service.service])
-      network = "mainnet"
-    if(!versions[network][service.service])
-      network = "prater"
-    return versions[network][service.service].slice(-1).pop()
+    let version = service.imageVersion
+    if(versions[network] && versions[network][service.service]){
+      version = versions[network][service.service].slice(-1).pop()
+    }else if(versions["mainnet"] && versions["mainnet"][service.service]){
+      version = versions["mainnet"][service.service].slice(-1).pop()
+    }else if(versions["prater"] && versions["prater"][service.service]){
+      version = versions["prater"][service.service].slice(-1).pop()
+    }
+    return version
   }
 
   async generateSSVKeys() {

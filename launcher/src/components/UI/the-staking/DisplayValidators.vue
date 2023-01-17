@@ -550,9 +550,7 @@ export default {
     },
     listKeys: async function () {
       let keyStats = [];
-      let clients = this.installedServices.filter((s) =>
-        s.service.includes("Validator")
-      );
+      let clients = this.installedServices.filter((s) => s.category == "validator")
       if (clients && clients.length > 0 && this.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()

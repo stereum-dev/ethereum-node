@@ -25,7 +25,7 @@
       >
         <router-link
           class="lintTtl"
-          :class="{ disabled: !install.display || !isSupported }"
+          :class="{ disabled: isCompatible(install) }"
           :to="install.path"
           ><button-installation
             @mousedown.prevent.stop
@@ -86,6 +86,11 @@ export default {
     ...mapState(useWelcomeStore, { installation: "installation" }),
   },
   methods: {
+    isCompatible(item){
+      if(process.env.NODE_ENV == "development")
+        return !item.display
+      return !item.display || this.active
+    },
     randomValue() {
       this.value = Math.random() * this.max;
     },

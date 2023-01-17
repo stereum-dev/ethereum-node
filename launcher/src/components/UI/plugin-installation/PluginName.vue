@@ -200,7 +200,7 @@ export default {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (this.selectedPreset.name === "staking") {
+      if (this.selectedPreset.name === "staking" || this.selectedPreset.name === "mev boost") {
         //if the preset is staking:
         if (item.category === "consensus") {
           //and you just changed the consensus client
@@ -263,7 +263,8 @@ export default {
         case "staking":
           filter = (item) =>
             item.category === element.category &&
-            item.service !== "SSVNetworkService";
+            item.service !== "SSVNetworkService" &&
+            item.service !== "Web3SignerService"
           if(this.selectedNetwork.name == "gnosis"){
             filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service)
           }
@@ -285,7 +286,8 @@ export default {
         case "mev boost":
           filter = (item) =>
             item.category === element.category &&
-            item.service !== "SSVNetworkService";
+            item.service !== "SSVNetworkService" &&
+            item.service !== "Web3SignerService"
           break;
         default:
           break;

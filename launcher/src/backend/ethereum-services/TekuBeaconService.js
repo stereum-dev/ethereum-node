@@ -76,7 +76,6 @@ export class TekuBeaconService extends NodeService {
             null,                   // user
             network,                // network
             executionClients,       // executionClients
-            executionClients,  //executionClients
             null, //consensusClients
             null,  //prometheusNodeExporterClients
             mevboost  //mevboost
