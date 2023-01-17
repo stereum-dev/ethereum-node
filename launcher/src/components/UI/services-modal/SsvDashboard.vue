@@ -2,7 +2,7 @@
   <div class="pubkey-parent" @click="$emit('openPubkey')">
     <div class="pubkey-box">
       <div class="pub-key">
-        <span class="input-text">Public operator key</span>
+        <span class="input-text">{{ $t("registerSSV.pubKey") }}</span>
         <input
           type="hidden"
           class="pubkey-input"
@@ -19,14 +19,16 @@
     <div class="browser-box">
       <div class="operator-box">
         <div class="operator-btn">
-          <a :href="ssvNetworkUrl.operatorUrl" target="_blank">My Operator Page</a>
+          <a :href="ssvNetworkUrl.operatorUrl" target="_blank">{{
+            $t("ssvDashboard.operatorPage")
+          }}</a>
         </div>
       </div>
       <div class="grafana-box">
         <div class="grafana-btn">
-          <a :href="ssvNetworkUrl.grafanaDashboardUrl" target="_blank"
-            >SSV Node Grafana Dashboard</a
-          >
+          <a :href="ssvNetworkUrl.grafanaDashboardUrl" target="_blank">{{
+            $t("ssvDashboard.SSVNodeGrafna")
+          }}</a>
         </div>
       </div>
     </div>
@@ -42,8 +44,8 @@ export default {
   data() {
     return {};
   },
-  mounted(){
-    this.getURL()
+  mounted() {
+    this.getURL();
   },
   computed: {
     ...mapWritableState(useNodeStore, {
@@ -51,13 +53,14 @@ export default {
     }),
     ...mapState(useServices, {
       installedServices: "installedServices",
-    })
+    }),
   },
 
   methods: {
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
-      navigator.clipboard.writeText(pubkeyToCopy)
+      navigator.clipboard
+        .writeText(pubkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -66,9 +69,15 @@ export default {
         });
     },
     async getURL() {
-      const grafana = this.installedServices.find(service => service.service === "GrafanaService")
-      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(this.pubkey)
-      this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1" : ""
+      const grafana = this.installedServices.find(
+        (service) => service.service === "GrafanaService"
+      );
+      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(
+        this.pubkey
+      );
+      this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
+        ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1"
+        : "";
     },
   },
 };

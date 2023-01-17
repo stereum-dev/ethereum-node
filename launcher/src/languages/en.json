@@ -240,5 +240,16 @@
     "register":"Register",
     "insertTitle":"insert operator key for existing operator",
     "insertText":"Use an existing operator private key to recover your existing node operator's processes"
+  },
+  "registerSSV":{
+    "pubKey":"Public operator key",
+    "copied":"copied!",
+    "secKey":"Secret Operator Key",
+    "makeSureText":"Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
+    "copyMessage":"Copy your public operator key into this field to confirm that you stored your keys!"
+  },
+  "ssvDashboard":{
+    "operatorPage":"My Operator Page",
+    "SSVNodeGrafna":"SSV Node Grafana Dashboard"
   }
 }
