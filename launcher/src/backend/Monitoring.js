@@ -1798,8 +1798,7 @@ rm -rf diskoutput
         var id = 1;
         let validatorNotFound;
         for (const [key, ] of Object.entries(YAML.parse(validatorPublicKeys.stdout))) {
-          // const beaconAPICmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconAPIPort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'"`     // using beacon container to run beacon API
-          const beaconAPICmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconAPIPort}/eth/v1/beacon/states/head/validators/0xb4a59f9f65eafc09c0246606670f86b6049788d0601048362bc0178b7299665907b3257121a64a5a4795b16cac6f3f25' -H 'accept: application/json'"`     // using beacon container to run beacon API
+          const beaconAPICmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconAPIPort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'"`     // using beacon container to run beacon API
           beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
           validatorNotFound = JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message");
 
