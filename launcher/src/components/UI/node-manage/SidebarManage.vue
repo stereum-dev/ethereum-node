@@ -19,10 +19,10 @@
     </div>
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
       <div class="categoryBox">
-        <div class="category" @click="selectCategoryTitle">
-          <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+        <div class="category">
+          <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="selectCategoryTitle" />
           <span :style="{ ...fontSize }">{{ currentCategory }}</span>
-          <img src="/img/icon/arrows/right-arrow.png" alt="icon" />
+          <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="selectCategoryTitlePrev" />
         </div>
       </div>
       <div class="plugin-box">
@@ -144,6 +144,41 @@ export default {
         case "service":
           this.currentCategory = "all";
           this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          break;
+        default:
+          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          break;
+      }
+    },
+    selectCategoryTitlePrev() {
+      switch (this.currentCategory) {
+        case "all":
+          this.currentCategory = "service";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "service";
+          }).filter(this.getFilterbyNetwork());
+          break;
+        case "execution client":
+          this.currentCategory = "all";
+          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          break;
+        case "consensus client":
+          this.currentCategory = "execution client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "execution";
+          }).filter(this.getFilterbyNetwork());
+          break;
+        case "validator client":
+          this.currentCategory = "consensus client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "consensus";
+          }).filter(this.getFilterbyNetwork());
+          break;
+        case "service":
+          this.currentCategory = "validator client";
+          this.plugins = this.allServices.filter((item) => {
+            return item.category === "validator";
+          }).filter(this.getFilterbyNetwork());
           break;
         default:
           this.plugins = this.allServices.filter(this.getFilterbyNetwork());
