@@ -574,7 +574,7 @@ export class Monitoring {
       'execution':{
         'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
         'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - query for job="besu"
-        'NethermindService' : ['nethermind_blocks','nethermind_blocks_sealed'], // TODO: N/A - query for job="nethermind"
+        'NethermindService' : ['nethermind_blocks','nethermind_blocks'], // OK [there is only one label and requires Metrics.ExposePort of the Docker container opened for local machine!] - query for job="nethermind"
       },
     };
 

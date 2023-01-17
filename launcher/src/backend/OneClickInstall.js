@@ -144,6 +144,7 @@ export class OneClickInstall {
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
+        new ServicePort('127.0.0.1', 6060, 6060, servicePortProtocol.tcp),
       ]
       this.executionClient = NethermindService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/nethermind')
 
