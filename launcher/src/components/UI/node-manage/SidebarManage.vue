@@ -20,9 +20,9 @@
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
       <div class="categoryBox">
         <div class="category">
-          <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="selectCategoryTitle" />
+          <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="selectCategoryTitle('left')" />
           <span :style="{ ...fontSize }">{{ currentCategory }}</span>
-          <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="selectCategoryTitlePrev" />
+          <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="selectCategoryTitle('right')" />
         </div>
       </div>
       <div class="plugin-box">
@@ -115,72 +115,84 @@ export default {
 
       }
     },
-    selectCategoryTitle() {
-      switch (this.currentCategory) {
-        case "all":
-          this.currentCategory = "execution client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "execution";
-          }).filter(this.getFilterbyNetwork());
-          break;
-        case "execution client":
-          this.currentCategory = "consensus client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "consensus";
-          }).filter(this.getFilterbyNetwork());
-          break;
-        case "consensus client":
-          this.currentCategory = "validator client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "validator";
-          }).filter(this.getFilterbyNetwork());
-          break;
-        case "validator client":
-          this.currentCategory = "service";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "service";
-          }).filter(this.getFilterbyNetwork());
-          break;
-        case "service":
-          this.currentCategory = "all";
-          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
-          break;
-        default:
-          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
-          break;
+    selectCategoryTitle(direction) {
+      if(direction == null){
+        this.currentCategory = ""
       }
-    },
-    selectCategoryTitlePrev() {
       switch (this.currentCategory) {
         case "all":
-          this.currentCategory = "service";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "service";
-          }).filter(this.getFilterbyNetwork());
+          if(direction == "right"){
+            this.currentCategory = "execution client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "execution";
+            }).filter(this.getFilterbyNetwork());
+          }
+          else if(direction == "left")
+          {
+            this.currentCategory = "service";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "service";
+            }).filter(this.getFilterbyNetwork());
+          }
           break;
         case "execution client":
-          this.currentCategory = "all";
-          this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          if(direction == "right"){
+            this.currentCategory = "consensus client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "consensus";
+            }).filter(this.getFilterbyNetwork());
+          }
+          else if(direction == "left")
+          {
+            this.currentCategory = "all";
+            this.plugins = this.allServices.filter(this.getFilterbyNetwork()); 
+          }
           break;
         case "consensus client":
-          this.currentCategory = "execution client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "execution";
-          }).filter(this.getFilterbyNetwork());
+          if(direction == "right"){
+            this.currentCategory = "validator client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "validator";
+            }).filter(this.getFilterbyNetwork());
+          }
+          else if(direction == "left")
+          {
+            this.currentCategory = "execution client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "execution";
+            }).filter(this.getFilterbyNetwork());
+          }
           break;
         case "validator client":
-          this.currentCategory = "consensus client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "consensus";
-          }).filter(this.getFilterbyNetwork());
+          if(direction == "right"){
+            this.currentCategory = "service";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "service";
+            }).filter(this.getFilterbyNetwork());
+          }
+          else if(direction == "left")
+          {
+            this.currentCategory = "consensus client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "consensus";
+            }).filter(this.getFilterbyNetwork());
+          }
           break;
         case "service":
-          this.currentCategory = "validator client";
-          this.plugins = this.allServices.filter((item) => {
-            return item.category === "validator";
-          }).filter(this.getFilterbyNetwork());
+          if(direction == "right"){
+            this.currentCategory = "all";
+            this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          }
+          else if(direction == "left")
+          {
+            this.currentCategory = "validator client";
+            this.plugins = this.allServices.filter((item) => {
+              return item.category === "validator";
+            }).filter(this.getFilterbyNetwork());
+          }
           break;
         default:
+          this.currentCategory = "all";
           this.plugins = this.allServices.filter(this.getFilterbyNetwork());
           break;
       }
