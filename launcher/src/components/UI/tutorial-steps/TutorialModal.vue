@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <span class="click">Click outside to close</span>
+      <span class="click">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
         {
           id: 1,
           name: "videos",
-          title: "video",
+          title: this.$t("tutorialBox.video"),
           icon: "/img/icon/tutorial-icons/big-camera.png",
           videosLink: this.itemToTutorial.videosLink,
           route: "/videos",
@@ -41,7 +41,7 @@ export default {
         {
           id: 2,
           name: "walkthrough",
-          title: "WALKTHROUGH",
+          title: this.$t("tutorialBox.walkthrough"),
           icon: "/img/icon/tutorial-icons/guide-icon.png",
           guideLink: this.itemToTutorial.guideLink,
           route: "/guide",
@@ -50,7 +50,7 @@ export default {
         {
           id: 3,
           name: "text guide",
-          title: "WRITTEN GUIDE",
+          title: this.$t("tutorialBox.textGuide"),
           icon: "/img/icon/tutorial-icons/manual-icon.png",
           writtenLink: this.itemToTutorial.writtenLink,
           route: "/guide/text",

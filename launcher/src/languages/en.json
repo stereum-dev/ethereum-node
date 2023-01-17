@@ -228,5 +228,10 @@
   },
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+  },
+  "tutorialBox":{
+    "video":"video",
+    "walkthrough":"walkthrough",
+    "textGuide":"written guide"
   }
 }
