@@ -233,5 +233,12 @@
     "video":"video",
     "walkthrough":"walkthrough",
     "textGuide":"written guide"
+  },
+  "frontPageSsv":{
+    "newRegistritionTitle":"REGISTER A NEW OPERATOR",
+    "newRegistritionText":"Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register":"Register",
+    "insertTitle":"insert operator key for existing operator",
+    "insertText":"Use an existing operator private key to recover your existing node operator's processes"
   }
 }

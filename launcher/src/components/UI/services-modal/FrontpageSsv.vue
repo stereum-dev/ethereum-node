@@ -2,26 +2,22 @@
   <div class="pubkey-parent">
     <div class="operator-box">
       <div class="operator-content">
-        <span class="title">REGISTER A NEW OPERATOR</span>
-        <span class="description"
-          >Use the newly generated operator key to register a new node operator
-          into the SSV Network</span
-        >
+        <span class="title">{{ $t("frontPageSsv.newRegistritionTitle") }}</span>
+        <span class="description">{{
+          $t("frontPageSsv.newRegistritionText")
+        }}</span>
       </div>
       <div class="operator-btn" @click="$emit('openPubkey')">
-        <span> Register</span>
+        <span> {{ $t("frontPageSsv.register") }}</span>
       </div>
     </div>
     <div class="insert-box">
       <div class="insert-content">
-        <span class="title">insert operator key for existing operator</span>
-        <span class="description"
-          >Use an existing operator private key to recover your existing node
-          operator's processes</span
-        >
+        <span class="title">{{ $t("frontPageSsv.insertTitle") }}</span>
+        <span class="description">{{ $t("frontPageSsv.insertText") }}</span>
       </div>
       <div class="insert-btn" @click="$emit('openSecretkey')">
-        <span>Register</span>
+        <span>{{ $t("frontPageSsv.register") }}</span>
       </div>
     </div>
   </div>
