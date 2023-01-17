@@ -1774,7 +1774,7 @@ rm -rf diskoutput
 
       if (curlCheckRunCmd.stderr.includes("curl: not found")) {
         const installCurlCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "apt-get update && apt-get install curl -y"`;
-        const installCurlRunCmd = await this.nodeConnection.sshService.exec(installCurlCmd);
+        await this.nodeConnection.sshService.exec(installCurlCmd);
       }
 
       // get beacon API port ---> should be defined as private: 127.0.0.1
@@ -1826,7 +1826,6 @@ rm -rf diskoutput
               validatorBalances.push(validatorBalancesObject);
           }
         }
-        console.log(JSON.stringify(validatorBalances));  // comment test
       }
       // return array of objects which include following:
       // - id: value
