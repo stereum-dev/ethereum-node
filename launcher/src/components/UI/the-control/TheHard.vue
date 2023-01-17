@@ -134,12 +134,14 @@ export default {
 .valueBarPart_loader {
   width: 90%;
   background: #33393e;
-  height: 80%;
+  height: 100%;
   border: 1px solid #33393e;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 5%;
+  box-shadow: 1px 1px 11px 1px #1f1f1f;
 }
 .valueBarPart_loader-value {
   height: 100%;
@@ -152,5 +154,6 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  border-radius: 5px;
 }
 </style>

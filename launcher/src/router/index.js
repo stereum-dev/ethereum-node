@@ -6,7 +6,7 @@ import WelcomePage from "../pages/WelcomePage.vue";
 import TheNode from "../pages/TheNode.vue";
 import ControlPanel from "../pages/TheControl.vue";
 import NodeManage from "../pages/NodeManage.vue";
-import TheStaking from "../pages/TheStaking.vue";
+import StakingPage from "../pages/StakingPage.vue";
 import SettingPage from "../pages/SettingPage.vue";
 import CreditPage from "../pages/CreditPage.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
@@ -51,8 +51,8 @@ const routes = [
   },
   {
     path: "/staking",
-    name: "TheStaking",
-    component: TheStaking,
+    name: "StakingPage",
+    component: StakingPage,
   },
   {
     path: "/install",

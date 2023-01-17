@@ -7,6 +7,9 @@
 export default {};
 </script>
 <style>
+* {
+  outline: none;
+}
 #app {
   width: 1024px;
   height: 576px;
