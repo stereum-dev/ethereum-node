@@ -227,6 +227,6 @@
     "path": "PATH"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "ما به شما توصیه می کنیم قبل از اعمال تغییرات بیشتر صبر کنید تا نصب اولیه انجام شود"
   }
 }

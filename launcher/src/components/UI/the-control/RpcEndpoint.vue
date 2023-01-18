@@ -85,13 +85,13 @@ export default {
     async copy(s, t) {
       if (!this.toggleAllowed) return;
       if (!s) {
-        this.dialogValue = "Please turn ON the RPC tunnel first!";
+        this.dialogValue = this.$t("dataAPIAndRPC.RPCTurnOnMessage");
         this.openDialog = true;
         this.dialogIcon = this.infoIcon;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
-        this.dialogValue = t + " RPC-URL copied to clipboard!";
+        this.dialogValue = t + " " + this.$t("dataAPIAndRPC.RPCCopiedMessage");
         this.dialogIcon = this.copyIcon;
       }
       if (this.openDialog === true) {
@@ -196,7 +196,9 @@ export default {
       }
       let rpcItemsHashAfter = this.createHashByKey(rpcItems, "id");
       this.isActive = isActive;
-      this.copyVal = isActive ? "click to copy" : "tunnel closed";
+      this.copyVal = isActive
+        ? this.$t("dataAPIAndRPC.copy")
+        : this.$t("dataAPIAndRPC.closed");
       this.rpcItems = rpcItems;
       if (rpcItemsHashBefore != rpcItemsHashAfter) {
         //console.log("RPC TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");

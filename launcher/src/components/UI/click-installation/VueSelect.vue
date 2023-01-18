@@ -2,18 +2,16 @@
   <div class="plugin-parent">
     <div class="select-box">
       <div class="icon-box">
-        <img
-          v-if="networkIcon"
-          :src="networkIcon"
-          alt="icon"
-        />
+        <img v-if="networkIcon" :src="networkIcon" alt="icon" />
       </div>
       <select
         id="selector"
         @change="pluginNetworkHandler"
         v-model="selectedNetworkName"
       >
-        <option class="ring-0" value="" selected>CHOOSE A NETWORK</option>
+        <option class="ring-0" value="" selected>
+          {{ $t("installOption.placeHoldrer") }}
+        </option>
         <option class="ring-0" value="mainnet">Mainnet</option>
         <option class="ring-0" value="testnet">Testnet</option>
         <option class="ring-0" value="gnosis">Gnosis</option>
@@ -25,7 +23,9 @@
           <div class="network-container">
             <div
               class="plugin"
-              v-for="(item, index) in this.plugins.filter(p => p.network === selectedNetworkName)"
+              v-for="(item, index) in this.plugins.filter(
+                (p) => p.network === selectedNetworkName
+              )"
               :key="index"
             >
               <img
@@ -73,10 +73,12 @@ export default {
     this.selectedPreset = undefined;
   },
   methods: {
-    pluginNetworkHandler(){
-      let network = this.networks.find(item => item.name === this.selectedNetworkName)
-      this.networkIcon = network ? network.icon : ""
-      this.selectedNetwork = network
+    pluginNetworkHandler() {
+      let network = this.networks.find(
+        (item) => item.name === this.selectedNetworkName
+      );
+      this.networkIcon = network ? network.icon : "";
+      this.selectedNetwork = network;
     },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({

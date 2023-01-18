@@ -82,14 +82,14 @@ export default {
     async copy(s, t) {
       if (!this.toggleAllowed) return;
       if (!s) {
-        this.dialogValue = "Please turn ON the DATA-API tunnel first!";
+        this.dialogValue = this.$t("dataAPIAndRPC.turnOnMessage");
         this.dialogIcon = this.infoIcon;
         this.openDialog = true;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogIcon = this.copyIcon;
-        this.dialogValue = t + " DATA-API-URL copied to clipboard!";
+        this.dialogValue = t + " " + this.$t("dataAPIAndRPC.copiedMessage");
       }
       if (this.openDialog === true) {
         setTimeout(() => {
@@ -196,7 +196,9 @@ export default {
       }
       let dataApiItemsHashAfter = this.createHashByKey(dataApiItems, "id");
       this.isActive = isActive;
-      this.copyVal = isActive ? "click to copy" : "tunnel closed";
+      this.copyVal = isActive
+        ? this.$t("dataAPIAndRPC.copy")
+        : this.$t("dataAPIAndRPC.closed");
       this.dataApiItems = dataApiItems;
       if (dataApiItemsHashBefore != dataApiItemsHashAfter) {
         //console.log("BEACON TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
