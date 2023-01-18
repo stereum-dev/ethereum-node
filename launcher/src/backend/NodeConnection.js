@@ -998,6 +998,30 @@ export class NodeConnection {
     return app ? app.getVersion() : 'N/A';
   }
 
+  async getLargestVolumePath() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const dfOutput = await this.sshService.exec(
+          "df -h | sort -k 4 -r | tail -n +2 | head -n 1"
+        );
+
+        if (SSHService.checkExecError(dfOutput)) {
+          return reject(
+            "Failed reading df command: " +
+              SSHService.extractExecError(dfOutput)
+          );
+        }
+
+        const path = dfOutput.stdout.split(" ").pop().trim();
+
+        return resolve(path);
+      } catch (err) {
+        log.error("Can't read df", err);
+        return reject("Can't read df: " + err);
+      }
+    });
+  }
+
   async setStereumSettings(settings) {
     let value = {stereum_settings: settings.stereum}
     return new Promise(async (resolve, reject) => {
