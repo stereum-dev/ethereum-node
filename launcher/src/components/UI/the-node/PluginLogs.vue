@@ -4,7 +4,7 @@
       <div class="logsHeader">
         <div class="title">
           <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" />
-          <span>PLUG-IN LOGS</span>
+          <span>{{ $t("pluginLogs.pageTitle") }}</span>
         </div>
         <div class="serviceDetails">
           <div class="serviceIcon">
@@ -40,13 +40,13 @@
         </template>
         <template v-else>
           <div class="tableRow">
-            <span>No log found in the list</span>
+            <span>{{ $t("pluginLogs.noLogFound") }}</span>
           </div>
         </template>
       </div>
       <div class="logsFooter">
         <div class="textBox">
-          <span>Click on the logs to copy</span>
+          <span>{{ $t("pluginLogs.clickCopy") }}</span>
         </div>
         <div class="searchBox">
           <input
@@ -58,7 +58,7 @@
           <img src="/img/icon/arrows/search.png" alt="icon" />
         </div>
         <div class="serviceBox">
-          <span>service id:</span>
+          <span>{{ $t("pluginLogs.serviceId") }}:</span>
           <span>{{ item.config.serviceID }}</span>
         </div>
       </div>

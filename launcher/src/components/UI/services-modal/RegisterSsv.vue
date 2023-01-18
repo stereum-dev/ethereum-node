@@ -3,7 +3,7 @@
     <div class="operator-box">
       <div class="pubkey-box">
         <div class="pub-key">
-          <span class="pubkey-input_text">Public operator key</span>
+          <span class="pubkey-input_text">{{ $t("registerSSV.pubKey") }}</span>
           <input
             v-on:focus="$event.target.select()"
             type="hidden"
@@ -14,13 +14,15 @@
           />
           <div class="copy-icon" @click="copyPubKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-            <span>copied!</span>
+            <span>{{ $t("registerSSV.copied") }}</span>
           </div>
         </div>
       </div>
       <div class="secretkey-box">
         <div class="secret-key">
-          <span class="secretkey-input_text">Secret Operator Key</span>
+          <span class="secretkey-input_text">{{
+            $t("registerSSV.secKey")
+          }}</span>
           <input
             type="hidden"
             class="secretkey-input"
@@ -29,22 +31,18 @@
           />
           <div class="copy-icon" @click="copySecretKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
-            <span>copied!</span>
+            <span>{{ $t("registerSSV.copied") }}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="register-box">
       <div class="text-1">
-        <span
-          >Please make sure to store and backup your operator secret key in a
-          safe place.Do not share this key with anyone.</span
-        >
+        <span>{{ $t("registerSSV.makeSureText") }}</span>
       </div>
       <div class="copiedPubKey">
         <label for="copyPubkey"
-          >Copy your public operator key into this field to confirm that you
-          stored your keys!
+          >{{ $t("registerSSV.copyMessage") }}
           <input
             name="copiedPubkey"
             id="copyPubkey"
@@ -59,7 +57,7 @@
           :class="{ 'btn-disabled': isBtnDisabled }"
           :disabled="isBtnDisabled"
         >
-          REGISTER
+          {{ $t("frontPageSsv.register") }}
         </button>
       </div>
     </div>
@@ -90,7 +88,8 @@ export default {
     },
     copyPubKey() {
       let pubkeyToCopy = this.pubkey;
-      navigator.clipboard.writeText(pubkeyToCopy)
+      navigator.clipboard
+        .writeText(pubkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
@@ -100,7 +99,8 @@ export default {
     },
     copySecretKey() {
       let secretkeyToCopy = this.secretkey;
-      navigator.clipboard.writeText(secretkeyToCopy)
+      navigator.clipboard
+        .writeText(secretkeyToCopy)
         .then(() => {
           console.log("copied!");
         })
