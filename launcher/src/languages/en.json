@@ -201,7 +201,8 @@
   "installitionMenu": {
     "welcome": "WELCOME",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
+    "osSupported":"IS A SUPPORTED OS"
   },
   "pluginName": {
     "option": "OPTION",
@@ -255,5 +256,13 @@
   "secretKeyReg":{
     "modalLabel":"INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
     "apply":"APPLY"
+  },
+  "dataAPIAndRPC":{
+    "copy":"Click to copy!",
+    "closed":"Tunnel closed!",
+    "turnOnMessage":"Please turn ON the DATA-API tunnel first!",
+    "copiedMessage":"DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage":"Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage":"RPC-URL copied to clipboard!"
   }
 }

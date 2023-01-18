@@ -93,7 +93,8 @@ export default {
       const osData = await osResponse;
       const suData = await suResponse;
       if (osData == "Ubuntu" || osData == "CentOS") {
-        this.message = osData.toUpperCase() + " IS A SUPPORTED OS";
+        this.message =
+          osData.toUpperCase() + " " + this.$t("installitionMenu.osSupported");
         if (suData.rc) {
           // Description of return codes (suData.rc):
           // 1 = FAIL: user can not sudo at all because not in sudo group!
