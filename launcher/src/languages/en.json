@@ -251,5 +251,9 @@
   "ssvDashboard":{
     "operatorPage":"My Operator Page",
     "SSVNodeGrafna":"SSV Node Grafana Dashboard"
+  },
+  "secretKeyReg":{
+    "modalLabel":"INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply":"APPLY"
   }
 }

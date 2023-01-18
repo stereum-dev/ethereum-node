@@ -2,7 +2,7 @@
   <div class="secretkey-parent">
     <div class="secretkey-box">
       <label for="secretKey"
-        >INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY
+        >{{ $t("secretKeyReg.modalLabel") }}
         <input
           name="secretkey"
           id="secretKey"
@@ -17,7 +17,7 @@
         :class="{ 'btn-disabled': isBtnDisabled }"
         :disabled="isBtnDisabled"
       >
-        APPLY
+        {{ $t("secretKeyReg.apply") }}
       </button>
     </div>
   </div>
@@ -26,7 +26,7 @@
 import ControlService from "@/store/ControlService";
 import { toRaw } from "vue";
 export default {
-  props: ['ssvService'],
+  props: ["ssvService"],
   data() {
     return {
       isBtnDisabled: true,
@@ -38,23 +38,26 @@ export default {
   },
   methods: {
     checkSecretkeyHandler() {
-      if (this.enteredSecretkey != '') {
+      if (this.enteredSecretkey != "") {
         this.isBtnDisabled = false;
-      } else if (this.enteredSecretkey === ''){
+      } else if (this.enteredSecretkey === "") {
         this.isBtnDisabled = true;
       } else {
         this.$router.push("/node");
       }
     },
-    insertKey: async function(data){
-      const result = await ControlService.insertSSVNetworkKeys({service: toRaw(this.ssvService), pk: data.enteredSecretkey})
-        if (result && result.stack && result.message) {
-          console.log("importing Keys failed")
-          //implement error msg here
-        }else{
-          this.$emit('loginSecretkey')
-        }
-    }
+    insertKey: async function (data) {
+      const result = await ControlService.insertSSVNetworkKeys({
+        service: toRaw(this.ssvService),
+        pk: data.enteredSecretkey,
+      });
+      if (result && result.stack && result.message) {
+        console.log("importing Keys failed");
+        //implement error msg here
+      } else {
+        this.$emit("loginSecretkey");
+      }
+    },
   },
 };
 </script>
