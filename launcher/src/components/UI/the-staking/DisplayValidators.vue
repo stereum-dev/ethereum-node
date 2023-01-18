@@ -611,19 +611,19 @@ export default {
     async updateValidatorStats() {
       let totalBalance = 0;
       let data = [];
-      let network = this.network === "mainnet" ? "mainnet" : "prater";
+      let networkURls = {
+        mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
+        testnet: "https://goerli.beaconcha.in/api/v1/validator/",
+        gnosis: "https://beacon.gnosischain.com/api/v1/validator/"
+      }
+
       try {
         let buffer = this.keys.map((key) => key.key);
         const chunkSize = 50;
         for (let i = 0; i < buffer.length; i += chunkSize) {
           //split validator accounts into chunks of 50 (api url limit)
           const chunk = buffer.slice(i, i + chunkSize);
-          let response = await axios.get(
-            "https://" +
-              network +
-              ".beaconcha.in/api/v1/validator/" +
-              encodeURIComponent(chunk.join())
-          );
+          let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
           if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
         }
       } catch (err) {

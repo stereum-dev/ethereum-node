@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <span class="click">{{ $t("notifModal.cancelText") }}</span>
+      <span class="click">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
   </div>
 </template>
@@ -51,7 +51,7 @@ export default {
         {
           id: 3,
           name: "text guide",
-          title: this.$t("tutorialBox.testGuide"),
+          title: this.$t("tutorialBox.textGuide"),
           icon: "/img/icon/tutorial-icons/manual-icon.png",
           writtenLink: this.itemToTutorial.writtenLink,
           route: "/guide/text",

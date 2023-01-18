@@ -400,7 +400,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 62%;
   font-weight: 400;
   font-size: 50%;
   color: #94deff;

@@ -13,6 +13,7 @@
         </div>
       </div>
       <div class="proposed">
+        <comming-soon></comming-soon>
         <div class="proposedHeader">
           <span class="header-text">VALIDATOR RECIPIENT ADDRESS</span>
           <span class="header-counter">1/1</span>
@@ -157,6 +158,9 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+}
+.proposed {
+  position: relative;
 }
 .proposed .proposedHeader {
   width: 100%;

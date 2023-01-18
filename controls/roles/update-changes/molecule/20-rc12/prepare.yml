@@ -1,0 +1,367 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+    
+    - name: Create Teku service config
+      copy:
+        dest: "/etc/stereum/services/61cb4672-f069-4416-bf2a-db53a0776395.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          autoupdate: true
+          command:
+            - --network=prater
+            - --logging=INFO
+            - --p2p-enabled=true
+            - --p2p-port=9001
+            - --validators-keystore-locking-enabled=false
+            - --validators-graffiti="stereum.net"
+            - --ee-endpoint=http://stereum-foobar:8551
+            - --ee-jwt-secret-file=/engine.jwt
+            - --validators-proposer-default-fee-recipient=0x0000000000000000000000000000000000000000
+            - --metrics-enabled=true
+            - --metrics-port=8008
+            - --metrics-interface=0.0.0.0
+            - --metrics-host-allowlist=*
+            - --metrics-publish-interval=10
+            - --metrics-categories=BEACON,LIBP2P,NETWORK,PROCESS
+            - --data-path=/opt/app/data
+            - --data-storage-mode=prune
+            - --rest-api-port=5051
+            - --rest-api-host-allowlist=*
+            - --rest-api-interface=0.0.0.0
+            - --rest-api-docs-enabled=true
+            - --rest-api-enabled=true
+            - --log-destination=CONSOLE
+            - --validator-api-enabled=true
+            - --validator-api-port=5052
+            - --validator-api-host-allowlist=*
+            - --validator-api-cors-origins=*
+            - --validator-api-keystore-file=/opt/app/data/teku_api_keystore
+            - --validator-api-keystore-password-file=/opt/app/data/teku_api_password.txt
+          configVersion: 1
+          dependencies:
+              consensusClients: []
+              executionClients:
+              -   id: dLYMYaf9-ovC0-CXOE-s3Cx-VJBUjjsXrrOS
+                  service: GethService
+              prometheusNodeExporterClients: []
+          entrypoint:
+          - /opt/teku/bin/teku
+          env:
+              JAVA_OPTS: -Xmx8g
+          id: 61cb4672-f069-4416-bf2a-db53a0776395
+          image: consensys/teku:22.9.0
+          network: prater
+          ports:
+          - 0.0.0.0:9001:9001/tcp
+          - 0.0.0.0:9001:9001/udp
+          restart_policy: null
+          service: TekuBeaconService
+          user: '2000'
+          volumes:
+            - /opt/stereum/teku-61cb4672-f069-4416-bf2a-db53a0776395/data:/opt/app/data
+      become: yes
+
+    - name: Create Prysm service config
+      copy:
+        dest: "/etc/stereum/services/22272f4b-6652-b5da-f3b8-69d34a3ea784.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrysmBeaconService
+          id: 22272f4b-6652-b5da-f3b8-69d34a3ea784
+          configVersion: 1
+          command: /app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true
+            --datadir=/opt/app/beacon --p2p-host-ip="" --p2p-host-dns="" --prater=true
+            --fallback-web3provider=http://foobar:8551 --block-batch-limit=512
+            --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0
+            --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100
+            --http-web3provider=http://foobar:8551
+            --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001
+            --p2p-udp-port=12001 --jwt-secret=/engine.jwt
+          entrypoint: []
+          env: {}
+          image: prysmaticlabs/prysm-beacon-chain:v3.1.1
+          ports:
+            - 0.0.0.0:13001:13001/tcp
+            - 0.0.0.0:12001:12001/udp
+            - 127.0.0.1:4000:4000/tcp
+          restart_policy: null
+          volumes:
+            - /opt/stereum/prysm-22272f4b-6652-b5da-f3b8-69d34a3ea784/beacon:/opt/app/beacon
+            - /opt/stereum/prysm-22272f4b-6652-b5da-f3b8-69d34a3ea784/genesis:/opt/app/genesis
+            - /opt/stereum/geth-b4c2019d-7116-17f8-7fa1-4e4be93105da/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: prater
+          dependencies:
+            executionClients:
+              - service: GethService
+                id: b4c2019d-7116-17f8-7fa1-4e4be93105da
+            consensusClients: []
+            prometheusNodeExporterClients: []
+      become: yes
+
+    - name: Create Geth service config
+      copy:
+        dest: "/etc/stereum/services/0dd89db9-a431-5e2f-81a4-b1c5d28ec220.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: GethService
+          id: 0dd89db9-a431-5e2f-81a4-b1c5d28ec220
+          configVersion: 1
+          command:
+            - --goerli
+            - --datadir=/opt/data/geth
+            - --http
+            - --http.port=8545
+            - --http.addr=0.0.0.0
+            - --http.vhosts=*
+            - --http.api="engine,eth,web3,net,debug"
+            - --http.corsdomain=*
+            - --ws
+            - --ws.port=8546
+            - --ws.addr=0.0.0.0
+            - --ws.api="debug,eth,net,web3"
+            - --ws.origins=*
+            - --authrpc.port=8551
+            - --authrpc.addr=0.0.0.0
+            - --authrpc.vhosts=*
+            - --authrpc.jwtsecret=/engine.jwt
+            - --metrics
+            - --metrics.expensive
+            - --metrics.port=6060
+            - --metrics.addr=0.0.0.0
+          entrypoint:
+            - geth
+          env:
+            STEREUM_DUMMY: foobar
+          image: ethereum/client-go:v1.10.25
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8551:8551/tcp
+          restart_policy: null
+          volumes:
+            - /opt/stereum/geth-0dd89db9-a431-5e2f-81a4-b1c5d28ec220/data:/opt/data/geth
+            - /opt/stereum/geth-0dd89db9-a431-5e2f-81a4-b1c5d28ec220/engine.jwt:/engine.jwt
+          user: root
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
+
+    - name: Create Besu service config
+      copy:
+        dest: "/etc/stereum/services/7fabf678-eaac-ffe8-adaf-d081d71ddbe3.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: BesuService
+          id: 7fabf678-eaac-ffe8-adaf-d081d71ddbe3
+          configVersion: 1
+          command:
+            - --network=goerli
+            - --data-path=/opt/app/data
+            - --data-storage-format=BONSAI
+            - --sync-mode=X_SNAP
+            - --p2p-port=30303
+            - --p2p-host=0.0.0.0
+            - --rpc-http-enabled=true
+            - --rpc-http-host=0.0.0.0
+            - --rpc-http-cors-origins=*
+            - --rpc-http-port=8545
+            - --rpc-ws-enabled=true
+            - --rpc-ws-host=0.0.0.0
+            - --rpc-ws-port=8546
+            - --host-allowlist=*
+            - --metrics-enabled
+            - --metrics-host=0.0.0.0
+            - --metrics-port=9545
+            - --logging=INFO
+            - --engine-rpc-enabled=true
+            - --engine-host-allowlist=*
+            - --engine-rpc-port=8551
+            - --engine-jwt-enabled=true
+            - --engine-jwt-secret=/engine.jwt
+            - --Xmerge-support=true
+          entrypoint:
+            - besu
+          env:
+            JAVA_OPTS: -Xmx4g
+          image: hyperledger/besu:22.7.6
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+            - 127.0.0.1:8551:8551/tcp
+          restart_policy: null
+          volumes:
+            - /opt/stereum/besu-7fabf678-eaac-ffe8-adaf-d081d71ddbe3/data:/opt/app/data
+            - /opt/stereum/besu-7fabf678-eaac-ffe8-adaf-d081d71ddbe3/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost:
+              - service: FlashbotsMevBoostService
+                id: 470fb37f-ad98-1ea7-f89e-e4a6b20cb3c0
+      become: yes
+
+    - name: Create Nethermmind service config
+      copy:
+        dest: "/etc/stereum/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NethermindService
+          id: 8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d
+          image: "nethermind/nethermind:1.14.6"
+          ports:
+            - 0.0.0.0:30303:30303/tcp
+            - 0.0.0.0:30303:30303/udp
+          entrypoint: ["./Nethermind.Runner"]
+          env: {}
+          command:
+            - --config=gnosis
+            - --log=info
+            - --datadir=/opt/app/data
+            - --Network.DiscoveryPort=30303
+            - --Network.P2PPort=30303
+            - --Sync.FastSync=true
+            - --Sync.SnapSync=true
+            - --Sync.FastBlocks=true
+            - --Sync.AncientBodiesBarrier=11052984
+            - --Sync.AncientReceiptsBarrier=11052984
+            - --Merge.Enabled=true
+            - --JsonRpc.Enabled=true
+            - --JsonRpc.JwtSecretFile=/engine.jwt
+            - --JsonRpc.Host=0.0.0.0
+            - --JsonRpc.EngineHost=0.0.0.0
+            - --Init.WebSocketsEnabled=true
+            - --JsonRpc.WebSocketsPort=8546
+            - --JsonRpc.EnabledModules=[web3,eth,subscribe,net]
+            - --JsonRpc.AdditionalRpcUrls=http://0.0.0.0:8551|http;ws|engine;eth;subscribe
+            - --Metrics.Enabled=true
+            - --Metrics.ExposePort=6060
+            - --HealthChecks.Enabled=true
+          user: "root"
+          restart_policy: null
+          volumes:
+            - "/opt/app/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d/data:/opt/app/data"
+            - "/opt/app/services/8b955b0c-3b2c-4aeb-96bd-2fc0b786cf8d/engine.jwt:/engine.jwt"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
+
+    - name: Create Nimbus service config
+      copy:
+        dest: "/etc/stereum/services/71a410be-c555-b226-294b-8d8439c6ae74.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: NimbusBeaconService
+          id: 71a410be-c555-b226-294b-8d8439c6ae74
+          configVersion: 1
+          command:
+            - --network=goerli
+            - --data-dir=/opt/app/beacon
+            - --validators-dir=/opt/app/validators
+            - --secrets-dir=/opt/app/secrets
+            - --suggested-fee-recipient=0x0000000000000000000000000000000000000000
+            - --tcp-port=9000
+            - --udp-port=9000
+            - --metrics
+            - --metrics-port=8008
+            - --metrics-address=0.0.0.0
+            - --rest
+            - --rest-address=0.0.0.0
+            - --rest-port=5052
+            - --graffiti=stereum.net
+            - --keymanager
+            - --keymanager-address=0.0.0.0
+            - --keymanager-token-file=/opt/app/validators/api-token.txt
+            - --jwt-secret=/engine.jwt
+            - --web3-url=ws:foo-bar:8551
+          entrypoint:
+            - /home/user/nimbus-eth2/build/nimbus_beacon_node
+          env: {}
+          image: statusim/nimbus-eth2:multiarch-v22.12.0
+          ports:
+            - 0.0.0.0:9001:9000/tcp
+            - 0.0.0.0:9001:9000/udp
+            - 127.0.0.1:5053:5052/tcp
+          restart_policy: null
+          volumes:
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/beacon:/opt/app/beacon
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/validator/validators:/opt/app/validators
+            - /opt/stereum/nimbus-71a410be-c555-b226-294b-8d8439c6ae74/validator/secrets:/opt/app/secrets
+            - /opt/stereum/geth-foo-bar/engine.jwt:/engine.jwt
+          user: "2000"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients:
+              - service: FooBarService
+                id: foo-bar
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
+
+    - name: Create NodeExporter service config
+      copy:
+        dest: "/etc/stereum/services/8a4aae8e-9717-3026-f733-cc8e022f3893.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrometheusNodeExporterService
+          id: 8a4aae8e-9717-3026-f733-cc8e022f3893
+          configVersion: 1
+          command: []
+          entrypoint:
+            - /bin/node_exporter
+          env: {}
+          image: prom/node-exporter:v1.3.1
+          ports: []
+          restart_policy: null
+          volumes: []
+          user: "2000"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            prometheusNodeExporterClients: []
+            mevboost: []
+      become: yes
+# EOF
