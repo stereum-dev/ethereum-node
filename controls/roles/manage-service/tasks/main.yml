@@ -41,7 +41,7 @@
       recurse: yes
     changed_when: false
     become: yes
-    when: stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted"
+    when: (stereum.manage_service.state == "started" or stereum.manage_service.state == "restarted") and item.split(':') | first != '/'
     with_items: "{{ stereum_service_configuration.volumes | reject('search', ':/engine.jwt') }}"
 
   - name: Set directory permissions for engine.jwt

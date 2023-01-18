@@ -1,0 +1,25 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # NodeExporter
+  - name: Read NodeExporter service file
+    slurp:
+      src: "/etc/stereum/services/8a4aae8e-9717-3026-f733-cc8e022f3893.yaml"
+    register: node_exporter_service_configuration_raw
+
+  - name: Parse NodeExporter service's configuration
+    set_fact: 
+      node_exporter_service_configuration: "{{ node_exporter_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+      msg: "{{ node_exporter_service_configuration }}"
+
+  # - assert:
+  #     that:
+  #     - (node_exporter_service_configuration.command | select('match', '--path.rootfs=/host') | length) == 1
+  #     - (node_exporter_service_configuration.volumes | select('match', '/:/host:ro,rslave') | length) == 1
+
+# EOF
