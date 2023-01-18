@@ -66,6 +66,8 @@ export default {
       bttnLoading: "/img/icon/control/loading.gif",
       rpcItems: [],
       dialogIcon: "",
+      copyText: this.$t("dataAPIAndRPC.copy"),
+      closedText: this.$t("dataAPIAndRPC.closed"),
     };
   },
   mounted() {
@@ -196,9 +198,7 @@ export default {
       }
       let rpcItemsHashAfter = this.createHashByKey(rpcItems, "id");
       this.isActive = isActive;
-      this.copyVal = isActive
-        ? this.$t("dataAPIAndRPC.copy")
-        : this.$t("dataAPIAndRPC.closed");
+      this.copyVal = isActive ? this.copyText : this.closedText;
       this.rpcItems = rpcItems;
       if (rpcItemsHashBefore != rpcItemsHashAfter) {
         //console.log("RPC TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");

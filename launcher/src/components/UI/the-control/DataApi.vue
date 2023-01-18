@@ -63,6 +63,8 @@ export default {
       bttnLoading: "/img/icon/control/loading.gif",
       dataApiItems: [],
       dialogIcon: "",
+      copyText: this.$t("dataAPIAndRPC.copy"),
+      closedText: this.$t("dataAPIAndRPC.closed"),
     };
   },
   created() {
@@ -196,9 +198,7 @@ export default {
       }
       let dataApiItemsHashAfter = this.createHashByKey(dataApiItems, "id");
       this.isActive = isActive;
-      this.copyVal = isActive
-        ? this.$t("dataAPIAndRPC.copy")
-        : this.$t("dataAPIAndRPC.closed");
+      this.copyVal = isActive ? this.copyText : this.closedText;
       this.dataApiItems = dataApiItems;
       if (dataApiItemsHashBefore != dataApiItemsHashAfter) {
         //console.log("BEACON TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
