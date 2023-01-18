@@ -1,6 +1,5 @@
 import { NodeService } from "./NodeService";
 import { ServiceVolume } from "./ServiceVolume";
-import { EL_BootNodes } from "./GnosisBootNodes";
 
 export class NethermindService extends NodeService {
     static buildByUserInput (network, ports, dir){
@@ -20,7 +19,7 @@ export class NethermindService extends NodeService {
             service.id,             // id
             1,                      // configVersion
             'nethermind/nethermind',// image
-            '1.14.3',               // imageVersion
+            '1.15.0',               // imageVersion
             [
                 `--config=${network === "gnosis" ? "xdai" : network}`,
                 '--log=info',
@@ -50,8 +49,6 @@ export class NethermindService extends NodeService {
             // executionClients
             // consensusClients
         )
-        if(network == "gnosis")
-          service.command.push(`--Discovery.Bootnodes=${EL_BootNodes.join()}`)
 
       return service
     }

@@ -79,6 +79,7 @@
   - name: Reload Web3Signer
     command: "docker exec stereum-{{ validator_service }} curl -X POST http://localhost:9000/reload"
     become: yes
+    changed_when: false
   - include_tasks: list.yaml
     vars:
       validator_port: 9000
