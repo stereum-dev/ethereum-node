@@ -1415,8 +1415,22 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all publicly available ports (including the associated service and protocol)
-  async getPortStatus(){
+  // Get a list of all ports (including the associated service and protocol) that are availble either publicly, locally or thru specific ip addresses
+  // Accepts an optional object of arguments:
+  // [OPTIONAL] addr=<string|array> (default: "public"):
+  // - "public": retrieve only ports that are publicly available (which means not localhost/127.0.0.1)
+  // - "local": retrieve only ports that are locally available (which thru localhost/127.0.0.1)
+  // - ["IPv4"]: retrieve only ports that are available thru specified IP addresses
+  // Returns array with code/info/data keys where:
+  // - code: 0 means success and every other value means an error
+  // - info: a info message regarding the last reuqest (for example success or error)
+  // - data: a array of objects with port and associated protocol/service on success or empty string on errors
+  async getPortStatus(args){
+
+    // Extract arguments
+    var {addr} = Object.assign({
+      addr:"public",
+    }, (typeof args === 'object' ? args : {}));
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
@@ -1428,20 +1442,35 @@ export class Monitoring {
       };
     }
 
-    // Get ports that are bound to a public network
+    // Check and format addr
+    const addr_type = Array.isArray(addr) ? 'arr' : ( (typeof addr === 'string'  && ["public","local"].includes(addr) ) ? 'str' : 'invalid' );
+    addr = addr_type == 'str' ? addr.toLowerCase().trim() : addr;
+    if(addr_type == 'invalid'){
+      return {
+        "code": 1,
+        "info": "error: addr must have a value of \"public\", \"local\" or an array of ip addresses",
+        "data": '',
+      };
+    }
+
+    // Get ports that are bound to a public or local address (or to a address specified in addr array)
     let data = [];
-    const ignore = ["127.0.0.1","localhost"];
+    const local_addresses = ["127.0.0.1","localhost"];
+    const addresses = addr_type == 'arr' ? addr : local_addresses;
     for(let i = 0; i < serviceInfos.length; i++){
       let svc = serviceInfos[i];
       let ports = svc.config.ports
       if(ports.length < 1) continue;
       for(let n = 0; n < ports.length; n++){
-        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+        if(addr == 'public' && addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+          continue;
+        if((addr_type == 'arr' || addr == 'local') && !addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
           continue;
         data.push({
           name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
+          type: addr_type == 'arr' ? addresses.find(w => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
         });
       }
     }
@@ -1454,11 +1483,22 @@ export class Monitoring {
     // );
 
     // Return success
+    const addinfo = addr_type === 'str' ? 'that are '+addr+'ly available' : 'that are available thru ip ' + addr.join(' or ');
     return {
       "code": 0,
-      "info": "success: open ports retrieved",
+      "info": "success: open ports "+addinfo+" retrieved",
       "data": data,
     };
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1) 
+  async getPublicPortStatus(){
+    return await this.getPortStatus({addr:'public'});
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)  
+  async getLocalPortStatus(){
+    return await this.getPortStatus({addr:'local'});
   }
 
   // Used for fast debug/dev purposes
@@ -1717,45 +1757,6 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
-  }
-
-  // Get a list of all localhost (127.0.0.1) available ports (including the associated service and protocol)
-  async getLocalPortStatus(){
-
-    // Get service infos
-    const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
-      return {
-        "code": 1,
-        "info": "error: service infos unavailable",
-        "data": '',
-      };
-    }
-
-    // Get ports that are bound to a public network
-    let data = [];
-    const ignore = ["0.0.0.0"];
-    for(let i = 0; i < serviceInfos.length; i++){
-      let svc = serviceInfos[i];
-      let ports = svc.config.ports
-      if(ports.length < 1) continue;
-      for(let n = 0; n < ports.length; n++){
-        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
-          continue;
-        data.push({
-          name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
-          port: ports[n].destinationPort,
-          prot: ports[n].servicePortProtocol,
-        });
-      }
-    }
-
-    // Return success
-    return {
-      "code": 0,
-      "info": "success: open ports retrieved",
-      "data": data,
-    };
   }
 
   // get States of Validators
