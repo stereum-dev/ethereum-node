@@ -35,7 +35,7 @@
                 </div>
                 <div class="change-installation">
                   <div class="change-title">
-                    <span>{{ $t("pluginName.path") }}patthhhh</span>
+                    <span>{{ $t("pluginName.path") }}</span>
                   </div>
                   <div class="change-box">
                     <input type="text" v-model="installationPath" />
@@ -180,7 +180,6 @@ export default {
     }),
   },
   mounted() {
-    console.log();
     this.selectedPluginsValidation();
     this.pushNewProperthyToPresets();
     this.sortPlugins();
