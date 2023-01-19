@@ -1002,7 +1002,7 @@ export class NodeConnection {
     return new Promise(async (resolve, reject) => {
       try {
         const dfOutput = await this.sshService.exec(
-          "df -h | sort -k 4 -r | tail -n +2 | head -n 1"
+          "df | sort -k 4 -r | tail -n +2 | head -n 1"
         );
 
         if (SSHService.checkExecError(dfOutput)) {
