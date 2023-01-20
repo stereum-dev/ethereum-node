@@ -159,9 +159,8 @@ export default {
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding-left: 10px;
 }
 .service-option img {
   width: 8%;
