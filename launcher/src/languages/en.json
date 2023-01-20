@@ -271,5 +271,10 @@
     "noLogFound":"No log found in the list",
     "clickCopy":"Click on the logs to copy",
     "serviceId":"service id"
+  },
+  "serviceModals":{
+    "localApp":"LOCAL APPLICATION",
+    "localAppText":"Open up the service on your local machine",
+    "openBrowser":"OPEN IN BROWSER"
   }
 }

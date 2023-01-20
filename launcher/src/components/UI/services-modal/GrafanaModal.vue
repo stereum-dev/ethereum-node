@@ -25,13 +25,13 @@
       <div class="content">
         <div class="browserBox">
           <div class="title">
-            <span>LOCAL APPLICATION</span>
-            <span>Open up the service on your local machine</span>
+            <span>{{ $t("serviceModals.localApp") }}</span>
+            <span>{{ $t("serviceModals.localAppText") }}</span>
           </div>
           <div class="btn-box">
-            <a class="btn" :href="grafanaService.linkUrl" target="_blank"
-              >OPEN IN BROWSER</a
-            >
+            <a class="btn" :href="grafanaService.linkUrl" target="_blank">{{
+              $t("serviceModals.openBrowser")
+            }}</a>
           </div>
         </div>
       </div>

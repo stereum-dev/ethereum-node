@@ -1,6 +1,5 @@
 <template>
   <div class="verticalBar-parent">
-    <comming-soon></comming-soon>
     <div class="verticalBar-container">
       <div
         v-for="(number, index) in arrayWith18Ones"
@@ -22,22 +21,20 @@ export default {
     // every 6 sec update
     //it's defult and fix stracture!
     arrayWith18Ones() {
-      return Array(18).fill(0);
+      return Array(10).fill(0);
     },
   },
   methods: {
     getColor(number) {
       switch (number) {
         case 0:
-          return "#707070";
+          return "#eee";
         case 1:
           return "#74FA65";
         case 2:
-          return "#FFD924";
-        case 3:
-          return "#FA831B";
-        case 4:
           return "#EB5353";
+        case 3:
+          return "#0013de";
       }
     },
   },
@@ -57,7 +54,7 @@ export default {
   height: 100%;
 }
 .bar {
-  width: 2.8%;
+  width: 4%;
   height: 90%;
   display: inline-block;
   margin: 0 1%;
