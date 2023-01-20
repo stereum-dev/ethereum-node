@@ -21,14 +21,6 @@
             />
           </router-link>
         </div>
-        <div class="config-add" @click.stop="$emit('modalPreset')">
-          <comming-soon></comming-soon>
-          <span class="btn-text">{{ $t("modifyPanel.addPreset") }}</span>
-        </div>
-        <div class="config-network">
-          <comming-soon></comming-soon>
-          <span class="btn-text">{{ $t("modifyPanel.changeNetwork") }}</span>
-        </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
@@ -278,45 +270,6 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-}
-.config-btns .config-add,
-.config-btns .config-network {
-  pointer-events: none !important;
-  user-select: none !important;
-  position: relative;
-  width: 95%;
-  height: 25%;
-  margin-top: 3%;
-  background-color: #292929;
-  font-size: 0.7rem;
-  z-index: 0;
-  font-weight: 700;
-  color: rgb(144, 144, 144);
-  border: 1px solid #787878;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
-}
-.config-btns .config-add span,
-.config-btns .config-network span {
-  width: 100%;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: rgb(147, 147, 147);
-}
-.config-btns .config-add:hover,
-.config-btns .config-network:hover {
-  background-color: #161619;
-  border: 1px solid #a0a0a0;
-  color: #a0a0a0;
-}
-.config-btns .config-add:active,
-.config-btns .config-network:active {
-  box-shadow: none;
-  transform: scale(0.99);
 }
 
 .edit-btn a:hover {
