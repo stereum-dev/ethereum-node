@@ -147,7 +147,7 @@ export default {
       );
     },
     openBrowser() {
-      let url = "https://www.mevboost.org/";
+      let url = "https://boost.flashbots.net/";
       window.open(url, "_blank");
     },
     openGitHub() {
