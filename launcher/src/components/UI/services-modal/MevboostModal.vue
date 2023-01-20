@@ -25,7 +25,9 @@
       </div>
       <div class="content">
         <div class="relaysParent" v-if="showRelaysBox">
-          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxTitle">
+            {{ $t("serviceModals.availBlockRel") }}
+          </div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
               <div
@@ -56,7 +58,7 @@
 
           <div class="btn-box">
             <div class="process" v-if="loading">
-              Processing...
+              {{ $t("serviceModals.process") }}...
               <img
                 class="animate-spin"
                 src="/img/icon/arrows/loading.png"
@@ -68,14 +70,14 @@
               :class="{ disabled: applyBtnDisabled }"
               v-else
               @click="applyRelays"
-              >APPLY</span
+              >{{ $t("secretKeyReg.apply") }}</span
             >
           </div>
         </div>
         <div class="browserBox" v-else>
           <div class="title">
-            <span>Block relay</span>
-            <p>Select one or multiple relays to receive blocks from.</p>
+            <span>{{ $t("serviceModals.blockRel") }}</span>
+            <p>{{ $t("serviceModals.blockRelTxt") }}.</p>
           </div>
           <div class="btn-box">
             <span class="openBtn" @click="displayRelaysBlock">OPEN</span>

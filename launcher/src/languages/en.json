@@ -275,6 +275,10 @@
   "serviceModals":{
     "localApp":"LOCAL APPLICATION",
     "localAppText":"Open up the service on your local machine",
-    "openBrowser":"OPEN IN BROWSER"
+    "openBrowser":"OPEN IN BROWSER",
+    "availBlockRel":"AVAILABLE BLOCK RELAYS",
+    "process":"Processing",
+    "blockRel":"Block relay",
+    "blockRelTxt":"Select one or multiple relays to receive blocks from"
   }
 }
