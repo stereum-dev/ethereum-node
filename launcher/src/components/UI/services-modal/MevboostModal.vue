@@ -151,7 +151,7 @@ export default {
       window.open(url, "_blank");
     },
     openGitHub() {
-      let url = "https://github.com/mev/mev";
+      let url = "https://github.com/flashbots/mev-boost";
       window.open(url, "_blank");
     },
     displayRelaysBlock() {
