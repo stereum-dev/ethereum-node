@@ -337,11 +337,10 @@ export default {
 .browserBox {
   width: 95%;
   height: 30%;
-  background-color: #32383e;
-  border: 1px solid #32383e;
-  box-shadow: 1px 1px 10px 1px #1b1c1c;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
-  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -470,6 +469,7 @@ export default {
   height: 70%;
   padding: 2px;
   border: 1px solid #2b3439;
+  box-shadow: 1px 1px 10px 1px #0a0a0a;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -498,8 +498,8 @@ export default {
 }
 .relaysBoxContent {
   width: 100%;
-  height: 100%;
-  margin-top: 10px;
+  height: 97%;
+  margin-top: 0.1%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

@@ -185,7 +185,7 @@ export default {
   height: 30%;
   background-color: #393939;
   border: 1px solid #444444;
-  box-shadow: 1px 1px 3px 1px #252525;
+  box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
