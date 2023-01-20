@@ -25,7 +25,7 @@ test('LodestarValidatorService buildConfiguration', () => {
 
 
 
-  expect(lService.command).toContain('--server=http-endpoint-string')
+  expect(lService.command).toContain('--beaconNodes=http-endpoint-string')
   expect(lService.volumes).toHaveLength(1)
   expect(lService.volumes).toContain('/opt/stereum/l-' + lService.id + '/validator:/opt/app/validator')
   expect(lService.ports).toHaveLength(1)
@@ -77,7 +77,7 @@ test('buildByConfiguration', () => {
       `validator`,
       `--network=goerli`,
       `--dataDir=/opt/app/validator`,
-      `--server=${bn1},${bn2}`,
+      `--beaconNodes=${bn1},${bn2}`,
       `--keymanager=true`,
       `--keymanager.address=0.0.0.0`,
       `--keymanager.port=5062`,
@@ -99,7 +99,7 @@ test('buildByConfiguration', () => {
 
   expect(l.command).toBeDefined()
   expect(l.command).toContain('--logLevel=debug')
-  expect(l.command).toContain('--server=http://node1:9596,https://node2:999')
+  expect(l.command).toContain('--beaconNodes=http://node1:9596,https://node2:999')
 })
 
 // EOF

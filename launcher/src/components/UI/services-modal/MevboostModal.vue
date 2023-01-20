@@ -31,7 +31,7 @@
               <div
                 class="relay"
                 v-for="relay in relaysList.filter(
-                  (r) => r[this.currentNetwork.name.toLowerCase()]
+                  (r) => r[this.currentNetwork.network.toLowerCase()]
                 )"
                 :key="relay.id"
               >
@@ -136,7 +136,7 @@ export default {
             ].split(",");
           relayURLs.forEach((relay) => {
             let relayData = this.relaysList.find(
-              (r) => r[this.currentNetwork.name.toLowerCase()] === relay
+              (r) => r[this.currentNetwork.network.toLowerCase()] === relay
             );
             if (relayData) this.checkedRelays.push(relayData);
           });
@@ -161,7 +161,7 @@ export default {
         this.serviceConfig.entrypoint[
           this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1
         ] = this.checkedRelays
-          .map((r) => r[this.currentNetwork.name.toLowerCase()])
+          .map((r) => r[this.currentNetwork.network.toLowerCase()])
           .join();
         ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(
           () => {
