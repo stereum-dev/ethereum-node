@@ -8,7 +8,7 @@
         </div>
 
         <div class="title-box">
-          <span class="service-name">Flashbots Mev Boost</span>
+          <div class="service-name"><span>Flashbots Mev Boost</span></div>
           <div class="service-option">
             <img
               src="/img/icon/service-icons/internet.png"
@@ -25,7 +25,9 @@
       </div>
       <div class="content">
         <div class="relaysParent" v-if="showRelaysBox">
-          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxTitle">
+            {{ $t("serviceModals.availBlockRel") }}
+          </div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
               <div
@@ -56,7 +58,7 @@
 
           <div class="btn-box">
             <div class="process" v-if="loading">
-              Processing...
+              {{ $t("serviceModals.process") }}...
               <img
                 class="animate-spin"
                 src="/img/icon/arrows/loading.png"
@@ -68,14 +70,14 @@
               :class="{ disabled: applyBtnDisabled }"
               v-else
               @click="applyRelays"
-              >APPLY</span
+              >{{ $t("secretKeyReg.apply") }}</span
             >
           </div>
         </div>
         <div class="browserBox" v-else>
           <div class="title">
-            <span>Block relay</span>
-            <p>Select one or multiple relays to receive blocks from.</p>
+            <span>{{ $t("serviceModals.blockRel") }}</span>
+            <p>{{ $t("serviceModals.blockRelTxt") }}.</p>
           </div>
           <div class="btn-box">
             <span class="openBtn" @click="displayRelaysBlock">OPEN</span>
@@ -145,11 +147,11 @@ export default {
       );
     },
     openBrowser() {
-      let url = "https://www.mevboost.org/";
+      let url = "https://boost.flashbots.net/";
       window.open(url, "_blank");
     },
     openGitHub() {
-      let url = "https://github.com/mev/mev";
+      let url = "https://github.com/flashbots/mev-boost";
       window.open(url, "_blank");
     },
     displayRelaysBlock() {
@@ -253,17 +255,17 @@ export default {
 .mev-header {
   width: 100%;
   height: 20%;
-  margin-top: 7px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  margin-top: 1.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: nowrap;
   position: relative;
   z-index: 102;
 }
 
 .icon-box {
-  grid-column: 1/2;
-  grid-row: 1;
-  width: 100%;
+  width: 20%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -271,42 +273,39 @@ export default {
 }
 
 .icon-box img {
-  margin-left: 10px;
-  width: 82%;
+  width: 70%;
   height: 90%;
 }
 
 .title-box {
-  grid-column: 2/7;
-  grid-row: 1;
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   align-items: flex-start;
 }
 
-.title-box span {
-  width: max-content;
+.service-name {
+  width: 100%;
   height: 45%;
   text-align: center;
   color: rgb(226, 226, 226);
   text-transform: uppercase;
   font-size: 1.6rem;
   font-weight: 600;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .service-option {
   width: 60%;
   height: 38%;
-  margin-left: 14px;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding-left: 10px;
 }
 
 .service-option img {
@@ -318,8 +317,9 @@ export default {
 
 .content {
   width: 100%;
-  height: 70%;
-  margin-top: 20px;
+  height: 75%;
+  height: 75%;
+  margin-top: 2%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -336,11 +336,10 @@ export default {
 .browserBox {
   width: 95%;
   height: 30%;
-  background-color: #32383e;
-  border: 1px solid #32383e;
-  box-shadow: 1px 1px 10px 1px #1b1c1c;
+  background-color: #393939;
+  border: 1px solid #444444;
+  box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
-  margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -469,6 +468,7 @@ export default {
   height: 70%;
   padding: 2px;
   border: 1px solid #2b3439;
+  box-shadow: 1px 1px 10px 1px #0a0a0a;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -497,8 +497,8 @@ export default {
 }
 .relaysBoxContent {
   width: 100%;
-  height: 100%;
-  margin-top: 10px;
+  height: 97%;
+  margin-top: 0.1%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
