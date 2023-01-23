@@ -18,7 +18,7 @@
     "edit": "NODE ویرایش"
   },
   "pagesnav": {
-    "node": "NODE",
+    "node": "نود",
     "control": "کنترل",
     "staking": "استیک"
   },
@@ -37,8 +37,8 @@
   "settingPanel": {
     "stereumName": "تنظیمات استریوم",
     "langName": "انتخاب زبان",
-    "confirm": "APPLIED",
-    "general": "GENERAL",
+    "confirm": "پذیرفته شد",
+    "general": "اصلی",
     "credits": "پشتیبان ها",
     "open": "باز کردن",
     "update": "بروزرسانی",
@@ -57,8 +57,8 @@
     "ssv": " ssvاستفاده از شبکه",
     "alert": "اخطارها در موبایل",
     "switchC": "انتخاب کاربر",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "migrate": "انتقال نود ها",
+    "rpc": "اتصال RPC"
   },
   "pluginZone": {
     "client": "کننده"
@@ -97,7 +97,7 @@
     "all": "بروزرسانی همه چیز"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "نود",
     "disk": "سرعت دیسک",
     "write": "نوشتن",
     "read": "خواندن",
@@ -129,7 +129,7 @@
     "balance": "تعادل",
     "option": "گزینه ها",
     "importKey": "وارد کردن کلید(های) اعتبارسنجی",
-    "waitMessage": "It may take some time",
+    "waitMessage": "ممکن است کمی طول بکشد",
     "waitForImport": "لطفا صبر کنید تا کلید وارد شود"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "رمز عبور اعتبارسنجی خود را برای خروج از زنجیره با این کلید وارد کنید",
-    "confirm": "Confirm"
+    "confirm": "تایید"
   },
   "exitValidatorModal": {
     "modalMessage": "آیا مطمئن هستید که می‌خواهید با کلیدهای اعتبارسنجی انتخاب شده از زنجیره خارج شوید؟ این وظیفه اعتبارسنجی شما را متوقف می کند و نمی توان آن را معکوس کرد. وجوه شما نیز فقط در صورتی قابل برداشت است که زنجیره اجازه دهد",
@@ -153,22 +153,22 @@
     "textPlaceHolder": "سی و دو کاراکتر را وارد کنید تا هنگام ایجاد یک بلوک به زنجیره اضافه شود"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "برای تغییر نام اعتباردهنده، 32 کاراکتر را وارد کنید!"
   },
   "insertValidator": {
     "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "آیا می خواهید پایگاه داده slashing خود را دانلود کنید?",
+    "description": "برای اطمینان از ایمنی اضافی هنگام انتقال کلیدهایتان، می‌توانید این مورد را با کلیدهای اعتبارسنجی خود وارد کنید",
+    "btn": "انتخاب مسیر"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With slashing Protection Database?",
+    "sure": "آیا مطمئن هستید که می خواهید این محصول را از فهرست دستگاه خود حذف کنید؟",
+    "slashing": "با Slashing Database Protection",
     "remove": "حذف  کردن",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "مسیری را برای ذخیره پایگاه داده اسلش صادر شده انتخاب کنید",
+    "writePath": "لطفا مسیر خود را بنویسید"
   },
   "removeMultipleValidators": {
     "sureText": "آیا مطمئن هستید که می خواهید همه کلیدهای اعتبار سنجی را از این ماشین حذف کنید؟"
@@ -185,7 +185,7 @@
   },
   "validatorsBox": {
     "date": "تاریخ",
-    "validator": "VALIDATOR",
+    "validator": "تایید کننده",
     "attestRate": "نرخ تصدیق",
     "reward": "پاداش"
   },
@@ -215,21 +215,21 @@
     "next": "بعدی"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "creditTitle": "اعتبارات - مشارکت کنندگان مالی",
+    "fincialTitle": "نام خود را در لیست قرار دهید! از شما برای حمایت از توسعه متشکریم!",
+    "technicPage": "مشارکت فنی",
+    "techTitle": "اعتبارات - مشارکت کنندگان فنی",
+    "techText": "یک GITPOAP کسب کنید! با بازدید از GITHUB ما یاد بگیرید که چگونه درگیر شوید!",
+    "financialPage": "مشارکت مالی"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "تأیید و نصب کنید",
+    "name": "نام",
+    "cat": "دسته بندی",
+    "path": "مسیر"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "ما به شما توصیه می کنیم قبل از اعمال تغییرات بیشتر صبر کنید تا نصب اولیه انجام شود"
   },
   "tutorialBox": {
     "video": "video",
