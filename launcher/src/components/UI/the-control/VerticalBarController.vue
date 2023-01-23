@@ -1,6 +1,7 @@
 <template>
   <div class="verticalBar-parent">
     <div class="verticalBar-container">
+      <comming-soon></comming-soon>
       <div
         v-for="(number, index) in arrayWith18Ones"
         :key="index"
