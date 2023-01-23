@@ -26,7 +26,7 @@
     "support": "پشتیبانی",
     "supportText": "سریعترین راه برای دسترسی به یک شخص برای پشتیبانی، پیوستن به سرور دیسکورد ما است",
     "bugReport": "گزارش خطا",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
+    "bugRepText": "لطفاً برای نوشتن این موضوع کمی وقت بگذارید و اجازه دهید استریوم را بهتر کنیم!",
     "emailText": "یا ایمیل بنویسید به آدرس"
   },
   "notifModal": {
@@ -35,8 +35,8 @@
     "cancelText": "برای خروج بیرون از کادر کلیک کنید"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
+    "stereumName": "تنظیمات استریوم",
+    "langName": "انتخاب زبان",
     "confirm": "APPLIED",
     "general": "GENERAL",
     "credits": "پشتیبان ها",
@@ -192,7 +192,8 @@
   "installOption": {
     "installText": "در این صفحه می توانید آنچه را که می خواهید با نود خود انجام دهید را انتخاب کنید. پس ازانتخاب و فشار دادن استارت، یک انتخاب تصادفی کلاینت برای سرویس دهی به مورد استفاده شما انجام می شود",
     "back": "بازگشت",
-    "install": "نصب"
+    "install": "نصب",
+    "placeHoldrer": "choose a network"
   },
   "removeModal": {
     "removeText": ".تمام خدمات حذف خواهد شد",
@@ -201,7 +202,8 @@
   "installitionMenu": {
     "welcome": "خوش آمدید",
     "installText": "در این مرحله شما نحوه نصب نود خود را انتخاب می کنید. اگر در راه‌اندازی به کمک نیاز دارید، به دیسکورد ما بپیوندید - خوشحال می‌شویم به شما کمک کنیم",
-    "osCheck": "بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر"
+    "osCheck": "بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر",
+    "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
     "option": "گزینه انتخاب",
@@ -228,5 +230,55 @@
   },
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+  },
+  "tutorialBox": {
+    "video": "video",
+    "walkthrough": "walkthrough",
+    "textGuide": "written guide"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register": "Register",
+    "insertTitle": "insert operator key for existing operator",
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+  },
+  "registerSSV": {
+    "pubKey": "Public operator key",
+    "copied": "copied!",
+    "secKey": "Secret Operator Key",
+    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
+    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+  },
+  "ssvDashboard": {
+    "operatorPage": "My Operator Page",
+    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+  },
+  "secretKeyReg": {
+    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply": "APPLY"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Click to copy!",
+    "closed": "Tunnel closed!",
+    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "copiedMessage": "DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+  },
+  "pluginLogs": {
+    "pageTitle": "PLUG-IN LOGS",
+    "noLogFound": "No log found in the list",
+    "clickCopy": "Click on the logs to copy",
+    "serviceId": "service id"
+  },
+  "serviceModals": {
+    "localApp": "LOCAL APPLICATION",
+    "localAppText": "Open up the service on your local machine",
+    "openBrowser": "OPEN IN BROWSER",
+    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "process": "Processing",
+    "blockRel": "Block relay",
+    "blockRelTxt": "Select one or multiple relays to receive blocks from"
   }
 }
