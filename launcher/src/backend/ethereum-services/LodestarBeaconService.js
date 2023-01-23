@@ -7,7 +7,6 @@ export class LodestarBeaconService extends NodeService {
     const service = new LodestarBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
-    const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
 
     const image = 'chainsafe/lodestar'
 
@@ -17,9 +16,11 @@ export class LodestarBeaconService extends NodeService {
     // volumes
     const volumes = [
       new ServiceVolume(workingDir + '/beacon', dataDir),
-      new ServiceVolume(elJWTDir, JWTDir)
     ]
-
+    if(executionClients && executionClients.length > 0){
+      const elJWTDir = (executionClients[0].volumes.find(vol => vol.servicePath === '/engine.jwt')).destinationPath
+      volumes.push(new ServiceVolume(elJWTDir, JWTDir))
+    }
     // eth1 nodes
     const eth1Nodes = (executionClients.map(client => { return client.buildExecutionClientEngineRPCHttpEndpointUrl() })).join()
 
@@ -31,7 +32,7 @@ export class LodestarBeaconService extends NodeService {
       service.id, //id
       1, // configVersion
       image,  //image
-      'v1.2.1', //imageVersion
+      'v1.3.0', //imageVersion
       [
         `beacon`,
         `--network=${network}`,

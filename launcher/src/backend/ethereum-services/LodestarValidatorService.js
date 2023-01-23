@@ -25,12 +25,12 @@ export class LodestarValidatorService extends NodeService {
       service.id, //id
       1, //configVersion
       image,  //image
-      'v1.2.1', //imageVersion
+      'v1.3.0', //imageVersion
       [
         `validator`,
         `--network=${network}`,
         `--dataDir=${dataDir}`,
-        `--server=${eth2Nodes}`,
+        `--beaconNodes=${eth2Nodes}`,
         `--keymanager=true`,
         `--keymanager.address=0.0.0.0`,
         `--keymanager.port=5062`,
