@@ -18,7 +18,7 @@
     "edit": "NODE ویرایش"
   },
   "pagesnav": {
-    "node": "NODE",
+    "node": "نود",
     "control": "کنترل",
     "staking": "استیک"
   },
@@ -26,7 +26,7 @@
     "support": "پشتیبانی",
     "supportText": "سریعترین راه برای دسترسی به یک شخص برای پشتیبانی، پیوستن به سرور دیسکورد ما است",
     "bugReport": "گزارش خطا",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
+    "bugRepText": "لطفاً برای نوشتن این موضوع کمی وقت بگذارید و اجازه دهید استریوم را بهتر کنیم!",
     "emailText": "یا ایمیل بنویسید به آدرس"
   },
   "notifModal": {
@@ -35,10 +35,10 @@
     "cancelText": "برای خروج بیرون از کادر کلیک کنید"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLIED",
-    "general": "GENERAL",
+    "stereumName": "تنظیمات استریوم",
+    "langName": "انتخاب زبان",
+    "confirm": "پذیرفته شد",
+    "general": "اصلی",
     "credits": "پشتیبان ها",
     "open": "باز کردن",
     "update": "بروزرسانی",
@@ -57,8 +57,8 @@
     "ssv": " ssvاستفاده از شبکه",
     "alert": "اخطارها در موبایل",
     "switchC": "انتخاب کاربر",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "migrate": "انتقال نود ها",
+    "rpc": "اتصال RPC"
   },
   "pluginZone": {
     "client": "کننده"
@@ -97,7 +97,7 @@
     "all": "بروزرسانی همه چیز"
   },
   "controlPage": {
-    "node": "NODE",
+    "node": "نود",
     "disk": "سرعت دیسک",
     "write": "نوشتن",
     "read": "خواندن",
@@ -129,7 +129,7 @@
     "balance": "تعادل",
     "option": "گزینه ها",
     "importKey": "وارد کردن کلید(های) اعتبارسنجی",
-    "waitMessage": "It may take some time",
+    "waitMessage": "ممکن است کمی طول بکشد",
     "waitForImport": "لطفا صبر کنید تا کلید وارد شود"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "رمز عبور اعتبارسنجی خود را برای خروج از زنجیره با این کلید وارد کنید",
-    "confirm": "Confirm"
+    "confirm": "تایید"
   },
   "exitValidatorModal": {
     "modalMessage": "آیا مطمئن هستید که می‌خواهید با کلیدهای اعتبارسنجی انتخاب شده از زنجیره خارج شوید؟ این وظیفه اعتبارسنجی شما را متوقف می کند و نمی توان آن را معکوس کرد. وجوه شما نیز فقط در صورتی قابل برداشت است که زنجیره اجازه دهد",
@@ -153,22 +153,22 @@
     "textPlaceHolder": "سی و دو کاراکتر را وارد کنید تا هنگام ایجاد یک بلوک به زنجیره اضافه شود"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "برای تغییر نام اعتباردهنده، 32 کاراکتر را وارد کنید!"
   },
   "insertValidator": {
     "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "آیا می خواهید پایگاه داده slashing خود را دانلود کنید?",
+    "description": "برای اطمینان از ایمنی اضافی هنگام انتقال کلیدهایتان، می‌توانید این مورد را با کلیدهای اعتبارسنجی خود وارد کنید",
+    "btn": "انتخاب مسیر"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With slashing Protection Database?",
+    "sure": "آیا مطمئن هستید که می خواهید این محصول را از فهرست دستگاه خود حذف کنید؟",
+    "slashing": "با Slashing Database Protection",
     "remove": "حذف  کردن",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "مسیری را برای ذخیره پایگاه داده اسلش صادر شده انتخاب کنید",
+    "writePath": "لطفا مسیر خود را بنویسید"
   },
   "removeMultipleValidators": {
     "sureText": "آیا مطمئن هستید که می خواهید همه کلیدهای اعتبار سنجی را از این ماشین حذف کنید؟"
@@ -185,14 +185,15 @@
   },
   "validatorsBox": {
     "date": "تاریخ",
-    "validator": "VALIDATOR",
+    "validator": "تایید کننده",
     "attestRate": "نرخ تصدیق",
     "reward": "پاداش"
   },
   "installOption": {
     "installText": "در این صفحه می توانید آنچه را که می خواهید با نود خود انجام دهید را انتخاب کنید. پس ازانتخاب و فشار دادن استارت، یک انتخاب تصادفی کلاینت برای سرویس دهی به مورد استفاده شما انجام می شود",
     "back": "بازگشت",
-    "install": "نصب"
+    "install": "نصب",
+    "placeHoldrer": "choose a network"
   },
   "removeModal": {
     "removeText": ".تمام خدمات حذف خواهد شد",
@@ -201,7 +202,8 @@
   "installitionMenu": {
     "welcome": "خوش آمدید",
     "installText": "در این مرحله شما نحوه نصب نود خود را انتخاب می کنید. اگر در راه‌اندازی به کمک نیاز دارید، به دیسکورد ما بپیوندید - خوشحال می‌شویم به شما کمک کنیم",
-    "osCheck": "بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر"
+    "osCheck": "بررسی اینکه آیا سیستم عامل سرور شما پشتیبانی می شود یا خیر",
+    "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
     "option": "گزینه انتخاب",
@@ -213,20 +215,70 @@
     "next": "بعدی"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "creditTitle": "اعتبارات - مشارکت کنندگان مالی",
+    "fincialTitle": "نام خود را در لیست قرار دهید! از شما برای حمایت از توسعه متشکریم!",
+    "technicPage": "مشارکت فنی",
+    "techTitle": "اعتبارات - مشارکت کنندگان فنی",
+    "techText": "یک GITPOAP کسب کنید! با بازدید از GITHUB ما یاد بگیرید که چگونه درگیر شوید!",
+    "financialPage": "مشارکت مالی"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "تأیید و نصب کنید",
+    "name": "نام",
+    "cat": "دسته بندی",
+    "path": "مسیر"
   },
   "warningModal": {
     "warningText": "ما به شما توصیه می کنیم قبل از اعمال تغییرات بیشتر صبر کنید تا نصب اولیه انجام شود"
+  },
+  "tutorialBox": {
+    "video": "video",
+    "walkthrough": "walkthrough",
+    "textGuide": "written guide"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register": "Register",
+    "insertTitle": "insert operator key for existing operator",
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+  },
+  "registerSSV": {
+    "pubKey": "Public operator key",
+    "copied": "copied!",
+    "secKey": "Secret Operator Key",
+    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
+    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+  },
+  "ssvDashboard": {
+    "operatorPage": "My Operator Page",
+    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+  },
+  "secretKeyReg": {
+    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply": "APPLY"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Click to copy!",
+    "closed": "Tunnel closed!",
+    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "copiedMessage": "DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+  },
+  "pluginLogs": {
+    "pageTitle": "PLUG-IN LOGS",
+    "noLogFound": "No log found in the list",
+    "clickCopy": "Click on the logs to copy",
+    "serviceId": "service id"
+  },
+  "serviceModals": {
+    "localApp": "LOCAL APPLICATION",
+    "localAppText": "Open up the service on your local machine",
+    "openBrowser": "OPEN IN BROWSER",
+    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "process": "Processing",
+    "blockRel": "Block relay",
+    "blockRelTxt": "Select one or multiple relays to receive blocks from"
   }
 }
