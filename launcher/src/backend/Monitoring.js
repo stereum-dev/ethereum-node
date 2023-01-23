@@ -1350,6 +1350,7 @@ export class Monitoring {
       'LighthouseBeaconService' : 5052,
       'PrysmBeaconService' : 3500,
       'NimbusBeaconService' : 5052,
+      'LodestarBeaconService' : 9596,
     };
 
     // Set timestamp in micro seconds
