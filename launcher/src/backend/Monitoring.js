@@ -570,6 +570,7 @@ export class Monitoring {
         'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - query for job="lighthouse_beacon"!
         'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - query for job="prysm_beacon"!
         'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="nimbus"
+        'LodestarBeaconService' : ['beacon_clock_slot','beacon_head_slot'], // OK - query for job="lodestar_beacon"
       },
       'execution':{
         'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
@@ -584,6 +585,7 @@ export class Monitoring {
       'LighthouseBeaconService' : 'lighthouse_beacon',
       'PrysmBeaconService' : 'prysm_beacon',
       'NimbusBeaconService' : 'nimbus',
+      'LodestarBeaconService' : 'lodestar_beacon',
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
