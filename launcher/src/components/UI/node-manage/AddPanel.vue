@@ -28,7 +28,7 @@
             <div
               class="relay"
               v-for="relay in relaysList.filter(
-                (r) => r[configNetwork.name.toLowerCase()]
+                (r) => r[configNetwork.network.toLowerCase()]
               )"
               :key="relay.id"
             >
@@ -237,7 +237,7 @@ export default {
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
         relays: this.checkedRelays
-          .map((r) => r[this.configNetwork.name.toLowerCase()])
+          .map((r) => r[this.configNetwork.network.toLowerCase()])
           .join(),
       });
     },

@@ -265,6 +265,16 @@ export class ServiceManager {
             command = "--beacon-rpc-gateway-provider="
           }
           break;
+        case "Lodestar":
+          if(service.service.includes("Beacon")){
+            filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl()
+            command = "--execution.urls="
+          }
+          if(service.service.includes("Validator")){
+            filter = (e) => e.buildConsensusClientHttpEndpointUrl()
+            command = "--beaconNodes="
+          }
+          break;
         case "Nimbus":
             filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl()
             command = "--web3-url="
@@ -328,6 +338,9 @@ export class ServiceManager {
           break;
         case'PrysmBeaconService':
           builderCommand = "--http-mev-relay="
+          break;
+        case'LodestarBeaconService':
+          builderCommand = "--builder.urls="
           break;
         case'NimbusBeaconService':
           command.push('--payload-builder=true')
@@ -483,7 +496,23 @@ export class ServiceManager {
           new ServicePort('127.0.0.1', args.port ? args.port : 7500, 7500, servicePortProtocol.tcp),
         ]
         return PrysmValidatorService.buildByUserInput(args.network, ports, args.installDir + '/prysm', args.beaconServices)
-
+      
+      case "LodestarBeaconService":
+        //LodestarBeaconService
+        ports = [
+          new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
+          new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 9596, 9596, servicePortProtocol.tcp)
+        ]
+        return LodestarBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lodestar', args.executionClients, [], args.checkpointURL)
+        
+      case "LodestarValidatorService":
+        //LodestarValidatorService
+        ports = [
+          new ServicePort('127.0.0.1', args.port ? args.port : 5062, 5062, servicePortProtocol.tcp)
+        ]
+        return LodestarValidatorService.buildByUserInput(args.network, ports, args.installDir + '/lodestar', args.beaconServices)
+        
       case "NimbusBeaconService":
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),

@@ -112,7 +112,7 @@
                 - validator
                 - --network=goerli
                 - --dataDir=/opt/app/validator
-                - --server=http://stereum-{{ lodestar_beacon_service }}:9596
+                - --beaconNodes==http://stereum-{{ lodestar_beacon_service }}:9596
                 - --suggestedFeeRecipient=0x5dC29815e46dfb5EAb5C57606f8e2A5FbBdb454e
                 - --keymanager
                 - --builder=true

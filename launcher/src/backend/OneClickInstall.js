@@ -15,6 +15,8 @@ import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService
 import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
 import { NethermindService } from './ethereum-services/NethermindService'
 import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
+import { LodestarBeaconService } from './ethereum-services/LodestarBeaconService'
+import { LodestarValidatorService } from './ethereum-services/LodestarValidatorService'
 
 const YAML = require('yaml')
 const log = require('electron-log')
@@ -171,6 +173,24 @@ export class OneClickInstall {
         new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
       ]
       this.validatorService = LighthouseValidatorService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lighthouse', [this.beaconService])
+    }
+
+    if (constellation.includes('LodestarBeaconService')) {
+      //LodestarBeaconService
+      ports = [
+        new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
+        new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 9596, 9596, servicePortProtocol.tcp)
+      ]
+      this.beaconService = LodestarBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lodestar', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
+    }
+    
+    if (constellation.includes('LodestarValidatorService')) {
+      //LodestarValidatorService
+      ports = [
+        new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
+      ]
+      this.validatorService = LodestarValidatorService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lodestar', [this.beaconService])
     }
 
     if (constellation.includes('PrysmBeaconService')) {
