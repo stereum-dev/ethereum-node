@@ -19,7 +19,7 @@
             alt="icon"
           />
           <span class="docTitle">PLUG-IN DOCS</span>
-          <span class="openBtn">open</span>
+          <span class="openBtn" @click="linkMevBoost">open</span>
         </div>
         <!-- expert mode row -->
         <div
@@ -295,6 +295,12 @@ export default {
   //   },
   // },
   methods: {
+    linkMevBoost() {
+      let mevUrl =
+        " https://docs.flashbots.net/flashbots-mev-boost/introduction";
+      if (this.item.name === "Flashbots Mev Boost")
+        window.open(mevUrl, "_blank");
+    },
     somethingIsChanged(item) {
       if (item && item.title) item.changed = true;
       this.nothingsChanged = false;

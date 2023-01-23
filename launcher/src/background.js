@@ -309,6 +309,10 @@ promiseIpc.on("getCurrentLauncherVersion", async () => {
   return await nodeConnection.getCurrentLauncherVersion();
 });
 
+promiseIpc.on("getLargestVolumePath", async () => {
+  return await nodeConnection.getLargestVolumePath();
+});
+
 promiseIpc.on("getTasks", async () => {
   return await taskManager.getTasks();
 });
