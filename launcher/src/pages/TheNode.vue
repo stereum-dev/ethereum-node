@@ -460,6 +460,7 @@ export default {
   align-items: center;
   background: #3a3d40;
   box-sizing: border-box;
+  border: 1px solid #464646;
 }
 .switch-network__content {
   width: 98%;
