@@ -74,6 +74,8 @@ export const useNodeManage = defineStore("nodeManage", {
         {
           icon: "/img/icon/click-installation/testnet-circle.png",
           name: "Ultra sound money",
+          mainnet:
+            "https://0xa1559ace749633b997cb3fdacffb890aeebdb0f5a3b6aaa7eeeaf1a38af0a8fe88b9e4b1f61f236d2e64d95733327a62@relay.ultrasound.money",
           testnet:
             "https://0xb1559beef7b5ba3127485bbbb090362d9f497ba64e177ee2c8e7db74746306efad687f2cf8574e38d70067d40ef136dc@relay-stag.ultrasound.money",
           id: 7,
