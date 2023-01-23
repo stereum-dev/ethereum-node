@@ -145,7 +145,9 @@ import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
 import { useServices } from "../../../store/services";
+
 export default {
   components: { ToggleButton, ChangeModal },
 
@@ -181,6 +183,7 @@ export default {
     this.selectedPluginsValidation();
     this.pushNewProperthyToPresets();
     this.sortPlugins();
+    this.getInstallPath()
   },
   methods: {
     selectedPluginsValidation() {
@@ -312,6 +315,12 @@ export default {
         this.genesisIsActive = true;
       }
     },
+    getInstallPath: async function () {
+      const largestVolumePath = await ControlService.getLargestVolumePath();
+      const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
+
+      this.installationPath = stereumInstallationPath;
+    }
   },
 };
 </script>
