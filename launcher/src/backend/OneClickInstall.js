@@ -153,7 +153,6 @@ export class OneClickInstall {
 
     if (constellation.includes('FlashbotsMevBoostService')) {
       //FlashbotsMevBoostService
-      log.info(relayURL)
       this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(), relayURL)
     }
 
@@ -288,6 +287,8 @@ export class OneClickInstall {
       this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus)
       this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter)
       this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana)
+      if (this.mevboost)
+        this.mevboost.imageVersion = this.getLatestVersion(versions, this.mevboost)
       if (this.validatorService) {
         this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService)
       }
