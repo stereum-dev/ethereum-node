@@ -168,6 +168,7 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 import { toRaw } from "vue";
+import ControlService from "@/store/ControlService";
 
 export default {
   props: ["items"],
@@ -208,6 +209,9 @@ export default {
       immediate: true,
     },
   },
+  mounted(){
+    this.getInstallPath()
+  },
   methods: {
     switchHandler(service) {
       if (service.selectedForConnection) {
@@ -240,6 +244,13 @@ export default {
           .map((r) => r[this.configNetwork.network.toLowerCase()])
           .join(),
       });
+    },
+    getInstallPath: async function () {
+      let largestVolumePath = await ControlService.getLargestVolumePath();
+      if(largestVolumePath = '/')
+        largestVolumePath = largestVolumePath + 'opt'
+      const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
+      this.installationPath = stereumInstallationPath;
     },
     changeResyncOptions() {
       if (this.genesisIsActive) {
