@@ -150,10 +150,10 @@
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "CLICK OR DRAG TO INSERT KEY"
