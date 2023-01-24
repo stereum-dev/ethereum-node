@@ -70,7 +70,7 @@ jobs:
           {role: "update-changes", test: "20-rc6"},
           {role: "update-changes", test: "20-rc7"},
           {role: "update-changes", test: "20-rc9"},
-          {role: "update-changes", test: "20-rc10"}
+          {role: "update-changes", test: "20-rc10"},
           {role: "update-changes", test: "20-rc12"}
         ]
       fail-fast: false
