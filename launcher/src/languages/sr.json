@@ -57,7 +57,7 @@
     "ssv": "Koristi ssv.network",
     "alert": "Upozorenja na Mobilnoj Aplikaciji",
     "switchC": "Promijenite Client",
-    "migrate": "Nodes Migration",
+    "migrate": "Node Migration",
     "rpc": "RPC Connection"
   },
   "pluginZone": {
