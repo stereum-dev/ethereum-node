@@ -12,60 +12,131 @@
             <span class="valueLauncher">{{ launcherVersion }}</span>
           </div>
         </div>
-        <span class="nodeUpdate-title">{{ $t("updatePanel.nodeTitle") }}</span>
+
         <div class="stereum-updateBox">
-          <div class="versionBox">
-            <div id="current">
-              <span>{{ $t("updatePanel.current") }}:</span>
+          <div class="nodeUpdate-title_row">
+            <span>{{ $t("updatePanel.nodeTitle") }}</span>
+          </div>
+          <div class="versionContainer">
+            <div class="versionBox">
+              <div id="current">
+                <span>{{ $t("updatePanel.current") }}:</span>
+              </div>
+              <div id="latest">
+                <span>{{ $t("updatePanel.latest") }}:</span>
+              </div>
+              <div id="autoUpdate">
+                <span>{{ $t("updatePanel.auto") }}:</span>
+              </div>
+              <div id="currentValue">
+                <span>{{ stereumUpdate.current }}</span>
+              </div>
+              <div id="latestValue">
+                <span>{{ stereumUpdate.version }}</span>
+              </div>
+              <div id="updateStatus">
+                <span>{{ stereumApp.autoUpdate }}</span>
+              </div>
             </div>
-            <div id="latest">
-              <span>{{ $t("updatePanel.latest") }}:</span>
-            </div>
-            <div id="autoUpdate">
-              <span>{{ $t("updatePanel.auto") }}:</span>
-            </div>
-            <div id="currentValue">
-              <span>{{ stereumUpdate.current }}</span>
-            </div>
-            <div id="latestValue">
-              <span>{{ stereumUpdate.version }}</span>
-            </div>
-            <div id="updateStatus">
-              <span>{{ stereumApp.autoUpdate }}</span>
+            <div class="btnBox">
+              <div class="searchBtn" @click="searchUpdate">
+                <img src="/img/icon/header-icons/search.png" alt="icon" />
+              </div>
+              <div
+                class="downloadBtn"
+                :class="{ disabled: !checkStereumUpdate() || updating }"
+                @click="$emit('runUpdate', stereumUpdate)"
+              >
+                <img
+                  src="/img/icon/node-journal-icons/download2.png"
+                  alt="icon"
+                />
+              </div>
+
+              <div v-if="checkStereumUpdate()" class="available">
+                <div class="updateIcon">
+                  <img
+                    src="/img/icon/header-icons/update-green.png"
+                    alt="icon"
+                  />
+                </div>
+                <span class="availableText"
+                  >{{ stereumUpdate.version }}
+                  {{ $t("updatePanel.available") }}</span
+                >
+              </div>
+              <div
+                class="available"
+                v-if="forceUpdateCheck && !checkStereumUpdate()"
+              >
+                <span class="circle pulse"></span>
+                <span class="searchingText">{{
+                  $t("updatePanel.searching")
+                }}</span>
+              </div>
             </div>
           </div>
-          <div class="btnBox">
-            <div class="searchBtn" @click="searchUpdate">
-              <img src="/img/icon/header-icons/search.png" alt="icon" />
-            </div>
-            <div
-              class="downloadBtn"
-              :class="{ disabled: !checkStereumUpdate() || updating }"
-              @click="$emit('runUpdate', stereumUpdate)"
-            >
-              <img
-                src="/img/icon/node-journal-icons/download2.png"
-                alt="icon"
-              />
-            </div>
-
-            <div v-if="checkStereumUpdate()" class="available">
-              <div class="updateIcon">
-                <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+          <div class="nodeUpdate-title_row">
+            <span>operating system (server)</span>
+          </div>
+          <div class="versionContainer">
+            <comming-soon></comming-soon>
+            <div class="versionBox">
+              <div id="current">
+                <span>{{ $t("updatePanel.current") }}:</span>
               </div>
-              <span class="availableText"
-                >{{ stereumUpdate.version }}
-                {{ $t("updatePanel.available") }}</span
-              >
+              <div id="latest">
+                <span>{{ $t("updatePanel.latest") }}:</span>
+              </div>
+              <div id="autoUpdate">
+                <span>{{ $t("updatePanel.auto") }}:</span>
+              </div>
+              <div id="currentValue">
+                <span>{{ osVersionCurrent }}</span>
+              </div>
+              <div id="latestValue">
+                <span>{{ osVersionLatest }}</span>
+              </div>
+              <div id="updateStatus">
+                <span>{{ osAutoUpdate }}</span>
+              </div>
             </div>
-            <div
-              class="available"
-              v-if="forceUpdateCheck && !checkStereumUpdate()"
-            >
-              <span class="circle pulse"></span>
-              <span class="searchingText">{{
-                $t("updatePanel.searching")
-              }}</span>
+            <div class="btnBox">
+              <div class="searchBtn" @click="searchUpdate">
+                <img src="/img/icon/header-icons/search.png" alt="icon" />
+              </div>
+              <div
+                class="downloadBtn"
+                :class="{ disabled: !checkStereumUpdate() || updating }"
+                @click="$emit('runUpdate', stereumUpdate)"
+              >
+                <img
+                  src="/img/icon/node-journal-icons/download2.png"
+                  alt="icon"
+                />
+              </div>
+
+              <div v-if="checkStereumUpdate()" class="available">
+                <div class="updateIcon">
+                  <img
+                    src="/img/icon/header-icons/update-green.png"
+                    alt="icon"
+                  />
+                </div>
+                <span class="availableText"
+                  >{{ stereumUpdate.version }}
+                  {{ $t("updatePanel.available") }}</span
+                >
+              </div>
+              <div
+                class="available"
+                v-if="forceUpdateCheck && !checkStereumUpdate()"
+              >
+                <span class="circle pulse"></span>
+                <span class="searchingText">{{
+                  $t("updatePanel.searching")
+                }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -190,6 +261,9 @@ export default {
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
 .panelParent {
   width: 36%;
   height: 91%;
@@ -226,7 +300,7 @@ export default {
 }
 .stereumUpdates {
   width: 100%;
-  height: 30%;
+  height: 45%;
 }
 .serviceUpdates {
   width: 100%;
@@ -244,18 +318,29 @@ export default {
   margin-top: 10px;
   text-transform: uppercase;
 }
+.nodeUpdate-title_row {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #375b5c;
+  margin-left: 1.5%;
+  text-transform: uppercase;
+}
 .launcherUpdate,
 .serviceUpdates-title {
   width: 100%;
-  height: 50px;
+  height: 15%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+  margin: 1% 0;
 }
 .launcherUpdate .title,
 .serviceUpdates-title .title {
-  font-size: 1.1rem;
+  font-size: 100%;
   font-weight: 800;
   color: #375b5c;
   margin-left: 15px;
@@ -298,16 +383,22 @@ export default {
 }
 .stereum-updateBox {
   width: 94%;
-  height: 65%;
+  height: 90%;
   margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 }
-
+.versionContainer {
+  display: flex;
+  width: 100%;
+  height: 40%;
+  position: relative;
+}
 .stereum-updateBox .versionBox {
   width: 50%;
-  height: 80%;
+  height: 100%;
   display: grid;
   grid-template-columns: 46% 54%;
   grid-template-rows: repeat(3, 1fr);
@@ -429,11 +520,11 @@ export default {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: repeat(12, 1fr);
 }
 .btnBox .searchBtn {
   grid-column: 1/4;
-  grid-row: 2/4;
+  grid-row: 2/8;
   border-radius: 3px;
   margin-left: 20px;
   box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
@@ -460,7 +551,7 @@ export default {
 }
 .btnBox .downloadBtn {
   grid-column: 4/7;
-  grid-row: 2/4;
+  grid-row: 2/8;
   margin-right: 20px;
   border: 1px solid #067c5a;
   border-radius: 3px;
@@ -486,7 +577,7 @@ export default {
 }
 .btnBox .available {
   grid-column: 1/7;
-  grid-row: 4/5;
+  grid-row: 9/11;
   margin-left: 0;
   width: 90%;
   height: 100%;
