@@ -302,7 +302,7 @@ export default {
 }
 .serviceUpdates {
   width: 100%;
-  height: 55%;
+  height: 52%;
   display: flex;
   flex-direction: column;
   justify-content: center;
