@@ -737,6 +737,11 @@ select {
 .chooseFile img {
   width: 50%;
 }
+.chooseFile:active,
+.chooseFile:focus {
+  border: none;
+  transform: scale(0.9);
+}
 #keyLocation input {
   width: 57%;
   height: 80%;
@@ -855,10 +860,10 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 19px;
-  width: 19px;
-  left: 2px;
-  bottom: 1px;
+  height: 80%;
+  width: 40%;
+  left: 7%;
+  bottom: 10%;
   background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -870,11 +875,10 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(19px);
-  -ms-transform: translateX(19px);
-  transform: translateX(19px);
+  -webkit-transform: translateX(80%);
+  -ms-transform: translateX(40%);
+  transform: translateX(115%);
   background-color: #51a76e;
-
   box-shadow: 2px 1px 5px #292b2b;
 }
 

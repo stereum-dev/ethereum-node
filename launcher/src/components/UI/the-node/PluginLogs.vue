@@ -1,5 +1,14 @@
 <template>
   <div class="pluginLog-parent">
+    <control-dialog :open="openDialog">
+      <div class="dialogBox">
+        <div class="dialogIcon"><img :src="dialogIcon" /></div>
+        <div class="dialogMessage">
+          <span>{{ dialogValue }}</span>
+        </div>
+      </div>
+    </control-dialog>
+
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
@@ -55,7 +64,11 @@
             placeholder="Search"
             v-model="searchValue"
           />
-          <img src="/img/icon/arrows/search.png" alt="icon" />
+          <img
+            src="/img/icon/arrows/search.png"
+            alt="icon"
+            v-if="!searchValue"
+          />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
@@ -66,16 +79,22 @@
   </div>
 </template>
 <script>
+import ControlDialog from "../the-control/ControlDialog.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 export default {
+  components: { ControlDialog },
   props: ["item"],
   data() {
     return {
       logs: [],
       searchValue: "",
       logVal: "",
+      //nklnlökm
+      openDialog: false,
+      dialogValue: "",
+      copyIcon: "/img/icon/control/ok.png",
     };
   },
 
@@ -109,11 +128,50 @@ export default {
     copy(e) {
       const copyText = e.target.innerText;
       navigator.clipboard.writeText(copyText);
+      this.openDialog = !this.openDialog;
+      this.dialogValue = "Copied to clipboard!";
+      this.dialogIcon = this.copyIcon;
+      if (this.openDialog === true) {
+        setTimeout(() => {
+          this.openDialog = false;
+        }, 1000);
+      }
     },
   },
 };
 </script>
 <style scoped>
+.dialogBox {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 600;
+}
+
+.dialogIcon {
+  display: flex;
+  height: 100%;
+  width: 20%;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialogIcon img {
+  width: 50%;
+}
+
+.dialogMessage {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80%;
+  height: 100%;
+  font-weight: 500;
+  font-size: 100%;
+  color: #eee;
+}
 .pluginLog-parent {
   width: 100%;
   height: 91%;
@@ -386,13 +444,16 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .searchBox img {
   width: 9%;
-  margin-right: 5px;
+  margin-right: 1%;
+  left: 90%;
+  position: absolute;
 }
 .logsFooter .searchBox input {
-  width: 95%;
+  width: 100%;
   height: 90%;
   background-color: #eaeaea;
   border-radius: 5px;
