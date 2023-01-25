@@ -75,7 +75,7 @@
             <span>operating system (server)</span>
           </div>
           <div class="versionContainer">
-            <!-- <comming-soon></comming-soon> -->
+            <comming-soon></comming-soon>
             <div class="versionBox">
               <div id="current">
                 <span>{{ $t("updatePanel.current") }}:</span>
@@ -302,7 +302,7 @@ export default {
 }
 .serviceUpdates {
   width: 100%;
-  height: 52%;
+  height: 53%;
   display: flex;
   flex-direction: column;
   justify-content: center;
