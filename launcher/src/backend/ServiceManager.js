@@ -468,6 +468,14 @@ export class ServiceManager {
         ]
         return NethermindService.buildByUserInput(args.network, ports, args.installDir + '/nethermind')
 
+      case "ErigonService":
+        ports = [
+          new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+          new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+          new ServicePort('127.0.0.1', args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+        ]
+        return ErigonService.buildByUserInput(args.network, ports, args.installDir + '/erigon')
+
       case "LighthouseBeaconService":
         ports = [
           new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
