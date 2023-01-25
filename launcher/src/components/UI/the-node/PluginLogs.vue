@@ -91,7 +91,7 @@ export default {
       logs: [],
       searchValue: "",
       logVal: "",
-      //nklnlökm
+      //dialog datas
       openDialog: false,
       dialogValue: "",
       copyIcon: "/img/icon/control/ok.png",
@@ -134,7 +134,7 @@ export default {
       if (this.openDialog === true) {
         setTimeout(() => {
           this.openDialog = false;
-        }, 1000);
+        }, 700);
       }
     },
   },
