@@ -1,23 +1,22 @@
 <template>
   <div class="custom-layer_parent">
-    <div class="header"><span>CUSTOM INSTALLATION</span></div>
+    <div class="header">
+      <span>{{ $t("customInstallation.customInstallationTitle") }}</span>
+    </div>
     <div class="container-box">
       <div class="custom-container">
         <div class="text-container">
-          <span
-            >This mode is meant for more advanced users and requires you to have
-            a understanding of how the clients interact with each other. you
-            will have to pick and choose, install and connect every part of your
-            node with UI before it will be function!</span
-          >
+          <span>{{ $t("customInstallation.customInstallationText") }}</span>
         </div>
         <div class="path-container">
           <div class="path-title">
-            <span>CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO:</span>
+            <span>{{ $t("customInstallation.chooseWhereToInstall") }}:</span>
           </div>
           <div class="textbox-cont">
             <div class="textbox-cont_front">
-              <div class="textbox-title"><span>INSTALLATION PATH</span></div>
+              <div class="textbox-title">
+                <span>{{ $t("customInstallation.installationPath") }}</span>
+              </div>
               <div class="textbox">
                 <input
                   type="text"
@@ -30,9 +29,15 @@
         </div>
       </div>
     </div>
-    <router-link class="back" to="/welcome">back</router-link>
-    <router-link @click="prepareStereum" class="install" :class="activeBtn()" to="/node"
-      >install</router-link
+    <router-link class="back" to="/welcome">{{
+      $t("installOption.back")
+    }}</router-link>
+    <router-link
+      @click="prepareStereum"
+      class="install"
+      :class="activeBtn()"
+      to="/node"
+      >{{ $t("installOption.install") }}</router-link
     >
   </div>
 </template>
@@ -60,14 +65,15 @@ export default {
     }),
   },
   methods: {
-    async prepareStereum(){
-      this.currentNetwork = this.networkList.find(item => item.network === "testnet")
-      this.refresh = false
+    async prepareStereum() {
+      this.currentNetwork = this.networkList.find(
+        (item) => item.network === "testnet"
+      );
+      this.refresh = false;
       await ControlService.prepareStereumNode(this.installPath);
-      const restarted = await ControlService.restartServer()
-      this.refresh = true
-      if(restarted)
-        await new Promise(resolve => setTimeout(resolve, 20000))      
+      const restarted = await ControlService.restartServer();
+      this.refresh = true;
+      if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
     },
     activeBtn() {
       if (this.installPath === "") {
