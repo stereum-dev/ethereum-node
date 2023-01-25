@@ -1760,17 +1760,17 @@ rm -rf diskoutput
   }
 
   // get States of Validators
-  async getValidatorState(){
+  // validatorPublicKeys: array of all pubkeys
+  async getValidatorState(validatorPublicKeys){
     let validatorBalances = [];
     let validatorBalancesObject = {};
     // get status of beacon container
     const beaconStatus = await this.getBeaconStatus();
-
     if (beaconStatus.code === 0) {
-      var beaconAPIPort = "";
-      const curlCheckCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl"`;
+      var beaconAPIPort = beaconStatus.servicePort
 
       // checking 'CURL' installation on the beacon container
+      const curlCheckCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl"`;
       const curlCheckRunCmd = await this.nodeConnection.sshService.exec(curlCheckCmd);
 
       if (curlCheckRunCmd.stderr.includes("curl: not found")) {
@@ -1778,63 +1778,40 @@ rm -rf diskoutput
         await this.nodeConnection.sshService.exec(installCurlCmd);
       }
 
-      // get beacon API port ---> should be defined as private: 127.0.0.1
-      const localPortStatus = await this.getLocalPortStatus();
-
-      if (localPortStatus.code === 0) {
-        for(let i = 0; i < localPortStatus.data.length; i++){
-          if (localPortStatus.data[i].name === "LIGHTHOUSE" || localPortStatus.data[i].name === "NIMBUS" || localPortStatus.data[i].name === "PRYSM" || localPortStatus.data[i].name === "TEKU"){
-            beaconAPIPort = localPortStatus.data[i].port;
-          }
-        }
-      } else if (localPortStatus.code === 1) {
-          return validatorBalances;     // empty array will be returned, if the local ports are not found (service infos unavailable!)
-      }
-
-      const validatorPublicKeys = await this.nodeConnection.sshService.exec('cat /etc/stereum/keys.yaml');
-
       // get validator's states from beacon container
-      if (beaconAPIPort !== "" && validatorPublicKeys.rc ===  0) {
+      if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
         var beaconAPIRunCmd = "";
         var id = 1;
         let validatorNotFound;
-        for (const [key, ] of Object.entries(YAML.parse(validatorPublicKeys.stdout))) {
-          const beaconAPICmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconAPIPort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'"`     // using beacon container to run beacon API
-          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
-          validatorNotFound = JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message");
+
+        for (const key of validatorPublicKeys) {
+          const beaconAPICmd = `docker exec -u 0 stereum-${beaconStatus.data[0].sid} curl -s -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconStatus.data[0].beacon.servicePort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'`     // using beacon container to run beacon API
+          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
+
+          validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
 
           if (!validatorNotFound){
+            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
             validatorBalancesObject = {
               id: id,
-              validatorIndex: JSON.parse(beaconAPIRunCmd.stdout).data.index,
-              validatorBalance: parseFloat(JSON.parse(beaconAPIRunCmd.stdout).data.balance/1000000000),
-              validatorStatus: JSON.parse(beaconAPIRunCmd.stdout).data.status,
-              validatorPubkey: JSON.parse(beaconAPIRunCmd.stdout).data.validator.pubkey,
-              validatorActivationEpoch: JSON.parse(beaconAPIRunCmd.stdout).data.validator.activation_epoch,
+              index: queryResult.index,
+              balance: queryResult.balance,
+              status: queryResult.validator.slashed === "true" ? "slashed" : (queryResult.status.replace(/_.*/,"")),
+              pubkey: key,
+              activation_epoch: queryResult.validator.activation_epoch,
             };
             id++;
             validatorBalances.push(validatorBalancesObject);
-          } else if (validatorNotFound) {
-              validatorBalancesObject = {
-                id: id,
-                validatorIndex: "",
-                validatorBalance: "",
-                validatorStatus: "",
-                validatorPubkey: key,
-                validatorActivationEpoch: "",
-              };
-              id++;
-              validatorBalances.push(validatorBalancesObject);
           }
         }
       }
       // return array of objects which include following:
       // - id: value
-      // - validator Index: index
-      // - validatorBalance: balance
-      // - validatorStatus: state
-      // - validatorPubkey: pub_key
-      // - validatorActivationEpoch: epoch_number
+      // - index: index
+      // - balance: balance
+      // - status: state
+      // - pubkey: pub_key
+      // - activation_epoch: epoch_number
       return validatorBalances;
     } else if (beaconStatus.code === 2)
         return validatorBalances;     // empty array will be returned, if there is a no running consensus client

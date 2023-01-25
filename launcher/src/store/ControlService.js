@@ -289,8 +289,8 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("readKeys");
   }
 
-  async getValidatorState() {
-    return await this.promiseIpc.send("getValidatorState");
+  async getValidatorState(args) {
+    return await this.promiseIpc.send("getValidatorState", args);
   }
 
   async prepareStereumNode(args){

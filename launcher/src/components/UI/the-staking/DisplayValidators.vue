@@ -522,6 +522,8 @@ export default {
       switch (item.status) {
         case "active_online":
           return this.activeStatusIcon;
+        case "active":
+          return this.activeStatusIcon;
         case "active_offline":
           return this.offlineStatusIcon;
         case "slashed":
@@ -529,6 +531,8 @@ export default {
         case "pending":
           return this.pendingStatusIcon;
         case "exited":
+          return this.exitedStatusIcon;
+        case "withdrawal":
           return this.exitedStatusIcon;
         case "NA":
           return this.apiProblems;
@@ -605,7 +609,8 @@ export default {
             showExitText: false,
           };
         });
-        this.updateValidatorStats();
+        if(this.keys && this.keys.length > 0)
+          this.updateValidatorStats();
       }
     },
     async updateValidatorStats() {
@@ -618,13 +623,17 @@ export default {
       }
 
       try {
-        let buffer = this.keys.map((key) => key.key);
-        const chunkSize = 50;
-        for (let i = 0; i < buffer.length; i += chunkSize) {
-          //split validator accounts into chunks of 50 (api url limit)
-          const chunk = buffer.slice(i, i + chunkSize);
-          let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
-          if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
+        data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
+        if(!data || data.length == 0){
+          data = []
+          let buffer = this.keys.map((key) => key.key);
+          const chunkSize = 50;
+          for (let i = 0; i < buffer.length; i += chunkSize) {
+            //split validator accounts into chunks of 50 (api url limit)
+            const chunk = buffer.slice(i, i + chunkSize);
+            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
+            if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
+          }
         }
       } catch (err) {
         console.log("Couldn't fetch validator stats:\n", err);

@@ -8,23 +8,11 @@
 </template>
 <script>
 import StakingGrid from "../components/UI/the-staking/StakingGrid.vue";
-import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
-import { useStakingStore } from "@/store/theStaking";
-import { thisTypeAnnotation } from '@babel/types';
 
 export default {
   components: {
     StakingGrid,
   },
-  created(){
-    this.validatorState();
-  },
-  methods:{
-    async validatorState(){
-      const data = await ControlService.getValidatorState();
-    },
-  }
 };
 </script>
 <style scoped>
