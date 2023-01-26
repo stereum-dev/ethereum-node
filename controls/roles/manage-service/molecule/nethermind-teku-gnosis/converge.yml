@@ -30,7 +30,7 @@
               entrypoint: ["./Nethermind.Runner"]
               env: {}
               command:
-              - --config=xdai
+              - --config=gnosis
               - --log=debug
               - --datadir=/opt/app/data
               - --Network.DiscoveryPort=30303
