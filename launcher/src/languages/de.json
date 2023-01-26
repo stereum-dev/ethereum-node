@@ -37,7 +37,7 @@
   "settingPanel": {
     "stereumName": "Stereum Einstellungen",
     "langName": "Sprachauswahl",
-    "confirm": "ANWENDEN",
+    "confirm": "APPLY",
     "general": "ALLGEMEIN",
     "credits": "Credits",
     "open": "öffnen",
@@ -57,7 +57,7 @@
     "ssv": "SSV Network verwenden",
     "alert": "Mobile App Benachrichtigungen",
     "switchC": "Clients wechseln",
-    "migrate": "Node Migration",
+    "migrate": "Nodes Migration",
     "rpc": "RPC Connection"
   },
   "pluginZone": {
@@ -88,7 +88,7 @@
     "current": "aktuelle",
     "nodeTitle": "Node Updates",
     "latest": "neueste",
-    "auto": "Auto-Update",
+    "auto": "Auto Update",
     "available": "verfügbar",
     "searching": "Suche nach Updates...",
     "serviceTitle": "Service-Updates",
@@ -150,10 +150,10 @@
     "setBlock": "SETZE EINE BLOCK FEE EMPFÄNGERADRESSE"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Geben Sie bis zu 32 Zeichen ein um sie zur Blockchain hinzuzufügen, wenn Sie einen Block erstellen!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Geben Sie bis zu 32 Zeichen ein, um den Validator umzubenennen!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
@@ -238,13 +238,13 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "NEUEN OPERATOR REGISIEREN",
-    "newRegistritionText": "Benutzen Sie den neu generierten Operator-Schlüssel, um einen neuen Node Operator im SSV-Netzwerk zu registrieren",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
     "register": "Registrieren",
     "insertTitle": "Operatorschlüssel für bestehenden Operator einfügen",
-    "insertText": "Verwenden Sie einen bestehenden privaten Operatorschlüssel, um die Operationen einer bestehenden Node wiederherzustellen"
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
   "registerSSV": {
-    "pubKey": "Öffentlicher Operatorschlüssel",
+    "pubKey": "Public operator key",
     "copied": "Kopiert!",
     "secKey": "Geheimer Operatorschlüssel",
     "makeSureText": "Bitte stellen Sie sicher, dass Sie den geheimen Schlüssel Ihres Operators an einem sicheren Ort speichern und sichern. Teilen Sie diesen Schlüssel nicht mit niemandem.",
@@ -280,5 +280,11 @@
     "process": "Wird verarbeitet",
     "blockRel": "Block Relais",
     "blockRelTxt": "Wähle ein oder mehrere Relais aus, um Blöcke zu empfangen"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }
