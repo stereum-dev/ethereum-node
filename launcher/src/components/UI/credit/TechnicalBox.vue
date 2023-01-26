@@ -26,19 +26,20 @@
       ></the-contributor>
     </div>
     <div class="wrapper" v-else>
-      <the-contributor
+      <test-contributor
         v-for="result in filterTesters"
         :key="result.id"
         :name="result.name"
         :avatar="result.avatar"
-      ></the-contributor>
+      ></test-contributor>
     </div>
   </div>
 </template>
 <script>
 import TheContributor from "./TheContributor.vue";
+import TestContributor from "./TestContributor.vue";
 export default {
-  components: { TheContributor },
+  components: { TheContributor, TestContributor },
   data() {
     return {
       results: [],
