@@ -63,22 +63,6 @@ export default {
     },
   },
   methods: {
-    frameBgColor(index) {
-      if (index === 1) {
-        return "silver";
-      } else if (index === 2) {
-        return "#CD7F32";
-      }
-    },
-    frameColor(index) {
-      if (index === 0) {
-        return "gold";
-      } else if (index === 1) {
-        return "#171717";
-      } else if (index === 2) {
-        return "#171717";
-      }
-    },
     github() {
       fetch(
         "https://api.github.com/repos/stereum-dev/ethereum-node/contributors"
@@ -89,7 +73,6 @@ export default {
           }
         })
         .then((data) => {
-          console.log(data);
           const results = [];
           for (const id in data) {
             results.push({

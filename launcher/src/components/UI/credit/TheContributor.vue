@@ -43,6 +43,7 @@ export default {
   border-radius: 30px;
   flex-direction: column;
   margin-top: 2%;
+  margin-bottom: 1%;
   position: relative;
 }
 .contributor-avatar {
