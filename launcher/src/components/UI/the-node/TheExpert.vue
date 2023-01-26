@@ -19,7 +19,7 @@
             alt="icon"
           />
           <span class="docTitle">PLUG-IN DOCS</span>
-          <span class="openBtn" @click="linkMevBoost">open</span>
+          <span class="openBtn" @click="openDocs">open</span>
         </div>
         <!-- expert mode row -->
         <div
@@ -262,8 +262,9 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapState } from "pinia";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   props: ["item", "position", "prunningWarning"],
   data() {
@@ -284,8 +285,11 @@ export default {
       nothingsChanged: true,
     };
   },
-  computed: {},
-
+  computed: {
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
+  },
   mounted() {
     this.readService();
   },
@@ -295,16 +299,27 @@ export default {
   //   },
   // },
   methods: {
-    linkMevBoost() {
-      let mevUrl =
+    openDocs() {
+      let docsUrl =
         " https://docs.flashbots.net/flashbots-mev-boost/introduction";
-      if (this.item.name === "Flashbots Mev Boost")
-        window.open(mevUrl, "_blank");
+      const genosisUrl = "https://docs.gnosischain.com/node/";
+      if (this.item.name === "Flashbots Mev Boost") {
+        window.open(docsUrl, "_blank");
+      } else if (
+        this.currentNetwork.name === "Gnosis" &&
+        (this.item.name === "Nethermind" ||
+          this.item.name === "Lighthouse" ||
+          this.item.name === "Teku")
+      ) {
+        window.open(genosisUrl, "_blank");
+      }
     },
+
     somethingIsChanged(item) {
       if (item && item.title) item.changed = true;
       this.nothingsChanged = false;
     },
+
     async readService() {
       this.item.yaml = await ControlService.getServiceYAML(
         this.item.config.serviceID
@@ -628,7 +643,7 @@ export default {
   align-items: center;
 }
 .selectBox .spaceParent select {
-  width: 86%;
+  width: 78%;
   height: 94%;
   margin-right: 3px;
   border-radius: 25px;
@@ -725,7 +740,8 @@ export default {
   position: relative;
   border-radius: 10px;
 }
-.updateService select {
+.updateService select,
+.spaceParent select {
   text-align-last: center;
   color: #232323;
   font-size: 85%;
@@ -810,7 +826,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgb(173, 173, 173);
+  box-shadow: 3px 3px 5px #454747 inset;
+  background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -818,25 +835,29 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 0;
-  bottom: 8%;
+  height: 70%;
+  width: 35%;
+  left: 5%;
+  bottom: 15%;
   background-color: #abb0b2;
   box-shadow: 0 1px 3px 1px rgb(89, 89, 89);
   -webkit-transition: 0.4s;
   transition: 0.4s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 input:checked + .slider {
-  background-color: #e6e6e6;
+  background-color: #1ea669;
 }
 
 input:checked + .slider:before {
   -webkit-transform: translateX(24px);
   -ms-transform: translateX(24px);
   transform: translateX(24px);
-  background-color: #1ea669;
+
+  background-color: #e6e6e6;
 }
 
 /* Rounded sliders */

@@ -27,10 +27,7 @@
                     </div>
                   </div>
                   <div class="circle-box">
-                    <img
-                      :src="selectedNetwork.icon"
-                      alt="icon"
-                    />
+                    <img :src="selectedNetwork.icon" alt="icon" />
                   </div>
                 </div>
                 <div class="change-installation">
@@ -89,6 +86,7 @@
                         v-for="(item, idx) in filteredPluginsOnCategory"
                         :key="idx"
                         @click="pluginChangeHandler(plugin, item, index)"
+                        :data-tooltip="item.name"
                       >
                         <img
                           :src="item.icon"
@@ -96,9 +94,6 @@
                           @mouseover="runningTooltip(item)"
                           @mouseleave="item.displayTooltip = false"
                         />
-                        <span class="tooltip" v-if="item.displayTooltip">{{
-                          item.name
-                        }}</span>
                       </div>
                     </div>
                   </change-modal>
@@ -183,7 +178,7 @@ export default {
     this.selectedPluginsValidation();
     this.pushNewProperthyToPresets();
     this.sortPlugins();
-    this.getInstallPath()
+    this.getInstallPath();
   },
   methods: {
     selectedPluginsValidation() {
@@ -203,7 +198,10 @@ export default {
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (this.selectedPreset.name === "staking" || this.selectedPreset.name === "mev boost") {
+      if (
+        this.selectedPreset.name === "staking" ||
+        this.selectedPreset.name === "mev boost"
+      ) {
         //if the preset is staking:
         if (item.category === "consensus") {
           //and you just changed the consensus client
@@ -255,7 +253,7 @@ export default {
             this.checkPluginCategory(item);
           }
         });
-          el.showChangeModal = true;
+        el.showChangeModal = true;
       }
     },
     checkPluginCategory(element) {
@@ -267,9 +265,13 @@ export default {
           filter = (item) =>
             item.category === element.category &&
             item.service !== "SSVNetworkService" &&
-            item.service !== "Web3SignerService"
-          if(this.selectedNetwork.name == "gnosis"){
-            filter = (item) => item.category === element.category && /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service)
+            item.service !== "Web3SignerService";
+          if (this.selectedNetwork.name == "gnosis") {
+            filter = (item) =>
+              item.category === element.category &&
+              /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(
+                item.service
+              );
           }
           break;
         case "ssv.network":
@@ -290,7 +292,7 @@ export default {
           filter = (item) =>
             item.category === element.category &&
             item.service !== "SSVNetworkService" &&
-            item.service !== "Web3SignerService"
+            item.service !== "Web3SignerService";
           break;
         default:
           break;
@@ -321,11 +323,42 @@ export default {
         largestVolumePath = largestVolumePath + 'opt'
       const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
       this.installationPath = stereumInstallationPath;
-    }
+    },
   },
 };
 </script>
 <style scoped>
+* {
+  box-sizing: border-box;
+}
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: 0;
+  top: 0;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 47%;
+  padding: 2% 3%;
+  border: 1px solid #929292;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(20%);
+  transition: opacity 0.3s transform 0.2s;
+  z-index: 100;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .plugin-parent {
   display: flex;
   justify-content: center;
@@ -494,11 +527,11 @@ export default {
 
 .replaced-plugins {
   width: 100%;
-  height: 43px;
+  height: 100%;
   border-radius: 10px 10px 0 0;
   background-color: #2b3034;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 1fr;
 }
 .replaced-plugins .item {
@@ -506,8 +539,9 @@ export default {
   height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   position: relative;
+  z-index: 10;
 }
 .replaced-plugins .item img {
   width: 30px;
@@ -856,22 +890,5 @@ export default {
 .faildreq {
   color: rgb(225, 54, 54) !important;
   border: 1px solid rgb(225, 54, 54) !important;
-}
-.tooltip {
-  width: max-content;
-  height: 15px;
-  background-color: rgb(42, 42, 42);
-  border: 1px solid #a0a0a0;
-  border-radius: 3px;
-  padding: 0 3px 3px 3px;
-  position: absolute;
-  top: 5px;
-  left: 25%;
-  transform: translate(-5px, -5px);
-  font-size: 0.6rem;
-  font-weight: 400;
-  color: #dce2e9;
-  text-align: center;
-  display: inline-block;
 }
 </style>
