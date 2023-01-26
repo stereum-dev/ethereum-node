@@ -231,7 +231,7 @@ export default {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
         user: { value: "", isFilled: true },
-        port: { value: "", isFilled: true},
+        port: { value: "", isFilled: true },
         pass: { value: "", isFilled: true },
         keylocation: { value: "", isFilled: true },
         useAuthKey: false,
@@ -737,6 +737,11 @@ select {
 .chooseFile img {
   width: 50%;
 }
+.chooseFile:active,
+.chooseFile:focus {
+  border: none;
+  transform: scale(0.9);
+}
 #keyLocation input {
   width: 57%;
   height: 80%;
@@ -846,7 +851,7 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-
+  box-shadow: 3px 3px 5px #454747 inset;
   background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -855,15 +860,14 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 19px;
-  border: 1px solid #228bb1;
-  width: 19px;
-  left: 2px;
-  bottom: 1px;
+  height: 80%;
+  width: 40%;
+  left: 7%;
+  bottom: 10%;
   background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: inset 1px 1px 3px 1px #70bfdc;
+  box-shadow: 1px 1px 5px 1px #292b2b;
 }
 
 input:checked + .slider {
@@ -871,12 +875,11 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(19px);
-  -ms-transform: translateX(19px);
-  transform: translateX(19px);
+  -webkit-transform: translateX(80%);
+  -ms-transform: translateX(40%);
+  transform: translateX(115%);
   background-color: #51a76e;
-  border: 1px solid #329f55;
-  box-shadow: inset 1px 1px 5px #91d8a9;
+  box-shadow: 2px 1px 5px #292b2b;
 }
 
 /* Rounded sliders */
@@ -888,9 +891,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-input:optional {
-  border-color: gray;
-}
 .error-box {
   width: 100%;
   height: 100%;

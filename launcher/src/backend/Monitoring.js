@@ -570,6 +570,7 @@ export class Monitoring {
         'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - query for job="lighthouse_beacon"!
         'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - query for job="prysm_beacon"!
         'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="nimbus"
+        'LodestarBeaconService' : ['beacon_clock_slot','beacon_head_slot'], // OK - query for job="lodestar_beacon"
       },
       'execution':{
         'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
@@ -584,6 +585,7 @@ export class Monitoring {
       'LighthouseBeaconService' : 'lighthouse_beacon',
       'PrysmBeaconService' : 'prysm_beacon',
       'NimbusBeaconService' : 'nimbus',
+      'LodestarBeaconService' : 'lodestar_beacon',
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
@@ -723,6 +725,7 @@ export class Monitoring {
         'LighthouseBeaconService' : ['libp2p_peers'],
         'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
         'NimbusBeaconService' : ['nbc_peers'],
+        'LodestarBeaconService' : ['lodestar_peers_by_direction_count'],// needs to query for direction="outbound"! 
       },
       'execution':{
         'GethService' : ['p2p_peers'],
@@ -737,6 +740,7 @@ export class Monitoring {
       'LighthouseBeaconService' : 'lighthouse_beacon',
       'PrysmBeaconService' : 'prysm_beacon',
       'NimbusBeaconService' : 'nimbus',
+      'LodestarBeaconService' : 'lodestar_beacon',
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
@@ -850,6 +854,10 @@ export class Monitoring {
           // See extra dealing with --hard-max-peers below!
           optnam = '--max-peers';
           defval = 160;
+        }else if(clt.service == "LodestarBeaconService"){
+          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50)
+          optnam = '--targetPeers';
+          defval = 50;
         }else if(clt.service == "GethService"){
             // [MAXVAL: --maxpeers (Default: 50)]
           optnam = '--maxpeers';
@@ -912,7 +920,7 @@ export class Monitoring {
       });
 
       // Filter Prometheus result by current used services and calculate number of currently used peers per client
-      // Note that Prysm requires to match state="Connected"!
+      // Note that Prysm requires to match state="Connected" and Lodestar direction="outbound"
       try{
         var maxPeer = 0, numPeer = 0, valPeer = 0;
         clientTypes.forEach(function (clientType, index) {
@@ -922,7 +930,8 @@ export class Monitoring {
             services[clientType][clt.service].includes(s.metric.__name__) && 
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
-            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true
+            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true &&
+            clt.service == "LodestarBeaconService" ? s.metric.direction == 'outbound' : true
           );
           if(xx.length){
             services[clientType][clt.service].forEach(function (item, index) {
@@ -1348,6 +1357,7 @@ export class Monitoring {
       'LighthouseBeaconService' : 5052,
       'PrysmBeaconService' : 3500,
       'NimbusBeaconService' : 5052,
+      'LodestarBeaconService' : 9596,
     };
 
     // Set timestamp in micro seconds

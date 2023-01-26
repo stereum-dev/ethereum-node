@@ -17,6 +17,7 @@ import { NethermindService } from './ethereum-services/NethermindService'
 import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
 import { LodestarBeaconService } from './ethereum-services/LodestarBeaconService'
 import { LodestarValidatorService } from './ethereum-services/LodestarValidatorService'
+import { ErigonService } from './ethereum-services/ErigonService'
 
 const YAML = require('yaml')
 const log = require('electron-log')
@@ -151,9 +152,18 @@ export class OneClickInstall {
 
     }
 
+    if (constellation.includes('ErigonService')) {
+      ports = [
+        new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
+        new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
+        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
+      ]
+      this.executionClient = ErigonService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/erigon')
+
+    }
+
     if (constellation.includes('FlashbotsMevBoostService')) {
       //FlashbotsMevBoostService
-      log.info(relayURL)
       this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(), relayURL)
     }
 
@@ -288,6 +298,8 @@ export class OneClickInstall {
       this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus)
       this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter)
       this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana)
+      if (this.mevboost)
+        this.mevboost.imageVersion = this.getLatestVersion(versions, this.mevboost)
       if (this.validatorService) {
         this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService)
       }

@@ -17,9 +17,9 @@
   - debug:
       msg: "{{ node_exporter_service_configuration }}"
 
-  # - assert:
-  #     that:
-  #     - (node_exporter_service_configuration.command | select('match', '--path.rootfs=/host') | length) == 1
-  #     - (node_exporter_service_configuration.volumes | select('match', '/:/host:ro,rslave') | length) == 1
+  - assert:
+      that:
+      - (node_exporter_service_configuration.command | select('match', '--path.rootfs=/host') | length) == 1
+      - (node_exporter_service_configuration.volumes | select('match', '/:/host:ro,rslave') | length) == 1
 
 # EOF

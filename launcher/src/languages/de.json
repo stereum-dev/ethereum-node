@@ -26,7 +26,7 @@
     "support": "Hilfestellung",
     "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
     "bugReport": "BUG BERICHTE",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
+    "bugRepText": "Bitte nehmen Sie sich die Zeit das Problem auf Github festzuhalten und lassen Sie uns Stereum gemeinsam besser machen!",
     "emailText": "oder eine E-Mail schreiben an:"
   },
   "notifModal": {
@@ -35,10 +35,10 @@
     "cancelText": "Außerhalb klicken, um abzubrechen"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLIED",
-    "general": "GENERAL",
+    "stereumName": "Stereum Einstellungen",
+    "langName": "Sprachauswahl",
+    "confirm": "APPLY",
+    "general": "ALLGEMEIN",
     "credits": "Credits",
     "open": "öffnen",
     "update": "UPDATE",
@@ -88,7 +88,7 @@
     "current": "aktuelle",
     "nodeTitle": "Node Updates",
     "latest": "neueste",
-    "auto": "Auto-Update",
+    "auto": "Auto Update",
     "available": "verfügbar",
     "searching": "Suche nach Updates...",
     "serviceTitle": "Service-Updates",
@@ -104,8 +104,8 @@
     "inclusionDistance": "INKLUSIONSDISTANZ",
     "rpc": "RPC-Endpunkt",
     "syncStatus": "SYNC STATUS",
-    "hard": "STORAGE VOLUME",
-    "free": "KOSTENLOS",
+    "hard": "SPEICHERVOLUMEN",
+    "free": "FREI",
     "total": "GESAMT",
     "network": "NETZWERK",
     "receive": "Empfangene Daten",
@@ -129,7 +129,7 @@
     "balance": "KONTOSTAND",
     "option": "OPTIONEN",
     "importKey": "Importiere Validatorschlüssel",
-    "waitMessage": "It may take some time",
+    "waitMessage": "Dies kann einige Zeit dauern",
     "waitForImport": "Bitte warte bis der Schlüssel importiert ist"
   },
   "enterPass": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "GEBEN SIE IHR VALIDATOR PASSWORT EIN UM IHR STAKING KONTO AUFZULÖSEN...",
-    "confirm": "Confirm"
+    "confirm": "Bestätigen"
   },
   "exitValidatorModal": {
     "modalMessage": "Sind sie sicher, dass Sie die Blockchain mit den ausgewählten Validatorschlüsseln verlassen möchten? Dies stoppt Ihre Validatorpflicht & kann nicht umgekehrt werden. Ihr Einsatz kann auch nur dann wieder abgehoben werden, wenn es die Blockchain erlaubt.",
@@ -150,25 +150,25 @@
     "setBlock": "SETZE EINE BLOCK FEE EMPFÄNGERADRESSE"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Geben Sie 32 Zeichen ein um sie zur Blockchain hinzuzufügen, wenn Sie einen Block erstellen!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "KLICKEN ODER ZIEHEN UM DEN KEY EINZUFÜGEN"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "WOLLEN SIE DIE SLASHING DATABASE DOWNLOADEN?",
+    "description": "DU KANNST DIES MIT DEINEN VALIDATOR KEYS IMPORTIEREN UM FÜR ZUSÄTZLICHE SICHERHEIT BEIM MIGRIEREN DEINER KEYS ZU SORGEN",
+    "btn": "Pfad wählen"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With slashing Protection Database?",
+    "sure": "Möchten Sie diesen Validator Key von Ihrer Maschine entfernen?",
+    "slashing": "Mit Slashing Protection Database?",
     "remove": "Entfernen",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "Wählen einen Pfad zum Speicheren der Slashing Protection Database",
+    "writePath": "Bitte notiere dir den Pfad"
   },
   "removeMultipleValidators": {
     "sureText": "Sind Sie sicher, dass Sie alle Validatorschlüssel von DIESER MACHINE entfernen möchten?"
@@ -193,7 +193,7 @@
     "installText": "AUF DIESER SEITE KÖNNEN SIE ENTSCHEIDEN WAS SIE MIT IHRER NODE MACHEN MÖCHTEN. NACHDEM SIE GEWÄHLT HABEN UND START GEDRÜCKT, WIRD IHNEN EINE ZUFÄLLIGE CLIENT AUSWAHL PRÄSENTIERT UM SIE IN IHREM ANWENDUNGSFALL ZU UNTERSTÜTZEN",
     "back": "ZURÜCK",
     "install": "INSTALLIEREN",
-    "placeHoldrer": "choose a network"
+    "placeHoldrer": "Netzwerk auswählen"
   },
   "removeModal": {
     "removeText": "Alle Services werden entfernt.",
@@ -203,7 +203,7 @@
     "welcome": "WILLKOMMEN",
     "installText": "IN DIESEM SCHRITT ENTSCHEIDEN SIE, WIE SIE IHRE NODE INSTALLIEREN MÖCHTEN. WENN SIE HILFE BRAUCHEN BEIM AUFSETZEN, TRETTEN SIE UNSEREM DISCORD SERVER BEI - WIR HELFEN IHNEN GERNE AUS",
     "osCheck": "ÜBERPRÜFE OB DAS OS UNTERSTÜTZT WIRD",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "IST EIN UNTERSTÜTZTES OPERATING SYSTEM"
   },
   "pluginName": {
     "option": "OPTIONEN",
@@ -215,70 +215,76 @@
     "next": "WEITER"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "creditTitle": "CREDITS - FINANZIELLE SPENDEN",
+    "fincialTitle": "SETZE DEINEN NAMEN AUF DIE LISTE! DANKE FÜR DIE UNTERSTÜTZUNG BEI DER ENTWICKLUNG!",
+    "technicPage": "TECHNISCHE BEITRÄGE",
+    "techTitle": "CREDITS - TECHNISCHE BEITRÄGE",
+    "techText": "VERDIENE EINEN GITPOAP! BRINGE DICH EIN INDEM DU UNSEREN GITHUB BESUCHST!",
+    "financialPage": "FINANZIELLE SPENDEN"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
+    "verifyTitle": "VERIFIZIEREN & INSTALLIEREN",
     "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "cat": "KATEGORIE",
+    "path": "PFAD"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Wir empfehlen Ihnen, zu warten, bis die erste Installation abgeschlossen ist, bevor Sie weitere Änderungen vornehmen"
   },
   "tutorialBox": {
-    "video": "video",
-    "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "video": "Video",
+    "walkthrough": "Begleitanleitung",
+    "textGuide": "Schriftliche Anleitung"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionTitle": "NEUEN OPERATOR REGISIEREN",
     "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
+    "register": "Registrieren",
+    "insertTitle": "Operatorschlüssel für bestehenden Operator einfügen",
     "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
   "registerSSV": {
     "pubKey": "Public operator key",
-    "copied": "copied!",
-    "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "copied": "Kopiert!",
+    "secKey": "Geheimer Operatorschlüssel",
+    "makeSureText": "Bitte stellen Sie sicher, dass Sie den geheimen Schlüssel Ihres Operators an einem sicheren Ort speichern und sichern. Teilen Sie diesen Schlüssel nicht mit niemandem.",
+    "copyMessage": "Kopieren Sie Ihren öffentlichen Operator-Schlüssel in dieses Feld, um zu bestätigen, dass Sie Ihre Schlüssel gespeichert haben!"
   },
   "ssvDashboard": {
-    "operatorPage": "My Operator Page",
+    "operatorPage": "Meine Operator-Seite",
     "SSVNodeGrafna": "SSV Node Grafana Dashboard"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "EINEN BESTEHENDEN PRIVATEN OPERATORSCHLÜSSEL ALS OPERATORSCHLÜSSEL VERWENDEN",
+    "apply": "ANWENDEN"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+    "copy": "Klicke zum Kopieren!",
+    "closed": "Tunnel geschlossen!",
+    "turnOnMessage": "Bitte schalten Sie zuerst den DATA-API-Tunnel ein!",
+    "copiedMessage": "DATA-API-URL kopiert!",
+    "RPCTurnOnMessage": "Bitte schalten Sie zuerst den RPC-Tunnel ein!",
+    "RPCCopiedMessage": "RPC-URL kopiert!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Click on the logs to copy",
-    "serviceId": "service id"
+    "noLogFound": "Keine Einträge in den Logs gefunden",
+    "clickCopy": "Zum Kopieren auf die Einträge klicken",
+    "serviceId": "Service-ID"
   },
   "serviceModals": {
-    "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
-    "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
-    "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "localApp": "LOKALE ANWENDUNG",
+    "localAppText": "Öffne den Dienst auf deinem lokalen Rechner",
+    "openBrowser": "IN BROWSER ÖFFNEN",
+    "availBlockRel": "VERFÜGBARE BLOCK RELAYS",
+    "process": "Wird verarbeitet",
+    "blockRel": "Block Relais",
+    "blockRelTxt": "Wähle ein oder mehrere Relais aus, um Blöcke zu empfangen"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }

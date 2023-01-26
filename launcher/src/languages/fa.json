@@ -37,7 +37,7 @@
   "settingPanel": {
     "stereumName": "تنظیمات استریوم",
     "langName": "انتخاب زبان",
-    "confirm": "پذیرفته شد",
+    "confirm": "APPLY",
     "general": "اصلی",
     "credits": "پشتیبان ها",
     "open": "باز کردن",
@@ -57,7 +57,7 @@
     "ssv": " ssvاستفاده از شبکه",
     "alert": "اخطارها در موبایل",
     "switchC": "انتخاب کاربر",
-    "migrate": "انتقال نود ها",
+    "migrate": "Nodes Migration",
     "rpc": "اتصال RPC"
   },
   "pluginZone": {
@@ -88,7 +88,7 @@
     "current": "کنونی",
     "nodeTitle": "NODE بروز رسانی",
     "latest": "آخرین نسخه",
-    "auto": "بروزرسانی اتوماتیک",
+    "auto": "Auto Update",
     "available": "در دسترس",
     "searching": "جستجوی بروزرسانی جدید",
     "serviceTitle": "بروزرسانی خدمات",
@@ -150,10 +150,10 @@
     "setBlock": "یک آدرس گیرنده هزینه بلوک تنظیم کنید"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "سی و دو کاراکتر را وارد کنید تا هنگام ایجاد یک بلوک به زنجیره اضافه شود"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "برای تغییر نام اعتباردهنده، 32 کاراکتر را وارد کنید!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "برای درج کلید کلیک کنید یا فایل را با ماوس اینجا بکشید "
@@ -280,5 +280,11 @@
     "process": "در حال پردازش",
     "blockRel": "Block relay",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }

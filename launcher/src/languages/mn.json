@@ -37,7 +37,7 @@
   "settingPanel": {
     "stereumName": "stereum settings",
     "langName": "Language  Selection",
-    "confirm": "APPLIED",
+    "confirm": "APPLY",
     "general": "ЕРӨНХИЙ",
     "credits": "Нэр дурьдалт",
     "open": "нээх",
@@ -57,7 +57,7 @@
     "ssv": "ssv.сүлжээг хэрэглэх",
     "alert": "Мобайл апп дээрх сэрэмжлүүлэг",
     "switchC": "Клайнтуудийг солих",
-    "migrate": "Нөүдүүдын Шилжилт",
+    "migrate": "Nodes Migration",
     "rpc": "RPC Холболт"
   },
   "pluginZone": {
@@ -88,7 +88,7 @@
     "current": "одоогийн",
     "nodeTitle": "нөүд шинэчлэлтүүд",
     "latest": "сүүлийн",
-    "auto": "авто-шинэчлэлтүүд",
+    "auto": "Auto Update",
     "available": "боломжтой",
     "searching": "шинэ шинэчлэлтүүдийг хайж байна",
     "serviceTitle": "Сервисийн шинэчлэлтүүд",
@@ -150,10 +150,10 @@
     "setBlock": "БЛОК ТӨЛБӨР ХҮЛЭЭН АВАГЧИЙН ХАЯГИЙГ ТОХИРУУЛАХ"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Та блок үүсгээд chain-д нэмэхдээ 32 хүртэлх тэмдэгтийг оруулна уу!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "ТҮЛХҮҮР ОРУУЛАХ БОЛ ТОВШИХ БУЮУ ЧИРНЭ ҮҮ"
@@ -280,5 +280,11 @@
     "process": "Processing",
     "blockRel": "Block relay",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }

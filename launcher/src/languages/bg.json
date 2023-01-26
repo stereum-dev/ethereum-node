@@ -37,7 +37,7 @@
   "settingPanel": {
     "stereumName": "stereum settings",
     "langName": "Language  Selection",
-    "confirm": "APPLIED",
+    "confirm": "APPLY",
     "general": "GENERAL",
     "credits": "Заслуги",
     "open": "отвори",
@@ -88,7 +88,7 @@
     "current": "текущ",
     "nodeTitle": "нод актуализации",
     "latest": "последни",
-    "auto": "автоматично обновяване",
+    "auto": "Auto Update",
     "available": "налично",
     "searching": "търсене за актуализации",
     "serviceTitle": "Актуализиране на услугите",
@@ -150,10 +150,10 @@
     "setBlock": "ЗАДАВАНЕ НА АДРЕС НА ПОЛУЧАТЕЛ НА БЛОКОВА ТАКСА"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Въведете до 32 символа, които да добавите към веригата, когато създавате блок!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "КЛИКНЕТЕ ИЛИ ПЛЪЗНЕТЕ, ЗА ДА ДОБАВИТЕ КЛЮЧ"
@@ -280,5 +280,11 @@
     "process": "Processing",
     "blockRel": "Block relay",
     "blockRelTxt": "Select one or multiple relays to receive blocks from"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }
