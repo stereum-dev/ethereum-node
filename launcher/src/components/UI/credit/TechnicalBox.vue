@@ -11,10 +11,18 @@
     </select>
     <div class="wrapper" v-if="compToggl">
       <the-contributor
-        v-for="result in results"
+        :class="{
+          'gold-border': index === 0,
+          'silver-border': index === 1,
+          'bronze-border': index === 2,
+        }"
+        v-for="(result, index) in results"
         :key="result.id"
         :name="result.name"
         :avatar="result.avatar"
+        :crown="index == 0"
+        :rank="index + 1"
+        :score="result.score"
       ></the-contributor>
     </div>
     <div class="wrapper" v-else>
@@ -55,6 +63,22 @@ export default {
     },
   },
   methods: {
+    frameBgColor(index) {
+      if (index === 1) {
+        return "silver";
+      } else if (index === 2) {
+        return "#CD7F32";
+      }
+    },
+    frameColor(index) {
+      if (index === 0) {
+        return "gold";
+      } else if (index === 1) {
+        return "#171717";
+      } else if (index === 2) {
+        return "#171717";
+      }
+    },
     github() {
       fetch(
         "https://api.github.com/repos/stereum-dev/ethereum-node/contributors"
@@ -65,12 +89,14 @@ export default {
           }
         })
         .then((data) => {
+          console.log(data);
           const results = [];
           for (const id in data) {
             results.push({
               id: id,
               name: data[id].login,
               avatar: data[id].avatar_url,
+              score: data[id].contributions,
             });
           }
           this.results = results;
@@ -106,6 +132,16 @@ export default {
 };
 </script>
 <style scoped>
+.gold-border {
+  border: 2px solid gold;
+}
+.silver-border {
+  border: 2px solid silver;
+}
+.bronze-border {
+  border: 2px solid #cd7f32;
+}
+
 .technical-box_parent {
   display: flex;
   justify-content: center;
@@ -127,21 +163,16 @@ export default {
   top: 20%;
   left: 85%;
 }
-.techToggl:hover,
-.techToggl:focus,
-.techToggl:active {
-  outline: none;
-  border: none;
-}
+
 .wrapper {
-  display: grid;
-  grid-template-rows: repeat(7, 1fr);
-  grid-template-columns: repeat(4, 1fr);
-  width: 95%;
-  height: 80%;
+  display: flex;
+  width: 100%;
+  height: 70vh;
   gap: 2.2%;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  overflow: auto;
 }
 
 .contributors-list-enter-from {
