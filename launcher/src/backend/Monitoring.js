@@ -268,7 +268,7 @@ export class Monitoring {
   // api_reponse=<mixed>: the response of the RPC api
   // api_httpcode=<int> : the http status code of the RPC api response
   async queryRpcApi(url,rpc_method,rpc_params=[],method="POST",headers={}){
-    
+
     // Setup query
     var query = rpc_method.trim().indexOf("{") < 0 ? JSON.stringify({
       "jsonrpc": "2.0",
@@ -497,7 +497,7 @@ export class Monitoring {
 
     // Build curl command
     const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
- 
+
     // Execute the CURL command on the node and return the result
     let result = null;
     try {
@@ -624,7 +624,7 @@ export class Monitoring {
 
     // Get execution clients with RPC query data, optionally filtered by serviceID and/or instanceID
     const data = [];
-    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < executions.length; i++){
 
       // Make sure execution client is valid and running
@@ -651,7 +651,7 @@ export class Monitoring {
 
       // Query RPC Server (e.g: "web3_clientVersion")
       let result = await this.queryRpcApi({'addr':addr,'port':port},query);
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -724,6 +724,14 @@ export class Monitoring {
       'ErigonService' : 'erigon',
     };
 
+    // Execution clients that should be queried by RPC for chain head block
+    const get_chain_head_by_rpc = [
+      // 'GethService',
+      // 'BesuService',
+      // 'NethermindService',
+      'ErigonService',
+    ];
+
     // Merge all labels for Prometheus query
     const serviceLabels = [];
     for (let property in services) {
@@ -754,8 +762,12 @@ export class Monitoring {
       };
     }
 
-    // Get block number for ALL running execution clients by RPC query (just as fallback option, where available!)
-    const ecBlockNumberByRPC = await this.getRpcData('eth_blockNumber',{serviceInfos:serviceInfos});
+    // If serviceInfos contains at least one service that requires to query the chain head block by
+    // RPC then get block number for ALL running execution clients by RPC query (where available!)
+    let ecBlockNumberByRPC = null;
+    if(serviceInfos.filter(s => get_chain_head_by_rpc.includes(s.service)).length > 0){
+      ecBlockNumberByRPC = await this.getRpcData('eth_blockNumber',{serviceInfos:serviceInfos});
+    }
 
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
@@ -784,7 +796,7 @@ export class Monitoring {
 
       // Filter Prometheus result by current used services
       try{
-        
+
         // Add the response for "syncStatusItems" exact as defined in front-end
         // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
@@ -796,14 +808,14 @@ export class Monitoring {
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let results = [];
           let labels = services[clientType][clt.service];
-          let xx = prometheus_result.data.result.filter((s) => 
+          let xx = prometheus_result.data.result.filter((s) =>
             labels.includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service]
           );
           let frstVal = 0, scndVal = 0;
           if(xx.length){
-            labels.forEach(function (label, index) {              
+            labels.forEach(function (label, index) {
               try{
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
               }catch(e){}
@@ -811,10 +823,10 @@ export class Monitoring {
             try{
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            }catch(e){}   
+            }catch(e){}
           }
-          // Get chain head for Erigon from RPC server (if available) because there is no Prometheus data available yet...
-          if(clt.service == 'ErigonService' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
+          // Set chain head block for this client from RPC server (if available)
+          if(get_chain_head_by_rpc.includes(clt.service) && typeof ecBlockNumberByRPC == 'object' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
             let chain_head_block = 0;
             try{
               chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop().query_result.data.api_reponse;
@@ -869,7 +881,7 @@ export class Monitoring {
       'consensus':{
         'TekuBeaconService' : ['beacon_peer_count'],
         'LighthouseBeaconService' : ['libp2p_peers'],
-        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
+        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"!
         'NimbusBeaconService' : ['nbc_peers'],
         'LodestarBeaconService' : ['libp2p_peers'],
       },
@@ -1083,8 +1095,8 @@ export class Monitoring {
         clientTypes.forEach(function (clientType, index) {
           let clt = '';
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-          let xx = prometheus_result.data.result.filter((s) => 
-            services[clientType][clt.service].includes(s.metric.__name__) && 
+          let xx = prometheus_result.data.result.filter((s) =>
+            services[clientType][clt.service].includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
             (clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true)
@@ -1103,13 +1115,13 @@ export class Monitoring {
           details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
           details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
           details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
-  
+
           // Summarize totals
           maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
           numPeer = parseInt(numPeer + details[clientType]['numPeer']);
           valPeer = Math.round((numPeer/maxPeer)*100);
         });
-        
+
         // Respond success for this group
         // Define the response for "valPeer" exact as defined in front-end as percentage (%).
         // Avoid overdues that may happen during peer cleaning. The exact values can be taken
@@ -1120,7 +1132,7 @@ export class Monitoring {
           'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
           'valPeer': valPeer > 100 ? 100 : valPeer,
         };
-  
+
       }catch(err){
         return {
           "code": 224,
@@ -1161,7 +1173,7 @@ export class Monitoring {
       };
     }
 
-    // Build ssh commands to query storages 
+    // Build ssh commands to query storages
     var sshcommands = [];
     for(let svc of serviceInfos){
         if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
@@ -1358,7 +1370,7 @@ export class Monitoring {
 
     // Get execution clients with RPC data by service name
     const data = [];
-    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < executions.length; i++){
 
       // Make sure execution client is valid and running
@@ -1379,7 +1391,7 @@ export class Monitoring {
       let result = await this.queryRpcApi({'addr':addr,'port':port},"eth_blockNumber");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1533,7 +1545,7 @@ export class Monitoring {
 
     // Get consensus clients with BEACON data by service name
     const data = [];
-    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < consensusclients.length; i++){
 
       // Make sure consensus client is valid and running
@@ -1553,7 +1565,7 @@ export class Monitoring {
       let result = await this.queryBeaconApi({'addr':addr,'port':port},"/eth/v1/node/syncing");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1675,7 +1687,7 @@ export class Monitoring {
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
-      
+
       const debugstatus = await this.getDebugStatus();
       // if(debugstatus.code)
       //   return debugstatus;
