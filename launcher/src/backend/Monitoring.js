@@ -407,7 +407,7 @@ export class Monitoring {
     };
   }
 
-    // Query BEACON API via CURL on the node
+  // Query BEACON API via CURL on the node
   // https://ethereum.github.io/beacon-APIs/
   // https://consensys.github.io/teku/
   // url=<mixed>      : [REQUIRED] Full HTTP API URL of the BEACON server or object of {addr:'<addr>',port:'<port>'}
@@ -559,7 +559,7 @@ export class Monitoring {
       "data": data,
     };
   }
-
+  
   // Get sync status of consensus and execution clients
   async getSyncStatus(){
 
@@ -630,7 +630,7 @@ export class Monitoring {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
       if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
-        continue;
+       continue;
       let isConsensus = clt.service in services.consensus;
       let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
       if(!isConsensus || !hasMembers)
@@ -725,7 +725,7 @@ export class Monitoring {
         'LighthouseBeaconService' : ['libp2p_peers'],
         'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
         'NimbusBeaconService' : ['nbc_peers'],
-        'LodestarBeaconService' : ['lodestar_peers_by_direction_count'],// needs to query for direction="outbound"! 
+        'LodestarBeaconService' : ['libp2p_peers'],
       },
       'execution':{
         'GethService' : ['p2p_peers'],
@@ -855,7 +855,8 @@ export class Monitoring {
           optnam = '--max-peers';
           defval = 160;
         }else if(clt.service == "LodestarBeaconService"){
-          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50)
+          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50) + 10%
+          // See extra dealing with + 10% below!
           optnam = '--targetPeers';
           defval = 50;
         }else if(clt.service == "GethService"){
@@ -889,6 +890,9 @@ export class Monitoring {
         }
         optval = parseInt(optval);
         if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
+          optval = Math.round(optval*1.1);
+        }
+        if(clt.service == "LodestarBeaconService"){ // Extra calculate Lodestar --targetPeers + 10%
           optval = Math.round(optval*1.1);
         }
         details[opttyp]['maxPeer'] = optval;
@@ -930,8 +934,7 @@ export class Monitoring {
             services[clientType][clt.service].includes(s.metric.__name__) && 
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
-            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true &&
-            clt.service == "LodestarBeaconService" ? s.metric.direction == 'outbound' : true
+            (clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true)
           );
           if(xx.length){
             services[clientType][clt.service].forEach(function (item, index) {
