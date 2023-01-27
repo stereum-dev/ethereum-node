@@ -2,10 +2,10 @@
   "formsetup": {
     "login": " connexion",
     "server": " Connectez-vous à votre serveur",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
+    "servername": "NOM DU SERVEUR",
+    "iphost": "IP / NOM D'HÔTE",
+    "username": "NOM D’UTILISATEUR",
+    "password": "MOT DE PASSE",
     "keylocation": "KEY LOCATION",
     "usessh": "USE SSH KEY"
   },
@@ -14,7 +14,7 @@
   },
   "journalnode": {
     "serverip": "server ip",
-    "servername": "SERVER NAME",
+    "servername": "NOM DU SERVEUR",
     "edit": "to edit node"
   },
   "pagesnav": {
@@ -38,10 +38,10 @@
     "stereumName": "stereum settings",
     "langName": "Language  Selection",
     "confirm": "APPLY",
-    "general": "GENERAL",
+    "general": "GÉNÉRAL",
     "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
+    "open": "ouvrir",
+    "update": "MISE À JOUR",
     "launcherVersion": "Launcher Version",
     "nodeVersion": "Node Version",
     "lane": "Stereum - Testing Lane",
@@ -66,7 +66,7 @@
   "theNode": {
     "execution": "execution",
     "consensus": "consensus",
-    "validator": "validator",
+    "validator": "validateur",
     "servicePlugin": "SERVICE PLUGIN"
   },
   "modifyPanel": {
