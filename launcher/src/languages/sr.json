@@ -26,7 +26,7 @@
     "support": "potpora",
     "supportText": "Najbrži način da dođete do osobe za podršku je da se pridružite našem Discord serveru!",
     "bugReport": "BUG PRIJAVA",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
+    "bugRepText": "Odvojite vrijeme da napišete problem i dopustite nam da učinimo Stereum boljim!",
     "emailText": "ili napišite email na:"
   },
   "notifModal": {
@@ -35,9 +35,9 @@
     "cancelText": "Klikni vani da otkažete"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLY",
+    "stereumName": "postavke stereum",
+    "langName": "Promena Jezika",
+    "confirm": "PRIMIJENTITI",
     "general": "GENERAL",
     "credits": "Zasluge",
     "open": "otvoren",
@@ -57,7 +57,7 @@
     "ssv": "Koristi ssv.network",
     "alert": "Upozorenja na Mobilnoj Aplikaciji",
     "switchC": "Promijenite Client",
-    "migrate": "Nodes Migration",
+    "migrate": "Node Migracija",
     "rpc": "RPC Connection"
   },
   "pluginZone": {
@@ -137,7 +137,7 @@
   },
   "exitMultipleValidator": {
     "passMessage": "UNESITE VAŠU LOZINKU VALIDATORA DA IZAČETE IZ CHAINa OVIM KEYom...",
-    "confirm": "Confirm"
+    "confirm": "Potvrdi"
   },
   "exitValidatorModal": {
     "modalMessage": "Jeste li sigurni da želite izaći iz CHAINa sa ODABRANIM KEYom validatora? Ovo zaustavlja vašu dužnost validatora i NE MOŽE se poništiti. Vaš FUND se također može povući samo ako CHAIN to dozvoljava.",
@@ -150,22 +150,22 @@
     "setBlock": "POSTAVITE BLOCK FEE RECIPIENT ADRESU"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Unesite do 32 znaka za dodavanje u chain kada kreirate block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
+    "textPlaceHolder": "Unesite do 32 znaka da preimenujete validatora!"
   },
   "insertValidator": {
     "insertText": "KLIKNITE ILI PREVUČITE DA UMETATE KEY"
   },
   "removeSingleModal": {
-    "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
-    "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "question": "ŽELITE LI DOWLOAD VAŠU BAZU PODATAKA ZA SLASHING?",
+    "description": "OVO MOŽETE UVESTI SA VAŠIM VALIDATOR KEYS DA BISTE OBEZBEDILI DODATNU SIGURNOST PRILIKOM MIGRIRANJA VAŠIH KEYS",
+    "btn": "izaberite putanju"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With slashing Protection Database?",
+    "sure": "Jeste li sigurni da želite ukloniti ovaj key sa svoje mašine?",
+    "slashing": "Sa slashing Protection baza podataka?",
     "remove": "Ukloni",
     "path": "choose a path to save exported slashing db ",
     "writePath": "Please write down your path"
@@ -193,7 +193,7 @@
     "installText": "NA OVOJ STRANICI MOŽETE DA BIRATE ŠTA ŽELITE DA RADITE SA SVOJIM NODEOM. NAKON ODABRA I PRITISKA ZAPOČNI SLUČAJNI IZBOR CLIENTA ĆE SE PODUZET DA SE USLUŽI VAŠEM SLUČAJU UPOTREBE",
     "back": "NAZAD",
     "install": "INSTALIRATI",
-    "placeHoldrer": "choose a network"
+    "placeHoldrer": "izaberite network"
   },
   "removeModal": {
     "removeText": "Sve services će biti uklonjene.",
@@ -203,7 +203,7 @@
     "welcome": "DOBRODOŠLI",
     "installText": "U OVOM KORAKU BIRATE KAKO ŽELITE INSTALIRATI SVOJ NODE-om. AKO VAM JE POTREBNA POMOĆ U POSTAVLJANJU, PRIDRUŽITE SE NAŠEM DISCORD-u - TAMO VAM MOŽEMO POMOĆI",
     "osCheck": "PROVJERA DA LI JE OS VAŠEG SERVERA PODRŽAN",
-    "osSupported": "IS A SUPPORTED OS"
+    "osSupported": "OVO JE PODRŽAN OS"
   },
   "pluginName": {
     "option": "OPCIJA",
@@ -223,21 +223,21 @@
     "financialPage": "FINANCIAL CONTRIBUTION"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "PROVERI I INSTALIRAJ",
+    "name": "IME",
+    "cat": "KATEGORIJA",
+    "path": "PUT"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Preporučujemo da sačekate da se početna instalacija završi prije primjene daljnjih promjena"
   },
   "tutorialBox": {
     "video": "video",
     "walkthrough": "walkthrough",
-    "textGuide": "written guide"
+    "textGuide": "pisani vodič"
   },
   "frontPageSsv": {
-    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionTitle": "REGISTRIRAJTE NOVOG OPERATORA",
     "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
     "register": "Register",
     "insertTitle": "insert operator key for existing operator",
