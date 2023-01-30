@@ -18,7 +18,7 @@ dialog {
   top: 15%;
   left: 60%;
   height: 10%;
-  width: 30%;
+  max-width: max-content;
   border: 3px solid #929292;
   background: #000;
   color: #eee;

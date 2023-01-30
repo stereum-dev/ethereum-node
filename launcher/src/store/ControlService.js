@@ -233,6 +233,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getCurrentLauncherVersion");
   }
 
+  async getLargestVolumePath() {
+    return await this.promiseIpc.send("getLargestVolumePath");
+  }
+
   async getTasks() {
     return await this.promiseIpc.send("getTasks"); // gets the current available Data
   }

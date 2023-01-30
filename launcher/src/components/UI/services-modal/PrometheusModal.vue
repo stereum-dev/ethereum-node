@@ -7,7 +7,7 @@
           <img :src="prometheusService.icon" alt="icon" />
         </div>
         <div class="title-box">
-          <span class="service-name">prometheus</span>
+          <div class="service-name"><span>prometheus</span></div>
           <div class="service-option">
             <img
               src="/img/icon/service-icons/internet.png"
@@ -25,13 +25,13 @@
       <div class="content">
         <div class="browserBox">
           <div class="title">
-            <span>LOCAL APPLICATION</span>
-            <span>Open up the service on your local machine</span>
+            <span>{{ $t("serviceModals.localApp") }}</span>
+            <span>{{ $t("serviceModals.localAppText") }}</span>
           </div>
           <div class="btn-box">
-            <a class="btn" :href="prometheusService.linkUrl" target="_blank"
-              >OPEN IN BROWSER</a
-            >
+            <a class="btn" :href="prometheusService.linkUrl" target="_blank">{{
+              $t("serviceModals.openBrowser")
+            }}</a>
           </div>
         </div>
       </div>
@@ -115,67 +115,63 @@ export default {
 .prometheus-header {
   width: 100%;
   height: 20%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: nowrap;
   position: relative;
   z-index: 102;
+  margin-top: 1.5%;
 }
 .icon-box {
-  grid-column: 1;
-  grid-row: 1;
-  width: 100%;
-  margin-top: -1px;
+  width: 20%;
   height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-box img {
+  width: 70%;
+  height: 90%;
+}
+.title-box {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.service-name {
+  width: 100%;
+  height: 45%;
+  text-align: center;
+  color: rgb(226, 226, 226);
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  font-weight: 600;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.icon-box img {
-  margin: 10px 0 0 15px;
-  width: 65%;
-  height: 86%;
-}
-.title-box {
-  grid-column: 1/5;
-  margin-left: 85px;
-  grid-row: 1;
-  width: 70%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-.title-box span {
-  width: 70%;
-  height: 35%;
-  text-align: center;
-  color: rgb(226, 226, 226);
-  text-transform: uppercase;
-  font-size: 1.7rem;
-  font-weight: 600;
-}
 .service-option {
   width: 60%;
-  height: 35%;
-  margin-left: 16px;
+  height: 38%;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding-left: 10px;
 }
 .service-option img {
-  width: 11%;
-  height: 70%;
-  cursor: pointer;
+  width: 8%;
+  height: 72%;
   margin-right: 15px;
+  cursor: pointer;
 }
 .content {
   width: 100%;
-  height: 70%;
-  margin-top: 20px;
+  height: 75%;
+  margin-top: 2%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -187,7 +183,7 @@ export default {
   height: 30%;
   background-color: #393939;
   border: 1px solid #444444;
-  box-shadow: 1px 1px 3px 1px #252525;
+  box-shadow: 1px 1px 10px 1px #171717;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;

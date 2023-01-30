@@ -37,7 +37,7 @@
   "settingPanel": {
     "stereumName": "stereum settings",
     "langName": "Language  Selection",
-    "confirm": "APPLIED",
+    "confirm": "APPLY",
     "general": "GENERAL",
     "credits": "Credits",
     "open": "open",
@@ -88,7 +88,7 @@
     "current": "current",
     "nodeTitle": "node updates",
     "latest": "latest",
-    "auto": "auto-update",
+    "auto": "Auto Update",
     "available": "available",
     "searching": "searching new updates",
     "serviceTitle": "Service updates",
@@ -150,10 +150,10 @@
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
     "insertText": "CLICK OR DRAG TO INSERT KEY"
@@ -192,7 +192,8 @@
   "installOption": {
     "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "BACK",
-    "install": "INSTALL"
+    "install": "INSTALL",
+    "placeHoldrer": "choose a network"
   },
   "removeModal": {
     "removeText": "All services will be removed.",
@@ -201,7 +202,8 @@
   "installitionMenu": {
     "welcome": "WELCOME",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
+    "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
     "option": "OPTION",
@@ -228,5 +230,61 @@
   },
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+  },
+  "tutorialBox": {
+    "video": "video",
+    "walkthrough": "walkthrough",
+    "textGuide": "written guide"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register": "Register",
+    "insertTitle": "insert operator key for existing operator",
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+  },
+  "registerSSV": {
+    "pubKey": "Public operator key",
+    "copied": "copied!",
+    "secKey": "Secret Operator Key",
+    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
+    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+  },
+  "ssvDashboard": {
+    "operatorPage": "My Operator Page",
+    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+  },
+  "secretKeyReg": {
+    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply": "APPLY"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Click to copy!",
+    "closed": "Tunnel closed!",
+    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "copiedMessage": "DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+  },
+  "pluginLogs": {
+    "pageTitle": "PLUG-IN LOGS",
+    "noLogFound": "No log found in the list",
+    "clickCopy": "Click on the logs to copy",
+    "serviceId": "service id"
+  },
+  "serviceModals": {
+    "localApp": "LOCAL APPLICATION",
+    "localAppText": "Open up the service on your local machine",
+    "openBrowser": "OPEN IN BROWSER",
+    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "process": "Processing",
+    "blockRel": "Block relay",
+    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   }
 }

@@ -2,63 +2,63 @@
   "formsetup": {
     "login": " connexion",
     "server": " Connectez-vous à votre serveur",
-    "servername": "SERVER NAME",
-    "iphost": "IP / HOST NAME",
-    "username": "USER NAME",
-    "password": "PASSWORD",
-    "keylocation": "KEY LOCATION",
-    "usessh": "USE SSH KEY"
+    "servername": "NOM DU SERVEUR",
+    "iphost": "IP / NOM D'HÔTE",
+    "username": "NOM D’UTILISATEUR",
+    "password": "MOT DE PASSE",
+    "keylocation": "LOCALISATION DE LA CLÉ",
+    "usessh": "UTILISER UNE CLÉ SSH"
   },
   "comingsoon": {
     "comingsoon": "COMING SOON"
   },
   "journalnode": {
-    "serverip": "server ip",
-    "servername": "SERVER NAME",
-    "edit": "to edit node"
+    "serverip": "ip du serveur",
+    "servername": "NOM DU SERVEUR",
+    "edit": "éditer le noeud"
   },
   "pagesnav": {
-    "node": "NODE",
-    "control": "CONTROL",
+    "node": "Nœud",
+    "control": "CONTRÔLES",
     "staking": "STAKING"
   },
   "supportModal": {
     "support": "support",
-    "supportText": "The fastest way to reach a person for support is to join our Discord server!",
-    "bugReport": "BUG REPORT",
-    "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "or write an email to:"
+    "supportText": "Le plus rapide pour obtenir l'aide de quelqu'un est de rejoindre notre serveur Discord !",
+    "bugReport": "RAPPORT DE BUG",
+    "bugRepText": "Merci de prendre le temps d'écrire et expliquer le problème afin de nous permettre d'améliorer Stereum !",
+    "emailText": "ou écrivez un e-mail à:"
   },
   "notifModal": {
     "notification": "Notifications",
     "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Click outside to cancel"
+    "cancelText": "Cliquez en dehors pour annuler"
   },
   "settingPanel": {
-    "stereumName": "stereum settings",
-    "langName": "Language  Selection",
-    "confirm": "APPLIED",
-    "general": "GENERAL",
-    "credits": "Credits",
-    "open": "open",
-    "update": "UPDATE",
-    "launcherVersion": "Launcher Version",
-    "nodeVersion": "Node Version",
+    "stereumName": "paramètres de stereum",
+    "langName": "Sélection de la langue",
+    "confirm": "APPLIQUER",
+    "general": "GÉNÉRAL",
+    "credits": "Crédits",
+    "open": "ouvrir",
+    "update": "MISE À JOUR",
+    "launcherVersion": "Version du lanceur",
+    "nodeVersion": "Version du nœud",
     "lane": "Stereum - Testing Lane",
     "on": "on",
     "off": "off",
-    "updateConfig": "Stereum Update Configuration",
+    "updateConfig": "Configuration des mises à jour de Stereum",
     "servicePlugin": "Plug-in / Service Update Configuration",
-    "manual": "MANUAL",
+    "manual": "MANUEL",
     "auto": "AUTO"
   },
   "nodeSidebarVideo": {
     "stake": "Stake with 32 ETH",
-    "ssv": "Use ssv.network",
-    "alert": "Alerts on Mobile App",
-    "switchC": "Switch Clients",
-    "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "ssv": "Utiliser ssv.network",
+    "alert": "Alertes sur l'application mobile",
+    "switchC": "Changer de client",
+    "migrate": "Migration de nœuds",
+    "rpc": "Connexion RPC"
   },
   "pluginZone": {
     "client": "client"
@@ -66,55 +66,55 @@
   "theNode": {
     "execution": "execution",
     "consensus": "consensus",
-    "validator": "validator",
+    "validator": "validateur",
     "servicePlugin": "SERVICE PLUGIN"
   },
   "modifyPanel": {
-    "backNode": "back to NODE",
+    "backNode": "retour au NŒUD",
     "addPreset": "ADD 1 CLICK PRESET",
-    "changeNetwork": "CHANGE NETWORK",
+    "changeNetwork": "CHANGER LE RÉSEAU",
     "nukeNode": "NUKE NODE"
   },
   "sidebarManage": {
-    "filter": "Filter..."
+    "filter": "Filtre..."
   },
   "changeConfirm": {
-    "confirm": "CONFIRM",
-    "change": "CHANGES TO CONFIRM",
-    "delete": "DELETE"
+    "confirm": "CONFIRMER",
+    "change": "CHANGEMENTS À CONFIRMER",
+    "delete": "SUPPRIMER"
   },
   "updatePanel": {
     "launcherTitle": "launcher updates",
-    "current": "current",
-    "nodeTitle": "node updates",
-    "latest": "latest",
-    "auto": "auto-update",
-    "available": "available",
-    "searching": "searching new updates",
-    "serviceTitle": "Service updates",
+    "current": "actuel",
+    "nodeTitle": "mises à jour du noeud",
+    "latest": "dernière",
+    "auto": "Mise à jour automatique",
+    "available": "disponible",
+    "searching": "recherche de mises à jour",
+    "serviceTitle": "Mises à jour du service",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
-    "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "availablePlugin": "MISES À JOUR DU PLUG-IN DISPONIBLES",
+    "all": "tout mettre à jour"
   },
   "controlPage": {
-    "node": "NODE",
-    "disk": "DISK SPEED",
-    "write": "WRITE",
-    "read": "READ",
+    "node": "NŒUD",
+    "disk": "VITESSE DU DISQUE",
+    "write": "ÉCRITURE",
+    "read": "LECTURE",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
     "syncStatus": "SYNC STATUS",
     "hard": "STORAGE VOLUME",
     "free": "FREE",
     "total": "TOTAL",
-    "network": "NETWORK",
-    "receive": "Receiving Data",
-    "transmit": "Transmitting Data",
+    "network": "RÉSEAU",
+    "receive": "Réception de données",
+    "transmit": "Envoi de données",
     "ram": "RAM",
-    "used": "used",
+    "used": "utilisé",
     "totalram": "total",
-    "storage": "STORAGE",
-    "active": "ACTIVE",
+    "storage": "STOCKAGE",
+    "active": "ACTIF",
     "rating": "RATING",
     "usage": "Usage"
   },
@@ -122,62 +122,62 @@
     "clickDisplay": "Click on tasks to display"
   },
   "displayValidator": {
-    "pk": "Public Key",
+    "pk": "Clé publique",
     "service": "SERVICE",
     "active": "ACTIVE SINCE",
-    "state": "STATE",
+    "state": "ÉTAT",
     "balance": "BALANCE",
     "option": "OPTIONS",
-    "importKey": "Importing validator key(s)",
-    "waitMessage": "It may take some time",
-    "waitForImport": "Please wait until the key is imported"
+    "importKey": "Importation de clé(s) de validateur",
+    "waitMessage": "Cela peut prendre un certain temps",
+    "waitForImport": "Veuillez patienter jusqu'à ce que la clé soit importée"
   },
   "enterPass": {
-    "enterPass": "ENTER PASSWORD & IMPORT"
+    "enterPass": "ENTRER LE MOT DE PASSE & IMPORTER"
   },
   "exitMultipleValidator": {
-    "passMessage": "ENTER YOUR VALIDATOR PASSWORD TO EXIT CHAIN WITH THIS KEY...",
-    "confirm": "Confirm"
+    "passMessage": "ENTREZ VOTRE MOT DE PASSE VALIDATEUR POUR QUITTER LA CHAÎNE AVEC CETTE CLÉ...",
+    "confirm": "Confirmer"
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "exitChain": "EXIT CHAIN",
-    "clickClose": "Click outside to close."
+    "exitApprove": "J'AI LU LE TEXTE ET JE SUIS CONSCIENT DES CONSÉQUENCES",
+    "exitChain": "QUITTER LA CHAINE",
+    "clickClose": "Cliquez en dehors pour fermer."
   },
   "feeRecipient": {
     "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
     "setBlock": "SET A BLOCK FEE RECIPIENT ADDRESS"
   },
   "grafitiMultipleValidator": {
-    "textPlaceHolder": "Enter up 32 characters to add to the chain when you create a block!"
+    "textPlaceHolder": "Enter up to 32 characters to add to the chain when you create a block!"
   },
   "renameValidator": {
-    "textPlaceHolder": "Enter up 32 characters to rename the validator!"
+    "textPlaceHolder": "Enter up to 32 characters to rename the validator!"
   },
   "insertValidator": {
-    "insertText": "CLICK OR DRAG TO INSERT KEY"
+    "insertText": "CLIQUEZ OU GLISSEZ POUR INSÉRER LA CLÉ"
   },
   "removeSingleModal": {
     "question": "DO YOU WANT TO DOWNLOAD YOUR SLASHING DATABASE?",
     "description": "You can IMPORT THIS WITH YOUR VALIDATOR KEYS TO ENSURE YOU ADDITIONAL SAFETY WHEN MIGRATING YOUR KEYS",
-    "btn": "pick path"
+    "btn": "choisir le chemin d'accès"
   },
   "removeMultiModal": {
-    "sure": "Are you sure you want to remove this key from your machine?",
+    "sure": "Êtes-vous sûr de vouloir supprimer cette clé de votre machine ?",
     "slashing": "With slashing Protection Database?",
-    "remove": "Remove",
+    "remove": "Supprimer",
     "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "writePath": "Veuillez écrire votre chemin"
   },
   "removeMultipleValidators": {
     "sureText": "Are you sure you want to remove All Validator keys FROM THIS MACHINE?"
   },
   "timeReward": {
-    "totalText": "TOTAL BALANCE OF",
-    "validators": "VALIDATORS",
+    "totalText": "SOLDE TOTAL DE",
+    "validators": "VALIDATEURS",
     "proposed": "PROPOSED",
-    "attestRate": "ATTESTATION RATE",
+    "attestRate": "TAUX D'ATTESTATION",
     "attention": "ATTESTATION",
     "missed": "MISSED",
     "aggregations": "AGGREGATIONS",
@@ -185,48 +185,106 @@
   },
   "validatorsBox": {
     "date": "DATE",
-    "validator": "VALIDATOR",
+    "validator": "VALIDATEUR",
     "attestRate": "ATTEST.RATE",
     "reward": "REWARD"
   },
   "installOption": {
     "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
-    "back": "BACK",
-    "install": "INSTALL"
+    "back": "RETOUR",
+    "install": "INSTALLER",
+    "placeHoldrer": "sélectionner un réseau"
   },
   "removeModal": {
-    "removeText": "All services will be removed.",
-    "sure": "Are you sure?"
+    "removeText": "Tous les services seront supprimés.",
+    "sure": "Êtes-vous sûr ?"
   },
   "installitionMenu": {
-    "welcome": "WELCOME",
+    "welcome": "BIENVENUE",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
-    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED"
+    "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
+    "osSupported": "EST UN OS SUPPORTÉ"
   },
   "pluginName": {
-    "option": "OPTION",
-    "chosen": "CHOSEN NETWORK",
-    "path": "INSTALLATION PATH",
+    "option": "OPTIONS",
+    "chosen": "CHOISIR LE RÉSEAU",
+    "path": "CHEMIN D'INSTALLATION",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "plugin": "PLUGINS",
-    "back": "BACK",
-    "next": "NEXT"
+    "back": "RETOUR",
+    "next": "SUIVANT"
   },
   "creditPanel": {
-    "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
-    "technicPage": "TECHNICAL CONTRIBUTION",
-    "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "creditTitle": "CRÉDITS - CONTRIBUTEURS FINANCIERS",
+    "fincialTitle": "OBTENEZ VOTRE NOM SUR LA LISTE ! MERCI DE SOUTENIR LE DÉVELOPPEMENT !",
+    "technicPage": "CONTRIBUTION TECHNIQUE",
+    "techTitle": "CRÉDITS - CONTRIBUTEURS TECHNIQUES",
+    "techText": "RECEVEZ UN GITPOAP ! APPRENEZ COMMENT VOUS IMPLIQUER EN VISITANT NOTRE GITHUB !",
+    "financialPage": "CONTRIBUTION FINANCIÈRE"
   },
   "verifyInstallation": {
-    "verifyTitle": "VERIFY & INSTALL",
-    "name": "NAME",
-    "cat": "CATEGORY",
-    "path": "PATH"
+    "verifyTitle": "VÉRIFIER & INSTALLER",
+    "name": "NOM",
+    "cat": "CATÉGORIE",
+    "path": "CHEMIN D'ACCÈS"
   },
   "warningModal": {
-    "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
+    "warningText": "Nous vous recommandons d'attendre que l'installation initiale soit terminée avant d'appliquer d'autres modifications"
+  },
+  "tutorialBox": {
+    "video": "vidéo",
+    "walkthrough": "tutoriel",
+    "textGuide": "guide écrit"
+  },
+  "frontPageSsv": {
+    "newRegistritionTitle": "ENREGISTRER UN NOUVEL OPÉRATEUR",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register": "Register",
+    "insertTitle": "insert operator key for existing operator",
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+  },
+  "registerSSV": {
+    "pubKey": "Clé d'opérateur public",
+    "copied": "copié!",
+    "secKey": "Clé d'opérateur secrète",
+    "makeSureText": "Assurez-vous de stocker et de sauvegarder la clé secrète de votre opérateur dans un endroit sûr. Ne partagez cette clé avec personne.",
+    "copyMessage": "Copiez votre clé publique d'opérateur dans ce champ pour confirmer que vous avez stocké vos clés !"
+  },
+  "ssvDashboard": {
+    "operatorPage": "Ma page Opérateur",
+    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
+  },
+  "secretKeyReg": {
+    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply": "APPLIQUER"
+  },
+  "dataAPIAndRPC": {
+    "copy": "Cliquez pour copier !",
+    "closed": "Tunnel closed!",
+    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "copiedMessage": "DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+  },
+  "pluginLogs": {
+    "pageTitle": "PLUG-IN LOGS",
+    "noLogFound": "No log found in the list",
+    "clickCopy": "Click on the logs to copy",
+    "serviceId": "service id"
+  },
+  "serviceModals": {
+    "localApp": "LOCAL APPLICATION",
+    "localAppText": "Open up the service on your local machine",
+    "openBrowser": "OUVRIR DANS LE NAVIGATEUR",
+    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "process": "Processing",
+    "blockRel": "Block relay",
+    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+  },
+  "customInstallation": {
+    "customInstallationTitle": "INSTALLATION PERSONNALISÉE",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOISISSEZ OÙ VOUS VOULEZ INSTALLER STEREUM",
+    "installationPath": "CHEMIN D'INSTALLATION"
   }
 }

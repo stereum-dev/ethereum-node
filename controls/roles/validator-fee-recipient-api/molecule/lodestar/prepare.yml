@@ -107,7 +107,7 @@
                 - validator
                 - --network=goerli
                 - --dataDir=/opt/app/validator
-                - --server=http://stereum-{{ beacon_service }}:9596
+                - --beaconNodes=http://stereum-{{ beacon_service }}:9596
                 - --keymanager
                 - --keymanager.port=5062
                 - --keymanager.address=0.0.0.0
