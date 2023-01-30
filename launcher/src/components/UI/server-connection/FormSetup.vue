@@ -148,7 +148,11 @@
             $t("formsetup.password")
           }}</label>
           <div class="locationPicker" v-if="keyAuth">
-            <div class="chooseFile" @click="openUploadHandler">
+            <div
+              class="chooseFile"
+              @click="openUploadHandler"
+              v-if="!model.keylocation.value"
+            >
               <input
                 type="file"
                 style="display: none"
@@ -287,6 +291,11 @@ export default {
     //finish
     changeLabel() {
       this.keyAuth = !this.keyAuth;
+      if (this.keyAuth === true) {
+        this.model.pass.value = "";
+      } else {
+        this.model.keylocation.value = "";
+      }
     },
     setSelectedConnection(event) {
       this.selectedConnection = this.connections.find(
@@ -742,7 +751,7 @@ select {
 }
 .chooseFile {
   cursor: pointer;
-  left: 39%;
+  left: 40%;
   top: 4%;
   display: flex;
   justify-content: center;
@@ -754,6 +763,7 @@ select {
 }
 .chooseFile img {
   width: 30%;
+  opacity: 80%;
 }
 .chooseFile:active,
 .chooseFile:focus {
@@ -783,6 +793,8 @@ select {
 #keyInput {
   height: 100% !important;
   width: 96% !important;
+  margin-left: 1%;
+  padding-left: 50%;
 }
 
 #login {
