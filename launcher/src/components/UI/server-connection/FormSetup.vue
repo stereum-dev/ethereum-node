@@ -751,7 +751,7 @@ select {
 }
 .chooseFile {
   cursor: pointer;
-  left: 40%;
+  left: 39.5%;
   top: 4%;
   display: flex;
   justify-content: center;
@@ -794,7 +794,7 @@ select {
   height: 100% !important;
   width: 96% !important;
   margin-left: 1%;
-  padding-left: 50%;
+  padding-left: 7% !important;
 }
 
 #login {
