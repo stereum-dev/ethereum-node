@@ -409,7 +409,7 @@ export class Monitoring {
     };
   }
 
-    // Query BEACON API via CURL on the node
+  // Query BEACON API via CURL on the node
   // https://ethereum.github.io/beacon-APIs/
   // https://consensys.github.io/teku/
   // url=<mixed>      : [REQUIRED] Full HTTP API URL of the BEACON server or object of {addr:'<addr>',port:'<port>'}
@@ -562,6 +562,136 @@ export class Monitoring {
     };
   }
 
+  // Get RPC data of given query for all or a specific local running execution client(s)
+  // Arguments:
+  // query=<string> : [REQUIRED] The query to execute on the RPC server, e.g: "web3_clientVersion"
+  // params=<object>: [OPTIONAL] An object of optional parameters:
+  //                             serviceID<string>   : Service ID to match a specific execution client only
+  //                             instanceID<string>  : Instance ID to match a specific execution client only
+  //                             serviceInfos<object>: An object retrieved by method "getServiceInfos"
+  // Returns object with keys:
+  // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
+  // info=<string>: A message about the last result.
+  // data=<mixed> : An array of objects for each matched execution client (if available) or empty string
+  // On success object keys per array item are:
+  // now=<integer>            : Current timestamp in microseconds
+  // client=<object>          : Matched execution client object
+  // service_id=<string>      : Service ID of the matched execution client (if available) or "n/a"
+  // instance_id=<string>     : Instance ID of the matched execution client (if available) or "n/a"
+  // connection_infos=<object>: Connection infos that was used to query the rpc api
+  // query_result=<object>    : Result of the query to the rpc api (see method "queryRpcApi" for response infos)
+  async getRpcData(query,params){
+
+    // Service definitions with their associated rpc api (service) port
+    const services = {
+      'GethService' : 8545,
+      'BesuService' : 8545,
+      'NethermindService' : 8545,
+      'ErigonService' : 8545,
+    };
+
+    // Extract additional params
+    var {serviceID,instanceID,svcInfos} = Object.assign({
+      serviceID:null,
+      instanceID:null,
+      serviceInfos:null,
+    }, params);
+
+    // Format additional params
+    serviceID = typeof serviceID === 'string' ? serviceID : '';
+    instanceID = typeof instanceID === 'string' ? instanceID : '';
+    svcInfos = typeof svcInfos === 'object' ? svcInfos : null;
+
+    // Set timestamp in micro seconds
+    var now = Date.now();
+
+    // Check query
+    if(typeof query !== 'string'){
+      return {
+        "code": 1,
+        "info": "error: query must be string (" + typeof query + " given)",
+        "data": '',
+      };
+    }
+
+    // Get service infos
+    const serviceInfos = svcInfos ? svcInfos : await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 2,
+        "info": "error: service infos unavailable",
+        "data": '',
+      };
+    }
+
+    // Get execution clients with RPC query data, optionally filtered by serviceID and/or instanceID
+    const data = [];
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
+    for(let i = 0; i < executions.length; i++){
+
+      // Make sure execution client is valid and running
+      let execution = executions[i]
+      if(typeof execution !== "object" || !execution.hasOwnProperty("config") ||  !execution.hasOwnProperty("state") || execution.state != 'running'){
+        continue;
+      }
+
+      // Filter the RPC port configuration and get addr/port that is mapped on docker host
+      let sid = execution.config.hasOwnProperty("serviceID") ? execution.config.serviceID : 'n/a';
+      let iid = execution.config.hasOwnProperty("instanceID") ? execution.config.instanceID : 'n/a';
+      let rpc = execution.config.ports.filter((p) => p.servicePort == services[execution.service]).slice(-1).pop();
+      rpc.destinationIp = '127.0.0.1';
+      let addr = rpc.destinationIp;
+      let port = rpc.destinationPort;
+
+      // Ignore the client if serviceID is given and does not match
+      if(serviceID && sid != serviceID)
+        continue;
+
+      // Ignore the client if instanceID is given and does not match
+      if(instanceID && iid != instanceID)
+        continue;
+
+      // Query RPC Server (e.g: "web3_clientVersion")
+      let result = await this.queryRpcApi({'addr':addr,'port':port},query);
+
+      // Add valid client to final result
+      data.push({
+        now: now,
+        client: execution,
+        service_id: sid,
+        instance_id: iid,
+        connection_infos: rpc,
+        query_result: result,
+      });
+    }
+
+    // Additional info
+    let addinfo = [];
+    if(serviceID) addinfo.push('given service "'+serviceID+'"');
+    if(instanceID) addinfo.push('given instance "'+instanceID+'"');
+    if(addinfo.length){
+      addinfo = ' for ' + addinfo.join(' and ').trim();
+    }else{
+      addinfo = '';
+    }
+
+    // Final check
+    if(data.length < 1){
+      return {
+        "code": 3,
+        "info": "error: no running execution client with enabled RPC port found" + addinfo,
+        "data": '',
+      };
+    }
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: rpc data"+ (addinfo ? addinfo : ' for all running execution clients') +" successfully retrieved",
+      "data": data,
+    };
+  }
+
   // Get sync status of consensus and execution clients
   async getSyncStatus(){
 
@@ -578,6 +708,8 @@ export class Monitoring {
         'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
         'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - query for job="besu"
         'NethermindService' : ['nethermind_blocks','nethermind_blocks'], // OK [there is only one label] - query for job="nethermind"
+        // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not availble thru Prometheus!
+        'ErigonService' : ['chain_head_header','chain_head_block'], // TODO - query for job="erigon"
       },
     };
 
@@ -591,7 +723,16 @@ export class Monitoring {
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
+      'ErigonService' : 'erigon',
     };
+
+    // Execution clients that should be queried by RPC for chain head block
+    const get_chain_head_by_rpc = [
+      // 'GethService',
+      // 'BesuService',
+      // 'NethermindService',
+      'ErigonService',
+    ];
 
     // Merge all labels for Prometheus query
     const serviceLabels = [];
@@ -623,6 +764,13 @@ export class Monitoring {
       };
     }
 
+    // If serviceInfos contains at least one service that requires to query the chain head block by
+    // RPC then get block number for ALL running execution clients by RPC query (where available!)
+    let ecBlockNumberByRPC = null;
+    if(serviceInfos.filter(s => get_chain_head_by_rpc.includes(s.service)).length > 0){
+      ecBlockNumberByRPC = await this.getRpcData('eth_blockNumber',{serviceInfos:serviceInfos});
+    }
+
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -632,7 +780,7 @@ export class Monitoring {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
       if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
-        continue;
+       continue;
       let isConsensus = clt.service in services.consensus;
       let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
       if(!isConsensus || !hasMembers)
@@ -678,6 +826,18 @@ export class Monitoring {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
             }catch(e){}
+
+          }
+          // Set chain head block for this client from RPC server (if available)
+          if(get_chain_head_by_rpc.includes(clt.service) && typeof ecBlockNumberByRPC == 'object' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
+            let chain_head_block = 0;
+            try{
+              chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop().query_result.data.api_reponse;
+              chain_head_block = (typeof chain_head_block === 'string' && chain_head_block.startsWith('0x')) ? parseInt(chain_head_block,16) : 0;
+            }catch(e){}
+            frstVal = chain_head_block;
+            scndVal = chain_head_block;
+
           }
           data.push({
             id: index+1,
@@ -727,12 +887,13 @@ export class Monitoring {
         'LighthouseBeaconService' : ['libp2p_peers'],
         'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"!
         'NimbusBeaconService' : ['nbc_peers'],
-        'LodestarBeaconService' : ['lodestar_peers_by_direction_count'],// needs to query for direction="outbound"! 
+        'LodestarBeaconService' : ['libp2p_peers'],
       },
       'execution':{
         'GethService' : ['p2p_peers'],
         'BesuService' : ['ethereum_peer_count'],
         'NethermindService' : ['nethermind_sync_peers'],
+        'ErigonService' : ['p2p_peers'],
       },
     };
 
@@ -746,6 +907,7 @@ export class Monitoring {
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
+      'ErigonService' : 'erigon',
     };
 
     // Merge all labels for Prometheus query
@@ -857,7 +1019,8 @@ export class Monitoring {
           optnam = '--max-peers';
           defval = 160;
         }else if(clt.service == "LodestarBeaconService"){
-          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50)
+          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50) + 10%
+          // See extra dealing with + 10% below!
           optnam = '--targetPeers';
           defval = 50;
         }else if(clt.service == "GethService"){
@@ -872,6 +1035,11 @@ export class Monitoring {
           // --Network.MaxActivePeers (Default: 50)
           optnam = '--Network.MaxActivePeers';
           defval = 50;
+        }else if(clt.service == "ErigonService"){
+          // --maxpeers (Default: 100)
+          // https://github.com/ledgerwatch/erigon/issues/2853
+          optnam = '--maxpeers';
+          defval = 100;
         }else{
           return;
         }
@@ -891,6 +1059,9 @@ export class Monitoring {
         }
         optval = parseInt(optval);
         if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
+          optval = Math.round(optval*1.1);
+        }
+        if(clt.service == "LodestarBeaconService"){ // Extra calculate Lodestar --targetPeers + 10%
           optval = Math.round(optval*1.1);
         }
         details[opttyp]['maxPeer'] = optval;
@@ -932,8 +1103,7 @@ export class Monitoring {
             services[clientType][clt.service].includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
-            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true &&
-            clt.service == "LodestarBeaconService" ? s.metric.direction == 'outbound' : true
+            (clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true)
           );
           if(xx.length){
             services[clientType][clt.service].forEach(function (item, index) {
@@ -1186,6 +1356,7 @@ export class Monitoring {
       'GethService' : 8545,
       'BesuService' : 8545,
       'NethermindService' : 8545,
+      'ErigonService' : 8545,
     };
 
     // Set timestamp in micro seconds
@@ -1220,7 +1391,8 @@ export class Monitoring {
       let port = rpc.destinationPort;
 
       // Check if RPC port is enabled
-      let result = await this.queryRpcApi({'addr':addr,'port':port},"web3_clientVersion");
+      // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
+      let result = await this.queryRpcApi({'addr':addr,'port':port},"eth_blockNumber");
       if(result.code)
         continue;
 
