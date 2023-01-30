@@ -429,6 +429,7 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
+        this.model.pass.value = "";
         if (
           typeof err === "string" &&
           new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(
