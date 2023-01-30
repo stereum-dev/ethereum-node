@@ -38,7 +38,7 @@ export class ErigonService extends NodeService {
         `--http.corsdomain=*`,
         `--http.addr=0.0.0.0`,
         `--http.port=8545`,
-        `--http.api=engine,net,eth`,
+        `--http.api=engine,net,eth,web3`,
         `--metrics`,
         `--metrics.addr=0.0.0.0`,
         `--metrics.port=6060`,
