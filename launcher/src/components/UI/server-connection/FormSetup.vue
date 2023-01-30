@@ -172,13 +172,16 @@
               isFilled: model.pass.isFilled,
             }"
             v-else
-            type="password"
+            :type="inputType"
             name="keylocation"
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
             required
           />
+          <div class="passwordShow" @click="toggleShowPassword" v-if="!keyAuth">
+            <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+          </div>
         </div>
         <div class="ssh">
           <label class="switch">
@@ -227,6 +230,7 @@ export default {
       errorMsgExists: false,
       selectedName: "",
       bDialogVisible: false,
+      showPassword: false,
       model: {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
@@ -243,6 +247,9 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
+    inputType() {
+      return this.showPassword ? "text" : "password";
+    },
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
@@ -264,6 +271,9 @@ export default {
     },
   },
   methods: {
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
     openUploadHandler() {
       this.$refs.fileInput.click();
     },
@@ -451,6 +461,11 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.passwordShow {
+  display: flex;
+  position: absolute;
+  left: 92%;
 }
 .ssvBtn {
   display: none;
@@ -715,6 +730,7 @@ select {
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
   z-index: 95;
+  position: relative;
 }
 .keyLocation_title {
   clear: both;
