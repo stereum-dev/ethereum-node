@@ -466,6 +466,7 @@ export default {
   display: flex;
   position: absolute;
   left: 92%;
+  cursor: pointer;
 }
 .ssvBtn {
   display: none;
@@ -741,18 +742,18 @@ select {
 }
 .chooseFile {
   cursor: pointer;
-  background: #eaeaea;
-  border: 2px solid #979797;
+  left: 39%;
+  top: 4%;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 7%;
-  border-radius: 30px 0 0 30px;
+  position: absolute;
   box-sizing: border-box;
 }
 .chooseFile img {
-  width: 50%;
+  width: 30%;
 }
 .chooseFile:active,
 .chooseFile:focus {
@@ -781,9 +782,7 @@ select {
 }
 #keyInput {
   height: 100% !important;
-  width: 88.8% !important;
-  border-radius: 0 30px 30px 0 !important;
-  margin: 0 !important;
+  width: 96% !important;
 }
 
 #login {
@@ -818,7 +817,6 @@ select {
 }
 input {
   cursor: pointer;
-  outline-style: none;
 }
 
 .ssh {
