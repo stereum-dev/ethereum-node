@@ -32,7 +32,7 @@
         btn-action="logToggle"
         grid-row="2/3"
         v-if="isloading"
-        >loading new states</the-node-panel-btn
+        >{{ $t("journalnode.edit") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/turn_on.png"
@@ -43,7 +43,7 @@
         grid-row="2/3"
         v-else-if="checkStatus()"
         @btn-action="stateButtonHandler('started')"
-        >Turn Node on</the-node-panel-btn
+        >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/power2.png"
@@ -54,7 +54,7 @@
         grid-row="2/3"
         v-else
         @btn-action="stateButtonHandler('stopped')"
-        >Turn Node on</the-node-panel-btn
+        >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/logs_icon.svg"
@@ -64,7 +64,8 @@
         btn-action="logToggle"
         grid-row="3/4"
         @btn-action="logToggle"
-        >Open Logs...</the-node-panel-btn
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
     </div>
     <div class="configBtn" v-else>
@@ -76,7 +77,7 @@
         btn-action="logToggle"
         grid-row="1/2"
         @btn-action="logToggle"
-        >back</the-node-panel-btn
+        >{{ $t("installOption.back") }}</the-node-panel-btn
       >
     </div>
   </div>
@@ -96,6 +97,8 @@ export default {
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
+      //this data is dummy for invisible the log btn till the next release
+      tillTheNextRelease: false,
     };
   },
   computed: {
