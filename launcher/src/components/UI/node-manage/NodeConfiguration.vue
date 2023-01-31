@@ -149,6 +149,8 @@ export default {
   background-color: #606060;
   border-radius: 10px;
   margin: 0 auto;
+  box-shadow: 1px 1px 3px 1px #282727;
+  border: 1px solid #4c4848;
 }
 .server {
   grid-column: 1;
@@ -168,6 +170,8 @@ export default {
   align-items: center;
   background-color: #2d3134;
   border-radius: 10px;
+  box-shadow: 1px 1px 3px 1px #282727;
+  border: 1px solid #4c4848;
 }
 .server .details {
   width: 95%;
