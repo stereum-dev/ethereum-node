@@ -1945,47 +1945,33 @@ rm -rf diskoutput
   // validatorPublicKeys: array of all pubkeys
   async getValidatorState(validatorPublicKeys){
     let validatorBalances = [];
-    let validatorBalancesObject = {};
     // get status of beacon container
     const beaconStatus = await this.getBeaconStatus();
     if (beaconStatus.code === 0) {
-      var beaconAPIPort = beaconStatus.servicePort
-
-      // checking 'CURL' installation on the beacon container
-      const curlCheckCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "curl"`;
-      const curlCheckRunCmd = await this.nodeConnection.sshService.exec(curlCheckCmd);
-
-      if (curlCheckRunCmd.stderr.includes("curl: not found")) {
-        const installCurlCmd = `docker exec -u 0 -i stereum-${beaconStatus.data[0].sid} sh -c "apt-get update && apt-get install curl -y"`;
-        await this.nodeConnection.sshService.exec(installCurlCmd);
-      }
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort
 
       // get validator's states from beacon container
       if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
         var beaconAPIRunCmd = "";
-        var id = 1;
         let validatorNotFound;
 
-        for (const key of validatorPublicKeys) {
-          const beaconAPICmd = `docker exec -u 0 stereum-${beaconStatus.data[0].sid} curl -s -X GET 'http://stereum-${beaconStatus.data[0].sid}:${beaconStatus.data[0].beacon.servicePort}/eth/v1/beacon/states/head/validators/${key}' -H 'accept: application/json'`     // using beacon container to run beacon API
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
           beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
-
           validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
-
           if (!validatorNotFound){
             const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
-            validatorBalancesObject = {
-              id: id,
-              index: queryResult.index,
-              balance: queryResult.balance,
-              status: queryResult.validator.slashed === "true" ? "slashed" : (queryResult.status.replace(/_.*/,"")),
-              pubkey: key,
-              activation_epoch: queryResult.validator.activation_epoch,
-            };
-            id++;
-            validatorBalances.push(validatorBalancesObject);
+            validatorBalances = queryResult.map((key, id) => {
+              return {
+                id: id,
+                index: key.index,
+                balance: key.balance,
+                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
+                pubkey: key.validator.pubkey,
+                activation_epoch: key.validator.activation_epoch,
+              }
+            })
           }
-        }
+
       }
       // return array of objects which include following:
       // - id: value
