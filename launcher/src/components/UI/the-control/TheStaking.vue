@@ -13,13 +13,14 @@
       <div class="staking-container">
         <div class="side-top">
           <div class="top-icon">
-            <img
+            <!-- <img
               src="../../../../public/img/icon/control/stakingWu.svg"
               alt="coin-icon"
-            />
+            /> -->
+            <img :src="networkCurrencySymbolIcon" />
           </div>
           <div class="top-value">
-            <span>{{ totalBalance }}</span>
+            <span>{{ formattedBalance }}</span>
           </div>
         </div>
         <div class="side-bottom">
@@ -42,12 +43,20 @@
 <script>
 import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";
+import { useServices } from "@/store/services";
 import VerticalBarController from "./VerticalBarController.vue";
 export default {
   components: { VerticalBarController },
   data() {
     return {
       //dummy value o test
+      networkCurrencySymbolIcon: "",
+      mainnetCurrencySymbolIcon:
+        "/img/icon/control/mainnet-currency-symbol.png",
+      testnetCurrencySymbolIcon: "/img/icon/control/goETH_Currency_Symbol.png",
+      gnosisCurrencySymbolIcon: "/img/icon/control/gno_currency_symbol.png",
+      defaultCurrencySymbolIcon: "/img/icon/control/stakingWu.svg",
+      totalBalance: 1234567.123456789,
     };
   },
   computed: {
@@ -55,6 +64,23 @@ export default {
       totalBalance: "totalBalance",
       keys: "keys",
     }),
+    ...mapState(useServices, {
+      network: "network",
+    }),
+    formattedBalance() {
+      return this.totalBalance.toFixed(5);
+    },
+  },
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
+    } else if (this.network === "testnet") {
+      this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
+    } else if (this.network === "gnosis") {
+      this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
+    } else {
+      this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
+    }
   },
 };
 </script>
@@ -121,7 +147,7 @@ export default {
   align-items: center;
 }
 .top-icon {
-  width: 20%;
+  width: 27%;
   height: 100%;
   display: flex;
   justify-content: center;
