@@ -145,11 +145,6 @@ export default {
       item.serviceIsPending = false;
       this.updateStates();
     },
-    openDefaultBrowser(el) {
-      let url = el.linkUrl;
-      window.open(url, "_blank");
-      el.displayPluginMenu = false;
-    },
     pluginMenuHandler(el) {
       setTimeout(() => {
         this.list.map((i) => {
