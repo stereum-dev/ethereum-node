@@ -148,11 +148,7 @@
             $t("formsetup.password")
           }}</label>
           <div class="locationPicker" v-if="keyAuth">
-            <div
-              class="chooseFile"
-              @click="openUploadHandler"
-              v-if="!model.keylocation.value"
-            >
+            <div class="chooseFile" @click="openUploadHandler">
               <input
                 type="file"
                 style="display: none"
@@ -751,18 +747,19 @@ select {
 }
 .chooseFile {
   cursor: pointer;
-  left: 39.5%;
-  top: 4%;
+  left: 41%;
+  top: 17%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 7%;
+  height: 70%;
+  width: 5%;
   position: absolute;
   box-sizing: border-box;
+  border-right: 3px solid #929292;
 }
 .chooseFile img {
-  width: 30%;
+  width: 50%;
   opacity: 80%;
 }
 .chooseFile:active,
@@ -794,7 +791,7 @@ select {
   height: 100% !important;
   width: 96% !important;
   margin-left: 1%;
-  padding-left: 7% !important;
+  padding-left: 9% !important;
 }
 
 #login {

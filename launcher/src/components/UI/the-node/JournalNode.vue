@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="configBtn">
+    <div class="configBtn" v-if="!openLog">
       <div class="edit-btn">
         <router-link to="/manage">
           <span>{{ $t("journalnode.edit") }}</span>
@@ -22,16 +22,17 @@
       </div>
       <div class="state-btn-loading" v-if="isloading">
         <span>loading new states</span>
-        <img
-          src="/img/icon/plugin-menu-icons/turning_circle.gif"
-          alt="icon"
-        />
+        <img src="/img/icon/plugin-menu-icons/turning_circle.gif" alt="icon" />
       </div>
-      <div class="state-btn-on" v-else-if="checkStatus()" @click="stateButtonHandler('started')">
+      <div
+        class="state-btn-on"
+        v-else-if="checkStatus()"
+        @click="stateButtonHandler('started')"
+      >
         <span>Turn Node on</span>
         <img
-        src="../../../../public/img/icon/node-journal-icons/turn_on.png"
-        alt="icon"
+          src="../../../../public/img/icon/node-journal-icons/turn_on.png"
+          alt="icon"
         />
       </div>
       <div class="state-btn-off" v-else @click="stateButtonHandler('stopped')">
@@ -41,7 +42,15 @@
           alt="icon"
         />
       </div>
+      <div class="state-btn-log" @click="logToggle">
+        <span>Open Logs...</span>
+        <img
+          src="../../../../public/img/icon/node-journal-icons/logs_icon.svg"
+          alt="icon"
+        />
+      </div>
     </div>
+    <div class="configBtn" v-else></div>
   </div>
 </template>
 <script>
@@ -57,9 +66,14 @@ export default {
     return {
       loading: false,
       updateTableIsOpen: false,
+      openLog: false,
     };
   },
   computed: {
+    logToggle() {
+      this.openLog = !this.openLog;
+    },
+
     isloading: {
       // getter
       get: function () {
@@ -79,25 +93,35 @@ export default {
     }),
   },
   methods: {
-    checkStatus(){
-      return !this.installedServices.some(s => s.state == "running")
+    checkStatus() {
+      return !this.installedServices.some((s) => s.state == "running");
     },
-    async stateButtonHandler(state){
-      this.loading = true
-        try {
-          let promises = this.installedServices.map(async (service, index) => {
-            new Promise(resolve => setTimeout(resolve, index * 1000)).then(() => {
+    async stateButtonHandler(state) {
+      this.loading = true;
+      try {
+        let promises = this.installedServices.map(async (service, index) => {
+          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(
+            () => {
               ControlService.manageServiceState({
-                  id: service.config.serviceID,
-                  state: state,
+                id: service.config.serviceID,
+                state: state,
               });
-            })})
-          promises.push(new Promise(resolve => setTimeout(() => {this.loading = false; resolve()}, (promises.length * (state == "running" ? 8000 : 4000)))))
-          Promise.all(promises)
-          } catch (err) {
-            console.log(state.replace("ed", "ing") + " services failed:\n", err);
-          }
-    }
+            }
+          );
+        });
+        promises.push(
+          new Promise((resolve) =>
+            setTimeout(() => {
+              this.loading = false;
+              resolve();
+            }, promises.length * (state == "running" ? 8000 : 4000))
+          )
+        );
+        Promise.all(promises);
+      } catch (err) {
+        console.log(state.replace("ed", "ing") + " services failed:\n", err);
+      }
+    },
   },
 };
 </script>
@@ -324,6 +348,27 @@ export default {
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
+.state-btn-log {
+  grid-column: 1;
+  grid-row: 3/4;
+  width: 95%;
+  height: 80%;
+  padding: 0 10px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-self: center;
+  background-color: #242529;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #c1c1c1;
+  border: 1px solid #787878;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
 .state-btn-loading {
   grid-column: 1;
   grid-row: 2/3;
@@ -345,9 +390,15 @@ export default {
   cursor: default;
   box-shadow: 0 1px 3px 1px #2c2c2c;
 }
-.state-btn-loading img,.state-btn-on img,.state-btn-off img {
+.state-btn-log img {
+  width: 15%;
+  margin-right: 3%;
+}
+.state-btn-loading img,
+.state-btn-on img,
+.state-btn-off img {
   width: 10%;
-  margin-right: 8px;
+  margin-right: 5%;
 }
 .state-btn:hover {
   background-color: #18191c;
