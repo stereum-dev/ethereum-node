@@ -50,7 +50,15 @@
         />
       </div>
     </div>
-    <div class="configBtn" v-else></div>
+    <div class="configBtn" v-else>
+      <div class="backToNode" @click="logToggle">
+        <span>{{ $t("modifyPanel.backNode") }}</span>
+        <img
+          src="../../../../public/img/icon/manage-node-icons/undo1.png"
+          alt="icon"
+        />
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -70,10 +78,6 @@ export default {
     };
   },
   computed: {
-    logToggle() {
-      this.openLog = !this.openLog;
-    },
-
     isloading: {
       // getter
       get: function () {
@@ -93,6 +97,9 @@ export default {
     }),
   },
   methods: {
+    logToggle() {
+      this.openLog = !this.openLog;
+    },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
     },
@@ -368,6 +375,30 @@ export default {
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.backToNode {
+  grid-column: 1;
+  grid-row: 1/2;
+  width: 95%;
+  height: 80%;
+  padding: 0 10px;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-self: center;
+  background-color: #242529;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #408886;
+  border: 1px solid #787878;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.backToNode img {
+  width: 10%;
 }
 .state-btn-loading {
   grid-column: 1;
