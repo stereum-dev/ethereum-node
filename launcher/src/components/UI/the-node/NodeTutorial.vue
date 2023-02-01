@@ -28,6 +28,8 @@
 import { mapWritableState } from "pinia";
 //import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
+import { mapState } from "pinia";
+import { useServices } from "@/store/services";
 
 export default {
   data() {
@@ -35,7 +37,8 @@ export default {
       configData: [
         {
           id: 2,
-          name: this.$t("nodeSidebarVideo.stake"),
+          // name: this.$t("nodeSidebarVideo.stake"),
+          name: "",
           videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
           writtenLink:
             "https://stereum.net/eth-solo-staking-step-by-step-guide/",
@@ -85,6 +88,17 @@ export default {
           display: true,
         },
       ],
+      gnosisConfigData: [
+        {
+          id: 1,
+          name: "STAKE WITH 1 GNO",
+          videosLink: "https://youtu.be/qORXGzhZPns",
+          writtenLink:
+            "https://stereum.net/ethereum-node-setup/gno-solo-staking/",
+          guideLink: "https://stereum.net/",
+          display: true,
+        },
+      ],
     };
   },
   mounted() {
@@ -95,6 +109,9 @@ export default {
       };
     });
   },
+  created() {
+    this.configData[0].name = this.ethGnoName;
+  },
   computed: {
     // ...mapWritableState(useNodeStore, {
     //   configData: "configData_nodeSidebarVideo",
@@ -102,6 +119,14 @@ export default {
     ...mapWritableState(useTutorialStore, {
       showTutorialModal: "showTutorialModal",
     }),
+    ...mapState(useServices, {
+      network: "network",
+    }),
+    ethGnoName() {
+      return this.network === "gnosis"
+        ? "STAKE WITH 1 GNO"
+        : this.$t("nodeSidebarVideo.stake");
+    },
   },
   methods: {},
 };
