@@ -123,7 +123,7 @@ export default {
       if (this.network === "gnosis") {
         this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
         this.configData[0].videosLink =
-          "https://www.youtube.com/watch?v=qORXGzhZPns";
+          "https://www.youtube.com/embed/qORXGzhZPns";
         this.configData[0].writtenLink =
           "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
       } else if (this.network === "mainnet") {
