@@ -130,13 +130,13 @@ export default {
         this.configData[0].videosLink =
           "https://www.youtube.com/embed/bfToZ_wTh_Q";
         this.configData[0].writtenLink =
-          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+          "https://stereum.net/eth-solo-staking-step-by-step-guide/";
       } else if (this.network === "testnet") {
         this.configData[0].name = this.$t("nodeSidebarVideo.stake");
         this.configData[0].videosLink =
           "https://www.youtube.com/embed/bfToZ_wTh_Q";
         this.configData[0].writtenLink =
-          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+          "https://stereum.net/eth-solo-staking-step-by-step-guide/";
       } else {
         this.configData[0].name = "Wait...";
         this.configData[0].videosLink = "";

@@ -13,7 +13,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 1,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: false,
+          freeCensorship: false,
         },
         {
           icon: "/img/icon/click-installation/bloxRoute-icon.png",
@@ -25,7 +25,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 2,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: true,
+          freeCensorship: true,
         },
         {
           icon: "/img/icon/click-installation/bloxRoute-icon.png",
@@ -35,7 +35,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 3,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: false,
+          freeCensorship: false,
         },
         {
           icon: "/img/icon/click-installation/bloxRoute-icon.png",
@@ -45,7 +45,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 4,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: false,
+          freeCensorship: false,
         },
         {
           icon: "/img/icon/click-installation/blocknative.png",
@@ -57,7 +57,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 5,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: false,
+          freeCensorship: false,
         },
         {
           icon: "/img/icon/click-installation/MANIFOLD.png",
@@ -69,7 +69,7 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 6,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: true,
+          freeCensorship: true,
         },
         {
           icon: "/img/icon/click-installation/UltraSoundRelay.png",
@@ -81,27 +81,50 @@ export const useNodeManage = defineStore("nodeManage", {
           id: 7,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: true,
+          freeCensorship: true,
         },
         {
           icon: "/img/icon/click-installation/AESTUS.png",
           name: "Aestus",
+          mainnet:
+            "https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live",
           testnet:
             "https://0xab78bf8c781c58078c3beb5710c57940874dd96aef2835e7742c866b4c7c0406754376c2c8285a36c630346aa5c5f833@goerli.aestus.live",
           id: 8,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: true,
+          freeCensorship: true,
         },
         {
           icon: "/img/icon/click-installation/Gnosis Agnostic.png",
           name: "Agnostic",
+          mainnet:
+            "https://0xa7ab7a996c8584251c8f925da3170bdfd6ebc75d50f5ddc4050a6fdc77f2a3b5fce2cc750d0865e05d7228af97d69561@agnostic-relay.net",
           testnet:
             "https://0xa6bcad37b5d647152a93c2807d8a56055f1e0d7480eb6505d46edc21593e400f0f13738bf2e892f85946234629a3036a@goerli.agnostic-relay.net",
           id: 9,
           isSelected: false,
           isRemoved: false,
-          freeCencorship: true,
+          freeCensorship: true,
+        },
+        {
+          icon: "/img/icon/click-installation/mainnet-circle.png",
+          name: "Eden",
+          mainnet: "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
+          testnet: "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-goerli.edennetwork.io/",
+          id: 10,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: false,
+        },
+        {
+          icon: "/img/icon/click-installation/mainnet-circle.png",
+          name: "Relayooor's",
+          mainnet: "https://0x84e78cb2ad883861c9eeeb7d1b22a8e02332637448f84144e245d20dff1eb97d7abdde96d4e7f80934e5554e11915c56@relayooor.wtf",
+          id: 11,
+          isSelected: false,
+          isRemoved: false,
+          freeCensorship: true,
         },
       ],
       newConfiguration: [],

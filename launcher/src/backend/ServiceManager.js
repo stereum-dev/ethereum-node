@@ -289,6 +289,8 @@ export class ServiceManager {
             client.dependencies.mevboost.push(service)
             return client
           })
+        default:
+          return service
       }
       service.command = this.addCommandConnection(service, command, dependencies, filter)
 
