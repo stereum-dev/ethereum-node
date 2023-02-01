@@ -43,7 +43,7 @@
                 <img
                   src="/img/icon/header-icons/usa1.png"
                   alt="flag-icon"
-                  v-if="relay.freeCencorship == false"
+                  v-if="relay.freeCensorship == false"
                 />
               </div>
             </div>
