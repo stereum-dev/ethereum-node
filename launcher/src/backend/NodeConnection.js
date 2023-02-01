@@ -3,7 +3,6 @@ import { StringUtils } from "./StringUtils";
 import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
-import { ServiceManager } from "./ServiceManager";
 import axios from "axios";
 import net from "net";
 import YAML from "yaml";
@@ -779,25 +778,25 @@ export class NodeConnection {
   }
 
   async destroyNode(serviceConfigs) {
+
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
+
     let sPathCheck = "";
     for(let service of serviceConfigs) {
       let sID = service.id;
       for(let path of service.volumes) {
         let sPath = path.destinationPath.substring(0, path.destinationPath.indexOf(sID)) + sID + "/";
-        if(sPath.includes(sID) && sPath != sPathCheck){
-          try{
-            sPathCheck = sPath;
-            await this.sshService.exec("rm -rf " + sPath)
-          }
-          catch{
-            return "error";
-          }
+        if(sPath.includes(sID) && !sPath.includes("/etc/stereum") && sPath != sPathCheck){
+          sPathCheck = sPath;
+          this.taskManager.otherSubTasks.push({
+            name: "remove Volume Directories",
+            otherRunRef: ref,
+            status: !(await this.sshService.exec("rm -rf " + sPath)).rc,
+          });
         }
       }
     };
-
-    const ref = StringUtils.createRandomString();
-    this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
 
     this.taskManager.otherSubTasks.push({
       name: "remove Docker-Container",
