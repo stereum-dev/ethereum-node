@@ -56,7 +56,6 @@ export default {
       testnetCurrencySymbolIcon: "/img/icon/control/goETH_Currency_Symbol.png",
       gnosisCurrencySymbolIcon: "/img/icon/control/gno_currency_symbol.png",
       defaultCurrencySymbolIcon: "/img/icon/control/stakingWu.svg",
-      totalBalance: 1234567.123456789,
     };
   },
   computed: {
