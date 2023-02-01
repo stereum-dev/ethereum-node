@@ -40,8 +40,7 @@ export default {
           // name: this.$t("nodeSidebarVideo.stake"),
           name: "",
           videosLink: "",
-          writtenLink:
-            "https://stereum.net/eth-solo-staking-step-by-step-guide/",
+          writtenLink: "",
           guideLink: "https://stereum.net/",
           display: true,
         },
