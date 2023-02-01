@@ -5,6 +5,8 @@ import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
+import YAML from "yaml";
+import { Console } from "console";
 
 export class Monitoring {
   constructor() {
@@ -824,6 +826,7 @@ export class Monitoring {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
             }catch(e){}
+
           }
           // Set chain head block for this client from RPC server (if available)
           if(get_chain_head_by_rpc.includes(clt.service) && typeof ecBlockNumberByRPC == 'object' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
@@ -834,6 +837,7 @@ export class Monitoring {
             }catch(e){}
             frstVal = chain_head_block;
             scndVal = chain_head_block;
+
           }
           data.push({
             id: index+1,
@@ -1593,8 +1597,22 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all publicly available ports (including the associated service and protocol)
-  async getPortStatus(){
+  // Get a list of all ports (including the associated service and protocol) that are availble either publicly, locally or thru specific ip addresses
+  // Accepts an optional object of arguments:
+  // [OPTIONAL] addr=<string|array> (default: "public"):
+  // - "public": retrieve only ports that are publicly available (which means not localhost/127.0.0.1)
+  // - "local": retrieve only ports that are locally available (which thru localhost/127.0.0.1)
+  // - ["IPv4"]: retrieve only ports that are available thru specified IP addresses
+  // Returns array with code/info/data keys where:
+  // - code: 0 means success and every other value means an error
+  // - info: a info message regarding the last reuqest (for example success or error)
+  // - data: a array of objects with port and associated protocol/service on success or empty string on errors
+  async getPortStatus(args){
+
+    // Extract arguments
+    var {addr} = Object.assign({
+      addr:"public",
+    }, (typeof args === 'object' ? args : {}));
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
@@ -1606,20 +1624,35 @@ export class Monitoring {
       };
     }
 
-    // Get ports that are bound to a public network
+    // Check and format addr
+    const addr_type = Array.isArray(addr) ? 'arr' : ( (typeof addr === 'string'  && ["public","local"].includes(addr) ) ? 'str' : 'invalid' );
+    addr = addr_type == 'str' ? addr.toLowerCase().trim() : addr;
+    if(addr_type == 'invalid'){
+      return {
+        "code": 1,
+        "info": "error: addr must have a value of \"public\", \"local\" or an array of ip addresses",
+        "data": '',
+      };
+    }
+
+    // Get ports that are bound to a public or local address (or to a address specified in addr array)
     let data = [];
-    const ignore = ["127.0.0.1","localhost"];
+    const local_addresses = ["127.0.0.1","localhost"];
+    const addresses = addr_type == 'arr' ? addr : local_addresses;
     for(let i = 0; i < serviceInfos.length; i++){
       let svc = serviceInfos[i];
       let ports = svc.config.ports
       if(ports.length < 1) continue;
       for(let n = 0; n < ports.length; n++){
-        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+        if(addr == 'public' && addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+          continue;
+        if((addr_type == 'arr' || addr == 'local') && !addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
           continue;
         data.push({
           name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
+          type: addr_type == 'arr' ? addresses.find(w => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
         });
       }
     }
@@ -1632,11 +1665,22 @@ export class Monitoring {
     // );
 
     // Return success
+    const addinfo = addr_type === 'str' ? 'that are '+addr+'ly available' : 'that are available thru ip ' + addr.join(' or ');
     return {
       "code": 0,
-      "info": "success: open ports retrieved",
+      "info": "success: open ports "+addinfo+" retrieved",
       "data": data,
     };
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1) 
+  async getPublicPortStatus(){
+    return await this.getPortStatus({addr:'public'});
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)  
+  async getLocalPortStatus(){
+    return await this.getPortStatus({addr:'local'});
   }
 
   // Used for fast debug/dev purposes
@@ -1895,5 +1939,49 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
+  }
+
+  // get States of Validators
+  // validatorPublicKeys: array of all pubkeys
+  async getValidatorState(validatorPublicKeys){
+    let validatorBalances = [];
+    // get status of beacon container
+    const beaconStatus = await this.getBeaconStatus();
+    if (beaconStatus.code === 0) {
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort
+
+      // get validator's states from beacon container
+      if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
+        var beaconAPIRunCmd = "";
+        let validatorNotFound;
+
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
+          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
+          validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
+          if (!validatorNotFound){
+            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
+            validatorBalances = queryResult.map((key, id) => {
+              return {
+                id: id,
+                index: key.index,
+                balance: key.balance,
+                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
+                pubkey: key.validator.pubkey,
+                activation_epoch: key.validator.activation_epoch,
+              }
+            })
+          }
+
+      }
+      // return array of objects which include following:
+      // - id: value
+      // - index: index
+      // - balance: balance
+      // - status: state
+      // - pubkey: pub_key
+      // - activation_epoch: epoch_number
+      return validatorBalances;
+    } else if (beaconStatus.code === 2)
+        return validatorBalances;     // empty array will be returned, if there is a no running consensus client
   }
 }

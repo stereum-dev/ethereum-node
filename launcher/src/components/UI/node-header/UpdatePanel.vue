@@ -219,6 +219,8 @@ export default {
         latest: "2.0",
         autoUpdate: "off",
       },
+      osVersionCurrent: "-",
+      osVersionLatest: "-",
     };
   },
   computed: {
