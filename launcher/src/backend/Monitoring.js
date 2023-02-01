@@ -5,6 +5,8 @@ import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
+import YAML from "yaml";
+import { Console } from "console";
 
 export class Monitoring {
   constructor() {
@@ -268,7 +270,7 @@ export class Monitoring {
   // api_reponse=<mixed>: the response of the RPC api
   // api_httpcode=<int> : the http status code of the RPC api response
   async queryRpcApi(url,rpc_method,rpc_params=[],method="POST",headers={}){
-    
+
     // Setup query
     var query = rpc_method.trim().indexOf("{") < 0 ? JSON.stringify({
       "jsonrpc": "2.0",
@@ -407,7 +409,7 @@ export class Monitoring {
     };
   }
 
-    // Query BEACON API via CURL on the node
+  // Query BEACON API via CURL on the node
   // https://ethereum.github.io/beacon-APIs/
   // https://consensys.github.io/teku/
   // url=<mixed>      : [REQUIRED] Full HTTP API URL of the BEACON server or object of {addr:'<addr>',port:'<port>'}
@@ -497,7 +499,7 @@ export class Monitoring {
 
     // Build curl command
     const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
- 
+
     // Execute the CURL command on the node and return the result
     let result = null;
     try {
@@ -560,6 +562,136 @@ export class Monitoring {
     };
   }
 
+  // Get RPC data of given query for all or a specific local running execution client(s)
+  // Arguments:
+  // query=<string> : [REQUIRED] The query to execute on the RPC server, e.g: "web3_clientVersion"
+  // params=<object>: [OPTIONAL] An object of optional parameters:
+  //                             serviceID<string>   : Service ID to match a specific execution client only
+  //                             instanceID<string>  : Instance ID to match a specific execution client only
+  //                             serviceInfos<object>: An object retrieved by method "getServiceInfos"
+  // Returns object with keys:
+  // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
+  // info=<string>: A message about the last result.
+  // data=<mixed> : An array of objects for each matched execution client (if available) or empty string
+  // On success object keys per array item are:
+  // now=<integer>            : Current timestamp in microseconds
+  // client=<object>          : Matched execution client object
+  // service_id=<string>      : Service ID of the matched execution client (if available) or "n/a"
+  // instance_id=<string>     : Instance ID of the matched execution client (if available) or "n/a"
+  // connection_infos=<object>: Connection infos that was used to query the rpc api
+  // query_result=<object>    : Result of the query to the rpc api (see method "queryRpcApi" for response infos)
+  async getRpcData(query,params){
+
+    // Service definitions with their associated rpc api (service) port
+    const services = {
+      'GethService' : 8545,
+      'BesuService' : 8545,
+      'NethermindService' : 8545,
+      'ErigonService' : 8545,
+    };
+
+    // Extract additional params
+    var {serviceID,instanceID,svcInfos} = Object.assign({
+      serviceID:null,
+      instanceID:null,
+      serviceInfos:null,
+    }, params);
+
+    // Format additional params
+    serviceID = typeof serviceID === 'string' ? serviceID : '';
+    instanceID = typeof instanceID === 'string' ? instanceID : '';
+    svcInfos = typeof svcInfos === 'object' ? svcInfos : null;
+
+    // Set timestamp in micro seconds
+    var now = Date.now();
+
+    // Check query
+    if(typeof query !== 'string'){
+      return {
+        "code": 1,
+        "info": "error: query must be string (" + typeof query + " given)",
+        "data": '',
+      };
+    }
+
+    // Get service infos
+    const serviceInfos = svcInfos ? svcInfos : await this.getServiceInfos();
+    if(serviceInfos.length <1){
+      return {
+        "code": 2,
+        "info": "error: service infos unavailable",
+        "data": '',
+      };
+    }
+
+    // Get execution clients with RPC query data, optionally filtered by serviceID and/or instanceID
+    const data = [];
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
+    for(let i = 0; i < executions.length; i++){
+
+      // Make sure execution client is valid and running
+      let execution = executions[i]
+      if(typeof execution !== "object" || !execution.hasOwnProperty("config") ||  !execution.hasOwnProperty("state") || execution.state != 'running'){
+        continue;
+      }
+
+      // Filter the RPC port configuration and get addr/port that is mapped on docker host
+      let sid = execution.config.hasOwnProperty("serviceID") ? execution.config.serviceID : 'n/a';
+      let iid = execution.config.hasOwnProperty("instanceID") ? execution.config.instanceID : 'n/a';
+      let rpc = execution.config.ports.filter((p) => p.servicePort == services[execution.service]).slice(-1).pop();
+      rpc.destinationIp = '127.0.0.1';
+      let addr = rpc.destinationIp;
+      let port = rpc.destinationPort;
+
+      // Ignore the client if serviceID is given and does not match
+      if(serviceID && sid != serviceID)
+        continue;
+
+      // Ignore the client if instanceID is given and does not match
+      if(instanceID && iid != instanceID)
+        continue;
+
+      // Query RPC Server (e.g: "web3_clientVersion")
+      let result = await this.queryRpcApi({'addr':addr,'port':port},query);
+
+      // Add valid client to final result
+      data.push({
+        now: now,
+        client: execution,
+        service_id: sid,
+        instance_id: iid,
+        connection_infos: rpc,
+        query_result: result,
+      });
+    }
+
+    // Additional info
+    let addinfo = [];
+    if(serviceID) addinfo.push('given service "'+serviceID+'"');
+    if(instanceID) addinfo.push('given instance "'+instanceID+'"');
+    if(addinfo.length){
+      addinfo = ' for ' + addinfo.join(' and ').trim();
+    }else{
+      addinfo = '';
+    }
+
+    // Final check
+    if(data.length < 1){
+      return {
+        "code": 3,
+        "info": "error: no running execution client with enabled RPC port found" + addinfo,
+        "data": '',
+      };
+    }
+
+    // Respond success
+    return {
+      "code": 0,
+      "info": "success: rpc data"+ (addinfo ? addinfo : ' for all running execution clients') +" successfully retrieved",
+      "data": data,
+    };
+  }
+
   // Get sync status of consensus and execution clients
   async getSyncStatus(){
 
@@ -576,6 +708,8 @@ export class Monitoring {
         'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
         'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - query for job="besu"
         'NethermindService' : ['nethermind_blocks','nethermind_blocks'], // OK [there is only one label] - query for job="nethermind"
+        // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not availble thru Prometheus!
+        'ErigonService' : ['chain_head_header','chain_head_block'], // TODO - query for job="erigon"
       },
     };
 
@@ -589,7 +723,16 @@ export class Monitoring {
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
+      'ErigonService' : 'erigon',
     };
+
+    // Execution clients that should be queried by RPC for chain head block
+    const get_chain_head_by_rpc = [
+      // 'GethService',
+      // 'BesuService',
+      // 'NethermindService',
+      'ErigonService',
+    ];
 
     // Merge all labels for Prometheus query
     const serviceLabels = [];
@@ -621,6 +764,13 @@ export class Monitoring {
       };
     }
 
+    // If serviceInfos contains at least one service that requires to query the chain head block by
+    // RPC then get block number for ALL running execution clients by RPC query (where available!)
+    let ecBlockNumberByRPC = null;
+    if(serviceInfos.filter(s => get_chain_head_by_rpc.includes(s.service)).length > 0){
+      ecBlockNumberByRPC = await this.getRpcData('eth_blockNumber',{serviceInfos:serviceInfos});
+    }
+
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
@@ -630,7 +780,7 @@ export class Monitoring {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
       if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
-        continue;
+       continue;
       let isConsensus = clt.service in services.consensus;
       let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
       if(!isConsensus || !hasMembers)
@@ -648,7 +798,7 @@ export class Monitoring {
 
       // Filter Prometheus result by current used services
       try{
-        
+
         // Add the response for "syncStatusItems" exact as defined in front-end
         // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
@@ -660,14 +810,14 @@ export class Monitoring {
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let results = [];
           let labels = services[clientType][clt.service];
-          let xx = prometheus_result.data.result.filter((s) => 
+          let xx = prometheus_result.data.result.filter((s) =>
             labels.includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service]
           );
           let frstVal = 0, scndVal = 0;
           if(xx.length){
-            labels.forEach(function (label, index) {              
+            labels.forEach(function (label, index) {
               try{
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
               }catch(e){}
@@ -675,7 +825,19 @@ export class Monitoring {
             try{
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            }catch(e){}   
+            }catch(e){}
+
+          }
+          // Set chain head block for this client from RPC server (if available)
+          if(get_chain_head_by_rpc.includes(clt.service) && typeof ecBlockNumberByRPC == 'object' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
+            let chain_head_block = 0;
+            try{
+              chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop().query_result.data.api_reponse;
+              chain_head_block = (typeof chain_head_block === 'string' && chain_head_block.startsWith('0x')) ? parseInt(chain_head_block,16) : 0;
+            }catch(e){}
+            frstVal = chain_head_block;
+            scndVal = chain_head_block;
+
           }
           data.push({
             id: index+1,
@@ -723,14 +885,15 @@ export class Monitoring {
       'consensus':{
         'TekuBeaconService' : ['beacon_peer_count'],
         'LighthouseBeaconService' : ['libp2p_peers'],
-        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"! 
+        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"!
         'NimbusBeaconService' : ['nbc_peers'],
-        'LodestarBeaconService' : ['lodestar_peers_by_direction_count'],// needs to query for direction="outbound"! 
+        'LodestarBeaconService' : ['libp2p_peers'],
       },
       'execution':{
         'GethService' : ['p2p_peers'],
         'BesuService' : ['ethereum_peer_count'],
         'NethermindService' : ['nethermind_sync_peers'],
+        'ErigonService' : ['p2p_peers'],
       },
     };
 
@@ -744,6 +907,7 @@ export class Monitoring {
       'GethService' : 'geth',
       'BesuService' : 'besu',
       'NethermindService' : 'nethermind',
+      'ErigonService' : 'erigon',
     };
 
     // Merge all labels for Prometheus query
@@ -855,7 +1019,8 @@ export class Monitoring {
           optnam = '--max-peers';
           defval = 160;
         }else if(clt.service == "LodestarBeaconService"){
-          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50)
+          // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50) + 10%
+          // See extra dealing with + 10% below!
           optnam = '--targetPeers';
           defval = 50;
         }else if(clt.service == "GethService"){
@@ -870,6 +1035,11 @@ export class Monitoring {
           // --Network.MaxActivePeers (Default: 50)
           optnam = '--Network.MaxActivePeers';
           defval = 50;
+        }else if(clt.service == "ErigonService"){
+          // --maxpeers (Default: 100)
+          // https://github.com/ledgerwatch/erigon/issues/2853
+          optnam = '--maxpeers';
+          defval = 100;
         }else{
           return;
         }
@@ -889,6 +1059,9 @@ export class Monitoring {
         }
         optval = parseInt(optval);
         if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
+          optval = Math.round(optval*1.1);
+        }
+        if(clt.service == "LodestarBeaconService"){ // Extra calculate Lodestar --targetPeers + 10%
           optval = Math.round(optval*1.1);
         }
         details[opttyp]['maxPeer'] = optval;
@@ -926,12 +1099,11 @@ export class Monitoring {
         clientTypes.forEach(function (clientType, index) {
           let clt = '';
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-          let xx = prometheus_result.data.result.filter((s) => 
-            services[clientType][clt.service].includes(s.metric.__name__) && 
+          let xx = prometheus_result.data.result.filter((s) =>
+            services[clientType][clt.service].includes(s.metric.__name__) &&
             s.metric.instance.includes(clt.config.instanceID) &&
             s.metric.job == jobs[clt.service] &&
-            clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true &&
-            clt.service == "LodestarBeaconService" ? s.metric.direction == 'outbound' : true
+            (clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true)
           );
           if(xx.length){
             services[clientType][clt.service].forEach(function (item, index) {
@@ -947,13 +1119,13 @@ export class Monitoring {
           details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
           details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
           details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
-  
+
           // Summarize totals
           maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
           numPeer = parseInt(numPeer + details[clientType]['numPeer']);
           valPeer = Math.round((numPeer/maxPeer)*100);
         });
-        
+
         // Respond success for this group
         // Define the response for "valPeer" exact as defined in front-end as percentage (%).
         // Avoid overdues that may happen during peer cleaning. The exact values can be taken
@@ -964,7 +1136,7 @@ export class Monitoring {
           'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
           'valPeer': valPeer > 100 ? 100 : valPeer,
         };
-  
+
       }catch(err){
         return {
           "code": 224,
@@ -1005,7 +1177,7 @@ export class Monitoring {
       };
     }
 
-    // Build ssh commands to query storages 
+    // Build ssh commands to query storages
     var sshcommands = [];
     for(let svc of serviceInfos){
         if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
@@ -1184,6 +1356,7 @@ export class Monitoring {
       'GethService' : 8545,
       'BesuService' : 8545,
       'NethermindService' : 8545,
+      'ErigonService' : 8545,
     };
 
     // Set timestamp in micro seconds
@@ -1201,7 +1374,7 @@ export class Monitoring {
 
     // Get execution clients with RPC data by service name
     const data = [];
-    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < executions.length; i++){
 
       // Make sure execution client is valid and running
@@ -1218,10 +1391,11 @@ export class Monitoring {
       let port = rpc.destinationPort;
 
       // Check if RPC port is enabled
-      let result = await this.queryRpcApi({'addr':addr,'port':port},"web3_clientVersion");
+      // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
+      let result = await this.queryRpcApi({'addr':addr,'port':port},"eth_blockNumber");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1375,7 +1549,7 @@ export class Monitoring {
 
     // Get consensus clients with BEACON data by service name
     const data = [];
-    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service)); 
+    const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
     for(let i = 0; i < consensusclients.length; i++){
 
       // Make sure consensus client is valid and running
@@ -1395,7 +1569,7 @@ export class Monitoring {
       let result = await this.queryBeaconApi({'addr':addr,'port':port},"/eth/v1/node/syncing");
       if(result.code)
         continue;
-      
+
       // Add valid client to final result
       data.push({
         now: now,
@@ -1423,8 +1597,22 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all publicly available ports (including the associated service and protocol)
-  async getPortStatus(){
+  // Get a list of all ports (including the associated service and protocol) that are availble either publicly, locally or thru specific ip addresses
+  // Accepts an optional object of arguments:
+  // [OPTIONAL] addr=<string|array> (default: "public"):
+  // - "public": retrieve only ports that are publicly available (which means not localhost/127.0.0.1)
+  // - "local": retrieve only ports that are locally available (which thru localhost/127.0.0.1)
+  // - ["IPv4"]: retrieve only ports that are available thru specified IP addresses
+  // Returns array with code/info/data keys where:
+  // - code: 0 means success and every other value means an error
+  // - info: a info message regarding the last reuqest (for example success or error)
+  // - data: a array of objects with port and associated protocol/service on success or empty string on errors
+  async getPortStatus(args){
+
+    // Extract arguments
+    var {addr} = Object.assign({
+      addr:"public",
+    }, (typeof args === 'object' ? args : {}));
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
@@ -1436,20 +1624,35 @@ export class Monitoring {
       };
     }
 
-    // Get ports that are bound to a public network
+    // Check and format addr
+    const addr_type = Array.isArray(addr) ? 'arr' : ( (typeof addr === 'string'  && ["public","local"].includes(addr) ) ? 'str' : 'invalid' );
+    addr = addr_type == 'str' ? addr.toLowerCase().trim() : addr;
+    if(addr_type == 'invalid'){
+      return {
+        "code": 1,
+        "info": "error: addr must have a value of \"public\", \"local\" or an array of ip addresses",
+        "data": '',
+      };
+    }
+
+    // Get ports that are bound to a public or local address (or to a address specified in addr array)
     let data = [];
-    const ignore = ["127.0.0.1","localhost"];
+    const local_addresses = ["127.0.0.1","localhost"];
+    const addresses = addr_type == 'arr' ? addr : local_addresses;
     for(let i = 0; i < serviceInfos.length; i++){
       let svc = serviceInfos[i];
       let ports = svc.config.ports
       if(ports.length < 1) continue;
       for(let n = 0; n < ports.length; n++){
-        if(ignore.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+        if(addr == 'public' && addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+          continue;
+        if((addr_type == 'arr' || addr == 'local') && !addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
           continue;
         data.push({
           name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
+          type: addr_type == 'arr' ? addresses.find(w => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
         });
       }
     }
@@ -1462,11 +1665,22 @@ export class Monitoring {
     // );
 
     // Return success
+    const addinfo = addr_type === 'str' ? 'that are '+addr+'ly available' : 'that are available thru ip ' + addr.join(' or ');
     return {
       "code": 0,
-      "info": "success: open ports retrieved",
+      "info": "success: open ports "+addinfo+" retrieved",
       "data": data,
     };
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1) 
+  async getPublicPortStatus(){
+    return await this.getPortStatus({addr:'public'});
+  }
+
+  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)  
+  async getLocalPortStatus(){
+    return await this.getPortStatus({addr:'local'});
   }
 
   // Used for fast debug/dev purposes
@@ -1517,7 +1731,7 @@ export class Monitoring {
   // Get node stats (mostly by Prometheus)
   async getNodeStats(){
     try {
-      
+
       const debugstatus = await this.getDebugStatus();
       // if(debugstatus.code)
       //   return debugstatus;
@@ -1725,5 +1939,49 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
+  }
+
+  // get States of Validators
+  // validatorPublicKeys: array of all pubkeys
+  async getValidatorState(validatorPublicKeys){
+    let validatorBalances = [];
+    // get status of beacon container
+    const beaconStatus = await this.getBeaconStatus();
+    if (beaconStatus.code === 0) {
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort
+
+      // get validator's states from beacon container
+      if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
+        var beaconAPIRunCmd = "";
+        let validatorNotFound;
+
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
+          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
+          validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
+          if (!validatorNotFound){
+            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
+            validatorBalances = queryResult.map((key, id) => {
+              return {
+                id: id,
+                index: key.index,
+                balance: key.balance,
+                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
+                pubkey: key.validator.pubkey,
+                activation_epoch: key.validator.activation_epoch,
+              }
+            })
+          }
+
+      }
+      // return array of objects which include following:
+      // - id: value
+      // - index: index
+      // - balance: balance
+      // - status: state
+      // - pubkey: pub_key
+      // - activation_epoch: epoch_number
+      return validatorBalances;
+    } else if (beaconStatus.code === 2)
+        return validatorBalances;     // empty array will be returned, if there is a no running consensus client
   }
 }

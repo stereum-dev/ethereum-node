@@ -269,7 +269,7 @@ export class ValidatorAccountManager {
                     //Nimbus only supports Graffiti changes while running via their rest api
                     let command = client.command.find(c => c.includes("--rest-port="))
                     let port = command.replace("--rest-port=", "")
-                    config = `curl -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
+                    config = `curl -s -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
                     await this.nodeConnection.sshService.exec(config)
                     break;
 

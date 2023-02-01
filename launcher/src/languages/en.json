@@ -15,7 +15,11 @@
   "journalnode": {
     "serverip": "server ip",
     "servername": "SERVER NAME",
-    "edit": "to edit node"
+    "edit": "to edit node",
+    "loading":"loading new states",
+    "turnOn":"Turn Node on",
+    "turnOff":"Turn Node off",
+    "log":"Open Logs..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -58,7 +62,8 @@
     "alert": "Alerts on Mobile App",
     "switchC": "Switch Clients",
     "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "rpc": "RPC Connection",
+    "gnoStake":"STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "client"

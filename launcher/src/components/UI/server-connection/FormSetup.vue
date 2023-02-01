@@ -172,13 +172,16 @@
               isFilled: model.pass.isFilled,
             }"
             v-else
-            type="password"
+            :type="inputType"
             name="keylocation"
             id="keylocation"
             v-model="model.pass.value"
             @blur="checkInput(model.pass)"
             required
           />
+          <div class="passwordShow" @click="toggleShowPassword" v-if="!keyAuth">
+            <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+          </div>
         </div>
         <div class="ssh">
           <label class="switch">
@@ -227,6 +230,7 @@ export default {
       errorMsgExists: false,
       selectedName: "",
       bDialogVisible: false,
+      showPassword: false,
       model: {
         name: { value: "", isFilled: true },
         host: { value: "", isFilled: true },
@@ -243,6 +247,9 @@ export default {
     this.loadStoredConnections();
   },
   computed: {
+    inputType() {
+      return this.showPassword ? "text" : "password";
+    },
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
       selectedPreset: "selectedPreset",
@@ -264,6 +271,9 @@ export default {
     },
   },
   methods: {
+    toggleShowPassword() {
+      this.showPassword = !this.showPassword;
+    },
     openUploadHandler() {
       this.$refs.fileInput.click();
     },
@@ -277,6 +287,11 @@ export default {
     //finish
     changeLabel() {
       this.keyAuth = !this.keyAuth;
+      if (this.keyAuth === true) {
+        this.model.pass.value = "";
+      } else {
+        this.model.keylocation.value = "";
+      }
     },
     setSelectedConnection(event) {
       this.selectedConnection = this.connections.find(
@@ -429,6 +444,7 @@ export default {
         this.connectingAnimActive = false;
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
+        this.model.pass.value = "";
         if (
           typeof err === "string" &&
           new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(
@@ -450,6 +466,12 @@ export default {
 <style scoped>
 * {
   box-sizing: border-box;
+}
+.passwordShow {
+  display: flex;
+  position: absolute;
+  left: 92%;
+  cursor: pointer;
 }
 .ssvBtn {
   display: none;
@@ -714,6 +736,7 @@ select {
   height: 14%;
   box-shadow: 0 1px 3px 1px #182f2f;
   z-index: 95;
+  position: relative;
 }
 .keyLocation_title {
   clear: both;
@@ -724,18 +747,20 @@ select {
 }
 .chooseFile {
   cursor: pointer;
-  background: #eaeaea;
-  border: 2px solid #979797;
+  left: 41%;
+  top: 17%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 7%;
-  border-radius: 30px 0 0 30px;
+  height: 70%;
+  width: 5%;
+  position: absolute;
   box-sizing: border-box;
+  border-right: 3px solid #929292;
 }
 .chooseFile img {
   width: 50%;
+  opacity: 80%;
 }
 .chooseFile:active,
 .chooseFile:focus {
@@ -764,9 +789,9 @@ select {
 }
 #keyInput {
   height: 100% !important;
-  width: 88.8% !important;
-  border-radius: 0 30px 30px 0 !important;
-  margin: 0 !important;
+  width: 96% !important;
+  margin-left: 1%;
+  padding-left: 9% !important;
 }
 
 #login {
@@ -801,7 +826,6 @@ select {
 }
 input {
   cursor: pointer;
-  outline-style: none;
 }
 
 .ssh {
