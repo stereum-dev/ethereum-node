@@ -124,7 +124,7 @@ export default {
     }),
     ethGnoName() {
       return this.network === "gnosis"
-        ? "STAKE WITH 1 GNO"
+        ? this.$t("nodeSidebarVideo.gnoStake")
         : this.$t("nodeSidebarVideo.stake");
     },
   },

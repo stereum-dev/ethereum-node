@@ -62,7 +62,8 @@
     "alert": "Alerts on Mobile App",
     "switchC": "Switch Clients",
     "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "rpc": "RPC Connection",
+    "gnoStake":"STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "client"
