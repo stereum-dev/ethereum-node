@@ -97,56 +97,12 @@ export default {
         ...item,
       };
     });
-    if (this.network === "gnosis") {
-      this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
-      this.configData[0].videosLink =
-        "https://www.youtube.com/watch?v=qORXGzhZPns";
-      this.configData[0].writtenLink =
-        "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-    } else if (this.network === "mainnet") {
-      this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-      this.configData[0].videosLink =
-        "https://www.youtube.com/embed/bfToZ_wTh_Q";
-      this.configData[0].writtenLink =
-        "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-    } else if (this.network === "testnet") {
-      this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-      this.configData[0].videosLink =
-        "https://www.youtube.com/embed/bfToZ_wTh_Q";
-      this.configData[0].writtenLink =
-        "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-    } else {
-      this.configData[0].name = "Wait...";
-      this.configData[0].videosLink = "";
-      this.configData[0].writtenLink = "";
-    }
+    this.serviceController();
   },
   watch: {
     network: {
       handler(newVal, oldVal) {
-        if (newVal === "gnosis") {
-          this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/watch?v=qORXGzhZPns";
-          this.configData[0].writtenLink =
-            "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-        } else if (newVal === "mainnet") {
-          this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink =
-            "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-        } else if (newVal === "testnet") {
-          this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink =
-            "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-        } else {
-          this.configData[0].name = "Wait...";
-          this.configData[0].videosLink = "";
-          this.configData[0].writtenLink = "";
-        }
+        this.serviceController();
       },
     },
     immediate: true,
@@ -162,7 +118,33 @@ export default {
       network: "network",
     }),
   },
-  methods: {},
+  methods: {
+    serviceController() {
+      if (this.network === "gnosis") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/watch?v=qORXGzhZPns";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else if (this.network === "mainnet") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.stake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/embed/bfToZ_wTh_Q";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else if (this.network === "testnet") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.stake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/embed/bfToZ_wTh_Q";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else {
+        this.configData[0].name = "Wait...";
+        this.configData[0].videosLink = "";
+        this.configData[0].writtenLink = "";
+      }
+    },
+  },
 };
 </script>
 <style scoped>
