@@ -683,7 +683,7 @@ export class ServiceManager {
       changed = false
         newServices.forEach(service => {
           service.ports.forEach(newPort => {
-            if(allPorts.includes(newPort.destinationPort + '/' + newPort.servicePortProtocol)){
+            if(allPorts.includes(newPort.destinationPort + '/' + newPort.servicePortProtocol) && !services.map(s => s.id).includes(service.id)){
               newPort.destinationPort++
               changed = true
             }

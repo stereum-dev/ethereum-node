@@ -18,8 +18,8 @@
             src="../../../../public/img/icon/plugin-menu-icons/doc.png"
             alt="icon"
           />
-          <span class="docTitle">PLUG-IN DOCS</span>
-          <span class="openBtn" @click="openDocs">open</span>
+          <span class="docTitle">SERVICE DOCS</span>
+          <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
         </div>
         <!-- expert mode row -->
         <div
@@ -112,7 +112,7 @@
           icon: string (path)
           }
         -->
-        <div
+        <!-- <div
           class="actionBox"
           v-if="!isExpertModeActive && !ssvExpertModeActive"
         >
@@ -129,7 +129,7 @@
               <option value="manual">MANUAL</option>
             </select>
           </div>
-        </div>
+        </div> -->
         <div
           class="toggleTextBox"
           v-for="(option, index) in item.expertOptions.filter(
@@ -299,20 +299,10 @@ export default {
   //   },
   // },
   methods: {
-    openDocs() {
-      let docsUrl =
-        " https://docs.flashbots.net/flashbots-mev-boost/introduction";
-      const genosisUrl = "https://docs.gnosischain.com/node/";
-      if (this.item.name === "Flashbots Mev Boost") {
-        window.open(docsUrl, "_blank");
-      } else if (
-        this.currentNetwork.name === "Gnosis" &&
-        (this.item.name === "Nethermind" ||
-          this.item.name === "Lighthouse" ||
-          this.item.name === "Teku")
-      ) {
-        window.open(genosisUrl, "_blank");
-      }
+    openDocs(docsUrl) {
+      window.open(docsUrl, "_blank")
+      if(this.currentNetwork.network === "gnosis")
+        window.open("https://docs.gnosischain.com/node/", "_blank")
     },
 
     somethingIsChanged(item) {
@@ -325,9 +315,9 @@ export default {
         this.item.config.serviceID
       );
 
-      this.updateSelect = this.checkAutoUpdate(
-        [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
-      );
+      // this.updateSelect = this.checkAutoUpdate(
+      //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
+      // );
 
       if (this.item.service === "SSVNetworkService")
         this.item.ssvConfig = await ControlService.readSSVNetworkConfig(
