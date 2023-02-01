@@ -144,7 +144,7 @@ export default {
                 .filter((service) => service.tunnelLink)
                 .map((service) => {
                   return {
-                    dstPort: service.config.ports[0].servicePort,
+                    dstPort: service.config.ports[0].destinationPort,
                     localPort: service.linkUrl.split(":").pop(),
                   };
                 });
