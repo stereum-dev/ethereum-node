@@ -1,6 +1,6 @@
 {
   "name": "stereum-launcher",
-  "version": "2.0.0-rc.11",
+  "version": "2.0.0-rc.12",
   "private": true,
   "description": "Stereum Ethereum Node Setup Launcher",
   "author": "stereum.net",
