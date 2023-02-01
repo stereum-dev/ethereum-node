@@ -3,6 +3,7 @@ import { StringUtils } from "./StringUtils";
 import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
+import { ServiceManager } from "./ServiceManager";
 import axios from "axios";
 import net from "net";
 import YAML from "yaml";
@@ -777,7 +778,24 @@ export class NodeConnection {
     })
   }
 
-  async destroyNode() {
+  async destroyNode(serviceConfigs) {
+    let sPathCheck = "";
+    for(let service of serviceConfigs) {
+      let sID = service.id;
+      for(let path of service.volumes) {
+        let sPath = path.destinationPath.substring(0, path.destinationPath.indexOf(sID)) + sID + "/";
+        if(sPath.includes(sID) && sPath != sPathCheck){
+          try{
+            sPathCheck = sPath;
+            await this.sshService.exec("rm -rf " + sPath)
+          }
+          catch{
+            return "error";
+          }
+        }
+      }
+    };
+
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
 

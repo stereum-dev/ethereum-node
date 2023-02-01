@@ -98,7 +98,8 @@ promiseIpc.on("setup", async (arg) => {
 // called via promiseIpc as an async function
 promiseIpc.on("destroy", async () => {
   app.showExitPrompt = true;
-  const returnValue = await nodeConnection.destroyNode();
+  const serviceConfigs = await serviceManager.readServiceConfigurations()
+  const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
 });
