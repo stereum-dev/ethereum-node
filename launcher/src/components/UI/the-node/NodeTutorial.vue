@@ -28,6 +28,8 @@
 import { mapWritableState } from "pinia";
 //import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
+import { mapState } from "pinia";
+import { useServices } from "@/store/services";
 
 export default {
   data() {
@@ -35,10 +37,10 @@ export default {
       configData: [
         {
           id: 2,
-          name: this.$t("nodeSidebarVideo.stake"),
-          videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
-          writtenLink:
-            "https://stereum.net/eth-solo-staking-step-by-step-guide/",
+          // name: this.$t("nodeSidebarVideo.stake"),
+          name: "",
+          videosLink: "",
+          writtenLink: "",
           guideLink: "https://stereum.net/",
           display: true,
         },
@@ -94,6 +96,15 @@ export default {
         ...item,
       };
     });
+    this.serviceController();
+  },
+  watch: {
+    network: {
+      handler(newVal, oldVal) {
+        this.serviceController();
+      },
+    },
+    immediate: true,
   },
   computed: {
     // ...mapWritableState(useNodeStore, {
@@ -102,8 +113,37 @@ export default {
     ...mapWritableState(useTutorialStore, {
       showTutorialModal: "showTutorialModal",
     }),
+    ...mapState(useServices, {
+      network: "network",
+    }),
   },
-  methods: {},
+  methods: {
+    serviceController() {
+      if (this.network === "gnosis") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/embed/qORXGzhZPns";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else if (this.network === "mainnet") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.stake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/embed/bfToZ_wTh_Q";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else if (this.network === "testnet") {
+        this.configData[0].name = this.$t("nodeSidebarVideo.stake");
+        this.configData[0].videosLink =
+          "https://www.youtube.com/embed/bfToZ_wTh_Q";
+        this.configData[0].writtenLink =
+          "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+      } else {
+        this.configData[0].name = "Wait...";
+        this.configData[0].videosLink = "";
+        this.configData[0].writtenLink = "";
+      }
+    },
+  },
 };
 </script>
 <style scoped>

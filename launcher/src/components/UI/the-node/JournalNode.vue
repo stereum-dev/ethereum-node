@@ -10,37 +10,75 @@
         </div>
       </div>
     </div>
-    <div class="configBtn">
-      <div class="edit-btn">
-        <router-link to="/manage">
-          <span>{{ $t("journalnode.edit") }}</span>
-          <img
-            src="../../../../public/img/icon/node-journal-icons/edit-node.png"
-            alt="icon"
-          />
-        </router-link>
-      </div>
-      <div class="state-btn-loading" v-if="isloading">
-        <span>loading new states</span>
-        <img
-          src="/img/icon/plugin-menu-icons/turning_circle.gif"
-          alt="icon"
-        />
-      </div>
-      <div class="state-btn-on" v-else-if="checkStatus()" @click="stateButtonHandler('started')">
-        <span>Turn Node on</span>
-        <img
-        src="../../../../public/img/icon/node-journal-icons/turn_on.png"
-        alt="icon"
-        />
-      </div>
-      <div class="state-btn-off" v-else @click="stateButtonHandler('stopped')">
-        <span>Turn Node off</span>
-        <img
-          src="../../../../public/img/icon/node-journal-icons/power2.png"
-          alt="icon"
-        />
-      </div>
+    <div class="configBtn" v-if="!openLog">
+      <router-link to="/manage" class="linkToEdit">
+        <the-node-panel-btn
+          imgPath="/img/icon/node-journal-icons/edit-node.png"
+          is-color="gold"
+          width="20"
+          margin-right="1"
+          btn-action="logToggle"
+          grid-row="1/2"
+        >
+          {{ $t("journalnode.edit") }}</the-node-panel-btn
+        ></router-link
+      >
+
+      <the-node-panel-btn
+        imgPath="/img/icon/plugin-menu-icons/turning_circle.gif"
+        is-color="grey"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="2/3"
+        v-if="isloading"
+        >{{ $t("journalnode.edit") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        imgPath="/img/icon/node-journal-icons/turn_on.png"
+        is-color="lighGreen"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="2/3"
+        v-else-if="checkStatus()"
+        @btn-action="stateButtonHandler('started')"
+        >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        imgPath="/img/icon/node-journal-icons/power2.png"
+        is-color="red"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="2/3"
+        v-else
+        @btn-action="stateButtonHandler('stopped')"
+        >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        imgPath="/img/icon/node-journal-icons/logs_icon.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="3/4"
+        @btn-action="logToggle"
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
+    </div>
+    <div class="configBtn" v-else>
+      <the-node-panel-btn
+        imgPath="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="1/2"
+        @btn-action="logToggle"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
     </div>
   </div>
 </template>
@@ -50,13 +88,17 @@ import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
+import TheNodePanelBtn from "./TheNodePanelBtn.vue";
 
 export default {
-  components: { UpdateTable },
+  components: { UpdateTable, TheNodePanelBtn },
   data() {
     return {
       loading: false,
       updateTableIsOpen: false,
+      openLog: false,
+      //this data is dummy for invisible the log btn till the next release
+      tillTheNextRelease: false,
     };
   },
   computed: {
@@ -79,29 +121,49 @@ export default {
     }),
   },
   methods: {
-    checkStatus(){
-      return !this.installedServices.some(s => s.state == "running")
+    logToggle() {
+      this.openLog = !this.openLog;
     },
-    async stateButtonHandler(state){
-      this.loading = true
-        try {
-          let promises = this.installedServices.map(async (service, index) => {
-            new Promise(resolve => setTimeout(resolve, index * 1000)).then(() => {
+    checkStatus() {
+      return !this.installedServices.some((s) => s.state == "running");
+    },
+    async stateButtonHandler(state) {
+      this.loading = true;
+      try {
+        let promises = this.installedServices.map(async (service, index) => {
+          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(
+            () => {
               ControlService.manageServiceState({
-                  id: service.config.serviceID,
-                  state: state,
+                id: service.config.serviceID,
+                state: state,
               });
-            })})
-          promises.push(new Promise(resolve => setTimeout(() => {this.loading = false; resolve()}, (promises.length * (state == "running" ? 8000 : 4000)))))
-          Promise.all(promises)
-          } catch (err) {
-            console.log(state.replace("ed", "ing") + " services failed:\n", err);
-          }
-    }
+            }
+          );
+        });
+        promises.push(
+          new Promise((resolve) =>
+            setTimeout(() => {
+              this.loading = false;
+              resolve();
+            }, promises.length * (state == "running" ? 8000 : 4000))
+          )
+        );
+        Promise.all(promises);
+      } catch (err) {
+        console.log(state.replace("ed", "ing") + " services failed:\n", err);
+      }
+    },
   },
 };
 </script>
 <style scoped>
+.linkToEdit {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
 .config-node {
   grid-column: 1;
   width: 100%;
@@ -134,6 +196,8 @@ export default {
   align-items: center;
   background-color: #2d3134;
   border-radius: 10px;
+  box-shadow: 1px 1px 3px 1px #282727;
+  border: 1px solid #4c4848;
 }
 .server .details {
   width: 95%;
@@ -225,135 +289,7 @@ export default {
   background-color: #606060;
   border-radius: 10px;
   margin: 0 auto;
-}
-
-.edit-btn {
-  grid-column: 1;
-  grid-row: 1/2;
-  width: 95%;
-  height: 80%;
-  margin-top: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  justify-self: center;
-}
-.edit-btn a:hover {
-  background-color: #18191c;
-}
-.edit-btn a:active {
-  box-shadow: none;
-  transform: scale(0.99);
-}
-.edit-btn a {
-  width: 100%;
-  height: 99%;
-  background-color: #242529;
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: rgb(194, 194, 194);
-  border: 1px solid #787878;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
-}
-.edit-btn span {
-  color: #cfaf65;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-align: center;
-  margin-left: 10px;
-  text-transform: uppercase;
-}
-.edit-btn img {
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  margin-right: 10px;
-}
-
-.btn-text {
-  margin-left: 10px;
-}
-.router-box .btn-text {
-  text-decoration: none;
-  color: #4eb051;
-}
-.state-btn-on {
-  grid-column: 1;
-  grid-row: 2/3;
-  width: 95%;
-  height: 80%;
-  padding: 0 10px;
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  justify-self: center;
-  background-color: #242529;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: rgb(64, 238, 29);
-  border: 1px solid #787878;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
-}
-.state-btn-off {
-  grid-column: 1;
-  grid-row: 2/3;
-  width: 95%;
-  height: 80%;
-  padding: 0 10px;
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  justify-self: center;
-  background-color: #242529;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: rgb(220, 10, 3);
-  border: 1px solid #787878;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
-}
-.state-btn-loading {
-  grid-column: 1;
-  grid-row: 2/3;
-  width: 95%;
-  height: 80%;
-  padding: 0 10px;
-  margin-top: 4px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  justify-self: center;
-  background-color: #242529;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: #9b9b9b;
-  border: 1px solid #787878;
-  border-radius: 8px;
-  cursor: default;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
-}
-.state-btn-loading img,.state-btn-on img,.state-btn-off img {
-  width: 10%;
-  margin-right: 8px;
-}
-.state-btn:hover {
-  background-color: #18191c;
-}
-.state-btn:active {
-  box-shadow: none;
-  transform: scale(0.99);
+  box-shadow: 1px 1px 3px 1px #282727;
+  border: 1px solid #4c4848;
 }
 </style>
