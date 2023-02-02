@@ -3,7 +3,7 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="support-modal-content">
       <div class="content">
-        <div class="supportBox">
+        <!-- <div class="supportBox">
           <div class="title">
             <span>{{ $t("supportModal.support") }}</span>
           </div>
@@ -18,8 +18,14 @@
               alt=""
             />
           </div>
-        </div>
-        <div class="reportBox">
+        </div> -->
+        <support-modal-box
+          :box-title="$t('supportModal.support')"
+          box-image-path="/img/icon/header-icons/support.png"
+          :box-text="$t('supportModal.supportText')"
+          @card-action="OpenStereumDiscord"
+        ></support-modal-box>
+        <!-- <div class="reportBox">
           <div class="title">
             <span>{{ $t("supportModal.bugReport") }}</span>
           </div>
@@ -35,7 +41,19 @@
               alt=""
             />
           </div>
-        </div>
+        </div> -->
+        <support-modal-box
+          :box-title="$t('supportModal.bugReport')"
+          box-image-path="/img/icon/header-icons/bug.png"
+          :box-text="$t('supportModal.supportText')"
+          @card-action="OpenStereumGithub"
+        ></support-modal-box>
+        <support-modal-box
+          box-title="chain docs"
+          :box-image-path="gnoEthDocsImg"
+          :box-text="$t('supportModal.supportText')"
+          @card-action="OpenStereumDiscord"
+        ></support-modal-box>
       </div>
       <span class="email"
         >{{ $t("supportModal.emailText")
@@ -45,7 +63,33 @@
   </div>
 </template>
 <script>
+import SupportModalBox from "./SupportModalBox.vue";
+import { mapState } from "pinia";
+import { useServices } from "@/store/services";
 export default {
+  components: { SupportModalBox },
+  data() {
+    return {
+      gnoEthDocsImg: "",
+    };
+  },
+  computed: {
+    ...mapState(useServices, {
+      network: "network",
+    }),
+  },
+  mounted() {
+    if (this.network === "mainnet") {
+      this.gnoEthDocsImg =
+        "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
+    } else if (this.network === "testnet") {
+      this.gnoEthDocsImg =
+        "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
+    } else if (this.network === "gnosis") {
+      this.gnoEthDocsImg =
+        "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
+    }
+  },
   methods: {
     OpenStereumGithub() {
       let URL =
@@ -101,7 +145,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   padding: 5px;
 }
