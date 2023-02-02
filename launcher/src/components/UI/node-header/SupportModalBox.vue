@@ -49,7 +49,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1rem;
+  font-size: 100%;
   font-weight: 800;
   color: #b0b0b0;
   text-transform: uppercase;

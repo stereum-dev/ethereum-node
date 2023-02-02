@@ -31,7 +31,9 @@
     "supportText": "The fastest way to reach a person for support is to join our Discord server!",
     "bugReport": "BUG REPORT",
     "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "or write an email to:"
+    "emailText": "or write an email to:",
+    "docsTitle":"chain docs",
+    "docsText":"A handy link to the network logs' documentation for your selected node configuration."
   },
   "notifModal": {
     "notification": "Notifications",

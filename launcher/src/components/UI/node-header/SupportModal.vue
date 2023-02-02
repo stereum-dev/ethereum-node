@@ -49,9 +49,9 @@
           @card-action="OpenStereumGithub"
         ></support-modal-box>
         <support-modal-box
-          box-title="chain docs"
+          :box-title="$t('supportModal.docsTitle')"
           :box-image-path="gnoEthDocsImg"
-          box-text="A handy link to the network logs' documentation for your selected node configuration."
+          :box-text="$t('supportModal.docsText')"
           @card-action="openGnoEthDocs"
         ></support-modal-box>
       </div>
