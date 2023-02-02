@@ -51,8 +51,8 @@
         <support-modal-box
           box-title="chain docs"
           :box-image-path="gnoEthDocsImg"
-          :box-text="$t('supportModal.supportText')"
-          @card-action="OpenStereumDiscord"
+          box-text="A handy link to the network logs' documentation for your selected node configuration."
+          @card-action="openGnoEthDocs"
         ></support-modal-box>
       </div>
       <span class="email"
@@ -99,6 +99,16 @@ export default {
     OpenStereumDiscord() {
       let URL = "https://discord.gg/DzAwgnSXtB";
       window.open(URL, "_blank");
+    },
+    openGnoEthDocs(network) {
+      network = this.network;
+      let url;
+      if (network === "mainnet" || network === "testnet") {
+        url = "https://ethereum.org/en/developers/docs/";
+      } else if (network === "gnosis") {
+        url = "https://docs.gnosischain.com/node/guide/";
+      }
+      window.open(url, "_blank");
     },
   },
 };
