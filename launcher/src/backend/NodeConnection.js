@@ -782,21 +782,24 @@ export class NodeConnection {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
 
-    let sPathCheck = "";
+    let sPaths = [];
     for(let service of serviceConfigs) {
       let sID = service.id;
       for(let path of service.volumes) {
-        let sPath = path.destinationPath.substring(0, path.destinationPath.indexOf(sID)) + sID + "/";
-        if(sPath.includes(sID) && !sPath.includes("/etc/stereum") && sPath != sPathCheck){
-          sPathCheck = sPath;
-          this.taskManager.otherSubTasks.push({
-            name: "remove Volume Directories",
-            otherRunRef: ref,
-            status: !(await this.sshService.exec("rm -rf " + sPath)).rc,
-          });
+        let sPath = path.destinationPath;
+        if(sPath.includes(sID) && !sPath.includes(this.settings.stereum.settings.controls_install_path)){
+          sPaths.push(sPath.substring(0, sPath.indexOf(sID)) + sID + "/");
         }
       }
     };
+    let sPathsSet =[...new Set(sPaths)]
+    for(let sPathSet of sPathsSet){
+      this.taskManager.otherSubTasks.push({
+        name: "remove Volume Directories",
+        otherRunRef: ref,
+        status: !(await this.sshService.exec("rm -rf " + sPathSet)).rc,
+      });
+    }
 
     this.taskManager.otherSubTasks.push({
       name: "remove Docker-Container",
