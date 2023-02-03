@@ -304,6 +304,8 @@
     "syncMessage":"SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
     "portused":"PORT USED",
     "cancel":"cancel",
-    "save":"save"
+    "save":"save",
+    "add":"ADD",
+    "clickAndAdd":"Click on ADD"
   }
 }
