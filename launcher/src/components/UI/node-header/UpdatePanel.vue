@@ -91,11 +91,11 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="searchBtn" @click="testData">
+              <div class="searchBtn no-events" @click="testData">
                 <img src="/img/icon/header-icons/search.png" alt="icon" />
               </div>
               <div
-                class="downloadBtn"
+                class="downloadBtn no-events"
                 :class="{ disabled: !checkStereumUpdate() || updating }"
                 @click="$emit('runUpdate', stereumUpdate)"
               >
@@ -117,7 +117,7 @@
                   {{ $t("updatePanel.available") }}</span
                 >
               </div>
-              <div
+              <!-- <div
                 class="available"
                 v-if="forceUpdateCheck && !checkStereumUpdate()"
               >
@@ -125,7 +125,7 @@
                 <span class="searchingText">{{
                   $t("updatePanel.searching")
                 }}</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@
         <div class="autoUpdateText">
           <span
             >{{ $t("updatePanel.auto") }} :
-            <span class="autoUpdateText_status">{{
+            <span class="autoUpdateText_status" :class="onOff">{{
               stereumApp.autoUpdate
             }}</span></span
           >
@@ -207,6 +207,7 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -217,7 +218,7 @@ export default {
       stereumApp: {
         current: "alpha",
         latest: "2.0",
-        autoUpdate: "off",
+        autoUpdate: "",
       },
       osVersionCurrent: "-",
       osVersionLatest: "-",
@@ -233,13 +234,30 @@ export default {
       stereumUpdate: "stereumUpdate",
       updating: "updating",
     }),
+    onOff() {
+      return {
+        green: this.stereumApp.autoUpdate === "on",
+        red: this.stereumApp.autoUpdate === "off",
+      };
+    },
+  },
+  updated() {
+    this.getSettings();
   },
   methods: {
     searchUpdate() {
       this.forceUpdateCheck = true;
     },
     testData() {
-      console.log(this.stereumUpdate);
+      console.log(this.updating);
+    },
+    async getSettings() {
+      this.settings = await ControlService.getStereumSettings();
+      if (this.settings.stereum?.settings.updates.unattended.install) {
+        this.stereumApp.autoUpdate = "on";
+      } else {
+        this.stereumApp.autoUpdate = "off";
+      }
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
@@ -261,8 +279,14 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+.no-events {
+  pointer-events: none;
+}
+.green {
+  color: #7bbb1a;
+}
+.red {
+  color: #c70505;
 }
 .panelParent {
   width: 36%;
@@ -577,7 +601,7 @@ export default {
 }
 .available {
   grid-column: 1/7;
-  grid-row: 9/11;
+  grid-row: 9/12;
   margin-left: 0;
   width: 90%;
   height: 100%;
@@ -588,7 +612,7 @@ export default {
 .updateIcon {
   grid-column: 2/3;
   grid-row: 1;
-  width: 73%;
+  width: 75%;
   height: 100%;
   background-color: rgb(59, 103, 100);
   border-radius: 100%;
@@ -599,7 +623,7 @@ export default {
   justify-self: flex-start;
 }
 .btnBox .available .updateIcon img {
-  width: 66%;
+  width: 50%;
   justify-self: flex-start;
 }
 
@@ -607,7 +631,7 @@ export default {
   grid-column: 3/7;
   grid-row: 1;
   width: max-content;
-  font-size: 100%;
+  font-size: 60%;
   font-weight: 600;
   color: #c6c6c6;
   align-self: center;
