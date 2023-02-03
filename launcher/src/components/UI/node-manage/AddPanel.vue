@@ -209,8 +209,8 @@ export default {
       immediate: true,
     },
   },
-  mounted(){
-    this.getInstallPath()
+  mounted() {
+    this.getInstallPath();
   },
   methods: {
     switchHandler(service) {
@@ -247,9 +247,11 @@ export default {
     },
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if(largestVolumePath = '/')
-        largestVolumePath = largestVolumePath + 'opt'
-      const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
+      if ((largestVolumePath = "/"))
+        largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"]
+        .join("/")
+        .replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },
     changeResyncOptions() {

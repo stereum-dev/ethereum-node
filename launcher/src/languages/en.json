@@ -298,5 +298,12 @@
   "mevboostConfig":{
     "availRelays":"AVAILABLE BLOCK RELAYS",
     "usedRelays":"USED BLOCK RELAYS"
+  },
+  "addModifyPanel":{
+    "installPath":"INSTALLATION PATH",
+    "syncMessage":"SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "portused":"PORT USED",
+    "cancel":"cancel",
+    "save":"save"
   }
 }
