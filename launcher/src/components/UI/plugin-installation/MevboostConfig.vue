@@ -14,7 +14,7 @@
           <div class="content-box">
             <div class="options-box">
               <div class="option-title">
-                <span>AVAILABLE BLOCK RELAYS</span>
+                <span>{{ $t("mevboostConfig.availRelays") }}</span>
               </div>
               <div class="option-table">
                 <div
@@ -43,7 +43,7 @@
             </div>
             <div class="included-box">
               <div class="included-title">
-                <span>USED BLOCK RELAYS</span>
+                <span>{{ $t("mevboostConfig.usedRelays") }}</span>
               </div>
               <div class="included-table">
                 <div
@@ -65,13 +65,13 @@
           </div>
           <div class="btn-box">
             <router-link :to="{ path: '/install' }">
-              <span>BACK</span>
+              <span>{{ $t("pluginName.back") }}</span>
             </router-link>
             <router-link
               :to="{ path: '/verify' }"
               :class="{ disabled: !usedBlocks.length }"
             >
-              <span>NEXT</span>
+              <span>{{ $t("pluginName.next") }}</span>
             </router-link>
           </div>
         </div>
@@ -106,10 +106,19 @@ export default {
       allPlugins: "allServices",
     }),
   },
-  mounted(){
-    this.availableBlocks = this.relaysList.filter(r => r[this.selectedPreset.network])
+  mounted() {
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.selectedPreset.network])
+    );
   },
   methods: {
+    shuffleRelaysList(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
     selectItemToAdd(el) {
       this.availableBlocks.forEach((item) => {
         if (item.id == el.id) {
@@ -132,7 +141,9 @@ export default {
           this.usedBlocks.push(i);
         }
       });
-      this.relayURL = this.usedBlocks.map(r => r[this.selectedPreset.network]).join()
+      this.relayURL = this.usedBlocks
+        .map((r) => r[this.selectedPreset.network])
+        .join();
     },
     removeFromUsedBlocks() {
       this.usedBlocks.forEach((item) => {
@@ -141,7 +152,9 @@ export default {
           this.usedBlocks.splice(this.usedBlocks.indexOf(item), 1);
         }
       });
-      this.relayURL = this.usedBlocks.map(r => r[this.selectedPreset.network]).join()
+      this.relayURL = this.usedBlocks
+        .map((r) => r[this.selectedPreset.network])
+        .join();
     },
   },
 };
