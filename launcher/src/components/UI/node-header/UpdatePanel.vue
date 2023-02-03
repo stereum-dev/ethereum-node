@@ -72,7 +72,7 @@
             </div>
           </div>
           <div class="nodeUpdate-title_row">
-            <span>operating system (server)</span>
+            <span>{{ $t("updatePanel.osTitle") }}</span>
           </div>
           <div class="versionContainer">
             <comming-soon></comming-soon>

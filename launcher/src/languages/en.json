@@ -101,7 +101,8 @@
     "serviceTitle": "Service updates",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
-    "all": "update all"
+    "all": "update all",
+    "osTitle":"operating system (server)"
   },
   "controlPage": {
     "node": "NODE",
