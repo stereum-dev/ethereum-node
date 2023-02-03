@@ -778,28 +778,9 @@ export class NodeConnection {
   }
 
   async destroyNode(serviceConfigs) {
-
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
-
-    let sPaths = [];
-    for(let service of serviceConfigs) {
-      let sID = service.id;
-      for(let path of service.volumes) {
-        let sPath = path.destinationPath;
-        if(sPath.includes(sID) && !sPath.includes(this.settings.stereum.settings.controls_install_path)){
-          sPaths.push(sPath.substring(0, sPath.indexOf(sID)) + sID + "/");
-        }
-      }
-    };
-    let sPathsSet =[...new Set(sPaths)]
-    for(let sPathSet of sPathsSet){
-      this.taskManager.otherSubTasks.push({
-        name: "remove Volume Directories",
-        otherRunRef: ref,
-        status: !(await this.sshService.exec("rm -rf " + sPathSet)).rc,
-      });
-    }
+    await this.nukeServiceValumes(serviceConfigs,ref)
 
     this.taskManager.otherSubTasks.push({
       name: "remove Docker-Container",
@@ -855,6 +836,32 @@ export class NodeConnection {
     this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
     await this.logout()
     return "Node destroyed";
+  }
+
+  async nukeServiceValumes(serviceConfigs,ref){
+    let sPaths = [];
+    let sIDs = [];
+    for(let service of serviceConfigs) {
+      let sID = service.id;
+      for(let path of service.volumes) {
+        let sPath = path.destinationPath;
+        if(sPath.includes(sID) && !sPath.includes(this.settings.stereum.settings.controls_install_path)){
+          sPaths.push(sPath.substring(0, sPath.indexOf(sID)) + sID + "/");
+          sIDs.push(sID)
+        }
+      }
+    };
+    let sPathsSet =[...new Set(sPaths)]
+    let sIDSet =[...new Set(sIDs)]
+    let serviceNumber = 0
+    for(let sPathSet of sPathsSet){
+      this.taskManager.otherSubTasks.push({
+        name: "remove "+ sPathSet.replace("-"+sIDSet[serviceNumber],""),
+        otherRunRef: ref,
+        status: !(await this.sshService.exec("rm -rf " + sPathSet)).rc,
+      });
+      serviceNumber++
+    }
   }
 
   async openTunnels(tunnels) {
