@@ -1,5 +1,6 @@
-const vetur = require("@volar-plugins/vetur");
+const path = require('path');
 module.exports = {
+  parallel: false,
   pluginOptions: {
     electronBuilder: {
       preload: "src/preload.js",
@@ -28,20 +29,10 @@ module.exports = {
     },
   },
   chainWebpack: (config) => {
-    config.resolve.alias.set("vue", "@vue/compat");
+    config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
 
     config.module
       .rule("vue")
       .use("vue-loader", "css-loader")
-      .tap((options) => {
-        return {
-          ...options,
-          compilerOptions: {
-            compatConfig: {
-              MODE: 2,
-            },
-          },
-        };
-      });
   },
 };

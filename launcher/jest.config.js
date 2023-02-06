@@ -18,9 +18,12 @@ module.exports = {
   testEnvironment: 'jsdom',
   transformIgnorePatterns: ['node_modules/(?!(sucrase)/)'],
   transform: {
-    '.*\\.(vue)$': 'vue3-jest',
+    '.*\\.(vue)$': '@vue/vue3-jest',
     '^.+\\.(js|jsx|ts|tsx|mjs)$': 'babel-jest'
     // ".*\\.(ts)$": "ts-jest"
+  },
+  testEnvironmentOptions: {
+    customExportConditions: ["node", "node-addons"],
   },
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.{js,vue}', '!src/main.js'],

@@ -9,7 +9,7 @@
             type="hidden"
             class="pubkey-input"
             ref="pubkeyRef"
-            v-model="pubkey"
+            v-model="localpubkey"
             readonly
           />
           <div class="copy-icon" @click="copyPubKey">
@@ -26,7 +26,7 @@
           <input
             type="hidden"
             class="secretkey-input"
-            v-model="secretkey"
+            v-model="localsecretkey"
             disabled
           />
           <div class="copy-icon" @click="copySecretKey">
@@ -72,6 +72,8 @@ export default {
         copiedPubkey: "",
         copiedSecretkey: "",
       },
+      localpubkey: pubkey,
+      localsecretkey: secretkey,
       isBtnDisabled: true,
     };
   },

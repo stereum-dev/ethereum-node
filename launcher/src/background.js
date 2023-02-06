@@ -1,10 +1,8 @@
 "use strict";
 
-import { app, protocol, BrowserWindow, shell, dialog, Menu } from "electron";
+import { app, protocol, BrowserWindow, shell, dialog, Menu, ipcMain } from "electron";
 import { autoUpdater } from "electron-updater";
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
-import installExtension, { VUEJS_DEVTOOLS } from "electron-devtools-installer";
-import { StereumService } from "./stereumservice.js";
 import { StorageService } from "./storageservice.js";
 import { NodeConnection } from "./backend/NodeConnection.js";
 import { OneClickInstall } from "./backend/OneClickInstall.js";
@@ -12,12 +10,10 @@ import { ServiceManager } from "./backend/ServiceManager.js";
 import { ValidatorAccountManager } from "./backend/ValidatorAccountManager.js";
 import { TaskManager } from "./backend/TaskManager.js";
 import { Monitoring } from "./backend/Monitoring.js";
-import promiseIpc from "electron-promise-ipc";
 import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
 const isDevelopment = process.env.NODE_ENV !== "production";
-const stereumService = new StereumService();
 const storageService = new StorageService();
 const taskManager = new TaskManager();
 const monitoring = new Monitoring();
@@ -29,7 +25,7 @@ const validatorAccountManager = new ValidatorAccountManager(
   serviceManager
 );
 const { globalShortcut } = require('electron');
-
+const foo = null ?? 'default string';
 const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -38,19 +34,17 @@ autoUpdater.logger.transports.file.level = "debug";
 
 let remoteHost = {};
 
-promiseIpc.on("ready", (arg) => {
+ipcMain.handle("ready", () => {
   log.info("background process ready");
 });
 
-// called via promiseIpc as an async function
-promiseIpc.on("connect", async (arg) => {
+ipcMain.handle("connect", async (event, arg) => {
   remoteHost = arg;
-  if (arg.sshKeyAuth) {
+  if (arg?.sshKeyAuth) {
     remoteHost.privateKey = readFileSync(arg.keyfileLocation, {
       encoding: "utf8",
     });
   }
-  stereumService.connect(remoteHost);
   nodeConnection.nodeConnectionParams = remoteHost;
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
   monitoring.nodeConnection.nodeConnectionParams = remoteHost;
@@ -62,7 +56,7 @@ promiseIpc.on("connect", async (arg) => {
   return 0;
 });
 
-promiseIpc.on("reconnect", async () => {
+ipcMain.handle("reconnect", async () => {
   try {
       await nodeConnection.establish(taskManager);
       await taskManager.nodeConnection.establish();
@@ -73,7 +67,7 @@ promiseIpc.on("reconnect", async () => {
   }
 });
 
-promiseIpc.on("checkConnection", async () => {
+ipcMain.handle("checkConnection", async () => {
   try {
     await nodeConnection.sshService.exec("ls");
     await taskManager.nodeConnection.sshService.exec("ls");
@@ -85,73 +79,56 @@ promiseIpc.on("checkConnection", async () => {
   return true;
 });
 
-// called via promiseIpc as an async function
-promiseIpc.on("inquire", async (arg) => {
-  return stereumService.getInstalledVersions(remoteHost);
-});
-
-// called via promiseIpc as an async function
-promiseIpc.on("setup", async (arg) => {
-  return stereumService.setup(arg.stereumRelease);
-});
-
-// called via promiseIpc as an async function
-promiseIpc.on("destroy", async () => {
+ipcMain.handle("destroy", async () => {
   app.showExitPrompt = true;
   const returnValue = await nodeConnection.destroyNode();
   app.showExitPrompt = false;
   return returnValue;
 });
 
-// called via promiseIpc as an async function
-promiseIpc.on("tunnel", async (arg) => {
+ipcMain.handle("tunnel", async (event, arg) => {
   return nodeConnection.openTunnels(arg);
 });
 
-promiseIpc.on("closeTunnels", async () => {
+ipcMain.handle("closeTunnels", async () => {
   return await nodeConnection.closeTunnels();
 });
 
-promiseIpc.on("logout", async () => {
+ipcMain.handle("logout", async () => {
   await monitoring.logout();
   await taskManager.nodeConnection.logout();
   await serviceManager.nodeConnection.logout();
   return await nodeConnection.logout();
 });
 
-// called via promiseIpc as an async function
-promiseIpc.on("setApikey", async (arg) => {
-  return stereumService.setApikey(arg);
-});
-
 // userData storage
-promiseIpc.on("readConfig", async () => {
+ipcMain.handle("readConfig", async () => {
   return storageService.readConfig();
 });
-promiseIpc.on("writeConfig", async (arg) => {
+ipcMain.handle("writeConfig", async (event, arg) => {
   return storageService.writeConfig(arg);
 });
 
-promiseIpc.on("checkOS", async () => {
+ipcMain.handle("checkOS", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.findOS();
   return nodeConnection.os;
 });
 
-promiseIpc.on("checkSudo", async () => {
+ipcMain.handle("checkSudo", async () => {
   return await nodeConnection.checkSudo();
 });
 
-promiseIpc.on("getOneClickConstellation", async (arg) => {
+ipcMain.handle("getOneClickConstellation", async (event, arg) => {
   return await oneClickInstall.getSetupConstellation(arg.setup, arg.network);
 });
 
-promiseIpc.on("prepareOneClickInstallation", async (arg) => {
+ipcMain.handle("prepareOneClickInstallation", async (event, arg) => {
   app.showExitPrompt = true;
   return await oneClickInstall.prepareNode(arg, nodeConnection);
 });
 
-promiseIpc.on("writeOneClickConfiguration", async (args) => {
+ipcMain.handle("writeOneClickConfiguration", async (event, args) => {
   log.info(args)
   await oneClickInstall.createServices(
     args.array.map((service) => {
@@ -163,82 +140,82 @@ promiseIpc.on("writeOneClickConfiguration", async (args) => {
   return await oneClickInstall.writeConfig();
 });
 
-promiseIpc.on("startOneClickServices", async () => {
+ipcMain.handle("startOneClickServices", async () => {
   const returnValue = await oneClickInstall.startServices();
   app.showExitPrompt = false;
   return returnValue;
 });
 
 // open rpc tunnel
-promiseIpc.on("openRpcTunnel", async (args) => {
+ipcMain.handle("openRpcTunnel", async (event, args) => {
   return await monitoring.openRpcTunnel(args);
 });
 
 // close rpc tunnel
-promiseIpc.on("closeRpcTunnel", async () => {
+ipcMain.handle("closeRpcTunnel", async () => {
   return await monitoring.closeRpcTunnel();
 });
 
 // open beacon tunnel
-promiseIpc.on("openBeaconTunnel", async (args) => {
+ipcMain.handle("openBeaconTunnel", async (event, args) => {
   return await monitoring.openBeaconTunnel(args);
 });
 
 // close beacon tunnel
-promiseIpc.on("closeBeaconTunnel", async () => {
+ipcMain.handle("closeBeaconTunnel", async () => {
   return await monitoring.closeBeaconTunnel();
 });
 
 // get data for node stats (prometheus, and so on)
-promiseIpc.on("getNodeStats", async () => {
+ipcMain.handle("getNodeStats", async () => {
   return await monitoring.getNodeStats();
 });
 
 // get data for control cpu comp
-promiseIpc.on("getServerVitals", async () => {
+ipcMain.handle("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });
 
-promiseIpc.on("getConnectionStats", async () => {
+ipcMain.handle("getConnectionStats", async () => {
   const name = await monitoring.getServerName();
   const address = monitoring.getIPAddress();
   return { ServerName: name, ipAddress: address };
 });
 
-promiseIpc.on("getAvailablePort", async (args) => {
+ipcMain.handle("getAvailablePort", async (event, args) => {
   return await nodeConnection.checkAvailablePorts(args);
 });
 
-promiseIpc.on("checkStereumInstallation", async () => {
+ipcMain.handle("checkStereumInstallation", async () => {
   return await monitoring.checkStereumInstallation(nodeConnection);
 });
 
-promiseIpc.on("getServices", async () => {
+ipcMain.handle("getServices", async () => {
   return await serviceManager.readServiceConfigurations();
 });
 
 // get data for service logs
-promiseIpc.on("getServiceLogs", async (args) => {
+ipcMain.handle("getServiceLogs", async (event, args) => {
   return await monitoring.getServiceLogs(args);
 });
 
-promiseIpc.on("getServiceConfig", async (args) => {
+ipcMain.handle("getServiceConfig", async (event, args) => {
   return await nodeConnection.readServiceConfiguration(args);
 });
 
-promiseIpc.on("writeServiceConfig", async (args) => {
+ipcMain.handle("writeServiceConfig", async (event, args) => {
   return await nodeConnection.writeServiceConfiguration(args);
 });
 
-promiseIpc.on("getServiceYAML", async (args) => {
+ipcMain.handle("getServiceYAML", async (event, args) => {
   return await nodeConnection.readServiceYAML(args);
 });
 
-promiseIpc.on("writeServiceYAML", async (args) => {
+ipcMain.handle("writeServiceYAML", async (event, args) => {
   return await nodeConnection.writeServiceYAML(args);
 });
 
-promiseIpc.on("importKey", async (args) => {
+ipcMain.handle("importKey", async (event, args) => {
   app.showExitPrompt = true;
   const returnValue = await validatorAccountManager.importKey(
     args.files,
@@ -250,48 +227,48 @@ promiseIpc.on("importKey", async (args) => {
   return returnValue;
 });
 
-promiseIpc.on("deleteValidators", async (args) => {
+ipcMain.handle("deleteValidators", async (event, args) => {
   return await validatorAccountManager.deleteValidators(args.serviceID, args.keys, args.picked);
 });
 
-promiseIpc.on("listValidators", async (args) => {
+ipcMain.handle("listValidators", async (event, args) => {
   return await validatorAccountManager.listValidators(args);
 });
 
-promiseIpc.on("listServices", async () => {
+ipcMain.handle("listServices", async () => {
   return await nodeConnection.listServices();
 });
 
-promiseIpc.on("manageServiceState", async (args) => {
+ipcMain.handle("manageServiceState", async (event, args) => {
   return await serviceManager.manageServiceState(args.id, args.state);
 });
 
-promiseIpc.on("runAllUpdates", async (args) => {
+ipcMain.handle("runAllUpdates", async (event, args) => {
   app.showExitPrompt = true;
   const returnValue = await nodeConnection.runAllUpdates(args.commit);
   app.showExitPrompt = false;
   return returnValue;
 });
 
-promiseIpc.on("updateServices", async (args) => {
+ipcMain.handle("updateServices", async (event, args) => {
   app.showExitPrompt = true;
   let seconds = await nodeConnection.updateServices(args.services);
   app.showExitPrompt = false;
   return seconds;
 });
 
-promiseIpc.on("updateStereum", async (args) => {
+ipcMain.handle("updateStereum", async (event, args) => {
   app.showExitPrompt = true;
   let seconds = await nodeConnection.updateStereum(args.commit);
   app.showExitPrompt = false;
   return seconds;
 });
 
-promiseIpc.on("restartServices", async (args) => {
+ipcMain.handle("restartServices", async (event, args) => {
   await nodeConnection.restartServices(args);
 });
 
-promiseIpc.on("checkUpdates", async () => {
+ipcMain.handle("checkUpdates", async () => {
   let versions;
   try {
     versions = await nodeConnection.checkUpdates();
@@ -301,54 +278,54 @@ promiseIpc.on("checkUpdates", async () => {
   return versions;
 });
 
-promiseIpc.on("getCurrentStereumVersion", async () => {
+ipcMain.handle("getCurrentStereumVersion", async () => {
   return await nodeConnection.getCurrentStereumVersion();
 });
 
-promiseIpc.on("getCurrentLauncherVersion", async () => {
+ipcMain.handle("getCurrentLauncherVersion", async () => {
   return await nodeConnection.getCurrentLauncherVersion();
 });
 
-promiseIpc.on("getLargestVolumePath", async () => {
+ipcMain.handle("getLargestVolumePath", async () => {
   return await nodeConnection.getLargestVolumePath();
 });
 
-promiseIpc.on("getTasks", async () => {
+ipcMain.handle("getTasks", async () => {
   return await taskManager.getTasks();
 });
 
-promiseIpc.on("updateTasks", async () => {
+ipcMain.handle("updateTasks", async () => {
   return await taskManager.updateTasks();
 });
 
-promiseIpc.on("clearTasks", async () => {
+ipcMain.handle("clearTasks", async () => {
   return await taskManager.clearTasks();
 });
 
-promiseIpc.on("insertSSVNetworkKeys", async (args) => {
+ipcMain.handle("insertSSVNetworkKeys", async (event, args) => {
   return await validatorAccountManager.insertSSVNetworkKeys(
     args.service,
     args.pk
   );
 });
 
-promiseIpc.on("refreshServiceInfos", async () => {
+ipcMain.handle("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
-promiseIpc.on("addFeeRecipient", async (args) => {
+ipcMain.handle("addFeeRecipient", async (event, args) => {
   return await validatorAccountManager.addFeeRecipient(args.keys, args.address);
 });
 
-promiseIpc.on("getOperatorPageURL", async (args) => {
+ipcMain.handle("getOperatorPageURL", async (event, args) => {
   return await validatorAccountManager.getOperatorPageURL(args);
 });
 
-promiseIpc.on("setGraffitis", async (args) => {
+ipcMain.handle("setGraffitis", async (event, args) => {
   return await validatorAccountManager.setGraffitis(args);
 });
 
-promiseIpc.on("chooseServiceAction", async (args) => {
+ipcMain.handle("chooseServiceAction", async (event, args) => {
   return await serviceManager.chooseServiceAction(
     args.action,
     args.service,
@@ -356,47 +333,47 @@ promiseIpc.on("chooseServiceAction", async (args) => {
   );
 });
 
-promiseIpc.on("handleServiceChanges", async (args) => {
+ipcMain.handle("handleServiceChanges", async (event, args) => {
   return await serviceManager.handleServiceChanges(args);
 });
 
-promiseIpc.on("getStereumSettings", async () => {
+ipcMain.handle("getStereumSettings", async () => {
   await nodeConnection.findStereumSettings();
   return nodeConnection.settings
 });
 
-promiseIpc.on("setStereumSettings", async (args) => {
+ipcMain.handle("setStereumSettings", async (event, args) => {
   return await nodeConnection.setStereumSettings(args);
 });
 
-promiseIpc.on("writeKeys", async (args) => {
+ipcMain.handle("writeKeys", async (event, args) => {
   return await validatorAccountManager.writeKeys(args);
 });
 
-promiseIpc.on("readKeys", async () => {
+ipcMain.handle("readKeys", async () => {
   return await validatorAccountManager.readKeys();
 });
 
-promiseIpc.on("prepareStereumNode", async (arg) => {
+ipcMain.handle("prepareStereumNode", async (event, args) => {
   app.showExitPrompt = true;
-  await oneClickInstall.prepareNode(arg, nodeConnection);
+  await oneClickInstall.prepareNode(args, nodeConnection);
   app.showExitPrompt = false;
   return 0
 });
 
-promiseIpc.on("restartServer", async () => {
+ipcMain.handle("restartServer", async () => {
   return await nodeConnection.restartServer()
 });
 
-promiseIpc.on("readSSVNetworkConfig", async (args) => {
+ipcMain.handle("readSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.readSSVNetworkConfig(args)
 });
 
-promiseIpc.on("writeSSVNetworkConfig", async (args) => {
+ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config)
 });
 
-promiseIpc.on("getValidatorState", async (args) => {
+ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
 
@@ -498,31 +475,24 @@ app.on("activate", () => {
 app.on("web-contents-created", (event, contents) => {
   // open every new window in the OS's default browser instead of a
   // new Electron windows.
-  contents.on("new-window", (event, navigationUrl) => {
-    const parsedUrl = new url.URL(navigationUrl);
-    event.preventDefault();
-
+  contents.setWindowOpenHandler((details) => {
+    const parsedUrl = new url.URL(details.url);
     if (["https:", "http:", "mailto:"].includes(parsedUrl.protocol)) {
-      shell.openExternal(navigationUrl);
+      shell.openExternal(parsedUrl.href);
     }
-  });
+    return { action: 'deny' }
+  })
 });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", async () => {
-  if(process.platform === "linux"){
-    app.commandLine.appendSwitch('--no-sandbox')
-  }
-  // if (isDevelopment && !process.env.IS_TEST) {
-  // Install Vue Devtools
-  try {
-    await installExtension(VUEJS_DEVTOOLS);
-  } catch (e) {
-    log.error("Vue Devtools failed to install:", e.toString());
-  }
+  // workaround for linux whitescreen
+  // if(process.platform === "linux"){
+  //   app.commandLine.appendSwitch('--no-sandbox')
   // }
+
   // Disable "View" and "Window" Menu items in build (since CTRL+R and F5 is disabled also)
   if(!isDevelopment){
     const hideMenuItems = ["viewmenu","windowmenu"];
