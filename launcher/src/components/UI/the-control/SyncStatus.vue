@@ -8,6 +8,8 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
+        <!-- <sync-circular-progress color="red" />
+        <sync-circular-progress color="blue" /> -->
         <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
@@ -46,11 +48,12 @@
   </div>
 </template>
 <script>
+import SyncCircularProgress from "./SyncCircularProgress.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import NoData from "./NoData.vue";
 export default {
-  components: { NoData },
+  components: { NoData, SyncCircularProgress },
   data() {
     return {
       isMultiService: false,
@@ -370,7 +373,7 @@ export default {
 }
 .wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 69%;
   height: 95%;
