@@ -4,7 +4,7 @@
     size="50"
     border-width="5"
     border-bg-width="0"
-    percent="100"
+    :percent="syncPercent"
   />
 </template>
 
@@ -13,6 +13,6 @@ import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
 export default {
   components: { CircleProgress },
-  props: ["color"],
+  props: ["color", "syncPercent"],
 };
 </script>

@@ -8,9 +8,39 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
-        <!-- <sync-circular-progress color="red" />
-        <sync-circular-progress color="blue" /> -->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <sync-circular-progress color="#f84343" :sync-percent="consensusPer" />
+        <sync-circular-progress color="#3c8de4" :sync-percent="executionPer" />
+        <div
+          class="consensusIconCons"
+          :data-tooltip="
+            'Nimbus:  ' +
+            formatValues(consensusFirstValTest) +
+            ' / ' +
+            formatValues(consensusSecondValTest)
+          "
+        >
+          <img
+            src="/img/icon/plugin-icons/consensus/Nimbus.png"
+            alt="consensus"
+          />
+        </div>
+        <div
+          class="executionIconCons"
+          :data-tooltip="
+            'geth:  ' +
+            formatValues(executionFirstValTest) +
+            ' / ' +
+            formatValues(executionSecondValTest)
+          "
+        >
+          <img
+            src="/img/icon/plugin-icons/execution/Geth.png"
+            alt="execution"
+          />
+        </div>
+        <span class="consensusPer">{{ consensusPer }}%</span>
+        <span class="executionPer">{{ executionPer }}%</span>
+        <!-- <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -25,7 +55,7 @@
               <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="arrowBox" v-if="isMultiService">
@@ -56,6 +86,14 @@ export default {
   components: { NoData, SyncCircularProgress },
   data() {
     return {
+      //test values before wiring
+      consensusFirstValTest: 123456789,
+      consensusSecondValTest: 123456789,
+      executionFirstValTest: 1234567899,
+      executionSecondValTest: 1234566789,
+      consensusPer: 62,
+      executionPer: 40,
+      //----------------------------
       isMultiService: false,
       pageNumber: 1,
       clients: [],
@@ -94,6 +132,7 @@ export default {
   unmounted() {
     if (this.refresher) clearTimeout(this.refresher);
   },
+
   computed: {
     ...mapState(useControlStore, {
       code: "code",
@@ -113,6 +152,9 @@ export default {
     },
   },
   methods: {
+    formatValues(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    },
     nextPage() {
       this.refresh(true, "next");
     },
@@ -284,8 +326,67 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: calc(50%-25%);
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 8% 10%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-150%);
+  transition: opacity 0.3s transform 0.2s;
+  font-weight: 600;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(80%);
+}
+.consensusPer {
+  position: absolute;
+  left: 16%;
+  top: 80%;
+  font-size: 70%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+}
+.executionPer {
+  position: absolute;
+  left: 68%;
+  top: 80%;
+  font-size: 70%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+}
+.consensusIconCons {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28%;
+  left: 10%;
+  top: 8%;
+}
+.executionIconCons {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28%;
+  left: 61%;
+  top: 8%;
 }
 .pageNumber {
   display: flex;
@@ -374,9 +475,9 @@ export default {
 .wrapper {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   width: 69%;
-  height: 95%;
+  height: 90%;
   position: relative;
 }
 .sync-box_row {
@@ -430,7 +531,7 @@ export default {
 
 /* Client font colors */
 .clientred * {
-  color: rgb(248, 67, 67);
+  color: #f84343;
 }
 .clientorange * {
   color: darkorange;
@@ -439,7 +540,7 @@ export default {
   color: grey;
 }
 .clientblue * {
-  color: lightblue;
+  color: #3c8de4;
 }
 .clientgreen * {
   color: rgb(0, 190, 0);
