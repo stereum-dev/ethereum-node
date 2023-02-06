@@ -777,7 +777,7 @@ export class NodeConnection {
     })
   }
 
-  async destroyNode(serviceConfigs) {
+  async destroyNode(serviceConfigs = []) {
     const ref = StringUtils.createRandomString();
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
     await this.nukeServiceValumes(serviceConfigs,ref)
