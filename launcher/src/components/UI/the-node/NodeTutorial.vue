@@ -103,8 +103,8 @@ export default {
       handler(newVal, oldVal) {
         this.serviceController();
       },
+      immediate: true,
     },
-    immediate: true,
   },
   computed: {
     // ...mapWritableState(useNodeStore, {

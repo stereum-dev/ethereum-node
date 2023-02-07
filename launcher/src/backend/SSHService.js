@@ -1,24 +1,24 @@
 const { Client } = require('ssh2')
-const tunnel = require('tunnel-ssh')
+import { createTunnel } from 'tunnel-ssh';
 const log = require('electron-log')
 
 export class SSHService {
-  constructor () {
+  constructor() {
     this.conn = null
     this.connectionInfo = null
     this.connected = false
     this.tunnels = []
   }
 
-  static checkExecError (err) {
+  static checkExecError(err) {
     return !err || err.rc != 0
   }
 
-  static extractExecError (err) {
+  static extractExecError(err) {
     return err && err.stderr ? err.stderr : '<stderr empty>'
   }
 
-  async connect (connectionInfo) {
+  async connect(connectionInfo) {
     this.connectionInfo = connectionInfo
     this.conn = new Client()
 
@@ -32,7 +32,7 @@ export class SSHService {
       })
       //only works for ubuntu 22.04
       this.conn.on('banner', (msg) => {
-        if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())){
+        if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())) {
           if (process.env.NODE_ENV === "test") {
             resolve(this.conn)
           }
@@ -41,7 +41,7 @@ export class SSHService {
       })
       this.conn.on('ready', async () => {
         let test = await this.exec('ls')
-        if(new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())){
+        if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
           if (process.env.NODE_ENV === "test") {
             resolve(this.conn)
           }
@@ -60,7 +60,7 @@ export class SSHService {
     })
   }
 
-  async disconnect (connectionInfo) {
+  async disconnect(connectionInfo) {
     log.info('DISCONNECT: connectionInfo', this.connectionInfo.host)
 
     return new Promise((resolve, reject) => {
@@ -73,12 +73,12 @@ export class SSHService {
     })
   }
 
-  async exec (command, useSudo = true) {
+  async exec(command, useSudo = true) {
     const ensureSudoCommand = "sudo -u 'root' -i <<'=====EOF'\n" + command + "\n=====EOF"
     return this.execCommand(useSudo ? ensureSudoCommand : command)
   }
 
-  async execCommand (command) {
+  async execCommand(command) {
 
     return new Promise((resolve, reject) => {
       const data = {
@@ -104,8 +104,8 @@ export class SSHService {
     })
   }
 
-  async tunnel (tunnelConfig) {
-    return new Promise((resolve, reject) => {
+  async tunnel(tunnelConfig) {
+    return new Promise(async (resolve, reject) => {
       const config = {
         keepAlive: true,
         username: this.connectionInfo.user || 'root',
@@ -118,30 +118,56 @@ export class SSHService {
         localPort: tunnelConfig.localPort,
         privateKey: this.connectionInfo.privateKey || undefined
       }
+      const tunnelOptions = {
+        autoClose: true
+      };
+      const serverOptions = {
+        port: tunnelConfig.localPort,
+      };
+      const sshOptions = {
+        keepAlive: true,
+        host: this.connectionInfo.host,
+        port: this.connectionInfo.port || 22,
+        username: this.connectionInfo.user || 'root',
+        password: this.connectionInfo.password,
+        privateKey: this.connectionInfo.privateKey || undefined
+      };
+      const forwardOptions = {
+        srcAddr: 'localhost',
+        srcPort: tunnelConfig.localPort,
+        dstAddr: 'localhost',
+        dstPort: tunnelConfig.dstPort
+      };
 
-      const server = tunnel(config, (error, server) => {
-        if (error) {
-          log.error('Tunnel Connection failed!')
-          return reject(error)
-        }
-        log.info(`Tunnel Connection established! (${tunnelConfig.localPort})`)
-        this.tunnels.push({server: server, config: tunnelConfig})
-        resolve(server)
-      })
+      createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions).
+        then(([server, conn], error) => {
 
-      server.on('error', function (error) {
-        log.error('Tunnel connection error: ', error)
-      })
+          if (error) {
+            log.error('Tunnel Connection failed!')
+            return reject(error)
+          }
+          log.info(`Tunnel Connection established! (${tunnelConfig.localPort})`)
+          this.tunnels.push({ server: server, config: tunnelConfig })
+          resolve(server)
+
+          conn.on('error', function (error) {
+            log.error('Tunnel SSH Connection error: ', error)
+          })
+
+          server.on('error', function (error) {
+            log.error('Tunnel connection error: ', error)
+          });
+        });
     })
   }
 
-  async closeTunnels (onlySpecificPorts=[]) {
+  async closeTunnels(onlySpecificPorts = []) {
     return new Promise((resolve, reject) => {
       let i = this.tunnels.length;
-      if(i > 0){
-        while (i--){ // loop backwards to splice array from specific ports
+      if (i > 0) {
+        while (i--) { // loop backwards to splice array from specific ports
           let tunnel = this.tunnels[i];
-          if(Array.isArray(onlySpecificPorts) && onlySpecificPorts.length && !onlySpecificPorts.includes(tunnel.config.localPort)){
+          if (Array.isArray(onlySpecificPorts) && onlySpecificPorts.length && !onlySpecificPorts.includes(tunnel.config.localPort)) {
             continue;
           }
           tunnel.server.close()
@@ -149,7 +175,7 @@ export class SSHService {
           log.info(`Tunnel Connection closed! (${tunnel.config.localPort})`)
         }
         resolve("Tunnels Closed!")
-      }else{
+      } else {
         reject("No Tunnels to Close!")
       }
     })

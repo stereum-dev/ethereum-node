@@ -6,7 +6,7 @@
         <input
           type="hidden"
           class="pubkey-input"
-          v-model="pubkey"
+          v-model="localpubkey"
           disabled
           placeholder="Public Operator Key"
         />
@@ -42,7 +42,9 @@ import ControlService from "@/store/ControlService";
 export default {
   props: ["pubkey"],
   data() {
-    return {};
+    return {
+      localpubkey: pubkey,
+    };
   },
   mounted() {
     this.getURL();
