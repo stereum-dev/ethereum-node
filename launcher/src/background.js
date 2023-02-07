@@ -423,6 +423,10 @@ async function createWindow() {
     win.loadURL("app://./index.html");
   }
 
+  win.on('ready-to-show', async () => {
+    await nodeConnection.closeTunnels()
+});
+
   win.on("close", (e) => {
     if (app.showExitPrompt) {
       e.preventDefault(); // Prevents the window from closing
