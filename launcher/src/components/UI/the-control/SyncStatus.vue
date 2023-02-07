@@ -8,8 +8,8 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
-        <!--new form-->
-        <sync-circular-progress
+        <!--new form start-->
+        <!-- <sync-circular-progress
           :color="consensusClientCurrentColor"
           :sync-percent="consensusPer"
         />
@@ -45,8 +45,10 @@
           <img :src="geth.img" alt="execution" />
         </div>
         <span class="consensusPer">{{ consensusPer }}%</span>
-        <span class="executionPer">{{ executionPer }}%</span>
-        <!-- <no-data v-if="noDataLayerShow"></no-data>
+        <span class="executionPer">{{ executionPer }}%</span> -->
+        <!--new form end-->
+        <!--old form start-->
+        <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -61,24 +63,19 @@
               <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
             </div>
           </div>
-        </div> -->
+        </div>
+        <!--old form end-->
       </div>
     </div>
     <div class="arrowBox" v-if="isMultiService">
       <div class="arrowUp" @click="backPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
     </div>
   </div>
