@@ -108,19 +108,22 @@ export const useNodeManage = defineStore("nodeManage", {
           freeCensorship: true,
         },
         {
-          icon: "/img/icon/click-installation/mainnet-circle.png",
+          icon: "/img/icon/click-installation/eden.png",
           name: "Eden",
-          mainnet: "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
-          testnet: "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-goerli.edennetwork.io/",
+          mainnet:
+            "https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io/",
+          testnet:
+            "https://0xb1d229d9c21298a87846c7022ebeef277dfc321fe674fa45312e20b5b6c400bfde9383f801848d7837ed5fc449083a12@relay-goerli.edennetwork.io/",
           id: 10,
           isSelected: false,
           isRemoved: false,
           freeCensorship: false,
         },
         {
-          icon: "/img/icon/click-installation/mainnet-circle.png",
+          icon: "/img/icon/click-installation/Relayoor.png",
           name: "Relayooor's",
-          mainnet: "https://0x84e78cb2ad883861c9eeeb7d1b22a8e02332637448f84144e245d20dff1eb97d7abdde96d4e7f80934e5554e11915c56@relayooor.wtf",
+          mainnet:
+            "https://0x84e78cb2ad883861c9eeeb7d1b22a8e02332637448f84144e245d20dff1eb97d7abdde96d4e7f80934e5554e11915c56@relayooor.wtf",
           id: 11,
           isSelected: false,
           isRemoved: false,

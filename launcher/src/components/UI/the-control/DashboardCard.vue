@@ -6,17 +6,16 @@
 <style scoped>
 .card {
   margin: 1%;
+  background: #2a2a2a;
   border-radius: 10px;
   border: 1px solid #343434;
-  background: rgb(42, 42, 42);
-  box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px #171717;
+  cursor: pointer;
   text-decoration: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 1;
-  cursor: pointer;
   position: relative;
 }
 

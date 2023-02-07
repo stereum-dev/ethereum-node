@@ -71,14 +71,18 @@ export default {
     },
   },
   mounted() {
-    if (this.network === "mainnet") {
-      this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
-    } else if (this.network === "testnet") {
-      this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
-    } else if (this.network === "gnosis") {
-      this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
-    } else {
-      this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
+    switch (this.network) {
+      case "mainnet":
+        this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
+        break;
+      case "testnet":
+        this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
+        break;
+      case "gnosis":
+        this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
+        break;
+      default:
+        this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
     }
   },
 };

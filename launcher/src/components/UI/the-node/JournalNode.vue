@@ -88,10 +88,9 @@ import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
-import TheNodePanelBtn from "./TheNodePanelBtn.vue";
 
 export default {
-  components: { UpdateTable, TheNodePanelBtn },
+  components: { UpdateTable },
   data() {
     return {
       loading: false,
