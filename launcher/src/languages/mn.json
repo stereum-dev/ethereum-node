@@ -15,7 +15,11 @@
   "journalnode": {
     "serverip": "сервер ip",
     "servername": "СЕРВЕРИЙН НЭР",
-    "edit": "нөүд хянах"
+    "edit": "нөүд хянах",
+    "loading": "loading new states",
+    "turnOn": "Turn Node on",
+    "turnOff": "Turn Node off",
+    "log": "Open Logs..."
   },
   "pagesnav": {
     "node": "НӨҮД",
@@ -27,7 +31,9 @@
     "supportText": "Тусламж авах хүнтэй холбогдох хамгийн хурдан арга бол манай Discord серверт нэгдэх юм!",
     "bugReport": "АЛДААГ МЭДЭЭЛЛЭХ",
     "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
-    "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:"
+    "emailText": "эсвэл энэ хаяг руу Емайл бичнэ үү:",
+    "docsTitle": "chain docs",
+    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
   "notifModal": {
     "notification": "Мэдэгдэлүүд",
@@ -58,7 +64,8 @@
     "alert": "Мобайл апп дээрх сэрэмжлүүлэг",
     "switchC": "Клайнтуудийг солих",
     "migrate": "Nodes Migration",
-    "rpc": "RPC Холболт"
+    "rpc": "RPC Холболт",
+    "gnoStake": "STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "клaйнт"
@@ -94,7 +101,8 @@
     "serviceTitle": "Сервисийн шинэчлэлтүүд",
     "serviceDesc": "ПЛАГ-ИН-үүдийн суулгасан сонголтын шинэчлэлтүүд",
     "availablePlugin": "БОЛОМЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
-    "all": "бүгдийг шинэчлэх"
+    "all": "бүгдийг шинэчлэх",
+    "osTitle": "operating system (server)"
   },
   "controlPage": {
     "node": "НӨҮД",
@@ -286,5 +294,18 @@
     "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
     "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
     "installationPath": "INSTALLATION PATH"
+  },
+  "mevboostConfig": {
+    "availRelays": "AVAILABLE BLOCK RELAYS",
+    "usedRelays": "USED BLOCK RELAYS"
+  },
+  "addModifyPanel": {
+    "installPath": "INSTALLATION PATH",
+    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "portused": "PORT USED",
+    "cancel": "cancel",
+    "save": "save",
+    "add": "ADD",
+    "clickAndAdd": "Click on ADD"
   }
 }
