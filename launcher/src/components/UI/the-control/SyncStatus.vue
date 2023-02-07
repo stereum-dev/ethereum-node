@@ -8,10 +8,17 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
-        <sync-circular-progress color="#f84343" :sync-percent="consensusPer" />
-        <sync-circular-progress color="#3c8de4" :sync-percent="executionPer" />
+        <sync-circular-progress
+          :color="clientBlue"
+          :sync-percent="consensusPer"
+        />
+        <sync-circular-progress
+          :color="clientOrange"
+          :sync-percent="executionPer"
+        />
         <div
           class="consensusIconCons"
+          :class="{ clientColor: clientColor }"
           :data-tooltip="
             'Nimbus:  ' +
             formatValues(consensusFirstValTest) +
@@ -93,6 +100,15 @@ export default {
       executionSecondValTest: 1234566789,
       consensusPer: 62,
       executionPer: 40,
+      //this two color are usable for the progress circle color dynamic
+      consensusClientColor: "",
+      executionClientColor: "",
+      //----------------------------------
+      clientRed: "#f84343",
+      clientOrange: "#ff8c00",
+      clientGrey: "grey",
+      clientBlue: "#3c8de4",
+      clientgreen: "#00be00",
       //----------------------------
       isMultiService: false,
       pageNumber: 1,
@@ -128,6 +144,7 @@ export default {
   },
   mounted() {
     this.syncControler();
+    console.log(this.consensusClientColor);
   },
   unmounted() {
     if (this.refresher) clearTimeout(this.refresher);
@@ -336,7 +353,6 @@ export default {
   left: calc(50%-25%);
   text-align: center;
   content: attr(data-tooltip);
-  color: #eee;
   background: black;
   border-radius: 5px;
   font-size: 70%;
@@ -534,7 +550,7 @@ export default {
   color: #f84343;
 }
 .clientorange * {
-  color: darkorange;
+  color: #ff8c00;
 }
 .clientgrey * {
   color: grey;
@@ -543,7 +559,7 @@ export default {
   color: #3c8de4;
 }
 .clientgreen * {
-  color: rgb(0, 190, 0);
+  color: #00be00;
 }
 ::-webkit-scrollbar {
   width: 5px;
