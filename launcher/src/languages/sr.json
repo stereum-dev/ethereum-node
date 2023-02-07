@@ -15,7 +15,11 @@
   "journalnode": {
     "serverip": "server ip",
     "servername": "SERVER IME",
-    "edit": "za uređivanje node"
+    "edit": "za uređivanje node",
+    "loading": "loading new states",
+    "turnOn": "Turn Node on",
+    "turnOff": "Turn Node off",
+    "log": "Open Logs..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -27,7 +31,9 @@
     "supportText": "Najbrži način da dođete do osobe za podršku je da se pridružite našem Discord serveru!",
     "bugReport": "BUG PRIJAVA",
     "bugRepText": "Odvojite vrijeme da napišete problem i dopustite nam da učinimo Stereum boljim!",
-    "emailText": "ili napišite email na:"
+    "emailText": "ili napišite email na:",
+    "docsTitle": "chain docs",
+    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
   "notifModal": {
     "notification": "Obavještenja",
@@ -58,7 +64,8 @@
     "alert": "Upozorenja na Mobilnoj Aplikaciji",
     "switchC": "Promijenite Client",
     "migrate": "Node Migracija",
-    "rpc": "RPC Connection"
+    "rpc": "RPC Connection",
+    "gnoStake": "STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "client"
@@ -94,7 +101,8 @@
     "serviceTitle": "Service ažuriranja",
     "serviceDesc": "Ažuriranja za instalirani izbor od PLUG-INs",
     "availablePlugin": "DOSTUPNA AŽURIRANJA PLUG-INA",
-    "all": "ažuriraj sve"
+    "all": "ažuriraj sve",
+    "osTitle": "operating system (server)"
   },
   "controlPage": {
     "node": "NODE",
@@ -286,5 +294,18 @@
     "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
     "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
     "installationPath": "INSTALLATION PATH"
+  },
+  "mevboostConfig": {
+    "availRelays": "AVAILABLE BLOCK RELAYS",
+    "usedRelays": "USED BLOCK RELAYS"
+  },
+  "addModifyPanel": {
+    "installPath": "INSTALLATION PATH",
+    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "portused": "PORT USED",
+    "cancel": "cancel",
+    "save": "save",
+    "add": "ADD",
+    "clickAndAdd": "Click on ADD"
   }
 }

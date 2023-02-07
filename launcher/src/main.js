@@ -1,5 +1,4 @@
-import "mutationobserver-shim";
-import Vue, { createApp } from "vue"; // CHANGE
+import { createApp } from "vue"; // CHANGE
 
 import App from "./App.vue";
 import router from "./router/index.js";
@@ -14,8 +13,6 @@ import ServicePlugin from "./components/UI/node-manage/ServicePlugin.vue";
 import NodeService from "./components/UI/the-node/NodeService.vue";
 import CommingSoon from "./components/layers/CommingSoon.vue";
 import TheNodePanelBtn from "./components/UI/the-node/TheNodePanelBtn.vue";
-
-Vue.configureCompat({ WATCH_ARRAY: false });
 
 const app = createApp(App);
 app.component("comming-soon", CommingSoon);
