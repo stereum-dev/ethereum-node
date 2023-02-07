@@ -9,7 +9,13 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <!-- <sync-circular-progress
+        <div class="consensusName">
+          <span>{{ consensusClientsData[0].name }}</span>
+        </div>
+        <div class="executionName">
+          <span>{{ executionClientsData[0].name }}</span>
+        </div>
+        <sync-circular-progress
           :color="consensusClientCurrentColor"
           :sync-percent="consensusPer"
         />
@@ -21,7 +27,8 @@
           class="consensusIconCons"
           :class="{ clientColor: clientColor }"
           :data-tooltip="
-            'Nimbus:  ' +
+            consensusClientsData[0].name +
+            ': ' +
             formatValues(consensusFirstValTest) +
             ' / ' +
             formatValues(consensusSecondValTest)
@@ -35,20 +42,20 @@
         <div
           class="executionIconCons"
           :data-tooltip="
-            geth.name +
+            executionClientsData[0].name +
             ': ' +
             formatValues(executionFirstValTest) +
             ' / ' +
             formatValues(executionSecondValTest)
           "
         >
-          <img :src="geth.img" alt="execution" />
+          <img :src="executionClientsData[0].img" alt="execution" />
         </div>
         <span class="consensusPer">{{ consensusPer }}%</span>
-        <span class="executionPer">{{ executionPer }}%</span> -->
+        <span class="executionPer">{{ executionPer }}%</span>
         <!--new form end-->
         <!--old form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <!-- <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -63,7 +70,7 @@
               <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
         <!--old form end-->
       </div>
     </div>
@@ -94,8 +101,8 @@ export default {
       consensusSecondValTest: 123456789,
       executionFirstValTest: 1234567899,
       executionSecondValTest: 1234566789,
-      consensusPer: 62,
-      executionPer: 40,
+      consensusPer: 100,
+      executionPer: 100,
       //this two color are usable for the progress circle color dynamic
       consensusClientColor: "",
       executionClientColor: "",
@@ -105,10 +112,51 @@ export default {
       clientGrey: "grey",
       clientBlue: "#3c8de4",
       clientGreen: "#00be00",
-      geth: {
-        name: "geth",
-        img: "/img/icon/plugin-icons/execution/Geth.png",
-      },
+      consensusClientsData: [
+        {
+          name: "lighthouse",
+          img: "/img/icon/plugin-icons/consensus/LightHouse.png",
+        },
+        {
+          name: "Lodestar",
+          img: "/img/icon/plugin-icons/consensus/Lodestar.png",
+        },
+        {
+          name: "Nimbus",
+          img: "/img/icon/plugin-icons/consensus/Nimbus.png",
+        },
+        {
+          name: "Prysm",
+          img: "/img/icon/plugin-icons/consensus/Prysm.png",
+        },
+        {
+          name: "Teku",
+          img: "/img/icon/plugin-icons/consensus/Teku.png",
+        },
+      ],
+      executionClientsData: [
+        {
+          name: "Erigon",
+          img: "/img/icon/plugin-icons/execution/Erigon.png",
+        },
+        {
+          name: "Geth",
+          img: "/img/icon/plugin-icons/execution/Geth.png",
+        },
+        {
+          name: "hyperLedger-besu",
+          img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
+        },
+        {
+          name: "Nethermind",
+          img: "/img/icon/plugin-icons/execution/Nethermind.png",
+        },
+        {
+          name: "OpenEthereum",
+          img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
+        },
+      ],
+
       //----------------------------
       isMultiService: false,
       pageNumber: 1,
@@ -378,6 +426,32 @@ export default {
   visibility: visible;
   transform: rotateY(80%);
 }
+.consensusName {
+  position: absolute;
+  left: 6%;
+  top: 4%;
+  font-size: 50%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+  display: flex;
+  width: 40%;
+  height: 12%;
+  justify-content: center;
+  align-items: center;
+}
+.executionName {
+  position: absolute;
+  left: 56%;
+  top: 4%;
+  font-size: 50%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+  display: flex;
+  width: 40%;
+  height: 12%;
+  justify-content: center;
+  align-items: center;
+}
 .consensusPer {
   position: absolute;
   left: 16%;
@@ -388,7 +462,7 @@ export default {
 }
 .executionPer {
   position: absolute;
-  left: 68%;
+  left: 65%;
   top: 80%;
   font-size: 70%;
   font-weight: 600;
@@ -399,18 +473,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 28%;
-  left: 10%;
-  top: 8%;
+  width: 25%;
+  left: 12.5%;
+  top: 24.5%;
 }
 .executionIconCons {
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 28%;
-  left: 61%;
-  top: 8%;
+  width: 25%;
+  left: 62.5%;
+  top: 24.5%;
 }
 .pageNumber {
   display: flex;
@@ -499,9 +573,9 @@ export default {
 .wrapper {
   display: flex;
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: center;
   width: 69%;
-  height: 90%;
+  height: 100%;
   position: relative;
 }
 .sync-box_row {

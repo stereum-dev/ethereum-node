@@ -1,7 +1,7 @@
 <template>
   <circle-progress
     :fill-color="color"
-    size="50"
+    size="45"
     border-width="5"
     border-bg-width="0"
     :percent="syncPercent"
