@@ -18,10 +18,12 @@
         <sync-circular-progress
           :color="consensusClientCurrentColor"
           :sync-percent="consensusPer"
+     
         />
         <sync-circular-progress
           :color="exectionClientCurrentColor"
           :sync-percent="executionPer"
+     
         />
         <div
           class="consensusIconCons"
@@ -51,8 +53,8 @@
         >
           <img :src="executionClientsData[0].img" alt="execution" />
         </div>
-        <span class="consensusPer">{{ consensusPer }}%</span>
-        <span class="executionPer">{{ executionPer }}%</span>
+        <span class="consensusPer">{{ consensusPer }}% SYNCED</span>
+        <span class="executionPer">{{ executionPer }}% SYNCING</span>
         <!--new form end-->
         <!--old form start-->
         <!-- <no-data v-if="noDataLayerShow"></no-data>
@@ -102,7 +104,7 @@ export default {
       executionFirstValTest: 1234567899,
       executionSecondValTest: 1234566789,
       consensusPer: 100,
-      executionPer: 100,
+      executionPer: 60,
       //this two color are usable for the progress circle color dynamic
       consensusClientColor: "",
       executionClientColor: "",
@@ -204,7 +206,7 @@ export default {
       return this.consensusClientColor;
     },
     exectionClientCurrentColor() {
-      this.executionClientColor = this.clientOrange;
+      this.executionClientColor = this.clientBlue;
       return this.executionClientColor;
     },
     ...mapState(useControlStore, {
@@ -438,6 +440,7 @@ export default {
   height: 12%;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 .executionName {
   position: absolute;
@@ -451,22 +454,25 @@ export default {
   height: 12%;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 .consensusPer {
   position: absolute;
-  left: 16%;
-  top: 80%;
-  font-size: 70%;
+  left: 10%;
+  top: 85%;
+  font-size: 30%;
   font-weight: 600;
   text-shadow: 1px 2px 5px #4f5256;
+  text-transform: uppercase;
 }
 .executionPer {
   position: absolute;
-  left: 65%;
-  top: 80%;
-  font-size: 70%;
+  left: 60%;
+  top: 85%;
+  font-size: 30%;
   font-weight: 600;
   text-shadow: 1px 2px 5px #4f5256;
+  text-transform: uppercase;
 }
 .consensusIconCons {
   position: absolute;
@@ -474,7 +480,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 25%;
-  left: 12.5%;
+  left: 12.7%;
   top: 24.5%;
 }
 .executionIconCons {
@@ -483,7 +489,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 25%;
-  left: 62.5%;
+  left: 62.6%;
   top: 24.5%;
 }
 .pageNumber {
