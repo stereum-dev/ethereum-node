@@ -8,12 +8,13 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
+        <!--new form-->
         <sync-circular-progress
-          :color="clientBlue"
+          :color="consensusClientCurrentColor"
           :sync-percent="consensusPer"
         />
         <sync-circular-progress
-          :color="clientOrange"
+          :color="exectionClientCurrentColor"
           :sync-percent="executionPer"
         />
         <div
@@ -34,16 +35,14 @@
         <div
           class="executionIconCons"
           :data-tooltip="
-            'geth:  ' +
+            geth.name +
+            ': ' +
             formatValues(executionFirstValTest) +
             ' / ' +
             formatValues(executionSecondValTest)
           "
         >
-          <img
-            src="/img/icon/plugin-icons/execution/Geth.png"
-            alt="execution"
-          />
+          <img :src="geth.img" alt="execution" />
         </div>
         <span class="consensusPer">{{ consensusPer }}%</span>
         <span class="executionPer">{{ executionPer }}%</span>
@@ -108,7 +107,11 @@ export default {
       clientOrange: "#ff8c00",
       clientGrey: "grey",
       clientBlue: "#3c8de4",
-      clientgreen: "#00be00",
+      clientGreen: "#00be00",
+      geth: {
+        name: "geth",
+        img: "/img/icon/plugin-icons/execution/Geth.png",
+      },
       //----------------------------
       isMultiService: false,
       pageNumber: 1,
@@ -151,6 +154,14 @@ export default {
   },
 
   computed: {
+    consensusClientCurrentColor() {
+      this.consensusClientColor = this.clientGreen;
+      return this.consensusClientColor;
+    },
+    exectionClientCurrentColor() {
+      this.executionClientColor = this.clientOrange;
+      return this.executionClientColor;
+    },
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
