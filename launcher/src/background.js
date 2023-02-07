@@ -81,7 +81,8 @@ ipcMain.handle("checkConnection", async () => {
 
 ipcMain.handle("destroy", async () => {
   app.showExitPrompt = true;
-  const returnValue = await nodeConnection.destroyNode();
+  const serviceConfigs = await serviceManager.readServiceConfigurations()
+  const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
 });

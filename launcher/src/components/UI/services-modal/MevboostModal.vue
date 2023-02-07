@@ -32,9 +32,7 @@
             <div class="relaysBoxContent">
               <div
                 class="relay"
-                v-for="relay in relaysList.filter(
-                  (r) => r[this.currentNetwork.network.toLowerCase()]
-                )"
+                v-for="relay in availableBlocks"
                 :key="relay.id"
               >
                 <input
@@ -103,10 +101,16 @@ export default {
       serviceConfig: {},
       loading: false,
       applyBtnDisabled: true,
+      availableBlocks: [],
     };
   },
   mounted() {
     this.filtermevService();
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter(
+        (r) => r[this.currentNetwork.network.toLowerCase()]
+      )
+    );
   },
   computed: {
     ...mapState(useServices, {
@@ -118,6 +122,13 @@ export default {
     }),
   },
   methods: {
+    shuffleRelaysList(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
     enableBtn() {
       if (this.checkedRelays.length > 0) {
         this.applyBtnDisabled = false;
