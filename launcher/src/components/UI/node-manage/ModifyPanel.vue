@@ -29,15 +29,11 @@
           class="relaysBox"
           v-if="plugin.service === 'FlashbotsMevBoostService'"
         >
-          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+          <div class="relaysBoxTitle">
+            {{ $t("mevboostConfig.availRelays") }}
+          </div>
           <div class="relaysBoxContent">
-            <div
-              class="relay"
-              v-for="relay in relaysList.filter(
-                (r) => r[configNetwork.network.toLowerCase()]
-              )"
-              :key="relay.id"
-            >
+            <div class="relay" v-for="relay in availableBlocks" :key="relay.id">
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -63,7 +59,7 @@
           "
         >
           <div class="change-title">
-            <span>INSTALLATION PATH</span>
+            <span>{{ $t("addModifyPanel.installPath") }}</span>
           </div>
           <div class="change-box">
             <input type="text" v-model="installationPath" maxlength="255" />
@@ -97,9 +93,9 @@
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
+            <span v-if="genesisIsActive">{{
+              $t("addModifyPanel.syncMessage")
+            }}</span>
             <div class="inputBox" v-if="checkPointIsActive">
               <input type="text" v-model="checkPointSync" />
             </div>
@@ -111,7 +107,7 @@
         >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
-            <span>PORT USED</span>
+            <span>{{ $t("addModifyPanel.portused") }}</span>
             <input type="text" v-model="port" placeholder="9000" />
           </div>
         </div>
@@ -153,10 +149,10 @@
       </div>
       <div class="btnBox">
         <div class="cancelBtn" @click="$emit('cancelModify')">
-          <span>Cancel</span>
+          <span>{{ $t("addModifyPanel.cancel") }}</span>
         </div>
         <div class="addBtn" @click="saveModify">
-          <span>SAVE</span>
+          <span>{{ $t("addModifyPanel.save") }}</span>
         </div>
       </div>
     </div>
@@ -187,6 +183,7 @@ export default {
       selected: {},
       options: [],
       checkedRelays: [],
+      availableBlocks: [],
     };
   },
   computed: {
@@ -210,6 +207,9 @@ export default {
     },
   },
   mounted() {
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+    );
     if (this.items.service === "FlashbotsMevBoostService") {
       ControlService.getServiceConfig(this.items.config.serviceID).then(
         (service) => {
@@ -228,6 +228,13 @@ export default {
     }
   },
   methods: {
+    shuffleRelaysList(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
     saveModify() {
       let dependencies = toRaw(this.options).filter(
         (s) => s.selectedForConnection
