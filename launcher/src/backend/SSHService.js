@@ -119,7 +119,7 @@ export class SSHService {
         privateKey: this.connectionInfo.privateKey || undefined
       }
       const tunnelOptions = {
-        autoClose: true
+        autoClose: false
       };
       const serverOptions = {
         port: tunnelConfig.localPort,
