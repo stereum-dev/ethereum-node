@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <!-- <div class="consensusContainer">
+        <div class="consensusContainer">
           <div class="consensusName">
             <span>{{ consensusClientsData[0].name }}</span>
           </div>
@@ -90,11 +90,11 @@
           >
             <img :src="executionClientsData[0].img" alt="execution" />
           </div>
-        </div> -->
+        </div>
 
         <!--new form end-->
         <!--old form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <!-- <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -112,7 +112,7 @@
               >
             </div>
           </div>
-        </div>
+        </div> -->
         <!--old form end-->
       </div>
     </div>
