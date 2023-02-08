@@ -43,12 +43,12 @@
                   @change="enableBtn"
                 />
                 <label :for="relay.id">{{ relay.name }}</label>
-                <div class="iconBox" data-tooltip="OFAC Compliant - censored">
-                  <img
-                    src="/img/icon/header-icons/usa1.png"
-                    alt="flag-icon"
-                    v-if="relay.freeCensorship == false"
-                  />
+                <div
+                  class="iconBox"
+                  data-tooltip="OFAC Compliant - censored"
+                  v-if="relay.freeCensorship == false"
+                >
+                  <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
                 </div>
               </div>
             </div>
@@ -203,8 +203,8 @@ export default {
 [data-tooltip]::after {
   position: absolute;
   width: max-content;
-  left: -700%;
-  top: 180%;
+  left: -900%;
+  top: -10%;
   text-align: center;
   content: attr(data-tooltip);
   color: #eee;
