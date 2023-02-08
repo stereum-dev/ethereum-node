@@ -13,7 +13,7 @@
         <div class="activeWidget" v-else>
           <div class="consensusContainer">
             <div class="consensusName">
-              <span>{{ consensusClientsData[0].name }}</span>
+              <span>{{ consensusName }}</span>
             </div>
             <div class="progressBox">
               <sync-circular-progress
@@ -40,20 +40,20 @@
               class="consensusIconCons"
               :class="{ clientColor: clientColor }"
               :data-tooltip="
-                consensusClientsData[0].name +
+                consensusName +
                 ': ' +
                 formatValues(consensusFirstVal) +
                 ' / ' +
                 formatValues(consensusSecondVal)
               "
             >
-              <img :src="clientImage('lighthouse')" alt="consensus" />
+              <img :src="clientImage(consensusName)" alt="consensus" />
             </div>
           </div>
 
           <div class="executionContainer">
             <div class="executionName">
-              <span>{{ executionClientsData[0].name }}</span>
+              <span>{{ executionName }}</span>
             </div>
 
             <div class="progressBox">
@@ -80,14 +80,14 @@
             <div
               class="executionIconCons"
               :data-tooltip="
-                executionClientsData[0].name +
+                executionName +
                 ': ' +
                 formatValues(executionFirstVal) +
                 ' / ' +
                 formatValues(executionSecondVal)
               "
             >
-              <img :src="clientImage('erigon')" alt="execution" />
+              <img :src="clientImage(executionName)" alt="execution" />
             </div>
           </div>
         </div>
@@ -138,6 +138,8 @@ export default {
   data() {
     return {
       //test values before wiring
+      consensusName: "besu",
+      executionName: "lighthouse",
       consensusFirstVal: 10000000,
       consensusSecondVal: 123456789,
       executionFirstVal: 901234444,
@@ -184,7 +186,7 @@ export default {
           img: "/img/icon/plugin-icons/execution/Geth.png",
         },
         {
-          name: "hyperledger-besu",
+          name: "besu",
           img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
         },
         {
