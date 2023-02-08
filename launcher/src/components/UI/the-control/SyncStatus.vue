@@ -47,10 +47,7 @@
                 formatValues(consensusSecondVal)
               "
             >
-              <img
-                src="/img/icon/plugin-icons/consensus/Nimbus.png"
-                alt="consensus"
-              />
+              <img :src="clientImage('lighthouse')" alt="consensus" />
             </div>
           </div>
 
@@ -90,7 +87,7 @@
                 formatValues(executionSecondVal)
               "
             >
-              <img :src="executionClientsData[0].img" alt="execution" />
+              <img :src="clientImage('erigon')" alt="execution" />
             </div>
           </div>
         </div>
@@ -187,7 +184,7 @@ export default {
           img: "/img/icon/plugin-icons/execution/Geth.png",
         },
         {
-          name: "hyperLedger-besu",
+          name: "hyperledger-besu",
           img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
         },
         {
@@ -195,7 +192,7 @@ export default {
           img: "/img/icon/plugin-icons/execution/Nethermind.png",
         },
         {
-          name: "openEthereum",
+          name: "openethereum",
           img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
         },
       ],
@@ -291,6 +288,21 @@ export default {
     },
   },
   methods: {
+    clientImage(name) {
+      if (!name) {
+        return "";
+      }
+
+      const lowerCaseInputValue = name.toLowerCase();
+      const clientData = [
+        ...this.consensusClientsData,
+        ...this.executionClientsData,
+      ];
+      const matchingClient = clientData.find(
+        (client) => client.name.toLowerCase() === lowerCaseInputValue
+      );
+      return matchingClient ? matchingClient.img : "";
+    },
     SyncStatus(val) {
       return val < 100 ? true : false;
     },
