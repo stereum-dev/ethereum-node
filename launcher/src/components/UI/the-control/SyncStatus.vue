@@ -9,92 +9,91 @@
       </div>
       <div class="wrapper">
         <!--new form start-->
-        <!-- <div class="consensusContainer">
-          <div class="consensusName">
-            <span>{{ consensusClientsData[0].name }}</span>
-          </div>
-          <div class="progressBox">
-            <sync-circular-progress
-              :color="consensusClientCurrentColor"
-              :sync-percent="consensusPer"
-            />
+        <no-data v-if="noDataLayerShow"></no-data>
+        <div class="activeWidget" v-else>
+          <div class="consensusContainer">
+            <div class="consensusName">
+              <span>{{ consensusName }}</span>
+            </div>
+            <div class="progressBox">
+              <sync-circular-progress
+                :color="consensusClientCurrentColor"
+                :sync-percent="consensusPer"
+              />
+            </div>
+
+            <div
+              class="syncStatusStatus"
+              v-if="consensusSyncstatus"
+              :class="consensusSyncstatusClass"
+            >
+              <span>{{ displayConsensusPer }}% SYNCING</span>
+            </div>
+            <div
+              class="syncStatusStatus"
+              v-else
+              :class="consensusSyncstatusClass"
+            >
+              <span>SYNCED</span>
+            </div>
+            <div
+              class="consensusIconCons"
+              :class="{ clientColor: clientColor }"
+              :data-tooltip="
+                consensusName +
+                ': ' +
+                formatValues(consensusFirstVal) +
+                ' / ' +
+                formatValues(consensusSecondVal)
+              "
+            >
+              <img :src="clientImage(consensusName)" alt="consensus" />
+            </div>
           </div>
 
-          <div
-            class="syncStatusStatus"
-            v-if="consensusSyncstatus"
-            :class="consensusSyncstatusClass"
-          >
-            <span>{{ displayConsensusPer }}% SYNCING</span>
-          </div>
-          <div
-            class="syncStatusStatus"
-            v-else
-            :class="consensusSyncstatusClass"
-          >
-            <span>SYNCED</span>
-          </div>
-          <div
-            class="consensusIconCons"
-            :class="{ clientColor: clientColor }"
-            :data-tooltip="
-              consensusClientsData[0].name +
-              ': ' +
-              formatValues(consensusFirstVal) +
-              ' / ' +
-              formatValues(consensusSecondVal)
-            "
-          >
-            <img
-              src="/img/icon/plugin-icons/consensus/Nimbus.png"
-              alt="consensus"
-            />
+          <div class="executionContainer">
+            <div class="executionName">
+              <span>{{ executionName }}</span>
+            </div>
+
+            <div class="progressBox">
+              <sync-circular-progress
+                :color="exectionClientCurrentColor"
+                :sync-percent="executionPer"
+              />
+            </div>
+
+            <div
+              class="syncStatusStatus"
+              v-if="executionSyncstatus"
+              :class="executionSyncstatusClass"
+            >
+              <span>{{ displayExecutionPer }}% SYNCING</span>
+            </div>
+            <div
+              class="syncStatusStatus"
+              v-else
+              :class="executionSyncstatusClass"
+            >
+              <span>SYNCED</span>
+            </div>
+            <div
+              class="executionIconCons"
+              :data-tooltip="
+                executionName +
+                ': ' +
+                formatValues(executionFirstVal) +
+                ' / ' +
+                formatValues(executionSecondVal)
+              "
+            >
+              <img :src="clientImage(executionName)" alt="execution" />
+            </div>
           </div>
         </div>
-
-        <div class="executionContainer">
-          <div class="executionName">
-            <span>{{ executionClientsData[0].name }}</span>
-          </div>
-
-          <div class="progressBox">
-            <sync-circular-progress
-              :color="exectionClientCurrentColor"
-              :sync-percent="executionPer"
-            />
-          </div>
-
-          <div
-            class="syncStatusStatus"
-            v-if="executionSyncstatus"
-            :class="executionSyncstatusClass"
-          >
-            <span>{{ displayExecutionPer }}% SYNCING</span>
-          </div>
-          <div
-            class="syncStatusStatus"
-            v-else
-            :class="executionSyncstatusClass"
-          >
-            <span>SYNCED</span>
-          </div>
-          <div
-            class="executionIconCons"
-            :data-tooltip="
-              executionClientsData[0].name +
-              ': ' +
-              formatValues(executionFirstVal) +
-              ' / ' +
-              formatValues(executionSecondVal)
-            "
-          >
-            <img :src="executionClientsData[0].img" alt="execution" />
-          </div>
-        </div> -->
-
         <!--new form end-->
         <!--old form start-->
-        <no-data v-if="noDataLayerShow"></no-data>
+        <!-- <no-data v-if="noDataLayerShow"></no-data>
         <div class="sync-box_value" v-if="syncItemsShow">
           <div
             v-for="item in clients"
@@ -112,7 +111,7 @@
               >
             </div>
           </div>
-        </div>
+        </div> -->
         <!--old form end-->
       </div>
     </div>
@@ -139,7 +138,9 @@ export default {
   data() {
     return {
       //test values before wiring
-      consensusFirstVal: 123456789,
+      consensusName: "besu",
+      executionName: "lighthouse",
+      consensusFirstVal: 10000000,
       consensusSecondVal: 123456789,
       executionFirstVal: 901234444,
       executionSecondVal: 1234567899,
@@ -185,7 +186,7 @@ export default {
           img: "/img/icon/plugin-icons/execution/Geth.png",
         },
         {
-          name: "hyperLedger-besu",
+          name: "besu",
           img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
         },
         {
@@ -193,7 +194,7 @@ export default {
           img: "/img/icon/plugin-icons/execution/Nethermind.png",
         },
         {
-          name: "openEthereum",
+          name: "openethereum",
           img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
         },
       ],
@@ -289,6 +290,21 @@ export default {
     },
   },
   methods: {
+    clientImage(name) {
+      if (!name) {
+        return "";
+      }
+
+      const lowerCaseInputValue = name.toLowerCase();
+      const clientData = [
+        ...this.consensusClientsData,
+        ...this.executionClientsData,
+      ];
+      const matchingClient = clientData.find(
+        (client) => client.name.toLowerCase() === lowerCaseInputValue
+      );
+      return matchingClient ? matchingClient.img : "";
+    },
     SyncStatus(val) {
       return val < 100 ? true : false;
     },
@@ -470,8 +486,15 @@ export default {
 </script>
 
 <style scoped>
+.activeWidget {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
 .blue {
-  color: #3c8de4;
+  color: #add8e6;
 }
 .green {
   color: #00be00;
@@ -527,9 +550,9 @@ export default {
   width: 100%;
   height: 15%;
   display: flex;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: uppercase;
-  font-size: 30%;
+  font-size: 40%;
   justify-content: center;
   align-items: center;
   position: absolute;
