@@ -26,7 +26,7 @@
   - name: Stop service
     docker_container:
       name: "{{ stereum_service_container_name }}"
-      stop_timeout: 180
+      stop_timeout: 600
       state: absent
     become: yes
     when: stereum.manage_service.state == "stopped" or stereum.manage_service.state == "restarted"
