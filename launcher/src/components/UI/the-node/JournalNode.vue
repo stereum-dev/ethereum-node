@@ -79,10 +79,14 @@
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
+      <div class="log-navigation">
+        <service-log-button v-for="n in 999" :key="n"></service-log-button>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
@@ -90,7 +94,7 @@ import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
 
 export default {
-  components: { UpdateTable },
+  components: { UpdateTable, ServiceLogButton },
   data() {
     return {
       loading: false,
@@ -156,6 +160,16 @@ export default {
 };
 </script>
 <style scoped>
+.log-navigation {
+  grid-row: 2/8;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  flex-direction: column;
+}
 .linkToEdit {
   width: 100%;
   height: 100%;
