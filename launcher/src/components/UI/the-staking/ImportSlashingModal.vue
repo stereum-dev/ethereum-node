@@ -9,7 +9,7 @@
         />
       </div>
       <div class="removeMessage">
-        <span>Do you want to import with a slashing protection database?</span>
+        <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
       </div>
       <div class="slashingParent">
         <div class="pickSlashing">
@@ -50,7 +50,7 @@
             )
           "
         >
-          <span>Continue</span>
+          <span>{{ $t("importSlashingModal.continue") }}</span>
         </div>
       </div>
       <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
@@ -64,11 +64,11 @@
         />
       </div>
       <div class="removeMessage">
-        <span>Import your slashing database file.</span>
+        <span>{{ $t("importSlashingModal.importMessage") }}</span>
       </div>
       <div class="uploadBox" v-if="picked == 'yes'">
         <div class="upload-btn" @click="openFileUpload">
-          <span>Choose File</span>
+          <span>{{ $t("importSlashingModal.chooseFile") }}</span>
           <input
             type="file"
             @change="signalChangeHandler"
@@ -93,7 +93,7 @@
             )
           "
         >
-          <span>Continue</span>
+          <span>{{ $t("importSlashingModal.continue") }}</span>
         </div>
       </div>
       <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
