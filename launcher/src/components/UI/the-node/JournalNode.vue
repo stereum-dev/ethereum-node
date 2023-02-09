@@ -32,7 +32,7 @@
         btn-action="logToggle"
         grid-row="2/3"
         v-if="isloading"
-        >{{ $t("journalnode.edit") }}</the-node-panel-btn
+        >{{ $t("journalnode.loading") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/turn_on.png"
@@ -80,9 +80,22 @@
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
       <div class="log-navigation">
-        <service-log-button v-for="n in 999" :key="n"></service-log-button>
+        <service-log-button
+          v-for="service in installedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          @open-log="displayPluginLogPage(service)"
+        ></service-log-button>
       </div>
     </div>
+    <Transition>
+      <plugin-logs
+        :item="itemToLogs"
+        v-if="isPluginLogPageActive"
+        @close-log="closePluginLogsPage"
+      ></plugin-logs>
+    </Transition>
   </div>
 </template>
 <script>
@@ -92,18 +105,22 @@ import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
+import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable, ServiceLogButton },
+  components: { UpdateTable, ServiceLogButton, PluginLogs },
   data() {
     return {
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
+      itemToLogs: {},
+      isPluginLogPageActive: false,
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
     };
   },
+
   computed: {
     isloading: {
       // getter
@@ -123,7 +140,15 @@ export default {
       ipAddress: "ipAddress",
     }),
   },
+
   methods: {
+    displayPluginLogPage(el) {
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
     logToggle() {
       this.openLog = !this.openLog;
     },

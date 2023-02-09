@@ -140,7 +140,7 @@ export default {
       //test values before wiring
       consensusName: "besu",
       executionName: "lighthouse",
-      consensusFirstVal: 10000000,
+      consensusFirstVal: 123456789,
       consensusSecondVal: 123456789,
       executionFirstVal: 901234444,
       executionSecondVal: 1234567899,
@@ -153,52 +153,7 @@ export default {
       clientOrange: "#ff8c00",
       clientGrey: "grey",
       clientBlue: "#3c8de4",
-      clientGreen: "#00be00",
-      consensusClientsData: [
-        {
-          name: "lighthouse",
-          img: "/img/icon/plugin-icons/consensus/LightHouse.png",
-        },
-        {
-          name: "lodestar",
-          img: "/img/icon/plugin-icons/consensus/Lodestar.png",
-        },
-        {
-          name: "nimbus",
-          img: "/img/icon/plugin-icons/consensus/Nimbus.png",
-        },
-        {
-          name: "prysm",
-          img: "/img/icon/plugin-icons/consensus/Prysm.png",
-        },
-        {
-          name: "teku",
-          img: "/img/icon/plugin-icons/consensus/Teku.png",
-        },
-      ],
-      executionClientsData: [
-        {
-          name: "erigon",
-          img: "/img/icon/plugin-icons/execution/Erigon.png",
-        },
-        {
-          name: "geth",
-          img: "/img/icon/plugin-icons/execution/Geth.png",
-        },
-        {
-          name: "besu",
-          img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
-        },
-        {
-          name: "nethermind",
-          img: "/img/icon/plugin-icons/execution/Nethermind.png",
-        },
-        {
-          name: "openethereum",
-          img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
-        },
-      ],
-
+      clientGreen: "#00be00", 
       //----------------------------
       isMultiService: false,
       pageNumber: 1,
@@ -275,6 +230,8 @@ export default {
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
+      consensusClientsData: "consensusClientsData",
+      executionClientsData: "executionClientsData",
     }),
     errorIco() {
       return this.syncIco[0].icon;

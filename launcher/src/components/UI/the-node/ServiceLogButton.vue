@@ -1,5 +1,5 @@
 <template>
-  <div class="service-log-button_parent" :style="{ gridRow: `${gridRow}` }">
+  <div class="service-log-button_parent" @click="openLog">
     <div class="service-icon_box">
       <img
         src="/img/icon/plugin-icons/consensus/LightHouse.png"
@@ -8,10 +8,10 @@
     </div>
     <div class="service-title-type_box">
       <div class="title">
-        <span>LightHouse</span>
+        <span>{{ clientName }}</span>
       </div>
       <div class="type">
-        <span>consensus client</span>
+        <span>{{ clientType }}</span>
       </div>
     </div>
   </div>
@@ -19,6 +19,12 @@
 <script>
 export default {
   props: ["img", "clientName", "clientType", "gridRow"],
+  emit: ["open-log"],
+  methods: {
+    openLog() {
+      this.$emit("open-log");
+    },
+  },
 };
 </script>
 <style scoped>
