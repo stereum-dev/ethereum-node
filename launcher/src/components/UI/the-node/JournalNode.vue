@@ -97,7 +97,7 @@ export default {
       updateTableIsOpen: false,
       openLog: false,
       //this data is dummy for invisible the log btn till the next release
-      tillTheNextRelease: false,
+      tillTheNextRelease: true,
     };
   },
   computed: {

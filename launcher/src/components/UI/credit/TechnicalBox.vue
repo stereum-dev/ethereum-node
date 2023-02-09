@@ -122,7 +122,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(7, 1fr);
-  width: 80%;
+  width: 90%;
   height: 100%;
   justify-content: center;
   align-items: center;

@@ -18,8 +18,8 @@ export default {
   height: 100%;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid #343434;
-  background: rgb(42, 42, 42);
+  border: 1px solid #343131;
+  background: #2a2a2a;
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   border-radius: 30px;
@@ -32,7 +32,7 @@ export default {
   height: 100%;
 }
 .contributor-avatar img {
-  width: 95%;
+  width: 90%;
   border-radius: 50%;
 }
 .contributor-name {

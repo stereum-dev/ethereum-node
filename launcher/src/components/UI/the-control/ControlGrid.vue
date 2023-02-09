@@ -123,7 +123,6 @@
 import ControlService from "@/store/ControlService";
 import ControlDashboard from "./ControlDashboard.vue";
 import ControlPlugins from "./ControlPlugins.vue";
-import ControlPanel from "./ControlPanel.vue";
 import ControlAlert from "./ControlAlert.vue";
 import TheExpert from "../the-node/TheExpert.vue";
 import PrunningModal from "../the-node/PrunningModal.vue";
@@ -135,7 +134,6 @@ export default {
   components: {
     ControlDashboard,
     ControlPlugins,
-    ControlPanel,
     ControlAlert,
     TaskManager,
     TheExpert,
