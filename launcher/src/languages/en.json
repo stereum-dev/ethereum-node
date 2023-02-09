@@ -228,7 +228,10 @@
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "financialPage": "FINANCIAL CONTRIBUTION",
+    "gitcoinList":"GITCOIN COMPLETE LIST",
+    "developers":"DEVELOPERS",
+    "testers":"TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "VERIFY & INSTALL",

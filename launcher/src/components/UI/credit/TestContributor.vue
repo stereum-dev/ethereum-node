@@ -14,8 +14,8 @@ export default {
 <style scoped>
 .contributor-parent {
   display: flex;
-  width: 14rem;
-  height: 3.2rem;
+  width: 100%;
+  height: 100%;
   justify-content: flex-start;
   align-items: center;
   border: 1px solid #343434;
@@ -32,8 +32,8 @@ export default {
   height: 100%;
 }
 .contributor-avatar img {
-  width: 80%;
-  border-radius: 40px;
+  width: 95%;
+  border-radius: 50%;
 }
 .contributor-name {
   display: flex;
