@@ -161,50 +161,6 @@ export default {
           icon: "/img/icon/arrows/SynchronisationIconUnknown.gif",
         },
       ],
-      consensusClientsData: [
-        {
-          name: "lighthouse",
-          img: "/img/icon/plugin-icons/consensus/LightHouse.png",
-        },
-        {
-          name: "lodestar",
-          img: "/img/icon/plugin-icons/consensus/Lodestar.png",
-        },
-        {
-          name: "nimbus",
-          img: "/img/icon/plugin-icons/consensus/Nimbus.png",
-        },
-        {
-          name: "prysm",
-          img: "/img/icon/plugin-icons/consensus/Prysm.png",
-        },
-        {
-          name: "teku",
-          img: "/img/icon/plugin-icons/consensus/Teku.png",
-        },
-      ],
-      executionClientsData: [
-        {
-          name: "erigon",
-          img: "/img/icon/plugin-icons/execution/Erigon.png",
-        },
-        {
-          name: "geth",
-          img: "/img/icon/plugin-icons/execution/Geth.png",
-        },
-        {
-          name: "besu",
-          img: "/img/icon/plugin-icons/execution/hyperLedger-besu.png",
-        },
-        {
-          name: "nethermind",
-          img: "/img/icon/plugin-icons/execution/Nethermind.png",
-        },
-        {
-          name: "openethereum",
-          img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
-        },
-      ],
     };
   },
   mounted() {
@@ -217,6 +173,8 @@ export default {
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
+      consensusClientsData: "consensusClientsData",
+      executionClientsData: "executionClientsData",
     }),
     errorIco() {
       return this.syncIco[0].icon;

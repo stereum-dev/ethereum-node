@@ -32,7 +32,7 @@
         btn-action="logToggle"
         grid-row="2/3"
         v-if="isloading"
-        >{{ $t("journalnode.edit") }}</the-node-panel-btn
+        >{{ $t("journalnode.loading") }}</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/turn_on.png"
@@ -79,27 +79,49 @@
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log="displayPluginLogPage(service)"
+        ></service-log-button>
+      </div>
     </div>
+    <Transition>
+      <plugin-logs
+        :item="itemToLogs"
+        v-if="isPluginLogPageActive"
+        @close-log="closePluginLogsPage"
+      ></plugin-logs>
+    </Transition>
   </div>
 </template>
 <script>
+import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
+import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable },
+  components: { UpdateTable, ServiceLogButton, PluginLogs },
   data() {
     return {
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
+      itemToLogs: {},
+      isPluginLogPageActive: false,
       //this data is dummy for invisible the log btn till the next release
-      tillTheNextRelease: false,
+      tillTheNextRelease: true,
     };
   },
+
   computed: {
     isloading: {
       // getter
@@ -118,8 +140,27 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+    sortedServices() {
+      return this.installedServices.sort((a, b) => {
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
+        if (a.category === "execution") return -1;
+        if (b.category === "execution") return 1;
+        if (a.category === "validator") return -1;
+        if (b.category === "validator") return 1;
+        return 0;
+      });
+    },
   },
+
   methods: {
+    displayPluginLogPage(el) {
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
+    },
+    closePluginLogsPage() {
+      this.isPluginLogPageActive = false;
+    },
     logToggle() {
       this.openLog = !this.openLog;
     },
@@ -156,6 +197,16 @@ export default {
 };
 </script>
 <style scoped>
+.log-navigation {
+  grid-row: 2/8;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+  flex-direction: column;
+}
 .linkToEdit {
   width: 100%;
   height: 100%;
@@ -290,5 +341,23 @@ export default {
   margin: 0 auto;
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 50%;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 </style>

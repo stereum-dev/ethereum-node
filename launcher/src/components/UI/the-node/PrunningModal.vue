@@ -10,26 +10,22 @@
       </div>
       <div class="warningMessage">
         <p>
-          GETH used up storage space GROWs over its operational time. It takes
-          MULTIPLE HOURS to prune the Geth database, removing unnecessary data
-          and freeing up some of the used storage space. This has to be done
-          while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL
-          GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.
+          {{ $t("prunningModal.prunningText") }}
         </p>
       </div>
       <div class="check-box">
         <label for="checkbox">
           <input id="checkbox" type="checkbox" v-model="isChecked" />
-          I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES
+          {{ $t("prunningModal.prunningChecked") }}
         </label>
         <div
           class="confirmBtn"
           :class="{ disabled: !isChecked }"
           @click="$emit('confirmBtn')"
         >
-          <span>Start Pruning</span>
+          <span>{{ $t("prunningModal.prunningStart") }}</span>
         </div>
-        <span class="close">Click outside to cancel.</span>
+        <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
     </div>
   </div>

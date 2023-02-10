@@ -22,9 +22,9 @@ export default {
   position: absolute;
   justify-content: center;
   align-items: center;
-  top: -14%;
+  top: -13%;
   left: 63%;
-  transform: rotatez(30deg);
+  transform: rotatez(33deg);
   transform-origin: -55%;
 }
 .crown img {
@@ -32,7 +32,7 @@ export default {
 }
 .contributor-parent {
   display: flex;
-  width: 17%;
+  width: 16%;
   height: 59%;
   justify-content: center;
   align-items: center;
@@ -45,6 +45,9 @@ export default {
   margin-top: 2%;
   margin-bottom: 1%;
   position: relative;
+}
+.contributor-parent:hover {
+  background: #313131;
 }
 .contributor-avatar {
   display: flex;

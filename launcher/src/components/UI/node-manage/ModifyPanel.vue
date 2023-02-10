@@ -33,7 +33,7 @@
             {{ $t("mevboostConfig.availRelays") }}
           </div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in availableBlocks" :key="relay.id">
+            <div class="relay" v-for="relay in combinedBlocs" :key="relay.id">
               <input
                 type="checkbox"
                 :id="relay.id"
@@ -196,6 +196,17 @@ export default {
       relaysList: "relaysList",
       configNetwork: "configNetwork",
     }),
+    combinedBlocs() {
+      let names = new Set();
+      let combined = this.checkedRelays.concat(this.availableBlocks);
+      return combined.filter((item) => {
+        if (!names.has(item.name)) {
+          names.add(item.name);
+          return true;
+        }
+        return false;
+      });
+    },
   },
   watch: {
     items: {

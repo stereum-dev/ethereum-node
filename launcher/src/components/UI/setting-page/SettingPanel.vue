@@ -425,10 +425,15 @@ export default {
   cursor: pointer;
   margin: 5% 0;
 }
-.confirm-btn:hover,
-.confirm-btn:focus {
+.confirm-btn:hover {
   border: 1px solid white;
   font-weight: 800;
+}
+.confirm-btn:active {
+  background: #004cff;
+  transform: scale(0.9);
+  border: none;
+  box-shadow: none;
 }
 .division-line {
   width: 95%;

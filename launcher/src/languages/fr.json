@@ -173,7 +173,7 @@
   },
   "removeMultiModal": {
     "sure": "Êtes-vous sûr de vouloir supprimer cette clé de votre machine ?",
-    "slashing": "With slashing Protection Database?",
+    "slashing": "With Slashing Protection Database?",
     "remove": "Supprimer",
     "path": "choose a path to save exported slashing db ",
     "writePath": "Veuillez écrire votre chemin"
