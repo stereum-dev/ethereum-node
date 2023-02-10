@@ -81,10 +81,11 @@
       >
       <div class="log-navigation">
         <service-log-button
-          v-for="service in installedServices"
+          v-for="service in sortedServices"
           :key="service"
           :client-name="service.name"
           :client-type="service.category"
+          :service-icon="service.icon"
           @open-log="displayPluginLogPage(service)"
         ></service-log-button>
       </div>
@@ -139,6 +140,17 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+    sortedServices() {
+      return this.installedServices.sort((a, b) => {
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
+        if (a.category === "execution") return -1;
+        if (b.category === "execution") return 1;
+        if (a.category === "validator") return -1;
+        if (b.category === "validator") return 1;
+        return 0;
+      });
+    },
   },
 
   methods: {
@@ -329,5 +341,23 @@ export default {
   margin: 0 auto;
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
+}
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border: 1px solid #343434;
+  background: rgb(42, 42, 42);
+  box-sizing: border-box;
+  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  border-radius: 50%;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
 }
 </style>

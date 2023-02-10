@@ -24,6 +24,9 @@ export default {
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
   border-radius: 30px;
 }
+.contributor-parent:hover {
+  background: #313131;
+}
 .contributor-avatar {
   display: flex;
   justify-content: center;

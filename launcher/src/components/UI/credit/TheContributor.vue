@@ -46,6 +46,9 @@ export default {
   margin-bottom: 1%;
   position: relative;
 }
+.contributor-parent:hover {
+  background: #313131;
+}
 .contributor-avatar {
   display: flex;
   justify-content: center;

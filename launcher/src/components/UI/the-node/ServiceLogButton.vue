@@ -1,10 +1,7 @@
 <template>
   <div class="service-log-button_parent" @click="openLog">
     <div class="service-icon_box">
-      <img
-        src="/img/icon/plugin-icons/consensus/LightHouse.png"
-        alt="client-icon"
-      />
+      <img :src="serviceIcon" alt="client-icon" />
     </div>
     <div class="service-title-type_box">
       <div class="title">
@@ -18,7 +15,7 @@
 </template>
 <script>
 export default {
-  props: ["img", "clientName", "clientType", "gridRow"],
+  props: ["serviceIcon", "clientName", "clientType"],
   emit: ["open-log"],
   methods: {
     openLog() {
