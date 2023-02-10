@@ -56,7 +56,7 @@ export class NimbusBeaconService extends NodeService {
         '--keymanager-address=0.0.0.0',
         '--keymanager-token-file=/opt/app/validators/api-token.txt',
         '--jwt-secret=/engine.jwt',
-        '--history=Prune',
+        '--history=prune',
       ], // command,
       ["/home/user/nimbus_beacon_node"], // entrypoint,
       null, // env,

@@ -254,7 +254,7 @@ export const useServices = defineStore("services", {
             {
               title: "Pruning Mode",
               type: "select",
-              value: ["Archive", "Prune"],
+              value: ["archive", "prune"],
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/prunning.png",
               unit: "",
