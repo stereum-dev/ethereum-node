@@ -173,7 +173,7 @@
   },
   "removeMultiModal": {
     "sure": "Möchten Sie diesen Validator Key von Ihrer Maschine entfernen?",
-    "slashing": "Mit Slashing Protection Database?",
+    "slashing": "With Slashing Protection Database?",
     "remove": "Entfernen",
     "path": "Wählen einen Pfad zum Speicheren der Slashing Protection Database",
     "writePath": "Bitte notiere dir den Pfad"
@@ -228,7 +228,10 @@
     "technicPage": "TECHNISCHE BEITRÄGE",
     "techTitle": "CREDITS - TECHNISCHE BEITRÄGE",
     "techText": "VERDIENE EINEN GITPOAP! BRINGE DICH EIN INDEM DU UNSEREN GITHUB BESUCHST!",
-    "financialPage": "FINANZIELLE SPENDEN"
+    "financialPage": "FINANZIELLE SPENDEN",
+    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "developers": "DEVELOPERS",
+    "testers": "TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "VERIFIZIEREN & INSTALLIEREN",
@@ -307,5 +310,16 @@
     "save": "save",
     "add": "ADD",
     "clickAndAdd": "Click on ADD"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
+    "importMessage": "Import your slashing database file.",
+    "chooseFile": "Choose File",
+    "continue": "Continue"
+  },
+  "prunningModal": {
+    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningStart": "Start Pruning"
   }
 }
