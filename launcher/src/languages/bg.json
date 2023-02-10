@@ -228,7 +228,10 @@
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
-    "financialPage": "FINANCIAL CONTRIBUTION"
+    "financialPage": "FINANCIAL CONTRIBUTION",
+    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "developers": "DEVELOPERS",
+    "testers": "TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "VERIFY & INSTALL",
@@ -307,5 +310,16 @@
     "save": "save",
     "add": "ADD",
     "clickAndAdd": "Click on ADD"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
+    "importMessage": "Import your slashing database file.",
+    "chooseFile": "Choose File",
+    "continue": "Continue"
+  },
+  "prunningModal": {
+    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningStart": "Start Pruning"
   }
 }
