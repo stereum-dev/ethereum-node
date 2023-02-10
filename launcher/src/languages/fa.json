@@ -173,7 +173,7 @@
   },
   "removeMultiModal": {
     "sure": "آیا مطمئن هستید که می خواهید این محصول را از فهرست دستگاه خود حذف کنید؟",
-    "slashing": "با Slashing Database Protection",
+    "slashing": "With Slashing Protection Database?",
     "remove": "حذف  کردن",
     "path": "مسیری را برای ذخیره پایگاه داده اسلش صادر شده انتخاب کنید",
     "writePath": "لطفا مسیر خود را بنویسید"
@@ -228,7 +228,10 @@
     "technicPage": "مشارکت فنی",
     "techTitle": "اعتبارات - مشارکت کنندگان فنی",
     "techText": "یک GITPOAP کسب کنید! با بازدید از GITHUB ما یاد بگیرید که چگونه درگیر شوید!",
-    "financialPage": "مشارکت مالی"
+    "financialPage": "مشارکت مالی",
+    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "developers": "DEVELOPERS",
+    "testers": "TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "تأیید و نصب کنید",
@@ -307,5 +310,16 @@
     "save": "save",
     "add": "ADD",
     "clickAndAdd": "Click on ADD"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
+    "importMessage": "Import your slashing database file.",
+    "chooseFile": "Choose File",
+    "continue": "Continue"
+  },
+  "prunningModal": {
+    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningStart": "Start Pruning"
   }
 }
