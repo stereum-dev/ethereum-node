@@ -173,7 +173,7 @@
   },
   "removeMultiModal": {
     "sure": "Are you sure you want to remove this key from your machine?",
-    "slashing": "With slashing Protection Database?",
+    "slashing": "With Slashing Protection Database?",
     "remove": "Премахване",
     "path": "choose a path to save exported slashing db ",
     "writePath": "Please write down your path"

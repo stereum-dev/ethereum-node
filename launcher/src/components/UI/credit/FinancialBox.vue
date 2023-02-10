@@ -2,7 +2,9 @@
   <div class="financial-box_parent">
     <div class="round-selector">
       <select name="round" id="round" v-model="choosedRound">
-        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
+        <option value="allAddresses">
+          {{ $t("creditPanel.gitcoinList") }}
+        </option>
         <option value="round_15">Round 15</option>
         <option value="round_14">Round 14</option>
         <option value="round_13">Round 13</option>

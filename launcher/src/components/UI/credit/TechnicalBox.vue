@@ -6,8 +6,8 @@
       id="technikToggl"
       v-model="techToggl"
     >
-      <option value="developers">DEVELOPERS</option>
-      <option value="testers">TESTERS</option>
+      <option value="developers">{{ $t("creditPanel.developers") }}</option>
+      <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
     <div class="wrapper" v-if="compToggl">
       <the-contributor
@@ -26,12 +26,14 @@
       ></the-contributor>
     </div>
     <div class="wrapper" v-else>
-      <test-contributor
-        v-for="result in filterTesters"
-        :key="result.id"
-        :name="result.name"
-        :avatar="result.avatar"
-      ></test-contributor>
+      <div class="testers-container">
+        <test-contributor
+          v-for="result in filterTesters"
+          :key="result.id"
+          :name="result.name"
+          :avatar="result.avatar"
+        ></test-contributor>
+      </div>
     </div>
   </div>
 </template>
@@ -116,6 +118,18 @@ export default {
 };
 </script>
 <style scoped>
+.testers-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  width: 90%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 2%;
+  overflow: visible;
+  margin-top: 2%;
+}
 .gold-border {
   border: 2px solid gold;
 }
@@ -132,7 +146,7 @@ export default {
   align-items: center;
 }
 .techToggl {
-  height: 1.5rem;
+  height: 4%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,7 +156,7 @@ export default {
   border-radius: 10px;
   font-weight: 500;
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  box-shadow: 1px 1px 7px 1px rgb(6, 6, 6);
   position: fixed;
   top: 20%;
   left: 85%;
