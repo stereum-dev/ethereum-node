@@ -10,31 +10,22 @@
       <div class="wrapper">
         <!--new form start-->
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="activeWidget" v-else>
+        <div class="activeWidget" v-if="syncItemsShow">
           <div class="consensusContainer">
             <div class="consensusName">
               <span>{{ consensusName }}</span>
             </div>
             <div class="progressBox">
               <sync-circular-progress
-                :color="consensusClientCurrentColor"
+                :color="consensuColor"
                 :sync-percent="consensusPer"
               />
             </div>
-
             <div
               class="syncStatusStatus"
-              v-if="consensusSyncstatus"
-              :class="consensusSyncstatusClass"
+              :class="consensusClass"
             >
-              <span>{{ displayConsensusPer }}% SYNCING</span>
-            </div>
-            <div
-              class="syncStatusStatus"
-              v-else
-              :class="consensusSyncstatusClass"
-            >
-              <span>SYNCED</span>
+              <span>{{ consensusText }}</span>
             </div>
             <div
               class="consensusIconCons"
@@ -55,27 +46,17 @@
             <div class="executionName">
               <span>{{ executionName }}</span>
             </div>
-
             <div class="progressBox">
               <sync-circular-progress
-                :color="exectionClientCurrentColor"
+                :color="executionColor"
                 :sync-percent="executionPer"
               />
             </div>
-
             <div
               class="syncStatusStatus"
-              v-if="executionSyncstatus"
-              :class="executionSyncstatusClass"
+              :class="executionClass"
             >
-              <span>{{ displayExecutionPer }}% SYNCING</span>
-            </div>
-            <div
-              class="syncStatusStatus"
-              v-else
-              :class="executionSyncstatusClass"
-            >
-              <span>SYNCED</span>
+              <span>{{ executionText }}</span>
             </div>
             <div
               class="executionIconCons"
@@ -92,30 +73,9 @@
           </div>
         </div>
         <!--new form end-->
-        <!--old form start-->
-        <!-- <no-data v-if="noDataLayerShow"></no-data>
-        <div class="sync-box_value" v-if="syncItemsShow">
-          <div
-            v-for="item in clients"
-            :key="item.id"
-            class="sync-box_row"
-            :class="syncItemSytle(item)"
-          >
-            <div class="sync-box-row_title">
-              <span>{{ item.title }}</span>
-            </div>
-            <div class="sync-box-row_val">
-              <span
-                >{{ formatValues(item.frstVal) }} /
-                {{ formatValues(item.scndVal) }}</span
-              >
-            </div>
-          </div>
-        </div> -->
-        <!--old form end-->
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService">
+    <div class="arrowBox" v-if="isMultiService" v-show="syncItemsShow">
       <div class="arrowUp" @click="backPage">
         <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
@@ -137,24 +97,6 @@ export default {
   components: { NoData, SyncCircularProgress },
   data() {
     return {
-      //test values before wiring
-      consensusName: "besu",
-      executionName: "lighthouse",
-      consensusFirstVal: 123456789,
-      consensusSecondVal: 123456789,
-      executionFirstVal: 901234444,
-      executionSecondVal: 1234567899,
-
-      //this two color are usable for the progress circle color dynamic
-      consensusClientColor: "",
-      executionClientColor: "",
-      //----------------------------------
-      clientRed: "#f84343",
-      clientOrange: "#ff8c00",
-      clientGrey: "grey",
-      clientBlue: "#3c8de4",
-      clientGreen: "#00be00", 
-      //----------------------------
       isMultiService: false,
       pageNumber: 1,
       clients: [],
@@ -163,6 +105,40 @@ export default {
       syncIcoSituation: false,
       syncIcoError: false,
       noDataLayerShow: false,
+      consensusName: "",
+      executionName: "",
+      consensusFirstVal: 0,
+      consensusSecondVal: 0,
+      executionFirstVal: 0,
+      executionSecondVal: 0,
+      consensuColor: "",
+      executionColor: "",
+      consensusClass: "",
+      executionClass: "",
+      consensusText: "",
+      executionText: "",
+      clientInfo: {
+        clientred: {
+          text: 'ERROR',
+          color: '#f84343',
+        },
+        clientorange: {
+          text: 'INITIALIZING',
+          color: '#ff8c00',
+        },
+        clientgrey: {
+          text: 'ON-HOLD',
+          color: 'grey',
+        },
+        clientblue: {
+          text: 'SYNCING',
+          color: 'lightblue',
+        },
+        clientgreen: {
+          text: 'SYNCED',
+          color: '#00be00',
+        },
+      },
       syncIco: [
         {
           id: 1,
@@ -193,40 +169,7 @@ export default {
   unmounted() {
     if (this.refresher) clearTimeout(this.refresher);
   },
-
   computed: {
-    executionPer() {
-      return this.getPer(this.executionFirstVal, this.executionSecondVal);
-    },
-    displayExecutionPer() {
-      return Math.floor(this.executionPer);
-    },
-    executionSyncstatus() {
-      return this.SyncStatus(this.executionPer);
-    },
-    executionSyncstatusClass() {
-      return this.executionSyncstatus ? "blue" : "green";
-    },
-    consensusSyncstatus() {
-      return this.SyncStatus(this.consensusPer);
-    },
-    consensusSyncstatusClass() {
-      return this.consensusSyncstatus ? "blue" : "green";
-    },
-    consensusPer() {
-      return this.getPer(this.consensusFirstVal, this.consensusSecondVal);
-    },
-    displayConsensusPer() {
-      return Math.floor(this.consensusPer);
-    },
-    consensusClientCurrentColor() {
-      this.consensusClientColor = this.clientGreen;
-      return this.consensusClientColor;
-    },
-    exectionClientCurrentColor() {
-      this.executionClientColor = this.clientBlue;
-      return this.executionClientColor;
-    },
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
@@ -245,13 +188,24 @@ export default {
     unknownIco() {
       return this.syncIco[3].icon;
     },
+    executionPer() {
+      return this.getPer(this.executionFirstVal, this.executionSecondVal);
+    },
+    displayExecutionPer() {
+      return Math.floor(this.executionPer);
+    },
+    consensusPer() {
+      return this.getPer(this.consensusFirstVal, this.consensusSecondVal);
+    },
+    displayConsensusPer() {
+      return Math.floor(this.consensusPer);
+    },
   },
   methods: {
     clientImage(name) {
       if (!name) {
         return "";
       }
-
       const lowerCaseInputValue = name.toLowerCase();
       const clientData = [
         ...this.consensusClientsData,
@@ -261,9 +215,6 @@ export default {
         (client) => client.name.toLowerCase() === lowerCaseInputValue
       );
       return matchingClient ? matchingClient.img : "";
-    },
-    SyncStatus(val) {
-      return val < 100 ? true : false;
     },
     getPer(firstVal, secondVal) {
       return ((firstVal / secondVal) * 100).toFixed(5);
@@ -316,16 +267,16 @@ export default {
       }
       let gid = pageNum - 1;
       let clients =
-        Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
+        this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
           ? this.syncstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
-          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
             ? this.syncstatus.data[0]
             : false;
         let clients_last =
-          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
             ? this.syncstatus.data[this.syncstatus.data.length - 1]
             : false;
         if (pageNum < 1 && clients_last !== false) {
@@ -434,6 +385,30 @@ export default {
       this.syncIcoSituation = syncIcoSituation;
       this.pageNumber = pageNum;
       this.clients = clients;
+      for (let k in clients) {
+        const item = clients[k];
+        if(item.type == 'consensus'){
+          this.consensusName = item.title;
+          this.consensusFirstVal = item.frstVal;
+          this.consensusSecondVal = item.scndVal;
+          this.consensusClass = item.style;
+          this.consensuColor = this.clientInfo[item.style].color;
+          this.consensusText = this.clientInfo[item.style].text;
+          if(item.style == 'clientblue'){
+            this.consensusText = this.displayConsensusPer + '% ' + this.consensusText;
+          }
+        }else{
+          this.executionName = item.title;
+          this.executionFirstVal = item.frstVal;
+          this.executionSecondVal = item.scndVal;
+          this.executionClass = item.style;
+          this.executionColor = this.clientInfo[item.style].color;
+          this.executionText = this.clientInfo[item.style].text;
+          if(item.style == 'clientblue'){
+            this.executionText = this.displayExecutionPer + '% ' + this.executionText;
+          }
+        }
+      }
       this.isMultiService = isMultiService;
       this.noDataLayerShow = noDataLayerShow;
       this.refresh();
@@ -449,12 +424,6 @@ export default {
   height: 100%;
   justify-content: center;
   align-items: center;
-}
-.blue {
-  color: #add8e6;
-}
-.green {
-  color: #00be00;
 }
 .consensusContainer,
 .executionContainer {
@@ -695,11 +664,12 @@ export default {
   color: grey;
 }
 .clientblue * {
-  color: #3c8de4;
+  color: lightblue;
 }
 .clientgreen * {
   color: #00be00;
 }
+
 ::-webkit-scrollbar {
   width: 5px;
 }
