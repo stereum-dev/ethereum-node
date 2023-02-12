@@ -16,10 +16,10 @@
     "serverip": "server ip",
     "servername": "SERVER IME",
     "edit": "za uređivanje node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs..."
+    "loading": "učitavanje novi states",
+    "turnOn": "Uključite Node",
+    "turnOff": "Isključite Node",
+    "log": "Otvori Logs..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -33,7 +33,7 @@
     "bugRepText": "Odvojite vrijeme da napišete problem i dopustite nam da učinimo Stereum boljim!",
     "emailText": "ili napišite email na:",
     "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsText": "Zgodna veza do dokumentacije mrežnih dnevnika za odabranu konfiguraciju čvora."
   },
   "notifModal": {
     "notification": "Obavještenja",
@@ -65,7 +65,7 @@
     "switchC": "Promijenite Client",
     "migrate": "Node Migracija",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "gnoStake": "STAKE SA 1 GNO"
   },
   "pluginZone": {
     "client": "client"
@@ -102,7 +102,7 @@
     "serviceDesc": "Ažuriranja za instalirani izbor od PLUG-INs",
     "availablePlugin": "DOSTUPNA AŽURIRANJA PLUG-INA",
     "all": "ažuriraj sve",
-    "osTitle": "operating system (server)"
+    "osTitle": "operativni sistem (server)"
   },
   "controlPage": {
     "node": "NODE",
@@ -173,10 +173,10 @@
   },
   "removeMultiModal": {
     "sure": "Jeste li sigurni da želite ukloniti ovaj key sa svoje mašine?",
-    "slashing": "With Slashing Protection Database?",
+    "slashing": "Sa Slashing Protection Database?",
     "remove": "Ukloni",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "odaberite putanju za spremanje izvezenog slashing db ",
+    "writePath": "Molimo zapišite svoj put"
   },
   "removeMultipleValidators": {
     "sureText": "Jeste li sigurni da želite ukloniti sve keys validatora SA OVE MAŠINE?"
@@ -224,12 +224,12 @@
   },
   "creditPanel": {
     "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "fincialTitle": "VAŠE IME NA LISTU! HVALA NA PODRŠCI RAZVOJU!",
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "techText": "ZARADITE GITPOAP! NAUČITE KAKO DA SE UKLJUČITE POSJETOM NAŠEG GITHUB-a!",
     "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "gitcoinList": "GITCOIN KOMPLETNA LISTA",
     "developers": "DEVELOPERS",
     "testers": "TESTERS"
   },
@@ -249,9 +249,9 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRIRAJTE NOVOG OPERATORA",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
+    "newRegistritionText": "Upotrijebite novogenerirani ključ operatera za registraciju novog operatora čvora u SSV mrežu",
+    "register": "Registrirajte se",
+    "insertTitle": "ubacite operator key za postojećeg operatera",
     "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
   "registerSSV": {
