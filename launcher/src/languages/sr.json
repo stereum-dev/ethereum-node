@@ -16,10 +16,10 @@
     "serverip": "server ip",
     "servername": "SERVER IME",
     "edit": "za uređivanje node",
-    "loading": "loading new states",
-    "turnOn": "Turn Node on",
-    "turnOff": "Turn Node off",
-    "log": "Open Logs..."
+    "loading": "učitavanje novi states",
+    "turnOn": "Uključite Node",
+    "turnOff": "Isključite Node",
+    "log": "Otvori Logs..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -33,7 +33,7 @@
     "bugRepText": "Odvojite vrijeme da napišete problem i dopustite nam da učinimo Stereum boljim!",
     "emailText": "ili napišite email na:",
     "docsTitle": "chain docs",
-    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
+    "docsText": "Zgodna veza do dokumentacije mrežnih dnevnika za odabranu konfiguraciju čvora."
   },
   "notifModal": {
     "notification": "Obavještenja",
@@ -65,7 +65,7 @@
     "switchC": "Promijenite Client",
     "migrate": "Node Migracija",
     "rpc": "RPC Connection",
-    "gnoStake": "STAKE WITH 1 GNO"
+    "gnoStake": "STAKE SA 1 GNO"
   },
   "pluginZone": {
     "client": "client"
@@ -102,7 +102,7 @@
     "serviceDesc": "Ažuriranja za instalirani izbor od PLUG-INs",
     "availablePlugin": "DOSTUPNA AŽURIRANJA PLUG-INA",
     "all": "ažuriraj sve",
-    "osTitle": "operating system (server)"
+    "osTitle": "operativni sistem (server)"
   },
   "controlPage": {
     "node": "NODE",
@@ -173,10 +173,10 @@
   },
   "removeMultiModal": {
     "sure": "Jeste li sigurni da želite ukloniti ovaj key sa svoje mašine?",
-    "slashing": "With Slashing Protection Database?",
+    "slashing": "Sa Slashing Protection Database?",
     "remove": "Ukloni",
-    "path": "choose a path to save exported slashing db ",
-    "writePath": "Please write down your path"
+    "path": "odaberite putanju za spremanje izvezenog slashing db ",
+    "writePath": "Molimo zapišite svoj put"
   },
   "removeMultipleValidators": {
     "sureText": "Jeste li sigurni da želite ukloniti sve keys validatora SA OVE MAŠINE?"
@@ -224,12 +224,12 @@
   },
   "creditPanel": {
     "creditTitle": "CREDITS - FINANCIAL CONTRIBUTORS",
-    "fincialTitle": "GET YOUR NAME ON THE LIST! THANK YOU FOR SUPPORTING THE DEVELOPMENT!",
+    "fincialTitle": "VAŠE IME NA LISTU! HVALA NA PODRŠCI RAZVOJU!",
     "technicPage": "TECHNICAL CONTRIBUTION",
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
-    "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
+    "techText": "ZARADITE GITPOAP! NAUČITE KAKO DA SE UKLJUČITE POSJETOM NAŠEG GITHUB-a!",
     "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "gitcoinList": "GITCOIN KOMPLETNA LISTA",
     "developers": "DEVELOPERS",
     "testers": "TESTERS"
   },
@@ -249,77 +249,77 @@
   },
   "frontPageSsv": {
     "newRegistritionTitle": "REGISTRIRAJTE NOVOG OPERATORA",
-    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register": "Register",
-    "insertTitle": "insert operator key for existing operator",
-    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
+    "newRegistritionText": "Upotrijebite novogenerirani ključ operatera za registraciju novog operatora čvora u SSV mrežu",
+    "register": "Registrirajte se",
+    "insertTitle": "ubacite operator key za postojećeg operatera",
+    "insertText": "Koristite private key postojećeg operatera da biste oporavili procese vašeg postojećeg operatera čvora"
   },
   "registerSSV": {
     "pubKey": "Public operator key",
-    "copied": "copied!",
+    "copied": "kopirano!",
     "secKey": "Secret Operator Key",
-    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
+    "makeSureText": "Molimo vas da pohranite i napravite sigurnosnu kopiju svog private key operatera na sigurnom mjestu. Ne dijelite ovaj key ni sa kim.",
+    "copyMessage": "Kopirajte svoj public key operatera u ovo polje da potvrdite da ste pohranili svoje keys!"
   },
   "ssvDashboard": {
     "operatorPage": "My Operator Page",
     "SSVNodeGrafna": "SSV Node Grafana Dashboard"
   },
   "secretKeyReg": {
-    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply": "APPLY"
+    "modalLabel": "UMETNITE POSTOJEĆI PRIVATE OPERATOR KEY DA GA KORISTITE KAO VAŠ OPERATOR KEY",
+    "apply": "PRIMIJENITI"
   },
   "dataAPIAndRPC": {
-    "copy": "Click to copy!",
-    "closed": "Tunnel closed!",
-    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
-    "copiedMessage": "DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+    "copy": "Kliknite za kopiranje!",
+    "closed": "Tunnel zatvoren!",
+    "turnOnMessage": "Molimo prvo UKLJUČITE DATA-API tunel!",
+    "copiedMessage": "DATA-API-URL kopiran u clipboard!",
+    "RPCTurnOnMessage": "Molimo prvo UKLJUČITE RPC tunel!",
+    "RPCCopiedMessage": "RPC-URL kopiran u clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
-    "noLogFound": "No log found in the list",
-    "clickCopy": "Click on the logs to copy",
+    "noLogFound": "Nijedan log nije pronađen na listi",
+    "clickCopy": "Kliknite na log za kopiranje",
     "serviceId": "service id"
   },
   "serviceModals": {
     "localApp": "LOCAL APPLICATION",
-    "localAppText": "Open up the service on your local machine",
-    "openBrowser": "OPEN IN BROWSER",
+    "localAppText": "Otvorite uslugu na svom lokalnom mašina",
+    "openBrowser": "OTVORI U BROWSER",
     "availBlockRel": "AVAILABLE BLOCK RELAYS",
-    "process": "Processing",
+    "process": "Obrada",
     "blockRel": "Block relay",
-    "blockRelTxt": "Select one or multiple relays to receive blocks from"
+    "blockRelTxt": "Odaberite jedan ili više releja od kojih ćete primati blocks"
   },
   "customInstallation": {
     "customInstallationTitle": "CUSTOM INSTALLATION",
     "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath": "INSTALLATION PATH"
+    "chooseWhereToInstall": "ODABERITE GDJE ŽELITE INSTALIRATI STEREUM",
+    "installationPath": "INSTALACIJSKI PUT"
   },
   "mevboostConfig": {
     "availRelays": "AVAILABLE BLOCK RELAYS",
-    "usedRelays": "USED BLOCK RELAYS"
+    "usedRelays": "KORIŠĆENO BLOCK RELAYS"
   },
   "addModifyPanel": {
-    "installPath": "INSTALLATION PATH",
-    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "installPath": "INSTALACIJSKI PUT",
+    "syncMessage": "SINHRONIZUJE VAŠ CLIENT OD POČETKA CHAINa",
     "portused": "PORT USED",
-    "cancel": "cancel",
+    "cancel": "otkaži",
     "save": "save",
-    "add": "ADD",
-    "clickAndAdd": "Click on ADD"
+    "add": "DODAJ",
+    "clickAndAdd": "Kliknite na DODAJ"
   },
   "importSlashingModal": {
-    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
-    "importMessage": "Import your slashing database file.",
+    "slashModalMessage": "Želite li uvesti sa Slashing Protection Database?",
+    "importMessage": "Uvezite svoju Slashing Protection Database.",
     "chooseFile": "Choose File",
-    "continue": "Continue"
+    "continue": "Nastavi"
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart": "Start Pruning"
+    "prunningStart": "Započnite Pruning"
   }
 }
