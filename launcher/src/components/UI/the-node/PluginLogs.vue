@@ -21,41 +21,53 @@
         </div>
         <div class="serviceDetails">
           <div class="serviceIcon">
-            <img :src="item.icon" alt="icon" />
+            <img :src="logsItem.icon" alt="icon" />
           </div>
           <div class="serviceName">
-            <span>{{ item.name }}</span>
+            <span>{{ logsItem.name }}</span>
           </div>
         </div>
         <div class="categoryBox">
           <p class="category">
-            {{ item.category
-            }}<span v-if="item.category != 'service'"> client</span>
+            {{ logsItem.category
+            }}<span v-if="logsItem.category != 'service'"> client</span>
           </p>
-          <span id="serviceVersion">{{ item.config.imageVersion }}</span>
+          <span id="serviceVersion">{{ logsItem.config.imageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
           <div class="closeBtn"><span>x</span></div>
         </div>
       </div>
-      <div class="logsTable">
-        <template v-if="logsList.length">
+      <div class="logBox">
+        <div class="log-box_nav">
           <div
-            class="tableRow"
-            v-for="(log, idx) in logsList.slice(-150)"
-            :key="idx"
+            class="nav-button"
+            v-for="service in sortedServices"
+            :key="service"
+            @click="displayPluginLogPage(service)"
           >
-            <div class="rowMsg" @dblclick="copy">
-              <span>#{{ idx + 1 }}</span>
-              <span id="log">{{ log }}</span>
+            <img :src="service.icon" :alt="service.name" />
+          </div>
+        </div>
+        <div class="logsTable">
+          <template v-if="logsList.length">
+            <div
+              class="tableRow"
+              v-for="(log, idx) in logsList.slice(-150)"
+              :key="idx"
+            >
+              <div class="rowMsg" @dblclick="copy">
+                <span>#{{ idx + 1 }}</span>
+                <span id="log">{{ log }}</span>
+              </div>
             </div>
-          </div>
-        </template>
-        <template v-else>
-          <div class="tableRow">
-            <span>{{ $t("pluginLogs.noLogFound") }}</span>
-          </div>
-        </template>
+          </template>
+          <template v-else>
+            <div class="tableRow">
+              <span>{{ $t("pluginLogs.noLogFound") }}</span>
+            </div>
+          </template>
+        </div>
       </div>
       <div class="logsFooter">
         <div class="textBox">
@@ -76,7 +88,7 @@
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
-          <span>{{ item.config.serviceID }}</span>
+          <span>{{ logsItem.config.serviceID }}</span>
         </div>
       </div>
     </div>
@@ -87,12 +99,15 @@ import ControlDialog from "../the-control/ControlDialog.vue";
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
+import { mapState } from "pinia";
+import { useServices } from "../../../store/services";
 export default {
   components: { ControlDialog },
   props: ["item"],
   data() {
     return {
       logs: [],
+      logsItem: this.item,
       searchValue: "",
       logVal: "",
       //dialog datas
@@ -114,6 +129,20 @@ export default {
     ...mapWritableState(useNodeStore, {
       serviceLogs: "serviceLogs",
     }),
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
+    sortedServices() {
+      return this.installedServices.sort((a, b) => {
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
+        if (a.category === "execution") return -1;
+        if (b.category === "execution") return 1;
+        if (a.category === "validator") return -1;
+        if (b.category === "validator") return 1;
+        return 0;
+      });
+    },
   },
   mounted() {
     this.filteredServiceLogs();
@@ -122,9 +151,12 @@ export default {
     this.filteredServiceLogs();
   },
   methods: {
+    displayPluginLogPage(el) {
+      this.logsItem = el;
+    },
     filteredServiceLogs() {
       this.serviceLogs.forEach((i) => {
-        if (i.config.serviceID == this.item.config.serviceID) {
+        if (i.config.serviceID == this.logsItem.config.serviceID) {
           this.logs = i.logs;
         }
       });
@@ -198,7 +230,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   border: 4px solid rgb(156, 156, 156);
   border-radius: 10px;
 }
@@ -322,9 +354,44 @@ export default {
   text-align: left;
   color: rgb(202, 205, 206);
 }
-.logsTable {
+.logBox {
+  display: flex;
   width: 100%;
-  height: 80%;
+  height: 82%;
+}
+.log-box_nav {
+  display: flex;
+  width: 5%;
+  height: 100%;
+  background: #3b4146;
+  flex-direction: column;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.nav-button {
+  width: 90%;
+  min-height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #242529;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: 2px solid #787878;
+  border-radius: 0 15px 15px 0;
+  cursor: pointer;
+  box-shadow: 0 1px 3px 1px #2c2c2c;
+}
+.nav-button:hover {
+  background-color: #050505;
+}
+.nav-button img {
+  width: 70%;
+}
+.logsTable {
+  width: 95%;
+  height: 100%;
   background: #3b4146;
   display: flex;
   padding: 5px;
@@ -334,6 +401,7 @@ export default {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
 .logsTable::-webkit-scrollbar {
   width: 5px;
   height: 10px;
