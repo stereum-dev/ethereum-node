@@ -12,8 +12,12 @@
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
-          <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" />
-          <span>{{ $t("pluginLogs.pageTitle") }}</span>
+          <div class="title-icon">
+            <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" />
+          </div>
+          <div class="title-text">
+            <span>{{ $t("pluginLogs.pageTitle") }}</span>
+          </div>
         </div>
         <div class="serviceDetails">
           <div class="serviceIcon">
@@ -22,16 +26,16 @@
           <div class="serviceName">
             <span>{{ item.name }}</span>
           </div>
-          <div class="categoryBox">
-            <p class="category">
-              {{ item.category
-              }}<span v-if="item.category != 'service'"> client</span>
-            </p>
-            <span id="serviceVersion">{{ item.config.imageVersion }}</span>
-          </div>
+        </div>
+        <div class="categoryBox">
+          <p class="category">
+            {{ item.category
+            }}<span v-if="item.category != 'service'"> client</span>
+          </p>
+          <span id="serviceVersion">{{ item.config.imageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
-          <img src="/img/icon/plugin-menu-icons/close12.png" alt="icon" />
+          <div class="closeBtn"><span>x</span></div>
         </div>
       </div>
       <div class="logsTable">
@@ -200,84 +204,101 @@ export default {
 }
 .logsHeader {
   width: 100%;
-  height: 10%;
-  border-bottom: 4px solid rgb(156, 156, 156);
+  height: 8%;
+  border-bottom: 4px solid #9c9c9c;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 .logsHeader .title {
-  width: 50%;
+  width: 22.5%;
   height: 100%;
-  color: rgb(203, 202, 202);
+  color: #cbcaca;
   display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-right: 5px solid #c9c9c9;
+  border-radius: 10px;
+}
+.title-icon {
+  display: flex;
+  width: 30%;
+  height: 100%;
   justify-content: center;
   align-items: center;
 }
-.logsHeader .title img {
-  width: 5%;
+.title-icon img {
+  width: 43%;
 }
-.logsHeader .title span {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-left: 10px;
-}
-.logsHeader .serviceDetails {
-  width: 45%;
+.title-text {
+  display: flex;
+  width: 70%;
   height: 100%;
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: 1fr;
   justify-content: flex-start;
   align-items: center;
-  padding: 2px 5px;
+  font-size: 100%;
+  font-weight: 800;
 }
-.logsHeader .serviceDetails .serviceIcon {
-  grid-column: 1/2;
-  width: 95%;
-  height: 95%;
+.logsHeader .serviceDetails {
+  width: 48%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.logsHeader .serviceDetails img {
-  width: 60%;
+.logsHeader .serviceDetails .serviceIcon {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.serviceIcon img {
+  width: 40%;
 }
 .logsHeader .serviceDetails .serviceName {
-  grid-column: 2/7;
-  grid-row: 1/2;
-  width: max-content;
+  width: 85%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   text-transform: uppercase;
-  margin-left: 3%;
 }
 .serviceDetails .serviceName span {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 120%;
+  font-weight: 700;
   color: rgb(202, 205, 206);
 }
-.logsHeader .serviceDetails .categoryBox {
-  grid-column: 9/10;
-  grid-row: 1/2;
-  width: 100%;
-  height: 100%;
+.categoryBox {
   display: flex;
+  width: 20%;
+  height: 100%;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: flex-start;
-  margin-left: 5%;
 }
 .logsHeader .closeBox {
-  width: 5%;
+  width: 4%;
   height: 100%;
-  padding: 0.5%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.closeBtn {
+  display: grid;
+  width: 70%;
+  height: 80%;
+  color: red;
+  border: 2px solid #9c9c9c;
+  place-items: center;
+  font-size: 100%;
+  font-weight: 800;
+  border-radius: 10px;
+  padding-bottom: 4%;
+}
+.closeBtn:hover {
+  background: #313131;
 }
 .logsHeader .closeBox img {
   width: 93%;
@@ -288,15 +309,15 @@ export default {
 }
 .categoryBox .category,
 .categoryBox .category span {
-  font-size: 0.7rem;
+  font-size: 70%;
   font-weight: 600;
   text-align: left;
-  color: rgb(202, 205, 206);
+  color: #cacdce;
   text-transform: uppercase;
 }
 #serviceVersion {
   width: max-content;
-  font-size: 0.7rem;
+  font-size: 70%;
   font-weight: 600;
   text-align: left;
   color: rgb(202, 205, 206);
