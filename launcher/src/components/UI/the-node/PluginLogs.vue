@@ -369,6 +369,22 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 }
+.log-box_nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.log-box_nav::-webkit-scrollbar-track {
+  background: #3b4146;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+
+/* Handle */
+.log-box_nav::-webkit-scrollbar-thumb {
+  background: #324b3f;
+  border-radius: 50%;
+}
 .nav-button {
   width: 90%;
   min-height: 10%;
