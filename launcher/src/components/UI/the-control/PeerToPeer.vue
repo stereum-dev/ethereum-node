@@ -146,16 +146,16 @@ export default {
       }
       let gid = pageNumber - 1;
       let clients =
-        Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data
+        this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data
           ? this.p2pstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
-          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+          this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
             ? this.p2pstatus.data[0]
             : false;
         let clients_last =
-          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+          this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
             ? this.p2pstatus.data[this.p2pstatus.data.length - 1]
             : false;
         if (pageNumber < 1 && clients_last !== false) {
