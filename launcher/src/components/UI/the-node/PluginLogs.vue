@@ -249,7 +249,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  border-right: 5px solid #c9c9c9;
+  border-right: 3px solid #c9c9c9;
   border-radius: 10px;
 }
 .title-icon {
