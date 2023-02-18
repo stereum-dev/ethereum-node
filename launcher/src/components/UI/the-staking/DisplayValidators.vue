@@ -648,6 +648,7 @@ export default {
         if (info) {
           key.status = info.status;
           key.balance = info.balance / 1000000000;
+          key.activeSince = info.hasOwnProperty('activeSince') ? info.activeSince : key.activeSince;
           totalBalance += key.balance;
         } else {
           key.status = "deposit";
