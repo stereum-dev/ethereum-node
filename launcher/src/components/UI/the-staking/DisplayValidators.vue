@@ -622,16 +622,19 @@ export default {
         gnosis: "https://beacon.gnosischain.com/api/v1/validator/"
       }
 
+      let buffer;
+      let response;
+
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
         if(!data || data.length == 0){
           data = []
-          let buffer = this.keys.map((key) => key.key);
+          buffer = this.keys.map((key) => key.key);
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
             const chunk = buffer.slice(i, i + chunkSize);
-            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
+            response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
             if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
           }
         }
@@ -643,12 +646,14 @@ export default {
         return;
       }
 
+      let latestEpochResponse = await axios.get(networkURls[this.network] + buffer[0] + '/attestations');
+
       this.keys.forEach((key) => {
         let info = data.find((k) => k.pubkey === key.key);
         if (info) {
           key.status = info.status;
           key.balance = info.balance / 1000000000;
-          key.activeSince = info.hasOwnProperty('activeSince') ? info.activeSince : key.activeSince;
+          key.activeSince = info.hasOwnProperty('activeSince') ? info.activeSince : (((latestEpochResponse.data.data[0].epoch - response.data.data.activationepoch) * 6.4)/1440).toFixed(1);
           totalBalance += key.balance;
         } else {
           key.status = "deposit";
