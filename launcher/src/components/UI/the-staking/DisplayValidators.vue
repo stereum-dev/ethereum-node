@@ -631,7 +631,7 @@ export default {
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
             const chunk = buffer.slice(i, i + chunkSize);
-            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
+            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()), {validateStatus: function(status){return status < 500}});
             if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
           }
         }

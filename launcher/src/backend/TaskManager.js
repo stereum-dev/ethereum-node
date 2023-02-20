@@ -21,6 +21,20 @@ export class TaskManager {
         this.finishedOtherTasks = []
         this.otherSubTasks = []
     }
+    otherTasksHandler(ref, name, status, data){
+        let task = {
+            ...(ref && {otherRunRef: ref}),
+            ...(name && {name: name}),
+            ...(typeof status == "boolean" && {status: status}),
+            ...(data && {data: data}),
+        }
+        if(task.otherRunRef && task.name && typeof status == "boolean") //otherSubTasks
+            this.otherSubTasks.push(task)
+        if(task.otherRunRef && task.name && typeof status != "boolean") //tasks
+            this.tasks.push(task)
+        if(task.otherRunRef && !task.name && typeof status != "boolean") //finishedOtherTasks
+            this.finishedOtherTasks.push(task)
+    }
     async updateTasks() {
         let tasks = await this.queryLogs()
         this.polishedTasks = tasks.map((task, id) => {
@@ -105,7 +119,7 @@ export class TaskManager {
                         name: subTask.name,
                         action: subTask.name,
                         status: subTask.status ? 'OK' : 'FAILED',
-                        data: `TASK: ${subTask.name}\nACTION: ${subTask.name}\nCATEGORY: ${subTask.status ? 'OK' : 'FAILED'}\nDATA: There is no data for these kind of tasks ¯\\_(ツ)_/¯`
+                        data: `TASK: ${subTask.name}\nACTION: ${subTask.name}\nCATEGORY: ${subTask.status ? 'OK' : 'FAILED'}\nDATA: ${subTask.data ? subTask.data : 'There is no data for these kind of tasks ¯\\_(ツ)_/¯'}`
                       }
                     })
                     if(this.finishedOtherTasks.map(other => other.otherRunRef).includes(task.otherRunRef)){

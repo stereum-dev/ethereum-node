@@ -1943,7 +1943,7 @@ rm -rf diskoutput
 
   // get States of Validators
   // validatorPublicKeys: array of all pubkeys
-  async getValidatorState(validatorPublicKeys){
+  async getValidatorState(validatorPublicKeys) {
     let validatorBalances = [];
     // get status of beacon container
     const beaconStatus = await this.getBeaconStatus();
@@ -1954,23 +1954,30 @@ rm -rf diskoutput
       if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
         var beaconAPIRunCmd = "";
         let validatorNotFound;
+        const chunkSize = 250
+        let data = []
 
-          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
+        for (let i = 0; i < validatorPublicKeys.length; i += chunkSize) {
+          const chunk = validatorPublicKeys.slice(i, i + chunkSize);
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`
           beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
+          //check response
           validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
-          if (!validatorNotFound){
-            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
-            validatorBalances = queryResult.map((key, id) => {
-              return {
-                id: id,
-                index: key.index,
-                balance: key.balance,
-                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
-                pubkey: key.validator.pubkey,
-                activation_epoch: key.validator.activation_epoch,
-              }
-            })
-          }
+          if (!validatorNotFound) data = data.concat((JSON.parse(beaconAPIRunCmd.stdout).data)); //merge all gathered stats in one array
+        }
+        {
+          const queryResult = data
+          validatorBalances = queryResult.map((key, id) => {
+            return {
+              id: id,
+              index: key.index,
+              balance: key.balance,
+              status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/, "")),
+              pubkey: key.validator.pubkey,
+              activation_epoch: key.validator.activation_epoch,
+            }
+          })
+        }
 
       }
       // return array of objects which include following:
@@ -1982,6 +1989,6 @@ rm -rf diskoutput
       // - activation_epoch: epoch_number
       return validatorBalances;
     } else if (beaconStatus.code === 2)
-        return validatorBalances;     // empty array will be returned, if there is a no running consensus client
+      return validatorBalances;     // empty array will be returned, if there is a no running consensus client
   }
 }
