@@ -55,6 +55,7 @@ export class SSHService {
         username: connectionInfo.user || 'root',
         password: connectionInfo.password || undefined,
         privateKey: connectionInfo.privateKey || undefined,
+        passphrase: connectionInfo.passphrase || undefined,
         keepaliveInterval: 30000
       })
     })
@@ -116,7 +117,8 @@ export class SSHService {
         dstPort: tunnelConfig.dstPort,
         localHost: 'localhost',
         localPort: tunnelConfig.localPort,
-        privateKey: this.connectionInfo.privateKey || undefined
+        privateKey: this.connectionInfo.privateKey || undefined,
+        passphrase: this.connectionInfo.passphrase || undefined
       }
       const tunnelOptions = {
         autoClose: false
@@ -130,7 +132,8 @@ export class SSHService {
         port: this.connectionInfo.port || 22,
         username: this.connectionInfo.user || 'root',
         password: this.connectionInfo.password,
-        privateKey: this.connectionInfo.privateKey || undefined
+        privateKey: this.connectionInfo.privateKey || undefined,
+        passphrase: this.connectionInfo.passphrase || undefined
       };
       const forwardOptions = {
         srcAddr: 'localhost',
