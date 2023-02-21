@@ -932,7 +932,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
-  z-index: 100;
+  z-index: 5;
 }
 
 .keys-table-box {
