@@ -9,10 +9,9 @@
         />
       </div>
       <div class="disabledMessage">
-        <span>There is no validator client installed!</span>
+        <span>{{ $t("disabledStaking.noValidatorInstalled") }}</span>
         <p>
-          Install at least one validator client to activate importing validator
-          keys.
+          {{ $t("disabledStaking.disabledStakingMessage") }}
         </p>
       </div>
     </div>
@@ -52,7 +51,7 @@ export default {};
   position: absolute;
   top: 8%;
   left: 22%;
-  background-color: #b40e0e;
+  background-color: #bf3a3a;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -97,5 +96,4 @@ export default {};
   text-align: center;
   text-transform: uppercase;
 }
-
 </style>

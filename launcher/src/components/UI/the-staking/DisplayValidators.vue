@@ -20,23 +20,21 @@
             </div>
             <div class="top-message">
               <p>
-                Our additional Slashing Protection Checks showed that one of the
-                validators you are about to import has attested in the last 2
-                epochs.
+                {{ $t("displayValidator.warningMessage") }}
               </p>
             </div>
             <div class="warning-alarm">
-              <span>WARNING: You run a high risk of getting slashed!</span>
+              <span>{{ $t("displayValidator.warningAlarm") }}</span>
             </div>
             <div class="warning-question">
-              <span> ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?</span>
+              <span> {{ $t("displayValidator.warningQuestion") }}</span>
             </div>
             <div class="button-box">
               <div class="sure-button" @click="riskAccepted">
-                <span>I am sure</span>
+                <span>{{ $t("displayValidator.sure") }}</span>
               </div>
               <div class="cancel-button" @click="hideWDialog">
-                <span>cancel</span>
+                <span>{{ $t("displayValidator.cancel") }}</span>
               </div>
             </div>
           </div>
@@ -271,7 +269,7 @@
       v-if="exitChainForMultiValidatorsActive"
       @confirm-btn="confirmPasswordMultiExitChain"
     />
-    <!-- <DisabledStaking v-if="stakingIsDisabled" /> -->
+    <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
 <script>
@@ -651,17 +649,20 @@ export default {
       let totalBalance = 0;
       let data = [];
       let networkURls = {
-
         mainnet: "https://mainnet.beaconcha.in/api/v1",
         testnet: "https://goerli.beaconcha.in/api/v1",
-        gnosis: "https://beacon.gnosischain.com/api/v1"
-      }
+        gnosis: "https://beacon.gnosischain.com/api/v1",
+      };
       try {
-        data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
-        if(!data || data.length == 0){
-          data = []
-          let latestEpochResponse = await axios.get(networkURls[this.network] + "/epoch/latest");
-          var latestEpoch = latestEpochResponse.data.data.epoch
+        data = await ControlService.getValidatorState(
+          this.keys.map((key) => key.key)
+        );
+        if (!data || data.length == 0) {
+          data = [];
+          let latestEpochResponse = await axios.get(
+            networkURls[this.network] + "/epoch/latest"
+          );
+          var latestEpoch = latestEpochResponse.data.data.epoch;
           let buffer = this.keys.map((key) => key.key);
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
@@ -684,13 +685,20 @@ export default {
       this.keys.forEach((key) => {
         let info = data.find((k) => k.pubkey === key.key);
         if (info) {
-          let d = new Date()
-          let now = new Date()
-          d.setMilliseconds(d.getMilliseconds() - ((latestEpoch ? latestEpoch : info.latestEpoch - info.activationepoch) * 384000))
+          let d = new Date();
+          let now = new Date();
+          d.setMilliseconds(
+            d.getMilliseconds() -
+              (latestEpoch
+                ? latestEpoch
+                : info.latestEpoch - info.activationepoch) *
+                384000
+          );
 
           key.status = info.status;
           key.balance = info.balance / 1000000000;
-          key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days"
+          key.activeSince =
+            ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
           totalBalance += key.balance;
         } else {
           key.status = "deposit";
@@ -903,7 +911,7 @@ export default {
   align-items: center;
   height: 10%;
   width: 80%;
-  background-color: red;
+  background-color: #b22020;
   color: #eee;
   font-weight: 700;
   animation: blink 1s linear infinite;
@@ -956,7 +964,7 @@ export default {
   display: flex;
   width: 30%;
   height: 50%;
-  background-color: red;
+  background-color: #b22020;
   justify-content: center;
   align-items: center;
   text-transform: uppercase;
