@@ -20,6 +20,7 @@ class ControlService extends EventEmitter {
       password: args.password,
       sshKeyAuth: args.sshKeyAuth,
       keyfileLocation: args.keyfileLocation,
+      passphrase: args.passphrase,
       stereumRelease: args.stereumRelease,
     });
   }
