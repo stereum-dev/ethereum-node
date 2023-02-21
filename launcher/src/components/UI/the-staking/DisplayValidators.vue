@@ -10,6 +10,37 @@
           <span id="balance">{{ $t("displayValidator.balance") }}</span>
           <span id="option">{{ $t("displayValidator.option") }}</span>
         </div>
+        <key-modal v-if="riskWarning" @hide-modal="hideWDialog">
+          <div class="warning-container">
+            <div class="icon-part">
+              <img
+                src="/img/icon/the-staking/stereum-error.png"
+                alt="warning"
+              />
+            </div>
+            <div class="top-message">
+              <p>
+                Our additional Slashing Protection Checks showed that one of the
+                validators you are about to import has attested in the last 2
+                epochs.
+              </p>
+            </div>
+            <div class="warning-alarm">
+              <span>WARNING: You run a high risk of getting slashed!</span>
+            </div>
+            <div class="warning-question">
+              <span> ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?</span>
+            </div>
+            <div class="button-box">
+              <div class="sure-button" @click="riskAccepted">
+                <span>I am sure</span>
+              </div>
+              <div class="cancel-button" @click="hideWDialog">
+                <span>cancel</span>
+              </div>
+            </div>
+          </div>
+        </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
           <div class="title-box">
             <span>{{ $t("displayValidator.importKey") }}</span>
@@ -240,7 +271,7 @@
       v-if="exitChainForMultiValidatorsActive"
       @confirm-btn="confirmPasswordMultiExitChain"
     />
-    <DisabledStaking v-if="stakingIsDisabled" />
+    <!-- <DisabledStaking v-if="stakingIsDisabled" /> -->
   </div>
 </template>
 <script>
@@ -291,6 +322,7 @@ export default {
   props: ["button"],
   data() {
     return {
+      riskWarning: false,
       stakingIsDisabled: false,
       disable: true,
       message: "",
@@ -416,7 +448,8 @@ export default {
   methods: {
     checkValidatorClientsExist() {
       const clients = this.installedServices.filter(
-        (service) => service.category === "validator" && service.state === "running"
+        (service) =>
+          service.category === "validator" && service.state === "running"
       );
       if (clients.length > 0) {
         this.stakingIsDisabled = false;
@@ -554,7 +587,9 @@ export default {
     },
     listKeys: async function () {
       let keyStats = [];
-      let clients = this.installedServices.filter((s) => s.category == "validator")
+      let clients = this.installedServices.filter(
+        (s) => s.category == "validator"
+      );
       if (clients && clients.length > 0 && this.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
@@ -609,8 +644,7 @@ export default {
             showExitText: false,
           };
         });
-        if(this.keys && this.keys.length > 0)
-          this.updateValidatorStats();
+        if (this.keys && this.keys.length > 0) this.updateValidatorStats();
       }
     },
     async updateValidatorStats() {
@@ -619,19 +653,23 @@ export default {
       let networkURls = {
         mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
         testnet: "https://goerli.beaconcha.in/api/v1/validator/",
-        gnosis: "https://beacon.gnosischain.com/api/v1/validator/"
-      }
+        gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
+      };
 
       try {
-        data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
-        if(!data || data.length == 0){
-          data = []
+        data = await ControlService.getValidatorState(
+          this.keys.map((key) => key.key)
+        );
+        if (!data || data.length == 0) {
+          data = [];
           let buffer = this.keys.map((key) => key.key);
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
             const chunk = buffer.slice(i, i + chunkSize);
-            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()));
+            let response = await axios.get(
+              networkURls[this.network] + encodeURIComponent(chunk.join())
+            );
             if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
           }
         }
@@ -747,6 +785,13 @@ export default {
     hideBDialog() {
       this.bDialogVisible = false;
     },
+    hideWDialog() {
+      this.riskWarning = false;
+    },
+    riskAccepted() {
+      this.riskWarning = false;
+      this.bDialogVisible = true;
+    },
     async confirmEnteredGrafiti(graffiti) {
       await ControlService.setGraffitis(graffiti);
       this.grafitiForMultiValidatorsActive = false;
@@ -811,6 +856,73 @@ export default {
 };
 </script>
 <style scoped>
+.warning-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.icon-part {
+  width: 40%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-part img {
+  width: 55%;
+}
+.top-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 92%;
+  height: 18%;
+  color: #eee;
+}
+.warning-question {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 15%;
+  font-size: 100%;
+  font-weight: 800;
+  color: #eee;
+}
+.warning-alarm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+  width: 80%;
+  background-color: red;
+  color: #eee;
+  font-weight: 700;
+  animation: blink 1s linear infinite;
+}
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.button-box {
+  display: flex;
+  height: 20%;
+  width: 100%;
+  position: relative;
+  justify-content: space-around;
+  align-items: center;
+}
 .keys-parent {
   width: 100%;
   height: 100%;
@@ -820,6 +932,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
+  z-index: 100;
 }
 
 .keys-table-box {
@@ -833,6 +946,46 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sure-button {
+  display: flex;
+  width: 30%;
+  height: 50%;
+  background-color: red;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 0 #171610;
+}
+.sure-button:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+.cancel-button {
+  display: flex;
+  width: 30%;
+  height: 50%;
+  border: 2px solid #eee;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eee;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.cancel-button:hover {
+  background-color: blue;
+  border: none;
+  box-shadow: 1px 1px 5px 0 #171610;
+}
+.cancel-button:active {
+  transform: scale(0.9);
+  box-shadow: none;
 }
 .keys-table {
   width: 100%;
