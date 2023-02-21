@@ -1,4 +1,4 @@
 export const nodeOS = {
-  ubuntu: 'Ubuntu',
-  centos: 'CentOS'
-}
+  ubuntu: "Ubuntu",
+  centos: "CentOS",
+};

@@ -7,12 +7,10 @@
         </div>
         <div class="switch-box">
           <div class="switchBtn">
-            <span class="btn" @click="switchNetworkHandler"
-              >switch network</span
-            >
+            <span class="btn" @click="switchNetworkHandler">switch network</span>
           </div>
           <div class="networkBox">
-            <div class="mainnet" v-if="isMainnetActive">
+            <div v-if="isMainnetActive" class="mainnet">
               <span>mainnet</span>
               <img
                 class="mainnet-icon"
@@ -20,7 +18,7 @@
                 alt="icon"
               />
             </div>
-            <div class="testnet" v-else>
+            <div v-else class="testnet">
               <span>testnet</span>
               <img
                 class="testnet-icon"
@@ -31,41 +29,29 @@
           </div>
         </div>
         <div class="plugin-box">
-          <div class="mainnet-container" v-if="isMainnetActive">
-            <div
-              class="mainnet-plugin"
-              v-for="(item, index) in this.mainnetPlugins"
-              :key="index"
-            >
+          <div v-if="isMainnetActive" class="mainnet-container">
+            <div v-for="(item, index) in mainnetPlugins" :key="index" class="mainnet-plugin">
               <img
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem:
-                    item.id === this.selectedPreset?.id &&
-                    item.serviceAvailable,
+                  selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
                   notAvailable: !item.serviceAvailable,
                 }"
                 @click="selectItemToInstall(item)"
               />
             </div>
           </div>
-          <div class="testnet-container" v-else>
-            <div
-              class="testnet-plugin"
-              v-for="(item, index) in this.testnetPlugins"
-              :key="index"
-            >
+          <div v-else class="testnet-container">
+            <div v-for="(item, index) in testnetPlugins" :key="index" class="testnet-plugin">
               <img
-                @mousedown.stop
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem:
-                    item.id === this.selectedPreset?.id &&
-                    item.serviceAvailable,
+                  selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
                   notAvailable: !item.serviceAvailable,
                 }"
+                @mousedown.stop
                 @click="selectItemToInstall(item)"
               />
             </div>
@@ -78,9 +64,8 @@
         </div>
         <div class="description">
           <p>
-            Stereum gives you the choice of choosing different use case focused
-            pre-sets. You don't automatically commit to the changes, it just
-            recommends you a selection. Try them out!
+            Stereum gives you the choice of choosing different use case focused pre-sets. You don't automatically commit
+            to the changes, it just recommends you a selection. Try them out!
           </p>
         </div>
 
@@ -98,10 +83,7 @@
       </div>
     </div>
     <div class="close-preset" @click="$emit('closePreset')">
-      <img
-        src="../../../../public/img/icon/manage-node-icons/close3.png"
-        alt="icon"
-      />
+      <img src="../../../../public/img/icon/manage-node-icons/close3.png" alt="icon" />
     </div>
   </div>
 </template>
@@ -142,19 +124,14 @@ export default {
         setup: item.name,
         network: this.selectedNetworks,
       });
-      let includedPlugins = this.allServices.filter((service) =>
-        constellation.includes(service.service)
-      );
+      let includedPlugins = this.allServices.filter((service) => constellation.includes(service.service));
       if (
         includedPlugins.map((e) => e.service).includes("SSVNetworkService") ||
         includedPlugins.map((e) => e.service).includes("RocketpoolService")
       ) {
         includedPlugins.splice(
           includedPlugins.findIndex(
-            (e) =>
-              e.service != "SSVNetworkService" &&
-              e.service != "RocketpoolService" &&
-              e.category === "validator"
+            (e) => e.service != "SSVNetworkService" && e.service != "RocketpoolService" && e.category === "validator"
           ),
           1
         );
@@ -168,14 +145,10 @@ export default {
       this.isMainnetActive = !this.isMainnetActive;
       if (this.isMainnetActive) {
         this.selectedNetworks = "mainnet";
-        this.mainnetPlugins = this.plugins.filter(
-          (item) => item.network == "mainnet"
-        );
+        this.mainnetPlugins = this.plugins.filter((item) => item.network == "mainnet");
       } else {
         this.selectedNetworks = "testnet";
-        this.testnetPlugins = this.plugins.filter(
-          (item) => item.network == "testnet"
-        );
+        this.testnetPlugins = this.plugins.filter((item) => item.network == "testnet");
       }
     },
   },

@@ -155,7 +155,7 @@ class ControlService extends EventEmitter {
   }
 
   async getServiceLogs(args) {
-    return await this.promiseIpc.send("getServiceLogs",args);
+    return await this.promiseIpc.send("getServiceLogs", args);
   }
 
   async getServiceConfig(args) {
@@ -184,7 +184,7 @@ class ControlService extends EventEmitter {
       files: files,
       password: args.password,
       service: args.service,
-      slashingDB: args.slashingDB
+      slashingDB: args.slashingDB,
     });
   }
 
@@ -284,11 +284,11 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("setStereumSettings", args);
   }
 
-  async writeKeys(args){
+  async writeKeys(args) {
     return await this.promiseIpc.send("writeKeys", args);
   }
 
-  async readKeys(){
+  async readKeys() {
     return await this.promiseIpc.send("readKeys");
   }
 
@@ -296,22 +296,21 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getValidatorState", args);
   }
 
-  async prepareStereumNode(args){
+  async prepareStereumNode(args) {
     return await this.promiseIpc.send("prepareStereumNode", args);
   }
 
-  async restartServer(){
+  async restartServer() {
     return await this.promiseIpc.send("restartServer");
   }
 
-  async readSSVNetworkConfig(args){
+  async readSSVNetworkConfig(args) {
     return await this.promiseIpc.send("readSSVNetworkConfig", args);
   }
 
-  async writeSSVNetworkConfig(args){
+  async writeSSVNetworkConfig(args) {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
-
 }
 if (!instance) {
   instance = new ControlService(window.electron);

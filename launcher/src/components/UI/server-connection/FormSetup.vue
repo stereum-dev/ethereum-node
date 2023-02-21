@@ -1,21 +1,18 @@
 <template>
   <div class="server-parent">
-    <div class="error-box" v-if="errorMsgExists"></div>
-    <div class="error-modal" v-if="errorMsgExists">
+    <div v-if="errorMsgExists" class="error-box"></div>
+    <div v-if="errorMsgExists" class="error-modal">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/form-setup/form-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/form-setup/form-error.png" alt="icon" />
       </div>
       <div class="description">
-        <span>{{ this.error }}</span>
+        <span>{{ error }}</span>
       </div>
       <div class="btn-box">
         <button @click="closeErrorDialog">OK</button>
       </div>
     </div>
-    <div class="anim" v-if="connectingAnimActive">
+    <div v-if="connectingAnimActive" class="anim">
       <img src="../../../../public/img/icon/form-setup/anim3.gif" alt="anim" />
     </div>
     <div class="server-box" style="border-style: none">
@@ -23,25 +20,14 @@
         <span>{{ $t("formsetup.server") }}</span>
       </section>
 
-      <delete-modal
-        v-if="bDialogVisible"
-        @delete-server="baseDialogDelete"
-        @remove-modal="hideBDialog"
-      ></delete-modal>
+      <delete-modal v-if="bDialogVisible" @delete-server="baseDialogDelete" @remove-modal="hideBDialog"></delete-modal>
       <form @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
-              <select
-                v-model="selectedName"
-                @change="setSelectedConnection($event)"
-              >
+              <select v-model="selectedName" @change="setSelectedConnection($event)">
                 <option value="" disabled>Select your Server-Connection</option>
-                <option
-                  v-for="connection in connections"
-                  :key="connection.name"
-                  :value="connection.name"
-                >
+                <option v-for="connection in connections" :key="connection.name" :value="connection.name">
                   {{ connection.name }}
                 </option>
               </select>
@@ -64,14 +50,14 @@
             </div>
             <div class="server-group_input">
               <input
+                id="servername"
+                v-model="model.name.value"
                 :class="{
                   notFilled: !model.host.isFilled,
                   isFilled: model.host.isFilled,
                 }"
                 name="servername"
-                id="servername"
                 type="text"
-                v-model="model.name.value"
                 @blur="checkInput(model.name)"
               />
             </div>
@@ -82,18 +68,19 @@
             </div>
             <div class="server-group_input">
               <input
+                id="iporhostname"
+                v-model="model.host.value"
                 :class="{
                   notFilled: !model.host.isFilled,
                   isFilled: model.host.isFilled,
                 }"
                 name="host"
-                id="iporhostname"
                 type="text"
-                v-model="model.host.value"
-                @blur="checkInput(model.host)"
                 required
+                @blur="checkInput(model.host)"
               />
               <input
+                v-model="model.port.value"
                 :class="{
                   notFilled: !model.port.isFilled,
                   isFilled: model.port.isFilled,
@@ -101,9 +88,8 @@
                 type="text"
                 class="ipPort"
                 placeholder="22"
-                v-model="model.port.value"
-                @blur="checkInput(model.port)"
                 optional
+                @blur="checkInput(model.port)"
               />
             </div>
           </div>
@@ -119,16 +105,16 @@
             </div>
             <div class="server-group_input">
               <input
+                id="username"
+                v-model="model.user.value"
                 :class="{
                   notFilled: !model.user.isFilled,
                   isFilled: model.user.isFilled,
                 }"
                 type="text"
                 name="user"
-                id="username"
-                v-model="model.user.value"
-                @blur="checkInput(model.user)"
                 required
+                @blur="checkInput(model.user)"
               />
             </div>
           </div>
@@ -136,66 +122,48 @@
         <div
           id="keyLocation"
           :class="{
-            errors: keyAuth
-              ? !model.keylocation.isFilled
-              : !model.pass.isFilled,
+            errors: keyAuth ? !model.keylocation.isFilled : !model.pass.isFilled,
           }"
         >
-          <label class="keyLocation_title" v-if="keyAuth">{{
-            $t("formsetup.keylocation")
-          }}</label>
-          <label class="keyLocation_title" v-if="!keyAuth">{{
-            $t("formsetup.password")
-          }}</label>
-          <div class="locationPicker" v-if="keyAuth">
+          <label v-if="keyAuth" class="keyLocation_title">{{ $t("formsetup.keylocation") }}</label>
+          <label v-if="!keyAuth" class="keyLocation_title">{{ $t("formsetup.password") }}</label>
+          <div v-if="keyAuth" class="locationPicker">
             <div class="chooseFile" @click="openUploadHandler">
-              <input
-                type="file"
-                style="display: none"
-                @change="previewFiles"
-                ref="fileInput"
-              />
+              <input ref="fileInput" type="file" style="display: none" @change="previewFiles" />
               <img src="../../../../public/img/icon/form-setup/plus.png" />
             </div>
             <input
-              type="text"
-              name="keylocation"
               id="keyInput"
               v-model="model.keylocation.value"
-              @blur="checkInput(model.keylocation)"
+              type="text"
+              name="keylocation"
               required
+              @blur="checkInput(model.keylocation)"
             />
           </div>
           <input
+            v-else
+            id="keylocation"
+            v-model="model.pass.value"
             :class="{
               notFilled: !model.pass.isFilled,
               isFilled: model.pass.isFilled,
             }"
-            v-else
             :type="inputType"
             name="keylocation"
-            id="keylocation"
-            v-model="model.pass.value"
-            @blur="checkInput(model.pass)"
             required
+            @blur="checkInput(model.pass)"
           />
-          <div class="passwordShow" @click="toggleShowPassword" v-if="!keyAuth">
+          <div v-if="!keyAuth" class="passwordShow" @click="toggleShowPassword">
             <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
           </div>
         </div>
         <div class="ssh">
           <label class="switch">
-            <input
-              type="checkbox"
-              v-model="model.useAuthKey"
-              name="check-button"
-              @change="changeLabel"
-            />
+            <input v-model="model.useAuthKey" type="checkbox" name="check-button" @change="changeLabel" />
             <span class="slider round"></span>
           </label>
-          <label id="lbl" for="" style="margin-right: 5%">{{
-            $t("formsetup.usessh")
-          }}</label>
+          <label id="lbl" for="" style="margin-right: 5%">{{ $t("formsetup.usessh") }}</label>
         </div>
         <button id="login">
           {{ $t("formsetup.login") }}
@@ -215,8 +183,8 @@ import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 
 export default {
-  components: { DeleteModal },
   name: "FormSetup",
+  components: { DeleteModal },
   emits: ["page"],
   data() {
     return {
@@ -294,9 +262,7 @@ export default {
       }
     },
     setSelectedConnection(event) {
-      this.selectedConnection = this.connections.find(
-        (obj) => obj.name === event.target.value
-      );
+      this.selectedConnection = this.connections.find((obj) => obj.name === event.target.value);
       this.model.name.value = this.selectedConnection.name;
       this.model.host.value = this.selectedConnection.host;
       this.model.user.value = this.selectedConnection.user;
@@ -308,23 +274,13 @@ export default {
     },
     addModel() {
       const newConnection = this.createConnection();
-      if (
-        !this.connections.find(
-          (connection) => connection.name == this.model.name.value
-        )
-      ) {
+      if (!this.connections.find((connection) => connection.name == this.model.name.value)) {
         this.connections.push(newConnection);
         this.selectedConnection = newConnection;
         this.selectedName = this.selectedConnection.name;
         this.writeSettings();
-      } else if (
-        this.connections.find(
-          (connection) => connection.name == this.model.name.value
-        )
-      ) {
-        const index = this.connections.findIndex(
-          (connection) => connection.name == this.model.name.value
-        );
+      } else if (this.connections.find((connection) => connection.name == this.model.name.value)) {
+        const index = this.connections.findIndex((connection) => connection.name == this.model.name.value);
         this.connections[index] = newConnection;
         this.selectedConnection = newConnection;
         this.selectedName = this.selectedConnection.name;
@@ -374,13 +330,8 @@ export default {
     loadStoredConnections: async function () {
       const storageSavedConnections = await ControlService.readConfig();
       let savedConnections = [];
-      if (
-        storageSavedConnections !== undefined &&
-        storageSavedConnections.savedConnections !== undefined
-      ) {
-        savedConnections = savedConnections.concat(
-          storageSavedConnections.savedConnections
-        );
+      if (storageSavedConnections !== undefined && storageSavedConnections.savedConnections !== undefined) {
+        savedConnections = savedConnections.concat(storageSavedConnections.savedConnections);
       }
       this.connections = savedConnections;
     },
@@ -445,12 +396,7 @@ export default {
         this.errorMsgExists = true;
         this.error = "Connection refused, please try again.";
         this.model.pass.value = "";
-        if (
-          typeof err === "string" &&
-          new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(
-            err.toLowerCase()
-          )
-        ) {
+        if (typeof err === "string" && new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(err.toLowerCase())) {
           this.error = "You need to change your password first";
         }
         return;

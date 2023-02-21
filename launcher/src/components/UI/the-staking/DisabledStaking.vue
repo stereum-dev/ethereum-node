@@ -3,17 +3,11 @@
     <div class="modal-opacity"></div>
     <div class="disabledModalContent">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="disabledMessage">
         <span>There is no validator client installed!</span>
-        <p>
-          Install at least one validator client to activate importing validator
-          keys.
-        </p>
+        <p>Install at least one validator client to activate importing validator keys.</p>
       </div>
     </div>
   </div>
@@ -97,5 +91,4 @@ export default {};
   text-align: center;
   text-transform: uppercase;
 }
-
 </style>

@@ -4,10 +4,7 @@
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
         <ValidatorState />
-        <selection-options
-          :buttonState="buttonState"
-          @click-btn="clickBtnHandler"
-        ></selection-options>
+        <selection-options :button-state="buttonState" @click-btn="clickBtnHandler"></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
         <TaskManager />

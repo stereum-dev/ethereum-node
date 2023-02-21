@@ -22,10 +22,10 @@
       <!-- removed node-connection-row template end -->
       <div class="scrollable">
         <div
-          class="dataApi-data"
           v-for="item in dataApiItems"
           :key="item.id"
           ref="clone"
+          class="dataApi-data"
           @click="copy(item.value, item.title)"
         >
           <span>{{ item.title }}</span>
@@ -129,12 +129,7 @@ export default {
     },
     createHashByKey(arr, key = null) {
       let hash = "";
-      if (
-        Array.isArray(arr) &&
-        arr.length > 0 &&
-        typeof key === "string" &&
-        key != ""
-      ) {
+      if (Array.isArray(arr) && arr.length > 0 && typeof key === "string" && key != "") {
         arr.sort((a, b) => (a[key] > b[key] ? 1 : b[key] > a[key] ? -1 : 0));
         for (let i = 0; i < arr.length; i++) {
           hash += arr[i].hasOwnProperty(key) ? arr[i][key] : "";
@@ -149,12 +144,7 @@ export default {
       }
       this.toggleAllowed = false;
       this.clearRefresh();
-      let isActive =
-        clientListChanged === true
-          ? this.isActive
-          : this.isActive
-          ? false
-          : true;
+      let isActive = clientListChanged === true ? this.isActive : this.isActive ? false : true;
       let result = {
         code: 9999,
         info: "error: unknown issue on toggling tunnels",
@@ -176,10 +166,7 @@ export default {
     async beaconControler() {
       let isActive = false;
       let dataApiItems = [];
-      let dataApiItemsHashBefore = this.createHashByKey(
-        this.dataApiItems,
-        "id"
-      );
+      let dataApiItemsHashBefore = this.createHashByKey(this.dataApiItems, "id");
       if (this.code === 0 && this.beaconstatus.code === 0) {
         for (let i = 0; i < this.beaconstatus.data.length; i++) {
           if (this.beaconstatus.data[i].now < this.lastKnownMts) {

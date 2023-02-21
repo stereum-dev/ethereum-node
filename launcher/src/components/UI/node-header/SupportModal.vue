@@ -23,8 +23,7 @@
         ></support-modal-box>
       </div>
       <span class="email"
-        >{{ $t("supportModal.emailText")
-        }}<a href="mailto:support@stereum.net">support@stereum.net</a></span
+        >{{ $t("supportModal.emailText") }}<a href="mailto:support@stereum.net">support@stereum.net</a></span
       >
     </div>
   </div>
@@ -47,14 +46,11 @@ export default {
   },
   mounted() {
     if (this.network === "mainnet") {
-      this.gnoEthDocsImg =
-        "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
+      this.gnoEthDocsImg = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
     } else if (this.network === "testnet") {
-      this.gnoEthDocsImg =
-        "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
+      this.gnoEthDocsImg = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
     } else if (this.network === "gnosis") {
-      this.gnoEthDocsImg =
-        "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
+      this.gnoEthDocsImg = "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
     }
   },
   methods: {

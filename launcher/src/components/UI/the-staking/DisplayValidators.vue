@@ -2,7 +2,7 @@
   <div class="keys-parent">
     <div class="keys-table-box">
       <div class="keys-table">
-        <div class="table-header" v-if="importValidatorKeyActive">
+        <div v-if="importValidatorKeyActive" class="table-header">
           <span id="name">{{ $t("displayValidator.pk") }}</span>
           <span id="service">{{ $t("displayValidator.service") }}</span>
           <span id="active">{{ $t("displayValidator.active") }}</span>
@@ -14,17 +14,17 @@
           <div class="title-box">
             <span>{{ $t("displayValidator.importKey") }}</span>
           </div>
-          <div class="processImg" v-if="importIsProcessing">
+          <div v-if="importIsProcessing" class="processImg">
             <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
           </div>
-          <div class="import-message" v-if="importIsProcessing">
+          <div v-if="importIsProcessing" class="import-message">
             <span>{{ $t("displayValidator.waitMessage") }}</span>
             <span>{{ $t("displayValidator.waitForImport") }}</span>
           </div>
-          <div class="import-message" v-if="importIsDone">
+          <div v-if="importIsDone" class="import-message">
             <p :class="importingErrorMessage">{{ message }}</p>
           </div>
-          <div class="confirm-btn" v-if="importIsDone">
+          <div v-if="importIsDone" class="confirm-btn">
             <div class="confirm-box" @click="hideBDialog">
               <span>OK</span>
             </div>
@@ -36,8 +36,8 @@
           @import-slashing="setSlashingDB"
         />
         <div
-          class="table-content"
           v-if="importValidatorKeyActive"
+          class="table-content"
           :class="{ dropActive: isDragOver }"
           @drag.prevent.stop=""
           @dragstart.prevent.stop=""
@@ -47,85 +47,71 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div class="tableRow" v-for="(item, index) in keys" :key="index">
+          <div v-for="(item, index) in keys" :key="index" class="tableRow">
             <div class="rowContent">
               <span class="circle"></span>
-              <span class="category" v-if="item.displayName">{{
-                item.displayName
-              }}</span>
+              <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
 
-              <span class="category" @click="logEvent" v-else
-                >{{ item.key.substring(0, 20) }}...{{
-                  item.key.substring(item.key.length - 6, item.key.length)
-                }}</span
+              <span v-else class="category" @click="logEvent"
+                >{{ item.key.substring(0, 20) }}...{{ item.key.substring(item.key.length - 6, item.key.length) }}</span
               >
               <img class="service-icon" :src="item.icon" alt="icon" />
               <span class="since">{{ item.activeSince }}</span>
-              <img
-                class="state-icon"
-                :src="stateIconHandler(item)"
-                alt="icon"
-              />
+              <img class="state-icon" :src="stateIconHandler(item)" alt="icon" />
               <span class="balance">{{ item.balance }}</span>
               <div class="option-box">
                 <div class="grafiti-box">
                   <img
                     :class="{ disabled: disable }"
-                    @click="grafitiDisplayHandler(item)"
                     class="grafiti-icon"
                     src="../../../../public/img/icon/the-staking/option-graffiti.png"
                     alt="icon"
+                    @click="grafitiDisplayHandler(item)"
                   />
                 </div>
                 <div class="copy-box">
                   <img
-                    @click="copyHandler(item)"
                     class="copy-icon"
                     src="../../../../public/img/icon/the-staking/copy6.png"
                     alt="icon"
+                    @click="copyHandler(item)"
                   />
                 </div>
                 <div class="rename-box">
                   <img
-                    @click="renameDisplayHandler(item)"
                     class="rename-icon"
                     src="../../../../public/img/icon/the-staking/rename.png"
                     alt="icon"
+                    @click="renameDisplayHandler(item)"
                   />
                 </div>
                 <div class="remove-box">
                   <img
-                    @click="removeModalDisplay(item)"
                     class="remove-icon"
                     src="../../../../public/img/icon/the-staking/option-remove.png"
                     alt="icon"
+                    @click="removeModalDisplay(item)"
                   />
                 </div>
                 <div class="withdraw-box">
                   <img
                     :class="{ disabled: disable }"
-                    @click="passwordBoxSingleExitChain(item)"
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
+                    @click="passwordBoxSingleExitChain(item)"
                   />
                 </div>
               </div>
             </div>
             <RenameValidator
               v-if="item.isRenameActive"
+              :item="item"
               @change-name="renameValidatorHandler"
               @close-rename="closeRenameHandler"
-              :item="item"
             />
-            <GrafitiValidator
-              v-if="item.isGrafitiBoxActive"
-              @confirm-change="grafitiConfirmHandler(item)"
-            />
-            <ExitValidator
-              v-if="item.isExitBoxActive"
-              @confirm-password="confirmPasswordSingleExitChain(item)"
-            />
+            <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
+            <ExitValidator v-if="item.isExitBoxActive" @confirm-password="confirmPasswordSingleExitChain(item)" />
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
@@ -133,11 +119,7 @@
               @confirm-btn="confirmExitChainForValidators(item)"
             />
             <RemoveValidator
-              v-if="
-                item.toRemove ||
-                exitChainForMultiValidatorsActive ||
-                removeForMultiValidatorsActive
-              "
+              v-if="item.toRemove || exitChainForMultiValidatorsActive || removeForMultiValidatorsActive"
             />
             <RemoveSingleModal
               v-if="item.isRemoveBoxActive"
@@ -150,96 +132,63 @@
             />
           </div>
         </div>
-        <div
-          class="table-header"
-          v-if="
-            enterPasswordBox ||
-            selectValidatorServiceForKey ||
-            ImportSlashingActive
-          "
-        >
+        <div v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive" class="table-header">
           <span id="pubkey_name">FILE NAME</span>
           <span id="validator-service">Service</span>
         </div>
-        <div
-          class="table-content"
-          v-if="
-            enterPasswordBox ||
-            selectValidatorServiceForKey ||
-            ImportSlashingActive
-          "
-        >
-          <div
-            class="key-tableRow"
-            v-for="(item, index) in keyFiles"
-            :key="index"
-          >
+        <div v-if="enterPasswordBox || selectValidatorServiceForKey || ImportSlashingActive" class="table-content">
+          <div v-for="(item, index) in keyFiles" :key="index" class="key-tableRow">
             <span class="key-circle"></span>
             <span class="file-name">{{ item.name }}</span>
-            <div class="chosenService" v-if="enterPasswordBox">
+            <div v-if="enterPasswordBox" class="chosenService">
               <img :src="selectedService.icon" alt="icon" />
             </div>
-            <div @click="removeKeyHandler(item)" class="key-remove-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/close3.png"
-                alt="icon"
-              />
+            <div class="key-remove-icon" @click="removeKeyHandler(item)">
+              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- Small search icons -->
-    <SearchOptions
-      :isPubkeyVisible="isPubkeyVisible"
-      @toggle-pubkey="togglePubkeyView"
-    />
+    <SearchOptions :is-pubkey-visible="isPubkeyVisible" @toggle-pubkey="togglePubkeyView" />
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
+      :services="installedServices"
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
-      :services="installedServices"
     />
     <!-- select specific validator service -->
-    <SelectService
-      v-if="selectValidatorServiceForKey"
-      @select-service="checkSelectedService"
-    />
+    <SelectService v-if="selectValidatorServiceForKey" @select-service="checkSelectedService" />
     <!-- Password box for validator keys -->
     <EnterPassword
       v-if="enterPasswordBox"
-      :activePassword="passwordInputActive"
+      :active-password="passwordInputActive"
       @confirm-password="confirmPasswordHandler"
       @import-key="importKey"
     />
     <!-- Fee Recipient box for validator keys -->
     <FeeRecipient
       v-if="feeRecipientBoxActive"
+      :active-fee="feeInputActive"
       @enter-fee="enterFeeHandler"
-      :activeFee="feeInputActive"
       @confirm-btn="confirmFeeRecipientAddress"
     />
     <!-- Grafiti box for validator keys -->
-    <GrafitiMultipleValidators
-      v-if="grafitiForMultiValidatorsActive"
-      @confirm-btn="confirmEnteredGrafiti"
-    />
+    <GrafitiMultipleValidators v-if="grafitiForMultiValidatorsActive" @confirm-btn="confirmEnteredGrafiti" />
     <!-- Remove Box for validator keys -->
     <RemoveMultipleValidators
       v-if="removeForMultiValidatorsActive"
       @remove-modal="
         removeForMultiValidatorsActive = false;
-        this.keys.forEach((k) => (k.toRemove = false));
+        keys.forEach((k) => (k.toRemove = false));
       "
       @delete-key="confirmRemoveAllValidators"
     />
 
     <!-- Exit box for validator keys -->
-    <ExitMultipleValidators
-      v-if="exitChainForMultiValidatorsActive"
-      @confirm-btn="confirmPasswordMultiExitChain"
-    />
+    <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" />
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
@@ -316,14 +265,10 @@ export default {
       fileInput: "",
       displayRemoveValidatorModal: false,
       activeStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Active.png",
-      slashedStatusIcon:
-        "/img/icon/the-staking/Validatorkey_Status_Slashed.png",
-      depositStatusIcon:
-        "/img/icon/the-staking/Validatorkey_Status_Deposit.png",
-      offlineStatusIcon:
-        "/img/icon/the-staking/Validatorkey_Status_Offline.png",
-      pendingStatusIcon:
-        "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png",
+      slashedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Slashed.png",
+      depositStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Deposit.png",
+      offlineStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Offline.png",
+      pendingStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Pending_alternative.png",
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
@@ -470,11 +415,7 @@ export default {
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
-      const returnVal = await this.deleteValidators(
-        item.validatorID,
-        [item.key],
-        picked
-      );
+      const returnVal = await this.deleteValidators(item.validatorID, [item.key], picked);
       if (picked === "yes") {
         this.downloadFile(returnVal);
       }
@@ -554,25 +495,19 @@ export default {
     },
     listKeys: async function () {
       let keyStats = [];
-      let clients = this.installedServices.filter((s) => s.category == "validator")
+      let clients = this.installedServices.filter((s) => s.category == "validator");
       if (clients && clients.length > 0 && this.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
           if (
-            (client.config.keys === undefined ||
-              client.config.keys.length === 0 ||
-              this.forceRefresh) &&
+            (client.config.keys === undefined || client.config.keys.length === 0 || this.forceRefresh) &&
             client.state === "running"
           ) {
             //refresh validaotr list
-            let result = await ControlService.listValidators(
-              client.config.serviceID
-            );
+            let result = await ControlService.listValidators(client.config.serviceID);
 
             //update service config (pinia)
-            client.config.keys = result.data
-              ? result.data.map((e) => e.validating_pubkey)
-              : [];
+            client.config.keys = result.data ? result.data.map((e) => e.validating_pubkey) : [];
 
             //update service datasets in Pinia store
             this.installedServices = this.installedServices.map((service) => {
@@ -609,8 +544,7 @@ export default {
             showExitText: false,
           };
         });
-        if(this.keys && this.keys.length > 0)
-          this.updateValidatorStats();
+        if (this.keys && this.keys.length > 0) this.updateValidatorStats();
       }
     },
     async updateValidatorStats() {
@@ -619,13 +553,13 @@ export default {
       let networkURls = {
         mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
         testnet: "https://goerli.beaconcha.in/api/v1/validator/",
-        gnosis: "https://beacon.gnosischain.com/api/v1/validator/"
-      }
+        gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
+      };
 
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
-        if(!data || data.length == 0){
-          data = []
+        if (!data || data.length == 0) {
+          data = [];
           let buffer = this.keys.map((key) => key.key);
           const chunkSize = 50;
           for (let i = 0; i < buffer.length; i += chunkSize) {
@@ -694,10 +628,7 @@ export default {
     //Importing key
     uploadFileHandler(event) {
       let uploadedFiles = event.target.files;
-      if (
-        !this.keyFiles.includes(uploadedFiles[0]["name"]) &&
-        uploadedFiles[0]["type"] === "application/json"
-      ) {
+      if (!this.keyFiles.includes(uploadedFiles[0]["name"]) && uploadedFiles[0]["type"] === "application/json") {
         this.keyFiles.push(...uploadedFiles);
         this.importValidatorKeyActive = false;
         this.insertKeyBoxActive = false;
@@ -706,9 +637,7 @@ export default {
       }
     },
     dropFileHandler(event) {
-      let validator = this.installedServices.filter((s) =>
-        s.service.includes("Validator")
-      );
+      let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
       if (validator && validator.map((e) => e.state).includes("running")) {
         let droppedFiles = event.dataTransfer.files;
         if (droppedFiles[0]["type"] === "application/json") {

@@ -7,13 +7,13 @@
     <div class="icon-btn" @click="notifModalOpen">
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div class="icon-btn" @click="updateModalHandler" v-if="isUpdateAvailable">
+    <div v-if="isUpdateAvailable" class="icon-btn" @click="updateModalHandler">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
     <div
+      v-else
       class="icon-btn"
       @click="updateModalHandler"
-      v-else
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
     >
@@ -30,25 +30,19 @@
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
-      :clickBg="displayUpdatePanel"
+      :click-bg="displayUpdatePanel"
+      :class="{ 'updatePanel-show': displayUpdatePanel }"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
       @click-out="removeUpdateModal"
-      :class="{ 'updatePanel-show': displayUpdatePanel }"
     ></update-panel>
     <logout-modal
       v-if="logoutModalIsActive"
       @close-me="clickToCancelLogout"
       @confrim-logout="loggingOut"
     ></logout-modal>
-    <support-modal
-      v-if="supportModalIsActive"
-      @close-me="supportModalClose"
-    ></support-modal>
-    <notif-modal
-      v-if="notificationModalIsActive"
-      @close-me="notifModalClose"
-    ></notif-modal>
+    <support-modal v-if="supportModalIsActive" @close-me="supportModalClose"></support-modal>
+    <notif-modal v-if="notificationModalIsActive" @close-me="notifModalClose"></notif-modal>
   </div>
 </template>
 <script>
@@ -85,27 +79,29 @@ export default {
   },
   methods: {
     updateConfirmationHandler: async function () {
-      let seconds = 0
+      let seconds = 0;
       try {
-        this.refresh = false
+        this.refresh = false;
         this.updating = true;
-        this.newUpdates.forEach(update => update.running = true)
-        seconds = await ControlService.runAllUpdates({commit: this.stereumUpdate.commit});
+        this.newUpdates.forEach((update) => (update.running = true));
+        seconds = await ControlService.runAllUpdates({
+          commit: this.stereumUpdate.commit,
+        });
       } catch (err) {
-        console.log("Running All Updates Failed: ", err)
+        console.log("Running All Updates Failed: ", err);
       } finally {
         this.forceUpdateCheck = true;
         this.updating = false;
         this.versions = {};
         this.newUpdates = [];
-        this.refresh = true
+        this.refresh = true;
         await ControlService.restartServices(seconds);
       }
     },
     async runUpdate(item) {
-      let seconds = 0
+      let seconds = 0;
       try {
-        this.refresh = false
+        this.refresh = false;
         item.running = true;
         this.updating = true;
         if (item && item.id) {
@@ -114,15 +110,15 @@ export default {
           seconds = await ControlService.updateStereum({ commit: item.commit });
         }
       } catch (err) {
-        console.log(JSON.stringify(item) + "\nUpdate Failed", err)
+        console.log(JSON.stringify(item) + "\nUpdate Failed", err);
       } finally {
         this.forceUpdateCheck = true;
         this.refresh = true;
-        this.newUpdates = this.newUpdates.filter(u => {
+        this.newUpdates = this.newUpdates.filter((u) => {
           if (item && item.id) {
-            return u.id != item.id
+            return u.id != item.id;
           } else if (item && item.commit) {
-            return u.commit != item.commit
+            return u.commit != item.commit;
           }
         });
         await ControlService.restartServices(seconds);
@@ -138,12 +134,11 @@ export default {
     async loggingOut() {
       await ControlService.logout();
       this.$router.push("/").then(() => {
-        location.reload()
+        location.reload();
       });
     },
     updateModalHandler() {
-      if(!this.updating)
-        this.forceUpdateCheck = true
+      if (!this.updating) this.forceUpdateCheck = true;
       this.displayUpdatePanel = !this.displayUpdatePanel;
     },
     removeUpdateModal() {

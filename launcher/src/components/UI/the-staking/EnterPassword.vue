@@ -1,11 +1,11 @@
 <template>
   <div class="passwordBox">
     <div class="enter-password" @click="$emit('confirmPassword')">
-      <input v-model="enteredPassword" v-if="activePassword" type="password" />
+      <input v-if="activePassword" v-model="enteredPassword" type="password" />
       <button
-        @keyup.enter="$emit('importKey', this.enteredPassword)"
-        @click="$emit('importKey', this.enteredPassword)"
         v-if="activePassword"
+        @keyup.enter="$emit('importKey', enteredPassword)"
+        @click="$emit('importKey', enteredPassword)"
       >
         {{ $t("exitMultipleValidator.confirm") }}
       </button>

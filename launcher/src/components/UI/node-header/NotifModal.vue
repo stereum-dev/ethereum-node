@@ -2,7 +2,7 @@
   <div class="notif-modal-parent">
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="notif-modal-content">
-      <div class="content" v-if="qrPage">
+      <div v-if="qrPage" class="content">
         <div class="title-box">
           <span>{{ $t("notifModal.notification") }}</span>
         </div>
@@ -16,14 +16,11 @@
         </div>
         <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
-      <div class="qrPage_content" v-if="!qrPage">
+      <div v-if="!qrPage" class="qrPage_content">
         <div class="banner" @click="qrViewer"><img :src="banner" /></div>
         <div class="qrContent">
           <div class="qrCode-boxes">
-            <span
-              >1. Visit the app store or our website to download "STEREUM Node
-              Monitor"
-            </span>
+            <span>1. Visit the app store or our website to download "STEREUM Node Monitor" </span>
             <span>2. Open the app on your smartphone</span>
             <span>3. Scan the QR Code</span>
             <span>X. Send a test notification</span>

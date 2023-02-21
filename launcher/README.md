@@ -3,6 +3,7 @@
 ## Build
 
 ### Ubuntu
+
 Install [docker-ce](https://docs.docker.com/engine/install/ubuntu/).
 
 ```
@@ -23,21 +24,24 @@ stereum-launcher
 ```
 
 ## Common
+
 ```
 npm install -g modernizr
 npm install
 ```
 
 ### Build electron
+
 ```
 # ensure that we have the latest libs. If we skip this step it may happen that libs are missing in the final bundle
 npm install
 # start electron build
 npm run electron:build
 ```
+
 ### Test (run locally) electron
+
 ```
 npm run electron:serve
 
 ```
-
