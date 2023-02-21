@@ -56,6 +56,7 @@ export default {
       modalActive: false,
       removeServicesModal: false,
       removeIsConfirmed: false,
+      notSure: true,
     };
   },
   computed: {
@@ -94,10 +95,11 @@ export default {
       this.removeServicesModal = false;
     },
     removeConfirmation() {
-      this.refresh = false; //stop refreshing
-      this.removeServicesModal = false;
-      this.removeIsConfirmed = true;
-      this.destroyNode();
+      // this.refresh = false; //stop refreshing
+      // this.removeServicesModal = false;
+      // this.removeIsConfirmed = true;
+      // this.destroyNode();
+      this.notSure = false;
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
