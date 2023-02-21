@@ -1961,7 +1961,6 @@ rm -rf diskoutput
 
           const beaconAPICmdLastEpoch = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`
           beaconAPIRunCmdLastEpoch = await this.nodeConnection.sshService.exec(beaconAPICmdLastEpoch)
-
           validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
           if (!validatorNotFound){
             const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
@@ -1972,8 +1971,8 @@ rm -rf diskoutput
                 balance: key.balance,
                 status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
                 pubkey: key.validator.pubkey,
-                activation_epoch: key.validator.activation_epoch,
-                activeSince: (((JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.finalized.epoch - key.validator.activation_epoch) * 6.4)/1440).toFixed(1),
+                activationepoch: key.validator.activation_epoch,
+                latestEpoch: JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.finalized.epoch
               }
             })
           }
