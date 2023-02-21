@@ -197,6 +197,32 @@
             $t("formsetup.usessh")
           }}</label>
         </div>
+        <div v-if="keyAuth"
+          id="keyLocation"
+          :class="{
+            errors: keyAuth
+              ? !model.keylocation.isFilled
+              : !model.passphrase.isFilled,
+          }"
+        >
+          <label class="keyLocation_title">SSH-{{
+            $t("formsetup.password")
+          }}</label>
+          <input
+            :class="{
+              notFilled: !model.passphrase.isFilled,
+              isFilled: model.passphrase.isFilled,
+            }"
+            :type="inputType"
+            name="passphrase"
+            id="passphrase"
+            v-model="model.passphrase.value"
+            @blur="checkInput(model.passphrase)"
+          />
+          <div class="passwordShow" @click="toggleShowPassword">
+            <img src="/img/icon/form-setup/eye.png" alt="eyeIcon" />
+          </div>
+        </div>
         <button id="login">
           {{ $t("formsetup.login") }}
         </button>
@@ -238,6 +264,7 @@ export default {
         port: { value: "", isFilled: true },
         pass: { value: "", isFilled: true },
         keylocation: { value: "", isFilled: true },
+        passphrase: { value: "", isFilled: true },
         useAuthKey: false,
       },
       imgTrash: "./img/icon/TRASH_CAN.png",
@@ -305,6 +332,7 @@ export default {
       this.model.useAuthKey = this.selectedConnection.useAuthKey;
       this.keyAuth = this.selectedConnection.useAuthKey;
       this.model.pass.value = "";
+      this.model.passphrase.value = "";
     },
     addModel() {
       const newConnection = this.createConnection();
@@ -360,6 +388,7 @@ export default {
       this.model.keylocation.value = "";
       this.model.useAuthKey = false;
       this.keyAuth = false;
+      this.model.passphrase.value = "";
     },
     createConnection() {
       return {
@@ -368,7 +397,7 @@ export default {
         user: this.model.user.value,
         port: this.model.port.value,
         keylocation: this.model.keylocation.value,
-        useAuthKey: this.model.useAuthKey,
+        useAuthKey: this.model.useAuthKey
       };
     },
     loadStoredConnections: async function () {
@@ -439,6 +468,7 @@ export default {
           password: this.model.pass.value,
           sshKeyAuth: this.model.useAuthKey,
           keyfileLocation: this.model.keylocation.value,
+          passphrase: this.model.passphrase.value,
         });
       } catch (err) {
         this.connectingAnimActive = false;

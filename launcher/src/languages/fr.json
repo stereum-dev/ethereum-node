@@ -4,7 +4,7 @@
     "server": " Connectez-vous à votre serveur",
     "servername": "NOM DU SERVEUR",
     "iphost": "IP / NOM D'HÔTE",
-    "username": "NOM D’UTILISATEUR",
+    "username": "IDENTIFIANT",
     "password": "MOT DE PASSE",
     "keylocation": "LOCALISATION DE LA CLÉ",
     "usessh": "UTILISER UNE CLÉ SSH"
@@ -28,7 +28,7 @@
   },
   "supportModal": {
     "support": "support",
-    "supportText": "Le plus rapide pour obtenir l'aide de quelqu'un est de rejoindre notre serveur Discord !",
+    "supportText": "Le plus rapide pour obtenir l'aide est de rejoindre notre serveur Discord !",
     "bugReport": "RAPPORT DE BUG",
     "bugRepText": "Merci de prendre le temps d'écrire et expliquer le problème afin de nous permettre d'améliorer Stereum !",
     "emailText": "ou écrivez un e-mail à:",
@@ -38,10 +38,10 @@
   "notifModal": {
     "notification": "Notifications",
     "notifText": "You can set up different notification sources and the status you want to be notified of here",
-    "cancelText": "Cliquez en dehors pour annuler"
+    "cancelText": "Cliquez en-dehors pour annuler"
   },
   "settingPanel": {
-    "stereumName": "paramètres de stereum",
+    "stereumName": "paramètres de Stereum",
     "langName": "Sélection de la langue",
     "confirm": "APPLIQUER",
     "general": "GÉNÉRAL",
@@ -149,9 +149,9 @@
   },
   "exitValidatorModal": {
     "modalMessage": "Are you sure you want to exit the chain with THE SELECTED validator KEYS? This stops your validator duty & CAN NOT be reversed. Your fund are also only withdrawable, if the chain allows it.",
-    "exitApprove": "J'AI LU LE TEXTE ET JE SUIS CONSCIENT DES CONSÉQUENCES",
+    "exitApprove": "J'AI LU LE TEXTE ET J'AI CONSCIENCE DES CONSÉQUENCES",
     "exitChain": "QUITTER LA CHAINE",
-    "clickClose": "Cliquez en dehors pour fermer."
+    "clickClose": "Cliquez en-dehors pour fermer."
   },
   "feeRecipient": {
     "textPlaceHolder": "Enter a valid Ethereum address to send your block rewards to ... ",
@@ -172,7 +172,7 @@
     "btn": "choisir le chemin d'accès"
   },
   "removeMultiModal": {
-    "sure": "Êtes-vous sûr de vouloir supprimer cette clé de votre machine ?",
+    "sure": "Voulez-vous vraiment supprimer cette clé de votre machine ?",
     "slashing": "With Slashing Protection Database?",
     "remove": "Supprimer",
     "path": "choose a path to save exported slashing db ",
@@ -205,7 +205,7 @@
   },
   "removeModal": {
     "removeText": "Tous les services seront supprimés.",
-    "sure": "Êtes-vous sûr ?"
+    "sure": "Est-ce vraiment ce que vous voulez ?"
   },
   "installitionMenu": {
     "welcome": "BIENVENUE",
@@ -223,15 +223,15 @@
     "next": "SUIVANT"
   },
   "creditPanel": {
-    "creditTitle": "CRÉDITS - CONTRIBUTEURS FINANCIERS",
+    "creditTitle": "CRÉDITS - MECENES",
     "fincialTitle": "OBTENEZ VOTRE NOM SUR LA LISTE ! MERCI DE SOUTENIR LE DÉVELOPPEMENT !",
     "technicPage": "CONTRIBUTION TECHNIQUE",
-    "techTitle": "CRÉDITS - CONTRIBUTEURS TECHNIQUES",
+    "techTitle": "CRÉDITS - PERSONNES AYANT CONTRIBUÉ TECHNIQUEMENT",
     "techText": "RECEVEZ UN GITPOAP ! APPRENEZ COMMENT VOUS IMPLIQUER EN VISITANT NOTRE GITHUB !",
     "financialPage": "CONTRIBUTION FINANCIÈRE",
     "gitcoinList": "GITCOIN COMPLETE LIST",
-    "developers": "DEVELOPERS",
-    "testers": "TESTERS"
+    "developers": "DEVS",
+    "testers": "QAs"
   },
   "verifyInstallation": {
     "verifyTitle": "VÉRIFIER & INSTALLER",
@@ -256,7 +256,7 @@
   },
   "registerSSV": {
     "pubKey": "Clé d'opérateur public",
-    "copied": "copié!",
+    "copied": "copié !",
     "secKey": "Clé d'opérateur secrète",
     "makeSureText": "Assurez-vous de stocker et de sauvegarder la clé secrète de votre opérateur dans un endroit sûr. Ne partagez cette clé avec personne.",
     "copyMessage": "Copiez votre clé publique d'opérateur dans ce champ pour confirmer que vous avez stocké vos clés !"
