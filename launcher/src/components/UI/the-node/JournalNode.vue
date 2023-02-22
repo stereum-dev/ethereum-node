@@ -246,6 +246,9 @@ export default {
 };
 </script>
 <style scoped>
+.test{
+  display: flex;
+}
 .log-navigation {
   grid-row: 2/8;
   display: flex;
