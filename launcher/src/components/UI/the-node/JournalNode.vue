@@ -90,7 +90,7 @@
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
-      <div class="log-navigation" >
+      <div class="log-navigation">
         <service-log-button
           v-for="service in sortedServices"
           :key="service"
@@ -113,16 +113,16 @@
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
       <div class="log-navigation">
-          <service-restart-button
-            v-for="service in sortedServices"
-            :key="service"
-            :client-name="service.name"
-            :client-type="service.category"
-            :service-icon="service.icon"
-            @open-restart="restartService(service)"
-          ></service-restart-button>
-        </div>
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log="restartService(service.name)"
+        ></service-log-button>
       </div>
+    </div>
     <Transition>
       <plugin-logs
         :item="itemToLogs"
@@ -143,7 +143,12 @@ import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable, ServiceLogButton, PluginLogs, ServiceRestartButton },
+  components: {
+    UpdateTable,
+    ServiceLogButton,
+    PluginLogs,
+    ServiceRestartButton,
+  },
   data() {
     return {
       loading: false,
@@ -194,7 +199,7 @@ export default {
       this.isPluginLogPageActive = true;
     },
     restartService(el) {
-      console.log(el)
+      console.log(el);
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
@@ -206,7 +211,7 @@ export default {
     },
     restartToggle() {
       this.openRestart = !this.openRestart;
-      console.log()
+      console.log();
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
