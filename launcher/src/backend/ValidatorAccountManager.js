@@ -2,6 +2,9 @@ import { readFileSync } from "fs";
 import { StringUtils } from './StringUtils.js'
 import YAML from "yaml";
 import * as crypto from 'crypto'
+import { SSHService } from "./SSHService.js";
+import { validatorPorts } from "./ethereum-services/ServicePort.js";
+import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
 
 const log = require('electron-log')
 
@@ -13,7 +16,6 @@ export class ValidatorAccountManager {
     constructor(nodeConnection, serviceManager) {
         this.nodeConnection = nodeConnection
         this.serviceManager = serviceManager
-        this.batches = []
     }
 
     createBatch(files, password, slashingDB) { // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
@@ -22,19 +24,24 @@ export class ValidatorAccountManager {
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
-        const passwords = Array(content.length).fill(password)
-
-        let batch = {
-            name: "batch" + this.batches.length,
+        const chunkSize = 100;
+        let batches = []
+        for (let i = 0; i < content.length; i += chunkSize) {
+          const contentChunk = content.slice(i, i + chunkSize);
+          const passwords = Array(contentChunk.length).fill(password)
+          batches.push({
+            keystores: contentChunk,
             passwords: passwords,
-            content: content,
-            ...(slashing_protection_content && {slashing_protection_content: slashing_protection_content}) // READ ME & REMOVE ME short explanation !!! ---> for Martin, if slashing protection data is defined, then batch will use pass, content also slashing_p_db, if not defined, then only pass and content will be used ----> short explanation for Martin
+            ...(slashing_protection_content && {slashing_protection: slashing_protection_content})
+          })  
         }
-        this.batches.push(batch)
+        return batches
     }
 
     async importKey(files, password, serviceID, slashingDB) {
-        this.createBatch(files, password, slashingDB)
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${files.length} Keys`)
+        let batches = this.createBatch(files, password, slashingDB)
         let services = await this.serviceManager.readServiceConfigurations()
 
         let client = services.find(service => service.id === serviceID)
@@ -101,68 +108,109 @@ export class ValidatorAccountManager {
 
         }
         try {
-            let run = await this.nodeConnection.runPlaybook('validator-import-api', { stereum_role: 'validator-import-api', validator_service: client.id, validator_keys: this.batches })
-            let logs = [...(await this.nodeConnection.playbookStatus(run.playbookRunRef)).matchAll(/^DATA: ({"msg":.*)/gm)]
-
-            let output = logs.map(log => {
-                return (JSON.parse(log[1]))
-            })
-
-            let result = (output.map(log => {
-                if(log.msg.data === undefined){
-                    if(log.msg.code === undefined || log.msg.message === undefined){
-                        throw log.msg
+            let data = []
+            const apiToken = await this.getApiToken(client)
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true)
+            for(const batch of batches){
+                const returnVal = await this.keystoreAPI(client, "POST", batch, apiToken)
+                if(SSHService.checkExecError(returnVal) && returnVal.stderr)
+                    throw SSHService.extractExecError(returnVal)
+                const response = JSON.parse(returnVal.stdout)
+                if(response.data === undefined){
+                    if(response.code === undefined || response.message === undefined){
+                        throw "Undexpected Error: " + returnVal
                     }
-                    throw log.msg.code + " " + log.msg.message
+                    throw response.code + " " + response.message
                 }
-                return log.msg.data
-            })).flat()
+                if(response.data.map(k => k.status).includes("error")){
+                    this.nodeConnection.taskManager.otherTasksHandler(ref, `${batch.keystores.length} Keys Imported with errors`, false, JSON.stringify(response.data))
+                }else{
+                    this.nodeConnection.taskManager.otherTasksHandler(ref, `Batch with ${batch.keystores.length} Keys Imported`, true, JSON.stringify(response.data))
+                }
+                data = data.concat(response.data);
+            }
+
             let imported = 0
             let duplicate = 0
             let error = 0
-            let pubkeys = this.batches.map(b => b.content.map(c => JSON.parse(c).pubkey)).flat()
-            let message = (result.map((key, index, arr) => {
+            let pubkeys = batches.map(b => b.keystores.map(c => JSON.parse(c).pubkey)).flat()
+            let message = (data.map((key, index, arr) => {
                 if(key.status === "imported")imported ++
                 if(key.status === "duplicate")duplicate ++
                 if(key.status === "error")error ++
                 return ((`${pubkeys[index].substring(0, 20)}...${pubkeys[index].substring(pubkeys[index].length - 6, pubkeys[index].length)}:\t${key.status}`) + (key.status == "error" ? `:\n${key.message}\n` : ""))
             })).join('\n')
-
-            this.batches = []
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
             return message + `\n${imported} key(s) imported...\n${duplicate} duplicate(s)...\n${error} import(s) failed...`
         } catch (err) {
+            log.info(ref)
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Import Failed`, false, "Validator Import Failed:\n" + err)
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
             log.error("Validator Import Failed:\n", err)
-            this.batches = []
             return "Validator Import Failed:\n" + err
         }
     }
 
     async listValidators(serviceID) {
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`)
         try {
-            let run = await this.nodeConnection.runPlaybook('validator-list-api', { stereum_role: 'validator-list-api', validator_service: serviceID })
-            let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-            let result = (JSON.parse(logs[1])).msg
-            await this.writeKeys(result.data.map(k => k.validating_pubkey))
-            return result
+            
+            let client = await this.nodeConnection.readServiceConfiguration(serviceID)
+            const result = await this.keystoreAPI(client)
+            
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout)
+            
+            const data = JSON.parse(result.stdout)
+            await this.writeKeys(data.data.map(k => k.validating_pubkey))
+
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true)
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
+            return data
         } catch (err) {
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys Failed`, false, "Listing Validators Failed:\n" + err)
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
             log.error("Listing Validators Failed:\n", err)
             return err
         }
     }
 
     async deleteValidators(serviceID, keys, picked){
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys`)
         try {
-                let run = await this.nodeConnection.runPlaybook('validator-delete-api', { stereum_role: 'validator-delete-api', validator_service: serviceID, validator_public_keys: [{pubkeys: keys}] })
-                let logs = new RegExp(/^DATA: ({"msg":.*)/, 'gm').exec(await this.nodeConnection.playbookStatus(run.playbookRunRef))
-                let result = (JSON.parse(logs[1])).msg
-                if (picked) {
-                    return JSON.parse(result.slashing_protection);
-                }
-                return result
+            let client = await this.nodeConnection.readServiceConfiguration(serviceID)
+            const result = await this.keystoreAPI(client, 'DELETE', {pubkeys: keys})
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout)
+            const data = JSON.parse(result.stdout)
+            if (picked) {
+                return data.slashing_protection
+            }
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
+            return data
         } catch(err) {
+            this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys Failed`, false, "Deleting Validators Failed:\n" + err)
+            this.nodeConnection.taskManager.otherTasksHandler(ref)
             log.error("Deleting Validators Failed:\n", err)
             return err
         }
+    }
+
+    async keystoreAPI(service, method = 'GET', data, apiToken){
+        if(!apiToken)
+            apiToken = await this.getApiToken(service)
+        let command = [
+            "docker run --rm --network=stereum curlimages/curl",
+            `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]}/eth/v1/keystores`,
+            `-X ${method.toUpperCase()}`,
+            `-H 'Content-Type: application/json'`,
+            `-H 'Authorization: Bearer ${apiToken}'`,
+            `-s`
+        ]
+        if(data)
+            command.push(`-d '${JSON.stringify(data)}'`)
+        
+        return await this.nodeConnection.sshService.exec(command.join(" "))
     }
 
     async insertSSVNetworkKeys(service, sk) {
@@ -203,7 +251,7 @@ export class ValidatorAccountManager {
         })
 
     }
-
+    // deactivated on the front end side
     async addFeeRecipient(keys, address){
         if(keys && keys.length != 0 && address){
             const serviceID = keys[0].validatorID
@@ -269,7 +317,8 @@ export class ValidatorAccountManager {
                     //Nimbus only supports Graffiti changes while running via their rest api
                     let command = client.command.find(c => c.includes("--rest-port="))
                     let port = command.replace("--rest-port=", "")
-                    config = `curl -s -X POST http://localhost:${port}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
+                    const mappedPort = client.ports.find(p => p.servicePort == port)
+                    config = `curl -s -X POST http://localhost:${mappedPort.destinationPort}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`
                     await this.nodeConnection.sshService.exec(config)
                     break;
 
@@ -306,6 +355,48 @@ export class ValidatorAccountManager {
             return YAML.parse(result.stdout)
         log.error(result.stderr)
         return undefined
+    }
+
+    async getApiToken(service){
+        let result = {rc: 1, stderr: "default"}
+        switch(service.service){
+            case 'PrysmValidatorService':
+                let path = ""
+                if(typeof service.volumes[0] == "string"){
+                    path = ServiceVolume.buildByConfig(service.volumes.find(v => v.includes("/opt/app/data/wallets"))).destinationPath
+                } else {
+                    path = service.volumes.find(v => v.servicePath == "/opt/app/data/wallets").destinationPath
+                }
+                if(path){
+                    result = await this.nodeConnection.sshService.exec("cat " + path + "/auth-token")
+                    result.stdout = result.stdout.split('\n').filter(e => e).pop()
+                    break;
+                }
+                result.stderr = "Couldn't find path"
+            break;
+            case 'LighthouseValidatorService':
+                result = await this.nodeConnection.sshService.exec(`docker exec -u 0 -w /opt/app/validator/validators stereum-${service.id} cat api-token.txt`)
+            break;
+            case 'NimbusBeaconService':
+                result = await this.nodeConnection.sshService.exec(`docker exec -u 0 -w /opt/app/validators stereum-${service.id} cat api-token.txt`)
+            break;
+            case 'TekuBeaconService':
+                result = await this.nodeConnection.sshService.exec(`docker exec -u 0 -w /opt/app/data/validator/key-manager stereum-${service.id} cat validator-api-bearer`)
+            break;
+            case 'LodestarValidatorService':
+                result = await this.nodeConnection.sshService.exec(`docker exec -u 0 -w /opt/app/validator/validator-db stereum-${service.id} cat api-token.txt`)
+            break;
+            case 'Web3SignerService':
+                result = await this.nodeConnection.sshService.exec(`docker exec stereum-${service.id} curl -X POST http://localhost:9000/reload`)
+                result.stdout = ""
+            break;
+        }
+
+        if(SSHService.checkExecError(result)){
+            log.error(`Couldn't get API token for ${service.service}: ${SSHService.extractExecError(result)}`)
+            return null
+        }
+        return result.stdout.trim()
     }
 
 }

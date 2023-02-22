@@ -159,6 +159,7 @@ export class NodeConnection {
             name: "installing packages",
             otherRunRef: ref,
             status: false,
+            data: "This error might occur beacuse of a missing interaction. Running this command manually may fix this problem: apt update && apt install -y software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install -y pip ansible tar gzip wget git \n\n\nError: " + installPkgResult.stderr
           });
           this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
           return reject(
@@ -804,6 +805,12 @@ export class NodeConnection {
     });
 
     this.taskManager.otherSubTasks.push({
+      name: "clean up Docker-Networks",
+      otherRunRef: ref,
+      status: !(await this.sshService.exec("docker network prune -f")).rc,
+    });
+
+    this.taskManager.otherSubTasks.push({
       name: "clean up Docker",
       otherRunRef: ref,
       status: !(await this.sshService.exec("docker system prune -a -f")).rc,
@@ -1120,21 +1127,31 @@ export class NodeConnection {
   async restartServer(){
     let status = await this.sshService.exec('cat /var/run/reboot-required')
     if(status.rc == 0){
+      const ref = StringUtils.createRandomString();
+      this.taskManager.otherTasksHandler(ref, "Restarting Server")
       await new Promise(resolve => setTimeout(resolve, 10000))
       await this.sshService.exec('/sbin/shutdown -r now')
+      this.taskManager.otherTasksHandler(ref, "trigger restart", true)
       const retry = { connected: false, counter: 0, maxTries: 300 }
       log.info('Connecting via SSH')
       while (!retry.connected) {
         try {
           await this.sshService.connect(this.nodeConnectionParams);
           retry.connected = true
+          this.taskManager.otherTasksHandler(ref, "Connected", true)
           log.info('Connected!')
         } catch (e) {
-          if (++retry.counter == retry.maxTries) throw e
+          if (++retry.counter == retry.maxTries){
+            this.taskManager.otherTasksHandler(ref, "Could not connect " + (retry.maxTries - retry.counter), false)
+            this.taskManager.otherTasksHandler(ref)
+            throw e
+          }
+          this.taskManager.otherTasksHandler(ref, "Could not connect " + (retry.maxTries - retry.counter), true, e + "\n\n" + (retry.maxTries - retry.counter)  + " tries left.")
           log.info(' Could not connect.\n' + (retry.maxTries - retry.counter) + ' tries left.')
           await new Promise(resolve => setTimeout(resolve, 5000))
         }
       }
+      this.taskManager.otherTasksHandler(ref)
       return true
     }
     return false
