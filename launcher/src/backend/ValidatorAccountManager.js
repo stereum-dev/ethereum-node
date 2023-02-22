@@ -20,7 +20,8 @@ export class ValidatorAccountManager {
 
     createBatch(files, password, slashingDB) { // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
         if(slashingDB)
-            var slashing_protection_content = readFileSync(slashingDB, { encoding: "utf8", })
+            var slashing_protection_content = JSON.parse(readFileSync(slashingDB, { encoding: "utf8", }))
+        console.log(slashing_protection_content)
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
@@ -57,6 +58,7 @@ export class ValidatorAccountManager {
                 if ((await this.nodeConnection.sshService.exec(`cat ${passwords_path}/wallet-password`)).rc === 1) {
                     log.error("No Wallet found")
                     log.info("Generating one")
+                    this.nodeConnection.taskManager.otherTasksHandler(ref, `Check Wallet`, true, "No Wallet found, generating one")
                     //generate wallet password
                     await this.nodeConnection.sshService.exec(`echo ${StringUtils.createRandomString()} > ${passwords_path}/wallet-password`)
                     await this.nodeConnection.sshService.exec(`chmod 700 ${passwords_path}/wallet-password`)
@@ -75,7 +77,8 @@ export class ValidatorAccountManager {
                         this.serviceManager.manageServiceState(client.id, 'started')
                     ])
                     await this.nodeConnection.sshService.exec(`chmod 600 ${wallet_path}/direct/accounts/all-accounts.keystore.json`)
-                    await Sleep(180000)
+                    this.nodeConnection.taskManager.otherTasksHandler(ref, `Generated Wallet`, true, "Waiting 30 Seconds for Client")
+                    await Sleep(30000)
                 }
                 break;
 
@@ -162,6 +165,8 @@ export class ValidatorAccountManager {
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Get Keys`, true, result.stdout)
             
             const data = JSON.parse(result.stdout)
+            if(!data.data)
+                data.data = []
             await this.writeKeys(data.data.map(k => k.validating_pubkey))
 
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Write Keys to keys.yaml`, true)
@@ -184,6 +189,8 @@ export class ValidatorAccountManager {
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout)
             const data = JSON.parse(result.stdout)
             if (picked) {
+                this.nodeConnection.taskManager.otherTasksHandler(ref)
+                console.log(data.slashing_protection)
                 return data.slashing_protection
             }
             this.nodeConnection.taskManager.otherTasksHandler(ref)
@@ -209,7 +216,7 @@ export class ValidatorAccountManager {
         ]
         if(data)
             command.push(`-d '${JSON.stringify(data)}'`)
-        
+        console.log(command.join(" "))
         return await this.nodeConnection.sshService.exec(command.join(" "))
     }
 
