@@ -21,8 +21,8 @@
           grid-row="1/2"
         >
           {{ $t("journalnode.edit") }}</the-node-panel-btn
-        ></router-link
-      >
+        >
+      </router-link>
 
       <the-node-panel-btn
         imgPath="/img/icon/plugin-menu-icons/turning_circle.gif"
@@ -130,9 +130,15 @@
         @close-log="closePluginLogsPage"
       ></plugin-logs>
     </Transition>
+    <restart-modal
+      v-if="restartModalShow"
+      @close-window="restartModalClose"
+    ></restart-modal>
   </div>
 </template>
+
 <script>
+import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ServiceRestartButton from "./ServiceRestartButton.vue";
 import ControlService from "@/store/ControlService";
@@ -144,6 +150,7 @@ import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
   components: {
+    RestartModal,
     UpdateTable,
     ServiceLogButton,
     PluginLogs,
@@ -159,6 +166,7 @@ export default {
       isPluginLogPageActive: false,
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
+      restartModalShow: false,
     };
   },
 
@@ -200,6 +208,7 @@ export default {
     },
     restartService(el) {
       console.log(el);
+      this.restartModalShow = true;
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
@@ -212,6 +221,9 @@ export default {
     restartToggle() {
       this.openRestart = !this.openRestart;
       console.log();
+    },
+    restartModalClose() {
+      this.restartModalShow = false;
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
@@ -245,10 +257,12 @@ export default {
   },
 };
 </script>
+
 <style scoped>
-.test{
+.test {
   display: flex;
 }
+
 .log-navigation {
   grid-row: 2/8;
   display: flex;
@@ -259,6 +273,7 @@ export default {
   overflow-y: scroll;
   flex-direction: column;
 }
+
 .linkToEdit {
   width: 100%;
   height: 100%;
@@ -266,6 +281,7 @@ export default {
   align-items: center;
   display: flex;
 }
+
 .config-node {
   grid-column: 1;
   width: 100%;
@@ -290,6 +306,7 @@ export default {
   justify-content: center;
   align-items: flex-end;
 }
+
 .serverBox {
   width: 100%;
   height: 95%;
@@ -301,6 +318,7 @@ export default {
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
 }
+
 .server .details {
   width: 95%;
   height: 85%;
@@ -328,6 +346,7 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .nameTitle {
   grid-column: 1/2;
   grid-row: 4/6;
@@ -346,6 +365,7 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .name {
   grid-column: 2/3;
   grid-row: 4/6;
@@ -363,6 +383,7 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
+
 .server .ip {
   grid-column: 2/3;
   grid-row: 2/4;
@@ -380,6 +401,7 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
+
 .configBtn {
   grid-column: 1;
   grid-row: 3/10;
@@ -394,11 +416,13 @@ export default {
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }
 
 /* Track */
+
 ::-webkit-scrollbar-track {
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
@@ -408,6 +432,7 @@ export default {
 }
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 50%;
