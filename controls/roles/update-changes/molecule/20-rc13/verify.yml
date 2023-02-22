@@ -1,0 +1,24 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+
+  # NodeExporter
+  - name: Read LighthouseBeaconService file
+    slurp:
+      src: "/etc/stereum/services/30dfcebe-5af2-44c7-86b9-8e224cf3d78b.yaml"
+    register: lighthouse_beacon_service_configuration_raw
+
+  - name: Parse LighthouseBeaconService configuration
+    set_fact: 
+      lighthouse_beacon_service_configuration: "{{ lighthouse_beacon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+  - debug:
+      msg: "{{ lighthouse_beacon_service_configuration }}"
+
+  - assert:
+      that:
+      - (lighthouse_beacon_service_configuration.command | select('match', '^--slasher-max-db-size=') | length) == 0
+
+# EOF
