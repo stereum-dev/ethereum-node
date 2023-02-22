@@ -120,7 +120,14 @@
           :client-type="service.category"
           :service-icon="service.icon"
           @open-log="restartService(service.name)"
-        ></service-log-button>
+        >
+        </service-log-button>
+        <restart-modal
+          v-if="restartModalShow"
+          @close-window="restartModalClose"
+          name="hallo"
+          id="1234"
+        ></restart-modal>
       </div>
     </div>
     <Transition>
@@ -130,10 +137,6 @@
         @close-log="closePluginLogsPage"
       ></plugin-logs>
     </Transition>
-    <restart-modal
-      v-if="restartModalShow"
-      @close-window="restartModalClose"
-    ></restart-modal>
   </div>
 </template>
 

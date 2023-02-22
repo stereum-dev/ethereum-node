@@ -1,9 +1,31 @@
 <template>
   <div class="restart-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
-    <div class="browser-modal"></div>
+    <div class="browser-modal">
+      <div class="restart-icon">
+        <img
+          src="/img/icon/the-staking/stereum-error.png"
+          alt="restart warning"
+        />
+      </div>
+      <div class="restart-question">
+        <span>Are you sure you want to restart?</span>
+      </div>
+      <div class="service-name-id">
+        <span>{{ name }} - {{ id }}</span>
+      </div>
+      <div class="restart-message">
+        your node might go offline while doing so!
+      </div>
+      <div class="restart-button"><span>restart</span></div>
+    </div>
   </div>
 </template>
+<script>
+export default {
+  props: ["name", "id"],
+};
+</script>
 
 <style scoped>
 .restart-modal_parent {
@@ -41,5 +63,62 @@
   align-items: center;
   z-index: 105;
   cursor: default;
+}
+.restart-icon {
+  width: 80%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2% 0;
+}
+.restart-icon img {
+  width: 30%;
+}
+.restart-question {
+  width: 90%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 100%;
+}
+.service-name-id {
+  width: 90%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 120%;
+}
+.restart-message {
+  width: 90%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 100%;
+}
+.restart-button {
+  width: 30%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 100%;
+  background: red;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.restart-button:active {
+  transform: scale(0.9);
 }
 </style>
