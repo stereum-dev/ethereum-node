@@ -67,8 +67,19 @@
         v-if="tillTheNextRelease"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
+      <the-node-panel-btn
+        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="restartToggle"
+        grid-row="4/4"
+        @btn-action="restartToggle"
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.restart") }}</the-node-panel-btn
+      >
     </div>
-    <div class="configBtn" v-else>
+    <div class="configBtn" v-if="!openRestart && openLog">
       <the-node-panel-btn
         imgPath="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
@@ -79,7 +90,7 @@
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
-      <div class="log-navigation">
+      <div class="log-navigation" >
         <service-log-button
           v-for="service in sortedServices"
           :key="service"
@@ -90,6 +101,28 @@
         ></service-log-button>
       </div>
     </div>
+    <div class="configBtn" v-if="openRestart && !openLog">
+      <the-node-panel-btn
+        imgPath="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="restartToggle"
+        grid-row="1/2"
+        @btn-action="restartToggle"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+          <service-restart-button
+            v-for="service in sortedServices"
+            :key="service"
+            :client-name="service.name"
+            :client-type="service.category"
+            :service-icon="service.icon"
+            @open-restart="restartService(service)"
+          ></service-restart-button>
+        </div>
+      </div>
     <Transition>
       <plugin-logs
         :item="itemToLogs"
@@ -101,6 +134,7 @@
 </template>
 <script>
 import ServiceLogButton from "./ServiceLogButton.vue";
+import ServiceRestartButton from "./ServiceRestartButton.vue";
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
@@ -109,12 +143,13 @@ import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable, ServiceLogButton, PluginLogs },
+  components: { UpdateTable, ServiceLogButton, PluginLogs, ServiceRestartButton },
   data() {
     return {
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
+      openRestart: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
       //this data is dummy for invisible the log btn till the next release
@@ -158,11 +193,20 @@ export default {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;
     },
-    closePluginLogsPage() {
+    restartService(el) {
+      console.log(el)
+    },
+    closePluginLogsPage(el) {
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
       this.isPluginLogPageActive = false;
     },
     logToggle() {
       this.openLog = !this.openLog;
+    },
+    restartToggle() {
+      this.openRestart = !this.openRestart;
+      console.log()
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
