@@ -632,7 +632,7 @@ export default {
           for (let i = 0; i < buffer.length; i += chunkSize) {
             //split validator accounts into chunks of 50 (api url limit)
             const chunk = buffer.slice(i, i + chunkSize);
-            let response = await axios.get(networkURls[this.network] + encodeURIComponent(chunk.join()), {validateStatus: function(status){return status < 500}});
+            let response = await axios.get(networkURls[this.network] + "/validator/" + encodeURIComponent(chunk.join()), {validateStatus: function(status){return status < 500}});
             if (response.data.data) data = data.concat(response.data.data); //merge all gathered stats in one array
           }
         }
@@ -649,8 +649,9 @@ export default {
         if (info) {
           let d = new Date()
           let now = new Date()
-          d.setMilliseconds(d.getMilliseconds() - ((latestEpoch ? latestEpoch : info.latestEpoch - info.activationepoch) * 384000))
-
+          latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch)
+          let activationEpoch = parseInt(info.activationepoch)
+          d.setMilliseconds(d.getMilliseconds() - ((latestEpoch - activationEpoch) * 384000))
           key.status = info.status;
           key.balance = info.balance / 1000000000;
           key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days"

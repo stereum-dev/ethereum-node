@@ -152,9 +152,9 @@ export class ValidatorAccountManager {
     }
 
     async listValidators(serviceID) {
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`)
         try {
-            const ref = StringUtils.createRandomString();
-            this.nodeConnection.taskManager.otherTasksHandler(ref, `Listing Keys`)
             
             let client = await this.nodeConnection.readServiceConfiguration(serviceID)
             const result = await this.keystoreAPI(client)
@@ -176,9 +176,9 @@ export class ValidatorAccountManager {
     }
 
     async deleteValidators(serviceID, keys, picked){
+        const ref = StringUtils.createRandomString();
+        this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys`)
         try {
-            const ref = StringUtils.createRandomString();
-            this.nodeConnection.taskManager.otherTasksHandler(ref, `Deleting Keys`)
             let client = await this.nodeConnection.readServiceConfiguration(serviceID)
             const result = await this.keystoreAPI(client, 'DELETE', {pubkeys: keys})
             this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout)

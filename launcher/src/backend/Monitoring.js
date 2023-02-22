@@ -1976,8 +1976,8 @@ rm -rf diskoutput
               balance: key.balance,
               status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/, "")),
               pubkey: key.validator.pubkey,
-              activation_epoch: key.validator.activation_epoch,
-              latestEpoch: JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.finalized.epoch
+              activationepoch: key.validator.activation_epoch,
+              latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1
             }
           })
       }
