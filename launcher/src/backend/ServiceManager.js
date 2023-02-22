@@ -484,7 +484,7 @@ export class ServiceManager {
           new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
           new ServicePort('127.0.0.1', args.port ? args.port : 5052, 5052, servicePortProtocol.tcp),
         ]
-        return LighthouseBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.executionClients, '16', [], args.checkpointURL)
+        return LighthouseBeaconService.buildByUserInput(args.network, ports, args.installDir + '/lighthouse', args.executionClients, [], args.checkpointURL)
 
       case "LighthouseValidatorService":
         ports = [

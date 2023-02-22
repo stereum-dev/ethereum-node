@@ -4,7 +4,7 @@ import { ServiceVolume } from './ServiceVolume.js'
 import { CL_BootNodes } from './GnosisBootNodes.js'
 
 export class LighthouseBeaconService extends NodeService {
-  static buildByUserInput (network, ports, dir, executionClients, slasherDbSize, mevboost, checkpointURL) {
+  static buildByUserInput (network, ports, dir, executionClients, mevboost, checkpointURL) {
     const service = new LighthouseBeaconService()
     service.setId()
     const workingDir = service.buildWorkingDir(dir)
@@ -53,7 +53,6 @@ export class LighthouseBeaconService extends NodeService {
         '--validator-monitor-auto',
         '--slasher',
         `--slasher-dir=${slasherDir}`,
-        `--slasher-max-db-size=${slasherDbSize}`,
       ],  //command
       null, //entrypoint
       null, //env

@@ -71,7 +71,7 @@ test('lighthouse validator import', async () => {
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
     ]
 
-    let lhBC = LighthouseBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], '16', [])
+    let lhBC = LighthouseBeaconService.buildByUserInput('goerli', ports, nodeConnection.settings.stereum.settings.controls_install_path + '/lighthouse', [geth], [])
     //lhBC.imageVersion = versions[lhBC.network][lhBC.service].slice(-1).pop()
     lhBC.imageVersion = versions['prater'][lhBC.service].slice(-1).pop()
     //change out http address for integration test

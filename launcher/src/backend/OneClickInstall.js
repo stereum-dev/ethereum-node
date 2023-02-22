@@ -174,7 +174,7 @@ export class OneClickInstall {
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
         new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
       ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lighthouse', [this.executionClient], '16', this.mevboost ? [this.mevboost] : [], checkpointURL)
+      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lighthouse', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
     }
 
     if (constellation.includes('LighthouseValidatorService')) {
