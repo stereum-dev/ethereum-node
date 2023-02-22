@@ -21,7 +21,6 @@ export class ValidatorAccountManager {
     createBatch(files, password, slashingDB) { // this function can be called both with or without "slashing_protection_content" ---> README & REMOVE ME!!!
         if(slashingDB)
             var slashing_protection_content = JSON.parse(readFileSync(slashingDB, { encoding: "utf8", }))
-        console.log(slashing_protection_content)
         const content = files.map(file => {
             return readFileSync(file.path, { encoding: "utf8", })
         })
@@ -190,7 +189,6 @@ export class ValidatorAccountManager {
             const data = JSON.parse(result.stdout)
             if (picked) {
                 this.nodeConnection.taskManager.otherTasksHandler(ref)
-                console.log(data.slashing_protection)
                 return data.slashing_protection
             }
             this.nodeConnection.taskManager.otherTasksHandler(ref)
@@ -216,7 +214,6 @@ export class ValidatorAccountManager {
         ]
         if(data)
             command.push(`-d '${JSON.stringify(data)}'`)
-        console.log(command.join(" "))
         return await this.nodeConnection.sshService.exec(command.join(" "))
     }
 
