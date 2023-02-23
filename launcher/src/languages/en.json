@@ -19,7 +19,9 @@
     "loading":"loading new states",
     "turnOn":"Turn Node on",
     "turnOff":"Turn Node off",
-    "log":"Open Logs..."
+    "log":"Open Logs...",
+    "start":"start",
+    "stop":"stop"
   },
   "pagesnav": {
     "node": "NODE",

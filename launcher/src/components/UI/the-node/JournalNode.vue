@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="configBtn" v-if="!openLog">
+    <div class="configBtn" v-if="!openLog || !stopStartTogl">
       <router-link to="/manage" class="linkToEdit">
         <the-node-panel-btn
           imgPath="/img/icon/node-journal-icons/edit-node.png"
@@ -62,9 +62,10 @@
         width="15"
         margin-right="3"
         grid-row="3/4"
-        @btn-action=""
-        ><span id="start">start</span> /
-        <span id="stop">stop</span>...</the-node-panel-btn
+        @btn-action="switchPowertoggl"
+        ><span id="start">{{ $t("journalnode.start") }}</span> /
+        <span id="stop">{{ $t("journalnode.stop") }}</span
+        >...</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/logs_icon.svg"
@@ -76,7 +77,7 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
     </div>
-    <div class="configBtn" v-else>
+    <div class="configBtn" v-if="openLog">
       <the-node-panel-btn
         imgPath="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
@@ -94,6 +95,27 @@
           :client-type="service.category"
           :service-icon="service.icon"
           @open-log="displayPluginLogPage(service)"
+        ></service-log-button>
+      </div>
+    </div>
+    <div class="configBtn" v-if="stopStartTogl">
+      <the-node-panel-btn
+        imgPath="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        grid-row="1/2"
+        @btn-action="switchPowertoggl"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log=""
         ></service-log-button>
       </div>
     </div>
@@ -124,6 +146,7 @@ export default {
       openLog: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
+      stopStartTogl: false,
     };
   },
 
@@ -169,6 +192,9 @@ export default {
     logToggle() {
       this.openLog = !this.openLog;
     },
+    switchPowertoggl() {
+      this.stopStartTogl = !this.stopStartTogl;
+    },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
     },
@@ -208,6 +234,7 @@ export default {
 #stop {
   color: #dc0a03;
 }
+.start-stop-nav,
 .log-navigation {
   grid-row: 2/8;
   display: flex;
