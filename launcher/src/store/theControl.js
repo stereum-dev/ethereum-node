@@ -66,6 +66,8 @@ export const useControlStore = defineStore("theControl", {
           img: "/img/icon/plugin-icons/execution/OpenEthereum.png",
         },
       ],
+      consensusText: "",
+      executionText: "",
     };
   },
   actions: {},

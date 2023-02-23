@@ -84,6 +84,7 @@
             ></plugin-logs>
           </Transition>
           <div class="state-icon" :class="serviceStateStatus(item)"></div>
+          <div class="status-icon"><!--<img src="" alt="">--></div>
         </div>
       </div>
     </template>
@@ -328,6 +329,23 @@ export default {
   top: 24%;
   left: 63%;
   border-radius: 50%;
+}
+.status-icon {
+  width: 12%;
+  height: 12%;
+  display: flex;
+  position: absolute;
+  z-index: 1000;
+  top: 65%;
+  left: 60%;
+  border-radius: 50%;
+  background: #000;
+  justify-content: center;
+  align-items: center;
+}
+.status-icon img {
+  width: 5px;
+  height: 5px;
 }
 .showModal {
   display: none;

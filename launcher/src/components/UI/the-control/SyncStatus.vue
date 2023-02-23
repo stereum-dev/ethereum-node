@@ -21,10 +21,7 @@
                 :sync-percent="consensusPer"
               />
             </div>
-            <div
-              class="syncStatusStatus"
-              :class="consensusClass"
-            >
+            <div class="syncStatusStatus" :class="consensusClass">
               <span>{{ consensusText }}</span>
             </div>
             <div
@@ -52,10 +49,7 @@
                 :sync-percent="executionPer"
               />
             </div>
-            <div
-              class="syncStatusStatus"
-              :class="executionClass"
-            >
+            <div class="syncStatusStatus" :class="executionClass">
               <span>{{ executionText }}</span>
             </div>
             <div
@@ -90,6 +84,7 @@
 </template>
 <script>
 import SyncCircularProgress from "./SyncCircularProgress.vue";
+import { mapWritableState } from "pinia";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import NoData from "./NoData.vue";
@@ -115,28 +110,26 @@ export default {
       executionColor: "",
       consensusClass: "",
       executionClass: "",
-      consensusText: "",
-      executionText: "",
       clientInfo: {
         clientred: {
-          text: 'ERROR',
-          color: '#f84343',
+          text: "ERROR",
+          color: "#f84343",
         },
         clientorange: {
-          text: 'INITIALIZING',
-          color: '#ff8c00',
+          text: "INITIALIZING",
+          color: "#ff8c00",
         },
         clientgrey: {
-          text: 'ON-HOLD',
-          color: 'grey',
+          text: "ON-HOLD",
+          color: "grey",
         },
         clientblue: {
-          text: 'SYNCING',
-          color: 'lightblue',
+          text: "SYNCING",
+          color: "lightblue",
         },
         clientgreen: {
-          text: 'SYNCED',
-          color: '#00be00',
+          text: "SYNCED",
+          color: "#00be00",
         },
       },
       syncIco: [
@@ -175,6 +168,10 @@ export default {
       syncstatus: "syncstatus",
       consensusClientsData: "consensusClientsData",
       executionClientsData: "executionClientsData",
+    }),
+    ...mapWritableState(useControlStore, {
+      consensusText: "consensusText",
+      executionText: "executionText",
     }),
     errorIco() {
       return this.syncIco[0].icon;
@@ -267,16 +264,22 @@ export default {
       }
       let gid = pageNum - 1;
       let clients =
-        this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
+        this.syncstatus.hasOwnProperty("data") &&
+        Array.isArray(this.syncstatus.data) &&
+        gid in this.syncstatus.data
           ? this.syncstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
-          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[0]
             : false;
         let clients_last =
-          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[this.syncstatus.data.length - 1]
             : false;
         if (pageNum < 1 && clients_last !== false) {
@@ -387,25 +390,27 @@ export default {
       this.clients = clients;
       for (let k in clients) {
         const item = clients[k];
-        if(item.type == 'consensus'){
+        if (item.type == "consensus") {
           this.consensusName = item.title;
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
           this.consensuColor = this.clientInfo[item.style].color;
           this.consensusText = this.clientInfo[item.style].text;
-          if(item.style == 'clientblue'){
-            this.consensusText = this.displayConsensusPer + '% ' + this.consensusText;
+          if (item.style == "clientblue") {
+            this.consensusText =
+              this.displayConsensusPer + "% " + this.consensusText;
           }
-        }else{
+        } else {
           this.executionName = item.title;
           this.executionFirstVal = item.frstVal;
           this.executionSecondVal = item.scndVal;
           this.executionClass = item.style;
           this.executionColor = this.clientInfo[item.style].color;
           this.executionText = this.clientInfo[item.style].text;
-          if(item.style == 'clientblue'){
-            this.executionText = this.displayExecutionPer + '% ' + this.executionText;
+          if (item.style == "clientblue") {
+            this.executionText =
+              this.displayExecutionPer + "% " + this.executionText;
           }
         }
       }

@@ -115,7 +115,7 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
-          @open-log=""
+          @open-log="stateHandler(service)"
         ></service-log-button>
       </div>
     </div>
@@ -222,6 +222,25 @@ export default {
         Promise.all(promises);
       } catch (err) {
         console.log(state.replace("ed", "ing") + " services failed:\n", err);
+      }
+    },
+    stateHandler: async function (item) {
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
+      if (!item.yaml.includes("isPruning: true")) {
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
       }
     },
   },
