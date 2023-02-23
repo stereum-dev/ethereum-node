@@ -1,14 +1,14 @@
-import { mount } from '@vue/test-utils'
-import CircleLoading from '../../../src/components/UI/CircleLoading'
+import { mount } from "@vue/test-utils";
+import CircleLoading from "../../../src/components/UI/CircleLoading";
 
-test('Props rendered', () => {
+test("Props rendered", () => {
   const wrapper = mount(CircleLoading, {
     propsData: {
-      message: 'Ubuntu',
-      open: true
-    }
-  })
+      message: "Ubuntu",
+      open: true,
+    },
+  });
 
-  expect(wrapper.props().open).toBe(true)
-  expect(wrapper.props().message).toBe('Ubuntu')
-})
+  expect(wrapper.props().open).toBe(true);
+  expect(wrapper.props().message).toBe("Ubuntu");
+});

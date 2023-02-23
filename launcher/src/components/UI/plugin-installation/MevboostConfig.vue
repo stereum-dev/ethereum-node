@@ -18,10 +18,10 @@
               </div>
               <div class="option-table">
                 <div
-                  class="row"
-                  :class="{ selectedItemToAdd: item.isSelected }"
                   v-for="item in availableBlocks"
                   :key="item.id"
+                  class="row"
+                  :class="{ selectedItemToAdd: item.isSelected }"
                   @click="selectItemToAdd(item)"
                 >
                   <div class="rowIcon">
@@ -47,10 +47,10 @@
               </div>
               <div class="included-table">
                 <div
-                  class="row"
-                  :class="{ selectedItemToRemove: item.isRemoved }"
                   v-for="item in usedBlocks"
                   :key="item.id"
+                  class="row"
+                  :class="{ selectedItemToRemove: item.isRemoved }"
                   @click="selectItemToRemove(item)"
                 >
                   <div class="rowIcon">
@@ -67,10 +67,7 @@
             <router-link :to="{ path: '/install' }">
               <span>{{ $t("pluginName.back") }}</span>
             </router-link>
-            <router-link
-              :to="{ path: '/verify' }"
-              :class="{ disabled: !usedBlocks.length }"
-            >
+            <router-link :to="{ path: '/verify' }" :class="{ disabled: !usedBlocks.length }">
               <span>{{ $t("pluginName.next") }}</span>
             </router-link>
           </div>
@@ -107,9 +104,7 @@ export default {
     }),
   },
   mounted() {
-    this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.selectedPreset.network])
-    );
+    this.availableBlocks = this.shuffleRelaysList(this.relaysList.filter((r) => r[this.selectedPreset.network]));
   },
   methods: {
     shuffleRelaysList(array) {
@@ -141,9 +136,7 @@ export default {
           this.usedBlocks.push(i);
         }
       });
-      this.relayURL = this.usedBlocks
-        .map((r) => r[this.selectedPreset.network])
-        .join();
+      this.relayURL = this.usedBlocks.map((r) => r[this.selectedPreset.network]).join();
     },
     removeFromUsedBlocks() {
       this.usedBlocks.forEach((item) => {
@@ -152,9 +145,7 @@ export default {
           this.usedBlocks.splice(this.usedBlocks.indexOf(item), 1);
         }
       });
-      this.relayURL = this.usedBlocks
-        .map((r) => r[this.selectedPreset.network])
-        .join();
+      this.relayURL = this.usedBlocks.map((r) => r[this.selectedPreset.network]).join();
     },
   },
 };

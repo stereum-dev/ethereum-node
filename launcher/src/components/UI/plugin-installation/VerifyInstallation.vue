@@ -20,11 +20,7 @@
                   <span>{{ $t("verifyInstallation.path") }}</span>
                 </div>
                 <div class="table-content">
-                  <div
-                    class="table-row"
-                    v-for="(plugin, index) in selectedPreset.includedPlugins"
-                    :key="index"
-                  >
+                  <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="table-row">
                     <div class="plugin-name">
                       <img :src="plugin.icon" alt="icon" />
                       <span>{{ plugin.name }}</span>
@@ -105,12 +101,11 @@ export default {
     runInstalltion: async function () {
       this.$router.push("/node");
       this.displayInstallationWarning = false;
-      this.refresh = false
+      this.refresh = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
-      const restarted = await ControlService.restartServer()
-      this.refresh = true
-      if(restarted)
-        await new Promise(resolve => setTimeout(resolve, 20000))
+      const restarted = await ControlService.restartServer();
+      this.refresh = true;
+      if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
       await ControlService.writeOneClickConfiguration({
         services: this.selectedPreset.includedPlugins,
         checkpointURL: this.checkPointSync,

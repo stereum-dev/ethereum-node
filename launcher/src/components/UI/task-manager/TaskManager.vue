@@ -4,62 +4,39 @@
       <img :src="mainTaskIcon" alt="icon" />
       <span class="notification">{{ displayingTasks.length }}</span>
     </div>
-    <div
-      class="task-modal-box"
-      v-if="isTaskModalActive"
-    >
+    <div v-if="isTaskModalActive" class="task-modal-box">
       <div class="task-table">
         <div class="table-content">
-          <div
-            class="table-row"
-            v-for="(item, index) in displayingTasks"
-            :key="index"
-          >
-            <div class="table-row-active" v-if="item.status == null">
+          <div v-for="(item, index) in displayingTasks" :key="index" class="table-row">
+            <div v-if="item.status == null" class="table-row-active">
               <div class="active-icon">
                 <img :src="installIconSrc.activeInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
-              <drop-tasks
-                :item="item"
-                @droptaskActive="openDropDown"
-              ></drop-tasks>
+              <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <div class="table-row-success" v-if="item.status === 'success'">
+            <div v-if="item.status === 'success'" class="table-row-success">
               <div class="success-icon">
                 <img :src="installIconSrc.successInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
 
-              <drop-tasks
-                :item="item"
-                @droptaskActive="openDropDown"
-              ></drop-tasks>
+              <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <div class="table-row-failed" v-if="item.status === 'failed'">
+            <div v-if="item.status === 'failed'" class="table-row-failed">
               <div class="failed-icon">
                 <img :src="installIconSrc.failedInstallIcon" alt="icon" />
               </div>
               <span>{{ item.name }}</span>
-              <drop-tasks
-                :item="item"
-                @droptaskActive="openDropDown"
-              ></drop-tasks>
+              <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <sub-tasks
-              v-if="item.showDropDown"
-              :subTasks="item?.subTasks"
-            ></sub-tasks>
+            <sub-tasks v-if="item.showDropDown" :sub-tasks="item?.subTasks"></sub-tasks>
           </div>
         </div>
       </div>
       <div class="list-cleaner">
         <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
-        <img
-          @click="listCleanerHandler"
-          src="../../../../public/img/icon/task-manager-icons/remove-tasks.png"
-          alt=""
-        />
+        <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
       </div>
     </div>
   </div>
@@ -128,12 +105,8 @@ export default {
         this.displayingTasks = this.Tasks;
       } else {
         //if DropDown is open only update what the user sees so the menue doesn't close
-        this.displayingTasks[0].subTasks = this.Tasks.find(
-          (t) => t.id === this.displayingTasks[0].id
-        ).subTasks;
-        this.displayingTasks[0].status = this.Tasks.find(
-          (t) => t.id === this.displayingTasks[0].id
-        ).status;
+        this.displayingTasks[0].subTasks = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).subTasks;
+        this.displayingTasks[0].status = this.Tasks.find((t) => t.id === this.displayingTasks[0].id).status;
       }
     },
     taskModalHandler() {

@@ -1,7 +1,7 @@
 <template>
   <div class="parent">
     <div id="container">
-      <div class="baselogo-box" @click="activePage" v-if="!dialogIsVisible">
+      <div v-if="!dialogIsVisible" class="baselogo-box" @click="activePage">
         <base-logo :link="link"> </base-logo>
       </div>
 
@@ -10,13 +10,13 @@
         <span v-if="hiddenDialogActive">choose your language</span>
         <span v-else>Click to continue</span>
       </div>
-      <lang-dialog @close="hideDialog" :open="dialogIsVisible">
+      <lang-dialog :open="dialogIsVisible" @close="hideDialog">
         <flag-button
-          @setting="setLang(link.langName, link.langSelect, link.label)"
           v-for="link in linkFlags"
-          :key="link.langImg"
           id="flag-btn"
-          :isActive="link.enable"
+          :key="link.langImg"
+          :is-active="link.enable"
+          @setting="setLang(link.langName, link.langSelect, link.label)"
         >
           <div class="langIco"><img :src="link.langImg" /></div>
           <div class="langName">
@@ -25,7 +25,7 @@
         </flag-button>
       </lang-dialog>
 
-      <div class="selected-flag" v-if="isLanguageSelected" @click="showDialog">
+      <div v-if="isLanguageSelected" class="selected-flag" @click="showDialog">
         <div class="flag-box">
           <img :src="selectedLanguage.flag" class="selected-icon" />
         </div>
@@ -52,9 +52,6 @@ export default {
   components: { BaseLogo, LangButton, LangDialog, FlagButton },
 
   emit: ["open", "page"],
-  created() {
-    this.checkSettings();
-  },
   data() {
     return {
       link: "",
@@ -66,6 +63,9 @@ export default {
         label: "",
       },
     };
+  },
+  created() {
+    this.checkSettings();
   },
   mounted() {
     this.showDialog();
@@ -95,10 +95,7 @@ export default {
       }, 1000);
     },
     activePage() {
-      if (
-        this.selectedLanguage.flag == "" ||
-        this.selectedLanguage.lang == ""
-      ) {
+      if (this.selectedLanguage.flag == "" || this.selectedLanguage.lang == "") {
         // return
       } else {
         this.link = "/img/icon/language-animations/languageSelection3.gif";
@@ -109,10 +106,7 @@ export default {
     },
     checkSettings: async function () {
       const savedConfig = await ControlService.readConfig();
-      if (
-        savedConfig !== undefined &&
-        savedConfig.savedLanguage !== undefined
-      ) {
+      if (savedConfig !== undefined && savedConfig.savedLanguage !== undefined) {
         this.setLang(
           savedConfig.savedLanguage.language,
           savedConfig.savedLanguage.flag,

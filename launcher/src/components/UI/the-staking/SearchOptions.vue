@@ -1,29 +1,21 @@
 <template>
   <div class="searchOptions" @mousedown.prevent.stop>
     <img
-      @click="togglePubkeyView"
       v-if="isPubkeyVisible"
       class="pubkeyView"
       src="../../../../public/img/icon/the-staking/view2.png"
       alt="icon"
+      @click="togglePubkeyView"
     />
     <img
-      @click="togglePubkeyView"
       v-if="!isPubkeyVisible"
       class="pubkeyView"
       src="../../../../public/img/icon/the-staking/unview2.png"
       alt="icon"
+      @click="togglePubkeyView"
     />
-    <img
-      class="folder"
-      src="../../../../public/img/icon/the-staking/newfolder-icon.png"
-      alt="icon"
-    />
-    <img
-      class="filter"
-      src="../../../../public/img/icon/the-staking/staking-filter.png"
-      alt="icon"
-    />
+    <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
+    <img class="filter" src="../../../../public/img/icon/the-staking/staking-filter.png" alt="icon" />
   </div>
 </template>
 <script>

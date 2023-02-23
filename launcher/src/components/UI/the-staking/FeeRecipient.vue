@@ -1,17 +1,8 @@
 <template>
   <div class="feeBox">
     <div class="enter-fee" @click="$emit('enterFee')">
-      <input
-        :placeholder="$t('feeRecipient.textPlaceHolder')"
-        v-model="password"
-        v-if="activeFee"
-        type="text"
-      />
-      <button
-        @keyup.enter="$emit('confirmBtn')"
-        @click="$emit('confirmBtn')"
-        v-if="activeFee"
-      >
+      <input v-if="activeFee" v-model="password" :placeholder="$t('feeRecipient.textPlaceHolder')" type="text" />
+      <button v-if="activeFee" @keyup.enter="$emit('confirmBtn')" @click="$emit('confirmBtn')">
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
       <span v-else>{{ $t("feeRecipient.setBlock") }}</span>

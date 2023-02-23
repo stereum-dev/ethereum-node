@@ -1,5 +1,5 @@
 <template>
-  <dialog open v-if="open">
+  <dialog v-if="open" open>
     <slot></slot>
   </dialog>
 </template>

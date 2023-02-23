@@ -3,10 +3,7 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img
-            src="../../../../public/img/icon/control/keyEth.svg"
-            alt="Key-icon"
-          />
+          <img src="../../../../public/img/icon/control/keyEth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
@@ -51,8 +48,7 @@ export default {
     return {
       //dummy value o test
       networkCurrencySymbolIcon: "",
-      mainnetCurrencySymbolIcon:
-        "/img/icon/control/mainnet-currency-symbol.png",
+      mainnetCurrencySymbolIcon: "/img/icon/control/mainnet-currency-symbol.png",
       testnetCurrencySymbolIcon: "/img/icon/control/goETH_Currency_Symbol.png",
       gnosisCurrencySymbolIcon: "/img/icon/control/gno_currency_symbol.png",
       defaultCurrencySymbolIcon: "/img/icon/control/stakingWu.svg",

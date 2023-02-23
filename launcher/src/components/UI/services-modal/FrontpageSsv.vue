@@ -3,9 +3,7 @@
     <div class="operator-box">
       <div class="operator-content">
         <span class="title">{{ $t("frontPageSsv.newRegistritionTitle") }}</span>
-        <span class="description">{{
-          $t("frontPageSsv.newRegistritionText")
-        }}</span>
+        <span class="description">{{ $t("frontPageSsv.newRegistritionText") }}</span>
       </div>
       <div class="operator-btn" @click="$emit('openPubkey')">
         <span> {{ $t("frontPageSsv.register") }}</span>

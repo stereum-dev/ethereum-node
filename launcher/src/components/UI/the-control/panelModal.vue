@@ -11,8 +11,8 @@
             <div class="item-description">
               <p>{{ item.description }}</p>
             </div>
-            <div class="item-ip" v-if="item.ipBox">
-              <input type="text" placeholder="127.0.0.1" v-model="ip" />
+            <div v-if="item.ipBox" class="item-ip">
+              <input v-model="ip" type="text" placeholder="127.0.0.1" />
             </div>
             <div class="item-img-box">
               <div class="item-img">

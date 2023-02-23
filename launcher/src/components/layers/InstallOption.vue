@@ -14,7 +14,7 @@
         <button id="back">{{ $t("installOption.back") }}</button>
       </router-link>
       <div class="install-box">
-        <button v-if="isButtonEnabled" @click="clickedToInstall" class="instal">
+        <button v-if="isButtonEnabled" class="instal" @click="clickedToInstall">
           {{ $t("installOption.install") }}
         </button>
       </div>

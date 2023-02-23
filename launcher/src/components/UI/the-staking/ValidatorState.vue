@@ -3,10 +3,7 @@
     <div class="stateBox">
       <div class="balance">
         <div class="balance-title">
-          <span
-            >{{ $t("timeReward.totalText") }} {{ keys.length }}
-            {{ $t("timeReward.validators") }}</span
-          >
+          <span>{{ $t("timeReward.totalText") }} {{ keys.length }} {{ $t("timeReward.validators") }}</span>
         </div>
         <div class="balance-value">
           <span>{{ totalBalance }}</span>
@@ -21,28 +18,19 @@
         <div class="proposedContent">
           <div class="left-side">
             <div class="view">
-              <img
-                src="../../../../public/img/icon/the-staking/eye.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/eye.png" alt="icon" />
               <div class="view-value">
                 <span></span>
               </div>
             </div>
             <div class="cube">
-              <img
-                src="../../../../public/img/icon/the-staking/cube-icon.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/cube-icon.png" alt="icon" />
               <div class="cube-value">
                 <span>135456456</span>
               </div>
             </div>
             <div class="meet">
-              <img
-                src="../../../../public/img/icon/the-staking/meet.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/meet.png" alt="icon" />
               <div class="meet-value">
                 <span></span>
               </div>
@@ -50,28 +38,19 @@
           </div>
           <div class="right-side">
             <div class="percentage">
-              <img
-                src="../../../../public/img/icon/the-staking/percentage.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/percentage.png" alt="icon" />
               <div class="percentage-value">
                 <span>100</span>
               </div>
             </div>
             <div class="percentage">
-              <img
-                src="../../../../public/img/icon/the-staking/percentage.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/percentage.png" alt="icon" />
               <div class="percentage-value">
                 <span>95</span>
               </div>
             </div>
             <div class="slashing">
-              <img
-                src="../../../../public/img/icon/the-staking/slasher.png"
-                alt="icon"
-              />
+              <img src="../../../../public/img/icon/the-staking/slasher.png" alt="icon" />
               <div class="slashing-value">
                 <span></span>
               </div>

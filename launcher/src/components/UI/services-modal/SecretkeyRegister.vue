@@ -3,20 +3,11 @@
     <div class="secretkey-box">
       <label for="secretKey"
         >{{ $t("secretKeyReg.modalLabel") }}
-        <input
-          name="secretkey"
-          id="secretKey"
-          type="password"
-          v-model="enteredSecretkey"
-        />
+        <input id="secretKey" v-model="enteredSecretkey" name="secretkey" type="password" />
       </label>
     </div>
     <div class="btn-box">
-      <button
-        @click="insertKey($data)"
-        :class="{ 'btn-disabled': isBtnDisabled }"
-        :disabled="isBtnDisabled"
-      >
+      <button :class="{ 'btn-disabled': isBtnDisabled }" :disabled="isBtnDisabled" @click="insertKey($data)">
         {{ $t("secretKeyReg.apply") }}
       </button>
     </div>

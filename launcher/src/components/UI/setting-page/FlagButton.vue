@@ -1,5 +1,5 @@
 <template>
-  <div class="flagBtn_parent" @click="setting" :style="activeCheck()">
+  <div class="flagBtn_parent" :style="activeCheck()" @click="setting">
     <slot></slot>
   </div>
 </template>

@@ -8,10 +8,7 @@
           <span class="comment-row2">NODE CLIENT &</span>
         </div>
         <div class="icon-part" :data-tooltip="serviceName">
-          <img
-            src="../../../../public/img/icon/control/PrometheusServiceCircle.png"
-            alt=""
-          />
+          <img src="../../../../public/img/icon/control/PrometheusServiceCircle.png" alt="" />
         </div>
       </div>
     </div>

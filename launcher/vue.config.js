@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require("path");
 module.exports = {
   parallel: false,
   pluginOptions: {
@@ -31,8 +31,6 @@ module.exports = {
   chainWebpack: (config) => {
     config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
 
-    config.module
-      .rule("vue")
-      .use("vue-loader", "css-loader")
+    config.module.rule("vue").use("vue-loader", "css-loader");
   },
 };
