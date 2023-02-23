@@ -57,14 +57,22 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
+        imgPath="/img/icon/node-journal-icons/start_stop.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        grid-row="3/4"
+        @btn-action=""
+        ><span id="start">start</span> /
+        <span id="stop">stop</span>...</the-node-panel-btn
+      >
+      <the-node-panel-btn
         imgPath="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
         width="15"
         margin-right="3"
-        btn-action="logToggle"
-        grid-row="3/4"
+        grid-row="4/5"
         @btn-action="logToggle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
     </div>
@@ -74,7 +82,6 @@
         is-color="green"
         width="10"
         margin-right="5"
-        btn-action="logToggle"
         grid-row="1/2"
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
@@ -117,8 +124,6 @@ export default {
       openLog: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
-      //this data is dummy for invisible the log btn till the next release
-      tillTheNextRelease: true,
     };
   },
 
@@ -197,6 +202,12 @@ export default {
 };
 </script>
 <style scoped>
+#start {
+  color: #40ee1d;
+}
+#stop {
+  color: #dc0a03;
+}
 .log-navigation {
   grid-row: 2/8;
   display: flex;
