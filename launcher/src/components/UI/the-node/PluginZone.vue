@@ -83,6 +83,7 @@
               @close-log="closePluginLogsPage"
             ></plugin-logs>
           </Transition>
+          <div class="state-icon" :class="serviceStateStatus(item)"></div>
         </div>
       </div>
     </template>
@@ -147,6 +148,15 @@ export default {
     }),
   },
   methods: {
+    serviceStateStatus(item) {
+      if (item.state === "running") {
+        return "green";
+      } else if (item.serviceIsPending) {
+        return "orange";
+      } else {
+        return "red";
+      }
+    },
     updateStates: async function () {
       let serviceInfos = await ControlService.listServices();
       this.installedServices.forEach((s, idx) => {
@@ -298,6 +308,27 @@ export default {
 };
 </script>
 <style scoped>
+.green {
+  background-color: green;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.red {
+  background-color: red;
+}
+.state-icon {
+  width: 7%;
+  height: 7%;
+  display: flex;
+  position: absolute;
+  z-index: 1000;
+  top: 24%;
+  left: 63%;
+  border-radius: 50%;
+}
 .showModal {
   display: none;
 }
