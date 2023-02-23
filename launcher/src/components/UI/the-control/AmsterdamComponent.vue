@@ -8,16 +8,11 @@
     </div>
     <div class="docBox">
       <comming-soon></comming-soon>
-      <div
-        class="line-squares"
-        v-for="obj in array"
-        :key="obj"
-        :data-tooltip="'EPOCH: ' + obj.slot"
-      >
+      <div v-for="obj in array" :key="obj" class="line-squares" :data-tooltip="'EPOCH: ' + obj.slot">
         <div
-          class="square"
           v-for="square in obj.bar"
           :key="square"
+          class="square"
           :style="{ backgroundColor: getColor(square) }"
         ></div>
       </div>

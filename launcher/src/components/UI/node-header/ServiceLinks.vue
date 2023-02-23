@@ -1,35 +1,19 @@
 <template>
   <div class="links-box">
-    <div class="services" ref="service">
-      <div
-        class="service-icon"
-        v-for="(service, idx) in runningServices"
-        :key="idx"
-      >
+    <div ref="service" class="services">
+      <div v-for="(service, idx) in runningServices" :key="idx" class="service-icon">
         <div class="icon-box" onmousedown="return false">
           <img
-            @click="openServiceBrowser(service.service)"
             v-show="isImgExists"
             :src="service.hIcon"
             alt="service-icon"
+            @click="openServiceBrowser(service.service)"
           />
         </div>
-        <grafana-modal
-          v-if="showGrafanaWindow"
-          @close-window="closeServiceBrowser"
-        ></grafana-modal>
-        <ssv-modal
-          @close-window="closeServiceBrowser"
-          v-if="showSsvWindow"
-        ></ssv-modal>
-        <prometheus-modal
-          @close-window="closeServiceBrowser"
-          v-if="showPrometheusWindow"
-        ></prometheus-modal>
-        <mevboost-modal
-          @close-window="closeServiceBrowser"
-          v-if="showMevboostWindow"
-        ></mevboost-modal>
+        <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
+        <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
+        <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser"></prometheus-modal>
+        <mevboost-modal v-if="showMevboostWindow" @close-window="closeServiceBrowser"></mevboost-modal>
       </div>
       <div class="arrow-box">
         <div class="right-arrow left-paddle paddle" @click="scrollRight">

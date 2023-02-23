@@ -15,14 +15,14 @@ import CommingSoon from "./components/layers/CommingSoon.vue";
 import TheNodePanelBtn from "./components/UI/the-node/TheNodePanelBtn.vue";
 
 const app = createApp(App);
-app.component("comming-soon", CommingSoon);
-app.component("the-node-panel-btn", TheNodePanelBtn);
-app.component("background-page", BackgroundPage);
-app.component("the-trapezium", TheTrapezium);
-app.component("node-bg", NodeBg);
-app.component("node-header", NodeHeader);
-app.component("service-plugin", ServicePlugin);
-app.component("node-service", NodeService);
+app.component("CommingSoon", CommingSoon);
+app.component("TheNodePanelBtn", TheNodePanelBtn);
+app.component("BackgroundPage", BackgroundPage);
+app.component("TheTrapezium", TheTrapezium);
+app.component("NodeBg", NodeBg);
+app.component("NodeHeader", NodeHeader);
+app.component("ServicePlugin", ServicePlugin);
+app.component("NodeService", NodeService);
 
 app.use(createPinia());
 app.use(router);

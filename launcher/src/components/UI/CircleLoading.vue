@@ -2,7 +2,7 @@
   <div class="progress-box">
     <div class="progress">
       <div class="color"></div>
-      <img src="/img/icon/welcome-page/gear.png" class="gear" v-if="active" />
+      <img v-if="active" src="/img/icon/welcome-page/gear.png" class="gear" />
     </div>
   </div>
 </template>
@@ -13,7 +13,6 @@ export default {
     message: String,
     open: Boolean,
   },
-
 };
 </script>
 
@@ -131,6 +130,4 @@ dialog {
     width: 100%;
   }
 }
-
-;
 </style>

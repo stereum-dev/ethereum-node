@@ -1,6 +1,6 @@
 <template>
   <div class="contributor-parent">
-    <div class="crown" v-if="crown">
+    <div v-if="crown" class="crown">
       <img src="../../../../public/img/icon/credit/crown.png" alt="crown" />
     </div>
     <div class="contributor-avatar"><img :src="avatar" /></div>

@@ -2,17 +2,10 @@
   <div class="exitBox">
     <div class="exitRow">
       <div class="iconBox">
-        <img
-          class="exit-icon"
-          src="../../../../public/img/icon/the-staking/exit2.png"
-          alt="icon"
-        />
+        <img class="exit-icon" src="../../../../public/img/icon/the-staking/exit2.png" alt="icon" />
       </div>
       <div class="inputBox">
-        <input
-          type="text"
-          :placeholder="$t('exitMultipleValidator.passMessage')"
-        />
+        <input type="text" :placeholder="$t('exitMultipleValidator.passMessage')" />
       </div>
       <div class="confirmBox">
         <button class="confirmBtn" @click="$emit('confirmBtn')">

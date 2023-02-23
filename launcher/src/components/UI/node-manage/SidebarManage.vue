@@ -1,20 +1,20 @@
 <template>
   <div @mouseleave="showSidebar = false">
-    <div @click="showSidebar = !showSidebar" class="toggle-btn">
+    <div class="toggle-btn" @click="showSidebar = !showSidebar">
       <img
-        @mousedown.prevent.stop
         v-if="showSidebar"
         class="hidden-icon"
         src="../../../../public/img/icon/manage-node-icons/sidebar-in.png"
         alt=""
+        @mousedown.prevent.stop
       />
       <img
-        @mousedown.prevent.stop
         v-else
-        @mouseenter="showSidebar = true"
         class="show-icon"
         src="../../../../public/img/icon/manage-node-icons/sidebar-out.png"
         alt=""
+        @mousedown.prevent.stop
+        @mouseenter="showSidebar = true"
       />
     </div>
     <div :class="{ 'run-sidebar': showSidebar }" class="manage-sidebar">
@@ -27,16 +27,9 @@
       </div>
       <div class="plugin-box">
         <div class="plugin-col">
-          <template
-            v-for="item in plugins"
-            :key="item.id"
-          >
-            <div
-              @dragstart="startDrag($event, item)"
-              @dblclick="$emit('addService', item)"
-              class="itemBox"
-            >
-              <div class="tooltip" v-if="item.displayNameTooltip">
+          <template v-for="item in plugins" :key="item.id">
+            <div class="itemBox" @dragstart="startDrag($event, item)" @dblclick="$emit('addService', item)">
+              <div v-if="item.displayNameTooltip" class="tooltip">
                 <span class="tooltipText">{{ item.name }}</span>
               </div>
               <img
@@ -65,6 +58,12 @@ export default {
       plugins: [],
     };
   },
+  watch: {
+    showSidebar() {
+      this.currentCategory = "service";
+      this.selectCategoryTitle();
+    },
+  },
   mounted() {
     this.currentCategory = "service";
     this.plugins = this.allServices.map((item) => {
@@ -73,13 +72,7 @@ export default {
         displayNameTooltip: false,
       };
     });
-    this.selectCategoryTitle()
-  },
-  watch: {
-    showSidebar(){
-      this.currentCategory = "service"
-      this.selectCategoryTitle()
-    },
+    this.selectCategoryTitle();
   },
   computed: {
     ...mapWritableState(useServices, {
@@ -103,92 +96,97 @@ export default {
     },
   },
   methods: {
-    getFilterbyNetwork(){
+    getFilterbyNetwork() {
       switch (this.configNetwork.network) {
         case "mainnet":
         case "testnet":
-          return (item) => item.service != 'SSVNetworkService'
+          return (item) => item.service != "SSVNetworkService";
         case "gnosis":
-          return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service)
+          return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service);
         default:
-          return (item) => item.service != 'SSVNetworkService'
-
+          return (item) => item.service != "SSVNetworkService";
       }
     },
     selectCategoryTitle(direction) {
-      if(direction == null){
-        this.currentCategory = ""
+      if (direction == null) {
+        this.currentCategory = "";
       }
       switch (this.currentCategory) {
         case "all":
-          if(direction == "right"){
+          if (direction == "right") {
             this.currentCategory = "execution client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "execution";
-            }).filter(this.getFilterbyNetwork());
-          }
-          else if(direction == "left")
-          {
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "execution";
+              })
+              .filter(this.getFilterbyNetwork());
+          } else if (direction == "left") {
             this.currentCategory = "service";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "service";
-            }).filter(this.getFilterbyNetwork());
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "service";
+              })
+              .filter(this.getFilterbyNetwork());
           }
           break;
         case "execution client":
-          if(direction == "right"){
+          if (direction == "right") {
             this.currentCategory = "consensus client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "consensus";
-            }).filter(this.getFilterbyNetwork());
-          }
-          else if(direction == "left")
-          {
-            this.currentCategory = "all";
-            this.plugins = this.allServices.filter(this.getFilterbyNetwork()); 
-          }
-          break;
-        case "consensus client":
-          if(direction == "right"){
-            this.currentCategory = "validator client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "validator";
-            }).filter(this.getFilterbyNetwork());
-          }
-          else if(direction == "left")
-          {
-            this.currentCategory = "execution client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "execution";
-            }).filter(this.getFilterbyNetwork());
-          }
-          break;
-        case "validator client":
-          if(direction == "right"){
-            this.currentCategory = "service";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "service";
-            }).filter(this.getFilterbyNetwork());
-          }
-          else if(direction == "left")
-          {
-            this.currentCategory = "consensus client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "consensus";
-            }).filter(this.getFilterbyNetwork());
-          }
-          break;
-        case "service":
-          if(direction == "right"){
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "consensus";
+              })
+              .filter(this.getFilterbyNetwork());
+          } else if (direction == "left") {
             this.currentCategory = "all";
             this.plugins = this.allServices.filter(this.getFilterbyNetwork());
           }
-          else if(direction == "left")
-          {
+          break;
+        case "consensus client":
+          if (direction == "right") {
             this.currentCategory = "validator client";
-            this.plugins = this.allServices.filter((item) => {
-              return item.category === "validator";
-            }).filter(this.getFilterbyNetwork());
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "validator";
+              })
+              .filter(this.getFilterbyNetwork());
+          } else if (direction == "left") {
+            this.currentCategory = "execution client";
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "execution";
+              })
+              .filter(this.getFilterbyNetwork());
+          }
+          break;
+        case "validator client":
+          if (direction == "right") {
+            this.currentCategory = "service";
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "service";
+              })
+              .filter(this.getFilterbyNetwork());
+          } else if (direction == "left") {
+            this.currentCategory = "consensus client";
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "consensus";
+              })
+              .filter(this.getFilterbyNetwork());
+          }
+          break;
+        case "service":
+          if (direction == "right") {
+            this.currentCategory = "all";
+            this.plugins = this.allServices.filter(this.getFilterbyNetwork());
+          } else if (direction == "left") {
+            this.currentCategory = "validator client";
+            this.plugins = this.allServices
+              .filter((item) => {
+                return item.category === "validator";
+              })
+              .filter(this.getFilterbyNetwork());
           }
           break;
         default:

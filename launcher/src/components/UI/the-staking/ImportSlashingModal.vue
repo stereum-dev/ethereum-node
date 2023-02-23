@@ -1,12 +1,9 @@
 <template>
   <div class="remove-modal-parent">
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
-    <div class="remove-modal-content" v-if="!importSlashingFile">
+    <div v-if="!importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("importSlashingModal.slashModalMessage") }}</span>
@@ -14,24 +11,12 @@
       <div class="slashingParent">
         <div class="pickSlashing">
           <label for="no" class="inline-flex items-center">
-            <input
-              class="form-radio"
-              type="radio"
-              id="no"
-              value="no"
-              v-model="picked"
-            />
+            <input id="no" v-model="picked" class="form-radio" type="radio" value="no" />
             NO
           </label>
 
           <label for="yes" class="inline-flex items-center">
-            <input
-              class="form-radio"
-              type="radio"
-              id="yes"
-              value="yes"
-              v-model="picked"
-            />
+            <input id="yes" v-model="picked" class="form-radio" type="radio" value="yes" />
             YES
           </label>
         </div>
@@ -42,42 +27,32 @@
       <div class="continue-box" :class="{ disabled: !disabledBtn }">
         <div
           class="continue-btn"
-          @click.stop="
-            $emit(
-              'importSlashing',
-              picked == 'yes' ? slashingDB.path : '',
-              picked == 'yes' ? true : false
-            )
-          "
+          @click.stop="$emit('importSlashing', picked == 'yes' ? slashingDB.path : '', picked == 'yes' ? true : false)"
         >
           <span>{{ $t("importSlashingModal.continue") }}</span>
         </div>
       </div>
       <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
-    <div class="remove-modal-content" v-if="importSlashingFile">
+    <div v-if="importSlashingFile" class="remove-modal-content">
       <div class="title-box">
-        <img
-          class="folder-icon"
-          src="../../../../public/img/icon/the-staking/folder.png"
-          alt="icon"
-        />
+        <img class="folder-icon" src="../../../../public/img/icon/the-staking/folder.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("importSlashingModal.importMessage") }}</span>
       </div>
-      <div class="uploadBox" v-if="picked == 'yes'">
+      <div v-if="picked == 'yes'" class="uploadBox">
         <div class="upload-btn" @click="openFileUpload">
           <span>{{ $t("importSlashingModal.chooseFile") }}</span>
           <input
-            type="file"
-            @change="signalChangeHandler"
-            style="display: none"
             ref="fileInput"
+            type="file"
+            style="display: none"
             accept="application/json"
+            @change="signalChangeHandler"
           />
         </div>
-        <div class="pathBox" v-if="slashingDB.name">
+        <div v-if="slashingDB.name" class="pathBox">
           <span class="fileName">{{ slashingDB.name }}</span>
         </div>
       </div>
@@ -85,13 +60,7 @@
       <div class="continue-box" :class="{ disabled: !disabledBtn }">
         <div
           class="continue-btn"
-          @click.stop="
-            $emit(
-              'importSlashing',
-              picked == 'yes' ? slashingDB.path : '',
-              picked == 'yes' ? true : false
-            )
-          "
+          @click.stop="$emit('importSlashing', picked == 'yes' ? slashingDB.path : '', picked == 'yes' ? true : false)"
         >
           <span>{{ $t("importSlashingModal.continue") }}</span>
         </div>
@@ -111,6 +80,7 @@ export default {
       importSlashingFile: false,
     };
   },
+  computed: {},
   watch: {
     picked: function () {
       if (this.picked === "yes") {
@@ -127,7 +97,6 @@ export default {
       }
     },
   },
-  computed: {},
   methods: {
     openFileUpload() {
       this.$refs.fileInput.click();

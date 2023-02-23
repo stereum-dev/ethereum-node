@@ -10,32 +10,22 @@
       <div class="wrapper">
         <!--new form start-->
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="activeWidget" v-if="syncItemsShow">
+        <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
               <span>{{ consensusName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="consensuColor"
-                :sync-percent="consensusPer"
-              />
+              <sync-circular-progress :color="consensuColor" :sync-percent="consensusPer" />
             </div>
-            <div
-              class="syncStatusStatus"
-              :class="consensusClass"
-            >
+            <div class="syncStatusStatus" :class="consensusClass">
               <span>{{ consensusText }}</span>
             </div>
             <div
               class="consensusIconCons"
               :class="{ clientColor: clientColor }"
               :data-tooltip="
-                consensusName +
-                ': ' +
-                formatValues(consensusFirstVal) +
-                ' / ' +
-                formatValues(consensusSecondVal)
+                consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
               "
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
@@ -47,25 +37,15 @@
               <span>{{ executionName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="executionColor"
-                :sync-percent="executionPer"
-              />
+              <sync-circular-progress :color="executionColor" :sync-percent="executionPer" />
             </div>
-            <div
-              class="syncStatusStatus"
-              :class="executionClass"
-            >
+            <div class="syncStatusStatus" :class="executionClass">
               <span>{{ executionText }}</span>
             </div>
             <div
               class="executionIconCons"
               :data-tooltip="
-                executionName +
-                ': ' +
-                formatValues(executionFirstVal) +
-                ' / ' +
-                formatValues(executionSecondVal)
+                executionName + ': ' + formatValues(executionFirstVal) + ' / ' + formatValues(executionSecondVal)
               "
             >
               <img :src="clientImage(executionName)" alt="execution" />
@@ -75,7 +55,7 @@
         <!--new form end-->
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService" v-show="syncItemsShow">
+    <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
         <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
@@ -119,24 +99,24 @@ export default {
       executionText: "",
       clientInfo: {
         clientred: {
-          text: 'ERROR',
-          color: '#f84343',
+          text: "ERROR",
+          color: "#f84343",
         },
         clientorange: {
-          text: 'INITIALIZING',
-          color: '#ff8c00',
+          text: "INITIALIZING",
+          color: "#ff8c00",
         },
         clientgrey: {
-          text: 'ON-HOLD',
-          color: 'grey',
+          text: "ON-HOLD",
+          color: "grey",
         },
         clientblue: {
-          text: 'SYNCING',
-          color: 'lightblue',
+          text: "SYNCING",
+          color: "lightblue",
         },
         clientgreen: {
-          text: 'SYNCED',
-          color: '#00be00',
+          text: "SYNCED",
+          color: "#00be00",
         },
       },
       syncIco: [
@@ -207,13 +187,8 @@ export default {
         return "";
       }
       const lowerCaseInputValue = name.toLowerCase();
-      const clientData = [
-        ...this.consensusClientsData,
-        ...this.executionClientsData,
-      ];
-      const matchingClient = clientData.find(
-        (client) => client.name.toLowerCase() === lowerCaseInputValue
-      );
+      const clientData = [...this.consensusClientsData, ...this.executionClientsData];
+      const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
       return matchingClient ? matchingClient.img : "";
     },
     getPer(firstVal, secondVal) {
@@ -272,11 +247,15 @@ export default {
           : false;
       if (!clients) {
         let clients_first =
-          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[0]
             : false;
         let clients_last =
-          this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[this.syncstatus.data.length - 1]
             : false;
         if (pageNum < 1 && clients_last !== false) {
@@ -291,13 +270,8 @@ export default {
           clients = this.syncstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.syncstatus.hasOwnProperty("data") &&
-            this.syncstatus.data.hasOwnProperty("error")
-          ) {
-            if (
-              this.syncstatus.data.error == "prometheus service not running"
-            ) {
+          if (this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")) {
+            if (this.syncstatus.data.error == "prometheus service not running") {
               this.syncItemsShow = false;
               this.syncIcoUnknown = true;
               this.syncIcoError = false;
@@ -362,10 +336,7 @@ export default {
           }
           fonts.green.push(k);
         }
-        if (
-          fonts.grey.length &&
-          fonts.grey.length == this.syncstatus.data[gid].length
-        ) {
+        if (fonts.grey.length && fonts.grey.length == this.syncstatus.data[gid].length) {
           syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
         }
         for (let col in fonts) {
@@ -387,25 +358,25 @@ export default {
       this.clients = clients;
       for (let k in clients) {
         const item = clients[k];
-        if(item.type == 'consensus'){
+        if (item.type == "consensus") {
           this.consensusName = item.title;
           this.consensusFirstVal = item.frstVal;
           this.consensusSecondVal = item.scndVal;
           this.consensusClass = item.style;
           this.consensuColor = this.clientInfo[item.style].color;
           this.consensusText = this.clientInfo[item.style].text;
-          if(item.style == 'clientblue'){
-            this.consensusText = this.displayConsensusPer + '% ' + this.consensusText;
+          if (item.style == "clientblue") {
+            this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
           }
-        }else{
+        } else {
           this.executionName = item.title;
           this.executionFirstVal = item.frstVal;
           this.executionSecondVal = item.scndVal;
           this.executionClass = item.style;
           this.executionColor = this.clientInfo[item.style].color;
           this.executionText = this.clientInfo[item.style].text;
-          if(item.style == 'clientblue'){
-            this.executionText = this.displayExecutionPer + '% ' + this.executionText;
+          if (item.style == "clientblue") {
+            this.executionText = this.displayExecutionPer + "% " + this.executionText;
           }
         }
       }

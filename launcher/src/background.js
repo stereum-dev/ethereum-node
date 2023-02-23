@@ -20,12 +20,9 @@ const monitoring = new Monitoring();
 const nodeConnection = new NodeConnection();
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
-const validatorAccountManager = new ValidatorAccountManager(
-  nodeConnection,
-  serviceManager
-);
-const { globalShortcut } = require('electron');
-const foo = null ?? 'default string';
+const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
+const { globalShortcut } = require("electron");
+const foo = null ?? "default string";
 const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -58,10 +55,10 @@ ipcMain.handle("connect", async (event, arg) => {
 
 ipcMain.handle("reconnect", async () => {
   try {
-      await nodeConnection.establish(taskManager);
-      await taskManager.nodeConnection.establish();
-      await monitoring.nodeConnection.establish();
-      await monitoring.nodeConnectionProm.establish();
+    await nodeConnection.establish(taskManager);
+    await taskManager.nodeConnection.establish();
+    await monitoring.nodeConnection.establish();
+    await monitoring.nodeConnectionProm.establish();
   } catch (err) {
     log.error("Couldn't reconnect:\n", err);
   }
@@ -81,7 +78,7 @@ ipcMain.handle("checkConnection", async () => {
 
 ipcMain.handle("destroy", async () => {
   app.showExitPrompt = true;
-  const serviceConfigs = await serviceManager.readServiceConfigurations()
+  const serviceConfigs = await serviceManager.readServiceConfigurations();
   const returnValue = await nodeConnection.destroyNode(serviceConfigs);
   app.showExitPrompt = false;
   return returnValue;
@@ -130,13 +127,13 @@ ipcMain.handle("prepareOneClickInstallation", async (event, arg) => {
 });
 
 ipcMain.handle("writeOneClickConfiguration", async (event, args) => {
-  log.info(args)
+  log.info(args);
   await oneClickInstall.createServices(
     args.array.map((service) => {
       return service.service;
     }),
     args.checkpointURL,
-    args.relayURL,
+    args.relayURL
   );
   return await oneClickInstall.writeConfig();
 });
@@ -218,12 +215,7 @@ ipcMain.handle("writeServiceYAML", async (event, args) => {
 
 ipcMain.handle("importKey", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await validatorAccountManager.importKey(
-    args.files,
-    args.password,
-    args.service,
-    args.slashingDB
-  );
+  const returnValue = await validatorAccountManager.importKey(args.files, args.password, args.service, args.slashingDB);
   app.showExitPrompt = false;
   return returnValue;
 });
@@ -304,10 +296,7 @@ ipcMain.handle("clearTasks", async () => {
 });
 
 ipcMain.handle("insertSSVNetworkKeys", async (event, args) => {
-  return await validatorAccountManager.insertSSVNetworkKeys(
-    args.service,
-    args.pk
-  );
+  return await validatorAccountManager.insertSSVNetworkKeys(args.service, args.pk);
 });
 
 ipcMain.handle("refreshServiceInfos", async () => {
@@ -327,11 +316,7 @@ ipcMain.handle("setGraffitis", async (event, args) => {
 });
 
 ipcMain.handle("chooseServiceAction", async (event, args) => {
-  return await serviceManager.chooseServiceAction(
-    args.action,
-    args.service,
-    args.data
-  );
+  return await serviceManager.chooseServiceAction(args.action, args.service, args.data);
 });
 
 ipcMain.handle("handleServiceChanges", async (event, args) => {
@@ -340,7 +325,7 @@ ipcMain.handle("handleServiceChanges", async (event, args) => {
 
 ipcMain.handle("getStereumSettings", async () => {
   await nodeConnection.findStereumSettings();
-  return nodeConnection.settings
+  return nodeConnection.settings;
 });
 
 ipcMain.handle("setStereumSettings", async (event, args) => {
@@ -359,19 +344,19 @@ ipcMain.handle("prepareStereumNode", async (event, args) => {
   app.showExitPrompt = true;
   await oneClickInstall.prepareNode(args, nodeConnection);
   app.showExitPrompt = false;
-  return 0
+  return 0;
 });
 
 ipcMain.handle("restartServer", async () => {
-  return await nodeConnection.restartServer()
+  return await nodeConnection.restartServer();
 });
 
 ipcMain.handle("readSSVNetworkConfig", async (event, args) => {
-  return await nodeConnection.readSSVNetworkConfig(args)
+  return await nodeConnection.readSSVNetworkConfig(args);
 });
 
 ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
-  return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config)
+  return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
 ipcMain.handle("getValidatorState", async (event, args) => {
@@ -379,9 +364,7 @@ ipcMain.handle("getValidatorState", async (event, args) => {
 });
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  { scheme: "app", privileges: { secure: true, standard: true } },
-]);
+protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 
 async function createWindow() {
   // Create the browser window.
@@ -398,16 +381,16 @@ async function createWindow() {
       nodeIntegration: false,
       preload: path.join(__dirname, "preload.js"),
     },
+  };
+  if (!isDevelopment) {
+    initwin["maxHeight"] = 609;
+    initwin["maxWidth"] = 1044;
   }
-  if(!isDevelopment){
-    initwin['maxHeight'] = 609;
-    initwin['maxWidth'] = 1044;
-  }
-  if (!isDevelopment && process.platform === "win32"){
-    initwin['minHeight'] = 650
-    initwin['minWidth'] = 1100
-    initwin['maxHeight'] = 650
-    initwin['maxWidth'] = 1100
+  if (!isDevelopment && process.platform === "win32") {
+    initwin["minHeight"] = 650;
+    initwin["minWidth"] = 1100;
+    initwin["maxHeight"] = 650;
+    initwin["maxWidth"] = 1100;
   }
 
   const win = new BrowserWindow(initwin);
@@ -423,9 +406,9 @@ async function createWindow() {
     win.loadURL("app://./index.html");
   }
 
-  win.on('ready-to-show', async () => {
-    await nodeConnection.closeTunnels()
-});
+  win.on("ready-to-show", async () => {
+    await nodeConnection.closeTunnels();
+  });
 
   win.on("close", (e) => {
     if (app.showExitPrompt) {
@@ -434,8 +417,7 @@ async function createWindow() {
         type: "question",
         buttons: ["Yes", "No"],
         title: "Confirm",
-        message:
-          "Critical tasks are running in the background.\nAre you sure you want to quit?",
+        message: "Critical tasks are running in the background.\nAre you sure you want to quit?",
         icon: "./public/img/icon/node-journal-icons/red-warning.png",
       });
       if (response === 0) {
@@ -447,18 +429,18 @@ async function createWindow() {
 }
 
 // Disable CTRL+R and F5 in build
-if(!isDevelopment){
-  app.on('browser-window-focus', function () {
+if (!isDevelopment) {
+  app.on("browser-window-focus", function () {
     globalShortcut.register("CommandOrControl+R", () => {
-        // console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+      // console.log("CommandOrControl+R is pressed: Shortcut Disabled");
     });
     globalShortcut.register("F5", () => {
-        // console.log("F5 is pressed: Shortcut Disabled");
+      // console.log("F5 is pressed: Shortcut Disabled");
     });
   });
-  app.on('browser-window-blur', function () {
-    globalShortcut.unregister('CommandOrControl+R');
-    globalShortcut.unregister('F5');
+  app.on("browser-window-blur", function () {
+    globalShortcut.unregister("CommandOrControl+R");
+    globalShortcut.unregister("F5");
   });
 }
 
@@ -485,8 +467,8 @@ app.on("web-contents-created", (event, contents) => {
     if (["https:", "http:", "mailto:"].includes(parsedUrl.protocol)) {
       shell.openExternal(parsedUrl.href);
     }
-    return { action: 'deny' }
-  })
+    return { action: "deny" };
+  });
 });
 
 // This method will be called when Electron has finished
@@ -499,32 +481,34 @@ app.on("ready", async () => {
   // }
 
   // Disable "View" and "Window" Menu items in build (since CTRL+R and F5 is disabled also)
-  if(!isDevelopment){
-    const hideMenuItems = ["viewmenu","windowmenu"];
+  if (!isDevelopment) {
+    const hideMenuItems = ["viewmenu", "windowmenu"];
     var menu = Menu.getApplicationMenu();
-    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => item.visible = false);
+    menu.items.filter((item) => hideMenuItems.includes(item.role)).map((item) => (item.visible = false));
     Menu.setApplicationMenu(menu);
   }
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
 
-autoUpdater.on('error', (error) => {
-  dialog.showErrorBox('Error: ', error == null ? "unknown" : (error.stack || error).toString())
-})
+autoUpdater.on("error", (error) => {
+  dialog.showErrorBox("Error: ", error == null ? "unknown" : (error.stack || error).toString());
+});
 
-autoUpdater.on('update-downloaded', () => {
-  dialog.showMessageBox({
-    type: "question",
-    buttons: ["Yes", "No"],
-    title: "Install Update",
-    message: "Update downloaded!\n Do you want to restart and apply updates now?",
-  }).then((result) => {
-    if(result.response == 0){
-      autoUpdater.quitAndInstall()
-    }
-  })
-})
+autoUpdater.on("update-downloaded", () => {
+  dialog
+    .showMessageBox({
+      type: "question",
+      buttons: ["Yes", "No"],
+      title: "Install Update",
+      message: "Update downloaded!\n Do you want to restart and apply updates now?",
+    })
+    .then((result) => {
+      if (result.response == 0) {
+        autoUpdater.quitAndInstall();
+      }
+    });
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
