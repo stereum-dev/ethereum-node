@@ -3,17 +3,12 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("removeMultiModal.sure") }}</span>
         <p>{{ item.key }}</p>
-        <span>{{
-          $t("removeMultiModal.slashing")
-        }}</span>
+        <span>{{ $t("removeMultiModal.slashing") }}</span>
       </div>
       <div class="slashingParent">
         <!-- <Transition name="slide-up">
@@ -28,29 +23,17 @@
               />
             </div>
           </div> -->
-          <div class="pickSlashing">
-            <label for="no" class="inline-flex items-center">
-              <input
-                class="form-radio"
-                type="radio"
-                id="no"
-                value="no"
-                v-model="picked"
-              />
-              NO
-            </label>
+        <div class="pickSlashing">
+          <label for="no" class="inline-flex items-center">
+            <input id="no" v-model="picked" class="form-radio" type="radio" value="no" />
+            NO
+          </label>
 
-            <label for="yes" class="inline-flex items-center">
-              <input
-                class="form-radio"
-                type="radio"
-                id="yes"
-                value="yes"
-                v-model="picked"
-              />
-              YES
-            </label>
-          </div>
+          <label for="yes" class="inline-flex items-center">
+            <input id="yes" v-model="picked" class="form-radio" type="radio" value="yes" />
+            YES
+          </label>
+        </div>
         <!-- </Transition> -->
       </div>
 
@@ -75,6 +58,7 @@ export default {
       disabledBtn: false,
     };
   },
+  computed: {},
   watch: {
     // path: function () {
     //   if (this.path.trim().length > 0) {
@@ -91,7 +75,6 @@ export default {
       }
     },
   },
-  computed: {},
   methods: {
     // getPath(event) {
     //   const filePath = event.target.files[0].path;

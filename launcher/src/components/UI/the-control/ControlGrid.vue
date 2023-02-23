@@ -7,17 +7,10 @@
         </div>
         <div class="plugins-table-bg">
           <div class="arrow-up">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
-              alt=""
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png" alt="" />
           </div>
           <div class="plugins-table">
-            <div
-              class="plugins-row"
-              v-for="(item, index) in installedServices"
-              :key="index"
-            >
+            <div v-for="(item, index) in installedServices" :key="index" class="plugins-row">
               <div
                 class="plugins-pending-state"
                 :class="{
@@ -46,64 +39,55 @@
                       />
                       <img
                         v-else-if="item.state == 'running'"
-                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/shutdown.png"
                         alt="icon"
+                        @click.stop="stateHandler(item)"
                       />
                       <img
                         v-else-if="item.state == 'restarting'"
-                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/restart.png"
                         alt="icon"
+                        @click.stop="stateHandler(item)"
                       />
                       <img
                         v-else
-                        @click.stop="stateHandler(item)"
                         src="/img/icon/plugin-menu-icons/turn-on.png"
                         alt="icon"
+                        @click.stop="stateHandler(item)"
                       />
                     </div>
                   </div>
                   <div class="icon-bg">
-                    <div
-                      class="seting-icon"
-                      @click.stop="expertModeHandler(item)"
-                    >
-                      <img
-                        src="/img/icon/plugin-menu-icons/setting8.png"
-                        alt="icon"
-                      />
+                    <div class="seting-icon" @click.stop="expertModeHandler(item)">
+                      <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
                     </div>
                   </div>
                 </div>
               </div>
               <the-expert
-                @hide-modal="hideExpertMode(item)"
                 v-if="item.expertOptionsModal"
-                @prunning-warning="runGethPrunningWarning"
-                @resync-warning="runResyncWarning"
                 :item="item"
                 position="23.4"
+                @hide-modal="hideExpertMode(item)"
+                @prunning-warning="runGethPrunningWarning"
+                @resync-warning="runResyncWarning"
               ></the-expert>
               <prunning-modal
-                :item="item"
                 v-if="gethPrunningWarningModal"
+                :item="item"
                 @cancel-warning="hidePrunningWarningsModal"
                 @confirm-btn="confirmRunningGethPrunning(option)"
               ></prunning-modal>
               <resync-modal
-                :item="item"
                 v-if="resyncWarningModal"
+                :item="item"
                 @cancel-warning="hideResyncWarningsModal"
                 @confirm-btn="confirmRunningResync"
               ></resync-modal>
             </div>
           </div>
           <div class="arrow-down">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
-              alt="icon"
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png" alt="icon" />
           </div>
         </div>
       </control-plugins>
@@ -205,8 +189,7 @@ export default {
     },
     expertModeHandler(el) {
       this.installedServices.map((item) => {
-        if (item.category === el.category && item?.id === el.id)
-          el.expertOptionsModal = true;
+        if (item.category === el.category && item?.id === el.id) el.expertOptionsModal = true;
       });
     },
     // Check if service is Geth

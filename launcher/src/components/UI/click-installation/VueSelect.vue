@@ -4,11 +4,7 @@
       <div class="icon-box">
         <img v-if="networkIcon" :src="networkIcon" alt="icon" />
       </div>
-      <select
-        id="selector"
-        @change="pluginNetworkHandler"
-        v-model="selectedNetworkName"
-      >
+      <select id="selector" v-model="selectedNetworkName" @change="pluginNetworkHandler">
         <option class="ring-0" value="" selected>
           {{ $t("installOption.placeHoldrer") }}
         </option>
@@ -22,19 +18,15 @@
         <div class="plugin-box">
           <div class="network-container">
             <div
-              class="plugin"
-              v-for="(item, index) in this.plugins.filter(
-                (p) => p.network === selectedNetworkName
-              )"
+              v-for="(item, index) in plugins.filter((p) => p.network === selectedNetworkName)"
               :key="index"
+              class="plugin"
             >
               <img
                 :src="item.icon"
                 alt="icon"
                 :class="{
-                  selectedItem:
-                    item.id === this.selectedPreset?.id &&
-                    item.serviceAvailable,
+                  selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
                   notAvailable: !item.serviceAvailable,
                 }"
                 @click="selectItemToInstall(item)"
@@ -74,9 +66,7 @@ export default {
   },
   methods: {
     pluginNetworkHandler() {
-      let network = this.networks.find(
-        (item) => item.name === this.selectedNetworkName
-      );
+      let network = this.networks.find((item) => item.name === this.selectedNetworkName);
       this.networkIcon = network ? network.icon : "";
       this.selectedNetwork = network;
     },
@@ -85,19 +75,14 @@ export default {
         setup: item.name,
         network: this.selectedNetworkName,
       });
-      let includedPlugins = this.allServices.filter((service) =>
-        constellation.includes(service.service)
-      );
+      let includedPlugins = this.allServices.filter((service) => constellation.includes(service.service));
       if (
         includedPlugins.map((e) => e.service).includes("SSVNetworkService") ||
         includedPlugins.map((e) => e.service).includes("RocketpoolService")
       ) {
         includedPlugins.splice(
           includedPlugins.findIndex(
-            (e) =>
-              e.service != "SSVNetworkService" &&
-              e.service != "RocketpoolService" &&
-              e.category === "validator"
+            (e) => e.service != "SSVNetworkService" && e.service != "RocketpoolService" && e.category === "validator"
           ),
           1
         );
@@ -144,8 +129,7 @@ export default {
   color: rgb(97, 194, 255);
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
-    var(--tw-ring-color);
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
 }
 .select-box #selector:focus {
   outline: none;
@@ -155,8 +139,7 @@ export default {
   height: 100%;
   margin-left: 5px;
   border: none !important;
-  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width))
-    var(--tw-ring-color);
+  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
 }
 .select-box:hover {
   border: 2px solid rgb(32, 191, 235);

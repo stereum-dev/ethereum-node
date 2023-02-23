@@ -35,7 +35,7 @@
                     <span>{{ $t("pluginName.path") }}</span>
                   </div>
                   <div class="change-box">
-                    <input type="text" v-model="installationPath" />
+                    <input v-model="installationPath" type="text" />
                   </div>
                 </div>
                 <div class="fast-sync">
@@ -44,26 +44,16 @@
                       <span>SYNCHRONISATION</span>
                     </div>
                     <div class="headerContent">
-                      <img
-                        @click="changeTheOption"
-                        src="/img/icon/arrows/left-arrow.png"
-                        alt="icon"
-                      />
+                      <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
                       <span v-if="genesisIsActive">GENESIS</span>
                       <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
-                      <img
-                        @click="changeTheOption"
-                        src="/img/icon/arrows/right-arrow.png"
-                        alt="icon"
-                      />
+                      <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
                     </div>
                   </div>
                   <div class="content">
-                    <span v-if="genesisIsActive">{{
-                      $t("pluginName.syncClient")
-                    }}</span>
-                    <div class="inputBox" v-if="checkPointIsActive">
-                      <input type="text" v-model="checkPointSync" />
+                    <span v-if="genesisIsActive">{{ $t("pluginName.syncClient") }}</span>
+                    <div v-if="checkPointIsActive" class="inputBox">
+                      <input v-model="checkPointSync" type="text" />
                     </div>
                   </div>
                 </div>
@@ -74,19 +64,15 @@
                 <span>{{ $t("pluginName.plugin") }}</span>
               </div>
               <div class="info-box">
-                <div
-                  class="info-row"
-                  v-for="(plugin, index) in selectedPreset.includedPlugins"
-                  :key="index"
-                >
+                <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="info-row">
                   <change-modal v-if="plugin.showChangeModal">
                     <div class="replaced-plugins">
                       <div
-                        class="item"
                         v-for="(item, idx) in filteredPluginsOnCategory"
                         :key="idx"
-                        @click="pluginChangeHandler(plugin, item, index)"
+                        class="item"
                         :data-tooltip="item.name"
+                        @click="pluginChangeHandler(plugin, item, index)"
                       >
                         <img
                           :src="item.icon"
@@ -120,10 +106,7 @@
             <router-link :to="{ path: '/selectPlugin' }">
               <span>{{ $t("pluginName.back") }}</span>
             </router-link>
-            <router-link
-              v-if="selectedPreset.name === 'mev boost'"
-              :to="{ path: '/mevboost' }"
-            >
+            <router-link v-if="selectedPreset.name === 'mev boost'" :to="{ path: '/mevboost' }">
               <span>{{ $t("pluginName.next") }}</span>
             </router-link>
             <router-link v-else :to="{ path: '/verify' }">
@@ -187,35 +170,27 @@ export default {
       }
     },
     pushNewProperthyToPresets() {
-      this.selectedPreset.includedPlugins =
-        this.selectedPreset.includedPlugins.map((item) => {
-          return {
-            showChangeModal: false,
-            ...item,
-          };
-        });
+      this.selectedPreset.includedPlugins = this.selectedPreset.includedPlugins.map((item) => {
+        return {
+          showChangeModal: false,
+          ...item,
+        };
+      });
     },
     pluginChangeHandler(el, item, idx) {
       el.showChangeModal = false;
       this.selectedPreset.includedPlugins[idx] = item; //no matter what change the service you clicked on
-      if (
-        this.selectedPreset.name === "staking" ||
-        this.selectedPreset.name === "mev boost"
-      ) {
+      if (this.selectedPreset.name === "staking" || this.selectedPreset.name === "mev boost") {
         //if the preset is staking:
         if (item.category === "consensus") {
           //and you just changed the consensus client
-          let valIndex = this.selectedPreset.includedPlugins.findIndex(
-            (e) => e.category === "validator"
-          ); //find the index of the current validator service
+          let valIndex = this.selectedPreset.includedPlugins.findIndex((e) => e.category === "validator"); //find the index of the current validator service
           this.selectedPreset.includedPlugins[valIndex] = this.allPlugins.find(
             (e) => e.service === item.name + "ValidatorService"
           ); //change the validator service to the matching one
         } else if (item.category === "validator") {
           //otherwise if you changed the validator client do the same for the consensus client
-          let conIndex = this.selectedPreset.includedPlugins.findIndex(
-            (e) => e.category === "consensus"
-          );
+          let conIndex = this.selectedPreset.includedPlugins.findIndex((e) => e.category === "consensus");
           this.selectedPreset.includedPlugins[conIndex] = this.allPlugins.find(
             (e) => e.service === item.name + "BeaconService"
           );
@@ -225,24 +200,11 @@ export default {
     sortPlugins() {
       //sorts includedPlugins in this order: EXECUTION -> CONSENSUS -> VALIDATOR -> SERVICE
       if (this.selectedPreset.includedPlugins) {
-        const ec = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "execution"
-        );
-        const cc = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "consensus"
-        );
-        const vc = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "validator"
-        );
-        const services = this.selectedPreset.includedPlugins.filter(
-          (p) => p.category === "service"
-        );
-        this.selectedPreset.includedPlugins = new Array().concat(
-          ec,
-          cc,
-          vc,
-          services
-        );
+        const ec = this.selectedPreset.includedPlugins.filter((p) => p.category === "execution");
+        const cc = this.selectedPreset.includedPlugins.filter((p) => p.category === "consensus");
+        const vc = this.selectedPreset.includedPlugins.filter((p) => p.category === "validator");
+        const services = this.selectedPreset.includedPlugins.filter((p) => p.category === "service");
+        this.selectedPreset.includedPlugins = new Array().concat(ec, cc, vc, services);
       }
     },
     pluginExChange(el) {
@@ -269,9 +231,7 @@ export default {
           if (this.selectedNetwork.name == "gnosis") {
             filter = (item) =>
               item.category === element.category &&
-              /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(
-                item.service
-              );
+              /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service);
           }
           break;
         case "ssv.network":
@@ -319,9 +279,8 @@ export default {
     },
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if(largestVolumePath = '/')
-        largestVolumePath = largestVolumePath + 'opt'
-      const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
+      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },
   },

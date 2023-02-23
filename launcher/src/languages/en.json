@@ -34,8 +34,8 @@
     "bugReport": "BUG REPORT",
     "bugRepText": "Please take the time to write an issue and let us make Stereum better!",
     "emailText": "or write an email to:",
-    "docsTitle":"chain docs",
-    "docsText":"A handy link to the network logs' documentation for your selected node configuration."
+    "docsTitle": "chain docs",
+    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
   "notifModal": {
     "notification": "Notifications",
@@ -67,7 +67,7 @@
     "switchC": "Switch Clients",
     "migrate": "Nodes Migration",
     "rpc": "RPC Connection",
-    "gnoStake":"STAKE WITH 1 GNO"
+    "gnoStake": "STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "client"
@@ -104,7 +104,7 @@
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
-    "osTitle":"operating system (server)"
+    "osTitle": "operating system (server)"
   },
   "controlPage": {
     "node": "NODE",
@@ -203,7 +203,7 @@
     "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "BACK",
     "install": "INSTALL",
-    "placeHoldrer":"choose a network"
+    "placeHoldrer": "choose a network"
   },
   "removeModal": {
     "removeText": "All services will be removed.",
@@ -213,7 +213,7 @@
     "welcome": "WELCOME",
     "installText": "IN THIS STEP YOU CHOOSE HOW YOU WANT TO INSTALL YOUR NODE. IF YOU NEED ASSISTANCE WITH THE SETUP, JOIN OUR DISCORD - WE ARE HAPPY TO HELP YOU OUT",
     "osCheck": "CHECKING IF THE OS OF YOUR SERVER IS SUPPORTED",
-    "osSupported":"IS A SUPPORTED OS"
+    "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
     "option": "OPTION",
@@ -231,9 +231,9 @@
     "techTitle": "CREDITS - TECHNICAL CONTRIBUTORS",
     "techText": "EARN A GITPOAP! LEARN HOW TO GET INVOLVED BY VISITING OUR GITHUB!",
     "financialPage": "FINANCIAL CONTRIBUTION",
-    "gitcoinList":"GITCOIN COMPLETE LIST",
-    "developers":"DEVELOPERS",
-    "testers":"TESTERS"
+    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "developers": "DEVELOPERS",
+    "testers": "TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "VERIFY & INSTALL",
@@ -244,85 +244,84 @@
   "warningModal": {
     "warningText": "We recommend you to wait until the initial installation is done before applying further changes"
   },
-  "tutorialBox":{
-    "video":"video",
-    "walkthrough":"walkthrough",
-    "textGuide":"written guide"
+  "tutorialBox": {
+    "video": "video",
+    "walkthrough": "walkthrough",
+    "textGuide": "written guide"
   },
-  "frontPageSsv":{
-    "newRegistritionTitle":"REGISTER A NEW OPERATOR",
-    "newRegistritionText":"Use the newly generated operator key to register a new node operator into the SSV Network",
-    "register":"Register",
-    "insertTitle":"insert operator key for existing operator",
-    "insertText":"Use an existing operator private key to recover your existing node operator's processes"
+  "frontPageSsv": {
+    "newRegistritionTitle": "REGISTER A NEW OPERATOR",
+    "newRegistritionText": "Use the newly generated operator key to register a new node operator into the SSV Network",
+    "register": "Register",
+    "insertTitle": "insert operator key for existing operator",
+    "insertText": "Use an existing operator private key to recover your existing node operator's processes"
   },
-  "registerSSV":{
-    "pubKey":"Public operator key",
-    "copied":"copied!",
-    "secKey":"Secret Operator Key",
-    "makeSureText":"Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
-    "copyMessage":"Copy your public operator key into this field to confirm that you stored your keys!"
+  "registerSSV": {
+    "pubKey": "Public operator key",
+    "copied": "copied!",
+    "secKey": "Secret Operator Key",
+    "makeSureText": "Please make sure to store and backup your operator secret key in a safe place.Do not share this key with anyone.",
+    "copyMessage": "Copy your public operator key into this field to confirm that you stored your keys!"
   },
-  "ssvDashboard":{
-    "operatorPage":"My Operator Page",
-    "SSVNodeGrafna":"SSV Node Grafana Dashboard"
+  "ssvDashboard": {
+    "operatorPage": "My Operator Page",
+    "SSVNodeGrafna": "SSV Node Grafana Dashboard"
   },
-  "secretKeyReg":{
-    "modalLabel":"INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
-    "apply":"APPLY"
+  "secretKeyReg": {
+    "modalLabel": "INSERT AN EXISTING PRIVATE OPERATOR KEY TO USE IT AS YOUR OPERATOR KEY",
+    "apply": "APPLY"
   },
-  "dataAPIAndRPC":{
-    "copy":"Click to copy!",
-    "closed":"Tunnel closed!",
-    "turnOnMessage":"Please turn ON the DATA-API tunnel first!",
-    "copiedMessage":"DATA-API-URL copied to clipboard!",
-    "RPCTurnOnMessage":"Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage":"RPC-URL copied to clipboard!"
+  "dataAPIAndRPC": {
+    "copy": "Click to copy!",
+    "closed": "Tunnel closed!",
+    "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
+    "copiedMessage": "DATA-API-URL copied to clipboard!",
+    "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
   },
-  "pluginLogs":{
-    "pageTitle":"PLUG-IN LOGS",
-    "noLogFound":"No log found in the list",
-    "clickCopy":"Click on the logs to copy",
-    "serviceId":"service id"
+  "pluginLogs": {
+    "pageTitle": "PLUG-IN LOGS",
+    "noLogFound": "No log found in the list",
+    "clickCopy": "Click on the logs to copy",
+    "serviceId": "service id"
   },
-  "serviceModals":{
-    "localApp":"LOCAL APPLICATION",
-    "localAppText":"Open up the service on your local machine",
-    "openBrowser":"OPEN IN BROWSER",
-    "availBlockRel":"AVAILABLE BLOCK RELAYS",
-    "process":"Processing",
-    "blockRel":"Block relay",
-    "blockRelTxt":"Select one or multiple relays to receive blocks from"
+  "serviceModals": {
+    "localApp": "LOCAL APPLICATION",
+    "localAppText": "Open up the service on your local machine",
+    "openBrowser": "OPEN IN BROWSER",
+    "availBlockRel": "AVAILABLE BLOCK RELAYS",
+    "process": "Processing",
+    "blockRel": "Block relay",
+    "blockRelTxt": "Select one or multiple relays to receive blocks from"
   },
-  "customInstallation":{
-    "customInstallationTitle":"CUSTOM INSTALLATION",
-    "customInstallationText":"This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
-    "chooseWhereToInstall":"CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
-    "installationPath":"INSTALLATION PATH"
+  "customInstallation": {
+    "customInstallationTitle": "CUSTOM INSTALLATION",
+    "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
+    "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
+    "installationPath": "INSTALLATION PATH"
   },
-  "mevboostConfig":{
-    "availRelays":"AVAILABLE BLOCK RELAYS",
-    "usedRelays":"USED BLOCK RELAYS"
+  "mevboostConfig": {
+    "availRelays": "AVAILABLE BLOCK RELAYS",
+    "usedRelays": "USED BLOCK RELAYS"
   },
-  "addModifyPanel":{
-    "installPath":"INSTALLATION PATH",
-    "syncMessage":"SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "portused":"PORT USED",
-    "cancel":"cancel",
-    "save":"save",
-    "add":"ADD",
-    "clickAndAdd":"Click on ADD"
+  "addModifyPanel": {
+    "installPath": "INSTALLATION PATH",
+    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "portused": "PORT USED",
+    "cancel": "cancel",
+    "save": "save",
+    "add": "ADD",
+    "clickAndAdd": "Click on ADD"
   },
-  "importSlashingModal":{
-    "slashModalMessage":"Do you want to import with a Slashing Protection Database?",
-    "importMessage":"Import your slashing database file.",
-    "chooseFile":"Choose File",
-    "continue":"Continue"
+  "importSlashingModal": {
+    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
+    "importMessage": "Import your slashing database file.",
+    "chooseFile": "Choose File",
+    "continue": "Continue"
   },
-  "prunningModal":{
-    "prunningText":"GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
-    "prunningChecked":"I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
-    "prunningStart":"Start Pruning"
-
+  "prunningModal": {
+    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningStart": "Start Pruning"
   }
 }

@@ -28,10 +28,7 @@
           </div>
         </div>
         <div class="categoryBox">
-          <p class="category">
-            {{ logsItem.category
-            }}<span v-if="logsItem.category != 'service'"> client</span>
-          </p>
+          <p class="category">{{ logsItem.category }}<span v-if="logsItem.category != 'service'"> client</span></p>
           <span id="serviceVersion">{{ logsItem.config.imageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
@@ -41,9 +38,9 @@
       <div class="logBox">
         <div class="log-box_nav">
           <div
-            class="nav-button"
             v-for="service in sortedServices"
             :key="service"
+            class="nav-button"
             @click="displayPluginLogPage(service)"
           >
             <img :src="service.icon" :alt="service.name" />
@@ -51,11 +48,7 @@
         </div>
         <div class="logsTable">
           <template v-if="logsList.length">
-            <div
-              class="tableRow"
-              v-for="(log, idx) in logsList.slice(-150)"
-              :key="idx"
-            >
+            <div v-for="(log, idx) in logsList.slice(-150)" :key="idx" class="tableRow">
               <div class="rowMsg" @dblclick="copy">
                 <span>#{{ idx + 1 }}</span>
                 <span id="log">{{ log }}</span>
@@ -74,17 +67,8 @@
           <span>{{ $t("pluginLogs.clickCopy") }}</span>
         </div>
         <div class="searchBox">
-          <input
-            id="search"
-            type="search"
-            placeholder="Search"
-            v-model="searchValue"
-          />
-          <img
-            src="/img/icon/arrows/search.png"
-            alt="icon"
-            v-if="!searchValue"
-          />
+          <input id="search" v-model="searchValue" type="search" placeholder="Search" />
+          <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
         </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
@@ -120,9 +104,7 @@ export default {
   computed: {
     logsList() {
       if (this.searchValue.length > 0) {
-        return this.logs.filter((i) =>
-          i.toLowerCase().includes(this.searchValue.toLowerCase())
-        );
+        return this.logs.filter((i) => i.toLowerCase().includes(this.searchValue.toLowerCase()));
       }
       return this.logs;
     },

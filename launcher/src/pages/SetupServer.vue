@@ -4,14 +4,14 @@
   </div>
 </template>
 <script>
-import FormSetup from '../components/UI/server-connection/FormSetup.vue'
+import FormSetup from "../components/UI/server-connection/FormSetup.vue";
 export default {
   components: { FormSetup },
   methods: {
-    page () {
-      this.$emit('page', 'welcome-page')
-    }
-  }
-}
+    page() {
+      this.$emit("page", "welcome-page");
+    },
+  },
+};
 </script>
 <style scoped></style>

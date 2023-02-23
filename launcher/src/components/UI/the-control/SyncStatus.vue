@@ -10,16 +10,13 @@
       <div class="wrapper">
         <!--new form start-->
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="activeWidget" v-if="syncItemsShow">
+        <div v-if="syncItemsShow" class="activeWidget">
           <div class="consensusContainer">
             <div class="consensusName">
               <span>{{ consensusName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="consensuColor"
-                :sync-percent="consensusPer"
-              />
+              <sync-circular-progress :color="consensuColor" :sync-percent="consensusPer" />
             </div>
             <div class="syncStatusStatus" :class="consensusClass">
               <span>{{ consensusText }}</span>
@@ -28,11 +25,7 @@
               class="consensusIconCons"
               :class="{ clientColor: clientColor }"
               :data-tooltip="
-                consensusName +
-                ': ' +
-                formatValues(consensusFirstVal) +
-                ' / ' +
-                formatValues(consensusSecondVal)
+                consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
               "
             >
               <img :src="clientImage(consensusName)" alt="consensus" />
@@ -44,10 +37,7 @@
               <span>{{ executionName }}</span>
             </div>
             <div class="progressBox">
-              <sync-circular-progress
-                :color="executionColor"
-                :sync-percent="executionPer"
-              />
+              <sync-circular-progress :color="executionColor" :sync-percent="executionPer" />
             </div>
             <div class="syncStatusStatus" :class="executionClass">
               <span>{{ executionText }}</span>
@@ -55,11 +45,7 @@
             <div
               class="executionIconCons"
               :data-tooltip="
-                executionName +
-                ': ' +
-                formatValues(executionFirstVal) +
-                ' / ' +
-                formatValues(executionSecondVal)
+                executionName + ': ' + formatValues(executionFirstVal) + ' / ' + formatValues(executionSecondVal)
               "
             >
               <img :src="clientImage(executionName)" alt="execution" />
@@ -69,7 +55,7 @@
         <!--new form end-->
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService" v-show="syncItemsShow">
+    <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
         <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
@@ -204,13 +190,8 @@ export default {
         return "";
       }
       const lowerCaseInputValue = name.toLowerCase();
-      const clientData = [
-        ...this.consensusClientsData,
-        ...this.executionClientsData,
-      ];
-      const matchingClient = clientData.find(
-        (client) => client.name.toLowerCase() === lowerCaseInputValue
-      );
+      const clientData = [...this.consensusClientsData, ...this.executionClientsData];
+      const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
       return matchingClient ? matchingClient.img : "";
     },
     getPer(firstVal, secondVal) {
@@ -294,13 +275,8 @@ export default {
           clients = this.syncstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.syncstatus.hasOwnProperty("data") &&
-            this.syncstatus.data.hasOwnProperty("error")
-          ) {
-            if (
-              this.syncstatus.data.error == "prometheus service not running"
-            ) {
+          if (this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")) {
+            if (this.syncstatus.data.error == "prometheus service not running") {
               this.syncItemsShow = false;
               this.syncIcoUnknown = true;
               this.syncIcoError = false;
@@ -365,10 +341,7 @@ export default {
           }
           fonts.green.push(k);
         }
-        if (
-          fonts.grey.length &&
-          fonts.grey.length == this.syncstatus.data[gid].length
-        ) {
+        if (fonts.grey.length && fonts.grey.length == this.syncstatus.data[gid].length) {
           syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
         }
         for (let col in fonts) {

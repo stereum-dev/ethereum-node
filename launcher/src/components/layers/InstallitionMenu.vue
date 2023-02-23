@@ -18,40 +18,26 @@
       </div> -->
     </div>
     <div class="item-container">
-      <div
-        class="item-column"
-        v-for="(install, index) in installation"
-        :key="index"
-      >
-        <router-link
-          class="lintTtl"
-          :class="{ disabled: isCompatible(install) }"
-          :to="install.path"
+      <div v-for="(install, index) in installation" :key="index" class="item-column">
+        <router-link class="lintTtl" :class="{ disabled: isCompatible(install) }" :to="install.path"
           ><button-installation
-            @mousedown.prevent.stop
             :img="install.display ? install.img : install.imgDisabled"
             :url="install.imgHover"
+            @mousedown.prevent.stop
           ></button-installation
         ></router-link>
       </div>
     </div>
-    <div class="message-box" v-if="active">
+    <div v-if="active" class="message-box">
       <p class="msg-title">
         {{ $t("installitionMenu.osCheck") }}
         <span class="dot-flashing"></span>
       </p>
     </div>
-    <div class="result-box" v-if="!active">
-      <img
-        src="/img/icon/welcome-page/like.png"
-        alt="icon"
-        v-if="isSupported"
-      />
-      <img src="/img/icon/welcome-page/dislike.png" alt="icon" v-else />
-      <span
-        class="check-msg"
-        :class="{ supported: isSupported, notSupported: !isSupported }"
-      >
+    <div v-if="!active" class="result-box">
+      <img v-if="isSupported" src="/img/icon/welcome-page/like.png" alt="icon" />
+      <img v-else src="/img/icon/welcome-page/dislike.png" alt="icon" />
+      <span class="check-msg" :class="{ supported: isSupported, notSupported: !isSupported }">
         {{ message }}
       </span>
     </div>
@@ -115,26 +101,19 @@ export default {
             this.message += " BUT YOU NEED TO ENABLE PASSLESS SUDO";
           } else if (errnum === 2 && errmsg.indexOf("code failed to run")) {
             // We could not check due to interactive syntax error - allow install but show a warning
-            this.message +=
-              " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
             this.isSupported = true;
           } else {
             // We could not check due to unknonw error - allow install but show a warning
-            this.message +=
-              " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
+            this.message += " BUT MAKE SURE TO ENABLE PASSLESS SUDO (" + errnum + ")";
             this.isSupported = true;
           }
         } else {
           // OS supported, passless sudo avail - allow install :)
           this.isSupported = true;
         }
-      } else if (
-        osData &&
-        osData.hasOwnProperty("name") &&
-        osData.name !== undefined
-      ) {
-        this.message =
-          osData.name.toUpperCase() + ": " + osData.message.toUpperCase();
+      } else if (osData && osData.hasOwnProperty("name") && osData.name !== undefined) {
+        this.message = osData.name.toUpperCase() + ": " + osData.message.toUpperCase();
       } else {
         this.message = "UNSUPPORTED OS";
       }

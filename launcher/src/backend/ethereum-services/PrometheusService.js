@@ -1,29 +1,29 @@
-import { NodeService } from './NodeService'
-import { ServicePortDefinition } from './SerivcePortDefinition'
-import { ServiceVolume } from './ServiceVolume'
+import { NodeService } from "./NodeService";
+import { ServicePortDefinition } from "./SerivcePortDefinition";
+import { ServiceVolume } from "./ServiceVolume";
 
 export class PrometheusService extends NodeService {
-  static buildByUserInput (network, ports, dir, prometheusJobs) {
-    const service = new PrometheusService()
-    service.setId()
-    const workingDir = service.buildWorkingDir(dir)
+  static buildByUserInput(network, ports, dir, prometheusJobs) {
+    const service = new PrometheusService();
+    service.setId();
+    const workingDir = service.buildWorkingDir(dir);
 
-    const image = 'prom/prometheus'
+    const image = "prom/prometheus";
 
-    const dataDir = '/prometheus'
-    const configDir = '/etc/prometheus'
+    const dataDir = "/prometheus";
+    const configDir = "/etc/prometheus";
 
     const volumes = [
-      new ServiceVolume(workingDir + '/data/prometheus', dataDir),
-      new ServiceVolume(workingDir + '/config', configDir)
-    ]
+      new ServiceVolume(workingDir + "/data/prometheus", dataDir),
+      new ServiceVolume(workingDir + "/config", configDir),
+    ];
 
     service.init(
-      'PrometheusService',
+      "PrometheusService",
       service.id, // id
       1, // configVersion
       image, // image
-      'v2.38.0', // imageVersion
+      "v2.38.0", // imageVersion
       'sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle"', // command
       null, // entrypoint
       null, // env
@@ -32,22 +32,20 @@ export class PrometheusService extends NodeService {
       null, // user
       network, // network
       null, // executionClients
-      prometheusJobs, // consensusClients but every single client to monitor is in there should be implemented correctly someday
-    )
-    return service
+      prometheusJobs // consensusClients but every single client to monitor is in there should be implemented correctly someday
+    );
+    return service;
   }
 
-  static buildByConfiguration (config) {
-    const service = new PrometheusService()
+  static buildByConfiguration(config) {
+    const service = new PrometheusService();
 
-    service.initByConfig(config)
+    service.initByConfig(config);
 
-    return service
+    return service;
   }
 
-  getAvailablePorts () {
-    return [
-      new ServicePortDefinition(9090, 'tcp', 'add some description')
-    ]
+  getAvailablePorts() {
+    return [new ServicePortDefinition(9090, "tcp", "add some description")];
   }
 }

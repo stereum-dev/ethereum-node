@@ -3,9 +3,9 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          class="subTask-row"
           v-for="(item, index) in modifiedSubTasks"
           :key="index"
+          class="subTask-row"
           :class="{
             'skipping-installation': item.status == 'SKIPPED',
             'success-installation': item.status == 'OK',
@@ -14,64 +14,37 @@
         >
           <error-terminal
             v-if="item.showErrorterminal"
+            :item="item"
             @close-terminal="hideTerminalHandler(item)"
             @copy-error="copyErrorText(item)"
-            :item="item"
           ></error-terminal>
-          <div
-            class="success-box"
-            v-if="item.status == 'OK'"
-            @click="openTerminalHandler(item)"
-          >
-            <span class="itemAction" v-if="displayTaskResult">{{
-              item.action
-            }}</span>
-            <span class="itemName" v-else>{{ item.name }}</span>
+          <div v-if="item.status == 'OK'" class="success-box" @click="openTerminalHandler(item)">
+            <span v-if="displayTaskResult" class="itemAction">{{ item.action }}</span>
+            <span v-else class="itemName">{{ item.name }}</span>
             <div class="loading-box">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/check5.png"
-                alt=""
-              />
+              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
-            <div class="success-tooltip" v-if="item.showTooltip">
+            <div v-if="item.showTooltip" class="success-tooltip">
               <span>{{ item.action }}</span>
             </div>
           </div>
-          <div
-            class="failed-box"
-            v-if="item.status == 'FAILED'"
-            @click="openTerminalHandler(item)"
-          >
-            <span class="error" v-if="displayTaskResult">{{
-              item.action
-            }}</span>
-            <span class="noError" v-else>{{ item.name }}</span>
+          <div v-if="item.status == 'FAILED'" class="failed-box" @click="openTerminalHandler(item)">
+            <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
+            <span v-else class="noError">{{ item.name }}</span>
             <div class="error-icon">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/cancel.png"
-                alt=""
-              />
-              <div class="failed-tooltip" v-if="item.showTooltip">
+              <img src="../../../../public/img/icon/task-manager-icons/cancel.png" alt="" />
+              <div v-if="item.showTooltip" class="failed-tooltip">
                 <span>{{ item.name }}</span>
               </div>
             </div>
           </div>
-          <div
-            class="skipped-box"
-            v-if="item.status == 'SKIPPED'"
-            @click="openTerminalHandler(item)"
-          >
-            <span class="error" v-if="displayTaskResult">{{
-              item.action
-            }}</span>
-            <span class="noError" v-else>{{ item.name }}</span>
+          <div v-if="item.status == 'SKIPPED'" class="skipped-box" @click="openTerminalHandler(item)">
+            <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
+            <span v-else class="noError">{{ item.name }}</span>
             <div class="loading-box">
-              <img
-                src="../../../../public/img/icon/task-manager-icons/check5.png"
-                alt=""
-              />
+              <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
-            <div class="skipped-tooltip" v-if="item.showTooltip">
+            <div v-if="item.showTooltip" class="skipped-tooltip">
               <span>{{ item.name }}</span>
             </div>
           </div>
@@ -111,7 +84,8 @@ export default {
   methods: {
     copyErrorText(item) {
       let errorToCopy = item.data;
-      navigator.clipboard.writeText(errorToCopy)
+      navigator.clipboard
+        .writeText(errorToCopy)
         .then(() => {
           console.log("copied!");
         })

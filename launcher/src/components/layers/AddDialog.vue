@@ -2,55 +2,55 @@
   <dialog open>
     <div class="formGroup">
       <label for="serverName">ServerName</label>
-      <input name="serverName" id="serverName" type="text" ref="serverName" />
+      <input id="serverName" ref="serverName" name="serverName" type="text" />
     </div>
     <div class="formGroup">
       <label for="localPort">LocalPort</label>
-      <input name="localPort" id="localPort" type="text" ref="localPort" />
+      <input id="localPort" ref="localPort" name="localPort" type="text" />
     </div>
     <div class="formGroup">
       <label for="DstPort">DstPort</label>
-      <input name="DstPort" id="DstPort" ref="dstPort" />
+      <input id="DstPort" ref="dstPort" name="DstPort" />
     </div>
-    <div class="formGroup" v-if="logError">
+    <div v-if="logError" class="formGroup">
       <p>Please complete all filed!</p>
     </div>
     <div>
-      <button @click="addServer" id="add">Add Server</button>
+      <button id="add" @click="addServer">Add Server</button>
 
-      <button @click="$emit('dialogDis', true)" id="canc">Cancel</button>
+      <button id="canc" @click="$emit('dialogDis', true)">Cancel</button>
     </div>
   </dialog>
 </template>
 <script>
 export default {
-  name: 'addDialog',
-  emits: ['pass', 'dialogDis'],
-  data () {
+  name: "AddDialog",
+  emits: ["pass", "dialogDis"],
+  data() {
     return {
-      logError: false
-    }
+      logError: false,
+    };
   },
   methods: {
-    addServer () {
-      const serverName = this.$refs.serverName.value
-      const localPort = this.$refs.localPort.value
+    addServer() {
+      const serverName = this.$refs.serverName.value;
+      const localPort = this.$refs.localPort.value;
 
-      const dstPort = this.$refs.dstPort.value
-      if (serverName != '' && localPort != '' && dstPort != '') {
+      const dstPort = this.$refs.dstPort.value;
+      if (serverName != "" && localPort != "" && dstPort != "") {
         const obj = {
           name: serverName,
           localPort: localPort,
-          dstPort: dstPort
-        }
+          dstPort: dstPort,
+        };
 
-        this.$emit('pass', obj)
+        this.$emit("pass", obj);
       } else {
-        this.logError = true
+        this.logError = true;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 <style scoped>
 dialog {

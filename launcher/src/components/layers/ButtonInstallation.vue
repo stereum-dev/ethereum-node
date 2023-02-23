@@ -1,12 +1,8 @@
 <template>
   <section class="BtnInstIcon">
-    <div
-      class="imgIcon"
-      @mouseover="isHovered = true"
-      @mouseleave="isHovered = false"
-    >
-      <img :src="url" v-if="isHovered" />
-      <img :src="img" v-else />
+    <div class="imgIcon" @mouseover="isHovered = true" @mouseleave="isHovered = false">
+      <img v-if="isHovered" :src="url" />
+      <img v-else :src="img" />
     </div>
   </section>
 </template>
