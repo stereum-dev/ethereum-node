@@ -93,7 +93,7 @@ export default {
   align-items: center;
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 120%;
+  font-size: 100%;
 }
 .restart-message {
   width: 90%;

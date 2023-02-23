@@ -119,14 +119,14 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
-          @open-log="restartService(service.name)"
+          @open-log="restartService(service)"
         >
         </service-log-button>
         <restart-modal
           v-if="restartModalShow"
           @close-window="restartModalClose"
-          name="hallo"
-          id="1234"
+          :name="serviceChoosedToRestartName"
+          :id="serviceChoosedToRestartId"
         ></restart-modal>
       </div>
     </div>
@@ -170,6 +170,8 @@ export default {
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
       restartModalShow: false,
+      serviceChoosedToRestartName: "",
+      serviceChoosedToRestartId: "",
     };
   },
 
@@ -210,8 +212,10 @@ export default {
       this.isPluginLogPageActive = true;
     },
     restartService(el) {
-      console.log(el);
       this.restartModalShow = true;
+      this.serviceChoosedToRestartName = el.name;
+      this.serviceChoosedToRestartId = el.config.serviceID;
+      console.log(el);
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
