@@ -27,13 +27,6 @@ export const useServices = defineStore("services", {
           headerOption: false,
           expertOptionsModal: false,
           expertOptions: [
-            {
-              title: "Slasher DB Size",
-              type: "text",
-              changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/ram.png",
-              pattern: "(- --slasher-max-db-size=)(\\d+)(\\n)",
-            },
             // {
             //   title: "Resync",
             //   type: "action",

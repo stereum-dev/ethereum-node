@@ -1,7 +1,50 @@
 {
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "6.7.4"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "singlestat",
+      "name": "Singlestat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
+        "$$hashKey": "object:56",
         "builtIn": 1,
         "datasource": "-- Grafana --",
         "enable": true,
@@ -14,13 +57,50 @@
       }
     ]
   },
-  "description": "Dashboard to monitor a single Teku instance",
+  "description": "Dashboard to monitor multiple Teku instances on the same beacon chain",
   "editable": true,
   "gnetId": 13457,
   "graphTooltip": 1,
-  "id": 6,
-  "iteration": 1619526569083,
-  "links": [],
+  "id": null,
+  "iteration": 1626838102804,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Teku Website",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://consensys.net/knowledge-base/ethereum-2/teku"
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Teku Documentation",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://docs.teku.consensys.net/"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Teku GitHub",
+      "tooltip": "",
+      "type": "link",
+      "url": "https://github.com/ConsenSys/teku"
+    }
+  ],
   "panels": [
     {
       "cacheTimeout": null,
@@ -28,16 +108,10 @@
       "colorValue": false,
       "colors": [
         "#5794F2",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
+        "#5794F2",
+        "#5794F2"
       ],
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "datasource": "${DS_PROMETHEUS}",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -58,10 +132,12 @@
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:337",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:338",
           "name": "range to text",
           "value": 2
         }
@@ -69,7 +145,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.4",
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -98,7 +174,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": "5,10",
+      "thresholds": "0,1,2",
       "timeFrom": null,
       "timeShift": null,
       "title": "VALIDATOR",
@@ -106,22 +182,22 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:340",
           "op": "=",
-          "text": "",
-          "value": "1"
+          "text": "N/A",
+          "value": "null"
         }
       ],
-      "valueName": "first"
+      "valueName": "avg"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of local validators",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -149,22 +225,46 @@
       "id": 36,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "yellow",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
-            "mean"
+            "max"
           ],
           "fields": "",
-          "values": false
+          "values": true
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "validator_local_validator_count",
+          "expr": "sum(validator_local_validator_count{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -177,14 +277,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of blocks published",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -212,6 +311,29 @@
       "id": 37,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "yellow",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -222,12 +344,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_block_total",
+          "expr": "sum(validator_beacon_node_requests_total{instance=~\"$system\",method=\"publish_block\",outcome=\"success\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -240,14 +363,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of attestations published",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -275,6 +397,29 @@
       "id": 38,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "yellow",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -285,12 +430,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_attestation_total",
+          "expr": "sum(validator_beacon_node_requests_total{instance=~\"$system\",method=\"publish_attestation\",outcome=\"success\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -303,14 +449,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of aggregates published",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -338,6 +483,29 @@
       "id": 39,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "yellow",
+                  "value": null
+                },
+                {
+                  "color": "green",
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -348,12 +516,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "validator_beacon_node_published_aggregate_total",
+          "expr": "sum(validator_beacon_node_requests_total{instance=~\"$system\",method=\"publish_aggregate_and_proofs\",outcome=\"success\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -366,14 +535,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Total number of active validators in the network.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "decimals": 0,
           "displayName": "",
           "mappings": [],
@@ -403,6 +571,25 @@
       "id": 44,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -413,12 +600,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_current_active_validators",
+          "expr": "max(beacon_current_active_validators{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -435,16 +623,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Percentage of attestations in each epoch with the correct head root, correct target root and that were successfully included in blocks.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -468,10 +655,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -481,22 +669,53 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_included_attestations / validator_local_validator_count",
+          "expr": "validator_performance_included_attestations{instance=~\"$system\"} / validator_performance_expected_attestations{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Included",
+          "legendFormat": "{{instance}} Included",
           "refId": "C"
         },
         {
-          "expr": "validator_performance_correct_head_block_count / validator_performance_included_attestations",
+          "expr": "validator_performance_correct_head_block_count{instance=~\"$system\"} / validator_performance_included_attestations{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Correct Head",
+          "legendFormat": "{{instance}} Correct Head",
           "refId": "A"
         },
         {
-          "expr": "validator_performance_correct_target_count / validator_performance_included_attestations",
+          "expr": "validator_performance_correct_target_count{instance=~\"$system\"} / validator_performance_included_attestations{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Correct Target",
+          "legendFormat": "{{instance}} Correct Target",
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "\n(\nvalidator_performance_correct_head_block_count{instance=~\"$system\"} - (validator_performance_expected_attestations{instance=~\"$system\"} - validator_performance_correct_head_block_count{instance=~\"$system\"}) +\nvalidator_performance_correct_target_count{instance=~\"$system\"} - (validator_performance_expected_attestations{instance=~\"$system\"} - validator_performance_correct_target_count{instance=~\"$system\"}) +\nvalidator_performance_included_attestations{instance=~\"$system\"} - (validator_performance_expected_attestations{instance=~\"$system\"} - validator_performance_included_attestations{instance=~\"$system\"}) +\n(0.875  * validator_performance_included_attestations{instance=~\"$system\"} / validator_performance_inclusion_distance_average{instance=~\"$system\"})\n) / validator_performance_expected_attestations{instance=~\"$system\"} / 3.875",
+          "interval": "",
+          "legendFormat": "{{instance}} Attestation Rewards Earned",
+          "refId": "D"
+        },
+        {
+          "exemplar": true,
+          "expr": "validator_performance_included_sync_committee_messages{instance=~\"$system\"} / validator_performance_expected_sync_committee_messages{instance=~\"$system\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} Included Signatures",
+          "refId": "E"
+        },
+        {
+          "exemplar": true,
+          "expr": "validator_performance_produced_sync_committee_messages{instance=~\"$system\"} / validator_performance_expected_sync_committee_messages{instance=~\"$system\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} Produced Signatures",
+          "refId": "F"
+        },
+        {
+          "exemplar": true,
+          "expr": "validator_performance_correct_sync_committee_messages{instance=~\"$system\"} / validator_performance_produced_sync_committee_messages{instance=~\"$system\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "{{instance}} Correct Signatures",
+          "refId": "G"
         }
       ],
       "thresholds": [],
@@ -519,6 +738,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "format": "percentunit",
           "label": null,
           "logBase": 1,
@@ -527,6 +747,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -545,17 +766,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "decimals": null,
       "description": "Number of slots between when an attestation is created to when it is included in a block. The minimum possible inclusion distance is 1.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -580,10 +800,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -593,21 +814,21 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_inclusion_distance_min",
+          "expr": "validator_performance_inclusion_distance_min{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Minimum",
+          "legendFormat": "{{instance}} Minimum",
           "refId": "A"
         },
         {
-          "expr": "validator_performance_inclusion_distance_average",
+          "expr": "validator_performance_inclusion_distance_average{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Average",
+          "legendFormat": "{{instance}} Average",
           "refId": "B"
         },
         {
-          "expr": "validator_performance_inclusion_distance_max",
+          "expr": "validator_performance_inclusion_distance_max{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Maximum",
+          "legendFormat": "{{instance}} Maximum",
           "refId": "C"
         }
       ],
@@ -631,15 +852,17 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "decimals": null,
           "format": "none",
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "1",
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -658,16 +881,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Percentage of blocks produced in each epoch that were successfully included in the canonical chain.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -692,10 +914,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -705,9 +928,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "validator_performance_included_blocks / validator_performance_expected_blocks",
+          "expr": "validator_performance_included_blocks{instance=~\"$system\"} / validator_performance_expected_blocks{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Included Blocks",
+          "legendFormat": "{{instance}} Included Blocks",
           "refId": "A"
         }
       ],
@@ -731,6 +954,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "format": "percentunit",
           "label": null,
           "logBase": 1,
@@ -739,6 +963,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -758,16 +983,10 @@
       "colorValue": false,
       "colors": [
         "#5794F2",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
+        "#5794F2",
+        "#5794F2"
       ],
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "datasource": "${DS_PROMETHEUS}",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -788,10 +1007,12 @@
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:241",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:242",
           "name": "range to text",
           "value": 2
         }
@@ -799,7 +1020,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.4",
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -828,7 +1049,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": "5,10",
+      "thresholds": "0,1,2",
       "timeFrom": null,
       "timeShift": null,
       "title": "BEACON CHAIN",
@@ -836,22 +1057,22 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:244",
           "op": "=",
-          "text": "",
-          "value": "1"
+          "text": "N/A",
+          "value": "null"
         }
       ],
-      "valueName": "first"
+      "valueName": "avg"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Current slot according to system time",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -879,6 +1100,25 @@
       "id": 45,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -889,12 +1129,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_slot",
+          "expr": "max(beacon_slot{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -907,14 +1148,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "Current slot according to system time",
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "Slot of the latest imported block",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -942,6 +1182,25 @@
       "id": 48,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -952,12 +1211,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_slot",
+          "expr": "max(beacon_head_slot{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -970,14 +1230,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
-      "description": "Current finalized epoch",
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "Current justified epoch",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1005,6 +1264,25 @@
       "id": 49,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1015,12 +1293,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_current_justified_epoch",
+          "expr": "max(beacon_current_justified_epoch{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1033,14 +1312,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Current finalized epoch",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1068,6 +1346,25 @@
       "id": 51,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1078,12 +1375,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_finalized_epoch",
+          "expr": "max(beacon_finalized_epoch{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1097,12 +1395,13 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "Total number of peers connected to the selected nodes.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
+              "$$hashKey": "object:313",
               "id": 0,
               "op": "=",
               "text": "N/A",
@@ -1110,7 +1409,6 @@
               "value": "null"
             }
           ],
-          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1142,6 +1440,33 @@
       "links": [],
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 25
+                },
+                {
+                  "color": "green",
+                  "value": 60
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
@@ -1152,12 +1477,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_peer_count",
+          "expr": "sum(beacon_peer_count{instance=~\"$system\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1169,14 +1495,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "The current epoch according to system time",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1204,6 +1529,25 @@
       "id": 46,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1214,12 +1558,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_epoch",
+          "expr": "max(beacon_epoch{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1232,14 +1577,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of slots the head block is behind.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1271,6 +1615,33 @@
       "id": 47,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 3
+                },
+                {
+                  "color": "red",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1281,12 +1652,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_slot - beacon_head_slot",
+          "expr": "min(beacon_slot{instance=~\"$system\"} - beacon_head_slot{instance=~\"$system\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1299,14 +1671,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of epochs that justification has been delayed.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1338,6 +1709,33 @@
       "id": 50,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 2
+                },
+                {
+                  "color": "red",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1348,12 +1746,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "clamp_min(beacon_epoch - beacon_current_justified_epoch - 1, 0)",
+          "expr": "clamp_min(min(beacon_epoch{instance=~\"$system\"} - beacon_current_justified_epoch{instance=~\"$system\"} - 1), 0)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1366,14 +1765,13 @@
       "type": "stat"
     },
     {
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "Number of epochs that finalisation has been delayed.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "thresholds"
           },
-          "custom": {},
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -1405,6 +1803,33 @@
       "id": 52,
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "mean"
+          ],
+          "defaults": {
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "yellow",
+                  "value": 2
+                },
+                {
+                  "color": "red",
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -1415,12 +1840,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "value"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "clamp_min(beacon_epoch - beacon_finalized_epoch - 2, 0)",
+          "expr": "clamp_min(min(beacon_epoch{instance=~\"$system\"} - beacon_finalized_epoch{instance=~\"$system\"} - 2), 0)",
           "instant": true,
           "interval": "",
           "legendFormat": "",
@@ -1434,12 +1860,13 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "Percentage of validators which voted for the correct target in the previous epoch.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "mappings": [
             {
+              "$$hashKey": "object:313",
               "id": 0,
               "op": "=",
               "text": "N/A",
@@ -1447,7 +1874,8 @@
               "value": "null"
             }
           ],
-          "nullValueMode": "connected",
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1479,6 +1907,46 @@
       "links": [],
       "options": {
         "colorMode": "background",
+        "fieldOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "defaults": {
+            "decimals": 1,
+            "mappings": [
+              {
+                "$$hashKey": "object:167",
+                "id": 0,
+                "op": "=",
+                "text": "N/A",
+                "type": 1,
+                "value": "null"
+              }
+            ],
+            "min": 0,
+            "nullValueMode": "connected",
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "red",
+                  "value": null
+                },
+                {
+                  "color": "#EAB839",
+                  "value": 0.67
+                },
+                {
+                  "color": "green",
+                  "value": 0.9
+                }
+              ]
+            },
+            "unit": "percentunit"
+          },
+          "overrides": [],
+          "values": false
+        },
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "horizontal",
@@ -1489,12 +1957,13 @@
           "fields": "",
           "values": false
         },
+        "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "6.7.4",
       "targets": [
         {
-          "expr": "beacon_previous_correct_validators / beacon_previous_active_validators",
+          "expr": "max(beacon_previous_correct_validators{instance=~\"$system\"} / beacon_previous_active_validators{instance=~\"$system\"})",
           "interval": "",
           "legendFormat": "",
           "refId": "A"
@@ -1510,17 +1979,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "decimals": null,
-      "description": "",
+      "description": "Number of slots the head block is behind the current slot. Empty slots may mean the head block trails by a few slots.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -1534,6 +2002,7 @@
         "alignAsTable": true,
         "avg": true,
         "current": true,
+        "hideZero": false,
         "max": false,
         "min": false,
         "rightSide": false,
@@ -1547,32 +2016,39 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:87",
+          "alias": "/.* Blocks\\/second/",
+          "yaxis": 2
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beacon_slot - beacon_head_slot",
+          "expr": "beacon_slot{instance=~\"$system\"} - beacon_head_slot{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "Head Slot",
+          "legendFormat": "{{instance}} Head Slot",
           "refId": "A"
         },
         {
-          "expr": "clamp_min(beacon_epoch - beacon_current_justified_epoch - 1, 0)",
+          "expr": "clamp_min(min(beacon_epoch{instance=~\"$system\"} - beacon_current_justified_epoch{instance=~\"$system\"} - 1) without (instance), 0)",
           "interval": "",
           "legendFormat": "Justification Delay",
           "refId": "B"
         },
         {
-          "expr": "clamp_min(beacon_epoch - beacon_finalized_epoch - 2, 0)",
+          "expr": "clamp_min(min(beacon_epoch{instance=~\"$system\"} - beacon_finalized_epoch{instance=~\"$system\"} - 2) without (instance), 0)",
           "interval": "",
           "legendFormat": "Finalisation Delay",
           "refId": "C"
@@ -1598,6 +2074,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "decimals": null,
           "format": "none",
           "label": null,
@@ -1607,8 +2084,10 @@
           "show": true
         },
         {
-          "format": "short",
-          "label": null,
+          "$$hashKey": "object:150",
+          "decimals": 4,
+          "format": "ops",
+          "label": "blocks/second",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -1625,17 +2104,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "decimals": null,
-      "description": "Number of slots between when an attestation is created to when it is included in a block. The minimum possible inclusion distance is 1.",
+      "description": "Overall participation rate in the chain. The Correct Validators must be above 2/3rd for the chain to finalize.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -1660,10 +2138,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1673,20 +2152,30 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "beacon_previous_live_validators / beacon_previous_active_validators",
+          "expr": "max(beacon_previous_live_validators{instance=~\"$system\"} / beacon_previous_active_validators{instance=~\"$system\"})",
           "interval": "",
           "legendFormat": "Live Validators",
           "refId": "A"
         },
         {
-          "expr": "beacon_previous_correct_validators / beacon_previous_active_validators",
+          "exemplar": true,
+          "expr": "max(beacon_previous_correct_validators{instance=~\"$system\"} / beacon_previous_active_validators{instance=~\"$system\"})",
           "interval": "",
           "legendFormat": "Correct Validators",
           "refId": "B"
+        },
+        {
+          "exemplar": true,
+          "expr": "max(beacon_previous_live_sync_committee{instance=~\"$system\"} / (512 * 32))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Sync Committee Participation",
+          "refId": "D"
         }
       ],
       "thresholds": [
         {
+          "$$hashKey": "object:1511",
           "colorMode": "critical",
           "fill": true,
           "line": true,
@@ -1714,6 +2203,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "decimals": null,
           "format": "percentunit",
           "label": null,
@@ -1723,6 +2213,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1741,17 +2232,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": null,
+      "datasource": "${DS_PROMETHEUS}",
       "decimals": null,
       "description": "Rate of gossip messages received per second.",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -1778,10 +2268,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1791,9 +2282,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(libp2p_gossip_messages_total[1m])",
+          "expr": "irate(libp2p_gossip_messages_total{instance=~\"$system\"}[1m])",
           "interval": "",
-          "legendFormat": "{{topic}}",
+          "legendFormat": "{{instance}} {{topic}}",
           "refId": "A"
         }
       ],
@@ -1817,6 +2308,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "decimals": null,
           "format": "ops",
           "label": null,
@@ -1826,6 +2318,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1845,16 +2338,10 @@
       "colorValue": false,
       "colors": [
         "#5794F2",
-        "rgba(237, 129, 40, 0.89)",
-        "#d44a3a"
+        "#5794F2",
+        "#5794F2"
       ],
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
+      "datasource": "${DS_PROMETHEUS}",
       "format": "none",
       "gauge": {
         "maxValue": 100,
@@ -1875,10 +2362,12 @@
       "mappingType": 1,
       "mappingTypes": [
         {
+          "$$hashKey": "object:279",
           "name": "value to text",
           "value": 1
         },
         {
+          "$$hashKey": "object:280",
           "name": "range to text",
           "value": 2
         }
@@ -1886,7 +2375,7 @@
       "maxDataPoints": 100,
       "nullPointMode": "connected",
       "nullText": null,
-      "pluginVersion": "6.7.2",
+      "pluginVersion": "6.7.4",
       "postfix": "",
       "postfixFontSize": "50%",
       "prefix": "",
@@ -1915,7 +2404,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": "5,10",
+      "thresholds": "0,1,2",
       "timeFrom": null,
       "timeShift": null,
       "title": "SYSTEM",
@@ -1923,28 +2412,28 @@
       "valueFontSize": "80%",
       "valueMaps": [
         {
+          "$$hashKey": "object:282",
           "op": "=",
-          "text": "",
-          "value": "1"
+          "text": "N/A",
+          "value": "null"
         }
       ],
-      "valueName": "first"
+      "valueName": "avg"
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
-      "description": "Percentage of attestations in each epoch with the correct head root, correct target root and that were successfully included in blocks.",
+      "datasource": "${DS_PROMETHEUS}",
+      "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -1968,10 +2457,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -1981,9 +2471,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "irate(process_cpu_seconds_total[1m])",
+          "exemplar": true,
+          "expr": "irate(process_cpu_seconds_total{instance=~\"$system\"}[1m])",
           "interval": "",
-          "legendFormat": "{{job}}",
+          "legendFormat": "{{instance}} {{job}}",
           "refId": "C"
         }
       ],
@@ -1991,7 +2482,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "CPU Usage",
+      "title": "CPU usage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -2007,6 +2498,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "format": "none",
           "label": null,
           "logBase": 1,
@@ -2015,6 +2507,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2033,16 +2526,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -2061,6 +2553,8 @@
         "max": true,
         "min": false,
         "show": true,
+        "sort": "current",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -2068,10 +2562,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2081,33 +2576,33 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "jvm_memory_pool_bytes_used",
+          "expr": "jvm_memory_pool_bytes_used{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "{{job}} {{pool}} Used",
+          "legendFormat": "{{instance}} {{job}} {{pool}} Used",
           "refId": "C"
         },
         {
-          "expr": "sum by (instance) (jvm_memory_pool_bytes_used)",
+          "expr": "sum by (instance) (jvm_memory_pool_bytes_used{instance=~\"$system\"})",
           "interval": "",
-          "legendFormat": "{{job}} {{pool}} Used Total",
+          "legendFormat": "{{instance}} {{job}} {{pool}} Used Total",
           "refId": "A"
         },
         {
-          "expr": "process_resident_memory_bytes",
+          "expr": "process_resident_memory_bytes{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "{{job}} {{pool}} Process Total",
+          "legendFormat": "{{instance}} {{job}} {{pool}} Process Total",
           "refId": "B"
         },
         {
-          "expr": " (jvm_memory_pool_bytes_max)",
+          "expr": " (jvm_memory_pool_bytes_max{instance=~\"$system\"})",
           "interval": "",
-          "legendFormat": "{{job}} {{pool}} Max",
+          "legendFormat": "{{instance}} {{job}} {{pool}} Max",
           "refId": "D"
         },
         {
-          "expr": "node_memory_MemTotal_bytes",
+          "expr": "node_memory_MemTotal_bytes{instance=~\"$system\"}",
           "interval": "",
-          "legendFormat": "System Memory",
+          "legendFormat": "{{instance}} System Memory",
           "refId": "E"
         }
       ],
@@ -2131,6 +2626,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "format": "bytes",
           "label": null,
           "logBase": 1,
@@ -2139,6 +2635,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2157,16 +2654,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "Prometheus",
+      "datasource": "${DS_PROMETHEUS}",
       "description": "",
       "fieldConfig": {
         "defaults": {
-          "custom": {},
           "links": []
         },
         "overrides": []
       },
-      "fill": 1,
+      "fill": 0,
       "fillGradient": 1,
       "gridPos": {
         "h": 10,
@@ -2192,10 +2688,11 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": true,
+        "dataLinks": []
       },
       "percentage": false,
-      "pluginVersion": "7.3.10",
+      "pluginVersion": "8.0.3",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -2205,9 +2702,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(jvm_gc_collection_seconds_sum[1m])",
+          "expr": "rate(jvm_gc_collection_seconds_sum{instance=~\"$system\"}[1m])",
           "interval": "",
-          "legendFormat": "{{gc}}",
+          "legendFormat": "{{instance}} {{gc}}",
           "refId": "C"
         }
       ],
@@ -2231,6 +2728,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:149",
           "format": "percentunit",
           "label": null,
           "logBase": 1,
@@ -2239,6 +2737,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:150",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -2253,26 +2752,28 @@
       }
     }
   ],
-  "refresh": "5s",
-  "schemaVersion": 26,
+  "refresh": "10s",
+  "schemaVersion": 22,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "eth2.0",
+    "ethereum",
+    "teku"
+  ],
   "templating": {
     "list": [
       {
         "allValue": null,
-        "current": {
-          "selected": false,
-          "text": "beacon:8008",
-          "value": "beacon:8008"
-        },
-        "datasource": "Prometheus",
+        "current": {},
+        "datasource": "${DS_PROMETHEUS}",
         "definition": "beacon_slot",
+        "description": null,
         "error": null,
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
+        "index": -1,
         "label": "System",
-        "multi": false,
+        "multi": true,
         "name": "system",
         "options": [],
         "query": "beacon_slot",
@@ -2289,7 +2790,7 @@
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -2307,7 +2808,10 @@
     ]
   },
   "timezone": "",
-  "title": "Teku - Single",
-  "uid": "DzqnL9oGk",
-  "version": 4
+  "title": "Teku",
+  "uid": "oTNZAomnk",
+  "variables": {
+    "list": []
+  },
+  "version": 2
 }

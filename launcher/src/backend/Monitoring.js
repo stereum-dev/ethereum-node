@@ -1673,12 +1673,12 @@ export class Monitoring {
     };
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1) 
+  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1)
   async getPublicPortStatus(){
     return await this.getPortStatus({addr:'public'});
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)  
+  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)
   async getLocalPortStatus(){
     return await this.getPortStatus({addr:'local'});
   }
@@ -1943,7 +1943,7 @@ rm -rf diskoutput
 
   // get States of Validators
   // validatorPublicKeys: array of all pubkeys
-  async getValidatorState(validatorPublicKeys){
+  async getValidatorState(validatorPublicKeys) {
     let validatorBalances = [];
     // get status of beacon container
     const beaconStatus = await this.getBeaconStatus();
@@ -1953,25 +1953,33 @@ rm -rf diskoutput
       // get validator's states from beacon container
       if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
         var beaconAPIRunCmd = "";
+        var beaconAPIRunCmdLastEpoch = "";
         let validatorNotFound;
+        const chunkSize = 250
+        let data = []
 
-          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
+        for (let i = 0; i < validatorPublicKeys.length; i += chunkSize) {
+          const chunk = validatorPublicKeys.slice(i, i + chunkSize);
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`
           beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
+          //check response
           validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
-          if (!validatorNotFound){
-            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
-            validatorBalances = queryResult.map((key, id) => {
-              return {
-                id: id,
-                index: key.index,
-                balance: key.balance,
-                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
-                pubkey: key.validator.pubkey,
-                activation_epoch: key.validator.activation_epoch,
-              }
-            })
-          }
-
+          if (!validatorNotFound) data = data.concat((JSON.parse(beaconAPIRunCmd.stdout).data)); //merge all gathered stats in one array
+        }
+        const beaconAPICmdLastEpoch = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`
+        beaconAPIRunCmdLastEpoch = await this.nodeConnection.sshService.exec(beaconAPICmdLastEpoch)
+        const queryResult = data
+        validatorBalances = queryResult.map((key, id) => {
+            return {
+              id: id,
+              index: key.index,
+              balance: key.balance,
+              status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/, "")),
+              pubkey: key.validator.pubkey,
+              activationepoch: key.validator.activation_epoch,
+              latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1
+            }
+          })
       }
       // return array of objects which include following:
       // - id: value
@@ -1980,8 +1988,9 @@ rm -rf diskoutput
       // - status: state
       // - pubkey: pub_key
       // - activation_epoch: epoch_number
+      // - activeSince: active_since_day
       return validatorBalances;
     } else if (beaconStatus.code === 2)
-        return validatorBalances;     // empty array will be returned, if there is a no running consensus client
+      return validatorBalances;     // empty array will be returned, if there is a no running consensus client
   }
 }
