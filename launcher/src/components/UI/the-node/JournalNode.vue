@@ -125,8 +125,8 @@
         <restart-modal
           v-if="restartModalShow"
           @close-window="restartModalClose"
-          :name="serviceChoosedToRestartName"
-          :id="serviceChoosedToRestartId"
+          @restart-confirm="restartConfirmed"
+          :service="itemToRestart"
         ></restart-modal>
       </div>
     </div>
@@ -143,7 +143,6 @@
 <script>
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
-import ServiceRestartButton from "./ServiceRestartButton.vue";
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
@@ -157,7 +156,6 @@ export default {
     UpdateTable,
     ServiceLogButton,
     PluginLogs,
-    ServiceRestartButton,
   },
   data() {
     return {
@@ -170,8 +168,7 @@ export default {
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
       restartModalShow: false,
-      serviceChoosedToRestartName: "",
-      serviceChoosedToRestartId: "",
+      itemToRestart: {}
     };
   },
 
@@ -212,10 +209,8 @@ export default {
       this.isPluginLogPageActive = true;
     },
     restartService(el) {
+      this.itemToRestart = el;
       this.restartModalShow = true;
-      this.serviceChoosedToRestartName = el.name;
-      this.serviceChoosedToRestartId = el.config.serviceID;
-      console.log(el);
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
@@ -227,10 +222,51 @@ export default {
     },
     restartToggle() {
       this.openRestart = !this.openRestart;
-      console.log();
     },
     restartModalClose() {
       this.restartModalShow = false;
+    },
+    async restartConfirmed(service) {
+      this.restartModalShow = false;
+      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
+      if (!service.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        service.serviceIsPending = true;
+        let state = "stopped";
+        if (service.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: service.config.serviceID,
+            state: "stopped",
+          });
+          await ControlService.manageServiceState({
+            id: service.config.serviceID,
+            state: "started",
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        service.serviceIsPending = false;
+        this.updateStates();
+      }
+    },
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");

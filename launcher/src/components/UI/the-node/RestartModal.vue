@@ -11,19 +11,20 @@
       <div class="restart-question">
         <span>Are you sure you want to restart?</span>
       </div>
-      <div class="service-name-id">
-        <span>{{ name }} - {{ id }}</span>
+      <div>
+        <span class="service-name">{{ service.name }}</span>
+        <span class="service-id">[{{ service.config.serviceID }}]</span>
       </div>
       <div class="restart-message">
         your node might go offline while doing so!
       </div>
-      <div class="restart-button"><span>restart</span></div>
+      <div class="restart-button" @click="$emit('restartConfirm', service)"><span>restart</span></div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["name", "id"],
+  props: ["service"],
 };
 </script>
 
@@ -85,15 +86,25 @@ export default {
   text-transform: uppercase;
   font-size: 100%;
 }
-.service-name-id {
-  width: 90%;
+.service-name {
+  width: 100%;
   height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: 800;
   text-transform: uppercase;
-  font-size: 100%;
+  font-size: 120%;
+}
+.service-id {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 80%;
 }
 .restart-message {
   width: 90%;
