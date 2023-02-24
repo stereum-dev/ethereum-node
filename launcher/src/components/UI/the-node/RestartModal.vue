@@ -11,9 +11,9 @@
       <div class="restart-question">
         <span>Are you sure you want to restart?</span>
       </div>
-      <div>
+      <div class="nameId">
         <span class="service-name">{{ service.name }}</span>
-        <span class="service-id">[{{ service.config.serviceID }}]</span>
+        <span class="service-id">[ {{ service.config.serviceID }} ]</span>
       </div>
       <div class="restart-message">
         your node might go offline while doing so!
@@ -93,9 +93,17 @@ export default {
   text-transform: uppercase;
   font-size: 100%;
 }
+.nameId {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 18%;
+}
 .service-name {
   width: 100%;
-  height: 10%;
+  height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -105,7 +113,7 @@ export default {
 }
 .service-id {
   width: 100%;
-  height: 80%;
+  height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
