@@ -1,6 +1,4 @@
-<template>
-
-</template>
+<template></template>
 <script>
 export default {
   props: ["keyFiles"],
@@ -10,6 +8,4 @@ export default {
   methods: {},
 };
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

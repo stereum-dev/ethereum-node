@@ -6,26 +6,14 @@
 
     <language-setting
       v-if="isLanguage"
-      @language-box="langAction"
       :flag="savedFlag"
       :lang="savedLang"
       :label="savedLabel"
+      @language-box="langAction"
     ></language-setting>
 
-    <router-link
-      class="setting-items_btn"
-      :style="color()"
-      to="/credit"
-      v-else-if="link"
-      >{{ linkValue }}</router-link
-    >
-    <div
-      iv
-      class="setting-items_btn"
-      v-else
-      @click="customizeSetting"
-      :style="color()"
-    >
+    <router-link v-else-if="link" class="setting-items_btn" :style="color()" to="/credit">{{ linkValue }}</router-link>
+    <div v-else iv class="setting-items_btn" :style="color()" @click="customizeSetting">
       <span>{{ btnValue }}</span>
     </div>
   </div>

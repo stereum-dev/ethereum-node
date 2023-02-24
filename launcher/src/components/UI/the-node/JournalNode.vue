@@ -10,10 +10,10 @@
         </div>
       </div>
     </div>
-    <div class="configBtn" v-if="!openLog">
+    <div v-if="!openLog" class="configBtn">
       <router-link to="/manage" class="linkToEdit">
         <the-node-panel-btn
-          imgPath="/img/icon/node-journal-icons/edit-node.png"
+          img-path="/img/icon/node-journal-icons/edit-node.png"
           is-color="gold"
           width="20"
           margin-right="1"
@@ -25,46 +25,46 @@
       </router-link>
 
       <the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/turning_circle.gif"
+        v-if="isloading"
+        img-path="/img/icon/plugin-menu-icons/turning_circle.gif"
         is-color="grey"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-if="isloading"
         >{{ $t("journalnode.loading") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/turn_on.png"
+        v-else-if="checkStatus()"
+        img-path="/img/icon/node-journal-icons/turn_on.png"
         is-color="lighGreen"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-else-if="checkStatus()"
         @btn-action="stateButtonHandler('started')"
         >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/power2.png"
+        v-else
+        img-path="/img/icon/node-journal-icons/power2.png"
         is-color="red"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-else
         @btn-action="stateButtonHandler('stopped')"
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/logs_icon.svg"
+        v-if="tillTheNextRelease"
+        img-path="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="logToggle"
         grid-row="3/4"
         @btn-action="logToggle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -81,7 +81,7 @@
     </div>
     <div class="configBtn" v-if="!openRestart && openLog">
       <the-node-panel-btn
-        imgPath="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -142,11 +142,7 @@
       </div>
     </div>
     <Transition>
-      <plugin-logs
-        :item="itemToLogs"
-        v-if="isPluginLogPageActive"
-        @close-log="closePluginLogsPage"
-      ></plugin-logs>
+      <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
     </Transition>
   </div>
 </template>
@@ -292,14 +288,12 @@ export default {
       this.loading = true;
       try {
         let promises = this.installedServices.map(async (service, index) => {
-          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(
-            () => {
-              ControlService.manageServiceState({
-                id: service.config.serviceID,
-                state: state,
-              });
-            }
-          );
+          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
+            ControlService.manageServiceState({
+              id: service.config.serviceID,
+              state: state,
+            });
+          });
         });
         promises.push(
           new Promise((resolve) =>

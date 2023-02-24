@@ -2,17 +2,14 @@
   <div class="tutorial-box">
     <div class="tutorial-table">
       <div
-        class="table-row"
         v-for="(item, index) in configData"
         :key="index"
-        @click="$emit('showModal', item)"
+        class="table-row"
         :class="{ disabled: !item.display }"
+        @click="$emit('showModal', item)"
       >
         <div class="question-icon">
-          <img
-            src="../../../../public/img/icon/manage-node-icons/QuestionMark.png"
-            alt="question-icon"
-          />
+          <img src="../../../../public/img/icon/manage-node-icons/QuestionMark.png" alt="question-icon" />
         </div>
         <div class="row-content">
           <span>{{ item.name }}</span>
@@ -81,13 +78,20 @@ export default {
           id: 1,
           name: this.$t("nodeSidebarVideo.rpc"),
           videosLink: "https://www.youtube.com/embed/iFzSdjg9r6U",
-          writtenLink:
-            "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
+          writtenLink: "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
           guideLink: "https://stereum.net/",
           display: true,
         },
       ],
     };
+  },
+  watch: {
+    network: {
+      handler(newVal, oldVal) {
+        this.serviceController();
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.configData = this.configData.map((item) => {
@@ -97,14 +101,6 @@ export default {
       };
     });
     this.serviceController();
-  },
-  watch: {
-    network: {
-      handler(newVal, oldVal) {
-        this.serviceController();
-      },
-      immediate: true,
-    },
   },
   computed: {
     // ...mapWritableState(useNodeStore, {
@@ -122,24 +118,18 @@ export default {
       switch (this.network) {
         case "gnosis":
           this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/embed/qORXGzhZPns";
-          this.configData[0].writtenLink =
-            "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
+          this.configData[0].videosLink = "https://www.youtube.com/embed/qORXGzhZPns";
+          this.configData[0].writtenLink = "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
           break;
         case "mainnet":
           this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink =
-            "https://stereum.net/eth-solo-staking-step-by-step-guide/";
+          this.configData[0].videosLink = "https://www.youtube.com/embed/bfToZ_wTh_Q";
+          this.configData[0].writtenLink = "https://stereum.net/eth-solo-staking-step-by-step-guide/";
           break;
         case "testnet":
           this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink =
-            "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink =
-            "https://stereum.net/eth-solo-staking-step-by-step-guide/";
+          this.configData[0].videosLink = "https://www.youtube.com/embed/bfToZ_wTh_Q";
+          this.configData[0].writtenLink = "https://stereum.net/eth-solo-staking-step-by-step-guide/";
           break;
         default:
           this.configData[0].name = "Wait...";

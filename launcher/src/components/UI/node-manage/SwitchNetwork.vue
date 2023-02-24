@@ -1,26 +1,16 @@
 <template>
-  <div
-    class="switch-network"
-    @mouseleave="(closeDropdownActive = false), (dropdownIsActive = false)"
-  >
+  <div class="switch-network" @mouseleave="(closeDropdownActive = false), (dropdownIsActive = false)">
     <div class="switch-network__content">
       <div class="current" @click="openDropDown">
         <div class="networkIcon">
-          <img
-            :src="configNetwork.icon ? configNetwork.icon : loadingGIF"
-            alt="icon"
-          />
+          <img :src="configNetwork.icon ? configNetwork.icon : loadingGIF" alt="icon" />
         </div>
         <div class="networkSelect">
           <span>{{ configNetwork.name }}</span>
         </div>
       </div>
-      <ul class="dropdown-parent" v-if="dropdownIsActive">
-        <li
-          v-for="item in networkList"
-          :key="item.id"
-          @click="selectNetworkToDisplay(item)"
-        >
+      <ul v-if="dropdownIsActive" class="dropdown-parent">
+        <li v-for="item in networkList" :key="item.id" @click="selectNetworkToDisplay(item)">
           <div class="networkIcon">
             <img :src="item.icon" alt="icon" />
           </div>
@@ -92,17 +82,12 @@ export default {
     },
     selectNetworkToDisplay(item) {
       if (!(item.network == this.configNetwork.network)) {
-        if (
-          this.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")
-        ) {
-          let index = this.confirmChanges.findIndex((j) =>
-            j.content.includes("CHANGE NETWORK")
-          );
+        if (this.confirmChanges.map((j) => j.content).includes("CHANGE NETWORK")) {
+          let index = this.confirmChanges.findIndex((j) => j.content.includes("CHANGE NETWORK"));
           if (this.currentNetwork.network === item.network) {
             this.confirmChanges.splice(index, 1);
           } else {
-            this.confirmChanges[index].data.network =
-              item.network === "testnet" ? "goerli" : item.network;
+            this.confirmChanges[index].data.network = item.network === "testnet" ? "goerli" : item.network;
             this.confirmChanges[index].service.icon = item.icon;
           }
         } else if (this.newConfiguration.length > 0) {

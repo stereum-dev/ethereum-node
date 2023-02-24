@@ -3,22 +3,19 @@
     <div class="modal-opacity" @click="$emit('closeModal')"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
         <p>{{ $t("warningModal.warningText") }}</p>
       </div>
       <div class="confirm-box">
-        <span @click="$emit('installBtn')" class="confirm-btn">
+        <span class="confirm-btn" @click="$emit('installBtn')">
           {{ $t("installOption.install") }}
         </span>
         <!-- <div class="confirm-btn" >
           <span>Confirm</span>
         </div> -->
-        <span class="close">{{$t('exitValidatorModal.clickClose')}}</span>
+        <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
       </div>
     </div>
   </div>

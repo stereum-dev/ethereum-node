@@ -1,26 +1,14 @@
 <template>
   <div class="renameRow">
     <div class="inputBox">
-      <input
-        type="text"
-        v-model="newName"
-        :placeholder="$t('renameValidator.textPlaceHolder')"
-      />
+      <input v-model="newName" type="text" :placeholder="$t('renameValidator.textPlaceHolder')" />
     </div>
     <div class="buttonBox">
       <button class="cancelBtn" @click="$emit('closeRename', item)">
         <img src="/img/icon/the-staking/close.png" alt="icon" />
       </button>
-      <button
-        class="confirmBtn"
-        :class="{ disabled: newName.trim().length === 0 }"
-        @click="checkEnteredName"
-      >
-        <img
-          src="/img/icon/the-staking/done.png"
-          alt="icon"
-          :class="{ disabledIcon: newName.trim().length === 0 }"
-        />
+      <button class="confirmBtn" :class="{ disabled: newName.trim().length === 0 }" @click="checkEnteredName">
+        <img src="/img/icon/the-staking/done.png" alt="icon" :class="{ disabledIcon: newName.trim().length === 0 }" />
       </button>
     </div>
   </div>

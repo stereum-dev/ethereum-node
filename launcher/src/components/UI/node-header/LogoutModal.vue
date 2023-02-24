@@ -6,13 +6,8 @@
         <span>LOG-OUT</span>
       </div>
       <div class="messageContent">
-        <img
-          src="../../../../public/img/icon/manage-node-icons/stop.png"
-          alt=""
-        />
-        <span class="question"
-          >ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span
-        >
+        <img src="../../../../public/img/icon/manage-node-icons/stop.png" alt="" />
+        <span class="question">ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span>
       </div>
       <div class="confrimBtn">
         <div class="confrimBox" @click="$emit('confrimLogout')">

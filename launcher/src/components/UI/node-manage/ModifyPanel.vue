@@ -1,20 +1,12 @@
 <template>
   <div class="addParent">
     <div class="addBox">
-      <div
-        class="replaceService"
-        v-if="items.category !== 'service'"
-        @click="$emit('changePlugin', items)"
-      >
+      <div v-if="items.category !== 'service'" class="replaceService" @click="$emit('changePlugin', items)">
         <img src="/img/icon/manage-node-icons/replace.png" alt="icon" />
       </div>
 
       <div class="service">
-        <img
-          :src="plugin.icon"
-          alt="icon"
-          data-tooltip="OFAC Compliant - censored"
-        />
+        <img :src="plugin.icon" alt="icon" data-tooltip="OFAC Compliant - censored" />
         <div class="service-details">
           <span class="serviceName">{{ plugin.name }}</span>
           <p class="category">
@@ -25,105 +17,65 @@
       </div>
 
       <div class="configBox">
-        <div
-          class="relaysBox"
-          v-if="plugin.service === 'FlashbotsMevBoostService'"
-        >
+        <div v-if="plugin.service === 'FlashbotsMevBoostService'" class="relaysBox">
           <div class="relaysBoxTitle">
             {{ $t("mevboostConfig.availRelays") }}
           </div>
           <div class="relaysBoxContent">
-            <div class="relay" v-for="relay in combinedBlocs" :key="relay.id">
-              <input
-                type="checkbox"
-                :id="relay.id"
-                :value="relay"
-                v-model="checkedRelays"
-              />
+            <div v-for="relay in combinedBlocs" :key="relay.id" class="relay">
+              <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" />
               <label :for="relay.id">{{ relay.name }}</label>
-              <div
-                class="iconBox"
-                data-tooltip="OFAC Compliant - censored"
-                v-if="relay.freeCensorship == false"
-              >
+              <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
                 <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
               </div>
             </div>
           </div>
         </div>
-        <div
-          class="change-installation"
-          v-if="
-            replaceServiceActive &&
-            plugin.service !== 'FlashbotsMevBoostService'
-          "
-        >
+        <div v-if="replaceServiceActive && plugin.service !== 'FlashbotsMevBoostService'" class="change-installation">
           <div class="change-title">
             <span>{{ $t("addModifyPanel.installPath") }}</span>
           </div>
           <div class="change-box">
-            <input type="text" v-model="installationPath" maxlength="255" />
+            <input v-model="installationPath" type="text" maxlength="255" />
           </div>
         </div>
         <div
+          v-if="(plugin.category === 'execution' || plugin.category === 'consensus') && replaceServiceActive"
           class="fast-sync"
-          v-if="
-            (plugin.category === 'execution' ||
-              plugin.category === 'consensus') &&
-            replaceServiceActive
-          "
         >
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive">{{
-              $t("addModifyPanel.syncMessage")
-            }}</span>
-            <div class="inputBox" v-if="checkPointIsActive">
-              <input type="text" v-model="checkPointSync" />
+            <span v-if="genesisIsActive">{{ $t("addModifyPanel.syncMessage") }}</span>
+            <div v-if="checkPointIsActive" class="inputBox">
+              <input v-model="checkPointSync" type="text" />
             </div>
           </div>
         </div>
-        <div
-          class="portAddBox"
-          v-if="plugin.service !== 'FlashbotsMevBoostService'"
-        >
+        <div v-if="plugin.service !== 'FlashbotsMevBoostService'" class="portAddBox">
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>{{ $t("addModifyPanel.portused") }}</span>
-            <input type="text" v-model="port" placeholder="9000" />
+            <input v-model="port" type="text" placeholder="9000" />
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
           <div
-            class="optionsBox"
-            :serviceId-tooltip="
-              service.config.serviceID ? service.config.serviceID : service.id
-            "
             v-if="!switchHandler(service)"
+            class="optionsBox"
+            :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
           >
-            <img
-              src="/img/icon/manage-node-icons/not-connected.png"
-              alt="icon"
-            />
+            <img src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
               <div class="optionsName">
@@ -132,11 +84,9 @@
             </div>
           </div>
           <div
-            class="clientAddBox"
-            :serviceId-tooltip="
-              service.config.serviceID ? service.config.serviceID : service.id
-            "
             v-if="switchHandler(service)"
+            class="clientAddBox"
+            :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
           >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
@@ -222,20 +172,13 @@ export default {
       this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
     );
     if (this.items.service === "FlashbotsMevBoostService") {
-      ControlService.getServiceConfig(this.items.config.serviceID).then(
-        (service) => {
-          let relayURLs =
-            service.entrypoint[
-              service.entrypoint.findIndex((e) => e === "-relays") + 1
-            ].split(",");
-          relayURLs.forEach((relay) => {
-            let relayData = this.relaysList.find(
-              (r) => r[this.configNetwork.network.toLowerCase()] === relay
-            );
-            if (relayData) this.checkedRelays.push(relayData);
-          });
-        }
-      );
+      ControlService.getServiceConfig(this.items.config.serviceID).then((service) => {
+        let relayURLs = service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1].split(",");
+        relayURLs.forEach((relay) => {
+          let relayData = this.relaysList.find((r) => r[this.configNetwork.network.toLowerCase()] === relay);
+          if (relayData) this.checkedRelays.push(relayData);
+        });
+      });
     }
   },
   methods: {
@@ -247,18 +190,12 @@ export default {
       return array;
     },
     saveModify() {
-      let dependencies = toRaw(this.options).filter(
-        (s) => s.selectedForConnection
-      );
+      let dependencies = toRaw(this.options).filter((s) => s.selectedForConnection);
       this.$emit("saveModify", {
         port: parseInt(this.port),
-        executionClients: dependencies.filter(
-          (s) => s.category === "execution"
-        ),
+        executionClients: dependencies.filter((s) => s.category === "execution"),
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
-        relays: this.checkedRelays
-          .map((r) => r[this.configNetwork.network.toLowerCase()])
-          .join(),
+        relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       });
     },
     switchHandler(service) {
@@ -278,17 +215,11 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "execution"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "execution");
       } else if (this.items.category === "validator") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "consensus"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else if (this.items.service === "FlashbotsMevBoostService") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "consensus"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else {
         this.options = [];
       }
@@ -298,10 +229,7 @@ export default {
           let buffer = this.items.config.dependencies.consensusClients.concat(
             this.items.config.dependencies.executionClients
           );
-          connected = this.getMevBoostConnections(
-            this.items.config.serviceID,
-            option.config.serviceID
-          );
+          connected = this.getMevBoostConnections(this.items.config.serviceID, option.config.serviceID);
           if (buffer.map((s) => s.id).includes(option.config.serviceID)) {
             connected = true;
           }
@@ -314,14 +242,9 @@ export default {
     },
     getMevBoostConnections(mevID, clientID) {
       let connected = false;
-      let client = this.installedServices.find(
-        (c) => c.config.serviceID === clientID
-      );
+      let client = this.installedServices.find((c) => c.config.serviceID === clientID);
       if (client?.config.dependencies.mevboost?.length > 0) {
-        if (
-          client.config.dependencies.mevboost.map((c) => c.id).includes(mevID)
-        )
-          connected = true;
+        if (client.config.dependencies.mevboost.map((c) => c.id).includes(mevID)) connected = true;
       }
       return connected;
     },

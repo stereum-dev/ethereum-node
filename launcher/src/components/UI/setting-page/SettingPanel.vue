@@ -16,10 +16,10 @@
       </div>
       <div class="division-line"></div>
       <transition name="fade-box" mode="out-in">
-        <div class="seting-language_box" v-if="langActive">
+        <div v-if="langActive" class="seting-language_box">
           <language-panel @back="langActiveBox"></language-panel>
         </div>
-        <div class="base-container" v-else>
+        <div v-else class="base-container">
           <div class="general-panel">
             <div class="general-panel_title">
               <span>{{ $t("settingPanel.general") }}</span>
@@ -30,13 +30,13 @@
                 v-for="item in generalItems"
                 :key="item.id"
                 :title="item.title"
-                :isColor="item.isColor"
-                :itemType="item.itemType"
-                :savedFlag="langIco"
-                :savedLang="langName"
+                :is-color="item.isColor"
+                :item-type="item.itemType"
+                :saved-flag="langIco"
+                :saved-lang="langName"
                 :link="item.link"
-                :isLanguage="item.isLanguage"
-                :linkValue="item.linkValue"
+                :is-language="item.isLanguage"
+                :link-value="item.linkValue"
                 @lang-action="langActiveBox"
               ></setting-items>
             </div>
@@ -48,29 +48,25 @@
             <hr />
             <div class="items-box_update">
               <setting-items
+                id="version"
                 :title="launcherItem"
                 :btn-value="launcherVersion"
                 is-color="alpha"
                 item-type="update"
-                id="version"
               ></setting-items>
               <setting-items
+                id="version"
                 :title="nodeVersion"
                 :btn-value="stereumUpdate.current"
                 is-color="alpha"
                 item-type="update"
-                id="version"
               ></setting-items>
               <div class="setting-items">
                 <div class="setting-items_title">
                   <span>{{ $t("settingPanel.updateConfig") }}</span>
                 </div>
                 <div class="setting-items_btn">
-                  <select
-                    name="stereum-update"
-                    id="stereum-update"
-                    v-model="stereumRef"
-                  >
+                  <select id="stereum-update" v-model="stereumRef" name="stereum-update">
                     <option value="manual">
                       {{ $t("settingPanel.manual") }}
                     </option>
@@ -220,8 +216,7 @@ export default {
       return false;
     },
     async confirm() {
-      this.settings.stereum.settings.updates.unattended.install =
-        this.stereumRef === "auto";
+      this.settings.stereum.settings.updates.unattended.install = this.stereumRef === "auto";
       await ControlService.setStereumSettings(toRaw(this.settings));
     },
     selector() {
@@ -239,10 +234,7 @@ export default {
     },
     checkSettings: async function () {
       const savedConfig = await ControlService.readConfig();
-      if (
-        savedConfig !== undefined &&
-        savedConfig.savedLanguage !== undefined
-      ) {
+      if (savedConfig !== undefined && savedConfig.savedLanguage !== undefined) {
         this.langIco = savedConfig.savedLanguage.flag;
         this.langName = savedConfig.savedLanguage.language;
         this.$i18n.locale = savedConfig.savedLanguage.label;

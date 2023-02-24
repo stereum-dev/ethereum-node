@@ -13,12 +13,10 @@
       </div>
       <div class="configBox">
         <div
+          v-for="service in allServices.filter((e) => e.category === plugin.category && e.name !== plugin.name)"
+          :key="service.id"
           class="pluginBox"
           @click="replacePluginHandler(service)"
-          v-for="service in allServices.filter(
-            (e) => e.category === plugin.category && e.name !== plugin.name
-          )"
-          :key="service.id"
         >
           <img :src="service.icon" alt="icon" />
           <div class="plugin-details">
@@ -29,37 +27,22 @@
             </p>
           </div>
         </div>
-        <div
-          class="fast-sync"
-          v-if="
-            plugin.category === 'execution' || plugin.category === 'consensus'
-          "
-        >
+        <div v-if="plugin.category === 'execution' || plugin.category === 'consensus'" class="fast-sync">
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
-            <div class="inputBox" v-if="checkPointIsActive">
-              <input type="text" v-model="checkPointSync" />
+            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <div v-if="checkPointIsActive" class="inputBox">
+              <input v-model="checkPointSync" type="text" />
             </div>
           </div>
         </div>

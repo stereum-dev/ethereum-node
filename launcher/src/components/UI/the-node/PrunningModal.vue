@@ -3,10 +3,7 @@
     <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
     <div class="warning-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="warningMessage">
         <p>
@@ -15,14 +12,10 @@
       </div>
       <div class="check-box">
         <label for="checkbox">
-          <input id="checkbox" type="checkbox" v-model="isChecked" />
+          <input id="checkbox" v-model="isChecked" type="checkbox" />
           {{ $t("prunningModal.prunningChecked") }}
         </label>
-        <div
-          class="confirmBtn"
-          :class="{ disabled: !isChecked }"
-          @click="$emit('confirmBtn')"
-        >
+        <div class="confirmBtn" :class="{ disabled: !isChecked }" @click="$emit('confirmBtn')">
           <span>{{ $t("prunningModal.prunningStart") }}</span>
         </div>
         <span class="close">{{ $t("notifModal.cancelText") }}</span>

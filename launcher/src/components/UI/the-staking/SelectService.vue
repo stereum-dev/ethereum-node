@@ -2,9 +2,9 @@
   <div class="selectBox">
     <div class="display-service">
       <div
-        class="serviceBox"
         v-for="service in installedServices.filter((i) => i.category === 'validator')"
         :key="service.id"
+        class="serviceBox"
         @click="$emit('selectService', service)"
       >
         <div class="service-icon">
