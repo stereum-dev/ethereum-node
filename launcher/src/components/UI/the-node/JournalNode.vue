@@ -227,7 +227,6 @@ export default {
       this.restartModalShow = false;
     },
     async restartConfirmed(service) {
-      this.restartModalShow = false;
       service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
@@ -267,6 +266,7 @@ export default {
           this.installedServices[idx].state = "exited";
         }
       });
+      this.restartModalShow = false;
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
