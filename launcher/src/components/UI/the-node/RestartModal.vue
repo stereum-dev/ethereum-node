@@ -18,13 +18,20 @@
       <div class="restart-message">
         your node might go offline while doing so!
       </div>
-      <div class="restart-button" @click="$emit('restartConfirm', service)"><span>restart</span></div>
+      <div
+        class="restart-button"
+        @click="$emit('restartConfirm', service)"
+        :class="{ disabled: loading }"
+      >
+        <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
+        <span v-else>restart</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["service"],
+  props: ["service", "loading"],
 };
 </script>
 
@@ -125,9 +132,18 @@ export default {
   font-weight: 800;
   text-transform: uppercase;
   font-size: 100%;
-  background: red;
+  background: rgb(255, 0, 25);
   border-radius: 10px;
   cursor: pointer;
+  color: #eee;
+}
+.restart-button.disabled {
+  background: rgba(255, 0, 25, 0.5);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.restart-button img {
+  width: 35%;
 }
 .restart-button:active {
   transform: scale(0.9);

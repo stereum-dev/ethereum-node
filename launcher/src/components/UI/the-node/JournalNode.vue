@@ -137,6 +137,7 @@
           @close-window="restartModalClose"
           @restart-confirm="restartConfirmed"
           :service="itemToRestart"
+          :loading="restartLoad"
         ></restart-modal>
       </div>
     </div>
@@ -179,6 +180,7 @@ export default {
       tillTheNextRelease: true,
       restartModalShow: false,
       itemToRestart: {},
+      restartLoad: false,
     };
   },
 
@@ -237,6 +239,7 @@ export default {
       this.restartModalShow = false;
     },
     async restartConfirmed(service) {
+      this.restartLoad = true;
       service.yaml = await ControlService.getServiceYAML(
         service.config.serviceID
       );
@@ -272,6 +275,8 @@ export default {
           if (i.Names.replace("stereum-", "") === s.config.serviceID) {
             this.installedServices[idx].state = i.State;
             updated = true;
+            this.restartModalClose();
+            this.restartLoad = false;
           }
         });
         if (!updated) {
