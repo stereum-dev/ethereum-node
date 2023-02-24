@@ -108,9 +108,19 @@
         width="10"
         margin-right="5"
         btn-action="restartToggle"
-        grid-row="1/2"
+        grid-row="2/3"
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
+      ><the-node-panel-btn
+        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="restartToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
       <div class="log-navigation">
         <service-log-button
@@ -168,7 +178,7 @@ export default {
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
       restartModalShow: false,
-      itemToRestart: {}
+      itemToRestart: {},
     };
   },
 
@@ -227,7 +237,9 @@ export default {
       this.restartModalShow = false;
     },
     async restartConfirmed(service) {
-      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
+      service.yaml = await ControlService.getServiceYAML(
+        service.config.serviceID
+      );
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;
@@ -302,12 +314,18 @@ export default {
 </script>
 
 <style scoped>
-.test {
-  display: flex;
+.btnTitle {
+  box-shadow: none !important;
+  border: none !important;
+  cursor: default !important;
+}
+.btnTitle:hover {
+  background-color: #242529 !important;
+  transform: none !important;
 }
 
 .log-navigation {
-  grid-row: 2/8;
+  grid-row: 3/8;
   display: flex;
   justify-content: flex-start;
   align-items: center;
