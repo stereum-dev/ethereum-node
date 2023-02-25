@@ -17,6 +17,7 @@ export class Monitoring {
     this.rpcTunnel = {};
     this.beaconTunnel = {};
     this.serviceInfosCacheFile = path.join(os.tmpdir(), "server_infos_cache_" + process.getCreationTime() + ".txt");
+    this.lastKnownHeadBlockFile = path.join(os.tmpdir(), "last_head_block_cache.txt");
   }
 
   // Cleanup on logout
@@ -84,6 +85,50 @@ export class Monitoring {
 
   getIPAddress() {
     return this.nodeConnection.nodeConnectionParams.host;
+  }
+
+  // Returns true if var is numeric, false otherwise
+  is_numeric(v) {
+    return typeof v == "number" || (typeof v == "string" && !isNaN(v));
+  }
+
+  // Get last known head block
+  // Returns last known head block or false if unknown
+  async getLastKnownHeadBlock(ntwk) {
+    const file = this.lastKnownHeadBlockFile;
+    var cont = {};
+    try {
+      cont = fs.readFileSync(file);
+      cont = JSON.parse(cont);
+      if (cont.hasOwnProperty(ntwk)) {
+        return cont[ntwk].val;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Set last known head block
+  // Returns true on success, false otherwise
+  async setLastKnownHeadBlock(val, ntwk) {
+    if (!this.is_numeric(val)) return false;
+    const file = this.lastKnownHeadBlockFile;
+    var cont = {};
+    let lkhb = await this.getLastKnownHeadBlock(ntwk);
+    if (val <= lkhb) {
+      return true;
+    }
+    try {
+      cont[ntwk] = {
+        val: val,
+        uxts: Math.floor(Date.now() / 1000),
+      };
+      fs.writeFileSync(file, JSON.stringify(cont));
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   // Get service infos (either all or optional limited to specific - case-sensitive - service names)
@@ -570,6 +615,153 @@ export class Monitoring {
     };
   }
 
+  // Query any API via CURL that responds a valid JSON format
+  // url=<mixed>      : [REQUIRED] Full HTTP API URL of the server or object of {addr:'<addr>',port:'<port>'}
+  // endpoint=<string>: [REQUIRED] API endpoint (relative to the host:port or a full http url)
+  // params=<array>   : [OPTIONAL] API parameters associated to the given endpoint
+  // method=<string>  : [OPTIONAL] HTTP request method (defaults to GET)
+  // headers=<object> : [OPTIONAL] HTTP headers (defaults to {"Content-Type":"application/json"})
+  // Returns object with keys:
+  // code=<number>: 0 (number!) means success all other values (including null or undefined) means error.
+  // info=<string>: a message about the last result.
+  // data=<mixed> : additional data (if available) or empty string
+  // On success data keys are:
+  // api_reponse=<mixed>: the response of the JSON api
+  // api_httpcode=<int> : the http status code of the JSON api response
+  // Example:
+  // const result = await this.queryJsonApi("http://127.0.0.1:8545", "health", [], "GET", {"X-ERIGON-HEALTHCHECK": "synced"});
+  async queryJsonApi(url, endpoint, params = [], method = "GET", headers = {}) {
+    // Define default response
+    const data = {
+      api_reponse: null,
+      api_httpcode: null,
+    };
+
+    // Format endpoint
+    endpoint = typeof endpoint === "string" ? endpoint.trim().replace(/^\//, "").trim() : ""; // /a/b/c/ => a/b/c/ : ''
+    if (!endpoint) {
+      return {
+        code: 2,
+        info: "error: invalid endpoint specified",
+        data: data,
+      };
+    }
+
+    // Format url
+    if (typeof url === "string") {
+      url = url.trim();
+    } else if (typeof url === "object") {
+      let def = { addr: "127.0.0.1", port: 0 };
+      url = { ...def, ...url };
+      url = `http://${url.addr}:${url.port}`;
+    }
+    url = endpoint.startsWith("http") ? endpoint : `${url}/${endpoint}`;
+
+    // Check url
+    if (!url.startsWith("http")) {
+      return {
+        code: 3,
+        info: "error: invalid url specified",
+        data: data,
+      };
+    }
+
+    // Build request headers
+    headers = typeof headers === "object" && !Array.isArray(headers) && headers !== null ? headers : {};
+    headers = {
+      ...Object.fromEntries(
+        Object.entries({
+          "Content-Type": "application/json",
+          //"Content-Type":"application/json; charset=utf-8",
+        }).map(([k, v]) => [k.toLowerCase(), v])
+      ),
+      ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])),
+    };
+
+    let requestheaders = [];
+    for (let [k, v] of Object.entries(headers)) {
+      k = k.replaceAll("'", "'\\''");
+      v = v.replaceAll("'", "'\\''");
+      requestheaders.push("-H '" + k + ": " + v + "'");
+    }
+    requestheaders = requestheaders.length ? requestheaders.join(" ") : "";
+
+    // Build request data
+    let d = Array.isArray(params) && params.length ? JSON.stringify(params).replaceAll("'", "'\\''") : "";
+    let requestdata = d ? `-d '${d}'` : "";
+
+    // Build curl command
+    const cmd =
+      `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
+
+    // Execute the CURL command on the node and return the result
+    let result = null;
+    try {
+      result = await this.nodeConnection.sshService.exec(cmd);
+    } catch (err) {
+      return {
+        code: 4,
+        info: "error: could not execute curl command (" + err + ")",
+        data: data,
+      };
+    }
+
+    // No data in stdout or data in stderr? Executed code above failed to run!
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      let err = "error:" + result.rc + ": executed code failed to run";
+      if (result.stderr != "") {
+        err += " (" + result.stderr + ")";
+      } else if (result.stdout == "") {
+        err += " (syntax error)";
+      }
+      data.api_reponse = result;
+      return {
+        code: 5,
+        info: err,
+        data: data,
+      };
+    }
+
+    // Parse response
+    let r = result.stdout.trim().split("\n");
+    let statuscode = r.length > 0 ? parseInt(r.pop()) : data.api_httpcode;
+    let jsonstring = r.length > 0 ? r.join("\n").trim() : "";
+    data.api_httpcode = statuscode;
+    try {
+      if (!jsonstring.startsWith("{")) {
+        return {
+          code: 6,
+          info: "error: invalid api response format (" + jsonstring + ")",
+          data: data,
+        };
+      }
+      data.api_reponse = jsonstring ? JSON.parse(jsonstring) : jsonstring;
+    } catch (e) {
+      data.api_reponse = jsonstring ? jsonstring : result.stdout;
+      return {
+        code: 7,
+        info: "error: invalid api response (" + e + ")",
+        data: data,
+      };
+    }
+
+    // Check for response errors
+    if (typeof data.api_httpcode == "number" && data.api_httpcode != 200) {
+      return {
+        code: 8,
+        info: "error: api responded an http error code" + data.api_httpcode,
+        data: data,
+      };
+    }
+
+    // Respond success
+    return {
+      code: 0,
+      info: "success: api successfully requested",
+      data: data,
+    };
+  }
+
   // Get RPC data of given query for all or a specific local running execution client(s)
   // Arguments:
   // query=<string> : [REQUIRED] The query to execute on the RPC server, e.g: "web3_clientVersion"
@@ -708,6 +900,22 @@ export class Monitoring {
     };
   }
 
+  // Get head block of execution client from Beacon API with servcie id "sid"
+  // Returns head block number if the Beacon API is online and in sync, null otherwise
+  async getExecutionHeadBlockFromBeaconApi(sid) {
+    try {
+      let gbs = await this.getBeaconStatus();
+      let rpc = gbs.data.filter((d) => d.sid == sid).pop().beacon;
+      let addr = rpc.destinationIp;
+      let port = rpc.destinationPort;
+      let result = await this.queryBeaconApi(`http://${addr}:${port}`, "eth/v2/beacon/blocks/head", [], "GET");
+      let block_number = result.data.api_reponse.data.message.body.execution_payload.block_number;
+      return !this.is_numeric(block_number) ? null : block_number;
+    } catch (e) {
+      return null;
+    }
+  }
+
   // Get sync status of consensus and execution clients
   async getSyncStatus() {
     // Service definitions with type and Prometheus labels for sync status
@@ -819,6 +1027,20 @@ export class Monitoring {
         let data = [];
         let consensus = cc;
         let execution = ec;
+        let network = consensus.config.network;
+        let last_known_head_block_number = 0;
+        let head_block_number = 0;
+        if (typeof ecBlockNumberByRPC == "object") {
+          last_known_head_block_number = await this.getLastKnownHeadBlock(network);
+          last_known_head_block_number = !this.is_numeric(last_known_head_block_number)
+            ? 0
+            : last_known_head_block_number;
+          head_block_number = await this.getExecutionHeadBlockFromBeaconApi(consensus.config.serviceID);
+          await this.setLastKnownHeadBlock(head_block_number, network); // does update only if head_block_number is a number and higher
+          if (!this.is_numeric(head_block_number)) {
+            head_block_number = last_known_head_block_number;
+          }
+        }
         clientTypes.forEach(function (clientType, index) {
           let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
@@ -852,15 +1074,16 @@ export class Monitoring {
           ) {
             let chain_head_block = 0;
             try {
-              chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop()
-                .query_result.data.api_reponse;
+              const ecbfilt = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop();
+              chain_head_block = ecbfilt.query_result.data.api_reponse;
               chain_head_block =
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
             } catch (e) {}
-            frstVal = chain_head_block;
-            scndVal = chain_head_block;
+            frstVal = !head_block_number ? 0 : chain_head_block;
+            scndVal = !head_block_number ? 0 : head_block_number;
+            scndVal = frstVal > scndVal ? frstVal : scndVal; // can happen in theory while CL is down
           }
           data.push({
             id: index + 1,
@@ -1981,8 +2204,7 @@ rm -rf diskoutput
     const dateNow = Date.now();
     const logsSince = typeof logs_since == "string" ? logs_since : new Date(dateNow - 1000 * 60 * 10).toISOString();
     const logsUntil = typeof logs_until == "string" ? logs_until : new Date(dateNow).toISOString();
-    const logsTail =
-      typeof logs_tail == "number" || (typeof logs_tail == "string" && !isNaN(logs_tail)) ? parseInt(logs_tail) : 0;
+    const logsTail = this.is_numeric(logs_tail) ? parseInt(logs_tail) : 0;
     const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
     var sshcommand = [];
     var logArgs = "";
