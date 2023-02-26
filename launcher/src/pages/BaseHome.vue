@@ -4,23 +4,23 @@
   </div>
 </template>
 <script>
-import TheFirst from './TheFirst.vue'
-import SetupServer from './SetupServer.vue'
-import WelcomePage from './WelcomePage.vue'
+import TheFirst from "./TheFirst.vue";
+import SetupServer from "./SetupServer.vue";
+import WelcomePage from "./WelcomePage.vue";
 
 export default {
-  data () {
-    return {
-      pageName: 'TheFirst'
-    }
-  },
+  name: "BaseHome",
   components: { TheFirst, SetupServer, WelcomePage },
-  name: 'BaseHome',
+  data() {
+    return {
+      pageName: "TheFirst",
+    };
+  },
   methods: {
-    page (pageId) {
-      this.pageName = pageId
-    }
-  }
-}
+    page(pageId) {
+      this.pageName = pageId;
+    },
+  },
+};
 </script>
 <style></style>

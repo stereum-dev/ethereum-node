@@ -5,12 +5,7 @@
         <span>{{ itemToTutorial.name }}</span>
       </div>
       <div class="modal-items">
-        <div
-          class="item"
-          v-for="(item, index) in steps"
-          :key="index"
-          @click="$emit('showItem', item)"
-        >
+        <div v-for="(item, index) in steps" :key="index" class="item" @click="$emit('showItem', item)">
           <div class="icon-box">
             <img :src="item.icon" alt="icon" />
           </div>

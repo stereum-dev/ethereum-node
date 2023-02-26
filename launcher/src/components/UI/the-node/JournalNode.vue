@@ -10,10 +10,10 @@
         </div>
       </div>
     </div>
-    <div class="configBtn" v-if="!openLog">
+    <div v-if="!openLog" class="configBtn">
       <router-link to="/manage" class="linkToEdit">
         <the-node-panel-btn
-          imgPath="/img/icon/node-journal-icons/edit-node.png"
+          img-path="/img/icon/node-journal-icons/edit-node.png"
           is-color="gold"
           width="20"
           margin-right="1"
@@ -21,56 +21,67 @@
           grid-row="1/2"
         >
           {{ $t("journalnode.edit") }}</the-node-panel-btn
-        ></router-link
-      >
+        >
+      </router-link>
 
       <the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/turning_circle.gif"
+        v-if="isloading"
+        img-path="/img/icon/plugin-menu-icons/turning_circle.gif"
         is-color="grey"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-if="isloading"
         >{{ $t("journalnode.loading") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/turn_on.png"
+        v-else-if="checkStatus()"
+        img-path="/img/icon/node-journal-icons/turn_on.png"
         is-color="lighGreen"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-else-if="checkStatus()"
         @btn-action="stateButtonHandler('started')"
         >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/power2.png"
+        v-else
+        img-path="/img/icon/node-journal-icons/power2.png"
         is-color="red"
         width="10"
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        v-else
         @btn-action="stateButtonHandler('stopped')"
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/logs_icon.svg"
+        v-if="tillTheNextRelease"
+        img-path="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="logToggle"
         grid-row="3/4"
         @btn-action="logToggle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
-    </div>
-    <div class="configBtn" v-else>
       <the-node-panel-btn
-        imgPath="/img/icon/manage-node-icons/undo1.png"
+        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="restartToggle"
+        grid-row="4/4"
+        @btn-action="restartToggle"
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.restart") }}</the-node-panel-btn
+      >
+    </div>
+    <div class="configBtn" v-if="!openRestart && openLog">
+      <the-node-panel-btn
+        img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -90,16 +101,54 @@
         ></service-log-button>
       </div>
     </div>
+    <div class="configBtn" v-if="openRestart && !openLog">
+      <the-node-panel-btn
+        imgPath="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="restartToggle"
+        grid-row="2/3"
+        @btn-action="restartToggle"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      ><the-node-panel-btn
+        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="restartToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        v-if="tillTheNextRelease"
+        >{{ $t("journalnode.restart") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log="restartService(service)"
+        >
+        </service-log-button>
+        <restart-modal
+          v-if="restartModalShow"
+          @close-window="restartModalClose"
+          @restart-confirm="restartConfirmed"
+          :service="itemToRestart"
+          :loading="restartLoad"
+        ></restart-modal>
+      </div>
+    </div>
     <Transition>
-      <plugin-logs
-        :item="itemToLogs"
-        v-if="isPluginLogPageActive"
-        @close-log="closePluginLogsPage"
-      ></plugin-logs>
+      <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
     </Transition>
   </div>
 </template>
+
 <script>
+import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import UpdateTable from "./UpdateTable.vue";
@@ -109,16 +158,25 @@ import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable, ServiceLogButton, PluginLogs },
+  components: {
+    RestartModal,
+    UpdateTable,
+    ServiceLogButton,
+    PluginLogs,
+  },
   data() {
     return {
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
+      openRestart: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
       //this data is dummy for invisible the log btn till the next release
       tillTheNextRelease: true,
+      restartModalShow: false,
+      itemToRestart: {},
+      restartLoad: false,
     };
   },
 
@@ -158,11 +216,70 @@ export default {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;
     },
-    closePluginLogsPage() {
+    restartService(el) {
+      this.itemToRestart = el;
+      this.restartModalShow = true;
+    },
+    closePluginLogsPage(el) {
+      this.itemToLogs = el;
+      this.isPluginLogPageActive = true;
       this.isPluginLogPageActive = false;
     },
     logToggle() {
       this.openLog = !this.openLog;
+    },
+    restartToggle() {
+      this.openRestart = !this.openRestart;
+    },
+    restartModalClose() {
+      this.restartModalShow = false;
+    },
+    async restartConfirmed(service) {
+      this.restartLoad = true;
+      service.yaml = await ControlService.getServiceYAML(
+        service.config.serviceID
+      );
+      if (!service.yaml.includes("isPruning: true")) {
+        this.isServiceOn = false;
+        service.serviceIsPending = true;
+        let state = "stopped";
+        if (service.state === "exited") {
+          state = "started";
+          this.isServiceOn = true;
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: service.config.serviceID,
+            state: "stopped",
+          });
+          await ControlService.manageServiceState({
+            id: service.config.serviceID,
+            state: "started",
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        service.serviceIsPending = false;
+        this.updateStates();
+      }
+    },
+    updateStates: async function () {
+      let serviceInfos = await ControlService.listServices();
+      this.installedServices.forEach((s, idx) => {
+        let updated = false;
+        serviceInfos.forEach((i) => {
+          if (i.Names.replace("stereum-", "") === s.config.serviceID) {
+            this.installedServices[idx].state = i.State;
+            updated = true;
+            this.restartModalClose();
+            this.restartLoad = false;
+          }
+        });
+        if (!updated) {
+          this.installedServices[idx].state = "exited";
+        }
+      });
+      this.restartModalShow = false;
     },
     checkStatus() {
       return !this.installedServices.some((s) => s.state == "running");
@@ -171,14 +288,12 @@ export default {
       this.loading = true;
       try {
         let promises = this.installedServices.map(async (service, index) => {
-          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(
-            () => {
-              ControlService.manageServiceState({
-                id: service.config.serviceID,
-                state: state,
-              });
-            }
-          );
+          new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
+            ControlService.manageServiceState({
+              id: service.config.serviceID,
+              state: state,
+            });
+          });
         });
         promises.push(
           new Promise((resolve) =>
@@ -196,9 +311,20 @@ export default {
   },
 };
 </script>
+
 <style scoped>
+.btnTitle {
+  box-shadow: none !important;
+  border: none !important;
+  cursor: default !important;
+}
+.btnTitle:hover {
+  background-color: #242529 !important;
+  transform: none !important;
+}
+
 .log-navigation {
-  grid-row: 2/8;
+  grid-row: 3/8;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -207,6 +333,7 @@ export default {
   overflow-y: scroll;
   flex-direction: column;
 }
+
 .linkToEdit {
   width: 100%;
   height: 100%;
@@ -214,6 +341,7 @@ export default {
   align-items: center;
   display: flex;
 }
+
 .config-node {
   grid-column: 1;
   width: 100%;
@@ -238,6 +366,7 @@ export default {
   justify-content: center;
   align-items: flex-end;
 }
+
 .serverBox {
   width: 100%;
   height: 95%;
@@ -249,6 +378,7 @@ export default {
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
 }
+
 .server .details {
   width: 95%;
   height: 85%;
@@ -276,6 +406,7 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .nameTitle {
   grid-column: 1/2;
   grid-row: 4/6;
@@ -294,6 +425,7 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .name {
   grid-column: 2/3;
   grid-row: 4/6;
@@ -311,6 +443,7 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
+
 .server .ip {
   grid-column: 2/3;
   grid-row: 2/4;
@@ -328,6 +461,7 @@ export default {
   text-overflow: clip;
   align-self: center;
 }
+
 .configBtn {
   grid-column: 1;
   grid-row: 3/10;
@@ -342,11 +476,13 @@ export default {
   box-shadow: 1px 1px 3px 1px #282727;
   border: 1px solid #4c4848;
 }
+
 ::-webkit-scrollbar {
   width: 4px;
 }
 
 /* Track */
+
 ::-webkit-scrollbar-track {
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
@@ -356,6 +492,7 @@ export default {
 }
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 50%;

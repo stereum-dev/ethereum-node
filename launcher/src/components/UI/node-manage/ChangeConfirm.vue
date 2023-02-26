@@ -4,24 +4,17 @@
       <div class="confirm-bg-1">
         <div class="confirm-bg-2">
           <div class="check-icon">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/check-mark.png"
-              alt="icon"
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/check-mark.png" alt="icon" />
           </div>
         </div>
       </div>
-      <button
-        class="confirm-btn"
-        @click="confirmHandler"
-        :class="{ disabled: disableBtn }"
-      >
+      <button class="confirm-btn" :class="{ disabled: disableBtn }" @click="confirmHandler">
         {{ $t("changeConfirm.confirm") }}
       </button>
     </div>
     <div class="table-container">
       <div class="table-box">
-        <div class="tableRow" v-for="item in confirmChanges" :key="item.id">
+        <div v-for="item in confirmChanges" :key="item.id" class="tableRow">
           <div class="left-icon">
             <img :src="item.contentIcon" alt="icon" />
           </div>
@@ -41,10 +34,7 @@
       <div class="trash-bg-1">
         <div class="trash-bg-2">
           <div class="trash-icon">
-            <img
-              src="../../../../public/img/icon/manage-node-icons/trash-icon.png"
-              alt="icon"
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/trash-icon.png" alt="icon" />
           </div>
         </div>
       </div>
@@ -84,9 +74,7 @@ export default {
       return undefined;
     },
     clickOnRemoveBtn() {
-      this.newConfiguration = this.newConfiguration.filter(
-        (item) => !this.selectedItemToRemove.includes(item)
-      );
+      this.newConfiguration = this.newConfiguration.filter((item) => !this.selectedItemToRemove.includes(item));
       this.selectedItemToRemove.forEach((item) => {
         this.confirmChanges.push(toRaw(this.getActions("DELETE", item)));
       });
@@ -99,9 +87,9 @@ export default {
       this.disableBtn = true;
       await ControlService.handleServiceChanges(toRaw(this.confirmChanges));
       setTimeout(() => {
-        this.newConfiguration = this.installedServices
+        this.newConfiguration = this.installedServices;
       }, 4000);
-      
+
       this.confirmChanges = [];
       this.disableBtn = false;
     },

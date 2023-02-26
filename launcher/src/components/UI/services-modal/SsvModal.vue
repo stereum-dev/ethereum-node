@@ -15,17 +15,9 @@
 
         <div class="flip-box icon-box">
           <div class="flip-box-inner">
-            <img
-              class="flip-box-front"
-              src="/img/icon/service-icons/ssv-network.png"
-              alt="icon"
-            />
+            <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
 
-            <img
-              class="flip-box-back"
-              src="/img/icon/click-installation/testnet-icon.png"
-              alt="icon"
-            />
+            <img class="flip-box-back" src="/img/icon/click-installation/testnet-icon.png" alt="icon" />
           </div>
         </div>
 
@@ -33,30 +25,18 @@
         <div class="title-box">
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
-            <img
-              src="/img/icon/service-icons/discord.png"
-              alt="icon"
-              @click="openDiscord"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
       <div class="content-box">
         <frontpage-ssv
           v-if="pubkeyModalActive"
+          :pubkey="pubkey"
           @open-pubkey="operatorModalHandler"
           @open-secretkey="registerSecretkeyHandler"
-          :pubkey="pubkey"
         ></frontpage-ssv>
         <register-ssv
           v-if="registerModalActive"
@@ -66,13 +46,10 @@
         ></register-ssv>
         <secretkey-register
           v-if="registerSecretkeyActive"
-          :ssvService="ssvService"
+          :ssv-service="ssvService"
           @login-secretkey="loginWithSecretkeyHandler"
         ></secretkey-register>
-        <ssv-dashboard
-          :pubkey="pubkey"
-          v-if="ssvDashboardActive"
-        ></ssv-dashboard>
+        <ssv-dashboard v-if="ssvDashboardActive" :pubkey="pubkey"></ssv-dashboard>
       </div>
     </div>
   </div>
@@ -122,13 +99,9 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let ssv = this.runningServices.find(
-        (service) => service.service === "SSVNetworkService"
-      );
+      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
       this.ssvService = ssv;
-      let ssvConfig = await ControlService.getServiceConfig(
-        ssv.config.serviceID
-      );
+      let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
       this.pubkey = ssvConfig.ssv_pk;
     },

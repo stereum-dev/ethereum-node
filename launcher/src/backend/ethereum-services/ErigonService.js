@@ -1,27 +1,25 @@
-import { NodeService } from './NodeService.js'
-import { ServiceVolume } from './ServiceVolume.js'
+import { NodeService } from "./NodeService.js";
+import { ServiceVolume } from "./ServiceVolume.js";
 
 export class ErigonService extends NodeService {
-  static buildByUserInput (network, ports, dir) {
-    const service = new ErigonService()
-    service.setId()
-    const workingDir = service.buildWorkingDir(dir)
+  static buildByUserInput(network, ports, dir) {
+    const service = new ErigonService();
+    service.setId();
+    const workingDir = service.buildWorkingDir(dir);
 
-    const JWTDir = '/engine.jwt'
-    const dataDir = '/opt/data/erigon'
+    const JWTDir = "/engine.jwt";
+    const dataDir = "/opt/data/erigon";
     const volumes = [
-      new ServiceVolume(workingDir + '/data', dataDir),
-      new ServiceVolume(workingDir + '/engine.jwt', JWTDir)
-    ]
-
-
+      new ServiceVolume(workingDir + "/data", dataDir),
+      new ServiceVolume(workingDir + "/engine.jwt", JWTDir),
+    ];
 
     service.init(
-      'ErigonService',  // service
+      "ErigonService", // service
       service.id, // id
-      1,  // configVersion
-      'thorax/erigon', // image
-      'v2.36.1', // imageVersion
+      1, // configVersion
+      "thorax/erigon", // image
+      "v2.36.1", // imageVersion
       [
         `erigon`,
         `--chain=${network}`,
@@ -45,47 +43,49 @@ export class ErigonService extends NodeService {
       ], // command
       [], // entrypoint
       null, // env
-      ports,  // ports
-      volumes,  // volumes
-      'root', // user
+      ports, // ports
+      volumes, // volumes
+      "root", // user
       network // network
       // executionClients
       // consensusClients
-    )
+    );
 
-    return service
+    return service;
   }
 
-  static buildByConfiguration (config) {
-    const service = new ErigonService()
+  static buildByConfiguration(config) {
+    const service = new ErigonService();
 
-    service.initByConfig(config)
+    service.initByConfig(config);
 
-    return service
+    return service;
   }
 
-  buildExecutionClientHttpEndpointUrl () {
-    return 'http://stereum-' + this.id + ':8545'
+  buildExecutionClientHttpEndpointUrl() {
+    return "http://stereum-" + this.id + ":8545";
   }
 
-  buildExecutionClientWsEndpointUrl () {
-    return 'ws://stereum-' + this.id + ':8545'
+  buildExecutionClientWsEndpointUrl() {
+    return "ws://stereum-" + this.id + ":8545";
   }
 
   buildExecutionClientEngineRPCHttpEndpointUrl() {
-    return 'http://stereum-' + this.id + ':8551'
+    return "http://stereum-" + this.id + ":8551";
   }
 
   buildExecutionClientEngineRPCWsEndpointUrl() {
-    return 'ws://stereum-' + this.id + ':8551'
+    return "ws://stereum-" + this.id + ":8551";
   }
 
-  buildExecutionClientMetricsEndpoint () {
-    return 'stereum-' + this.id + ':6060'
+  buildExecutionClientMetricsEndpoint() {
+    return "stereum-" + this.id + ":6060";
   }
 
-  buildPrometheusJob () {
-    return `\n  - job_name: stereum-${this.id}\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`
+  buildPrometheusJob() {
+    return `\n  - job_name: stereum-${
+      this.id
+    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 

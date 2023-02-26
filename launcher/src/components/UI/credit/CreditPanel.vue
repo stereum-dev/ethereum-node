@@ -1,7 +1,7 @@
 <template>
   <div class="credit-panel_parent">
     <transition name="fade-box" mode="out-in">
-      <div class="credit-panel_box" v-if="financial">
+      <div v-if="financial" class="credit-panel_box">
         <div class="credit-panel_title">
           <div class="ttl-box">
             <div class="credit-panel_title_ico">
@@ -24,7 +24,7 @@
         </div>
         <financial-box></financial-box>
       </div>
-      <div class="credit-panel_box" v-else>
+      <div v-else class="credit-panel_box">
         <div class="credit-panel_title">
           <div class="ttl-box">
             <div class="credit-panel_title_ico">

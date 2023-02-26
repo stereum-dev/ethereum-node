@@ -1,28 +1,20 @@
-import { NodeService } from './NodeService'
-import { ServicePortDefinition } from './SerivcePortDefinition'
-import { ServiceVolume } from './ServiceVolume'
+import { NodeService } from "./NodeService";
+import { ServicePortDefinition } from "./SerivcePortDefinition";
+import { ServiceVolume } from "./ServiceVolume";
 
 export class FlashbotsMevBoostService extends NodeService {
-  static buildByUserInput (network, relayLinks) {
-    const image = 'flashbots/mev-boost'
-    const service = new FlashbotsMevBoostService()
+  static buildByUserInput(network, relayLinks) {
+    const image = "flashbots/mev-boost";
+    const service = new FlashbotsMevBoostService();
 
     service.init(
-      'FlashbotsMevBoostService',
+      "FlashbotsMevBoostService",
       null, // id
       1, // configVersion
       image, // image
-      'v0.8.2', // imageVersion
+      "v0.8.2", // imageVersion
       null, // command
-      [
-        '/app/mev-boost',
-        '-addr',
-        '0.0.0.0:18550',
-        `-${network}`,
-        '-relay-check',
-        '-relays',
-        `${relayLinks}`,
-      ], // entrypoint
+      ["/app/mev-boost", "-addr", "0.0.0.0:18550", `-${network}`, "-relay-check", "-relays", `${relayLinks}`], // entrypoint
       null, // env
       null, // ports
       null, // volumes
@@ -31,21 +23,19 @@ export class FlashbotsMevBoostService extends NodeService {
       // executionClients
       // consensusClients
       // FlashbotsMevBoostService
-    )
-    return service
+    );
+    return service;
   }
 
-  static buildByConfiguration (config) {
-    const service = new FlashbotsMevBoostService()
+  static buildByConfiguration(config) {
+    const service = new FlashbotsMevBoostService();
 
-    service.initByConfig(config)
+    service.initByConfig(config);
 
-    return service
+    return service;
   }
 
-  buildMevboostEndpointURL () {
-    return 'http://stereum-' + this.id + ':18550'
+  buildMevboostEndpointURL() {
+    return "http://stereum-" + this.id + ":18550";
   }
-
-
 }

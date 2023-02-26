@@ -1,14 +1,12 @@
 <template>
   <div class="panelParent">
-    <div class="clickOutside" @click="$emit('clickOut')" v-if="clickBg"></div>
+    <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="launcherUpdate">
           <span class="title">{{ $t("updatePanel.launcherTitle") }}</span>
           <div class="launcherBox">
-            <span class="currentLauncher"
-              >{{ $t("updatePanel.current") }}:</span
-            >
+            <span class="currentLauncher">{{ $t("updatePanel.current") }}:</span>
             <span class="valueLauncher">{{ launcherVersion }}</span>
           </div>
         </div>
@@ -42,32 +40,18 @@
                 :class="{ disabled: !checkStereumUpdate() || updating }"
                 @click="$emit('runUpdate', stereumUpdate)"
               >
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
+                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
               </div>
 
               <div v-if="checkStereumUpdate()" class="available">
                 <div class="updateIcon">
-                  <img
-                    src="/img/icon/header-icons/update-green.png"
-                    alt="icon"
-                  />
+                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
                 </div>
-                <span class="availableText"
-                  >{{ stereumUpdate.version }}
-                  {{ $t("updatePanel.available") }}</span
-                >
+                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
               </div>
-              <div
-                class="available"
-                v-if="forceUpdateCheck && !checkStereumUpdate()"
-              >
+              <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
                 <span class="circle pulse"></span>
-                <span class="searchingText">{{
-                  $t("updatePanel.searching")
-                }}</span>
+                <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
               </div>
             </div>
           </div>
@@ -99,23 +83,14 @@
                 :class="{ disabled: !checkStereumUpdate() || updating }"
                 @click="$emit('runUpdate', stereumUpdate)"
               >
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
+                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
               </div>
 
               <div v-if="checkStereumUpdate()" class="available">
                 <div class="updateIcon">
-                  <img
-                    src="/img/icon/header-icons/update-green.png"
-                    alt="icon"
-                  />
+                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
                 </div>
-                <span class="availableText"
-                  >{{ stereumUpdate.version }}
-                  {{ $t("updatePanel.available") }}</span
-                >
+                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
               </div>
               <!-- <div
                 class="available"
@@ -144,29 +119,12 @@
               <span>{{ $t("updatePanel.availablePlugin") }}</span>
             </div>
             <div class="tableContent">
-              <div
-                class="tableRow"
-                v-for="(item, index) in newUpdates"
-                :key="index"
-              >
-                <div
-                  v-if="item.running || updating"
-                  class="downloadBtnDisabled"
-                >
-                  <img
-                    src="/img/icon/node-journal-icons/download_disabled.png"
-                    alt="icon"
-                  />
+              <div v-for="(item, index) in newUpdates" :key="index" class="tableRow">
+                <div v-if="item.running || updating" class="downloadBtnDisabled">
+                  <img src="/img/icon/node-journal-icons/download_disabled.png" alt="icon" />
                 </div>
-                <div
-                  v-else
-                  class="downloadBtn"
-                  @click="$emit('runUpdate', item)"
-                >
-                  <img
-                    src="/img/icon/node-journal-icons/download2.png"
-                    alt="icon"
-                  />
+                <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
+                  <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
                 </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
@@ -183,12 +141,10 @@
         <div class="updateAllBtn">
           <div
             class="confirmUpdate"
-            @click.prevent.stop="$emit('updateConfirm')"
             :class="{
-              disabled:
-                (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) ||
-                updating,
+              disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || updating,
             }"
+            @click.prevent.stop="$emit('updateConfirm')"
           >
             <span>{{ $t("updatePanel.all") }}</span>
             <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
@@ -197,9 +153,7 @@
         <div class="autoUpdateText">
           <span
             >{{ $t("updatePanel.auto") }} :
-            <span class="autoUpdateText_status" :class="onOff">{{
-              stereumApp.autoUpdate
-            }}</span></span
+            <span class="autoUpdateText_status" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
           >
         </div>
       </div>
@@ -263,9 +217,7 @@ export default {
       if (this.stereumUpdate && this.stereumUpdate.version) {
         // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
         //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
-          ? true
-          : false;
+        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
       }
       return false;
     },

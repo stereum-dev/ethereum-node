@@ -1,11 +1,7 @@
 <template>
-  <div class="btn-parent" @click="btnAction" :style="{ gridRow: `${gridRow}` }">
+  <div class="btn-parent" :style="{ gridRow: `${gridRow}` }" @click="btnAction">
     <span :style="color()"><slot></slot></span>
-    <img
-      :src="imgPath"
-      alt="icon"
-      :style="{ width: `${width}%`, marginRight: `${marginRight}%` }"
-    />
+    <img :src="imgPath" alt="icon" :style="{ width: `${width}%`, marginRight: `${marginRight}%` }" />
   </div>
 </template>
 <script>

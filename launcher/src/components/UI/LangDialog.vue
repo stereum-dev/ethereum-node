@@ -1,6 +1,6 @@
 <template>
   <transition name="modal">
-    <dialog open v-if="open">
+    <dialog v-if="open" open>
       <slot> </slot>
     </dialog>
   </transition>
