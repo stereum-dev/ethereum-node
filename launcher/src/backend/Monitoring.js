@@ -1,3 +1,4 @@
+/* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
 import * as log from "electron-log";
@@ -5,8 +6,6 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import YAML from "yaml";
-import { Console } from "console";
 
 export class Monitoring {
   constructor() {
@@ -38,7 +37,6 @@ export class Monitoring {
       nodeConnection = this.nodeConnection;
     }
     if (nodeConnection.sshService.connected) {
-      let services;
       let settings;
       try {
         settings = await nodeConnection.sshService.exec("ls /etc/stereum");
@@ -141,7 +139,7 @@ export class Monitoring {
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
     const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
     const file = this.serviceInfosCacheFile;
-    const dnow = new Date();
+    const dnow = new Date(); // eslint-disable-line no-unused-vars
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
     try {
@@ -472,15 +470,7 @@ export class Monitoring {
   // On success data keys are:
   // api_reponse=<mixed>: the response of the BEACON api
   // api_httpcode=<int> : the http status code of the BEACON api response
-  async queryBeaconApi(url, endpoint, params = [], method = "GET", headers = {}, cc_only = false) {
-    // Service definitions with their associated beacon api (service) port
-    const services = {
-      TekuBeaconService: 5051,
-      LighthouseBeaconService: 5052,
-      PrysmBeaconService: 3500,
-      NimbusBeaconService: 5052,
-    };
-
+  async queryBeaconApi(url, endpoint, params = [], method = "GET", headers = {}) {
     // Define default response
     const data = {
       api_reponse: null,
@@ -1026,7 +1016,7 @@ export class Monitoring {
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
         let data = [];
         let consensus = cc;
-        let execution = ec;
+        let execution = ec; // eslint-disable-line no-unused-vars
         let network = consensus.config.network;
         let last_known_head_block_number = 0;
         let head_block_number = 0;
@@ -1191,7 +1181,6 @@ export class Monitoring {
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
-    const utsNow = Math.floor(Date.now() / 1000);
     for (let i = 0; i < serviceInfos.length; i++) {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
@@ -1229,15 +1218,16 @@ export class Monitoring {
       };
 
       // Get max peers for consensus and execution clients by configuration or their default values
-      let consensus = cc;
-      let execution = ec;
+      // Do not disable consensuc/execution vars on lint warning because they are used with eval!
+      let consensus = cc; // eslint-disable-line no-unused-vars
+      let execution = ec; // eslint-disable-line no-unused-vars
       var data = {},
         opttyp = null,
         optnam = null,
         defval = null,
         optval = null,
         regexp = null;
-      clientTypes.forEach(function (clientType, index) {
+      clientTypes.forEach(function (clientType, index /* eslint-disable-line no-unused-vars */) {
         let clt = "";
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
@@ -1356,7 +1346,7 @@ export class Monitoring {
         var maxPeer = 0,
           numPeer = 0,
           valPeer = 0;
-        clientTypes.forEach(function (clientType, index) {
+        clientTypes.forEach(function (clientType, index /* eslint-disable-line no-unused-vars*/) {
           let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let xx = prometheus_result.data.result.filter(
@@ -1381,7 +1371,7 @@ export class Monitoring {
           }
 
           // Summarize details
-          details[clientType]["maxPeer"] = details[clientType]["maxPeer"];
+          //details[clientType]["maxPeer"] = details[clientType]["maxPeer"];
           details[clientType]["numPeer"] =
             details[clientType]["numPeer"] > details[clientType]["maxPeer"]
               ? details[clientType]["maxPeer"]
@@ -2023,9 +2013,6 @@ export class Monitoring {
       dependencyInfos: dependencyInfos,
       easyInfos: easyInfos,
     };
-
-    // Nothign else, just string info..
-    return "debugstatus";
   }
 
   // Get node stats (mostly by Prometheus)
@@ -2101,8 +2088,8 @@ export class Monitoring {
     }
     let addr = prometheus.config.ports[0].destinationIp; // the addr on the docker host
     let port = prometheus.config.ports[0].destinationPort; // the port on the docker host
-    let service_port = prometheus.config.ports[0].servicePort; // the port in the docker container
-    let service_prot = prometheus.config.ports[0].servicePortProtocol; // the protocol on the docker host and in the container
+    //let service_port = prometheus.config.ports[0].servicePort; // the port in the docker container eslint-disable-line no-unused-vars
+    //let service_prot = prometheus.config.ports[0].servicePortProtocol; // the protocol on the docker host and in the container
     const cmd = `curl -s http://${addr}:${port}/api/v1/label/__name__/values`;
     const resp = await this.nodeConnection.sshService.exec(cmd);
     return resp;
@@ -2208,7 +2195,6 @@ rm -rf diskoutput
     const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
     var sshcommand = [];
     var logArgs = "";
-    var logTs = "";
     for (let i = 0; i < serviceInfos.length; i++) {
       var containerName = serviceInfos[i].config.instanceID;
       if (logsTail > 0) {
@@ -2224,7 +2210,7 @@ rm -rf diskoutput
     if (result.rc || result.stdout == "" || result.stderr != "") {
       return [];
     }
-    var result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
+    result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
 
     // Attach container logs to each service
     for (let i = 0; i < serviceInfos.length; i++) {
