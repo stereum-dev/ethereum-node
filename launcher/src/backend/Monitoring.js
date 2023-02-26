@@ -1071,9 +1071,16 @@ export class Monitoring {
                   ? parseInt(chain_head_block, 16)
                   : 0;
             } catch (e) {}
-            frstVal = !head_block_number ? 0 : chain_head_block;
-            scndVal = !head_block_number ? 0 : head_block_number;
-            scndVal = frstVal > scndVal ? frstVal : scndVal; // can happen in theory while CL is down
+            let stay_on_hold_till_first_block = false; // true = enabled | false = disabled
+            if (stay_on_hold_till_first_block && !chain_head_block) {
+              // stay on hold until EC has responded the first block by RPC
+              frstVal = 0;
+              scndVal = 0;
+            } else {
+              frstVal = !head_block_number ? 0 : chain_head_block;
+              scndVal = !head_block_number ? 0 : head_block_number;
+              scndVal = frstVal > scndVal ? frstVal : scndVal; // can happen in theory while CL is down
+            }
           }
           data.push({
             id: index + 1,
