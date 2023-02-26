@@ -88,10 +88,10 @@
   </div>
 </template>
 <script>
-import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
+import { mapWritableState } from "pinia";
 export default {
   props: ["modalStatus"],
   data() {
@@ -102,9 +102,6 @@ export default {
       testnetPlugins: [],
     };
   },
-  created() {
-    this.switchNetworkHandler();
-  },
   computed: {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
@@ -114,6 +111,9 @@ export default {
     ...mapWritableState(useServices, {
       allServices: "allServices",
     }),
+  },
+  created() {
+    this.switchNetworkHandler();
   },
   methods: {
     goToInstallation() {

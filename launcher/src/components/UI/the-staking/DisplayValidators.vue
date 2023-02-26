@@ -193,32 +193,30 @@
   </div>
 </template>
 <script>
-import DropZone from "./DropZone.vue";
-import KeyModal from "./KeyModal.vue";
-import GrafitiValidator from "./GrafitiValidator.vue";
-import RenameValidator from "./RenameValidator.vue";
-import ExitValidator from "./ExitValidator.vue";
-import ExitValidatorsModal from "./ExitValidatorsModal.vue";
-import RemoveValidator from "./RemoveValidatore.vue";
-import RemoveSingleModal from "./RemoveSingleModal.vue";
-import SearchOptions from "./SearchOptions.vue";
-import EnterPassword from "./EnterPassword.vue";
-import SelectService from "./SelectService.vue";
-import FeeRecipient from "./FeeRecipient.vue";
-import InsertValidator from "./InsertValidator.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import axios from "axios";
-import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
-import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
-import ExitMultipleValidators from "./ExitMultipleValidators.vue";
-import ImportSlashingModal from "./ImportSlashingModal.vue";
+import { mapWritableState } from "pinia";
 import DisabledStaking from "./DisabledStaking.vue";
+import EnterPassword from "./EnterPassword.vue";
+import ExitMultipleValidators from "./ExitMultipleValidators.vue";
+import ExitValidator from "./ExitValidator.vue";
+import ExitValidatorsModal from "./ExitValidatorsModal.vue";
+import FeeRecipient from "./FeeRecipient.vue";
+import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
+import GrafitiValidator from "./GrafitiValidator.vue";
+import ImportSlashingModal from "./ImportSlashingModal.vue";
+import InsertValidator from "./InsertValidator.vue";
+import KeyModal from "./KeyModal.vue";
+import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
+import RemoveSingleModal from "./RemoveSingleModal.vue";
+import RemoveValidator from "./RemoveValidatore.vue";
+import RenameValidator from "./RenameValidator.vue";
+import SearchOptions from "./SearchOptions.vue";
+import SelectService from "./SelectService.vue";
 export default {
   components: {
-    DropZone,
     KeyModal,
     FeeRecipient,
     GrafitiValidator,
@@ -278,6 +276,23 @@ export default {
       isPubkeyVisible: false,
     };
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+      network: "network",
+    }),
+    ...mapWritableState(useStakingStore, {
+      totalBalance: "totalBalance",
+      keys: "keys",
+      forceRefresh: "forceRefresh",
+    }),
+    importingErrorMessage() {
+      return {
+        "text-danger": this.message.includes("Failed"),
+      };
+    },
+  },
   watch: {
     button: {
       deep: true,
@@ -312,23 +327,6 @@ export default {
           this.listKeys();
         }
       },
-    },
-  },
-  computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      runningServices: "runningServices",
-      network: "network",
-    }),
-    ...mapWritableState(useStakingStore, {
-      totalBalance: "totalBalance",
-      keys: "keys",
-      forceRefresh: "forceRefresh",
-    }),
-    importingErrorMessage() {
-      return {
-        "text-danger": this.message.includes("Failed"),
-      };
     },
   },
   beforeMount() {

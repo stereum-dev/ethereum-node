@@ -34,15 +34,15 @@
   </div>
 </template>
 <script>
-import { mapWritableState, mapState } from "pinia";
-import { useNodeHeader } from "@/store/nodeHeader";
-import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
+import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "../../../store/nodeManage";
 import { useControlStore } from "../../../store/theControl";
 import { useStakingStore } from "../../../store/theStaking";
 import RemoveModal from "./RemoveModal.vue";
+
 export default {
   components: { RemoveModal },
   data() {

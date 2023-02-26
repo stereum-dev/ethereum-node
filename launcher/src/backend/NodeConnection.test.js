@@ -1,6 +1,6 @@
 import { NodeConnection } from "./NodeConnection";
-import { TaskManager } from "./TaskManager";
 import { nodeOS } from "./NodeOS";
+import { TaskManager } from "./TaskManager";
 const log = require("electron-log");
 
 test("findOS Ubuntu", () => {
@@ -271,7 +271,6 @@ test("prepareStereumNode success", async () => {
 
   expect(mMock.mock.calls.length).toBe(7);
 
-  const i = 0;
   expect(mMock.mock.calls[0][0]).toMatch(/cat/);
   expect(mMock.mock.calls[0][0]).toMatch(/stereum.yaml/);
 
@@ -388,7 +387,8 @@ test("playbookStatus failure", async () => {
   jest.mock("./SSHService");
   const SSHService = require("./SSHService");
   const mMock = jest.fn();
-  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 1, stderr: "err-1" })));
+  // eslint-disable-next-line no-async-promise-executor
+  mMock.mockReturnValueOnce(new Promise(async (resolve) => resolve({ rc: 1, stderr: "err-1" })));
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
@@ -411,7 +411,8 @@ test("playbookStatus success", async () => {
   jest.mock("./SSHService");
   const SSHService = require("./SSHService");
   const mMock = jest.fn();
-  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 0, stdout: "playbook-output" })));
+  // eslint-disable-next-line no-async-promise-executor
+  mMock.mockReturnValueOnce(new Promise(async (resolve) => resolve({ rc: 0, stdout: "playbook-output" })));
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,

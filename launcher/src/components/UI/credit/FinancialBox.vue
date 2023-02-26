@@ -77,7 +77,8 @@ export default {
     }),
 
     sortedAddresses() {
-      return this.roundAdresses.sort((a, b) => {
+      const copyOfRoundAddresses = [...this.roundAdresses];
+      return copyOfRoundAddresses.sort((a, b) => {
         let fa = a.toLowerCase(),
           fb = b.toLowerCase();
         if (fa < fb) {

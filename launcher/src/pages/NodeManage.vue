@@ -96,21 +96,21 @@
 </template>
 
 <script>
-import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
-import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
+import { useServices } from "@/store/services";
+import { mapWritableState } from "pinia";
+import { toRaw } from "vue";
+import AddPanel from "../components/UI/node-manage/AddPanel.vue";
+import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import ChangeConfirm from "../components/UI/node-manage/ChangeConfirm.vue";
 import DropZone from "../components/UI/node-manage/DropZone.vue";
-import BaseModal from "../components/UI/node-manage/BaseModal.vue";
-import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
-import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
+import NodeConfiguration from "../components/UI/node-manage/NodeConfiguration.vue";
 import PresetModal from "../components/UI/node-manage/PresetModal.vue";
+import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
+import SidebarManage from "../components/UI/node-manage/SidebarManage.vue";
 import SwitchNetwork from "../components/UI/node-manage/SwitchNetwork.vue";
-import { mapWritableState } from "pinia";
-import { useServices } from "@/store/services";
 import TaskManager from "../components/UI/task-manager/TaskManager.vue";
 import { useNodeManage } from "../store/nodeManage";
-import { toRaw } from "vue";
 
 export default {
   components: {
@@ -317,7 +317,7 @@ export default {
       this.itemToReplace.replacePanel = false;
       this.itemToReplace = {};
     },
-    replacePluginHandler(item) {},
+    replacePluginHandler() {},
   },
 };
 </script>

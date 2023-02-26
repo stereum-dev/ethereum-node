@@ -198,12 +198,12 @@
 </template>
 
 <script>
-import DeleteModal from "./DeleteModal.vue";
-import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { mapWritableState } from "pinia";
+import DeleteModal from "./DeleteModal.vue";
 
 export default {
   name: "FormSetup",
@@ -235,9 +235,6 @@ export default {
       imgTrash: "./img/icon/TRASH_CAN.png",
     };
   },
-  created() {
-    this.loadStoredConnections();
-  },
   computed: {
     inputType() {
       return this.showPassword ? "text" : "password";
@@ -261,6 +258,9 @@ export default {
         return this.model.keylocation.value;
       }
     },
+  },
+  created() {
+    this.loadStoredConnections();
   },
   methods: {
     toggleShowPassword() {

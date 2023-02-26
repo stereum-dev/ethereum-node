@@ -34,17 +34,14 @@
 
 <script>
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
-import { useNodeManage } from "@/store/nodeManage";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useNodeManage } from "@/store/nodeManage";
+import { mapWritableState } from "pinia";
 export default {
   data() {
     return {
       installPath: "/opt/stereum",
     };
-  },
-  created() {
-    this.activeBtn();
   },
   computed: {
     ...mapWritableState(useNodeManage, {
@@ -55,6 +52,11 @@ export default {
       refresh: "refresh",
     }),
   },
+
+  created() {
+    this.activeBtn();
+  },
+
   methods: {
     async prepareStereum() {
       this.currentNetwork = this.networkList.find((item) => item.network === "testnet");

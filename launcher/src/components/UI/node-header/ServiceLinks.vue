@@ -27,13 +27,13 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
-import GrafanaModal from "../services-modal/GrafanaModal.vue";
-import SsvModal from "../services-modal/SsvModal.vue";
-import PrometheusModal from "../services-modal/PrometheusModal.vue";
+import { mapState } from "pinia";
 import MevboostModal from "../services-modal//MevboostModal.vue";
+import GrafanaModal from "../services-modal/GrafanaModal.vue";
+import PrometheusModal from "../services-modal/PrometheusModal.vue";
+import SsvModal from "../services-modal/SsvModal.vue";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
@@ -46,7 +46,6 @@ export default {
       showMevboostWindow: false,
     };
   },
-  mounted() {},
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
@@ -55,6 +54,7 @@ export default {
       allServices: "allServices",
     }),
   },
+  mounted() {},
   methods: {
     scrollRight() {
       let position = this.$refs.service;

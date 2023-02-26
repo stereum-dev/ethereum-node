@@ -83,17 +83,17 @@ export default {
       itemToLogs: {},
     };
   },
-  beforeMount() {
-    this.updateStates();
-  },
-  updated() {
-    this.updateStates();
-  },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
+  },
+  beforeMount() {
+    this.updateStates();
+  },
+  updated() {
+    this.updateStates();
   },
   methods: {
     updateStates: async function () {

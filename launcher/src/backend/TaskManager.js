@@ -61,7 +61,9 @@ export class TaskManager {
           let logs = "";
           try {
             logs = await this.nodeConnection.playbookStatus(task.ref);
-          } catch (err) {}
+          } catch (err) {
+            /* empty */
+          }
           let buffer = logs.split("\n\n");
           buffer.pop();
           task.subTasks = [];

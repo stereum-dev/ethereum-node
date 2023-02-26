@@ -3,12 +3,11 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { StringUtils } from "../StringUtils.js";
 import { ServiceManager } from "../ServiceManager.js";
+import { GethService } from "./GethService.js";
 import { LodestarBeaconService } from "./LodestarBeaconService.js";
 import { LodestarValidatorService } from "./LodestarValidatorService.js";
-import { GethService } from "./GethService.js";
+import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 const log = require("electron-log");
 
 jest.setTimeout(1000000);

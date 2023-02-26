@@ -29,8 +29,8 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { mapState } from "pinia";
 export default {
   data() {
     return {
@@ -38,13 +38,13 @@ export default {
       isprometheusAvailable: false,
     };
   },
-  mounted() {
-    this.filterprometheusService();
-  },
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
     }),
+  },
+  mounted() {
+    this.filterprometheusService();
   },
   methods: {
     filterprometheusService() {

@@ -25,19 +25,17 @@
   </div>
 </template>
 <script>
-import { mapState, mapWritableState } from "pinia";
-import { useNodeStore } from "@/store/theNode";
-import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
+import { useServices } from "@/store/services";
+import { useNodeStore } from "@/store/theNode";
+import { mapState, mapWritableState } from "pinia";
+
 export default {
   props: ["pubkey"],
   data() {
     return {
       localpubkey: pubkey,
     };
-  },
-  mounted() {
-    this.getURL();
   },
   computed: {
     ...mapWritableState(useNodeStore, {
@@ -46,6 +44,9 @@ export default {
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
+  },
+  mounted() {
+    this.getURL();
   },
 
   methods: {

@@ -1,12 +1,10 @@
-import { NodeConnection } from "./NodeConnection";
-import { ServiceManager } from "./ServiceManager";
-import * as log from "electron-log";
 import * as crypto from "crypto";
+import * as log from "electron-log";
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import YAML from "yaml";
-import { Console } from "console";
+import { NodeConnection } from "./NodeConnection";
+import { ServiceManager } from "./ServiceManager";
 
 export class Monitoring {
   constructor() {
@@ -25,7 +23,9 @@ export class Monitoring {
     this.beaconTunnel = {};
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) {}
+    } catch (e) {
+      /* empty */
+    }
     await this.nodeConnection.logout();
     await this.nodeConnectionProm.logout();
     await this.serviceManager.nodeConnection.logout();
@@ -37,7 +37,6 @@ export class Monitoring {
       nodeConnection = this.nodeConnection;
     }
     if (nodeConnection.sshService.connected) {
-      let services;
       let settings;
       try {
         settings = await nodeConnection.sshService.exec("ls /etc/stereum");
@@ -89,14 +88,14 @@ export class Monitoring {
   // Get service infos (either all or optional limited to specific - case-sensitive - service names)
   // Example A: const serviceInfos = await this.getServiceInfos(); // <- Returns all configs
   // Example B: const serviceInfos = await this.getServiceInfos("PrometheusService","GrafanaService");
-  // Returns array of matched services with their associated (formated) config
+  // Returns array of matched services with their associated (formatted) config
   // Caches results for 10 seconds!
   async getServiceInfos() {
     const cache_max_seconds = 10;
-    const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
+    const args = Array.prototype.slice.call(arguments); // convert function "arguments" to Array
     const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
     const file = this.serviceInfosCacheFile;
-    const dnow = new Date();
+
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
     try {
@@ -111,7 +110,9 @@ export class Monitoring {
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    } catch (e) {}
+    } catch (e) {
+      /* empty */
+    }
     if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
@@ -427,14 +428,8 @@ export class Monitoring {
   // On success data keys are:
   // api_reponse=<mixed>: the response of the BEACON api
   // api_httpcode=<int> : the http status code of the BEACON api response
-  async queryBeaconApi(url, endpoint, params = [], method = "GET", headers = {}, cc_only = false) {
+  async queryBeaconApi(url, endpoint, params = [], method = "GET", headers = {}) {
     // Service definitions with their associated beacon api (service) port
-    const services = {
-      TekuBeaconService: 5051,
-      LighthouseBeaconService: 5052,
-      PrysmBeaconService: 3500,
-      NimbusBeaconService: 5052,
-    };
 
     // Define default response
     const data = {
@@ -817,8 +812,7 @@ export class Monitoring {
         // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
         let data = [];
-        let consensus = cc;
-        let execution = ec;
+
         clientTypes.forEach(function (clientType, index) {
           let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
@@ -836,12 +830,16 @@ export class Monitoring {
             labels.forEach(function (label, index) {
               try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              } catch (e) {}
+              } catch (e) {
+                /* empty */
+              }
             });
             try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            } catch (e) {}
+            } catch (e) {
+              /* empty */
+            }
           }
           // Set chain head block for this client from RPC server (if available)
           if (
@@ -858,7 +856,9 @@ export class Monitoring {
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
-            } catch (e) {}
+            } catch (e) {
+              /* empty */
+            }
             frstVal = chain_head_block;
             scndVal = chain_head_block;
           }
@@ -968,7 +968,7 @@ export class Monitoring {
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
-    const utsNow = Math.floor(Date.now() / 1000);
+
     for (let i = 0; i < serviceInfos.length; i++) {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
@@ -1006,15 +1006,13 @@ export class Monitoring {
       };
 
       // Get max peers for consensus and execution clients by configuration or their default values
-      let consensus = cc;
-      let execution = ec;
       var data = {},
         opttyp = null,
         optnam = null,
         defval = null,
         optval = null,
         regexp = null;
-      clientTypes.forEach(function (clientType, index) {
+      clientTypes.forEach(function (clientType) {
         let clt = "";
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
@@ -1133,7 +1131,7 @@ export class Monitoring {
         var maxPeer = 0,
           numPeer = 0,
           valPeer = 0;
-        clientTypes.forEach(function (clientType, index) {
+        clientTypes.forEach(function (clientType) {
           let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let xx = prometheus_result.data.result.filter(
@@ -1153,12 +1151,13 @@ export class Monitoring {
                     .value.pop()
                 );
                 details[clientType]["numPeerBy"]["fields"].push(item);
-              } catch (e) {}
+              } catch (e) {
+                /* empty */
+              }
             });
           }
 
           // Summarize details
-          details[clientType]["maxPeer"] = details[clientType]["maxPeer"];
           details[clientType]["numPeer"] =
             details[clientType]["numPeer"] > details[clientType]["maxPeer"]
               ? details[clientType]["maxPeer"]
@@ -1390,7 +1389,9 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) {
+      /* empty */
+    }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
@@ -1570,7 +1571,9 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) {
+      /* empty */
+    }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
@@ -1800,9 +1803,6 @@ export class Monitoring {
       dependencyInfos: dependencyInfos,
       easyInfos: easyInfos,
     };
-
-    // Nothign else, just string info..
-    return "debugstatus";
   }
 
   // Get node stats (mostly by Prometheus)
@@ -1878,8 +1878,6 @@ export class Monitoring {
     }
     let addr = prometheus.config.ports[0].destinationIp; // the addr on the docker host
     let port = prometheus.config.ports[0].destinationPort; // the port on the docker host
-    let service_port = prometheus.config.ports[0].servicePort; // the port in the docker container
-    let service_prot = prometheus.config.ports[0].servicePortProtocol; // the protocol on the docker host and in the container
     const cmd = `curl -s http://${addr}:${port}/api/v1/label/__name__/values`;
     const resp = await this.nodeConnection.sshService.exec(cmd);
     return resp;
@@ -1986,7 +1984,6 @@ rm -rf diskoutput
     const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
     var sshcommand = [];
     var logArgs = "";
-    var logTs = "";
     for (let i = 0; i < serviceInfos.length; i++) {
       var containerName = serviceInfos[i].config.instanceID;
       if (logsTail > 0) {
@@ -2002,7 +1999,8 @@ rm -rf diskoutput
     if (result.rc || result.stdout == "" || result.stderr != "") {
       return [];
     }
-    var result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
+
+    result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
 
     // Attach container logs to each service
     for (let i = 0; i < serviceInfos.length; i++) {

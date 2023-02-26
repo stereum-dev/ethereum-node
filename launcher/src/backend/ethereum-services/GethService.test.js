@@ -1,7 +1,6 @@
 import { GethService } from "./GethService.js";
 import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { ServiceVolume } from "./ServiceVolume.js";
 
 test("id test", () => {
   expect(GethService.buildByUserInput(networks.prater).id).toBeDefined();
@@ -76,8 +75,6 @@ test("multiple ports", () => {
 });
 
 test("workingDir", () => {
-  const volumes = [new ServiceVolume("/opt/stereum/foo", "/opt/app/bar")];
-
   const gethConfig = GethService.buildByUserInput(networks.goerli, null, "opt//stereum/geth/").buildConfiguration();
 
   expect(gethConfig.volumes).toHaveLength(2);

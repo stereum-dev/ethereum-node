@@ -1,25 +1,24 @@
-import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
-import { GethService } from "./ethereum-services/GethService";
 import { BesuService } from "./ethereum-services/BesuService";
-import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
-import { PrometheusService } from "./ethereum-services/PrometheusService";
-import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
+import { ErigonService } from "./ethereum-services/ErigonService";
+import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
+import { GethService } from "./ethereum-services/GethService";
 import { GrafanaService } from "./ethereum-services/GrafanaService";
-import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
-import { StringUtils } from "./StringUtils.js";
-import { ServiceManager } from "./ServiceManager";
 import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
 import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
-import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
-import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
-import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
-import { NethermindService } from "./ethereum-services/NethermindService";
-import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
 import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
-import { ErigonService } from "./ethereum-services/ErigonService";
+import { NethermindService } from "./ethereum-services/NethermindService";
+import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
+import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
+import { PrometheusService } from "./ethereum-services/PrometheusService";
+import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
+import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
+import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
+import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
+import { ServiceManager } from "./ServiceManager";
+import { StringUtils } from "./StringUtils.js";
 
-const YAML = require("yaml");
 const log = require("electron-log");
 
 async function Sleep(ms) {

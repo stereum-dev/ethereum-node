@@ -6,14 +6,14 @@
   </nav>
 </template>
 <script>
-import PagesNav from "./PagesNav.vue";
-import IconsNav from "./IconsNav.vue";
-import ServiceLinks from "./ServiceLinks.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+import { useServices } from "@/store/services";
+import { mapWritableState } from "pinia";
+import IconsNav from "./IconsNav.vue";
+import PagesNav from "./PagesNav.vue";
+import ServiceLinks from "./ServiceLinks.vue";
 export default {
   components: { PagesNav, IconsNav, ServiceLinks },
   data() {
@@ -22,13 +22,6 @@ export default {
       checked: false,
       polling: null,
     };
-  },
-  mounted() {
-    this.refreshServiceStates();
-    this.polling = setInterval(this.refreshServiceStates, 2000); //refresh services
-  },
-  beforeUnmount() {
-    clearInterval(this.polling);
   },
   computed: {
     ...mapWritableState(useNodeManage, {
@@ -54,6 +47,7 @@ export default {
       updating: "updating",
     }),
   },
+
   methods: {
     refreshServiceStates: async function () {
       const allServices = JSON.parse(JSON.stringify(this.allServices));

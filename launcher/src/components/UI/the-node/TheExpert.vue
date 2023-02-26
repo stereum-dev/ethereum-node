@@ -200,9 +200,8 @@
 </template>
 <script>
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
+import { mapState } from "pinia";
 export default {
   props: ["item", "position", "prunningWarning"],
   data() {
@@ -218,7 +217,6 @@ export default {
       bindingIp: "126.0.23.22",
       enteredPort: "9006",
       checkedPrunning: null,
-      editableData: null,
       changed: false,
       nothingsChanged: true,
     };
@@ -280,7 +278,7 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
       this.item.expertOptions.forEach((option) => {
-        if (option.changeValue != undefined && option.changeValue != null && option.changeValue != NaN) {
+        if (option.changeValue != undefined && option.changeValue != null && !isNaN(option.changeValue)) {
           if (option.changed) {
             this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
           }
@@ -299,7 +297,7 @@ export default {
       });
     },
     checkAutoUpdate(val) {
-      if (val != undefined && val != null && val != NaN) {
+      if (val != undefined && val != null && !isNaN(val)) {
         val = val == "true";
         return val ? "auto" : "manual";
       }

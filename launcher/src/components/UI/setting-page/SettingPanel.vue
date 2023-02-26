@@ -85,14 +85,14 @@
   </div>
 </template>
 <script>
-import LanguagePanel from "./LanguagePanel.vue";
-import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
-import SettingItems from "./SettingItems.vue";
-import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
+import { mapState, mapWritableState } from "pinia";
 import { toRaw } from "vue";
+import TaskManager from "../task-manager/TaskManager.vue";
+import LanguagePanel from "./LanguagePanel.vue";
+import SettingItems from "./SettingItems.vue";
 export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
@@ -142,20 +142,6 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.getSettings();
-    this.forceUpdateCheck = true;
-  },
-  updated() {
-    this.checkSettings();
-    this.stereumCurrentVersion();
-  },
-  created() {
-    this.checkSettings();
-    this.selector();
-    this.checkVersion();
-    this.switchOnOff();
-  },
   computed: {
     ...mapState(useServices, {
       launcherVersion: "launcherVersion",
@@ -191,6 +177,20 @@ export default {
     off() {
       return this.$t("settingPanel.off");
     },
+  },
+  mounted() {
+    this.getSettings();
+    this.forceUpdateCheck = true;
+  },
+  updated() {
+    this.checkSettings();
+    this.stereumCurrentVersion();
+  },
+  created() {
+    this.checkSettings();
+    this.selector();
+    this.checkVersion();
+    this.switchOnOff();
   },
   methods: {
     async getSettings() {

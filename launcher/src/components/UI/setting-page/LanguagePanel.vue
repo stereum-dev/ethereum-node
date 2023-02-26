@@ -14,10 +14,11 @@
   </div>
 </template>
 <script>
-import FlagButton from "./FlagButton.vue";
-import { mapWritableState, mapActions } from "pinia";
-import { useFlagDialog } from "../../../store/flagDialog";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
+import { useFlagDialog } from "../../../store/flagDialog";
+import FlagButton from "./FlagButton.vue";
+
 export default {
   components: { FlagButton },
   emits: ["back"],
@@ -36,7 +37,9 @@ export default {
       linkFlags: "linkFlags",
     }),
     sortedFlags() {
-      return this.linkFlags.sort((a, b) => {
+      const copyOfLinkFlags = [...this.linkFlags];
+
+      return copyOfLinkFlags.sort((a, b) => {
         let fa = a.langName.toLowerCase(),
           fb = b.langName.toLowerCase();
         if (fa < fb) {

@@ -3,10 +3,7 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="restart-icon">
-        <img
-          src="/img/icon/the-staking/stereum-error.png"
-          alt="restart warning"
-        />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="restart warning" />
       </div>
       <div class="restart-question">
         <span>Are you sure you want to restart?</span>
@@ -15,14 +12,8 @@
         <span class="service-name">{{ service.name }}</span>
         <span class="service-id">[ {{ service.config.serviceID }} ]</span>
       </div>
-      <div class="restart-message">
-        your node might go offline while doing so!
-      </div>
-      <div
-        class="restart-button"
-        @click="$emit('restartConfirm', service)"
-        :class="{ disabled: loading }"
-      >
+      <div class="restart-message">your node might go offline while doing so!</div>
+      <div class="restart-button" :class="{ disabled: loading }" @click="$emit('restartConfirm', service)">
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
         <span v-else>restart</span>
       </div>

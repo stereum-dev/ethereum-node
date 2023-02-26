@@ -1,7 +1,6 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
-import { StringUtils } from "../StringUtils.js";
 
 export class Web3SignerService extends NodeService {
   static buildByUserInput(network, ports, dir) {

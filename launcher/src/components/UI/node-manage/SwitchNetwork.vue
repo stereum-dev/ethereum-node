@@ -31,9 +31,9 @@
   </div>
 </template>
 <script>
-import { mapState, mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
+import { mapState, mapWritableState } from "pinia";
 export default {
   data() {
     return {
@@ -67,7 +67,7 @@ export default {
     },
   },
   methods: {
-    changeConfig(val) {
+    changeConfig() {
       const installed = JSON.parse(JSON.stringify(this.installedServices));
       this.newConfiguration = installed;
     },

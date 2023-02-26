@@ -126,7 +126,7 @@ export const useTaskManager = defineStore("taskManager", {
         },
       ],
       fakeError: {
-        TIME: 1656923564922971207,
+        TIME: 1656923564922971207n,
         PLAYBOOK: "/opt/stereum/ansible/controls/genericPlaybook.yaml,docker",
         TASK: " List validator using API",
         ACTION: " community.docker.docker_container",

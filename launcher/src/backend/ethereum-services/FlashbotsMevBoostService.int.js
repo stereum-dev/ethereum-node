@@ -3,7 +3,6 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceManager } from "../ServiceManager.js";
 import { FlashbotsMevBoostService } from "./FlashbotsMevBoostService.js";
 const log = require("electron-log");

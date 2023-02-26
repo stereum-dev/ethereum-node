@@ -56,10 +56,10 @@
   </div>
 </template>
 <script>
-import { mapState, mapWritableState } from "pinia";
+import ControlService from "@/store/ControlService";
 import { useNodeManage } from "@/store/nodeManage";
 import { useServices } from "@/store/services";
-import ControlService from "@/store/ControlService";
+import { mapState, mapWritableState } from "pinia";
 import { toRaw } from "vue";
 export default {
   data() {
@@ -73,12 +73,6 @@ export default {
       applyBtnDisabled: true,
       availableBlocks: [],
     };
-  },
-  mounted() {
-    this.filtermevService();
-    this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
-    );
   },
   computed: {
     ...mapState(useServices, {
@@ -99,6 +93,12 @@ export default {
         return false;
       });
     },
+  },
+  mounted() {
+    this.filtermevService();
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
+    );
   },
   methods: {
     shuffleRelaysList(array) {

@@ -1,7 +1,6 @@
 import { ErigonService } from "./ErigonService.js";
 import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { ServiceVolume } from "./ServiceVolume.js";
 
 test("id test", () => {
   expect(ErigonService.buildByUserInput(networks.prater).id).toBeDefined();
@@ -78,8 +77,6 @@ test("multiple ports", () => {
 });
 
 test("workingDir", () => {
-  const volumes = [new ServiceVolume("/opt/stereum/foo", "/opt/app/bar")];
-
   const erigonConfig = ErigonService.buildByUserInput(
     networks.goerli,
     null,

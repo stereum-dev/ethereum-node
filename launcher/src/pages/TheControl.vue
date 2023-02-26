@@ -9,7 +9,6 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import ControlService from "@/store/ControlService";
 import ControlGrid from "../components/UI/the-control/ControlGrid.vue";
 import { useControlStore } from "../store/theControl";
 export default {
@@ -48,12 +47,10 @@ export default {
       this.request = Array.isArray(this.request) ? this.request : [];
       const ARGUMENTS = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
       const meth = ARGUMENTS.length ? ARGUMENTS.shift() : null;
-      const args = ARGUMENTS.length ? ARGUMENTS : null;
       if (meth in this.request && this.request[meth]) {
         return;
       }
       this.request[meth] = true;
-      const csvc = ControlService;
       const func = eval("async () => {return await csvc." + meth + "()}");
       const resp = await func();
       this.request[meth] = false;
@@ -87,7 +84,9 @@ export default {
               this.beaconstatus = nodeStats.data.beaconstatus;
               this.portstatus = nodeStats.data.portstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;
-            } catch (e) {}
+            } catch (e) {
+              /* empty */
+            }
           }
         });
         // Get Server Vitals

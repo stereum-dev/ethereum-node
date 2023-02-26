@@ -119,15 +119,14 @@
   </div>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
-import ChangeModal from "./ChangeModal.vue";
-import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import ChangeModal from "./ChangeModal.vue";
 
 export default {
-  components: { ToggleButton, ChangeModal },
+  components: { ChangeModal },
 
   data() {
     return {
@@ -279,7 +278,7 @@ export default {
     },
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },

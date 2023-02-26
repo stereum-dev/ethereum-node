@@ -1,24 +1,24 @@
+import { BesuService } from "./ethereum-services/BesuService";
+import { ErigonService } from "./ethereum-services/ErigonService";
+import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
+import { GethService } from "./ethereum-services/GethService";
+import { GrafanaService } from "./ethereum-services/GrafanaService";
 import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
 import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
 import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
-import { GethService } from "./ethereum-services/GethService";
-import { ErigonService } from "./ethereum-services/ErigonService";
-import { BesuService } from "./ethereum-services/BesuService";
-import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { NethermindService } from "./ethereum-services/NethermindService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
-import { PrometheusService } from "./ethereum-services/PrometheusService";
 import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
-import { GrafanaService } from "./ethereum-services/GrafanaService";
+import { PrometheusService } from "./ethereum-services/PrometheusService";
 import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
 import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
-import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
-import { NethermindService } from "./ethereum-services/NethermindService";
-import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
-import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-services/ServicePort";
-import { StringUtils } from "./StringUtils";
+import { changeablePorts, ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
+import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
+import { StringUtils } from "./StringUtils";
 
 const log = require("electron-log");
 
@@ -160,7 +160,7 @@ export class ServiceManager {
       });
   }
 
-  async chooseServiceAction(action, service, data) {
+  async chooseServiceAction(action, service) {
     switch (action) {
       case "pruneGeth":
         if (service.service === "GethService") {
@@ -914,7 +914,6 @@ export class ServiceManager {
         newInstallTasks = await this.addServices(installTasks, services);
       } catch (err) {
         log.error("Installing Services Failed:", err);
-      } finally {
       }
     }
     if (jobs.includes("MODIFY")) {
@@ -924,7 +923,6 @@ export class ServiceManager {
         await this.modifyServices(modifyTasks, services, newInstallTasks);
       } catch (err) {
         log.error("Modifying Services Failed:", err);
-      } finally {
       }
     }
     if (jobs.includes("CHANGE NETWORK")) {

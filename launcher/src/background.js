@@ -22,7 +22,6 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const { globalShortcut } = require("electron");
-const foo = null ?? "default string";
 const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -262,12 +261,8 @@ ipcMain.handle("restartServices", async (event, args) => {
 });
 
 ipcMain.handle("checkUpdates", async () => {
-  let versions;
-  try {
-    versions = await nodeConnection.checkUpdates();
-  } catch (err) {
-    throw err;
-  }
+  const versions = await nodeConnection.checkUpdates();
+
   return versions;
 });
 

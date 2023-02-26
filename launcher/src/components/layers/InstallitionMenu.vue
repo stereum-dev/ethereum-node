@@ -44,13 +44,12 @@
   </div>
 </template>
 <script>
-import ButtonInstallation from "./ButtonInstallation.vue";
-import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
+import { mapState } from "pinia";
+import ButtonInstallation from "./ButtonInstallation.vue";
 export default {
-  components: { ButtonInstallation, CircleLoading },
+  components: { ButtonInstallation },
   data() {
     return {
       active: true,
@@ -62,15 +61,15 @@ export default {
       supportMessage: this.$t("installitionMenu.osSupported"),
     };
   },
+  computed: {
+    ...mapState(useWelcomeStore, { installation: "installation" }),
+  },
   created() {
     setTimeout(() => {
       this.active = false;
     }, 5000);
     this.checkOsRequirements();
     this.randomValue();
-  },
-  computed: {
-    ...mapState(useWelcomeStore, { installation: "installation" }),
   },
   methods: {
     isCompatible(item) {

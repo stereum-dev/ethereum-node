@@ -1,11 +1,11 @@
-import { SSHService } from "./SSHService";
-import { StringUtils } from "./StringUtils";
-import { NodeConnectionParams } from "./NodeConnectionParams";
-import { nodeOS } from "./NodeOS";
-import { ServiceVolume } from "./ethereum-services/ServiceVolume";
+/* eslint-disable no-async-promise-executor */
 import axios from "axios";
 import net from "net";
 import YAML from "yaml";
+import { ServiceVolume } from "./ethereum-services/ServiceVolume";
+import { nodeOS } from "./NodeOS";
+import { SSHService } from "./SSHService";
+import { StringUtils } from "./StringUtils";
 const log = require("electron-log");
 const electron = require("electron");
 
@@ -103,6 +103,7 @@ export class NodeConnection {
    */
   async prepareStereumNode(installationDirectory) {
     this.installationDirectory = installationDirectory;
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       if (!this.os) {
         log.debug("os not found yet");
@@ -306,6 +307,7 @@ export class NodeConnection {
    * start a playbook
    */
   async runPlaybook(playbook, extraVars) {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       if (!this.settings) {
         reject("Settings not loaded! Run findStereumSettings() first.");
@@ -829,14 +831,10 @@ export class NodeConnection {
   }
 
   async checkUpdates() {
-    try {
-      let response = await axios.get("https://stereum.net/downloads/updates.json");
-      if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
-      log.debug(response.data);
-      return response.data;
-    } catch (err) {
-      throw err;
-    }
+    let response = await axios.get("https://stereum.net/downloads/updates.json");
+    if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
+    log.debug(response.data);
+    return response.data;
   }
 
   async runAllUpdates(commit) {

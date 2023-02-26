@@ -22,11 +22,9 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
-//import { useNodeStore } from "@/store/theNode";
-import { useTutorialStore } from "@/store/tutorialSteps";
-import { mapState } from "pinia";
 import { useServices } from "@/store/services";
+import { useTutorialStore } from "@/store/tutorialSteps";
+import { mapState, mapWritableState } from "pinia";
 
 export default {
   data() {
@@ -85,9 +83,17 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapWritableState(useTutorialStore, {
+      showTutorialModal: "showTutorialModal",
+    }),
+    ...mapState(useServices, {
+      network: "network",
+    }),
+  },
   watch: {
     network: {
-      handler(newVal, oldVal) {
+      handler() {
         this.serviceController();
       },
       immediate: true,
@@ -102,17 +108,7 @@ export default {
     });
     this.serviceController();
   },
-  computed: {
-    // ...mapWritableState(useNodeStore, {
-    //   configData: "configData_nodeSidebarVideo",
-    // }),
-    ...mapWritableState(useTutorialStore, {
-      showTutorialModal: "showTutorialModal",
-    }),
-    ...mapState(useServices, {
-      network: "network",
-    }),
-  },
+
   methods: {
     serviceController() {
       switch (this.network) {

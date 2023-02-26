@@ -68,18 +68,18 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        v-if="tillTheNextRelease"
+        img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="4/4"
         @btn-action="restartToggle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
     </div>
-    <div class="configBtn" v-if="!openRestart && openLog">
+    <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
@@ -101,9 +101,9 @@
         ></service-log-button>
       </div>
     </div>
-    <div class="configBtn" v-if="openRestart && !openLog">
+    <div v-if="openRestart && !openLog" class="configBtn">
       <the-node-panel-btn
-        imgPath="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -112,14 +112,14 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        v-if="tillTheNextRelease"
+        img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="1/2"
         class="btnTitle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
       <div class="log-navigation">
@@ -134,10 +134,10 @@
         </service-log-button>
         <restart-modal
           v-if="restartModalShow"
-          @close-window="restartModalClose"
-          @restart-confirm="restartConfirmed"
           :service="itemToRestart"
           :loading="restartLoad"
+          @close-window="restartModalClose"
+          @restart-confirm="restartConfirmed"
         ></restart-modal>
       </div>
     </div>
@@ -148,19 +148,17 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
+import { mapState } from "pinia";
+import { useServices } from "../../../store/services";
+import { useControlStore } from "../../../store/theControl";
+import PluginLogs from "../the-node/PluginLogs.vue";
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
-import ControlService from "@/store/ControlService";
-import UpdateTable from "./UpdateTable.vue";
-import { mapState } from "pinia";
-import { useControlStore } from "../../../store/theControl";
-import { useServices } from "../../../store/services";
-import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
   components: {
     RestartModal,
-    UpdateTable,
     ServiceLogButton,
     PluginLogs,
   },
@@ -199,7 +197,9 @@ export default {
       ipAddress: "ipAddress",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "consensus") return -1;
         if (b.category === "consensus") return 1;
         if (a.category === "execution") return -1;
@@ -236,9 +236,7 @@ export default {
     },
     async restartConfirmed(service) {
       this.restartLoad = true;
-      service.yaml = await ControlService.getServiceYAML(
-        service.config.serviceID
-      );
+      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;

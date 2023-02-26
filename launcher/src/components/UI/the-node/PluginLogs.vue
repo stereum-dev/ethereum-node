@@ -79,12 +79,10 @@
   </div>
 </template>
 <script>
-import ControlDialog from "../the-control/ControlDialog.vue";
-import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import ControlDialog from "../the-control/ControlDialog.vue";
 export default {
   components: { ControlDialog },
   props: ["item"],
@@ -115,7 +113,9 @@ export default {
       installedServices: "installedServices",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "consensus") return -1;
         if (b.category === "consensus") return 1;
         if (a.category === "execution") return -1;

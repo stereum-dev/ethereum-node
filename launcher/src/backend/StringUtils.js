@@ -1,6 +1,6 @@
-const log = require("electron-log");
-const path = require("path");
 import * as crypto from "crypto";
+
+const log = require("electron-log");
 
 export class StringUtils {
   static escapeStringForShell(shellCmd) {

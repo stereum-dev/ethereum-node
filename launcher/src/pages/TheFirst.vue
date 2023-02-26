@@ -5,22 +5,21 @@
         <base-logo :link="link"> </base-logo>
       </div>
 
-      <!-- <lang-dialog @click="$emit('open')" v-if="dialogIsVisible"></lang-dialog> -->
       <div class="text-box">
         <span v-if="hiddenDialogActive">choose your language</span>
         <span v-else>Click to continue</span>
       </div>
       <lang-dialog :open="dialogIsVisible" @close="hideDialog">
         <flag-button
-          v-for="link in linkFlags"
+          v-for="linkFlag in linkFlags"
           id="flag-btn"
-          :key="link.langImg"
-          :is-active="link.enable"
-          @setting="setLang(link.langName, link.langSelect, link.label)"
+          :key="linkFlag.langImg"
+          :is-active="linkFlag.enable"
+          @setting="setLang(linkFlag.langName, linkFlag.langSelect, linkFlag.label)"
         >
-          <div class="langIco"><img :src="link.langImg" /></div>
+          <div class="langIco"><img :src="linkFlag.langImg" /></div>
           <div class="langName">
-            <span>{{ link.langName }}</span>
+            <span>{{ linkFlag.langName }}</span>
           </div>
         </flag-button>
       </lang-dialog>
@@ -38,18 +37,16 @@
 </template>
 
 <script>
-// import { mapActions } from "vuex";
-import { mapWritableState, mapActions } from "pinia";
-import { useFlagDialog } from "../store/flagDialog";
-import BaseLogo from "../components/layers/BaseLogo.vue";
-import LangButton from "../components/UI/LangButton.vue";
-import LangDialog from "../components/UI/LangDialog.vue";
 import ControlService from "@/store/ControlService";
+import { mapActions, mapWritableState } from "pinia";
+import BaseLogo from "../components/layers/BaseLogo.vue";
+import LangDialog from "../components/UI/LangDialog.vue";
 import FlagButton from "../components/UI/setting-page/FlagButton.vue";
-// import SetupServer from "./SetupServer.vue";
+import { useFlagDialog } from "../store/flagDialog";
+
 export default {
   name: "TheFirst",
-  components: { BaseLogo, LangButton, LangDialog, FlagButton },
+  components: { BaseLogo, LangDialog, FlagButton },
 
   emit: ["open", "page"],
   data() {
@@ -64,17 +61,17 @@ export default {
       },
     };
   },
-  created() {
-    this.checkSettings();
-  },
-  mounted() {
-    this.showDialog();
-  },
   computed: {
     ...mapWritableState(useFlagDialog, {
       linkFlags: "linkFlags",
       dialogIsVisible: "dialogIsVisible",
     }),
+  },
+  created() {
+    this.checkSettings();
+  },
+  mounted() {
+    this.showDialog();
   },
   methods: {
     ...mapActions(useFlagDialog, {

@@ -3,49 +3,57 @@
     <div class="subTask-table">
       <div class="subTask-content">
         <div
-          v-for="(item, index) in modifiedSubTasks"
+          v-for="(modifiedSubTask, index) in modifiedSubTasks"
           :key="index"
           class="subTask-row"
           :class="{
-            'skipping-installation': item.status == 'SKIPPED',
-            'success-installation': item.status == 'OK',
-            'failed-installation': item.status == 'FAILED',
+            'skipping-installation': modifiedSubTask.status == 'SKIPPED',
+            'success-installation': modifiedSubTask.status == 'OK',
+            'failed-installation': modifiedSubTask.status == 'FAILED',
           }"
         >
           <error-terminal
-            v-if="item.showErrorterminal"
-            :item="item"
-            @close-terminal="hideTerminalHandler(item)"
-            @copy-error="copyErrorText(item)"
+            v-if="modifiedSubTask.showErrorterminal"
+            :item="modifiedSubTask"
+            @close-terminal="hideTerminalHandler(modifiedSubTask)"
+            @copy-error="copyErrorText(modifiedSubTask)"
           ></error-terminal>
-          <div v-if="item.status == 'OK'" class="success-box" @click="openTerminalHandler(item)">
-            <span v-if="displayTaskResult" class="itemAction">{{ item.action }}</span>
-            <span v-else class="itemName">{{ item.name }}</span>
+          <div v-if="modifiedSubTask.status == 'OK'" class="success-box" @click="openTerminalHandler(modifiedSubTask)">
+            <span v-if="displayTaskResult" class="itemAction">{{ modifiedSubTask.action }}</span>
+            <span v-else class="itemName">{{ modifiedSubTask.name }}</span>
             <div class="loading-box">
               <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
-            <div v-if="item.showTooltip" class="success-tooltip">
-              <span>{{ item.action }}</span>
+            <div v-if="modifiedSubTask.showTooltip" class="success-tooltip">
+              <span>{{ modifiedSubTask.action }}</span>
             </div>
           </div>
-          <div v-if="item.status == 'FAILED'" class="failed-box" @click="openTerminalHandler(item)">
-            <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
-            <span v-else class="noError">{{ item.name }}</span>
+          <div
+            v-if="modifiedSubTask.status == 'FAILED'"
+            class="failed-box"
+            @click="openTerminalHandler(modifiedSubTask)"
+          >
+            <span v-if="displayTaskResult" class="error">{{ modifiedSubTask.action }}</span>
+            <span v-else class="noError">{{ modifiedSubTask.name }}</span>
             <div class="error-icon">
               <img src="../../../../public/img/icon/task-manager-icons/cancel.png" alt="" />
-              <div v-if="item.showTooltip" class="failed-tooltip">
-                <span>{{ item.name }}</span>
+              <div v-if="modifiedSubTask.showTooltip" class="failed-tooltip">
+                <span>{{ modifiedSubTask.name }}</span>
               </div>
             </div>
           </div>
-          <div v-if="item.status == 'SKIPPED'" class="skipped-box" @click="openTerminalHandler(item)">
-            <span v-if="displayTaskResult" class="error">{{ item.action }}</span>
-            <span v-else class="noError">{{ item.name }}</span>
+          <div
+            v-if="modifiedSubTask.status == 'SKIPPED'"
+            class="skipped-box"
+            @click="openTerminalHandler(modifiedSubTask)"
+          >
+            <span v-if="displayTaskResult" class="error">{{ modifiedSubTask.action }}</span>
+            <span v-else class="noError">{{ modifiedSubTask.name }}</span>
             <div class="loading-box">
               <img src="../../../../public/img/icon/task-manager-icons/check5.png" alt="" />
             </div>
-            <div v-if="item.showTooltip" class="skipped-tooltip">
-              <span>{{ item.name }}</span>
+            <div v-if="modifiedSubTask.showTooltip" class="skipped-tooltip">
+              <span>{{ modifiedSubTask.name }}</span>
             </div>
           </div>
         </div>
@@ -106,7 +114,7 @@ export default {
       });
     },
     openTerminalHandler(el) {
-      this.modifiedSubTasks.forEach((item) => {
+      this.modifiedSubTasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }

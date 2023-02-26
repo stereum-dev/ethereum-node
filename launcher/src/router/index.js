@@ -1,21 +1,17 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-
-import BaseHome from "../pages/BaseHome.vue";
-import ClickInstall from "../pages/ClickInstall.vue";
-import WelcomePage from "../pages/WelcomePage.vue";
-import TheNode from "../pages/TheNode.vue";
-import ControlPanel from "../pages/TheControl.vue";
-import NodeManage from "../pages/NodeManage.vue";
-import StakingPage from "../pages/StakingPage.vue";
-import SettingPage from "../pages/SettingPage.vue";
-import CreditPage from "../pages/CreditPage.vue";
+import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
-import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
+import BaseHome from "../pages/BaseHome.vue";
+import ClickInstall from "../pages/ClickInstall.vue";
+import CreditPage from "../pages/CreditPage.vue";
 import CustomInstallationPage from "../pages/CustomInstallationPage.vue";
-import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
-import WalkThrough from "../components/UI/tutorial-steps/WalkThrough.vue";
-import WrittenGuide from "../components/UI/tutorial-steps/WrittenGuide.vue";
+import NodeManage from "../pages/NodeManage.vue";
+import SettingPage from "../pages/SettingPage.vue";
+import StakingPage from "../pages/StakingPage.vue";
+import ControlPanel from "../pages/TheControl.vue";
+import TheNode from "../pages/TheNode.vue";
+import WelcomePage from "../pages/WelcomePage.vue";
 
 const routes = [
   {

@@ -1,7 +1,6 @@
 import { NethermindService } from "./NethermindService";
 import { networks } from "./NodeService";
 import { ServicePort, servicePortProtocol } from "./ServicePort";
-import { ServiceVolume } from "./ServiceVolume";
 
 test("buildByUserInput", () => {
   const ports = [new ServicePort(null, 4040, 4040, servicePortProtocol.tcp)];

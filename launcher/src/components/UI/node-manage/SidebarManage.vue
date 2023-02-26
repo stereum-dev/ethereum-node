@@ -46,8 +46,8 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
+import { mapWritableState } from "pinia";
 import { useNodeManage } from "../../../store/nodeManage";
 export default {
   props: ["startDrag"],
@@ -58,12 +58,36 @@ export default {
       plugins: [],
     };
   },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      allServices: "allServices",
+    }),
+    ...mapWritableState(useNodeManage, {
+      configNetwork: "configNetwork",
+    }),
+    fontSize() {
+      if (!this.currentCategory.length > 7) {
+        return {};
+      }
+
+      return {
+        "font-size": "0.6rem",
+        padding: "6px",
+        " white-space": "nowrap",
+        " -o-text-overflow": " ellipsis",
+        "-ms-text-overflow": "ellipsis",
+        "text-overflow": "ellipsis",
+      };
+    },
+  },
   watch: {
     showSidebar() {
       this.currentCategory = "service";
       this.selectCategoryTitle();
     },
   },
+
   mounted() {
     this.currentCategory = "service";
     this.plugins = this.allServices.map((item) => {
@@ -74,27 +98,7 @@ export default {
     });
     this.selectCategoryTitle();
   },
-  computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      allServices: "allServices",
-    }),
-    ...mapWritableState(useNodeManage, {
-      configNetwork: "configNetwork",
-    }),
-    fontSize() {
-      if (this.currentCategory.length > 7) {
-        return {
-          "font-size": "0.6rem",
-          padding: "6px",
-          " white-space": "nowrap",
-          " -o-text-overflow": " ellipsis",
-          "-ms-text-overflow": "ellipsis",
-          "text-overflow": "ellipsis",
-        };
-      }
-    },
-  },
+
   methods: {
     getFilterbyNetwork() {
       switch (this.configNetwork.network) {

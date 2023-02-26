@@ -47,13 +47,14 @@ export class ValidatorAccountManager {
     let client = services.find((service) => service.id === serviceID);
     let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
 
+    let wallet_path, passwords_path, validator_path, dataDir;
     switch (service) {
       case "prysm":
-        const wallet_path = client
+        wallet_path = client
           .buildConfiguration()
           .volumes.find((volume) => volume.includes("wallets"))
           .split(":")[0];
-        const passwords_path = client
+        passwords_path = client
           .buildConfiguration()
           .volumes.find((volume) => volume.includes("passwords"))
           .split(":")[0];
@@ -98,7 +99,7 @@ export class ValidatorAccountManager {
 
       case "nimbus":
         //generate validator api-token
-        const validator_path = client
+        validator_path = client
           .buildConfiguration()
           .volumes.find((volume) => volume.includes("validators"))
           .split(":")[0];
@@ -114,7 +115,7 @@ export class ValidatorAccountManager {
         break;
 
       case "teku":
-        const dataDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
+        dataDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         if ((await this.nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_password.txt`)).rc === 1) {
           log.error("Couldn't read API-Token");
           log.info("Generating one");
@@ -167,7 +168,7 @@ export class ValidatorAccountManager {
       let error = 0;
       let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
       let message = data
-        .map((key, index, arr) => {
+        .map((key, index) => {
           if (key.status === "imported") imported++;
           if (key.status === "duplicate") duplicate++;
           if (key.status === "error") error++;
@@ -268,6 +269,7 @@ export class ValidatorAccountManager {
   }
 
   async insertSSVNetworkKeys(service, sk) {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve, reject) => {
       try {
         const dataDir = service.config.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
@@ -360,6 +362,7 @@ export class ValidatorAccountManager {
       let graffitiDir = "";
       if (graffitiVolume) graffitiDir = graffitiVolume.destinationPath + "/graffitis.yaml";
       let config = "";
+      let command, port, mappedPort;
       switch (service) {
         case "lighthouse":
           config = `default: ${graffiti}`;
@@ -377,9 +380,9 @@ export class ValidatorAccountManager {
 
         case "nimbus":
           //Nimbus only supports Graffiti changes while running via their rest api
-          let command = client.command.find((c) => c.includes("--rest-port="));
-          let port = command.replace("--rest-port=", "");
-          const mappedPort = client.ports.find((p) => p.servicePort == port);
+          command = client.command.find((c) => c.includes("--rest-port="));
+          port = command.replace("--rest-port=", "");
+          mappedPort = client.ports.find((p) => p.servicePort == port);
           config = `curl -s -X POST http://localhost:${mappedPort.destinationPort}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`;
           await this.nodeConnection.sshService.exec(config);
           break;
@@ -424,9 +427,10 @@ export class ValidatorAccountManager {
 
   async getApiToken(service) {
     let result = { rc: 1, stderr: "default" };
+    let path = "";
+
     switch (service.service) {
       case "PrysmValidatorService":
-        let path = "";
         if (typeof service.volumes[0] == "string") {
           path = ServiceVolume.buildByConfig(
             service.volumes.find((v) => v.includes("/opt/app/data/wallets"))

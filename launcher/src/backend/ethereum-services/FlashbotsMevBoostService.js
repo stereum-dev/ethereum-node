@@ -1,6 +1,4 @@
 import { NodeService } from "./NodeService";
-import { ServicePortDefinition } from "./SerivcePortDefinition";
-import { ServiceVolume } from "./ServiceVolume";
 
 export class FlashbotsMevBoostService extends NodeService {
   static buildByUserInput(network, relayLinks) {
