@@ -13,85 +13,54 @@
       </div>
 
       <div class="configBox">
-        <div
-          class="exporterBox"
-          v-if="plugin.service === 'PrometheusNodeExporterService'"
-        >
-          <div class="exporterBoxTitle">Click on ADD</div>
+        <div v-if="plugin.service === 'PrometheusNodeExporterService'" class="exporterBox">
+          <div class="exporterBoxTitle">
+            {{ $t("addModifyPanel.clickAndAdd") }}
+          </div>
         </div>
-        <div
-          class="relaysBox"
-          v-if="plugin.service === 'FlashbotsMevBoostService'"
-        >
-          <div class="relaysBoxTitle">AVAILABLE BLOCK RELAYS</div>
+        <div v-if="plugin.service === 'FlashbotsMevBoostService'" class="relaysBox">
+          <div class="relaysBoxTitle">
+            {{ $t("mevboostConfig.availRelays") }}
+          </div>
           <div class="relaysBoxContent">
-            <div
-              class="relay"
-              v-for="relay in relaysList.filter(
-                (r) => r[configNetwork.network.toLowerCase()]
-              )"
-              :key="relay.id"
-            >
-              <input
-                type="checkbox"
-                :id="relay.id"
-                :value="relay"
-                v-model="checkedRelays"
-              />
+            <div v-for="relay in combinedBlocs" :key="relay.id" class="relay">
+              <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" />
               <label :for="relay.id">{{ relay.name }}</label>
-              <div class="iconBox" data-tooltip="OFAC Compliant - censored">
-                <img
-                  src="/img/icon/header-icons/usa1.png"
-                  alt="flag-icon"
-                  v-if="relay.freeCensorship == false"
-                />
+              <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
+                <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
               </div>
             </div>
           </div>
         </div>
         <div
+          v-if="plugin.service !== 'FlashbotsMevBoostService' && plugin.service !== 'PrometheusNodeExporterService'"
           class="change-installation"
-          v-if="
-            plugin.service !== 'FlashbotsMevBoostService' &&
-            plugin.service !== 'PrometheusNodeExporterService'
-          "
         >
           <div class="change-title">
             <span>INSTALLATION PATH</span>
           </div>
           <div class="change-box">
-            <input type="text" v-model="installationPath" maxlength="255" />
+            <input v-model="installationPath" type="text" maxlength="255" />
           </div>
         </div>
         <div
+          v-if="plugin.service !== 'FlashbotsMevBoostService' && plugin.service !== 'PrometheusNodeExporterService'"
           class="portAddBox"
-          v-if="
-            plugin.service !== 'FlashbotsMevBoostService' &&
-            plugin.service !== 'PrometheusNodeExporterService'
-          "
         >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
-            <span>PORT USED</span>
-            <input type="text" v-model="port" placeholder="9000" />
+            <span>{{ $t("addModifyPanel.portused") }}</span>
+            <input v-model="port" type="text" placeholder="9000" />
           </div>
         </div>
         <template v-for="service in options" :key="service.id">
           <div
+            v-if="!switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
             class="optionsBox"
-            :serviceId-tooltip="
-              service.config.serviceID ? service.config.serviceID : service.id
-            "
-            v-if="
-              !switchHandler(service) &&
-              service.service !== 'FlashbotsMevBoostService'
-            "
+            :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
           >
-            <img
-              src="/img/icon/manage-node-icons/not-connected.png"
-              alt="icon"
-            />
+            <img src="/img/icon/manage-node-icons/not-connected.png" alt="icon" />
             <div class="optionsDetails">
               <span class="category">{{ service.category }} Client</span>
               <div class="optionsName">
@@ -100,14 +69,9 @@
             </div>
           </div>
           <div
+            v-if="switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
             class="clientAddBox"
-            :serviceId-tooltip="
-              service.config.serviceID ? service.config.serviceID : service.id
-            "
-            v-if="
-              switchHandler(service) &&
-              service.service !== 'FlashbotsMevBoostService'
-            "
+            :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
           >
             <img src="/img/icon/manage-node-icons/connect.png" alt="icon" />
@@ -117,47 +81,32 @@
             </div>
           </div>
         </template>
-        <div
-          class="fast-sync"
-          v-if="
-            plugin.category === 'execution' || plugin.category === 'consensus'
-          "
-        >
+        <div v-if="plugin.category === 'execution' || plugin.category === 'consensus'" class="fast-sync">
           <div class="sync-header">
             <div class="headerTitle">
               <span>SYNC</span>
             </div>
             <div class="headerContent">
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeResyncOptions" />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT</span>
-              <img
-                @click="changeResyncOptions"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeResyncOptions" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
-            <div class="inputBox" v-if="checkPointIsActive">
-              <input type="text" v-model="checkPointSync" />
+            <span v-if="genesisIsActive">{{ $t("addModifyPanel.syncMessage") }}</span>
+            <div v-if="checkPointIsActive" class="inputBox">
+              <input v-model="checkPointSync" type="text" />
             </div>
           </div>
         </div>
       </div>
       <div class="btnBox">
         <div class="cancelBtn" @click="cancelConfig">
-          <span>Cancel</span>
+          <span>{{ $t("addModifyPanel.cancel") }}</span>
         </div>
         <div class="addBtn" @click="saveConfig">
-          <span>ADD</span>
+          <span>{{ $t("addModifyPanel.add") }}</span>
         </div>
       </div>
     </div>
@@ -187,6 +136,7 @@ export default {
       selected: {},
       options: [],
       checkedRelays: [],
+      availableBlocks: [],
     };
   },
   computed: {
@@ -199,6 +149,17 @@ export default {
       configNetwork: "configNetwork",
       relaysList: "relaysList",
     }),
+    combinedBlocs() {
+      let names = new Set();
+      let combined = this.checkedRelays.concat(this.availableBlocks);
+      return combined.filter((item) => {
+        if (!names.has(item.name)) {
+          names.add(item.name);
+          return true;
+        }
+        return false;
+      });
+    },
   },
   watch: {
     items: {
@@ -209,10 +170,20 @@ export default {
       immediate: true,
     },
   },
-  mounted(){
-    this.getInstallPath()
+  mounted() {
+    this.getInstallPath();
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+    );
   },
   methods: {
+    shuffleRelaysList(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
     switchHandler(service) {
       if (service.selectedForConnection) {
         return service.selectedForConnection;
@@ -223,33 +194,21 @@ export default {
       this.$emit("cancelAdd");
     },
     saveConfig() {
-      let dependencies = toRaw(this.options).filter(
-        (s) => s.selectedForConnection
-      );
+      let dependencies = toRaw(this.options).filter((s) => s.selectedForConnection);
       this.$emit("saveConfig", {
-        network:
-          this.configNetwork.network === "testnet"
-            ? "goerli"
-            : this.configNetwork.network,
-        installDir: this.installationPath
-          ? this.installationPath
-          : "/opt/stereum",
+        network: this.configNetwork.network === "testnet" ? "goerli" : this.configNetwork.network,
+        installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
-        executionClients: dependencies.filter(
-          (s) => s.category === "execution"
-        ),
+        executionClients: dependencies.filter((s) => s.category === "execution"),
         beaconServices: dependencies.filter((s) => s.category === "consensus"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
-        relays: this.checkedRelays
-          .map((r) => r[this.configNetwork.network.toLowerCase()])
-          .join(),
+        relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       });
     },
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if(largestVolumePath = '/')
-        largestVolumePath = largestVolumePath + 'opt'
-      const stereumInstallationPath = [largestVolumePath, '/stereum'].join('/').replace(/\/{2,}/, '/');
+      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },
     changeResyncOptions() {
@@ -263,17 +222,11 @@ export default {
     },
     optionsToConnect() {
       if (this.items.category === "consensus") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "execution"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "execution");
       } else if (this.items.category === "validator") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "consensus"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else if (this.items.service === "FlashbotsMevBoostService") {
-        this.options = this.newConfiguration.filter(
-          (service) => service.category === "consensus"
-        );
+        this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else {
         this.options = [];
       }
@@ -329,8 +282,8 @@ export default {
 [data-tooltip]::after {
   position: absolute;
   width: max-content;
-  left: -950%;
-  top: 180%;
+  left: -990%;
+  top: 50%;
   text-align: center;
   content: attr(data-tooltip);
   color: #eee;

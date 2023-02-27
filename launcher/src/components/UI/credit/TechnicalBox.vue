@@ -1,23 +1,18 @@
 <template>
   <div class="technical-box_parent" name="contributors-list">
-    <select
-      class="techToggl"
-      name="technikToggl"
-      id="technikToggl"
-      v-model="techToggl"
-    >
-      <option value="developers">DEVELOPERS</option>
-      <option value="testers">TESTERS</option>
+    <select id="technikToggl" v-model="techToggl" class="techToggl" name="technikToggl">
+      <option value="developers">{{ $t("creditPanel.developers") }}</option>
+      <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
-    <div class="wrapper" v-if="compToggl">
+    <div v-if="compToggl" class="wrapper">
       <the-contributor
+        v-for="(result, index) in results"
+        :key="result.id"
         :class="{
           'gold-border': index === 0,
           'silver-border': index === 1,
           'bronze-border': index === 2,
         }"
-        v-for="(result, index) in results"
-        :key="result.id"
         :name="result.name"
         :avatar="result.avatar"
         :crown="index == 0"
@@ -25,13 +20,15 @@
         :score="result.score"
       ></the-contributor>
     </div>
-    <div class="wrapper" v-else>
-      <test-contributor
-        v-for="result in filterTesters"
-        :key="result.id"
-        :name="result.name"
-        :avatar="result.avatar"
-      ></test-contributor>
+    <div v-else class="wrapper">
+      <div class="testers-container">
+        <test-contributor
+          v-for="result in filterTesters"
+          :key="result.id"
+          :name="result.name"
+          :avatar="result.avatar"
+        ></test-contributor>
+      </div>
     </div>
   </div>
 </template>
@@ -48,6 +45,12 @@ export default {
       compToggl: true,
     };
   },
+
+  computed: {
+    filterTesters() {
+      return [...new Map(this.issuesVal.map((item) => [item.name, item])).values()];
+    },
+  },
   updated() {
     this.toggleHandler();
   },
@@ -55,19 +58,9 @@ export default {
     this.github();
     this.issues();
   },
-
-  computed: {
-    filterTesters() {
-      return [
-        ...new Map(this.issuesVal.map((item) => [item.name, item])).values(),
-      ];
-    },
-  },
   methods: {
     github() {
-      fetch(
-        "https://api.github.com/repos/stereum-dev/ethereum-node/contributors"
-      )
+      fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -116,6 +109,18 @@ export default {
 };
 </script>
 <style scoped>
+.testers-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  width: 90%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 2%;
+  overflow: visible;
+  margin-top: 2%;
+}
 .gold-border {
   border: 2px solid gold;
 }
@@ -132,7 +137,7 @@ export default {
   align-items: center;
 }
 .techToggl {
-  height: 1.5rem;
+  height: 4%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,7 +147,7 @@ export default {
   border-radius: 10px;
   font-weight: 500;
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
+  box-shadow: 1px 1px 7px 1px rgb(6, 6, 6);
   position: fixed;
   top: 20%;
   left: 85%;

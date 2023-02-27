@@ -4,25 +4,17 @@
     <div class="menu-box">
       <div class="menu">
         <router-link to="/node">
-          <img
-            class="home-icon"
-            src="/img/icon/manage-node-icons/home-item-icon.png"
-            alt="icon"
-          />
+          <img class="home-icon" src="/img/icon/manage-node-icons/home-item-icon.png" alt="icon" />
         </router-link>
         <router-link to="/manage">
-          <img
-            class="manage-icon"
-            src="/img/icon/manage-node-icons/manage-item-icon.png"
-            alt="icon"
-          />
+          <img class="manage-icon" src="/img/icon/manage-node-icons/manage-item-icon.png" alt="icon" />
         </router-link>
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {}
+export default {};
 </script>
 <style scoped>
 .menu-side {

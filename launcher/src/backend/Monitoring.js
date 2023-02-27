@@ -1,10 +1,10 @@
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
-import * as log from 'electron-log'
-import * as crypto from 'crypto'
-import * as fs from 'fs'
-import * as os from 'os'
-import * as path from 'path'
+import * as log from "electron-log";
+import * as crypto from "crypto";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 import YAML from "yaml";
 import { Console } from "console";
 
@@ -16,16 +16,16 @@ export class Monitoring {
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.rpcTunnel = {};
     this.beaconTunnel = {};
-    this.serviceInfosCacheFile = path.join(os.tmpdir(), 'server_infos_cache_' + process.getCreationTime() + '.txt');
+    this.serviceInfosCacheFile = path.join(os.tmpdir(), "server_infos_cache_" + process.getCreationTime() + ".txt");
   }
 
   // Cleanup on logout
-  async logout(){
+  async logout() {
     this.rpcTunnel = {};
     this.beaconTunnel = {};
-    try{
-      fs.unlinkSync(this.serviceInfosCacheFile)
-    }catch(e){}
+    try {
+      fs.unlinkSync(this.serviceInfosCacheFile);
+    } catch (e) {}
     await this.nodeConnection.logout();
     await this.nodeConnectionProm.logout();
     await this.serviceManager.nodeConnection.logout();
@@ -41,29 +41,21 @@ export class Monitoring {
       let settings;
       try {
         settings = await nodeConnection.sshService.exec("ls /etc/stereum");
-      } catch(err){
-        log.debug("checking stereum installation failed:", err)
+      } catch (err) {
+        log.debug("checking stereum installation failed:", err);
       }
-      if (settings.stdout.includes("stereum.yaml"))
-        return true;
+      if (settings.stdout.includes("stereum.yaml")) return true;
     }
     return false;
   }
 
   async refreshServiceInfos() {
     if (await this.checkStereumInstallation()) {
-      const serviceConfigs = await this.serviceManager.readServiceConfigurations()
+      const serviceConfigs = await this.serviceManager.readServiceConfigurations();
       const serviceStates = await this.nodeConnection.listServices();
-      if (
-        serviceConfigs &&
-        serviceConfigs.length > 0 &&
-        serviceStates &&
-        Array.isArray(serviceStates)
-      ) {
+      if (serviceConfigs && serviceConfigs.length > 0 && serviceStates && Array.isArray(serviceStates)) {
         let newInfo = serviceConfigs.map((config) => {
-          const newState = serviceStates.find(
-            (state) => state.Names.replace("stereum-", "") === config.id
-          );
+          const newState = serviceStates.find((state) => state.Names.replace("stereum-", "") === config.id);
           return {
             service: config.service,
             state: newState ? newState.State : "exited",
@@ -75,7 +67,7 @@ export class Monitoring {
               ports: config.ports,
               volumes: config.volumes,
               network: config.network,
-              dependencies : config.dependencies,
+              dependencies: config.dependencies,
             },
           };
         });
@@ -91,7 +83,7 @@ export class Monitoring {
   }
 
   getIPAddress() {
-    return this.nodeConnection.nodeConnectionParams.host
+    return this.nodeConnection.nodeConnectionParams.host;
   }
 
   // Get service infos (either all or optional limited to specific - case-sensitive - service names)
@@ -102,67 +94,69 @@ export class Monitoring {
   async getServiceInfos() {
     const cache_max_seconds = 10;
     const args = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
-    const hash = crypto.createHash('md5').update(args.join("-")).digest('hex'); // cache id
+    const hash = crypto.createHash("md5").update(args.join("-")).digest("hex"); // cache id
     const file = this.serviceInfosCacheFile;
     const dnow = new Date();
     var cont = {};
     //console.log("INCOMING '"+args.join("-")+"' -> " + hash);
-    try{
+    try {
       cont = fs.readFileSync(file);
       cont = JSON.parse(cont);
-      if(cont.hasOwnProperty(hash)){
+      if (cont.hasOwnProperty(hash)) {
         var uxts = Math.floor(Date.now() / 1000);
         var diff = uxts - cont[hash].uxts;
-        if(diff<cache_max_seconds){
+        if (diff < cache_max_seconds) {
           //console.log('RETURN cache ' + hash, file);
           return cont[hash].data;
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    }catch(e){}
-    if (await this.checkStereumInstallation()){
+    } catch (e) {}
+    if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
-      if(
+      if (
         serviceConfigs &&
         Array.isArray(serviceConfigs) &&
         serviceConfigs.length > 0 &&
         serviceStates &&
         Array.isArray(serviceStates)
-      ){
-        serviceConfigs = args.length<1 ? serviceConfigs : serviceConfigs.filter((s) => args.includes(s.service));
-        serviceConfigs = serviceConfigs.map((config) => {
-          const newState = serviceStates.find(
-            (state) => (state.hasOwnProperty("Names") ? state.Names.replace("stereum-", "") : "") === config.id
-          );
-          return {
-            service: config.service,
-            state: newState ? newState.State : "exited",
-            createdAt: newState ? newState.CreatedAt : null,
-            config: {
-              serviceID: config.id,
-              instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
-              command: config.command,
-              configVersion: config.configVersion,
-              image: config.image,
-              imageVersion: config.imageVersion,
-              ports: config.ports,
-              volumes: config.volumes,
-              network: config.network,
-              dependencies: config.dependencies,
-            },
-            //fullconfig: config,
-            //fullstate: newState,
-          };
-        }).sort((a, b) => args.indexOf(a.service) - args.indexOf(b.service));
-        if(Array.isArray(serviceConfigs) && serviceConfigs.length > 0){
+      ) {
+        serviceConfigs = args.length < 1 ? serviceConfigs : serviceConfigs.filter((s) => args.includes(s.service));
+        serviceConfigs = serviceConfigs
+          .map((config) => {
+            const newState = serviceStates.find(
+              (state) => (state.hasOwnProperty("Names") ? state.Names.replace("stereum-", "") : "") === config.id
+            );
+            return {
+              service: config.service,
+              state: newState ? newState.State : "exited",
+              createdAt: newState ? newState.CreatedAt : null,
+              config: {
+                serviceID: config.id,
+                instanceID: newState && newState.hasOwnProperty("Names") ? newState.Names : "N/A",
+                command: config.command,
+                configVersion: config.configVersion,
+                image: config.image,
+                imageVersion: config.imageVersion,
+                ports: config.ports,
+                volumes: config.volumes,
+                network: config.network,
+                dependencies: config.dependencies,
+              },
+              //fullconfig: config,
+              //fullstate: newState,
+            };
+          })
+          .sort((a, b) => args.indexOf(a.service) - args.indexOf(b.service));
+        if (Array.isArray(serviceConfigs) && serviceConfigs.length > 0) {
           //console.log('REFRESH cache ' + hash, dnow, file);
           cont[hash] = {
             data: serviceConfigs,
             uxts: Math.floor(Date.now() / 1000),
             hash: hash,
           };
-          fs.writeFileSync(file,JSON.stringify(cont));
+          fs.writeFileSync(file, JSON.stringify(cont));
         }
         return serviceConfigs;
       }
@@ -177,43 +171,45 @@ export class Monitoring {
   // time=<rfc3339|unix_timestamp>: Evaluation timestamp. Optional.
   // timeout=<duration>: Evaluation timeout. Optional. Defaults to and is capped by the value of the -query.timeout flag.
   // Returns json parsed result as described on Prometheus API reference (even for internal errors)
-  async queryPrometheus(query,time=null,timeout=5){
-
+  async queryPrometheus(query, time = null, timeout = 5) {
     // Get Prometheus connection infos from config
     const serviceInfos = await this.getServiceInfos("PrometheusService");
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": "service infos unavailable",
+        status: "error",
+        errorType: "internal",
+        error: "service infos unavailable",
       };
     }
     const prometheus = serviceInfos.pop();
-    if(typeof prometheus !== "object" || !prometheus.hasOwnProperty("config")){
+    if (typeof prometheus !== "object" || !prometheus.hasOwnProperty("config")) {
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": "prometheus config unavailable",
+        status: "error",
+        errorType: "internal",
+        error: "prometheus config unavailable",
       };
     }
     let addr = prometheus.config.ports[0].destinationIp;
     let port = prometheus.config.ports[0].destinationPort;
-    if(!prometheus.hasOwnProperty("state") || prometheus.state != "running"){
+    if (!prometheus.hasOwnProperty("state") || prometheus.state != "running") {
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": "prometheus service not running",
+        status: "error",
+        errorType: "internal",
+        error: "prometheus service not running",
       };
     }
 
     // Escape single quotes in query for bash command (note the single quotes for curl -d arguments)
-    query = query.replaceAll("'","'\\''");
+    query = query.replaceAll("'", "'\\''");
 
     // Build curl command
-    const cmd = `
+    const cmd =
+      `
       curl -s -X POST http://${addr}:${port}/api/v1/query \
       -H "Content-Type: application/x-www-form-urlencoded" \
-      -d 'query=${query}&timeout=${timeout}` + ( time ? `&time=${time}` : '') + `'
+      -d 'query=${query}&timeout=${timeout}` +
+      (time ? `&time=${time}` : "") +
+      `'
     `.trim();
 
     // Execute the CURL command on the node and return the result
@@ -223,26 +219,26 @@ export class Monitoring {
     } catch (err) {
       //throw err;
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": err,
+        status: "error",
+        errorType: "internal",
+        error: err,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
     // Return error in same format as prometheus does for consistency reasons.
-    if(result.rc || result.stdout == "" || result.stderr != ""){
-      var err = "E:" + result.rc +": executed code failed to run";
-      if(result.stderr != ""){
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      var err = "E:" + result.rc + ": executed code failed to run";
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       return {
-        "status": "error",
-        "errorType": "internal",
-        "error": err,
-        "data": result,
+        status: "error",
+        errorType: "internal",
+        error: err,
+        data: result,
       };
     }
 
@@ -269,67 +265,74 @@ export class Monitoring {
   // On success data keys are:
   // api_reponse=<mixed>: the response of the RPC api
   // api_httpcode=<int> : the http status code of the RPC api response
-  async queryRpcApi(url,rpc_method,rpc_params=[],method="POST",headers={}){
-
+  async queryRpcApi(url, rpc_method, rpc_params = [], method = "POST", headers = {}) {
     // Setup query
-    var query = rpc_method.trim().indexOf("{") < 0 ? JSON.stringify({
-      "jsonrpc": "2.0",
-      "method": rpc_method.trim(),
-      "params": rpc_params,
-      "id": 1,
-    }) : rpc_method;
+    var query =
+      rpc_method.trim().indexOf("{") < 0
+        ? JSON.stringify({
+            jsonrpc: "2.0",
+            method: rpc_method.trim(),
+            params: rpc_params,
+            id: 1,
+          })
+        : rpc_method;
 
     // Define default response
     const data = {
-      "api_reponse":null,
-      "api_httpcode":null,
-    }
+      api_reponse: null,
+      api_httpcode: null,
+    };
 
     // Make sure query is valid JSON
-    try{
+    try {
       JSON.parse(query);
-    }catch(e){
+    } catch (e) {
       return {
-        "code": 1,
-        "info": "error: invalid query data specified (valid JSON string expected)",
-        "data": data,
+        code: 1,
+        info: "error: invalid query data specified (valid JSON string expected)",
+        data: data,
       };
     }
 
     // Format url
-    if(typeof url === "string"){
+    if (typeof url === "string") {
       url = url.trim();
-    }else if(typeof url === "object"){
-      let def = {'addr': '127.0.0.1','port':0};
-      url = {...def, ...url}
-      url = `http://${url.addr}:${url.port}`
+    } else if (typeof url === "object") {
+      let def = { addr: "127.0.0.1", port: 0 };
+      url = { ...def, ...url };
+      url = `http://${url.addr}:${url.port}`;
     }
 
     // Check url
-    if(!url.startsWith('http')){
+    if (!url.startsWith("http")) {
       return {
-        "code": 3,
-        "info": "error: invalid url specified",
-        "data": data,
+        code: 3,
+        info: "error: invalid url specified",
+        data: data,
       };
     }
 
     // Build request headers
     headers = typeof headers === "object" && !Array.isArray(headers) && headers !== null ? headers : {};
-    headers = {...Object.fromEntries(Object.entries({
-      "Content-Type":"application/json",
-      //"Content-Type":"application/json; charset=utf-8",
-    }).map(([k, v]) => [k.toLowerCase(), v])), ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])) }
+    headers = {
+      ...Object.fromEntries(
+        Object.entries({
+          "Content-Type": "application/json",
+          //"Content-Type":"application/json; charset=utf-8",
+        }).map(([k, v]) => [k.toLowerCase(), v])
+      ),
+      ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])),
+    };
     let requestheaders = [];
     for (let [k, v] of Object.entries(headers)) {
-      k = k.replaceAll("'","'\\''");
-      v = v.replaceAll("'","'\\''");
-      requestheaders.push("-H '"+k+": "+v+"'");
+      k = k.replaceAll("'", "'\\''");
+      v = v.replaceAll("'", "'\\''");
+      requestheaders.push("-H '" + k + ": " + v + "'");
     }
-    requestheaders = requestheaders.length ? requestheaders.join(" ") : '';
+    requestheaders = requestheaders.length ? requestheaders.join(" ") : "";
 
     // Escape single quotes in query for bash command (note the single quotes for curl --data-raw argument)
-    query = query.replaceAll("'","'\\''");
+    query = query.replaceAll("'", "'\\''");
 
     // Build curl command
     const cmd = `
@@ -343,69 +346,69 @@ export class Monitoring {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
       return {
-        "code": 4,
-        "info": "error: could not execute curl command (" + err + ")",
-        "data": data,
+        code: 4,
+        info: "error: could not execute curl command (" + err + ")",
+        data: data,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
-    if(result.rc || result.stdout == "" || result.stderr != ""){
-      let err = "error:" + result.rc +": executed code failed to run";
-      if(result.stderr != ""){
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      let err = "error:" + result.rc + ": executed code failed to run";
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       data.api_reponse = result;
       return {
-        "code": 5,
-        "info": err,
-        "data": data,
+        code: 5,
+        info: err,
+        data: data,
       };
     }
 
     // Parse response
     let r = result.stdout.trim().split("\n");
     let statuscode = r.length > 0 ? parseInt(r.pop()) : data.api_httpcode;
-    let jsonstring = r.length > 0 ? r.join("\n").trim() : '';
+    let jsonstring = r.length > 0 ? r.join("\n").trim() : "";
     data.api_httpcode = statuscode;
-    try{
+    try {
       data.api_reponse = jsonstring ? JSON.parse(jsonstring) : jsonstring;
-    }catch(e){
+    } catch (e) {
       data.api_reponse = jsonstring ? jsonstring : result.stdout;
       return {
-        "code": 6,
-        "info": "error: invalid api response (" + e + ")",
-        "data": data,
+        code: 6,
+        info: "error: invalid api response (" + e + ")",
+        data: data,
       };
     }
 
     // Check response format
-    if(!data.api_reponse.hasOwnProperty("id")){
+    if (!data.api_reponse.hasOwnProperty("id")) {
       return {
-        "code": 7,
-        "info": "error: invalid api response (format unknown)",
-        "data": data,
+        code: 7,
+        info: "error: invalid api response (format unknown)",
+        data: data,
       };
     }
 
     // Check for response errors
-    if(data.api_reponse.hasOwnProperty("error")){
+    if (data.api_reponse.hasOwnProperty("error")) {
       data.api_reponse = data.api_reponse.error.message + " (" + data.api_reponse.error.code + ")";
       return {
-        "code": 8,
-        "info": "error: api responded an error -> " + data.api_reponse,
-        "data": data,
+        code: 8,
+        info: "error: api responded an error -> " + data.api_reponse,
+        data: data,
       };
     }
 
     // Respond success
     data.api_reponse = data.api_reponse.result;
     return {
-      "code": 0,
-      "info": "success: api successfully requested",
-      "data": data,
+      code: 0,
+      info: "success: api successfully requested",
+      data: data,
     };
   }
 
@@ -424,81 +427,86 @@ export class Monitoring {
   // On success data keys are:
   // api_reponse=<mixed>: the response of the BEACON api
   // api_httpcode=<int> : the http status code of the BEACON api response
-  async queryBeaconApi(url,endpoint,params=[],method="GET",headers={},cc_only=false){
-
+  async queryBeaconApi(url, endpoint, params = [], method = "GET", headers = {}, cc_only = false) {
     // Service definitions with their associated beacon api (service) port
     const services = {
-      'TekuBeaconService' : 5051,
-      'LighthouseBeaconService' : 5052,
-      'PrysmBeaconService' : 3500,
-      'NimbusBeaconService' : 5052,
+      TekuBeaconService: 5051,
+      LighthouseBeaconService: 5052,
+      PrysmBeaconService: 3500,
+      NimbusBeaconService: 5052,
     };
 
     // Define default response
     const data = {
-      "api_reponse":null,
-      "api_httpcode":null,
-    }
+      api_reponse: null,
+      api_httpcode: null,
+    };
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 1,
-        "info": "error: service infos unavailable",
-        "data": data,
+        code: 1,
+        info: "error: service infos unavailable",
+        data: data,
       };
     }
 
     // Format endpoint
-    endpoint = typeof endpoint === "string" ? endpoint.trim().replace(/^\//, '').trim() : ''; // /a/b/c/ => a/b/c/ : ''
-    if(!endpoint){
+    endpoint = typeof endpoint === "string" ? endpoint.trim().replace(/^\//, "").trim() : ""; // /a/b/c/ => a/b/c/ : ''
+    if (!endpoint) {
       return {
-        "code": 2,
-        "info": "error: invalid endpoint specified",
-        "data": data,
+        code: 2,
+        info: "error: invalid endpoint specified",
+        data: data,
       };
     }
 
     // Format url
-    if(typeof url === "string"){
+    if (typeof url === "string") {
       url = url.trim();
-    }else if(typeof url === "object"){
-      let def = {'addr': '127.0.0.1','port':0};
-      url = {...def, ...url}
-      url = `http://${url.addr}:${url.port}`
+    } else if (typeof url === "object") {
+      let def = { addr: "127.0.0.1", port: 0 };
+      url = { ...def, ...url };
+      url = `http://${url.addr}:${url.port}`;
     }
-    url = endpoint.startsWith('http') ? endpoint : `${url}/${endpoint}`;
+    url = endpoint.startsWith("http") ? endpoint : `${url}/${endpoint}`;
 
     // Check url
-    if(!url.startsWith('http')){
+    if (!url.startsWith("http")) {
       return {
-        "code": 3,
-        "info": "error: invalid url specified",
-        "data": data,
+        code: 3,
+        info: "error: invalid url specified",
+        data: data,
       };
     }
 
     // Build request headers
     headers = typeof headers === "object" && !Array.isArray(headers) && headers !== null ? headers : {};
-    headers = {...Object.fromEntries(Object.entries({
-      "Content-Type":"application/json",
-      //"Content-Type":"application/json; charset=utf-8",
-    }).map(([k, v]) => [k.toLowerCase(), v])), ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])) }
+    headers = {
+      ...Object.fromEntries(
+        Object.entries({
+          "Content-Type": "application/json",
+          //"Content-Type":"application/json; charset=utf-8",
+        }).map(([k, v]) => [k.toLowerCase(), v])
+      ),
+      ...Object.fromEntries(Object.entries(headers).map(([k, v]) => [k.toLowerCase(), v])),
+    };
     let requestheaders = [];
     for (let [k, v] of Object.entries(headers)) {
-      k = k.replaceAll("'","'\\''");
-      v = v.replaceAll("'","'\\''");
-      requestheaders.push("-H '"+k+": "+v+"'");
+      k = k.replaceAll("'", "'\\''");
+      v = v.replaceAll("'", "'\\''");
+      requestheaders.push("-H '" + k + ": " + v + "'");
     }
-    requestheaders = requestheaders.length ? requestheaders.join(" ") : '';
+    requestheaders = requestheaders.length ? requestheaders.join(" ") : "";
 
     // Build request data
-    let d = Array.isArray(params) && params.length ? JSON.stringify(params).replaceAll("'","'\\''") : '';
-    let requestdata = d ? `-d '${d}'` : '';
+    let d = Array.isArray(params) && params.length ? JSON.stringify(params).replaceAll("'", "'\\''") : "";
+    let requestdata = d ? `-d '${d}'` : "";
 
     // Build curl command
-    const cmd = `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
+    const cmd =
+      `curl -s --location --request ${method} -w "\\n%{http_code}" '${url}' ${requestheaders} ${requestdata}`.trim();
 
     // Execute the CURL command on the node and return the result
     let result = null;
@@ -506,59 +514,59 @@ export class Monitoring {
       result = await this.nodeConnection.sshService.exec(cmd);
     } catch (err) {
       return {
-        "code": 4,
-        "info": "error: could not execute curl command (" + err + ")",
-        "data": data,
+        code: 4,
+        info: "error: could not execute curl command (" + err + ")",
+        data: data,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
-    if(result.rc || result.stdout == "" || result.stderr != ""){
-      let err = "error:" + result.rc +": executed code failed to run";
-      if(result.stderr != ""){
+    if (result.rc || result.stdout == "" || result.stderr != "") {
+      let err = "error:" + result.rc + ": executed code failed to run";
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       data.api_reponse = result;
       return {
-        "code": 5,
-        "info": err,
-        "data": data,
+        code: 5,
+        info: err,
+        data: data,
       };
     }
 
     // Parse response
     let r = result.stdout.trim().split("\n");
     let statuscode = r.length > 0 ? parseInt(r.pop()) : data.api_httpcode;
-    let jsonstring = r.length > 0 ? r.join("\n").trim() : '';
+    let jsonstring = r.length > 0 ? r.join("\n").trim() : "";
     data.api_httpcode = statuscode;
-    try{
+    try {
       data.api_reponse = jsonstring ? JSON.parse(jsonstring) : jsonstring;
-    }catch(e){
+    } catch (e) {
       data.api_reponse = jsonstring ? jsonstring : result.stdout;
       return {
-        "code": 6,
-        "info": "error: invalid api response (" + e + ")",
-        "data": data,
+        code: 6,
+        info: "error: invalid api response (" + e + ")",
+        data: data,
       };
     }
 
     // Check for response errors
-    if(data.api_reponse.hasOwnProperty("code") && data.api_reponse.hasOwnProperty("message")){
+    if (data.api_reponse.hasOwnProperty("code") && data.api_reponse.hasOwnProperty("message")) {
       data.api_reponse = data.api_reponse.message + " (" + data.api_reponse.code + ")";
       return {
-        "code": 7,
-        "info": "error: api responded an error -> " + data.api_reponse,
-        "data": data,
+        code: 7,
+        info: "error: api responded an error -> " + data.api_reponse,
+        data: data,
       };
     }
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: api successfully requested",
-      "data": data,
+      code: 0,
+      info: "success: api successfully requested",
+      data: data,
     };
   }
 
@@ -580,79 +588,86 @@ export class Monitoring {
   // instance_id=<string>     : Instance ID of the matched execution client (if available) or "n/a"
   // connection_infos=<object>: Connection infos that was used to query the rpc api
   // query_result=<object>    : Result of the query to the rpc api (see method "queryRpcApi" for response infos)
-  async getRpcData(query,params){
-
+  async getRpcData(query, params) {
     // Service definitions with their associated rpc api (service) port
     const services = {
-      'GethService' : 8545,
-      'BesuService' : 8545,
-      'NethermindService' : 8545,
-      'ErigonService' : 8545,
+      GethService: 8545,
+      BesuService: 8545,
+      NethermindService: 8545,
+      ErigonService: 8545,
     };
 
     // Extract additional params
-    var {serviceID,instanceID,svcInfos} = Object.assign({
-      serviceID:null,
-      instanceID:null,
-      serviceInfos:null,
-    }, params);
+    var { serviceID, instanceID, svcInfos } = Object.assign(
+      {
+        serviceID: null,
+        instanceID: null,
+        serviceInfos: null,
+      },
+      params
+    );
 
     // Format additional params
-    serviceID = typeof serviceID === 'string' ? serviceID : '';
-    instanceID = typeof instanceID === 'string' ? instanceID : '';
-    svcInfos = typeof svcInfos === 'object' ? svcInfos : null;
+    serviceID = typeof serviceID === "string" ? serviceID : "";
+    instanceID = typeof instanceID === "string" ? instanceID : "";
+    svcInfos = typeof svcInfos === "object" ? svcInfos : null;
 
     // Set timestamp in micro seconds
     var now = Date.now();
 
     // Check query
-    if(typeof query !== 'string'){
+    if (typeof query !== "string") {
       return {
-        "code": 1,
-        "info": "error: query must be string (" + typeof query + " given)",
-        "data": '',
+        code: 1,
+        info: "error: query must be string (" + typeof query + " given)",
+        data: "",
       };
     }
 
     // Get service infos
     const serviceInfos = svcInfos ? svcInfos : await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 2,
-        "info": "error: service infos unavailable",
-        "data": '',
+        code: 2,
+        info: "error: service infos unavailable",
+        data: "",
       };
     }
 
     // Get execution clients with RPC query data, optionally filtered by serviceID and/or instanceID
     const data = [];
     const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
-    for(let i = 0; i < executions.length; i++){
-
+    for (let i = 0; i < executions.length; i++) {
       // Make sure execution client is valid and running
-      let execution = executions[i]
-      if(typeof execution !== "object" || !execution.hasOwnProperty("config") ||  !execution.hasOwnProperty("state") || execution.state != 'running'){
+      let execution = executions[i];
+      if (
+        typeof execution !== "object" ||
+        !execution.hasOwnProperty("config") ||
+        !execution.hasOwnProperty("state") ||
+        execution.state != "running"
+      ) {
         continue;
       }
 
       // Filter the RPC port configuration and get addr/port that is mapped on docker host
-      let sid = execution.config.hasOwnProperty("serviceID") ? execution.config.serviceID : 'n/a';
-      let iid = execution.config.hasOwnProperty("instanceID") ? execution.config.instanceID : 'n/a';
-      let rpc = execution.config.ports.filter((p) => p.servicePort == services[execution.service]).slice(-1).pop();
-      rpc.destinationIp = '127.0.0.1';
+      let sid = execution.config.hasOwnProperty("serviceID") ? execution.config.serviceID : "n/a";
+      let iid = execution.config.hasOwnProperty("instanceID") ? execution.config.instanceID : "n/a";
+      let rpc = execution.config.ports
+        .filter((p) => p.servicePort == services[execution.service])
+        .slice(-1)
+        .pop();
+      rpc.destinationIp = "127.0.0.1";
       let addr = rpc.destinationIp;
       let port = rpc.destinationPort;
 
       // Ignore the client if serviceID is given and does not match
-      if(serviceID && sid != serviceID)
-        continue;
+      if (serviceID && sid != serviceID) continue;
 
       // Ignore the client if instanceID is given and does not match
-      if(instanceID && iid != instanceID)
-        continue;
+      if (instanceID && iid != instanceID) continue;
 
       // Query RPC Server (e.g: "web3_clientVersion")
-      let result = await this.queryRpcApi({'addr':addr,'port':port},query);
+      let result = await this.queryRpcApi({ addr: addr, port: port }, query);
 
       // Add valid client to final result
       data.push({
@@ -667,63 +682,63 @@ export class Monitoring {
 
     // Additional info
     let addinfo = [];
-    if(serviceID) addinfo.push('given service "'+serviceID+'"');
-    if(instanceID) addinfo.push('given instance "'+instanceID+'"');
-    if(addinfo.length){
-      addinfo = ' for ' + addinfo.join(' and ').trim();
-    }else{
-      addinfo = '';
+    if (serviceID) addinfo.push('given service "' + serviceID + '"');
+    if (instanceID) addinfo.push('given instance "' + instanceID + '"');
+    if (addinfo.length) {
+      addinfo = " for " + addinfo.join(" and ").trim();
+    } else {
+      addinfo = "";
     }
 
     // Final check
-    if(data.length < 1){
+    if (data.length < 1) {
       return {
-        "code": 3,
-        "info": "error: no running execution client with enabled RPC port found" + addinfo,
-        "data": '',
+        code: 3,
+        info: "error: no running execution client with enabled RPC port found" + addinfo,
+        data: "",
       };
     }
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: rpc data"+ (addinfo ? addinfo : ' for all running execution clients') +" successfully retrieved",
-      "data": data,
+      code: 0,
+      info:
+        "success: rpc data" + (addinfo ? addinfo : " for all running execution clients") + " successfully retrieved",
+      data: data,
     };
   }
 
   // Get sync status of consensus and execution clients
-  async getSyncStatus(){
-
+  async getSyncStatus() {
     // Service definitions with type and Prometheus labels for sync status
     const services = {
-      'consensus':{
-        'TekuBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="teku"
-        'LighthouseBeaconService' : ['slotclock_present_slot','beacon_head_state_slot'], // OK - query for job="lighthouse_beacon"!
-        'PrysmBeaconService' : ['beacon_clock_time_slot','beacon_head_slot'], // OK - query for job="prysm_beacon"!
-        'NimbusBeaconService' : ['beacon_slot','beacon_head_slot'], // OK - query for job="nimbus"
-        'LodestarBeaconService' : ['beacon_clock_slot','beacon_head_slot'], // OK - query for job="lodestar_beacon"
+      consensus: {
+        TekuBeaconService: ["beacon_slot", "beacon_head_slot"], // OK - query for job="teku"
+        LighthouseBeaconService: ["slotclock_present_slot", "beacon_head_state_slot"], // OK - query for job="lighthouse_beacon"!
+        PrysmBeaconService: ["beacon_clock_time_slot", "beacon_head_slot"], // OK - query for job="prysm_beacon"!
+        NimbusBeaconService: ["beacon_slot", "beacon_head_slot"], // OK - query for job="nimbus"
+        LodestarBeaconService: ["beacon_clock_slot", "beacon_head_slot"], // OK - query for job="lodestar_beacon"
       },
-      'execution':{
-        'GethService' : ['chain_head_header','chain_head_block'], // OK - query for job="geth"
-        'BesuService' : ['ethereum_best_known_block_number','ethereum_blockchain_height'], // OK - query for job="besu"
-        'NethermindService' : ['nethermind_blocks','nethermind_blocks'], // OK [there is only one label] - query for job="nethermind"
+      execution: {
+        GethService: ["chain_head_header", "chain_head_block"], // OK - query for job="geth"
+        BesuService: ["ethereum_best_known_block_number", "ethereum_blockchain_height"], // OK - query for job="besu"
+        NethermindService: ["nethermind_blocks", "nethermind_blocks"], // OK [there is only one label] - query for job="nethermind"
         // Note: Erigon labels are taken from their official Grafana Dashboard, however those are not availble thru Prometheus!
-        'ErigonService' : ['chain_head_header','chain_head_block'], // TODO - query for job="erigon"
+        ErigonService: ["chain_head_header", "chain_head_block"], // TODO - query for job="erigon"
       },
     };
 
     // Prometheus job definitions
     const jobs = {
-      'TekuBeaconService' : 'teku',
-      'LighthouseBeaconService' : 'lighthouse_beacon',
-      'PrysmBeaconService' : 'prysm_beacon',
-      'NimbusBeaconService' : 'nimbus',
-      'LodestarBeaconService' : 'lodestar_beacon',
-      'GethService' : 'geth',
-      'BesuService' : 'besu',
-      'NethermindService' : 'nethermind',
-      'ErigonService' : 'erigon',
+      TekuBeaconService: "teku",
+      LighthouseBeaconService: "lighthouse_beacon",
+      PrysmBeaconService: "prysm_beacon",
+      NimbusBeaconService: "nimbus",
+      LodestarBeaconService: "lodestar_beacon",
+      GethService: "geth",
+      BesuService: "besu",
+      NethermindService: "nethermind",
+      ErigonService: "erigon",
     };
 
     // Execution clients that should be queried by RPC for chain head block
@@ -731,7 +746,7 @@ export class Monitoring {
       // 'GethService',
       // 'BesuService',
       // 'NethermindService',
-      'ErigonService',
+      "ErigonService",
     ];
 
     // Merge all labels for Prometheus query
@@ -739,66 +754,65 @@ export class Monitoring {
     for (let property in services) {
       for (let prop in services[property]) {
         for (let p of services[property][prop]) {
-          serviceLabels.push(p)
+          serviceLabels.push(p);
         }
       }
     }
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 111,
-        "info": "error: service infos for syncstatus not available",
-        "data": "",
+        code: 111,
+        info: "error: service infos for syncstatus not available",
+        data: "",
       };
     }
 
     // Query Prometehus for all possible labels
-    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
-    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
+    const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+    if (
+      typeof prometheus_result !== "object" ||
+      !prometheus_result.hasOwnProperty("status") ||
+      prometheus_result.status != "success"
+    ) {
       return {
-        "code": 113,
-        "info": "error: prometheus query for syncstatus failed",
-        "data": prometheus_result,
+        code: 113,
+        info: "error: prometheus query for syncstatus failed",
+        data: prometheus_result,
       };
     }
 
     // If serviceInfos contains at least one service that requires to query the chain head block by
     // RPC then get block number for ALL running execution clients by RPC query (where available!)
     let ecBlockNumberByRPC = null;
-    if(serviceInfos.filter(s => get_chain_head_by_rpc.includes(s.service)).length > 0){
-      ecBlockNumberByRPC = await this.getRpcData('eth_blockNumber',{serviceInfos:serviceInfos});
+    if (serviceInfos.filter((s) => get_chain_head_by_rpc.includes(s.service)).length > 0) {
+      ecBlockNumberByRPC = await this.getRpcData("eth_blockNumber", { serviceInfos: serviceInfos });
     }
 
     // Build pairs for the FrontEnd (cc and ec member)
     const clientTypes = Object.keys(services);
     const groups = [];
     const utsNow = Math.floor(Date.now() / 1000);
-    for(let i=0;i<serviceInfos.length;i++){
-
+    for (let i = 0; i < serviceInfos.length; i++) {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
-       continue;
+      if (typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")) continue;
       let isConsensus = clt.service in services.consensus;
       let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
-      if(!isConsensus || !hasMembers)
-        continue;
+      if (!isConsensus || !hasMembers) continue;
       let cc = clt;
       let ec = null;
-      try{
+      try {
         ec = cc.config.dependencies.executionClients[0];
-        if(typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id"))
-          continue;
-        ec = serviceInfos.find(item => item.config.serviceID == ec.id)
-      }catch(e){
+        if (typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id")) continue;
+        ec = serviceInfos.find((item) => item.config.serviceID == ec.id);
+      } catch (e) {
         continue;
       }
 
       // Filter Prometheus result by current used services
-      try{
-
+      try {
         // Add the response for "syncStatusItems" exact as defined in front-end
         // Values for "syncIcoSituation" and "syncIcoError" can generated from these!
         // Attention: frstVal needs to be the lower value in frontend, which is in key 1 + added new state key!
@@ -806,42 +820,51 @@ export class Monitoring {
         let consensus = cc;
         let execution = ec;
         clientTypes.forEach(function (clientType, index) {
-          let clt = '';
+          let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
           let results = [];
           let labels = services[clientType][clt.service];
-          let xx = prometheus_result.data.result.filter((s) =>
-            labels.includes(s.metric.__name__) &&
-            s.metric.instance.includes(clt.config.instanceID) &&
-            s.metric.job == jobs[clt.service]
+          let xx = prometheus_result.data.result.filter(
+            (s) =>
+              labels.includes(s.metric.__name__) &&
+              s.metric.instance.includes(clt.config.instanceID) &&
+              s.metric.job == jobs[clt.service]
           );
-          let frstVal = 0, scndVal = 0;
-          if(xx.length){
+          let frstVal = 0,
+            scndVal = 0;
+          if (xx.length) {
             labels.forEach(function (label, index) {
-              try{
+              try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              }catch(e){}
+              } catch (e) {}
             });
-            try{
+            try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            }catch(e){}
-
+            } catch (e) {}
           }
           // Set chain head block for this client from RPC server (if available)
-          if(get_chain_head_by_rpc.includes(clt.service) && typeof ecBlockNumberByRPC == 'object' && !ecBlockNumberByRPC.code && Array.isArray(ecBlockNumberByRPC.data)){
+          if (
+            get_chain_head_by_rpc.includes(clt.service) &&
+            typeof ecBlockNumberByRPC == "object" &&
+            !ecBlockNumberByRPC.code &&
+            Array.isArray(ecBlockNumberByRPC.data)
+          ) {
             let chain_head_block = 0;
-            try{
-              chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop().query_result.data.api_reponse;
-              chain_head_block = (typeof chain_head_block === 'string' && chain_head_block.startsWith('0x')) ? parseInt(chain_head_block,16) : 0;
-            }catch(e){}
+            try {
+              chain_head_block = ecBlockNumberByRPC.data.filter((s) => s.instance_id == clt.config.instanceID).pop()
+                .query_result.data.api_reponse;
+              chain_head_block =
+                typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
+                  ? parseInt(chain_head_block, 16)
+                  : 0;
+            } catch (e) {}
             frstVal = chain_head_block;
             scndVal = chain_head_block;
-
           }
           data.push({
-            id: index+1,
-            title: clt.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+            id: index + 1,
+            title: clt.service.replace(/Beacon|Service/gi, "").toUpperCase(),
             frstVal: frstVal ? frstVal : 0,
             scndVal: scndVal ? scndVal : 0,
             type: clientType,
@@ -850,64 +873,62 @@ export class Monitoring {
           });
         });
         groups.push(data);
-
-      }catch(err){
+      } catch (err) {
         return {
-          "code": 114,
-          "info": "error: no prometheus data for syncstatus available yet",
-          "data": err,
+          code: 114,
+          info: "error: no prometheus data for syncstatus available yet",
+          data: err,
         };
       }
     }
 
     // Make sure at least one pair of consensus and execution service configurations exists
-    if(groups.length < 1){
+    if (groups.length < 1) {
       return {
-        "code": 115,
-        "info": "error: a pair of consensus and execution client does not exist (in syncstatus)",
-        "data": serviceInfos,
+        code: 115,
+        info: "error: a pair of consensus and execution client does not exist (in syncstatus)",
+        data: serviceInfos,
       };
     }
 
     // success
     return {
-      "code": 0,
-      "info": "success: syncstatus successfully retrieved",
-      "data": groups,
+      code: 0,
+      info: "success: syncstatus successfully retrieved",
+      data: groups,
     };
   }
 
   // Get P2P status of consensus and execution clients
-  async getP2PStatus(){
-
+  async getP2PStatus() {
     // Service definitions with type and Prometheus labels for p2p status
     const services = {
-      'consensus':{
-        'TekuBeaconService' : ['beacon_peer_count'],
-        'LighthouseBeaconService' : ['libp2p_peers'],
-        'PrysmBeaconService' : ['p2p_peer_count'], // needs to query for state="Connected"!
-        'NimbusBeaconService' : ['nbc_peers'],
-        'LodestarBeaconService' : ['libp2p_peers'],
+      consensus: {
+        TekuBeaconService: ["beacon_peer_count"],
+        LighthouseBeaconService: ["libp2p_peers"],
+        PrysmBeaconService: ["p2p_peer_count"], // needs to query for state="Connected"!
+        NimbusBeaconService: ["nbc_peers"],
+        LodestarBeaconService: ["libp2p_peers"],
       },
-      'execution':{
-        'GethService' : ['p2p_peers'],
-        'BesuService' : ['ethereum_peer_count'],
-        'NethermindService' : ['nethermind_sync_peers'],
-        'ErigonService' : ['p2p_peers'],
+      execution: {
+        GethService: ["p2p_peers"],
+        BesuService: ["ethereum_peer_count"],
+        NethermindService: ["nethermind_sync_peers"],
+        ErigonService: ["p2p_peers"],
       },
     };
 
     // Prometheus job definitions
     const jobs = {
-      'TekuBeaconService' : 'teku',
-      'LighthouseBeaconService' : 'lighthouse_beacon',
-      'PrysmBeaconService' : 'prysm_beacon',
-      'NimbusBeaconService' : 'nimbus',
-      'LodestarBeaconService' : 'lodestar_beacon',
-      'GethService' : 'geth',
-      'BesuService' : 'besu',
-      'NethermindService' : 'nethermind',
-      'ErigonService' : 'erigon',
+      TekuBeaconService: "teku",
+      LighthouseBeaconService: "lighthouse_beacon",
+      PrysmBeaconService: "prysm_beacon",
+      NimbusBeaconService: "nimbus",
+      LodestarBeaconService: "lodestar_beacon",
+      GethService: "geth",
+      BesuService: "besu",
+      NethermindService: "nethermind",
+      ErigonService: "erigon",
     };
 
     // Merge all labels for Prometheus query
@@ -915,28 +936,32 @@ export class Monitoring {
     for (let property in services) {
       for (let prop in services[property]) {
         for (let p of services[property][prop]) {
-          serviceLabels.push(p)
+          serviceLabels.push(p);
         }
       }
     }
 
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 221,
-        "info": "error: service infos for p2pstatus not available",
-        "data": "",
+        code: 221,
+        info: "error: service infos for p2pstatus not available",
+        data: "",
       };
     }
 
     // Query Prometehus for all possible labels
-    const prometheus_result = await this.queryPrometheus('{__name__=~"'+serviceLabels.join('|')+'"}');
-    if(typeof prometheus_result !== "object" || !prometheus_result.hasOwnProperty("status") || prometheus_result.status != "success"){
+    const prometheus_result = await this.queryPrometheus('{__name__=~"' + serviceLabels.join("|") + '"}');
+    if (
+      typeof prometheus_result !== "object" ||
+      !prometheus_result.hasOwnProperty("status") ||
+      prometheus_result.status != "success"
+    ) {
       return {
-        "code": 223,
-        "info": "error: prometheus query for p2pstatus failed",
-        "data": prometheus_result,
+        code: 223,
+        info: "error: prometheus query for p2pstatus failed",
+        data: prometheus_result,
       };
     }
 
@@ -944,186 +969,209 @@ export class Monitoring {
     const clientTypes = Object.keys(services);
     const groups = [];
     const utsNow = Math.floor(Date.now() / 1000);
-    for(let i=0;i<serviceInfos.length;i++){
-
+    for (let i = 0; i < serviceInfos.length; i++) {
       // Find execution and consensus service configurations for this group
       let clt = serviceInfos[i];
-      if(typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config"))
-        continue;
+      if (typeof clt !== "object" || !clt.hasOwnProperty("service") || !clt.hasOwnProperty("config")) continue;
       let isConsensus = clt.service in services.consensus;
       let hasMembers = clt.config.dependencies.executionClients.length ? true : false;
-      if(!isConsensus || !hasMembers)
-        continue;
+      if (!isConsensus || !hasMembers) continue;
       let cc = clt;
       let ec = null;
-      try{
+      try {
         ec = cc.config.dependencies.executionClients[0];
-        if(typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id"))
-          continue;
-        ec = serviceInfos.find(item => item.config.serviceID == ec.id)
-      }catch(e){
+        if (typeof ec !== "object" || !ec.hasOwnProperty("service") || !ec.hasOwnProperty("id")) continue;
+        ec = serviceInfos.find((item) => item.config.serviceID == ec.id);
+      } catch (e) {
         continue;
       }
 
       // Setup details
       var details = {};
       var detailsbase = {
-        'service': 'unknown',
-        'client': "unknown",
-        'state': "unknown",
-        'numPeer': 0,
-        'numPeerBy': {
-          'source': 'prometheus',
-          'fields': [],
+        service: "unknown",
+        client: "unknown",
+        state: "unknown",
+        numPeer: 0,
+        numPeerBy: {
+          source: "prometheus",
+          fields: [],
         },
-        'maxPeer': 0,
-        'maxPeerBy': {
-          'source': 'config',
-          'fields': [],
+        maxPeer: 0,
+        maxPeerBy: {
+          source: "config",
+          fields: [],
         },
-        'valPeer': 0,
+        valPeer: 0,
       };
 
       // Get max peers for consensus and execution clients by configuration or their default values
       let consensus = cc;
       let execution = ec;
-      var data = {}, opttyp=null, optnam=null, defval=null, optval=null, regexp=null;
+      var data = {},
+        opttyp = null,
+        optnam = null,
+        defval = null,
+        optval = null,
+        regexp = null;
       clientTypes.forEach(function (clientType, index) {
-        let clt = '';
+        let clt = "";
         eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
         details[clientType] = JSON.parse(JSON.stringify(detailsbase)); // clone detailsbase!
-        details[clientType]['service'] = clt.service;
-        details[clientType]['client'] = clt.service.replace(/Beacon|Service/gi,"").toUpperCase();
-        details[clientType]['state'] = clt.state;
-        opttyp = Object.keys(services).find(key => services[key].hasOwnProperty(clt.service));
-        if(!opttyp){
+        details[clientType]["service"] = clt.service;
+        details[clientType]["client"] = clt.service.replace(/Beacon|Service/gi, "").toUpperCase();
+        details[clientType]["state"] = clt.state;
+        opttyp = Object.keys(services).find((key) => services[key].hasOwnProperty(clt.service));
+        if (!opttyp) {
           return;
         }
-        if(clt.service == "TekuBeaconService"){
+        if (clt.service == "TekuBeaconService") {
           // --p2p-peer-upper-bound (Default: 100)
-          optnam = '--p2p-peer-upper-bound';
+          optnam = "--p2p-peer-upper-bound";
           defval = 100;
-        }else if(clt.service == "LighthouseBeaconService"){
+        } else if (clt.service == "LighthouseBeaconService") {
           // --target-peers (Default: 80) + 10%
           // See extra dealing with + 10% below!
-          optnam = '--target-peers';
+          optnam = "--target-peers";
           defval = 80;
-        }else if(clt.service == "PrysmBeaconService"){
+        } else if (clt.service == "PrysmBeaconService") {
           // --p2p-max-peers (Default: 45)
-          optnam = '--p2p-max-peers';
+          optnam = "--p2p-max-peers";
           defval = 45;
-        }else if(clt.service == "NimbusBeaconService"){
+        } else if (clt.service == "NimbusBeaconService") {
           // --max-peers (The target number of peers to connect to, default: 160)
           // --hard-max-peers (The maximum number of peers to connect to. Defaults to maxPeers * 1.5)
           // See extra dealing with --hard-max-peers below!
-          optnam = '--max-peers';
+          optnam = "--max-peers";
           defval = 160;
-        }else if(clt.service == "LodestarBeaconService"){
+        } else if (clt.service == "LodestarBeaconService") {
           // --targetPeers(The target connected peers. Above this number peers will be disconnected, default: 50) + 10%
           // See extra dealing with + 10% below!
-          optnam = '--targetPeers';
+          optnam = "--targetPeers";
           defval = 50;
-        }else if(clt.service == "GethService"){
-            // [MAXVAL: --maxpeers (Default: 50)]
-          optnam = '--maxpeers';
+        } else if (clt.service == "GethService") {
+          // [MAXVAL: --maxpeers (Default: 50)]
+          optnam = "--maxpeers";
           defval = 50;
-        }else if(clt.service == "BesuService"){
+        } else if (clt.service == "BesuService") {
           // --max-peers (Default: 25)
-          optnam = '--max-peers';
+          optnam = "--max-peers";
           defval = 25;
-        }else if(clt.service == "NethermindService"){
+        } else if (clt.service == "NethermindService") {
           // --Network.MaxActivePeers (Default: 50)
-          optnam = '--Network.MaxActivePeers';
+          optnam = "--Network.MaxActivePeers";
           defval = 50;
-        }else if(clt.service == "ErigonService"){
+        } else if (clt.service == "ErigonService") {
           // --maxpeers (Default: 100)
           // https://github.com/ledgerwatch/erigon/issues/2853
-          optnam = '--maxpeers';
+          optnam = "--maxpeers";
           defval = 100;
-        }else{
+        } else {
           return;
         }
-        regexp = new RegExp(optnam+"=(\\d+)", "si");
-        if(Array.isArray(clt.config.command)){
-          try{
-            optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
-          }catch(e){
+        regexp = new RegExp(optnam + "=(\\d+)", "si");
+        if (Array.isArray(clt.config.command)) {
+          try {
+            optval = clt.config.command
+              .find((item) => item.match(regexp))
+              .match(regexp)
+              .pop();
+          } catch (e) {
             optval = defval;
           }
-        }else{
-          try{
+        } else {
+          try {
             optval = clt.config.command.match(regexp).pop();
-          }catch(e){
+          } catch (e) {
             optval = defval;
           }
         }
         optval = parseInt(optval);
-        if(clt.service == "LighthouseBeaconService"){ // Extra calculate Lighthouse --target-peers + 10%
-          optval = Math.round(optval*1.1);
+        if (clt.service == "LighthouseBeaconService") {
+          // Extra calculate Lighthouse --target-peers + 10%
+          optval = Math.round(optval * 1.1);
         }
-        if(clt.service == "LodestarBeaconService"){ // Extra calculate Lodestar --targetPeers + 10%
-          optval = Math.round(optval*1.1);
+        if (clt.service == "LodestarBeaconService") {
+          // Extra calculate Lodestar --targetPeers + 10%
+          optval = Math.round(optval * 1.1);
         }
-        details[opttyp]['maxPeer'] = optval;
-        details[opttyp]['maxPeerBy']['fields'].push(optnam);
-        if(clt.service == "NimbusBeaconService"){ // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
-          if(!opttyp){
+        details[opttyp]["maxPeer"] = optval;
+        details[opttyp]["maxPeerBy"]["fields"].push(optnam);
+        if (clt.service == "NimbusBeaconService") {
+          // Extra calculate Nimbus --hard-max-peers by Nimbus --max-peers
+          if (!opttyp) {
             return;
           }
-          optnam = '--hard-max-peers'; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
-          defval = Math.round(optval*1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
-          regexp = new RegExp(optnam+"=(\\d+)", "si");
-          if(Array.isArray(clt.config.command)){
-            try{
-              optval = clt.config.command.find((item) => item.match(regexp)).match(regexp).pop();
-            }catch(e){
+          optnam = "--hard-max-peers"; // Defaults to maxPeers (Nimbus "--max-peers") * 1.5
+          defval = Math.round(optval * 1.5); // optval is here Nimbus --max-peers that was calculated in the current loop
+          regexp = new RegExp(optnam + "=(\\d+)", "si");
+          if (Array.isArray(clt.config.command)) {
+            try {
+              optval = clt.config.command
+                .find((item) => item.match(regexp))
+                .match(regexp)
+                .pop();
+            } catch (e) {
               optval = defval;
             }
-          }else{
-            try{
+          } else {
+            try {
               optval = clt.config.command.match(regexp).pop();
-            }catch(e){
+            } catch (e) {
               optval = defval;
             }
           }
           optval = parseInt(optval);
-          details[opttyp]['maxPeer'] = optval;
-          details[opttyp]['maxPeerBy']['fields'].push(optnam);
+          details[opttyp]["maxPeer"] = optval;
+          details[opttyp]["maxPeerBy"]["fields"].push(optnam);
         }
       });
 
       // Filter Prometheus result by current used services and calculate number of currently used peers per client
       // Note that Prysm requires to match state="Connected" and Lodestar direction="outbound"
-      try{
-        var maxPeer = 0, numPeer = 0, valPeer = 0;
+      try {
+        var maxPeer = 0,
+          numPeer = 0,
+          valPeer = 0;
         clientTypes.forEach(function (clientType, index) {
-          let clt = '';
+          let clt = "";
           eval("clt = " + clientType + ";"); // eval clt object from consensus/execution objects
-          let xx = prometheus_result.data.result.filter((s) =>
-            services[clientType][clt.service].includes(s.metric.__name__) &&
-            s.metric.instance.includes(clt.config.instanceID) &&
-            s.metric.job == jobs[clt.service] &&
-            (clt.service == "PrysmBeaconService" ? s.metric.state == 'Connected' : true)
+          let xx = prometheus_result.data.result.filter(
+            (s) =>
+              services[clientType][clt.service].includes(s.metric.__name__) &&
+              s.metric.instance.includes(clt.config.instanceID) &&
+              s.metric.job == jobs[clt.service] &&
+              (clt.service == "PrysmBeaconService" ? s.metric.state == "Connected" : true)
           );
-          if(xx.length){
+          if (xx.length) {
             services[clientType][clt.service].forEach(function (item, index) {
-              try{
-                details[clientType]['numPeer'] = parseInt(xx.filter((s) => s.metric.__name__ == services[clientType][clt.service][index]).pop().value.pop());
-                details[clientType]['numPeerBy']['fields'].push(item);
-              }catch(e){}
+              try {
+                details[clientType]["numPeer"] = parseInt(
+                  xx
+                    .filter((s) => s.metric.__name__ == services[clientType][clt.service][index])
+                    .pop()
+                    .value.pop()
+                );
+                details[clientType]["numPeerBy"]["fields"].push(item);
+              } catch (e) {}
             });
           }
 
           // Summarize details
-          details[clientType]['maxPeer'] = details[clientType]['maxPeer'];
-          details[clientType]['numPeer'] = details[clientType]['numPeer'] > details[clientType]['maxPeer'] ? details[clientType]['maxPeer'] : details[clientType]['numPeer'];
-          details[clientType]['valPeer'] = Math.round((details[clientType]['numPeer']/details[clientType]['maxPeer'])*100);
-          details[clientType]['valPeer'] = details[clientType]['valPeer'] > 100 ? 100 : details[clientType]['valPeer'];
+          details[clientType]["maxPeer"] = details[clientType]["maxPeer"];
+          details[clientType]["numPeer"] =
+            details[clientType]["numPeer"] > details[clientType]["maxPeer"]
+              ? details[clientType]["maxPeer"]
+              : details[clientType]["numPeer"];
+          details[clientType]["valPeer"] = Math.round(
+            (details[clientType]["numPeer"] / details[clientType]["maxPeer"]) * 100
+          );
+          details[clientType]["valPeer"] = details[clientType]["valPeer"] > 100 ? 100 : details[clientType]["valPeer"];
 
           // Summarize totals
-          maxPeer = parseInt(maxPeer + details[clientType]['maxPeer']);
-          numPeer = parseInt(numPeer + details[clientType]['numPeer']);
-          valPeer = Math.round((numPeer/maxPeer)*100);
+          maxPeer = parseInt(maxPeer + details[clientType]["maxPeer"]);
+          numPeer = parseInt(numPeer + details[clientType]["numPeer"]);
+          valPeer = Math.round((numPeer / maxPeer) * 100);
         });
 
         // Respond success for this group
@@ -1131,72 +1179,73 @@ export class Monitoring {
         // Avoid overdues that may happen during peer cleaning. The exact values can be taken
         // from the details object if needed.
         data = {
-          'details': details,
-          'maxPeer': maxPeer,
-          'numPeer': numPeer > maxPeer ? maxPeer : numPeer,
-          'valPeer': valPeer > 100 ? 100 : valPeer,
+          details: details,
+          maxPeer: maxPeer,
+          numPeer: numPeer > maxPeer ? maxPeer : numPeer,
+          valPeer: valPeer > 100 ? 100 : valPeer,
         };
-
-      }catch(err){
+      } catch (err) {
         return {
-          "code": 224,
-          "info": "error: no prometheus data for p2pstatus available yet",
-          "data": err,
+          code: 224,
+          info: "error: no prometheus data for p2pstatus available yet",
+          data: err,
         };
       }
       groups.push(data);
     }
 
     // Make sure at least one pair of consensus and execution service configurations exists
-    if(groups.length < 1){
+    if (groups.length < 1) {
       return {
-        "code": 225,
-        "info": "error: a pair of consensus and execution client does not exist (in p2pstatus)",
-        "data": serviceInfos,
+        code: 225,
+        info: "error: a pair of consensus and execution client does not exist (in p2pstatus)",
+        data: serviceInfos,
       };
     }
 
     // success
     return {
-      "code": 0,
-      "info": "success: p2pstatus successfully retrieved",
-      "data": groups,
+      code: 0,
+      info: "success: p2pstatus successfully retrieved",
+      data: groups,
     };
   }
 
   // Get storage status of all services
   async getStorageStatus() {
-
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 331,
-        "info": "error: service infos for storagestatus not available",
-        "data": "",
+        code: 331,
+        info: "error: service infos for storagestatus not available",
+        data: "",
       };
     }
 
     // Build ssh commands to query storages
     var sshcommands = [];
-    for(let svc of serviceInfos){
-        if(typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")){
-            continue;
-        }
-        if(Array.isArray(svc.config.volumes) && svc.config.volumes.length){
-          const strVolumes = '"' + svc.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
-          sshcommands.push({
-            svc: svc,
-            cmd: "du -csh " + strVolumes + " | tail -n1 | awk '{print $1;}'",
-          });
-        }
+    for (let svc of serviceInfos) {
+      if (typeof svc !== "object" || !svc.hasOwnProperty("service") || !svc.hasOwnProperty("config")) {
+        continue;
+      }
+      if (Array.isArray(svc.config.volumes) && svc.config.volumes.length) {
+        const strVolumes = '"' + svc.config.volumes.flatMap(({ destinationPath }) => destinationPath).join('" "') + '"';
+        sshcommands.push({
+          svc: svc,
+          cmd: "du -csh " + strVolumes + " | tail -n1 | awk '{print $1;}'",
+        });
+      }
     }
-    var sshcmd = sshcommands.flatMap(({ cmd }) => cmd).join(' ; ').trim();
-    if(!sshcmd){
+    var sshcmd = sshcommands
+      .flatMap(({ cmd }) => cmd)
+      .join(" ; ")
+      .trim();
+    if (!sshcmd) {
       return {
-        "code": 332,
-        "info": "error: no storage volumes available (detected in storagestatus)",
-        "data": serviceInfos,
+        code: 332,
+        info: "error: no storage volumes available (detected in storagestatus)",
+        data: serviceInfos,
       };
     }
 
@@ -1206,24 +1255,24 @@ export class Monitoring {
       result = await this.nodeConnectionProm.sshService.exec(sshcmd);
     } catch (err) {
       return {
-        "code": 333,
-        "info": "error: failed to execute ssh command in storagestatus",
-        "data": err,
+        code: 333,
+        info: "error: failed to execute ssh command in storagestatus",
+        data: err,
       };
     }
 
     // No data in stdout or data in stderr? Executed code above failed to run!
-    if(result.rc || result.stdout == "" /*|| result.stderr != ""*/){
+    if (result.rc || result.stdout == "" /*|| result.stderr != ""*/) {
       var err = "error: ssh command in storagestatus failed with return code " + result.rc;
-      if(result.stderr != ""){
+      if (result.stderr != "") {
         err += " (" + result.stderr + ")";
-      }else if(result.stdout == ""){
+      } else if (result.stdout == "") {
         err += " (syntax error)";
       }
       return {
-        "code": 334,
-        "info": err,
-        "data": result,
+        code: 334,
+        info: err,
+        data: result,
       };
     }
 
@@ -1232,35 +1281,40 @@ export class Monitoring {
     var storagesizes = result.stdout.trim().split("\n");
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
-      if(svc){
+      if (svc) {
         data.push({
-          id: index+1,
-          title: svc.service.replace(/Beacon|Service/gi,"").replace(/Validator/gi," vc").replace(/NodeExporter/gi," ne").toUpperCase(),
-          storageValue: ( (!val || val < 1) ? '0 ' : val.replace(/([a-z]+)/si,' $1') ) + "B",
+          id: index + 1,
+          title: svc.service
+            .replace(/Beacon|Service/gi, "")
+            .replace(/Validator/gi, " vc")
+            .replace(/NodeExporter/gi, " ne")
+            .toUpperCase(),
+          storageValue: (!val || val < 1 ? "0 " : val.replace(/([a-z]+)/is, " $1")) + "B",
         });
       }
     });
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: storagestatus successfully retrieved",
-      "data": data,
+      code: 0,
+      info: "success: storagestatus successfully retrieved",
+      data: data,
     };
   }
 
   // Open RPC tunnel(s) on request
-  async openRpcTunnel(args){
-
+  async openRpcTunnel(args) {
     // Extract arguments
-    var {force_fresh} = Object.assign({
-      force_fresh:false,
-    }, args);
+    var { force_fresh } = Object.assign(
+      {
+        force_fresh: false,
+      },
+      args
+    );
 
     // Get current RPC status
     const rpcstatus = await this.getRpcStatus();
-    if(rpcstatus.code)
-      return rpcstatus;
+    if (rpcstatus.code) return rpcstatus;
 
     // Get available ports
     const localPorts = await this.nodeConnection.checkAvailablePorts({
@@ -1270,17 +1324,16 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if(localPorts.length != rpcstatus.data.length){
+    if (localPorts.length != rpcstatus.data.length) {
       return {
-        "code": 1,
-        "info": "error: not enough local ports availbe for all RPC services",
-        "data": '',
+        code: 1,
+        info: "error: not enough local ports availbe for all RPC services",
+        data: "",
       };
     }
 
     // Create a tunnel for each service
-    for(let i=0; i < rpcstatus.data.length; i++){
-
+    for (let i = 0; i < rpcstatus.data.length; i++) {
       // Setup details for this service
       let sid = rpcstatus.data[i].sid;
       let rpc = rpcstatus.data[i].rpc;
@@ -1288,27 +1341,29 @@ export class Monitoring {
       let port = rpc.destinationPort;
 
       // Check if the tunnel is already open
-      if(this.rpcTunnel[sid] > 0 && !force_fresh){
+      if (this.rpcTunnel[sid] > 0 && !force_fresh) {
         continue;
       }
 
       // Open the tunnel
-      try{
+      try {
         var localPort = localPorts.shift();
-        await this.nodeConnection.openTunnels([{
-          dstHost: addr,
-          dstPort: port,
-          localPort: localPort,
-        }]);
-      }catch(e){
+        await this.nodeConnection.openTunnels([
+          {
+            dstHost: addr,
+            dstPort: port,
+            localPort: localPort,
+          },
+        ]);
+      } catch (e) {
         // On any error stop opening further tunnels and close all already opened
-        await this.closeRpcTunnel()
+        await this.closeRpcTunnel();
         const freshrpcstatus = await this.getRpcStatus();
-        freshrpcstatus.info = freshrpcstatus.info + '(fresh after failed attempt to open rpc tunnels)';
+        freshrpcstatus.info = freshrpcstatus.info + "(fresh after failed attempt to open rpc tunnels)";
         return {
-          "code": 2,
-          "info": "error: failed to open tunnels (" + e + ")",
-          "data": freshrpcstatus,
+          code: 2,
+          info: "error: failed to open tunnels (" + e + ")",
+          data: freshrpcstatus,
         };
       }
 
@@ -1318,45 +1373,43 @@ export class Monitoring {
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
-    freshrpcstatus.info = freshrpcstatus.info + '(fresh after opening rpc tunnels)';
+    freshrpcstatus.info = freshrpcstatus.info + "(fresh after opening rpc tunnels)";
     return {
-      "code": 0,
-      "info": "success: tunnels successfully opened",
-      "data": freshrpcstatus,
+      code: 0,
+      info: "success: tunnels successfully opened",
+      data: freshrpcstatus,
     };
   }
 
   // Close RPC tunnel(s) on request
-  async closeRpcTunnel(){
-
+  async closeRpcTunnel() {
     // Close all open tunnels, ignore any errors
-    try{
+    try {
       const openTunnels = Object.values(this.rpcTunnel);
-      if(openTunnels.length){
+      if (openTunnels.length) {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    }catch(e){}
+    } catch (e) {}
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
-    freshrpcstatus.info = freshrpcstatus.info + '(fresh after closing rpc tunnels)';
+    freshrpcstatus.info = freshrpcstatus.info + "(fresh after closing rpc tunnels)";
     return {
-      "code": 0,
-      "info": "success: tunnels successfully closed",
-      "data": freshrpcstatus,
+      code: 0,
+      info: "success: tunnels successfully closed",
+      data: freshrpcstatus,
     };
   }
 
   // Get RPC status
-  async getRpcStatus(){
-
+  async getRpcStatus() {
     // Service definitions with their associated rpc api (service) port
     const services = {
-      'GethService' : 8545,
-      'BesuService' : 8545,
-      'NethermindService' : 8545,
-      'ErigonService' : 8545,
+      GethService: 8545,
+      BesuService: 8545,
+      NethermindService: 8545,
+      ErigonService: 8545,
     };
 
     // Set timestamp in micro seconds
@@ -1364,77 +1417,84 @@ export class Monitoring {
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 1,
-        "info": "error: service infos unavailable",
-        "data": '',
+        code: 1,
+        info: "error: service infos unavailable",
+        data: "",
       };
     }
 
     // Get execution clients with RPC data by service name
     const data = [];
     const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
-    for(let i = 0; i < executions.length; i++){
-
+    for (let i = 0; i < executions.length; i++) {
       // Make sure execution client is valid and running
-      let execution = executions[i]
-      if(typeof execution !== "object" || !execution.hasOwnProperty("config") ||  !execution.hasOwnProperty("state") || execution.state != 'running'){
+      let execution = executions[i];
+      if (
+        typeof execution !== "object" ||
+        !execution.hasOwnProperty("config") ||
+        !execution.hasOwnProperty("state") ||
+        execution.state != "running"
+      ) {
         continue;
       }
 
       // Filter the RPC port configuration and get addr/port that is mapped on docker host
       const sid = execution.config.serviceID;
-      const rpc = execution.config.ports.filter((p) => p.servicePort == services[execution.service]).slice(-1).pop();
-      rpc.destinationIp = rpc.destinationIp == '0.0.0.0' ? '127.0.0.1' : rpc.destinationIp; // FIX: rpc.destinationIp could be 0.0.0.0 if config was changed in expert mode
+      const rpc = execution.config.ports
+        .filter((p) => p.servicePort == services[execution.service])
+        .slice(-1)
+        .pop();
+      rpc.destinationIp = rpc.destinationIp == "0.0.0.0" ? "127.0.0.1" : rpc.destinationIp; // FIX: rpc.destinationIp could be 0.0.0.0 if config was changed in expert mode
       let addr = rpc.destinationIp;
       let port = rpc.destinationPort;
 
       // Check if RPC port is enabled
       // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
-      let result = await this.queryRpcApi({'addr':addr,'port':port},"eth_blockNumber");
-      if(result.code)
-        continue;
+      let result = await this.queryRpcApi({ addr: addr, port: port }, "eth_blockNumber");
+      if (result.code) continue;
 
       // Add valid client to final result
       data.push({
         now: now,
         sid: sid,
         rpc: rpc,
-        url: this.rpcTunnel[sid] > 0 ? 'http://' + addr + ':' + this.rpcTunnel[sid] : '',
-        clt: execution.service.replace(/Service/gi,"").toUpperCase(),
+        url: this.rpcTunnel[sid] > 0 ? "http://" + addr + ":" + this.rpcTunnel[sid] : "",
+        clt: execution.service.replace(/Service/gi, "").toUpperCase(),
       });
     }
 
     // Final check
-    if(data.length < 1){
+    if (data.length < 1) {
       return {
-        "code": 2,
-        "info": "error: no running execution client with enabled RPC port found",
-        "data": '',
+        code: 2,
+        info: "error: no running execution client with enabled RPC port found",
+        data: "",
       };
     }
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: rpcstatus successfully retrieved",
-      "data": data,
+      code: 0,
+      info: "success: rpcstatus successfully retrieved",
+      data: data,
     };
   }
 
   // Open BEACON tunnel(s) on request
-  async openBeaconTunnel(args){
-
+  async openBeaconTunnel(args) {
     // Extract arguments
-    var {force_fresh} = Object.assign({
-      force_fresh:false,
-    }, args);
+    var { force_fresh } = Object.assign(
+      {
+        force_fresh: false,
+      },
+      args
+    );
 
     // Get current BEACON status
     const beaconstatus = await this.getBeaconStatus();
-    if(beaconstatus.code)
-      return beaconstatus;
+    if (beaconstatus.code) return beaconstatus;
 
     // Get available ports
     const localPorts = await this.nodeConnection.checkAvailablePorts({
@@ -1444,17 +1504,16 @@ export class Monitoring {
     });
 
     // Make sure there are enough ports available
-    if(localPorts.length != beaconstatus.data.length){
+    if (localPorts.length != beaconstatus.data.length) {
       return {
-        "code": 1,
-        "info": "error: not enough local ports availbe for all BEACON services",
-        "data": '',
+        code: 1,
+        info: "error: not enough local ports availbe for all BEACON services",
+        data: "",
       };
     }
 
     // Create a tunnel for each service
-    for(let i=0; i < beaconstatus.data.length; i++){
-
+    for (let i = 0; i < beaconstatus.data.length; i++) {
       // Setup details for this service
       let sid = beaconstatus.data[i].sid;
       let beacon = beaconstatus.data[i].beacon;
@@ -1462,27 +1521,29 @@ export class Monitoring {
       let port = beacon.destinationPort;
 
       // Check if the tunnel is already open
-      if(this.beaconTunnel[sid] > 0 && !force_fresh){
+      if (this.beaconTunnel[sid] > 0 && !force_fresh) {
         continue;
       }
 
       // Open the tunnel
-      try{
+      try {
         var localPort = localPorts.shift();
-        await this.nodeConnection.openTunnels([{
-          dstHost: addr,
-          dstPort: port,
-          localPort: localPort,
-        }]);
-      }catch(e){
+        await this.nodeConnection.openTunnels([
+          {
+            dstHost: addr,
+            dstPort: port,
+            localPort: localPort,
+          },
+        ]);
+      } catch (e) {
         // On any error stop opening further tunnels and close all already opened
-        await this.closeBeaconTunnel()
+        await this.closeBeaconTunnel();
         const freshbeaconstatus = await this.getBeaconStatus();
-        freshbeaconstatus.info = freshbeaconstatus.info + '(fresh after failed attempt to open beacon tunnels)';
+        freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after failed attempt to open beacon tunnels)";
         return {
-          "code": 2,
-          "info": "error: failed to open tunnels (" + e + ")",
-          "data": freshbeaconstatus,
+          code: 2,
+          info: "error: failed to open tunnels (" + e + ")",
+          data: freshbeaconstatus,
         };
       }
 
@@ -1492,46 +1553,44 @@ export class Monitoring {
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
-    freshbeaconstatus.info = freshbeaconstatus.info + '(fresh after opening beacon tunnels)';
+    freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after opening beacon tunnels)";
     return {
-      "code": 0,
-      "info": "success: tunnels successfully opened",
-      "data": freshbeaconstatus,
+      code: 0,
+      info: "success: tunnels successfully opened",
+      data: freshbeaconstatus,
     };
   }
 
   // Close BEACON tunnel(s) on request
-  async closeBeaconTunnel(){
-
+  async closeBeaconTunnel() {
     // Close all open tunnels, ignore any errors
-    try{
+    try {
       const openTunnels = Object.values(this.beaconTunnel);
-      if(openTunnels.length){
+      if (openTunnels.length) {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    }catch(e){}
+    } catch (e) {}
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
-    freshbeaconstatus.info = freshbeaconstatus.info + '(fresh after closing beacon tunnels)';
+    freshbeaconstatus.info = freshbeaconstatus.info + "(fresh after closing beacon tunnels)";
     return {
-      "code": 0,
-      "info": "success: tunnels successfully closed",
-      "data": freshbeaconstatus,
+      code: 0,
+      info: "success: tunnels successfully closed",
+      data: freshbeaconstatus,
     };
   }
 
   // Get BEACON status
-  async getBeaconStatus(){
-
+  async getBeaconStatus() {
     // Service definitions with their associated beacon api (service) port
     const services = {
-      'TekuBeaconService' : 5051,
-      'LighthouseBeaconService' : 5052,
-      'PrysmBeaconService' : 3500,
-      'NimbusBeaconService' : 5052,
-      'LodestarBeaconService' : 9596,
+      TekuBeaconService: 5051,
+      LighthouseBeaconService: 5052,
+      PrysmBeaconService: 3500,
+      NimbusBeaconService: 5052,
+      LodestarBeaconService: 9596,
     };
 
     // Set timestamp in micro seconds
@@ -1539,61 +1598,67 @@ export class Monitoring {
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 1,
-        "info": "error: service infos unavailable",
-        "data": '',
+        code: 1,
+        info: "error: service infos unavailable",
+        data: "",
       };
     }
 
     // Get consensus clients with BEACON data by service name
     const data = [];
     const consensusclients = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
-    for(let i = 0; i < consensusclients.length; i++){
-
+    for (let i = 0; i < consensusclients.length; i++) {
       // Make sure consensus client is valid and running
-      let consensus = consensusclients[i]
-      if(typeof consensus !== "object" || !consensus.hasOwnProperty("config") ||  !consensus.hasOwnProperty("state") || consensus.state != 'running'){
+      let consensus = consensusclients[i];
+      if (
+        typeof consensus !== "object" ||
+        !consensus.hasOwnProperty("config") ||
+        !consensus.hasOwnProperty("state") ||
+        consensus.state != "running"
+      ) {
         continue;
       }
 
       // Filter the BEACON port configuration and get addr/port that is mapped on docker host
       const sid = consensus.config.serviceID;
-      const beacon = consensus.config.ports.filter((p) => p.servicePort == services[consensus.service]).slice(-1).pop();
-      beacon.destinationIp = beacon.destinationIp == '0.0.0.0' ? '127.0.0.1' : beacon.destinationIp; // FIX: beacon.destinationIp could be 0.0.0.0 if config was changed in expert mode
+      const beacon = consensus.config.ports
+        .filter((p) => p.servicePort == services[consensus.service])
+        .slice(-1)
+        .pop();
+      beacon.destinationIp = beacon.destinationIp == "0.0.0.0" ? "127.0.0.1" : beacon.destinationIp; // FIX: beacon.destinationIp could be 0.0.0.0 if config was changed in expert mode
       let addr = beacon.destinationIp;
       let port = beacon.destinationPort;
 
       // Check if BEACON port is enabled
-      let result = await this.queryBeaconApi({'addr':addr,'port':port},"/eth/v1/node/syncing");
-      if(result.code)
-        continue;
+      let result = await this.queryBeaconApi({ addr: addr, port: port }, "/eth/v1/node/syncing");
+      if (result.code) continue;
 
       // Add valid client to final result
       data.push({
         now: now,
         sid: sid,
         beacon: beacon,
-        url: this.beaconTunnel[sid] > 0 ? 'http://' + addr + ':' + this.beaconTunnel[sid] : '',
-        clt: consensus.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+        url: this.beaconTunnel[sid] > 0 ? "http://" + addr + ":" + this.beaconTunnel[sid] : "",
+        clt: consensus.service.replace(/Beacon|Service/gi, "").toUpperCase(),
       });
     }
 
     // Final check
-    if(data.length < 1){
+    if (data.length < 1) {
       return {
-        "code": 2,
-        "info": "error: no running consensus client with enabled BEACON port found",
-        "data": '',
+        code: 2,
+        info: "error: no running consensus client with enabled BEACON port found",
+        data: "",
       };
     }
 
     // Respond success
     return {
-      "code": 0,
-      "info": "success: beaconstatus successfully retrieved",
-      "data": data,
+      code: 0,
+      info: "success: beaconstatus successfully retrieved",
+      data: data,
     };
   }
 
@@ -1607,52 +1672,60 @@ export class Monitoring {
   // - code: 0 means success and every other value means an error
   // - info: a info message regarding the last reuqest (for example success or error)
   // - data: a array of objects with port and associated protocol/service on success or empty string on errors
-  async getPortStatus(args){
-
+  async getPortStatus(args) {
     // Extract arguments
-    var {addr} = Object.assign({
-      addr:"public",
-    }, (typeof args === 'object' ? args : {}));
+    var { addr } = Object.assign(
+      {
+        addr: "public",
+      },
+      typeof args === "object" ? args : {}
+    );
 
     // Get service infos
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 1,
-        "info": "error: service infos unavailable",
-        "data": '',
+        code: 1,
+        info: "error: service infos unavailable",
+        data: "",
       };
     }
 
     // Check and format addr
-    const addr_type = Array.isArray(addr) ? 'arr' : ( (typeof addr === 'string'  && ["public","local"].includes(addr) ) ? 'str' : 'invalid' );
-    addr = addr_type == 'str' ? addr.toLowerCase().trim() : addr;
-    if(addr_type == 'invalid'){
+    const addr_type = Array.isArray(addr)
+      ? "arr"
+      : typeof addr === "string" && ["public", "local"].includes(addr)
+      ? "str"
+      : "invalid";
+    addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
+    if (addr_type == "invalid") {
       return {
-        "code": 1,
-        "info": "error: addr must have a value of \"public\", \"local\" or an array of ip addresses",
-        "data": '',
+        code: 1,
+        info: 'error: addr must have a value of "public", "local" or an array of ip addresses',
+        data: "",
       };
     }
 
     // Get ports that are bound to a public or local address (or to a address specified in addr array)
     let data = [];
-    const local_addresses = ["127.0.0.1","localhost"];
-    const addresses = addr_type == 'arr' ? addr : local_addresses;
-    for(let i = 0; i < serviceInfos.length; i++){
+    const local_addresses = ["127.0.0.1", "localhost"];
+    const addresses = addr_type == "arr" ? addr : local_addresses;
+    for (let i = 0; i < serviceInfos.length; i++) {
       let svc = serviceInfos[i];
-      let ports = svc.config.ports
-      if(ports.length < 1) continue;
-      for(let n = 0; n < ports.length; n++){
-        if(addr == 'public' && addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
-          continue;
-        if((addr_type == 'arr' || addr == 'local') && !addresses.some(w => ports[n].destinationIp.toLowerCase().includes(w)))
+      let ports = svc.config.ports;
+      if (ports.length < 1) continue;
+      for (let n = 0; n < ports.length; n++) {
+        if (addr == "public" && addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))) continue;
+        if (
+          (addr_type == "arr" || addr == "local") &&
+          !addresses.some((w) => ports[n].destinationIp.toLowerCase().includes(w))
+        )
           continue;
         data.push({
-          name: svc.service.replace(/Beacon|Service/gi,"").toUpperCase(),
+          name: svc.service.replace(/Beacon|Service/gi, "").toUpperCase(),
           port: ports[n].destinationPort,
           prot: ports[n].servicePortProtocol,
-          type: addr_type == 'arr' ? addresses.find(w => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
+          type: addr_type == "arr" ? addresses.find((w) => ports[n].destinationIp.toLowerCase().includes(w)) : addr,
         });
       }
     }
@@ -1665,73 +1738,76 @@ export class Monitoring {
     // );
 
     // Return success
-    const addinfo = addr_type === 'str' ? 'that are '+addr+'ly available' : 'that are available thru ip ' + addr.join(' or ');
+    const addinfo =
+      addr_type === "str" ? "that are " + addr + "ly available" : "that are available thru ip " + addr.join(" or ");
     return {
-      "code": 0,
-      "info": "success: open ports "+addinfo+" retrieved",
-      "data": data,
+      code: 0,
+      info: "success: open ports " + addinfo + " retrieved",
+      data: data,
     };
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1) 
-  async getPublicPortStatus(){
-    return await this.getPortStatus({addr:'public'});
+  // Get a list of all ports (including the associated service and protocol) that are availalbe publicly (which means thru an ip that is NOT localhost/127.0.0.1)
+  async getPublicPortStatus() {
+    return await this.getPortStatus({ addr: "public" });
   }
 
-  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)  
-  async getLocalPortStatus(){
-    return await this.getPortStatus({addr:'local'});
+  // Get a list of all ports (including the associated service and protocol) that are availalbe locally (thru localhost/127.0.0.1)
+  async getLocalPortStatus() {
+    return await this.getPortStatus({ addr: "local" });
   }
 
   // Used for fast debug/dev purposes
-  async getDebugStatus(){
-
+  async getDebugStatus() {
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return {
-        "code": 9999,
-        "info": "error: service infos for debugstatus not available",
-        "data": "",
+        code: 9999,
+        info: "error: service infos for debugstatus not available",
+        data: "",
       };
     }
 
     // Get all dependency infos
-    const dependencyInfos = []
-    for(let i=0;i<serviceInfos.length;i++){
+    const dependencyInfos = [];
+    for (let i = 0; i < serviceInfos.length; i++) {
       dependencyInfos.push({
         service: serviceInfos[i].service,
         instanceID: serviceInfos[i].config.instanceID,
         dependencies: serviceInfos[i].config.dependencies,
-      })
+      });
     }
 
     // Make an easy dependency view
-    const easyInfos = []
-    for(let i=0;i<serviceInfos.length;i++){
-      const hashDependencies = serviceInfos[i].config.dependencies.consensusClients.length || serviceInfos[i].config.dependencies.executionClients.length ? 'yes' : 'no';
+    const easyInfos = [];
+    for (let i = 0; i < serviceInfos.length; i++) {
+      const hashDependencies =
+        serviceInfos[i].config.dependencies.consensusClients.length ||
+        serviceInfos[i].config.dependencies.executionClients.length
+          ? "yes"
+          : "no";
       easyInfos.push({
         hashDependencies: hashDependencies,
         service: serviceInfos[i].service,
         instanceID: serviceInfos[i].config.instanceID,
         dependencies: serviceInfos[i].config.dependencies,
-      })
+      });
     }
 
     return {
-      serviceInfos:serviceInfos,
-      dependencyInfos:dependencyInfos,
-      easyInfos:easyInfos,
-    }
+      serviceInfos: serviceInfos,
+      dependencyInfos: dependencyInfos,
+      easyInfos: easyInfos,
+    };
 
     // Nothign else, just string info..
-    return "debugstatus"
+    return "debugstatus";
   }
 
   // Get node stats (mostly by Prometheus)
-  async getNodeStats(){
+  async getNodeStats() {
     try {
-
       const debugstatus = await this.getDebugStatus();
       // if(debugstatus.code)
       //   return debugstatus;
@@ -1754,29 +1830,29 @@ export class Monitoring {
       // if(p2pstatus.code)
       //   return p2pstatus;
       return {
-        "code": 0,
-        "info": "success: data successfully retrieved",
-        "data": {
-          'debugstatus':debugstatus,
-          'syncstatus':syncstatus,
-          'p2pstatus':p2pstatus,
-          'storagestatus':storagestatus,
-          'rpcstatus':rpcstatus,
-          'beaconstatus':beaconstatus,
-          'portstatus':portstatus,
-        }
+        code: 0,
+        info: "success: data successfully retrieved",
+        data: {
+          debugstatus: debugstatus,
+          syncstatus: syncstatus,
+          p2pstatus: p2pstatus,
+          storagestatus: storagestatus,
+          rpcstatus: rpcstatus,
+          beaconstatus: beaconstatus,
+          portstatus: portstatus,
+        },
       };
     } catch (err) {
       return {
-        "code": 1,
-        "info": "error: an general error occured",
-        "data": err,
+        code: 1,
+        info: "error: an general error occured",
+        data: err,
       };
     }
   }
 
   // Just a demo for the Beacon API
-  async myBeaconApiDemo(){
+  async myBeaconApiDemo() {
     // queryBeaconApi(endpoint,params=[],method="GET",headers={},cc_only=false)
     //let result = await this.queryBeaconApi("/eth/v1/node/health");
     //let result = await this.queryBeaconApi("/eth/v1/node/syncingx");
@@ -1794,16 +1870,16 @@ export class Monitoring {
   }
 
   // Just a demo how to get all keys from prometheus and how to fetch different services thru getServiceInfos
-  async getAllPrometheusKeysDemo(){
-    const serviceInfos = await this.getServiceInfos("PrometheusService","GrafanaService");
+  async getAllPrometheusKeysDemo() {
+    const serviceInfos = await this.getServiceInfos("PrometheusService", "GrafanaService");
     const prometheus = serviceInfos.filter((s) => s.service == "PrometheusService").pop();
-    if(typeof prometheus != "object"){
+    if (typeof prometheus != "object") {
       return "we have a bad day ;)";
     }
-    let addr = prometheus.config.ports[0].destinationIp;                // the addr on the docker host
-    let port = prometheus.config.ports[0].destinationPort;              // the port on the docker host
-    let service_port = prometheus.config.ports[0].servicePort;          // the port in the docker container
-    let service_prot = prometheus.config.ports[0].servicePortProtocol;  // the protocol on the docker host and in the container
+    let addr = prometheus.config.ports[0].destinationIp; // the addr on the docker host
+    let port = prometheus.config.ports[0].destinationPort; // the port on the docker host
+    let service_port = prometheus.config.ports[0].servicePort; // the port in the docker container
+    let service_prot = prometheus.config.ports[0].servicePortProtocol; // the protocol on the docker host and in the container
     const cmd = `curl -s http://${addr}:${port}/api/v1/label/__name__/values`;
     const resp = await this.nodeConnection.sshService.exec(cmd);
     return resp;
@@ -1845,7 +1921,7 @@ rm -rf disks &&
 rm -rf diskspeeds &&
 rm -rf diskoutput
         `);
-    try{
+    try {
       let arr = serverVitals.stdout.split(/\n/);
       const data = {
         ServerName: arr[0],
@@ -1861,7 +1937,7 @@ rm -rf diskoutput
         writeValue: arr[5].split(" ")[2],
       };
       return data;
-    }catch(e){
+    } catch (e) {
       return null;
     }
   }
@@ -1874,20 +1950,22 @@ rm -rf diskoutput
   // [OPTIONAL] logs_ts=<bool>: When true each log line is prefixed with a ISO8601DateString timestamp (default is false)
   // [OPTIONAL] service_name=<string>: When specified only logs for the specified case-sensitive service name (e.g.: "BesuService") are returned
   // Returns array of services including their docker logs on success or empty array on errors
-  async getServiceLogs(args){
-
+  async getServiceLogs(args) {
     // Extract arguments
-    var {logs_since, logs_until, logs_tail, logs_ts, service_name} = Object.assign({
-      logs_since:null,
-      logs_until:null,
-      logs_tail:150,
-      logs_ts:null,
-      service_name:null,
-    }, (typeof args === 'object' ? args : {}));
+    var { logs_since, logs_until, logs_tail, logs_ts, service_name } = Object.assign(
+      {
+        logs_since: null,
+        logs_until: null,
+        logs_tail: 150,
+        logs_ts: null,
+        service_name: null,
+      },
+      typeof args === "object" ? args : {}
+    );
 
     // Get all service configurations
     const serviceInfos = service_name ? await this.getServiceInfos(service_name) : await this.getServiceInfos();
-    if(serviceInfos.length <1){
+    if (serviceInfos.length < 1) {
       return [];
     }
 
@@ -1901,18 +1979,19 @@ rm -rf diskoutput
     // --until string   Show logs before a timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
     // --since string   Show logs since timestamp (e.g. 2013-01-02T13:23:37Z) or relative (e.g. 42m for 42 minutes)
     const dateNow = Date.now();
-    const logsSince = typeof logs_since == "string" ? logs_since : new Date(dateNow - 1000*60*10).toISOString();
+    const logsSince = typeof logs_since == "string" ? logs_since : new Date(dateNow - 1000 * 60 * 10).toISOString();
     const logsUntil = typeof logs_until == "string" ? logs_until : new Date(dateNow).toISOString();
-    const logsTail = typeof logs_tail == "number" || (typeof logs_tail == "string" && !isNaN(logs_tail)) ? parseInt(logs_tail) : 0;
-    const logsTs= typeof logs_ts == "boolean" && logs_ts ? true : false;
+    const logsTail =
+      typeof logs_tail == "number" || (typeof logs_tail == "string" && !isNaN(logs_tail)) ? parseInt(logs_tail) : 0;
+    const logsTs = typeof logs_ts == "boolean" && logs_ts ? true : false;
     var sshcommand = [];
-    var logArgs='';
-    var logTs='';
-    for(let i=0; i<serviceInfos.length; i++){
+    var logArgs = "";
+    var logTs = "";
+    for (let i = 0; i < serviceInfos.length; i++) {
       var containerName = serviceInfos[i].config.instanceID;
-      if(logsTail > 0){
+      if (logsTail > 0) {
         logArgs = `--tail ${logsTail}`;
-      }else{
+      } else {
         logArgs = `--since ${logsSince} --until ${logsUntil}`;
       }
       logArgs = logsTs ? `--timestamps ${logArgs}` : logArgs;
@@ -1920,17 +1999,17 @@ rm -rf diskoutput
     }
     sshcommand = sshcommand.join(" && ");
     var result = await this.nodeConnection.sshService.exec(sshcommand);
-    if(result.rc || result.stdout == "" || result.stderr != ""){
+    if (result.rc || result.stdout == "" || result.stderr != "") {
       return [];
     }
     var result = result.stdout.trim().split("---STEREUMSTRINGSPLITTER---");
 
     // Attach container logs to each service
-    for(let i=0; i<serviceInfos.length; i++){
-      try{
+    for (let i = 0; i < serviceInfos.length; i++) {
+      try {
         var logs = result[i].trim();
         serviceInfos[i].logs = logs ? logs.split(/\n/) : [];
-      }catch(e){
+      } catch (e) {
         serviceInfos[i].logs = [];
       }
       serviceInfos[i].logsSince = logsTail > 0 ? null : logsSince;
@@ -1943,35 +2022,46 @@ rm -rf diskoutput
 
   // get States of Validators
   // validatorPublicKeys: array of all pubkeys
-  async getValidatorState(validatorPublicKeys){
+  async getValidatorState(validatorPublicKeys) {
     let validatorBalances = [];
     // get status of beacon container
     const beaconStatus = await this.getBeaconStatus();
     if (beaconStatus.code === 0) {
-      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort
+      const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
 
       // get validator's states from beacon container
       if (beaconAPIPort !== "" && validatorPublicKeys.length > 0) {
         var beaconAPIRunCmd = "";
+        var beaconAPIRunCmdLastEpoch = "";
         let validatorNotFound;
+        const chunkSize = 250;
+        let data = [];
 
-          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${validatorPublicKeys.join()}' -H 'accept: application/json'`     // using beacon container to run beacon API
-          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd)
-          validatorNotFound = (beaconAPIRunCmd.rc != 0 || beaconAPIRunCmd.stderr || JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message"))
-          if (!validatorNotFound){
-            const queryResult = (JSON.parse(beaconAPIRunCmd.stdout).data)
-            validatorBalances = queryResult.map((key, id) => {
-              return {
-                id: id,
-                index: key.index,
-                balance: key.balance,
-                status: key.validator.slashed === "true" ? "slashed" : (key.status.replace(/_.*/,"")),
-                pubkey: key.validator.pubkey,
-                activation_epoch: key.validator.activation_epoch,
-              }
-            })
-          }
-
+        for (let i = 0; i < validatorPublicKeys.length; i += chunkSize) {
+          const chunk = validatorPublicKeys.slice(i, i + chunkSize);
+          const beaconAPICmd = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/validators?id=${chunk.join()}' -H 'accept: application/json'`;
+          beaconAPIRunCmd = await this.nodeConnection.sshService.exec(beaconAPICmd);
+          //check response
+          validatorNotFound =
+            beaconAPIRunCmd.rc != 0 ||
+            beaconAPIRunCmd.stderr ||
+            JSON.parse(beaconAPIRunCmd.stdout).hasOwnProperty("message");
+          if (!validatorNotFound) data = data.concat(JSON.parse(beaconAPIRunCmd.stdout).data); //merge all gathered stats in one array
+        }
+        const beaconAPICmdLastEpoch = `curl -s -X GET 'http://localhost:${beaconAPIPort}/eth/v1/beacon/states/head/finality_checkpoints' -H 'accept: application/json'`;
+        beaconAPIRunCmdLastEpoch = await this.nodeConnection.sshService.exec(beaconAPICmdLastEpoch);
+        const queryResult = data;
+        validatorBalances = queryResult.map((key, id) => {
+          return {
+            id: id,
+            index: key.index,
+            balance: key.balance,
+            status: key.validator.slashed === "true" ? "slashed" : key.status.replace(/_.*/, ""),
+            pubkey: key.validator.pubkey,
+            activationepoch: key.validator.activation_epoch,
+            latestEpoch: parseInt(JSON.parse(beaconAPIRunCmdLastEpoch.stdout).data.current_justified.epoch) + 1,
+          };
+        });
       }
       // return array of objects which include following:
       // - id: value
@@ -1980,8 +2070,8 @@ rm -rf diskoutput
       // - status: state
       // - pubkey: pub_key
       // - activation_epoch: epoch_number
+      // - activeSince: active_since_day
       return validatorBalances;
-    } else if (beaconStatus.code === 2)
-        return validatorBalances;     // empty array will be returned, if there is a no running consensus client
+    } else if (beaconStatus.code === 2) return validatorBalances; // empty array will be returned, if there is a no running consensus client
   }
 }

@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="p2pBarBox" v-show="p2pItemsShow">
+        <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
               <span>{{ consensusClient }}</span>
@@ -35,21 +35,15 @@
         </div>
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService" v-show="p2pItemsShow">
+    <div v-if="isMultiService" v-show="p2pItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
     </div>
   </div>
@@ -146,16 +140,16 @@ export default {
       }
       let gid = pageNumber - 1;
       let clients =
-        Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data
+        this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && gid in this.p2pstatus.data
           ? this.p2pstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
-          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+          this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
             ? this.p2pstatus.data[0]
             : false;
         let clients_last =
-          Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
+          this.p2pstatus.hasOwnProperty("data") && Array.isArray(this.p2pstatus.data) && this.p2pstatus.data.length > 0
             ? this.p2pstatus.data[this.p2pstatus.data.length - 1]
             : false;
         if (pageNumber < 1 && clients_last !== false) {
@@ -170,10 +164,7 @@ export default {
           clients = this.p2pstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.p2pstatus.hasOwnProperty("data") &&
-            this.p2pstatus.data.hasOwnProperty("error")
-          ) {
+          if (this.p2pstatus.hasOwnProperty("data") && this.p2pstatus.data.hasOwnProperty("error")) {
             if (this.p2pstatus.data.error == "prometheus service not running") {
               this.p2pItemsShow = false;
               this.p2pIcoUnknown = true;

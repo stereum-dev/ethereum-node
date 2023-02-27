@@ -1,0 +1,16 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: Remove slasher max db size property
+  lineinfile:
+    path: "{{ item.path }}"
+    state: absent
+    regexp: '^\s*- --slasher-max-db-size='
+  when: service_configuration.service == "LighthouseBeaconService"

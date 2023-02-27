@@ -1,14 +1,12 @@
 <template>
   <div class="panelParent">
-    <div class="clickOutside" @click="$emit('clickOut')" v-if="clickBg"></div>
+    <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
         <div class="launcherUpdate">
           <span class="title">{{ $t("updatePanel.launcherTitle") }}</span>
           <div class="launcherBox">
-            <span class="currentLauncher"
-              >{{ $t("updatePanel.current") }}:</span
-            >
+            <span class="currentLauncher">{{ $t("updatePanel.current") }}:</span>
             <span class="valueLauncher">{{ launcherVersion }}</span>
           </div>
         </div>
@@ -42,37 +40,23 @@
                 :class="{ disabled: !checkStereumUpdate() || updating }"
                 @click="$emit('runUpdate', stereumUpdate)"
               >
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
+                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
               </div>
 
               <div v-if="checkStereumUpdate()" class="available">
                 <div class="updateIcon">
-                  <img
-                    src="/img/icon/header-icons/update-green.png"
-                    alt="icon"
-                  />
+                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
                 </div>
-                <span class="availableText"
-                  >{{ stereumUpdate.version }}
-                  {{ $t("updatePanel.available") }}</span
-                >
+                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
               </div>
-              <div
-                class="available"
-                v-if="forceUpdateCheck && !checkStereumUpdate()"
-              >
+              <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
                 <span class="circle pulse"></span>
-                <span class="searchingText">{{
-                  $t("updatePanel.searching")
-                }}</span>
+                <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
               </div>
             </div>
           </div>
           <div class="nodeUpdate-title_row">
-            <span>operating system (server)</span>
+            <span>{{ $t("updatePanel.osTitle") }}</span>
           </div>
           <div class="versionContainer">
             <comming-soon></comming-soon>
@@ -91,33 +75,24 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="searchBtn" @click="testData">
+              <div class="searchBtn no-events" @click="testData">
                 <img src="/img/icon/header-icons/search.png" alt="icon" />
               </div>
               <div
-                class="downloadBtn"
+                class="downloadBtn no-events"
                 :class="{ disabled: !checkStereumUpdate() || updating }"
                 @click="$emit('runUpdate', stereumUpdate)"
               >
-                <img
-                  src="/img/icon/node-journal-icons/download2.png"
-                  alt="icon"
-                />
+                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
               </div>
 
               <div v-if="checkStereumUpdate()" class="available">
                 <div class="updateIcon">
-                  <img
-                    src="/img/icon/header-icons/update-green.png"
-                    alt="icon"
-                  />
+                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
                 </div>
-                <span class="availableText"
-                  >{{ stereumUpdate.version }}
-                  {{ $t("updatePanel.available") }}</span
-                >
+                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
               </div>
-              <div
+              <!-- <div
                 class="available"
                 v-if="forceUpdateCheck && !checkStereumUpdate()"
               >
@@ -125,7 +100,7 @@
                 <span class="searchingText">{{
                   $t("updatePanel.searching")
                 }}</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -144,29 +119,12 @@
               <span>{{ $t("updatePanel.availablePlugin") }}</span>
             </div>
             <div class="tableContent">
-              <div
-                class="tableRow"
-                v-for="(item, index) in newUpdates"
-                :key="index"
-              >
-                <div
-                  v-if="item.running || updating"
-                  class="downloadBtnDisabled"
-                >
-                  <img
-                    src="/img/icon/node-journal-icons/download_disabled.png"
-                    alt="icon"
-                  />
+              <div v-for="(item, index) in newUpdates" :key="index" class="tableRow">
+                <div v-if="item.running || updating" class="downloadBtnDisabled">
+                  <img src="/img/icon/node-journal-icons/download_disabled.png" alt="icon" />
                 </div>
-                <div
-                  v-else
-                  class="downloadBtn"
-                  @click="$emit('runUpdate', item)"
-                >
-                  <img
-                    src="/img/icon/node-journal-icons/download2.png"
-                    alt="icon"
-                  />
+                <div v-else class="downloadBtn" @click="$emit('runUpdate', item)">
+                  <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
                 </div>
                 <div class="serviceName">
                   <span>{{ item.name }}</span>
@@ -183,12 +141,10 @@
         <div class="updateAllBtn">
           <div
             class="confirmUpdate"
-            @click.prevent.stop="$emit('updateConfirm')"
             :class="{
-              disabled:
-                (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) ||
-                updating,
+              disabled: (!checkAvailableServicesNewUpdate() && !checkStereumUpdate()) || updating,
             }"
+            @click.prevent.stop="$emit('updateConfirm')"
           >
             <span>{{ $t("updatePanel.all") }}</span>
             <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
@@ -197,9 +153,7 @@
         <div class="autoUpdateText">
           <span
             >{{ $t("updatePanel.auto") }} :
-            <span class="autoUpdateText_status">{{
-              stereumApp.autoUpdate
-            }}</span></span
+            <span class="autoUpdateText_status" :class="onOff">{{ stereumApp.autoUpdate }}</span></span
           >
         </div>
       </div>
@@ -207,6 +161,7 @@
   </div>
 </template>
 <script>
+import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -217,7 +172,7 @@ export default {
       stereumApp: {
         current: "alpha",
         latest: "2.0",
-        autoUpdate: "off",
+        autoUpdate: "",
       },
       osVersionCurrent: "-",
       osVersionLatest: "-",
@@ -233,21 +188,36 @@ export default {
       stereumUpdate: "stereumUpdate",
       updating: "updating",
     }),
+    onOff() {
+      return {
+        green: this.stereumApp.autoUpdate === "on",
+        red: this.stereumApp.autoUpdate === "off",
+      };
+    },
+  },
+  updated() {
+    this.getSettings();
   },
   methods: {
     searchUpdate() {
       this.forceUpdateCheck = true;
     },
     testData() {
-      console.log(this.stereumUpdate);
+      console.log(this.updating);
+    },
+    async getSettings() {
+      this.settings = await ControlService.getStereumSettings();
+      if (this.settings.stereum?.settings.updates.unattended.install) {
+        this.stereumApp.autoUpdate = "on";
+      } else {
+        this.stereumApp.autoUpdate = "off";
+      }
     },
     checkStereumUpdate() {
       if (this.stereumUpdate && this.stereumUpdate.version) {
         // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
         //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
-          ? true
-          : false;
+        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
       }
       return false;
     },
@@ -261,8 +231,14 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+.no-events {
+  pointer-events: none;
+}
+.green {
+  color: #7bbb1a;
+}
+.red {
+  color: #c70505;
 }
 .panelParent {
   width: 36%;
@@ -577,7 +553,7 @@ export default {
 }
 .available {
   grid-column: 1/7;
-  grid-row: 9/11;
+  grid-row: 9/12;
   margin-left: 0;
   width: 90%;
   height: 100%;
@@ -588,7 +564,7 @@ export default {
 .updateIcon {
   grid-column: 2/3;
   grid-row: 1;
-  width: 73%;
+  width: 75%;
   height: 100%;
   background-color: rgb(59, 103, 100);
   border-radius: 100%;
@@ -599,7 +575,7 @@ export default {
   justify-self: flex-start;
 }
 .btnBox .available .updateIcon img {
-  width: 66%;
+  width: 50%;
   justify-self: flex-start;
 }
 
@@ -607,7 +583,7 @@ export default {
   grid-column: 3/7;
   grid-row: 1;
   width: max-content;
-  font-size: 100%;
+  font-size: 60%;
   font-weight: 600;
   color: #c6c6c6;
   align-self: center;

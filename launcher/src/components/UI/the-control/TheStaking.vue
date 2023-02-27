@@ -3,10 +3,7 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img
-            src="../../../../public/img/icon/control/keyEth.svg"
-            alt="Key-icon"
-          />
+          <img src="../../../../public/img/icon/control/keyEth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
@@ -51,8 +48,7 @@ export default {
     return {
       //dummy value o test
       networkCurrencySymbolIcon: "",
-      mainnetCurrencySymbolIcon:
-        "/img/icon/control/mainnet-currency-symbol.png",
+      mainnetCurrencySymbolIcon: "/img/icon/control/mainnet-currency-symbol.png",
       testnetCurrencySymbolIcon: "/img/icon/control/goETH_Currency_Symbol.png",
       gnosisCurrencySymbolIcon: "/img/icon/control/gno_currency_symbol.png",
       defaultCurrencySymbolIcon: "/img/icon/control/stakingWu.svg",
@@ -71,14 +67,18 @@ export default {
     },
   },
   mounted() {
-    if (this.network === "mainnet") {
-      this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
-    } else if (this.network === "testnet") {
-      this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
-    } else if (this.network === "gnosis") {
-      this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
-    } else {
-      this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
+    switch (this.network) {
+      case "mainnet":
+        this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
+        break;
+      case "testnet":
+        this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
+        break;
+      case "gnosis":
+        this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
+        break;
+      default:
+        this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
     }
   },
 };

@@ -17,6 +17,4 @@
 - include_tasks: zip-centos.yml
   when: ansible_distribution == "CentOS"
 
-- include_tasks: add-stereum-user.yml
-
 - include_tasks: stereum-config.yml

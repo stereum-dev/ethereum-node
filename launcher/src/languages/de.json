@@ -15,7 +15,12 @@
   "journalnode": {
     "serverip": "server ip",
     "servername": "SERVERNAME",
-    "edit": "Node bearbeiten"
+    "edit": "Node bearbeiten",
+    "loading": "loading new states",
+    "turnOn": "Turn Node on",
+    "turnOff": "Turn Node off",
+    "log": "Open Logs...",
+    "restart": "Restart..."
   },
   "pagesnav": {
     "node": "NODE",
@@ -27,7 +32,9 @@
     "supportText": "Der schnellste Weg, um eine Person für Support zu erreichen, ist unserem Discord Server beizutreten!",
     "bugReport": "BUG BERICHTE",
     "bugRepText": "Bitte nehmen Sie sich die Zeit das Problem auf Github festzuhalten und lassen Sie uns Stereum gemeinsam besser machen!",
-    "emailText": "oder eine E-Mail schreiben an:"
+    "emailText": "oder eine E-Mail schreiben an:",
+    "docsTitle": "chain docs",
+    "docsText": "A handy link to the network logs' documentation for your selected node configuration."
   },
   "notifModal": {
     "notification": "Benachrichtigungen",
@@ -58,7 +65,8 @@
     "alert": "Mobile App Benachrichtigungen",
     "switchC": "Clients wechseln",
     "migrate": "Nodes Migration",
-    "rpc": "RPC Connection"
+    "rpc": "RPC Connection",
+    "gnoStake": "STAKE WITH 1 GNO"
   },
   "pluginZone": {
     "client": "client"
@@ -94,7 +102,8 @@
     "serviceTitle": "Service-Updates",
     "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
     "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
-    "all": "Alle aktualisieren"
+    "all": "Alle aktualisieren",
+    "osTitle": "operating system (server)"
   },
   "controlPage": {
     "node": "NODE",
@@ -165,7 +174,7 @@
   },
   "removeMultiModal": {
     "sure": "Möchten Sie diesen Validator Key von Ihrer Maschine entfernen?",
-    "slashing": "Mit Slashing Protection Database?",
+    "slashing": "With Slashing Protection Database?",
     "remove": "Entfernen",
     "path": "Wählen einen Pfad zum Speicheren der Slashing Protection Database",
     "writePath": "Bitte notiere dir den Pfad"
@@ -220,7 +229,10 @@
     "technicPage": "TECHNISCHE BEITRÄGE",
     "techTitle": "CREDITS - TECHNISCHE BEITRÄGE",
     "techText": "VERDIENE EINEN GITPOAP! BRINGE DICH EIN INDEM DU UNSEREN GITHUB BESUCHST!",
-    "financialPage": "FINANZIELLE SPENDEN"
+    "financialPage": "FINANZIELLE SPENDEN",
+    "gitcoinList": "GITCOIN COMPLETE LIST",
+    "developers": "DEVELOPERS",
+    "testers": "TESTERS"
   },
   "verifyInstallation": {
     "verifyTitle": "VERIFIZIEREN & INSTALLIEREN",
@@ -286,5 +298,29 @@
     "customInstallationText": "This mode is meant for more advanced users and requires you to have a understanding of how the clients interact with each other. You will have to pick and choose, install and connect every part of your node with the UI yourself before it will be functional!",
     "chooseWhereToInstall": "CHOOSE WHERE YOU WANT TO INSTALL STEREUM TO",
     "installationPath": "INSTALLATION PATH"
+  },
+  "mevboostConfig": {
+    "availRelays": "AVAILABLE BLOCK RELAYS",
+    "usedRelays": "USED BLOCK RELAYS"
+  },
+  "addModifyPanel": {
+    "installPath": "INSTALLATION PATH",
+    "syncMessage": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
+    "portused": "PORT USED",
+    "cancel": "cancel",
+    "save": "save",
+    "add": "ADD",
+    "clickAndAdd": "Click on ADD"
+  },
+  "importSlashingModal": {
+    "slashModalMessage": "Do you want to import with a Slashing Protection Database?",
+    "importMessage": "Import your slashing database file.",
+    "chooseFile": "Choose File",
+    "continue": "Continue"
+  },
+  "prunningModal": {
+    "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
+    "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
+    "prunningStart": "Start Pruning"
   }
 }

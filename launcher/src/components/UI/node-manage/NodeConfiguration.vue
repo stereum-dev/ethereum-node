@@ -15,20 +15,14 @@
         <div class="edit-btn">
           <router-link to="/node">
             <span>{{ $t("modifyPanel.backNode") }}</span>
-            <img
-              src="../../../../public/img/icon/manage-node-icons/undo1.png"
-              alt="icon"
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/undo1.png" alt="icon" />
           </router-link>
         </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
           <span class="btn-text">{{ $t("modifyPanel.nukeNode") }}</span>
-          <img
-            src="../../../../public/img/icon/manage-node-icons/nuke.png"
-            alt="icon"
-          />
+          <img src="../../../../public/img/icon/manage-node-icons/nuke.png" alt="icon" />
         </div>
       </div>
       <remove-modal

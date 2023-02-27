@@ -1,23 +1,18 @@
 <template>
   <div class="warning-modal-paren">
-    <div class="modal-opacity" @click="$emit('cancelWarning',item)"></div>
+    <div class="modal-opacity" @click="$emit('cancelWarning', item)"></div>
     <div class="warning-modal-content">
-      <div class="title-box" v-if="displayWarningMessage">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+      <div v-if="displayWarningMessage" class="title-box">
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
-      <div class="warningMessage" v-if="displayWarningMessage">
+      <div v-if="displayWarningMessage" class="warningMessage">
         <p>
-          YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN
-          serve the network. this is necessary for your node TO PICK up its
-          ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING
-          YOUR CLIENTS's CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A
-          SOURCE TO SYNCHRONIZE YOUR NODE ANEW.
+          YOUR CLIENT Stores blockchain data ON YOUR SERVER SO YOUR NODE CAN serve the network. this is necessary for
+          your node TO PICK up its ATTESTATION DUTY in STAKING. BY USING THIS OPTION YOU ARE DELETING YOUR CLIENTS's
+          CURRENT BLOCKCHAIN DATA & USE THE SELECTED OPTION AS A SOURCE TO SYNCHRONIZE YOUR NODE ANEW.
         </p>
       </div>
-      <div class="resyncBox" v-else>
+      <div v-else class="resyncBox">
         <div class="titleBox">
           <img src="/img/icon/plugin-menu-icons/resync.png" alt="icon" />
         </div>
@@ -27,44 +22,26 @@
               <span>SYNCHRONISATION</span>
             </div>
             <div class="headerContent">
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/left-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
               <span v-if="genesisIsActive">GENESIS</span>
               <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
-              <img
-                @click="changeTheOption"
-                src="/img/icon/arrows/right-arrow.png"
-                alt="icon"
-              />
+              <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
             </div>
           </div>
           <div class="content">
-            <span v-if="genesisIsActive"
-              >SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span
-            >
-            <div class="inputBox" v-if="checkPointIsActive">
-              <input type="text" v-model="checkPointSync" />
+            <span v-if="genesisIsActive">SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN</span>
+            <div v-if="checkPointIsActive" class="inputBox">
+              <input v-model="checkPointSync" type="text" />
             </div>
           </div>
         </div>
       </div>
 
       <div class="btnBox">
-        <div
-          v-if="displayWarningMessage"
-          class="confirmBtn"
-          @click="continueToResync"
-        >
+        <div v-if="displayWarningMessage" class="confirmBtn" @click="continueToResync">
           <span>Continue</span>
         </div>
-        <div
-          v-else
-          class="confirmBtn"
-          @click="$emit('confirmBtn',this.checkPointSync)"
-        >
+        <div v-else class="confirmBtn" @click="$emit('confirmBtn', checkPointSync)">
           <span>RESYNC</span>
         </div>
       </div>
@@ -255,7 +232,7 @@ export default {
   width: 100%;
   height: 34%;
 
-  border-radius:5px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;

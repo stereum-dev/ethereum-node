@@ -1,10 +1,10 @@
 <template>
   <div class="lang-panel_parent">
     <flag-button
-      @setting="setLang(link.langName, link.langSelect, link.label)"
       v-for="link in sortedFlags"
       :key="link.flag"
-      :isActive="link.enable"
+      :is-active="link.enable"
+      @setting="setLang(link.langName, link.langSelect, link.label)"
     >
       <div class="langIco"><img :src="link.langImg" /></div>
       <div class="langName">
@@ -20,6 +20,7 @@ import { useFlagDialog } from "../../../store/flagDialog";
 import ControlService from "@/store/ControlService";
 export default {
   components: { FlagButton },
+  emits: ["back"],
   data() {
     return {
       isLanguageSelected: false,
@@ -30,7 +31,6 @@ export default {
       },
     };
   },
-  emits: ["back"],
   computed: {
     ...mapWritableState(useFlagDialog, {
       linkFlags: "linkFlags",

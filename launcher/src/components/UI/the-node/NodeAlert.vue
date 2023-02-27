@@ -1,45 +1,30 @@
 <template>
   <div class="status-box">
     <update-panel
-      :clickBg="displayUpdatePanel"
+      :click-bg="displayUpdatePanel"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
       @click-out="removeUpdateModal"
     ></update-panel>
     <div class="status-box_header">
       <div class="icon-line">
-        <div class="status-icon" v-if="perfect">
-          <img
-            src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png"
-            alt="green"
-          />
+        <div v-if="perfect" class="status-icon">
+          <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div class="status-icon" v-if="warning">
-          <img
-            src="../../../../public/img/icon/control/WARNSCHILD_GELB.png"
-            alt="green"
-          />
+        <div v-if="warning" class="status-icon">
+          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
-        <div class="status-icon" v-if="alarm">
-          <img
-            src="../../../../public/img/icon/control/WARNSCHILD_ROT.png"
-            alt="green"
-          />
+        <div v-if="alarm" class="status-icon">
+          <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div class="status-icon" v-if="notification">
-          <img
-            src="../../../../public/img/icon/control/SETTINGS.png"
-            alt="green"
-          />
+        <div v-if="notification" class="status-icon">
+          <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
     </div>
     <div class="status-box_messages">
-      <div class="status-message_yellow" v-if="storageWarning">
+      <div v-if="storageWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img
-            src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png"
-            alt="warn_storage"
-          />
+          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="warning"><span>WARNING</span></div>
@@ -47,12 +32,9 @@
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
-      <div class="status-message_yellow" v-if="cpuWarning">
+      <div v-if="cpuWarning" class="status-message_yellow">
         <div class="message-icon">
-          <img
-            src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png"
-            alt="warn_storage"
-          />
+          <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="warning"><span>WARNING</span></div>
@@ -62,12 +44,9 @@
           </div>
         </div>
       </div>
-      <div class="status-message_red" v-if="cpuAlarm">
+      <div v-if="cpuAlarm" class="status-message_red">
         <div class="message-icon">
-          <img
-            src="../../../../public/img/icon/control/red_warning_cpu.png"
-            alt="warn_storage"
-          />
+          <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="warning"><span>CRITICAL WARNING</span></div>
@@ -77,12 +56,9 @@
           </div>
         </div>
       </div>
-      <div class="status-message_red" v-if="missedAttest">
+      <div v-if="missedAttest" class="status-message_red">
         <div class="message-icon">
-          <img
-            src="../../../../public/img/icon/control/key-rot.png"
-            alt="warn_storage"
-          />
+          <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
           <div class="warning"><span>CRITICAL WARNING</span></div>
@@ -90,17 +66,9 @@
         </div>
       </div>
       <transition>
-        <div
-          class="status-message_green"
-          v-if="notification"
-          @mouseover="iconShow"
-          @mouseleave="iconHide"
-        >
+        <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
           <div class="message-icon" @click="showUpdate">
-            <img
-              src="../../../../public/img/icon/control/logo-icon.png"
-              alt="warn_storage"
-            />
+            <img src="../../../../public/img/icon/control/logo-icon.png" alt="warn_storage" />
           </div>
           <div class="message-text_container" @click="showUpdate">
             <div class="warning"><span>NOTIFICATION</span></div>
@@ -109,11 +77,8 @@
               <span>{{ stereumUpdate.version }}</span>
             </div>
           </div>
-          <div class="close" v-if="closeNotif" @click="closeNotification">
-            <img
-              src="../../../../public/img/icon/control/close.png"
-              alt="close"
-            />
+          <div v-if="closeNotif" class="close" @click="closeNotification">
+            <img src="../../../../public/img/icon/control/close.png" alt="close" />
           </div>
         </div>
       </transition>
@@ -217,9 +182,7 @@ export default {
       if (this.stereumUpdate && this.stereumUpdate.version) {
         // console.log(this.stereumUpdate.commit)  // commit hash of the newest newest release tag
         //console.log(this.stereumUpdate.current_commit); // current installed commit on the os
-        return this.stereumUpdate.commit != this.stereumUpdate.current_commit
-          ? true
-          : false;
+        return this.stereumUpdate.commit != this.stereumUpdate.current_commit ? true : false;
       }
       return false;
     },

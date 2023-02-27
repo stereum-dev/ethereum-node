@@ -2,7 +2,7 @@
   <div class="modal-bg">
     <div class="modal-box">
       <div class="modal-items">
-        <div class="item" v-for="item in modalItems" :key="item.id">
+        <div v-for="item in modalItems" :key="item.id" class="item">
           <img :src="item.sIcon" alt="icon" />
         </div>
       </div>

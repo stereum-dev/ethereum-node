@@ -1,17 +1,17 @@
-const Store = require('electron-store')
+const Store = require("electron-store");
 
 export class StorageService {
-  constructor () {
-    this.store = new Store()
+  constructor() {
+    this.store = new Store();
   }
 
-  async writeConfig (config) {
-    this.store.set('config-v2', config)
+  async writeConfig(config) {
+    this.store.set("config-v2", config);
   }
 
-  async readConfig () {
+  async readConfig() {
     return new Promise((resolve, reject) => {
-      resolve(this.store.get('config-v2'))
-    })
+      resolve(this.store.get("config-v2"));
+    });
   }
 }

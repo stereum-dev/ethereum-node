@@ -1,8 +1,10 @@
 <template>
   <div class="financial-box_parent">
     <div class="round-selector">
-      <select name="round" id="round" v-model="choosedRound">
-        <option value="allAddresses">GITCOIN COMPLETE LIST</option>
+      <select id="round" v-model="choosedRound" name="round">
+        <option value="allAddresses">
+          {{ $t("creditPanel.gitcoinList") }}
+        </option>
         <option value="round_15">Round 15</option>
         <option value="round_14">Round 14</option>
         <option value="round_13">Round 13</option>
@@ -12,11 +14,7 @@
       </select>
     </div>
     <div class="search">
-      <input
-        type="search"
-        placeholder="Search Contributor"
-        v-model="searchPayload"
-      />
+      <input v-model="searchPayload" type="search" placeholder="Search Contributor" />
     </div>
     <div class="itemWrapper">
       <!-- <div
@@ -34,11 +32,7 @@
           <span>{{ item.name }}</span>
         </div>
       </div> -->
-      <div
-        class="ethAddresses"
-        v-for="(item, index) in filteredItem"
-        :key="index"
-      >
+      <div v-for="(item, index) in filteredItem" :key="index" class="ethAddresses">
         <span>{{ item }}</span>
       </div>
     </div>
@@ -96,14 +90,6 @@ export default {
       });
     },
   },
-  updated() {
-    this.roundPicker();
-    this.sortedAddresses;
-  },
-  created() {
-    this.roundPicker();
-    this.filteredItem = this.sortedAddresses;
-  },
   watch: {
     choosedRound: {
       immediate: true,
@@ -118,6 +104,14 @@ export default {
         item.toLowerCase().includes(this.searchPayload.toLowerCase())
       );
     },
+  },
+  updated() {
+    this.roundPicker();
+    this.sortedAddresses;
+  },
+  created() {
+    this.roundPicker();
+    this.filteredItem = this.sortedAddresses;
   },
   methods: {
     roundPicker() {

@@ -8,49 +8,73 @@
         <span>{{ $t("controlPage.syncStatus") }}</span>
       </div>
       <div class="wrapper">
+        <!--new form start-->
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="sync-box_value" v-if="syncItemsShow">
-          <div
-            v-for="item in clients"
-            :key="item.id"
-            class="sync-box_row"
-            :class="syncItemSytle(item)"
-          >
-            <div class="sync-box-row_title">
-              <span>{{ item.title }}</span>
+        <div v-if="syncItemsShow" class="activeWidget">
+          <div class="consensusContainer">
+            <div class="consensusName">
+              <span>{{ consensusName }}</span>
             </div>
-            <div class="sync-box-row_val">
-              <span>{{ item.frstVal }} / {{ item.scndVal }}</span>
+            <div class="progressBox">
+              <sync-circular-progress :color="consensuColor" :sync-percent="consensusPer" />
+            </div>
+            <div class="syncStatusStatus" :class="consensusClass">
+              <span>{{ consensusText }}</span>
+            </div>
+            <div
+              class="consensusIconCons"
+              :class="{ clientColor: clientColor }"
+              :data-tooltip="
+                consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
+              "
+            >
+              <img :src="clientImage(consensusName)" alt="consensus" />
+            </div>
+          </div>
+
+          <div class="executionContainer">
+            <div class="executionName">
+              <span>{{ executionName }}</span>
+            </div>
+            <div class="progressBox">
+              <sync-circular-progress :color="executionColor" :sync-percent="executionPer" />
+            </div>
+            <div class="syncStatusStatus" :class="executionClass">
+              <span>{{ executionText }}</span>
+            </div>
+            <div
+              class="executionIconCons"
+              :data-tooltip="
+                executionName + ': ' + formatValues(executionFirstVal) + ' / ' + formatValues(executionSecondVal)
+              "
+            >
+              <img :src="clientImage(executionName)" alt="execution" />
             </div>
           </div>
         </div>
+        <!--new form end-->
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService">
+    <div v-if="isMultiService" v-show="syncItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
     </div>
   </div>
 </template>
 <script>
+import SyncCircularProgress from "./SyncCircularProgress.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import NoData from "./NoData.vue";
 export default {
-  components: { NoData },
+  components: { NoData, SyncCircularProgress },
   data() {
     return {
       isMultiService: false,
@@ -61,6 +85,40 @@ export default {
       syncIcoSituation: false,
       syncIcoError: false,
       noDataLayerShow: false,
+      consensusName: "",
+      executionName: "",
+      consensusFirstVal: 0,
+      consensusSecondVal: 0,
+      executionFirstVal: 0,
+      executionSecondVal: 0,
+      consensuColor: "",
+      executionColor: "",
+      consensusClass: "",
+      executionClass: "",
+      consensusText: "",
+      executionText: "",
+      clientInfo: {
+        clientred: {
+          text: "ERROR",
+          color: "#f84343",
+        },
+        clientorange: {
+          text: "INITIALIZING",
+          color: "#ff8c00",
+        },
+        clientgrey: {
+          text: "ON-HOLD",
+          color: "grey",
+        },
+        clientblue: {
+          text: "SYNCING",
+          color: "lightblue",
+        },
+        clientgreen: {
+          text: "SYNCED",
+          color: "#00be00",
+        },
+      },
       syncIco: [
         {
           id: 1,
@@ -95,6 +153,8 @@ export default {
     ...mapState(useControlStore, {
       code: "code",
       syncstatus: "syncstatus",
+      consensusClientsData: "consensusClientsData",
+      executionClientsData: "executionClientsData",
     }),
     errorIco() {
       return this.syncIco[0].icon;
@@ -108,8 +168,35 @@ export default {
     unknownIco() {
       return this.syncIco[3].icon;
     },
+    executionPer() {
+      return this.getPer(this.executionFirstVal, this.executionSecondVal);
+    },
+    displayExecutionPer() {
+      return Math.floor(this.executionPer);
+    },
+    consensusPer() {
+      return this.getPer(this.consensusFirstVal, this.consensusSecondVal);
+    },
+    displayConsensusPer() {
+      return Math.floor(this.consensusPer);
+    },
   },
   methods: {
+    clientImage(name) {
+      if (!name) {
+        return "";
+      }
+      const lowerCaseInputValue = name.toLowerCase();
+      const clientData = [...this.consensusClientsData, ...this.executionClientsData];
+      const matchingClient = clientData.find((client) => client.name.toLowerCase() === lowerCaseInputValue);
+      return matchingClient ? matchingClient.img : "";
+    },
+    getPer(firstVal, secondVal) {
+      return ((firstVal / secondVal) * 100).toFixed(5);
+    },
+    formatValues(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    },
     nextPage() {
       this.refresh(true, "next");
     },
@@ -155,16 +242,20 @@ export default {
       }
       let gid = pageNum - 1;
       let clients =
-        Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
+        this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
           ? this.syncstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
-          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[0]
             : false;
         let clients_last =
-          Array.isArray(this.syncstatus.data) && this.syncstatus.data.length > 0
+          this.syncstatus.hasOwnProperty("data") &&
+          Array.isArray(this.syncstatus.data) &&
+          this.syncstatus.data.length > 0
             ? this.syncstatus.data[this.syncstatus.data.length - 1]
             : false;
         if (pageNum < 1 && clients_last !== false) {
@@ -179,13 +270,8 @@ export default {
           clients = this.syncstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.syncstatus.hasOwnProperty("data") &&
-            this.syncstatus.data.hasOwnProperty("error")
-          ) {
-            if (
-              this.syncstatus.data.error == "prometheus service not running"
-            ) {
+          if (this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")) {
+            if (this.syncstatus.data.error == "prometheus service not running") {
               this.syncItemsShow = false;
               this.syncIcoUnknown = true;
               this.syncIcoError = false;
@@ -250,10 +336,7 @@ export default {
           }
           fonts.green.push(k);
         }
-        if (
-          fonts.grey.length &&
-          fonts.grey.length == this.syncstatus.data[gid].length
-        ) {
+        if (fonts.grey.length && fonts.grey.length == this.syncstatus.data[gid].length) {
           syncIcoUnknown = true; // all clients 0/0 -> show unknown icon
         }
         for (let col in fonts) {
@@ -273,6 +356,30 @@ export default {
       this.syncIcoSituation = syncIcoSituation;
       this.pageNumber = pageNum;
       this.clients = clients;
+      for (let k in clients) {
+        const item = clients[k];
+        if (item.type == "consensus") {
+          this.consensusName = item.title;
+          this.consensusFirstVal = item.frstVal;
+          this.consensusSecondVal = item.scndVal;
+          this.consensusClass = item.style;
+          this.consensuColor = this.clientInfo[item.style].color;
+          this.consensusText = this.clientInfo[item.style].text;
+          if (item.style == "clientblue") {
+            this.consensusText = this.displayConsensusPer + "% " + this.consensusText;
+          }
+        } else {
+          this.executionName = item.title;
+          this.executionFirstVal = item.frstVal;
+          this.executionSecondVal = item.scndVal;
+          this.executionClass = item.style;
+          this.executionColor = this.clientInfo[item.style].color;
+          this.executionText = this.clientInfo[item.style].text;
+          if (item.style == "clientblue") {
+            this.executionText = this.displayExecutionPer + "% " + this.executionText;
+          }
+        }
+      }
       this.isMultiService = isMultiService;
       this.noDataLayerShow = noDataLayerShow;
       this.refresh();
@@ -280,10 +387,102 @@ export default {
   },
 };
 </script>
+
 <style scoped>
-* {
-  box-sizing: border-box;
+.activeWidget {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
 }
+.consensusContainer,
+.executionContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 45%;
+  height: 98%;
+  flex-direction: column;
+  position: relative;
+}
+.consensusName,
+.executionName {
+  font-size: 40%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+  display: flex;
+  width: 100%;
+  height: 15%;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+.consensusIconCons,
+.executionIconCons {
+  position: absolute;
+  width: 52%;
+  left: 0;
+  top: -53%;
+}
+.consensusPer {
+  position: absolute;
+  left: 10%;
+  top: 85%;
+  font-size: 30%;
+  font-weight: 600;
+  text-shadow: 1px 2px 5px #4f5256;
+  text-transform: uppercase;
+}
+.progressBox {
+  display: flex;
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 7%;
+}
+.syncStatusStatus {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 40%;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+}
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: -300%;
+  text-align: center;
+  content: attr(data-tooltip);
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 8% 20%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-320%);
+  transition: opacity 0.3s transform 0.2s;
+  font-weight: 600;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(50%);
+}
+
 .pageNumber {
   display: flex;
   justify-content: center;
@@ -370,10 +569,10 @@ export default {
 }
 .wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   width: 69%;
-  height: 95%;
+  height: 100%;
   position: relative;
 }
 .sync-box_row {
@@ -427,10 +626,10 @@ export default {
 
 /* Client font colors */
 .clientred * {
-  color: rgb(248, 67, 67);
+  color: #f84343;
 }
 .clientorange * {
-  color: darkorange;
+  color: #ff8c00;
 }
 .clientgrey * {
   color: grey;
@@ -439,8 +638,9 @@ export default {
   color: lightblue;
 }
 .clientgreen * {
-  color: rgb(0, 190, 0);
+  color: #00be00;
 }
+
 ::-webkit-scrollbar {
   width: 5px;
 }

@@ -1,158 +1,195 @@
-import { TekuBeaconService } from './TekuBeaconService.js'
-import { networks } from './NodeService.js'
-import { ServicePort, servicePortProtocol } from './ServicePort.js'
-import { ServiceVolume } from './ServiceVolume.js'
+import { TekuBeaconService } from "./TekuBeaconService.js";
+import { networks } from "./NodeService.js";
+import { ServicePort, servicePortProtocol } from "./ServicePort.js";
+import { ServiceVolume } from "./ServiceVolume.js";
 
-test('buildConfiguration', () => {
-    const ports = [
-      new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
-      new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
-      new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
-      new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
-      new ServicePort('127.0.0.1', 8008, 8008, servicePortProtocol.tcp)
-    ]
+test("buildConfiguration", () => {
+  const ports = [
+    new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
+    new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
+    new ServicePort("127.0.0.1", 5052, 5052, servicePortProtocol.tcp),
+    new ServicePort("127.0.0.1", 5051, 5051, servicePortProtocol.tcp),
+    new ServicePort("127.0.0.1", 8008, 8008, servicePortProtocol.tcp),
+  ];
 
-    jest.mock('./GethService')
-    const GethService = require('./GethService')
-    const mMock = jest.fn(() => { return 'http-endpoint-string' })
-    GethService.GethService.mockImplementation(() => {
-      return {
-        buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
-        buildMinimalConfiguration: jest.fn(() => {
-          return {
-            id: 'geth-id',
-            service: 'GethService'
-          }
-        }),
-        volumes: [
-          new ServiceVolume('some/path/data', 'some/path/other/data'),
-          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
-        ]
-      }
-    })
+  jest.mock("./GethService");
+  const GethService = require("./GethService");
+  const mMock = jest.fn(() => {
+    return "http-endpoint-string";
+  });
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: "geth-id",
+          service: "GethService",
+        };
+      }),
+      volumes: [
+        new ServiceVolume("some/path/data", "some/path/other/data"),
+        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
+      ],
+    };
+  });
 
-    const tekuService = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], []).buildConfiguration()
+  const tekuService = TekuBeaconService.buildByUserInput(
+    networks.prater,
+    ports,
+    "/opt/stereum/teku",
+    [new GethService.GethService()],
+    []
+  ).buildConfiguration();
 
-    expect(tekuService.command).toContain('--ee-endpoint=http-endpoint-string')
-    expect(tekuService.command).toContain('--network=prater')
-    expect(tekuService.volumes).toHaveLength(3)
-    expect(tekuService.volumes).toContain('/opt/stereum/teku-' + tekuService.id + '/graffitis:/opt/app/graffitis')
-    expect(tekuService.ports).toHaveLength(5)
-    expect(tekuService.id).toHaveLength(36)
-    expect(tekuService.user).toMatch(/2000/)
-    expect(tekuService.image).toMatch(/consensys\/teku/)
-    expect(tekuService.configVersion).toBe(1)
-  })
+  expect(tekuService.command).toContain("--ee-endpoint=http-endpoint-string");
+  expect(tekuService.command).toContain("--network=prater");
+  expect(tekuService.volumes).toHaveLength(3);
+  expect(tekuService.volumes).toContain("/opt/stereum/teku-" + tekuService.id + "/graffitis:/opt/app/graffitis");
+  expect(tekuService.ports).toHaveLength(5);
+  expect(tekuService.id).toHaveLength(36);
+  expect(tekuService.user).toMatch(/2000/);
+  expect(tekuService.image).toMatch(/consensys\/teku/);
+  expect(tekuService.configVersion).toBe(1);
+});
 
-  test('buildConsensusClientHttpEndpointUrl', () => {
-    const ports = [
-      new ServicePort(null, 100, 200, servicePortProtocol.tcp),
-      new ServicePort(null, 101, 202, servicePortProtocol.udp),
-      new ServicePort('1.2.3.4', 303, 404, servicePortProtocol.udp)
-    ]
+test("buildConsensusClientHttpEndpointUrl", () => {
+  const ports = [
+    new ServicePort(null, 100, 200, servicePortProtocol.tcp),
+    new ServicePort(null, 101, 202, servicePortProtocol.udp),
+    new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp),
+  ];
 
-    jest.mock('./GethService')
-    const GethService = require('./GethService')
-    const mMock = jest.fn(() => { return 'http-endpoint-string' })
-    GethService.GethService.mockImplementation(() => {
-      return {
-        buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
-        buildMinimalConfiguration: jest.fn(() => {
-          return {
-            id: 'geth-id',
-            service: 'GethService'
-          }
-        }),
-        volumes: [
-          new ServiceVolume('some/path/data', 'some/path/other/data'),
-          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
-        ]
-      }
-    })
+  jest.mock("./GethService");
+  const GethService = require("./GethService");
+  const mMock = jest.fn(() => {
+    return "http-endpoint-string";
+  });
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: "geth-id",
+          service: "GethService",
+        };
+      }),
+      volumes: [
+        new ServiceVolume("some/path/data", "some/path/other/data"),
+        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
+      ],
+    };
+  });
 
-    jest.mock('./FlashbotsMevBoostService')
-    const FlashbotsMevBoostService = require('./FlashbotsMevBoostService')
-    const mevMock = jest.fn(() => { return 'mevboost-http-endpoint-string' })
-    FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
-      return {
-        buildMevboostEndpointURL: mevMock,
-      }
-    })
+  jest.mock("./FlashbotsMevBoostService");
+  const FlashbotsMevBoostService = require("./FlashbotsMevBoostService");
+  const mevMock = jest.fn(() => {
+    return "mevboost-http-endpoint-string";
+  });
+  FlashbotsMevBoostService.FlashbotsMevBoostService.mockImplementation(() => {
+    return {
+      buildMevboostEndpointURL: mevMock,
+    };
+  });
 
-    const tekuEndpoint = TekuBeaconService.buildByUserInput(networks.prater, ports, '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').buildConsensusClientHttpEndpointUrl()
+  const tekuEndpoint = TekuBeaconService.buildByUserInput(
+    networks.prater,
+    ports,
+    "/opt/stereum/teku",
+    [new GethService.GethService()],
+    [],
+    "stereum.net"
+  ).buildConsensusClientHttpEndpointUrl();
 
-    expect(tekuEndpoint).toMatch(/http:\/\/stereum-.{36}:5051/)
-  })
+  expect(tekuEndpoint).toMatch(/http:\/\/stereum-.{36}:5051/);
+});
 
-  test('getAvailablePorts', () => {
-    jest.mock('./GethService')
-    const GethService = require('./GethService')
-    const mMock = jest.fn(() => { return 'http-endpoint-string' })
-    GethService.GethService.mockImplementation(() => {
-      return {
-        buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
-        buildMinimalConfiguration: jest.fn(() => {
-          return {
-            id: 'geth-id',
-            service: 'GethService'
-          }
-        }),
-        volumes: [
-          new ServiceVolume('some/path/data', 'some/path/other/data'),
-          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
-        ]
-      }
-    })
-    const tekuServicePorts = TekuBeaconService.buildByUserInput(networks.prater, [], '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').getAvailablePorts()
+test("getAvailablePorts", () => {
+  jest.mock("./GethService");
+  const GethService = require("./GethService");
+  const mMock = jest.fn(() => {
+    return "http-endpoint-string";
+  });
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: "geth-id",
+          service: "GethService",
+        };
+      }),
+      volumes: [
+        new ServiceVolume("some/path/data", "some/path/other/data"),
+        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
+      ],
+    };
+  });
+  const tekuServicePorts = TekuBeaconService.buildByUserInput(
+    networks.prater,
+    [],
+    "/opt/stereum/teku",
+    [new GethService.GethService()],
+    [],
+    "stereum.net"
+  ).getAvailablePorts();
 
-    expect(tekuServicePorts).toHaveLength(5)
-  })
+  expect(tekuServicePorts).toHaveLength(5);
+});
 
-  test('network', () => {
-    jest.mock('./GethService')
-    const GethService = require('./GethService')
-    const mMock = jest.fn(() => { return 'http-endpoint-string' })
-    GethService.GethService.mockImplementation(() => {
-      return {
-        buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
-        buildMinimalConfiguration: jest.fn(() => {
-          return {
-            id: 'geth-id',
-            service: 'GethService'
-          }
-        }),
-        volumes: [
-          new ServiceVolume('some/path/data', 'some/path/other/data'),
-          new ServiceVolume('some/path/engine.jwt', '/engine.jwt')
-        ]
-      }
-    })
-    const tekuService = TekuBeaconService.buildByUserInput(networks.goerli, [], '/opt/stereum/teku', [new GethService.GethService()], [], 'stereum.net').buildConfiguration()
+test("network", () => {
+  jest.mock("./GethService");
+  const GethService = require("./GethService");
+  const mMock = jest.fn(() => {
+    return "http-endpoint-string";
+  });
+  GethService.GethService.mockImplementation(() => {
+    return {
+      buildExecutionClientEngineRPCHttpEndpointUrl: mMock,
+      buildMinimalConfiguration: jest.fn(() => {
+        return {
+          id: "geth-id",
+          service: "GethService",
+        };
+      }),
+      volumes: [
+        new ServiceVolume("some/path/data", "some/path/other/data"),
+        new ServiceVolume("some/path/engine.jwt", "/engine.jwt"),
+      ],
+    };
+  });
+  const tekuService = TekuBeaconService.buildByUserInput(
+    networks.goerli,
+    [],
+    "/opt/stereum/teku",
+    [new GethService.GethService()],
+    [],
+    "stereum.net"
+  ).buildConfiguration();
 
-    expect(tekuService.network).toMatch(/goerli/)
-  })
+  expect(tekuService.network).toMatch(/goerli/);
+});
 
-  test('buildByConfiguration', () => {
-    const tekuService = TekuBeaconService.buildByConfiguration({
-      id: '423',
-      service: 'TekuBeaconService',
-      configVersion: 926,
-      image: 'tekubeacon:v1.3.3.7',
-      ports: ['0.0.0.0:1234:5678/tcp', '8.8.8.8:1234:5678/udp'],
-      volumes: ['/opt/stereum/foo:/opt/app/data']
-    })
+test("buildByConfiguration", () => {
+  const tekuService = TekuBeaconService.buildByConfiguration({
+    id: "423",
+    service: "TekuBeaconService",
+    configVersion: 926,
+    image: "tekubeacon:v1.3.3.7",
+    ports: ["0.0.0.0:1234:5678/tcp", "8.8.8.8:1234:5678/udp"],
+    volumes: ["/opt/stereum/foo:/opt/app/data"],
+  });
 
-    expect(tekuService.id).toBe('423')
-    expect(tekuService.service).toBe('TekuBeaconService')
-    expect(tekuService.configVersion).toBe(926)
-    expect(tekuService.image).toBe('tekubeacon')
-    expect(tekuService.imageVersion).toBe('v1.3.3.7')
-    expect(tekuService.ports).toHaveLength(2)
-    expect(tekuService.ports[0].destinationPort).toBe('1234')
-    expect(tekuService.ports[1].servicePort).toBe('5678')
+  expect(tekuService.id).toBe("423");
+  expect(tekuService.service).toBe("TekuBeaconService");
+  expect(tekuService.configVersion).toBe(926);
+  expect(tekuService.image).toBe("tekubeacon");
+  expect(tekuService.imageVersion).toBe("v1.3.3.7");
+  expect(tekuService.ports).toHaveLength(2);
+  expect(tekuService.ports[0].destinationPort).toBe("1234");
+  expect(tekuService.ports[1].servicePort).toBe("5678");
 
-    expect(tekuService.volumes).toHaveLength(1)
-    expect(tekuService.volumes[0]).toBeDefined()
-  })
+  expect(tekuService.volumes).toHaveLength(1);
+  expect(tekuService.volumes[0]).toBeDefined();
+});
 
 // EOF
