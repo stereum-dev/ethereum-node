@@ -72,7 +72,7 @@
         width="15"
         margin-right="3"
         grid-row="4/5"
-        @btn-action="switchPowertoggl"
+        @btn-action="powerToggl"
         ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -118,6 +118,39 @@
         ></service-log-button>
       </div>
     </div>
+    <div class="configBtn" v-if="!openRestart && !openLog && openPower">
+      <the-node-panel-btn
+        img-path="/img/icon/node-journal-icons/start_stop.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        img-path="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="2/3"
+        @btn-action="powerToggl"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          :disabled="serviceStateStatus(service)"
+          @open-log="stateHandler(service)"
+        ></service-log-button>
+      </div>
+    </div>
     <div class="configBtn" v-if="openRestart && !openLog">
       <the-node-panel-btn
         imgPath="/img/icon/manage-node-icons/undo1.png"
@@ -145,7 +178,6 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
-          :loading="service"
           :disabled="serviceStateStatus(service)"
           @open-log="restartService(service)"
         >
@@ -188,11 +220,10 @@ export default {
       openRestart: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
-      //this data is dummy for invisible the log btn till the next release
-      tillTheNextRelease: true,
       restartModalShow: false,
       itemToRestart: {},
       restartLoad: false,
+      openPower: false,
     };
   },
 
@@ -248,6 +279,9 @@ export default {
     },
     logToggle() {
       this.openLog = !this.openLog;
+    },
+    powerToggl() {
+      this.openPower = !this.openPower;
     },
     restartToggle() {
       this.openRestart = !this.openRestart;
@@ -325,6 +359,25 @@ export default {
         Promise.all(promises);
       } catch (err) {
         console.log(state.replace("ed", "ing") + " services failed:\n", err);
+      }
+    },
+    stateHandler: async function (item) {
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
+      if (!item.yaml.includes("isPruning: true")) {
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
       }
     },
   },
