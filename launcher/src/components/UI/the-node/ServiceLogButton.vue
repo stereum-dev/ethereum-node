@@ -23,10 +23,6 @@ export default {
     openLog() {
       this.$emit("open-log");
     },
-
-    serviceStateStatus(item) {
-      return item.serviceIsPending ? true : false;
-    },
   },
 };
 </script>
