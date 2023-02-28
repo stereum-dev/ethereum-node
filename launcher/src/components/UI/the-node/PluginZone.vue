@@ -72,7 +72,6 @@
             <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
           </Transition>
           <div class="state-icon" :class="serviceStateStatus(item)"></div>
-          <div class="status-icon"><!--<img src="" alt="">--></div>
         </div>
       </div>
     </template>

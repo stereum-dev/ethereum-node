@@ -63,8 +63,7 @@
         margin-right="3"
         grid-row="3/4"
         @btn-action="switchPowertoggl"
-        ><span id="start">{{ $t("journalnode.start") }}</span> /
-        <span id="stop">{{ $t("journalnode.stop") }}</span
+        ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
         >...</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -112,6 +111,7 @@
         <service-log-button
           v-for="service in sortedServices"
           :key="service"
+          :loading="service"
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
@@ -127,14 +127,13 @@
 <script>
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
-import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
-  components: { UpdateTable, ServiceLogButton, PluginLogs },
+  components: { ServiceLogButton, PluginLogs },
   data() {
     return {
       loading: false,
@@ -165,11 +164,13 @@ export default {
       ipAddress: "ipAddress",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "execution") return -1;
         if (b.category === "execution") return 1;
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
         if (a.category === "validator") return -1;
         if (b.category === "validator") return 1;
         return 0;
