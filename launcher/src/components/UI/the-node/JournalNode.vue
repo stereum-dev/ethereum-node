@@ -67,14 +67,13 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        imgPath="/img/icon/node-journal-icons/start_stop.svg"
         is-color="light"
         width="15"
         margin-right="3"
-        btn-action="logToggle"
         grid-row="4/5"
-        @btn-action="logToggle"
-        >{{ $t("journalnode.log") }}</the-node-panel-btn
+        @btn-action="switchPowertoggl"
+        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/plugin-menu-icons/restart.png"
@@ -333,6 +332,12 @@ export default {
 </script>
 
 <style scoped>
+#start {
+  color: #40ee1d;
+}
+#stop {
+  color: #dc0a03;
+}
 .btnTitle {
   box-shadow: none !important;
   border: none !important;
