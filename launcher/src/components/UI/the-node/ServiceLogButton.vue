@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  props: ["serviceIcon", "clientName", "clientType", "loading", "disabled"],
+  props: ["serviceIcon", "clientName", "clientType", "disabled"],
   emit: ["open-log"],
   methods: {
     openLog() {

@@ -73,7 +73,8 @@
         margin-right="3"
         grid-row="4/5"
         @btn-action="powerToggl"
-        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
+        ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
+        >...</the-node-panel-btn
       >
       <the-node-panel-btn
         imgPath="/img/icon/plugin-menu-icons/restart.png"
