@@ -3,28 +3,19 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="restart-icon">
-        <img
-          src="/img/icon/the-staking/stereum-error.png"
-          alt="restart warning"
-        />
+        <img src="/img/icon/the-staking/stereum-error.png" alt="restart warning" />
       </div>
       <div class="restart-question">
-        <span>Are you sure you want to restart?</span>
+        <span>{{ $t("restartModal.restarQ") }}</span>
       </div>
       <div class="nameId">
         <span class="service-name">{{ service.name }}</span>
         <span class="service-id">[ {{ service.config.serviceID }} ]</span>
       </div>
-      <div class="restart-message">
-        your node might go offline while doing so!
-      </div>
-      <div
-        class="restart-button"
-        @click="$emit('restartConfirm', service)"
-        :class="{ disabled: loading }"
-      >
+      <div class="restart-message">{{ $t("restartModal.restartMessage") }}</div>
+      <div class="restart-button" @click="$emit('restartConfirm', service)" :class="{ disabled: loading }">
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
-        <span v-else>restart</span>
+        <span v-else>{{ $t("restartModal.restart") }}</span>
       </div>
     </div>
   </div>
@@ -69,7 +60,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 105;
+  z-index: 1050;
   cursor: default;
 }
 .restart-icon {
