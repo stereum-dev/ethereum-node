@@ -19,7 +19,8 @@
     "loading": "učitavanje novi states",
     "turnOn": "Uključite Node",
     "turnOff": "Isključite Node",
-    "log": "Otvori Logs..."
+    "log": "Otvori Logs...",
+    "restart": "Restart..."
   },
   "pagesnav": {
     "node": "NODE",

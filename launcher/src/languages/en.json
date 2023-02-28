@@ -22,6 +22,7 @@
     "log":"Open Logs...",
     "start":"start",
     "stop":"stop"
+    "restart": "Restart..."
   },
   "pagesnav": {
     "node": "NODE",
