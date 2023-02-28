@@ -57,13 +57,22 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        v-if="tillTheNextRelease"
         img-path="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="logToggle"
-        grid-row="3/4"
+        grid-row="5/6"
+        @btn-action="logToggle"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="4/5"
         @btn-action="logToggle"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
@@ -73,20 +82,29 @@
         width="15"
         margin-right="3"
         btn-action="restartToggle"
-        grid-row="4/4"
+        grid-row="3/4"
         @btn-action="restartToggle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
     </div>
     <div class="configBtn" v-if="!openRestart && openLog">
+      <the-node-panel-btn
+        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
         btn-action="logToggle"
-        grid-row="1/2"
+        grid-row="2/3"
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
@@ -119,7 +137,6 @@
         btn-action="restartToggle"
         grid-row="1/2"
         class="btnTitle"
-        v-if="tillTheNextRelease"
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
       <div class="log-navigation">
@@ -129,6 +146,8 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
+          :loading="service"
+          :disabled="serviceStateStatus(service)"
           @open-log="restartService(service)"
         >
         </service-log-button>
@@ -212,6 +231,9 @@ export default {
   },
 
   methods: {
+    serviceStateStatus(item) {
+      return item.serviceIsPending ? true : false;
+    },
     displayPluginLogPage(el) {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;

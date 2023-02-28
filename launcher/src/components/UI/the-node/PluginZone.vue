@@ -310,27 +310,10 @@ export default {
   height: 7%;
   display: flex;
   position: absolute;
-  z-index: 1000;
+  z-index: 1;
   top: 24%;
   left: 63%;
   border-radius: 50%;
-}
-.status-icon {
-  width: 12%;
-  height: 12%;
-  display: flex;
-  position: absolute;
-  z-index: 10;
-  top: 65%;
-  left: 60%;
-  border-radius: 50%;
-  background: #000;
-  justify-content: center;
-  align-items: center;
-}
-.status-icon img {
-  width: 5px;
-  height: 5px;
 }
 .showModal {
   display: none;

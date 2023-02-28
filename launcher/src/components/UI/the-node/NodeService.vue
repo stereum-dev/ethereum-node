@@ -239,7 +239,7 @@ export default {
   height: 15%;
   display: flex;
   position: absolute;
-  z-index: 1000;
+  z-index: 1;
   top: 7%;
   left: 75%;
   border-radius: 50%;
