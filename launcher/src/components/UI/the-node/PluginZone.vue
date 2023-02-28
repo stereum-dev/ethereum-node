@@ -295,7 +295,7 @@ export default {
 </script>
 <style scoped>
 .green {
-  background-color: green;
+  background-color: #0eac0e;
 }
 
 .orange {
@@ -320,7 +320,7 @@ export default {
   height: 12%;
   display: flex;
   position: absolute;
-  z-index: 1000;
+  z-index: 10;
   top: 65%;
   left: 60%;
   border-radius: 50%;

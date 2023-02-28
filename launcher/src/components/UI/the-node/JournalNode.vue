@@ -151,7 +151,6 @@
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
-import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
@@ -160,7 +159,6 @@ import PluginLogs from "../the-node/PluginLogs.vue";
 export default {
   components: {
     RestartModal,
-    UpdateTable,
     ServiceLogButton,
     PluginLogs,
   },
@@ -199,11 +197,13 @@ export default {
       ipAddress: "ipAddress",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "execution") return -1;
         if (b.category === "execution") return 1;
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
         if (a.category === "validator") return -1;
         if (b.category === "validator") return 1;
         return 0;
@@ -236,9 +236,7 @@ export default {
     },
     async restartConfirmed(service) {
       this.restartLoad = true;
-      service.yaml = await ControlService.getServiceYAML(
-        service.config.serviceID
-      );
+      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;
