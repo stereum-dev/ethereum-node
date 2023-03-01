@@ -1,7 +1,7 @@
 <template>
   <background-page>
     <div class="plugin-modal-parent">
-      <div class="plugin-modal">
+      <div class="plugin-modal space-y-2">
         <div class="titleBox">
           <span>CONFIG IMPORT</span>
         </div>
@@ -29,6 +29,11 @@
               </div>
             </div>
           </div>
+          <div class="confirmBox">
+            <p v-show="uploadConfirmed" class="text-sm text-green-400 font-semibold mt-0">
+              Stereum config recognized.Press install to continue.
+            </p>
+          </div>
         </div>
       </div>
       <div class="btn-box">
@@ -50,6 +55,7 @@ export default {
     return {
       file: null,
       fileType: ["config.json", "config.json.bak", "config.json.bak2", "config.json.bak3"],
+      uploadConfirmed: false,
     };
   },
   methods: {
@@ -95,7 +101,7 @@ export default {
 
 .titleBox {
   width: 95%;
-  height: 20%;
+  height: 18%;
   margin-top: 5px;
   background-color: #2d3134;
   border: 4px solid #dcdcdc;
@@ -123,6 +129,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 20px;
+  padding-bottom: 5px;
   border-radius: 20px;
 }
 
@@ -144,8 +151,8 @@ export default {
 
 .uploadBox {
   width: 100%;
-  height: 70%;
-  margin-top: 20px;
+  height: 65%;
+  margin-top: 15px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -216,6 +223,14 @@ export default {
 .uploadBox__content__file label .input img {
   width: 28px;
   margin-left: 1px;
+}
+
+.confirmBox {
+  width: 100%;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .btn-box {
   width: 98%;

@@ -848,6 +848,14 @@ video {
   margin-left: 0.5rem;
 }
 
+.mt-10{
+  margin-top: 2.5rem;
+}
+
+.mt-0{
+  margin-top: 0px;
+}
+
 .block{
   display: block;
 }
@@ -894,6 +902,28 @@ video {
 
 .h-14{
   height: 3.5rem;
+}
+
+.h-\[\]{
+  height: ;
+}
+
+.h-\[30\]{
+  height: 30;
+}
+
+.h-\[30px\]{
+  height: 30px;
+}
+
+.h-\[10px\]{
+  height: 10px;
+}
+
+.h-fit{
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .w-5{
@@ -965,6 +995,12 @@ video {
           align-items: center;
 }
 
+.justify-start{
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
 .justify-center{
   -webkit-box-pack: center;
       -ms-flex-pack: center;
@@ -987,6 +1023,18 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-10 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-y-reverse: 0;
+  margin-top: calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
+}
+
+.space-y-2 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 
 .overflow-hidden{
@@ -1087,6 +1135,14 @@ video {
   padding: 1.5rem;
 }
 
+.p-10{
+  padding: 2.5rem;
+}
+
+.p-2{
+  padding: 0.5rem;
+}
+
 .px-5{
   padding-left: 1.25rem;
   padding-right: 1.25rem;
@@ -1147,6 +1203,10 @@ video {
   font-weight: 400;
 }
 
+.font-bold{
+  font-weight: 700;
+}
+
 .uppercase{
   text-transform: uppercase;
 }
@@ -1187,6 +1247,26 @@ video {
 .text-gray-600{
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
+.text-green-600{
+  --tw-text-opacity: 1;
+  color: rgb(22 163 74 / var(--tw-text-opacity));
+}
+
+.text-teal-600{
+  --tw-text-opacity: 1;
+  color: rgb(13 148 136 / var(--tw-text-opacity));
+}
+
+.text-teal-400{
+  --tw-text-opacity: 1;
+  color: rgb(45 212 191 / var(--tw-text-opacity));
+}
+
+.text-green-400{
+  --tw-text-opacity: 1;
+  color: rgb(74 222 128 / var(--tw-text-opacity));
 }
 
 .placeholder-gray-400::-webkit-input-placeholder{
