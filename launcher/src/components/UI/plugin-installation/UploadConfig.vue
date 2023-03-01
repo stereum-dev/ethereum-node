@@ -32,10 +32,10 @@
         </div>
       </div>
       <div class="btn-box">
-        <router-link :to="{ path: '/install' }">
+        <router-link :to="{ path: '/welcome' }">
           <button class="back-btn">{{ $t("pluginName.back") }}</button>
         </router-link>
-        <router-link :to="{ path: '/' }">
+        <router-link :to="{ path: '/welcome' }">
           <button @click="runInstalltion" class="next-btn">INSTALL</button>
         </router-link>
       </div>
@@ -53,15 +53,11 @@ export default {
     };
   },
   methods: {
-    uploadFile(event) {
-      this.file = event.target.files[0];
-      if (!this.keyFiles.includes(this.file["name"]) && this.file["type"] === "application/json") {
-        this.$store.commit("setConfigFile", this.file);
-      }
-    },
-    handleFileUpload() {
-      this.$store.dispatch("uploadConfigFile");
-    },
+    // uploadFile(event) {
+    //   this.file = event.target.files[0];
+    //   if (!this.keyFiles.includes(this.file["name"]) && this.file["type"] === "application/json") {
+    //   }
+    // },
   },
 };
 </script>
