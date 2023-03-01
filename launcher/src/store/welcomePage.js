@@ -22,7 +22,7 @@ export const useWelcomeStore = defineStore("welcomePage", {
           imgHover: "/img/icon/welcome-page/config-import-hover.png",
           imgDisabled: "/img/icon/welcome-page/config-import-disabled.png",
           path: "/upload",
-          display: true,
+          display: false,
         },
       ],
     };
