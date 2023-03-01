@@ -16,6 +16,7 @@ import CustomInstallationPage from "../pages/CustomInstallationPage.vue";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import WalkThrough from "../components/UI/tutorial-steps/WalkThrough.vue";
 import WrittenGuide from "../components/UI/tutorial-steps/WrittenGuide.vue";
+import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
 
 const routes = [
   {
@@ -96,7 +97,12 @@ const routes = [
   {
     path: "/custom",
     name: "CustomInstallationPage",
-    component: CustomInstallationPage,
+    component: CustomInstallationPage,  
+  },
+  {
+    path: "/upload",
+    name: "UploadConfig",
+    component: UploadConfig,
   },
 ];
 
