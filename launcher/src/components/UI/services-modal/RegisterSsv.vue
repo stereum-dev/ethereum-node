@@ -36,7 +36,7 @@
       <div class="copiedPubKey">
         <label for="copyPubkey"
           >{{ $t("registerSSV.copyMessage") }}
-          <input id="copyPubkey" v-model="model.copiedPubkey" name="copiedPubkey" type="password" />
+          <input id="copyPubkey" v-model="model.copiedPubkey" name="copiedPubkey" type="password" @mousedown.stop/>
         </label>
       </div>
       <div class="btn-box">
@@ -56,8 +56,8 @@ export default {
         copiedPubkey: "",
         copiedSecretkey: "",
       },
-      localpubkey: pubkey,
-      localsecretkey: secretkey,
+      localpubkey: this.pubkey,
+      localsecretkey: this.secretkey,
       isBtnDisabled: true,
     };
   },
@@ -66,14 +66,14 @@ export default {
   },
   methods: {
     getPubkeyHandler() {
-      if (this.model.copiedPubkey === this.pubkey) {
+      if (this.model.copiedPubkey === this.localpubkey) {
         this.isBtnDisabled = false;
-      } else {
-        this.$router.push("/node");
+      }else {
+        this.isBtnDisabled = true;
       }
     },
     copyPubKey() {
-      let pubkeyToCopy = this.pubkey;
+      let pubkeyToCopy = this.localpubkey;
       navigator.clipboard
         .writeText(pubkeyToCopy)
         .then(() => {
@@ -84,7 +84,7 @@ export default {
         });
     },
     copySecretKey() {
-      let secretkeyToCopy = this.secretkey;
+      let secretkeyToCopy = this.localsecretkey;
       navigator.clipboard
         .writeText(secretkeyToCopy)
         .then(() => {
@@ -257,6 +257,7 @@ export default {
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(51, 129, 239);
+  z-index: 1000000;
 }
 
 .btn-box {

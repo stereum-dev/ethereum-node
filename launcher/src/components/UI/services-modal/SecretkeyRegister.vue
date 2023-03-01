@@ -3,7 +3,7 @@
     <div class="secretkey-box">
       <label for="secretKey"
         >{{ $t("secretKeyReg.modalLabel") }}
-        <input id="secretKey" v-model="enteredSecretkey" name="secretkey" type="password" />
+        <input id="secretKey" v-model="enteredSecretkey" name="secretkey" type="password" @mousedown.stop/>
       </label>
     </div>
     <div class="btn-box">
