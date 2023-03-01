@@ -26,8 +26,23 @@
         <div class="remove-modal-accepted_header">
           <span>nuke the node</span>
         </div>
-        <div class="remove-modal-accepted_explode-box"></div>
-        <div class="remove-modal-accepted_footer"></div>
+        <div class="remove-modal-accepted_explode-box">
+          <!-- <img src="../../../../public/img/icon/arrows/Nuke_2.gif" alt="" /> -->
+          <div class="item" v-for="(n, idx) in test" key="n">
+            <div class="state">✓</div>
+            <div class="textItem">item {{ idx + 1 }}</div>
+          </div>
+        </div>
+
+        <div
+          class="remove-modal-accepted_footer"
+          :class="{ deactive: loginBtn }"
+        >
+          <div class="spinner" v-if="loginBtn">
+            <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
+          </div>
+          <span v-else>Back to login</span>
+        </div>
       </div>
     </div>
   </div>
@@ -38,7 +53,15 @@ export default {
   data() {
     return {
       visible: true,
+      solidBg: true,
+      test: 0,
+      loginBtn: true,
     };
+  },
+  mounted() {
+    setInterval(() => {
+      return this.test < 4 ? this.test++ : (this.loginBtn = false);
+    }, 2000);
   },
   methods: {
     removeItems() {
@@ -52,6 +75,27 @@ export default {
 };
 </script>
 <style scoped>
+.item {
+  width: 50%;
+  display: flex;
+  color: #fcd100;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1% 0;
+  font-size: 100%;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.state {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: green;
+  border-radius: 50%;
+  border: 1px solid black;
+}
 .remove-modal-parent {
   width: 100%;
   height: 100%;
@@ -94,6 +138,7 @@ export default {
   position: absolute;
   top: 10%;
   left: 17%;
+  position: relative;
   background: repeating-linear-gradient(
     45deg,
     #fcd100,
@@ -111,12 +156,19 @@ export default {
 .remove-modal-accepted_container {
   width: 95%;
   height: 95%;
-  background: #33393e;
+  background-image: url(../../../../public/img/icon/arrows/NukeNode_Final.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
   border-radius: 75px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-direction: column;
+}
+.solidBg {
+  background-image: url(../../../../public/img/icon/arrows/NukeNode_Final.gif);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 .remove-modal-accepted_header {
   width: 40%;
@@ -131,22 +183,54 @@ export default {
   font-size: 120%;
   text-transform: uppercase;
   font-weight: 700;
-  box-shadow: 1px 1px 7px 1px rgb(6, 6, 6);
   margin: 2% 0;
+  z-index: 1;
 }
 .remove-modal-accepted_explode-box {
-  width: 80%;
-  height: 55%;
+  width: 90%;
+  height: 50%;
   display: flex;
   border-top: 2px solid black;
   border-bottom: 2px solid black;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
 }
+
 .remove-modal-accepted_footer {
-  width: 100%;
-  height: 25%;
+  width: 40%;
+  height: 15%;
+  border: 2px solid #181b1d;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 10px;
+  background: #fcd100;
+  color: #181b1d;
+  font-size: 120%;
+  text-transform: uppercase;
+  font-weight: 700;
+  box-shadow: 0px 0px 10px 0px rgb(40, 39, 39);
+  margin: 2% 0;
+  z-index: 1;
+  cursor: pointer;
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.spinner img {
+  width: 28%;
+}
+.deactive {
+  background-color: rgba(250, 208, 0, 0.5);
+}
+.remove-modal-accepted_footer:active {
+  box-shadow: none;
+  transform: scale(0.9);
 }
 .title-box {
   width: 80%;
