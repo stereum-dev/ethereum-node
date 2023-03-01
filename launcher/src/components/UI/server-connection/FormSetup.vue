@@ -816,6 +816,7 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 1px;
 }
 #lbl {
   width: max-content;
@@ -848,7 +849,6 @@ input {
   left: 0;
   right: 0;
   bottom: 0;
-  box-shadow: 3px 3px 5px #454747 inset;
   background-color: rgb(216, 216, 216);
   -webkit-transition: 0.4s;
   transition: 0.4s;
@@ -859,12 +859,12 @@ input {
   content: "";
   height: 80%;
   width: 40%;
-  left: 7%;
+  left: 6%;
   bottom: 10%;
   background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: 1px 1px 5px 1px #292b2b;
+  box-shadow: 0px 1px 3px 1px #5f6161;
 }
 
 input:checked + .slider {
