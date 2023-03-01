@@ -27,8 +27,7 @@
           <span>nuke the node</span>
         </div>
         <div class="remove-modal-accepted_explode-box">
-          <!-- <img src="../../../../public/img/icon/arrows/Nuke_2.gif" alt="" /> -->
-          <div class="item" v-for="(n, idx) in test" key="n">
+          <div class="item" v-for="(n, idx) in dataCunter" key="n">
             <div class="state">✓</div>
             <div class="textItem">item {{ idx + 1 }}</div>
           </div>
@@ -54,13 +53,18 @@ export default {
     return {
       visible: true,
       solidBg: true,
-      test: 0,
+      data: ["data 1", "data 2", "data 3", "data4"],
+      dataCunter: [],
       loginBtn: true,
     };
   },
   mounted() {
     setInterval(() => {
-      return this.test < 4 ? this.test++ : (this.loginBtn = false);
+      if (this.data.length > 0) {
+        this.dataCunter.push(this.data.shift());
+      } else {
+        this.loginBtn = false;
+      }
     }, 2000);
   },
   methods: {
