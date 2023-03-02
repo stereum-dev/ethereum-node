@@ -29,7 +29,7 @@
         <div class="remove-modal-accepted_explode-box">
           <div class="item" v-for="(n, idx) in dataCunter" key="n">
             <div class="state">✓</div>
-            <div class="textItem">item {{ idx + 1 }}</div>
+            <div class="textItem">{{ n }}</div>
           </div>
         </div>
 
@@ -40,7 +40,7 @@
           <div class="spinner" v-if="loginBtn">
             <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
           </div>
-          <span v-else>Back to login</span>
+          <span v-else @click="backToLogin">Back to login</span>
         </div>
       </div>
     </div>
@@ -48,12 +48,13 @@
 </template>
 <script>
 export default {
-  emit: ["remove-items", "close-me"],
+  emit: ["remove-items", "close-me", "back-to-login"],
   data() {
     return {
       visible: true,
       solidBg: true,
-      data: ["data 1", "data 2", "data 3", "data4"],
+      //this is dummy
+      data: ["data 1", "data 2", "data 3"],
       dataCunter: [],
       loginBtn: true,
     };
@@ -73,7 +74,12 @@ export default {
       this.$emit("remove-items");
     },
     closeMe() {
-      this.$emit("close-me");
+      if (this.visible === true) {
+        this.$emit("close-me");
+      }
+    },
+    backToLogin() {
+      this.$emit("back-to-login");
     },
   },
 };
@@ -199,6 +205,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  overflow-y: scroll;
 }
 
 .remove-modal-accepted_footer {
@@ -297,7 +304,7 @@ export default {
 .yes-box span {
   font-size: 0.9rem;
   font-weight: 700;
-  color: #fcd100;
+  color: #fad000;
   text-transform: uppercase;
   background: black;
   width: 95%;
@@ -324,5 +331,20 @@ export default {
   font-size: 0.7rem;
   font-weight: 500;
   align-self: center;
+}
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: none;
+  box-sizing: border-box;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #fad000;
+  border-radius: 50%;
 }
 </style>

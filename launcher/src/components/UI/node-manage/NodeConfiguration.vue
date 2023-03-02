@@ -35,6 +35,7 @@
         v-if="removeServicesModal"
         @close-me="closeRemoveModal"
         @remove-items="removeConfirmation"
+        @back-to-login="backToLogin"
       ></remove-modal>
     </div>
   </div>
@@ -95,10 +96,9 @@ export default {
       this.removeServicesModal = false;
     },
     removeConfirmation() {
-      // this.refresh = false; //stop refreshing
-      // this.removeServicesModal = false;
-      // this.removeIsConfirmed = true;
-      // this.destroyNode();
+      this.refresh = false; //stop refreshing
+      this.removeIsConfirmed = true;
+      this.destroyNode();
       this.notSure = false;
     },
     removeAllPlugins() {
@@ -117,6 +117,8 @@ export default {
       console.log(await ControlService.destroy());
       this.refresh = true;
       this.removeAllPlugins();
+    },
+    backToLogin() {
       this.$router.push("/");
     },
   },
