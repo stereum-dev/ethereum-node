@@ -16,10 +16,10 @@
     />
     <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
     <img
-      @click="$emit('openSearch')"
       class="filter"
       src="../../../../public/img/icon/the-staking/staking-filter.png"
       alt="icon"
+      @click="$emit('openSearch')"
     />
   </div>
 </template>

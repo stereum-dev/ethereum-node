@@ -20,8 +20,8 @@
       </div>
       <div
         class="restart-button"
-        @click="$emit('restartConfirm', service)"
         :class="{ disabled: loading }"
+        @click="$emit('restartConfirm', service)"
       >
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
         <span v-else>restart</span>

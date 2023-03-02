@@ -186,8 +186,8 @@
             </svg>
           </div>
           <input
-            type="search"
             v-model="searchModel"
+            type="search"
             class="z-10 text-gray-100 text-sm rounded-full block w-full pl-10 p-2.5 placeholder-gray-400 bg-transparent"
             placeholder="Search"
           />

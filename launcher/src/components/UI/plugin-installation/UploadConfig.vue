@@ -21,7 +21,7 @@
                 <label class="w-full block mb-2 text-xs text-left font-medium text-slate-100" for="file_input">
                   <span class="ml-2">Config file</span>
                   <div class="input">
-                    <input class="hidden" id="file_input" type="file" @change="uploadFile" accept="application/json" />
+                    <input id="file_input" class="hidden" type="file" accept="application/json" @change="uploadFile" />
                     <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
                     <span class="ml-5 text-gray-600 overflow-hidden"> {{ file ? file.name : "Select a file" }}</span>
                   </div>
@@ -41,7 +41,7 @@
           <button class="back-btn">{{ $t("pluginName.back") }}</button>
         </router-link>
         <router-link :to="{ path: '/welcome' }">
-          <button @click="runInstalltion" class="next-btn">INSTALL</button>
+          <button class="next-btn" @click="runInstalltion">INSTALL</button>
         </router-link>
       </div>
     </div>

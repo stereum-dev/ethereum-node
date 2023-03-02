@@ -6,7 +6,7 @@
         {{ $t("installOption.installText") }}
       </div>
       <div class="plugin-container">
-        <vue-select @disable-btn="enableButtonHandler"> </vue-select>
+        <NetworkSelect @disable-btn="enableButtonHandler" />
       </div>
     </div>
     <div class="btn-container">
@@ -23,12 +23,12 @@
 </template>
 
 <script>
-import VueSelect from "../UI/click-installation/VueSelect.vue";
+import NetworkSelect from "./NetworkSelect.vue";
 import { mapState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
   components: {
-    VueSelect,
+    NetworkSelect,
   },
   data() {
     return {
