@@ -8,7 +8,6 @@
         </div>
       </div>
     </control-dialog>
-
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
@@ -49,7 +48,7 @@
         <div class="logsTable">
           <template v-if="logsList.length">
             <div v-for="(log, idx) in logsList.slice(-150)" :key="idx" class="tableRow">
-              <div class="rowMsg" @dblclick="copy">
+              <div :id="'rowMsg-' + idx" class="rowMsg" @dblclick="copy">
                 <span>#{{ idx + 1 }}</span>
                 <span id="log">{{ log }}</span>
               </div>
@@ -80,14 +79,18 @@
 </template>
 <script>
 import ControlDialog from "../the-control/ControlDialog.vue";
-import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { mapState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
   components: { ControlDialog },
-  props: ["item"],
+  props: {
+    item: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       logs: [],
@@ -115,14 +118,27 @@ export default {
       installedServices: "installedServices",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "execution") return -1;
         if (b.category === "execution") return 1;
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
         if (a.category === "validator") return -1;
         if (b.category === "validator") return 1;
         return 0;
+      });
+    },
+  },
+  watch: {
+    logsList: function () {
+      this.$nextTick(function () {
+        const lastRowMsg = this.$el.querySelector(".tableRow:last-child");
+        window.scrollTo({
+          top: lastRowMsg.offsetTop,
+          behavior: "smooth",
+        });
       });
     },
   },
