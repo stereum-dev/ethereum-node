@@ -53,9 +53,10 @@
             <input v-model="port" type="text" placeholder="9000" />
           </div>
         </div>
-        <template v-for="service in options" :key="service.id">
+        <template v-for="service in options">
           <div
             v-if="!switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
+            :key="service.id"
             class="optionsBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
@@ -70,6 +71,7 @@
           </div>
           <div
             v-if="switchHandler(service) && service.service !== 'FlashbotsMevBoostService'"
+            :key="service.id"
             class="clientAddBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
@@ -120,7 +122,12 @@ import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 
 export default {
-  props: ["items"],
+  props: {
+    items: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       modalActive: false,
@@ -943,6 +950,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   cursor: pointer;
+  text-transform: uppercase;
 }
 .relaysBoxContent .relay:hover {
   background-color: #3b4246;

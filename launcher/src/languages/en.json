@@ -283,7 +283,7 @@
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "No log found in the list",
-    "clickCopy": "Click on the logs to copy",
+    "clickCopy": "Double Click to Copy Logs",
     "serviceId": "service id"
   },
   "serviceModals": {
