@@ -9,7 +9,11 @@
 <script>
 export default {
   name: "LangDialog",
-  props: ["open"],
+  props: {
+    open: {
+      type: Boolean,
+    },
+  },
 };
 </script>
 

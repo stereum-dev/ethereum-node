@@ -23,13 +23,7 @@ export default {
       polling: null,
     };
   },
-  mounted() {
-    this.refreshServiceStates();
-    this.polling = setInterval(this.refreshServiceStates, 2000); //refresh services
-  },
-  beforeUnmount() {
-    clearInterval(this.polling);
-  },
+
   computed: {
     ...mapWritableState(useNodeManage, {
       networkList: "networkList",
@@ -53,6 +47,13 @@ export default {
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
     }),
+  },
+  mounted() {
+    this.refreshServiceStates();
+    this.polling = setInterval(this.refreshServiceStates, 2000); //refresh services
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   methods: {
     refreshServiceStates: async function () {

@@ -43,9 +43,7 @@ export default {
       installPath: "/opt/stereum",
     };
   },
-  created() {
-    this.activeBtn();
-  },
+
   computed: {
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -54,6 +52,9 @@ export default {
     ...mapWritableState(useNodeHeader, {
       refresh: "refresh",
     }),
+  },
+  created() {
+    this.activeBtn();
   },
   methods: {
     async prepareStereum() {

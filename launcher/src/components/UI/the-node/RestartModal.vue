@@ -13,7 +13,7 @@
         <span class="service-id">[ {{ service.config.serviceID }} ]</span>
       </div>
       <div class="restart-message">{{ $t("restartModal.restartMessage") }}</div>
-      <div class="restart-button" @click="$emit('restartConfirm', service)" :class="{ disabled: loading }">
+      <div class="restart-button" :class="{ disabled: loading }" @click="$emit('restartConfirm', service)">
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
         <span v-else>{{ $t("restartModal.restart") }}</span>
       </div>
