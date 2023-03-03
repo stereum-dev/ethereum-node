@@ -67,7 +67,7 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/node-journal-icons/start_stop.svg"
+        img-path="/img/icon/node-journal-icons/start_stop.svg"
         is-color="light"
         width="15"
         margin-right="3"
@@ -77,7 +77,7 @@
         >...</the-node-panel-btn
       >
       <the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -87,7 +87,7 @@
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
     </div>
-    <div class="configBtn" v-if="!openRestart && openLog">
+    <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
@@ -119,7 +119,7 @@
         ></service-log-button>
       </div>
     </div>
-    <div class="configBtn" v-if="!openRestart && !openLog && openPower">
+    <div v-if="!openRestart && !openLog && openPower" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/start_stop.svg"
         is-color="light"
@@ -152,9 +152,9 @@
         ></service-log-button>
       </div>
     </div>
-    <div class="configBtn" v-if="openRestart && !openLog">
+    <div v-if="openRestart && !openLog" class="configBtn">
       <the-node-panel-btn
-        imgPath="/img/icon/manage-node-icons/undo1.png"
+        img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
@@ -163,7 +163,7 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        imgPath="/img/icon/plugin-menu-icons/restart.png"
+        img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -185,10 +185,10 @@
         </service-log-button>
         <restart-modal
           v-if="restartModalShow"
-          @close-window="restartModalClose"
-          @restart-confirm="restartConfirmed"
           :service="itemToRestart"
           :loading="restartLoad"
+          @close-window="restartModalClose"
+          @restart-confirm="restartConfirmed"
         ></restart-modal>
       </div>
     </div>

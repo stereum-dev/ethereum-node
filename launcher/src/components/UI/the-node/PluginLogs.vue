@@ -8,7 +8,6 @@
         </div>
       </div>
     </control-dialog>
-
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
@@ -48,8 +47,8 @@
         </div>
         <div class="logsTable">
           <template v-if="logsList.length">
-            <div v-for="(log, idx) in logsList.slice(-150)" :key="idx" class="tableRow">
-              <div class="rowMsg" @dblclick="copy">
+            <div v-for="(log, idx) in logsList.slice(-150).reverse()" :key="idx" class="tableRow">
+              <div :id="'rowMsg-' + idx" class="rowMsg" @dblclick="copy">
                 <span>#{{ idx + 1 }}</span>
                 <span id="log">{{ log }}</span>
               </div>
@@ -80,14 +79,18 @@
 </template>
 <script>
 import ControlDialog from "../the-control/ControlDialog.vue";
-import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { mapState } from "pinia";
 import { useServices } from "../../../store/services";
 export default {
   components: { ControlDialog },
-  props: ["item"],
+  props: {
+    item: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       logs: [],
@@ -115,14 +118,27 @@ export default {
       installedServices: "installedServices",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "execution") return -1;
         if (b.category === "execution") return 1;
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
         if (a.category === "validator") return -1;
         if (b.category === "validator") return 1;
         return 0;
+      });
+    },
+  },
+  watch: {
+    logsList: function () {
+      this.$nextTick(function () {
+        const lastRowMsg = this.$el.querySelector(".tableRow:first-child");
+        window.scrollTo({
+          top: lastRowMsg.offsetTop,
+          behavior: "smooth",
+        });
       });
     },
   },
@@ -339,7 +355,7 @@ export default {
 .logBox {
   display: flex;
   width: 100%;
-  height: 82%;
+  height: 85%;
 }
 .log-box_nav {
   display: flex;
@@ -429,7 +445,7 @@ export default {
 }
 .tableRow {
   width: 100%;
-  min-height: 35px;
+  min-height: 7%;
   margin-top: 5px;
   padding: 2px 5px;
   border-radius: 5px;
@@ -441,7 +457,7 @@ export default {
   overflow-x: auto;
 }
 .tableRow::-webkit-scrollbar {
-  height: 5px;
+  height: 2px;
   background: transparent;
   padding: 0 20px;
 }
@@ -477,8 +493,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   white-space: pre;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 80%;
+  font-weight: 500;
   color: rgb(203, 202, 202);
   margin-left: 10px;
 }
@@ -498,7 +514,7 @@ export default {
 
 .logsFooter {
   width: 100%;
-  height: 10%;
+  height: 7%;
   border-top: 4px solid rgb(156, 156, 156);
   display: grid;
   grid-template-columns: repeat(12, 1fr);
