@@ -10,7 +10,7 @@
 <script>
 export default {
   props: {
-    message: String,
+    message: { type: String, required: true, default: "" },
     open: Boolean,
   },
 };

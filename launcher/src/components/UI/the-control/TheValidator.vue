@@ -42,6 +42,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";

@@ -143,12 +143,7 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.syncControler();
-  },
-  unmounted() {
-    if (this.refresher) clearTimeout(this.refresher);
-  },
+
   computed: {
     ...mapState(useControlStore, {
       code: "code",
@@ -180,6 +175,12 @@ export default {
     displayConsensusPer() {
       return Math.floor(this.consensusPer);
     },
+  },
+  mounted() {
+    this.syncControler();
+  },
+  unmounted() {
+    if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
     clientImage(name) {

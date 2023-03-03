@@ -81,12 +81,7 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.p2pControler();
-  },
-  unmounted() {
-    if (this.refresher) clearTimeout(this.refresher);
-  },
+
   computed: {
     ...mapState(useControlStore, {
       code: "code",
@@ -100,12 +95,16 @@ export default {
     },
     firstBar() {
       return { width: this.consensusValPeer + "%" };
-      return "width: 100%";
     },
     secondBar() {
       return { width: this.executionValPeer + "%" };
-      return "width: 100%";
     },
+  },
+  mounted() {
+    this.p2pControler();
+  },
+  unmounted() {
+    if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
     nextPage() {

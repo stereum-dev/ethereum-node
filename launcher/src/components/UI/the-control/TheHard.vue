@@ -40,7 +40,6 @@ export default {
       totalDisk: "totalDisk",
       usedPerc: "usedPerc",
     }),
-    availableDisk() {},
     getPerc() {
       return { width: 100 - parseInt(this.usedPerc) + "%" };
     },

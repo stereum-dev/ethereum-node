@@ -85,9 +85,22 @@ export default {
       ],
     };
   },
+
+  computed: {
+    // ...mapWritableState(useNodeStore, {
+    //   configData: "configData_nodeSidebarVideo",
+    // }),
+    ...mapWritableState(useTutorialStore, {
+      showTutorialModal: "showTutorialModal",
+    }),
+    ...mapState(useServices, {
+      network: "network",
+    }),
+  },
+
   watch: {
     network: {
-      handler(newVal, oldVal) {
+      handler() {
         this.serviceController();
       },
       immediate: true,
@@ -101,17 +114,6 @@ export default {
       };
     });
     this.serviceController();
-  },
-  computed: {
-    // ...mapWritableState(useNodeStore, {
-    //   configData: "configData_nodeSidebarVideo",
-    // }),
-    ...mapWritableState(useTutorialStore, {
-      showTutorialModal: "showTutorialModal",
-    }),
-    ...mapState(useServices, {
-      network: "network",
-    }),
   },
   methods: {
     serviceController() {

@@ -67,9 +67,7 @@ export default {
       closedText: this.$t("dataAPIAndRPC.closed"),
     };
   },
-  created() {
-    this.beaconControler();
-  },
+
   computed: {
     ...mapWritableState(useControlStore, {
       code: "code",
@@ -79,6 +77,9 @@ export default {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
     },
+  },
+  created() {
+    this.beaconControler();
   },
   methods: {
     async copy(s, t) {
@@ -294,12 +295,7 @@ export default {
   cursor: pointer;
   font-weight: 600;
 }
-.dataApi-data:hover,
-.dataApi-data:active {
-  /* color: rgb(246, 250, 141);
-  font-weight: 800;
-  background: #313131; */
-}
+
 /* width */
 ::-webkit-scrollbar {
   width: 5px;
