@@ -215,11 +215,11 @@
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "OPTION",
+    "option": "CHOSEN NETWORK",
     "chosen": "CHOSEN NETWORK",
     "path": "INSTALLATION PATH",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "PLUGINS",
+    "plugin": "INSTALLED SERVICES",
     "back": "BACK",
     "next": "NEXT"
   },

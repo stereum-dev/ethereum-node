@@ -27,12 +27,12 @@ export default {
 </script>
 <style scoped>
 .warning-modal-parent {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  top: 10%;
+  top: 0;
   left: 0;
-  z-index: 500;
+  z-index: 5002;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,12 +40,12 @@ export default {
 
 .modal-opacity {
   width: 100%;
-  height: 91%;
+  height: 100%;
   background-color: black;
   position: fixed;
   left: 0;
   bottom: 0;
-  opacity: 0.6;
+  opacity: 0.8;
   z-index: 501;
 }
 
@@ -55,7 +55,7 @@ export default {
   border-radius: 75px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 10%;
+  top: 15%;
   left: 23%;
   background-color: #272b2e;
   display: flex;
@@ -90,7 +90,7 @@ export default {
 }
 
 .warningMessage p {
-  width: 74%;
+  width: 90%;
   font-size: 1rem;
   color: #b7b7b7;
   font-weight: 600;

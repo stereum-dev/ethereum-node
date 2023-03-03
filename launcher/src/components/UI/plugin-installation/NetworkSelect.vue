@@ -285,15 +285,15 @@ export default {
 .plugin {
   width: 100%;
   height: 100%;
-  margin-top: 10px;
+  padding: 5px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .plugin img {
-  width: 65%;
-  height: 77%;
+  width: 100%;
+  height: 95%;
   border-radius: 5px;
   border: 2px solid transparent;
   cursor: pointer;
@@ -301,13 +301,13 @@ export default {
 }
 
 .plugin img:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);
   transition-duration: 0.3s;
 }
 
 .selectedItem {
-  transform: scale(1.1);
+  transform: scale(1.05);
   border: 2px solid rgb(53, 178, 246) !important;
 }
 

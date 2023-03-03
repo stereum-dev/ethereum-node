@@ -1,63 +1,43 @@
 <template>
-  <div class="verify-parent">
-    <background-page>
-      <div class="opacity-bg"></div>
-      <div class="verify-modal-parent">
-        <div class="verify-modal">
-          <div class="verify-box">
-            <div class="verify-title-box">
-              <div class="verify-title">
-                <span>{{ $t("verifyInstallation.verifyTitle") }}</span>
-              </div>
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon">
+    <div class="verify-parent">
+      <div class="content-box">
+        <div class="table-box">
+          <div class="table">
+            <div class="table-header">
+              <span>{{ $t("verifyInstallation.name") }}</span>
+              <span>{{ $t("verifyInstallation.cat") }}</span>
+              <span>{{ $t("verifyInstallation.path") }}</span>
             </div>
-          </div>
-          <div class="content-box">
-            <div class="table-box">
-              <div class="table">
-                <div class="table-header">
-                  <span>{{ $t("verifyInstallation.name") }}</span>
-                  <span>{{ $t("verifyInstallation.cat") }}</span>
-                  <span>{{ $t("verifyInstallation.path") }}</span>
+            <div class="table-content">
+              <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="table-row">
+                <div class="plugin-name">
+                  <img :src="plugin.icon" alt="icon" />
+                  <span>{{ plugin.name }}</span>
                 </div>
-                <div class="table-content">
-                  <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="table-row">
-                    <div class="plugin-name">
-                      <img :src="plugin.icon" alt="icon" />
-                      <span>{{ plugin.name }}</span>
-                    </div>
-                    <div class="category">
-                      <span>{{ plugin.category }}</span>
-                    </div>
-                    <div class="path">
-                      <span>{{ installationPath + plugin.path }}</span>
-                    </div>
-                  </div>
+                <div class="category">
+                  <span>{{ plugin.category }}</span>
+                </div>
+                <div class="path">
+                  <span>{{ installationPath + plugin.path }}</span>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="btn-box">
-            <router-link :to="{ path: '/install' }">
-              <button class="back-btn">{{ $t("pluginName.back") }}</button>
-            </router-link>
-            <!-- <router-link :to="{ path: '/node' }">
-              <button @click="runInstalltion" class="next-btn">INSTALL</button>
-            </router-link> -->
-            <a>
-              <button class="next-btn" @click="displayWarningHandler">
-                {{ $t("pluginName.next") }}
-              </button>
-            </a>
-            <warning-modal
-              v-if="displayInstallationWarning"
-              @install-btn="runInstalltion"
-              @close-modal="closeWarningModal"
-            ></warning-modal>
           </div>
         </div>
       </div>
-    </background-page>
-  </div>
+      <div class="btnBox">
+        <div @click="displayWarningHandler" class="install">
+          {{ $t("pluginName.next") }}
+        </div>
+      </div>
+      <warning-modal
+        v-if="displayInstallationWarning"
+        @install-btn="runInstalltion"
+        @close-modal="closeWarningModal"
+      ></warning-modal>
+    </div>
+  </installation-box>
 </template>
 <script>
 import { mapWritableState } from "pinia";
@@ -66,13 +46,17 @@ import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
 import WarningModal from "./WarningModal.vue";
+import InstallationBox from "./InstallationBox.vue";
 export default {
   components: {
     WarningModal,
+    InstallationBox,
   },
   data() {
     return {
       displayInstallationWarning: false,
+      back: "install",
+      title: "Verify & Install",
     };
   },
   computed: {
@@ -124,81 +108,33 @@ export default {
 </script>
 <style scoped>
 .verify-parent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.opacity-bg {
+  grid-column: 2/5;
+  grid-row: 3/4;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
-  position: fixed;
-  left: 0;
-  top: 0;
-  opacity: 0.7;
-  z-index: 1;
-}
-.verify-modal-parent {
-  width: 80%;
-  height: 75%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 11.2%;
-  left: 10%;
-  z-index: 2;
-}
-.verify-modal {
-  width: 70%;
-  height: 95%;
-  border: 1px solid rgba(38, 38, 38, 0.5);
-  border-radius: 20px;
-  background-color: #334b3e;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.verify-box {
-  width: 95%;
-  height: 20%;
-  margin-top: 5px;
-  background-color: #8e8e8e;
-  border-radius: 20px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
-}
-.verify-title-box {
-  width: 96%;
-  height: 80%;
-  border-radius: 15px;
-  background-color: #5b5b5b;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.verify-title-box span {
-  font-size: 2rem;
-  font-weight: 900;
-  color: #d7d7d7;
 }
 
 .content-box {
-  width: 95%;
-  height: 63%;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #2d3134;
+  border: 3px solid #b4b4b4;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .table-box {
   width: 100%;
-  height: 99%;
-  background-color: #5b5b5b;
-  border-radius: 15px;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -206,8 +142,6 @@ export default {
 .table-box .table {
   width: 100%;
   height: 100%;
-  border: 9px solid #8e8e8e;
-  background-color: #33393e;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -215,11 +149,11 @@ export default {
   align-items: center;
 }
 .table .table-header {
-  width: 90%;
+  width: 95%;
   height: 10%;
-  margin-top: 10px;
-  /* background-color: #334b3e; */
+  margin-top: 2px;
   background-color: #336666;
+  border-radius: 5px;
   display: grid;
   grid-template-columns: 32% 32% 36%;
   align-items: center;
@@ -240,10 +174,13 @@ export default {
   text-align: left;
 }
 .table .table-content {
-  width: 95%;
+  width: 100%;
   height: 85%;
-  border-top: 1px solid #8e8e8e;
   margin-top: 10px;
+  padding: 10px;
+  background: #1f2328;
+  border-radius: 15px;
+  border: 1px solid #4c5962;
   display: grid;
   grid-template-columns: 100%;
   align-items: center;
@@ -255,10 +192,13 @@ export default {
 }
 
 .table-content .table-row {
-  width: 95%;
+  width: 100%;
   height: 35px;
   margin-top: 2px;
-  border-bottom: 1px solid rgb(81, 80, 80);
+  border-radius: 5px;
+  border: 1px solid rgb(86, 90, 95);
+  background-color: #353d46;
+  box-shadow: 0 1px 5px 1px rgb(21, 23, 23);
   justify-self: center;
   display: flex;
   justify-content: space-evenly;
@@ -325,43 +265,40 @@ export default {
   text-overflow: ellipsis;
 }
 
-.btn-box {
-  width: 95%;
-  height: 12%;
+.btnBox {
+  width: 10%;
+  height: fit-content;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  margin: 0 auto;
+  position: absolute;
+  right: 11%;
+  bottom: 6%;
+  z-index: 1;
 }
-.btn-box a {
-  width: 25%;
-  height: 60%;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.next-btn,
-.back-btn {
-  width: 100%;
-  height: 100%;
-  border: 2px solid rgb(125, 125, 125);
-  border-radius: 20px;
-  background-color: #336666;
-  color: #eaeaea;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39;
+
+.install {
+  height: 40px;
+  min-width: 120px;
+  border-radius: 40px;
+  border: 3px solid #929292;
+  background-color: #194747;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(191, 191, 191);
+  box-shadow: 0 1px 3px 1px rgb(41, 61, 51);
   outline-style: none;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.next-btn:hover,
-.back-btn:hover {
-  background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
+.install:hover {
+  background-color: rgb(31, 48, 43);
+  box-shadow: 0 1px 3px 0 rgb(21, 31, 26);
 }
-.next-btn:active,
-.back-btn:active {
-  box-shadow: inset 1px 1px 5px 1px rgb(28, 36, 28);
-  font-size: 0.8rem;
+.install:active {
+  box-shadow: inset 1px 1px 3px 1px rgb(14, 19, 17);
 }
 </style>
