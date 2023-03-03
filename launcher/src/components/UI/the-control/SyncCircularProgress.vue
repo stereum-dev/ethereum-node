@@ -14,6 +14,15 @@ import "vue3-circle-progress/dist/circle-progress.css";
 import CircleProgress from "vue3-circle-progress";
 export default {
   components: { CircleProgress },
-  props: ["color", "syncPercent"],
+  props: {
+    color: {
+      type: String,
+      required: true,
+    },
+    syncPercent: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>

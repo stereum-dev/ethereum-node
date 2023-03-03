@@ -88,10 +88,10 @@
     </div>
   </div>
 </template>
+
 <script>
 import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
-import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
@@ -129,12 +129,12 @@ export default {
     },
   },
   watch: {
-    usedPercInt(newVal, oldVal) {
-      if (newVal > 80) {
+    usedPercInt() {
+      if (this.usedPercInt > 80) {
         this.storageCheck();
       }
     },
-    cpu(newVal, oldVal) {
+    cpu(newVal) {
       if (newVal >= 80 && newVal < 90) {
         this.cpuWarning = true;
         this.cpuAlarm = false;

@@ -214,7 +214,7 @@ export default {
     },
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },

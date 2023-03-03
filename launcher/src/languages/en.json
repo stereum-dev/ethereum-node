@@ -334,5 +334,9 @@
     "nukeQ":"ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
     "nukeTitle":"nuke the node",
     "backToLogin":"Back to login"
+  },
+  "noData":{
+    "noData":"no data",
+    "turnOn":"please turn on"
   }
 }
