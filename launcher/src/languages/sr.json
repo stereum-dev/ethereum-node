@@ -283,7 +283,7 @@
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "Nijedan log nije pronađen na listi",
-    "clickCopy": "Kliknite na log za kopiranje",
+    "clickCopy": "Double Click to Copy Logs",
     "serviceId": "service id"
   },
   "serviceModals": {
@@ -334,5 +334,9 @@
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
     "nukeTitle": "nuke the node",
     "backToLogin": "Back to login"
+  },
+  "noData": {
+    "noData": "no data",
+    "turnOn": "please turn on"
   }
 }
