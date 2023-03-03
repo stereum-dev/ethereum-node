@@ -1,46 +1,37 @@
 <template>
   <div class="remove-modal-parent">
     <div class="modal-opacity" @click="closeMe"></div>
-    <div class="remove-modal-content" v-if="visible">
+    <div v-if="visible" class="remove-modal-content">
       <div class="title-box">
         <img src="../../../../public/img/icon/manage-node-icons/stop.png" />
       </div>
       <div class="remove-message">
-        <!-- <span class="warning">{{ $t("removeModal.removeText") }}</span> -->
-        <span class="warning"
-          >ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE
-          SERVER?
-        </span>
-        <!-- <span class="question">{{ $t("removeModal.sure") }}</span> -->
+        <span class="warning">{{ $t("nukeModal.nukeQ") }} </span>
       </div>
       <div class="remove-btn">
         <div class="yes-box" @click="removeItems">
-          <!-- <span>{{ $t("removeMultiModal.remove") }}</span> -->
-          <span>nuke the node</span>
+          <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
       </div>
       <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
-    <div class="remove-modal-accepted" v-else>
+    <div v-else class="remove-modal-accepted">
       <div class="remove-modal-accepted_container">
         <div class="remove-modal-accepted_header">
-          <span>nuke the node</span>
+          <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
         <div class="remove-modal-accepted_explode-box">
-          <div class="item" v-for="(n, idx) in dataCunter" key="n">
+          <div v-for="n in dataCunter" :key="n" class="item">
             <div class="state">✓</div>
             <div class="textItem">{{ n }}</div>
           </div>
         </div>
 
-        <div
-          class="remove-modal-accepted_footer"
-          :class="{ deactive: loginBtn }"
-        >
-          <div class="spinner" v-if="loginBtn">
+        <div class="remove-modal-accepted_footer" :class="{ deactive: loginBtn }">
+          <div v-if="loginBtn" class="spinner">
             <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
           </div>
-          <span v-else @click="backToLogin">Back to login</span>
+          <span v-else @click="backToLogin">{{ $t("nukeModal.backToLogin") }}</span>
         </div>
       </div>
     </div>
@@ -53,7 +44,7 @@ export default {
     return {
       visible: true,
       solidBg: true,
-      //this is dummy
+      //data is dummy
       data: ["data 1", "data 2", "data 3"],
       dataCunter: [],
       loginBtn: true,
@@ -149,13 +140,7 @@ export default {
   top: 10%;
   left: 17%;
   position: relative;
-  background: repeating-linear-gradient(
-    45deg,
-    #fcd100,
-    #fcd100 2%,
-    #181b1d 2%,
-    #181b1d 4%
-  );
+  background: repeating-linear-gradient(45deg, #fcd100, #fcd100 2%, #181b1d 2%, #181b1d 4%);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -293,13 +278,7 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  background: repeating-linear-gradient(
-    45deg,
-    #fcd100,
-    #fcd100 4%,
-    #181b1d 4%,
-    #181b1d 8%
-  );
+  background: repeating-linear-gradient(45deg, #fcd100, #fcd100 4%, #181b1d 4%, #181b1d 8%);
 }
 .yes-box span {
   font-size: 0.9rem;
