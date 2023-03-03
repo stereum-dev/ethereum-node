@@ -13,7 +13,33 @@
 </template>
 <script>
 export default {
-  props: ["name", "avatar", "crown", "rank", "score"],
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    crown: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    rank: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    score: {
+      type: String,
+      required: true,
+      default: "",
+    },
+  },
 };
 </script>
 <style scoped>

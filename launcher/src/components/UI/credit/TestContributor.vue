@@ -8,7 +8,18 @@
 </template>
 <script>
 export default {
-  props: ["name", "avatar"],
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      required: true,
+      default: "",
+    },
+  },
 };
 </script>
 <style scoped>
