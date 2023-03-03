@@ -68,9 +68,10 @@
             <input v-model="port" type="text" placeholder="9000" />
           </div>
         </div>
-        <template v-for="service in options" :key="service.id">
+        <template v-for="service in options">
           <div
             v-if="!switchHandler(service)"
+            :key="service.id"
             class="optionsBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
@@ -85,6 +86,7 @@
           </div>
           <div
             v-if="switchHandler(service)"
+            :key="service.id"
             class="clientAddBox"
             :serviceId-tooltip="service.config.serviceID ? service.config.serviceID : service.id"
             @click="changeSelectedServiceToConnect(service)"
@@ -116,7 +118,12 @@ import { toRaw } from "vue";
 import ControlService from "@/store/ControlService";
 
 export default {
-  props: ["items"],
+  props: {
+    items: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       modalActive: false,
@@ -895,6 +902,7 @@ export default {
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
+  text-transform: uppercase;
 }
 .relaysBoxContent::-webkit-scrollbar {
   width: 5px;

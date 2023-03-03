@@ -10,7 +10,16 @@
 </template>
 <script>
 export default {
-  props: ["flag", "lang"],
+  props: {
+    flag: {
+      type: String,
+      required: true,
+    },
+    lang: {
+      type: String,
+      required: true,
+    },
+  },
   emit: ["language-box"],
   data() {},
   methods: {

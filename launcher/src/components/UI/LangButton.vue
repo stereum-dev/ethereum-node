@@ -5,7 +5,13 @@
 <script>
 export default {
   name: "LangButton",
-  props: ["flag"],
+  props: {
+    flag: {
+      type: String,
+      required: true,
+      default: "",
+    },
+  },
 };
 </script>
 
