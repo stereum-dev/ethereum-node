@@ -58,22 +58,7 @@ export default {
       plugins: [],
     };
   },
-  watch: {
-    showSidebar() {
-      this.currentCategory = "service";
-      this.selectCategoryTitle();
-    },
-  },
-  mounted() {
-    this.currentCategory = "service";
-    this.plugins = this.allServices.map((item) => {
-      return {
-        ...item,
-        displayNameTooltip: false,
-      };
-    });
-    this.selectCategoryTitle();
-  },
+
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -94,6 +79,22 @@ export default {
         };
       }
     },
+  },
+  watch: {
+    showSidebar() {
+      this.currentCategory = "service";
+      this.selectCategoryTitle();
+    },
+  },
+  mounted() {
+    this.currentCategory = "service";
+    this.plugins = this.allServices.map((item) => {
+      return {
+        ...item,
+        displayNameTooltip: false,
+      };
+    });
+    this.selectCategoryTitle();
   },
   methods: {
     getFilterbyNetwork() {

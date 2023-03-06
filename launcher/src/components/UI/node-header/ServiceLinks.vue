@@ -46,7 +46,6 @@ export default {
       showMevboostWindow: false,
     };
   },
-  mounted() {},
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",

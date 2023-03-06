@@ -57,36 +57,54 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        v-if="tillTheNextRelease"
         img-path="/img/icon/node-journal-icons/logs_icon.svg"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="logToggle"
-        grid-row="3/4"
+        grid-row="5/6"
         @btn-action="logToggle"
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        v-if="tillTheNextRelease"
+        img-path="/img/icon/node-journal-icons/start_stop.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        grid-row="4/5"
+        @btn-action="powerToggl"
+        ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
+        >...</the-node-panel-btn
+      >
+      <the-node-panel-btn
         img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
         margin-right="3"
         btn-action="restartToggle"
-        grid-row="4/4"
+        grid-row="3/4"
         @btn-action="restartToggle"
         >{{ $t("journalnode.restart") }}</the-node-panel-btn
       >
     </div>
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
+        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
         is-color="green"
         width="10"
         margin-right="5"
         btn-action="logToggle"
-        grid-row="1/2"
+        grid-row="2/3"
         @btn-action="logToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       >
@@ -101,6 +119,39 @@
         ></service-log-button>
       </div>
     </div>
+    <div v-if="!openRestart && !openLog && openPower" class="configBtn">
+      <the-node-panel-btn
+        img-path="/img/icon/node-journal-icons/start_stop.svg"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        img-path="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="logToggle"
+        grid-row="2/3"
+        @btn-action="powerToggl"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          :disabled="serviceStateStatus(service)"
+          @open-log="stateHandler(service)"
+        ></service-log-button>
+      </div>
+    </div>
     <div v-if="openRestart && !openLog" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
@@ -112,7 +163,6 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        v-if="tillTheNextRelease"
         img-path="/img/icon/plugin-menu-icons/restart.png"
         is-color="light"
         width="15"
@@ -129,6 +179,7 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
+          :disabled="serviceStateStatus(service)"
           @open-log="restartService(service)"
         >
         </service-log-button>
@@ -151,7 +202,6 @@
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
-import UpdateTable from "./UpdateTable.vue";
 import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
 import { useServices } from "../../../store/services";
@@ -160,7 +210,6 @@ import PluginLogs from "../the-node/PluginLogs.vue";
 export default {
   components: {
     RestartModal,
-    UpdateTable,
     ServiceLogButton,
     PluginLogs,
   },
@@ -172,11 +221,10 @@ export default {
       openRestart: false,
       itemToLogs: {},
       isPluginLogPageActive: false,
-      //this data is dummy for invisible the log btn till the next release
-      tillTheNextRelease: true,
       restartModalShow: false,
       itemToRestart: {},
       restartLoad: false,
+      openPower: false,
     };
   },
 
@@ -199,11 +247,13 @@ export default {
       ipAddress: "ipAddress",
     }),
     sortedServices() {
-      return this.installedServices.sort((a, b) => {
-        if (a.category === "consensus") return -1;
-        if (b.category === "consensus") return 1;
+      const copyOfInstalledServices = [...this.installedServices];
+
+      return copyOfInstalledServices.sort((a, b) => {
         if (a.category === "execution") return -1;
         if (b.category === "execution") return 1;
+        if (a.category === "consensus") return -1;
+        if (b.category === "consensus") return 1;
         if (a.category === "validator") return -1;
         if (b.category === "validator") return 1;
         return 0;
@@ -212,6 +262,9 @@ export default {
   },
 
   methods: {
+    serviceStateStatus(item) {
+      return item.serviceIsPending ? true : false;
+    },
     displayPluginLogPage(el) {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;
@@ -228,6 +281,9 @@ export default {
     logToggle() {
       this.openLog = !this.openLog;
     },
+    powerToggl() {
+      this.openPower = !this.openPower;
+    },
     restartToggle() {
       this.openRestart = !this.openRestart;
     },
@@ -236,9 +292,7 @@ export default {
     },
     async restartConfirmed(service) {
       this.restartLoad = true;
-      service.yaml = await ControlService.getServiceYAML(
-        service.config.serviceID
-      );
+      service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
       if (!service.yaml.includes("isPruning: true")) {
         this.isServiceOn = false;
         service.serviceIsPending = true;
@@ -308,11 +362,36 @@ export default {
         console.log(state.replace("ed", "ing") + " services failed:\n", err);
       }
     },
+    stateHandler: async function (item) {
+      item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
+      if (!item.yaml.includes("isPruning: true")) {
+        item.serviceIsPending = true;
+        let state = "stopped";
+        if (item.state === "exited") {
+          state = "started";
+        }
+        try {
+          await ControlService.manageServiceState({
+            id: item.config.serviceID,
+            state: state,
+          });
+        } catch (err) {
+          console.log(state.replace("ed", "ing") + " service failed:\n", err);
+        }
+        item.serviceIsPending = false;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+#start {
+  color: #40ee1d;
+}
+#stop {
+  color: #dc0a03;
+}
 .btnTitle {
   box-shadow: none !important;
   border: none !important;

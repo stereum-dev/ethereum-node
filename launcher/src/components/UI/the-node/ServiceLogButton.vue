@@ -1,21 +1,23 @@
 <template>
-  <div class="service-log-button_parent" @click="openLog">
-    <div class="service-icon_box">
-      <img :src="serviceIcon" alt="client-icon" />
-    </div>
-    <div class="service-title-type_box">
-      <div class="title">
-        <span>{{ clientName }}</span>
+  <div :class="{ disabled: disabled }" class="service-log-button_parent" @click="openLog">
+    <div class="button-container">
+      <div class="service-icon_box">
+        <img :src="serviceIcon" alt="client-icon" />
       </div>
-      <div class="type">
-        <span>{{ clientType }}</span>
+      <div class="service-title-type_box">
+        <div class="title">
+          <span>{{ clientName }}</span>
+        </div>
+        <div class="type">
+          <span>{{ clientType }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["serviceIcon", "clientName", "clientType"],
+  props: ["serviceIcon", "clientName", "clientType", "disabled"],
   emit: ["open-log"],
   methods: {
     openLog() {
@@ -25,6 +27,18 @@ export default {
 };
 </script>
 <style scoped>
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.service-log-button_parent.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .service-log-button_parent {
   width: 90%;
   min-height: 2.1rem;

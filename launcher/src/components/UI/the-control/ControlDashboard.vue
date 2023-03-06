@@ -50,7 +50,6 @@ import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
-import CommingSoon from "../../layers/CommingSoon.vue";
 export default {
   components: {
     PortList,
@@ -70,7 +69,6 @@ export default {
     RpcEndpoint,
     DiskSpeed,
     TheStaking,
-    CommingSoon,
   },
 };
 </script>

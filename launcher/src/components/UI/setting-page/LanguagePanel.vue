@@ -13,9 +13,10 @@
     </flag-button>
   </div>
 </template>
+
 <script>
 import FlagButton from "./FlagButton.vue";
-import { mapWritableState, mapActions } from "pinia";
+import { mapWritableState } from "pinia";
 import { useFlagDialog } from "../../../store/flagDialog";
 import ControlService from "@/store/ControlService";
 export default {
@@ -36,7 +37,8 @@ export default {
       linkFlags: "linkFlags",
     }),
     sortedFlags() {
-      return this.linkFlags.sort((a, b) => {
+      const sortedFlags = [...this.linkFlags];
+      sortedFlags.sort((a, b) => {
         let fa = a.langName.toLowerCase(),
           fb = b.langName.toLowerCase();
         if (fa < fb) {
@@ -47,6 +49,7 @@ export default {
         }
         return 0;
       });
+      return sortedFlags;
     },
   },
   methods: {

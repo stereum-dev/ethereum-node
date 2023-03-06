@@ -19,12 +19,11 @@
     </div>
   </div>
 </template>
+
 <script>
-import SyncInfo from "./SyncInfo.vue";
 import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
-  components: { SyncInfo },
   data() {
     return {
       showSyncInfo: false,
@@ -39,17 +38,6 @@ export default {
     };
   },
 
-  mounted() {
-    if (this.network === "mainnet") {
-      this.networkIcon = this.mainnetIcon;
-    } else if (this.network === "testnet") {
-      this.networkIcon = this.testnetIcon;
-    } else if (this.network === "gnosis") {
-      this.networkIcon = this.gnosisIcon;
-    } else {
-      this.networkIcon = this.defaultIcon;
-    }
-  },
   computed: {
     ...mapState(useServices, {
       network: "network",
@@ -67,6 +55,17 @@ export default {
       }
       return array;
     },
+  },
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkIcon = this.mainnetIcon;
+    } else if (this.network === "testnet") {
+      this.networkIcon = this.testnetIcon;
+    } else if (this.network === "gnosis") {
+      this.networkIcon = this.gnosisIcon;
+    } else {
+      this.networkIcon = this.defaultIcon;
+    }
   },
 
   methods: {

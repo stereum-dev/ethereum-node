@@ -33,7 +33,7 @@ export default {
   props: ["pubkey"],
   data() {
     return {
-      localpubkey: pubkey,
+      localpubkey: this.pubkey,
     };
   },
   mounted() {
@@ -50,7 +50,7 @@ export default {
 
   methods: {
     copyPubKey() {
-      let pubkeyToCopy = this.pubkey;
+      let pubkeyToCopy = this.localpubkey;
       navigator.clipboard
         .writeText(pubkeyToCopy)
         .then(() => {
@@ -62,7 +62,7 @@ export default {
     },
     async getURL() {
       const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
-      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(this.pubkey);
+      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(this.localpubkey);
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
         ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1"
         : "";

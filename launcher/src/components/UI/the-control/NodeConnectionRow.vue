@@ -8,9 +8,15 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
-  props: ["rowName"],
+  props: {
+    rowName: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       isActive: false,

@@ -77,7 +77,8 @@ export default {
     }),
 
     sortedAddresses() {
-      return this.roundAdresses.sort((a, b) => {
+      const sortedAddresses = [...this.roundAdresses];
+      sortedAddresses.sort((a, b) => {
         let fa = a.toLowerCase(),
           fb = b.toLowerCase();
         if (fa < fb) {
@@ -88,6 +89,7 @@ export default {
         }
         return 0;
       });
+      return sortedAddresses;
     },
   },
   watch: {

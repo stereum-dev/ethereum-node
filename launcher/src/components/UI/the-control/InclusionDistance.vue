@@ -27,7 +27,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -41,7 +40,7 @@ export default {
     };
   },
   watch: {
-    strIns(newValue, _) {
+    strIns(newValue) {
       if (newValue === null) {
         this.off = true;
         this.good = false;

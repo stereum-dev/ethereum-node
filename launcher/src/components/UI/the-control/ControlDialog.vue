@@ -5,11 +5,18 @@
     </dialog>
   </transition>
 </template>
+
 <script>
 export default {
-  props: ["open"],
+  props: {
+    open: {
+      type: Boolean,
+      required: true,
+    },
+  },
 };
 </script>
+
 <style scoped>
 dialog {
   border-radius: 10px;
@@ -27,15 +34,16 @@ dialog {
 .modal-enter-active {
   animation: modal 0.2s ease-out;
 }
+
 .modal-leave-active {
   animation: modal 0.2s ease-in reverse;
 }
+
 @keyframes modal {
   from {
     opacity: 0;
     transform: translateY(200px) scale(0.5);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);

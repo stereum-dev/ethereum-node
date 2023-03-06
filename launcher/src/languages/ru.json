@@ -20,7 +20,9 @@
     "turnOn": "Turn Node on",
     "turnOff": "Turn Node off",
     "log": "Open Logs...",
-    "restart": "Restart..."
+    "restart": "Restart...",
+    "start": "start",
+    "stop": "stop"
   },
   "pagesnav": {
     "node": "NODE",
@@ -281,7 +283,7 @@
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "No log found in the list",
-    "clickCopy": "Click on the logs to copy",
+    "clickCopy": "Double Click to Copy Logs",
     "serviceId": "service id"
   },
   "serviceModals": {
@@ -322,5 +324,19 @@
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
     "prunningStart": "Start Pruning"
+  },
+  "restartModal": {
+    "restarQ": "Are you sure you want to restart?",
+    "restartMessage": "your node might go offline while doing so!",
+    "restart": "restart"
+  },
+  "nukeModal": {
+    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
+    "nukeTitle": "nuke the node",
+    "backToLogin": "Back to login"
+  },
+  "noData": {
+    "noData": "no data",
+    "turnOn": "please turn on"
   }
 }

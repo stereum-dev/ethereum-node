@@ -29,6 +29,7 @@
         v-if="removeServicesModal"
         @close-me="closeRemoveModal"
         @remove-items="removeConfirmation"
+        @back-to-login="backToLogin"
       ></remove-modal>
     </div>
   </div>
@@ -36,7 +37,6 @@
 <script>
 import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
@@ -50,6 +50,7 @@ export default {
       modalActive: false,
       removeServicesModal: false,
       removeIsConfirmed: false,
+      notSure: true,
     };
   },
   computed: {
@@ -89,9 +90,9 @@ export default {
     },
     removeConfirmation() {
       this.refresh = false; //stop refreshing
-      this.removeServicesModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
+      this.notSure = false;
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
@@ -109,6 +110,8 @@ export default {
       console.log(await ControlService.destroy());
       this.refresh = true;
       this.removeAllPlugins();
+    },
+    backToLogin() {
       this.$router.push("/");
     },
   },

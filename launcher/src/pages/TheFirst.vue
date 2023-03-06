@@ -12,13 +12,13 @@
       </div>
       <lang-dialog :open="dialogIsVisible" @close="hideDialog">
         <flag-button
-          v-for="link in linkFlags"
+          v-for="linkF in linkFlags"
           id="flag-btn"
-          :key="link.langImg"
-          :is-active="link.enable"
-          @setting="setLang(link.langName, link.langSelect, link.label)"
+          :key="linkF.langImg"
+          :is-active="linkF.enable"
+          @setting="setLang(linkF.langName, linkF.langSelect, linkF.label)"
         >
-          <div class="langIco"><img :src="link.langImg" /></div>
+          <div class="langIco"><img :src="linkF.langImg" /></div>
           <div class="langName">
             <span>{{ link.langName }}</span>
           </div>
@@ -42,14 +42,13 @@
 import { mapWritableState, mapActions } from "pinia";
 import { useFlagDialog } from "../store/flagDialog";
 import BaseLogo from "../components/layers/BaseLogo.vue";
-import LangButton from "../components/UI/LangButton.vue";
 import LangDialog from "../components/UI/LangDialog.vue";
 import ControlService from "@/store/ControlService";
 import FlagButton from "../components/UI/setting-page/FlagButton.vue";
 // import SetupServer from "./SetupServer.vue";
 export default {
   name: "TheFirst",
-  components: { BaseLogo, LangButton, LangDialog, FlagButton },
+  components: { BaseLogo, LangDialog, FlagButton },
 
   emit: ["open", "page"],
   data() {

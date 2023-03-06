@@ -74,12 +74,7 @@ export default {
       availableBlocks: [],
     };
   },
-  mounted() {
-    this.filtermevService();
-    this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
-    );
-  },
+
   computed: {
     ...mapState(useServices, {
       installedServices: "installedServices",
@@ -99,6 +94,12 @@ export default {
         return false;
       });
     },
+  },
+  mounted() {
+    this.filtermevService();
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
+    );
   },
   methods: {
     shuffleRelaysList(array) {
@@ -510,6 +511,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   cursor: pointer;
+  text-transform: uppercase;
 }
 .relaysBoxContent .relay:hover {
   background-color: #404851;

@@ -6,7 +6,6 @@
     <node-header id="head"> </node-header>
   </div>
 </template>
-
 <script>
 import { mapWritableState } from "pinia";
 import ControlService from "@/store/ControlService";

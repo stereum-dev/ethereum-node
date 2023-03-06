@@ -142,20 +142,7 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.getSettings();
-    this.forceUpdateCheck = true;
-  },
-  updated() {
-    this.checkSettings();
-    this.stereumCurrentVersion();
-  },
-  created() {
-    this.checkSettings();
-    this.selector();
-    this.checkVersion();
-    this.switchOnOff();
-  },
+
   computed: {
     ...mapState(useServices, {
       launcherVersion: "launcherVersion",
@@ -191,6 +178,20 @@ export default {
     off() {
       return this.$t("settingPanel.off");
     },
+  },
+  mounted() {
+    this.getSettings();
+    this.forceUpdateCheck = true;
+  },
+  updated() {
+    this.checkSettings();
+    this.stereumCurrentVersion();
+  },
+  created() {
+    this.checkSettings();
+    this.selector();
+    this.checkVersion();
+    this.switchOnOff();
   },
   methods: {
     async getSettings() {

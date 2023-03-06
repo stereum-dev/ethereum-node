@@ -30,10 +30,12 @@ export default {
     btnValue: {
       type: String,
       required: false,
+      default: "",
     },
     isColor: {
       type: String,
       required: false,
+      default: "",
     },
     isLang: {
       type: Boolean,
@@ -47,14 +49,17 @@ export default {
     savedFlag: {
       type: String,
       required: false,
+      default: "",
     },
     savedLang: {
       type: String,
       required: false,
+      default: "",
     },
     savedLabel: {
       type: String,
       required: false,
+      default: "",
     },
     link: {
       type: Boolean,
@@ -67,6 +72,7 @@ export default {
     linkValue: {
       type: String,
       required: false,
+      default: "",
     },
   },
   emits: ["customize-setting", "lang-action"],
