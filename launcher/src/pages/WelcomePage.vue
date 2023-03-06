@@ -5,7 +5,7 @@
 </template>
 <script>
 import BackgroundPage from "../components/layers/BackgroundPage.vue";
-import InstallationMenu from "../components/layers/InstallitionMenu.vue";
+import InstallationMenu from "../components/UI/the-welcome/InstallitionMenu.vue";
 export default {
   components: { BackgroundPage, InstallationMenu },
 };
