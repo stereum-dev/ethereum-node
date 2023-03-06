@@ -5,6 +5,30 @@ export const useClickInstall = defineStore("clickInstallation", {
     return {
       relayURL: "",
       checkPointSync: "",
+      currentElement: 0,
+      syncType: [
+        {
+          id: 1,
+          name: "checkpoint sync",
+          type: "recommended",
+          displayCategory: "Sync your client",
+          display: true,
+        },
+        {
+          id: 2,
+          name: "genesis",
+          type: "Syncs from genesis",
+          displayCategory: "Syncs from genesis",
+          display: false,
+        },
+        {
+          id: 3,
+          name: "checkpoint sync",
+          type: "custom source",
+          displayCategory: "Sync from a custom source",
+          display: false,
+        },
+      ],
       selectedNetwork: {},
       installationPath: "/opt/stereum",
       selectedPreset: [],

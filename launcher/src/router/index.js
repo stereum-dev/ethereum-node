@@ -17,6 +17,7 @@ import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
 import WalkThrough from "../components/UI/tutorial-steps/WalkThrough.vue";
 import WrittenGuide from "../components/UI/tutorial-steps/WrittenGuide.vue";
 import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
+import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 
 const routes = [
   {
@@ -60,6 +61,11 @@ const routes = [
     component: PluginName,
   },
   {
+    path: "/sync",
+    name: "FastSync",
+    component: FastSync,
+  },
+  {
     path: "/verify",
     name: "VerifyInstallation",
     component: VerifyInstallation,
@@ -97,7 +103,7 @@ const routes = [
   {
     path: "/custom",
     name: "CustomInstallationPage",
-    component: CustomInstallationPage,  
+    component: CustomInstallationPage,
   },
   {
     path: "/upload",
