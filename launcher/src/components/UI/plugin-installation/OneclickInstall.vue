@@ -15,7 +15,7 @@
       <router-link class="back" :to="{ path: '/welcome' }">
         <span id="back">{{ $t("installOption.back") }}</span>
       </router-link>
-      <div class="install" v-if="isButtonEnabled" @click="clickedToInstall">
+      <div v-if="isButtonEnabled" class="install" @click="clickedToInstall">
         <span>
           {{ $t("installOption.install") }}
         </span>

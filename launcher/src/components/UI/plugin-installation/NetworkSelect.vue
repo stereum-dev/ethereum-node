@@ -2,7 +2,7 @@
   <div class="plugin-parent">
     <div class="select-box">
       <div class="selectContent">
-        <div @click="openDropdown" class="currentBox">
+        <div class="currentBox" @click="openDropdown">
           <div class="selectBox_current space-x-4">
             <img v-if="currentNetwork.icon !== ''" :src="currentNetwork.icon" alt="Icon" class="w-6" />
             <span class="uppercase">{{ currentNetwork.name }}</span>
@@ -17,12 +17,12 @@
       <div v-if="show" class="listBox">
         <div class="selectBox_list w-full divide-y-2 divide-gray-400">
           <div
-            @click="selectNetwork(state.name)"
-            class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
             v-for="(state, i) in list"
             :key="i"
+            class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
+            @click="selectNetwork(state.name)"
           >
-            <div class="w-1/2 flex space-x-4">
+            <div class="w-1/2 flex justify-start space-x-4 pl-10">
               <img :src="state.icon" alt="Icon" class="w-6" />
               <span class="text-md uppercase">{{ state.name }}</span>
             </div>
@@ -40,13 +40,13 @@
               class="plugin"
             >
               <img
-                @click="selectItemToInstall(item)"
                 :src="item.icon"
                 :class="{
                   selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
                   notAvailable: !item.serviceAvailable,
                 }"
                 alt="icon"
+                @click="selectItemToInstall(item)"
               />
             </div>
           </div>

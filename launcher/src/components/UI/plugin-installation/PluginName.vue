@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="selectedPreset.name" :icon="selectedPreset.icon" :next="nextPath" :back="backPath">
+  <installation-box :title="selectedPreset.name" :icon="selectedPreset.icon" :next="nextPath" :back="backPath" >
     <div class="content-box">
       <div class="included-box">
         <div class="included-title">
@@ -32,7 +32,7 @@
                 </div>
               </div>
               <div class="content">
-                <div class="plugin-name">
+                <div class="pluginName">
                   <span>{{ plugin.name }}</span>
                 </div>
                 <div class="category">
@@ -70,33 +70,15 @@
                 <input v-model="installationPath" type="text" />
               </div>
             </div>
-            <div class="set-recipient gap-y-2">
+            <!-- <div class="set-recipient gap-y-2">
               <div class="set-title">
                 <span>SET DEFAULT FEE RECIPIENT</span>
               </div>
               <div class="set-box">
                 <input v-model="recipientFee" type="text" disabled />
               </div>
-            </div>
-            <!-- <div class="fast-sync">
-              <div class="sync-header">
-                <div class="headerTitle">
-                  <span>SYNCHRONISATION</span>
-                </div>
-                <div class="headerContent">
-                  <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
-                  <span v-if="genesisIsActive">GENESIS</span>
-                  <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
-                  <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
-                </div>
-              </div>
-              <div class="content">
-                <span v-if="genesisIsActive">{{ $t("pluginName.syncClient") }}</span>
-                <div v-if="checkPointIsActive" class="inputBox">
-                  <input v-model="checkPointSync" type="text" />
-                </div>
-              </div>
             </div> -->
+
           </div>
         </div>
       </div>
@@ -117,8 +99,6 @@ export default {
 
   data() {
     return {
-      genesisIsActive: true,
-      checkPointIsActive: false,
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
@@ -130,9 +110,9 @@ export default {
       filteredPluginsOnName: [],
       categoryDisplayName: "",
       recipientFee: "",
-      nextPath: "verify",
+      nextPath: "sync",
       backPath: "selectPlugin",
-      mev: "mevboost",
+      mevPath: "mevboost",
     };
   },
   computed: {
@@ -258,15 +238,7 @@ export default {
     backToHistoryHandler() {
       history.back();
     },
-    changeTheOption() {
-      if (this.genesisIsActive) {
-        this.genesisIsActive = false;
-        this.checkPointIsActive = true;
-      } else {
-        this.checkPointIsActive = false;
-        this.genesisIsActive = true;
-      }
-    },
+
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
       if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
@@ -388,7 +360,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.plugin-name {
+.pluginName {
   width: 83%;
   height: 90%;
   margin-left: 5px;
@@ -396,7 +368,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.plugin-name span {
+.pluginName span {
   font-size: 0.85rem;
   font-weight: 700;
   text-align: center;
@@ -610,107 +582,7 @@ export default {
   border-radius: 100%;
 }
 
-.option-content .fast-sync {
-  width: 100%;
-  height: 30%;
-  background-color: #343434;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.fast-sync .sync-header {
-  width: 100%;
-  height: 34%;
-  border: 1px solid #707070;
-  border-radius: 15px 0 0 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.fast-sync .sync-header .headerTitle {
-  width: 45%;
-  height: 100%;
-  border-radius: 15px 0 0 15px;
-  background-color: #1a5443;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-.headerTitle span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
-}
-.fast-sync .sync-header .headerContent {
-  width: 55%;
-  height: 100%;
-  border-radius: 0;
-  padding: 0 5px;
-  background-color: #33393e;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.headerContent span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
-}
-.headerContent img {
-  width: 5%;
-  height: 50%;
-  cursor: pointer;
-}
-.fast-sync .content {
-  width: 100%;
-  height: 64%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.fast-sync .content span {
-  font-size: 0.5rem;
-  font-weight: 400;
-  color: #aaaaaa;
-}
-.fast-sync .content .inputBox {
-  width: 96%;
-  height: 74%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.fast-sync .content input {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
-}
+
 .option-content .change-installation,
 .option-content .set-recipient {
   width: 100%;

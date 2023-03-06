@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back" :icon="selectedPreset.icon">
+  <installation-box :title="title" :back="back"  :icon="selectedPreset.icon" @open-modal="displayWarningHandler">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
@@ -11,7 +11,7 @@
             </div>
             <div class="table-content">
               <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="table-row">
-                <div class="plugin-name">
+                <div class="pluginName">
                   <img :src="plugin.icon" alt="icon" />
                   <span>{{ plugin.name }}</span>
                 </div>
@@ -24,11 +24,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="btnBox">
-        <div @click="displayWarningHandler" class="install">
-          {{ $t("pluginName.next") }}
         </div>
       </div>
       <warning-modal
@@ -55,8 +50,8 @@ export default {
   data() {
     return {
       displayInstallationWarning: false,
-      back: "install",
-      title: "Verify & Install",
+      back: "sync",
+      title: "verify & install",
     };
   },
   computed: {
@@ -149,7 +144,7 @@ export default {
   align-items: center;
 }
 .table .table-header {
-  width: 95%;
+  width: 97%;
   height: 10%;
   margin-top: 2px;
   background-color: #336666;
@@ -175,12 +170,12 @@ export default {
 }
 .table .table-content {
   width: 100%;
-  height: 85%;
-  margin-top: 10px;
+  height: 90%;
+  margin-top: 5px;
   padding: 10px;
-  background: #1f2328;
+  /* background: #1f2328;
   border-radius: 15px;
-  border: 1px solid #4c5962;
+  border: 1px solid #4c5962; */
   display: grid;
   grid-template-columns: 100%;
   align-items: center;
@@ -206,7 +201,7 @@ export default {
   cursor: pointer;
 }
 
-.table-row .plugin-name {
+.table-row .pluginName {
   width: 30%;
   height: 100%;
   display: flex;
@@ -216,12 +211,12 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.plugin-name img {
+.pluginName img {
   width: 15%;
   height: 65%;
 }
 
-.plugin-name span {
+.pluginName span {
   width: 90%;
   height: 56%;
   color: #929292;
