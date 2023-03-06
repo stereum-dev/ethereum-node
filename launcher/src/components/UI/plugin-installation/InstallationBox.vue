@@ -11,10 +11,14 @@
           <router-link :to="{ path: back }" class="back">
             <span>{{ $t("installOption.back") }}</span>
           </router-link>
-          <router-link v-if="title === 'mev boost'" :to="{ path: mev }" class="install">
+
+          <router-link v-if="next === 'disabled'" to="verify" class="install disabled">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
-          <router-link v-else-if="next" :to="{ path: next }" class="install">
+          <router-link v-else-if="next !== 'disabled' && next" :to="{ path: next }" class="install">
+            <span>{{ $t("pluginName.next") }}</span>
+          </router-link>
+          <router-link v-else to="" class="install" @click="$emit('openModal')">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
         </div>
@@ -23,6 +27,8 @@
   </background-page>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeManage } from "../../../store/nodeManage";
 export default {
   name: "InstallationBox",
   props: {
@@ -42,10 +48,14 @@ export default {
       type: String,
       default: "",
     },
-    mev: {
-      type: String,
-      default: "",
-    },
+  },
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapWritableState(useNodeManage, {
+      usedBlocks: "usedBlocks",
+    }),
   },
 };
 </script>
@@ -166,5 +176,9 @@ export default {
 .install:active,
 .back:active {
   box-shadow: inset 1px 1px 3px 1px rgb(14, 19, 17);
+}
+.disabled {
+  opacity: 0.2;
+  pointer-events: none;
 }
 </style>
