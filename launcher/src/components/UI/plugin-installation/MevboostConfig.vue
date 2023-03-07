@@ -1,96 +1,89 @@
 <template>
-  <div class="plugin-parent">
-    <background-page>
-      <div class="opacity-bg"></div>
-      <div class="plugin-modal-parent">
-        <div class="plugin-modal">
-          <div class="name-box">
-            <div class="name-title-box">
-              <div class="name-title">
-                <span>{{ selectedPreset.name }}</span>
+  <installation-box
+    :title="title"
+    :back="back"
+    :icon="selectedPreset.icon"
+    :next="selectedUsedBlocks ? 'verify' : 'disabled'"
+  >
+    <div class="plugin-parent">
+      <div class="content-box">
+        <div class="options-box">
+          <div class="option-title">
+            <span>{{ $t("mevboostConfig.availRelays") }}</span>
+          </div>
+          <div class="option-table">
+            <div
+              v-for="item in availableBlocks"
+              :key="item.id"
+              class="row"
+              :class="{ selectedItemToAdd: item.isSelected }"
+              @click="selectItemToAdd(item)"
+              @dblclick="doubleClickAdd(item)"
+            >
+              <div class="rowIcon">
+                <img :src="item.icon" alt="icon" />
+              </div>
+              <div class="rowText">
+                <span>{{ item.name }}</span>
               </div>
             </div>
           </div>
-          <div class="content-box">
-            <div class="options-box">
-              <div class="option-title">
-                <span>{{ $t("mevboostConfig.availRelays") }}</span>
-              </div>
-              <div class="option-table">
-                <div
-                  v-for="item in availableBlocks"
-                  :key="item.id"
-                  class="row"
-                  :class="{ selectedItemToAdd: item.isSelected }"
-                  @click="selectItemToAdd(item)"
-                >
-                  <div class="rowIcon">
-                    <img :src="item.icon" alt="icon" />
-                  </div>
-                  <div class="rowText">
-                    <span>{{ item.name }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="arrowBox">
-              <div class="select" @click="addBlocksToUse">
-                <img src="/img/icon/arrows/right-1.png" alt="icon" />
-              </div>
-              <div class="remove" @click="removeFromUsedBlocks">
-                <img src="/img/icon/arrows/left-1.png" alt="icon" />
-              </div>
-            </div>
-            <div class="included-box">
-              <div class="included-title">
-                <span>{{ $t("mevboostConfig.usedRelays") }}</span>
-              </div>
-              <div class="included-table">
-                <div
-                  v-for="item in usedBlocks"
-                  :key="item.id"
-                  class="row"
-                  :class="{ selectedItemToRemove: item.isRemoved }"
-                  @click="selectItemToRemove(item)"
-                >
-                  <div class="rowIcon">
-                    <img :src="item.icon" alt="icon" />
-                  </div>
-                  <div class="rowText">
-                    <span>{{ item.name }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        </div>
+        <div class="arrowBox">
+          <div class="select" @click="addBlocksToUse">
+            <img src="/img/icon/arrows/right-1.png" alt="icon" />
           </div>
-          <div class="btn-box">
-            <router-link :to="{ path: '/install' }">
-              <span>{{ $t("pluginName.back") }}</span>
-            </router-link>
-            <router-link :to="{ path: '/verify' }" :class="{ disabled: !usedBlocks.length }">
-              <span>{{ $t("pluginName.next") }}</span>
-            </router-link>
+          <div class="remove" @click="removeFromUsedBlocks">
+            <img src="/img/icon/arrows/left-1.png" alt="icon" />
+          </div>
+        </div>
+        <div class="included-box">
+          <div class="included-title">
+            <span>{{ $t("mevboostConfig.usedRelays") }}</span>
+          </div>
+          <div class="included-table">
+            <div
+              v-for="item in usedBlocks"
+              :key="item.id"
+              class="row"
+              :class="{ selectedItemToRemove: item.isRemoved }"
+              @click="selectItemToRemove(item)"
+            >
+              <div class="rowIcon">
+                <img :src="item.icon" alt="icon" />
+              </div>
+              <div class="rowText">
+                <span>{{ item.name }}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </background-page>
-  </div>
+    </div>
+  </installation-box>
 </template>
 <script>
+import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 export default {
+  components: {
+    InstallationBox,
+  },
   data() {
     return {
-      availableBlocks: [],
-      usedBlocks: [],
+      title: "Mevboost Config",
+      back: "sync",
+      next: "verify",
     };
   },
   computed: {
     ...mapWritableState(useNodeManage, {
       relaysList: "relaysList",
+      availableBlocks: "availableBlocks",
+      usedBlocks: "usedBlocks",
     }),
     ...mapWritableState(useClickInstall, {
       relayURL: "relayURL",
@@ -102,10 +95,18 @@ export default {
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
     }),
+    selectedUsedBlocks() {
+      if (this.usedBlocks.length === 0) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
   mounted() {
     this.availableBlocks = this.shuffleRelaysList(this.relaysList.filter((r) => r[this.selectedPreset.network]));
   },
+
   methods: {
     shuffleRelaysList(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -113,6 +114,14 @@ export default {
         [array[i], array[j]] = [array[j], array[i]];
       }
       return array;
+    },
+    doubleClickAdd(el) {
+      this.availableBlocks.forEach((item) => {
+        if (item.id == el.id) {
+          item.isSelected = true;
+        }
+      });
+      this.addBlocksToUse();
     },
     selectItemToAdd(el) {
       this.availableBlocks.forEach((item) => {
@@ -152,131 +161,72 @@ export default {
 </script>
 <style scoped>
 .plugin-parent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.opacity-bg {
+  grid-column: 2/5;
+  grid-row: 3/4;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
-  position: fixed;
-  left: 0;
-  top: 0;
-  opacity: 0.7;
-  z-index: 1;
-}
-.plugin-modal-parent {
-  width: 80%;
-  height: 75%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 11.2%;
-  left: 10%;
-  z-index: 2;
-}
-.plugin-modal {
-  width: 70%;
-  height: 95%;
-  border: 1px solid rgba(38, 38, 38, 0.5);
-  border-radius: 20px;
-  background-color: #334b3e;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
 }
 
-.name-box {
-  width: 95%;
-  height: 20%;
-  margin-top: 5px;
-  background-color: #8e8e8e;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 1px 4px 1px rgb(31, 47, 43);
-}
-.name-title-box {
-  width: 96%;
-  height: 80%;
-  border-radius: 15px;
-  background-color: #5b5b5b;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.name-title-box span {
-  font-size: 2rem;
-  font-weight: 900;
-  color: #d7d7d7;
-  text-transform: uppercase;
-}
 .content-box {
-  width: 95%;
-  height: 63%;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: #2d3134;
+  border: 3px solid #b4b4b4;
+  border-radius: 20px;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.content-box .included-box {
-  width: 43%;
-  height: 95%;
-  background-color: #5b5b5b;
+.included-box {
+  width: 50%;
+  height: 100%;
+  margin: 0 auto;
   border-radius: 20px;
-  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
-.included-title {
-  width: max-content;
-  height: 11%;
-  border: 1px solid rgb(98, 98, 98);
+.options-box {
+  width: 50%;
+  height: 100%;
   margin: 0 auto;
-  border-radius: 25px;
+  padding: 0 8px;
+  border-radius: 20px;
+  position: relative;
   display: flex;
-  background-color: #30483b;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 5px;
-  padding: 0 10px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 
-.content-box .options-box {
-  width: 43%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px 1px rgb(35, 56, 50);
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.option-title {
-  width: max-content;
-  height: 11%;
+.option-title,
+.included-title {
+  width: 90%;
+  height: 25px;
   border: 1px solid rgb(98, 98, 98);
-  border-radius: 25px;
+  border-radius: 10px;
+  padding: 5px 0;
   display: flex;
-  background-color: #30483b;
+  background-color: #33393e;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  padding: 0 10px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
 .option-title span,
 .included-title span {
-  color: #dfdfdf;
+  color: #d3d3d3;
   font-size: 0.7rem;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .content-box .arrowBox {
@@ -363,18 +313,19 @@ export default {
 
 .options-box .option-table,
 .included-box .included-table {
-  width: 95%;
-  height: 85%;
-  border-radius: 0 0 15px 15px;
-  padding: 5px 1px 2px 1px;
+  width: 94%;
+  height: 91%;
+  margin: 10px auto;
+  background-color: #080808;
+  border: 1px solid #b4b4b4;
+  padding: 2px 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 2px solid #545454;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
 }
 .row {
   width: 100%;
@@ -396,13 +347,15 @@ export default {
 }
 .row .rowIcon {
   width: 15%;
-  height: 100%;
+  height: 80%;
+  border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .row .rowIcon img {
   width: 80%;
+  border-radius: 100%;
 }
 .row .rowText {
   width: 80%;

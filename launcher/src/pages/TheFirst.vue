@@ -63,18 +63,19 @@ export default {
       },
     };
   },
-  created() {
-    this.checkSettings();
-  },
-  mounted() {
-    this.showDialog();
-  },
   computed: {
     ...mapWritableState(useFlagDialog, {
       linkFlags: "linkFlags",
       dialogIsVisible: "dialogIsVisible",
     }),
   },
+  created() {
+    this.checkSettings();
+  },
+  mounted() {
+    this.showDialog();
+  },
+
   methods: {
     ...mapActions(useFlagDialog, {
       showDialog: "showDialog",

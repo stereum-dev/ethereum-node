@@ -15,7 +15,12 @@
 </template>
 <script>
 export default {
-  props: ["videoUrl"],
+  props: {
+    videoUrl: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       url: "",

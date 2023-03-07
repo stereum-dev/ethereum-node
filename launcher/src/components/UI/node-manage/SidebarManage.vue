@@ -50,7 +50,12 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 export default {
-  props: ["startDrag"],
+  props: {
+    startDrag: {
+      type: Function,
+      required: true,
+    },
+  },
   data() {
     return {
       showSidebar: false,
@@ -70,7 +75,7 @@ export default {
     fontSize() {
       if (this.currentCategory.length > 7) {
         return {
-          "font-size": "0.6rem",
+          fontSize: "0.6rem",
           padding: "6px",
           " white-space": "nowrap",
           " -o-text-overflow": " ellipsis",

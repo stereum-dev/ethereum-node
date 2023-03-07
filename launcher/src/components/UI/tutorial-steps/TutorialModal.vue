@@ -20,7 +20,12 @@
 </template>
 <script>
 export default {
-  props: ["itemToTutorial"],
+  props: {
+    itemToTutorial: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       steps: [
@@ -63,6 +68,8 @@ export default {
           item.guideLink = this.itemToTutorial.guideLink;
         } else if (item.name == "text guide") {
           item.writtenLink = this.itemToTutorial.writtenLink;
+        } else {
+          return;
         }
       });
     },
