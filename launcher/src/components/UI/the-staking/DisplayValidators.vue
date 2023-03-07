@@ -166,10 +166,10 @@
     <!-- Search Input -->
     <search-box v-if="searchBoxActive">
       <form
-        class="w-full flex justify-between items-center border-gray-300 bg-gray-700 rounded-full focus:ring-blue-500 focus:border-blue-500"
+        class="w-full flex justify-between items-center border-2 border-gray-700 rounded-full bg-slate-300 focus:ring-blue-500 focus:border-blue-500"
       >
-        <label for="simple-search" class="sr-only">Search</label>
-        <div class="w-full flex justify-evenly items-center px-5 relative">
+        <label for="simple-search" class="sr-only text-gray-400  rounded-full">Search</label>
+        <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
           <div class="flex items-center pointer-events-none">
             <svg
               aria-hidden="true"
@@ -188,7 +188,7 @@
           <input
             v-model="searchModel"
             type="search"
-            class="z-10 text-gray-100 text-sm rounded-full block w-full pl-10 p-2.5 placeholder-gray-400 bg-transparent"
+            class="z-10 text-gray-700 text-sm rounded-full block w-full pl-10 p-2.5 placeholder-gray-500 bg-transparent"
             placeholder="Search"
           />
 
@@ -1259,11 +1259,12 @@ remove-validator {
   text-align: center;
 }
 .import-message p {
-  width: 85%;
+  width: 96%;
   color: rgb(211, 211, 211);
-  background-color: rgb(47, 51, 55);
-  border: 1px solid rgb(211, 211, 211);
+  background-color: rgb(36, 40, 43);
+  border: 1px solid rgb(147, 150, 152);
   border-radius: 5px;
+  margin-top: 10px;
   padding: 5px 10px;
   font-size: 1rem;
   font-weight: 500;
@@ -1330,9 +1331,12 @@ remove-validator {
   opacity: 0.3;
 }
 
+
+
 .searchBox .textBox form {
   width: 100%;
   height: 100%;
+  border-radius: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
