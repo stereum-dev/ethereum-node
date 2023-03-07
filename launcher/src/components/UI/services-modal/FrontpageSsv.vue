@@ -22,7 +22,12 @@
 </template>
 <script>
 export default {
-  props: ["pubkey"],
+  props : {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 <style scoped>

@@ -1,21 +1,12 @@
 <template>
   <div class="welcome-parent">
-    <div class="empty1"></div>
-    <div class="empty2"></div>
-    <div id="welcome-header">
-      <h2 class="welcome-title">{{ $t("installitionMenu.welcome") }}</h2>
+    <div class="header bg-zinc-900">
+      <span>{{ $t("installitionMenu.welcome") }}</span>
     </div>
-    <div class="middle-box">
-      <div id="txt">
-        <p>
-          {{ $t("installitionMenu.installText") }}
-        </p>
-      </div>
-      <!-- <div class="progress-container">
-        <div class="progress-bg">
-          <circle-loading :open="running"></circle-loading>
-        </div>
-      </div> -->
+    <div class="textBox bg-zinc-900">
+      <p>
+        {{ $t("installitionMenu.installText") }}
+      </p>
     </div>
     <div class="item-container">
       <div v-for="(install, index) in installation" :key="index" class="item-column">
@@ -45,12 +36,11 @@
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
-import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
 export default {
-  components: { ButtonInstallation, CircleLoading },
+  components: { ButtonInstallation },
   data() {
     return {
       active: true,
@@ -62,15 +52,16 @@ export default {
       supportMessage: this.$t("installitionMenu.osSupported"),
     };
   },
+
+  computed: {
+    ...mapState(useWelcomeStore, { installation: "installation" }),
+  },
   created() {
     setTimeout(() => {
       this.active = false;
     }, 5000);
     this.checkOsRequirements();
     this.randomValue();
-  },
-  computed: {
-    ...mapState(useWelcomeStore, { installation: "installation" }),
   },
   methods: {
     isCompatible(item) {
@@ -141,25 +132,67 @@ export default {
 </script>
 <style scope>
 .welcome-parent {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(15, 1fr);
+  grid-template-rows: repeat(10, 1fr);
 }
-.empty1 {
-  grid-column: 1/7;
-  grid-row: 1/2;
-  height: 100%;
-}
-.empty2 {
-  grid-column: 1/7;
+.header {
+  grid-column: 2/6;
   grid-row: 2/3;
-  height: 100%;
+  margin: 0 auto;
+  background-color: #1e2429;
+  border: 3px solid #b4b4b4;
+  border-radius: 15px;
+  width: 80%;
+  height: 90%;
+  text-align: center;
+  font-size: 1.5rem;
+  color: rgb(214, 214, 214);
+  font-weight: 700;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
 }
+
+.header span {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #b4b4b4;
+}
+
+.textBox {
+  grid-column: 1/7;
+  grid-row: 4/6;
+  margin: 0 auto;
+  background-color: #1e2429;
+  border: 3px solid #b4b4b4;
+  border-radius: 15px;
+  width: 75%;
+  height: 90%;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+}
+.textBox p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #b4b4b4;
+  text-align: center;
+  line-height: 1.5;
+  padding: 5px 10px;
+}
+
 .item-container {
   grid-column: 1/7;
-  grid-row: 8/13;
+  grid-row: 6/10;
   width: 80% !important;
   height: 180px !important;
   margin: 0 auto !important;
@@ -190,49 +223,9 @@ export default {
   cursor: default;
 }
 
-#welcome-header {
-  grid-column: 3/5;
-  grid-row: 3/4;
-  border: 5px solid #929292;
-  width: 100%;
-  max-width: 350px;
-  height: 50px;
-  margin: 50px auto;
-  border-radius: 40px;
-  background-color: #194747;
-  opacity: 0.88;
-  box-shadow: 0 1px 3px 1px #1f3737;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-#welcome-header .welcome-title {
-  width: 95%;
-  max-width: auto;
-  height: 100%;
-  font-size: 1.8rem !important;
-  font-weight: 700 !important;
-  color: #cecece !important;
-  border: none;
-  background-color: transparent;
-  box-shadow: none;
-  text-transform: uppercase;
-}
-.middle-box {
-  grid-column: 1/7;
-  grid-row: 5/8;
-  width: 100%;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 .message-box {
   grid-column: 1/7;
-  grid-row: 14/16;
+  grid-row: 9/11;
   width: 100%;
   height: 50px;
   display: flex;
@@ -240,13 +233,6 @@ export default {
   align-items: center;
 }
 
-.result-box .check-msg {
-  padding-bottom: 5px;
-  border-bottom: 2px solid rgb(189, 189, 189);
-  text-align: center;
-  font-size: 1rem;
-  font-weight: 800;
-}
 .message-box .msg-title {
   width: 48%;
   height: 30%;
@@ -260,60 +246,44 @@ export default {
 }
 .result-box {
   grid-column: 1/7;
-  grid-row: 14/16;
-  width: 100%;
+  grid-row: 9/11;
+  width: 30%;
   height: 50px;
-  margin-right: 20px;
+  background-color: #1e2429;
+  border: 1px solid #3b5a41;
+  border-radius: 50px;
+  margin: 20px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 .result-box img {
   width: 30px;
   height: 30px;
   margin-right: 10px;
   border-radius: 100%;
-  box-shadow: 1px 1px 3px 1px rgb(16, 60, 27);
-}
-.progress-container {
-  width: 82%;
-  height: 30%;
-  margin: 10px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.progress-bg {
-  width: 59%;
-  height: 70%;
-  border: 3px solid #929292;
-  background-color: #6e8582;
-  border-radius: 40px;
-  box-shadow: 0 0 3px 1px rgb(18, 20, 20), inset 1px 1px 5px rgb(0, 0, 0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  opacity: 1;
-}
-#txt {
-  width: 75%;
-  height: 95%;
-  border: 5px solid #929292;
-  margin: 0 auto;
-  background-color: #194747;
-  border-radius: 20px;
-  opacity: 0.8;
-  box-shadow: 0 1px 3px 1px rgb(28, 52, 48);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-#txt p {
-  font-size: 1rem;
-  font-weight: 600;
-  color: rgb(225, 225, 225);
+.result-box .check-msg {
   text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.supported {
+  color: #dcdcdc;
+  font-size: 1rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 1px rgb(19, 55, 36);
+}
+.notSupported {
+  color: #c83e29;
+  font-size: 1rem;
+  font-weight: 800;
+}
+.disabled {
+  pointer-events: none;
 }
 .dot-flashing {
   position: relative;
@@ -366,19 +336,5 @@ export default {
   100% {
     background-color: #eee;
   }
-}
-.supported {
-  color: #55b568;
-  font-size: 1rem;
-  font-weight: 800;
-  text-shadow: 1px 1px 1px rgb(19, 55, 36);
-}
-.notSupported {
-  color: #c83e29;
-  font-size: 1rem;
-  font-weight: 800;
-}
-.disabled {
-  pointer-events: none;
 }
 </style>

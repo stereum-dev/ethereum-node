@@ -1,34 +1,51 @@
 <template>
   <div class="plugin-parent">
     <div class="select-box">
-      <div class="icon-box">
-        <img v-if="networkIcon" :src="networkIcon" alt="icon" />
+      <div class="selectContent">
+        <div class="currentBox" @click="openDropdown">
+          <div class="selectBox_current space-x-4">
+            <img v-if="currentNetwork.icon !== ''" :src="currentNetwork.icon" alt="Icon" class="w-6" />
+            <span class="uppercase">{{ currentNetwork.name }}</span>
+          </div>
+          <div class="selectBox_icon">
+            <img src="/img/icon/arrows/arrow-down.png" alt="arrow-down" class="arrowDown" />
+          </div>
+        </div>
       </div>
-      <select id="selector" v-model="selectedNetworkName" @change="pluginNetworkHandler">
-        <option class="ring-0" value="" selected>
-          {{ $t("installOption.placeHoldrer") }}
-        </option>
-        <option class="ring-0" value="mainnet">Mainnet</option>
-        <option class="ring-0" value="testnet">Testnet</option>
-        <option class="ring-0" value="gnosis">Gnosis</option>
-      </select>
     </div>
+    <Transition name="slide-fade">
+      <div v-if="show" class="listBox">
+        <div class="selectBox_list w-full divide-y-2 divide-gray-400">
+          <div
+            v-for="(state, i) in list"
+            :key="i"
+            class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
+            @click="selectNetwork(state.name)"
+          >
+            <div class="w-1/2 flex justify-start space-x-4 pl-10">
+              <img :src="state.icon" alt="Icon" class="w-6" />
+              <span class="text-md uppercase">{{ state.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
     <div class="plugin-table">
       <div class="table-content">
         <div class="plugin-box">
           <div class="network-container">
             <div
-              v-for="(item, index) in plugins.filter((p) => p.network === selectedNetworkName)"
+              v-for="(item, index) in plugins.filter((p) => p.network === currentNetwork.name)"
               :key="index"
               class="plugin"
             >
               <img
                 :src="item.icon"
-                alt="icon"
                 :class="{
                   selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
                   notAvailable: !item.serviceAvailable,
                 }"
+                alt="icon"
                 @click="selectItemToInstall(item)"
               />
             </div>
@@ -46,10 +63,28 @@ import { useServices } from "@/store/services";
 export default {
   data() {
     return {
-      networkIcon: "",
-      selectedNetworkName: "",
+      currentNetwork: {
+        name: "Choose a network",
+        icon: "",
+      },
+      show: false,
+      list: [
+        {
+          name: "mainnet",
+          icon: "/img/icon/click-installation/mainnet-icon.png",
+        },
+        {
+          name: "testnet",
+          icon: "/img/icon/click-installation/testnet-icon.png",
+        },
+        {
+          name: "gnosis",
+          icon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
+        },
+      ],
     };
   },
+
   computed: {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
@@ -66,8 +101,7 @@ export default {
   },
   methods: {
     pluginNetworkHandler() {
-      let network = this.networks.find((item) => item.name === this.selectedNetworkName);
-      this.networkIcon = network ? network.icon : "";
+      let network = this.networks.find((item) => item.name === this.currentNetwork);
       this.selectedNetwork = network;
     },
     selectItemToInstall: async function (item) {
@@ -91,6 +125,13 @@ export default {
       this.selectedPreset = item;
       this.$emit("disableBtn");
     },
+    openDropdown() {
+      this.show = !this.show;
+    },
+    selectNetwork(name) {
+      this.currentNetwork = this.list.find((item) => item.name === name);
+      this.show = false;
+    },
   },
 };
 </script>
@@ -107,8 +148,8 @@ export default {
   overflow-y: auto;
 }
 .select-box {
-  width: 35%;
-  height: 13%;
+  width: 100%;
+  height: 15%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -117,56 +158,78 @@ export default {
   border-radius: 5px;
   box-shadow: inset 0 1px 5px 1px rgb(18, 18, 18), 0 1px 3px 1px rgb(31, 31, 31);
 }
-.select-box #selector {
-  width: 85%;
-  height: 90%;
-  border: none !important;
-  border-radius: 5px;
-  background-color: transparent;
-  padding: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: rgb(97, 194, 255);
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-}
-.select-box #selector:focus {
-  outline: none;
-}
-.select-box #selector option {
+.select-box .selectContent {
   width: 100%;
   height: 100%;
-  margin-left: 5px;
-  border: none !important;
-  box-shadow: var(--tw-ring-inset) 0 0 0 calc(0px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
-.select-box:hover {
-  border: 2px solid rgb(32, 191, 235);
+
+.select-box .selectContent .currentBox {
+  width: 98%;
+  height: 100%;
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
 }
-.icon-box {
-  width: 13%;
-  height: 83%;
+.currentBox .selectBox_current {
+  width: 95%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.icon-box img {
-  width: 90%;
-  height: 100%;
+.currentBox .selectBox_current span {
+  color: white;
+  font-size: 1rem;
+  font-weight: 400;
 }
+.select-box:hover {
+  border-color: rgb(126, 189, 248);
+  transition-duration: 0.2s;
+}
+.select-box:hover .selectBox_current span {
+  color: rgb(126, 189, 248);
+  transition-duration: 0.2s;
+}
+.currentBox .selectBox_icon {
+  width: 5%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.currentBox .selectBox_icon img {
+  width: 10px;
+  height: 10px;
+}
+.listBox {
+  width: 90%;
+  height: fit-content;
+  position: absolute;
+  top: 45%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
 .plugin-table {
   width: 99%;
   height: 72%;
-  border-radius: 20px;
   overflow-y: auto;
-  box-shadow: 0 1px 2px 1px rgb(21, 45, 41);
 }
 
 .table-content {
   width: 100%;
   height: 100%;
-  background-color: #2f7270;
 }
 .network-container {
   width: 100%;
@@ -176,8 +239,8 @@ export default {
   grid-template-rows: repeat(2, 1fr);
   overflow-x: hidden;
   overflow-y: auto;
-  align-items: center;
-  justify-items: center;
+  border-top: 3px solid rgb(96, 96, 96);
+  border-bottom: 3px solid rgb(96, 96, 96);
 }
 /* .mainnet-container::-webkit-scrollbar,
 .testnet-container::-webkit-scrollbar {
@@ -200,7 +263,6 @@ export default {
 } */
 ::-webkit-scrollbar {
   width: 8px;
-  background: #2f7270;
 }
 
 ::-webkit-scrollbar-track {
@@ -223,15 +285,15 @@ export default {
 .plugin {
   width: 100%;
   height: 100%;
-  margin-top: 10px;
+  padding: 5px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .plugin img {
-  width: 65%;
-  height: 77%;
+  width: 100%;
+  height: 95%;
   border-radius: 5px;
   border: 2px solid transparent;
   cursor: pointer;
@@ -239,18 +301,39 @@ export default {
 }
 
 .plugin img:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   box-shadow: 1px 1px 7px 1px rgb(24, 69, 61);
   transition-duration: 0.3s;
 }
 
 .selectedItem {
-  transform: scale(1.1);
+  transform: scale(1.05);
   border: 2px solid rgb(53, 178, 246) !important;
 }
 
 .notAvailable {
   opacity: 0.2;
   pointer-events: none;
+}
+
+.networkIcon {
+  width: 20px;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from {
+  transform: translateY(-30px);
+  opacity: 0;
+}
+.slide-fade-leave-to {
+  transform: translateY(-30px);
+  opacity: 0;
 }
 </style>

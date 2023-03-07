@@ -14,6 +14,7 @@ export default {
     isColor: {
       type: String,
       required: false,
+      default: "light",
     },
     width: {
       type: String,

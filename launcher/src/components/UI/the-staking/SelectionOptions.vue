@@ -14,7 +14,12 @@
 </template>
 <script>
 export default {
-  props: ["buttonState"],
+  props: {
+    buttonState: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {},
 };
 </script>
