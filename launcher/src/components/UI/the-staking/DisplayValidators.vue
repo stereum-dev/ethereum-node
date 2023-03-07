@@ -49,7 +49,7 @@
         >
           <div v-for="(item, index) in keys" :key="index" class="tableRow">
             <div class="rowContent">
-              <span class="circle"></span>
+              <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
               <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
 
               <span v-else class="category" @click="logEvent"
@@ -276,7 +276,36 @@ export default {
       ImportSlashingActive: false,
       slashingDB: "",
       isPubkeyVisible: false,
+      keyIcon: {
+        normalKey: "./img/icon/the-staking/normal-key.svg",
+        remoteKey: "./img/icon/the-staking/remotekey.svg",
+      },
+      keyType: true,
     };
+  },
+  computed: {
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+      runningServices: "runningServices",
+      network: "network",
+    }),
+    ...mapWritableState(useStakingStore, {
+      totalBalance: "totalBalance",
+      keys: "keys",
+      forceRefresh: "forceRefresh",
+    }),
+    importingErrorMessage() {
+      return {
+        "text-danger": this.message.includes("Failed"),
+      };
+    },
+    keyIconPicker() {
+      if (this.keyType === true) {
+        return this.keyIcon.normalKey;
+      } else {
+        return this.keyIcon.remoteKey;
+      }
+    },
   },
   watch: {
     button: {
@@ -314,23 +343,7 @@ export default {
       },
     },
   },
-  computed: {
-    ...mapWritableState(useServices, {
-      installedServices: "installedServices",
-      runningServices: "runningServices",
-      network: "network",
-    }),
-    ...mapWritableState(useStakingStore, {
-      totalBalance: "totalBalance",
-      keys: "keys",
-      forceRefresh: "forceRefresh",
-    }),
-    importingErrorMessage() {
-      return {
-        "text-danger": this.message.includes("Failed"),
-      };
-    },
-  },
+
   beforeMount() {
     this.keys = this.keys.map((item) => {
       return {
@@ -847,12 +860,18 @@ remove-validator {
 
 .tableRow .circle {
   grid-column: 1;
-  width: 19px;
-  height: 19px;
+  width: 80%;
+  height: 70%;
   border-radius: 50%;
   background-color: #bebebe;
   margin: 0 5px;
   align-self: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.circle img {
+  width: 80%;
 }
 
 .tableRow .category {
