@@ -1,5 +1,5 @@
 const { Client } = require("ssh2");
-import { createTunnel } from "tunnel-ssh";
+import { createTunnel } from "./SSHServiceTunnel";
 const log = require("electron-log");
 
 export class SSHService {
