@@ -201,7 +201,7 @@
     "reward": "ШАГНАЛ"
   },
   "installOption": {
-    "installText": "ЭНЭ ХУУДСАН ДЭЭР ТА ӨӨРИЙН НӨҮД - ДӨӨ ХИЙХ ЗҮЙЛЭЭ СОНГОХ БОЛОМЖТОЙ. СОНГОЛТОО ХИЙГЭЭД, ЭХЛҮҮЛЭХ ТОВЧИЙГ ДАРСНЫ ДАРАА КЛАЙНТ САНАМСАРГҮЙГЭЭР СОНГОГДОЖ, ТАНЫ USE CASE - ИЙН ДАГУУ ҮЙЛЧЛЭХ БОЛНО",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "БУЦАХ",
     "install": "СУУЛГАХ",
     "placeHoldrer": "choose a network"
@@ -217,11 +217,11 @@
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "СОНГОЛТ",
+    "option": "CHOSEN NETWORK",
     "chosen": "СОНГОГДСОН СҮЛЖЭЭ",
     "path": "СУУЛГАХ ЗАМ",
     "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
-    "plugin": "ПЛАГИНС",
+    "plugin": "INSTALLED SERVICES",
     "back": "БУЦАХ",
     "next": "ДАРААГИЙНХ"
   },
