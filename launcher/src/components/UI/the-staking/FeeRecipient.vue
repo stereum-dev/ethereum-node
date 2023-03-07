@@ -11,7 +11,12 @@
 </template>
 <script>
 export default {
-  props: ["activeFee"],
+  props: {
+    activeFee: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>
 <style scoped>

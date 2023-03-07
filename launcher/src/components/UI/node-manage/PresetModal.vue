@@ -93,7 +93,12 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 export default {
-  props: ["modalStatus"],
+  props: {
+    modalStatus: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isMainnetActive: true,
@@ -102,9 +107,7 @@ export default {
       testnetPlugins: [],
     };
   },
-  created() {
-    this.switchNetworkHandler();
-  },
+
   computed: {
     ...mapWritableState(useClickInstall, {
       plugins: "presets",
@@ -114,6 +117,9 @@ export default {
     ...mapWritableState(useServices, {
       allServices: "allServices",
     }),
+  },
+  created() {
+    this.switchNetworkHandler();
   },
   methods: {
     goToInstallation() {

@@ -58,7 +58,12 @@
 import ErrorTerminal from "./ErrorTerminal.vue";
 export default {
   components: { ErrorTerminal },
-  props: ["subTasks", "item"],
+  props: {
+    subTasks: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       displayTaskResult: false,

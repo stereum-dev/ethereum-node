@@ -62,22 +62,6 @@ export default {
       checkNewTasks: [],
     };
   },
-  created() {
-    this.checkNewTasks = this.displayingTasks;
-    if (this.$route.name === "TheNode") {
-      this.displayTasksTemprory();
-    }
-  },
-
-  mounted() {
-    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
-    this.refresh = setInterval(this.getTasks, 1000); //refresh data
-  },
-  beforeUnmount() {
-    clearInterval(this.polling);
-    clearInterval(this.refresh);
-  },
-
   computed: {
     ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
@@ -97,6 +81,21 @@ export default {
       }
       return this.taskManagerIcons.progressIcon;
     },
+  },
+  created() {
+    this.checkNewTasks = this.displayingTasks;
+    if (this.$route.name === "TheNode") {
+      this.displayTasksTemprory();
+    }
+  },
+
+  mounted() {
+    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
+    this.refresh = setInterval(this.getTasks, 1000); //refresh data
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
+    clearInterval(this.refresh);
   },
   methods: {
     getTasks: async function () {

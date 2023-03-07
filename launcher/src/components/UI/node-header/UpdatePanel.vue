@@ -166,7 +166,12 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services.js";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
-  props: ["clickBg"],
+  props: {
+    clickBg: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       stereumApp: {

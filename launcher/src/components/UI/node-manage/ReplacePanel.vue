@@ -63,7 +63,12 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 
 export default {
-  props: ["items"],
+  props: {
+    items: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       plugin: {},

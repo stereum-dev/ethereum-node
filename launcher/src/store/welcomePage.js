@@ -21,7 +21,7 @@ export const useWelcomeStore = defineStore("welcomePage", {
           img: "/img/icon/welcome-page/config-import.png",
           imgHover: "/img/icon/welcome-page/config-import-hover.png",
           imgDisabled: "/img/icon/welcome-page/config-import-disabled.png",
-          path: "/",
+          path: "/upload",
           display: false,
         },
       ],
