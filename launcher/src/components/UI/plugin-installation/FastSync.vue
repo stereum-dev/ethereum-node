@@ -62,12 +62,10 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import WarningModal from "./WarningModal.vue";
 import InstallationBox from "./InstallationBox.vue";
 import ConsensusSync from "./ConsensusSync.vue";
 export default {
   components: {
-    WarningModal,
     InstallationBox,
     ConsensusSync,
   },
@@ -103,6 +101,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.filterServices();
+  },
 
   methods: {
     changeTheOption() {
@@ -123,9 +124,6 @@ export default {
       )[0];
     },
 
-  },
-  mounted() {
-    this.filterServices();
   },
 };
 </script>

@@ -1,6 +1,8 @@
 <template>
-  <div class="bg-opacity"></div>
-  <div class="removeRow"></div>
+  <div>
+    <div class="bg-opacity"></div>
+    <div class="removeRow"></div>
+  </div>
 </template>
 <script>
 export default {};

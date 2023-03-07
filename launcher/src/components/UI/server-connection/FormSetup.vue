@@ -235,9 +235,7 @@ export default {
       imgTrash: "./img/icon/TRASH_CAN.png",
     };
   },
-  created() {
-    this.loadStoredConnections();
-  },
+
   computed: {
     inputType() {
       return this.showPassword ? "text" : "password";
@@ -261,6 +259,9 @@ export default {
         return this.model.keylocation.value;
       }
     },
+  },
+  created() {
+    this.loadStoredConnections();
   },
   methods: {
     toggleShowPassword() {

@@ -38,13 +38,14 @@ export default {
       isprometheusAvailable: false,
     };
   },
-  mounted() {
-    this.filterprometheusService();
-  },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
     }),
+  },
+  mounted() {
+    this.filterprometheusService();
   },
   methods: {
     filterprometheusService() {

@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="selectedPreset.name" :icon="selectedPreset.icon" :next="nextPath" :back="backPath" >
+  <installation-box :title="selectedPreset.name" :icon="selectedPreset.icon" :next="nextPath" :back="backPath">
     <div class="content-box">
       <div class="included-box">
         <div class="included-title">
@@ -78,7 +78,6 @@
                 <input v-model="recipientFee" type="text" disabled />
               </div>
             </div> -->
-
           </div>
         </div>
       </div>
@@ -86,7 +85,6 @@
   </installation-box>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
 import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
@@ -95,7 +93,7 @@ import ControlService from "@/store/ControlService";
 import { useServices } from "../../../store/services";
 
 export default {
-  components: { ToggleButton, ChangeModal, InstallationBox },
+  components: { ChangeModal, InstallationBox },
 
   data() {
     return {
@@ -241,7 +239,7 @@ export default {
 
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },
@@ -581,7 +579,6 @@ export default {
   border: 2px solid #5b5b5b;
   border-radius: 100%;
 }
-
 
 .option-content .change-installation,
 .option-content .set-recipient {

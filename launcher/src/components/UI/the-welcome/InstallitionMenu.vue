@@ -52,15 +52,16 @@ export default {
       supportMessage: this.$t("installitionMenu.osSupported"),
     };
   },
+
+  computed: {
+    ...mapState(useWelcomeStore, { installation: "installation" }),
+  },
   created() {
     setTimeout(() => {
       this.active = false;
     }, 5000);
     this.checkOsRequirements();
     this.randomValue();
-  },
-  computed: {
-    ...mapState(useWelcomeStore, { installation: "installation" }),
   },
   methods: {
     isCompatible(item) {

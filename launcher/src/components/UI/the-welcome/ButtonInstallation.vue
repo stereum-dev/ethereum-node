@@ -9,7 +9,16 @@
 <script>
 export default {
   name: "ButtonInstallation",
-  props: ["img", "url"],
+  props: {
+    img: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       isHovered: false,

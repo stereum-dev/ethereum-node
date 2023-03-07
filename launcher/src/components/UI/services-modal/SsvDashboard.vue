@@ -30,15 +30,18 @@ import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 export default {
-  props: ["pubkey"],
+  props: {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       localpubkey: this.pubkey,
     };
   },
-  mounted() {
-    this.getURL();
-  },
+
   computed: {
     ...mapWritableState(useNodeStore, {
       ssvNetworkUrl: "ssvNetworkUrl",
@@ -46,6 +49,9 @@ export default {
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
+  },
+  mounted() {
+    this.getURL();
   },
 
   methods: {

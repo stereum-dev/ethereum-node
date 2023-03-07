@@ -22,7 +22,16 @@
 </template>
 <script>
 export default {
-  props: ["service", "loading"],
+  props: {
+    service: {
+      type: Object,
+      required: true,
+    },
+    loading: {
+      type: Boolean,
+      required: true,
+    },
+  },
 };
 </script>
 

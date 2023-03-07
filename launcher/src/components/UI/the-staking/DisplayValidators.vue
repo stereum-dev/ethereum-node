@@ -230,7 +230,6 @@
   </div>
 </template>
 <script>
-import DropZone from "./DropZone.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
@@ -256,7 +255,6 @@ import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
 export default {
   components: {
-    DropZone,
     KeyModal,
     FeeRecipient,
     GrafitiValidator,
@@ -276,7 +274,12 @@ export default {
     DisabledStaking,
     SearchBox,
   },
-  props: ["button"],
+  props: {
+    isPubkeyVisible: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       stakingIsDisabled: false,
@@ -314,7 +317,6 @@ export default {
       selectedService: {},
       ImportSlashingActive: false,
       slashingDB: "",
-      isPubkeyVisible: false,
       searchBoxActive: false,
       searchModel: "",
     };

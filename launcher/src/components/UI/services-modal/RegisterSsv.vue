@@ -49,7 +49,16 @@
 </template>
 <script>
 export default {
-  props: ["pubkey", "secretkey"],
+  props: {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+    secretkey: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       model: {

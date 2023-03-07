@@ -84,14 +84,15 @@ export default {
       pubkey: null,
     };
   },
-  mounted() {
-    this.getKeys();
-  },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
     }),
+  },
+  mounted() {
+    this.getKeys();
   },
   methods: {
     operatorModalHandler() {

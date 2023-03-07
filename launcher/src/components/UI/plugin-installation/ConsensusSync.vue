@@ -9,7 +9,7 @@
         <span>{{ client.displayCategory }}</span>
       </div>
     </div>
-    <carousel :items-to-show="1" :wrapAround="true" :transition="500">
+    <carousel :items-to-show="1" :wrap-around="true" :transition="500">
       <slide v-for="(item, index) in syncType" :key="index">
         <div class="syncBox">
           <div v-if="item.type === 'recommended'" class="syncContent">
@@ -61,19 +61,18 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import "vue3-carousel/dist/carousel.css";
-import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel";
+import { Carousel, Slide, Navigation } from "vue3-carousel";
 export default {
   components: {
     Carousel,
     Slide,
-    Pagination,
     Navigation,
   },
   props: {
     client: {
       type: Object,
       required: true,
-      default: {},
+      default: () => ({}),
     },
   },
   data() {
@@ -83,17 +82,17 @@ export default {
       selectedItem: " - SELECT A SOURCE -",
     };
   },
-  watch: {
-    checkInput() {
-      this.checkPointSync = this.inputData;
-    },
-  },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
       checkPointSync: "checkPointSync",
       customElements: "customElements",
     }),
+  },
+  watch: {
+    checkInput() {
+      this.checkPointSync = this.inputData;
+    },
   },
 };
 </script>

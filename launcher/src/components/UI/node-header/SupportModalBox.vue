@@ -13,7 +13,20 @@
 </template>
 <script>
 export default {
-  props: ["boxTitle", "boxImagePath", "boxText"],
+  props: {
+    boxTitle: {
+      type: String,
+      required: true,
+    },
+    boxImagePath: {
+      type: String,
+      required: true,
+    },
+    boxText: {
+      type: String,
+      required: true,
+    },
+  },
   emit: ["card-action"],
   methods: {
     cardAction() {

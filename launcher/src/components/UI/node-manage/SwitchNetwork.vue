@@ -67,7 +67,7 @@ export default {
     },
   },
   methods: {
-    changeConfig(val) {
+    changeConfig() {
       const installed = JSON.parse(JSON.stringify(this.installedServices));
       this.newConfiguration = installed;
     },

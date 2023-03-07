@@ -317,7 +317,6 @@ export default {
       this.itemToReplace.replacePanel = false;
       this.itemToReplace = {};
     },
-    replacePluginHandler(item) {},
   },
 };
 </script>
