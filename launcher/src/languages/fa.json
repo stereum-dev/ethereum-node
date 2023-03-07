@@ -201,7 +201,7 @@
     "reward": "پاداش"
   },
   "installOption": {
-    "installText": "در این صفحه می توانید آنچه را که می خواهید با نود خود انجام دهید را انتخاب کنید. پس ازانتخاب و فشار دادن استارت، یک انتخاب تصادفی کلاینت برای سرویس دهی به مورد استفاده شما انجام می شود",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "بازگشت",
     "install": "نصب",
     "placeHoldrer": "یک شبکه را انتخاب کنید"
@@ -217,11 +217,11 @@
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "گزینه انتخاب",
+    "option": "CHOSEN NETWORK",
     "chosen": "شبکه انتخاب شده",
     "path": "مسیر نصب",
     "syncClient": "کلاینت خود را از ابتدای زنجیره همگام سازی می کند",
-    "plugin": "پلاگین ها",
+    "plugin": "INSTALLED SERVICES",
     "back": "بازگشت",
     "next": "بعدی"
   },
