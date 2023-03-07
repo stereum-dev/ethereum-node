@@ -201,7 +201,7 @@
     "reward": "НАГРАДА"
   },
   "installOption": {
-    "installText": "НА ТАЗИ СТРАНИЦА МОЖЕТЕ ДА ИЗБЕРЕТЕ КАКВО ИСКАТЕ ДА НАПРАВИТЕ С НОД-а СИ. СЛЕД КАТО ИЗБЕРЕТЕ И НАТИСНЕТЕ СТАРТ, ЩЕ БЪДЕ ИЗБРАН СЛУЧАЕН КЛИЕНТ, КОЙТО ДА ОБСЛУЖВА ВАШИЯ СЛУЧАЙ НА УПОТРЕБА",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "НАЗАД",
     "install": "ИНСТАЛИРАЙ",
     "placeHoldrer": "choose a network"
@@ -217,11 +217,11 @@
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "ОПЦИИ",
+    "option": "CHOSEN NETWORK",
     "chosen": "ИЗБИРАНЕ НА МРЕЖА",
     "path": "ПЪТ ЗА ИНСТАЛИРАНЕ",
     "syncClient": "СИНХРОНИЗИРА ВАШИЯ КЛИЕНТ ОТ НАЧАЛОТО НА ВЕРИГАТА",
-    "plugin": "ПЛЪГИНИ",
+    "plugin": "INSTALLED SERVICES",
     "back": "НАЗАД",
     "next": "СЛЕДВАЩ"
   },
