@@ -226,19 +226,24 @@ export default {
 .message-box {
   grid-column: 1/7;
   grid-row: 9/11;
-  width: 100%;
+  width: 500px;
   height: 50px;
+  background-color: #1e2429;
+  border: 1px solid #3b5a41;
+  border-radius: 50px;
+  margin: 20px auto;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .message-box .msg-title {
-  width: 48%;
+  width: 100%;
   height: 30%;
   text-align: center;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: #eee;
   display: flex;
   justify-content: center;
@@ -247,7 +252,7 @@ export default {
 .result-box {
   grid-column: 1/7;
   grid-row: 9/11;
-  width: 30%;
+  width: 500px;
   height: 50px;
   background-color: #1e2429;
   border: 1px solid #3b5a41;
@@ -287,6 +292,7 @@ export default {
 }
 .dot-flashing {
   position: relative;
+  top: -2px;
   width: 5px;
   height: 5px;
   align-self: flex-end;
@@ -303,7 +309,7 @@ export default {
   content: "";
   display: inline-block;
   position: absolute;
-  top: 0;
+  top:0;
 }
 
 .dot-flashing::before {

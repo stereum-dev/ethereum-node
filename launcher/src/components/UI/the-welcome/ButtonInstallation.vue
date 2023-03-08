@@ -53,8 +53,7 @@ export default {
   height: 100%;
   resize: both;
   border-radius: 50px;
-  border: 4px solid #6e8582;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
+  border: 4px solid  #1e2429;
   cursor: pointer;
 }
 

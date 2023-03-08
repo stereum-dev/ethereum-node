@@ -75,6 +75,7 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/selectPlugin");
     }
+    console.log(this.checkPointSync);
   },
   methods: {
     runInstalltion: async function () {
