@@ -201,7 +201,7 @@
     "reward": "NAGRADA"
   },
   "installOption": {
-    "installText": "NA OVOJ STRANICI MOŽETE DA BIRATE ŠTA ŽELITE DA RADITE SA SVOJIM NODEOM. NAKON ODABRA I PRITISKA ZAPOČNI SLUČAJNI IZBOR CLIENTA ĆE SE PODUZET DA SE USLUŽI VAŠEM SLUČAJU UPOTREBE",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "NAZAD",
     "install": "INSTALIRATI",
     "placeHoldrer": "izaberite network"
@@ -217,11 +217,11 @@
     "osSupported": "OVO JE PODRŽAN OS"
   },
   "pluginName": {
-    "option": "OPCIJA",
+    "option": "CHOSEN NETWORK",
     "chosen": "IZABRANI NETWORK",
     "path": "INSTALACIJSKI PUT",
     "syncClient": "SINHRONIZUJE VAŠEG CLIENTA OD POČETKA CHAINa",
-    "plugin": "PLUGINS",
+    "plugin": "INSTALLED SERVICES",
     "back": "NAZAD",
     "next": "SLJEDEĆI"
   },
