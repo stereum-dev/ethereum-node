@@ -542,7 +542,7 @@ export default {
   padding-top: 6px;
   white-space: nowrap;
   display: inline-flex;
-  overflow: hidden;
+  overflow: visible !important;
   justify-self: center;
 }
 
