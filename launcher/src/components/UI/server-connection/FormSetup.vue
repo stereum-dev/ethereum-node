@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attributes-order -->
 <template>
   <div class="server-parent">
     <div v-if="errorMsgExists" class="error-box"></div>
@@ -21,7 +22,7 @@
       </section>
 
       <delete-modal v-if="bDialogVisible" @delete-server="baseDialogDelete" @remove-modal="hideBDialog"></delete-modal>
-      <form @submit.prevent.stop="login">
+      <form @submit.prevent.stop="login" class="space-y-1">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">
@@ -702,7 +703,7 @@ select {
 #keyLocation {
   width: 65%;
   border: 5px solid #929292;
-  border-radius: 18px;
+  border-radius: 14px;
   background-color: #234141;
   display: flex;
   justify-content: space-between;
@@ -805,7 +806,7 @@ input {
 .ssh {
   width: 150px;
   min-width: 100px;
-  height: 33px;
+  height: 34px;
   background-color: #234141;
   border: 3px solid #929292;
   border-radius: 40px;
@@ -830,7 +831,7 @@ input {
 .switch {
   position: relative;
   display: inline-block;
-  width: 29%;
+  width: 30%;
   height: 89%;
   margin-left: 2px;
   margin-top: 3px;
@@ -843,7 +844,7 @@ input {
 }
 
 .slider {
-  height: 90%;
+  height: 22px;
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -858,14 +859,14 @@ input {
 .slider:before {
   position: absolute;
   content: "";
-  height: 80%;
-  width: 40%;
+  height: 18px;
+  width: 18px;
+  border: 1px solid #1b9dcc;
   left: 6%;
-  bottom: 10%;
+  bottom: 9%;
   background-color: #25acde;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  box-shadow: 0px 1px 3px 1px #5f6161;
 }
 
 input:checked + .slider {
@@ -873,11 +874,11 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(80%);
-  -ms-transform: translateX(40%);
-  transform: translateX(115%);
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(10px);
+  transform: translateX(19px);
   background-color: #51a76e;
-  box-shadow: 2px 1px 5px #292b2b;
+  border: 1px solid #2d944f;
 }
 
 /* Rounded sliders */
