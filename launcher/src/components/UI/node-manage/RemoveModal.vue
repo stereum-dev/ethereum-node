@@ -16,7 +16,7 @@
       <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
     </div>
     <div v-else class="remove-modal-accepted">
-      <div class="remove-modal-accepted_container">
+      <div class="remove-modal-accepted_container" :style="{ backgroundImage: nukeNode }">
         <div class="remove-modal-accepted_header">
           <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
@@ -43,11 +43,11 @@ export default {
   data() {
     return {
       visible: true,
-      solidBg: true,
       //data is dummy
       data: ["data 1", "data 2", "data 3"],
       dataCunter: [],
       loginBtn: true,
+      nukeNode: "url('./img/icon/arrows/NukeNode_Final.gif')",
     };
   },
   mounted() {
@@ -151,7 +151,7 @@ export default {
 .remove-modal-accepted_container {
   width: 95%;
   height: 95%;
-  background-image: url(../../../../public/img/icon/arrows/NukeNode_Final.gif);
+
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 75px;
@@ -160,11 +160,7 @@ export default {
   align-items: center;
   flex-direction: column;
 }
-.solidBg {
-  background-image: url(../../../../public/img/icon/arrows/NukeNode_Final.gif);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
+
 .remove-modal-accepted_header {
   width: 40%;
   height: 12%;
