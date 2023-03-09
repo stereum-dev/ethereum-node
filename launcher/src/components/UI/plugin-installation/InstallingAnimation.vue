@@ -86,10 +86,8 @@ export default {
         }, 700);
         setTimeout(() => {
           this.images.push(this.installAnimations[3]);
-        }, 1000);
-        setTimeout(() => {
           this.images.push(this.executionClientIcon, this.consensusClientIcon);
-        }, 2000);
+        }, 1000);
         this.images = [];
       }, 6000);
     },

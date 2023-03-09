@@ -803,6 +803,10 @@ video {
   margin-top: 0px;
 }
 
+.ml-1{
+  margin-left: 0.25rem;
+}
+
 .block{
   display: block;
 }
@@ -1190,6 +1194,31 @@ html body {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   background-color: rgb(31, 31, 31);
+}
+
+.placeholder\:text-gray-500::-webkit-input-placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-500::-moz-placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-500:-ms-input-placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-500::-ms-input-placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
+
+.placeholder\:text-gray-500::placeholder{
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
 }
 
 .hover\:bg-slate-700:hover{

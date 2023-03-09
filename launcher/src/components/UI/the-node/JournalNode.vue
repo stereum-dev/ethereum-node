@@ -66,7 +66,7 @@
         btn-action="logToggle"
         grid-row="5/6"
         @btn-action="logToggle"
-        >{{ $t("journalnode.log") }}</the-node-panel-btn
+        >{{ $t("journalnode.log") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/start-stop.png"
@@ -75,8 +75,8 @@
         margin-right="3"
         grid-row="4/5"
         @btn-action="powerToggl"
-        ><span id="start">{{ $t("journalnode.start") }}</span> /
-        <span id="stop">{{ $t("journalnode.stop") }}</span></the-node-panel-btn
+        ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
+        ><span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/restart.png"
@@ -86,7 +86,7 @@
         btn-action="restartToggle"
         grid-row="3/4"
         @btn-action="restartToggle"
-        >{{ $t("journalnode.restart") }}</the-node-panel-btn
+        >{{ $t("journalnode.restart") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
     </div>
     <div v-if="!openRestart && openLog" class="configBtn">
