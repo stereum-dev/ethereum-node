@@ -176,6 +176,11 @@ export default {
       },
       immediate: true,
     },
+    checkAvailableRelays() {
+      this.availableBlocks = this.shuffleRelaysList(
+        this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+      );
+    },
   },
   mounted() {
     this.getInstallPath();
