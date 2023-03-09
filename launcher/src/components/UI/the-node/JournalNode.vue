@@ -2,11 +2,13 @@
   <div class="config-node">
     <div class="server">
       <div class="serverBox">
-        <div class="details">
+        <div ref="nameParent" class="details">
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
           <span class="ip">{{ ipAddress }}</span>
-          <span class="name">{{ ServerName }}</span>
+          <span ref="serverName" :class="{ animateServerName: checkServerNameWidth }" class="name">{{
+            ServerName
+          }}</span>
         </div>
       </div>
     </div>
@@ -57,39 +59,39 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/logs_icon.svg"
-        is-color="light"
+        img-path="/img/icon/node-journal-icons/log-icon.png"
+        is-color="blue"
         width="15"
         margin-right="3"
         btn-action="logToggle"
         grid-row="5/6"
         @btn-action="logToggle"
-        >{{ $t("journalnode.log") }}</the-node-panel-btn
+        >{{ $t("journalnode.log") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start_stop.svg"
+        img-path="/img/icon/node-journal-icons/start-stop.png"
         is-color="light"
         width="15"
         margin-right="3"
         grid-row="4/5"
         @btn-action="powerToggl"
         ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
-        >...</the-node-panel-btn
+        ><span class="ml-1">. . .</span></the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/plugin-menu-icons/restart.png"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/restart.png"
+        is-color="orange"
+        width="14"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="3/4"
         @btn-action="restartToggle"
-        >{{ $t("journalnode.restart") }}</the-node-panel-btn
+        >{{ $t("journalnode.restart") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
     </div>
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        img-path="/img/icon/node-journal-icons/log-icon.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -121,14 +123,14 @@
     </div>
     <div v-if="!openRestart && !openLog && openPower" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start_stop.svg"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/start-stop.png"
+        is-color="orange"
+        width="16"
         margin-right="3"
         btn-action="logToggle"
         grid-row="1/2"
         class="btnTitle"
-        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
+        ><span id="start">start</span> / <span id="stop">stop</span></the-node-panel-btn
       >
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
@@ -163,9 +165,9 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        img-path="/img/icon/plugin-menu-icons/restart.png"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/restart.png"
+        is-color="orange"
+        width="14"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="1/2"
@@ -225,6 +227,8 @@ export default {
       itemToRestart: {},
       restartLoad: false,
       openPower: false,
+      serverNameWidth: null,
+      nameParentWidth: null,
     };
   },
 
@@ -259,8 +263,18 @@ export default {
         return 0;
       });
     },
+    checkServerNameWidth() {
+      if (this.serverNameWidth > this.nameParentWidth) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
-
+  mounted() {
+    this.serverNameWidth = this.$refs.serverName.clientWidth;
+    this.nameParentWidth = this.$refs.serverName.parentElement.clientWidth;
+  },
   methods: {
     serviceStateStatus(item) {
       return item.serviceIsPending ? true : false;
@@ -387,10 +401,10 @@ export default {
 
 <style scoped>
 #start {
-  color: #40ee1d;
+  color: #49b48b;
 }
 #stop {
-  color: #dc0a03;
+  color: #df4b46;
 }
 .btnTitle {
   box-shadow: none !important;
@@ -407,10 +421,13 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 100%;
+  height: 230px;
   width: 100%;
   overflow-y: scroll;
   flex-direction: column;
+}
+.log-navigation::-webkit-scrollbar {
+  width: 3px;
 }
 
 .linkToEdit {
@@ -452,10 +469,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2d3134;
+  background-color: #23272a;
   border-radius: 10px;
-  box-shadow: 1px 1px 3px 1px #282727;
-  border: 1px solid #4c4848;
+  box-shadow: 0 1px 3px 1px #282727;
+  border: 1px solid #747475;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .server .details {
@@ -463,17 +482,19 @@ export default {
   height: 85%;
   border-radius: 8px;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 25% 75%;
   grid-template-rows: repeat(6, 1fr);
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -488,11 +509,11 @@ export default {
 
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 4/6;
+  grid-row: 4/7;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -507,31 +528,56 @@ export default {
 
 .server .name {
   grid-column: 2/3;
-  grid-row: 4/6;
-  width: 100%;
+  grid-row: 4/7;
+  width: fit-content;
+  max-width: 125px;
   height: 100%;
-  text-align: center;
-  font-size: 0.6rem;
+  text-align: center !important;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #84b36b;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
+  padding-top: 6px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  align-self: center;
+  display: inline-flex;
+  overflow: visible !important;
+  justify-self: center;
 }
 
+.animateServerName {
+  animation: backAndForth 5s infinite;
+}
+@keyframes backAndForth {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(-50%);
+  }
+  55% {
+    transform: translateX(-50%);
+  }
+  90% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
 .server .ip {
   grid-column: 2/3;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #84b36b;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -552,8 +598,8 @@ export default {
   background-color: #606060;
   border-radius: 10px;
   margin: 0 auto;
-  box-shadow: 1px 1px 3px 1px #282727;
-  border: 1px solid #4c4848;
+  box-shadow: 0 1px 3px 1px #2a2d31;
+  border: 1px solid #868686;
 }
 
 ::-webkit-scrollbar {
@@ -564,10 +610,10 @@ export default {
 
 ::-webkit-scrollbar-track {
   border: 1px solid #343434;
-  background: rgb(42, 42, 42);
+  background: rgb(229, 161, 52);
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
-  border-radius: 50%;
+  border-radius: 50px;
 }
 
 /* Handle */

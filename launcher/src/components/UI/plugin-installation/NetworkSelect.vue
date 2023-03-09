@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/return-in-computed-property -->
 <template>
   <div class="plugin-parent">
     <div class="select-box">
@@ -292,8 +293,8 @@ export default {
 }
 
 .plugin img {
-  width: 100%;
-  height: 95%;
+  width: 69px;
+  height: 69px;
   border-radius: 5px;
   border: 2px solid transparent;
   cursor: pointer;

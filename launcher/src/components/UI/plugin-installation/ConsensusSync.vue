@@ -18,10 +18,18 @@
               <span>{{ item.type }}</span>
             </div>
             <div class="inputBox">
-              <input v-model="inputData" type="text" placeholder="9000" />
+              <input
+                v-model="checkPointSync"
+                type="text"
+                placeholder="https://example.cc/"
+                class="placeholder:text-gray-500"
+              />
             </div>
           </div>
           <div v-else-if="item.type === 'custom source'" class="syncContent">
+            <div class="commingSoon">Coming soon...</div>
+            <!-- <span>{{ item.name }}</span>
+            <span>{{ item.type }}</span>
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
@@ -29,22 +37,19 @@
             <div class="inputBox_select" @click="dropdown = true">
               <div class="select">
                 {{ selectedItem }}
-                <!-- <div class="dropParent" v-if="dropdown">
+                <div class="dropParent" v-if="dropdown">
                   <div class="dropRow">the first</div>
                   <div class="dropRow">second one</div>
                   <div class="dropRow">third one</div>
-                </div> -->
+                </div>
               </div>
               <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
-            </div>
+            </div> -->
           </div>
           <div v-else class="syncContent">
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
-            </div>
-            <div class="inputBox">
-              <div class="empty"></div>
             </div>
           </div>
         </div>
@@ -77,7 +82,6 @@ export default {
   },
   data() {
     return {
-      inputData: "",
       dropdown: true,
       selectedItem: " - SELECT A SOURCE -",
     };
@@ -88,11 +92,6 @@ export default {
       checkPointSync: "checkPointSync",
       customElements: "customElements",
     }),
-  },
-  watch: {
-    checkInput() {
-      this.checkPointSync = this.inputData;
-    },
   },
 };
 </script>
@@ -220,8 +219,18 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
-
+.syncBox .syncContent .commingSoon {
+  width: 100%;
+  height: 30px;
+  background-color: black;
+  opacity: 0.5;
+  color: gray;
+  padding: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
 .syncContent .syncText {
   width: 40%;
   height: 100%;
@@ -253,7 +262,7 @@ export default {
 }
 
 .syncContent .inputBox {
-  width: 60%;
+  width: 75%;
   height: 100%;
   border-radius: 10px;
   background-color: #1e2226;
@@ -317,19 +326,18 @@ export default {
   cursor: pointer;
 }
 
-.inputBox input,
-.inputBox .empty {
+.inputBox input {
   width: 100%;
   height: 100%;
   border: 3px solid #23272c;
   border-radius: 5px;
   background-color: #151a1e;
   color: #d5d5d5;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   font-weight: 400;
   text-align: left;
   padding: 5px;
-  padding-left: 10px;
+  padding-left: 5px;
 }
 .sync-header {
   width: 100%;

@@ -6,7 +6,9 @@
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
           <span class="ip">{{ ipAddress }}</span>
-          <span class="name">{{ ServerName }}</span>
+          <span ref="serverName" :class="{ animateServerName: checkServerNameWidth }" class="name">{{
+            ServerName
+          }}</span>
         </div>
       </div>
     </div>
@@ -51,6 +53,8 @@ export default {
       removeServicesModal: false,
       removeIsConfirmed: false,
       notSure: true,
+      serverNameWidth: null,
+      nameParentWidth: null,
     };
   },
   computed: {
@@ -74,6 +78,17 @@ export default {
       keys: "keys",
       forceRefresh: "forceRefresh",
     }),
+    checkServerNameWidth() {
+      if (this.serverNameWidth > this.nameParentWidth) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  mounted() {
+    this.serverNameWidth = this.$refs.serverName.clientWidth;
+    this.nameParentWidth = this.$refs.serverName.parentElement.clientWidth;
   },
   methods: {
     openModal() {
@@ -175,17 +190,17 @@ export default {
   height: 85%;
   border-radius: 8px;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 25% 75%;
   grid-template-rows: repeat(6, 1fr);
 }
 
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -197,13 +212,14 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 4/6;
+  grid-row: 4/7;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -215,32 +231,59 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .name {
   grid-column: 2/3;
-  grid-row: 4/6;
-  width: 100%;
+  grid-row: 4/7;
+  width: fit-content;
+  max-width: 125px;
   height: 100%;
-  text-align: center;
-  font-size: 0.6rem;
+  text-align: center !important;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #84b36b;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
+  padding-top: 6px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  align-self: center;
+  display: inline-flex;
+  overflow: visible !important;
+  justify-self: center;
+}
+
+.animateServerName {
+  animation: backAndForth 5s infinite;
+}
+@keyframes backAndForth {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(-50%);
+  }
+  55% {
+    transform: translateX(-50%);
+  }
+  90% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 .server .ip {
   grid-column: 2/3;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #84b36b;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;

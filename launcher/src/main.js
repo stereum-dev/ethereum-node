@@ -1,6 +1,7 @@
 import { createApp } from "vue"; // CHANGE
 
 import App from "./App.vue";
+import "animate.css";
 import router from "./router/index.js";
 import "./main.css";
 import i18n from "./includes/i18n";
