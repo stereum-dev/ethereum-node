@@ -28,12 +28,14 @@
 </template>
 <script>
 import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
+import axios from "axios";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
@@ -46,14 +48,21 @@ export default {
       showMevboostWindow: false,
     };
   },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
+      pubkey: "pubkey",
     }),
     ...mapState(useServices, {
       allServices: "allServices",
     }),
+    ...mapWritableState(useNodeHeader, {
+      testOperatorData: "testOperatorData",
+    }),
   },
+  mounted() {},
+
   methods: {
     scrollRight() {
       let position = this.$refs.service;
@@ -71,6 +80,7 @@ export default {
           this.showGrafanaWindow = true;
         } else if (serviceName == "SSVNetworkService") {
           this.showSsvWindow = true;
+          this.checkOperator();
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
         } else if (serviceName == "FlashbotsMevBoostService") {
@@ -85,6 +95,14 @@ export default {
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;
       this.showMevboostWindow = false;
+    },
+    async checkOperator() {
+      let response = await axios.get(
+        "https://api.ssv.network/api/v2/prater/operators/a1d9e31db353271388683a70dab0808a89578b82fcdbe391df8c1b9a4d30e52d"
+      );
+      if (response.status == 200) {
+        this.testOperatorData = response.status;
+      }
     },
   },
 };

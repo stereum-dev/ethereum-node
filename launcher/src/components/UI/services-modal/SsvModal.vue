@@ -31,25 +31,30 @@
           </div>
         </div>
       </div>
-      <div class="content-box">
-        <frontpage-ssv
-          v-if="pubkeyModalActive"
-          :pubkey="pubkey"
-          @open-pubkey="operatorModalHandler"
-          @open-secretkey="registerSecretkeyHandler"
-        ></frontpage-ssv>
-        <register-ssv
-          v-if="registerModalActive"
-          :pubkey="pubkey"
-          :secretkey="secretkey"
-          @register-pubkey="registerSsvPubkeyHandler"
-        ></register-ssv>
-        <secretkey-register
-          v-if="registerSecretkeyActive"
-          :ssv-service="ssvService"
-          @login-secretkey="loginWithSecretkeyHandler"
-        ></secretkey-register>
-        <ssv-dashboard v-if="ssvDashboardActive" :pubkey="pubkey"></ssv-dashboard>
+      <div class="wrapper">
+        <div v-if="dataLoading" class="spinnerBox">
+          <img src="../../../../public/img/icon/control/spinner.gif" alt="spinner" />
+        </div>
+        <div v-else class="content-box">
+          <frontpage-ssv
+            v-if="pubkeyModalActive"
+            :pubkey="pubkey"
+            @open-pubkey="operatorModalHandler"
+            @open-secretkey="registerSecretkeyHandler"
+          ></frontpage-ssv>
+          <register-ssv
+            v-if="registerModalActive"
+            :pubkey="pubkey"
+            :secretkey="secretkey"
+            @register-pubkey="registerSsvPubkeyHandler"
+          ></register-ssv>
+          <secretkey-register
+            v-if="registerSecretkeyActive"
+            :ssv-service="ssvService"
+            @login-secretkey="loginWithSecretkeyHandler"
+          ></secretkey-register>
+          <ssv-dashboard v-if="ssvDashboardActive" :pubkey="pubkey"></ssv-dashboard>
+        </div>
       </div>
     </div>
   </div>
@@ -59,6 +64,7 @@ import FrontpageSsv from "./FrontpageSsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
 import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
+import { mapWritableState } from "pinia";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import SecretkeyRegister from "./SecretkeyRegister.vue";
@@ -81,7 +87,7 @@ export default {
       selectedOperator: null,
       accepted: "",
       secretkey: null,
-      pubkey: null,
+      dataLoading: true,
     };
   },
 
@@ -89,10 +95,28 @@ export default {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
+      testOperatorData: "testOperatorData",
+    }),
+
+    ...mapWritableState(useNodeHeader, {
+      pubkey: "pubkey",
     }),
   },
   mounted() {
     this.getKeys();
+  },
+  created() {
+    setTimeout(() => {
+      if (this.testOperatorData == "200") {
+        this.ssvDashboardActive = true;
+        this.pubkeyModalActive = false;
+        this.dataLoading = false;
+      } else {
+        this.ssvDashboardActive = false;
+        this.pubkeyModalActive = true;
+        this.dataLoading = false;
+      }
+    }, 5000);
   },
   methods: {
     operatorModalHandler() {
@@ -111,6 +135,11 @@ export default {
       this.pubkeyModalActive = false;
       this.ssvDashboardActive = true;
       window.open("https://app.ssv.network/");
+    },
+    matchingSsvPublickeyHandler() {
+      this.registerModalActive = false;
+      this.pubkeyModalActive = false;
+      this.ssvDashboardActive = true;
     },
     registerSecretkeyHandler() {
       this.registerModalActive = false;
@@ -277,10 +306,27 @@ export default {
   margin-right: 15px;
   cursor: pointer;
 }
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 75%;
+}
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.spinnerBox img {
+  width: 50%;
+}
 
 .content-box {
   width: 100%;
-  height: 75%;
+  height: 100%;
   margin-top: 2%;
   display: flex;
   flex-direction: column;

@@ -30,18 +30,15 @@ import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 export default {
-  props: {
-    pubkey: {
-      type: String,
-      required: true,
-    },
-  },
+  props: ["pubkey"],
   data() {
     return {
       localpubkey: this.pubkey,
     };
   },
-
+  mounted() {
+    this.getURL();
+  },
   computed: {
     ...mapWritableState(useNodeStore, {
       ssvNetworkUrl: "ssvNetworkUrl",
@@ -49,9 +46,6 @@ export default {
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
-  },
-  mounted() {
-    this.getURL();
   },
 
   methods: {
@@ -68,7 +62,7 @@ export default {
     },
     async getURL() {
       const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
-      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(this.localpubkey);
+      this.ssvNetworkUrl.operatorUrl = "https://explorer.ssv.network/operators/" + await ControlService.getOperatorPageURL(this.localpubkey);
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
         ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1"
         : "";
