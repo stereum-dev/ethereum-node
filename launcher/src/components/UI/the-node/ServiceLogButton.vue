@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  props:{
+  props: {
     serviceIcon: {
       type: String,
       required: true,
@@ -34,7 +34,7 @@ export default {
       type: Boolean,
       required: false,
       default: false,
-    },  
+    },
   },
   emit: ["open-log"],
   methods: {
@@ -51,6 +51,7 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  padding: 5px;
 }
 .service-log-button_parent.disabled {
   opacity: 0.5;

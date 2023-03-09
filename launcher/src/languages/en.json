@@ -16,13 +16,13 @@
     "serverip": "server ip",
     "servername": "SERVER NAME",
     "edit": "to edit node",
-    "loading":"loading new states",
-    "turnOn":"Turn Node on",
-    "turnOff":"Turn Node off",
-    "log":"Open Logs...",
-    "restart": "Restart...",
-    "start":"start",
-    "stop":"stop"
+    "loading": "loading new states",
+    "turnOn": "Turn Node on",
+    "turnOff": "Turn Node off",
+    "log": "Open Logs",
+    "restart": "Restart",
+    "start": "start",
+    "stop": "stop"
   },
   "pagesnav": {
     "node": "NODE",
@@ -325,18 +325,18 @@
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
     "prunningStart": "Start Pruning"
   },
-  "restartModal":{
-  "restarQ":"Are you sure you want to restart?",
-  "restartMessage":"your node might go offline while doing so!",
-  "restart":"restart"
+  "restartModal": {
+    "restarQ": "Are you sure you want to restart?",
+    "restartMessage": "your node might go offline while doing so!",
+    "restart": "restart"
   },
-  "nukeModal":{
-    "nukeQ":"ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
-    "nukeTitle":"nuke the node",
-    "backToLogin":"Back to login"
+  "nukeModal": {
+    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
+    "nukeTitle": "nuke the node",
+    "backToLogin": "Back to login"
   },
-  "noData":{
-    "noData":"no data",
-    "turnOn":"please turn on"
+  "noData": {
+    "noData": "no data",
+    "turnOn": "please turn on"
   }
 }

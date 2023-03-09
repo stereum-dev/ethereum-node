@@ -57,8 +57,8 @@
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/logs_icon.svg"
-        is-color="light"
+        img-path="/img/icon/node-journal-icons/log-icon.png"
+        is-color="blue"
         width="15"
         margin-right="3"
         btn-action="logToggle"
@@ -67,19 +67,19 @@
         >{{ $t("journalnode.log") }}</the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start_stop.svg"
+        img-path="/img/icon/node-journal-icons/start-stop.png"
         is-color="light"
         width="15"
         margin-right="3"
         grid-row="4/5"
         @btn-action="powerToggl"
-        ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
-        >...</the-node-panel-btn
+        ><span id="start">{{ $t("journalnode.start") }}</span> /
+        <span id="stop">{{ $t("journalnode.stop") }}</span></the-node-panel-btn
       >
       <the-node-panel-btn
-        img-path="/img/icon/plugin-menu-icons/restart.png"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/restart.png"
+        is-color="orange"
+        width="14"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="3/4"
@@ -89,7 +89,7 @@
     </div>
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/logs_icon.svg"
+        img-path="/img/icon/node-journal-icons/log-icon.png"
         is-color="light"
         width="15"
         margin-right="3"
@@ -121,14 +121,14 @@
     </div>
     <div v-if="!openRestart && !openLog && openPower" class="configBtn">
       <the-node-panel-btn
-        img-path="/img/icon/node-journal-icons/start_stop.svg"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/start-stop.png"
+        is-color="orange"
+        width="16"
         margin-right="3"
         btn-action="logToggle"
         grid-row="1/2"
         class="btnTitle"
-        ><span id="start">start</span> / <span id="stop">stop</span>...</the-node-panel-btn
+        ><span id="start">start</span> / <span id="stop">stop</span></the-node-panel-btn
       >
       <the-node-panel-btn
         img-path="/img/icon/manage-node-icons/undo1.png"
@@ -163,9 +163,9 @@
         @btn-action="restartToggle"
         >{{ $t("installOption.back") }}</the-node-panel-btn
       ><the-node-panel-btn
-        img-path="/img/icon/plugin-menu-icons/restart.png"
-        is-color="light"
-        width="15"
+        img-path="/img/icon/node-journal-icons/restart.png"
+        is-color="orange"
+        width="14"
         margin-right="3"
         btn-action="restartToggle"
         grid-row="1/2"
@@ -387,10 +387,10 @@ export default {
 
 <style scoped>
 #start {
-  color: #40ee1d;
+  color: #49b48b;
 }
 #stop {
-  color: #dc0a03;
+  color: #df4b46;
 }
 .btnTitle {
   box-shadow: none !important;
@@ -407,10 +407,13 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  height: 100%;
+  height: 230px;
   width: 100%;
   overflow-y: scroll;
   flex-direction: column;
+}
+.log-navigation::-webkit-scrollbar {
+  width: 3px;
 }
 
 .linkToEdit {
@@ -564,10 +567,10 @@ export default {
 
 ::-webkit-scrollbar-track {
   border: 1px solid #343434;
-  background: rgb(42, 42, 42);
+  background: rgb(229, 161, 52);
   box-sizing: border-box;
   box-shadow: 1px 1px 10px 1px rgb(23, 23, 23);
-  border-radius: 50%;
+  border-radius: 50px;
 }
 
 /* Handle */
