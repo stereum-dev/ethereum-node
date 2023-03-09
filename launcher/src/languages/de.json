@@ -13,14 +13,14 @@
     "comingsoon": "KOMMT BALD"
   },
   "journalnode": {
-    "serverip": "server ip",
-    "servername": "SERVERNAME",
+    "serverip": "IP",
+    "servername": "NAME",
     "edit": "Node bearbeiten",
     "loading": "loading new states",
     "turnOn": "Turn Node on",
     "turnOff": "Turn Node off",
-    "log": "Open Logs...",
-    "restart": "Restart...",
+    "log": "Open Logs",
+    "restart": "Restart",
     "start": "start",
     "stop": "stop"
   },
