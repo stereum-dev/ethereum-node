@@ -303,7 +303,7 @@ export default {
   height: 95%;
   grid-column: 2;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -397,7 +397,7 @@ export default {
 .sidebar-container {
   width: 100%;
   height: 100%;
-  background: #3a3d40;
+  background: #33393e;
   border: 2px solid #242529b4;
   border-top-right-radius: 30px;
   display: flex;
@@ -431,7 +431,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #3a3d40;
+  background: #494e53;
   box-sizing: border-box;
   border: 1px solid #464646;
 }

@@ -198,6 +198,11 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
       ],
       filteredPluginsToChange: [],
+
+      customAnimations: [
+        { id: 1, src: "/animation/custom-start.gif", alt: "Animation", display: false },
+        { id: 2, src: "/animation/custom-loop.gif", alt: "Animation", display: false },
+      ],
     };
   },
   actions: {},

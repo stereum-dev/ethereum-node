@@ -270,7 +270,7 @@ export default {
 }
 
 .status-box_header {
-  width: 90%;
+  width: 100%;
   height: 15%;
   display: flex;
   justify-content: center;
@@ -278,7 +278,7 @@ export default {
   background: #23272a;
   border: 1px solid #4c4848;
   border-radius: 5px;
-  box-shadow: 1px 1px 5px 1px #171717;
+  box-shadow: 0 1px 3px 1px #1c1f22;
 }
 
 .status-box_messages {
@@ -290,28 +290,30 @@ export default {
   flex-direction: column;
   background: #23272a;
   border: 1px solid #4c4848;
+  padding-top: 5px;
   border-radius: 5px;
-  box-shadow: 1px 1px 5px 1px #171717;
+  box-shadow: 0 1px 3px 1px #1c1f22;
 }
 
 .icon-line {
   display: flex;
+  justify-content: flex-start;
+  padding-top: 4px;
   width: 100%;
-  height: 90%;
+  height: 30px;
 }
 
 .status-icon {
-  width: 23%;
-  height: 100%;
+  width: 26px;
+  height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 1.5px;
 }
 
 .status-icon img {
-  width: 95%;
-  height: 98%;
+  width: 90%;
+  height: 90%;
 }
 
 .status-message_yellow,

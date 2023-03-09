@@ -35,14 +35,11 @@
                       <span>GENESIS</span>
                       <span>Syncs your clients</span>
                     </div>
-                    <div class="inputBox">
-                      <div class="empty"></div>
-                    </div>
                   </div>
                 </div>
               </div>
               <div class="table-row_3">
-                <ConsensusSync :client="consensusClient"  />
+                <ConsensusSync :client="consensusClient" />
               </div>
               <div class="table-row_5">
                 <p>
@@ -78,6 +75,7 @@ export default {
       back: "install",
       next: "",
       title: "",
+  
     };
   },
 
@@ -85,7 +83,6 @@ export default {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       syncType: "syncType",
-      checkPointSync: "checkPointSync",
       customElements: "customElements",
     }),
     ...mapWritableState(useServices, {
@@ -123,7 +120,6 @@ export default {
         (service) => service.category === "consensus"
       )[0];
     },
-
   },
 };
 </script>
@@ -297,7 +293,7 @@ export default {
 }
 
 .syncBox {
-  width: 70%;
+  width: 60.7%;
   height: 80%;
   border: 1px solid #394047;
   border-radius: 5px;
@@ -306,6 +302,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-right: 32px;
 }
 .table-row_5 {
   grid-column: 1/6;
@@ -329,7 +326,7 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 

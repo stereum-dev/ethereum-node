@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back"  :icon="selectedPreset.icon" @open-modal="displayWarningHandler">
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @open-modal="displayWarningHandler">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
@@ -75,10 +75,11 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/selectPlugin");
     }
+    console.log(this.checkPointSync);
   },
   methods: {
     runInstalltion: async function () {
-      this.$router.push("/node");
+      this.$router.push("/play");
       this.displayInstallationWarning = false;
       this.refresh = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
@@ -90,7 +91,10 @@ export default {
         checkpointURL: this.checkPointSync,
         relayURL: this.relayURL,
       });
+
       await ControlService.startOneClickServices();
+
+      this.$router.push("/node");
     },
     displayWarningHandler() {
       this.displayInstallationWarning = true;
@@ -188,11 +192,11 @@ export default {
 
 .table-content .table-row {
   width: 100%;
-  height: 35px;
+  height: 39px;
   margin-top: 2px;
   border-radius: 5px;
   border: 1px solid rgb(86, 90, 95);
-  background-color: #353d46;
+  background-color: #41464a;
   box-shadow: 0 1px 5px 1px rgb(21, 23, 23);
   justify-self: center;
   display: flex;
