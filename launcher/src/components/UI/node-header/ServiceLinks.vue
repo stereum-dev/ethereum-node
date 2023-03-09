@@ -29,6 +29,7 @@
 <script>
 import { mapState } from "pinia";
 import { mapWritableState } from "pinia";
+import ControlService from "@/store/ControlService";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
@@ -52,18 +53,28 @@ export default {
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
-      pubkey: "pubkey",
     }),
     ...mapState(useServices, {
       allServices: "allServices",
     }),
     ...mapWritableState(useNodeHeader, {
       testOperatorData: "testOperatorData",
+      pubkey: "pubkey",
     }),
   },
-  mounted() {},
+  mounted() {
+    this.getKeys();
+    console.log(this.pubkey);
+  },
 
   methods: {
+    getKeys: async function () {
+      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
+      this.ssvService = ssv;
+      let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
+      // this.secretkey = ssvConfig.ssv_sk;
+      this.pubkey = ssvConfig.ssv_pk;
+    },
     scrollRight() {
       let position = this.$refs.service;
       position.scrollLeft += 150;
