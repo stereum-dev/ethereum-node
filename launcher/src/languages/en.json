@@ -13,8 +13,8 @@
     "comingsoon": "COMING SOON"
   },
   "journalnode": {
-    "serverip": "server ip",
-    "servername": "SERVER NAME",
+    "serverip": "IP",
+    "servername": "NAME",
     "edit": "to edit node",
     "loading": "loading new states",
     "turnOn": "Turn Node on",
