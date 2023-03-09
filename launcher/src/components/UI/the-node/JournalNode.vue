@@ -7,7 +7,7 @@
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
           <span class="ip">{{ ipAddress }}</span>
           <span ref="serverName" :class="{ animateServerName: checkServerNameWidth }" class="name">{{
-            $t("journalnode.servername")
+            ServerName
           }}</span>
         </div>
       </div>
