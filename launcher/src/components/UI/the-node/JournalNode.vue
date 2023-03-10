@@ -202,8 +202,8 @@
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
-import { mapState } from "pinia";
 import { useControlStore } from "../../../store/theControl";
+import { mapState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 

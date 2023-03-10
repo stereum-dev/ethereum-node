@@ -45,12 +45,11 @@
 </template>
 <script>
 import ButtonInstallation from "./ButtonInstallation.vue";
-import CircleLoading from "../UI/CircleLoading.vue";
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useWelcomeStore } from "@/store/welcomePage";
 export default {
-  components: { ButtonInstallation, CircleLoading },
+  components: { ButtonInstallation },
   data() {
     return {
       active: true,

@@ -4,7 +4,12 @@
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
         <ValidatorState />
-        <selection-options :button-state="buttonState" @click-btn="clickBtnHandler"></selection-options>
+        <selection-options
+          :button-state="buttonState"
+          :validator-icon="installedValidators[1].icon"
+          :validator-name="installedValidators[1].name"
+          @click-btn="clickBtnHandler"
+        ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
         <TaskManager />
@@ -13,6 +18,8 @@
   </div>
 </template>
 <script>
+import { mapState } from "pinia";
+import { useServices } from "../../../store/services";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
@@ -64,6 +71,19 @@ export default {
       ],
       button: {},
     };
+  },
+
+  computed: {
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
+    installedValidators() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => obj.category === "validator");
+    },
+  },
+  mounted() {
+    console.log(this.installedValidators[0]);
   },
   methods: {
     clickBtnHandler(el) {

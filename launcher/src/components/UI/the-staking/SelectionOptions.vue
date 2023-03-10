@@ -1,6 +1,13 @@
 <template>
   <div class="selection-box">
+    .
     <div class="selection-table">
+      <div class="selection-table_validator">
+        <div class="validator-icon"><img :src="validatorIcon" :alt="validatorName" /></div>
+        <div class="validator-name">
+          <span>{{ validatorName }}</span>
+        </div>
+      </div>
       <template v-for="(button, index) in buttonState" :key="index">
         <div class="buttonRow" :class="{ disabled: !button.display }" @click.stop="$emit('clickBtn', button)">
           <div class="btnContent">
@@ -14,11 +21,56 @@
 </template>
 <script>
 export default {
-  props: ["buttonState"],
+  props: {
+    buttonState: {
+      type: Array,
+      required: true,
+    },
+    validatorIcon: {
+      type: String,
+      required: true,
+    },
+    validatorName: {
+      type: String,
+      required: true,
+    },
+  },
   methods: {},
 };
 </script>
 <style scoped>
+.validator-name {
+  display: flex;
+  width: 80%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+}
+.validator-icon {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+.validator-icon img {
+  width: 55%;
+}
+.selection-table_validator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 15%;
+  background: #dfdfdf;
+  border-radius: 30px;
+  padding: 0 1%;
+  position: absolute;
+  top: -10px;
+  z-index: 100;
+}
 .disabled {
   opacity: 0.2;
   pointer-events: none;
@@ -34,18 +86,18 @@ export default {
   background-color: #242529;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   margin: 0 auto;
+  position: relative;
 }
 .selection-table {
   width: 98%;
-  height: 98%;
+  height: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
   justify-content: flex-start;
 }
 /*.selection-table .buttonRow:last-child {
