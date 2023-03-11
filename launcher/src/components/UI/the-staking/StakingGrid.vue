@@ -6,9 +6,11 @@
         <ValidatorState />
         <selection-options
           :button-state="buttonState"
-          :validator-icon="installedValidators[1].icon"
-          :validator-name="installedValidators[1].name"
+          :validator-icon="selectedIcon"
+          :validator-name="selectedName"
+          :validators="installedValidators"
           @click-btn="clickBtnHandler"
+          @vld-picker="selectedValidator"
         ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
@@ -70,6 +72,8 @@ export default {
         },
       ],
       button: {},
+      selectedIcon: "",
+      selectedName: "",
     };
   },
 
@@ -82,8 +86,9 @@ export default {
       return copyOfInstalledServices.filter((obj) => obj.category === "validator");
     },
   },
-  mounted() {
-    console.log(this.installedValidators[0]);
+  created() {
+    this.selectedIcon = this.installedValidators[0].icon;
+    this.selectedName = this.installedValidators[0].name;
   },
   methods: {
     clickBtnHandler(el) {
@@ -91,6 +96,10 @@ export default {
       setTimeout(() => {
         this.button = el;
       });
+    },
+    selectedValidator(validator) {
+      this.selectedIcon = validator.icon;
+      this.selectedName = validator.name;
     },
   },
 };

@@ -7,7 +7,18 @@
         <div class="validator-name">
           <span>{{ validatorName }}</span>
         </div>
+        <div v-if="multiValidator" class="arrow-abteilung" @click="selectorToggl">
+          <i class="arrow down"></i>
+        </div>
       </div>
+      <ul v-if="selector" class="validator-selection">
+        <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
+          <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
+          <div class="validators-name">
+            <span>{{ validator.name }}</span>
+          </div>
+        </li>
+      </ul>
       <template v-for="(button, index) in buttonState" :key="index">
         <div class="buttonRow" :class="{ disabled: !button.display }" @click.stop="$emit('clickBtn', button)">
           <div class="btnContent">
@@ -34,14 +45,107 @@ export default {
       type: String,
       required: true,
     },
+    vIcon: {
+      type: String,
+      required: true,
+    },
+    vName: {
+      type: String,
+      required: true,
+    },
+    validators: {
+      type: Array,
+      required: true,
+    },
   },
-  methods: {},
+  emits: ["vld-picker"],
+  data() {
+    return {
+      selector: false,
+      multiValidator: false,
+    };
+  },
+  mounted() {
+    if (this.validators.length > 1) {
+      this.multiValidator = true;
+    }
+  },
+  methods: {
+    selectorToggl() {
+      this.selector = !this.selector;
+    },
+    vldPicker(validator) {
+      this.$emit("vld-picker", validator);
+      this.selector = false;
+    },
+  },
 };
 </script>
 <style scoped>
+.validator-selection {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  background: #17a2b8;
+  top: 10%;
+  overflow-y: scroll;
+}
+.validator-selection li {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  border-bottom: 1px solid #242529;
+  color: #eee;
+  margin-bottom: 1%;
+  cursor: pointer;
+}
+.validator-selection li:hover {
+  background: #dfdfdf;
+  color: #242529;
+}
+.validator-icons {
+  width: 18%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.validator-icons img {
+  width: 80%;
+}
+.validators-name {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.arrow {
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  display: flex;
+  padding: 10%;
+  margin-right: 15%;
+}
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.arrow-abteilung {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: pointer;
+}
 .validator-name {
   display: flex;
-  width: 80%;
+  width: 60%;
   height: 100%;
   justify-content: center;
   align-items: center;
@@ -60,7 +164,7 @@ export default {
 }
 .selection-table_validator {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   height: 15%;
