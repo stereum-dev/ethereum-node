@@ -62,9 +62,7 @@ export default {
       closedText: this.$t("dataAPIAndRPC.closed"),
     };
   },
-  mounted() {
-    this.rpcControler();
-  },
+
   computed: {
     ...mapWritableState(useControlStore, {
       code: "code",
@@ -74,6 +72,9 @@ export default {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
     },
+  },
+  mounted() {
+    this.rpcControler();
   },
   methods: {
     async copy(s, t) {

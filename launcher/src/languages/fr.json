@@ -201,7 +201,7 @@
     "reward": "REWARD"
   },
   "installOption": {
-    "installText": "ON THIS PAGE YOU CAN CHOOSE WHAT YOU WANT TO DO WITH YOUR NODE. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "RETOUR",
     "install": "INSTALLER",
     "placeHoldrer": "sélectionner un réseau"
@@ -217,11 +217,11 @@
     "osSupported": "EST UN OS SUPPORTÉ"
   },
   "pluginName": {
-    "option": "OPTIONS",
+    "option": "CHOSEN NETWORK",
     "chosen": "CHOISIR LE RÉSEAU",
     "path": "CHEMIN D'INSTALLATION",
     "syncClient": "SYNCS YOUR CLIENT FROM THE BEGINNING OF THE CHAIN",
-    "plugin": "PLUGINS",
+    "plugin": "INSTALLED SERVICES",
     "back": "RETOUR",
     "next": "SUIVANT"
   },

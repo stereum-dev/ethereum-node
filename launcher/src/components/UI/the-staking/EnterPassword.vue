@@ -20,7 +20,13 @@
 </template>
 <script>
 export default {
-  props: ["activePassword", "password"],
+  props: {
+    activePassword: {
+      type: Boolean,
+      default: false,
+    },
+
+  },
   data() {
     return {
       enteredPassword: "",

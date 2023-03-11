@@ -107,34 +107,32 @@ export default {
 <style scoped>
 .staking-parent {
   width: 100%;
-  height: 95.2%;
+  height: 100%;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  margin-top: 27px;
   position: relative;
+  bottom: 0;
 }
 .staking-green-bg {
   width: 100%;
   height: 100%;
-  background-color: #324b3e;
+  background-color: #264744;
   border-radius: 0 0 10px 10px;
+  padding-top: 50px;
   display: flex;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: flex-end;
-  position: relative;
   overflow: hidden;
 }
 .staking-black-bg {
-  width: 99.95%;
-  height: 95.8%;
+  width: 100%;
+  height: 99%;
   background-color: #242529;
   border: 5px solid #979797;
   border-radius: 0 15px 10px 10px;
-  position: absolute;
-  bottom: 0px;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 30% 26% 39% 5%;

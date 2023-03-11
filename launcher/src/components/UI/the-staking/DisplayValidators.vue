@@ -47,7 +47,7 @@
           @dragleave.prevent.stop="isDragOver = false"
           @drop.prevent.stop="dropFileHandler"
         >
-          <div v-for="(item, index) in keys" :key="index" class="tableRow">
+          <div v-for="(item, index) in filteredKey" :key="index" class="tableRow">
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
               <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
@@ -151,7 +151,11 @@
       </div>
     </div>
     <!-- Small search icons -->
-    <SearchOptions :is-pubkey-visible="isPubkeyVisible" @toggle-pubkey="togglePubkeyView" />
+    <SearchOptions
+      :is-pubkey-visible="isPubkeyVisible"
+      @toggle-pubkey="togglePubkeyView"
+      @open-search="openSearchBox"
+    />
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
@@ -159,6 +163,39 @@
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
     />
+    <!-- Search Input -->
+    <search-box v-if="searchBoxActive">
+      <form
+        class="w-full flex justify-between items-center border-2 border-gray-700 rounded-full bg-slate-300 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <label for="simple-search" class="sr-only text-gray-400 rounded-full">Search</label>
+        <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
+          <div class="flex items-center pointer-events-none">
+            <svg
+              aria-hidden="true"
+              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <input
+            v-model="searchModel"
+            type="search"
+            class="z-10 text-gray-700 text-sm rounded-full block w-full pl-10 p-2.5 placeholder-gray-500 bg-transparent"
+            placeholder="Search"
+          />
+
+          <!-- <img @click="$emit('close')" src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" /> -->
+        </div>
+      </form>
+    </search-box>
     <!-- select specific validator service -->
     <SelectService v-if="selectValidatorServiceForKey" @select-service="checkSelectedService" />
     <!-- Password box for validator keys -->
@@ -193,7 +230,6 @@
   </div>
 </template>
 <script>
-import DropZone from "./DropZone.vue";
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
@@ -216,9 +252,9 @@ import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
 import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
+import SearchBox from "./SearchBox.vue";
 export default {
   components: {
-    DropZone,
     KeyModal,
     FeeRecipient,
     GrafitiValidator,
@@ -236,8 +272,8 @@ export default {
     SelectService,
     ImportSlashingModal,
     DisabledStaking,
+    SearchBox,
   },
-  props: ["button"],
   data() {
     return {
       stakingIsDisabled: false,
@@ -281,6 +317,9 @@ export default {
         remoteKey: "./img/icon/the-staking/remotekey.svg",
       },
       keyType: true,
+
+      searchBoxActive: false,
+      searchModel: "",
     };
   },
   computed: {
@@ -299,6 +338,13 @@ export default {
         "text-danger": this.message.includes("Failed"),
       };
     },
+    filteredKey() {
+      if (this.searchModel.length > 0) {
+        return this.keys.filter((k) => k.key.toLowerCase().includes(this.searchModel.toLowerCase()));
+      }
+      return this.keys;
+    },
+
     keyIconPicker() {
       if (this.keyType === true) {
         return this.keyIcon.normalKey;
@@ -342,6 +388,13 @@ export default {
         }
       },
     },
+    // filteredKey(out) {
+    //   if (out !== "") {
+    //     return this.keys.filter((k) => k.key.toLowerCase().includes(out.toLowerCase()));
+    //   } else {
+    //     return this.keys;
+    //   }
+    // },
   },
 
   beforeMount() {
@@ -766,6 +819,15 @@ export default {
       }
       this.ImportSlashingActive = false;
       this.enterPasswordBox = true;
+    },
+    openSearchBox() {
+      if (this.keys.length > 0) {
+        this.searchBoxActive = !this.searchBoxActive;
+      }
+    },
+    closeSearchBox() {
+      this.insertKeyBoxActive = true;
+      this.searchBoxActive = false;
     },
   },
 };
@@ -1212,11 +1274,12 @@ remove-validator {
   text-align: center;
 }
 .import-message p {
-  width: 85%;
+  width: 96%;
   color: rgb(211, 211, 211);
-  background-color: rgb(47, 51, 55);
-  border: 1px solid rgb(211, 211, 211);
+  background-color: rgb(36, 40, 43);
+  border: 1px solid rgb(147, 150, 152);
   border-radius: 5px;
+  margin-top: 10px;
   padding: 5px 10px;
   font-size: 1rem;
   font-weight: 500;
@@ -1281,5 +1344,20 @@ remove-validator {
 .disabled {
   pointer-events: none;
   opacity: 0.3;
+}
+
+.searchBox .textBox form {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.searchBox .textBox form input {
+  width: 100%;
+  height: 100%;
+  padding-left: 10px;
 }
 </style>

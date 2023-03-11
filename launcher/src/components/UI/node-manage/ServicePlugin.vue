@@ -33,7 +33,12 @@ import { mapWritableState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
-  props: ["list"],
+  props: {
+    list: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       itemsList: [],

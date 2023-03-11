@@ -201,10 +201,22 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 export default {
-  props: ["item", "position", "prunningWarning"],
+  props:{
+    item: {
+      type: Object,
+      required: true,
+    },
+    position: {
+      type: Number,
+      required: true,
+    },
+    prunningWarning: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       updateSelect: "auto",
@@ -212,7 +224,6 @@ export default {
       isExpertModeActive: false,
       ssvExpertModeActive: false,
       ramUsage: null,
-      editableData: null,
       isRamUsageActive: false,
       bindingIsOn: false,
       bindingIp: "126.0.23.22",

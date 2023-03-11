@@ -1,6 +1,5 @@
 <template>
   <div class="parent">
-    <div class="header"></div>
     <div class="logo-box">
       <img src="/img/icon/LOGO.png" class="main-header__brand" />
     </div>

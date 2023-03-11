@@ -1,138 +1,102 @@
 <template>
-  <div class="plugin-parent">
-    <background-page>
-      <div class="opacity-bg"></div>
-      <div class="plugin-modal-parent">
-        <div class="plugin-modal">
-          <div class="name-box">
-            <div class="name-title-box">
-              <div class="name-title">
-                <span>{{ selectedPreset.name }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="content-box">
-            <div class="options-box">
-              <div class="option-title">
-                <span>{{ $t("pluginName.option") }}</span>
-              </div>
-              <div class="option-content">
-                <div class="network-parent">
-                  <div class="network-box">
-                    <div class="choose">
-                      <span>{{ $t("pluginName.chosen") }}</span>
-                    </div>
-                    <div class="none">
-                      <span>{{ selectedPreset.network }}</span>
-                    </div>
-                  </div>
-                  <div class="circle-box">
-                    <img :src="selectedNetwork.icon" alt="icon" />
-                  </div>
+  <installation-box :title="selectedPreset.name" :icon="selectedPreset.icon" :next="nextPath" :back="backPath">
+    <div class="content-box">
+      <div class="included-box">
+        <div class="included-title">
+          <span>{{ $t("pluginName.plugin") }}</span>
+        </div>
+        <div class="info-box">
+          <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="info-row">
+            <change-modal v-if="plugin.showChangeModal">
+              <div class="replaced-plugins">
+                <div
+                  v-for="(item, idx) in filteredPluginsOnCategory"
+                  :key="idx"
+                  class="item"
+                  :data-tooltip="item.name"
+                  @click="pluginChangeHandler(plugin, item, index)"
+                >
+                  <img
+                    :src="item.icon"
+                    alt="icon"
+                    @mouseover="runningTooltip(item)"
+                    @mouseleave="item.displayTooltip = false"
+                  />
                 </div>
-                <div class="change-installation">
-                  <div class="change-title">
-                    <span>{{ $t("pluginName.path") }}</span>
-                  </div>
-                  <div class="change-box">
-                    <input v-model="installationPath" type="text" />
-                  </div>
+              </div>
+            </change-modal>
+            <div class="row" @click="pluginExChange(plugin)">
+              <div class="icon-box">
+                <div class="plugin-icon">
+                  <img :src="plugin.icon" alt="icon" />
                 </div>
-                <div class="fast-sync">
-                  <div class="sync-header">
-                    <div class="headerTitle">
-                      <span>SYNCHRONISATION</span>
-                    </div>
-                    <div class="headerContent">
-                      <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="changeTheOption" />
-                      <span v-if="genesisIsActive">GENESIS</span>
-                      <span v-if="checkPointIsActive">CHECKPOINT SYNC</span>
-                      <img src="/img/icon/arrows/right-arrow.png" alt="icon" @click="changeTheOption" />
-                    </div>
-                  </div>
-                  <div class="content">
-                    <span v-if="genesisIsActive">{{ $t("pluginName.syncClient") }}</span>
-                    <div v-if="checkPointIsActive" class="inputBox">
-                      <input v-model="checkPointSync" type="text" />
-                    </div>
-                  </div>
+              </div>
+              <div class="content">
+                <div class="pluginName">
+                  <span>{{ plugin.name }}</span>
+                </div>
+                <div class="category">
+                  <span>{{ plugin.displayCategory }}</span>
                 </div>
               </div>
             </div>
-            <div class="included-box">
-              <div class="included-title">
-                <span>{{ $t("pluginName.plugin") }}</span>
-              </div>
-              <div class="info-box">
-                <div v-for="(plugin, index) in selectedPreset.includedPlugins" :key="index" class="info-row">
-                  <change-modal v-if="plugin.showChangeModal">
-                    <div class="replaced-plugins">
-                      <div
-                        v-for="(item, idx) in filteredPluginsOnCategory"
-                        :key="idx"
-                        class="item"
-                        :data-tooltip="item.name"
-                        @click="pluginChangeHandler(plugin, item, index)"
-                      >
-                        <img
-                          :src="item.icon"
-                          alt="icon"
-                          @mouseover="runningTooltip(item)"
-                          @mouseleave="item.displayTooltip = false"
-                        />
-                      </div>
-                    </div>
-                  </change-modal>
-                  <div class="row" @click="pluginExChange(plugin)">
-                    <div class="icon-box">
-                      <div class="plugin-icon">
-                        <img :src="plugin.icon" alt="icon" />
-                      </div>
-                    </div>
-                    <div class="content">
-                      <div class="plugin-name">
-                        <span>{{ plugin.name }}</span>
-                      </div>
-                      <div class="category">
-                        <span>{{ plugin.displayCategory }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="btn-box">
-            <router-link :to="{ path: '/selectPlugin' }">
-              <span>{{ $t("pluginName.back") }}</span>
-            </router-link>
-            <router-link v-if="selectedPreset.name === 'mev boost'" :to="{ path: '/mevboost' }">
-              <span>{{ $t("pluginName.next") }}</span>
-            </router-link>
-            <router-link v-else :to="{ path: '/verify' }">
-              <span>{{ $t("pluginName.next") }}</span>
-            </router-link>
           </div>
         </div>
       </div>
-    </background-page>
-  </div>
+      <div class="options-box">
+        <div class="option-title">
+          <span>{{ $t("pluginName.option") }}</span>
+        </div>
+        <div class="option-content">
+          <div class="optionHeader">
+            <span>ADDITIONAL OPTIONS</span>
+          </div>
+          <div class="option-content_box gap-y-2">
+            <div class="network-parent">
+              <div class="network-box">
+                <div class="none">
+                  <span>{{ selectedPreset.network }}</span>
+                </div>
+              </div>
+              <div class="circle-box">
+                <img :src="selectedPreset.networkIcon" alt="icon" />
+              </div>
+            </div>
+            <div class="change-installation gap-y-2">
+              <div class="change-title">
+                <span>{{ $t("pluginName.path") }}</span>
+              </div>
+              <div class="change-box">
+                <input v-model="installationPath" type="text" />
+              </div>
+            </div>
+            <!-- <div class="set-recipient gap-y-2">
+              <div class="set-title">
+                <span>SET DEFAULT FEE RECIPIENT</span>
+              </div>
+              <div class="set-box">
+                <input v-model="recipientFee" type="text" disabled />
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </installation-box>
 </template>
 <script>
-import ToggleButton from "./toggleButton.vue";
 import ChangeModal from "./ChangeModal.vue";
+import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import { useServices } from "../../../store/services";
 
 export default {
-  components: { ToggleButton, ChangeModal },
+  components: { ChangeModal, InstallationBox },
 
   data() {
     return {
-      genesisIsActive: true,
-      checkPointIsActive: false,
       toggleActive: false,
       requirementPassed: false,
       requirementFailed: false,
@@ -143,6 +107,10 @@ export default {
       filteredPluginsOnCategory: [],
       filteredPluginsOnName: [],
       categoryDisplayName: "",
+      recipientFee: "",
+      nextPath: "sync",
+      backPath: "selectPlugin",
+      mevPath: "mevboost",
     };
   },
   computed: {
@@ -268,18 +236,10 @@ export default {
     backToHistoryHandler() {
       history.back();
     },
-    changeTheOption() {
-      if (this.genesisIsActive) {
-        this.genesisIsActive = false;
-        this.checkPointIsActive = true;
-      } else {
-        this.checkPointIsActive = false;
-        this.genesisIsActive = true;
-      }
-    },
+
     getInstallPath: async function () {
       let largestVolumePath = await ControlService.getLargestVolumePath();
-      if ((largestVolumePath = "/")) largestVolumePath = largestVolumePath + "opt";
+      if (largestVolumePath === "/") largestVolumePath = largestVolumePath + "opt";
       const stereumInstallationPath = [largestVolumePath, "/stereum"].join("/").replace(/\/{2,}/, "/");
       this.installationPath = stereumInstallationPath;
     },
@@ -287,107 +247,75 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-[data-tooltip] {
-  position: relative;
-  cursor: default;
-}
-[data-tooltip]::after {
-  position: absolute;
-  width: max-content;
-  left: 0;
-  top: 0;
-  text-align: center;
-  content: attr(data-tooltip);
-  color: #eee;
-  background: black;
-  border-radius: 5px;
-  font-size: 47%;
-  padding: 2% 3%;
-  border: 1px solid #929292;
-  visibility: hidden;
-  opacity: 0;
-  transform: translateY(20%);
-  transition: opacity 0.3s transform 0.2s;
-  z-index: 100;
-}
-[data-tooltip]:hover::after {
-  opacity: 1;
-  visibility: visible;
-  transform: rotateY(0);
-}
-.plugin-parent {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.opacity-bg {
+.content-box {
+  grid-column: 2/5;
+  grid-row: 3/4;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
-  position: fixed;
-  left: 0;
-  top: 0;
-  opacity: 0.7;
-  z-index: 1;
-}
-.plugin-modal-parent {
-  width: 80%;
-  height: 75%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 11.2%;
-  left: 10%;
-  z-index: 2;
-}
-.plugin-modal {
-  width: 70%;
-  height: 95%;
-  border: 1px solid rgba(38, 38, 38, 0.5);
+  margin: 0 auto;
+  padding: 10px 3px;
+  background-color: #2d3134;
+  border: 3px solid #b4b4b4;
   border-radius: 20px;
-  background-color: #334b3e;
+  position: relative;
+  box-shadow: 0 1px 3px 1px rgb(25, 33, 32);
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 .included-box {
-  width: 49%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px 1px rgb(34, 54, 49);
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 15% 85%;
-  position: relative;
-}
-.included-title {
-  width: 61%;
-  height: 71%;
-  border: 1px solid rgb(98, 98, 98);
+  width: 50%;
+  height: 100%;
   margin: 0 auto;
-  border-radius: 10px;
+  border-radius: 20px;
+  position: relative;
   display: flex;
-  background-color: #30483b;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.options-box {
+  width: 50%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 8px;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option-title,
+.included-title {
+  width: 90%;
+  height: 25px;
+  border: 1px solid rgb(98, 98, 98);
+  border-radius: 10px;
+  padding: 5px 0;
+  display: flex;
+  background-color: #33393e;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
+}
+.option-title span,
+.included-title span {
+  color: #d3d3d3;
+  font-size: 0.7rem;
+  font-weight: 400;
 }
 .info-box {
   width: 94%;
   height: 91%;
   margin: 10px auto;
-  padding: 2px;
+  background-color: #080808;
+  border: 1px solid #b4b4b4;
+  padding: 2px 5px;
   overflow-x: hidden;
   overflow-y: auto;
-  border: 2px solid #343434;
-  background-color: #282828;
+  border: 2px solid #545454;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -430,7 +358,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.plugin-name {
+.pluginName {
   width: 83%;
   height: 90%;
   margin-left: 5px;
@@ -438,7 +366,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.plugin-name span {
+.pluginName span {
   font-size: 0.85rem;
   font-weight: 700;
   text-align: center;
@@ -536,48 +464,48 @@ export default {
   color: #d7d7d7;
   text-transform: uppercase;
 }
-.option-title {
-  width: 60%;
-  height: 11%;
+
+.options-box .option-content {
+  width: 100%;
+  height: 78%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.optionHeader {
+  width: 100%;
+  height: 25px;
   border: 1px solid rgb(98, 98, 98);
   border-radius: 10px;
+  padding: 5px 0;
   display: flex;
-  background-color: #30483b;
+  background-color: #33393e;
   justify-content: center;
   align-items: center;
   margin-top: 5px;
-  box-shadow: 0 1px 3px 1px rgb(67, 67, 67);
 }
-.option-title span,
-.included-title span {
-  color: #d3d3d3;
-  font-size: 0.9rem;
-  font-weight: 700;
+.optionHeader span {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgb(214, 214, 214);
+  text-transform: uppercase;
 }
-.content-box {
-  width: 95%;
-  height: 63%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.options-box {
-  width: 49%;
-  height: 95%;
-  background-color: #5b5b5b;
-  border-radius: 20px;
-  box-shadow: 0 1px 3px 1px rgb(35, 56, 50);
+.option-content .option-content_box {
+  width: 100%;
+  height: 100%;
+  margin: 2px auto 10px auto;
+  background-color: #080808;
+  border: 1px solid #b4b4b4;
+  padding: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 2px solid #545454;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.options-box .option-content {
-  width: 94%;
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
 }
 .option-content .network-parent {
@@ -586,18 +514,22 @@ export default {
   background-color: transparent;
   display: flex;
   justify-content: center;
-  align-items: center;
-  position: relative;
+  align-items: flex-start;
+  position: absolute;
+  top: -5px;
+  right: 0;
 }
 .network-parent .network-box {
-  width: 85%;
+  width: 100%;
   height: 80%;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+  margin-right: -20px;
 }
 .network-box .choose {
-  width: 90%;
+  width: 80%;
   height: 51%;
   border: 2px solid #7f7d7d;
   border-radius: 15px;
@@ -616,31 +548,27 @@ export default {
 }
 .network-box .none {
   width: 70%;
-  height: 45%;
+  height: 30%;
   border: 2px solid #838383;
   border-radius: 30px;
   background-color: #2a2a2a;
-  align-self: flex-end;
   color: #d3d3d3;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 .none span {
   font-size: 0.8rem;
   font-weight: 700;
-  margin-left: 25px;
   color: rgba(171, 180, 92, 0.982);
   text-transform: capitalize;
 }
 .network-parent .circle-box {
-  width: 24%;
-  height: 93%;
+  width: 26%;
+  height: 70%;
   border: 2px solid #5b5b5b;
   border-radius: 50%;
   background-color: #1f1f1f;
-  position: absolute;
-  right: 3%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -652,202 +580,62 @@ export default {
   border-radius: 100%;
 }
 
-.option-content .fast-sync {
+.option-content .change-installation,
+.option-content .set-recipient {
   width: 100%;
   height: 30%;
-  background-color: #343434;
+  padding: 0 2px 2px 2px;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-}
-.fast-sync .sync-header {
-  width: 100%;
-  height: 34%;
-  border: 1px solid #707070;
-  border-radius: 15px 0 0 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.fast-sync .sync-header .headerTitle {
-  width: 45%;
-  height: 100%;
-  border-radius: 15px 0 0 15px;
-  background-color: #1a5443;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-.headerTitle span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
-}
-.fast-sync .sync-header .headerContent {
-  width: 55%;
-  height: 100%;
-  border-radius: 0;
-  padding: 0 5px;
-  background-color: #33393e;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
-.headerContent span {
-  width: 86%;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #dedede;
-  text-align: center;
-  margin-right: 3px;
-}
-.headerContent img {
-  width: 5%;
-  height: 50%;
-  cursor: pointer;
-}
-.fast-sync .content {
-  width: 100%;
-  height: 64%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.fast-sync .content span {
-  font-size: 0.5rem;
-  font-weight: 400;
-  color: #aaaaaa;
-}
-.fast-sync .content .inputBox {
-  width: 96%;
-  height: 74%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.fast-sync .content input {
-  width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
-}
-.option-content .change-installation {
-  width: 100%;
-  height: 30%;
-  border-radius: 10px;
-  background-color: #30483b;
+  border: 1px solid rgb(78, 78, 78);
+  background-color: #383838;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
 }
-.change-installation .change-title {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.change-title span {
-  color: #d3d3d3;
-  font-size: 0.6rem;
-  font-weight: 600;
-}
-.change-installation .change-box {
-  width: 96%;
-  height: 50%;
-  background-color: rgb(209, 209, 209);
-  border: 5px solid rgb(104, 104, 104);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
-.change-box input {
+.change-installation .change-title,
+.set-recipient .set-title {
   width: 100%;
-  height: 100%;
-  background-color: rgb(209, 209, 209);
-  border: none;
-  border-radius: 6px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #232323;
-  padding: 0;
-  padding-left: 7px;
-  padding-bottom: 3px;
-}
-
-.btn-box {
-  width: 95%;
-  height: 12%;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-.btn-box a {
-  width: 25%;
-  height: 60%;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btn-box a span {
-  width: 100%;
-  border: 2px solid rgb(125, 125, 125);
-  border-radius: 20px;
+  height: 40%;
+  border-radius: 50px;
   background-color: #336666;
-  color: #eaeaea;
-  font-size: 0.9rem;
-  font-weight: 600;
-  box-shadow: 0 1px 2px 1px #353e39;
-  outline-style: none;
-  cursor: pointer;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
-.btn-box a span:hover {
-  background-color: #1a3535;
-  box-shadow: 0 1px 4px 1px rgb(60, 60, 60);
-}
-
-.btn-box a span:active {
-  box-shadow: inset 1px 1px 5px 1px rgb(28, 36, 28);
+.change-title span,
+.set-title span {
+  color: #d3d3d3;
   font-size: 0.8rem;
+  font-weight: 500;
 }
-
-.passedreq {
-  color: #16d26e !important;
+.change-installation .change-box,
+.set-recipient .set-box {
+  width: 96%;
+  height: 50%;
+  background-color: rgb(209, 209, 209);
+  border: 3px solid rgb(104, 104, 104);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
-.faildreq {
-  color: rgb(225, 54, 54) !important;
-  border: 1px solid rgb(225, 54, 54) !important;
+.change-box input,
+.set-box input {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(209, 209, 209);
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #232323;
+  padding: 0;
+  padding-left: 7px;
+  padding-bottom: 3px;
 }
 </style>

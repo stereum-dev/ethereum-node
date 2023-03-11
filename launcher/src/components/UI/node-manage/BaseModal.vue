@@ -14,7 +14,12 @@
 </template>
 <script>
 export default {
-  props: ["modalItems"],
+  props: {
+    modalItems: {
+      type: Array,
+      required: true,
+    },
+  },
 };
 </script>
 <style scoped>

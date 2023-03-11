@@ -32,7 +32,16 @@ export default {
   components: {
     ManageTrapezoid,
   },
-  props: ["title", "list"],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    list: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       itemsList: [],

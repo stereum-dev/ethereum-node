@@ -16,7 +16,12 @@
 </template>
 <script>
 export default {
-  props: ["services"],
+  props: {
+    services: {
+      type: Array,
+      default: () => [],
+    },
+  },
   methods: {
     openUploadHandler() {
       let validator = this.services.filter((s) => s.service.includes("Validator"));
