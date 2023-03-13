@@ -116,7 +116,7 @@ export default {
         this.pubkeyModalActive = true;
         this.dataLoading = false;
       }
-    }, 5000);
+    }, 3000);
   },
   methods: {
     operatorModalHandler() {

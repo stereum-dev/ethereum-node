@@ -63,8 +63,7 @@ export default {
     }),
   },
   mounted() {
-    this.getKeys();
-    console.log(this.pubkey);
+    //console.log(this.pubkey);
   },
 
   methods: {
@@ -74,6 +73,9 @@ export default {
       let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       // this.secretkey = ssvConfig.ssv_sk;
       this.pubkey = ssvConfig.ssv_pk;
+      //console.log(this.pubkey);
+      this.pubkeyHash = await ControlService.getOperatorPageURL(this.pubkey);
+      this.checkOperator();
     },
     scrollRight() {
       let position = this.$refs.service;
@@ -91,7 +93,7 @@ export default {
           this.showGrafanaWindow = true;
         } else if (serviceName == "SSVNetworkService") {
           this.showSsvWindow = true;
-          this.checkOperator();
+          this.getKeys();
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
         } else if (serviceName == "FlashbotsMevBoostService") {
@@ -108,11 +110,13 @@ export default {
       this.showMevboostWindow = false;
     },
     async checkOperator() {
-      let response = await axios.get(
-        "https://api.ssv.network/api/v2/prater/operators/a1d9e31db353271388683a70dab0808a89578b82fcdbe391df8c1b9a4d30e52d"
-      );
-      if (response.status == 200) {
-        this.testOperatorData = response.status;
+      try {
+        let response = await axios.get("https://api.ssv.network/api/v2/prater/operators/" + this.pubkeyHash);
+        if (response.status == 200) {
+          this.testOperatorData = response.status;
+        }
+      } catch {
+        console.log("Operator not registered");
       }
     },
   },
