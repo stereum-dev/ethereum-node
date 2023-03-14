@@ -9,10 +9,16 @@
         <span>{{ client.displayCategory }}</span>
       </div>
     </div>
-    <carousel :items-to-show="1" :wrap-around="true" :transition="500">
+    <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
       <slide v-for="(item, index) in syncType" :key="index">
         <div class="syncBox">
-          <div v-if="item.type === 'recommended'" class="syncContent">
+          <div v-if="item.name === 'genesis'" class="syncContent">
+            <div class="syncText">
+              <span>{{ item.name }}</span>
+              <span>{{ item.type }}</span>
+            </div>
+          </div>
+          <div v-else-if="item.type === 'recommended'" class="syncContent">
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
@@ -46,12 +52,6 @@
               <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
             </div> -->
           </div>
-          <div v-else class="syncContent">
-            <div class="syncText">
-              <span>{{ item.name }}</span>
-              <span>{{ item.type }}</span>
-            </div>
-          </div>
         </div>
       </slide>
 
@@ -84,14 +84,26 @@ export default {
     return {
       dropdown: true,
       selectedItem: " - SELECT A SOURCE -",
+      currentSlide: 0,
     };
   },
+
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
       checkPointSync: "checkPointSync",
-      customElements: "customElements",
+      btnActive: "btnActive",
     }),
+  },
+  watch: {
+    currentSlide: function (val) {
+      if (this.$route.path === "sync")
+        if (val === 1 && this.checkPointSync === "") {
+          this.btnActive = false;
+        } else {
+          this.btnActive = true;
+        }
+    },
   },
 };
 </script>

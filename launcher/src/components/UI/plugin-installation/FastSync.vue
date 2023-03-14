@@ -4,13 +4,14 @@
     :back="back"
     :next="nextRouteHandler ? 'mevboost' : 'verify'"
     :icon="selectedPreset.icon"
+    :btn="disabledBtn"
   >
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
           <div class="table">
             <div class="table-header">
-              <span>Set how the Node clients where synchronize their blockchain data from</span>
+              <span>Set how the Node clients will synchronize their blockchain data.</span>
             </div>
             <div class="table-content">
               <div class="table-row_1">
@@ -43,9 +44,9 @@
               </div>
               <div class="table-row_5">
                 <p>
-                  After the installation of your node your clients will start syncing with the synchronisation source
-                  you selected. This will take multiple hours / days. Usually the Consensus Clients syncs first, then
-                  the Execution Clients will start picking up.
+                  After installing your node, your clients will start syncing with the synchronization source you
+                  selected. This process can take multiple hours or days. Typically, the Consensus Client syncs first,
+                  followed by the Execution Client.
                 </p>
               </div>
             </div>
@@ -75,7 +76,7 @@ export default {
       back: "install",
       next: "",
       title: "",
-  
+      disabledBtn: false,
     };
   },
 
@@ -178,8 +179,8 @@ export default {
 .table .table-header span {
   width: 100%;
   color: #d5d5d5;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   text-align: center;
 }
 .table .table-content {
@@ -206,6 +207,9 @@ export default {
 .table-row_1 .clientTitle {
   width: 100%;
   height: 100%;
+  background-color: #4d8384;
+  border-radius: 5px;
+  padding: 0 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -213,15 +217,15 @@ export default {
 .table-row_1 .clientTitle span:first-child {
   width: 40%;
   color: #d5d5d5;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 500;
   text-align: left;
 }
 .table-row_1 .clientTitle span:last-child {
-  width: 60%;
+  width: 78%;
   color: #d5d5d5;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 500;
   text-align: left;
 }
 .table-row_2 {
@@ -315,10 +319,11 @@ export default {
 }
 
 .table-row_5 p {
-  width: 100%;
+  width: 90%;
   color: #d5d5d5;
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  margin: 0 auto;
+  font-weight: 500;
   text-align: center;
 }
 
