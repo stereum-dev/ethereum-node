@@ -28,6 +28,15 @@ import { mapWritableState } from 'pinia';
             <img :src="installAnimations[5]" alt="Animation" /> -->
           </div>
         </div>
+
+        <div class="taskBox">
+          <div v-if="displayNewTask !== ''" class="message-box">
+            <p class="msg-title">
+              {{ displayNewTask }}
+              <span class="dot-flashing"></span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <TaskManager />
@@ -38,6 +47,7 @@ import { mapWritableState } from 'pinia';
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import TaskManager from "../task-manager/TaskManager.vue";
+import ControlService from "@/store/ControlService";
 export default {
   components: {
     TaskManager,
@@ -54,6 +64,8 @@ export default {
       currentIndex: null,
       executionClientIcon: "",
       consensusClientIcon: "",
+      Tasks: [],
+      displayNewTask: "",
     };
   },
   computed: {
@@ -71,10 +83,13 @@ export default {
         this.consensusClientIcon = plugin.icon;
       }
     });
+    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
+    this.refresh = setInterval(this.getTasks, 1000); //refresh data
   },
   unmounted() {
     this.images = [];
   },
+
   methods: {
     displayImages() {
       setInterval(() => {
@@ -83,31 +98,18 @@ export default {
         }, 500);
         setTimeout(() => {
           this.images.push(this.installAnimations[1], this.installAnimations[2]);
+          this.images.push(this.executionClientIcon, this.consensusClientIcon);
         }, 700);
         setTimeout(() => {
           this.images.push(this.installAnimations[3]);
-          this.images.push(this.executionClientIcon, this.consensusClientIcon);
-        }, 1000);
+        }, 1500);
         this.images = [];
       }, 6000);
     },
-
-    // getIndex() {
-    //   setInterval(() => {
-    //     const arr = this.installAnimations;
-    //     arr.forEach((el, i) => {
-    //       setTimeout(() => {
-    //         if (i === 1 || i === 2) {
-    //           this.images.push(arr[1], arr[2]);
-    //         }
-    //         this.images.push(el);
-    //         this.images.push(this.consensusClientIcon, this.executionClientIcon);
-    //       }, 500);
-    //     });
-    //     console.log(this.images);
-    //     this.images = [];
-    //   }, 5500);
-    // },
+    getTasks: async function () {
+      this.Tasks = await ControlService.getTasks();
+      this.displayNewTask = this.Tasks.slice(-1)[0].name;
+    },
   },
 };
 </script>
@@ -134,14 +136,19 @@ export default {
 .anim {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+
   position: relative;
 }
 .anim__content {
+  grid-column: 1/6;
+  grid-row: 1/6;
   width: 75%;
-  height: 75%;
+  height: 100%;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,11 +172,11 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  animation-name: anim;
+  animation-name: anim1;
   animation-duration: 500ms;
 }
 
-@keyframes anim {
+@keyframes anim1 {
   0% {
     opacity: 0;
   }
@@ -188,26 +195,146 @@ export default {
 }
 
 .execution__icon {
-  width: 80px !important;
-  height: 80px !important;
+  width: 145px !important;
+  height: 145px !important;
   position: absolute !important;
-  top: 33.9% !important;
-  left: 30.8% !important;
-  animation-name: anim !important;
-  animation-duration: 500ms !important;
-  z-index: 100 !important;
-  opacity: 0.5 !important;
+  top: 26.4% !important;
+  left: 25.3% !important;
+  animation-name: anim2 3s !important;
 }
 
 .consensus__icon {
-  width: 80px !important;
-  height: 80px !important;
+  width: 144px !important;
+  height: 144px !important;
   position: absolute !important;
-  top: 33% !important;
-  left: 60.5% !important;
-  animation-name: anim !important;
-  animation-duration: 500ms !important;
-  z-index: 100 !important;
-  opacity: 0.5 !important;
+  top: 25.8% !important;
+  left: 57% !important;
+  animation-name: anim2 3s !important;
+}
+@keyframes anim2 {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  35% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.9;
+  }
+}
+
+.taskBox {
+  grid-column: 1/7;
+  grid-row: 6/7;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.message-box {
+  width: 500px;
+  height: 50px;
+  background-color: #23272b;
+  border: 1px solid #464849;
+  box-shadow: 0 1px 5px 1px rgb(30, 30, 30);
+  border-radius: 50px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.message-box .msg-title {
+  width: 100%;
+  height: 30%;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #d9dcdc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dot-flashing {
+  position: relative;
+  top: -2px;
+  width: 5px;
+  height: 5px;
+  align-self: flex-end;
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+}
+
+.dot-flashing::before,
+.dot-flashing::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-flashing::before {
+  left: -15px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+
+.dot-flashing::after {
+  left: 15px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #262626;
+  color: #2b2b2b;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #1068a3;
+  }
+  50%,
+  100% {
+    background-color: #eee;
+  }
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

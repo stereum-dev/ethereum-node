@@ -168,7 +168,7 @@
       <form
         class="w-full flex justify-between items-center border-2 border-gray-700 rounded-full bg-slate-300 focus:ring-blue-500 focus:border-blue-500"
       >
-        <label for="simple-search" class="sr-only text-gray-400  rounded-full">Search</label>
+        <label for="simple-search" class="sr-only text-gray-400 rounded-full">Search</label>
         <div class="w-full flex justify-evenly items-center px-5 rounded-full relative">
           <div class="flex items-center pointer-events-none">
             <svg
@@ -274,12 +274,12 @@ export default {
     DisabledStaking,
     SearchBox,
   },
-  props: {
-    isPubkeyVisible: {
-      type: Boolean,
-      default: false,
-    },
-  },
+  // props: {
+  //   isPubkeyVisible: {
+  //     type: Boolean,
+  //     default: false,
+  //   },
+  // },
   data() {
     return {
       stakingIsDisabled: false,
@@ -319,6 +319,7 @@ export default {
       slashingDB: "",
       searchBoxActive: false,
       searchModel: "",
+      isPubkeyVisible: false,
     };
   },
   computed: {
@@ -1331,8 +1332,6 @@ remove-validator {
   opacity: 0.3;
 }
 
-
-
 .searchBox .textBox form {
   width: 100%;
   height: 100%;
@@ -1347,5 +1346,4 @@ remove-validator {
   height: 100%;
   padding-left: 10px;
 }
-
 </style>

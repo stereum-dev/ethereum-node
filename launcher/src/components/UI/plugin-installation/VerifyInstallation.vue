@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @open-modal="displayWarningHandler">
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @execute-installation="runInstalltion">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
@@ -26,11 +26,6 @@
           </div>
         </div>
       </div>
-      <warning-modal
-        v-if="displayInstallationWarning"
-        @install-btn="runInstalltion"
-        @close-modal="closeWarningModal"
-      ></warning-modal>
     </div>
   </installation-box>
 </template>
@@ -40,18 +35,16 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
-import WarningModal from "./WarningModal.vue";
 import InstallationBox from "./InstallationBox.vue";
 export default {
   components: {
-    WarningModal,
     InstallationBox,
   },
   data() {
     return {
-      displayInstallationWarning: false,
       back: "sync",
       title: "verify & install",
+      next: "play",
     };
   },
   computed: {
@@ -75,12 +68,10 @@ export default {
     if (Object.keys(this.selectedPreset).length === 0) {
       this.$router.push("/selectPlugin");
     }
-    console.log(this.checkPointSync);
   },
   methods: {
     runInstalltion: async function () {
       this.$router.push("/play");
-      this.displayInstallationWarning = false;
       this.refresh = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
       const restarted = await ControlService.restartServer();
