@@ -241,7 +241,7 @@ export default {
   text-align: center !important;
   font-size: 0.7rem;
   font-weight: 700;
-  color: #84b36b;
+  color: #dfbb06;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
@@ -283,7 +283,7 @@ export default {
   text-align: center;
   font-size: 1rem;
   font-weight: 700;
-  color: #84b36b;
+  color: #dfbb06;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
