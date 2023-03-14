@@ -3,6 +3,5 @@
     "source.fixAll.eslint": true
   },
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "nuxt.isNuxtApp": false
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
