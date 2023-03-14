@@ -30,7 +30,7 @@
               <span>{{ item.name }}</span>
               <drop-tasks :item="item" @droptaskActive="openDropDown"></drop-tasks>
             </div>
-            <sub-tasks v-if="item.showDropDown" :sub-tasks="item?.subTasks"></sub-tasks>
+            <sub-tasks v-if="item.showDropDown" :sub-tasks="item.subTasks"></sub-tasks>
           </div>
         </div>
       </div>

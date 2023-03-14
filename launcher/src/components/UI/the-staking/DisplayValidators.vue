@@ -274,6 +274,15 @@ export default {
     DisabledStaking,
     SearchBox,
   },
+<<<<<<< HEAD
+=======
+  // props: {
+  //   isPubkeyVisible: {
+  //     type: Boolean,
+  //     default: false,
+  //   },
+  // },
+>>>>>>> main
   data() {
     return {
       stakingIsDisabled: false,
@@ -320,6 +329,7 @@ export default {
 
       searchBoxActive: false,
       searchModel: "",
+      isPubkeyVisible: false,
     };
   },
   computed: {

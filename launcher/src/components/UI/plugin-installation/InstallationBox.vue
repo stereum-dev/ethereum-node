@@ -12,13 +12,17 @@
             <span>{{ $t("installOption.back") }}</span>
           </router-link>
 
-          <router-link v-if="next === 'disabled'" to="verify" class="install disabled">
+          <router-link v-if="next === 'disabled'" :class="{ disabled: btnActive }" to="verify" class="install disabled">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
           <router-link v-else-if="next !== 'disabled' && next" :to="{ path: next }" class="install">
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
+<<<<<<< HEAD
           <router-link v-else to="" class="install" @click="$emit('openModal')">
+=======
+          <router-link v-else to="{ path:'' }" class="install" @click="$emit('executeInstallation')">
+>>>>>>> main
             <span>{{ $t("pluginName.next") }}</span>
           </router-link>
         </div>
@@ -29,6 +33,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeManage } from "../../../store/nodeManage";
+import { useClickInstall } from "@/store/clickInstallation";
 export default {
   name: "InstallationBox",
   props: {
@@ -56,7 +61,13 @@ export default {
     ...mapWritableState(useNodeManage, {
       usedBlocks: "usedBlocks",
     }),
+    ...mapWritableState(useClickInstall, {
+      btnActive: "btnActive",
+      checkPointUrl: "checkPointUrl",
+    }),
   },
+
+  methods: {},
 };
 </script>
 <style scoped>
