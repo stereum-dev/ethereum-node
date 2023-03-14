@@ -692,6 +692,28 @@ export class NodeConnection {
 
   async destroyNode(serviceConfigs = []) {
     const ref = StringUtils.createRandomString();
+
+    // FAKE2DEBUG: Set to true to fake destroy output for debugging purposes (IN YOUR LOCAL BRANCH ONLY!)
+    const FAKE2DEBUG = false;
+    if (FAKE2DEBUG) {
+      this.taskManager.tasks.push({ name: "Task: Delete Node", otherRunRef: ref });
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // <- executed simulates operation
+
+      var x = await new Promise((resolve) => setTimeout(resolve, 2000)); // <- executed simulates operation
+      this.taskManager.otherSubTasks.push({ name: "SubTask: Step 1", otherRunRef: ref, status: !x });
+
+      var y = await new Promise((resolve) => setTimeout(resolve, 2000)); // <- executed simulates operation
+      this.taskManager.otherSubTasks.push({ name: "SubTask: Step 2", otherRunRef: ref, status: !y });
+
+      var z = await new Promise((resolve) => setTimeout(resolve, 2000)); // <- executed simulates operation
+      this.taskManager.otherSubTasks.push({ name: "SubTask: Step 3", otherRunRef: ref, status: !z });
+
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      await this.logout();
+      return "FAKE2DEBUG -> Node destroyed";
+    }
+
+    // Destroy
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
     await this.nukeServiceValumes(serviceConfigs, ref);
 
