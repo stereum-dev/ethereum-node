@@ -20,11 +20,7 @@
         <div class="remove-modal-accepted_header">
           <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
-        <div
-          class="remove-modal-accepted_explode-box"
-          v-on:mouseenter="disableAutoScroll"
-          v-on:mouseleave="enableAutoScroll"
-        >
+        <div class="remove-modal-accepted_explode-box" @mouseenter="disableAutoScroll" @mouseleave="enableAutoScroll">
           <div v-for="n in nukeData" :key="n" class="item">
             <div class="state">✓</div>
             <div class="textItem">{{ n }}</div>
@@ -114,18 +110,18 @@ export default {
 </script>
 <style scoped>
 .item {
-  width: 50%;
+  width: 100%;
   display: flex;
   color: #fcd100;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: center;
   margin: 1% 0;
-  font-size: 100%;
+  font-size: 80%;
   font-weight: 700;
   text-transform: uppercase;
 }
 .state {
-  width: 10%;
+  width: 5%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -133,6 +129,7 @@ export default {
   background-color: green;
   border-radius: 50%;
   border: 1px solid black;
+  margin: 0 1%;
 }
 
 .textItem {
@@ -228,11 +225,6 @@ export default {
   align-items: center;
   flex-direction: column;
   overflow-y: scroll;
-
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 10px;
-  border-style: dotted;
-  border: 2px solid #fcd100;
 }
 
 .remove-modal-accepted_footer {
@@ -354,7 +346,7 @@ export default {
   align-self: center;
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: none;
 }
 
 /* Track */
@@ -366,6 +358,6 @@ export default {
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #fad000;
-  border-radius: 50%;
+  border-radius: none;
 }
 </style>
