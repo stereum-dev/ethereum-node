@@ -11,6 +11,18 @@
           <i class="arrow down"></i>
         </div>
       </div>
+      <div class="validator-commands">
+        <div class="validator-state">
+          <div class="validator-state_Icon"></div>
+          <div class="validator-state_status">Running</div>
+        </div>
+        <div class="key-counter">
+          <div class="key-counter_counter"><span>2</span></div>
+          <div class="key-counter_icon">
+            <img src="../../../../public/img/icon/control/keyEth.svg" alt="validator-key" />
+          </div>
+        </div>
+      </div>
       <ul v-if="selector" class="validator-selection">
         <li v-for="validator in validators" :key="validator" @click="vldPicker(validator)">
           <div class="validator-icons"><img :src="validator.icon" :alt="validator.name" /></div>
@@ -82,6 +94,23 @@ export default {
 };
 </script>
 <style scoped>
+.validator-commands {
+  display: flex;
+  width: 90%;
+  height: 10%;
+  justify-content: center;
+  align-items: center;
+  background: red;
+  top: 11%;
+  position: absolute;
+}
+.validator-state {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .validator-selection {
   width: 90%;
   height: 90%;
