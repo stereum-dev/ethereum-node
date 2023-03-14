@@ -20,8 +20,12 @@
         <div class="remove-modal-accepted_header">
           <span>{{ $t("nukeModal.nukeTitle") }}</span>
         </div>
-        <div class="remove-modal-accepted_explode-box">
-          <div v-for="n in dataCunter" :key="n" class="item">
+        <div
+          class="remove-modal-accepted_explode-box"
+          v-on:mouseenter="disableAutoScroll"
+          v-on:mouseleave="enableAutoScroll"
+        >
+          <div v-for="n in nukeData" :key="n" class="item">
             <div class="state">✓</div>
             <div class="textItem">{{ n }}</div>
           </div>
@@ -43,23 +47,56 @@ export default {
   data() {
     return {
       visible: true,
-      //data is dummy
-      data: ["data 1", "data 2", "data 3"],
-      dataCunter: [],
+      //demoData is dummy
+      demoData: [
+        "my super very ultra long string data 1",
+        "my long string data 2",
+        "my very long string data 3",
+        "my very ultra long string data 4",
+        "my string data 5",
+        "my super very ultra long string data 6",
+        "my very long string data 7",
+        "my long string data 8",
+        "my super very long string data 9",
+      ],
+      nukeData: [],
       loginBtn: true,
       nukeNode: "url('./img/icon/arrows/NukeNode_Final.gif')",
+      autoScroll: true,
     };
   },
   mounted() {
+    // @frontend: uncomment the block below to use nuke dummy data to style the content
+    // --------------------------------------------------------------------------------
+    // this.visible = !this.visible;
+    // setInterval(() => {
+    //   if (this.demoData.length > 0) {
+    //     this.nukeData.push(this.demoData.shift());
+    //   } else {
+    //     this.loginBtn = false;
+    //   }
+    // }, 1000);
+    // --------------------------------------------------------------------------------
     setInterval(() => {
-      if (this.data.length > 0) {
-        this.dataCunter.push(this.data.shift());
-      } else {
-        this.loginBtn = false;
-      }
-    }, 2000);
+      this.updateScroll();
+    }, 100);
   },
   methods: {
+    disableAutoScroll() {
+      this.autoScroll = false;
+    },
+    enableAutoScroll() {
+      this.autoScroll = true;
+    },
+    updateScroll() {
+      this.$nextTick(function () {
+        if (!this.autoScroll) return;
+        try {
+          var element = this.$el.querySelector(".remove-modal-accepted_explode-box");
+          element.scrollTop = element.scrollHeight + 9999;
+        } catch (e) {}
+      });
+    },
     removeItems() {
       this.visible = !this.visible;
       this.$emit("remove-items");
@@ -96,6 +133,10 @@ export default {
   background-color: green;
   border-radius: 50%;
   border: 1px solid black;
+}
+
+.textItem {
+  white-space: nowrap;
 }
 .remove-modal-parent {
   width: 100%;
@@ -187,6 +228,11 @@ export default {
   align-items: center;
   flex-direction: column;
   overflow-y: scroll;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 10px;
+  border-style: dotted;
+  border: 2px solid #fcd100;
 }
 
 .remove-modal-accepted_footer {
