@@ -5,7 +5,7 @@
       class="pubkeyView"
       src="../../../../public/img/icon/the-staking/view2.png"
       alt="icon"
-      @click="togglePubkeyView"
+      @click="$emit('togglePubkey')"
     />
     <img
       v-if="!isPubkeyVisible"

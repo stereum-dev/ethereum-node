@@ -83,11 +83,11 @@ export default {
         }, 500);
         setTimeout(() => {
           this.images.push(this.installAnimations[1], this.installAnimations[2]);
+          this.images.push(this.executionClientIcon, this.consensusClientIcon);
         }, 700);
         setTimeout(() => {
           this.images.push(this.installAnimations[3]);
-          this.images.push(this.executionClientIcon, this.consensusClientIcon);
-        }, 1000);
+        }, 1500);
         this.images = [];
       }, 6000);
     },
@@ -165,11 +165,11 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  animation-name: anim;
+  animation-name: anim1;
   animation-duration: 500ms;
 }
 
-@keyframes anim {
+@keyframes anim1 {
   0% {
     opacity: 0;
   }
@@ -188,26 +188,49 @@ export default {
 }
 
 .execution__icon {
-  width: 80px !important;
-  height: 80px !important;
+  width: 145px !important;
+  height: 145px !important;
   position: absolute !important;
-  top: 33.9% !important;
-  left: 30.8% !important;
-  animation-name: anim !important;
-  animation-duration: 500ms !important;
-  z-index: 100 !important;
-  opacity: 0.5 !important;
+  top: 25.4% !important;
+  left: 26.6% !important;
+  animation-name: anim2 3s !important;
 }
 
 .consensus__icon {
-  width: 80px !important;
-  height: 80px !important;
+  width: 144px !important;
+  height: 144px !important;
   position: absolute !important;
-  top: 33% !important;
-  left: 60.5% !important;
-  animation-name: anim !important;
-  animation-duration: 500ms !important;
-  z-index: 100 !important;
-  opacity: 0.5 !important;
+  top: 24.8% !important;
+  left: 56.5% !important;
+  animation-name: anim2 3s !important;
+}
+@keyframes anim2 {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  35% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  90% {
+    opacity: 0.9;
+  }
 }
 </style>
