@@ -27,7 +27,6 @@
           </div>
           <div class="qrCode-boxes">
             <div class="qrCode-place-holder">
-              <comming-soon></comming-soon>
               <div class="qrCode">
                 <img :src="qrCode" />
               </div>
@@ -41,6 +40,7 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -48,12 +48,26 @@ export default {
       banner: "/img/icon/header-icons/monitor2.png",
       //BACKEND
       //qrCode is a dummy data
-      qrCode: "/img/icon/header-icons/dummyQR.png",
+      qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
+      ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
+
     };
+  },
+  mounted(){
+    this.getqrcode()
   },
   methods: {
     qrViewer() {
       this.qrPage = !this.qrPage;
+    },
+    async getqrcode(){
+      const response = await ControlService.getQRCode()
+      if(response instanceof Error){
+        console.log(response)
+        this.qrCode = this.ErrorQRCode
+      }else{
+        this.qrCode = response
+      }
     },
   },
 };

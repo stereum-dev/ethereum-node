@@ -1,7 +1,6 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
-import { StringUtils } from "../StringUtils.js";
 
 export class Web3SignerService extends NodeService {
   static buildByUserInput(network, ports, dir) {
@@ -24,7 +23,7 @@ export class Web3SignerService extends NodeService {
       service.id, // id
       1, // configVersion
       image, // image
-      "23.1.0", // imageVersion
+      "23.2.1", // imageVersion
       [
         `--key-store-path=${keysDir}`,
         `--data-path=${dataDir}`,

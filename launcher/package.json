@@ -32,6 +32,7 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "pinia": "^2.0.14",
+    "qrcode": "^1.5.1",
     "ssh2": "^1.1.0",
     "vue": "^3.2.33",
     "vue-i18n": "9.2.2",

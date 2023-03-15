@@ -1,6 +1,7 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
+import * as QRCode from 'qrcode'
 import * as log from "electron-log";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -30,6 +31,20 @@ export class Monitoring {
     await this.nodeConnectionProm.logout();
     await this.serviceManager.nodeConnection.logout();
     await this.serviceManagerProm.nodeConnection.logout();
+  }
+
+  async getQRCode(){
+    const services = await this.serviceManager.readServiceConfigurations()
+    const notifyService = services.find(s => s.service === "NotificationService")
+    if(notifyService){
+      const volume = notifyService.volumes.find(v => v.servicePath == "/opt/app/qrcode")
+      if(volume && volume.destinationPath){
+        const data = await this.nodeConnection.sshService.exec(`cat ${volume.destinationPath}/keys.json`)
+        if(data.stdout)
+          return await QRCode.toDataURL(data.stdout)
+      }
+    }
+    return new Error("Couldn't read QRCode Data")
   }
 
   async checkStereumInstallation(nodeConnection) {

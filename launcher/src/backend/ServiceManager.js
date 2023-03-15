@@ -19,6 +19,7 @@ import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-se
 import { StringUtils } from "./StringUtils";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
+import { NotificationService } from "./ethereum-services/NotificationService";
 
 const log = require("electron-log");
 
@@ -120,6 +121,8 @@ export class ServiceManager {
               services.push(FlashbotsMevBoostService.buildByConfiguration(config));
             } else if (config.service == "Web3SignerService") {
               services.push(Web3SignerService.buildByConfiguration(config));
+            } else if (config.service == "NotificationService") {
+              services.push(NotificationService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -160,7 +163,7 @@ export class ServiceManager {
       });
   }
 
-  async chooseServiceAction(action, service, data) {
+  async chooseServiceAction(action, service) {
     switch (action) {
       case "pruneGeth":
         if (service.service === "GethService") {
@@ -627,6 +630,9 @@ export class ServiceManager {
 
       case "Web3SignerService":
         return Web3SignerService.buildByUserInput(args.network, [], args.installDir + "/web3signer");
+
+      case "NotificationService":
+        return NotificationService.buildByUserInput(args.network, args.installDir + "/notification");
     }
   }
 
@@ -914,7 +920,6 @@ export class ServiceManager {
         newInstallTasks = await this.addServices(installTasks, services);
       } catch (err) {
         log.error("Installing Services Failed:", err);
-      } finally {
       }
     }
     if (jobs.includes("MODIFY")) {
@@ -924,7 +929,6 @@ export class ServiceManager {
         await this.modifyServices(modifyTasks, services, newInstallTasks);
       } catch (err) {
         log.error("Modifying Services Failed:", err);
-      } finally {
       }
     }
     if (jobs.includes("CHANGE NETWORK")) {

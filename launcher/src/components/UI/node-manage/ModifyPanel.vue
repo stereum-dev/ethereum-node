@@ -61,7 +61,7 @@
             </div>
           </div>
         </div>
-        <div v-if="plugin.service !== 'FlashbotsMevBoostService'" class="portAddBox">
+        <div v-if="!noPortServices.includes(plugin.service)" class="portAddBox">
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
           <div class="portConfig">
             <span>{{ $t("addModifyPanel.portused") }}</span>
@@ -141,6 +141,7 @@ export default {
       options: [],
       checkedRelays: [],
       availableBlocks: [],
+      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService"],
     };
   },
   computed: {
