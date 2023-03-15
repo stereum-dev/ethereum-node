@@ -26,7 +26,7 @@
           <div class="icon-box">
             <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
           </div>
-          <div class="message-box">
+          <div class="message">
             <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>LOW STORAGE SPACE</span></div>
             <div class="val-message">{{ availDisk }} GB Free</div>
@@ -36,7 +36,7 @@
           <div class="icon-box">
             <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
           </div>
-          <div class="message-box">
+          <div class="message">
             <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
             <div class="val-message">
@@ -48,7 +48,7 @@
           <div class="icon-box">
             <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
           </div>
-          <div class="message-box">
+          <div class="message">
             <div class="warning"><span>CRITICAL WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
             <div class="val-message">
@@ -60,7 +60,11 @@
           <div class="icon-box">
             <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
           </div>
-          <div class="message-box">
+          <!-- <div class="message-box">
+            <div class="warning"><span>CRITICAL WARNING</span></div>
+            <div class="main-message"><span>MISSED ATTESTATION</span></div>
+          </div> -->
+          <div class="message">
             <div class="warning"><span>CRITICAL WARNING</span></div>
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div>
@@ -300,6 +304,13 @@ export default {
   width: 100%;
   height: 100%;
 }
+.message {
+  width: 70%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
 .alert-box_messages {
   display: flex;
   justify-content: flex-start;
@@ -323,13 +334,14 @@ export default {
   border-radius: 5px;
   margin: 2px 0;
 }
+
 .alert-message_red {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 95%;
   height: 15%;
-  background: #be3635;
+  background: rgb(173, 7, 7);
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
@@ -361,7 +373,7 @@ export default {
   height: 99%;
 }
 .message-box {
-  width: 70%;
+  width: 90%;
   height: 75%;
   display: flex;
   justify-content: space-between;
