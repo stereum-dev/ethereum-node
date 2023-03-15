@@ -107,8 +107,12 @@ export default {
       }, 6000);
     },
     getTasks: async function () {
-      this.Tasks = await ControlService.getTasks();
-      this.displayNewTask = this.Tasks.at(-1).name;
+      const freshTasks = await ControlService.getTasks();
+      this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
+      // use try/catch to avoid an error if no tasks responded for whatever reason
+      try {
+        this.displayNewTask = this.Tasks.at(-1).name;
+      } catch (e) {}
     },
   },
 };
