@@ -64,10 +64,10 @@ import FrontpageSsv from "./FrontpageSsv.vue";
 import RegisterSsv from "./RegisterSsv.vue";
 import SsvDashboard from "./SsvDashboard.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import SecretkeyRegister from "./SecretkeyRegister.vue";
+import axios from "axios";
 export default {
   components: {
     FrontpageSsv,
@@ -95,28 +95,13 @@ export default {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
-      testOperatorData: "testOperatorData",
-    }),
-
-    ...mapWritableState(useNodeHeader, {
-      pubkey: "pubkey",
     }),
   },
   mounted() {
     this.getKeys();
   },
   created() {
-    setTimeout(() => {
-      if (this.testOperatorData == "200") {
-        this.ssvDashboardActive = true;
-        this.pubkeyModalActive = false;
-        this.dataLoading = false;
-      } else {
-        this.ssvDashboardActive = false;
-        this.pubkeyModalActive = true;
-        this.dataLoading = false;
-      }
-    }, 3000);
+    this.dataLoading = true;
   },
   methods: {
     operatorModalHandler() {
@@ -129,6 +114,24 @@ export default {
       let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
       this.pubkey = ssvConfig.ssv_pk;
+      let pubkeyHash = await ControlService.getOperatorPageURL(this.pubkey);
+      try {
+        let response = await axios.get("https://api.ssv.network/api/v2/prater/operators/" + pubkeyHash);
+        if (response.status == 200) {
+          this.ssvDashboardActive = true;
+          this.pubkeyModalActive = false;
+          this.dataLoading = false;
+        } else {
+          this.ssvDashboardActive = false;
+          this.pubkeyModalActive = true;
+          this.dataLoading = false;
+        }
+      } catch {
+        console.log("Operator not registered");
+        this.ssvDashboardActive = false;
+        this.pubkeyModalActive = true;
+        this.dataLoading = false;
+      }
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;

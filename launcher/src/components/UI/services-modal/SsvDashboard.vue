@@ -30,7 +30,12 @@ import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 export default {
-  props: ["pubkey"],
+  props: {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       localpubkey: this.pubkey,

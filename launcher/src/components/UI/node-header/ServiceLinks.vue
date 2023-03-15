@@ -28,15 +28,12 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import { mapWritableState } from "pinia";
-import ControlService from "@/store/ControlService";
 import { useNodeHeader } from "@/store/nodeHeader";
 import { useServices } from "@/store/services";
 import GrafanaModal from "../services-modal/GrafanaModal.vue";
 import SsvModal from "../services-modal/SsvModal.vue";
 import PrometheusModal from "../services-modal/PrometheusModal.vue";
 import MevboostModal from "../services-modal//MevboostModal.vue";
-import axios from "axios";
 export default {
   components: { GrafanaModal, SsvModal, PrometheusModal, MevboostModal },
   data() {
@@ -57,26 +54,9 @@ export default {
     ...mapState(useServices, {
       allServices: "allServices",
     }),
-    ...mapWritableState(useNodeHeader, {
-      testOperatorData: "testOperatorData",
-      pubkey: "pubkey",
-    }),
-  },
-  mounted() {
-    //console.log(this.pubkey);
   },
 
   methods: {
-    getKeys: async function () {
-      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
-      this.ssvService = ssv;
-      let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
-      // this.secretkey = ssvConfig.ssv_sk;
-      this.pubkey = ssvConfig.ssv_pk;
-      //console.log(this.pubkey);
-      this.pubkeyHash = await ControlService.getOperatorPageURL(this.pubkey);
-      this.checkOperator();
-    },
     scrollRight() {
       let position = this.$refs.service;
       position.scrollLeft += 150;
@@ -93,7 +73,6 @@ export default {
           this.showGrafanaWindow = true;
         } else if (serviceName == "SSVNetworkService") {
           this.showSsvWindow = true;
-          this.getKeys();
         } else if (serviceName == "PrometheusService") {
           this.showPrometheusWindow = true;
         } else if (serviceName == "FlashbotsMevBoostService") {
@@ -108,16 +87,6 @@ export default {
       this.showSsvWindow = false;
       this.showPrometheusWindow = false;
       this.showMevboostWindow = false;
-    },
-    async checkOperator() {
-      try {
-        let response = await axios.get("https://api.ssv.network/api/v2/prater/operators/" + this.pubkeyHash);
-        if (response.status == 200) {
-          this.testOperatorData = response.status;
-        }
-      } catch {
-        console.log("Operator not registered");
-      }
     },
   },
 };
