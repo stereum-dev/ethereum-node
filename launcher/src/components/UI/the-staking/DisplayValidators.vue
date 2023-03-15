@@ -274,15 +274,6 @@ export default {
     DisabledStaking,
     SearchBox,
   },
-<<<<<<< HEAD
-=======
-  // props: {
-  //   isPubkeyVisible: {
-  //     type: Boolean,
-  //     default: false,
-  //   },
-  // },
->>>>>>> main
   data() {
     return {
       stakingIsDisabled: false,
@@ -320,7 +311,6 @@ export default {
       selectedService: {},
       ImportSlashingActive: false,
       slashingDB: "",
-      isPubkeyVisible: false,
       keyIcon: {
         normalKey: "./img/icon/the-staking/normal-key.svg",
         remoteKey: "./img/icon/the-staking/remotekey.svg",
