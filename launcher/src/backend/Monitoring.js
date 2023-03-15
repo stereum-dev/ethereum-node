@@ -1516,9 +1516,10 @@ export class Monitoring {
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
       if (svc) {
+        // Prometheus NE does not store data but using "/" as volume, see #1095
         if (svc.service === "PrometheusNodeExporterService") {
-          val = 0; // Show 0 B as value for prometheus NE (it does not store data, see #1095)
-          //return; // Otional: Do not show prometheus NE at all in the storage list
+          //val = 0; // Solution A: Show 0 B as value for Prometheus NE
+          return; // Solution B: Do not show Prometheus NE at all in the storage list
         }
         data.push({
           id: index + 1,
