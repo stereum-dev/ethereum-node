@@ -46,6 +46,7 @@ export default {
       showMevboostWindow: false,
     };
   },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
@@ -54,6 +55,7 @@ export default {
       allServices: "allServices",
     }),
   },
+
   methods: {
     scrollRight() {
       let position = this.$refs.service;
