@@ -99,7 +99,8 @@ export default {
   },
   methods: {
     getTasks: async function () {
-      this.Tasks = await ControlService.getTasks();
+      const freshTasks = await ControlService.getTasks();
+      this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
       if (!this.showDropDownList) {
         this.displayingTasks = this.Tasks;
       } else {
@@ -137,6 +138,7 @@ export default {
     listCleanerHandler: async function () {
       this.displayingTasks = [];
       this.Tasks = [];
+      this.showDropDownList = false;
       await ControlService.clearTasks();
     },
   },

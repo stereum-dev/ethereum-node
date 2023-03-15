@@ -23,13 +23,13 @@ export const useClickInstall = defineStore("clickInstallation", {
           display: true,
         },
 
-        {
-          id: 3,
-          name: "checkpoint sync",
-          type: "custom source",
-          displayCategory: "Sync from a custom source",
-          display: false,
-        },
+        // {
+        //   id: 3,
+        //   name: "checkpoint sync",
+        //   type: "custom source",
+        //   displayCategory: "Sync from a custom source",
+        //   display: false,
+        // },
       ],
       selectedNetwork: {},
       installationPath: "/opt/stereum",
