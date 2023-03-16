@@ -312,6 +312,10 @@ class ControlService extends EventEmitter {
   async writeSSVNetworkConfig(args) {
     return await this.promiseIpc.send("writeSSVNetworkConfig", args);
   }
+
+  async getQRCode() {
+    return await this.promiseIpc.send("getQRCode");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);

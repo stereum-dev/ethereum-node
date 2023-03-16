@@ -1,0 +1,12 @@
+---
+- name: Copy Grafana's alert(s)
+  copy:
+    src: "{{ item }}"
+    dest: "{{ service_provisioning_path }}/alerting"
+    owner: "2000"
+    group: "2000"
+    mode: 0644
+  become: yes
+  with_fileglob: "{{ role_path }}/files/grafana/{{ item }}/alerting/*"
+
+# EOF

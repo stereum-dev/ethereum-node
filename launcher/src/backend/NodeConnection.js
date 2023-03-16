@@ -1,6 +1,5 @@
 import { SSHService } from "./SSHService";
 import { StringUtils } from "./StringUtils";
-import { NodeConnectionParams } from "./NodeConnectionParams";
 import { nodeOS } from "./NodeOS";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import axios from "axios";
@@ -222,19 +221,13 @@ export class NodeConnection {
       let installResult;
       try {
         installResult = await this.sshService.exec(
-          `
-                mkdir -p "` +
-            this.installationDirectory +
-            `/ansible" &&
-                cd "` +
-            this.installationDirectory +
-            `/ansible" &&
-                git init &&
-                git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
-                git config core.sparseCheckout true &&
-                echo 'controls' >> .git/info/sparse-checkout &&
-                git checkout ${branch ? branch : commit}
-                `
+          `mkdir -p "${this.installationDirectory}/ansible" &&
+          cd "${this.installationDirectory}/ansible" &&
+          git init &&
+          git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
+          git config core.sparseCheckout true &&
+          echo 'controls' >> .git/info/sparse-checkout &&
+          git checkout ${global.branch ? global.branch : commit}`
         );
       } catch (err) {
         log.error("can't install ansible roles", err);
@@ -328,17 +321,17 @@ export class NodeConnection {
           "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-            playbookRunRef +
-            "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-            StringUtils.escapeStringForShell(extraVarsJson) +
-            "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-            this.settings.stereum.settings.controls_install_path +
-            "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
         );
       } catch (err) {
@@ -530,10 +523,10 @@ export class NodeConnection {
       try {
         configStatus = await this.sshService.exec(
           "echo -e " +
-            StringUtils.escapeStringForShell(service.data.trim()) +
-            " > /etc/stereum/services/" +
-            service.id +
-            ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
         );
       } catch (err) {
         this.taskManager.otherSubTasks.push({
@@ -580,10 +573,10 @@ export class NodeConnection {
       try {
         configStatus = await this.sshService.exec(
           "echo -e " +
-            StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-            " > /etc/stereum/services/" +
-            serviceConfiguration.id +
-            ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
         );
       } catch (err) {
         this.taskManager.otherSubTasks.push({
@@ -605,9 +598,9 @@ export class NodeConnection {
         this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
         return reject(
           "Failed writing service configuration " +
-            serviceConfiguration.id +
-            ": " +
-            SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
         );
       }
       this.taskManager.otherSubTasks.push({
@@ -851,14 +844,10 @@ export class NodeConnection {
   }
 
   async checkUpdates() {
-    try {
-      let response = await axios.get("https://stereum.net/downloads/updates.json");
-      if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
-      log.debug(response.data);
-      return response.data;
-    } catch (err) {
-      throw err;
-    }
+    let response = await axios.get("https://stereum.net/downloads/updates.json");
+    if (global.branch === "main") response.data.stereum.push({ name: "HEAD", commit: "main" });
+    log.debug(response.data);
+    return response.data;
   }
 
   async runAllUpdates(commit) {
@@ -872,10 +861,10 @@ export class NodeConnection {
       after = this.getTimeStamp();
     } catch (err) {
       log.error("Error occurred running all updates:\n", err);
-    } finally {
-      if (after != 0 && before != 0) return after - before;
       return 30;
     }
+    if (after != 0 && before != 0) return after - before;
+    return 30;
   }
 
   async updateServices(services) {
@@ -954,7 +943,7 @@ export class NodeConnection {
   async getLargestVolumePath() {
     return new Promise(async (resolve, reject) => {
       try {
-        const dfOutput = await this.sshService.exec("df | tail -n +2 | sort -k 4 -rn | head -n 1");
+        const dfOutput = await this.sshService.exec("df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1");
 
         if (SSHService.checkExecError(dfOutput)) {
           return reject("Failed reading df command: " + SSHService.extractExecError(dfOutput));

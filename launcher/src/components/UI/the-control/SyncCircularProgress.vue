@@ -1,10 +1,10 @@
 <template>
   <circle-progress
     :fill-color="color"
-    size="40"
-    border-width="2"
-    border-bg-width="3"
-    :percent="syncPercent"
+    :size = 40
+    :border-width = 2
+    :border-bg-width = 3
+    :percent="parseInt(syncPercent)"
     empty-color="black"
   />
 </template>
@@ -20,7 +20,7 @@ export default {
       required: true,
     },
     syncPercent: {
-      type: String,
+      type: [Number, String],
       required: true,
     },
   },

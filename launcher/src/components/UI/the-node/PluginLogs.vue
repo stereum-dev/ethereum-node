@@ -11,11 +11,11 @@
     <div class="logsContainer">
       <div class="logsHeader">
         <div class="title">
-          <div class="title-icon">
-            <img src="/img/icon/plugin-menu-icons/log-icon.png" alt="icon" />
-          </div>
           <div class="title-text">
             <span>{{ $t("pluginLogs.pageTitle") }}</span>
+          </div>
+          <div class="title-icon">
+            <img src="/img/icon/node-journal-icons/log-icon.png" alt="icon" />
           </div>
         </div>
         <div class="serviceDetails">
@@ -27,7 +27,9 @@
           </div>
         </div>
         <div class="categoryBox">
-          <p class="category">{{ logsItem.category }}<span v-if="logsItem.category != 'service'"> client</span></p>
+          <p class="category">
+            {{ logsItem.category }}<span v-if="logsItem.category != 'service'" class="client"> client</span>
+          </p>
           <span id="serviceVersion">{{ logsItem.config.imageVersion }}</span>
         </div>
         <div class="closeBox" @click="$emit('closeLog')">
@@ -62,8 +64,8 @@
         </div>
       </div>
       <div class="logsFooter">
-        <div class="textBox">
-          <span>{{ $t("pluginLogs.clickCopy") }}</span>
+        <div class="logsText">
+          <span class="animate-pulse duration-100">{{ $t("pluginLogs.clickCopy") }}</span>
         </div>
         <div class="searchBox">
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
@@ -234,37 +236,37 @@ export default {
 }
 .logsHeader {
   width: 100%;
-  height: 8%;
+  height: 42px;
   border-bottom: 4px solid #9c9c9c;
   display: flex;
   justify-content: flex-end;
   align-items: center;
 }
 .logsHeader .title {
-  width: 22.5%;
-  height: 100%;
+  width: 28%;
+  height: 90%;
   color: #cbcaca;
+  background-color: #0761bb;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  border-right: 3px solid #c9c9c9;
-  border-radius: 10px;
+  align-items: center;
+  border-radius: 0 5px 5px 0;
 }
 .title-icon {
   display: flex;
-  width: 30%;
+  width: 10%;
   height: 100%;
   justify-content: center;
   align-items: center;
 }
 .title-icon img {
-  width: 43%;
+  width: 100%;
 }
 .title-text {
   display: flex;
-  width: 70%;
+  width: 50%;
   height: 100%;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   font-size: 100%;
   font-weight: 800;
@@ -337,13 +339,18 @@ export default {
 .logsHeader .closeBox img:active {
   transform: scale(0.9);
 }
-.categoryBox .category,
-.categoryBox .category span {
+.categoryBox .category {
   font-size: 70%;
   font-weight: 600;
   text-align: left;
   color: #cacdce;
   text-transform: uppercase;
+}
+.category .client {
+  width: fit-content;
+  height: fit-content;
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 #serviceVersion {
   width: max-content;
@@ -355,7 +362,7 @@ export default {
 .logBox {
   display: flex;
   width: 100%;
-  height: 85%;
+  height: 82%;
 }
 .log-box_nav {
   display: flex;
@@ -514,36 +521,39 @@ export default {
 
 .logsFooter {
   width: 100%;
-  height: 7%;
+  height: 50px;
   border-top: 4px solid rgb(156, 156, 156);
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 100%;
   align-items: center;
 }
-.logsFooter .textBox {
-  grid-column: 1/4;
+.logsFooter .logsText {
+  grid-column: 2/6;
   grid-row: 1/2;
-  width: 100%;
-  height: 100%;
+  width: 72%;
+  height: 80%;
+  border: 2px solid rgb(156, 156, 156);
+  border-radius: 5px;
+  background-color: #32564f;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
 }
-.logsFooter .textBox span {
-  font-size: 0.9rem;
+.logsFooter .logsText span {
+  font-size: 0.7rem;
   color: #d8d8d8;
-  font-weight: 600;
-  margin-left: 20%;
+  font-weight: 400;
 }
 
 .logsFooter .searchBox {
-  grid-column: 5/9;
+  grid-column: 9/13;
   grid-row: 1/2;
-  width: 98%;
+  width: 95%;
   height: 76%;
-  background-color: #eaeaea;
+  background-color: #f4f4f4;
   border-radius: 5px;
+  margin-left: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -568,12 +578,13 @@ export default {
   padding: 0 0.5rem;
 }
 .logsFooter .serviceBox {
-  grid-column: 9/13;
+  grid-column: 5/9;
   grid-row: 1/2;
-  width: 97%;
-  height: 70%;
+  width: 100%;
+  height: 80%;
   border: 2px solid rgb(156, 156, 156);
   border-radius: 5px;
+  background-color: #32564f;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

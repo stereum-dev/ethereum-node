@@ -33,7 +33,7 @@
           </div>
         </div>
         <div
-          v-if="plugin.service !== 'FlashbotsMevBoostService' && plugin.service !== 'PrometheusNodeExporterService'"
+          v-if="!noInstallPathServices.includes(plugin.service)"
           class="change-installation"
         >
           <div class="change-title">
@@ -44,7 +44,7 @@
           </div>
         </div>
         <div
-          v-if="plugin.service !== 'FlashbotsMevBoostService' && plugin.service !== 'PrometheusNodeExporterService'"
+          v-if="!noPortServices.includes(plugin.service)"
           class="portAddBox"
         >
           <img src="/img/icon/manage-node-icons/port.png" alt="icon" />
@@ -144,6 +144,8 @@ export default {
       options: [],
       checkedRelays: [],
       availableBlocks: [],
+      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService", "ValidatorEjectorService"],
+      noInstallPathServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService"],
     };
   },
   computed: {

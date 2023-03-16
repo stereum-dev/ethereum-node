@@ -22,7 +22,6 @@ const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
 const { globalShortcut } = require("electron");
-const foo = null ?? "default string";
 const log = require("electron-log");
 log.transports.console.level = "info";
 log.transports.file.level = "debug";
@@ -361,6 +360,10 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
 
 ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
+});
+
+ipcMain.handle("getQRCode", async (event) => {
+  return await monitoring.getQRCode()
 });
 
 // Scheme must be registered before the app is ready
