@@ -209,11 +209,7 @@ export default {
       required: true,
     },
     position: {
-      type: Number,
-      required: true,
-    },
-    prunningWarning: {
-      type: Boolean,
+      type: [Number, String],
       required: true,
     },
   },
@@ -291,7 +287,7 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
       this.item.expertOptions.forEach((option) => {
-        if (option.changeValue != undefined && option.changeValue != null && option.changeValue != NaN) {
+        if (option.changeValue != undefined && option.changeValue != null && isNaN(option.changeValue)) {
           if (option.changed) {
             this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
           }
@@ -310,7 +306,7 @@ export default {
       });
     },
     checkAutoUpdate(val) {
-      if (val != undefined && val != null && val != NaN) {
+      if (val != undefined && val != null && isNaN(val)) {
         val = val == "true";
         return val ? "auto" : "manual";
       }

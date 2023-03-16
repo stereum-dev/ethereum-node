@@ -20,6 +20,7 @@ import { StringUtils } from "./StringUtils";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
+import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 
 const log = require("electron-log");
 
@@ -123,6 +124,8 @@ export class ServiceManager {
               services.push(Web3SignerService.buildByConfiguration(config));
             } else if (config.service == "NotificationService") {
               services.push(NotificationService.buildByConfiguration(config));
+            } else if (config.service == "ValidatorEjectorService") {
+              services.push(ValidatorEjectorService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -633,6 +636,9 @@ export class ServiceManager {
 
       case "NotificationService":
         return NotificationService.buildByUserInput(args.network, args.installDir + "/notification");
+
+      case "ValidatorEjectorService":
+        return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
     }
   }
 
