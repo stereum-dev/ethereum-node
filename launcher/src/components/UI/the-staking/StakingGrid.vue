@@ -12,6 +12,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
@@ -53,14 +54,14 @@ export default {
         //   method: this.feeBtn,
         //   display: false,
         // },
-        {
-          id: 4,
-          name: "withdraw",
-          displayName: "withdrawal",
-          icon: "img/icon/the-staking/withdraw.png",
-          method: this.exitBtn,
-          display: false,
-        },
+        // {
+        //   id: 4,
+        //   name: "withdraw",
+        //   displayName: "withdrawal",
+        //   icon: "img/icon/the-staking/withdraw.png",
+        //   method: this.exitBtn,
+        //   display: false,
+        // },
       ],
       button: {},
     };
