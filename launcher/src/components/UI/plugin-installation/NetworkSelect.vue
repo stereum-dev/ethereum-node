@@ -18,7 +18,7 @@
       <div v-if="show" class="listBox">
         <div class="selectBox_list w-full divide-y-2 divide-gray-400">
           <div
-            v-for="(state, i) in list"
+            v-for="(state, i) in networks"
             :key="i"
             class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
             @click="selectNetwork(state.name)"
@@ -69,20 +69,6 @@ export default {
         icon: "",
       },
       show: false,
-      list: [
-        {
-          name: "mainnet",
-          icon: "/img/icon/click-installation/mainnet-icon.png",
-        },
-        {
-          name: "testnet",
-          icon: "/img/icon/click-installation/testnet-icon.png",
-        },
-        {
-          name: "gnosis",
-          icon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
-        },
-      ],
     };
   },
 
@@ -108,7 +94,7 @@ export default {
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({
         setup: item.name,
-        network: this.selectedNetworkName,
+        network: this.currentNetwork.name,
       });
       let includedPlugins = this.allServices.filter((service) => constellation.includes(service.service));
       if (
@@ -130,7 +116,8 @@ export default {
       this.show = !this.show;
     },
     selectNetwork(name) {
-      this.currentNetwork = this.list.find((item) => item.name === name);
+      this.currentNetwork = this.networks.find((item) => item.name === name);
+      this.selectedNetwork = this.currentNetwork
       this.show = false;
     },
   },
