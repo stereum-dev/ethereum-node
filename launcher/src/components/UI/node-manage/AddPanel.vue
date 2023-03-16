@@ -144,7 +144,7 @@ export default {
       options: [],
       checkedRelays: [],
       availableBlocks: [],
-      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService"],
+      noPortServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService", "NotificationService", "Web3SignerService", "ValidatorEjectorService"],
       noInstallPathServices: ["FlashbotsMevBoostService", "PrometheusNodeExporterService"],
     };
   },
