@@ -1,7 +1,7 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
-import * as QRCode from 'qrcode'
+import * as QRCode from "qrcode";
 import * as log from "electron-log";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -33,18 +33,17 @@ export class Monitoring {
     await this.serviceManagerProm.nodeConnection.logout();
   }
 
-  async getQRCode(){
-    const services = await this.serviceManager.readServiceConfigurations()
-    const notifyService = services.find(s => s.service === "NotificationService")
-    if(notifyService){
-      const volume = notifyService.volumes.find(v => v.servicePath == "/opt/app/qrcode")
-      if(volume && volume.destinationPath){
-        const data = await this.nodeConnection.sshService.exec(`cat ${volume.destinationPath}/keys.json`)
-        if(data.stdout)
-          return await QRCode.toDataURL(data.stdout)
+  async getQRCode() {
+    const services = await this.serviceManager.readServiceConfigurations();
+    const notifyService = services.find((s) => s.service === "NotificationService");
+    if (notifyService) {
+      const volume = notifyService.volumes.find((v) => v.servicePath == "/opt/app/qrcode");
+      if (volume && volume.destinationPath) {
+        const data = await this.nodeConnection.sshService.exec(`cat ${volume.destinationPath}/keys.json`);
+        if (data.stdout) return await QRCode.toDataURL(data.stdout);
       }
     }
-    return new Error("Couldn't read QRCode Data")
+    return new Error("Couldn't read QRCode Data");
   }
 
   async checkStereumInstallation(nodeConnection) {
@@ -1517,6 +1516,11 @@ export class Monitoring {
     storagesizes.forEach(function (val, index) {
       let svc = index in sshcommands ? sshcommands[index].svc : false;
       if (svc) {
+        // Prometheus NE does not store data but using "/" as volume, see #1095
+        if (svc.service === "PrometheusNodeExporterService") {
+          //val = 0; // Solution A: Show 0 B as value for Prometheus NE
+          return; // Solution B: Do not show Prometheus NE at all in the storage list
+        }
         data.push({
           id: index + 1,
           title: svc.service
