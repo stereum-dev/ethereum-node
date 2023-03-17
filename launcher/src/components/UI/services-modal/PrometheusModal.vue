@@ -9,16 +9,8 @@
         <div class="title-box">
           <div class="service-name"><span>prometheus</span></div>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>
@@ -29,9 +21,7 @@
             <span>{{ $t("serviceModals.localAppText") }}</span>
           </div>
           <div class="btn-box">
-            <a class="btn" :href="prometheusService.linkUrl" target="_blank">{{
-              $t("serviceModals.openBrowser")
-            }}</a>
+            <a class="btn" :href="prometheusService.linkUrl" target="_blank">{{ $t("serviceModals.openBrowser") }}</a>
           </div>
         </div>
       </div>
@@ -48,13 +38,14 @@ export default {
       isprometheusAvailable: false,
     };
   },
-  mounted() {
-    this.filterprometheusService();
-  },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
     }),
+  },
+  mounted() {
+    this.filterprometheusService();
   },
   methods: {
     filterprometheusService() {

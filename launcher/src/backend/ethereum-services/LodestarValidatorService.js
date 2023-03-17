@@ -1,31 +1,32 @@
-import { NodeService } from './NodeService.js'
-import { ServicePortDefinition } from './SerivcePortDefinition.js'
-import { ServiceVolume } from './ServiceVolume.js'
-
+import { NodeService } from "./NodeService.js";
+import { ServicePortDefinition } from "./SerivcePortDefinition.js";
+import { ServiceVolume } from "./ServiceVolume.js";
 
 export class LodestarValidatorService extends NodeService {
-  static buildByUserInput (network, ports, dir, consensusClients) {
-    const service = new LodestarValidatorService()
-    service.setId()
-    const workingDir = service.buildWorkingDir(dir)
+  static buildByUserInput(network, ports, dir, consensusClients) {
+    const service = new LodestarValidatorService();
+    service.setId();
+    const workingDir = service.buildWorkingDir(dir);
 
-    const image = 'chainsafe/lodestar'
+    const image = "chainsafe/lodestar";
 
-    const dataDir = '/opt/app/validator'
+    const dataDir = "/opt/app/validator";
 
-    const volumes = [
-      new ServiceVolume(workingDir + '/validator', dataDir),
-    ]
+    const volumes = [new ServiceVolume(workingDir + "/validator", dataDir)];
 
-    const eth2Nodes = (consensusClients.map(client => { return client.buildConsensusClientHttpEndpointUrl() })).join()
+    const eth2Nodes = consensusClients
+      .map((client) => {
+        return client.buildConsensusClientHttpEndpointUrl();
+      })
+      .join();
 
     // build service
     service.init(
-      'LodestarValidatorService', //service
+      "LodestarValidatorService", //service
       service.id, //id
       1, //configVersion
-      image,  //image
-      'v1.3.0', //imageVersion
+      image, //image
+      "v1.3.0", //imageVersion
       [
         `validator`,
         `--network=${network}`,
@@ -39,36 +40,34 @@ export class LodestarValidatorService extends NodeService {
         `--metrics.address=0.0.0.0`,
         `--builder`,
         `--suggestedFeeRecipient=0x0000000000000000000000000000000000000000`,
-      ],  //command
+      ], //command
       ["node", "./packages/cli/bin/lodestar"], // entrypoint
       null, // env
       ports, //ports
-      volumes,  //volumes
+      volumes, //volumes
       null, //user
       network, //network
       null, //executionClients
       consensusClients //consensusClients
-      )
+    );
 
-    return service
+    return service;
   }
 
-  static buildByConfiguration (config) {
-    const service = new LodestarValidatorService()
+  static buildByConfiguration(config) {
+    const service = new LodestarValidatorService();
 
-    service.initByConfig(config)
+    service.initByConfig(config);
 
-    return service
+    return service;
   }
 
-  buildValidatorClientMetricsEndpoint () {
-    return 'stereum-' + this.id + ':5064'
+  buildValidatorClientMetricsEndpoint() {
+    return "stereum-" + this.id + ":5064";
   }
 
-  getAvailablePorts () {
-    return [
-      new ServicePortDefinition(5062, 'tcp', 'Validator Client API')
-    ]
+  getAvailablePorts() {
+    return [new ServicePortDefinition(5062, "tcp", "Validator Client API")];
   }
 }
 

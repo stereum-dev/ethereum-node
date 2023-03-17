@@ -1,7 +1,7 @@
 <template>
   <div class="parentGuage">
-    <div class="guageTitle" v-on:click="test">
-      <span>{{$t('controlPage.inclusionDistance')}}</span>
+    <div class="guageTitle" @click="test">
+      <span>{{ $t("controlPage.inclusionDistance") }}</span>
     </div>
     <div class="guageBox">
       <div
@@ -21,13 +21,12 @@
         </div>
         <div class="needle"></div>
         <div class="gauge-center">
-          <div class="str" v-on:click="test1">{{ strIns }}</div>
+          <div class="str" @click="test1">{{ strIns }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -41,7 +40,7 @@ export default {
     };
   },
   watch: {
-    strIns(newValue, _) {
+    strIns(newValue) {
       if (newValue === null) {
         this.off = true;
         this.good = false;

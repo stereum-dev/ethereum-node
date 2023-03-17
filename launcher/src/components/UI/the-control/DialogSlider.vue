@@ -1,11 +1,17 @@
 <template>
-  <dialog open v-if="open">
+  <dialog v-if="open" open>
     <slot></slot>
   </dialog>
 </template>
+
 <script>
 export default {
-  props: ["open"],
+  props: {
+    open: {
+      type: Boolean,
+      required: true,
+    },
+  },
 };
 </script>
 <style scoped>

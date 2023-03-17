@@ -15,17 +15,9 @@
 
         <div class="flip-box icon-box">
           <div class="flip-box-inner">
-            <img
-              class="flip-box-front"
-              src="/img/icon/service-icons/ssv-network.png"
-              alt="icon"
-            />
+            <img class="flip-box-front" src="/img/icon/service-icons/ssv-network.png" alt="icon" />
 
-            <img
-              class="flip-box-back"
-              src="/img/icon/click-installation/testnet-icon.png"
-              alt="icon"
-            />
+            <img class="flip-box-back" src="/img/icon/click-installation/testnet-icon.png" alt="icon" />
           </div>
         </div>
 
@@ -33,46 +25,36 @@
         <div class="title-box">
           <div class="service-name"><span>ssv.network</span></div>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
-            <img
-              src="/img/icon/service-icons/discord.png"
-              alt="icon"
-              @click="openDiscord"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
+            <img src="/img/icon/service-icons/discord.png" alt="icon" @click="openDiscord" />
           </div>
         </div>
       </div>
-      <div class="content-box">
-        <frontpage-ssv
-          v-if="pubkeyModalActive"
-          @open-pubkey="operatorModalHandler"
-          @open-secretkey="registerSecretkeyHandler"
-          :pubkey="pubkey"
-        ></frontpage-ssv>
-        <register-ssv
-          v-if="registerModalActive"
-          :pubkey="pubkey"
-          :secretkey="secretkey"
-          @register-pubkey="registerSsvPubkeyHandler"
-        ></register-ssv>
-        <secretkey-register
-          v-if="registerSecretkeyActive"
-          :ssvService="ssvService"
-          @login-secretkey="loginWithSecretkeyHandler"
-        ></secretkey-register>
-        <ssv-dashboard
-          :pubkey="pubkey"
-          v-if="ssvDashboardActive"
-        ></ssv-dashboard>
+      <div class="wrapper">
+        <div v-if="dataLoading" class="spinnerBox">
+          <img src="../../../../public/img/icon/control/spinner.gif" alt="spinner" />
+        </div>
+        <div v-else class="content-box">
+          <frontpage-ssv
+            v-if="pubkeyModalActive"
+            :pubkey="pubkey"
+            @open-pubkey="operatorModalHandler"
+            @open-secretkey="registerSecretkeyHandler"
+          ></frontpage-ssv>
+          <register-ssv
+            v-if="registerModalActive"
+            :pubkey="pubkey"
+            :secretkey="secretkey"
+            @register-pubkey="registerSsvPubkeyHandler"
+          ></register-ssv>
+          <secretkey-register
+            v-if="registerSecretkeyActive"
+            :ssv-service="ssvService"
+            @login-secretkey="loginWithSecretkeyHandler"
+          ></secretkey-register>
+          <ssv-dashboard v-if="ssvDashboardActive" :pubkey="pubkey"></ssv-dashboard>
+        </div>
       </div>
     </div>
   </div>
@@ -85,6 +67,7 @@ import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
 import SecretkeyRegister from "./SecretkeyRegister.vue";
+import axios from "axios";
 export default {
   components: {
     FrontpageSsv,
@@ -104,17 +87,21 @@ export default {
       selectedOperator: null,
       accepted: "",
       secretkey: null,
-      pubkey: null,
+      dataLoading: true,
     };
   },
-  mounted() {
-    this.getKeys();
-  },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
       operators: "operators",
     }),
+  },
+  mounted() {
+    this.getKeys();
+  },
+  created() {
+    this.dataLoading = true;
   },
   methods: {
     operatorModalHandler() {
@@ -122,21 +109,40 @@ export default {
       this.registerModalActive = true;
     },
     getKeys: async function () {
-      let ssv = this.runningServices.find(
-        (service) => service.service === "SSVNetworkService"
-      );
+      let ssv = this.runningServices.find((service) => service.service === "SSVNetworkService");
       this.ssvService = ssv;
-      let ssvConfig = await ControlService.getServiceConfig(
-        ssv.config.serviceID
-      );
+      let ssvConfig = await ControlService.getServiceConfig(ssv.config.serviceID);
       this.secretkey = ssvConfig.ssv_sk;
       this.pubkey = ssvConfig.ssv_pk;
+      let pubkeyHash = await ControlService.getOperatorPageURL(this.pubkey);
+      try {
+        let response = await axios.get("https://api.ssv.network/api/v2/prater/operators/" + pubkeyHash);
+        if (response.status == 200) {
+          this.ssvDashboardActive = true;
+          this.pubkeyModalActive = false;
+          this.dataLoading = false;
+        } else {
+          this.ssvDashboardActive = false;
+          this.pubkeyModalActive = true;
+          this.dataLoading = false;
+        }
+      } catch {
+        console.log("Operator not registered");
+        this.ssvDashboardActive = false;
+        this.pubkeyModalActive = true;
+        this.dataLoading = false;
+      }
     },
     registerSsvPubkeyHandler() {
       this.registerModalActive = false;
       this.pubkeyModalActive = false;
       this.ssvDashboardActive = true;
       window.open("https://app.ssv.network/");
+    },
+    matchingSsvPublickeyHandler() {
+      this.registerModalActive = false;
+      this.pubkeyModalActive = false;
+      this.ssvDashboardActive = true;
     },
     registerSecretkeyHandler() {
       this.registerModalActive = false;
@@ -303,10 +309,27 @@ export default {
   margin-right: 15px;
   cursor: pointer;
 }
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 75%;
+}
+.spinnerBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.spinnerBox img {
+  width: 50%;
+}
 
 .content-box {
   width: 100%;
-  height: 75%;
+  height: 100%;
   margin-top: 2%;
   display: flex;
   flex-direction: column;

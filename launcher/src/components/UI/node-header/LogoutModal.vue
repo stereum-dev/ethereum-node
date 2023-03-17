@@ -6,10 +6,7 @@
         <span>{{ $t("logOutModal.logOutTitle") }}</span>
       </div>
       <div class="messageContent">
-        <img
-          src="../../../../public/img/icon/manage-node-icons/stop.png"
-          alt=""
-        />
+        <img src="../../../../public/img/icon/manage-node-icons/stop.png" alt="" />
         <span class="question">{{ $t("logOutModal.logOutQuestion") }}</span>
       </div>
       <div class="confrimBtn">

@@ -2,32 +2,30 @@
   <div class="insertBox">
     <div class="insert-key" @click="openUploadHandler">
       <input
-        type="file"
-        @change="signalChangeHandler"
-        style="display: none"
         ref="fileInput"
+        type="file"
+        style="display: none"
         multiple="true"
         accept="application/json"
+        @change="signalChangeHandler"
       />
       <span>{{ $t("insertValidator.insertText") }}</span>
-      <img
-        class="black-key"
-        src="../../../../public/img/icon/the-staking/black-key.png"
-        alt="icon"
-      />
+      <img class="black-key" src="../../../../public/img/icon/the-staking/black-key.png" alt="icon" />
     </div>
   </div>
 </template>
 <script>
 export default {
-  props: ["services"],
+  props: {
+    services: {
+      type: Array,
+      default: () => [],
+    },
+  },
   methods: {
     openUploadHandler() {
-      let validator = this.services.filter((s) =>
-        s.service.includes("Validator")
-      );
-      if (validator && validator.map((e) => e.state).includes("running"))
-        this.$refs.fileInput.click();
+      let validator = this.services.filter((s) => s.service.includes("Validator"));
+      if (validator && validator.map((e) => e.state).includes("running")) this.$refs.fileInput.click();
     },
     signalChangeHandler(event) {
       this.$emit("uploadFile", event);

@@ -1,51 +1,53 @@
-import { SSVNetworkService } from './ethereum-services/SSVNetworkService'
-import { GethService } from './ethereum-services/GethService'
-import { BesuService } from './ethereum-services/BesuService'
-import { NimbusBeaconService } from './ethereum-services/NimbusBeaconService'
-import { PrometheusService } from './ethereum-services/PrometheusService'
-import { PrometheusNodeExporterService } from './ethereum-services/PrometheusNodeExporterService'
-import { GrafanaService } from './ethereum-services/GrafanaService'
-import { ServicePort, servicePortProtocol } from './ethereum-services/ServicePort'
-import { StringUtils } from './StringUtils.js'
-import { ServiceManager } from './ServiceManager'
-import { LighthouseBeaconService } from './ethereum-services/LighthouseBeaconService'
-import { LighthouseValidatorService } from './ethereum-services/LighthouseValidatorService'
-import { PrysmBeaconService } from './ethereum-services/PrysmBeaconService'
-import { PrysmValidatorService } from './ethereum-services/PrysmValidatorService'
-import { TekuBeaconService } from './ethereum-services/TekuBeaconService'
-import { NethermindService } from './ethereum-services/NethermindService'
-import { FlashbotsMevBoostService } from './ethereum-services/FlashbotsMevBoostService'
-import { LodestarBeaconService } from './ethereum-services/LodestarBeaconService'
-import { LodestarValidatorService } from './ethereum-services/LodestarValidatorService'
-import { ErigonService } from './ethereum-services/ErigonService'
+import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { GethService } from "./ethereum-services/GethService";
+import { BesuService } from "./ethereum-services/BesuService";
+import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
+import { PrometheusService } from "./ethereum-services/PrometheusService";
+import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
+import { GrafanaService } from "./ethereum-services/GrafanaService";
+import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
+import { StringUtils } from "./StringUtils.js";
+import { ServiceManager } from "./ServiceManager";
+import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
+import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
+import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
+import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
+import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
+import { NethermindService } from "./ethereum-services/NethermindService";
+import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
+import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
+import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
+import { ErigonService } from "./ethereum-services/ErigonService";
+import { NotificationService } from "./ethereum-services/NotificationService";
 
-const YAML = require('yaml')
-const log = require('electron-log')
+const log = require("electron-log");
 
 async function Sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export class OneClickInstall {
   async prepareNode(installDir, nodeConnection) {
-    this.installDir = installDir
-    this.nodeConnection = nodeConnection
-    this.serviceManager = new ServiceManager(this.nodeConnection)
-    await this.nodeConnection.findStereumSettings()
+    this.installDir = installDir;
+    this.nodeConnection = nodeConnection;
+    this.serviceManager = new ServiceManager(this.nodeConnection);
+    await this.nodeConnection.findStereumSettings();
     if (this.nodeConnection.settings === undefined) {
       await this.nodeConnection.sshService.exec(` mkdir /etc/stereum &&
       echo "stereum_settings:
       settings:
-        controls_install_path: ${this.installDir || '/opt/stereum'}
+        controls_install_path: ${this.installDir || "/opt/stereum"}
         os_user: stereum
         updates:
           lane: stable
           unattended:
             install: false
-    " > /etc/stereum/stereum.yaml`)
-      await this.nodeConnection.findStereumSettings()
+    " > /etc/stereum/stereum.yaml`);
+      await this.nodeConnection.findStereumSettings();
     }
-    return await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path)
+    return await this.nodeConnection.prepareStereumNode(
+      this.nodeConnection.settings.stereum.settings.controls_install_path
+    );
   }
 
   //this is broken
@@ -55,233 +57,287 @@ export class OneClickInstall {
       LIGHTHOUSE: 24,
       NIMBUS: 24,
       TEKU: 20,
-    }
-    let buffer = []
-    let clientDistribution = []
-    let sum = 0
-    let range = 0
+    };
+    let buffer = [];
+    let clientDistribution = [];
+    let sum = 0;
+    let range = 0;
 
-    Object.keys(clients).forEach(key => {
-      buffer.push({ name: key, coverage: clients[key] })
-    })
+    Object.keys(clients).forEach((key) => {
+      buffer.push({ name: key, coverage: clients[key] });
+    });
 
-    buffer.forEach(client => { sum += (100 / client.coverage) })
+    buffer.forEach((client) => {
+      sum += 100 / client.coverage;
+    });
 
-    buffer.forEach(client => {
-      clientDistribution.push({ name: client.name, percentage: (((100 / client.coverage) / sum) * 100) })
-    })
+    buffer.forEach((client) => {
+      clientDistribution.push({ name: client.name, percentage: (100 / client.coverage / sum) * 100 });
+    });
 
-    clientDistribution.forEach(client => {
-      client.min = range
-      range = range + client.percentage
-      client.max = range
-    })
+    clientDistribution.forEach((client) => {
+      client.min = range;
+      range = range + client.percentage;
+      client.max = range;
+    });
 
-    const ran = Math.random() * 100
-    const winner = clientDistribution.find(client => (client.min <= ran && client.max >= ran))
-    log.info(winner, ran)
-    return winner.name.toLowerCase()
+    const ran = Math.random() * 100;
+    const winner = clientDistribution.find((client) => client.min <= ran && client.max >= ran);
+    log.info(winner, ran);
+    return winner.name.toLowerCase();
   }
 
   clearSetup() {
-    this.beaconService = undefined
-    this.validatorService = undefined
-    this.installDir = undefined
-    this.executionClient = undefined
-    this.prometheusNodeExporter = undefined
-    this.prometheus = undefined
-    this.grafana = undefined
-    this.setup = undefined
-    this.choosenClient = undefined
-    this.network = undefined
-    this.mevboost = undefined
+    this.beaconService = undefined;
+    this.validatorService = undefined;
+    this.installDir = undefined;
+    this.executionClient = undefined;
+    this.prometheusNodeExporter = undefined;
+    this.prometheus = undefined;
+    this.grafana = undefined;
+    this.notificationService = undefined;
+    this.setup = undefined;
+    this.choosenClient = undefined;
+    this.network = undefined;
+    this.mevboost = undefined;
   }
 
   getConfigurations() {
-    let serviceList = []
-    serviceList.push(this.beaconService.buildConfiguration(),
-    this.executionClient.buildConfiguration(),
-    this.prometheusNodeExporter.buildConfiguration(),
-    this.prometheus.buildConfiguration(),
-    this.grafana.buildConfiguration()
-    )
-    if(this.mevboost)
-      serviceList.push(this.mevboost.buildConfiguration())
-    if(this.validatorService)
-      serviceList.push(this.validatorService.buildConfiguration())
+    let serviceList = [];
+    serviceList.push(
+      this.beaconService.buildConfiguration(),
+      this.executionClient.buildConfiguration(),
+      this.prometheusNodeExporter.buildConfiguration(),
+      this.prometheus.buildConfiguration(),
+      this.grafana.buildConfiguration(),
+      this.notificationService.buildConfiguration()
+    );
+    if (this.mevboost) serviceList.push(this.mevboost.buildConfiguration());
+    if (this.validatorService) serviceList.push(this.validatorService.buildConfiguration());
 
-    return serviceList
+    return serviceList;
   }
 
   networkHandler() {
-    if(this.network === "gnosis")
-      return "gnosis"
-    return this.network === "mainnet" ? "mainnet" : "goerli"
+    if (this.network === "gnosis") return "gnosis";
+    return this.network === "mainnet" ? "mainnet" : "goerli";
   }
 
   async createServices(constellation, checkpointURL, relayURL) {
-    let ports = []
-    if (constellation.includes('GethService')) {
+    let ports = [];
+    if (constellation.includes("GethService")) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
-      ]
-      this.executionClient = GethService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/geth')
+        new ServicePort("127.0.0.1", 8551, 8551, servicePortProtocol.tcp),
+        new ServicePort("127.0.0.1", 8545, 8545, servicePortProtocol.tcp),
+      ];
+      this.executionClient = GethService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/geth");
     }
 
-    if (constellation.includes('BesuService')) {
+    if (constellation.includes("BesuService")) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 8551, 8551, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
-      ]
-      this.executionClient = BesuService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/besu')
-
+        new ServicePort("127.0.0.1", 8551, 8551, servicePortProtocol.tcp),
+        new ServicePort("127.0.0.1", 8545, 8545, servicePortProtocol.tcp),
+      ];
+      this.executionClient = BesuService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/besu");
     }
 
-    if (constellation.includes('NethermindService')) {
+    if (constellation.includes("NethermindService")) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
-      ]
-      this.executionClient = NethermindService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/nethermind')
-
+        new ServicePort("127.0.0.1", 8545, 8545, servicePortProtocol.tcp),
+      ];
+      this.executionClient = NethermindService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/nethermind"
+      );
     }
 
-    if (constellation.includes('ErigonService')) {
+    if (constellation.includes("ErigonService")) {
       ports = [
         new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
         new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 8545, 8545, servicePortProtocol.tcp),
-      ]
-      this.executionClient = ErigonService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/erigon')
-
+        new ServicePort("127.0.0.1", 8545, 8545, servicePortProtocol.tcp),
+      ];
+      this.executionClient = ErigonService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/erigon");
     }
 
-    if (constellation.includes('FlashbotsMevBoostService')) {
+    if (constellation.includes("FlashbotsMevBoostService")) {
       //FlashbotsMevBoostService
-      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(), relayURL)
+      this.mevboost = FlashbotsMevBoostService.buildByUserInput(this.networkHandler(), relayURL);
     }
 
-    if (constellation.includes('LighthouseBeaconService')) {
+    if (constellation.includes("LighthouseBeaconService")) {
       //LighthouseBeaconService
       ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
-      ]
-      this.beaconService = LighthouseBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lighthouse', [this.executionClient], '16', this.mevboost ? [this.mevboost] : [], checkpointURL)
+        new ServicePort("127.0.0.1", 5052, 5052, servicePortProtocol.tcp),
+      ];
+      this.beaconService = LighthouseBeaconService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/lighthouse",
+        [this.executionClient],
+        this.mevboost ? [this.mevboost] : [],
+        checkpointURL
+      );
     }
 
-    if (constellation.includes('LighthouseValidatorService')) {
+    if (constellation.includes("LighthouseValidatorService")) {
       //LighthouseValidatorService
-      ports = [
-        new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
-      ]
-      this.validatorService = LighthouseValidatorService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lighthouse', [this.beaconService])
+      ports = [new ServicePort("127.0.0.1", 5062, 5062, servicePortProtocol.tcp)];
+      this.validatorService = LighthouseValidatorService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/lighthouse",
+        [this.beaconService]
+      );
     }
 
-    if (constellation.includes('LodestarBeaconService')) {
+    if (constellation.includes("LodestarBeaconService")) {
       //LodestarBeaconService
       ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 9596, 9596, servicePortProtocol.tcp)
-      ]
-      this.beaconService = LodestarBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lodestar', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
-    }
-    
-    if (constellation.includes('LodestarValidatorService')) {
-      //LodestarValidatorService
-      ports = [
-        new ServicePort('127.0.0.1', 5062, 5062, servicePortProtocol.tcp)
-      ]
-      this.validatorService = LodestarValidatorService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/lodestar', [this.beaconService])
+        new ServicePort("127.0.0.1", 9596, 9596, servicePortProtocol.tcp),
+      ];
+      this.beaconService = LodestarBeaconService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/lodestar",
+        [this.executionClient],
+        this.mevboost ? [this.mevboost] : [],
+        checkpointURL
+      );
     }
 
-    if (constellation.includes('PrysmBeaconService')) {
+    if (constellation.includes("LodestarValidatorService")) {
+      //LodestarValidatorService
+      ports = [new ServicePort("127.0.0.1", 5062, 5062, servicePortProtocol.tcp)];
+      this.validatorService = LodestarValidatorService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/lodestar",
+        [this.beaconService]
+      );
+    }
+
+    if (constellation.includes("PrysmBeaconService")) {
       //PrysmBeaconService
       ports = [
         new ServicePort(null, 13001, 13001, servicePortProtocol.tcp),
         new ServicePort(null, 12001, 12001, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 4000, 4000, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 3500, 3500, servicePortProtocol.tcp)
-      ]
-      this.beaconService = PrysmBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/prysm', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
+        new ServicePort("127.0.0.1", 4000, 4000, servicePortProtocol.tcp),
+        new ServicePort("127.0.0.1", 3500, 3500, servicePortProtocol.tcp),
+      ];
+      this.beaconService = PrysmBeaconService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/prysm",
+        [this.executionClient],
+        this.mevboost ? [this.mevboost] : [],
+        checkpointURL
+      );
     }
 
-    if (constellation.includes('PrysmValidatorService')) {
+    if (constellation.includes("PrysmValidatorService")) {
       //PrysmValidatorService
-      ports = [
-        new ServicePort('127.0.0.1', 7500, 7500, servicePortProtocol.tcp)
-      ]
-      this.validatorService = PrysmValidatorService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/prysm', [this.beaconService])
+      ports = [new ServicePort("127.0.0.1", 7500, 7500, servicePortProtocol.tcp)];
+      this.validatorService = PrysmValidatorService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/prysm",
+        [this.beaconService]
+      );
     }
 
-    if (constellation.includes('NimbusBeaconService')) {
+    if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
       ports = [
         new ServicePort(null, 9000, 9000, servicePortProtocol.tcp),
         new ServicePort(null, 9000, 9000, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp)
-      ]
-      this.beaconService = NimbusBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/nimbus', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
+        new ServicePort("127.0.0.1", 5052, 5052, servicePortProtocol.tcp),
+      ];
+      this.beaconService = NimbusBeaconService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/nimbus",
+        [this.executionClient],
+        this.mevboost ? [this.mevboost] : [],
+        checkpointURL
+      );
 
       //generate validator api-token
-      const valDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/validators')).destinationPath
-      const token = StringUtils.createRandomString()
-      await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`)
-      await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`)
+      const valDir = this.beaconService.volumes.find(
+        (vol) => vol.servicePath === "/opt/app/validators"
+      ).destinationPath;
+      const token = StringUtils.createRandomString();
+      await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`);
+      await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`);
     }
 
-    if (constellation.includes('TekuBeaconService')) {
+    if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
       ports = [
         new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
         new ServicePort(null, 9001, 9001, servicePortProtocol.udp),
-        new ServicePort('127.0.0.1', 5051, 5051, servicePortProtocol.tcp),
-        new ServicePort('127.0.0.1', 5052, 5052, servicePortProtocol.tcp),
-      ]
-      this.beaconService = TekuBeaconService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/teku', [this.executionClient], this.mevboost ? [this.mevboost] : [], checkpointURL)
+        new ServicePort("127.0.0.1", 5051, 5051, servicePortProtocol.tcp),
+        new ServicePort("127.0.0.1", 5052, 5052, servicePortProtocol.tcp),
+      ];
+      this.beaconService = TekuBeaconService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/teku",
+        [this.executionClient],
+        this.mevboost ? [this.mevboost] : [],
+        checkpointURL
+      );
 
       //keystore
-      const dataDir = (this.beaconService.volumes.find(vol => vol.servicePath === '/opt/app/data')).destinationPath
-      const password = StringUtils.createRandomString()
-      await this.nodeConnection.sshService.exec('apt install -y openjdk-8-jre-headless')
-      await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`)
-      await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`)
-      await this.nodeConnection.sshService.exec(`cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${this.beaconService.id}"`)
+      const dataDir = this.beaconService.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
+      const password = StringUtils.createRandomString();
+      await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
+      await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`);
+      await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`);
+      await this.nodeConnection.sshService.exec(
+        `cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${this.beaconService.id}"`
+      );
     }
 
-    if (constellation.includes('SSVNetworkService')) {
+    if (constellation.includes("SSVNetworkService")) {
       //SSVNetworkService
       ports = [
         new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
         new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
-      ]
-      this.validatorService = SSVNetworkService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/ssv_network', [this.executionClient], [this.beaconService])
+      ];
+      this.validatorService = SSVNetworkService.buildByUserInput(
+        this.networkHandler(),
+        ports,
+        this.installDir + "/ssv_network",
+        [this.executionClient],
+        [this.beaconService]
+      );
     }
 
+    this.prometheusNodeExporter = PrometheusNodeExporterService.buildByUserInput(this.networkHandler());
 
-    this.prometheusNodeExporter = PrometheusNodeExporterService.buildByUserInput(this.networkHandler())
+    ports = [new ServicePort("127.0.0.1", 9090, 9090, servicePortProtocol.tcp)];
+    this.prometheus = PrometheusService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/prometheus");
 
-    ports = [
-      new ServicePort('127.0.0.1', 9090, 9090, servicePortProtocol.tcp)
-    ]
-    this.prometheus = PrometheusService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/prometheus')
+    ports = [new ServicePort("127.0.0.1", 3000, 3000, servicePortProtocol.tcp)];
+    this.grafana = GrafanaService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/grafana");
 
-    ports = [
-      new ServicePort('127.0.0.1', 3000, 3000, servicePortProtocol.tcp)
-    ]
-    this.grafana = GrafanaService.buildByUserInput(this.networkHandler(), ports, this.installDir + '/grafana')
+    this.notificationService = NotificationService.buildByUserInput(this.networkHandler(),this.installDir + "/notification");
 
-    let versions
+    let versions;
     try {
-      versions = await this.nodeConnection.checkUpdates()
+      versions = await this.nodeConnection.checkUpdates();
     } catch (err) {
       log.error(`Couldn't fetch versions in OneClickInstallation...
       Installing with predefined Versions
@@ -290,102 +346,122 @@ export class OneClickInstall {
       method: ${err.config.method}
       headers: ${err.config.headers}
       timeout: ${err.config.timeout}
-      `)
+      `);
     }
     if (versions) {
-      this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient)
-      this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService)
-      this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus)
-      this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter)
-      this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana)
-      if (this.mevboost)
-        this.mevboost.imageVersion = this.getLatestVersion(versions, this.mevboost)
+      this.executionClient.imageVersion = this.getLatestVersion(versions, this.executionClient);
+      this.beaconService.imageVersion = this.getLatestVersion(versions, this.beaconService);
+      this.prometheus.imageVersion = this.getLatestVersion(versions, this.prometheus);
+      this.prometheusNodeExporter.imageVersion = this.getLatestVersion(versions, this.prometheusNodeExporter);
+      this.grafana.imageVersion = this.getLatestVersion(versions, this.grafana);
+      if (this.mevboost) this.mevboost.imageVersion = this.getLatestVersion(versions, this.mevboost);
       if (this.validatorService) {
-        this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService)
+        this.validatorService.imageVersion = this.getLatestVersion(versions, this.validatorService);
       }
     }
   }
 
   getLatestVersion(versions, service) {
-    let network = service.network
-    let version = service.imageVersion
-    if(versions[network] && versions[network][service.service]){
-      version = versions[network][service.service].slice(-1).pop()
-    }else if(versions["mainnet"] && versions["mainnet"][service.service]){
-      version = versions["mainnet"][service.service].slice(-1).pop()
-    }else if(versions["prater"] && versions["prater"][service.service]){
-      version = versions["prater"][service.service].slice(-1).pop()
+    let network = service.network;
+    let version = service.imageVersion;
+    if (versions[network] && versions[network][service.service]) {
+      version = versions[network][service.service].slice(-1).pop();
+    } else if (versions["mainnet"] && versions["mainnet"][service.service]) {
+      version = versions["mainnet"][service.service].slice(-1).pop();
+    } else if (versions["prater"] && versions["prater"][service.service]) {
+      version = versions["prater"][service.service].slice(-1).pop();
     }
-    return version
+    return version;
   }
 
   async generateSSVKeys() {
-    await this.nodeConnection.runPlaybook('ssv-key-generator', { stereum_role: 'ssv-key-generator', ssv_key_service: this.validatorService.id })
-    const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id)
-    let ssvConfig = this.validatorService.getServiceConfiguration(this.networkHandler(), [this.executionClient], [this.beaconService])
+    await this.nodeConnection.runPlaybook("ssv-key-generator", {
+      stereum_role: "ssv-key-generator",
+      ssv_key_service: this.validatorService.id,
+    });
+    const config = await this.nodeConnection.readServiceConfiguration(this.validatorService.id);
+    let ssvConfig = this.validatorService.getServiceConfiguration(
+      this.networkHandler(),
+      [this.executionClient],
+      [this.beaconService]
+    );
 
     // prepare service's config file
-    const dataDir = (this.validatorService.volumes.find(vol => vol.servicePath === '/data')).destinationPath
-    const escapedConfigFile = StringUtils.escapeStringForShell(ssvConfig.replace(/^OperatorPrivateKey.*/gm, "OperatorPrivateKey: \"" + config.ssv_sk + "\""))
-    this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`)
+    const dataDir = this.validatorService.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
+    const escapedConfigFile = StringUtils.escapeStringForShell(
+      ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + config.ssv_sk + '"')
+    );
+    this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
   }
 
   async writeConfig() {
-    const configs = this.getConfigurations()
+    const configs = this.getConfigurations();
     if (configs[0] !== undefined) {
-      await Promise.all(configs.map(async (config) => {
-        await this.nodeConnection.writeServiceConfiguration(config)
-      }))
-      if (this.validatorService && this.validatorService.service === 'SSVNetworkService') {
-        await this.generateSSVKeys()
+      await Promise.all(
+        configs.map(async (config) => {
+          await this.nodeConnection.writeServiceConfiguration(config);
+        })
+      );
+      if (this.validatorService && this.validatorService.service === "SSVNetworkService") {
+        await this.generateSSVKeys();
       }
-      return configs
+      return configs;
     }
   }
 
   async startServices() {
-    const services = this.getConfigurations()
-    const runRefs = []
+    const services = this.getConfigurations();
+    const runRefs = [];
     if (services[0] !== undefined) {
-      await Promise.all(services.map(async (service, index) => {
-        Sleep(index * 1000).then(() => runRefs.push(this.serviceManager.manageServiceState(service.id, 'started')))
-      }))
+      await Promise.all(
+        services.map(async (service, index) => {
+          Sleep(index * 1000).then(() => runRefs.push(this.serviceManager.manageServiceState(service.id, "started")));
+        })
+      );
     }
-    this.clearSetup()
-    return runRefs
+    this.clearSetup();
+    return runRefs;
   }
 
   async getSetupConstellation(setup, network) {
-    this.clearSetup()
-    this.setup = setup
-    this.network = network
-    let services = ['GethService', 'GrafanaService', 'PrometheusNodeExporterService', 'PrometheusService']
+    this.clearSetup();
+    this.setup = setup;
+    this.network = network;
+    let services = ["GethService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
 
-    this.choosenClient = await this.chooseClient()
-    this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1)
+    this.choosenClient = await this.chooseClient();
+    this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1);
 
-    services.push(this.choosenClient + 'ValidatorService')
-    services.push(this.choosenClient + 'BeaconService')
+    services.push(this.choosenClient + "ValidatorService");
+    services.push(this.choosenClient + "BeaconService");
 
-    if(network === "gnosis")
-      services = ['NethermindService', 'LighthouseBeaconService', 'LighthouseValidatorService', 'GrafanaService', 'PrometheusNodeExporterService', 'PrometheusService']
+    if (network === "gnosis")
+      services = [
+        "NethermindService",
+        "LighthouseBeaconService",
+        "LighthouseValidatorService",
+        "GrafanaService",
+        "PrometheusNodeExporterService",
+        "PrometheusService",
+        "NotificationService"
+      ];
 
     switch (setup) {
-      case 'staking':
-        break
-      case 'mev boost':
-        services.push('FlashbotsMevBoostService')
-        break
-      case 'ssv.network':
-        services.push('SSVNetworkService')
-        break
-      case 'obol ssv':
-        services.push('OBOLSSV')
-        break
-      case 'rocketpool':
-        services.push('ROCKETPOOL')
-        break
+      case "staking":
+        break;
+      case "mev boost":
+        services.push("FlashbotsMevBoostService");
+        break;
+      case "ssv.network":
+        services.push("SSVNetworkService");
+        break;
+      case "obol ssv":
+        services.push("OBOLSSV");
+        break;
+      case "rocketpool":
+        services.push("ROCKETPOOL");
+        break;
     }
-    return services
+    return services;
   }
 }

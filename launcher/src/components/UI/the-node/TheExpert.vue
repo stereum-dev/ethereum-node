@@ -12,59 +12,27 @@
       </div>
       <div class="expertRow" :class="{ shorterRowBox: isExpertModeActive }">
         <!-- plugin docs row -->
-        <div class="docBox" v-if="!isExpertModeActive && !ssvExpertModeActive">
-          <img
-            class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/doc.png"
-            alt="icon"
-          />
+        <div v-if="!isExpertModeActive && !ssvExpertModeActive" class="docBox">
+          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/doc.png" alt="icon" />
           <span class="docTitle">SERVICE DOCS</span>
           <span class="openBtn" @click="openDocs(item.docsUrl)">open</span>
         </div>
         <!-- expert mode row -->
-        <div
-          class="dataTitleBox"
-          @click="openExpertMode"
-          v-if="!ssvExpertModeActive"
-        >
-          <img
-            class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/crown2.png"
-            alt="icon"
-          />
+        <div v-if="!ssvExpertModeActive" class="dataTitleBox" @click="openExpertMode">
+          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/crown2.png" alt="icon" />
           <span>Expert Mode</span>
-          <img
-            v-if="isExpertModeActive"
-            src="../../../../public/img/icon/task-manager-icons/up.png"
-            alt=""
-          />
-          <img
-            v-else
-            src="../../../../public/img/icon/task-manager-icons/down.png"
-            alt=""
-          />
+          <img v-if="isExpertModeActive" src="../../../../public/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="../../../../public/img/icon/task-manager-icons/down.png" alt="" />
         </div>
         <div
+          v-if="item.service === 'SSVNetworkService' && !isExpertModeActive"
           class="dataTitleBox"
           @click="openSSVExpertMode"
-          v-if="item.service === 'SSVNetworkService' && !isExpertModeActive"
         >
-          <img
-            class="titleIcon"
-            src="../../../../public/img/icon/plugin-menu-icons/ssv-config.png"
-            alt="icon"
-          />
+          <img class="titleIcon" src="../../../../public/img/icon/plugin-menu-icons/ssv-config.png" alt="icon" />
           <span>SSV Configuration</span>
-          <img
-            v-if="ssvExpertModeActive"
-            src="../../../../public/img/icon/task-manager-icons/up.png"
-            alt=""
-          />
-          <img
-            v-else
-            src="../../../../public/img/icon/task-manager-icons/down.png"
-            alt=""
-          />
+          <img v-if="ssvExpertModeActive" src="../../../../public/img/icon/task-manager-icons/up.png" alt="" />
+          <img v-else src="../../../../public/img/icon/task-manager-icons/down.png" alt="" />
         </div>
 
         <!--
@@ -78,28 +46,16 @@
           }
         -->
         <div
+          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'select')"
+          :key="index"
           class="selectBox"
           :class="{ unvisible: isExpertModeActive }"
-          v-for="(option, index) in item.expertOptions.filter(
-            (option) => option.type === 'select'
-          )"
-          :key="index"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
           <div class="spaceParent">
-            <select
-              v-model="option.changeValue"
-              id="value"
-              @change="somethingIsChanged(option)"
-            >
-              <option
-                v-for="(rate, idx) in option.value"
-                :value="rate"
-                :key="idx"
-              >
-                {{ rate }} {{ option.unit }}
-              </option>
+            <select id="value" v-model="option.changeValue" @change="somethingIsChanged(option)">
+              <option v-for="(rate, idx) in option.value" :key="idx" :value="rate">{{ rate }} {{ option.unit }}</option>
             </select>
           </div>
         </div>
@@ -131,35 +87,33 @@
           </div>
         </div> -->
         <div
-          class="toggleTextBox"
-          v-for="(option, index) in item.expertOptions.filter(
-            (option) => option.type === 'text'
-          )"
+          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'text')"
           :key="index"
+          class="toggleTextBox"
           :class="{ unvisible: isExpertModeActive }"
         >
           <img class="titleIcon" :src="option.icon" alt="icon" />
           <span>{{ option.title }}</span>
           <Transition name="slide-up">
             <img
+              v-if="option.buttonState"
               class="buttonOff"
               src="/img/icon/plugin-menu-icons/confirm.png"
               alt="icon"
-              v-if="option.buttonState"
               @click="buttonOff(option)"
             />
             <img
+              v-else
               class="buttonOn"
               src="/img/icon/plugin-menu-icons/edit2.png"
               alt="icon"
-              v-else
               @click="buttonOn(option)"
             />
           </Transition>
           <input
+            v-model="option.changeValue"
             class="toggleTextInput"
             type="text"
-            v-model="option.changeValue"
             :class="{ disabled: !option.buttonState }"
             @input="somethingIsChanged(option)"
           />
@@ -175,11 +129,9 @@
         -->
 
         <div
-          class="actionBox"
-          v-for="(option, index) in item.expertOptions.filter(
-            (option) => option.type === 'action'
-          )"
+          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'action')"
           :key="index"
+          class="actionBox"
           :class="{ unvisible: isExpertModeActive }"
         >
           <img :src="option.icon" alt="icon" />
@@ -187,9 +139,9 @@
           <div class="toggleBox">
             <label class="switch">
               <input
+                v-model="option.changeValue"
                 :disabled="option.disabled"
                 type="checkbox"
-                v-model="option.changeValue"
                 name="check-button"
                 @change="somethingIsChanged()"
               />
@@ -198,11 +150,9 @@
           </div>
         </div>
         <div
-          class="actionBox"
-          v-for="(option, index) in item.expertOptions.filter(
-            (option) => option.type === 'toggle'
-          )"
+          v-for="(option, index) in item.expertOptions.filter((option) => option.type === 'toggle')"
           :key="index"
+          class="actionBox"
           :class="{ unvisible: isExpertModeActive }"
         >
           <img :src="option.icon" alt="icon" />
@@ -210,9 +160,9 @@
           <div class="toggleBox">
             <label class="switch">
               <input
+                v-model="option.changeValue"
                 :disabled="option.disabled"
                 type="checkbox"
-                v-model="option.changeValue"
                 name="check-button"
                 @change="somethingIsChanged(option)"
               />
@@ -223,19 +173,11 @@
       </div>
       <!-- expert mode textarea -->
       <div class="expertTable">
-        <div class="expertMode" v-if="isExpertModeActive">
-          <textarea
-            class="editContent"
-            @input="somethingIsChanged"
-            v-model="item.yaml"
-          ></textarea>
+        <div v-if="isExpertModeActive" class="expertMode">
+          <textarea v-model="item.yaml" class="editContent" @input="somethingIsChanged"></textarea>
         </div>
-        <div class="expertMode" v-if="ssvExpertModeActive">
-          <textarea
-            class="editContent"
-            @input="somethingIsChanged"
-            v-model="item.ssvConfig"
-          ></textarea>
+        <div v-if="ssvExpertModeActive" class="expertMode">
+          <textarea v-model="item.ssvConfig" class="editContent" @input="somethingIsChanged"></textarea>
         </div>
       </div>
       <div class="btn-box">
@@ -246,14 +188,10 @@
         <!-- close text -->
         <span class="exit-btn">{{ $t("exitValidatorModal.clickClose") }}</span>
         <!-- confirm button box -->
-        <div
-          class="confirmBtn"
-          v-if="!nothingsChanged"
-          @click="confirmExpertChanges(item)"
-        >
+        <div v-if="!nothingsChanged" class="confirmBtn" @click="confirmExpertChanges(item)">
           <span>Confirm</span>
         </div>
-        <div class="disabledBtn" v-else>
+        <div v-else class="disabledBtn">
           <span>Confirm</span>
         </div>
       </div>
@@ -263,10 +201,18 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 export default {
-  props: ["item", "position", "prunningWarning"],
+  props:{
+    item: {
+      type: Object,
+      required: true,
+    },
+    position: {
+      type: [Number, String],
+      required: true,
+    },
+  },
   data() {
     return {
       updateSelect: "auto",
@@ -274,7 +220,6 @@ export default {
       isExpertModeActive: false,
       ssvExpertModeActive: false,
       ramUsage: null,
-      editableData: null,
       isRamUsageActive: false,
       bindingIsOn: false,
       bindingIp: "126.0.23.22",
@@ -300,9 +245,8 @@ export default {
   // },
   methods: {
     openDocs(docsUrl) {
-      window.open(docsUrl, "_blank")
-      if(this.currentNetwork.network === "gnosis")
-        window.open("https://docs.gnosischain.com/node/", "_blank")
+      window.open(docsUrl, "_blank");
+      if (this.currentNetwork.network === "gnosis") window.open("https://docs.gnosischain.com/node/", "_blank");
     },
 
     somethingIsChanged(item) {
@@ -311,18 +255,14 @@ export default {
     },
 
     async readService() {
-      this.item.yaml = await ControlService.getServiceYAML(
-        this.item.config.serviceID
-      );
+      this.item.yaml = await ControlService.getServiceYAML(this.item.config.serviceID);
 
       // this.updateSelect = this.checkAutoUpdate(
       //   [...this.item.yaml.match(new RegExp("(autoupdate: )(.*)(\\n)"))][2]
       // );
 
       if (this.item.service === "SSVNetworkService")
-        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(
-          this.item.config.serviceID
-        );
+        this.item.ssvConfig = await ControlService.readSSVNetworkConfig(this.item.config.serviceID);
       this.item.expertOptions = this.item.expertOptions.map((option) => {
         if (this.item.yaml.includes("isPruning: true")) {
           option.disabled = true;
@@ -331,14 +271,8 @@ export default {
           if (option.type === "action") option.changeValue = false;
           option.disabled = false;
         }
-        if (
-          option.type === "select" ||
-          option.type === "text" ||
-          option.type === "toggle"
-        ) {
-          option.changeValue = [
-            ...this.item.yaml.match(new RegExp(option.pattern)),
-          ][2];
+        if (option.type === "select" || option.type === "text" || option.type === "toggle") {
+          option.changeValue = [...this.item.yaml.match(new RegExp(option.pattern))][2];
         }
         return {
           ...option,
@@ -353,16 +287,9 @@ export default {
         "$1" + this.checkAutoUpdate() + "$3"
       );
       this.item.expertOptions.forEach((option) => {
-        if (
-          option.changeValue != undefined &&
-          option.changeValue != null &&
-          option.changeValue != NaN
-        ) {
+        if (option.changeValue != undefined && option.changeValue != null && isNaN(option.changeValue)) {
           if (option.changed) {
-            this.item.yaml = this.item.yaml.replace(
-              new RegExp(option.pattern),
-              "$1" + option.changeValue + "$3"
-            );
+            this.item.yaml = this.item.yaml.replace(new RegExp(option.pattern), "$1" + option.changeValue + "$3");
           }
           option.changed = false;
         }
@@ -379,7 +306,7 @@ export default {
       });
     },
     checkAutoUpdate(val) {
-      if (val != undefined && val != null && val != NaN) {
+      if (val != undefined && val != null && isNaN(val)) {
         val = val == "true";
         return val ? "auto" : "manual";
       }

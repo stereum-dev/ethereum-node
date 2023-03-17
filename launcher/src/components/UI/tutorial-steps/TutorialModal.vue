@@ -5,12 +5,7 @@
         <span>{{ itemToTutorial.name }}</span>
       </div>
       <div class="modal-items">
-        <div
-          class="item"
-          v-for="(item, index) in steps"
-          :key="index"
-          @click="$emit('showItem', item)"
-        >
+        <div v-for="(item, index) in steps" :key="index" class="item" @click="$emit('showItem', item)">
           <div class="icon-box">
             <img :src="item.icon" alt="icon" />
           </div>
@@ -23,9 +18,15 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
-  props: ["itemToTutorial"],
+  props: {
+    itemToTutorial: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       steps: [
@@ -68,6 +69,8 @@ export default {
           item.guideLink = this.itemToTutorial.guideLink;
         } else if (item.name == "text guide") {
           item.writtenLink = this.itemToTutorial.writtenLink;
+        } else {
+          return;
         }
       });
     },
@@ -75,6 +78,7 @@ export default {
   methods: {},
 };
 </script>
+
 <style scoped>
 .modal-bg {
   width: 100%;
@@ -90,6 +94,7 @@ export default {
   left: 0;
   cursor: default;
 }
+
 .modal-box {
   width: 45%;
   height: 55%;
@@ -102,6 +107,7 @@ export default {
   border-radius: 15px;
   position: relative;
 }
+
 .modal-box .modal-box-title {
   width: 90%;
   height: 40px;
@@ -112,12 +118,14 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .modal-box-title span {
   font-size: 1rem;
   font-weight: 600;
   color: #c3c3c3;
   text-transform: uppercase;
 }
+
 .modal-items {
   width: 90%;
   height: 65%;
@@ -127,6 +135,7 @@ export default {
   align-items: center;
   padding: 2px;
 }
+
 .item {
   width: 32%;
   height: 80%;
@@ -139,14 +148,17 @@ export default {
   cursor: pointer;
   box-shadow: 0 1px 3px 1px rgb(68, 68, 68);
 }
+
 .item:hover {
   border: 2px solid rgb(54, 174, 248);
   opacity: 0.8;
 }
+
 .item:active {
   transition-duration: 200ms;
   transform: scale(0.95);
 }
+
 .item .icon-box {
   background-color: #33393e;
   border-radius: 5px;
@@ -156,9 +168,11 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .icon-box img {
   width: 65%;
 }
+
 .item-text {
   width: 100%;
   height: 35%;
@@ -168,15 +182,18 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .item-text span {
   font-size: 0.9rem;
   font-weight: 700;
   color: #303030;
   text-transform: uppercase;
 }
+
 .modal-items::-webkit-scrollbar {
   display: none;
 }
+
 .click {
   font-size: 0.7rem;
   color: #d8d8d8;

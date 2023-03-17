@@ -9,7 +9,7 @@
       </div>
       <div class="wrapper">
         <no-data v-if="noDataLayerShow"></no-data>
-        <div class="p2pBarBox" v-show="p2pItemsShow">
+        <div v-show="p2pItemsShow" class="p2pBarBox">
           <div class="p2pBarCont">
             <div class="titleVal">
               <span>{{ consensusClient }}</span>
@@ -35,21 +35,15 @@
         </div>
       </div>
     </div>
-    <div class="arrowBox" v-if="isMultiService" v-show="p2pItemsShow">
+    <div v-if="isMultiService" v-show="p2pItemsShow" class="arrowBox">
       <div class="arrowUp" @click="backPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
       <div class="pageNumber">
         <span>{{ pageNumber }}</span>
       </div>
       <div class="arrowDown" @click="nextPage">
-        <img
-          src="../../../../public/img/icon/control/arrowIcon.png"
-          alt="arrow"
-        />
+        <img src="../../../../public/img/icon/control/arrowIcon.png" alt="arrow" />
       </div>
     </div>
   </div>
@@ -87,12 +81,7 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.p2pControler();
-  },
-  unmounted() {
-    if (this.refresher) clearTimeout(this.refresher);
-  },
+
   computed: {
     ...mapState(useControlStore, {
       code: "code",
@@ -106,12 +95,16 @@ export default {
     },
     firstBar() {
       return { width: this.consensusValPeer + "%" };
-      return "width: 100%";
     },
     secondBar() {
       return { width: this.executionValPeer + "%" };
-      return "width: 100%";
     },
+  },
+  mounted() {
+    this.p2pControler();
+  },
+  unmounted() {
+    if (this.refresher) clearTimeout(this.refresher);
   },
   methods: {
     nextPage() {
@@ -170,10 +163,7 @@ export default {
           clients = this.p2pstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (
-            this.p2pstatus.hasOwnProperty("data") &&
-            this.p2pstatus.data.hasOwnProperty("error")
-          ) {
+          if (this.p2pstatus.hasOwnProperty("data") && this.p2pstatus.data.hasOwnProperty("error")) {
             if (this.p2pstatus.data.error == "prometheus service not running") {
               this.p2pItemsShow = false;
               this.p2pIcoUnknown = true;

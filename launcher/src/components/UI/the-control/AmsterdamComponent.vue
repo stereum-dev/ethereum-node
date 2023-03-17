@@ -8,28 +8,22 @@
     </div>
     <div class="docBox">
       <comming-soon></comming-soon>
-      <div
-        class="line-squares no-events"
-        v-for="obj in pattern"
-        :key="obj"
-        :data-tooltip="'EPOCH: ' + obj.slot"
-      >
+      <div v-for="obj in pattern" :key="obj" class="line-squares no-events" :data-tooltip="'EPOCH: ' + obj.slot">
         <div
-          class="square"
           v-for="square in obj.bar"
           :key="square"
+          class="square"
           :style="{ backgroundColor: getColor(square) }"
         ></div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import SyncInfo from "./SyncInfo.vue";
 import { mapState } from "pinia";
 import { useServices } from "@/store/services";
 export default {
-  components: { SyncInfo },
   data() {
     return {
       showSyncInfo: false,
@@ -45,17 +39,6 @@ export default {
     };
   },
 
-  mounted() {
-    if (this.network === "mainnet") {
-      this.networkIcon = this.mainnetIcon;
-    } else if (this.network === "testnet") {
-      this.networkIcon = this.testnetIcon;
-    } else if (this.network === "gnosis") {
-      this.networkIcon = this.gnosisIcon;
-    } else {
-      this.networkIcon = this.defaultIcon;
-    }
-  },
   computed: {
     ...mapState(useServices, {
       network: "network",

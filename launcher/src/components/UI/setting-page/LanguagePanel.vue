@@ -1,10 +1,10 @@
 <template>
   <div class="lang-panel_parent">
     <flag-button
-      @setting="setLang(link.langName, link.langSelect, link.label)"
       v-for="link in sortedFlags"
       :key="link.flag"
-      :isActive="link.enable"
+      :is-active="link.enable"
+      @setting="setLang(link.langName, link.langSelect, link.label)"
     >
       <div class="langIco"><img :src="link.langImg" /></div>
       <div class="langName">
@@ -13,13 +13,15 @@
     </flag-button>
   </div>
 </template>
+
 <script>
 import FlagButton from "./FlagButton.vue";
-import { mapWritableState, mapActions } from "pinia";
+import { mapWritableState } from "pinia";
 import { useFlagDialog } from "../../../store/flagDialog";
 import ControlService from "@/store/ControlService";
 export default {
   components: { FlagButton },
+  emits: ["back"],
   data() {
     return {
       isLanguageSelected: false,
@@ -30,13 +32,13 @@ export default {
       },
     };
   },
-  emits: ["back"],
   computed: {
     ...mapWritableState(useFlagDialog, {
       linkFlags: "linkFlags",
     }),
     sortedFlags() {
-      return this.linkFlags.sort((a, b) => {
+      const sortedFlags = [...this.linkFlags];
+      sortedFlags.sort((a, b) => {
         let fa = a.langName.toLowerCase(),
           fb = b.langName.toLowerCase();
         if (fa < fb) {
@@ -47,6 +49,7 @@ export default {
         }
         return 0;
       });
+      return sortedFlags;
     },
   },
   methods: {

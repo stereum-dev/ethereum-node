@@ -6,26 +6,14 @@
 
     <language-setting
       v-if="isLanguage"
-      @language-box="langAction"
       :flag="savedFlag"
       :lang="savedLang"
       :label="savedLabel"
+      @language-box="langAction"
     ></language-setting>
 
-    <router-link
-      class="setting-items_btn"
-      :style="color()"
-      to="/credit"
-      v-else-if="link"
-      >{{ linkValue }}</router-link
-    >
-    <div
-      iv
-      class="setting-items_btn"
-      v-else
-      @click="customizeSetting"
-      :style="color()"
-    >
+    <router-link v-else-if="link" class="setting-items_btn" :style="color()" to="/credit">{{ linkValue }}</router-link>
+    <div v-else iv class="setting-items_btn" :style="color()" @click="customizeSetting">
       <span>{{ btnValue }}</span>
     </div>
   </div>
@@ -42,10 +30,12 @@ export default {
     btnValue: {
       type: String,
       required: false,
+      default: "",
     },
     isColor: {
       type: String,
       required: false,
+      default: "",
     },
     isLang: {
       type: Boolean,
@@ -59,14 +49,17 @@ export default {
     savedFlag: {
       type: String,
       required: false,
+      default: "",
     },
     savedLang: {
       type: String,
       required: false,
+      default: "",
     },
     savedLabel: {
       type: String,
       required: false,
+      default: "",
     },
     link: {
       type: Boolean,
@@ -79,6 +72,7 @@ export default {
     linkValue: {
       type: String,
       required: false,
+      default: "",
     },
   },
   emits: ["customize-setting", "lang-action"],

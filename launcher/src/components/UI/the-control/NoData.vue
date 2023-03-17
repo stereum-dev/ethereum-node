@@ -1,17 +1,14 @@
 <template>
   <div class="no-data_parent">
     <div class="no-data_box">
-      <span class="big-sign"> &gt; no data &lt; </span>
+      <span class="big-sign"> &gt; {{ $t("noData.noData") }} &lt; </span>
       <div class="bottom-part">
         <div class="comment-part">
-          <span class="comment-row1">PLEASE TURN ON A</span>
-          <span class="comment-row2">NODE CLIENT &</span>
+          <span class="comment-row1">{{ $t("noData.turnOn") }} </span>
+          <span class="comment-row2">Prometheus</span>
         </div>
         <div class="icon-part" :data-tooltip="serviceName">
-          <img
-            src="../../../../public/img/icon/control/PrometheusServiceCircle.png"
-            alt=""
-          />
+          <img src="/img/icon/control/PrometheusServiceCircle.png" alt="Prometheus" />
         </div>
       </div>
     </div>
@@ -102,6 +99,7 @@ export default {
   align-items: center;
   width: 68%;
   height: 100%;
+  text-transform: uppercase;
 }
 .comment-row1 {
   width: 100%;
@@ -118,7 +116,7 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: 60%;
+  font-size: 80%;
   font-weight: 600;
 }
 .icon-part {

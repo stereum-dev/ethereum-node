@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      availableBlocks: [],
+      usedBlocks: [],
       relaysList: [
         {
           icon: "/img/icon/click-installation/flashbot-icon.png",

@@ -82,19 +82,19 @@ export const useTaskManager = defineStore("taskManager", {
               status: "active",
               statusLabel: "TASK ACTIVE",
               displayTooltip: false,
-              showErrorterminal:false,
+              showErrorterminal: false,
             },
             {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
               displayTooltip: false,
-              showErrorterminal:false,
+              showErrorterminal: false,
             },
             {
               status: "failed",
               statusLabel: "TASK FAILED",
               displayTooltip: false,
-              showErrorterminal:false,
+              showErrorterminal: false,
             },
           ],
         },
@@ -107,7 +107,7 @@ export const useTaskManager = defineStore("taskManager", {
               status: "success",
               statusLabel: "TASK SUCCEEDED",
               displayTooltip: false,
-              showErrorterminal:false,
+              showErrorterminal: false,
             },
           ],
         },
@@ -120,7 +120,7 @@ export const useTaskManager = defineStore("taskManager", {
               status: "failed",
               statusLabel: "TASK FAILED",
               showTooltip: false,
-              showErrorterminal:false,
+              showErrorterminal: false,
             },
           ],
         },
@@ -161,8 +161,7 @@ export const useTaskManager = defineStore("taskManager", {
               StartedAt: "2022-07-04T08:32:44.596033426Z",
               FinishedAt: "2022-07-04T08:32:44.638548667Z",
             },
-            Image:
-              "sha256:0e88798890db40bbf98a855d740869178056b769690c2d59e0bc42b8fd23e49e",
+            Image: "sha256:0e88798890db40bbf98a855d740869178056b769690c2d59e0bc42b8fd23e49e",
             ResolvConfPath:
               "/var/lib/docker/containers/15dbf7ef039d093a802b97269cece5a0365b15da235bb85f710806f32266dbc3/resolv.conf",
             HostnamePath:
@@ -255,13 +254,7 @@ export const useTaskManager = defineStore("taskManager", {
                 "/proc/scsi",
                 "/sys/firmware",
               ],
-              ReadonlyPaths: [
-                "/proc/bus",
-                "/proc/fs",
-                "/proc/irq",
-                "/proc/sys",
-                "/proc/sysrq-trigger",
-              ],
+              ReadonlyPaths: ["/proc/bus", "/proc/fs", "/proc/irq", "/proc/sys", "/proc/sysrq-trigger"],
             },
             GraphDriver: {
               Data: {
@@ -313,8 +306,7 @@ export const useTaskManager = defineStore("taskManager", {
                 Maintainer: "James Fuller <jim.fuller@webcomposite.com>",
                 Name: "curl",
                 Version: "1.0.0",
-                "docker.cmd":
-                  "docker run -it curl/curl:7.83.1 -s -L http://curl.se",
+                "docker.cmd": "docker run -it curl/curl:7.83.1 -s -L http://curl.se",
                 "se.haxx.curl": "curl",
                 "se.haxx.curl.description": "network utility",
                 "se.haxx.curl.release_tag": "curl-7_83_1",
@@ -323,8 +315,7 @@ export const useTaskManager = defineStore("taskManager", {
             },
             NetworkSettings: {
               Bridge: "",
-              SandboxID:
-                "a3e30a39541aa4196c5e097405699c968408d94eadbef7882ca8a6b9b422d009",
+              SandboxID: "a3e30a39541aa4196c5e097405699c968408d94eadbef7882ca8a6b9b422d009",
               HairpinMode: false,
               LinkLocalIPv6Address: "",
               LinkLocalIPv6PrefixLen: 0,
@@ -345,8 +336,7 @@ export const useTaskManager = defineStore("taskManager", {
                   IPAMConfig: null,
                   Links: null,
                   Aliases: ["15dbf7ef039d"],
-                  NetworkID:
-                    "8ff1ef2f7ffe836d0c460dfd080100030a3f7c1082b5a067ae759993f3284be7",
+                  NetworkID: "8ff1ef2f7ffe836d0c460dfd080100030a3f7c1082b5a067ae759993f3284be7",
                   EndpointID: "",
                   Gateway: "",
                   IPAddress: "",

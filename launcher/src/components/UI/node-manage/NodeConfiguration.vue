@@ -6,7 +6,9 @@
           <span class="ipTitle">{{ $t("journalnode.serverip") }}</span>
           <span class="nameTitle">{{ $t("journalnode.servername") }}</span>
           <span class="ip">{{ ipAddress }}</span>
-          <span class="name">{{ ServerName }}</span>
+          <span ref="serverName" :class="{ animateServerName: checkServerNameWidth }" class="name">{{
+            ServerName
+          }}</span>
         </div>
       </div>
     </div>
@@ -15,26 +17,22 @@
         <div class="edit-btn">
           <router-link to="/node">
             <span>{{ $t("modifyPanel.backNode") }}</span>
-            <img
-              src="../../../../public/img/icon/manage-node-icons/undo1.png"
-              alt="icon"
-            />
+            <img src="../../../../public/img/icon/manage-node-icons/undo1.png" alt="icon" />
           </router-link>
         </div>
       </div>
       <div class="delete-box">
         <div class="delete-btn" @click.stop="openRemoveModal">
           <span class="btn-text">{{ $t("modifyPanel.nukeNode") }}</span>
-          <img
-            src="../../../../public/img/icon/manage-node-icons/nuke.png"
-            alt="icon"
-          />
+          <img src="../../../../public/img/icon/manage-node-icons/nuke.png" alt="icon" />
         </div>
       </div>
       <remove-modal
         v-if="removeServicesModal"
         @close-me="closeRemoveModal"
         @remove-items="removeConfirmation"
+        @back-to-login="backToLogin"
+        ref="removeServicesModalComponent"
       ></remove-modal>
     </div>
   </div>
@@ -42,7 +40,6 @@
 <script>
 import { mapWritableState, mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
-import { useNodeStore } from "@/store/theNode";
 import ControlService from "@/store/ControlService";
 import { useServices } from "@/store/services";
 import { useNodeManage } from "../../../store/nodeManage";
@@ -56,6 +53,9 @@ export default {
       modalActive: false,
       removeServicesModal: false,
       removeIsConfirmed: false,
+      notSure: true,
+      serverNameWidth: null,
+      nameParentWidth: null,
     };
   },
   computed: {
@@ -79,6 +79,17 @@ export default {
       keys: "keys",
       forceRefresh: "forceRefresh",
     }),
+    checkServerNameWidth() {
+      if (this.serverNameWidth > this.nameParentWidth) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+  mounted() {
+    this.serverNameWidth = this.$refs.serverName.clientWidth;
+    this.nameParentWidth = this.$refs.serverName.parentElement.clientWidth;
   },
   methods: {
     openModal() {
@@ -95,9 +106,9 @@ export default {
     },
     removeConfirmation() {
       this.refresh = false; //stop refreshing
-      this.removeServicesModal = false;
       this.removeIsConfirmed = true;
       this.destroyNode();
+      this.notSure = false;
     },
     removeAllPlugins() {
       if (this.removeIsConfirmed) {
@@ -112,10 +123,60 @@ export default {
       this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
-      console.log(await ControlService.destroy());
+      await ControlService.clearTasks();
+      ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
+      var uxtStart = Math.floor(Date.now() / 1000);
+      var secMax = 30; // wait max X seconds to finish destroy process
+      while (1) {
+        var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
+        if (secElapsed >= secMax) {
+          console.log("abort -> timeout -> secElapsed", secElapsed);
+          await ControlService.clearTasks();
+          break;
+        }
+        var tasks = await ControlService.getTasks();
+        var task = tasks.findLast((t) => t.name.includes("Delete Node"));
+        var subtasks = task && task.hasOwnProperty("subTasks") ? task.subTasks : null;
+        var status = task && task.hasOwnProperty("status") ? task.status : null;
+        // console.log("tasks => ", tasks);
+        // console.log("task => ", task);
+        // console.log("subtasks => ", subtasks);
+        // console.log("status => ", status);
+        var myresult = [];
+        myresult.push("nuke node executed (ok)");
+        if (subtasks && Array.isArray(subtasks) && subtasks.length > 0) {
+          myresult.push("gathering facts (ok)");
+          for (var i = 0; i < subtasks.length; i++) {
+            var subtask = subtasks[i];
+            myresult.push(subtask.name + " (" + subtask.status + ")");
+          }
+        } else {
+          if (secElapsed >= 2) {
+            myresult.push("gathering facts (ok)");
+          }
+          // console.log("waiting for subtasks");
+        }
+        this.$refs.removeServicesModalComponent.nukeData = myresult;
+        // Intentionally as last check since last subtask could be retrieved at exact same frame
+        if (status != null) {
+          status = status === "success" ? "ok" : status;
+          myresult.push("node nuked (" + status + ")");
+          this.$refs.removeServicesModalComponent.nukeData = myresult;
+          await ControlService.clearTasks();
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts
+      }
       this.refresh = true;
       this.removeAllPlugins();
+      this.$refs.removeServicesModalComponent.loginBtn = false;
+    },
+    logout: async function () {
+      await ControlService.logout();
       this.$router.push("/");
+    },
+    backToLogin() {
+      this.logout();
     },
   },
 };
@@ -178,17 +239,17 @@ export default {
   height: 85%;
   border-radius: 8px;
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 25% 75%;
   grid-template-rows: repeat(6, 1fr);
 }
 
 .server .ipTitle {
   grid-column: 1/2;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -200,13 +261,14 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .nameTitle {
   grid-column: 1/2;
-  grid-row: 4/6;
+  grid-row: 4/7;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: #c4c4c4;
   text-transform: uppercase;
@@ -218,32 +280,59 @@ export default {
   align-self: flex-end;
   text-align: left;
 }
+
 .server .name {
   grid-column: 2/3;
-  grid-row: 4/6;
-  width: 100%;
+  grid-row: 4/7;
+  width: fit-content;
+  max-width: 125px;
   height: 100%;
-  text-align: center;
-  font-size: 0.6rem;
+  text-align: center !important;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #dfbb06;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;
+  padding-top: 6px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: clip;
-  align-self: center;
+  display: inline-flex;
+  overflow: visible !important;
+  justify-self: center;
+}
+
+.animateServerName {
+  animation: backAndForth 5s infinite;
+}
+@keyframes backAndForth {
+  0% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(-50%);
+  }
+  55% {
+    transform: translateX(-50%);
+  }
+  90% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 .server .ip {
   grid-column: 2/3;
-  grid-row: 2/4;
+  grid-row: 1/4;
   width: 100%;
   height: 100%;
   text-align: center;
-  font-size: 0.7rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #cfaf65;
+  color: #dfbb06;
   text-transform: uppercase;
   border-radius: 5px;
   padding: 4px;

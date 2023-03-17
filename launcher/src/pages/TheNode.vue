@@ -3,17 +3,17 @@
     <node-header id="head" @mousedown.prevent></node-header>
     <node-bg>
       <div class="node-parent">
-        <div class="play-box" v-if="playYoutubeVideo">
+        <div v-if="playYoutubeVideo" class="play-box">
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos :videoUrl="itemToTutorial.videosLink"></the-videos>
+          <the-videos :video-url="itemToTutorial.videosLink"></the-videos>
         </div>
         <TutorialModal
+          v-if="isTutorialModalActive"
+          :item-to-tutorial="itemToTutorial"
           @hide-modal="closeTutorialModalHandler"
           @show-item="openTutorialStep"
-          v-if="isTutorialModalActive"
-          :itemToTutorial="itemToTutorial"
         />
         <div class="journal-box" @mousedown.prevent>
           <JournalNode />
@@ -23,12 +23,7 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img
-                    :src="
-                      currentNetwork.icon ? currentNetwork.icon : loadingGIF
-                    "
-                    alt="icon"
-                  />
+                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
                   <span>{{ currentNetwork.name }}</span>
@@ -36,57 +31,35 @@
               </div>
             </div>
           </div>
-          <div class="modal-parent" v-if="isModalActive">
-            <base-modal
-              :modalItems="modalItems"
-              @close-me="closeModal"
-            ></base-modal>
+          <div v-if="isModalActive" class="modal-parent">
+            <base-modal :modal-items="modalItems" @close-me="closeModal"></base-modal>
           </div>
           <div>
             <plugin-zone
               :title="$t('theNode.execution')"
-              :list="
-                installedServices
-                  .filter((service) => service.category === 'execution')
-                  .sort(sortByName)
-              "
+              :list="installedServices.filter((service) => service.category === 'execution').sort(sortByName)"
               @modal-view="showModal"
             ></plugin-zone>
           </div>
           <div>
             <plugin-zone
-              @modal-view="showModal"
               :title="$t('theNode.consensus')"
-              :list="
-                installedServices
-                  .filter((service) => service.category === 'consensus')
-                  .sort(sortByName)
-              "
+              :list="installedServices.filter((service) => service.category === 'consensus').sort(sortByName)"
+              @modal-view="showModal"
             ></plugin-zone>
           </div>
           <div>
             <plugin-zone
-              @modal-view="showModal"
               :title="$t('theNode.validator')"
-              :list="
-                installedServices
-                  .filter((service) => service.category === 'validator')
-                  .sort(sortByName)
-              "
+              :list="installedServices.filter((service) => service.category === 'validator').sort(sortByName)"
+              @modal-view="showModal"
             ></plugin-zone>
           </div>
         </div>
         <div class="service">
           <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
-            <node-service
-              :list="
-                installedServices.filter(
-                  (service) => service.category === 'service'
-                )
-              "
-            >
-            </node-service>
+            <node-service :list="installedServices.filter((service) => service.category === 'service')"> </node-service>
           </div>
         </div>
         <div class="node-side">
@@ -330,7 +303,7 @@ export default {
   height: 95%;
   grid-column: 2;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -424,7 +397,7 @@ export default {
 .sidebar-container {
   width: 100%;
   height: 100%;
-  background: #3a3d40;
+  background: #33393e;
   border: 2px solid #242529b4;
   border-top-right-radius: 30px;
   display: flex;
@@ -458,7 +431,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #3a3d40;
+  background: #494e53;
   box-sizing: border-box;
   border: 1px solid #464646;
 }

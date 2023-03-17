@@ -3,10 +3,7 @@
     <div class="modal-opacity"></div>
     <div class="disabledModalContent">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="disabledMessage">
         <span>{{ $t("disabledStaking.noValidatorInstalled") }}</span>

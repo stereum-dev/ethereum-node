@@ -10,6 +10,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import InclusionDistance from "./InclusionDistance.vue";
 import TheValidator from "./TheValidator.vue";

@@ -1,23 +1,18 @@
 <template>
   <div class="technical-box_parent" name="contributors-list">
-    <select
-      class="techToggl"
-      name="technikToggl"
-      id="technikToggl"
-      v-model="techToggl"
-    >
+    <select id="technikToggl" v-model="techToggl" class="techToggl" name="technikToggl">
       <option value="developers">{{ $t("creditPanel.developers") }}</option>
       <option value="testers">{{ $t("creditPanel.testers") }}</option>
     </select>
-    <div class="wrapper" v-if="compToggl">
+    <div v-if="compToggl" class="wrapper">
       <the-contributor
+        v-for="(result, index) in results"
+        :key="result.id"
         :class="{
           'gold-border': index === 0,
           'silver-border': index === 1,
           'bronze-border': index === 2,
         }"
-        v-for="(result, index) in results"
-        :key="result.id"
         :name="result.name"
         :avatar="result.avatar"
         :crown="index == 0"
@@ -25,7 +20,7 @@
         :score="result.score"
       ></the-contributor>
     </div>
-    <div class="wrapper" v-else>
+    <div v-else class="wrapper">
       <div class="testers-container">
         <test-contributor
           v-for="result in filterTesters"
@@ -50,6 +45,12 @@ export default {
       compToggl: true,
     };
   },
+
+  computed: {
+    filterTesters() {
+      return [...new Map(this.issuesVal.map((item) => [item.name, item])).values()];
+    },
+  },
   updated() {
     this.toggleHandler();
   },
@@ -57,19 +58,9 @@ export default {
     this.github();
     this.issues();
   },
-
-  computed: {
-    filterTesters() {
-      return [
-        ...new Map(this.issuesVal.map((item) => [item.name, item])).values(),
-      ];
-    },
-  },
   methods: {
     github() {
-      fetch(
-        "https://api.github.com/repos/stereum-dev/ethereum-node/contributors"
-      )
+      fetch("https://api.github.com/repos/stereum-dev/ethereum-node/contributors")
         .then((response) => {
           if (response.ok) {
             return response.json();

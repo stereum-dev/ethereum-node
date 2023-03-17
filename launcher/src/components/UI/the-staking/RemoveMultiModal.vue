@@ -3,10 +3,7 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("removeMultiModal.sure") }}</span>
@@ -24,7 +21,12 @@
 </template>
 <script>
 export default {
-  props: ["item"],
+  props: {
+    item: {
+      type: Object,
+      default: () => {},
+    },
+  },
 };
 </script>
 <style scoped>

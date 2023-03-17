@@ -1,11 +1,11 @@
 <template>
   <div class="gasParent">
-    <div class="gasIco" v-on:click="test1">
+    <div class="gasIco" @click="test1">
       <img src="../../../../public/img/icon/control/gasIco.svg" />
     </div>
     <div class="baseFeeBox">
       <div class="baseFeeBox_title"><span>BASE FEE</span></div>
-      <div class="feeValue" v-on:click="test">
+      <div class="feeValue" @click="test">
         <span>{{ feeValue }}</span>
       </div>
     </div>
@@ -117,8 +117,7 @@ export default {
   width: 10 0%;
 }
 .greenArrow {
-  filter: grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg)
-    saturate(500%);
+  filter: grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg) saturate(500%);
   transform: rotate(-85deg);
 }
 .greyArrow {

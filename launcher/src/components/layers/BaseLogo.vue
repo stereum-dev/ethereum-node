@@ -7,7 +7,12 @@
 <script>
 export default {
   name: "BaseLogo",
-  props: ["link"],
+  props:{
+    link: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 

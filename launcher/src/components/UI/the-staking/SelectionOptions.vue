@@ -2,11 +2,7 @@
   <div class="selection-box">
     <div class="selection-table">
       <template v-for="(button, index) in buttonState" :key="index">
-        <div
-          class="buttonRow"
-          :class="{ disabled: !button.display }"
-          @click.stop="$emit('clickBtn', button)"
-        >
+        <div class="buttonRow" :class="{ disabled: !button.display }" @click.stop="$emit('clickBtn', button)">
           <div class="btnContent">
             <img :src="button.icon" alt="icon" />
             <span>{{ button.displayName }}</span>
@@ -18,7 +14,12 @@
 </template>
 <script>
 export default {
-  props: ["buttonState"],
+  props: {
+    buttonState: {
+      type: Array,
+      required: true,
+    },
+  },
   methods: {},
 };
 </script>

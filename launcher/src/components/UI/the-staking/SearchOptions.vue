@@ -1,28 +1,25 @@
 <template>
   <div class="searchOptions" @mousedown.prevent.stop>
     <img
-      @click="togglePubkeyView"
       v-if="isPubkeyVisible"
       class="pubkeyView"
       src="../../../../public/img/icon/the-staking/view2.png"
       alt="icon"
+      @click="$emit('togglePubkey')"
     />
     <img
-      @click="togglePubkeyView"
       v-if="!isPubkeyVisible"
       class="pubkeyView"
       src="../../../../public/img/icon/the-staking/unview2.png"
       alt="icon"
+      @click="$emit('togglePubkey')"
     />
-    <img
-      class="folder"
-      src="../../../../public/img/icon/the-staking/newfolder-icon.png"
-      alt="icon"
-    />
+    <img class="folder" src="../../../../public/img/icon/the-staking/newfolder-icon.png" alt="icon" />
     <img
       class="filter"
       src="../../../../public/img/icon/the-staking/staking-filter.png"
       alt="icon"
+      @click="$emit('openSearch')"
     />
   </div>
 </template>
@@ -34,10 +31,10 @@ export default {
       default: false,
     },
   },
-  methods: {
-    togglePubkeyView() {
-      this.$emit("togglePubkey");
-    },
+  data() {
+    return {
+      hover: false,
+    };
   },
 };
 </script>
@@ -67,5 +64,11 @@ export default {
   margin-top: 50px;
   width: 23px;
   cursor: pointer;
+}
+
+.searchOptions .folder:hover,
+.searchOptions .filter:hover,
+.searchOptions .pubkeyView:hover {
+ transform: scale(1.1 );
 }
 </style>

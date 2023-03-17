@@ -1,6 +1,6 @@
 <template>
   <div class="contributor-parent">
-    <div class="crown" v-if="crown">
+    <div v-if="crown" class="crown">
       <img src="../../../../public/img/icon/credit/crown.png" alt="crown" />
     </div>
     <div class="contributor-avatar"><img :src="avatar" /></div>
@@ -13,7 +13,33 @@
 </template>
 <script>
 export default {
-  props: ["name", "avatar", "crown", "rank", "score"],
+  props: {
+    name: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    avatar: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    crown: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    rank: {
+      type: String,
+      required: true,
+      default: "",
+    },
+    score: {
+      type: String,
+      required: true,
+      default: "",
+    },
+  },
 };
 </script>
 <style scoped>

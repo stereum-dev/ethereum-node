@@ -5,12 +5,12 @@
         <div class="pub-key">
           <span class="pubkey-input_text">{{ $t("registerSSV.pubKey") }}</span>
           <input
-            v-on:focus="$event.target.select()"
-            type="hidden"
-            class="pubkey-input"
             ref="pubkeyRef"
             v-model="localpubkey"
+            type="hidden"
+            class="pubkey-input"
             readonly
+            @focus="$event.target.select()"
           />
           <div class="copy-icon" @click="copyPubKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
@@ -20,15 +20,8 @@
       </div>
       <div class="secretkey-box">
         <div class="secret-key">
-          <span class="secretkey-input_text">{{
-            $t("registerSSV.secKey")
-          }}</span>
-          <input
-            type="hidden"
-            class="secretkey-input"
-            v-model="localsecretkey"
-            disabled
-          />
+          <span class="secretkey-input_text">{{ $t("registerSSV.secKey") }}</span>
+          <input v-model="localsecretkey" type="hidden" class="secretkey-input" disabled />
           <div class="copy-icon" @click="copySecretKey">
             <img src="/img/icon/service-icons/copy1.png" alt="icon" />
             <span>{{ $t("registerSSV.copied") }}</span>
@@ -43,20 +36,11 @@
       <div class="copiedPubKey">
         <label for="copyPubkey"
           >{{ $t("registerSSV.copyMessage") }}
-          <input
-            name="copiedPubkey"
-            id="copyPubkey"
-            type="password"
-            v-model="model.copiedPubkey"
-          />
+          <input id="copyPubkey" v-model="model.copiedPubkey" name="copiedPubkey" type="password" @mousedown.stop/>
         </label>
       </div>
       <div class="btn-box">
-        <button
-          @click="$emit('registerPubkey')"
-          :class="{ 'btn-disabled': isBtnDisabled }"
-          :disabled="isBtnDisabled"
-        >
+        <button :class="{ 'btn-disabled': isBtnDisabled }" :disabled="isBtnDisabled" @click="$emit('registerPubkey')">
           {{ $t("frontPageSsv.register") }}
         </button>
       </div>
@@ -65,15 +49,24 @@
 </template>
 <script>
 export default {
-  props: ["pubkey", "secretkey"],
+  props: {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+    secretkey: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       model: {
         copiedPubkey: "",
         copiedSecretkey: "",
       },
-      localpubkey: pubkey,
-      localsecretkey: secretkey,
+      localpubkey: this.pubkey,
+      localsecretkey: this.secretkey,
       isBtnDisabled: true,
     };
   },
@@ -82,14 +75,14 @@ export default {
   },
   methods: {
     getPubkeyHandler() {
-      if (this.model.copiedPubkey === this.pubkey) {
+      if (this.model.copiedPubkey === this.localpubkey) {
         this.isBtnDisabled = false;
-      } else {
-        this.$router.push("/node");
+      }else {
+        this.isBtnDisabled = true;
       }
     },
     copyPubKey() {
-      let pubkeyToCopy = this.pubkey;
+      let pubkeyToCopy = this.localpubkey;
       navigator.clipboard
         .writeText(pubkeyToCopy)
         .then(() => {
@@ -100,7 +93,7 @@ export default {
         });
     },
     copySecretKey() {
-      let secretkeyToCopy = this.secretkey;
+      let secretkeyToCopy = this.localsecretkey;
       navigator.clipboard
         .writeText(secretkeyToCopy)
         .then(() => {
@@ -273,6 +266,7 @@ export default {
   font-size: 1.5rem;
   font-weight: 600;
   color: rgb(51, 129, 239);
+  z-index: 1000000;
 }
 
 .btn-box {

@@ -1,7 +1,7 @@
 <template>
   <div class="financial-box_parent">
     <div class="round-selector">
-      <select name="round" id="round" v-model="choosedRound">
+      <select id="round" v-model="choosedRound" name="round">
         <option value="allAddresses">
           {{ $t("creditPanel.gitcoinList") }}
         </option>
@@ -14,11 +14,7 @@
       </select>
     </div>
     <div class="search">
-      <input
-        type="search"
-        placeholder="Search Contributor"
-        v-model="searchPayload"
-      />
+      <input v-model="searchPayload" type="search" placeholder="Search Contributor" />
     </div>
     <div class="itemWrapper">
       <!-- <div
@@ -36,11 +32,7 @@
           <span>{{ item.name }}</span>
         </div>
       </div> -->
-      <div
-        class="ethAddresses"
-        v-for="(item, index) in filteredItem"
-        :key="index"
-      >
+      <div v-for="(item, index) in filteredItem" :key="index" class="ethAddresses">
         <span>{{ item }}</span>
       </div>
     </div>
@@ -85,7 +77,8 @@ export default {
     }),
 
     sortedAddresses() {
-      return this.roundAdresses.sort((a, b) => {
+      const sortedAddresses = [...this.roundAdresses];
+      sortedAddresses.sort((a, b) => {
         let fa = a.toLowerCase(),
           fb = b.toLowerCase();
         if (fa < fb) {
@@ -96,15 +89,8 @@ export default {
         }
         return 0;
       });
+      return sortedAddresses;
     },
-  },
-  updated() {
-    this.roundPicker();
-    this.sortedAddresses;
-  },
-  created() {
-    this.roundPicker();
-    this.filteredItem = this.sortedAddresses;
   },
   watch: {
     choosedRound: {
@@ -120,6 +106,14 @@ export default {
         item.toLowerCase().includes(this.searchPayload.toLowerCase())
       );
     },
+  },
+  updated() {
+    this.roundPicker();
+    this.sortedAddresses;
+  },
+  created() {
+    this.roundPicker();
+    this.filteredItem = this.sortedAddresses;
   },
   methods: {
     roundPicker() {

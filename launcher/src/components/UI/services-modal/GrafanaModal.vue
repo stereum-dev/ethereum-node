@@ -9,16 +9,8 @@
         <div class="title-box">
           <div class="service-name"><span>GRAFANA</span></div>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>
@@ -29,15 +21,14 @@
             <span>{{ $t("serviceModals.localAppText") }}</span>
           </div>
           <div class="btn-box">
-            <a class="btn" :href="grafanaService.linkUrl" target="_blank">{{
-              $t("serviceModals.openBrowser")
-            }}</a>
+            <a class="btn" :href="grafanaService.linkUrl" target="_blank">{{ $t("serviceModals.openBrowser") }}</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
 import { mapState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
@@ -48,13 +39,14 @@ export default {
       isGrafanaAvailable: false,
     };
   },
-  mounted() {
-    this.filterGrafanaService();
-  },
+
   computed: {
     ...mapState(useNodeHeader, {
       runningServices: "runningServices",
     }),
+  },
+  mounted() {
+    this.filterGrafanaService();
   },
   methods: {
     filterGrafanaService() {
@@ -74,6 +66,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .service-modal_parent {
   width: 100vw;
@@ -85,6 +78,7 @@ export default {
   left: 0;
   top: 0;
 }
+
 .bg-dark {
   width: 100%;
   height: 100%;
@@ -96,6 +90,7 @@ export default {
   z-index: 102;
   cursor: default;
 }
+
 .browser-modal {
   width: 60%;
   height: 80%;
@@ -123,6 +118,7 @@ export default {
   z-index: 102;
   margin-top: 1.5%;
 }
+
 .icon-box {
   width: 20%;
   height: 100%;
@@ -130,10 +126,12 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .icon-box img {
   width: 70%;
   height: 90%;
 }
+
 .title-box {
   width: 80%;
   height: 100%;
@@ -141,6 +139,7 @@ export default {
   flex-direction: column;
   align-items: flex-start;
 }
+
 .service-name {
   width: 100%;
   height: 45%;
@@ -153,6 +152,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+
 .service-option {
   width: 60%;
   height: 38%;
@@ -162,6 +162,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
+
 .service-option img {
   width: 8%;
   height: 72%;
@@ -190,6 +191,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .browserBox .title {
   width: 50%;
   height: 100%;
@@ -198,6 +200,7 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
 }
+
 .title span:first-child {
   color: #dbdbdb;
   font-size: 0.9rem;
@@ -205,6 +208,7 @@ export default {
   margin-left: 10px;
   margin-top: 5px;
 }
+
 .title span:last-child {
   color: #dbdbdb;
   font-size: 0.65rem;
@@ -221,6 +225,7 @@ export default {
   justify-content: flex-start;
   align-items: flex-end;
 }
+
 .browserBox .btn {
   width: 50%;
   height: 35%;
@@ -239,10 +244,12 @@ export default {
   text-transform: uppercase;
   transition-duration: all 200ms;
 }
+
 .btn:hover {
   transition-duration: 100ms;
   background-color: rgb(179, 72, 0);
 }
+
 .btn:active {
   transform: scale(0.9);
 }

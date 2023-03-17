@@ -8,11 +8,7 @@
         <span>{{ $t("controlPage.storage") }}</span>
       </div>
       <div class="storage-data_box">
-        <div
-          class="storage-data_row"
-          v-for="item in storagestatus"
-          :key="item.id"
-        >
+        <div v-for="item in storagestatus" :key="item.id" class="storage-data_row">
           <div class="storage-data_row_title">
             <span>{{ item.title }}</span>
           </div>

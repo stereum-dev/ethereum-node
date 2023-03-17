@@ -1,27 +1,44 @@
 <template>
   <div class="service-container" @mousedown.prevent.stop>
-    <img class="service-arrow" src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png" alt="icon"
-      @click="$refs.serviceBg.scrollTop = 0" />
-    <div class="service-bg" ref="serviceBg">
+    <img
+      class="service-arrow"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-up.png"
+      alt="icon"
+      @click="$refs.serviceBg.scrollTop = 0"
+    />
+    <div ref="serviceBg" class="service-bg">
       <div v-for="item in itemsList" :key="item.id" class="service-item">
-        <img :src="item.hIcon ? item.hIcon : item.sIcon" alt="icon" @mouseup.right="selectedItem(item)"
-          @click="modifyItem(item)" :class="{
+        <img
+          :src="item.hIcon ? item.hIcon : item.sIcon"
+          alt="icon"
+          :class="{
             'chosen-plugin': item.active,
             'modify-plugin': item.modifierPanel,
-          }" />
+          }"
+          @mouseup.right="selectedItem(item)"
+          @click="modifyItem(item)"
+        />
       </div>
     </div>
-    <img class="service-arrow" src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png" alt="icon"
-      @click="$refs.serviceBg.scrollTop = 1000" />
+    <img
+      class="service-arrow"
+      src="../../../../public/img/icon/manage-node-icons/white-arrow-down.png"
+      alt="icon"
+      @click="$refs.serviceBg.scrollTop = 1000"
+    />
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 
 export default {
-  props: ["list"],
+  props: {
+    list: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       itemsList: [],
@@ -48,14 +65,14 @@ export default {
       this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      if(item.modifierPanel){
-        this.newConfiguration.forEach(s => s.modifierPanel = false)
-        return
+      if (item.modifierPanel) {
+        this.newConfiguration.forEach((s) => (s.modifierPanel = false));
+        return;
       }
       this.newConfiguration.map((i) => {
         if (i.id != item.id) {
           i.modifierPanel = false;
-        } else if (i.id == item.id && i.service !== 'PrometheusNodeExporterService') {
+        } else if (i.id == item.id && i.service !== "PrometheusNodeExporterService") {
           i.modifierPanel = true;
           this.$emit("modifyItem", item);
         }

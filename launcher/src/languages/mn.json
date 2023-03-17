@@ -13,13 +13,16 @@
     "comingsoon": "ТУН УДАХГҮЙ"
   },
   "journalnode": {
-    "serverip": "сервер ip",
-    "servername": "СЕРВЕРИЙН НЭР",
+    "serverip": "IP",
+    "servername": "NAME",
     "edit": "нөүд хянах",
     "loading": "loading new states",
     "turnOn": "Turn Node on",
     "turnOff": "Turn Node off",
-    "log": "Open Logs..."
+    "log": "Open Logs",
+    "restart": "Restart",
+    "start": "start",
+    "stop": "stop"
   },
   "pagesnav": {
     "node": "НӨҮД",
@@ -198,7 +201,7 @@
     "reward": "ШАГНАЛ"
   },
   "installOption": {
-    "installText": "ЭНЭ ХУУДСАН ДЭЭР ТА ӨӨРИЙН НӨҮД - ДӨӨ ХИЙХ ЗҮЙЛЭЭ СОНГОХ БОЛОМЖТОЙ. СОНГОЛТОО ХИЙГЭЭД, ЭХЛҮҮЛЭХ ТОВЧИЙГ ДАРСНЫ ДАРАА КЛАЙНТ САНАМСАРГҮЙГЭЭР СОНГОГДОЖ, ТАНЫ USE CASE - ИЙН ДАГУУ ҮЙЛЧЛЭХ БОЛНО",
+    "installText": "CHOOSE YOUR USE CASE AND NETWORK. AFTER CHOOSING AND PRESSING START A RANDOM CLIENT SELECTION WILL BE TAKEN TO SERVE YOUR USE CASE",
     "back": "БУЦАХ",
     "install": "СУУЛГАХ",
     "placeHoldrer": "choose a network"
@@ -214,11 +217,11 @@
     "osSupported": "IS A SUPPORTED OS"
   },
   "pluginName": {
-    "option": "СОНГОЛТ",
+    "option": "CHOSEN NETWORK",
     "chosen": "СОНГОГДСОН СҮЛЖЭЭ",
     "path": "СУУЛГАХ ЗАМ",
     "syncClient": "ТАНЫ КЛАЙНТЫГ ЧЭЙНИЙ ЭХЛЭЛЭЭС СИНК ХИЙНЭ",
-    "plugin": "ПЛАГИНС",
+    "plugin": "INSTALLED SERVICES",
     "back": "БУЦАХ",
     "next": "ДАРААГИЙНХ"
   },
@@ -280,7 +283,7 @@
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
     "noLogFound": "No log found in the list",
-    "clickCopy": "Click on the logs to copy",
+    "clickCopy": "Double Click to Copy Logs",
     "serviceId": "service id"
   },
   "serviceModals": {
@@ -321,5 +324,19 @@
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
     "prunningStart": "Start Pruning"
+  },
+  "restartModal": {
+    "restarQ": "Are you sure you want to restart?",
+    "restartMessage": "your node might go offline while doing so!",
+    "restart": "restart"
+  },
+  "nukeModal": {
+    "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",
+    "nukeTitle": "nuke the node",
+    "backToLogin": "Back to login"
+  },
+  "noData": {
+    "noData": "no data",
+    "turnOn": "please turn on"
   }
 }

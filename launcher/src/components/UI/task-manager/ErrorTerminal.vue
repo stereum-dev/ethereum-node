@@ -22,7 +22,12 @@
 import { mapWritableState } from "pinia";
 import { useTaskManager } from "@/store/taskManager";
 export default {
-  props: ["item"],
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+  },
   computed: {
     ...mapWritableState(useTaskManager, {
       error: "fakeError",

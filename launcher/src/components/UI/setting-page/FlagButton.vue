@@ -1,11 +1,16 @@
 <template>
-  <div class="flagBtn_parent" @click="setting" :style="activeCheck()">
+  <div class="flagBtn_parent" :style="activeCheck()" @click="setting">
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
-  props: ["isActive"],
+  props: {
+    isActive: {
+      type: Boolean,
+      required: true,
+    },
+  },
   emits: ["setting"],
   data() {
     return {

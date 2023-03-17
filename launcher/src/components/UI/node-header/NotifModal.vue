@@ -2,7 +2,7 @@
   <div class="notif-modal-parent">
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="notif-modal-content">
-      <div class="content" v-if="qrPage">
+      <div v-if="qrPage" class="content">
         <div class="title-box">
           <span>{{ $t("notifModal.notification") }}</span>
         </div>
@@ -16,21 +16,17 @@
         </div>
         <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
-      <div class="qrPage_content" v-if="!qrPage">
+      <div v-if="!qrPage" class="qrPage_content">
         <div class="banner" @click="qrViewer"><img :src="banner" /></div>
         <div class="qrContent">
           <div class="qrCode-boxes">
-            <span
-              >1. Visit the app store or our website to download "STEREUM Node
-              Monitor"
-            </span>
+            <span>1. Visit the app store or our website to download "STEREUM Node Monitor" </span>
             <span>2. Open the app on your smartphone</span>
             <span>3. Scan the QR Code</span>
             <span>X. Send a test notification</span>
           </div>
           <div class="qrCode-boxes">
             <div class="qrCode-place-holder">
-              <comming-soon></comming-soon>
               <div class="qrCode">
                 <img :src="qrCode" />
               </div>
@@ -44,6 +40,7 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 export default {
   data() {
     return {
@@ -51,12 +48,26 @@ export default {
       banner: "/img/icon/header-icons/monitor2.png",
       //BACKEND
       //qrCode is a dummy data
-      qrCode: "/img/icon/header-icons/dummyQR.png",
+      qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
+      ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
+
     };
+  },
+  mounted(){
+    this.getqrcode()
   },
   methods: {
     qrViewer() {
       this.qrPage = !this.qrPage;
+    },
+    async getqrcode(){
+      const response = await ControlService.getQRCode()
+      if(response instanceof Error){
+        console.log(response)
+        this.qrCode = this.ErrorQRCode
+      }else{
+        this.qrCode = response
+      }
     },
   },
 };

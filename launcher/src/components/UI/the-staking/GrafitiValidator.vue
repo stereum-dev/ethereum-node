@@ -1,17 +1,10 @@
 <template>
   <div class="grafitiRow">
     <div class="iconBox">
-      <img
-        class="grafiti-icon"
-        src="../../../../public/img/icon/the-staking/option-graffiti.png"
-        alt="icon"
-      />
+      <img class="grafiti-icon" src="../../../../public/img/icon/the-staking/option-graffiti.png" alt="icon" />
     </div>
     <div class="inputBox">
-      <input
-        type="text"
-        :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')"
-      />
+      <input type="text" :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')" />
     </div>
     <div class="confirmBox">
       <button class="confirmBtn" @click="$emit('confirmChange')">

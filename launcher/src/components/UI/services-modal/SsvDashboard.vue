@@ -3,13 +3,7 @@
     <div class="pubkey-box">
       <div class="pub-key">
         <span class="input-text">{{ $t("registerSSV.pubKey") }}</span>
-        <input
-          type="hidden"
-          class="pubkey-input"
-          v-model="localpubkey"
-          disabled
-          placeholder="Public Operator Key"
-        />
+        <input v-model="localpubkey" type="hidden" class="pubkey-input" disabled placeholder="Public Operator Key" />
         <div class="copy-icon" @click="copyPubKey">
           <img src="/img/icon/service-icons/copy1.png" alt="icon" />
           <span>copied!</span>
@@ -19,16 +13,12 @@
     <div class="browser-box">
       <div class="operator-box">
         <div class="operator-btn">
-          <a :href="ssvNetworkUrl.operatorUrl" target="_blank">{{
-            $t("ssvDashboard.operatorPage")
-          }}</a>
+          <a :href="ssvNetworkUrl.operatorUrl" target="_blank">{{ $t("ssvDashboard.operatorPage") }}</a>
         </div>
       </div>
       <div class="grafana-box">
         <div class="grafana-btn">
-          <a :href="ssvNetworkUrl.grafanaDashboardUrl" target="_blank">{{
-            $t("ssvDashboard.SSVNodeGrafna")
-          }}</a>
+          <a :href="ssvNetworkUrl.grafanaDashboardUrl" target="_blank">{{ $t("ssvDashboard.SSVNodeGrafna") }}</a>
         </div>
       </div>
     </div>
@@ -40,15 +30,18 @@ import { useNodeStore } from "@/store/theNode";
 import { useServices } from "@/store/services";
 import ControlService from "@/store/ControlService";
 export default {
-  props: ["pubkey"],
+  props: {
+    pubkey: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
-      localpubkey: pubkey,
+      localpubkey: this.pubkey,
     };
   },
-  mounted() {
-    this.getURL();
-  },
+
   computed: {
     ...mapWritableState(useNodeStore, {
       ssvNetworkUrl: "ssvNetworkUrl",
@@ -57,10 +50,13 @@ export default {
       installedServices: "installedServices",
     }),
   },
+  mounted() {
+    this.getURL();
+  },
 
   methods: {
     copyPubKey() {
-      let pubkeyToCopy = this.pubkey;
+      let pubkeyToCopy = this.localpubkey;
       navigator.clipboard
         .writeText(pubkeyToCopy)
         .then(() => {
@@ -71,12 +67,9 @@ export default {
         });
     },
     async getURL() {
-      const grafana = this.installedServices.find(
-        (service) => service.service === "GrafanaService"
-      );
-      this.ssvNetworkUrl.operatorUrl = await ControlService.getOperatorPageURL(
-        this.pubkey
-      );
+      const grafana = this.installedServices.find((service) => service.service === "GrafanaService");
+      this.ssvNetworkUrl.operatorUrl =
+        "https://explorer.ssv.network/operators/" + (await ControlService.getOperatorPageURL(this.localpubkey));
       this.ssvNetworkUrl.grafanaDashboardUrl = grafana.linkUrl
         ? grafana.linkUrl + "/d/FIbEQ37ng/blox-ssv-operator-node?orgId=1"
         : "";

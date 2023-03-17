@@ -10,40 +10,22 @@
         <div class="title-box">
           <div class="service-name"><span>Flashbots Mev Boost</span></div>
           <div class="service-option">
-            <img
-              src="/img/icon/service-icons/internet.png"
-              alt="icon"
-              @click="openBrowser"
-            />
-            <img
-              src="/img/icon/service-icons/github1.png"
-              alt="icon"
-              @click="openGitHub"
-            />
+            <img src="/img/icon/service-icons/internet.png" alt="icon" @click="openBrowser" />
+            <img src="/img/icon/service-icons/github1.png" alt="icon" @click="openGitHub" />
           </div>
         </div>
       </div>
       <div class="content">
-        <div class="relaysParent" v-if="showRelaysBox">
+        <div v-if="showRelaysBox" class="relaysParent">
           <div class="relaysBoxTitle">
             {{ $t("serviceModals.availBlockRel") }}
           </div>
           <div class="relaysBox">
             <div class="relaysBoxContent">
-              <div class="relay" v-for="relay in combinedBlocs" :key="relay.id">
-                <input
-                  type="checkbox"
-                  :id="relay.id"
-                  :value="relay"
-                  v-model="checkedRelays"
-                  @change="enableBtn"
-                />
+              <div v-for="relay in combinedBlocs" :key="relay.id" class="relay">
+                <input :id="relay.id" v-model="checkedRelays" type="checkbox" :value="relay" @change="enableBtn" />
                 <label :for="relay.id">{{ relay.name }}</label>
-                <div
-                  class="iconBox"
-                  data-tooltip="OFAC Compliant - censored"
-                  v-if="relay.freeCensorship == false"
-                >
+                <div v-if="relay.freeCensorship == false" class="iconBox" data-tooltip="OFAC Compliant - censored">
                   <img src="/img/icon/header-icons/usa1.png" alt="flag-icon" />
                 </div>
               </div>
@@ -51,24 +33,16 @@
           </div>
 
           <div class="btn-box">
-            <div class="process" v-if="loading">
+            <div v-if="loading" class="process">
               {{ $t("serviceModals.process") }}...
-              <img
-                class="animate-spin"
-                src="/img/icon/arrows/loading.png"
-                alt="icon"
-              />
+              <img class="animate-spin" src="/img/icon/arrows/loading.png" alt="icon" />
             </div>
-            <span
-              class="btn"
-              :class="{ disabled: applyBtnDisabled }"
-              v-else
-              @click="applyRelays"
-              >{{ $t("secretKeyReg.apply") }}</span
-            >
+            <span v-else class="btn" :class="{ disabled: applyBtnDisabled }" @click="applyRelays">{{
+              $t("secretKeyReg.apply")
+            }}</span>
           </div>
         </div>
-        <div class="browserBox" v-else>
+        <div v-else class="browserBox">
           <div class="title">
             <span>{{ $t("serviceModals.blockRel") }}</span>
             <p>{{ $t("serviceModals.blockRelTxt") }}.</p>
@@ -100,14 +74,7 @@ export default {
       availableBlocks: [],
     };
   },
-  mounted() {
-    this.filtermevService();
-    this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter(
-        (r) => r[this.currentNetwork.network.toLowerCase()]
-      )
-    );
-  },
+
   computed: {
     ...mapState(useServices, {
       installedServices: "installedServices",
@@ -127,6 +94,12 @@ export default {
         return false;
       });
     },
+  },
+  mounted() {
+    this.filtermevService();
+    this.availableBlocks = this.shuffleRelaysList(
+      this.relaysList.filter((r) => r[this.currentNetwork.network.toLowerCase()])
+    );
   },
   methods: {
     shuffleRelaysList(array) {
@@ -148,21 +121,14 @@ export default {
         if (item.name === "Flashbots Mev Boost") this.mevService = item;
       });
       this.isMevAvailable = true;
-      ControlService.getServiceConfig(this.mevService.config.serviceID).then(
-        (service) => {
-          let relayURLs =
-            service.entrypoint[
-              service.entrypoint.findIndex((e) => e === "-relays") + 1
-            ].split(",");
-          relayURLs.forEach((relay) => {
-            let relayData = this.relaysList.find(
-              (r) => r[this.currentNetwork.network.toLowerCase()] === relay
-            );
-            if (relayData) this.checkedRelays.push(relayData);
-          });
-          this.serviceConfig = service;
-        }
-      );
+      ControlService.getServiceConfig(this.mevService.config.serviceID).then((service) => {
+        let relayURLs = service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1].split(",");
+        relayURLs.forEach((relay) => {
+          let relayData = this.relaysList.find((r) => r[this.currentNetwork.network.toLowerCase()] === relay);
+          if (relayData) this.checkedRelays.push(relayData);
+        });
+        this.serviceConfig = service;
+      });
     },
     openBrowser() {
       let url = "https://boost.flashbots.net/";
@@ -178,19 +144,14 @@ export default {
     applyRelays() {
       this.loading = true;
       if (this.serviceConfig.entrypoint) {
-        this.serviceConfig.entrypoint[
-          this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1
-        ] = this.checkedRelays
-          .map((r) => r[this.currentNetwork.network.toLowerCase()])
-          .join();
-        ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(
-          () => {
-            setTimeout(() => {
-              this.loading = false;
-              this.$emit("closeWindow");
-            }, 2000);
-          }
-        );
+        this.serviceConfig.entrypoint[this.serviceConfig.entrypoint.findIndex((e) => e === "-relays") + 1] =
+          this.checkedRelays.map((r) => r[this.currentNetwork.network.toLowerCase()]).join();
+        ControlService.writeServiceConfig(toRaw(this.serviceConfig)).then(() => {
+          setTimeout(() => {
+            this.loading = false;
+            this.$emit("closeWindow");
+          }, 2000);
+        });
       }
     },
     closeWindow() {
@@ -550,6 +511,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   cursor: pointer;
+  text-transform: uppercase;
 }
 .relaysBoxContent .relay:hover {
   background-color: #404851;

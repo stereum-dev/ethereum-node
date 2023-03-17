@@ -13,9 +13,9 @@ import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import CustomInstallationPage from "../pages/CustomInstallationPage.vue";
-import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
-import WalkThrough from "../components/UI/tutorial-steps/WalkThrough.vue";
-import WrittenGuide from "../components/UI/tutorial-steps/WrittenGuide.vue";
+import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
+import FastSync from "../components/UI/plugin-installation/FastSync.vue";
+import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
 
 const routes = [
   {
@@ -59,10 +59,21 @@ const routes = [
     component: PluginName,
   },
   {
+    path: "/sync",
+    name: "FastSync",
+    component: FastSync,
+  },
+  {
     path: "/verify",
     name: "VerifyInstallation",
     component: VerifyInstallation,
   },
+  {
+    path: "/play",
+    name: "InstallingAnimation",
+    component: InstallingAnimation,
+  },
+
   {
     path: "/mevboost",
     name: "MevboostConfig",
@@ -97,6 +108,11 @@ const routes = [
     path: "/custom",
     name: "CustomInstallationPage",
     component: CustomInstallationPage,
+  },
+  {
+    path: "/upload",
+    name: "UploadConfig",
+    component: UploadConfig,
   },
 ];
 

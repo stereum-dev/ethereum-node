@@ -7,6 +7,7 @@
     - ../../../../defaults/stereum_defaults.yaml
   vars:
     prometheus_service: cb6ff2c4-0d45-4f58-97b1-f61d2c8ba79f
+    prometheus_node_exporter_service: eab71712-17b3-4338-911b-d976570359dc
 
   tasks:
     - name: Install python for Ansible (Ubuntu)
@@ -54,3 +55,27 @@
               volumes:
                 - "/opt/app/services/{{ prometheus_service }}/data/prometheus:/prometheus"
                 - "/opt/app/services/{{ prometheus_service }}/config:/etc/prometheus"
+
+    # prometheus node exporter service
+    - block:
+      - set_fact:
+          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+      - name: "Include manage-service"
+        include_role:
+          name: "manage-service"
+      vars:
+        stereum_args:
+          manage_service:
+            save: true
+            state: started
+            configuration:
+              service: PrometheusNodeExporterService
+              id: "{{ prometheus_node_exporter_service }}"
+              image: "prom/node-exporter:{{ stereum_static.defaults.versions.node_exporter }}"
+              ports: []
+              env: {}
+              command: ["--path.rootfs=/host"]
+              entrypoint: ["/bin/node_exporter"]
+              user: "2000"
+              volumes:
+                - /:/host:ro,rslave

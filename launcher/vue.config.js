@@ -1,10 +1,10 @@
-const path = require('path');
+const path = require("path");
 module.exports = {
   parallel: false,
   pluginOptions: {
     electronBuilder: {
       preload: "src/preload.js",
-      externals: ["ssh2", "tunnel-ssh"],
+      externals: ["ssh2"],
       builderOptions: {
         appId: "com.stereum.launcher",
         productName: "Stereum Launcher",
@@ -31,8 +31,6 @@ module.exports = {
   chainWebpack: (config) => {
     config.resolve.alias.set("vue-i18n", "vue-i18n/dist/vue-i18n.cjs.js");
 
-    config.module
-      .rule("vue")
-      .use("vue-loader", "css-loader")
+    config.module.rule("vue").use("vue-loader", "css-loader");
   },
 };

@@ -6,13 +6,8 @@
       alt="icon"
       @click="$refs.serviceBg.scrollTop = 0"
     />
-    <div class="item-box" ref="serviceBg">
-      <div
-        v-for="(item, index) in list"
-        :key="index"
-        class="items"
-        @mouseleave="mouseLeaveToHide(item)"
-      >
+    <div ref="serviceBg" class="item-box">
+      <div v-for="(item, index) in list" :key="index" class="items" @mouseleave="mouseLeaveToHide(item)">
         <img
           :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
@@ -24,23 +19,18 @@
             <div class="power">
               <img
                 v-if="item.serviceIsPending"
-                @click="stateHandler(item)"
                 class="pending"
                 src="/img/icon/plugin-menu-icons/turning_circle.gif"
                 alt="icon"
+                @click="stateHandler(item)"
               />
               <img
                 v-else-if="item.state == 'running'"
-                @click.once="stateHandler(item)"
                 src="/img/icon/plugin-menu-icons/shutdown.png"
                 alt="icon"
+                @click.once="stateHandler(item)"
               />
-              <img
-                v-else
-                @click.stop="stateHandler(item)"
-                src="/img/icon/plugin-menu-icons/turn-on.png"
-                alt="icon"
-              />
+              <img v-else src="/img/icon/plugin-menu-icons/turn-on.png" alt="icon" @click.stop="stateHandler(item)" />
             </div>
             <div class="setting" @click="expertModeHandler(item)">
               <img src="/img/icon/plugin-menu-icons/setting8.png" alt="icon" />
@@ -48,19 +38,16 @@
           </div>
         </plugin-menu>
         <the-expert
-          @hide-modal="hideExpertMode(item)"
           v-if="item.expertOptionsModal"
           :item="item"
           position="18.8%"
           wide="39%"
+          @hide-modal="hideExpertMode(item)"
         ></the-expert>
         <Transition>
-          <plugin-logs
-            :item="itemToLogs"
-            v-if="isPluginLogPageActive"
-            @close-log="closePluginLogsPage"
-          ></plugin-logs>
+          <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
         </Transition>
+        <div class="state-icon" :class="serviceStateStatus(item)"></div>
       </div>
     </div>
     <img
@@ -97,19 +84,29 @@ export default {
       itemToLogs: {},
     };
   },
-  beforeMount() {
-    this.updateStates();
-  },
-  updated() {
-    this.updateStates();
-  },
+
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
     }),
   },
+  beforeMount() {
+    this.updateStates();
+  },
+  updated() {
+    this.updateStates();
+  },
   methods: {
+    serviceStateStatus(item) {
+      if (item.state === "running") {
+        return "green";
+      } else if (item.serviceIsPending) {
+        return "orange";
+      } else {
+        return "red";
+      }
+    },
     updateStates: async function () {
       let serviceInfos = await ControlService.listServices();
       this.installedServices.forEach((s, idx) => {
@@ -148,8 +145,7 @@ export default {
     pluginMenuHandler(el) {
       setTimeout(() => {
         this.list.map((i) => {
-          if (i?.id === el.id && i?.name === el.name)
-            el.displayPluginMenu = !el.displayPluginMenu;
+          if (i?.id === el.id && i?.name === el.name) el.displayPluginMenu = !el.displayPluginMenu;
         });
       }, 300);
     },
@@ -158,8 +154,7 @@ export default {
     },
     expertModeHandler(el) {
       this.list.map((item) => {
-        if (item.category === el.category && item?.id === el.id)
-          el.expertOptionsModal = true;
+        if (item.category === el.category && item?.id === el.id) el.expertOptionsModal = true;
       });
     },
     mouseLeaveToHide(el) {
@@ -179,6 +174,17 @@ export default {
 };
 </script>
 <style scoped>
+.green {
+  background-color: #0eac0e;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.red {
+  background-color: red;
+}
 .service-container {
   width: 96%;
   height: 95%;
@@ -228,6 +234,16 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
+}
+.state-icon {
+  width: 15%;
+  height: 15%;
+  display: flex;
+  position: absolute;
+  z-index: 1;
+  top: 7%;
+  left: 75%;
+  border-radius: 50%;
 }
 .items img {
   width: 100%;

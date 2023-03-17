@@ -9,9 +9,7 @@
       <the-hard></the-hard>
     </dashboard-card>
     <dashboard-card class="storage"><the-storage></the-storage></dashboard-card>
-    <dashboard-card class="disk-speed"
-      ><disk-speed></disk-speed
-    ></dashboard-card>
+    <dashboard-card class="disk-speed"><disk-speed></disk-speed></dashboard-card>
     <dashboard-card class="p2p"> <peer-to-peer></peer-to-peer></dashboard-card>
     <dashboard-card class="the-cpu">
       <the-cpu></the-cpu>
@@ -19,19 +17,13 @@
     <dashboard-card class="amsterdam">
       <amsterdam-component></amsterdam-component>
     </dashboard-card>
-    <dashboard-card class="sync-status"
-      ><sync-status></sync-status
-    ></dashboard-card>
+    <dashboard-card class="sync-status"><sync-status></sync-status></dashboard-card>
     <dashboard-card class="validatorComment_cell">
       <the-staking></the-staking>
     </dashboard-card>
     <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
-    <dashboard-card class="the-network"
-      ><the-network></the-network
-    ></dashboard-card>
-    <dashboard-card class="portlist_card"
-      ><port-list></port-list
-    ></dashboard-card>
+    <dashboard-card class="the-network"><the-network></the-network></dashboard-card>
+    <dashboard-card class="portlist_card"><port-list></port-list></dashboard-card>
 
     <div class="half-card">
       <rpc-endpoint></rpc-endpoint>
@@ -58,7 +50,6 @@ import RpcEndpoint from "./RpcEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
-import CommingSoon from "../../layers/CommingSoon.vue";
 export default {
   components: {
     PortList,
@@ -78,7 +69,6 @@ export default {
     RpcEndpoint,
     DiskSpeed,
     TheStaking,
-    CommingSoon,
   },
 };
 </script>

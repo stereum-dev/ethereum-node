@@ -2,22 +2,17 @@
   <manage-trapezoid>
     <template #default>
       <span class="title">{{ title }} {{ $t("pluginZone.client") }}</span>
-      <div
-        class="item-box"
-        @dragenter.prevent
-        @dragover.prevent
-        @mousedown.prevent.stop
-      >
-        <div class="items" v-for="item in itemsList" :key="item.id">
+      <div class="item-box" @dragenter.prevent @dragover.prevent @mousedown.prevent.stop>
+        <div v-for="item in itemsList" :key="item.id" class="items">
           <img
             :src="item.sIcon"
             alt="icon"
-            @mouseup.right="selectedItem(item)"
-            @click="modifyItem(item)"
             :class="{
               'chosen-plugin': item.active,
               'modify-plugin': item.modifierPanel,
             }"
+            @mouseup.right="selectedItem(item)"
+            @click="modifyItem(item)"
           />
         </div>
       </div>
@@ -37,7 +32,16 @@ export default {
   components: {
     ManageTrapezoid,
   },
-  props: ["title", "list"],
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    list: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       itemsList: [],
@@ -61,25 +65,24 @@ export default {
   },
   methods: {
     selectedItem(item) {
-      if(item.config.serviceID){
-        this.newConfiguration.forEach(s => {
-          if(s.config.serviceID === item.config.serviceID)
-            s.active = !s.active; 
+      if (item.config.serviceID) {
+        this.newConfiguration.forEach((s) => {
+          if (s.config.serviceID === item.config.serviceID) s.active = !s.active;
         });
       }
-        this.$emit("selectItem", item);
+      this.$emit("selectItem", item);
     },
     modifyItem(item) {
-      if(item.modifierPanel){
-        this.newConfiguration.forEach(s => s.modifierPanel = false)
-        return
+      if (item.modifierPanel) {
+        this.newConfiguration.forEach((s) => (s.modifierPanel = false));
+        return;
       }
-      if(item.config.serviceID){
-        this.newConfiguration.forEach(s => {
-          if(s.config.serviceID === item.config.serviceID){
-            s.modifierPanel = true
-          }else{
-            s.modifierPanel = false
+      if (item.config.serviceID) {
+        this.newConfiguration.forEach((s) => {
+          if (s.config.serviceID === item.config.serviceID) {
+            s.modifierPanel = true;
+          } else {
+            s.modifierPanel = false;
           }
         });
       }

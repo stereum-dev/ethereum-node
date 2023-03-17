@@ -3,20 +3,11 @@
     <div class="secretkey-box">
       <label for="secretKey"
         >{{ $t("secretKeyReg.modalLabel") }}
-        <input
-          name="secretkey"
-          id="secretKey"
-          type="password"
-          v-model="enteredSecretkey"
-        />
+        <input id="secretKey" v-model="enteredSecretkey" name="secretkey" type="password" @mousedown.stop />
       </label>
     </div>
     <div class="btn-box">
-      <button
-        @click="insertKey($data)"
-        :class="{ 'btn-disabled': isBtnDisabled }"
-        :disabled="isBtnDisabled"
-      >
+      <button :class="{ 'btn-disabled': isBtnDisabled }" :disabled="isBtnDisabled" @click="insertKey($data)">
         {{ $t("secretKeyReg.apply") }}
       </button>
     </div>
@@ -26,7 +17,12 @@
 import ControlService from "@/store/ControlService";
 import { toRaw } from "vue";
 export default {
-  props: ["ssvService"],
+  props: {
+    ssvService: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       isBtnDisabled: true,

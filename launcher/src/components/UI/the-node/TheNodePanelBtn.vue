@@ -1,11 +1,7 @@
 <template>
-  <div class="btn-parent" @click="btnAction" :style="{ gridRow: `${gridRow}` }">
+  <div class="btn-parent" :style="{ gridRow: `${gridRow}` }" @click="btnAction">
     <span :style="color()"><slot></slot></span>
-    <img
-      :src="imgPath"
-      alt="icon"
-      :style="{ width: `${width}%`, marginRight: `${marginRight}%` }"
-    />
+    <img :src="imgPath" alt="icon" :style="{ width: `${width}%`, marginRight: `${marginRight}%` }" />
   </div>
 </template>
 <script>
@@ -18,6 +14,7 @@ export default {
     isColor: {
       type: String,
       required: false,
+      default: "light",
     },
     width: {
       type: String,
@@ -43,7 +40,7 @@ export default {
       return { color: "#9b9b9b" };
     },
     red() {
-      return { color: "#dc0a03" };
+      return { color: "#df4b46" };
     },
     light() {
       return { color: "#c1c1c1" };
@@ -52,10 +49,16 @@ export default {
       return { color: "#408886" };
     },
     lighGreen() {
-      return { color: "#40ee1d" };
+      return { color: "#49b48b" };
     },
     gold() {
       return { color: "#cfaf65" };
+    },
+    orange() {
+      return { color: "#F37F0C" };
+    },
+    blue() {
+      return { color: "#6ABCFF" };
     },
   },
   methods: {
@@ -76,6 +79,10 @@ export default {
           return this.lighGreen;
         case "gold":
           return this.gold;
+        case "orange":
+          return this.orange;
+        case "blue":
+          return this.blue;
         default:
           return this.light;
       }
@@ -95,12 +102,12 @@ export default {
   justify-self: center;
   background-color: #242529;
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   border: 1px solid #787878;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 1px 3px 1px #2c2c2c;
+  box-shadow: 0 1px 3px 1px #3b3b3b;
 }
 .btn-parent:hover {
   background-color: #18191c;

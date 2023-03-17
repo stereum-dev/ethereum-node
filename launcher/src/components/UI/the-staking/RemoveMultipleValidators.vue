@@ -3,16 +3,11 @@
     <div class="modal-opacity" @click="$emit('removeModal')"></div>
     <div class="remove-modal-content">
       <div class="title-box">
-        <img
-          src="../../../../public/img/icon/the-staking/stereum-error.png"
-          alt="icon"
-        />
+        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="removeMessage">
         <span>{{ $t("removeMultipleValidators.sureText") }}</span>
-        <span>{{
-          $t("removeMultiModal.slashing")
-        }}</span>
+        <span>{{ $t("removeMultiModal.slashing") }}</span>
       </div>
       <div class="slashingParent">
         <!-- <Transition name="slide-up">
@@ -27,33 +22,21 @@
               />
             </div>
           </div> -->
-          <div class="pickSlashing">
-            <label for="no" class="inline-flex items-center">
-              <input
-                class="form-radio"
-                type="radio"
-                id="no"
-                value="no"
-                v-model="picked"
-              />
-              NO
-            </label>
+        <div class="pickSlashing">
+          <label for="no" class="inline-flex items-center">
+            <input id="no" v-model="picked" class="form-radio" type="radio" value="no" />
+            NO
+          </label>
 
-            <label for="yes" class="inline-flex items-center">
-              <input
-                class="form-radio"
-                type="radio"
-                id="yes"
-                value="yes"
-                v-model="picked"
-              />
-              YES
-            </label>
-          </div>
+          <label for="yes" class="inline-flex items-center">
+            <input id="yes" v-model="picked" class="form-radio" type="radio" value="yes" />
+            YES
+          </label>
+        </div>
         <!-- </Transition> -->
       </div>
       <div class="remove-box">
-        <div class="remove-btn" @click="$emit('deleteKey',picked)">
+        <div class="remove-btn" @click="$emit('deleteKey', picked)">
           <span>{{ $t("removeMultiModal.remove") }}</span>
         </div>
         <span class="close">{{ $t("exitValidatorModal.clickClose") }}</span>
@@ -63,12 +46,17 @@
 </template>
 <script>
 export default {
-  props: ["item"],
-  data(){
-    return{
+  props: {
+    item: {
+      type: Object,
+      required: true,
+    },
+  },
+  data() {
+    return {
       picked: "",
-    }
-  }
+    };
+  },
 };
 </script>
 <style scoped>
