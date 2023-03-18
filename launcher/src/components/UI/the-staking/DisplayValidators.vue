@@ -279,6 +279,7 @@ import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
+
 export default {
   components: {
     KeyModal,
@@ -347,6 +348,7 @@ export default {
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
+      isActiveRunning: [],
     };
   },
   computed: {
@@ -487,6 +489,7 @@ export default {
         console.log("Couldn't read KeyFile!");
       }
     },
+
     togglePubkeyView() {
       this.isPubkeyVisible = !this.isPubkeyVisible;
     },

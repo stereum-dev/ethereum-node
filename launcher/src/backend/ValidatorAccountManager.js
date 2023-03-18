@@ -17,7 +17,7 @@ async function Sleep(ms) {
 export class ValidatorAccountManager {
   constructor(nodeConnection, serviceManager) {
     this.nodeConnection = nodeConnection;
-    this .serviceManager = serviceManager;
+    this.serviceManager = serviceManager;
   }
 
   createBatch(files, password, slashingDB) {
@@ -44,11 +44,11 @@ export class ValidatorAccountManager {
     let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
     let isActiveRunning = [];
 
-    console.log('pubkeys: ' + JSON.stringify(pubkeys));
-    console.log('pubkeys length: ' + JSON.stringify(pubkeys.length));
+    console.log("pubkeys: " + JSON.stringify(pubkeys));
+    console.log("pubkeys length: " + JSON.stringify(pubkeys.length));
     console.log("network: " + JSON.stringify(client.network));
 
-    if(pubkeys.length < 11) {
+    if (pubkeys.length < 11) {
       let networkURLs = {
         mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
         goerli: "https://goerli.beaconcha.in/api/v1/validator/",
@@ -56,22 +56,22 @@ export class ValidatorAccountManager {
       };
 
       for (const pubkey of pubkeys) {
-          console.log('url: ' + JSON.stringify(networkURLs[client.network] + pubkey +"/attestations"));
+        console.log("url: " + JSON.stringify(networkURLs[client.network] + pubkey + "/attestations"));
         let latestEpochsResponse = await axios.get(networkURLs[client.network] + pubkey + "/attestations");
-          console.log('status: ' + latestEpochsResponse.status);
-          console.log('data.data.length: ' + latestEpochsResponse.data.data.length);
+        console.log("status: " + latestEpochsResponse.status);
+        console.log("data.data.length: " + latestEpochsResponse.data.data.length);
         if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
           for (let i = 0; i < 2; i++) {
-              console.log('data.data.epoch: ' + JSON.stringify(latestEpochsResponse.data.data[i].epoch));
-              console.log('data.data.status: ' + JSON.stringify(latestEpochsResponse.data.data[i].status));
-            if(latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
+            console.log("data.data.epoch: " + JSON.stringify(latestEpochsResponse.data.data[i].epoch));
+            console.log("data.data.status: " + JSON.stringify(latestEpochsResponse.data.data[i].status));
+            if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
               isActiveRunning.push(pubkey);
             }
           }
         }
       }
     }
-      console.log(isActiveRunning);
+    console.log(isActiveRunning);
     return isActiveRunning;
   }
 
@@ -83,7 +83,6 @@ export class ValidatorAccountManager {
 
     let client = services.find((service) => service.id === serviceID);
     let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
-
     this.checkLatestEpoch(batches, client);
 
     switch (service) {
