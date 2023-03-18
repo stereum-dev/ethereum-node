@@ -366,6 +366,10 @@ ipcMain.handle("getQRCode", async (event) => {
   return await monitoring.getQRCode()
 });
 
+ipcMain.handle("getActiveValidators", async (event, args) => {
+  return await validatorAccountManager.getActiveValidators(args.files, args.password, args.serviceID, args.slashingDB)
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

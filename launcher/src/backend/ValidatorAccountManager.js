@@ -18,6 +18,7 @@ export class ValidatorAccountManager {
   constructor(nodeConnection, serviceManager) {
     this.nodeConnection = nodeConnection;
     this.serviceManager = serviceManager;
+    this.batches = [];
   }
 
   createBatch(files, password, slashingDB) {
@@ -27,64 +28,75 @@ export class ValidatorAccountManager {
       return readFileSync(file.path, { encoding: "utf8" });
     });
     const chunkSize = 100;
-    let batches = [];
+    // let batches = [];
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
       const passwords = Array(contentChunk.length).fill(password);
-      batches.push({
+      this.batches.push({
         keystores: contentChunk,
         passwords: passwords,
         ...(slashing_protection_content && { slashing_protection: slashing_protection_content }),
       });
     }
-    return batches;
+    return this.batches;
   }
 
-  async checkLatestEpoch(batches, client) {
-    let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
+  async checkActiveValidators(files, password, serviceID, slashingDB) {
+    this.batches = [];
+    this.batches = this.createBatch(files, password, slashingDB);
+    let services = await this.serviceManager.readServiceConfigurations();
+    let client = services.find((service) => service.id === serviceID);
+
+    let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
     let isActiveRunning = [];
 
-    console.log("pubkeys: " + JSON.stringify(pubkeys));
-    console.log("pubkeys length: " + JSON.stringify(pubkeys.length));
+    console.log('pubkeys: ' + JSON.stringify(pubkeys));
+    console.log('pubkeys length: ' + JSON.stringify(pubkeys.length));
     console.log("network: " + JSON.stringify(client.network));
 
-    if (pubkeys.length < 11) {
+    if(pubkeys.length < 11) {
       let networkURLs = {
         mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
         goerli: "https://goerli.beaconcha.in/api/v1/validator/",
         gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
       };
-
-      for (const pubkey of pubkeys) {
-        console.log("url: " + JSON.stringify(networkURLs[client.network] + pubkey + "/attestations"));
-        let latestEpochsResponse = await axios.get(networkURLs[client.network] + pubkey + "/attestations");
-        console.log("status: " + latestEpochsResponse.status);
-        console.log("data.data.length: " + latestEpochsResponse.data.data.length);
-        if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0) {
-          for (let i = 0; i < 2; i++) {
-            console.log("data.data.epoch: " + JSON.stringify(latestEpochsResponse.data.data[i].epoch));
-            console.log("data.data.status: " + JSON.stringify(latestEpochsResponse.data.data[i].status));
-            if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
-              isActiveRunning.push(pubkey);
+      try {
+        for (const pubkey of pubkeys) {
+            console.log('url: ' + JSON.stringify(networkURLs[client.network] + pubkey +"/attestations"));
+          let latestEpochsResponse = await axios.get(networkURLs[client.network] + pubkey + "/attestations");
+            console.log('status: ' + latestEpochsResponse.status);
+            console.log('data.data.length: ' + latestEpochsResponse.data.data.length);
+          if (latestEpochsResponse.status === 200 && latestEpochsResponse.data.data.length > 0 && latestEpochsResponse.data.status !== /ERROR:*/) {
+            for (let i = 0; i < 2; i++) {
+                console.log('data.data.epoch: ' + JSON.stringify(latestEpochsResponse.data.data[i].epoch));
+                console.log('data.data.status: ' + JSON.stringify(latestEpochsResponse.data.data[i].status));
+              if(latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
+                isActiveRunning.push(pubkey);
+              }
             }
           }
         }
       }
+      catch (err) {
+        log.error("checking validator key(s) is failed:\n", err);
+        return "Validator check error:\n" + err;
+      }
     }
-    console.log(isActiveRunning);
+      console.log(isActiveRunning);
     return isActiveRunning;
   }
 
   async importKey(files, password, serviceID, slashingDB) {
+    this.batches = [];
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${files.length} Keys`);
-    let batches = this.createBatch(files, password, slashingDB);
+    this.batches = this.createBatch(files, password, slashingDB);
     let services = await this.serviceManager.readServiceConfigurations();
 
     let client = services.find((service) => service.id === serviceID);
     let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
-    this.checkLatestEpoch(batches, client);
 
+    this.checkActiveValidators(files, password, serviceID, slashingDB);
     switch (service) {
       case "prysm":
         const wallet_path = client
@@ -172,7 +184,7 @@ export class ValidatorAccountManager {
       let data = [];
       const apiToken = await this.getApiToken(client);
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true);
-      for (const batch of batches) {
+      for (const batch of this.batches) {
         const returnVal = await this.keystoreAPI(client, "POST", batch, apiToken);
         if (SSHService.checkExecError(returnVal) && returnVal.stderr) throw SSHService.extractExecError(returnVal);
         const response = JSON.parse(returnVal.stdout);
@@ -203,7 +215,7 @@ export class ValidatorAccountManager {
       let imported = 0;
       let duplicate = 0;
       let error = 0;
-      let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
+      let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
       let message = data
         .map((key, index, arr) => {
           if (key.status === "imported") imported++;

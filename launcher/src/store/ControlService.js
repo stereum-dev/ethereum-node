@@ -316,6 +316,10 @@ class ControlService extends EventEmitter {
   async getQRCode() {
     return await this.promiseIpc.send("getQRCode");
   }
+
+  async checkActiveValidators() {
+    return await this.promiseIpc.send("checkActiveValidators");
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
