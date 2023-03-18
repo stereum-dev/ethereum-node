@@ -363,11 +363,16 @@ ipcMain.handle("getValidatorState", async (event, args) => {
 });
 
 ipcMain.handle("getQRCode", async (event) => {
-  return await monitoring.getQRCode()
+  return await monitoring.getQRCode();
 });
 
-ipcMain.handle("getActiveValidators", async (event, args) => {
-  return await validatorAccountManager.getActiveValidators(args.files, args.password, args.serviceID, args.slashingDB)
+ipcMain.handle("checkActiveValidators", async (event, args) => {
+  return await validatorAccountManager.checkActiveValidators(
+    args.files,
+    args.password,
+    args.serviceID,
+    args.slashingDB
+  );
 });
 
 // Scheme must be registered before the app is ready

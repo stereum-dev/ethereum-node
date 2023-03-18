@@ -704,19 +704,20 @@ export default {
       this.importIsProcessing = true;
       this.importIsDone = false;
       this.password = val;
+      this.TestSms = await ControlService.checkActiveValidators({
+        files: this.keyFiles,
+        password: this.password,
+        serviceID: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB,
+      });
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
         service: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
-      this.TestSms = await ControlService.checkActiveValidators({
-        files: this.keyFiles,
-        password: this.password,
-        service: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
-      console.log(this.TestSms);
+
+      console.log("testttt" + this.TestSms);
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];

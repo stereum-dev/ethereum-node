@@ -326,7 +326,7 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("checkActiveValidators", {
       files: files,
       password: args.password,
-      service: args.service,
+      serviceID: args.serviceID,
       slashingDB: args.slashingDB,
     });
   }
