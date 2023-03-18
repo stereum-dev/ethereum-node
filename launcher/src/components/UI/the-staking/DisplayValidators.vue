@@ -229,7 +229,8 @@
       v-if="enterPasswordBox"
       :active-password="passwordInputActive"
       @confirm-password="confirmPasswordHandler"
-      @import-key="importKey"
+      @import-key="checkRisk"
+      @import-key-enter="checkRisk"
     />
     <!-- Fee Recipient box for validator keys -->
     <FeeRecipient
@@ -698,11 +699,7 @@ export default {
       });
       this.totalBalance = totalBalance;
     },
-
-    importKey: async function (val) {
-      this.bDialogVisible = true;
-      this.importIsProcessing = true;
-      this.importIsDone = false;
+    checkRisk: async function (val) {
       this.password = val;
       this.TestSms = await ControlService.checkActiveValidators({
         files: this.keyFiles,
@@ -710,6 +707,20 @@ export default {
         serviceID: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
+      this.keyFiles = [];
+      if (this.TestSms.length === 0 || this.TestSms.includes("Validator check error:\n")) {
+        this.importKey(val);
+      } else {
+        this.riskWarning = true;
+      }
+    },
+
+    importKey: async function (val) {
+      this.bDialogVisible = true;
+      this.importIsProcessing = true;
+      this.importIsDone = false;
+      this.password = val;
+
       this.message = await ControlService.importKey({
         files: this.keyFiles,
         password: this.password,
@@ -717,7 +728,6 @@ export default {
         slashingDB: this.slashingDB,
       });
 
-      console.log("testttt" + this.TestSms);
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -799,6 +809,7 @@ export default {
     riskAccepted() {
       this.riskWarning = false;
       this.bDialogVisible = true;
+      this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
       await ControlService.setGraffitis(graffiti);
@@ -873,6 +884,22 @@ export default {
 };
 </script>
 <style scoped>
+.import-message::-webkit-scrollbar {
+  width: none;
+}
+
+/* Track */
+.import-message::-webkit-scrollbar-track {
+  background: none;
+  box-sizing: border-box;
+}
+
+/* Handle */
+.import-message::-webkit-scrollbar-thumb {
+  background: none;
+  border-radius: none;
+}
+
 .warning-container {
   display: flex;
   justify-content: space-around;

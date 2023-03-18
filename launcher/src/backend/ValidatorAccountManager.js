@@ -90,16 +90,15 @@ export class ValidatorAccountManager {
   }
 
   async importKey(files, password, serviceID, slashingDB) {
-    this.batches = [];
     const ref = StringUtils.createRandomString();
     this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${files.length} Keys`);
-    this.batches = this.createBatch(files, password, slashingDB);
+    let batches = this.createBatch(files, password, slashingDB);
     let services = await this.serviceManager.readServiceConfigurations();
 
     let client = services.find((service) => service.id === serviceID);
     let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
 
-    this.checkActiveValidators(files, password, serviceID, slashingDB);
+    // this.checkActiveValidators(files, password, serviceID, slashingDB);
     switch (service) {
       case "prysm":
         const wallet_path = client
@@ -187,7 +186,7 @@ export class ValidatorAccountManager {
       let data = [];
       const apiToken = await this.getApiToken(client);
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true);
-      for (const batch of this.batches) {
+      for (const batch of batches) {
         const returnVal = await this.keystoreAPI(client, "POST", batch, apiToken);
         if (SSHService.checkExecError(returnVal) && returnVal.stderr) throw SSHService.extractExecError(returnVal);
         const response = JSON.parse(returnVal.stdout);
@@ -218,7 +217,7 @@ export class ValidatorAccountManager {
       let imported = 0;
       let duplicate = 0;
       let error = 0;
-      let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
+      let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
       let message = data
         .map((key, index, arr) => {
           if (key.status === "imported") imported++;
