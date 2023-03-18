@@ -437,12 +437,12 @@ export class ServiceManager {
       value = value.substring(1, value.length - 1);
     }
     let newValue;
-    if (dependencies && filter) {
+    if (dependencies && dependencies.length && filter) {
       newValue = dependencies.map(filter).join();
-    } else if (dependencies) {
+    } else if (dependencies && dependencies.length) {
       newValue = value.split(",").concat(dependencies).join();
     } else {
-      newValue = value.split(",").filter(filter).join();
+      newValue = value.split(",").join();
     }
     if (!newValue) {
       return undefined;
