@@ -349,6 +349,8 @@ export default {
       searchModel: "",
       isPubkeyVisible: false,
       isActiveRunning: [],
+      //justForTest
+      TestSms: [],
     };
   },
   computed: {
@@ -696,6 +698,7 @@ export default {
       });
       this.totalBalance = totalBalance;
     },
+
     importKey: async function (val) {
       this.bDialogVisible = true;
       this.importIsProcessing = true;
@@ -707,6 +710,13 @@ export default {
         service: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
+      this.TestSms = await ControlService.checkActiveValidators({
+        files: this.keyFiles,
+        password: this.password,
+        service: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB,
+      });
+      console.log(this.TestSms);
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];

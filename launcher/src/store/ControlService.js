@@ -317,8 +317,18 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getQRCode");
   }
 
-  async checkActiveValidators() {
-    return await this.promiseIpc.send("checkActiveValidators");
+  async checkActiveValidators(args) {
+    //resolve proxy
+    let files = [];
+    args.files.forEach((file) => {
+      files.push({ name: file.name, path: file.path });
+    });
+    return await this.promiseIpc.send("checkActiveValidators", {
+      files: files,
+      password: args.password,
+      service: args.service,
+      slashingDB: args.slashingDB,
+    });
   }
 }
 if (!instance) {
