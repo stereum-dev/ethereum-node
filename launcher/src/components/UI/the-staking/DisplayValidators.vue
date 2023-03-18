@@ -350,8 +350,7 @@ export default {
       searchModel: "",
       isPubkeyVisible: false,
       isActiveRunning: [],
-      //justForTest
-      TestSms: [],
+      checkActiveValidatorsResponse: [],
     };
   },
   computed: {
@@ -701,14 +700,14 @@ export default {
     },
     checkRisk: async function (val) {
       this.password = val;
-      this.TestSms = await ControlService.checkActiveValidators({
+      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
         password: this.password,
         serviceID: this.selectedService.config.serviceID,
         slashingDB: this.slashingDB,
       });
       this.keyFiles = [];
-      if (this.TestSms.length === 0 || this.TestSms.includes("Validator check error:\n")) {
+      if (this.checkActiveValidatorsResponse.length === 0 || this.checkActiveValidatorsResponse.includes("Validator check error:\n")) {
         this.importKey(val);
       } else {
         this.riskWarning = true;
