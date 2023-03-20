@@ -812,6 +812,7 @@ export default {
     //Importing key modal
     hideBDialog() {
       this.bDialogVisible = false;
+      this.insertKeyBoxActive = true;
     },
     hideWDialog() {
       this.riskWarning = false;
