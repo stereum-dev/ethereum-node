@@ -176,17 +176,7 @@ class ControlService extends EventEmitter {
   }
 
   async importKey(args) {
-    //resolve proxy
-    let files = [];
-    args.files.forEach((file) => {
-      files.push({ name: file.name, path: file.path });
-    });
-    return await this.promiseIpc.send("importKey", {
-      files: files,
-      password: args.password,
-      service: args.service,
-      slashingDB: args.slashingDB,
-    });
+    return await this.promiseIpc.send("importKey", args);
   }
 
   async deleteValidators(args) {

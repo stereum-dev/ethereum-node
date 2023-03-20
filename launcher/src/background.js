@@ -214,7 +214,7 @@ ipcMain.handle("writeServiceYAML", async (event, args) => {
 
 ipcMain.handle("importKey", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await validatorAccountManager.importKey(args.files, args.password, args.service, args.slashingDB);
+  const returnValue = await validatorAccountManager.importKey(args);
   app.showExitPrompt = false;
   return returnValue;
 });
