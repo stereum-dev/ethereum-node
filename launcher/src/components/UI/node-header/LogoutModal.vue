@@ -3,18 +3,18 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="logout-modal-content">
       <div class="title-box">
-        <span>LOG-OUT</span>
+        <span>{{ $t("logOutModal.logOutTitle") }}</span>
       </div>
       <div class="messageContent">
         <img src="../../../../public/img/icon/manage-node-icons/stop.png" alt="" />
-        <span class="question">ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?</span>
+        <span class="question">{{ $t("logOutModal.logOutQuestion") }}</span>
       </div>
       <div class="confrimBtn">
         <div class="confrimBox" @click="$emit('confrimLogout')">
-          <span>Log out</span>
+          <span>{{ $t("logOutModal.logOutBtn") }}</span>
         </div>
       </div>
-      <span class="close">Click outside to cancel</span>
+      <span class="close">{{ $t("notifModal.cancelText") }}</span>
     </div>
   </div>
 </template>
@@ -61,7 +61,7 @@
   align-items: center;
 }
 .title-box span {
-  font-size: 2rem;
+  font-size: 200%;
   font-weight: 800;
   color: #c6c6c6;
   text-align: center;
@@ -82,7 +82,7 @@
 .messageContent .question {
   width: 80%;
   color: rgb(195, 195, 195);
-  font-size: 1rem;
+  font-size: 100%;
   font-weight: 600;
   text-transform: capitalize;
 }
@@ -106,7 +106,7 @@
   cursor: pointer;
 }
 .confrimBox span {
-  font-size: 1rem;
+  font-size: 100%;
   font-weight: 700;
   color: #b22020;
   text-transform: uppercase;
@@ -128,8 +128,8 @@
 }
 
 .close {
-  color: #bf3a3a;
-  font-size: 0.7rem;
+  color: #eee;
+  font-size: 60%;
   font-weight: 400;
   align-self: center;
 }

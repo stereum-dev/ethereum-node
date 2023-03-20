@@ -214,7 +214,7 @@ ipcMain.handle("writeServiceYAML", async (event, args) => {
 
 ipcMain.handle("importKey", async (event, args) => {
   app.showExitPrompt = true;
-  const returnValue = await validatorAccountManager.importKey(args.files, args.password, args.service, args.slashingDB);
+  const returnValue = await validatorAccountManager.importKey(args);
   app.showExitPrompt = false;
   return returnValue;
 });
@@ -363,7 +363,16 @@ ipcMain.handle("getValidatorState", async (event, args) => {
 });
 
 ipcMain.handle("getQRCode", async (event) => {
-  return await monitoring.getQRCode()
+  return await monitoring.getQRCode();
+});
+
+ipcMain.handle("checkActiveValidators", async (event, args) => {
+  return await validatorAccountManager.checkActiveValidators(
+    args.files,
+    args.password,
+    args.serviceID,
+    args.slashingDB
+  );
 });
 
 // Scheme must be registered before the app is ready

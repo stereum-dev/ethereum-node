@@ -6,8 +6,10 @@
         <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
       </div>
       <div class="disabledMessage">
-        <span>There is no validator client installed!</span>
-        <p>Install at least one validator client to activate importing validator keys.</p>
+        <span>{{ $t("disabledStaking.noValidatorInstalled") }}</span>
+        <p>
+          {{ $t("disabledStaking.disabledStakingMessage") }}
+        </p>
       </div>
     </div>
   </div>
@@ -46,7 +48,7 @@ export default {};
   position: absolute;
   top: 8%;
   left: 22%;
-  background-color: #b40e0e;
+  background-color: #bf3a3a;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;

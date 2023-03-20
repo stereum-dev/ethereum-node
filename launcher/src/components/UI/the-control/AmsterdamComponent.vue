@@ -42,7 +42,12 @@ export default {
       network: "network",
     }),
   },
-
+  created() {
+    // Add initial objects to the array
+    for (let i = 0; i < 5; i++) {
+      this.epochMonitoring();
+    }
+  },
   mounted() {
     if (this.network === "mainnet") {
       this.networkIcon = this.mainnetIcon;
@@ -52,13 +57,6 @@ export default {
       this.networkIcon = this.gnosisIcon;
     } else {
       this.networkIcon = this.defaultIcon;
-    }
-  },
-
-  created() {
-    // Add initial objects to the array
-    for (let i = 0; i < 5; i++) {
-      this.epochMonitoring();
     }
 
     // Call the addObject() function every sec

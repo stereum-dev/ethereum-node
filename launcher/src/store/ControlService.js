@@ -176,17 +176,7 @@ class ControlService extends EventEmitter {
   }
 
   async importKey(args) {
-    //resolve proxy
-    let files = [];
-    args.files.forEach((file) => {
-      files.push({ name: file.name, path: file.path });
-    });
-    return await this.promiseIpc.send("importKey", {
-      files: files,
-      password: args.password,
-      service: args.service,
-      slashingDB: args.slashingDB,
-    });
+    return await this.promiseIpc.send("importKey", args);
   }
 
   async deleteValidators(args) {
@@ -315,6 +305,20 @@ class ControlService extends EventEmitter {
 
   async getQRCode() {
     return await this.promiseIpc.send("getQRCode");
+  }
+
+  async checkActiveValidators(args) {
+    //resolve proxy
+    let files = [];
+    args.files.forEach((file) => {
+      files.push({ name: file.name, path: file.path });
+    });
+    return await this.promiseIpc.send("checkActiveValidators", {
+      files: files,
+      password: args.password,
+      serviceID: args.serviceID,
+      slashingDB: args.slashingDB,
+    });
   }
 }
 if (!instance) {
