@@ -731,12 +731,7 @@ export default {
       this.importIsDone = false;
       this.password = val;
 
-      this.message = await ControlService.importKey({
-        files: this.keyFiles,
-        password: this.password,
-        service: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
+      this.message = await ControlService.importKey(this.selectedService.config.serviceID);
 
       this.slashingDB = "";
       this.forceRefresh = true;
