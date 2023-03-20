@@ -1,7 +1,12 @@
 <template>
   <div class="passwordBox">
     <div class="enter-password" @click="$emit('confirmPassword')">
-      <input v-if="activePassword" v-model="enteredPassword" type="password" />
+      <input
+        v-if="activePassword"
+        v-model="enteredPassword"
+        type="password"
+        @keyup.enter="$emit('importKey', enteredPassword)"
+      />
       <button
         v-if="activePassword"
         @keyup.enter="$emit('importKeyEnter', enteredPassword)"

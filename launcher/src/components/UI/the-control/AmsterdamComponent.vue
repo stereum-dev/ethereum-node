@@ -19,7 +19,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mapState } from "pinia";
 import { useServices } from "@/store/services";
@@ -38,29 +37,26 @@ export default {
       pattern: [],
     };
   },
-
   computed: {
     ...mapState(useServices, {
       network: "network",
     }),
-    // pattern: () => {
-    //   var array = [];
-    //   for (var i = 1; i <= 5; i++) {
-    //     var obj = {
-    //       id: i,
-    //       title: "epoch",
-    //       slot: 12345,
-    //       bar: Array(32).fill(0),
-    //     };
-    //     array.push(obj);
-    //   }
-    //   return array;
-    // },
   },
   created() {
     // Add initial objects to the array
     for (let i = 0; i < 5; i++) {
       this.epochMonitoring();
+    }
+  },
+  mounted() {
+    if (this.network === "mainnet") {
+      this.networkIcon = this.mainnetIcon;
+    } else if (this.network === "testnet") {
+      this.networkIcon = this.testnetIcon;
+    } else if (this.network === "gnosis") {
+      this.networkIcon = this.gnosisIcon;
+    } else {
+      this.networkIcon = this.defaultIcon;
     }
 
     // Call the addObject() function every sec
