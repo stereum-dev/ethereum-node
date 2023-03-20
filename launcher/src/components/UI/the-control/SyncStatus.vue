@@ -23,7 +23,6 @@
             </div>
             <div
               class="consensusIconCons"
-              :class="{ clientColor: clientColor }"
               :data-tooltip="
                 consensusName + ': ' + formatValues(consensusFirstVal) + ' / ' + formatValues(consensusSecondVal)
               "

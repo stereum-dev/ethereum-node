@@ -335,9 +335,8 @@ export class ValidatorAccountManager {
   }
 
   async getOperatorPageURL(pubKey) {
-    const hash = crypto.createHash("sha256").update(pubKey).digest("hex");
-    const URL = "https://explorer.ssv.network/operators/" + hash;
-    return URL;
+    const pubKeyHash = crypto.createHash("sha256").update(pubKey).digest("hex");
+    return pubKeyHash;
   }
 
   async setGraffitis(graffiti) {

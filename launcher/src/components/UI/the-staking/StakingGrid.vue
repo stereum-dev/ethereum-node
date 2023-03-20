@@ -19,6 +19,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { mapState } from "pinia";
 import { useServices } from "../../../store/services";
@@ -62,14 +63,14 @@ export default {
         //   method: this.feeBtn,
         //   display: false,
         // },
-        {
-          id: 4,
-          name: "withdraw",
-          displayName: "withdrawal",
-          icon: "img/icon/the-staking/withdraw.png",
-          method: this.exitBtn,
-          display: false,
-        },
+        // {
+        //   id: 4,
+        //   name: "withdraw",
+        //   displayName: "withdrawal",
+        //   icon: "img/icon/the-staking/withdraw.png",
+        //   method: this.exitBtn,
+        //   display: false,
+        // },
       ],
       button: {},
       selectedIcon: "",

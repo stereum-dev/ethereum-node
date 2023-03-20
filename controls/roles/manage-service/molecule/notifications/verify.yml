@@ -21,7 +21,8 @@
       - stereum_docker_ps.stdout.find("grafana/grafana") != -1
       - stereum_docker_ps.stdout.find("prom/prometheus") != -1
       - stereum_docker_ps.stdout.find("stereum/notifications") != -1
-      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 3
+      - stereum_docker_ps.stdout.find("prom/node-exporter") != -1
+      - (stereum_docker_ps.stdout|regex_findall("Up")|length) == 4
   - docker_container_info:
       name: stereum-1738844e-3164-47de-85a8-ac7d07f2ee31
     register: notification_container
@@ -30,5 +31,13 @@
   - assert:
       that:
       - notification_container.container.NetworkSettings.Networks.stereum.Aliases is search("notifications")
-
+  
+  - stat: path=/opt/app/services/62aa1873-7b62-410b-ae8e-2cd8615165b9/grafana/provisioning/alerting/alerts.yaml
+    register: grafana_alerts
+  - debug:
+      msg: "{{ grafana_alerts }}"
+  - name: Check for grafana alert files
+    assert:
+      that:
+        - grafana_alerts.stat.exists
 # EOF

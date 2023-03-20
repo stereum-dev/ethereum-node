@@ -18,8 +18,8 @@ import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostS
 import { LodestarBeaconService } from "./ethereum-services/LodestarBeaconService";
 import { LodestarValidatorService } from "./ethereum-services/LodestarValidatorService";
 import { ErigonService } from "./ethereum-services/ErigonService";
+import { NotificationService } from "./ethereum-services/NotificationService";
 
-const YAML = require("yaml");
 const log = require("electron-log");
 
 async function Sleep(ms) {
@@ -95,6 +95,7 @@ export class OneClickInstall {
     this.prometheusNodeExporter = undefined;
     this.prometheus = undefined;
     this.grafana = undefined;
+    this.notificationService = undefined;
     this.setup = undefined;
     this.choosenClient = undefined;
     this.network = undefined;
@@ -108,7 +109,8 @@ export class OneClickInstall {
       this.executionClient.buildConfiguration(),
       this.prometheusNodeExporter.buildConfiguration(),
       this.prometheus.buildConfiguration(),
-      this.grafana.buildConfiguration()
+      this.grafana.buildConfiguration(),
+      this.notificationService.buildConfiguration()
     );
     if (this.mevboost) serviceList.push(this.mevboost.buildConfiguration());
     if (this.validatorService) serviceList.push(this.validatorService.buildConfiguration());
@@ -331,6 +333,8 @@ export class OneClickInstall {
     ports = [new ServicePort("127.0.0.1", 3000, 3000, servicePortProtocol.tcp)];
     this.grafana = GrafanaService.buildByUserInput(this.networkHandler(), ports, this.installDir + "/grafana");
 
+    this.notificationService = NotificationService.buildByUserInput(this.networkHandler(),this.installDir + "/notification");
+
     let versions;
     try {
       versions = await this.nodeConnection.checkUpdates();
@@ -423,7 +427,7 @@ export class OneClickInstall {
     this.clearSetup();
     this.setup = setup;
     this.network = network;
-    let services = ["GethService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService"];
+    let services = ["GethService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
 
     this.choosenClient = await this.chooseClient();
     this.choosenClient = this.choosenClient.charAt(0).toUpperCase() + this.choosenClient.slice(1);
@@ -439,6 +443,7 @@ export class OneClickInstall {
         "GrafanaService",
         "PrometheusNodeExporterService",
         "PrometheusService",
+        "NotificationService"
       ];
 
     switch (setup) {

@@ -17,6 +17,6 @@
   color: aqua;
   font-size: 70%;
   pointer-events: none;
-  z-index: 2;
+  z-index: 0;
 }
 </style>

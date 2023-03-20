@@ -83,8 +83,8 @@ export default {
         this.consensusClientIcon = plugin.icon;
       }
     });
-    this.polling = setInterval(ControlService.updateTasks, 2000); //refresh playbook logs
-    this.refresh = setInterval(this.getTasks, 1000); //refresh data
+    this.polling = setInterval(ControlService.updateTasks, 2000);
+    this.refresh = setInterval(this.getTasks, 5000); //refresh data
   },
   unmounted() {
     this.images = [];
@@ -107,8 +107,12 @@ export default {
       }, 6000);
     },
     getTasks: async function () {
-      this.Tasks = await ControlService.getTasks();
-      this.displayNewTask = this.Tasks.slice(-1)[0].name;
+      const freshTasks = await ControlService.getTasks();
+      this.Tasks = Array.isArray(freshTasks) ? freshTasks : this.Tasks;
+      // use try/catch to avoid an error if no tasks responded for whatever reason
+      try {
+        this.displayNewTask = this.Tasks.at(-1).name;
+      } catch (e) {}
     },
   },
 };
@@ -195,19 +199,19 @@ export default {
 }
 
 .execution__icon {
-  width: 145px !important;
-  height: 145px !important;
+  width: 148px !important;
+  height: 148px !important;
   position: absolute !important;
-  top: 26.4% !important;
+  top: 26.2% !important;
   left: 25.3% !important;
   animation-name: anim2 3s !important;
 }
 
 .consensus__icon {
-  width: 144px !important;
-  height: 144px !important;
+  width: 148px !important;
+  height: 148px !important;
   position: absolute !important;
-  top: 25.8% !important;
+  top: 26.2% !important;
   left: 57% !important;
   animation-name: anim2 3s !important;
 }
@@ -274,6 +278,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: capitalize;
 }
 .dot-flashing {
   position: relative;
