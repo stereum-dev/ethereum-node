@@ -8,6 +8,7 @@
           :button-state="buttonState"
           :validator-icon="selectedIcon"
           :validator-name="selectedName"
+          :validator-state="selectedStatus"
           :validators="installedValidators"
           @click-btn="clickBtnHandler"
           @vld-picker="selectedValidator"
@@ -75,6 +76,7 @@ export default {
       button: {},
       selectedIcon: "",
       selectedName: "",
+      selectedStatus: "",
     };
   },
 
@@ -90,6 +92,7 @@ export default {
   created() {
     this.selectedIcon = this.installedValidators[0].icon;
     this.selectedName = this.installedValidators[0].name;
+    this.selectedStatus = this.installedValidators[0].state;
   },
   methods: {
     clickBtnHandler(el) {
@@ -101,6 +104,7 @@ export default {
     selectedValidator(validator) {
       this.selectedIcon = validator.icon;
       this.selectedName = validator.name;
+      this.selectedStatus = validator.state;
     },
   },
 };

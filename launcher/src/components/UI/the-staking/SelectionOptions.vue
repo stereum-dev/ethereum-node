@@ -13,10 +13,13 @@
       </div>
       <div class="validator-commands">
         <div class="validator-state">
-          <div class="validator-state_Icon"></div>
-          <div class="validator-state_status">Running</div>
+          <div class="validator-state_Icon">
+            <div class="validator-state_Icon-icon" :class="validatorState === 'running' ? 'green' : 'red'"></div>
+          </div>
+          <div class="validator-state_status">{{ validatorState === "running" ? "running" : "off" }}</div>
         </div>
         <div class="key-counter">
+          <comming-soon></comming-soon>
           <div class="key-counter_counter"><span>2</span></div>
           <div class="key-counter_icon">
             <img src="../../../../public/img/icon/control/keyEth.svg" alt="validator-key" />
@@ -54,6 +57,10 @@ export default {
       required: true,
     },
     validatorName: {
+      type: String,
+      required: true,
+    },
+    validatorState: {
       type: String,
       required: true,
     },
@@ -100,7 +107,6 @@ export default {
   height: 10%;
   justify-content: center;
   align-items: center;
-  background: red;
   top: 11%;
   position: absolute;
 }
@@ -108,8 +114,62 @@ export default {
   width: 50%;
   height: 100%;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.key-counter {
+  width: 50%;
+  height: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
+  color: #eee;
+  font-size: 80%;
+  position: relative;
+}
+.key-counter_icon {
+  display: flex;
+  width: 50%;
+  height: 95%;
+
+  justify-content: center;
+  align-items: center;
+}
+.key-counter_icon img {
+  width: 35%;
+}
+.validator-state_Icon {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.validator-state_status {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee;
+  text-transform: uppercase;
+  font-size: 70%;
+  font-weight: 700;
+}
+.validator-state_Icon-icon {
+  display: flex;
+  width: 60%;
+  height: 95%;
+  border-radius: 50%;
+  border: #bfbfbf;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3), 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.green {
+  background-color: #7fff00;
+}
+
+.red {
+  background-color: #ff5733;
 }
 .validator-selection {
   width: 90%;
