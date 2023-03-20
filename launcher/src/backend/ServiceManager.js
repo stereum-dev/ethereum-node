@@ -331,7 +331,7 @@ export class ServiceManager {
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
       service.volumes = service.volumes.concat(volumes);
     } else if (service.service.includes("Validator")) {
-      service.dependencies.executionClients = dependencies;
+      service.dependencies.consensusClients = dependencies;
     }
     return service;
   }
@@ -347,7 +347,7 @@ export class ServiceManager {
     command = command.filter((c) => !c.includes(endpointCommand));
     let newProps;
     if (fullCommand) {
-      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)];
+      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter((c) => c !== undefined);
     } else {
       newProps = endpointCommand + dependencies.map(filter).join();
     }
@@ -437,14 +437,14 @@ export class ServiceManager {
       value = value.substring(1, value.length - 1);
     }
     let newValue;
-    if (dependencies && dependencies.length && filter) {
+    if (dependencies && filter) {   // it's intended that dependencies is only checked for truthy 
       newValue = dependencies.map(filter).join();
-    } else if (dependencies && dependencies.length) {
+    } else if (dependencies) {      // same here. 
       newValue = value.split(",").concat(dependencies).join();
     } else {
-      newValue = value.split(",").join();
+      newValue = value.split(",").filter(filter).join();
     }
-    if (!newValue) {
+    if (!newValue) {  // if dependencies is an empty array it is caught here
       return undefined;
     }
     if (quotes) newValue = '"' + newValue + '"';

@@ -167,6 +167,47 @@ test("addConnection String", () => {
   expect(result).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/);
 });
 
+test("addConnection array empty dependencies", () => {
+  const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
+  const lhService = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/prysm", [geth1], []);
+  const dependencies = []
+  const endpointCommand = "--execution-endpoint=";
+  const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+
+  const sm = new ServiceManager();
+  const result = sm.addCommandConnection(lhService, endpointCommand, dependencies, filter);
+
+  expect(result).not.toContain("--execution-endpoint=");
+  expect(result.join(" ")).not.toMatch(/--execution-endpoint=/);
+});
+
+test("addConnection array", () => {
+  const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
+  const geth2 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
+  const lhService = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/prysm", [geth1], []);
+  const dependencies = lhService.dependencies.executionClients.concat([geth2]);
+  const endpointCommand = "--execution-endpoint=";
+  const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+
+  const sm = new ServiceManager();
+  const result = sm.addCommandConnection(lhService, endpointCommand, dependencies, filter);
+
+  expect(result).toContain(`--execution-endpoint=http://stereum-${geth1.id}:8551,http://stereum-${geth2.id}:8551`);
+});
+
+test("addConnection String empty dependencies", () => {
+  const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth");
+  const prysm = PrysmBeaconService.buildByUserInput("prater", [], "/opt/stereum/prysm", [geth1], []);
+  const dependencies = []
+  const endpointCommand = "--execution-endpoint=";
+  const filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+
+  const sm = new ServiceManager();
+  const result = sm.addCommandConnection(prysm, endpointCommand, dependencies, filter);
+
+  expect(result).not.toMatch(/--execution-endpoint=/);
+});
+
 test("removeConnection String", () => {
   const command = `/app/cmd/validator/validator --accept-terms-of-use=true
   --beacon-rpc-provider="stereum-42d9f0b4-257f-f71e-10fe-66c342dd4995:4000"
