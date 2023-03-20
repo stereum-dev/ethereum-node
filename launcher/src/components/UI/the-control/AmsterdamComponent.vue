@@ -8,7 +8,7 @@
     </div>
     <div class="docBox">
       <comming-soon></comming-soon>
-      <div v-for="obj in array" :key="obj" class="line-squares" :data-tooltip="'EPOCH: ' + obj.slot">
+      <div v-for="obj in pattern" :key="obj" class="line-squares no-events" :data-tooltip="'EPOCH: ' + obj.slot">
         <div
           v-for="square in obj.bar"
           :key="square"
@@ -19,7 +19,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import { mapState } from "pinia";
 import { useServices } from "@/store/services";
@@ -35,27 +34,15 @@ export default {
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
+      pattern: [],
     };
   },
-
   computed: {
     ...mapState(useServices, {
       network: "network",
     }),
-    array() {
-      var array = [];
-      for (var i = 1; i <= 5; i++) {
-        var obj = {
-          id: i,
-          title: "epoch",
-          slot: 12345,
-          bar: Array(32).fill(0),
-        };
-        array.push(obj);
-      }
-      return array;
-    },
   },
+
   mounted() {
     if (this.network === "mainnet") {
       this.networkIcon = this.mainnetIcon;
@@ -68,7 +55,47 @@ export default {
     }
   },
 
+  created() {
+    // Add initial objects to the array
+    for (let i = 0; i < 5; i++) {
+      this.epochMonitoring();
+    }
+
+    // Call the addObject() function every sec
+    setInterval(() => {
+      this.epochMonitoring();
+    }, 1000);
+  },
   methods: {
+    epochMonitoring() {
+      // Create a new object an it can wire, the stracture has to be like this
+      //stracture started
+      const newObj = {
+        id: 1,
+        title: "epoch",
+        // slot: 12345,
+        // bar: Array(32).fill(0),
+        //the random just for showing the functionality is and tha last comment are the true pattern
+        slot: Math.floor(Math.random() * 100000),
+        bar: Array(32)
+          .fill(0)
+          .map(() => Math.floor(Math.random() * 5)),
+      };
+      // end of stracture
+
+      // Add the new object to the beginning of the array
+      this.pattern.unshift(newObj);
+
+      // If the array has more than 5 objects, remove the last one
+      if (this.pattern.length > 5) {
+        this.pattern.pop();
+      }
+
+      // Update the ids of the remaining objects
+      this.pattern.forEach((obj, index) => {
+        obj.id = index + 1;
+      });
+    },
     getColor(number) {
       switch (number) {
         case 0:
@@ -87,6 +114,9 @@ export default {
 };
 </script>
 <style scoped>
+.no-events {
+  pointer-events: none;
+}
 [data-tooltip] {
   position: relative;
   cursor: default;
