@@ -141,7 +141,12 @@
     "option": "СОНГОЛТУУД",
     "importKey": "Валидатор түлхүүр(үүд)-ийг импортлож байна",
     "waitMessage": "Магадгүй хэсэг хугацаа зарцуулагдана",
-    "waitForImport": "Түлхүүрийг импортлож дуустал хүртэл хүлээнэ үү"
+    "waitForImport": "Түлхүүрийг импортлож дуустал хүртэл хүлээнэ үү",
+    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
+    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
+    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
+    "sure": "I am sure",
+    "cancel": "cancel"
   },
   "enterPass": {
     "enterPass": "НУУЦ ҮГ ОРУУЛАХ & ИМПОРТЛОХ"
@@ -319,6 +324,15 @@
     "importMessage": "Import your slashing database file.",
     "chooseFile": "Choose File",
     "continue": "Continue"
+  },
+  "disabledStaking": {
+    "noValidatorInstalled": "There is no validator client installed!",
+    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+  },
+  "logOutModal": {
+    "logOutTitle": "LOG-OUT",
+    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
+    "logOutBtn": "Log out"
   },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
