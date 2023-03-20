@@ -262,7 +262,7 @@ export default {
   padding: 0 1%;
   position: absolute;
   top: -10px;
-  z-index: 100;
+  z-index: 0;
 }
 .disabled {
   opacity: 0.2;
