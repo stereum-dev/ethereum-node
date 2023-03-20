@@ -10,7 +10,7 @@
         @change="signalChangeHandler"
       />
       <span>{{ $t("insertValidator.insertText") }}</span>
-      <img class="black-key" src="../../../../public/img/icon/the-staking/black-key.png" alt="icon" />
+      <img class="black-key" src="../../../../public/img/icon/the-staking/white-key.svg" alt="icon" />
     </div>
   </div>
 </template>
@@ -49,20 +49,20 @@ export default {
   width: 100%;
   height: 80%;
   margin: 0 auto;
-  background-color: #bfbfbf;
+  background-color: #17a2b8;
   border-radius: 40px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
 }
 .insertBox .insert-key img {
-  width: 26px;
-  height: 28px;
+  width: 5%;
 }
 .insertBox .insert-key span {
-  color: #3a3a3a;
-  font-size: 1.1rem;
-  font-weight: 700;
+  color: #eee;
+  font-size: 100%;
+  font-weight: 500;
+  margin-right: 2%;
 }
 </style>

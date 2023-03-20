@@ -4,7 +4,15 @@
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
         <ValidatorState />
-        <selection-options :button-state="buttonState" @click-btn="clickBtnHandler"></selection-options>
+        <selection-options
+          :button-state="buttonState"
+          :validator-icon="selectedIcon"
+          :validator-name="selectedName"
+          :validator-state="selectedStatus"
+          :validators="installedValidators"
+          @click-btn="clickBtnHandler"
+          @vld-picker="selectedValidator"
+        ></selection-options>
         <validators-box></validators-box>
         <div class="footer"></div>
         <TaskManager />
@@ -14,6 +22,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useServices } from "../../../store/services";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
@@ -64,7 +74,25 @@ export default {
         // },
       ],
       button: {},
+      selectedIcon: "",
+      selectedName: "",
+      selectedStatus: "",
     };
+  },
+
+  computed: {
+    ...mapState(useServices, {
+      installedServices: "installedServices",
+    }),
+    installedValidators() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => obj.category === "validator");
+    },
+  },
+  created() {
+    this.selectedIcon = this.installedValidators[0].icon;
+    this.selectedName = this.installedValidators[0].name;
+    this.selectedStatus = this.installedValidators[0].state;
   },
   methods: {
     clickBtnHandler(el) {
@@ -72,6 +100,11 @@ export default {
       setTimeout(() => {
         this.button = el;
       });
+    },
+    selectedValidator(validator) {
+      this.selectedIcon = validator.icon;
+      this.selectedName = validator.name;
+      this.selectedStatus = validator.state;
     },
   },
 };
