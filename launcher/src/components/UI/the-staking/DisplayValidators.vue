@@ -715,7 +715,10 @@ export default {
         slashingDB: this.slashingDB,
       });
       this.keyFiles = [];
-      if (this.checkActiveValidatorsResponse.length === 0 || this.checkActiveValidatorsResponse.includes("Validator check error:\n")) {
+      if (
+        this.checkActiveValidatorsResponse.length === 0 ||
+        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
+      ) {
         this.importKey(val);
       } else {
         this.riskWarning = true;
@@ -812,6 +815,7 @@ export default {
     },
     hideWDialog() {
       this.riskWarning = false;
+      this.insertKeyBoxActive = true;
     },
     riskAccepted() {
       this.riskWarning = false;

@@ -79,7 +79,10 @@ export class ValidatorAccountManager {
 
   async importKey(serviceID) {
     const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${this.batches.map(b => b.keystores).flat().length} Keys`);
+    this.nodeConnection.taskManager.otherTasksHandler(
+      ref,
+      `Importing ${this.batches.map((b) => b.keystores).flat().length} Keys`
+    );
     let services = await this.serviceManager.readServiceConfigurations();
 
     let client = services.find((service) => service.id === serviceID);
@@ -296,7 +299,9 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]}/eth/v1/keystores`,
+      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${
+        validatorPorts[service.service]
+      }/eth/v1/keystores`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
       `-H 'Authorization: Bearer ${apiToken}'`,
