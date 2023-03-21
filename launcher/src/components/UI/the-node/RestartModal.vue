@@ -91,7 +91,7 @@ export default {
   margin: 2% 0;
 }
 .restart-icon img {
-  width: 20%;
+  width: 15%;
 }
 .restart-question {
   width: 90%;
