@@ -63,7 +63,7 @@ export class SSHService {
     });
   }
 
-  async disconnect(connectionInfo) {
+  async disconnect() {
     log.info("DISCONNECT: connectionInfo", this.connectionInfo.host);
 
     return new Promise((resolve, reject) => {
@@ -91,7 +91,7 @@ export class SSHService {
       this.conn.exec(command, (err, stream) => {
         if (err) return reject(err);
         stream
-          .on("close", (code, signal) => {
+          .on("close", (code) => {
             data.rc = code;
             resolve(data);
           })
@@ -107,20 +107,7 @@ export class SSHService {
   }
 
   async tunnel(tunnelConfig) {
-    return new Promise(async (resolve, reject) => {
-      const config = {
-        keepAlive: true,
-        username: this.connectionInfo.user || "root",
-        password: this.connectionInfo.password,
-        host: this.connectionInfo.host,
-        port: this.connectionInfo.port || 22,
-        dstHost: "localhost",
-        dstPort: tunnelConfig.dstPort,
-        localHost: "localhost",
-        localPort: tunnelConfig.localPort,
-        privateKey: this.connectionInfo.privateKey || undefined,
-        passphrase: this.connectionInfo.passphrase || undefined,
-      };
+    return new Promise((resolve, reject) => {
       const tunnelOptions = {
         autoClose: false,
       };

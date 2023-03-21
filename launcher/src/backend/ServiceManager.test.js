@@ -1,12 +1,9 @@
-import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
 import { GethService } from "./ethereum-services/GethService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
 import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
 import { GrafanaService } from "./ethereum-services/GrafanaService";
-import { ServicePort, servicePortProtocol } from "./ethereum-services/ServicePort";
-import { StringUtils } from "./StringUtils.js";
 import { ServiceManager, serivceState } from "./ServiceManager";
 import { LighthouseBeaconService } from "./ethereum-services/LighthouseBeaconService";
 import { LighthouseValidatorService } from "./ethereum-services/LighthouseValidatorService";
@@ -19,8 +16,8 @@ import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostS
 test("manageServiceState success", async () => {
   jest.mock("./NodeConnection");
   const NodeConnection = require("./NodeConnection");
-  const mMock = jest.fn((pb, args) => {
-    return new Promise(async (resolve, reject) => {
+  const mMock = jest.fn((pb) => {
+    return new Promise((resolve) => {
       resolve({
         playbook: pb,
         playbookRunRef: "asdf",
@@ -48,8 +45,8 @@ test("manageServiceState success", async () => {
 test("manageServiceState failure", async () => {
   jest.mock("./NodeConnection");
   const NodeConnection = require("./NodeConnection");
-  const mMock = jest.fn((pb, args) => {
-    return new Promise(async (resolve, reject) => {
+  const mMock = jest.fn(() => {
+    return new Promise((resolve, reject) => {
       reject("error321");
     });
   });
@@ -72,14 +69,14 @@ test("readServiceConfigurations success", async () => {
   jest.mock("./NodeConnection");
   const NodeConnection = require("./NodeConnection");
   const listServicesConfigurationsMock = jest.fn(() => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(["first", "second"]);
     });
   });
   const readServiceConfigurationMock = jest
     .fn()
     .mockReturnValueOnce(
-      new Promise(async (resolve, reject) => {
+      new Promise((resolve) => {
         return resolve({
           service: "LighthouseBeaconService",
           id: "first",
@@ -87,7 +84,7 @@ test("readServiceConfigurations success", async () => {
       })
     )
     .mockReturnValueOnce(
-      new Promise(async (resolve, reject) => {
+      new Promise((resolve) => {
         return resolve({
           service: "LighthouseValidatorService",
           id: "second",
@@ -119,7 +116,7 @@ test("readServiceConfigurations success empty", async () => {
   jest.mock("./NodeConnection");
   const NodeConnection = require("./NodeConnection");
   const listServicesConfigurationsMock = jest.fn(() => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(new Array());
     });
   });
@@ -142,7 +139,10 @@ test("addDependencies LighthouseBeaconService", () => {
   const geth1 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth1");
   const geth2 = GethService.buildByUserInput("goerli", [], "/opt/stereum/geth2");
   const lhService = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/lh", [], []);
+
   const result = sm.addDependencies(lhService, [geth1, geth2]);
+  expect(result.command.join(" ")).toMatch(/--execution-endpoint=http:\/\/stereum-.{36}:8551,http:\/\/stereum-.{36}:8551/)
+  expect(result.dependencies.executionClients).toHaveLength(2)
 });
 
 test("addDependencies FlashbotsMevBoost", () => {
@@ -150,7 +150,10 @@ test("addDependencies FlashbotsMevBoost", () => {
   const lhService1 = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/lh1", [], []);
   const lhService2 = LighthouseBeaconService.buildByUserInput("prater", [], "/opt/stereum/lh2", [], []);
   const mevboost = FlashbotsMevBoostService.buildByUserInput("goerli");
+
   const result = sm.addDependencies(mevboost, [lhService1, lhService2]);
+  expect(result).toHaveLength(2)
+  expect(result[0].command.join(" ")).toMatch(/--builder=http:\/\/stereum-.{36}:18550/)
 });
 
 test("addConnection String", () => {
@@ -352,7 +355,7 @@ test("change network", () => {
   expect(services.find((s) => s.service === "FlashbotsMevBoostService").entrypoint).toContain("-mainnet");
   expect(services.find((s) => s.service === "PrysmBeaconService").command).toMatch(/--mainnet/);
   expect(services.find((s) => s.service === "PrysmBeaconService").command).not.toMatch(
-    /--genesis-state=\/opt\/app\/genesis\/prysm\-prater\-genesis\.ssz/
+    /--genesis-state=\/opt\/app\/genesis\/prysm-prater-genesis\.ssz/
   );
   expect(services.find((s) => s.service === "LighthouseBeaconService").command).toContain("--network=mainnet");
 });

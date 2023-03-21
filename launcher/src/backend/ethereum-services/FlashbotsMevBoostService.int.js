@@ -3,7 +3,6 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceManager } from "../ServiceManager.js";
 import { FlashbotsMevBoostService } from "./FlashbotsMevBoostService.js";
 const log = require("electron-log");
@@ -68,9 +67,9 @@ test("mevboost installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${mevboost.id}`);
     if (
-      /listening on 0.0.0.0:18550/.test(status.stderr) &&
-      /using 1 relays/.test(status.stderr) &&
-      !/Invalid relay URL/.test(status.stderr)
+      /listening on 0.0.0.0:18550/.test(status.stdout) &&
+      /using 1 relays/.test(status.stdout) &&
+      !/Invalid relay URL/.test(status.stdout)
     ) {
       condition = true;
     }
@@ -91,7 +90,7 @@ test("mevboost installation", async () => {
   }
 
   // check if Mevboost service is running properly
-  expect(status.stderr).toMatch(/listening on 0.0.0.0:18550/);
-  expect(status.stderr).toMatch(/using 1 relays/);
-  expect(status.stderr).not.toMatch(/Invalid relay URL/);
+  expect(status.stdout).toMatch(/listening on 0.0.0.0:18550/);
+  expect(status.stdout).toMatch(/using 1 relays/);
+  expect(status.stdout).not.toMatch(/Invalid relay URL/);
 });
