@@ -26,7 +26,7 @@
           </div>
           <div class="number-of-validators_title">
             <span>IMPORTED</span>
-            <span>VALIDATOR</span>
+            <span>VALIDATOR(s)</span>
           </div>
           <div class="controller">
             <span>INCLUSION DISTANCE</span>
@@ -190,7 +190,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 50%;
+  font-size: 48%;
   font-weight: 600;
 }
 .controller {
