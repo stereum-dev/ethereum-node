@@ -343,7 +343,8 @@
   "restartModal": {
     "restarQ": "Are you sure you want to restart?",
     "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart"
+    "restart": "restart",
+    "confirmMessage": "Are you sure you want turn your node"
   },
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",

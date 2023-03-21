@@ -3,19 +3,24 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="restart-icon">
-        <img src="/img/icon/node-journal-icons/restart.png" alt="restart warning" />
+        <img
+          :src="mainIcon ? '/img/icon/node-journal-icons/turn_on.png' : '/img/icon/node-journal-icons/power2.png'"
+          alt="restart warning"
+        />
       </div>
-      <div class="restart-question">
-        <span>{{ $t("restartModal.restarQ") }}</span>
+      <div class="text-container">
+        <div class="toggle-message">
+          <span>{{ $t("restartModal.confirmMessage") }} {{ mainIcon ? "on" : "off" }}?</span>
+        </div>
+        <div class="toggle-message">
+          <span>Your node will go off line while you do this!</span>
+        </div>
       </div>
-      <div class="nameId">
-        <span class="service-name">{{ service.name }}</span>
-        <span class="service-id">[ {{ service.config.serviceID }} ]</span>
-      </div>
-      <div class="restart-message">{{ $t("restartModal.restartMessage") }}</div>
-      <div class="restart-button" :class="{ disabled: loading }" @click="$emit('restartConfirm', service)">
-        <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
-        <span v-else>{{ $t("restartModal.restart") }}</span>
+
+      <div v-if="mainIcon" class="toggle-button_on" @click="$emit('powerToggleOn')">turn on</div>
+      <div v-else class="toggle-button_off" @click="$emit('powerToggleOff')">
+        <!-- <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" /> -->
+        <span>turn off</span>
       </div>
       <span class="clickOut">click outside to close</span>
     </div>
@@ -32,6 +37,10 @@ export default {
       type: Boolean,
       required: true,
     },
+    mainIcon: {
+      type: Boolean,
+      required: true,
+    },
   },
 };
 </script>
@@ -40,11 +49,12 @@ export default {
 .clickOut {
   font-size: 70%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   width: 100%;
   height: 6%;
   color: red;
+  flex-direction: column;
 }
 .restart-modal_parent {
   width: 100vw;
@@ -77,7 +87,7 @@ export default {
   top: 15%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-around;
   align-items: center;
   z-index: 1050;
   cursor: default;
@@ -93,47 +103,18 @@ export default {
 .restart-icon img {
   width: 20%;
 }
-.restart-question {
+.text-container {
   width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 100%;
-}
-.nameId {
+  height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 18%;
 }
-.service-name {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 120%;
-}
-.service-id {
+
+.toggle-message {
   width: 100%;
   height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 80%;
-}
-.restart-message {
-  width: 90%;
-  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,7 +122,8 @@ export default {
   text-transform: uppercase;
   font-size: 100%;
 }
-.restart-button {
+.toggle-button_on,
+.toggle-button_off {
   width: 30%;
   height: 15%;
   display: flex;
@@ -150,20 +132,26 @@ export default {
   font-weight: 800;
   text-transform: uppercase;
   font-size: 100%;
-  background: rgb(255, 0, 25);
+
   border-radius: 10px;
   cursor: pointer;
   color: #eee;
 }
-.restart-button.disabled {
+.toggle-button_on {
+  background: green;
+}
+.toggle-button_off {
+  background: rgb(255, 0, 25);
+}
+.toggle-button.disabled {
   background: rgba(255, 0, 25, 0.5);
   cursor: not-allowed;
   pointer-events: none;
 }
-.restart-button img {
+.toggle-button img {
   width: 35%;
 }
-.restart-button:active {
+.toggle-button:active {
   transform: scale(0.9);
 }
 </style>
