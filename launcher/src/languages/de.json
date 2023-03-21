@@ -141,7 +141,12 @@
     "option": "OPTIONEN",
     "importKey": "Importiere Validatorschlüssel",
     "waitMessage": "Dies kann einige Zeit dauern",
-    "waitForImport": "Bitte warte bis der Schlüssel importiert ist"
+    "waitForImport": "Bitte warte bis der Schlüssel importiert ist",
+    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
+    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
+    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
+    "sure": "I am sure",
+    "cancel": "cancel"
   },
   "enterPass": {
     "enterPass": "PASSWORT EINGEBEN & IMPORTIEREN"
@@ -319,6 +324,15 @@
     "importMessage": "Import your slashing database file.",
     "chooseFile": "Datei auswählen",
     "continue": "Fortsetzen"
+  },
+  "disabledStaking": {
+    "noValidatorInstalled": "There is no validator client installed!",
+    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+  },
+  "logOutModal": {
+    "logOutTitle": "LOG-OUT",
+    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
+    "logOutBtn": "Log out"
   },
   "prunningModal": {
     "prunningText": "GETH verbraucht Speicherplatz, der im Laufe seiner Betriebszeit wächst. Das Löschen unnötiger Daten und das Freigeben von Speicherplatz aus der Geth-Datenbank kann mehrere Stunden dauern. Dies muss durchgeführt werden, wenn Geth nicht ausgeführt wird. WENN DER LÖSCHVORGANG GESTARTET WIRD, WIRD IHR NODE OFFLINE GEHEN UND POTENZIELLE ATTESTATIONSPFLICHTEN NICHT MEHR ERFÜLLEN.",
