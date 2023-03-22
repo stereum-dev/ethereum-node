@@ -342,7 +342,8 @@
   "restartModal": {
     "restarQ": "Sind Sie sich sicher, dass Sie neu starten wollen?",
     "restartMessage": "Ihre Node kann dabei offline gehen!",
-    "restart": "Neustart"
+    "restart": "Neustart",
+    "confirmMessage": "Are you sure you want turn your node"
   },
   "nukeModal": {
     "nukeQ": "Sind Sie sicher, dass Sie STEREUM & ALLE DIENSTE VON DEM SERVER entfernen möchten?",
