@@ -75,7 +75,7 @@ export default {
 }
 .bar {
   width: 4%;
-  height: 90%;
+  height: 80%;
   display: inline-block;
   margin: 0 1%;
 }

@@ -10,6 +10,32 @@
           <span id="balance">{{ $t("displayValidator.balance") }}</span>
           <span id="option">{{ $t("displayValidator.option") }}</span>
         </div>
+        <key-modal v-if="riskWarning" @hide-modal="hideWDialog">
+          <div class="warning-container">
+            <div class="icon-part">
+              <img src="/img/icon/the-staking/stereum-error.png" alt="warning" />
+            </div>
+            <div class="top-message">
+              <p>
+                {{ $t("displayValidator.warningMessage") }}
+              </p>
+            </div>
+            <div class="warning-alarm">
+              <span>{{ $t("displayValidator.warningAlarm") }}</span>
+            </div>
+            <div class="warning-question">
+              <span> {{ $t("displayValidator.warningQuestion") }}</span>
+            </div>
+            <div class="button-box">
+              <div class="sure-button" @click="riskAccepted">
+                <span>{{ $t("displayValidator.sure") }}</span>
+              </div>
+              <div class="cancel-button" @click="hideWDialog">
+                <span>{{ $t("displayValidator.cancel") }}</span>
+              </div>
+            </div>
+          </div>
+        </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
           <div class="title-box">
             <span>{{ $t("displayValidator.importKey") }}</span>
@@ -203,7 +229,8 @@
       v-if="enterPasswordBox"
       :active-password="passwordInputActive"
       @confirm-password="confirmPasswordHandler"
-      @import-key="importKey"
+      @import-key="checkRisk"
+      @import-key-enter="checkRisk"
     />
     <!-- Fee Recipient box for validator keys -->
     <FeeRecipient
@@ -253,6 +280,7 @@ import ExitMultipleValidators from "./ExitMultipleValidators.vue";
 import ImportSlashingModal from "./ImportSlashingModal.vue";
 import DisabledStaking from "./DisabledStaking.vue";
 import SearchBox from "./SearchBox.vue";
+
 export default {
   components: {
     KeyModal,
@@ -276,6 +304,7 @@ export default {
   },
   data() {
     return {
+      riskWarning: false,
       stakingIsDisabled: false,
       disable: true,
       message: "",
@@ -320,6 +349,8 @@ export default {
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
+      isActiveRunning: [],
+      checkActiveValidatorsResponse: [],
     };
   },
   computed: {
@@ -468,6 +499,7 @@ export default {
         console.log("Couldn't read KeyFile!");
       }
     },
+
     togglePubkeyView() {
       this.isPubkeyVisible = !this.isPubkeyVisible;
     },
@@ -674,17 +706,33 @@ export default {
       });
       this.totalBalance = totalBalance;
     },
+    checkRisk: async function (val) {
+      this.password = val;
+      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+        files: this.keyFiles,
+        password: this.password,
+        serviceID: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB,
+      });
+      this.keyFiles = [];
+      if (
+        this.checkActiveValidatorsResponse.length === 0 ||
+        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
+      ) {
+        this.importKey(val);
+      } else {
+        this.riskWarning = true;
+      }
+    },
+
     importKey: async function (val) {
       this.bDialogVisible = true;
       this.importIsProcessing = true;
       this.importIsDone = false;
       this.password = val;
-      this.message = await ControlService.importKey({
-        files: this.keyFiles,
-        password: this.password,
-        service: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
+
+      this.message = await ControlService.importKey(this.selectedService.config.serviceID);
+
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -759,6 +807,16 @@ export default {
     //Importing key modal
     hideBDialog() {
       this.bDialogVisible = false;
+      this.insertKeyBoxActive = true;
+    },
+    hideWDialog() {
+      this.riskWarning = false;
+      this.insertKeyBoxActive = true;
+    },
+    riskAccepted() {
+      this.riskWarning = false;
+      this.bDialogVisible = true;
+      this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
       await ControlService.setGraffitis(graffiti);
@@ -833,6 +891,89 @@ export default {
 };
 </script>
 <style scoped>
+.import-message::-webkit-scrollbar {
+  width: none;
+}
+
+/* Track */
+.import-message::-webkit-scrollbar-track {
+  background: none;
+  box-sizing: border-box;
+}
+
+/* Handle */
+.import-message::-webkit-scrollbar-thumb {
+  background: none;
+  border-radius: none;
+}
+
+.warning-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.icon-part {
+  width: 40%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon-part img {
+  width: 55%;
+}
+.top-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 92%;
+  height: 18%;
+  color: #eee;
+}
+.warning-question {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  height: 15%;
+  font-size: 100%;
+  font-weight: 800;
+  color: #eee;
+}
+.warning-alarm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10%;
+  width: 80%;
+  background-color: #b22020;
+  color: #eee;
+  font-weight: 700;
+  animation: blink 1s linear infinite;
+}
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.button-box {
+  display: flex;
+  height: 20%;
+  width: 100%;
+  position: relative;
+  justify-content: space-around;
+  align-items: center;
+}
 .keys-parent {
   width: 100%;
   height: 100%;
@@ -842,6 +983,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-template-rows: 86% 7% 7%;
+  z-index: 5;
 }
 
 .keys-table-box {
@@ -855,6 +997,46 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.sure-button {
+  display: flex;
+  width: 30%;
+  height: 50%;
+  background-color: #b22020;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eee;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 0 #171610;
+}
+.sure-button:active {
+  transform: scale(0.9);
+  box-shadow: none;
+}
+.cancel-button {
+  display: flex;
+  width: 30%;
+  height: 50%;
+  border: 2px solid #eee;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #eee;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.cancel-button:hover {
+  background-color: blue;
+  border: none;
+  box-shadow: 1px 1px 5px 0 #171610;
+}
+.cancel-button:active {
+  transform: scale(0.9);
+  box-shadow: none;
 }
 .keys-table {
   width: 100%;

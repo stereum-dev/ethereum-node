@@ -44,7 +44,7 @@
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        @btn-action="stateButtonHandler('started')"
+        @btn-action="toggleModalOn"
         >{{ $t("journalnode.turnOn") }}</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -55,7 +55,7 @@
         margin-right="5"
         btn-action="logToggle"
         grid-row="2/3"
-        @btn-action="stateButtonHandler('stopped')"
+        @btn-action="toggleModalOn"
         >{{ $t("journalnode.turnOff") }}</the-node-panel-btn
       >
       <the-node-panel-btn
@@ -78,6 +78,7 @@
         ><span id="start">{{ $t("journalnode.start") }}</span> / <span id="stop">{{ $t("journalnode.stop") }}</span
         ><span class="ml-1">. . .</span></the-node-panel-btn
       >
+
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/restart.png"
         is-color="orange"
@@ -194,6 +195,13 @@
         ></restart-modal>
       </div>
     </div>
+    <confirm-modal
+      v-if="confirmModal"
+      :main-icon="checkStatus()"
+      @close-window="toggleModalClose"
+      @power-toggle-on="stateButtonHandler('started')"
+      @power-toggle-off="stateButtonHandler('stopped')"
+    ></confirm-modal>
     <Transition>
       <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
     </Transition>
@@ -201,6 +209,7 @@
 </template>
 
 <script>
+import ConfirmModal from "./ConfirmModal.vue";
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
@@ -214,6 +223,7 @@ export default {
     RestartModal,
     ServiceLogButton,
     PluginLogs,
+    ConfirmModal,
   },
   data() {
     return {
@@ -229,6 +239,7 @@ export default {
       openPower: false,
       serverNameWidth: null,
       nameParentWidth: null,
+      confirmModal: false,
     };
   },
 
@@ -304,6 +315,12 @@ export default {
     restartModalClose() {
       this.restartModalShow = false;
     },
+    toggleModalClose() {
+      this.confirmModal = false;
+    },
+    toggleModalOn() {
+      this.confirmModal = true;
+    },
     async restartConfirmed(service) {
       this.restartLoad = true;
       service.yaml = await ControlService.getServiceYAML(service.config.serviceID);
@@ -354,6 +371,7 @@ export default {
     },
     async stateButtonHandler(state) {
       this.loading = true;
+      this.toggleModalClose();
       try {
         let promises = this.installedServices.map(async (service, index) => {
           new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {

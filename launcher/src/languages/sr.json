@@ -141,7 +141,12 @@
     "option": "OPCIJE",
     "importKey": "Uvoz validator key(s)",
     "waitMessage": "Može potrajati neko vrijeme",
-    "waitForImport": "Pričekajte dok se key ne uveze"
+    "waitForImport": "Pričekajte dok se key ne uveze",
+    "warningMessage": "Our additional Slashing Protection Checks showed that one of the validators you are about to import has attested in the last 2 epochs.",
+    "warningAlarm": "WARNING: You run a high risk of getting slashed!",
+    "warningQuestion": "ARE YOU SURE YOU WANT TO IMPORT THE VALIDATOR KEYS?",
+    "sure": "I am sure",
+    "cancel": "cancel"
   },
   "enterPass": {
     "enterPass": "UNESITE LOZINKU I UVOZ"
@@ -320,6 +325,15 @@
     "chooseFile": "Choose File",
     "continue": "Nastavi"
   },
+  "disabledStaking": {
+    "noValidatorInstalled": "There is no validator client installed!",
+    "disabledStakingMessage": "Install at least one validator client to activate importing validator keys."
+  },
+  "logOutModal": {
+    "logOutTitle": "LOG-OUT",
+    "logOutQuestion": "ARE YOU SURE YOU WANT TO LOG OUT OF YOUR NODE SERVER?",
+    "logOutBtn": "Log out"
+  },
   "prunningModal": {
     "prunningText": "GETH used up storage space GROWs over its operational time. It takes MULTIPLE HOURS to prune the Geth database, removing unnecessary data and freeing up some of the used storage space. This has to be done while Geth is not running. STARTING THE PRUNING PROCESS YOUR NODE WILL GO OFFLINE AND STOP POTENTIAL ATTESTATION DUTIES.",
     "prunningChecked": "I READ THE TEXT AND I AM AWARE OF THE CONSEQUENCES",
@@ -328,7 +342,8 @@
   "restartModal": {
     "restarQ": "Are you sure you want to restart?",
     "restartMessage": "your node might go offline while doing so!",
-    "restart": "restart"
+    "restart": "restart",
+    "confirmMessage": "Are you sure you want turn your node"
   },
   "nukeModal": {
     "nukeQ": "ARE YOU SURE YOU WANT TO REMOVE STEREUM & ALL ITS SERVICES FROM THE SERVER?",

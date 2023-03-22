@@ -104,10 +104,10 @@ export default {
 .validator-commands {
   display: flex;
   width: 90%;
-  height: 10%;
+  height: 8%;
   justify-content: center;
   align-items: center;
-  top: 11%;
+  top: 12%;
   position: absolute;
 }
 .validator-state {
@@ -131,12 +131,11 @@ export default {
   display: flex;
   width: 50%;
   height: 95%;
-
   justify-content: center;
   align-items: center;
 }
 .key-counter_icon img {
-  width: 35%;
+  width: 28%;
 }
 .validator-state_Icon {
   width: 30%;
@@ -158,7 +157,7 @@ export default {
 }
 .validator-state_Icon-icon {
   display: flex;
-  width: 60%;
+  width: 45%;
   height: 95%;
   border-radius: 50%;
   border: #bfbfbf;
@@ -262,7 +261,7 @@ export default {
   padding: 0 1%;
   position: absolute;
   top: -10px;
-  z-index: 100;
+  z-index: 0;
 }
 .disabled {
   opacity: 0.2;

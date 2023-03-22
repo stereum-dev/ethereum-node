@@ -6,6 +6,8 @@ import { SSHService } from "./SSHService.js";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
 
+import axios from "axios";
+
 const log = require("electron-log");
 
 async function Sleep(ms) {
@@ -16,6 +18,7 @@ export class ValidatorAccountManager {
   constructor(nodeConnection, serviceManager) {
     this.nodeConnection = nodeConnection;
     this.serviceManager = serviceManager;
+    this.batches = [];
   }
 
   createBatch(files, password, slashingDB) {
@@ -25,30 +28,68 @@ export class ValidatorAccountManager {
       return readFileSync(file.path, { encoding: "utf8" });
     });
     const chunkSize = 100;
-    let batches = [];
     for (let i = 0; i < content.length; i += chunkSize) {
       const contentChunk = content.slice(i, i + chunkSize);
       const passwords = Array(contentChunk.length).fill(password);
-      batches.push({
+      this.batches.push({
         keystores: contentChunk,
         passwords: passwords,
         ...(slashing_protection_content && { slashing_protection: slashing_protection_content }),
       });
     }
-    return batches;
   }
 
-  async importKey(files, password, serviceID, slashingDB) {
+  async checkActiveValidators(files, password, serviceID, slashingDB) {
+    this.batches = [];
+    this.createBatch(files, password, slashingDB);
+    let services = await this.serviceManager.readServiceConfigurations();
+    let client = services.find((service) => service.id === serviceID);
+
+    let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
+    let isActiveRunning = [];
+
+    if (pubkeys.length < 11) {
+      let networkURLs = {
+        mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
+        goerli: "https://goerli.beaconcha.in/api/v1/validator/",
+        gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
+      };
+      try {
+        for (const pubkey of pubkeys) {
+          let latestEpochsResponse = await axios.get(networkURLs[client.network] + pubkey + "/attestations");
+          if (
+            latestEpochsResponse.status === 200 &&
+            latestEpochsResponse.data.data.length > 0 &&
+            latestEpochsResponse.data.status !== /ERROR:*/
+          ) {
+            for (let i = 0; i < 2; i++) {
+              if (latestEpochsResponse.data.data[i].status === 1 && isActiveRunning.indexOf(pubkey) === -1) {
+                isActiveRunning.push(pubkey);
+              }
+            }
+          }
+        }
+      } catch (err) {
+        log.error("checking validator key(s) is failed:\n", err);
+        return "Validator check error:\n" + err;
+      }
+    }
+    return isActiveRunning;
+  }
+
+  async importKey(serviceID) {
     const ref = StringUtils.createRandomString();
-    this.nodeConnection.taskManager.otherTasksHandler(ref, `Importing ${files.length} Keys`);
-    let batches = this.createBatch(files, password, slashingDB);
+    this.nodeConnection.taskManager.otherTasksHandler(
+      ref,
+      `Importing ${this.batches.map((b) => b.keystores).flat().length} Keys`
+    );
     let services = await this.serviceManager.readServiceConfigurations();
 
     let client = services.find((service) => service.id === serviceID);
     let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
 
     switch (service) {
-      case "prysm":
+      case "prysm": {
         const wallet_path = client
           .buildConfiguration()
           .volumes.find((volume) => volume.includes("wallets"))
@@ -95,8 +136,9 @@ export class ValidatorAccountManager {
           await Sleep(30000);
         }
         break;
+      }
 
-      case "nimbus":
+      case "nimbus": {
         //generate validator api-token
         const validator_path = client
           .buildConfiguration()
@@ -112,8 +154,9 @@ export class ValidatorAccountManager {
           await Sleep(180000);
         }
         break;
+      }
 
-      case "teku":
+      case "teku": {
         const dataDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         if ((await this.nodeConnection.sshService.exec(`cat ${dataDir}/teku_api_password.txt`)).rc === 1) {
           log.error("Couldn't read API-Token");
@@ -129,12 +172,13 @@ export class ValidatorAccountManager {
           await Sleep(30000);
         }
         break;
+      }
     }
     try {
       let data = [];
       const apiToken = await this.getApiToken(client);
       this.nodeConnection.taskManager.otherTasksHandler(ref, `Get API Token`, true);
-      for (const batch of batches) {
+      for (const batch of this.batches) {
         const returnVal = await this.keystoreAPI(client, "POST", batch, apiToken);
         if (SSHService.checkExecError(returnVal) && returnVal.stderr) throw SSHService.extractExecError(returnVal);
         const response = JSON.parse(returnVal.stdout);
@@ -165,9 +209,9 @@ export class ValidatorAccountManager {
       let imported = 0;
       let duplicate = 0;
       let error = 0;
-      let pubkeys = batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
+      let pubkeys = this.batches.map((b) => b.keystores.map((c) => JSON.parse(c).pubkey)).flat();
       let message = data
-        .map((key, index, arr) => {
+        .map((key, index) => {
           if (key.status === "imported") imported++;
           if (key.status === "duplicate") duplicate++;
           if (key.status === "error") error++;
@@ -374,14 +418,22 @@ export class ValidatorAccountManager {
           );
           break;
 
-        case "nimbus":
+        case "nimbus": {
           //Nimbus only supports Graffiti changes while running via their rest api
           let command = client.command.find((c) => c.includes("--rest-port="));
           let port = command.replace("--rest-port=", "");
-          const mappedPort = client.ports.find((p) => p.servicePort == port);
-          config = `curl -s -X POST http://localhost:${mappedPort.destinationPort}/nimbus/v1/graffiti -H  "Content-Type: text/plain" -d "${graffiti}"`;
-          await this.nodeConnection.sshService.exec(config);
+
+          let CurlCommand = [
+            "docker run --rm --network=stereum curlimages/curl",
+            `curl http://stereum-${client.id}:${port}/nimbus/v1/graffiti`,
+            `-X POST`,
+            `-H 'Content-Type: text/plain'`,
+            `-d '${graffiti}'`,
+            `-s`,
+          ];
+          await this.nodeConnection.sshService.exec(CurlCommand.join(" "));
           break;
+        }
 
         case "teku":
           config = graffiti;
@@ -424,7 +476,7 @@ export class ValidatorAccountManager {
   async getApiToken(service) {
     let result = { rc: 1, stderr: "default" };
     switch (service.service) {
-      case "PrysmValidatorService":
+      case "PrysmValidatorService": {
         let path = "";
         if (typeof service.volumes[0] == "string") {
           path = ServiceVolume.buildByConfig(
@@ -443,6 +495,7 @@ export class ValidatorAccountManager {
         }
         result.stderr = "Couldn't find path";
         break;
+      }
       case "LighthouseValidatorService":
         result = await this.nodeConnection.sshService.exec(
           `docker exec -u 0 -w /opt/app/validator/validators stereum-${service.id} cat api-token.txt`

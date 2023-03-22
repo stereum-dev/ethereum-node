@@ -10,7 +10,6 @@
   border-radius: 10px;
   border: 1px solid #343434;
   box-shadow: 1px 1px 10px 1px #171717;
-  cursor: pointer;
   text-decoration: none;
   display: flex;
   justify-content: space-between;
