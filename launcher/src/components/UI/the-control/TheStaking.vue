@@ -14,7 +14,7 @@
               src="../../../../public/img/icon/control/stakingWu.svg"
               alt="coin-icon"
             /> -->
-            <img :src="networkCurrencySymbolIcon" />
+            <img :src="currencyIcon" />
           </div>
           <div class="top-value">
             <span>{{ formattedBalance }}</span>
@@ -40,18 +40,14 @@
 <script>
 import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";
-import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 import VerticalBarController from "./VerticalBarController.vue";
 export default {
   components: { VerticalBarController },
   data() {
     return {
-      //dummy value o test
-      networkCurrencySymbolIcon: "",
-      mainnetCurrencySymbolIcon: "/img/icon/control/mainnet-currency-symbol.png",
-      testnetCurrencySymbolIcon: "/img/icon/control/goETH_Currency_Symbol.png",
-      gnosisCurrencySymbolIcon: "/img/icon/control/gno_currency_symbol.png",
-      defaultCurrencySymbolIcon: "/img/icon/control/stakingWu.svg",
+      currencyIcon: "",
+      defaultIcon: "/img/icon/control/stakingWu.svg",
     };
   },
   computed: {
@@ -59,27 +55,15 @@ export default {
       totalBalance: "totalBalance",
       keys: "keys",
     }),
-    ...mapState(useServices, {
-      network: "network",
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
     formattedBalance() {
       return this.totalBalance.toFixed(5);
     },
   },
   mounted() {
-    switch (this.network) {
-      case "mainnet":
-        this.networkCurrencySymbolIcon = this.mainnetCurrencySymbolIcon;
-        break;
-      case "testnet":
-        this.networkCurrencySymbolIcon = this.testnetCurrencySymbolIcon;
-        break;
-      case "gnosis":
-        this.networkCurrencySymbolIcon = this.gnosisCurrencySymbolIcon;
-        break;
-      default:
-        this.networkCurrencySymbolIcon = this.defaultCurrencySymbolIcon;
-    }
+    this.currencyIcon = this.currentNetwork.network ? this.currentNetwork.currencyIcon : this.defaultIcon
   },
 };
 </script>

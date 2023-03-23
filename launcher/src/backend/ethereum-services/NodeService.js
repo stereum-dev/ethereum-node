@@ -4,9 +4,18 @@ import { StringUtils } from "../StringUtils.js";
 import * as path from "path";
 
 export const networks = {
-  goerli: "goerli",
-  prater: "prater",
-  mainnet: "mainnet",
+  mainnet: {
+    name: "mainnet",
+    dataEndpoint: "https://mainnet.beaconcha.in/api/v1",
+  },
+  goerli: {
+    name: "goerli",
+    dataEndpoint: "https://goerli.beaconcha.in/api/v1",
+  },
+  gnosis: {
+    name: "gnosis",
+    dataEndpoint: "https://beacon.gnosischain.com/api/v1",
+  }
 };
 
 export class NodeService {
@@ -45,7 +54,6 @@ export class NodeService {
     network,
     executionClients,
     consensusClients,
-    prometheusNodeExporterClients,
     mevboost
   ) {
     this.service = service;
@@ -59,12 +67,11 @@ export class NodeService {
     this.ports = ports === undefined || ports === null ? [] : ports;
     this.volumes = volumes === undefined || volumes === null ? [] : volumes;
     this.user = user === undefined || user === null ? "2000" : user;
-    this.network = network === undefined || network === null ? networks.prater : network;
+    this.network = network === undefined || network === null ? "goerli" : network;
 
     this.dependencies = {
       executionClients: executionClients,
       consensusClients: consensusClients,
-      prometheusNodeExporterClients: prometheusNodeExporterClients,
       mevboost: mevboost,
     };
   }
@@ -88,9 +95,6 @@ export class NodeService {
     this.dependencies = {
       executionClients: config.dependencies.executionClients ? config.dependencies.executionClients : [],
       consensusClients: config.dependencies.consensusClients ? config.dependencies.consensusClients : [],
-      prometheusNodeExporterClients: config.dependencies.prometheusNodeExporterClients
-        ? config.dependencies.prometheusNodeExporterClients
-        : [],
       mevboost: config.dependencies.mevboost ? config.dependencies.mevboost : [],
     };
   }
@@ -124,9 +128,6 @@ export class NodeService {
           service.buildMinimalConfiguration()
         ),
         consensusClients: (this.dependencies.consensusClients || []).map((service) =>
-          service.buildMinimalConfiguration()
-        ),
-        prometheusNodeExporterClients: (this.dependencies.prometheusNodeExporterClients || []).map((service) =>
           service.buildMinimalConfiguration()
         ),
         mevboost: (this.dependencies.mevboost || []).map((service) => service.buildMinimalConfiguration()),

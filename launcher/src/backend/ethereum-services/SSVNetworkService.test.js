@@ -1,5 +1,4 @@
 import { SSVNetworkService } from "./SSVNetworkService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 const log = require("electron-log");
 
@@ -44,7 +43,7 @@ test("buildConfiguration", () => {
   });
 
   const ssvService = SSVNetworkService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/ssv",
     [new GethService.GethService()],
@@ -87,13 +86,13 @@ test("getServiceConfiguration", () => {
   });
 
   const ssvService = SSVNetworkService.buildByUserInput(
-    networks.prater,
+    "prater",
     null,
     "/opt/stereum/ssv",
     [new GethService.GethService()],
     [new LighthouseBeaconService.LighthouseBeaconService()]
   ).getServiceConfiguration(
-    networks.prater,
+    "prater",
     [new GethService.GethService()],
     [new LighthouseBeaconService.LighthouseBeaconService()]
   );
@@ -106,7 +105,7 @@ test("getServiceConfiguration", () => {
 
 test("getAvailablePorts", () => {
   const service = SSVNetworkService.buildByUserInput(
-    networks.prater,
+    "prater",
     null,
     "/opt/stereum/ssv",
     [],
@@ -118,7 +117,7 @@ test("getAvailablePorts", () => {
 
 test("service name", () => {
   const service = SSVNetworkService.buildByUserInput(
-    networks.prater,
+    "prater",
     null,
     "/opt/stereum/ssv",
     [],
@@ -130,7 +129,7 @@ test("service name", () => {
 
 test("autoupdate", () => {
   const service = SSVNetworkService.buildByUserInput(
-    networks.prater,
+    "prater",
     null,
     "/opt/stereum/ssv",
     [],

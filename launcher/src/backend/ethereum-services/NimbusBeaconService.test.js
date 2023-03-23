@@ -1,5 +1,4 @@
 import { NimbusBeaconService } from "./NimbusBeaconService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
@@ -43,7 +42,7 @@ test("buildConfiguration", () => {
   });
 
   const nimbusService = NimbusBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/nimbus",
     [new GethService.GethService()],
@@ -97,7 +96,7 @@ test("buildConsensusClientWsEndpointUrl", () => {
   });
 
   const nimbusEndpoint = NimbusBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/nimbus",
     [new GethService.GethService()],
@@ -129,7 +128,7 @@ test("getAvailablePorts", () => {
     };
   });
   const nimbusServicePorts = NimbusBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/nimbus",
     [new GethService.GethService()],
@@ -161,7 +160,7 @@ test("network", () => {
     };
   });
   const nimbusService = NimbusBeaconService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/nimbus",
     [new GethService.GethService()],

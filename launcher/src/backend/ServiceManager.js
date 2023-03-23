@@ -145,13 +145,6 @@ export class ServiceManager {
               return services.find((dependency) => dependency.id === client.id);
             });
           }
-          if (service.dependencies.prometheusNodeExporterClients.length > 0) {
-            service.dependencies.prometheusNodeExporterClients = service.dependencies.prometheusNodeExporterClients.map(
-              (client) => {
-                return services.find((dependency) => dependency.id === client.id);
-              }
-            );
-          }
           if (service.dependencies.mevboost.length > 0) {
             service.dependencies.mevboost = service.dependencies.mevboost.map((client) => {
               return services.find((dependency) => dependency.id === client.id);
