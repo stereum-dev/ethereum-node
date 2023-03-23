@@ -1,8 +1,6 @@
 <template>
   <div class="thestaking-parent">
-    <div class="header">
-      <node-header></node-header>
-    </div>
+    <node-header id="head" />
     <StakingGrid />
   </div>
 </template>
@@ -16,8 +14,7 @@ export default {
 };
 </script>
 <style scoped>
-.header {
-  height: 50px;
+#head {
   position: fixed;
   top: 0;
   z-index: 10;
