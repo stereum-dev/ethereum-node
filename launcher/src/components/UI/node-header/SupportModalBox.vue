@@ -7,7 +7,7 @@
       <img :src="boxImagePath" alt="support photo" />
     </div>
     <div class="support-modal-box_text">
-      <p>{{ boxText }}</p>
+      <span>{{ boxText }}</span>
     </div>
   </div>
 </template>
@@ -83,11 +83,11 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 53%;
+  text-align: center;
+}
+.support-modal-box_text span {
+  font-size: 55%;
   font-weight: 500;
   color: #bfbfbf;
-  padding: 0;
-  margin: 0;
-  text-align: center;
 }
 </style>
