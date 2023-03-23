@@ -299,8 +299,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }/eth/v1/keystores`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -312,43 +311,41 @@ export class ValidatorAccountManager {
   }
 
   async insertSSVNetworkKeys(service, sk) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const dataDir = service.config.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
-        let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout;
-        if (ssvConfig) {
-          const escapedConfigFile = StringUtils.escapeStringForShell(
-            ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + sk + '"')
-          );
-          await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
+    try {
+      const dataDir = service.config.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
+      let ssvConfig = (await this.nodeConnection.sshService.exec(`cat ${dataDir}/config.yaml`)).stdout;
+      if (ssvConfig) {
+        const escapedConfigFile = StringUtils.escapeStringForShell(
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + sk + '"')
+        );
+        await this.nodeConnection.sshService.exec(`echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
 
-          await this.serviceManager.manageServiceState(service.config.serviceID, "stopped");
-          await this.serviceManager.manageServiceState(service.config.serviceID, "started");
+        await this.serviceManager.manageServiceState(service.config.serviceID, "stopped");
+        await this.serviceManager.manageServiceState(service.config.serviceID, "started");
 
-          let pk = undefined;
-          let tries = 0;
-          while (pk === undefined) {
-            let logs = await this.nodeConnection.getServiceLogs(service.config.serviceID);
-            if (new RegExp(/"public-key": "(.*)"/gm).test(logs)) {
-              pk = new RegExp(/"public-key": "(.*)"/gm).exec(logs)[1];
-            }
-            tries++;
-            if (tries === 20) {
-              throw new Error('"public-key" was not found in service logs');
-            }
+        let pk = undefined;
+        let tries = 0;
+        while (pk === undefined) {
+          let logs = await this.nodeConnection.getServiceLogs(service.config.serviceID);
+          if (new RegExp(/"public-key": "(.*)"/gm).test(logs)) {
+            pk = new RegExp(/"public-key": "(.*)"/gm).exec(logs)[1];
           }
-          let serviceConfig = await this.nodeConnection.readServiceConfiguration(service.config.serviceID);
-          serviceConfig.ssv_pk = pk;
-          await this.nodeConnection.writeServiceConfiguration(serviceConfig);
-          return resolve(serviceConfig.ssv_pk);
-        } else {
-          throw new Error("no ssv config.yaml");
+          tries++;
+          if (tries === 20) {
+            throw new Error('"public-key" was not found in service logs');
+          }
         }
-      } catch (err) {
-        log.error("Inserting Keys failed:\n", err);
-        return reject(err);
+        let serviceConfig = await this.nodeConnection.readServiceConfiguration(service.config.serviceID);
+        serviceConfig.ssv_pk = pk;
+        await this.nodeConnection.writeServiceConfiguration(serviceConfig);
+        return serviceConfig.ssv_pk
+      } else {
+        throw new Error("no ssv config.yaml");
       }
-    });
+    } catch (err) {
+      log.error("Inserting Keys failed:\n", err);
+      return err
+    }
   }
   // deactivated on the front end side
   async addFeeRecipient(keys, address) {

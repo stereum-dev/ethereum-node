@@ -167,7 +167,7 @@ test("nimbus validator import", async () => {
   }
 
   //check nimbus service logs
-  expect(status.stdout).toMatch(/Eth1 chain monitoring failure, restarting/);
+  expect(status.stdout).toMatch(/Failed to obtain the most recent known block from the execution layer node \(the node is probably not synced\)/);
   expect(status.stdout).toMatch(/Parameter \[result\] expected JObject but got JNull/);
   expect(status.stdout).toMatch(/Local validator attached/);
 });

@@ -271,7 +271,6 @@ test("prepareStereumNode success", async () => {
 
   expect(mMock.mock.calls.length).toBe(7);
 
-  const i = 0;
   expect(mMock.mock.calls[0][0]).toMatch(/cat/);
   expect(mMock.mock.calls[0][0]).toMatch(/stereum.yaml/);
 
@@ -388,7 +387,7 @@ test("playbookStatus failure", async () => {
   jest.mock("./SSHService");
   const SSHService = require("./SSHService");
   const mMock = jest.fn();
-  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 1, stderr: "err-1" })));
+  mMock.mockReturnValueOnce(new Promise((resolve) => resolve({ rc: 1, stderr: "err-1" })));
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
@@ -411,7 +410,7 @@ test("playbookStatus success", async () => {
   jest.mock("./SSHService");
   const SSHService = require("./SSHService");
   const mMock = jest.fn();
-  mMock.mockReturnValueOnce(new Promise(async (resolve, reject) => resolve({ rc: 0, stdout: "playbook-output" })));
+  mMock.mockReturnValueOnce(new Promise((resolve) => resolve({ rc: 0, stdout: "playbook-output" })));
   SSHService.SSHService.mockImplementation(() => {
     return {
       exec: mMock,
