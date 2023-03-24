@@ -54,7 +54,6 @@ test("findStereumSettings", async () => {
       stdout: `stereum_settings:
   settings:
     controls_install_path: /opt/stereum/mock
-    os_user: stereum_mock
     updates:
       in_progress:
       lane: stable_mock
@@ -78,7 +77,6 @@ test("findStereumSettings", async () => {
   await nodeConnection.findStereumSettings();
 
   expect(nodeConnection.settings.stereum.settings.controls_install_path).toMatch(/\/opt\/stereum\/mock/);
-  expect(nodeConnection.settings.stereum.settings.os_user).toMatch(/stereum_mock/);
 });
 
 test("findStereumSettings failure", async () => {
@@ -90,7 +88,6 @@ test("findStereumSettings failure", async () => {
       stdout: `stereum:
   settings:
     controls_install_path: /opt/stereum/mock
-    os_user: stereum_mock
     updates:
       in_progress:
       lane: stable_mock

@@ -468,7 +468,7 @@ export class ServiceManager {
       service: task.service.config.serviceID,
     });
   }
-  //args: network, installDir, port, executionClients, checkpointURL, beaconServices
+  //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
   getService(name, args) {
     let ports;
     switch (name) {
@@ -515,7 +515,7 @@ export class ServiceManager {
           ports,
           args.installDir + "/lighthouse",
           args.executionClients,
-          [],
+          args.mevboost ? args.mevboost : [],
           args.checkpointURL
         );
 
@@ -540,7 +540,7 @@ export class ServiceManager {
           ports,
           args.installDir + "/prysm",
           args.executionClients,
-          [],
+          args.mevboost ? args.mevboost : [],
           args.checkpointURL
         );
 
@@ -565,7 +565,7 @@ export class ServiceManager {
           ports,
           args.installDir + "/lodestar",
           args.executionClients,
-          [],
+          args.mevboost ? args.mevboost : [],
           args.checkpointURL
         );
 
@@ -590,7 +590,7 @@ export class ServiceManager {
           ports,
           args.installDir + "/nimbus",
           args.executionClients,
-          [],
+          args.mevboost ? args.mevboost : [],
           args.checkpointURL
         );
 
@@ -606,7 +606,7 @@ export class ServiceManager {
           ports,
           args.installDir + "/teku",
           args.executionClients,
-          [],
+          args.mevboost ? args.mevboost : [],
           args.checkpointURL
         );
 
@@ -632,6 +632,13 @@ export class ServiceManager {
 
       case "ValidatorEjectorService":
         return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
+
+      case "SSVNetworkService":
+        ports = [
+          new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
+          new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
+        ];
+        return SSVNetworkService.buildByUserInput(args.network, ports, args.installDir + "/ssv_network", args.executionClients, args.beaconServices);
     }
   }
 
@@ -696,6 +703,24 @@ export class ServiceManager {
         await this.nodeConnection.sshService.exec(
           `cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${service.id}"`
         );
+      } else if (service.service.includes("SSVNetwork")) {
+        await this.nodeConnection.runPlaybook("ssv-key-generator", {
+          stereum_role: "ssv-key-generator",
+          ssv_key_service: service.id,
+        });
+        const config = await this.nodeConnection.readServiceConfiguration(service.id);
+        let ssvConfig = service.getServiceConfiguration(
+          service.network,
+          service.dependencies.executionClients,
+          service.dependencies.consensusClients
+        );
+
+        // prepare service's config file
+        const dataDir = service.volumes.find((vol) => vol.servicePath === "/data").destinationPath;
+        const escapedConfigFile = StringUtils.escapeStringForShell(
+          ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + config.ssv_sk + '"')
+        );
+        this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
       }
     }
   }
@@ -787,7 +812,7 @@ export class ServiceManager {
       });
     } while (changed === true);
 
-    await this.createKeystores(newServices.filter((s) => s.service.includes("Teku") || s.service.includes("Nimbus")));
+    await this.createKeystores(newServices.filter((s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")));
     let versions;
     try {
       versions = await this.nodeConnection.checkUpdates();

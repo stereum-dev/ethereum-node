@@ -61,13 +61,12 @@ export default {
       let URL = "https://discord.gg/DzAwgnSXtB";
       window.open(URL, "_blank");
     },
-    openGnoEthDocs(network) {
-      network = this.network;
+    openGnoEthDocs() {
       let url;
-      if (network === "mainnet" || network === "testnet") {
-        url = "https://ethereum.org/en/developers/docs/";
-      } else if (network === "gnosis") {
+      if (this.currentNetwork.network === "gnosis") {
         url = "https://docs.gnosischain.com/node/guide/";
+      } else {
+        url = "https://ethereum.org/en/developers/docs/";
       }
       window.open(url, "_blank");
     },

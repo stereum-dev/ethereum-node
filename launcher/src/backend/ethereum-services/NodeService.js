@@ -15,6 +15,10 @@ export const networks = {
   gnosis: {
     name: "gnosis",
     dataEndpoint: "https://beacon.gnosischain.com/api/v1",
+  },
+  sepolia: {
+    name: "sepolia",
+    dataEndpoint: "https://sepolia.beaconcha.in/api/v1",
   }
 };
 

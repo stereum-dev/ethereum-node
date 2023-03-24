@@ -34,11 +34,7 @@ export default {
   },
   data() {
     return {
-      isTestnetActive: false,
       isButtonEnabled: false,
-      testnetBtn: false,
-      isMainnetActive: false,
-      mainnetBtn: false,
     };
   },
   computed: {
@@ -49,18 +45,6 @@ export default {
   methods: {
     enableButtonHandler() {
       this.isButtonEnabled = true;
-    },
-    testnetActive() {
-      this.isTestnetActive = true;
-      this.testnetBtn = true;
-      this.isMainnetActive = false;
-      this.mainnetBtn = false;
-    },
-    mainnetActive() {
-      this.isMainnetActive = true;
-      this.mainnetBtn = true;
-      this.isTestnetActive = false;
-      this.testnetBtn = false;
     },
     clickedToInstall() {
       if (Object.keys(this.selectedPreset).length > 0) {

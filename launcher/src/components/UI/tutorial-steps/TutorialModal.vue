@@ -60,21 +60,7 @@ export default {
       ],
     };
   },
-  computed: {
-    checkLinks() {
-      this.steps.map((item) => {
-        if (item.name == "videos") {
-          item.videosLink = this.itemToTutorial.videosLink;
-        } else if (item.name == "walkthrough") {
-          item.guideLink = this.itemToTutorial.guideLink;
-        } else if (item.name == "text guide") {
-          item.writtenLink = this.itemToTutorial.writtenLink;
-        } else {
-          return;
-        }
-      });
-    },
-  },
+  computed: {},
   methods: {},
 };
 </script>

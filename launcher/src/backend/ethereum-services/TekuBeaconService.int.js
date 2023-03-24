@@ -8,7 +8,6 @@ import { StringUtils } from "../StringUtils.js";
 import { ServiceManager } from "../ServiceManager.js";
 import { TekuBeaconService } from "./TekuBeaconService.js";
 import { GethService } from "./GethService.js";
-import { ServiceVolume } from "./ServiceVolume.js";
 const log = require("electron-log");
 
 jest.setTimeout(1000000);

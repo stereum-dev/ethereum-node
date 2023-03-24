@@ -38,7 +38,7 @@ export default {
           name: "",
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: true,
         },
         {
@@ -55,7 +55,7 @@ export default {
           name: this.$t("nodeSidebarVideo.alert"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -63,7 +63,7 @@ export default {
           name: this.$t("nodeSidebarVideo.switchC"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -71,7 +71,7 @@ export default {
           name: this.$t("nodeSidebarVideo.migrate"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -79,7 +79,7 @@ export default {
           name: this.$t("nodeSidebarVideo.rpc"),
           videosLink: "https://www.youtube.com/embed/iFzSdjg9r6U",
           writtenLink: "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: true,
         },
       ],
@@ -122,6 +122,7 @@ export default {
           name: this.$t("nodeSidebarVideo.gnoStake"),
           videosLink: "https://www.youtube.com/embed/qORXGzhZPns",
           writtenLink: "https://stereum.net/ethereum-node-setup/gno-solo-staking/",
+          guideLink: "",
           display: true,
         }
       } else if(this.currentNetwork.network) {
@@ -129,6 +130,7 @@ export default {
           name: this.$t("nodeSidebarVideo.stake"),
           videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
           writtenLink: "https://stereum.net/eth-solo-staking-step-by-step-guide/",
+          guideLink: "",
           display: true,
         }
       }

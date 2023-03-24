@@ -10,7 +10,7 @@ export class StorageService {
   }
 
   async readConfig() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       resolve(this.store.get("config-v2"));
     });
   }

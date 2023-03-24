@@ -27,11 +27,8 @@
               @replace-plugin="replacePluginHandler"
             >
             </replace-panel>
-            <node-configuration v-else @modal-preset="openPresetModal"></node-configuration>
+            <node-configuration v-else ></node-configuration>
           </Transition>
-        </div>
-        <div v-if="presetModal" class="preset-modal">
-          <preset-modal @close-preset="closePresetModal"></preset-modal>
         </div>
         <div class="drop-parent">
           <switch-network></switch-network>
@@ -104,7 +101,6 @@ import BaseModal from "../components/UI/node-manage/BaseModal.vue";
 import AddPanel from "../components/UI/node-manage/AddPanel.vue";
 import ModifyPanel from "../components/UI/node-manage/ModifyPanel.vue";
 import ReplacePanel from "../components/UI/node-manage/ReplacePanel.vue";
-import PresetModal from "../components/UI/node-manage/PresetModal.vue";
 import SwitchNetwork from "../components/UI/node-manage/SwitchNetwork.vue";
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
@@ -119,7 +115,6 @@ export default {
     ChangeConfirm,
     DropZone,
     BaseModal,
-    PresetModal,
     TaskManager,
     AddPanel,
     ModifyPanel,
@@ -132,7 +127,6 @@ export default {
     return {
       dragging: false,
       isModalActive: false,
-      presetModal: false,
       modalItems: [],
       displayCustomAddPanel: false,
       displayCustomModifyPanel: false,
@@ -179,14 +173,8 @@ export default {
       this.isModalActive = true;
       this.modalItems = data;
     },
-    openPresetModal() {
-      this.presetModal = true;
-    },
     closeModal() {
       this.isModalActive = false;
-    },
-    closePresetModal() {
-      this.presetModal = false;
     },
     startDrag(event, item) {
       if (event.type === "dragstart") {
@@ -356,16 +344,6 @@ export default {
 
 .activeAddPanel {
   left: 0 !important;
-}
-
-.preset-modal {
-  width: 81.5%;
-  height: 86.4%;
-  border-radius: 35px;
-  z-index: 5;
-  position: absolute;
-  top: 9%;
-  left: 18%;
 }
 
 .drop-parent {
