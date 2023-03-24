@@ -347,7 +347,6 @@ test("prepareStereumNode failure playbook", async () => {
   });
 
   expect(mMock.mock.calls.length).toBe(6);
-  console.log(mMock.mock.calls)
   expect(mMock.mock.calls[1][0]).toMatch(/cat/);
   expect(mMock.mock.calls[1][0]).toMatch(/release/);
 
