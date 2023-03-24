@@ -322,7 +322,16 @@ export default {
     },
     resyncServices() {
       const copyOfInstalledServices = [...this.installedServices];
-      return copyOfInstalledServices.filter((obj) => ["execution", "consensus"].includes(obj.category));
+      return copyOfInstalledServices
+        .filter((obj) => ["execution", "consensus"].includes(obj.category))
+        .sort((a, b) => {
+          if (a.category === "execution") return -1;
+          if (b.category === "execution") return 1;
+          if (a.category === "consensus") return -1;
+          if (b.category === "consensus") return 1;
+
+          return 0;
+        });
     },
 
     checkServerNameWidth() {
