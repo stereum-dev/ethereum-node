@@ -92,8 +92,8 @@
       <the-node-panel-btn
         img-path="/img/icon/plugin-menu-icons/resync.png"
         is-color="gold"
-        width="14"
-        margin-right="3"
+        width="12"
+        margin-right="5"
         btn-action="resyncToggle"
         grid-row="6/7"
         @btn-action="resyncToggle"
@@ -124,7 +124,7 @@
       >
       <div class="log-navigation">
         <service-log-button
-          v-for="service in sortedServices"
+          v-for="service in resyncServices"
           :key="service"
           :client-name="service.name"
           :client-type="service.category"
@@ -306,6 +306,7 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+
     sortedServices() {
       const copyOfInstalledServices = [...this.installedServices];
 
@@ -319,6 +320,11 @@ export default {
         return 0;
       });
     },
+    resyncServices() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices.filter((obj) => ["execution", "consensus"].includes(obj.category));
+    },
+
     checkServerNameWidth() {
       if (this.serverNameWidth > this.nameParentWidth) {
         return true;
