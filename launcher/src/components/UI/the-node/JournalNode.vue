@@ -94,12 +94,46 @@
         is-color="gold"
         width="14"
         margin-right="3"
-        btn-action="restartToggle"
+        btn-action="resyncToggle"
         grid-row="6/7"
-        @btn-action="restartToggle"
+        @btn-action="resyncToggle"
         >resync<span class="ml-1">. . .</span></the-node-panel-btn
       >
     </div>
+
+    <div v-if="openResync" class="configBtn">
+      <the-node-panel-btn
+        img-path="/img/icon/plugin-menu-icons/resync.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        img-path="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="resyncToggle"
+        grid-row="2/3"
+        @btn-action="resyncToggle"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in sortedServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log="displayPluginLogPage(service)"
+        ></service-log-button>
+      </div>
+    </div>
+
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/log-icon.png"
@@ -250,6 +284,7 @@ export default {
       serverNameWidth: null,
       nameParentWidth: null,
       confirmModal: false,
+      openResync: false,
     };
   },
 
@@ -321,6 +356,9 @@ export default {
     },
     restartToggle() {
       this.openRestart = !this.openRestart;
+    },
+    resyncToggle() {
+      this.openResync = !this.openResync;
     },
     restartModalClose() {
       this.restartModalShow = false;
