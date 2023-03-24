@@ -89,6 +89,16 @@
         @btn-action="restartToggle"
         >{{ $t("journalnode.restart") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
+      <the-node-panel-btn
+        img-path="/img/icon/plugin-menu-icons/resync.png"
+        is-color="gold"
+        width="14"
+        margin-right="3"
+        btn-action="restartToggle"
+        grid-row="6/7"
+        @btn-action="restartToggle"
+        >resync<span class="ml-1">. . .</span></the-node-panel-btn
+      >
     </div>
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
