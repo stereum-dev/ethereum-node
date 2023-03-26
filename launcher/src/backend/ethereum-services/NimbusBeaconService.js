@@ -74,7 +74,6 @@ export class NimbusBeaconService extends NodeService {
       network, // network,
       executionClients, //executionClients
       null, //consensusClients
-      null, //prometheusNodeExporterClients
       mevboost //mevboost
     );
     if (checkpointURL) service.command.push("--trusted-node-url=" + checkpointURL);

@@ -1,5 +1,4 @@
 import { PrysmBeaconService } from "./PrysmBeaconService";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
@@ -32,7 +31,7 @@ test("buildConfiguration", () => {
   });
 
   const prysm = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm/",
     [new GethService.GethService(), new GethService.GethService()],
@@ -78,7 +77,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
   ];
 
   const prysm = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     [new GethService.GethService()],
@@ -116,7 +115,7 @@ test("buildConsensusClientGateway", () => {
   ];
 
   const prysm = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     [new GethService.GethService()],
@@ -165,7 +164,7 @@ test("buildConsensusClientEndpoint", () => {
   });
 
   const prysm = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     [new GethService.GethService()],
@@ -198,7 +197,7 @@ test("getAvailablePorts", () => {
   });
 
   const prysmPorts = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/prysm",
     [new GethService.GethService()],
@@ -231,7 +230,7 @@ test("network", () => {
   });
 
   const prysmNetwork = PrysmBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/prysm",
     [new GethService.GethService()],

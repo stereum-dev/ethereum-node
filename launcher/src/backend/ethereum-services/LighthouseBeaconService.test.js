@@ -1,5 +1,4 @@
 import { LighthouseBeaconService } from "./LighthouseBeaconService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
@@ -43,7 +42,7 @@ test("buildConfiguration", () => {
   });
 
   const lhService = LighthouseBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/lh",
     [new GethService.GethService()],
@@ -89,7 +88,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
   ];
 
   const lhService = LighthouseBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/lh",
     [new GethService.GethService()],
@@ -121,7 +120,7 @@ test("getAvailablePorts", () => {
     };
   });
   const lhServicePorts = LighthouseBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/lh",
     [new GethService.GethService()],
@@ -153,7 +152,7 @@ test("network", () => {
     };
   });
   const lhServicePorts = LighthouseBeaconService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/lh",
     [new GethService.GethService()],

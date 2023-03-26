@@ -26,7 +26,7 @@ import { mapWritableState } from "pinia";
 //import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 
 export default {
   data() {
@@ -38,7 +38,7 @@ export default {
           name: "",
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: true,
         },
         {
@@ -55,7 +55,7 @@ export default {
           name: this.$t("nodeSidebarVideo.alert"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -63,7 +63,7 @@ export default {
           name: this.$t("nodeSidebarVideo.switchC"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -71,7 +71,7 @@ export default {
           name: this.$t("nodeSidebarVideo.migrate"),
           videosLink: "",
           writtenLink: "",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: false,
         },
         {
@@ -79,7 +79,7 @@ export default {
           name: this.$t("nodeSidebarVideo.rpc"),
           videosLink: "https://www.youtube.com/embed/iFzSdjg9r6U",
           writtenLink: "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
-          guideLink: "https://stereum.net/",
+          guideLink: "",
           display: true,
         },
       ],
@@ -93,13 +93,13 @@ export default {
     ...mapWritableState(useTutorialStore, {
       showTutorialModal: "showTutorialModal",
     }),
-    ...mapState(useServices, {
-      network: "network",
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
   },
 
   watch: {
-    network: {
+    currentNetwork: {
       handler() {
         this.serviceController();
       },
@@ -117,26 +117,22 @@ export default {
   },
   methods: {
     serviceController() {
-      switch (this.network) {
-        case "gnosis":
-          this.configData[0].name = this.$t("nodeSidebarVideo.gnoStake");
-          this.configData[0].videosLink = "https://www.youtube.com/embed/qORXGzhZPns";
-          this.configData[0].writtenLink = "https://stereum.net/ethereum-node-setup/gno-solo-staking/";
-          break;
-        case "mainnet":
-          this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink = "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink = "https://stereum.net/eth-solo-staking-step-by-step-guide/";
-          break;
-        case "testnet":
-          this.configData[0].name = this.$t("nodeSidebarVideo.stake");
-          this.configData[0].videosLink = "https://www.youtube.com/embed/bfToZ_wTh_Q";
-          this.configData[0].writtenLink = "https://stereum.net/eth-solo-staking-step-by-step-guide/";
-          break;
-        default:
-          this.configData[0].name = "Wait...";
-          this.configData[0].videosLink = "";
-          this.configData[0].writtenLink = "";
+      if(this.currentNetwork.network == "gnosis"){
+        this.configData[0] = {
+          name: this.$t("nodeSidebarVideo.gnoStake"),
+          videosLink: "https://www.youtube.com/embed/qORXGzhZPns",
+          writtenLink: "https://stereum.net/ethereum-node-setup/gno-solo-staking/",
+          guideLink: "",
+          display: true,
+        }
+      } else if(this.currentNetwork.network) {
+          this.configData[0] = {
+          name: this.$t("nodeSidebarVideo.stake"),
+          videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
+          writtenLink: "https://stereum.net/eth-solo-staking-step-by-step-guide/",
+          guideLink: "",
+          display: true,
+        }
       }
     },
   },

@@ -5,6 +5,7 @@ import * as crypto from "crypto";
 import { SSHService } from "./SSHService.js";
 import { validatorPorts } from "./ethereum-services/ServicePort.js";
 import { ServiceVolume } from "./ethereum-services/ServiceVolume.js";
+import { networks } from "./ethereum-services/NodeService.js";
 
 import axios from "axios";
 
@@ -49,14 +50,9 @@ export class ValidatorAccountManager {
     let isActiveRunning = [];
 
     if (pubkeys.length < 11) {
-      let networkURLs = {
-        mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
-        goerli: "https://goerli.beaconcha.in/api/v1/validator/",
-        gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
-      };
       try {
         for (const pubkey of pubkeys) {
-          let latestEpochsResponse = await axios.get(networkURLs[client.network] + pubkey + "/attestations");
+          let latestEpochsResponse = await axios.get(networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations");
           if (
             latestEpochsResponse.status === 200 &&
             latestEpochsResponse.data.data.length > 0 &&

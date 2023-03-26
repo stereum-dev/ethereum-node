@@ -180,14 +180,14 @@ export default {
     },
     checkAvailableRelays() {
       this.availableBlocks = this.shuffleRelaysList(
-        this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+        this.relaysList.filter((r) => r[this.configNetwork?.network?.toLowerCase()])
       );
     },
   },
   mounted() {
     this.getInstallPath();
     this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+      this.relaysList.filter((r) => r[this.configNetwork?.network?.toLowerCase()])
     );
   },
   methods: {
@@ -210,7 +210,7 @@ export default {
     saveConfig() {
       let dependencies = toRaw(this.options).filter((s) => s.selectedForConnection);
       this.$emit("saveConfig", {
-        network: this.configNetwork.network === "testnet" ? "goerli" : this.configNetwork.network,
+        network: this.configNetwork.network,
         installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
         executionClients: dependencies.filter((s) => s.category === "execution"),

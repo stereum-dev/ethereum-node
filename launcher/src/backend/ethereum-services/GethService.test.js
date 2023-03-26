@@ -1,59 +1,57 @@
 import { GethService } from "./GethService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { ServiceVolume } from "./ServiceVolume.js";
 
 test("id test", () => {
-  expect(GethService.buildByUserInput(networks.prater).id).toBeDefined();
+  expect(GethService.buildByUserInput("prater").id).toBeDefined();
 });
 
 test("network test goerli", () => {
-  expect(GethService.buildByUserInput(networks.goerli, null, null).buildConfiguration().command).toContain("--goerli");
+  expect(GethService.buildByUserInput("goerli", null, null).buildConfiguration().command).toContain("--goerli");
 });
 
 test("network test mainnet", () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildConfiguration().command).not.toContain(
+  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().command).not.toContain(
     "--goerli"
   );
 });
 
 test("user", () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildConfiguration().user).toMatch(/root/);
+  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().user).toMatch(/root/);
 });
 
 test("image", () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildConfiguration().image).toMatch(
+  expect(GethService.buildByUserInput("mainnet", null, null).buildConfiguration().image).toMatch(
     /ethereum\/client-go/
   );
 });
 
 test("endpoint url", () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientHttpEndpointUrl()).toMatch(
+  expect(GethService.buildByUserInput("mainnet", null, null).buildExecutionClientHttpEndpointUrl()).toMatch(
     new RegExp("^http://stereum-.*:8545")
   );
 });
 
 test("endpoint ws url", () => {
-  expect(GethService.buildByUserInput(networks.mainnet, null, null).buildExecutionClientWsEndpointUrl()).toMatch(
+  expect(GethService.buildByUserInput("mainnet", null, null).buildExecutionClientWsEndpointUrl()).toMatch(
     new RegExp("^ws://stereum-.*:8546")
   );
 });
 
 test("empty ports", () => {
-  expect(GethService.buildByUserInput(networks.goerli, null, null).buildConfiguration().ports).toHaveLength(0);
+  expect(GethService.buildByUserInput("goerli", null, null).buildConfiguration().ports).toHaveLength(0);
 });
 
 test("ports", () => {
   expect(
     GethService.buildByUserInput(
-      networks.goerli,
+      "goerli",
       [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
       null
     ).buildConfiguration().ports
   ).toHaveLength(1);
   expect(
     GethService.buildByUserInput(
-      networks.goerli,
+      "goerli",
       [new ServicePort(null, 100, 200, servicePortProtocol.tcp)],
       null
     ).buildConfiguration().ports
@@ -67,7 +65,7 @@ test("multiple ports", () => {
     new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp),
   ];
 
-  const gethService = GethService.buildByUserInput(networks.goerli, ports, null).buildConfiguration();
+  const gethService = GethService.buildByUserInput("goerli", ports, null).buildConfiguration();
 
   expect(gethService.ports).toHaveLength(3);
   expect(gethService.ports).toContain("0.0.0.0:100:200/tcp");
@@ -76,9 +74,7 @@ test("multiple ports", () => {
 });
 
 test("workingDir", () => {
-  const volumes = [new ServiceVolume("/opt/stereum/foo", "/opt/app/bar")];
-
-  const gethConfig = GethService.buildByUserInput(networks.goerli, null, "opt//stereum/geth/").buildConfiguration();
+  const gethConfig = GethService.buildByUserInput("goerli", null, "opt//stereum/geth/").buildConfiguration();
 
   expect(gethConfig.volumes).toHaveLength(2);
   expect(gethConfig.volumes).toContain("/opt/stereum/geth-" + gethConfig.id + "/data:/opt/data/geth");
