@@ -102,102 +102,101 @@ export class NodeConnection {
    */
   async prepareStereumNode(installationDirectory) {
     this.installationDirectory = installationDirectory;
-    return new Promise(async (resolve, reject) => {
-      if (!this.os) {
-        log.debug("os not found yet");
-        await this.findOS();
-      }
+    if (!this.os) {
+      log.debug("os not found yet");
+      await this.findOS();
+    }
 
-      /**
-       * install necessary OS packages
-       */
-      log.info("installing necessary os packages");
-      const ref = StringUtils.createRandomString();
-      this.taskManager.tasks.push({
-        name: "install os packages",
+    /**
+     * install necessary OS packages
+     */
+    log.info("installing necessary os packages");
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({
+      name: "install os packages",
+      otherRunRef: ref,
+    });
+
+    log.debug("this.os: ", this.os);
+    log.debug("nodeOS.ubuntu: ", nodeOS.ubuntu);
+    if (this.os == nodeOS.centos) {
+      this.taskManager.otherSubTasks.push({
+        name: "Check OS",
         otherRunRef: ref,
+        status: false,
       });
-
-      log.debug("this.os: ", this.os);
-      log.debug("nodeOS.ubuntu: ", nodeOS.ubuntu);
-      if (this.os == nodeOS.centos) {
-        this.taskManager.otherSubTasks.push({
-          name: "Check OS",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("not implemented yet");
-      } else if (this.os == nodeOS.ubuntu) {
-        log.debug("procede on ubuntu");
-        this.taskManager.otherSubTasks.push({
-          name: "Check OS",
-          otherRunRef: ref,
-          status: true,
-        });
-        let installPkgResult;
-        try {
-          installPkgResult = await this.sshService.exec(
-            "apt update &&\
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("not implemented yet")
+    } else if (this.os == nodeOS.ubuntu) {
+      log.debug("procede on ubuntu");
+      this.taskManager.otherSubTasks.push({
+        name: "Check OS",
+        otherRunRef: ref,
+        status: true,
+      });
+      let installPkgResult;
+      try {
+        installPkgResult = await this.sshService.exec(
+          "apt update &&\
                     apt install -y software-properties-common &&\
                     add-apt-repository --yes --update ppa:ansible/ansible &&\
                     apt install -y pip ansible tar gzip wget git"
-          );
-        } catch (err) {
-          log.error(err);
-          installPkgResult = { rc: 1, stderr: err };
-        }
-        if (SSHService.checkExecError(installPkgResult)) {
-          this.taskManager.otherSubTasks.push({
-            name: "installing packages",
-            otherRunRef: ref,
-            status: false,
-            data:
-              "This error might occur beacuse of a missing interaction. Running this command manually may fix this problem: apt update && apt install -y software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install -y pip ansible tar gzip wget git \n\n\nError: " +
-              installPkgResult.stderr,
-          });
-          this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-          return reject("Can't install os packages: " + SSHService.extractExecError(installPkgResult));
-        }
+        );
+      } catch (err) {
+        log.error(err);
+        installPkgResult = { rc: 1, stderr: err };
+      }
+      if (SSHService.checkExecError(installPkgResult)) {
         this.taskManager.otherSubTasks.push({
           name: "installing packages",
           otherRunRef: ref,
-          status: true,
-        });
-      } else {
-        this.taskManager.otherSubTasks.push({
-          name: "Check OS",
-          otherRunRef: ref,
           status: false,
+          data:
+            "This error might occur beacuse of a missing interaction. Running this command manually may fix this problem: apt update && apt install -y software-properties-common && add-apt-repository --yes --update ppa:ansible/ansible && apt install -y pip ansible tar gzip wget git \n\n\nError: " +
+            installPkgResult.stderr,
         });
         this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("unsupported OS");
+        throw new Error("Can't install os packages: " + SSHService.extractExecError(installPkgResult));
       }
+      this.taskManager.otherSubTasks.push({
+        name: "installing packages",
+        otherRunRef: ref,
+        status: true,
+      });
+    } else {
+      this.taskManager.otherSubTasks.push({
+        name: "Check OS",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("unsupported OS");
+    }
 
-      /**
-       * remove stereum ansible playbooks & roles if exist
-       */
-      await this.sshService.exec(`rm -rf ${this.installationDirectory}/ansible`);
+    /**
+     * remove stereum ansible playbooks & roles if exist
+     */
+    await this.sshService.exec(`rm -rf ${this.installationDirectory}/ansible`);
 
-      /**
-       * fetch stereum version
-       */
-      let versions;
-      let commit;
-      try {
-        versions = await this.checkUpdates();
-        this.taskManager.otherSubTasks.push({
-          name: "Get Version Information",
-          otherRunRef: ref,
-          status: true,
-        });
-      } catch (err) {
-        this.taskManager.otherSubTasks.push({
-          name: "Get Version Information",
-          otherRunRef: ref,
-          status: false,
-        });
-        log.error(`Couldn't fetch versions in PrepareStereumNode...
+    /**
+     * fetch stereum version
+     */
+    let versions;
+    let commit;
+    try {
+      versions = await this.checkUpdates();
+      this.taskManager.otherSubTasks.push({
+        name: "Get Version Information",
+        otherRunRef: ref,
+        status: true,
+      });
+    } catch (err) {
+      this.taskManager.otherSubTasks.push({
+        name: "Get Version Information",
+        otherRunRef: ref,
+        status: false,
+      });
+      log.error(`Couldn't fetch versions in PrepareStereumNode...
         Installing with predefined Versions...
         ${err.name}: ${err.message}
         url: ${err.config.url}
@@ -205,309 +204,294 @@ export class NodeConnection {
         headers: ${err.config.headers}
         timeout: ${err.config.timeout}
         `);
-      }
-      if (versions) {
-        commit = versions["stereum"].slice(-1).pop().commit;
-      } else {
-        commit = "main";
-      }
-      log.info("CommitHash:", commit);
+    }
+    if (versions) {
+      commit = versions["stereum"].slice(-1).pop().commit;
+    } else {
+      commit = "main";
+    }
+    log.info("CommitHash:", commit);
 
-      /**
-       * install stereum ansible playbooks & roles
-       */
-      log.info("installing stereum ansible roles");
+    /**
+     * install stereum ansible playbooks & roles
+     */
+    log.info("installing stereum ansible roles");
 
-      let installResult;
-      try {
-        installResult = await this.sshService.exec(
-          `mkdir -p "${this.installationDirectory}/ansible" &&
+    let installResult;
+    try {
+      installResult = await this.sshService.exec(
+        `mkdir -p "${this.installationDirectory}/ansible" &&
           cd "${this.installationDirectory}/ansible" &&
           git init &&
           git remote add -f ethereum-node https://github.com/stereum-dev/ethereum-node.git &&
           git config core.sparseCheckout true &&
           echo 'controls' >> .git/info/sparse-checkout &&
           git checkout ${global.branch ? global.branch : commit}`
-        );
-      } catch (err) {
-        log.error("can't install ansible roles", err);
-        this.taskManager.otherSubTasks.push({
-          name: "install ansible roles",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("Can't install ansible roles: " + err);
-      }
-
-      if (SSHService.checkExecError(installResult)) {
-        this.taskManager.otherSubTasks.push({
-          name: "install ansible roles",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("Can't install ansible role: " + SSHService.extractExecError(installResult));
-      }
+      );
+    } catch (err) {
+      log.error("can't install ansible roles", err);
       this.taskManager.otherSubTasks.push({
         name: "install ansible roles",
         otherRunRef: ref,
-        status: true,
+        status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      /**
-       * run stereum ansible playbook "setup"
-       */
-      log.info("run stereum ansible playbook 'setup'");
-      let playbookRuns = [];
-      try {
-        playbookRuns.push(
-          await this.runPlaybook("setup", {
-            stereum_role: "setup",
-            stereum_args: {
-              settings: {
-                controls_install_path: this.installationDirectory,
-              },
-            },
-          })
-        );
-      } catch (err) {
-        log.error("foo", err);
-        reject("Can't run setup playbook: " + err);
-      }
+      throw new Error("Can't install ansible roles: " + err);
+    }
 
-      /*
-       *  run stereum ansible playbook "configure-firewall"
-       */
-      log.info("run stereum ansible playbook 'configure-firewall'");
-      try {
-        playbookRuns.push(
-          await this.runPlaybook("configure-firewall", {
-            stereum_role: "configure-firewall",
-          })
-        );
-      } catch (err) {
-        log.error("foo", err);
-        reject("Can't run configure-firewall playbook: " + err);
-      }
-
-      return resolve(playbookRuns);
+    if (SSHService.checkExecError(installResult)) {
+      this.taskManager.otherSubTasks.push({
+        name: "install ansible roles",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't install ansible role: " + SSHService.extractExecError(installResult));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "install ansible roles",
+      otherRunRef: ref,
+      status: true,
     });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    /**
+     * run stereum ansible playbook "setup"
+     */
+    log.info("run stereum ansible playbook 'setup'");
+    let playbookRuns = [];
+    try {
+      playbookRuns.push(
+        await this.runPlaybook("setup", {
+          stereum_role: "setup",
+          stereum_args: {
+            settings: {
+              controls_install_path: this.installationDirectory,
+            },
+          },
+        })
+      );
+    } catch (err) {
+      log.error("Can't run setup playbook: ", err);
+      throw new Error("Can't run setup playbook: " + err);
+    }
+
+    /*
+     *  run stereum ansible playbook "configure-firewall"
+     */
+    log.info("run stereum ansible playbook 'configure-firewall'");
+    try {
+      playbookRuns.push(
+        await this.runPlaybook("configure-firewall", {
+          stereum_role: "configure-firewall",
+        })
+      );
+    } catch (err) {
+      log.error("Can't run configure-firewall playbook: ", err);
+      throw new Error("Can't run configure-firewall playbook: " + err);
+    }
+
+    return playbookRuns
   }
 
   /**
    * start a playbook
    */
   async runPlaybook(playbook, extraVars) {
-    return new Promise(async (resolve, reject) => {
-      if (!this.settings) {
-        reject("Settings not loaded! Run findStereumSettings() first.");
-      }
+    if (!this.settings) {
+      throw new Error("Settings not loaded! Run findStereumSettings() first.");
+    }
 
-      log.info("starting playbook " + playbook + " with extra vars", extraVars);
+    log.info("starting playbook " + playbook + " with extra vars", extraVars);
 
-      const playbookRunRef = StringUtils.createRandomString();
+    const playbookRunRef = StringUtils.createRandomString();
 
-      log.info("using playbookRunRef: ", playbookRunRef);
-      let extraVarsJson = "";
-      if (extraVars) {
-        extraVarsJson = JSON.stringify(extraVars);
-      }
+    log.info("using playbookRunRef: ", playbookRunRef);
+    let extraVarsJson = "";
+    if (extraVars) {
+      extraVarsJson = JSON.stringify(extraVars);
+    }
 
-      let ansibleResult;
-      this.taskManager.tasks.push({ name: playbook, ref: playbookRunRef });
-      try {
-        ansibleResult = await this.sshService.exec(
-          "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
+    let ansibleResult;
+    this.taskManager.tasks.push({ name: playbook, ref: playbookRunRef });
+    try {
+      ansibleResult = await this.sshService.exec(
+        "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-          playbookRunRef +
-          "\
+        playbookRunRef +
+        "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-          StringUtils.escapeStringForShell(extraVarsJson) +
-          "\
+        StringUtils.escapeStringForShell(extraVarsJson) +
+        "\
                         " +
-          this.settings.stereum.settings.controls_install_path +
-          "/ansible/controls/genericPlaybook.yaml\
+        this.settings.stereum.settings.controls_install_path +
+        "/ansible/controls/genericPlaybook.yaml\
                         "
-        );
-      } catch (err) {
-        log.error("Can't run playbook '" + playbook + "'", err);
-        return reject("Can't run playbook: " + err);
-      }
+      );
+    } catch (err) {
+      log.error("Can't run playbook '" + playbook + "'", err);
+      throw new Error("Can't run playbook: " + err);
+    }
 
-      if (SSHService.checkExecError(ansibleResult)) {
-        return reject("Failed running '" + playbook + "': " + SSHService.extractExecError(ansibleResult));
-      }
-      this.taskManager.finishedPlaybooks.push(playbookRunRef);
-      return resolve({
-        playbook: playbook,
-        playbookRunRef: playbookRunRef,
-      });
-    });
+    if (SSHService.checkExecError(ansibleResult)) {
+      throw new Error("Failed running '" + playbook + "': " + SSHService.extractExecError(ansibleResult));
+    }
+    this.taskManager.finishedPlaybooks.push(playbookRunRef);
+    return {
+      playbook: playbook,
+      playbookRunRef: playbookRunRef,
+    }
   }
 
   /**
    * get the logs of a playbook started via runPlayboook(...)
    */
   async playbookStatus(playbookRunRef) {
-    return new Promise(async (resolve, reject) => {
-      log.debug("playbook status of ref ", playbookRunRef);
+    log.debug("playbook status of ref ", playbookRunRef);
 
-      let statusResult;
-      try {
-        statusResult = await this.sshService.exec("cat /tmp/" + playbookRunRef + "/localhost");
-      } catch (err) {
-        log.error("Can't read playbook status '" + playbookRunRef + "'", err);
-        return reject("Can't read playbook status '" + playbookRunRef + "': " + err);
-      }
+    let statusResult;
+    try {
+      statusResult = await this.sshService.exec("cat /tmp/" + playbookRunRef + "/localhost");
+    } catch (err) {
+      log.error("Can't read playbook status '" + playbookRunRef + "'", err);
+      throw new Error("Can't read playbook status '" + playbookRunRef + "': " + err);
+    }
 
-      if (SSHService.checkExecError(statusResult)) {
-        return reject(
-          "Failed reading status of ref '" + playbookRunRef + "': " + SSHService.extractExecError(statusResult)
-        );
-      }
+    if (SSHService.checkExecError(statusResult)) {
+      throw new Error(
+        "Failed reading status of ref '" + playbookRunRef + "': " + SSHService.extractExecError(statusResult)
+      );
+    }
 
-      return resolve(statusResult.stdout);
-    });
+    return statusResult.stdout
   }
 
   /**
    * list services configurations
    */
   async listServicesConfigurations() {
-    return new Promise(async (resolve, reject) => {
-      let services;
-      try {
-        services = await this.sshService.exec("ls -1 /etc/stereum/services");
-      } catch (err) {
-        log.error("Can't read services configurations", err);
-        return reject("Can't read services configurations: " + err);
-      }
+    let services;
+    try {
+      services = await this.sshService.exec("ls -1 /etc/stereum/services");
+    } catch (err) {
+      log.error("Can't read services configurations", err);
+      throw new Error("Can't read services configurations: " + err);
+    }
 
-      if (SSHService.checkExecError(services)) {
-        return reject("Failed reading services configurations: " + SSHService.extractExecError(services));
-      }
+    if (SSHService.checkExecError(services)) {
+      throw new Error("Failed reading services configurations: " + SSHService.extractExecError(services));
+    }
 
-      return resolve(services.stdout.split("\n").filter((i) => i));
-    });
+    return services.stdout.split("\n").filter((i) => i)
   }
 
   /**
    * read a specific service configuration
    */
   async readServiceConfiguration(serviceId) {
-    return new Promise(async (resolve, reject) => {
-      let serviceConfig;
-      try {
-        const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
-        serviceConfig = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
-      } catch (err) {
-        log.error("Can't read service configuration of " + serviceId, err);
-        return reject("Can't read service configuration of " + serviceId + ": " + err);
-      }
+    let serviceConfig;
+    try {
+      const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
+      serviceConfig = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
+    } catch (err) {
+      log.error("Can't read service configuration of " + serviceId, err);
+      throw new Error("Can't read service configuration of " + serviceId + ": " + err);
+    }
 
-      if (SSHService.checkExecError(serviceConfig)) {
-        return reject(
-          "Failed reading service configuration " + serviceId + ": " + SSHService.extractExecError(serviceConfig)
-        );
-      }
+    if (SSHService.checkExecError(serviceConfig)) {
+      throw new Error(
+        "Failed reading service configuration " + serviceId + ": " + SSHService.extractExecError(serviceConfig)
+      );
+    }
 
-      return resolve(YAML.parse(serviceConfig.stdout));
-    });
+    return YAML.parse(serviceConfig.stdout)
   }
 
   /**
    * read a specific service configuration
    */
   async readServiceYAML(serviceId) {
-    return new Promise(async (resolve, reject) => {
-      let serviceYAML;
-      try {
-        const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
-        serviceYAML = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
-      } catch (err) {
-        log.error("Can't read service yaml of " + serviceId, err);
-        return reject("Can't read service yaml of " + serviceId + ": " + err);
-      }
+    let serviceYAML;
+    try {
+      const suffix = serviceId.endsWith(".yaml") ? "" : ".yaml";
+      serviceYAML = await this.sshService.exec("cat /etc/stereum/services/" + serviceId + suffix);
+    } catch (err) {
+      log.error("Can't read service yaml of " + serviceId, err);
+      throw new Error("Can't read service yaml of " + serviceId + ": " + err);
+    }
 
-      if (SSHService.checkExecError(serviceYAML)) {
-        return reject("Failed reading service yaml " + serviceId + ": " + SSHService.extractExecError(serviceYAML));
-      }
+    if (SSHService.checkExecError(serviceYAML)) {
+      throw new Error("Failed reading service yaml " + serviceId + ": " + SSHService.extractExecError(serviceYAML));
+    }
 
-      return resolve(serviceYAML.stdout);
-    });
+    return serviceYAML.stdout
   }
 
   async readSSVNetworkConfig(serviceID) {
-    return new Promise(async (resolve, reject) => {
-      let SSVNetworkConfig;
-      try {
-        const service = await this.readServiceConfiguration(serviceID);
-        let configPath = ServiceVolume.buildByConfig(
-          service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-        ).destinationPath;
-        if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+    let SSVNetworkConfig;
+    try {
+      const service = await this.readServiceConfiguration(serviceID);
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
 
-        SSVNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
-      } catch (err) {
-        log.error("Can't read SSV config " + serviceID, err);
-        return reject("Can't read SSV config " + serviceID + ": " + err);
-      }
+      SSVNetworkConfig = await this.sshService.exec(`cat ${configPath}/config.yaml`);
+    } catch (err) {
+      log.error("Can't read SSV config " + serviceID, err);
+      throw new Error("Can't read SSV config " + serviceID + ": " + err);
+    }
 
-      if (SSHService.checkExecError(SSVNetworkConfig)) {
-        return reject("Failed reading SSV config " + serviceID + ": " + SSHService.extractExecError(SSVNetworkConfig));
-      }
+    if (SSHService.checkExecError(SSVNetworkConfig)) {
+      throw new Error("Failed reading SSV config " + serviceID + ": " + SSHService.extractExecError(SSVNetworkConfig));
+    }
 
-      return resolve(SSVNetworkConfig.stdout);
-    });
+    return SSVNetworkConfig.stdout
   }
 
   async writeSSVNetworkConfig(serviceID, config) {
-    return new Promise(async (resolve, reject) => {
-      let configStatus;
-      const ref = StringUtils.createRandomString();
-      this.taskManager.tasks.push({ name: "write SSV config", otherRunRef: ref });
-      const service = await this.readServiceConfiguration(serviceID);
-      try {
-        let configPath = ServiceVolume.buildByConfig(
-          service.volumes.find((v) => v.split(":").slice(-1) == "/data")
-        ).destinationPath;
-        if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
-        configStatus = await this.sshService.exec(
-          "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/config.yaml`
-        );
-      } catch (err) {
-        this.taskManager.otherSubTasks.push({
-          name: "write SSV config yaml",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        log.error("Can't write SSV config", err);
-        return reject("Can't write SSV config: " + err);
-      }
-
-      if (SSHService.checkExecError(configStatus)) {
-        this.taskManager.otherSubTasks.push({
-          name: "write SSV config yaml",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("Can't write SSV config: " + SSHService.extractExecError(configStatus));
-      }
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write SSV config", otherRunRef: ref });
+    const service = await this.readServiceConfiguration(serviceID);
+    try {
+      let configPath = ServiceVolume.buildByConfig(
+        service.volumes.find((v) => v.split(":").slice(-1) == "/data")
+      ).destinationPath;
+      if (configPath.endsWith("/")) configPath = configPath.slice(0, -1, ""); //if path ends with '/' remove it
+      configStatus = await this.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(config.trim()) + ` > ${configPath}/config.yaml`
+      );
+    } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write SSV config yaml",
         otherRunRef: ref,
-        status: true,
+        status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      return resolve();
+      log.error("Can't write SSV config", err);
+      throw new Error("Can't write SSV config: " + err);
+    }
+
+    if (SSHService.checkExecError(configStatus)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write SSV config yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't write SSV config: " + SSHService.extractExecError(configStatus));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write SSV config yaml",
+      otherRunRef: ref,
+      status: true,
     });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
   }
 
   /**
@@ -516,48 +500,46 @@ export class NodeConnection {
    * @param service object {id,data,service} id: serviceID, data: plain YAML, service: Service Name
    */
   async writeServiceYAML(service) {
-    return new Promise(async (resolve, reject) => {
-      let configStatus;
-      const ref = StringUtils.createRandomString();
-      this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
-      try {
-        configStatus = await this.sshService.exec(
-          "echo -e " +
-          StringUtils.escapeStringForShell(service.data.trim()) +
-          " > /etc/stereum/services/" +
-          service.id +
-          ".yaml"
-        );
-      } catch (err) {
-        this.taskManager.otherSubTasks.push({
-          name: "write " + service.service + " yaml",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        log.error("Can't write service yaml of " + service.id, err);
-        return reject("Can't write service configuration of " + service.id + ": " + err);
-      }
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write yaml", otherRunRef: ref });
+    try {
+      configStatus = await this.sshService.exec(
+        "echo -e " +
+        StringUtils.escapeStringForShell(service.data.trim()) +
+        " > /etc/stereum/services/" +
+        service.id +
+        ".yaml"
+      );
+    } catch (err) {
+      this.taskManager.otherSubTasks.push({
+        name: "write " + service.service + " yaml",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      log.error("Can't write service yaml of " + service.id, err);
+      throw new Error("Can't write service configuration of " + service.id + ": " + err);
+    }
 
-      if (SSHService.checkExecError(configStatus)) {
-        this.taskManager.otherSubTasks.push({
-          name: "write " + service.service + " config",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject(
-          "Failed writing service configuration " + service.id + ": " + SSHService.extractExecError(configStatus)
-        );
-      }
+    if (SSHService.checkExecError(configStatus)) {
       this.taskManager.otherSubTasks.push({
         name: "write " + service.service + " config",
         otherRunRef: ref,
-        status: true,
+        status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      return resolve();
+      throw new Error(
+        "Failed writing service configuration " + service.id + ": " + SSHService.extractExecError(configStatus)
+      );
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write " + service.service + " config",
+      otherRunRef: ref,
+      status: true,
     });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
   }
 
   /**
@@ -566,79 +548,68 @@ export class NodeConnection {
    * @param serviceConfiguration servicd configuration to write to the node
    */
   async writeServiceConfiguration(serviceConfiguration) {
-    return new Promise(async (resolve, reject) => {
-      let configStatus;
-      const ref = StringUtils.createRandomString();
-      this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
-      try {
-        configStatus = await this.sshService.exec(
-          "echo -e " +
-          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-          " > /etc/stereum/services/" +
-          serviceConfiguration.id +
-          ".yaml"
-        );
-      } catch (err) {
-        this.taskManager.otherSubTasks.push({
-          name: "write " + serviceConfiguration.service + " config",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        log.error("Can't write service configuration of " + serviceConfiguration.id, err);
-        return reject("Can't write service configuration of " + serviceConfiguration.id + ": " + err);
-      }
-
-      if (SSHService.checkExecError(configStatus)) {
-        this.taskManager.otherSubTasks.push({
-          name: "write " + serviceConfiguration.service + " config",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject(
-          "Failed writing service configuration " +
-          serviceConfiguration.id +
-          ": " +
-          SSHService.extractExecError(configStatus)
-        );
-      }
+    let configStatus;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
+    try {
+      configStatus = await this.sshService.exec(
+        "echo -e " +
+        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+        " > /etc/stereum/services/" +
+        serviceConfiguration.id +
+        ".yaml"
+      );
+    } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write " + serviceConfiguration.service + " config",
         otherRunRef: ref,
-        status: true,
+        status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      return resolve();
+      log.error("Can't write service configuration of " + serviceConfiguration.id, err);
+      throw new Error("Can't write service configuration of " + serviceConfiguration.id + ": " + err);
+    }
+
+    if (SSHService.checkExecError(configStatus)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write " + serviceConfiguration.service + " config",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error(
+        "Failed writing service configuration " +
+        serviceConfiguration.id +
+        ": " +
+        SSHService.extractExecError(configStatus)
+      );
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write " + serviceConfiguration.service + " config",
+      otherRunRef: ref,
+      status: true,
     });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    return;
   }
 
   /**
    * list docker services
    */
   async listServices() {
-    return new Promise(async (resolve, reject) => {
-      let serviceJsons;
-      try {
-        serviceJsons = await this.sshService.exec("docker ps --format '{{json .}}' --no-trunc");
-      } catch (err) {
-        log.error("Can't list services: ", err);
-        return reject("Can't list services: " + err);
-      }
+    let serviceJsons;
+    try {
+      serviceJsons = await this.sshService.exec("docker ps --format '{{json .}}' --no-trunc");
+    } catch (err) {
+      log.error("Can't list services: ", err);
+      throw new Error("Can't list services: " + err);
+    }
 
-      if (SSHService.checkExecError(serviceJsons)) {
-        return reject("Failed listing services: " + SSHService.extractExecError(serviceJsons));
-      }
+    if (SSHService.checkExecError(serviceJsons)) {
+      throw new Error("Failed listing services: " + SSHService.extractExecError(serviceJsons));
+    }
 
-      return resolve(
-        serviceJsons.stdout
-          .split(/\n/)
-          .slice(0, -1)
-          .map((json) => {
-            return JSON.parse(json);
-          })
-      );
-    });
+    return serviceJsons.stdout.split(/\n/).slice(0, -1).map((json) => { return JSON.parse(json); })
   }
 
   /**
@@ -647,40 +618,36 @@ export class NodeConnection {
    * @param serviceId either <docker-container-id> or <'stereum-' + stereum-service-id>
    */
   async getServiceDetails(serviceId) {
-    return new Promise(async (resolve, reject) => {
-      let serviceJson;
-      try {
-        serviceJson = await this.sshService.exec("docker inspect " + serviceId);
-      } catch (err) {
-        log.error("Can't get service details of '" + serviceId + "': ", err);
-        return reject("Can't get service details of '" + serviceId + "': " + err);
-      }
+    let serviceJson;
+    try {
+      serviceJson = await this.sshService.exec("docker inspect " + serviceId);
+    } catch (err) {
+      log.error("Can't get service details of '" + serviceId + "': ", err);
+      throw new Error("Can't get service details of '" + serviceId + "': " + err);
+    }
 
-      if (SSHService.checkExecError(serviceJson)) {
-        return reject(
-          "Failed getting service details of '" + serviceId + "': " + SSHService.extractExecError(serviceJson)
-        );
-      }
+    if (SSHService.checkExecError(serviceJson)) {
+      throw new Error(
+        "Failed getting service details of '" + serviceId + "': " + SSHService.extractExecError(serviceJson)
+      );
+    }
 
-      return resolve(JSON.parse(serviceJson.stdout));
-    });
+    return JSON.parse(serviceJson.stdout)
   }
 
   async getServiceLogs(serviceID) {
-    return new Promise(async (resolve, reject) => {
-      let logs;
-      try {
-        logs = await this.sshService.exec("docker logs --tail=100 stereum-" + serviceID);
-      } catch (err) {
-        log.error("Can't get service logs of '" + serviceID + "': ", err);
-        return reject("Can't get service logs of '" + serviceID + "': " + err);
-      }
+    let logs;
+    try {
+      logs = await this.sshService.exec("docker logs --tail=100 stereum-" + serviceID);
+    } catch (err) {
+      log.error("Can't get service logs of '" + serviceID + "': ", err);
+      throw new Error("Can't get service logs of '" + serviceID + "': " + err);
+    }
 
-      if (logs.stdout.length > 0) {
-        return resolve(logs.stdout);
-      }
-      return resolve(logs.stderr);
-    });
+    if (logs.stdout.length > 0) {
+      return logs.stdout
+    }
+    return logs.stderr
   }
 
   async destroyNode(serviceConfigs = []) {
@@ -708,7 +675,7 @@ export class NodeConnection {
 
     // Destroy
     this.taskManager.tasks.push({ name: "Delete Node", otherRunRef: ref });
-    await this.nukeServiceValumes(serviceConfigs, ref);
+    await this.nukeServiceVolumes(serviceConfigs, ref);
 
     this.taskManager.otherSubTasks.push({
       name: "remove Docker-Container",
@@ -765,7 +732,7 @@ export class NodeConnection {
     return "Node destroyed";
   }
 
-  async nukeServiceValumes(serviceConfigs, ref) {
+  async nukeServiceVolumes(serviceConfigs, ref) {
     let sPaths = [];
     let sIDs = [];
     for (let service of serviceConfigs) {
@@ -917,22 +884,20 @@ export class NodeConnection {
   }
 
   async getCurrentStereumVersion() {
-    return new Promise(async (resolve, reject) => {
-      let response;
-      try {
-        response = await this.sshService.exec(
-          `cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`
-        );
-      } catch (err) {
-        log.error("Couldn't get Stereum Version:", err);
-        return reject("Couldn't get Stereum Version:\n" + err);
-      }
+    let response;
+    try {
+      response = await this.sshService.exec(
+        `cd ${this.settings.stereum.settings.controls_install_path}/ansible && git rev-parse HEAD`
+      );
+    } catch (err) {
+      log.error("Couldn't get Stereum Version:", err);
+      throw new Error("Couldn't get Stereum Version:\n" + err);
+    }
 
-      if (SSHService.checkExecError(response)) {
-        return reject("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
-      }
-      return resolve(response.stdout);
-    });
+    if (SSHService.checkExecError(response)) {
+      throw new Error("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
+    }
+    return response.stdout
   }
 
   async getCurrentLauncherVersion() {
@@ -941,72 +906,68 @@ export class NodeConnection {
   }
 
   async getLargestVolumePath() {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const dfOutput = await this.sshService.exec("df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1");
+    try {
+      const dfOutput = await this.sshService.exec("df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1");
 
-        if (SSHService.checkExecError(dfOutput)) {
-          return reject("Failed reading df command: " + SSHService.extractExecError(dfOutput));
-        }
-
-        const path = dfOutput.stdout.split(" ").pop().trim();
-
-        return resolve(path);
-      } catch (err) {
-        log.error("Can't read df", err);
-        return reject("Can't read df: " + err);
+      if (SSHService.checkExecError(dfOutput)) {
+        throw new Error("Failed reading df command: " + SSHService.extractExecError(dfOutput));
       }
-    });
+
+      const path = dfOutput.stdout.split(" ").pop().trim();
+
+      return path
+    } catch (err) {
+      log.error("Can't read df", err);
+      throw new Error("Can't read df: " + err);
+    }
   }
 
   async setStereumSettings(settings) {
     let value = { stereum_settings: settings.stereum };
-    return new Promise(async (resolve, reject) => {
-      let result;
-      const ref = StringUtils.createRandomString();
-      this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
-      try {
-        result = await this.sshService.exec(
-          "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(value)) + " > /etc/stereum/stereum.yaml"
-        );
-      } catch (err) {
-        this.taskManager.otherSubTasks.push({
-          name: "write stereum config",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        log.error("Can't write stereum config", err);
-        return reject("Can't write stereum config: " + err);
-      }
-
-      if (SSHService.checkExecError(result)) {
-        this.taskManager.otherSubTasks.push({
-          name: "write stereum config",
-          otherRunRef: ref,
-          status: false,
-        });
-        this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-        return reject("Can't write stereum config: " + SSHService.extractExecError(result));
-      }
+    let result;
+    const ref = StringUtils.createRandomString();
+    this.taskManager.tasks.push({ name: "write config", otherRunRef: ref });
+    try {
+      result = await this.sshService.exec(
+        "echo -e " + StringUtils.escapeStringForShell(YAML.stringify(value)) + " > /etc/stereum/stereum.yaml"
+      );
+    } catch (err) {
       this.taskManager.otherSubTasks.push({
         name: "write stereum config",
         otherRunRef: ref,
-        status: true,
+        status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      try {
-        await this.runPlaybook("configure-updates", {
-          stereum_role: "configure-updates",
-          stereum_args: settings.stereum.settings,
-        });
-      } catch (err) {
-        log.error("foo", err);
-        return reject("Can't run setup playbook: " + err);
-      }
+      log.error("Can't write stereum config", err);
+      throw new Error("Can't write stereum config: " + err);
+    }
 
-      return resolve(settings);
+    if (SSHService.checkExecError(result)) {
+      this.taskManager.otherSubTasks.push({
+        name: "write stereum config",
+        otherRunRef: ref,
+        status: false,
+      });
+      this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+      throw new Error("Can't write stereum config: " + SSHService.extractExecError(result));
+    }
+    this.taskManager.otherSubTasks.push({
+      name: "write stereum config",
+      otherRunRef: ref,
+      status: true,
     });
+    this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
+    try {
+      await this.runPlaybook("configure-updates", {
+        stereum_role: "configure-updates",
+        stereum_args: settings.stereum.settings,
+      });
+    } catch (err) {
+      log.error("foo", err);
+      throw new Error("Can't run setup playbook: " + err);
+    }
+
+    return settings
   }
 
   async logout() {

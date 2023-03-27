@@ -1,13 +1,11 @@
 import { NethermindService } from "./NethermindService";
-import { networks } from "./NodeService";
 import { ServicePort, servicePortProtocol } from "./ServicePort";
-import { ServiceVolume } from "./ServiceVolume";
 
 test("buildByUserInput", () => {
   const ports = [new ServicePort(null, 4040, 4040, servicePortProtocol.tcp)];
 
   const nethermindService = NethermindService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     ports,
     "/opt/stereum/nethermind"
   ).buildConfiguration();
@@ -25,12 +23,12 @@ test("buildByUserInput", () => {
     "/opt/stereum/nethermind-" + nethermindService.id + "/data:/opt/app/data"
   );
   expect(nethermindService.user).toBe("root");
-  expect(nethermindService.network).toBe(networks.goerli);
+  expect(nethermindService.network).toBe("goerli");
 });
 
 test("buildExecutionClientHttpEndpointUrl", () => {
   const nethermindHttpEndpoint = NethermindService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/nethermind"
   ).buildExecutionClientHttpEndpointUrl();
@@ -39,7 +37,7 @@ test("buildExecutionClientHttpEndpointUrl", () => {
 
 test("buildExecutionClientWsEndpointUrl", () => {
   const nethermindWsEndpoint = NethermindService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/nethermind"
   ).buildExecutionClientWsEndpointUrl();
@@ -48,7 +46,7 @@ test("buildExecutionClientWsEndpointUrl", () => {
 
 test("buildExecutionClientMetricsEndpoint", () => {
   const nethermindMetricsEndpoint = NethermindService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/nethermind"
   ).buildExecutionClientMetricsEndpoint();
@@ -57,7 +55,7 @@ test("buildExecutionClientMetricsEndpoint", () => {
 
 test("buildPrometheusJob", () => {
   const nethermindPrometheusJob = NethermindService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/nethermind"
   ).buildPrometheusJob();

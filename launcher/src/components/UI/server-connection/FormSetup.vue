@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/attributes-order -->
 <template>
   <div class="server-parent">
     <div v-if="errorMsgExists" class="error-box"></div>
@@ -22,7 +21,7 @@
       </section>
 
       <delete-modal v-if="bDialogVisible" @delete-server="baseDialogDelete" @remove-modal="hideBDialog"></delete-modal>
-      <form @submit.prevent.stop="login" class="space-y-1">
+      <form class="space-y-1" @submit.prevent.stop="login">
         <div id="container">
           <div id="one">
             <div class="select-wrapper">

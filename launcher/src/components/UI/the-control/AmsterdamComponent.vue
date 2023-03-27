@@ -21,16 +21,13 @@
 </template>
 <script>
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
       showSyncInfo: false,
       counter: null,
       networkIcon: "",
-      mainnetIcon: "/img/icon/click-installation/mainnet-icon.png",
-      testnetIcon: "/img/icon/click-installation/testnet-icon.png",
-      gnosisIcon: "/img/icon/click-installation/gnosis_mainnet_icon.png",
       defaultIcon: "/img/icon/control/spinner.gif",
       days: null,
       date: "",
@@ -38,9 +35,9 @@ export default {
     };
   },
   computed: {
-    ...mapState(useServices, {
-      network: "network",
-    }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    })
   },
   created() {
     // Add initial objects to the array
@@ -49,16 +46,7 @@ export default {
     }
   },
   mounted() {
-    if (this.network === "mainnet") {
-      this.networkIcon = this.mainnetIcon;
-    } else if (this.network === "testnet") {
-      this.networkIcon = this.testnetIcon;
-    } else if (this.network === "gnosis") {
-      this.networkIcon = this.gnosisIcon;
-    } else {
-      this.networkIcon = this.defaultIcon;
-    }
-
+    this.networkIcon = this.currentNetwork.network ? this.currentNetwork.icon : this.defaultIcon
     // Call the addObject() function every sec
     setInterval(() => {
       this.epochMonitoring();

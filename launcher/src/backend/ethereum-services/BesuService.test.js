@@ -1,12 +1,10 @@
 import { BesuService } from "./BesuService";
-import { networks } from "./NodeService";
 import { ServicePort, servicePortProtocol } from "./ServicePort";
-import { ServiceVolume } from "./ServiceVolume";
 
 test("buildByUserInput", () => {
   const ports = [new ServicePort(null, 4040, 4040, servicePortProtocol.tcp)];
 
-  const besuService = BesuService.buildByUserInput(networks.goerli, ports, "/opt/stereum/besu").buildConfiguration();
+  const besuService = BesuService.buildByUserInput("goerli", ports, "/opt/stereum/besu").buildConfiguration();
 
   expect(besuService.service).toBe("BesuService");
   expect(besuService.id).toMatch(/.{8}-.{4}-.{4}-.{4}-.{12}/);
@@ -20,12 +18,12 @@ test("buildByUserInput", () => {
   expect(besuService.ports).toContain("0.0.0.0:4040:4040/tcp");
   expect(besuService.volumes).toContain("/opt/stereum/besu-" + besuService.id + "/data:/opt/app/data");
   expect(besuService.user).toBe("2000");
-  expect(besuService.network).toBe(networks.goerli);
+  expect(besuService.network).toBe("goerli");
 });
 
 test("buildExecutionClientHttpEndpointUrl", () => {
   const besuHttpEndpoint = BesuService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/besu"
   ).buildExecutionClientHttpEndpointUrl();
@@ -34,7 +32,7 @@ test("buildExecutionClientHttpEndpointUrl", () => {
 
 test("buildExecutionClientWsEndpointUrl", () => {
   const besuWsEndpoint = BesuService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/besu"
   ).buildExecutionClientWsEndpointUrl();
@@ -43,7 +41,7 @@ test("buildExecutionClientWsEndpointUrl", () => {
 
 test("buildExecutionClientMetricsEndpoint", () => {
   const besuMetricsEndpoint = BesuService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/besu"
   ).buildExecutionClientMetricsEndpoint();
@@ -51,7 +49,7 @@ test("buildExecutionClientMetricsEndpoint", () => {
 });
 
 test("buildPrometheusJob", () => {
-  const besuPrometheusJob = BesuService.buildByUserInput(networks.goerli, [], "/opt/stereum/besu").buildPrometheusJob();
+  const besuPrometheusJob = BesuService.buildByUserInput("goerli", [], "/opt/stereum/besu").buildPrometheusJob();
   expect(besuPrometheusJob).toMatch(
     /\n {2}- job_name: stereum-.{36}\n {4}static_configs:\n {6}- targets: \[stereum-.{36}:9545]/
   );

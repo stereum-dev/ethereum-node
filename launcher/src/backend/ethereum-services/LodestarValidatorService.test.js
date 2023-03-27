@@ -1,5 +1,4 @@
 import { LodestarValidatorService } from "./LodestarValidatorService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 
 test("LodestarValidatorService buildConfiguration", () => {
@@ -21,7 +20,7 @@ test("LodestarValidatorService buildConfiguration", () => {
   });
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
 
-  const lService = LodestarValidatorService.buildByUserInput(networks.prater, ports, "/opt/stereum/l", [
+  const lService = LodestarValidatorService.buildByUserInput("prater", ports, "/opt/stereum/l", [
     new LodestarBeaconService.LodestarBeaconService(),
   ]).buildConfiguration();
 
@@ -40,7 +39,7 @@ test("LodestarValidatorService buildConfiguration", () => {
 test("LodestarValidatorService getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lService = LodestarValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/l",
     [],
@@ -53,7 +52,7 @@ test("LodestarValidatorService getAvailablePorts", () => {
 test("LodestarValidatorService autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lService = LodestarValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/l",
     [],
@@ -66,14 +65,14 @@ test("LodestarValidatorService autoupdate", () => {
 test("LodestarValidatorService network", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lService = LodestarValidatorService.buildByUserInput(
-    networks.mainnet,
+    "mainnet",
     ports,
     "/opt/stereum/l",
     [],
     "foobar"
   ).buildConfiguration();
 
-  expect(lService.network).toBe(networks.mainnet);
+  expect(lService.network).toBe("mainnet");
 });
 
 test("buildByConfiguration", () => {

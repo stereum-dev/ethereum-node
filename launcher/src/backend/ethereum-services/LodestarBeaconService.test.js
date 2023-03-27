@@ -1,5 +1,4 @@
 import { LodestarBeaconService } from "./LodestarBeaconService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
@@ -32,7 +31,7 @@ test("buildConfiguration", () => {
   });
 
   const lService = LodestarBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/l",
     [new GethService.GethService()],
@@ -77,7 +76,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
   ];
 
   const lService = LodestarBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/l",
     [new GethService.GethService()],
@@ -109,7 +108,7 @@ test("getAvailablePorts", () => {
     };
   });
   const lServicePorts = LodestarBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/l",
     [new GethService.GethService()],
@@ -141,7 +140,7 @@ test("network", () => {
     };
   });
   const lServicePorts = LodestarBeaconService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/l",
     [new GethService.GethService()],

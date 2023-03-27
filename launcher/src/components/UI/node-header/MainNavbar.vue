@@ -37,7 +37,6 @@ export default {
       stereumVersion: "stereumVersion",
       launcherVersion: "launcherVersion",
       newUpdates: "newUpdates",
-      network: "network",
     }),
     ...mapWritableState(useNodeHeader, {
       headerServices: "runningServices",
@@ -111,17 +110,9 @@ export default {
               e.id = i;
               return e;
             });
-            let networks = this.installedServices.map((s) => s.config.network);
-            if (networks && networks.includes("mainnet")) {
-              this.network = "mainnet";
-              this.currentNetwork = this.networkList.find((item) => item.network === "mainnet");
-            } else if (networks && networks.includes("gnosis")) {
-              this.network = "gnosis";
-              this.currentNetwork = this.networkList.find((item) => item.network === "gnosis");
-            } else {
-              this.network = "testnet";
-              this.currentNetwork = this.networkList.find((item) => item.network === "testnet");
-            }
+            let network = this.installedServices[0].config.network
+            this.currentNetwork = this.networkList.find((item) => item.network === network);
+
             if (needForTunnel.length != 0 && this.refresh) {
               let localPorts = await ControlService.getAvailablePort({
                 min: 9000,
@@ -155,12 +146,10 @@ export default {
             if (!this.updating) {
               this.installedServices = [];
               this.headerServices = [];
-              this.network = "";
             }
           }
-          if (!this.network) {
-            this.network = "testnet";
-            this.currentNetwork = this.networkList.find((item) => item.network === "testnet");
+          if (!this.currentNetwork) {
+            this.currentNetwork = this.networkList.find((item) => item.network === "goerli");
           }
           if (await ControlService.checkStereumInstallation()) {
             await this.checkUpdates(services);

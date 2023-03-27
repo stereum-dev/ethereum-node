@@ -84,6 +84,7 @@ export default {
       relaysList: "relaysList",
       availableBlocks: "availableBlocks",
       usedBlocks: "usedBlocks",
+      currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useClickInstall, {
       relayURL: "relayURL",
@@ -104,7 +105,7 @@ export default {
     },
   },
   mounted() {
-    this.availableBlocks = this.shuffleRelaysList(this.relaysList.filter((r) => r[this.selectedPreset.network]));
+    this.availableBlocks = this.shuffleRelaysList(this.relaysList.filter((r) => r[this.currentNetwork.network]));
   },
 
   methods: {
@@ -145,7 +146,7 @@ export default {
           this.usedBlocks.push(i);
         }
       });
-      this.relayURL = this.usedBlocks.map((r) => r[this.selectedPreset.network]).join();
+      this.relayURL = this.usedBlocks.map((r) => r[this.currentNetwork.network]).join();
     },
     removeFromUsedBlocks() {
       this.usedBlocks.forEach((item) => {
@@ -154,7 +155,7 @@ export default {
           this.usedBlocks.splice(this.usedBlocks.indexOf(item), 1);
         }
       });
-      this.relayURL = this.usedBlocks.map((r) => r[this.selectedPreset.network]).join();
+      this.relayURL = this.usedBlocks.map((r) => r[this.currentNetwork.network]).join();
     },
   },
 };

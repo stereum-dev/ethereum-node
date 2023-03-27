@@ -270,9 +270,10 @@ import SelectService from "./SelectService.vue";
 import FeeRecipient from "./FeeRecipient.vue";
 import InsertValidator from "./InsertValidator.vue";
 import ControlService from "@/store/ControlService";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
+import { useNodeManage } from "@/store/nodeManage";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -357,7 +358,9 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      network: "network",
+    }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
       totalBalance: "totalBalance",
@@ -594,7 +597,7 @@ export default {
     listKeys: async function () {
       let keyStats = [];
       let clients = this.installedServices.filter((s) => s.category == "validator");
-      if (clients && clients.length > 0 && this.network != "") {
+      if (clients && clients.length > 0 && this.currentNetwork.network != "") {
         for (let client of clients) {
           //if there is already a list of keys ()
           if (
@@ -648,16 +651,11 @@ export default {
     async updateValidatorStats() {
       let totalBalance = 0;
       let data = [];
-      let networkURls = {
-        mainnet: "https://mainnet.beaconcha.in/api/v1",
-        testnet: "https://goerli.beaconcha.in/api/v1",
-        gnosis: "https://beacon.gnosischain.com/api/v1",
-      };
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
         if (!data || data.length == 0) {
           data = [];
-          let latestEpochResponse = await axios.get(networkURls[this.network] + "/epoch/latest", {
+          let latestEpochResponse = await axios.get(this.currentNetwork.dataEndpoint + "/epoch/latest", {
             validateStatus: function (status) {
               return status < 500;
             },
@@ -669,7 +667,7 @@ export default {
             //split validator accounts into chunks of 50 (api url limit)
             const chunk = buffer.slice(i, i + chunkSize);
             let response = await axios.get(
-              networkURls[this.network] + "/validator/" + encodeURIComponent(chunk.join()),
+              this.currentNetwork.dataEndpoint + "/validator/" + encodeURIComponent(chunk.join()),
               {
                 validateStatus: function (status) {
                   return status < 500;

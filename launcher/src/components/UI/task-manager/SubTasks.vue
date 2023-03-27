@@ -111,7 +111,7 @@ export default {
       });
     },
     openTerminalHandler(el) {
-      this.modifiedSubTasks.forEach((item) => {
+      this.modifiedSubTasks.forEach(() => {
         if (el.showTooltip) {
           el.showTooltip = false;
         }

@@ -1,5 +1,4 @@
 const log = require("electron-log");
-const path = require("path");
 import * as crypto from "crypto";
 
 export class StringUtils {

@@ -65,7 +65,6 @@ export default {
   computed: {
     ...mapWritableState(useTaskManager, {
       playbookTasks: "playbookTasks",
-      dataTasks: "dataTasks",
       taskManagerIcons: "taskManagerIcons",
       installIconSrc: "installIconSrc",
     }),
