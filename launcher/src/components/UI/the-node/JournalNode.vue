@@ -237,6 +237,7 @@
           @close-window="restartModalClose"
           @restart-confirm="restartConfirmed"
         ></restart-modal>
+        <resync-separate-services v-if="test" service="test" resync-loading="false"></resync-separate-services>
       </div>
     </div>
     <confirm-modal
@@ -253,6 +254,7 @@
 </template>
 
 <script>
+import ResyncSeparateServices from "./ResyncSeparateServices.vue";
 import ConfirmModal from "./ConfirmModal.vue";
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
@@ -268,9 +270,11 @@ export default {
     ServiceLogButton,
     PluginLogs,
     ConfirmModal,
+    ResyncSeparateServices,
   },
   data() {
     return {
+      test: true,
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
