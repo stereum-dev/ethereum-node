@@ -373,7 +373,10 @@ export default {
       this.loading = true;
       this.toggleModalClose();
       try {
-        let promises = this.installedServices.map(async (service, index) => {
+        //this is the temporary solution until notification service is exiting correctly
+        let servicesToManage = this.installedServices.filter((service) => service.name !== "notifications");
+
+        let promises = servicesToManage.map(async (service, index) => {
           new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
             ControlService.manageServiceState({
               id: service.config.serviceID,
