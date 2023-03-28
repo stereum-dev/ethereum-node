@@ -367,14 +367,16 @@ export default {
       this.restartModalShow = false;
     },
     checkStatus() {
-      return !this.installedServices.some((s) => s.state == "running");
+      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
+
+      return !servicesToManage.some((s) => s.state == "running");
     },
     async stateButtonHandler(state) {
       this.loading = true;
       this.toggleModalClose();
       try {
         //this is the temporary solution until notification service is exiting correctly
-        let servicesToManage = this.installedServices.filter((service) => service.name !== "notifications");
+        let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
 
         let promises = servicesToManage.map(async (service, index) => {
           new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
