@@ -528,36 +528,40 @@ export class ValidatorAccountManager {
   }
 
   async exitValidator(password, pubkey, serviceID) {
-    let services = await this.serviceManager.readServiceConfigurations();
-    let client = services.find((service) => service.id === serviceID);
-    let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
+    console.log(password);
+    console.log(pubkey);
+    console.log(serviceID);
 
-    let networkURLs = {
-      mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
-      goerli: "https://goerli.beaconcha.in/api/v1/validator/",
-      gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
-    };
+    // let services = await this.serviceManager.readServiceConfigurations();
+    // let client = services.find((service) => service.id === serviceID);
+    // let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
 
-    switch (service) {
-      case "lighthouse": {
-        const exitLighthouseCmd = `docker exec -u 0 -it stereum-c6244fe0-917e-4f2d-25a6-1c198436be0b sh -c "lighthouse account validator exit --keystore=/opt/app/validator/validators/0x82eb86ef4ffbd211f40b0442241d825bc4dd30a25d04c9181eda1a41c6efd5de0c3248921d0c7a27c8cab2455c6706cf/voting-keystore.json --network=goerli --beacon-node=http://stereum-80a60e2a-005e-a196-6f0f-05d84760532f:5052"`;
-        var exitLighthouseRunCmd = await this.nodeConnection.sshService.exec(exitLighthouseCmd);
-        console.log(exitLighthouseRunCmd);
-        break;
-      }
-      case "lodestar": {
-        break;
-      }
-      case "nimbus": {
-        break;
-      }
-      case "prysm": {
-        break;
-      }
-      case "teku": {
-        break;
-      }
-    }
+    // let networkURLs = {
+    //   mainnet: "https://mainnet.beaconcha.in/api/v1/validator/",
+    //   goerli: "https://goerli.beaconcha.in/api/v1/validator/",
+    //   gnosis: "https://beacon.gnosischain.com/api/v1/validator/",
+    // };
+
+    // switch (service) {
+    //   case "lighthouse": {
+    //     const exitLighthouseCmd = `docker exec -u 0 -it stereum-c6244fe0-917e-4f2d-25a6-1c198436be0b sh -c "lighthouse account validator exit --keystore=/opt/app/validator/validators/0x82eb86ef4ffbd211f40b0442241d825bc4dd30a25d04c9181eda1a41c6efd5de0c3248921d0c7a27c8cab2455c6706cf/voting-keystore.json --network=goerli --beacon-node=http://stereum-80a60e2a-005e-a196-6f0f-05d84760532f:5052"`;
+    //     var exitLighthouseRunCmd = await this.nodeConnection.sshService.exec(exitLighthouseCmd);
+    //     console.log(exitLighthouseRunCmd);
+    //     break;
+    //   }
+    //   case "lodestar": {
+    //     break;
+    //   }
+    //   case "nimbus": {
+    //     break;
+    //   }
+    //   case "prysm": {
+    //     break;
+    //   }
+    //   case "teku": {
+    //     break;
+    //   }
+    // }
 
     // docker exec -u 0 -it stereum-c6244fe0-917e-4f2d-25a6-1c198436be0b sh -c
     // "lighthouse account validator exit

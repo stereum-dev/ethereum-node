@@ -4,17 +4,23 @@
       <img class="exit-icon" src="../../../../public/img/icon/the-staking/redexit-icon.png" alt="icon" />
     </div>
     <div class="inputBox">
-      <input type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
+      <input v-model="enteredPassword" type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmPassword')">
+      <button class="confirmBtn" @click="$emit('confirmPassword', enteredPassword)">
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      enteredPassword: "",
+    };
+  },
+};
 </script>
 <style scoped>
 .exitRow {

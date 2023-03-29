@@ -121,7 +121,6 @@
                 </div>
                 <div class="withdraw-box">
                   <img
-                    :class="{ disabled: disable }"
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
@@ -137,7 +136,22 @@
               @close-rename="closeRenameHandler"
             />
             <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
-            <ExitValidator v-if="item.isExitBoxActive" @confirm-password="confirmPasswordSingleExitChain(item)" />
+            <ExitValidator
+              v-if="item.isExitBoxActive"
+              @confirm-password="
+                (enteredPassword) => {
+                  confirmPasswordSingleExitChain(item, enteredPassword);
+                }
+              "
+            />
+            <!-- <ExitValidator
+              v-if="true"
+              @confirm-password="
+                (enteredPassword) => {
+                  confirmPasswordSingleExitChain(item, enteredPassword);
+                }
+              "
+            /> -->
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
@@ -305,6 +319,7 @@ export default {
   },
   data() {
     return {
+      exitPassword: "",
       riskWarning: false,
       stakingIsDisabled: false,
       disable: true,
@@ -352,6 +367,7 @@ export default {
       isPubkeyVisible: false,
       isActiveRunning: [],
       checkActiveValidatorsResponse: [],
+      exitValidatorResponse: {},
     };
   },
   computed: {
@@ -531,8 +547,33 @@ export default {
       link.click();
       window.URL.revokeObjectURL(url);
     },
-    confirmPasswordSingleExitChain(el) {
+    confirmPasswordSingleExitChain: async function (el, val) {
       el.displayExitModal = true;
+      this.exitPassword = val;
+
+      this.exitValidatorResponse = await ControlService.exitValidator({
+        pubkey: el.key,
+        password: this.exitPassword,
+        serviceID: el.validatorID,
+      });
+    },
+    checkRisk: async function (val) {
+      this.password = val;
+      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+        files: this.keyFiles,
+        password: this.password,
+        serviceID: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB,
+      });
+      this.keyFiles = [];
+      if (
+        this.checkActiveValidatorsResponse.length === 0 ||
+        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
+      ) {
+        this.importKey(val);
+      } else {
+        this.riskWarning = true;
+      }
     },
     confirmPasswordMultiExitChain() {
       this.exitChainForMultiValidatorsActive = false;
@@ -703,24 +744,6 @@ export default {
         }
       });
       this.totalBalance = totalBalance;
-    },
-    checkRisk: async function (val) {
-      this.password = val;
-      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
-        files: this.keyFiles,
-        password: this.password,
-        serviceID: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
-      this.keyFiles = [];
-      if (
-        this.checkActiveValidatorsResponse.length === 0 ||
-        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
-      ) {
-        this.importKey(val);
-      } else {
-        this.riskWarning = true;
-      }
     },
 
     importKey: async function (val) {
