@@ -2,35 +2,113 @@
   <div class="resync-modal_parent">
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
-      <div class="resync-icon">
-        <img src="/img/icon/plugin-menu-icons/resync.png" alt="resync modal" />
+      <div class="resync-icon"><img src="/img/icon/plugin-menu-icons/resync.png" alt="" /></div>
+      <div class="resync-message">
+        <div>
+          <span>by initiating resync you will delete the database of</span>
+        </div>
+        <div class="resync-message_nameId">
+          <span>{{ item.name }} - [{{ item.config.serviceID }}}]</span>
+        </div>
+        <div>
+          <span>choose what source will be used for resynchnorization</span>
+        </div>
       </div>
-      <div class="resync-question">
-        <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse, et.</span>
+      <div class="resync-box">
+        <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
+          <slide v-for="(item, index) in syncType" :key="index">
+            <div class="syncBox">
+              <div v-if="item.name === 'genesis'" class="syncContent">
+                <div class="syncText">
+                  <span>{{ item.name }}</span>
+                  <span>{{ item.type }}</span>
+                </div>
+              </div>
+              <div v-else-if="item.type === 'recommended'" class="syncContent">
+                <div class="syncText">
+                  <span>{{ item.name }}</span>
+                  <span>{{ item.type }}</span>
+                </div>
+                <div class="inputBox">
+                  <input
+                    v-model="checkPointSync"
+                    type="text"
+                    placeholder="https://example.cc/"
+                    class="placeholder:text-gray-500"
+                  />
+                </div>
+              </div>
+              <div v-else-if="item.type === 'custom source'" class="syncContent">
+                <div class="commingSoon">Coming soon...</div>
+                <!-- <span>{{ item.name }}</span>
+            <span>{{ item.type }}</span>
+            <div class="syncText">
+              <span>{{ item.name }}</span>
+              <span>{{ item.type }}</span>
+            </div>
+            <div class="inputBox_select" @click="dropdown = true">
+              <div class="select">
+                {{ selectedItem }}
+                <div class="dropParent" v-if="dropdown">
+                  <div class="dropRow">the first</div>
+                  <div class="dropRow">second one</div>
+                  <div class="dropRow">third one</div>
+                </div>
+              </div>
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+            </div> -->
+              </div>
+            </div>
+          </slide>
+
+          <template #addons>
+            <navigation />
+          </template>
+        </carousel>
       </div>
-      <div class="nameId">
-        <span class="service-name">{{ service.name }}</span>
-        <span class="service-id">[ {{ service.config.serviceID }} ]</span>
-      </div>
-      <div class="resync-message">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, est!</div>
-      <div class="resync-button" :class="{ disabled: loading }" @click="$emit('resyncConfirm', service)">
-        <img v-if="resyncLoading" src="/img/icon/control/spinner.gif" alt="loading" />
-        <span v-else>resync</span>
-      </div>
+      <div class="resync-confirm">resync</div>
       <span class="clickOut">click outside to close</span>
     </div>
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useClickInstall } from "@/store/clickInstallation";
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide, Navigation } from "vue3-carousel";
+
 export default {
+  components: {
+    Carousel,
+    Slide,
+    Navigation,
+  },
   props: {
-    service: {
+    item: {
       type: Object,
       required: true,
     },
-    resyncLoading: {
-      type: Boolean,
-      required: true,
+  },
+  data() {
+    return {
+      currentSlide: 0,
+    };
+  },
+  computed: {
+    ...mapWritableState(useClickInstall, {
+      syncType: "syncType",
+      checkPointSync: "checkPointSync",
+      btnActive: "btnActive",
+    }),
+  },
+  watch: {
+    currentSlide: function (val) {
+      if (this.$route.path === "sync")
+        if (val === 1 && this.checkPointSync === "") {
+          this.btnActive = false;
+        } else {
+          this.btnActive = true;
+        }
     },
   },
 };
@@ -52,118 +130,86 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
+  z-index: 300;
 }
 .bg-dark {
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
-  opacity: 0.5;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.3;
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 102;
+  z-index: 202;
   cursor: default;
 }
 .browser-modal {
   width: 50%;
-  height: 50%;
+  height: 55%;
   background-color: #212122;
   border: 5px solid rgb(161, 161, 161);
   border-radius: 70px;
   position: absolute;
-  top: 15%;
+  top: 24%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   z-index: 1050;
   cursor: default;
 }
+
 .resync-icon {
-  width: 80%;
-  height: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2% 0;
+  width: 95%;
+  height: 25%;
 }
 .resync-icon img {
-  width: 15%;
-}
-.resync-question {
-  width: 90%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 100%;
-}
-.nameId {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 18%;
-}
-.service-name {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 120%;
-}
-.service-id {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 80%;
+  width: 11%;
 }
 .resync-message {
-  width: 90%;
-  height: 10%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  font-weight: 600;
+  width: 100%;
+  height: 30%;
+  flex-direction: column;
+  font-size: 80%;
+  font-weight: 500;
   text-transform: uppercase;
-  font-size: 100%;
-}
-.resync-button {
-  width: 30%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 100%;
-  background: rgb(255, 0, 25);
-  border-radius: 10px;
-  cursor: pointer;
   color: #eee;
 }
-.resync-button.disabled {
-  background: rgba(255, 0, 25, 0.5);
-  cursor: not-allowed;
-  pointer-events: none;
+.resync-message_nameId {
+  font-size: 130%;
+  font-weight: 800;
 }
-.resync-button img {
-  width: 35%;
+.resync-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 18%;
 }
-.resync-button:active {
+.resync-confirm {
+  width: 40%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: red;
+  font-size: 100%;
+  text-transform: uppercase;
+  font-weight: 700;
+  border-radius: 15px;
+  color: #eee;
+  cursor: pointer;
+}
+.resync-confirm:active {
   transform: scale(0.9);
 }
 </style>

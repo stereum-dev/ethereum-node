@@ -129,7 +129,7 @@
           :client-name="service.name"
           :client-type="service.category"
           :service-icon="service.icon"
-          @open-log="displayPluginLogPage(service)"
+          @open-log="resyncToggleModal(service)"
         ></service-log-button>
       </div>
     </div>
@@ -237,7 +237,6 @@
           @close-window="restartModalClose"
           @restart-confirm="restartConfirmed"
         ></restart-modal>
-        <resync-separate-services v-if="test" service="test" resync-loading="false"></resync-separate-services>
       </div>
     </div>
     <confirm-modal
@@ -254,13 +253,12 @@
 </template>
 
 <script>
-import ResyncSeparateServices from "./ResyncSeparateServices.vue";
 import ConfirmModal from "./ConfirmModal.vue";
 import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "../../../store/theControl";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
@@ -270,7 +268,6 @@ export default {
     ServiceLogButton,
     PluginLogs,
     ConfirmModal,
-    ResyncSeparateServices,
   },
   data() {
     return {
@@ -303,6 +300,10 @@ export default {
         this.loading = newValue;
       },
     },
+    ...mapWritableState(useServices, {
+      resyncSeparateModal: "resyncSeparateModal",
+      selectedServiceToResync: "selectedServiceToResync",
+    }),
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
@@ -361,6 +362,11 @@ export default {
     restartService(el) {
       this.itemToRestart = el;
       this.restartModalShow = true;
+    },
+    resyncToggleModal(el) {
+      this.resyncSeparateModal = true;
+      this.selectedServiceToResync = el;
+      console.log(this.selectedServiceToResync);
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
