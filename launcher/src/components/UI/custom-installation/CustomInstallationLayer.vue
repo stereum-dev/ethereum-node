@@ -35,7 +35,6 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
-import { useNodeManage } from "@/store/nodeManage";
 import { useNodeHeader } from "@/store/nodeHeader";
 export default {
   data() {
@@ -45,10 +44,6 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(useNodeManage, {
-      currentNetwork: "currentNetwork",
-      networkList: "networkList",
-    }),
     ...mapWritableState(useNodeHeader, {
       refresh: "refresh",
     }),
@@ -58,7 +53,6 @@ export default {
   },
   methods: {
     async prepareStereum() {
-      this.currentNetwork = this.networkList.find((item) => item.network === "testnet");
       this.refresh = false;
       await ControlService.prepareStereumNode(this.installPath);
       const restarted = await ControlService.restartServer();

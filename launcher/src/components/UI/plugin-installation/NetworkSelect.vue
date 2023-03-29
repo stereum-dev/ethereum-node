@@ -1,12 +1,11 @@
-<!-- eslint-disable vue/return-in-computed-property -->
 <template>
   <div class="plugin-parent">
     <div class="select-box">
       <div class="selectContent">
         <div class="currentBox" @click="openDropdown">
           <div class="selectBox_current space-x-4">
-            <img v-if="currentNetwork.icon !== ''" :src="currentNetwork.icon" alt="Icon" class="w-6" />
-            <span class="uppercase">{{ currentNetwork.name }}</span>
+            <img v-if="currentNetwork?.icon" :src="currentNetwork.icon" alt="Icon" class="w-6" />
+            <span class="uppercase">{{ currentNetwork?.name }}</span>
           </div>
           <div class="selectBox_icon">
             <img src="/img/icon/arrows/arrow-down.png" alt="arrow-down" class="arrowDown" />
@@ -18,10 +17,10 @@
       <div v-if="show" class="listBox">
         <div class="selectBox_list w-full divide-y-2 divide-gray-400">
           <div
-            v-for="(state, i) in networks"
+            v-for="(state, i) in networkList"
             :key="i"
             class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
-            @click="selectNetwork(state.name)"
+            @click="selectNetwork(state)"
           >
             <div class="w-1/2 flex justify-start space-x-4 pl-10">
               <img :src="state.icon" alt="Icon" class="w-6" />
@@ -36,15 +35,15 @@
         <div class="plugin-box">
           <div class="network-container">
             <div
-              v-for="(item, index) in plugins.filter((p) => p.network === currentNetwork.name)"
+              v-for="(item, index) in presets"
               :key="index"
               class="plugin"
             >
               <img
                 :src="item.icon"
                 :class="{
-                  selectedItem: item.id === selectedPreset?.id && item.serviceAvailable,
-                  notAvailable: !item.serviceAvailable,
+                  selectedItem: item.selected,
+                  notAvailable: !currentNetwork?.support?.includes(item.name),
                 }"
                 alt="icon"
                 @click="selectItemToInstall(item)"
@@ -61,23 +60,22 @@ import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
-      currentNetwork: {
-        name: "Choose a network",
-        icon: "",
-      },
       show: false,
     };
   },
 
   computed: {
     ...mapWritableState(useClickInstall, {
-      plugins: "presets",
+      presets: "presets",
       selectedPreset: "selectedPreset",
-      selectedNetwork: "selectedNetwork",
-      networks: "networks",
+    }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+      networkList: "networkList",
     }),
     ...mapWritableState(useServices, {
       allServices: "allServices",
@@ -85,16 +83,14 @@ export default {
   },
   mounted() {
     this.selectedPreset = undefined;
+    this.currentNetwork = undefined;
+    this.presets.forEach(p => p.selected = false)
   },
   methods: {
-    pluginNetworkHandler() {
-      let network = this.networks.find((item) => item.name === this.currentNetwork);
-      this.selectedNetwork = network;
-    },
     selectItemToInstall: async function (item) {
       const constellation = await ControlService.getOneClickConstellation({
         setup: item.name,
-        network: this.currentNetwork.name,
+        network: this.currentNetwork.network,
       });
       let includedPlugins = this.allServices.filter((service) => constellation.includes(service.service));
       if (
@@ -109,15 +105,17 @@ export default {
         );
       }
       item.includedPlugins = includedPlugins;
+      this.presets.forEach(p => p.selected = false)
+      item.selected = true
       this.selectedPreset = item;
       this.$emit("disableBtn");
     },
     openDropdown() {
       this.show = !this.show;
     },
-    selectNetwork(name) {
-      this.currentNetwork = this.networks.find((item) => item.name === name);
-      this.selectedNetwork = this.currentNetwork
+    selectNetwork(network) {
+      this.presets.forEach(p => p.selected = false)
+      this.currentNetwork = network
       this.show = false;
     },
   },

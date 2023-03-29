@@ -41,7 +41,6 @@ test("prepareStereumNode on ubuntu", async () => {
     echo "stereum_settings:
     settings:
       controls_install_path: /opt/stereum
-      os_user: stereum
       updates:
         lane: stable
         unattended:

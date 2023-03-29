@@ -83,6 +83,7 @@ export default {
           "text-overflow": "ellipsis",
         };
       }
+      return {}
     },
   },
   watch: {
@@ -105,7 +106,8 @@ export default {
     getFilterbyNetwork() {
       switch (this.configNetwork.network) {
         case "mainnet":
-        case "testnet":
+        case "sepolia":
+        case "goerli":
           return (item) => item.service != "SSVNetworkService";
         case "gnosis":
           return (item) => /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service);

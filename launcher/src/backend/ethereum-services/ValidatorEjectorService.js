@@ -34,7 +34,6 @@ export class ValidatorEjectorService extends NodeService {
       network // network
       // executionClients
       // consensusClients
-      // prometheusNodeExporterClients
     );
     return service;
   }

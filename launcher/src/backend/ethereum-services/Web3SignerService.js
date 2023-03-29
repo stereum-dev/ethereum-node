@@ -49,7 +49,6 @@ export class Web3SignerService extends NodeService {
       network, // network
       null, // executionClients
       null, //consensusClients
-      null, //prometheusNodeExporterClients
       null //mevboost
     );
     return service;

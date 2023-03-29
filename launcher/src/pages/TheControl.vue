@@ -47,12 +47,12 @@ export default {
       this.request = Array.isArray(this.request) ? this.request : [];
       const ARGUMENTS = Array.prototype.slice.call(arguments); // convert functon "arguments" to Array
       const meth = ARGUMENTS.length ? ARGUMENTS.shift() : null;
-      const args = ARGUMENTS.length ? ARGUMENTS : null;
+      const args = ARGUMENTS.length ? ARGUMENTS : null; // eslint-disable-line no-unused-vars
       if (meth in this.request && this.request[meth]) {
         return;
       }
       this.request[meth] = true;
-      const csvc = ControlService;
+      const csvc = ControlService;  // eslint-disable-line no-unused-vars
       const func = eval("async () => {return await csvc." + meth + "()}");
       const resp = await func();
       this.request[meth] = false;

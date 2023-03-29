@@ -17,7 +17,7 @@
         ></support-modal-box>
         <support-modal-box
           :box-title="$t('supportModal.docsTitle')"
-          :box-image-path="gnoEthDocsImg"
+          :box-image-path="docsImage"
           :box-text="$t('supportModal.docsText')"
           @card-action="openGnoEthDocs"
         ></support-modal-box>
@@ -31,26 +31,24 @@
 <script>
 import SupportModalBox from "./SupportModalBox.vue";
 import { mapState } from "pinia";
-import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   components: { SupportModalBox },
   data() {
     return {
-      gnoEthDocsImg: "",
+      docsImage: "",
     };
   },
   computed: {
-    ...mapState(useServices, {
-      network: "network",
-    }),
+    ...mapState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    })
   },
   mounted() {
-    if (this.network === "mainnet") {
-      this.gnoEthDocsImg = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
-    } else if (this.network === "testnet") {
-      this.gnoEthDocsImg = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
-    } else if (this.network === "gnosis") {
-      this.gnoEthDocsImg = "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
+    if (this.currentNetwork.network === "gnosis") {
+      this.docsImage = "/img/icon/header-icons/Gnosis_Documentation_Logo.png";
+    } else {
+      this.docsImage = "/img/icon/header-icons/Ethereum_Documentatio_Logo.png";
     }
   },
   methods: {
@@ -63,13 +61,12 @@ export default {
       let URL = "https://discord.gg/DzAwgnSXtB";
       window.open(URL, "_blank");
     },
-    openGnoEthDocs(network) {
-      network = this.network;
+    openGnoEthDocs() {
       let url;
-      if (network === "mainnet" || network === "testnet") {
-        url = "https://ethereum.org/en/developers/docs/";
-      } else if (network === "gnosis") {
+      if (this.currentNetwork.network === "gnosis") {
         url = "https://docs.gnosischain.com/node/guide/";
+      } else {
+        url = "https://ethereum.org/en/developers/docs/";
       }
       window.open(url, "_blank");
     },

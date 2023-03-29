@@ -2,17 +2,18 @@ name: Tests Molecule
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   configure-updates:
     strategy:
       matrix:
-        tests: [
-          {role: "configure-updates", test: "default"},
-          {role: "configure-updates", test: "no-unattended-updates"}
-        ]
+        tests:
+          [
+            { role: "configure-updates", test: "default" },
+            { role: "configure-updates", test: "no-unattended-updates" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -21,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -65,14 +66,12 @@ jobs:
   update-changes:
     strategy:
       matrix:
-        tests: [
-          {role: "update-changes", test: "20-rc3"},
-          {role: "update-changes", test: "20-rc6"},
-          {role: "update-changes", test: "20-rc7"},
-          {role: "update-changes", test: "20-rc9"},
-          {role: "update-changes", test: "20-rc10"},
-          {role: "update-changes", test: "20-rc12"}
-        ]
+        tests:
+          [
+            { role: "update-changes", test: "20-rc10" },
+            { role: "update-changes", test: "20-rc12" },
+            { role: "update-changes", test: "20-rc13" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -81,7 +80,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -125,9 +124,7 @@ jobs:
   restart-services:
     strategy:
       matrix:
-        tests: [
-          {role: "restart-services", test: "default"}
-        ]
+        tests: [{ role: "restart-services", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -136,7 +133,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -236,9 +233,7 @@ jobs:
   setup:
     strategy:
       matrix:
-        tests: [
-          {role: "setup", test: "default"}
-        ]
+        tests: [{ role: "setup", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -247,7 +242,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -294,57 +289,57 @@ jobs:
     strategy:
       matrix:
         tests: [
-          {role: "manage-service", test: "start"},
-          {role: "manage-service", test: "start-multiple"},
-          {role: "manage-service", test: "start-stop"},
-          {role: "manage-service", test: "write-start"},
-          # {role: "manage-service", test: "ssv-lighthouse"},
-          # {role: "manage-service", test: "ssv-lodestar"},
-          # {role: "manage-service", test: "ssv-nimbus"},
-          # {role: "manage-service", test: "ssv-teku"},
-          # {role: "manage-service", test: "ssv-prysm"},
-          {role: "manage-service", test: "monitor-geth"},
-          # {role: "manage-service", test: "monitor-ssvnetwork"},
-          # {role: "manage-service", test: "monitor-besu"},
-          # {role: "manage-service", test: "monitor-nethermind"},
-          # {role: "manage-service", test: "monitor-erigon"},
-          # {role: "manage-service", test: "monitor-lighthouse"},
-          # {role: "manage-service", test: "monitor-lighthouse"},
-          # {role: "manage-service", test: "monitor-nimbus"},
-          # {role: "manage-service", test: "monitor-prysm"},
-          # {role: "manage-service", test: "monitor-teku"},
-          # {role: "manage-service", test: "mevboost-besu-lighthouse"},
-          # {role: "manage-service", test: "mevboost-besu-nimbus"},
-          # {role: "manage-service", test: "mevboost-besu-prysm"},
-          # {role: "manage-service", test: "mevboost-besu-teku"},
-          # {role: "manage-service", test: "mevboost-geth-lighthouse"},
-          # {role: "manage-service", test: "mevboost-geth-lodestar"},
-          # {role: "manage-service", test: "mevboost-geth-nimbus"},
-          # {role: "manage-service", test: "mevboost-geth-prysm"},
-          # {role: "manage-service", test: "mevboost-geth-teku"},
-          # {role: "manage-service", test: "mevboost-nethermind-lighthouse"},
-          # {role: "manage-service", test: "mevboost-nethermind-nimbus"},
-          # {role: "manage-service", test: "mevboost-nethermind-prysm"},
-          # {role: "manage-service", test: "mevboost-nethermind-teku"},
-          # {role: "manage-service", test: "mevboost-erigon-lodestar"},
-          # {role: "manage-service", test: "besu-lighthouse"},
-          # {role: "manage-service", test: "besu-lodestar"},
-          # {role: "manage-service", test: "besu-nimbus"},
-          {role: "manage-service", test: "besu-prysm"},
-          # {role: "manage-service", test: "besu-teku"},
-          # {role: "manage-service", test: "erigon-lighthouse"},
-          {role: "manage-service", test: "erigon-lodestar"},
-          # {role: "manage-service", test: "erigon-prysm"},
-          {role: "manage-service", test: "geth-lighthouse"},
-          # {role: "manage-service", test: "geth-nimbus"},
-          # {role: "manage-service", test: "geth-prysm"},
-          {role: "manage-service", test: "geth-teku"},
-          # {role: "manage-service", test: "nethermind-lighthouse"},
-          {role: "manage-service", test: "nethermind-nimbus"},
-          # {role: "manage-service", test: "nethermind-prysm"},
-          # {role: "manage-service", test: "nethermind-teku"},
-          {role: "manage-service", test: "notifications"}
-        ]
+            { role: "manage-service", test: "start" },
+            { role: "manage-service", test: "start-multiple" },
+            { role: "manage-service", test: "start-stop" },
+            { role: "manage-service", test: "write-start" },
+            # {role: "manage-service", test: "ssv-lighthouse"},
+            # {role: "manage-service", test: "ssv-lodestar"},
+            # {role: "manage-service", test: "ssv-nimbus"},
+            # {role: "manage-service", test: "ssv-teku"},
+            # {role: "manage-service", test: "ssv-prysm"},
+            { role: "manage-service", test: "monitor-geth" },
+            # {role: "manage-service", test: "monitor-ssvnetwork"},
+            # {role: "manage-service", test: "monitor-besu"},
+            # {role: "manage-service", test: "monitor-nethermind"},
+            # {role: "manage-service", test: "monitor-erigon"},
+            # {role: "manage-service", test: "monitor-lighthouse"},
+            # {role: "manage-service", test: "monitor-lighthouse"},
+            # {role: "manage-service", test: "monitor-nimbus"},
+            # {role: "manage-service", test: "monitor-prysm"},
+            # {role: "manage-service", test: "monitor-teku"},
+            # {role: "manage-service", test: "mevboost-besu-lighthouse"},
+            # {role: "manage-service", test: "mevboost-besu-nimbus"},
+            # {role: "manage-service", test: "mevboost-besu-prysm"},
+            # {role: "manage-service", test: "mevboost-besu-teku"},
+            # {role: "manage-service", test: "mevboost-geth-lighthouse"},
+            # {role: "manage-service", test: "mevboost-geth-lodestar"},
+            # {role: "manage-service", test: "mevboost-geth-nimbus"},
+            # {role: "manage-service", test: "mevboost-geth-prysm"},
+            # {role: "manage-service", test: "mevboost-geth-teku"},
+            # {role: "manage-service", test: "mevboost-nethermind-lighthouse"},
+            # {role: "manage-service", test: "mevboost-nethermind-nimbus"},
+            # {role: "manage-service", test: "mevboost-nethermind-prysm"},
+            # {role: "manage-service", test: "mevboost-nethermind-teku"},
+            # {role: "manage-service", test: "mevboost-erigon-lodestar"},
+            # {role: "manage-service", test: "besu-lighthouse"},
+            # {role: "manage-service", test: "besu-lodestar"},
+            # {role: "manage-service", test: "besu-nimbus"},
+            { role: "manage-service", test: "besu-prysm" },
+            # {role: "manage-service", test: "besu-teku"},
+            # {role: "manage-service", test: "erigon-lighthouse"},
+            { role: "manage-service", test: "erigon-lodestar" },
+            # {role: "manage-service", test: "erigon-prysm"},
+            { role: "manage-service", test: "geth-lighthouse" },
+            # {role: "manage-service", test: "geth-nimbus"},
+            # {role: "manage-service", test: "geth-prysm"},
+            { role: "manage-service", test: "geth-teku" },
+            # {role: "manage-service", test: "nethermind-lighthouse"},
+            { role: "manage-service", test: "nethermind-nimbus" },
+            # {role: "manage-service", test: "nethermind-prysm"},
+            # {role: "manage-service", test: "nethermind-teku"},
+            { role: "manage-service", test: "notifications" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -353,7 +348,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -399,9 +394,7 @@ jobs:
       - manage-service
     strategy:
       matrix:
-        tests: [
-          {role: "ssv-key-generator", test: "default"}
-        ]
+        tests: [{ role: "ssv-key-generator", test: "default" }]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -410,7 +403,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -456,10 +449,11 @@ jobs:
       - manage-service
     strategy:
       matrix:
-        tests: [
-          {role: "update-services", test: "default"},
-          {role: "update-services", test: "single-service"}
-        ]
+        tests:
+          [
+            { role: "update-services", test: "default" },
+            { role: "update-services", test: "single-service" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -468,7 +462,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -514,11 +508,12 @@ jobs:
       - update-services
     strategy:
       matrix:
-        tests: [
-          {role: "update-stereum", test: "default"},
-          {role: "update-stereum", test: "full"},
-          {role: "update-stereum", test: "override"}
-        ]
+        tests:
+          [
+            { role: "update-stereum", test: "default" },
+            { role: "update-stereum", test: "full" },
+            { role: "update-stereum", test: "override" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -527,7 +522,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -573,13 +568,14 @@ jobs:
       - manage-service
     strategy:
       matrix:
-        tests: [
-          {role: "validator-import-api", test: "lighthouse"},
-          {role: "validator-import-api", test: "lodestar"},
-          {role: "validator-import-api", test: "nimbus"},
-          {role: "validator-import-api", test: "prysm"},
-          {role: "validator-import-api", test: "teku"}
-        ]
+        tests:
+          [
+            { role: "validator-import-api", test: "lighthouse" },
+            { role: "validator-import-api", test: "lodestar" },
+            { role: "validator-import-api", test: "nimbus" },
+            { role: "validator-import-api", test: "prysm" },
+            { role: "validator-import-api", test: "teku" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -588,7 +584,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -634,13 +630,14 @@ jobs:
       - validator-import-api
     strategy:
       matrix:
-        tests: [
-          {role: "validator-delete-api", test: "lighthouse"},
-          {role: "validator-delete-api", test: "lodestar"},
-          {role: "validator-delete-api", test: "nimbus"},
-          {role: "validator-delete-api", test: "prysm"},
-          {role: "validator-delete-api", test: "teku"}
-        ]
+        tests:
+          [
+            { role: "validator-delete-api", test: "lighthouse" },
+            { role: "validator-delete-api", test: "lodestar" },
+            { role: "validator-delete-api", test: "nimbus" },
+            { role: "validator-delete-api", test: "prysm" },
+            { role: "validator-delete-api", test: "teku" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -649,7 +646,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0
@@ -695,13 +692,14 @@ jobs:
       - validator-import-api
     strategy:
       matrix:
-        tests: [
-          {role: "validator-list-api", test: "lighthouse"},
-          {role: "validator-list-api", test: "lodestar"},
-          {role: "validator-list-api", test: "nimbus"},
-          {role: "validator-list-api", test: "prysm"},
-          {role: "validator-list-api", test: "teku"}
-        ]
+        tests:
+          [
+            { role: "validator-list-api", test: "lighthouse" },
+            { role: "validator-list-api", test: "lodestar" },
+            { role: "validator-list-api", test: "nimbus" },
+            { role: "validator-list-api", test: "prysm" },
+            { role: "validator-list-api", test: "teku" },
+          ]
       fail-fast: false
     concurrency: molecule-test-${{ matrix.tests.role }}-${{ matrix.tests.test }}
     runs-on: ubuntu-22.04
@@ -710,7 +708,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: "3.9"
       - name: Install depencencies
         run: |
           pip install ansible==5.10.0

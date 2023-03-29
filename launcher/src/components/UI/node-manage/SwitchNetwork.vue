@@ -87,7 +87,7 @@ export default {
           if (this.currentNetwork.network === item.network) {
             this.confirmChanges.splice(index, 1);
           } else {
-            this.confirmChanges[index].data.network = item.network === "testnet" ? "goerli" : item.network;
+            this.confirmChanges[index].data.network = item.network
             this.confirmChanges[index].service.icon = item.icon;
           }
         } else if (this.newConfiguration.length > 0) {
@@ -95,7 +95,7 @@ export default {
             this.getActions(
               "CHANGE NETWORK",
               { icon: item.icon },
-              { network: item.network === "testnet" ? "goerli" : item.network }
+              { network: item.network }
             )
           );
         }
