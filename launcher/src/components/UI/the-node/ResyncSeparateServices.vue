@@ -15,7 +15,14 @@
         </div>
       </div>
       <div class="resync-box">
-        <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
+        <carousel
+          ref="carousel"
+          v-model="currentSlide"
+          :items-to-show="1"
+          :wrap-around="true"
+          :transition="500"
+          :class="{ disabled: item.category === 'execution' }"
+        >
           <slide v-for="(Stype, index) in syncType" :key="index">
             <div class="syncBox">
               <div v-if="Stype.name === 'genesis'" class="syncContent">
@@ -116,6 +123,9 @@ export default {
 </script>
 
 <style scoped>
+.disabled {
+  pointer-events: none;
+}
 .clickOut {
   font-size: 70%;
   display: flex;
