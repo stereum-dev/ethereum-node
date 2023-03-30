@@ -366,7 +366,6 @@ export default {
     resyncToggleModal(el) {
       this.resyncSeparateModal = true;
       this.selectedServiceToResync = el;
-      console.log(this.selectedServiceToResync);
     },
     closePluginLogsPage(el) {
       this.itemToLogs = el;

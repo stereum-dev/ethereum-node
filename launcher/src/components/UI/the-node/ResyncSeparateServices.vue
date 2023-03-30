@@ -73,7 +73,7 @@
           </template>
         </carousel>
       </div>
-      <div class="resync-confirm deactive" :class="{ active: btnActive }">resync</div>
+      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">resync</div>
       <span class="clickOut">click outside to close</span>
     </div>
   </div>
@@ -101,6 +101,7 @@ export default {
       currentSlide: 0,
       btnActive: true,
       checkPointSync: "",
+      serviceID: "",
     };
   },
   computed: {
@@ -117,6 +118,14 @@ export default {
     },
     checkPointSync(val) {
       this.btnActive = val !== "" || this.currentSlide === 0;
+    },
+  },
+  methods: {
+    resync(el) {
+      // Patrik,you can create your function here
+      this.serviceID = el.config.serviceID;
+
+      console.log("service id is =>" + this.serviceID + "and url is =>" + this.checkPointSync);
     },
   },
 };
