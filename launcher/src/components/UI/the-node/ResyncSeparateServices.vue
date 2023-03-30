@@ -92,13 +92,13 @@ export default {
   data() {
     return {
       currentSlide: 0,
+      btnActive: "btnActive",
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
       checkPointSync: "checkPointSync",
-      btnActive: "btnActive",
     }),
   },
   watch: {
@@ -123,6 +123,8 @@ export default {
   width: 100%;
   height: 6%;
   color: red;
+  position: absolute;
+  bottom: 0;
 }
 .resync-modal_parent {
   width: 100vw;
@@ -197,7 +199,7 @@ export default {
 }
 .resync-confirm {
   width: 40%;
-  height: 20%;
+  height: 12%;
   display: flex;
   justify-content: center;
   align-items: center;
