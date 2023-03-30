@@ -55,11 +55,11 @@
             <div class="network-parent">
               <div class="network-box">
                 <div class="none">
-                  <span>{{ selectedPreset.network }}</span>
+                  <span>{{ currentNetwork.name }}</span>
                 </div>
               </div>
               <div class="circle-box">
-                <img :src="selectedPreset.networkIcon" alt="icon" />
+                <img :src="currentNetwork.icon" alt="icon" />
               </div>
             </div>
             <div class="change-installation gap-y-2">
@@ -91,6 +91,7 @@ import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
 import { useServices } from "../../../store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
   components: { ChangeModal, InstallationBox },
@@ -114,12 +115,15 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+      networkList: "networkList",
+    }),
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       plugins: "presets",
       installationPath: "installationPath",
       checkPointSync: "checkPointSync",
-      selectedNetwork: "selectedNetwork",
     }),
     ...mapWritableState(useServices, {
       allPlugins: "allServices",
@@ -196,7 +200,7 @@ export default {
             item.category === element.category &&
             item.service !== "SSVNetworkService" &&
             item.service !== "Web3SignerService";
-          if (this.selectedNetwork.name == "gnosis") {
+          if (this.currentNetwork.network == "gnosis") {
             filter = (item) =>
               item.category === element.category &&
               /(Lighthouse|Teku|Nethermind|Grafana|Prometheus)/.test(item.service);

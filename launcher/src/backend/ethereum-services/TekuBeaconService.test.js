@@ -1,5 +1,4 @@
 import { TekuBeaconService } from "./TekuBeaconService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceVolume } from "./ServiceVolume.js";
 
@@ -34,7 +33,7 @@ test("buildConfiguration", () => {
   });
 
   const tekuService = TekuBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/teku",
     [new GethService.GethService()],
@@ -92,7 +91,7 @@ test("buildConsensusClientHttpEndpointUrl", () => {
   });
 
   const tekuEndpoint = TekuBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/teku",
     [new GethService.GethService()],
@@ -125,7 +124,7 @@ test("getAvailablePorts", () => {
     };
   });
   const tekuServicePorts = TekuBeaconService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/teku",
     [new GethService.GethService()],
@@ -158,7 +157,7 @@ test("network", () => {
     };
   });
   const tekuService = TekuBeaconService.buildByUserInput(
-    networks.goerli,
+    "goerli",
     [],
     "/opt/stereum/teku",
     [new GethService.GethService()],

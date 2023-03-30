@@ -1,13 +1,11 @@
 import { GrafanaService } from "./GrafanaService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { ServiceVolume } from "./ServiceVolume.js";
 
 test("buildConfiguration", () => {
   const ports = [new ServicePort("127.0.0.1", 3000, 3000, servicePortProtocol.tcp)];
 
   const grafanaService = GrafanaService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/grafana",
     "nimbus"
@@ -28,7 +26,7 @@ test("buildConfiguration", () => {
 
 test("getAvailablePorts", () => {
   const grafanaServicePorts = GrafanaService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/grafana",
     "nimbus"

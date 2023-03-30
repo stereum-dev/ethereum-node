@@ -177,13 +177,13 @@ export default {
   },
   mounted() {
     this.availableBlocks = this.shuffleRelaysList(
-      this.relaysList.filter((r) => r[this.configNetwork.network.toLowerCase()])
+      this.relaysList.filter((r) => r[this.configNetwork?.network?.toLowerCase()])
     );
     if (this.items.service === "FlashbotsMevBoostService") {
       ControlService.getServiceConfig(this.items.config.serviceID).then((service) => {
         let relayURLs = service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1].split(",");
         relayURLs.forEach((relay) => {
-          let relayData = this.relaysList.find((r) => r[this.configNetwork.network.toLowerCase()] === relay);
+          let relayData = this.relaysList.find((r) => r[this.configNetwork?.network?.toLowerCase()] === relay);
           if (relayData) this.checkedRelays.push(relayData);
         });
       });

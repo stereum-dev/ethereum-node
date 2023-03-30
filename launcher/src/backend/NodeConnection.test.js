@@ -54,7 +54,6 @@ test("findStereumSettings", async () => {
       stdout: `stereum_settings:
   settings:
     controls_install_path: /opt/stereum/mock
-    os_user: stereum_mock
     updates:
       in_progress:
       lane: stable_mock
@@ -78,7 +77,6 @@ test("findStereumSettings", async () => {
   await nodeConnection.findStereumSettings();
 
   expect(nodeConnection.settings.stereum.settings.controls_install_path).toMatch(/\/opt\/stereum\/mock/);
-  expect(nodeConnection.settings.stereum.settings.os_user).toMatch(/stereum_mock/);
 });
 
 test("findStereumSettings failure", async () => {
@@ -90,7 +88,6 @@ test("findStereumSettings failure", async () => {
       stdout: `stereum:
   settings:
     controls_install_path: /opt/stereum/mock
-    os_user: stereum_mock
     updates:
       in_progress:
       lane: stable_mock
@@ -131,7 +128,7 @@ test("prepareStereumNode failure ubuntu installpkg", async () => {
   nodeConnection.sshService = new SSHService.SSHService();
 
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't install os packages: error1234");
+    expect(e).toEqual(new Error("Can't install os packages: error1234"));
   });
 
   expect(mMock.mock.calls.length).toBe(2);
@@ -154,7 +151,7 @@ test("prepareStereumNode error ubuntu installpkg", async () => {
   nodeConnection.sshService = new SSHService.SSHService();
 
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't install os packages: foobar");
+    expect(e).toEqual(new Error("Can't install os packages: foobar"));
   });
 
   expect(mMock.mock.calls.length).toBe(2);
@@ -177,7 +174,7 @@ test("prepareStereumNode failure ubuntu unsupported os", async () => {
   nodeConnection.sshService = new SSHService.SSHService();
 
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("unsupported OS");
+    expect(e).toEqual(new Error("unsupported OS"));
   });
 
   expect(mMock.mock.calls.length).toBe(1);
@@ -202,7 +199,7 @@ test("prepareStereumNode failure ubuntu install", async () => {
   nodeConnection.sshService = new SSHService.SSHService();
 
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't install ansible role: <stderr empty>");
+    expect(e).toEqual(new Error("Can't install ansible role: <stderr empty>"));
   });
 
   expect(mMock.mock.calls.length).toBe(4);
@@ -228,7 +225,7 @@ test("prepareStereumNode error ubuntu install", async () => {
   nodeConnection.sshService = new SSHService.SSHService();
 
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't install ansible roles: connection lost");
+    expect(e).toEqual(new Error("Can't install ansible roles: connection lost"));
   });
 
   expect(mMock.mock.calls.length).toBe(4);
@@ -308,10 +305,10 @@ test("prepareStereumNode error playbook", async () => {
 
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't run setup playbook: Can't run playbook: connection interrupted");
+    expect(e).toEqual(new Error("Can't run setup playbook: Error: Can't run playbook: connection interrupted"));
   });
 
-  expect(mMock.mock.calls.length).toBe(7);
+  expect(mMock.mock.calls.length).toBe(6);
 
   expect(mMock.mock.calls[1][0]).toMatch(/cat/);
   expect(mMock.mock.calls[1][0]).toMatch(/release/);
@@ -346,11 +343,10 @@ test("prepareStereumNode failure playbook", async () => {
 
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode("/opt/stereum/bar").catch((e) => {
-    expect(e).toMatch("Can't run setup playbook: Failed running 'setup': asdf");
+    expect(e).toEqual(new Error("Can't run setup playbook: Error: Failed running 'setup': asdf"));
   });
 
-  expect(mMock.mock.calls.length).toBe(7);
-
+  expect(mMock.mock.calls.length).toBe(6);
   expect(mMock.mock.calls[1][0]).toMatch(/cat/);
   expect(mMock.mock.calls[1][0]).toMatch(/release/);
 
@@ -379,7 +375,7 @@ test("playbookStatus error", async () => {
   expect.assertions(1);
 
   await nodeConnection.playbookStatus("ref-123").catch((e) => {
-    expect(e).toMatch("Can't read playbook status 'ref-123': error123");
+    expect(e).toEqual(new Error("Can't read playbook status 'ref-123': error123"));
   });
 });
 
@@ -402,7 +398,7 @@ test("playbookStatus failure", async () => {
 
   await nodeConnection.playbookStatus("ref-123").catch((e) => {
     log.debug("playbookStatus failure:", e);
-    expect(e).toMatch("Failed reading status of ref 'ref-123': err-1");
+    expect(e).toEqual(new Error("Failed reading status of ref 'ref-123': err-1"));
   });
 });
 
@@ -463,7 +459,7 @@ test("runPlaybook error no settings", async () => {
   nodeConnection.taskManager = new TaskManager();
 
   await nodeConnection.runPlaybook("ref-abc", { stereum_var: "sowow" }).catch((e) => {
-    expect(e).toMatch(/Settings not loaded/);
+    expect(e).toEqual(new Error("Settings not loaded! Run findStereumSettings() first."));
   });
 });
 

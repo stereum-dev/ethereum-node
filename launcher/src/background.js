@@ -261,13 +261,7 @@ ipcMain.handle("restartServices", async (event, args) => {
 });
 
 ipcMain.handle("checkUpdates", async () => {
-  let versions;
-  try {
-    versions = await nodeConnection.checkUpdates();
-  } catch (err) {
-    throw err;
-  }
-  return versions;
+  return await nodeConnection.checkUpdates();
 });
 
 ipcMain.handle("getCurrentStereumVersion", async () => {
@@ -362,7 +356,7 @@ ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
 
-ipcMain.handle("getQRCode", async (event) => {
+ipcMain.handle("getQRCode", async () => {
   return await monitoring.getQRCode();
 });
 

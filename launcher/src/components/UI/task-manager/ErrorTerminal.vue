@@ -19,8 +19,6 @@
   </div>
 </template>
 <script>
-import { mapWritableState } from "pinia";
-import { useTaskManager } from "@/store/taskManager";
 export default {
   props: {
     item: {
@@ -28,11 +26,7 @@ export default {
       required: true,
     },
   },
-  computed: {
-    ...mapWritableState(useTaskManager, {
-      error: "fakeError",
-    }),
-  },
+  computed: {},
 };
 </script>
 <style scoped>

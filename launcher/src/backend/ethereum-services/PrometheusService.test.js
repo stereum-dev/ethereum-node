@@ -1,5 +1,4 @@
 import { PrometheusService } from "./PrometheusService";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 
 test("buildConfiguration", () => {
@@ -31,7 +30,7 @@ test("buildConfiguration", () => {
     };
   });
 
-  const prometheus = PrometheusService.buildByUserInput(networks.prater, ports, "/opt/stereum/prometheus", [
+  const prometheus = PrometheusService.buildByUserInput("prater", ports, "/opt/stereum/prometheus", [
     new NimbusBeaconService.NimbusBeaconService(),
     new PrometheusNodeExporterService.PrometheusNodeExporterService(),
   ]).buildConfiguration();
@@ -48,7 +47,7 @@ test("buildConfiguration", () => {
 
 test("getAvailablePorts", () => {
   const prometheus = PrometheusService.buildByUserInput(
-    networks.prater,
+    "prater",
     [],
     "/opt/stereum/prometheus",
     [],

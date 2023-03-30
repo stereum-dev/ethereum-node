@@ -29,10 +29,10 @@
       </div>
       <remove-modal
         v-if="removeServicesModal"
+        ref="removeServicesModalComponent"
         @close-me="closeRemoveModal"
         @remove-items="removeConfirmation"
         @back-to-login="backToLogin"
-        ref="removeServicesModalComponent"
       ></remove-modal>
     </div>
   </div>
@@ -123,11 +123,12 @@ export default {
       this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
+      let condition = true
       await ControlService.clearTasks();
       ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
       var uxtStart = Math.floor(Date.now() / 1000);
       var secMax = 30; // wait max X seconds to finish destroy process
-      while (1) {
+      while (condition) {
         var secElapsed = Math.floor(Math.floor(Date.now() / 1000) - uxtStart);
         if (secElapsed >= secMax) {
           console.log("abort -> timeout -> secElapsed", secElapsed);
@@ -163,6 +164,7 @@ export default {
           myresult.push("node nuked (" + status + ")");
           this.$refs.removeServicesModalComponent.nukeData = myresult;
           await ControlService.clearTasks();
+          condition = false
           break;
         }
         await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts

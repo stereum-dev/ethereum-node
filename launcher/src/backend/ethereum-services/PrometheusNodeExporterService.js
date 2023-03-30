@@ -21,7 +21,6 @@ export class PrometheusNodeExporterService extends NodeService {
       network // network
       // executionClients
       // consensusClients
-      // prometheusNodeExporterClients
     );
     return service;
   }
@@ -43,8 +42,7 @@ export class PrometheusNodeExporterService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    static_configs:\n      - targets: [${this.buildPrometheusNodeExporterClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    static_configs:\n      - targets: [${this.buildPrometheusNodeExporterClientMetricsEndpoint()}]`;
   }
 }

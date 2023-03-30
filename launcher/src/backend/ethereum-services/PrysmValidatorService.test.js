@@ -1,5 +1,4 @@
 import { PrysmValidatorService } from "./PrysmValidatorService";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 
 test("buildConfiguration", () => {
@@ -23,12 +22,12 @@ test("buildConfiguration", () => {
   });
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
 
-  const prysm = PrysmValidatorService.buildByUserInput(networks.prater, ports, "/opt/stereum/prysm", [
+  const prysm = PrysmValidatorService.buildByUserInput("prater", ports, "/opt/stereum/prysm", [
     new PrysmBeaconService.PrysmBeaconService(),
   ]).buildConfiguration();
 
-  expect(prysm.command).toMatch(/--beacon-rpc-provider=\"buildConsensusClientEndpoint\"/);
-  expect(prysm.command).toMatch(/--beacon-rpc-gateway-provider=\"buildConsensusClientGateway\"/);
+  expect(prysm.command).toMatch(/--beacon-rpc-provider="buildConsensusClientEndpoint"/);
+  expect(prysm.command).toMatch(/--beacon-rpc-gateway-provider="buildConsensusClientGateway"/);
   expect(prysm.volumes).toHaveLength(4);
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/data/db:/opt/app/data/db");
   expect(prysm.volumes).toContain("/opt/stereum/prysm-" + prysm.id + "/data/wallets:/opt/app/data/wallets");
@@ -46,7 +45,7 @@ test("buildConfiguration", () => {
 test("getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const prysm = PrysmValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     []
@@ -58,7 +57,7 @@ test("getAvailablePorts", () => {
 test("autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const prysm = PrysmValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     []
@@ -70,13 +69,13 @@ test("autoupdate", () => {
 test("autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const prysm = PrysmValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/prysm",
     []
   ).buildConfiguration();
 
-  expect(prysm.network).toBe(networks.prater);
+  expect(prysm.network).toBe("prater");
 });
 
 test("buildByConfiguration", () => {

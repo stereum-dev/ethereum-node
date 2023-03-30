@@ -37,45 +37,43 @@ async function createClient(config) {
 }
 
 async function createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions) {
-  return new Promise(async function (resolve, reject) {
-    let server, conn;
-    try {
-      server = await createServer(serverOptions);
-    } catch (e) {
-      return reject(e);
-    }
+  let server, conn;
+  try {
+    server = await createServer(serverOptions);
+  } catch (e) {
+    return e;
+  }
 
-    try {
-      conn = await createClient(sshOptions);
-    } catch (e) {
-      return reject(e);
-    }
+  try {
+    conn = await createClient(sshOptions);
+  } catch (e) {
+    return e;
+  }
 
-    server.on("connection", (connection) => {
-      if (tunnelOptions.autoClose) {
-        autoClose(server, connection);
-      }
-      try {
-        conn.forwardOut(
-          forwardOptions.srcAddr,
-          forwardOptions.srcPort,
-          forwardOptions.dstAddr,
-          forwardOptions.dstPort,
-          (err, stream) => {
-            if (err) {
-              return reject(err);
-            }
-            connection.pipe(stream).pipe(connection);
+  server.on("connection", (connection) => {
+    if (tunnelOptions.autoClose) {
+      autoClose(server, connection);
+    }
+    try {
+      conn.forwardOut(
+        forwardOptions.srcAddr,
+        forwardOptions.srcPort,
+        forwardOptions.dstAddr,
+        forwardOptions.dstPort,
+        (err, stream) => {
+          if (err) {
+            return err;
           }
-        );
-      } catch (e) {
-        return reject(e);
-      }
-    });
-
-    server.on("close", () => conn.end());
-    resolve([server, conn]);
+          connection.pipe(stream).pipe(connection);
+        }
+      );
+    } catch (e) {
+      return e;
+    }
   });
+
+  server.on("close", () => conn.end());
+  return [server, conn]
 }
 
 exports.createTunnel = createTunnel;

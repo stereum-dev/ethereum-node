@@ -1,5 +1,4 @@
 import { LighthouseValidatorService } from "./LighthouseValidatorService.js";
-import { networks } from "./NodeService.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 
 test("LighthouseValidatorService buildConfiguration", () => {
@@ -21,7 +20,7 @@ test("LighthouseValidatorService buildConfiguration", () => {
   });
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
 
-  const lhService = LighthouseValidatorService.buildByUserInput(networks.prater, ports, "/opt/stereum/lh", [
+  const lhService = LighthouseValidatorService.buildByUserInput("prater", ports, "/opt/stereum/lh", [
     new LighthouseBeaconService.LighthouseBeaconService(),
   ]).buildConfiguration();
 
@@ -41,7 +40,7 @@ test("LighthouseValidatorService buildConfiguration", () => {
 test("LighthouseValidatorService getAvailablePorts", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lhService = LighthouseValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/lh",
     [],
@@ -54,7 +53,7 @@ test("LighthouseValidatorService getAvailablePorts", () => {
 test("LighthouseValidatorService autoupdate", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lhService = LighthouseValidatorService.buildByUserInput(
-    networks.prater,
+    "prater",
     ports,
     "/opt/stereum/lh",
     [],
@@ -67,14 +66,14 @@ test("LighthouseValidatorService autoupdate", () => {
 test("LighthouseValidatorService network", () => {
   const ports = [new ServicePort("1.2.3.4", 303, 404, servicePortProtocol.udp)];
   const lhService = LighthouseValidatorService.buildByUserInput(
-    networks.mainnet,
+    "mainnet",
     ports,
     "/opt/stereum/lh",
     [],
     "foobar"
   ).buildConfiguration();
 
-  expect(lhService.network).toBe(networks.mainnet);
+  expect(lhService.network).toBe("mainnet");
 });
 
 test("buildByConfiguration", () => {

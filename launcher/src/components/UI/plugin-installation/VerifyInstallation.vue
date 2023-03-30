@@ -71,6 +71,7 @@ export default {
   },
   methods: {
     runInstalltion: async function () {
+      try {
       this.$router.push("/play");
       this.refresh = false;
       await ControlService.prepareOneClickInstallation(this.installationPath);
@@ -84,8 +85,20 @@ export default {
       });
 
       await ControlService.startOneClickServices();
-
       this.$router.push("/node");
+      } catch(err) {
+        console.log("Installation Failed: ",err)
+        await ControlService.clearTasks();
+        await ControlService.destroy();
+        //handle error with ui and stuff not like this:
+        this.loggingOut()
+      }
+    },
+    async loggingOut() {
+      await ControlService.logout();
+      this.$router.push("/").then(() => {
+        location.reload();
+      });
     },
     displayWarningHandler() {
       this.displayInstallationWarning = true;

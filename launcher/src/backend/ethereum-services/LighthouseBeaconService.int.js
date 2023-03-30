@@ -4,7 +4,6 @@
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
 import { ServicePort, servicePortProtocol } from "./ServicePort.js";
-import { StringUtils } from "../StringUtils.js";
 import { ServiceManager } from "../ServiceManager.js";
 import { LighthouseBeaconService } from "./LighthouseBeaconService.js";
 import { LighthouseValidatorService } from "./LighthouseValidatorService.js";
