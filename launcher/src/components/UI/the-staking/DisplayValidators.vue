@@ -151,6 +151,7 @@
                   confirmPasswordSingleExitChain(item, enteredPassword);
                 }
               "
+             
             /> -->
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
@@ -199,6 +200,7 @@
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
+      :class="{ deactive: deactiveInsertValidator === true ? true : false }"
       :services="installedServices"
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
@@ -319,6 +321,7 @@ export default {
   },
   data() {
     return {
+      deactiveInsertValidator: false,
       exitPassword: "",
       riskWarning: false,
       stakingIsDisabled: false,
@@ -547,15 +550,9 @@ export default {
       link.click();
       window.URL.revokeObjectURL(url);
     },
-    confirmPasswordSingleExitChain: async function (el, val) {
+    confirmPasswordSingleExitChain(el, val) {
       el.displayExitModal = true;
       this.exitPassword = val;
-
-      this.exitValidatorResponse = await ControlService.exitValidator({
-        pubkey: el.key,
-        password: this.exitPassword,
-        serviceID: el.validatorID,
-      });
     },
     checkRisk: async function (val) {
       this.password = val;
@@ -579,17 +576,24 @@ export default {
       this.exitChainForMultiValidatorsActive = false;
       this.exitChainModalForMultiValidators = true;
     },
-    confirmExitChainForValidators(el) {
+    confirmExitChainForValidators: async function (el) {
       if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
+        this.deactiveInsertValidator = false;
       } else {
         this.exitChainModalForMultiValidators = false;
       }
       this.insertKeyBoxActive = true;
+      this.exitValidatorResponse = await ControlService.exitValidator({
+        pubkey: el.key,
+        password: this.exitPassword,
+        serviceID: el.validatorID,
+      });
     },
     passwordBoxSingleExitChain(el) {
       el.isExitBoxActive = true;
+      this.deactiveInsertValidator = true;
     },
     closeExitChainModal(el) {
       if (el.displayExitModal || el.isExitBoxActive) {
@@ -912,6 +916,10 @@ export default {
 };
 </script>
 <style scoped>
+.deactive {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .import-message::-webkit-scrollbar {
   width: none;
 }

@@ -7,7 +7,11 @@
       <input v-model="enteredPassword" type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmPassword', enteredPassword)">
+      <button
+        class="confirmBtn"
+        :class="{ deactive: enteredPassword === '' ? true : false }"
+        @click="$emit('confirmPassword', enteredPassword)"
+      >
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
     </div>
@@ -23,6 +27,10 @@ export default {
 };
 </script>
 <style scoped>
+.deactive {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .exitRow {
   grid-column: 1/8;
   grid-row: 1;
