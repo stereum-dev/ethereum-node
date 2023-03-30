@@ -11,8 +11,8 @@
           <span>{{ item.name }} - [{{ item.config.serviceID }}}]</span>
         </div>
         <div>
-          <span
-            >choose {{ item.category === "consensus" ? "what" : "genesis" }} source will be used for
+          <span>
+            {{ item.category === "consensus" ? "choose what" : "genesis" }} source will be used for
             resynchnorization</span
           >
         </div>
