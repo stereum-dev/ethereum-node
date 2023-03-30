@@ -16,18 +16,18 @@
       </div>
       <div class="resync-box">
         <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
-          <slide v-for="(item, index) in syncType" :key="index">
+          <slide v-for="(Stype, index) in syncType" :key="index">
             <div class="syncBox">
-              <div v-if="item.name === 'genesis'" class="syncContent">
+              <div v-if="Stype.name === 'genesis'" class="syncContent">
                 <div class="syncText">
-                  <span>{{ item.name }}</span>
-                  <span>{{ item.type }}</span>
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
               </div>
-              <div v-else-if="item.type === 'recommended'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended'" class="syncContent">
                 <div class="syncText">
-                  <span>{{ item.name }}</span>
-                  <span>{{ item.type }}</span>
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
                 <div class="inputBox">
                   <input
@@ -38,7 +38,7 @@
                   />
                 </div>
               </div>
-              <div v-else-if="item.type === 'custom source'" class="syncContent">
+              <div v-else-if="Stype.type === 'custom source'" class="syncContent">
                 <div class="commingSoon">Coming soon...</div>
                 <!-- <span>{{ item.name }}</span>
             <span>{{ item.type }}</span>
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      btnActive: false,
+      btnActive: true,
       checkPointSync: "",
     };
   },
@@ -102,14 +102,11 @@ export default {
     }),
   },
   watch: {
-    checkPointSync: function () {
-      if (this.checkPointSync === "") {
-        this.btnActive = false;
-        console.log(this.btnActive);
-      } else {
-        this.btnActive = true;
-        console.log(this.btnActive);
-      }
+    currentSlide(val) {
+      this.btnActive = val === 0 || (val === 1 && this.checkPointSync !== "");
+    },
+    checkPointSync(val) {
+      this.btnActive = val !== "";
     },
   },
 };
