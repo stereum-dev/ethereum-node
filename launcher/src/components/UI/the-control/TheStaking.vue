@@ -3,7 +3,7 @@
     <div class="staking-box">
       <div class="staking-ico">
         <div class="staking-ico_container">
-          <img src="../../../../public/img/icon/control/keyEth.svg" alt="Key-icon" />
+          <img src="../../../../public/img/icon/control/key-eth.svg" alt="Key-icon" />
         </div>
         <span>STAKING</span>
       </div>
