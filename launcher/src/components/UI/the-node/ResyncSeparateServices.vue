@@ -61,7 +61,7 @@
             </div>
           </slide>
 
-          <template #addons>
+          <template v-if="item.category === 'consensus'" #addons>
             <navigation />
           </template>
         </carousel>
