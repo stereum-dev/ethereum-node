@@ -13,7 +13,7 @@
         <div>
           <span>
             {{ item.category === "consensus" ? "choose what" : "genesis" }} source will be used for
-            resynchnorization</span
+            resynchronization</span
           >
         </div>
       </div>
