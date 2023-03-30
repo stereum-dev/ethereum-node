@@ -66,7 +66,7 @@
           </template>
         </carousel>
       </div>
-      <div class="resync-confirm">resync</div>
+      <div class="resync-confirm deactive" :class="{ active: btnActive }">resync</div>
       <span class="clickOut">click outside to close</span>
     </div>
   </div>
@@ -92,23 +92,24 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      btnActive: "btnActive",
+      btnActive: false,
+      checkPointSync: "",
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
-      checkPointSync: "checkPointSync",
     }),
   },
   watch: {
-    currentSlide: function (val) {
-      if (this.$route.path === "sync")
-        if (val === 1 && this.checkPointSync === "") {
-          this.btnActive = false;
-        } else {
-          this.btnActive = true;
-        }
+    checkPointSync: function () {
+      if (this.checkPointSync === "") {
+        this.btnActive = false;
+        console.log(this.btnActive);
+      } else {
+        this.btnActive = true;
+        console.log(this.btnActive);
+      }
     },
   },
 };
@@ -213,5 +214,13 @@ export default {
 }
 .resync-confirm:active {
   transform: scale(0.9);
+}
+.deactive {
+  opacity: 50%;
+  pointer-events: none;
+}
+.active {
+  opacity: 1;
+  pointer-events: visible;
 }
 </style>
