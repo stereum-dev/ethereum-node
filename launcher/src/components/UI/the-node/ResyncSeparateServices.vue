@@ -103,10 +103,13 @@ export default {
   },
   watch: {
     currentSlide(val) {
-      this.btnActive = val === 0 || (val === 1 && this.checkPointSync !== "");
+      if (val === 0) {
+        this.checkPointSync = "";
+      }
+      this.btnActive = val === 0 || this.checkPointSync !== "";
     },
     checkPointSync(val) {
-      this.btnActive = val !== "";
+      this.btnActive = val !== "" || this.currentSlide === 0;
     },
   },
 };
