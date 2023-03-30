@@ -84,6 +84,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 
@@ -111,6 +112,9 @@ export default {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
     }),
+    ...mapWritableState(useServices, {
+      resyncSeparateModal: "resyncSeparateModal",
+    }),
   },
   watch: {
     currentSlide(val) {
@@ -129,6 +133,7 @@ export default {
       this.serviceID = el.config.serviceID;
 
       console.log("service id is =>" + this.serviceID + "and url is =>" + this.checkPointSync);
+      this.resyncSeparateModal = false;
     },
   },
 };
