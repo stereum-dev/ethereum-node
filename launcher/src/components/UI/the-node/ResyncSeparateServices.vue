@@ -24,7 +24,7 @@
                   <span>{{ Stype.type }}</span>
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'recommended'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
