@@ -68,6 +68,11 @@
             @confirm-btn="confirmRunningResync($event, item)"
           >
           </resync-modal>
+          <resync-separate-services
+            v-if="resyncSeparateModal"
+            :item="selectedServiceToResync"
+            @close-window="resyncSeparateModal = false"
+          ></resync-separate-services>
           <Transition>
             <plugin-logs v-if="isPluginLogPageActive" :item="itemToLogs" @close-log="closePluginLogsPage"></plugin-logs>
           </Transition>
@@ -93,6 +98,7 @@ import PluginLogs from "./PluginLogs.vue";
 import TheExpert from "./TheExpert.vue";
 import PrunningModal from "./PrunningModal.vue";
 import ResyncModal from "./ResyncModal.vue";
+import ResyncSeparateServices from "./ResyncSeparateServices.vue";
 export default {
   components: {
     ManageTrapezoid,
@@ -101,6 +107,7 @@ export default {
     PrunningModal,
     ResyncModal,
     PluginLogs,
+    ResyncSeparateServices,
   },
   props: {
     title: {
@@ -123,16 +130,19 @@ export default {
       isServiceOn: false,
       isServicePending: false,
       gethPrunningWarningModal: false,
-      resyncWarningModal: false,
       isPluginLogPageActive: false,
       options: null,
       itemToLogs: {},
+      resyncWarningModal: false,
     };
   },
   computed: {
     ...mapWritableState(useServices, {
+      resyncSeparateModal: "resyncSeparateModal",
       installedServices: "installedServices",
       runningServices: "runningServices",
+      resyncWarningModal: "resyncWarningModal",
+      selectedServiceToResync: "selectedServiceToResync",
     }),
   },
   methods: {
@@ -216,6 +226,7 @@ export default {
         this.resyncWarningModal = false;
       }
     },
+
     // Prunning Functions
     hidePrunningWarningsModal(el) {
       this.gethPrunningWarningModal = false;

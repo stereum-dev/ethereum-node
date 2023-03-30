@@ -89,7 +89,51 @@
         @btn-action="restartToggle"
         >{{ $t("journalnode.restart") }}<span class="ml-1">. . .</span></the-node-panel-btn
       >
+      <the-node-panel-btn
+        img-path="/img/icon/plugin-menu-icons/resync.png"
+        is-color="gold"
+        width="12"
+        margin-right="5"
+        btn-action="resyncToggle"
+        grid-row="6/7"
+        @btn-action="resyncToggle"
+        >resync<span class="ml-1">. . .</span></the-node-panel-btn
+      >
     </div>
+
+    <div v-if="openResync" class="configBtn">
+      <the-node-panel-btn
+        img-path="/img/icon/plugin-menu-icons/resync.png"
+        is-color="light"
+        width="15"
+        margin-right="3"
+        btn-action="logToggle"
+        grid-row="1/2"
+        class="btnTitle"
+        >{{ $t("journalnode.log") }}</the-node-panel-btn
+      >
+      <the-node-panel-btn
+        img-path="/img/icon/manage-node-icons/undo1.png"
+        is-color="green"
+        width="10"
+        margin-right="5"
+        btn-action="resyncToggle"
+        grid-row="2/3"
+        @btn-action="resyncToggle"
+        >{{ $t("installOption.back") }}</the-node-panel-btn
+      >
+      <div class="log-navigation">
+        <service-log-button
+          v-for="service in resyncServices"
+          :key="service"
+          :client-name="service.name"
+          :client-type="service.category"
+          :service-icon="service.icon"
+          @open-log="resyncToggleModal(service)"
+        ></service-log-button>
+      </div>
+    </div>
+
     <div v-if="!openRestart && openLog" class="configBtn">
       <the-node-panel-btn
         img-path="/img/icon/node-journal-icons/log-icon.png"
@@ -214,7 +258,7 @@ import RestartModal from "./RestartModal.vue";
 import ServiceLogButton from "./ServiceLogButton.vue";
 import ControlService from "@/store/ControlService";
 import { useControlStore } from "../../../store/theControl";
-import { mapState } from "pinia";
+import { mapState, mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
@@ -227,6 +271,7 @@ export default {
   },
   data() {
     return {
+      test: true,
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
@@ -240,6 +285,7 @@ export default {
       serverNameWidth: null,
       nameParentWidth: null,
       confirmModal: false,
+      openResync: false,
     };
   },
 
@@ -254,6 +300,10 @@ export default {
         this.loading = newValue;
       },
     },
+    ...mapWritableState(useServices, {
+      resyncSeparateModal: "resyncSeparateModal",
+      selectedServiceToResync: "selectedServiceToResync",
+    }),
     ...mapState(useServices, {
       installedServices: "installedServices",
     }),
@@ -261,6 +311,7 @@ export default {
       ServerName: "ServerName",
       ipAddress: "ipAddress",
     }),
+
     sortedServices() {
       const copyOfInstalledServices = [...this.installedServices];
 
@@ -274,6 +325,20 @@ export default {
         return 0;
       });
     },
+    resyncServices() {
+      const copyOfInstalledServices = [...this.installedServices];
+      return copyOfInstalledServices
+        .filter((obj) => ["execution", "consensus"].includes(obj.category))
+        .sort((a, b) => {
+          if (a.category === "execution") return -1;
+          if (b.category === "execution") return 1;
+          if (a.category === "consensus") return -1;
+          if (b.category === "consensus") return 1;
+
+          return 0;
+        });
+    },
+
     checkServerNameWidth() {
       if (this.serverNameWidth > this.nameParentWidth) {
         return true;
@@ -298,6 +363,11 @@ export default {
       this.itemToRestart = el;
       this.restartModalShow = true;
     },
+    resyncToggleModal(el) {
+      this.resyncSeparateModal = true;
+      this.selectedServiceToResync = el;
+      console.log(this.selectedServiceToResync);
+    },
     closePluginLogsPage(el) {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;
@@ -311,6 +381,9 @@ export default {
     },
     restartToggle() {
       this.openRestart = !this.openRestart;
+    },
+    resyncToggle() {
+      this.openResync = !this.openResync;
     },
     restartModalClose() {
       this.restartModalShow = false;
@@ -367,14 +440,16 @@ export default {
       this.restartModalShow = false;
     },
     checkStatus() {
-      return !this.installedServices.some((s) => s.state == "running");
+      let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
+
+      return !servicesToManage.some((s) => s.state == "running");
     },
     async stateButtonHandler(state) {
       this.loading = true;
       this.toggleModalClose();
       try {
         //this is the temporary solution until notification service is exiting correctly
-        let servicesToManage = this.installedServices.filter((service) => service.name !== "notifications");
+        let servicesToManage = this.installedServices.filter((service) => service.name !== "Notifications");
 
         let promises = servicesToManage.map(async (service, index) => {
           new Promise((resolve) => setTimeout(resolve, index * 1000)).then(() => {
