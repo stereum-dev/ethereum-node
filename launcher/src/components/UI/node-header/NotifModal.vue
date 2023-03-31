@@ -16,7 +16,10 @@
         <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
       <div v-if="!qrPage" class="qrPage_content">
-        <div class="banner" @click="qrViewer"><img :src="banner" /></div>
+        <div class="banner" @click="qrViewer">
+          <div class="banner_icon"><img src="/img/icon/stereum-logo/stereum_logo_extern.png" /></div>
+          <div class="banner_title"><span>Sterum Node Monitor</span></div>
+        </div>
         <div class="qrContent">
           <div class="qrCode-boxes">
             <span>1. Visit the app store or our website to download "STEREUM Node Monitor" </span>
@@ -129,15 +132,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20%;
+  width: 10%;
   height: 100%;
 }
 .notif-row_icon img {
-  max-width: 40%;
+  max-width: 70%;
 }
 .notif-row_name {
   display: flex;
-  width: 80%;
+  width: 87%;
   height: 100%;
   justify-content: flex-start;
   align-items: center;
@@ -188,18 +191,50 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .banner {
-  width: 100%;
-  height: 30%;
+  width: 90%;
+  height: 20%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  background: #1d1d1d;
+  border: 1px solid grey;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px 1px #001717;
+  cursor: pointer;
+}
+.banner:active {
+  box-shadow: none;
+  border: none;
+}
+.banner:hover {
+  background: #292727;
+}
+.banner_icon {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.banner img {
+.banner_icon img {
   width: 60%;
-  margin-left: 2%;
+}
+.banner_title {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: #c3c3c3;
+}
+.banner_title span {
+  font-size: 140%;
+  font-weight: 600;
 }
 .notif-modal-parent {
   width: 100%;
@@ -336,7 +371,7 @@ export default {
 
 .close {
   color: #bf3a3a;
-  font-size: 50%;
+  font-size: 70%;
   font-weight: 400;
   align-self: center;
   position: absolute;
