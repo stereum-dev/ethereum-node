@@ -138,7 +138,7 @@
             <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
             <ExitValidator
               v-if="item.isExitBoxActive"
-              @back-btn="item.isExitBoxActive = false"
+              @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
               @confirm-password="
                 (enteredPassword) => {
                   confirmPasswordSingleExitChain(item, enteredPassword);
