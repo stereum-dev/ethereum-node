@@ -3,17 +3,16 @@
     <div class="modal-opacity" @click="$emit('closeMe')"></div>
     <div class="notif-modal-content">
       <div v-if="qrPage" class="content">
-        <div class="title-box">
-          <span>{{ $t("notifModal.notification") }}</span>
-        </div>
-        <div class="text">
-          <p>
-            {{ $t("notifModal.notifText") }}
-          </p>
-        </div>
-        <div class="messageContent" @click="qrViewer">
-          <img :src="banner" alt="icon" />
-        </div>
+        <div class="notif-Title"><span>add a notification channel</span></div>
+        <div class="notif-message"><span>Choose what kind of Notification Channel you want to configure</span></div>
+        <ul class="notif-box">
+          <li @click="qrPage = !qrPage">
+            <div class="notif-row_icon">
+              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" alt="notif logo" />
+            </div>
+            <div class="notif-row_name"><span>Stereum Node Monitor</span></div>
+          </li>
+        </ul>
         <span class="close">{{ $t("notifModal.cancelText") }}</span>
       </div>
       <div v-if="!qrPage" class="qrPage_content">
@@ -50,29 +49,103 @@ export default {
       //qrCode is a dummy data
       qrCode: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       ErrorQRCode: "/img/icon/header-icons/dummyQR.png",
-
     };
   },
-  mounted(){
-    this.getqrcode()
+  mounted() {
+    this.getqrcode();
   },
   methods: {
     qrViewer() {
       this.qrPage = !this.qrPage;
     },
-    async getqrcode(){
-      const response = await ControlService.getQRCode()
-      if(response instanceof Error){
-        console.log(response)
-        this.qrCode = this.ErrorQRCode
-      }else{
-        this.qrCode = response
+    async getqrcode() {
+      const response = await ControlService.getQRCode();
+      if (response instanceof Error) {
+        console.log(response);
+        this.qrCode = this.ErrorQRCode;
+      } else {
+        this.qrCode = response;
       }
     },
   },
 };
 </script>
 <style scoped>
+.notif-Title {
+  display: flex;
+  width: 90%;
+  height: 15%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.notif-Title span {
+  font-size: 150%;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.notif-message {
+  display: flex;
+  width: 90%;
+  height: 12%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.notif-message span {
+  font-size: 80%;
+  font-weight: 500;
+}
+.notif-box {
+  display: flex;
+  width: 90%;
+  height: 65%;
+  border: 1px solid #3e3d3d;
+  background: #2a2a2a;
+  box-shadow: 1px 1px 10px 1px #171717, inset 1px 1px 5px 1px #1e1e1e;
+  border-radius: 10px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2% 0;
+}
+.notif-box li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #3e3d3d;
+  width: 90%;
+  height: 25%;
+  box-shadow: 1px 1px 10px 1px #171717;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.notif-box li:hover {
+  background: #313131;
+}
+.notif-box li:active {
+  border: none;
+  box-shadow: none;
+}
+.notif-row_icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 100%;
+}
+.notif-row_icon img {
+  max-width: 40%;
+}
+.notif-row_name {
+  display: flex;
+  width: 80%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+.notif-row_name span {
+  font-size: 100%;
+  font-weight: 600;
+}
 .qrCode {
   width: 70%;
   height: 70%;
@@ -104,7 +177,7 @@ export default {
 }
 
 .qrContent {
-  height: 70%;
+  height: 68%;
   width: 100%;
   display: flex;
   justify-content: space-around;
@@ -162,6 +235,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   box-shadow: 1px 1px 5px 1px rgb(6, 6, 6);
+  position: relative;
 }
 .content {
   width: 100%;
@@ -262,8 +336,10 @@ export default {
 
 .close {
   color: #bf3a3a;
-  font-size: 0.7rem;
+  font-size: 50%;
   font-weight: 400;
   align-self: center;
+  position: absolute;
+  bottom: 1%;
 }
 </style>
