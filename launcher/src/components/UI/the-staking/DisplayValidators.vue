@@ -138,6 +138,7 @@
             <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
             <ExitValidator
               v-if="item.isExitBoxActive"
+              @back-btn="item.isExitBoxActive = false"
               @confirm-password="
                 (enteredPassword) => {
                   confirmPasswordSingleExitChain(item, enteredPassword);
@@ -917,7 +918,7 @@ export default {
 </script>
 <style scoped>
 .deactive {
-  opacity: 0.5;
+  opacity: 0.9;
   pointer-events: none;
 }
 .import-message::-webkit-scrollbar {

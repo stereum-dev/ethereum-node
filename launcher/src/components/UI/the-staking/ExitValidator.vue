@@ -7,6 +7,9 @@
       <input v-model="enteredPassword" type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
     </div>
     <div class="confirmBox">
+      <div class="back_button" @click="$emit('backBtn', backBtn)">
+        <img src="/img/icon/arrows/arrow_back.png" alt="back icon" />
+      </div>
       <button
         class="confirmBtn"
         :class="{ deactive: enteredPassword === '' ? true : false }"
@@ -27,6 +30,16 @@ export default {
 };
 </script>
 <style scoped>
+.back_button {
+  margin-right: 5%;
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+}
+.back_button img {
+  width: 90%;
+  height: 100%;
+}
 .deactive {
   opacity: 0.5;
   pointer-events: none;
