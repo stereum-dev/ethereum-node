@@ -91,6 +91,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
+import ControlService from "@/store/ControlService";
 
 export default {
   components: {
@@ -133,12 +134,13 @@ export default {
     },
   },
   methods: {
-    resync(el) {
-      // Patrik,you can create your function here
-      this.serviceID = el.config.serviceID;
-
-      console.log("service id is =>" + this.serviceID + "and url is =>" + this.checkPointSync);
+    async resync(el) {
       this.resyncSeparateModal = false;
+      await ControlService.chooseServiceAction({
+        action: "reSync",
+        service: el.config.serviceID,
+        data: this.checkPointSync,
+      });
     },
     validateUrl() {
       const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;

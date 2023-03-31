@@ -159,7 +159,7 @@ export class ServiceManager {
       });
   }
 
-  async chooseServiceAction(action, service) {
+  async chooseServiceAction(action, service, data) {
     switch (action) {
       case "pruneGeth":
         if (service.service === "GethService") {
@@ -177,12 +177,67 @@ export class ServiceManager {
         break;
 
       case "reSync":
-        //initiate resync
+        await this.resyncService(service, data);
         break;
 
       default:
         break;
     }
+  }
+
+  async resyncService(serviceID, checkpointUrl) {
+    let services = await this.readServiceConfigurations();
+    let client = services.find((service) => service.id === serviceID);
+    const checkpointCommands = {
+      LighthouseBeaconService: "--checkpoint-sync-url=",
+      LodestarBeaconService: "--checkpointSyncUrl=",
+      PrysmBeaconService: "--checkpoint-sync-url=",
+      NimbusBeaconService: "--trusted-node-url=",
+      TekuBeaconService: "--initial-state=",
+    };
+    const dataDir = client.volumes.find(
+      (vol) =>
+        vol.servicePath === "/opt/app/beacon" ||
+        vol.servicePath === "/opt/app/data" ||
+        vol.servicePath === "/opt/data/geth" ||
+        vol.servicePath === "/opt/data/erigon"
+    ).destinationPath;
+    await this.manageServiceState(client.id, "stopped");
+
+    if (dataDir.length > 0) {
+      await this.deleteDataVolume(dataDir);
+    }
+    //Prysm specific
+    if (client.service == "PrysmBeaconService") {
+      //remove old checkpoint command
+      if (client.command.includes(checkpointCommands[client.service])) {
+        let commands = client.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
+        let includesCommand = commands.filter((c) => c.includes(checkpointCommands[client.service]));
+        commands = commands.filter((c) => !includesCommand.includes(c));
+        client.command = commands.concat().join(" ").trim();
+      }
+      //add checkpointSync if Url was send
+      if (checkpointUrl) {
+        client.command += " " + checkpointCommands[client.service] + checkpointUrl;
+      }
+    } else {
+      //check if command is used
+      const checkpointSyncIndex = client.command.findIndex((c) => c.includes(checkpointCommands[client.service]));
+      //delete checkpointSync if used
+      if (checkpointSyncIndex > -1) {
+        client.command.splice(checkpointSyncIndex, 1);
+      }
+      //add checkpointSync if Url was send
+      if (checkpointUrl) {
+        client.command.push(checkpointCommands[client.service] + checkpointUrl);
+      }
+    }
+    await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+    await this.manageServiceState(client.id, "started");
+  }
+
+  async deleteDataVolume(dataDir) {
+    await this.nodeConnection.sshService.exec(`rm -r ${dataDir}/*`);
   }
 
   getWorkindDir(service) {
@@ -340,7 +395,9 @@ export class ServiceManager {
     command = command.filter((c) => !c.includes(endpointCommand));
     let newProps;
     if (fullCommand) {
-      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter((c) => c !== undefined);
+      newProps = [this.formatCommand(fullCommand, endpointCommand, filter, dependencies)].filter(
+        (c) => c !== undefined
+      );
     } else {
       newProps = endpointCommand + dependencies.map(filter).join();
     }
@@ -430,14 +487,17 @@ export class ServiceManager {
       value = value.substring(1, value.length - 1);
     }
     let newValue;
-    if (dependencies && filter) {   // it's intended that dependencies is only checked for truthy 
+    if (dependencies && filter) {
+      // it's intended that dependencies is only checked for truthy
       newValue = dependencies.map(filter).join();
-    } else if (dependencies) {      // same here. 
+    } else if (dependencies) {
+      // same here.
       newValue = value.split(",").concat(dependencies).join();
     } else {
       newValue = value.split(",").filter(filter).join();
     }
-    if (!newValue) {  // if dependencies is an empty array it is caught here
+    if (!newValue) {
+      // if dependencies is an empty array it is caught here
       return undefined;
     }
     if (quotes) newValue = '"' + newValue + '"';
@@ -638,7 +698,13 @@ export class ServiceManager {
           new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
           new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
         ];
-        return SSVNetworkService.buildByUserInput(args.network, ports, args.installDir + "/ssv_network", args.executionClients, args.beaconServices);
+        return SSVNetworkService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/ssv_network",
+          args.executionClients,
+          args.beaconServices
+        );
     }
   }
 
@@ -720,7 +786,9 @@ export class ServiceManager {
         const escapedConfigFile = StringUtils.escapeStringForShell(
           ssvConfig.replace(/^OperatorPrivateKey.*/gm, 'OperatorPrivateKey: "' + config.ssv_sk + '"')
         );
-        this.nodeConnection.sshService.exec(`mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`);
+        this.nodeConnection.sshService.exec(
+          `mkdir -p ${dataDir} && echo ${escapedConfigFile} > ${dataDir}/config.yaml`
+        );
       }
     }
   }
@@ -812,7 +880,11 @@ export class ServiceManager {
       });
     } while (changed === true);
 
-    await this.createKeystores(newServices.filter((s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")));
+    await this.createKeystores(
+      newServices.filter(
+        (s) => s.service.includes("Teku") || s.service.includes("Nimbus") || s.service.includes("SSVNetwork")
+      )
+    );
     let versions;
     try {
       versions = await this.nodeConnection.checkUpdates();
