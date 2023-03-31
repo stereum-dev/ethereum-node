@@ -21,6 +21,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
+import { KeysAPIService } from "./ethereum-services/KeysAPIService"
 
 const log = require("electron-log");
 
@@ -126,6 +127,8 @@ export class ServiceManager {
               services.push(NotificationService.buildByConfiguration(config));
             } else if (config.service == "ValidatorEjectorService") {
               services.push(ValidatorEjectorService.buildByConfiguration(config));
+            } else if (config.service == "KeysAPIService") {
+              services.push(KeysAPIService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -463,6 +466,11 @@ export class ServiceManager {
         `docker stop slashingdb-${serviceToDelete.id} && docker rm slashingdb-${serviceToDelete.id}`
       );
     }
+    if (serviceToDelete.service === "KeysAPIService") {
+      await this.nodeConnection.sshService.exec(
+        `docker stop cachingDB-${serviceToDelete.id} && docker rm cachingDB-${serviceToDelete.id}`
+      );
+    }
     await this.nodeConnection.runPlaybook("Delete Service", {
       stereum_role: "delete-service",
       service: task.service.config.serviceID,
@@ -633,12 +641,46 @@ export class ServiceManager {
       case "ValidatorEjectorService":
         return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
 
+      case "KeysAPIService":
+        ports = [
+          new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp),
+        ];
+        return KeysAPIService.buildByUserInput(args.network, ports);
+
       case "SSVNetworkService":
         ports = [
           new ServicePort(null, 12000, 12000, servicePortProtocol.udp),
           new ServicePort(null, 13000, 13000, servicePortProtocol.tcp),
         ];
         return SSVNetworkService.buildByUserInput(args.network, ports, args.installDir + "/ssv_network", args.executionClients, args.beaconServices);
+    }
+  }
+
+  async createCachingDB(keyAPI) {
+    try {
+      const dbPass = StringUtils.createRandomString();
+      const dbUser = "postgres";
+      const dbName = "node_operator_keys_service_db";
+      await this.nodeConnection.sshService.exec(
+        `docker run --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
+      );
+      keyAPI.env.DB_NAME = dbName
+      keyAPI.env.DB_USER = dbUser
+      keyAPI.env.DB_PASSWORD = dbPass
+
+      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`
+    } catch (err) {
+      log.error("Creating CachingDB failed: ", err);
+      await this.nodeConnection.sshService.exec(
+        `docker stop cachingDB-${keyAPI.id} && docker rm cachingDB-${keyAPI.id}`
+      );
+    }
+  }
+
+  async initKeysAPI(services) {
+    for (const service of services) {
+      await this.createCachingDB(service);
+      await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
     }
   }
 
@@ -842,6 +884,7 @@ export class ServiceManager {
       })
     );
     await this.initWeb3Signer(newServices.filter((s) => s.service === "Web3SignerService"));
+    await this.initKeysAPI(newServices.filter((s) => s.service === "KeysAPIService"));
     return ELInstalls.concat(CLInstalls, VLInstalls);
   }
 
