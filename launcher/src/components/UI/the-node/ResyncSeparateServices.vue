@@ -41,10 +41,11 @@
                 </div>
                 <div class="inputBox">
                   <input
+                    id="url-input"
                     v-model="checkPointSync"
                     type="text"
                     placeholder="https://example.cc/"
-                    class="placeholder:text-gray-500"
+                    @input="validateUrl"
                   />
                 </div>
               </div>
@@ -76,6 +77,9 @@
           </template>
         </carousel>
       </div>
+      <div class="error">
+        <span v-if="error">{{ error }}</span>
+      </div>
       <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">resync</div>
       <span class="clickOut">click outside to close</span>
     </div>
@@ -106,6 +110,7 @@ export default {
       btnActive: true,
       checkPointSync: "",
       serviceID: "",
+      error: "",
     };
   },
   computed: {
@@ -135,11 +140,31 @@ export default {
       console.log("service id is =>" + this.serviceID + "and url is =>" + this.checkPointSync);
       this.resyncSeparateModal = false;
     },
+    validateUrl() {
+      const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+      if (!this.checkPointSync) {
+        this.error = "";
+      } else if (!regex.test(this.checkPointSync)) {
+        this.error = "Please enter a valid URL without spaces";
+        this.btnActive = false;
+      } else {
+        this.error = "";
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.error {
+  color: red;
+  width: 90%;
+  height: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
+}
 .disabled {
   pointer-events: none;
 }
