@@ -1,0 +1,49 @@
+name: Bug Report
+description: File a bug report
+title: "[FR]: "
+labels: ["enhancement"]
+assignees:
+body:
+ - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a change to make Stereum better! You are a true NodeRunner
+ 
+ - type: textarea
+    id: enhancements-description
+    attributes:
+      label: Describe your idea
+      description: A clear and concise description of what Feature / Enhancement / QoL Improvement you would like to see in the future!
+      placeholder: 
+      value: "This is my idea!"
+    validations:
+      required: true
+      
+      
+ - type: textarea
+    id: enhancements-alternative
+    attributes:
+      label: Consider Alternatives?
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: 
+      value: "This is my idea!"
+    validations:
+      required: false
+      
+ - type: input
+    id: launcher-version
+    attributes:
+      label: Launcher Version
+      description: What version of our software are you running on your Desktop PC?
+      placeholder: e. g. [2.0.1], [2.0.0-rc.15]
+    validations:
+      required: true 
+  
+ - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledgment
+      description: Please make sure to look through [our issues](https://github.com/stereum-dev/ethereum-node/labels/enhancement) if you find any related enhancements and add to them there!
+      options:
+        - label: I looked through the feature requests/enhancements planned for this project before submitting a new idea
+          required: true
