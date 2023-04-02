@@ -6,7 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report for Stereum!  
+        Thanks for taking the time to fill out this bug report for Stereum!
+
   - type: input
     id: contact
     attributes:
@@ -15,7 +16,8 @@ body:
       placeholder: e. g. support@stereum.net | Discord - ExampleUser#9999 | Twitter - @stereumdev
     validations:
       required: false
- - type: textarea
+
+  - type: textarea
     id: describe-the-bug
     attributes:
       label: Describe the bug!
@@ -24,7 +26,8 @@ body:
       value: "Here is a description!"
     validations:
       required: true 
-   - type: screenshot
+
+  - type: screenshot
     id: screenshoot
     attributes:
       label: Screenshots
@@ -32,6 +35,7 @@ body:
       placeholder: [Drag a Screenshot here] :)
     validations:
       required: false
+
   - type: textarea
     id: expected-behaviour
     attributes:
@@ -41,20 +45,22 @@ body:
       value: "I expected it to"
     validations:
       required: false
-   - type: textarea
+
+  - type: textarea
     id: how-to-reproduce
     attributes:
       label: Help us reproduce your bug!
       description: Give us a clear outline on how we could reproduce the bug. The more information, the better. 
       placeholder: Steps to reproduce the behavior:
-                    1. Go to '...'
-                    2. Click on '....'
-                    3. Scroll down to '....'
-                    4. See error
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
       value: "Here is how to reproduce it!"
-      validations:
+    validations:
       required: true
- - type: input
+
+  - type: input
     id: launcher-version
     attributes:
       label: Launcher Version
@@ -62,7 +68,8 @@ body:
       placeholder: e. g. [2.0.1], [2.0.0-rc.15]
     validations:
       required: true
- - type: dropdown
+
+  - type: dropdown
     id: desktop-os
     attributes:
       label: Desktop OS
@@ -71,31 +78,36 @@ body:
         - iOS
         - Linux 
         - Other
-     validations:
+    validations:
       required: true
-- type: dropdown
+
+  - type: dropdown
     id: node-server-os
     attributes:
       label: Node Server OS
       options:
         - Ubuntu 22.04
         - Other
-     required: true   
- - type: input
-    id: launcher-version
+    validations:
+      required: true   
+
+  - type: input
+    id: affected-service
     attributes:
-      label: Launcher Version
+      label: Affected Service
       description: Is there a specific service affected on your Node?
       placeholder: e. g. Prysm 2.3.4
     validations:
       required: false
+
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code!
       render: shell   
-- type: checkboxes
+
+  - type: checkboxes
     id: terms
     attributes:
       label: Acknowledgment
