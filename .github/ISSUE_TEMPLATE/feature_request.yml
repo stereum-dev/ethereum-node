@@ -7,7 +7,7 @@ body:
  - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to suggest a change to make Stereum better! You are a true NodeRunner!
+        Thanks for taking the time to suggest a change to make Stereum better!
  
  - type: textarea
     id: enhancements-description
