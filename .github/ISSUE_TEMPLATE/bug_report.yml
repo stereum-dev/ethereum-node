@@ -15,7 +15,7 @@ body:
     attributes:
       label: Contact Details
       description: Is there a way to get in touch with you if we need more info?
-      placeholder: e. g. support@stereum.net | Discord: ExampleUser#9999 | Twitter: @stereumdev
+      placeholder: e. g. support@stereum.net | Discord - ExampleUser#9999 | Twitter - @stereumdev
     validations:
       required: false
  
