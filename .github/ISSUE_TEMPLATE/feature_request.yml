@@ -1,5 +1,5 @@
-name: Bug Report
-description: File a bug report
+name: 🍄Feature Request
+description: Suggest an idea for a feature, enhancement or QoL improvement this project
 title: "[FR]: "
 labels: ["enhancement"]
 assignees:
@@ -7,7 +7,7 @@ body:
  - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to suggest a change to make Stereum better! You are a true NodeRunner
+        Thanks for taking the time to suggest a change to make Stereum better! You are a true NodeRunner!
  
  - type: textarea
     id: enhancements-description
@@ -23,21 +23,21 @@ body:
  - type: textarea
     id: enhancements-alternative
     attributes:
-      label: Consider Alternatives?
+      label: Considered Alternatives?
       description: A clear and concise description of any alternative solutions or features you've considered.
       placeholder: 
       value: "This is my idea!"
     validations:
       required: false
       
- - type: input
-    id: launcher-version
+ - type: textarea
+    id: additional-context
     attributes:
-      label: Launcher Version
-      description: What version of our software are you running on your Desktop PC?
-      placeholder: e. g. [2.0.1], [2.0.0-rc.15]
+      label: Additional Context
+      description: Some additional information for us to look through! 
+      placeholder: Links to Documentation, Screenshots, Images, Graphs, Drawings
     validations:
-      required: true 
+      required: false
   
  - type: checkboxes
     id: terms
