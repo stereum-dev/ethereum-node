@@ -30,7 +30,6 @@ body:
   - type: screenshot
     id: screenshoot
     attributes:
-      label: Screenshots
       description: If possible, please drag one/multiple screenshots of your bug into this!
       placeholder: [Drag a Screenshot here] :)
     validations:
