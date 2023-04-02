@@ -2,13 +2,11 @@ name: Bug Report
 description: File a bug report
 title: "[Bug]: "
 labels: ["bug"]
-
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report for Stereum!
-        
+        Thanks for taking the time to fill out this bug report for Stereum!  
   - type: input
     id: contact
     attributes:
@@ -17,7 +15,6 @@ body:
       placeholder: e. g. support@stereum.net | Discord - ExampleUser#9999 | Twitter - @stereumdev
     validations:
       required: false
- 
  - type: textarea
     id: describe-the-bug
     attributes:
@@ -26,8 +23,7 @@ body:
       placeholder: Tell us what you see or what issue / error / problem you ran into
       value: "Here is a description!"
     validations:
-      required: true
-      
+      required: true 
    - type: screenshot
     id: screenshoot
     attributes:
@@ -36,7 +32,6 @@ body:
       placeholder: [Drag a Screenshot here] :)
     validations:
       required: false
-      
   - type: textarea
     id: expected-behaviour
     attributes:
@@ -46,8 +41,6 @@ body:
       value: "I expected it to"
     validations:
       required: false
-      
-      
    - type: textarea
     id: how-to-reproduce
     attributes:
@@ -61,8 +54,6 @@ body:
       value: "Here is how to reproduce it!"
       validations:
       required: true
-
- 
  - type: input
     id: launcher-version
     attributes:
@@ -71,7 +62,6 @@ body:
       placeholder: e. g. [2.0.1], [2.0.0-rc.15]
     validations:
       required: true
- 
  - type: dropdown
     id: desktop-os
     attributes:
@@ -83,8 +73,6 @@ body:
         - Other
      validations:
       required: true
-     
-
 - type: dropdown
     id: node-server-os
     attributes:
@@ -92,8 +80,7 @@ body:
       options:
         - Ubuntu 22.04
         - Other
-     required: true
-      
+     required: true   
  - type: input
     id: launcher-version
     attributes:
@@ -102,15 +89,12 @@ body:
       placeholder: e. g. Prysm 2.3.4
     validations:
       required: false
-
-
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code!
-      render: shell
-      
+      render: shell   
 - type: checkboxes
     id: terms
     attributes:
