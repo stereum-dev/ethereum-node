@@ -27,14 +27,14 @@ body:
     validations:
       required: true 
 
-  - type: screenshot
-    id: screenshot
-    label: Screenshots
-    description: If possible, please drag one/multiple screenshots of your bug into this!
+  - type: textarea
+    id: screenshoot
+    attributes:
+      label: Attach a Screenshot!
+      description: If possible, please drag one/multiple screenshots of your bug into this!
+      placeholder: Drag a Screenshot here :)
     validations:
       required: false
-
- 
 
   - type: textarea
     id: expected-behaviour
