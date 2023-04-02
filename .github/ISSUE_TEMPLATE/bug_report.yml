@@ -51,11 +51,7 @@ body:
     attributes:
       label: Help us reproduce your bug!
       description: Give us a clear outline on how we could reproduce the bug. The more information, the better. 
-      placeholder: Steps to reproduce the behavior:
-        1. Go to '...'
-        2. Click on '....'
-        3. Scroll down to '....'
-        4. See error
+      placeholder: Outline the steps to reproduce the behavior as detailed as possible (suggested 1# Go to XYZ, 2# Click on XYZ)
       value: "Here is how to reproduce it!"
     validations:
       required: true
