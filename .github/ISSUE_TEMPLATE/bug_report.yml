@@ -28,12 +28,13 @@ body:
       required: true 
 
   - type: screenshot
-    id: screenshoot
-    attributes:
-      description: If possible, please drag one/multiple screenshots of your bug into this!
-      placeholder: [Drag a Screenshot here] :)
+    id: screenshot
+    label: Screenshots
+    description: If possible, please drag one/multiple screenshots of your bug into this!
     validations:
       required: false
+
+ 
 
   - type: textarea
     id: expected-behaviour
