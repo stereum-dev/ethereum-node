@@ -2,7 +2,6 @@ name: 🍄Feature Request
 description: Suggest an idea for a feature, enhancement or QoL improvement this project
 title: "[FR]: "
 labels: ["enhancement"]
-assignees:
 body:
  - type: markdown
    attributes:
