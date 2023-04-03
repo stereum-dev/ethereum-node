@@ -224,4 +224,32 @@ scrape_configs:
 {%   endif %}
 {% endfor %}
         ]
+
+# ValidatorEjectorService
+  - job_name: validatorejector
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "ValidatorEjectorService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8989"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# KeysAPI
+  - job_name: keys-api
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "KeysAPIService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:3600"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
 # EOF
