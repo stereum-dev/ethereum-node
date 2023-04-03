@@ -16,6 +16,7 @@ import CustomInstall from "../pages/CustomInstall.vue";
 import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
 import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
+import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
 
 const routes = [
   {
@@ -108,6 +109,11 @@ const routes = [
     path: "/custom",
     name: "CustomInstall",
     component: CustomInstall,
+  },
+  {
+    path: "/customAnim",
+    name: "CustomAnim",
+    component: CustomAnim,
   },
   {
     path: "/upload",

@@ -26,7 +26,7 @@
       </div>
     </div>
     <router-link class="back" to="/welcome">{{ $t("installOption.back") }} </router-link>
-    <router-link class="install" :class="activeBtn()" to="/node" @click="prepareStereum">{{
+    <router-link class="install" :class="activeBtn()" to="/customAnim" @click="prepareStereum">{{
       $t("installOption.install")
     }}</router-link>
   </div>
@@ -58,6 +58,7 @@ export default {
       const restarted = await ControlService.restartServer();
       this.refresh = true;
       if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
+      this.$router.push("/node");
     },
     activeBtn() {
       if (this.installPath === "") {
