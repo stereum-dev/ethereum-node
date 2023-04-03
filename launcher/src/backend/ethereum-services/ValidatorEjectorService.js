@@ -14,7 +14,7 @@ export class ValidatorEjectorService extends NodeService {
 
     service.init(
       "ValidatorEjectorService",
-      null, // id
+      service.id, // id
       1, // configVersion
       image, // image
       "dev", // imageVersion
@@ -23,10 +23,15 @@ export class ValidatorEjectorService extends NodeService {
       {
         EXECUTION_NODE: "http://foo-bar:8545",
         CONSENSUS_NODE: "http://foo-bar:5052",
-        LOCATOR_ADDRESS: "<locator_address>",
-        STAKING_MODULE_ID: "<staking_module_id>",
-        OPERATOR_ID: "<operator_id>",
+        LOCATOR_ADDRESS: "0x0000000000000000000000000000000000000000",
+        STAKING_MODULE_ID: "123",
+        OPERATOR_ID: "123",
         MESSAGES_LOCATION: "/app/messages",
+        ORACLE_ADDRESSES_ALLOWLIST: '["0x0000000000000000000000000000000000000000","0x0000000000000000000000000000000000000000"]',
+        HTTP_PORT: "8989",
+        RUN_METRICS: "true",
+        RUN_HEALTH_CHECK: "true",
+        DRY_RUN: "false",
       }, // env
       null, // ports
       volumes, // volumes

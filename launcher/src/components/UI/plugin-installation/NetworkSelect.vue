@@ -19,7 +19,7 @@
           <div
             v-for="(state, i) in networkList"
             :key="i"
-            class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-20"
+            class="selectBox_item w-full flex justify-center items-center bg-slate-600 py-2 hover:bg-slate-700 text-slate-100 px-12"
             @click="selectNetwork(state)"
           >
             <div class="w-1/2 flex justify-start space-x-4 pl-10">
@@ -34,11 +34,7 @@
       <div class="table-content">
         <div class="plugin-box">
           <div class="network-container">
-            <div
-              v-for="(item, index) in presets"
-              :key="index"
-              class="plugin"
-            >
+            <div v-for="(item, index) in presets" :key="index" class="plugin">
               <img
                 :src="item.icon"
                 :class="{
@@ -84,7 +80,7 @@ export default {
   mounted() {
     this.selectedPreset = undefined;
     this.currentNetwork = undefined;
-    this.presets.forEach(p => p.selected = false)
+    this.presets.forEach((p) => (p.selected = false));
   },
   methods: {
     selectItemToInstall: async function (item) {
@@ -105,8 +101,8 @@ export default {
         );
       }
       item.includedPlugins = includedPlugins;
-      this.presets.forEach(p => p.selected = false)
-      item.selected = true
+      this.presets.forEach((p) => (p.selected = false));
+      item.selected = true;
       this.selectedPreset = item;
       this.$emit("disableBtn");
     },
@@ -114,8 +110,8 @@ export default {
       this.show = !this.show;
     },
     selectNetwork(network) {
-      this.presets.forEach(p => p.selected = false)
-      this.currentNetwork = network
+      this.presets.forEach((p) => (p.selected = false));
+      this.currentNetwork = network;
       this.show = false;
     },
   },
