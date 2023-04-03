@@ -1,6 +1,6 @@
 <template>
   <div class="custom-layer_parent">
-    <div class="header">
+    <div class="customInstall_header">
       <span>{{ $t("customInstallation.customInstallationTitle") }}</span>
     </div>
     <div class="container-box">
@@ -26,7 +26,7 @@
       </div>
     </div>
     <router-link class="back" to="/welcome">{{ $t("installOption.back") }} </router-link>
-    <router-link class="install" :class="activeBtn()" to="/node" @click="prepareStereum">{{
+    <router-link class="install" :class="activeBtn()" to="/customAnim" @click="prepareStereum">{{
       $t("installOption.install")
     }}</router-link>
   </div>
@@ -58,6 +58,7 @@ export default {
       const restarted = await ControlService.restartServer();
       this.refresh = true;
       if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
+      this.$router.push("/node");
     },
     activeBtn() {
       if (this.installPath === "") {
@@ -86,26 +87,27 @@ export default {
   position: relative;
 }
 
-.header {
+.customInstall_header {
+  margin-top: 10px;
+  width: 100%;
+  height: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  top: 10%;
-  position: absolute;
 }
 
-.header span {
-  display: flex;
-  width: max-content;
-  padding: 0 2%;
-  border: 5px solid #929292;
-  background-color: #194747;
-  box-shadow: 0 1px 3px 1px #1f3737;
-  color: #cecece;
-  border-radius: 30px;
-  font-size: 2rem;
-  font-weight: 600;
+.customInstall_header span {
+  width: 60%;
+  height: 55%;
+  background-color: #2d3134;
+  border: 3px solid #b4b4b4;
+  box-shadow: 0 1px 3px 1px rgb(46, 57, 55);
+  border-radius: 15px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-align: center;
+  color: #b4b4b4;
 }
 
 .container-box {
@@ -121,10 +123,10 @@ export default {
 .custom-container {
   display: flex;
   flex-direction: column;
-  width: 50%;
-  height: 60%;
-  border: 5px solid #929292;
-  background-color: #194747;
+  width: 60%;
+  height: 70%;
+  background-color: #2d3134;
+  border: 3px solid #b4b4b4;
   box-shadow: 0 1px 3px 1px #1f3737;
   color: #cecece;
   border-radius: 30px;
@@ -166,16 +168,16 @@ export default {
   justify-content: center;
   align-items: center;
   width: 95%;
-  height: 50%;
+  height: 68%;
   flex-direction: column;
-  border: 1px solid #343434;
-  background: #2a2a2a;
-  box-shadow: 1px 1px 10px 1px #171717;
-  border-radius: 10px;
+  border: 1px solid #525a64;
+  background-color: #3d4449;
+  box-shadow: 0 1px 3px 1px #282a2b;
+  border-radius: 20px;
+  padding: 10px 20px;
 }
 
 .textbox-cont_front {
-  background: #194747;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -183,7 +185,6 @@ export default {
   width: 97%;
   border-radius: 10px;
   flex-direction: column;
-  border: 1px solid #343434;
 }
 
 .textbox-title {
@@ -192,7 +193,6 @@ export default {
   justify-content: flex-start;
   align-items: center;
   display: flex;
-  padding: 0 2%;
   font-size: 80%;
   font-weight: 600;
 }
@@ -207,7 +207,7 @@ export default {
 
 .textbox input {
   border: none;
-  width: 95%;
+  width: 100%;
   height: 70%;
   padding: 0 2%;
   border-radius: 5px;
@@ -221,7 +221,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 5px solid #929292;
+  border: 3px solid #929292;
   background-color: #194747;
   box-shadow: 0 1px 3px 1px #1f3737;
   color: #cecece;

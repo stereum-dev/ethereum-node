@@ -1,4 +1,3 @@
-import { mapWritableState } from 'pinia';
 <template>
   <background-page>
     <div class="animContainer">
@@ -7,18 +6,8 @@ import { mapWritableState } from 'pinia';
         <div class="anim__content">
           <div class="anim__content__box">
             <div class="anim__img__content">
-              <img src="/animation/installerBG.png" alt="Icon" />
-              <img src="/animation/installer-1.png" alt="Icon" />
-              <img
-                v-for="img in images"
-                :key="img"
-                :class="{
-                  'execution__icon ': img === executionClientIcon,
-                  'consensus__icon ': img === consensusClientIcon,
-                }"
-                :src="img"
-                alt="Animation"
-              />
+              <img src="/animation/custom-BG.png" alt="Icon" />
+              <img v-for="img in images" :key="img" :src="img" alt="Animation" />
             </div>
           </div>
         </div>
@@ -36,48 +25,21 @@ import { mapWritableState } from 'pinia';
     <TaskManager />
   </background-page>
 </template>
-
 <script>
-import { mapWritableState } from "pinia";
-import { useClickInstall } from "@/store/clickInstallation";
-import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 export default {
-  components: {
-    TaskManager,
-  },
   data() {
     return {
-      installAnimations: [
-        "/animation/installer-2.png",
-        "/animation/installer-3.png",
-        "/animation/installer-4.png",
-        "/animation/installer-5.png",
-      ],
+      customAnims: ["/animation/custom-2.png", "/animation/installer-2.png", "/animation/custom-3.png"],
       images: [],
-      animationIsDone: false,
       currentIndex: null,
-      executionClientIcon: "",
-      consensusClientIcon: "",
       Tasks: [],
       displayNewTask: "",
     };
   },
-  computed: {
-    ...mapWritableState(useClickInstall, {
-      selectedPreset: "selectedPreset",
-    }),
-  },
-
   mounted() {
     this.displayImages();
-    this.selectedPreset.includedPlugins.forEach((plugin) => {
-      if (plugin.category === "execution") {
-        this.executionClientIcon = plugin.icon;
-      } else if (plugin.category === "consensus") {
-        this.consensusClientIcon = plugin.icon;
-      }
-    });
+    this.getTasks();
     this.polling = setInterval(ControlService.updateTasks, 2000);
     this.refresh = setInterval(this.getTasks, 5000); //refresh data
   },
@@ -89,23 +51,18 @@ export default {
     displayImages() {
       setTimeout(() => {
         setTimeout(() => {
-          this.images.push(this.installAnimations[0]);
+          this.images.push(this.customAnims[0]);
         }, 500);
         setTimeout(() => {
-          this.images.push(this.installAnimations[1], this.installAnimations[2]);
-          this.images.push(this.executionClientIcon, this.consensusClientIcon);
-          this.images.push(this.installAnimations[3]);
+          this.images.push(this.customAnims[1], this.customAnims[2]);
         }, 700);
-
-        this.images = [];
         setInterval(() => {
           setTimeout(() => {
-            this.images.slice(3, 1);
+            this.images.slice(1, 2);
           }, 200);
           setTimeout(() => {
-            this.images.push(this.executionClientIcon, this.consensusClientIcon);
-            this.images.push(this.installAnimations[3]);
-          }, 300);
+            this.images.push(this.customAnims[1], this.customAnims[2]);
+          }, 1000);
 
           this.images = [];
         }, 2000);
@@ -122,7 +79,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .animContainer {
   width: 100%;
@@ -182,6 +138,9 @@ export default {
   left: 0;
   animation-name: anim1;
   animation-duration: 500ms;
+}
+.anim__content__box img:first-child {
+  opacity: 0.7;
 }
 
 @keyframes anim1 {
