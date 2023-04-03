@@ -102,7 +102,6 @@ export default {
         this.cilentIconActive = true;
         this.images = [];
 
-        console.log(this.images);
         setInterval(() => {
           setTimeout(() => {
             this.images.slice(3, 1);
