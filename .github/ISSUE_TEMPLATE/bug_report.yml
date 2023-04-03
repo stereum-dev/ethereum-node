@@ -1,0 +1,113 @@
+name: 🪳 Bug Report
+description: File a bug report to help us improve our project!
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report for Stereum!
+
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: Is there a way to get in touch with you if we need more info?
+      placeholder: e. g. support@stereum.net | Discord - ExampleUser#9999 | Twitter - @stereumdev
+    validations:
+      required: false
+
+  - type: textarea
+    id: describe-the-bug
+    attributes:
+      label: Describe the bug!
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what you see or what issue / error / problem you ran into
+      value: "Here is a description!"
+    validations:
+      required: true 
+
+  - type: textarea
+    id: screenshoot
+    attributes:
+      label: Attach a Screenshot!
+      description: If possible, please drag one/multiple screenshots of your bug into this!
+      placeholder: Drag a Screenshot here :)
+    validations:
+      required: false
+
+  - type: textarea
+    id: expected-behaviour
+    attributes:
+      label: Expected Behaviour
+      description: A clear and concise description of what you expected to happen.
+      placeholder: Tell us what you expected to happen to better help us identify the problem
+      value: "I expected it to"
+    validations:
+      required: false
+
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: Help us reproduce your bug!
+      description: Give us a clear outline on how we could reproduce the bug. The more information, the better. 
+      placeholder: Outline the steps to reproduce the behavior as detailed as possible (suggested 1# Go to XYZ, 2# Click on XYZ)
+      value: "Here is how to reproduce it!"
+    validations:
+      required: true
+
+  - type: input
+    id: launcher-version
+    attributes:
+      label: Launcher Version
+      description: What version of our software are you running on your Desktop PC?
+      placeholder: e. g. [2.0.1], [2.0.0-rc.15]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: desktop-os
+    attributes:
+      label: Desktop OS
+      options:
+        - Windows
+        - iOS
+        - Linux 
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: node-server-os
+    attributes:
+      label: Node Server OS
+      options:
+        - Ubuntu 22.04
+        - Other
+    validations:
+      required: true   
+
+  - type: input
+    id: affected-service
+    attributes:
+      label: Affected Service
+      description: Is there a specific service affected on your Node?
+      placeholder: e. g. Prysm 2.3.4
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code!
+      render: shell   
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Acknowledgment
+      description: Please make sure to look through [our existing issues](https://github.com/stereum-dev/ethereum-node/labels/bug) before submitting a bug!
+      options:
+        - label: I looked through the existing bugs of this project
+          required: true
