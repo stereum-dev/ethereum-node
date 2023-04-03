@@ -90,6 +90,7 @@ export default {
     },
   },
   created() {
+    if(this.installedValidators.length === 0) return;
     this.selectedIcon = this.installedValidators[0].icon;
     this.selectedName = this.installedValidators[0].name;
     this.selectedStatus = this.installedValidators[0].state;
