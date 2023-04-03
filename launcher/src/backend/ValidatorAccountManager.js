@@ -570,7 +570,6 @@ export class ValidatorAccountManager {
               `docker exec -u 0 stereum-${serviceID} sh -c "chmod -R 700 /opt/app/beacon"`
             );
             const exitNimbusCmd = `docker exec stereum-${serviceID} sh -c "/home/user/nimbus_beacon_node deposits exit --data-dir=/opt/app/beacon --rest-url=http://localhost:5052 --validator=${pubkey} --network=${client.network} --non-interactive=true"`;
-            console.log(exitNimbusCmd);
             result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
             await this.nodeConnection.sshService.exec(
               `docker exec -u 0 stereum-${serviceID} sh -c "chmod -R 755 /opt/app/beacon"`
