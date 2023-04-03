@@ -1,15 +1,15 @@
 <template>
   <background-page>
-    <custom-installation></custom-installation>
+    <CustomPage />
   </background-page>
 </template>
 <script>
 import BackgroundPage from "../components/layers/BackgroundPage.vue";
-import CustomInstallation from "../components/UI/custom-installation/CustomInstallationLayer.vue";
+import CustomPage from "../components/UI/custom-installation/CustomPage.vue";
 export default {
   components: {
     BackgroundPage,
-    CustomInstallation,
+    CustomPage,
   },
 };
 </script>
