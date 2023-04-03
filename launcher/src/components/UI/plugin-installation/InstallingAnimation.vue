@@ -4,9 +4,9 @@ import { mapWritableState } from 'pinia';
     <div class="animContainer">
       <div class="opacity"></div>
       <div class="anim">
-        <div class="anim__content shadow-md shadow-black">
+        <div class="anim__content">
           <div class="anim__content__box">
-            <div>
+            <div class="anim__img__content">
               <img src="/animation/installerBG.png" alt="Icon" />
               <img src="/animation/installer-1.png" alt="Icon" />
               <img
@@ -20,12 +20,6 @@ import { mapWritableState } from 'pinia';
                 alt="Animation"
               />
             </div>
-            <!-- <img :src="installAnimations[0]" alt="Animation" />
-            <img :src="installAnimations[1]" alt="Animation" />
-            <img :src="installAnimations[2]" alt="Animation" />
-            <img :src="installAnimations[3]" alt="Animation" />
-            <img :src="installAnimations[4]" alt="Animation" />
-            <img :src="installAnimations[5]" alt="Animation" /> -->
           </div>
         </div>
 
@@ -61,6 +55,7 @@ export default {
         "/animation/installer-5.png",
       ],
       images: [],
+      animationIsDone: false,
       currentIndex: null,
       executionClientIcon: "",
       consensusClientIcon: "",
@@ -92,19 +87,29 @@ export default {
 
   methods: {
     displayImages() {
-      setInterval(() => {
+      setTimeout(() => {
         setTimeout(() => {
           this.images.push(this.installAnimations[0]);
         }, 500);
         setTimeout(() => {
           this.images.push(this.installAnimations[1], this.installAnimations[2]);
           this.images.push(this.executionClientIcon, this.consensusClientIcon);
-        }, 700);
-        setTimeout(() => {
           this.images.push(this.installAnimations[3]);
-        }, 1500);
+        }, 700);
+
         this.images = [];
-      }, 6000);
+        setInterval(() => {
+          setTimeout(() => {
+            this.images.slice(3, 1);
+          }, 200);
+          setTimeout(() => {
+            this.images.push(this.executionClientIcon, this.consensusClientIcon);
+            this.images.push(this.installAnimations[3]);
+          }, 300);
+
+          this.images = [];
+        }, 2000);
+      }, 4000);
     },
     getTasks: async function () {
       const freshTasks = await ControlService.getTasks();
@@ -140,7 +145,6 @@ export default {
 .anim {
   width: 100%;
   height: 100%;
-  padding: 20px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(6, 1fr);
@@ -149,19 +153,19 @@ export default {
 }
 .anim__content {
   grid-column: 1/6;
-  grid-row: 1/6;
-  width: 75%;
+  grid-row: 1/7;
+  width: 100%;
   height: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 3px solid rgb(223, 218, 218);
   border-radius: 23px;
   z-index: 10;
 }
 .anim__content__box {
+  /* border-image: linear-gradient(98deg, blue, #ff000000) 1; */
   width: 100%;
   height: 100%;
   display: flex;
@@ -172,7 +176,7 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 20px;
+  border-radius: 8px;
   position: absolute;
   top: 0;
   left: 0;
@@ -198,12 +202,27 @@ export default {
   }
 }
 
+/* .anim__content__box img:last-child {
+  animation: anim3 1s infinite;
+}
+@keyframes anim3 {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+} */
+
 .execution__icon {
   width: 148px !important;
   height: 148px !important;
   position: absolute !important;
-  top: 26.2% !important;
-  left: 25.3% !important;
+  top: 30% !important;
+  left: 28.8% !important;
   animation-name: anim2 3s !important;
 }
 
@@ -211,8 +230,8 @@ export default {
   width: 148px !important;
   height: 148px !important;
   position: absolute !important;
-  top: 26.2% !important;
-  left: 57% !important;
+  top: 29.2% !important;
+  left: 58.6% !important;
   animation-name: anim2 3s !important;
 }
 @keyframes anim2 {
