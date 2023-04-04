@@ -37,8 +37,15 @@
           </div>
         </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
-          <div class="title-box">
-            <span>{{ $t("displayValidator.importKey") }}</span>
+          <div class="title-box" :class="{ 'bg-red': exitValidatorResponse.stdout === '' }">
+            <span>{{
+              importIsProcessing === true || importIsDone === true
+                ? $t("displayValidator.importKey")
+                : exitValidatorResponse.stdout === ""
+                ? "ERROR - WITHDRAWAL FAILED"
+                : "WITHDRAWAL SUCCESSFUL"
+            }}</span>
+            <!-- <span>tessssst</span> -->
           </div>
           <div v-if="importIsProcessing" class="processImg">
             <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
@@ -47,6 +54,26 @@
             <span>{{ $t("displayValidator.waitMessage") }}</span>
             <span>{{ $t("displayValidator.waitForImport") }}</span>
           </div>
+
+          <!-- start of new exit modal -->
+
+          <div v-if="exitInfo" class="import-message">
+            <p :class="importingErrorMessage">
+              {{
+                exitValidatorResponse.stdout === ""
+                  ? exitFormat(exitValidatorResponse.stderr)
+                  : exitValidatorResponse.stdout
+              }}
+            </p>
+          </div>
+          <div v-if="exitInfo" class="confirm-btn">
+            <div class="confirm-box" @click="hideBDialog">
+              <span>OK</span>
+            </div>
+          </div>
+
+          <!-- end of new exit modal -->
+
           <div v-if="importIsDone" class="import-message">
             <p :class="importingErrorMessage">{{ message }}</p>
           </div>
@@ -124,6 +151,7 @@
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
+                    :class="{ disabled: currentNetwork.network !== 'goerli' }"
                     @click="passwordBoxSingleExitChain(item)"
                   />
                 </div>
@@ -145,15 +173,7 @@
                 }
               "
             />
-            <!-- <ExitValidator
-              v-if="true"
-              @confirm-password="
-                (enteredPassword) => {
-                  confirmPasswordSingleExitChain(item, enteredPassword);
-                }
-              "
-             
-            /> -->
+
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
@@ -339,7 +359,8 @@ export default {
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
-      importIsProcessing: true,
+      importIsProcessing: true, //it has to change to true
+      exitInfo: false,
       importIsDone: false,
       grafitiForMultiValidatorsActive: false,
       exitChainForMultiValidatorsActive: false,
@@ -533,6 +554,21 @@ export default {
       el.toRemove = true;
       el.isRemoveBoxActive = true;
     },
+    exitFormat(arg) {
+      const lines = arg.split(/\r?\n/);
+
+      const formattedLines = lines.map((line) => {
+        const parts = line.split(" ");
+        const time = parts.shift();
+        const level = parts.shift();
+        const message = parts.join(" ");
+
+        return `${time}\n${level}\n${message}\n\n`;
+      });
+
+      const formattedData = formattedLines.join("");
+      return formattedData || "";
+    },
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
@@ -586,11 +622,19 @@ export default {
         this.exitChainModalForMultiValidators = false;
       }
       this.insertKeyBoxActive = true;
-      this.exitValidatorResponse = await ControlService.exitValidator({
-        pubkey: el.key,
-        password: this.exitPassword,
-        serviceID: el.validatorID,
-      });
+      try {
+        this.exitValidatorResponse = await ControlService.exitValidator({
+          pubkey: el.key,
+          password: this.exitPassword,
+          serviceID: el.validatorID,
+        });
+        this.importIsProcessing = false;
+        this.exitInfo = true;
+        this.bDialogVisible = true;
+        this.importIsDone = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     passwordBoxSingleExitChain(el) {
       el.isExitBoxActive = true;
@@ -756,7 +800,7 @@ export default {
       this.importIsProcessing = true;
       this.importIsDone = false;
       this.password = val;
-
+      this.exitInfo = false;
       this.message = await ControlService.importKey(this.selectedService.config.serviceID);
 
       this.slashingDB = "";
@@ -917,6 +961,9 @@ export default {
 };
 </script>
 <style scoped>
+.bg-red {
+  background: #b22020 !important;
+}
 .deactive {
   opacity: 0.9;
   pointer-events: none;

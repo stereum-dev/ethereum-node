@@ -36,6 +36,9 @@ export default {
   display: flex;
   height: 100%;
 }
+.back_button img:active {
+  transform: scale(0.8);
+}
 .back_button img {
   width: 90%;
   height: 100%;
@@ -108,7 +111,10 @@ export default {
   border-radius: 0 35px 35px 0;
   background-color: #292929;
   color: #b5b5b5;
-  font-size: 0.7rem;
+  font-size: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700;
   cursor: pointer;
   text-transform: uppercase;
@@ -121,6 +127,6 @@ export default {
 }
 .confirmBtn:active {
   background-color: #292929;
-  font-size: 0.67rem;
+  font-size: 47%;
 }
 </style>
