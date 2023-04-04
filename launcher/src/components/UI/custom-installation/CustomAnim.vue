@@ -26,8 +26,12 @@
   </background-page>
 </template>
 <script>
+import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
 export default {
+  components: {
+    TaskManager,
+  },
   data() {
     return {
       customAnims: ["/animation/custom-2.png", "/animation/installer-2.png", "/animation/custom-3.png"],
