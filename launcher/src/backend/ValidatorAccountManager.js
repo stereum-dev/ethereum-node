@@ -600,7 +600,7 @@ export class ValidatorAccountManager {
         return result.stdout;
       } catch (err) {
         log.error("Validator Voluntary-Exit Failed:\n", err);
-        return result.stderr;
+        return err;
       }
     }
   }
