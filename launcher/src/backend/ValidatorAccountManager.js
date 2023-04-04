@@ -590,14 +590,14 @@ export class ValidatorAccountManager {
             );
             break;
           }
-          case "teku":
-            {
-              let noPrefixPubkey = pubkey.slice(2, 98);
-              const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
-              await this.nodeConnection.sshService.exec(exitTekuCmd);
-            }
-            return result.stdout;
+          case "teku": {
+            let noPrefixPubkey = pubkey.slice(2, 98);
+            const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+            result = await this.nodeConnection.sshService.exec(exitTekuCmd);
+            break;
+          }
         }
+        return result.stdout;
       } catch (err) {
         log.error("Validator Voluntary-Exit Failed:\n", err);
         return result.stderr;
