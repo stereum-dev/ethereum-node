@@ -72,26 +72,26 @@ export default {
   methods: {
     runInstalltion: async function () {
       try {
-      this.$router.push("/play");
-      this.refresh = false;
-      await ControlService.prepareOneClickInstallation(this.installationPath);
-      const restarted = await ControlService.restartServer();
-      this.refresh = true;
-      if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
-      await ControlService.writeOneClickConfiguration({
-        services: this.selectedPreset.includedPlugins,
-        checkpointURL: this.checkPointSync,
-        relayURL: this.relayURL,
-      });
+        this.$router.push("/play");
+        this.refresh = false;
+        await ControlService.prepareOneClickInstallation(this.installationPath);
+        const restarted = await ControlService.restartServer();
+        this.refresh = true;
+        if (restarted) await new Promise((resolve) => setTimeout(resolve, 20000));
+        await ControlService.writeOneClickConfiguration({
+          services: this.selectedPreset.includedPlugins,
+          checkpointURL: this.checkPointSync,
+          relayURL: this.relayURL,
+        });
 
-      await ControlService.startOneClickServices();
-      this.$router.push("/node");
-      } catch(err) {
-        console.log("Installation Failed: ",err)
+        await ControlService.startOneClickServices();
+        this.$router.push("/node");
+      } catch (err) {
+        console.log("Installation Failed: ", err);
         await ControlService.clearTasks();
         await ControlService.destroy();
         //handle error with ui and stuff not like this:
-        this.loggingOut()
+        this.loggingOut();
       }
     },
     async loggingOut() {
