@@ -11,34 +11,45 @@
           <span>{{ item.name }} - [{{ item.config.serviceID }}}]</span>
         </div>
         <div>
-          <span>choose what source will be used for resynchnorization</span>
+          <span>
+            {{ item.category === "consensus" ? "choose what" : "genesis" }} source will be used for
+            resynchronization</span
+          >
         </div>
       </div>
       <div class="resync-box">
-        <carousel ref="carousel" v-model="currentSlide" :items-to-show="1" :wrap-around="true" :transition="500">
-          <slide v-for="(item, index) in syncType" :key="index">
+        <carousel
+          ref="carousel"
+          v-model="currentSlide"
+          :items-to-show="1"
+          :wrap-around="true"
+          :transition="500"
+          :class="{ disabled: item.category === 'execution' }"
+        >
+          <slide v-for="(Stype, index) in syncType" :key="index">
             <div class="syncBox">
-              <div v-if="item.name === 'genesis'" class="syncContent">
+              <div v-if="Stype.name === 'genesis'" class="syncContent">
                 <div class="syncText">
-                  <span>{{ item.name }}</span>
-                  <span>{{ item.type }}</span>
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
               </div>
-              <div v-else-if="item.type === 'recommended'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
-                  <span>{{ item.name }}</span>
-                  <span>{{ item.type }}</span>
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
                 <div class="inputBox">
                   <input
+                    id="url-input"
                     v-model="checkPointSync"
                     type="text"
                     placeholder="https://example.cc/"
-                    class="placeholder:text-gray-500"
+                    @input="validateUrl"
                   />
                 </div>
               </div>
-              <div v-else-if="item.type === 'custom source'" class="syncContent">
+              <div v-else-if="Stype.type === 'custom source'" class="syncContent">
                 <div class="commingSoon">Coming soon...</div>
                 <!-- <span>{{ item.name }}</span>
             <span>{{ item.type }}</span>
@@ -61,12 +72,15 @@
             </div>
           </slide>
 
-          <template #addons>
+          <template v-if="item.category === 'consensus'" #addons>
             <navigation />
           </template>
         </carousel>
       </div>
-      <div class="resync-confirm">resync</div>
+      <div class="error">
+        <span v-if="error">{{ error }}</span>
+      </div>
+      <div class="resync-confirm deactive" :class="{ active: btnActive }" @click="resync(item)">resync</div>
       <span class="clickOut">click outside to close</span>
     </div>
   </div>
@@ -74,8 +88,10 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useServices } from "@/store/services";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
+import ControlService from "@/store/ControlService";
 
 export default {
   components: {
@@ -92,29 +108,68 @@ export default {
   data() {
     return {
       currentSlide: 0,
-      btnActive: "btnActive",
+      btnActive: true,
+      checkPointSync: "",
+      serviceID: "",
+      error: "",
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
-      checkPointSync: "checkPointSync",
+    }),
+    ...mapWritableState(useServices, {
+      resyncSeparateModal: "resyncSeparateModal",
     }),
   },
   watch: {
-    currentSlide: function (val) {
-      if (this.$route.path === "sync")
-        if (val === 1 && this.checkPointSync === "") {
-          this.btnActive = false;
-        } else {
-          this.btnActive = true;
-        }
+    currentSlide(val) {
+      if (val === 0) {
+        this.checkPointSync = "";
+      }
+      this.btnActive = val === 0 || this.checkPointSync !== "";
+    },
+    checkPointSync(val) {
+      this.btnActive = val !== "" || this.currentSlide === 0;
+    },
+  },
+  methods: {
+    async resync(el) {
+      this.resyncSeparateModal = false;
+      await ControlService.chooseServiceAction({
+        action: "reSync",
+        service: el.config.serviceID,
+        data: this.checkPointSync,
+      });
+    },
+    validateUrl() {
+      const regex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
+      if (!this.checkPointSync) {
+        this.error = "";
+      } else if (!regex.test(this.checkPointSync)) {
+        this.error = "Please enter a valid URL without spaces";
+        this.btnActive = false;
+      } else {
+        this.error = "";
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.error {
+  color: red;
+  width: 90%;
+  height: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50%;
+}
+.disabled {
+  pointer-events: none;
+}
 .clickOut {
   font-size: 70%;
   display: flex;
@@ -213,5 +268,13 @@ export default {
 }
 .resync-confirm:active {
   transform: scale(0.9);
+}
+.deactive {
+  opacity: 50%;
+  pointer-events: none;
+}
+.active {
+  opacity: 1;
+  pointer-events: visible;
 }
 </style>

@@ -1,7 +1,7 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
-import * as QRCode from "qrcode";
+// import * as QRCode from "qrcode";
 import * as log from "electron-log";
 import * as crypto from "crypto";
 import * as fs from "fs";
