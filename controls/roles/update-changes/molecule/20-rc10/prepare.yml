@@ -10,7 +10,7 @@
         group: "root"
         mode: 0644
       become: yes
-    
+
     - name: Create Teku service config
       copy:
         dest: "/etc/stereum/services/61cb4672-f069-4416-bf2a-db53a0776395.yaml"
@@ -85,10 +85,10 @@
           configVersion: 1
           command: /app/cmd/beacon-chain/beacon-chain --accept-terms-of-use=true
             --datadir=/opt/app/beacon --p2p-host-ip="" --p2p-host-dns="" --prater=true
-            --fallback-web3provider=http://foobar:8551 --block-batch-limit=512
+            --block-batch-limit=512
             --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz --rpc-host=0.0.0.0
             --grpc-gateway-host=0.0.0.0 --p2p-max-peers=100
-            --http-web3provider=http://foobar:8551
+            --execution-endpoint==http://foobar:8551
             --monitoring-host=0.0.0.0 --monitoring-port=8080 --p2p-tcp-port=13001
             --p2p-udp-port=12001 --jwt-secret=/engine.jwt
           entrypoint: []

@@ -82,11 +82,7 @@ test("prysm validator import", async () => {
     [geth],
     []
   );
-  //prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop()
-  prysmBC.imageVersion = versions["prater"][prysmBC.service].slice(-1).pop();
-  //change out http address for integration test
-  // prysmBC.command = prysmBC.command.replace('--http-web3provider=' + geth.buildExecutionClientHttpEndpointUrl(),'--http-web3provider=http://10.10.0.3:8545')
-  prysmBC.command = prysmBC.command.replace("--fallback-web3provider=undefined", "--fallback-web3provider=[]");
+  prysmBC.imageVersion = versions[prysmBC.network][prysmBC.service].slice(-1).pop()
 
   ports = [new ServicePort("127.0.0.1", 7500, 7500, servicePortProtocol.tcp)];
   let prysmVC = PrysmValidatorService.buildByUserInput(
@@ -95,8 +91,7 @@ test("prysm validator import", async () => {
     nodeConnection.settings.stereum.settings.controls_install_path + "/prysm",
     [prysmBC]
   );
-  //prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop()
-  prysmVC.imageVersion = versions["prater"][prysmVC.service].slice(-1).pop();
+  prysmVC.imageVersion = versions[prysmVC.network][prysmVC.service].slice(-1).pop()
 
   await nodeConnection.writeServiceConfiguration(geth.buildConfiguration()),
     await serviceManager.manageServiceState(geth.id, "started");
@@ -204,8 +199,8 @@ test("prysm validator import", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
   let responseValidator = await nodeConnection.sshService.exec(
     "docker exec stereum-" +
-      prysmVC.id +
-      " /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use"
+    prysmVC.id +
+    " /app/cmd/validator/validator accounts list --wallet-dir=/opt/app/data/wallets --wallet-password-file=/opt/app/data/passwords/wallet-password --accept-terms-of-use"
   );
   const runningValidator = responseValidator.stdout.replace("\x1B[93m3\x1B[0m", "3"); //remove yellow color coding
 
