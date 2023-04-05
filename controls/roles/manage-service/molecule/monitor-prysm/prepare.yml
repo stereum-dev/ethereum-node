@@ -2,7 +2,7 @@
 - name: Prepare
   hosts: all
   roles:
-    - role: '../'
+    - role: "../"
   vars_files:
     - ../../../../defaults/stereum_defaults.yaml
   vars:
@@ -32,11 +32,11 @@
 
     # prysm beacon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -59,7 +59,6 @@
                 --p2p-host-ip=""
                 --p2p-host-dns=""
                 --prater=true
-                --fallback-web3provider=[]
                 --block-batch-limit=512
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
                 --rpc-host=0.0.0.0
