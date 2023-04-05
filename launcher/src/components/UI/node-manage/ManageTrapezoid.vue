@@ -18,7 +18,6 @@ export default {};
   width: 98%;
   margin: 0 auto;
   height: 130px;
-  background: #3a3d40;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,8 +31,8 @@ export default {};
   justify-content: center;
   align-items: center;
   position: relative;
-  box-shadow: 0 1px 3px 1px #171717;
-  border: 1px solid #4c4848;
+  box-shadow: 0 1px 3px 1px #2c3034;
+  border: 1px solid #434a50;
 }
 .trapezoid {
   width: 95%;
