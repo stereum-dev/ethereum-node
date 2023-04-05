@@ -1,9 +1,19 @@
 ---
+- name: Read SSVNetworkService config file
+  slurp:
+    src: "/etc/stereum/services/{{ ssv_key_service }}.yaml"
+  register: ssv_config_raw
+
+- name: Parse SSVNetworkService configuration
+  set_fact:
+    ssv_config: "{{ ssv_config_raw['content'] | b64decode | from_yaml }}"
+
 - name: Generate SSV network keys
-  command: bash -c "docker run -d --name=ssv_node_op_key -it 'bloxstaking/ssv-node:v0.3.0' /go/bin/ssvnode generate-operator-keys &&
-                    docker logs ssv_node_op_key --follow &&
-                    docker stop ssv_node_op_key &&
-                    docker rm ssv_node_op_key"
+  command:
+    bash -c "docker run -d --name=ssv_node_op_key -it '{{ ssv_config.image }}' /go/bin/ssvnode generate-operator-keys &&
+    docker logs ssv_node_op_key --follow &&
+    docker stop ssv_node_op_key &&
+    docker rm ssv_node_op_key"
   register: ssv_keys
   changed_when: false
   become: yes
@@ -20,7 +30,7 @@
     state: touch
     owner: "2000"
     group: "2000"
-    mode: '0644'
+    mode: "0644"
   become: yes
 
 - name: Adapt ssv-secret/public key
@@ -30,5 +40,4 @@
       ssv_pk: "{{ ssv.pk }}"
       ssv_sk: "{{ ssv.sk }}"
   become: yes
-
 # EOF
