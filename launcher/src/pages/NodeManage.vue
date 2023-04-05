@@ -27,7 +27,7 @@
               @replace-plugin="replacePluginHandler"
             >
             </replace-panel>
-            <node-configuration v-else ></node-configuration>
+            <node-configuration v-else></node-configuration>
           </Transition>
         </div>
         <div class="drop-parent">
@@ -351,7 +351,7 @@ export default {
   height: 95%;
   grid-column: 2;
   grid-row: 1/5;
-  background: #3a3d40;
+  background: #33393e;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -437,7 +437,7 @@ export default {
   height: 95%;
   grid-row: 1/5;
   grid-column: 4;
-  background: #3a3d40;
+  background: #33393e;
   border: 2px solid #242529b4;
   border-left: none;
   border-top-right-radius: 30px;
