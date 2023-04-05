@@ -107,7 +107,9 @@ export default {
             this.images.slice(3, 1);
           }, 200);
           setTimeout(() => {
+
             this.images.push(this.installAnimations[0],this.installAnimations[1], this.installAnimations[2], this.installAnimations[3]);
+
           }, 300);
 
           this.images = [];
