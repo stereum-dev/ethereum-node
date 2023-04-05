@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   vars_files:
-  - ../../../../defaults/stereum_defaults.yaml
+    - ../../../../defaults/stereum_defaults.yaml
   vars:
     prysm_service: 1aaaf4a6-1352-11ed-ad87-b37d6103eb33
     geth_service: 1c3ab554-1352-11ed-817e-37f53e69ec7d
@@ -10,11 +10,11 @@
   tasks:
     # geth service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -47,11 +47,11 @@
 
     # prysm beacon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -73,7 +73,6 @@
                 --p2p-host-ip=""
                 --p2p-host-dns=""
                 --prater=true
-                --fallback-web3provider=[]
                 --block-batch-limit=512
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
                 --rpc-host=0.0.0.0
@@ -88,5 +87,4 @@
                 - "/opt/app/services/{{ prysm_service }}/prysm/beacon:/opt/app/beacon"
                 - "/opt/app/services/{{ prysm_service }}/genesis:/opt/app/genesis"
                 - "/opt/app/services/{{ geth_service }}/engine.jwt:/engine.jwt"
-
 # EOF

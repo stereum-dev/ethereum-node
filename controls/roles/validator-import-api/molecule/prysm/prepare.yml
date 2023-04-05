@@ -43,11 +43,11 @@
 
     # prysm beacon service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
       vars:
         stereum_args:
           manage_service:
@@ -69,7 +69,6 @@
                 --p2p-host-ip=""
                 --p2p-host-dns=""
                 --prater=true
-                --fallback-web3provider=[]
                 --block-batch-limit=512
                 --genesis-state=/opt/app/genesis/prysm-prater-genesis.ssz
                 --rpc-host=0.0.0.0
@@ -81,58 +80,58 @@
 
     # prysm validator service
     - block:
-      - set_fact:
-          stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
-      - name: "Include manage-service"
-        include_role:
-          name: "manage-service"
-      - name: Generate wallet's password
-        command: uuidgen
-        register: wallet_password
-        changed_when: false
-        become: yes
-      - name: Set wallet password
-        copy:
-          content: "{{ wallet_password.stdout }}"
-          dest: "/opt/app/services/{{ validator_service }}/data/passwords/wallet-password"
-          owner: "2000"
-          group: "2000"
-          mode: 0700
-        become: yes
-      - name: Prysm - Create wallet for account(s)
-        command: bash -c "docker exec stereum-{{ validator_service }}
-                          /app/cmd/validator/validator
-                          wallet create
-                          --wallet-dir=/opt/app/data/wallets
-                          --wallet-password-file=/opt/app/data/passwords/wallet-password
-                          --accept-terms-of-use
-                          --keymanager-kind=direct
-                          --prater"
-        changed_when: false
-        become: yes
-      - name: Prysm - Set wallet permission
-        ansible.builtin.file:
-          path: "/opt/app/services/{{ validator_service }}/data/wallets"
-          state: directory
-          recurse: yes
-          owner: "2000"
-          group: "2000"
-        become: yes
-      - name: Stop beacon & validator service
-        docker_container:
-          name: "{{ item }}"
-          state: stopped
-        become: yes
-        with_items:
-          - "stereum-{{ beacon_service }}"
-          - "stereum-{{ validator_service }}"
-      - name: Restart beacon & validator service
-        command: "docker start {{ item }}"
-        changed_when: false
-        become: yes
-        with_items:
-          - "stereum-{{ beacon_service }}"
-          - "stereum-{{ validator_service }}"
+        - set_fact:
+            stereum: "{{ stereum_static | combine(stereum_args, recursive=True) }}"
+        - name: "Include manage-service"
+          include_role:
+            name: "manage-service"
+        - name: Generate wallet's password
+          command: uuidgen
+          register: wallet_password
+          changed_when: false
+          become: yes
+        - name: Set wallet password
+          copy:
+            content: "{{ wallet_password.stdout }}"
+            dest: "/opt/app/services/{{ validator_service }}/data/passwords/wallet-password"
+            owner: "2000"
+            group: "2000"
+            mode: 0700
+          become: yes
+        - name: Prysm - Create wallet for account(s)
+          command: bash -c "docker exec stereum-{{ validator_service }}
+            /app/cmd/validator/validator
+            wallet create
+            --wallet-dir=/opt/app/data/wallets
+            --wallet-password-file=/opt/app/data/passwords/wallet-password
+            --accept-terms-of-use
+            --keymanager-kind=direct
+            --prater"
+          changed_when: false
+          become: yes
+        - name: Prysm - Set wallet permission
+          ansible.builtin.file:
+            path: "/opt/app/services/{{ validator_service }}/data/wallets"
+            state: directory
+            recurse: yes
+            owner: "2000"
+            group: "2000"
+          become: yes
+        - name: Stop beacon & validator service
+          docker_container:
+            name: "{{ item }}"
+            state: stopped
+          become: yes
+          with_items:
+            - "stereum-{{ beacon_service }}"
+            - "stereum-{{ validator_service }}"
+        - name: Restart beacon & validator service
+          command: "docker start {{ item }}"
+          changed_when: false
+          become: yes
+          with_items:
+            - "stereum-{{ beacon_service }}"
+            - "stereum-{{ validator_service }}"
       vars:
         stereum_args:
           manage_service:
@@ -144,8 +143,7 @@
               image: "prysmaticlabs/prysm-validator:{{ stereum_static.defaults.versions.prysm }}"
               env: {}
               entrypoint: []
-              command:
-                /app/cmd/validator/validator
+              command: /app/cmd/validator/validator
                 --accept-terms-of-use=true
                 --beacon-rpc-provider="stereum-{{ beacon_service }}:4000"
                 --beacon-rpc-gateway-provider="stereum-{{ beacon_service }}:3500"
