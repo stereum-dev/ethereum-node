@@ -55,7 +55,7 @@ export default {
 }
 .disabledModalContent {
   width: 98%;
-  height: 79%;
+  height: 82%;
   border-radius: 20px;
   border: 3px solid #bfbfbf;
   position: absolute;
