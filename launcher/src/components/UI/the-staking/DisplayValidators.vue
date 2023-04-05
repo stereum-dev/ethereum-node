@@ -253,7 +253,7 @@
 
     <!-- Exit box for validator keys -->
     <ExitMultipleValidators v-if="exitChainForMultiValidatorsActive" @confirm-btn="confirmPasswordMultiExitChain" />
-    <DisabledStaking v-if="!stakingIsDisabled" />
+    <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
 <script>
