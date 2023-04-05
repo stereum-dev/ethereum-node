@@ -341,7 +341,7 @@ export default {
   background-color: #264744;
   border-radius: 0 15px 15px 0;
   position: absolute;
-  left: 0;
+  left: -1px;
   top: -7%;
   box-shadow: 0 1px 3px rgb(47, 47, 47);
   display: flex;

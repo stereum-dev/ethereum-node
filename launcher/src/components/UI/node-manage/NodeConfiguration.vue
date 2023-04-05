@@ -123,7 +123,7 @@ export default {
       this.removeIsConfirmed = false;
     },
     destroyNode: async function () {
-      let condition = true
+      let condition = true;
       await ControlService.clearTasks();
       ControlService.destroy(); // no await, we wanna read tasks while deletion is in progress
       var uxtStart = Math.floor(Date.now() / 1000);
@@ -164,7 +164,7 @@ export default {
           myresult.push("node nuked (" + status + ")");
           this.$refs.removeServicesModalComponent.nukeData = myresult;
           await ControlService.clearTasks();
-          condition = false
+          condition = false;
           break;
         }
         await new Promise((resolve) => setTimeout(resolve, 100)); // sleep 100ms between attempts
@@ -231,10 +231,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2d3134;
+  background-color: #23272a;
   border-radius: 10px;
-  box-shadow: 1px 1px 3px 1px #282727;
-  border: 1px solid #4c4848;
+  box-shadow: 0 1px 3px 1px #282727;
+  border: 1px solid #747475;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .server .details {
   width: 95%;
