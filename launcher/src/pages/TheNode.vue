@@ -366,7 +366,6 @@ export default {
 .trap-container {
   width: 98%;
   margin: 0 auto;
-  background: #3a3d40;
 }
 .trap-title {
   color: white;

@@ -9,6 +9,8 @@ import { mapWritableState } from 'pinia';
             <div class="anim__img__content">
               <img src="/animation/installerBG.png" alt="Icon" />
               <img src="/animation/installer-1.png" alt="Icon" />
+              <img v-if="cilentIconActive" :src="executionClientIcon" class="execution__icon" alt="icon" />
+              <img v-if="cilentIconActive" :src="consensusClientIcon" class="consensus__icon" alt="icon" />
               <img
                 v-for="img in images"
                 :key="img"
@@ -61,6 +63,7 @@ export default {
       consensusClientIcon: "",
       Tasks: [],
       displayNewTask: "",
+      cilentIconActive: false,
     };
   },
   computed: {
@@ -96,15 +99,15 @@ export default {
           this.images.push(this.executionClientIcon, this.consensusClientIcon);
           this.images.push(this.installAnimations[3]);
         }, 700);
-
+        this.cilentIconActive = true;
         this.images = [];
+
         setInterval(() => {
           setTimeout(() => {
             this.images.slice(3, 1);
           }, 200);
           setTimeout(() => {
-            this.images.push(this.executionClientIcon, this.consensusClientIcon);
-            this.images.push(this.installAnimations[3]);
+            this.images.push(this.installAnimations[1], this.installAnimations[2], this.installAnimations[3]);
           }, 300);
 
           this.images = [];
