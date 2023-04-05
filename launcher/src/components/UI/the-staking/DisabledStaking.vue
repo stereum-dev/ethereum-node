@@ -3,19 +3,32 @@
     <div class="modal-opacity"></div>
     <div class="disabledModalContent">
       <div class="title-box">
-        <img src="../../../../public/img/icon/the-staking/stereum-error.png" alt="icon" />
+        <img src="../../../../public/img/icon/the-staking/Fehlender_validatorenclient.svg" alt="icon" />
       </div>
       <div class="disabledMessage">
-        <span>{{ $t("disabledStaking.noValidatorInstalled") }}</span>
-        <p>
-          {{ $t("disabledStaking.disabledStakingMessage") }}
-        </p>
+        <span>REQUIRES RUNNING VALIDATOR CLIENT ON SERVER TO ACCESS STAKING</span>
+      </div>
+      <div class="validator-icons">
+        <div v-for="icon in validatorIcons" :key="icon" class="validator-icons_icon"><img :src="icon" alt="" /></div>
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      validatorIcons: [
+        "/img/icon/plugin-icons/validator/Lighthouse-Validator-Circle.png",
+        "/img/icon/plugin-icons/validator/Lodestar-Validator-Circle.png",
+        "/img/icon/plugin-icons/validator/Nimbus-Validator-Circle.png",
+        "/img/icon/plugin-icons/validator/Prysm-Validator-Circle.png",
+        "/img/icon/plugin-icons/validator/Teku-Validator-Circle.png",
+        "/img/icon/plugin-icons/validator/Web3Signer-Circle.png",
+      ],
+    };
+  },
+};
 </script>
 <style scoped>
 .disabled-parent {
@@ -41,14 +54,14 @@ export default {};
   z-index: 11;
 }
 .disabledModalContent {
-  width: 55%;
-  height: 60%;
-  border-radius: 75px;
+  width: 98%;
+  height: 79%;
+  border-radius: 20px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 8%;
-  left: 22%;
-  background-color: #bf3a3a;
+  top: 2%;
+  left: 1%;
+  background-color: #343434;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -58,39 +71,45 @@ export default {};
 }
 .title-box {
   width: 100%;
-  height: 35%;
-  margin-top: 5px;
+  height: 45%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .title-box img {
-  width: 25%;
+  width: 70%;
   height: 100%;
 }
 .disabledMessage {
   width: 95%;
-  height: 65%;
+  height: 15%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
-.disabledMessage p {
-  width: 80%;
-  margin-top: 5%;
-  color: rgb(197, 197, 197);
-  font-size: 1rem;
-  font-weight: 600;
-  word-break: break-word;
-  text-align: center;
-}
 .disabledMessage span {
-  color: rgb(213, 213, 213);
-  font-size: 1.2rem;
+  color: #04f4f4;
+  font-size: 200%;
   font-weight: 700;
-  margin-top: 5px;
   text-align: center;
   text-transform: uppercase;
+}
+.validator-icons {
+  width: 70%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.validator-icons_icon {
+  width: 14%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.validator-icons_icon img {
+  height: 80%;
 }
 </style>
