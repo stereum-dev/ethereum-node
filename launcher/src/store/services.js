@@ -423,7 +423,7 @@ export const useServices = defineStore("services", {
           hIcon: "/img/icon/service-icons/prometheus.png",
           linkUrl: "",
           docsUrl: "https://prometheus.io/docs/introduction/overview/",
-          headerOption: false,
+          headerOption: true,
           expertOptionsModal: false,
           expertOptions: [
             {
