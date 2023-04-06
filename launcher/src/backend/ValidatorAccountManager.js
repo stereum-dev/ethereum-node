@@ -594,9 +594,6 @@ export class ValidatorAccountManager {
             let noPrefixPubkey = pubkey.slice(2, 98);
             const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
             result = await this.nodeConnection.sshService.exec(exitTekuCmd);
-            if (result.stderr !== "") {
-              result.stdout = "";
-            }
             break;
           }
         }
