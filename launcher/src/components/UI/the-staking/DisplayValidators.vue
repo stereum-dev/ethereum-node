@@ -303,6 +303,12 @@ export default {
     DisabledStaking,
     SearchBox,
   },
+      props:{
+      button: {
+        type: Object,
+        required: false,
+      },
+    },
   data() {
     return {
       riskWarning: false,
