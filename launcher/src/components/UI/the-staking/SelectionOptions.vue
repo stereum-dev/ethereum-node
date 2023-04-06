@@ -66,11 +66,11 @@ export default {
     },
     vIcon: {
       type: String,
-      required: true,
+      required: false,
     },
     vName: {
       type: String,
-      required: true,
+      required: false,
     },
     validators: {
       type: Array,

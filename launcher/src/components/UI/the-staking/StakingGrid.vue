@@ -42,8 +42,8 @@ export default {
       buttonState: [
         {
           id: 1,
-          name: "grafiti",
-          displayName: "Grafiti",
+          name: "graffiti",
+          displayName: "Graffiti",
           icon: "/img/icon/the-staking/option-graffiti.png",
           method: this.grafitiBtn,
           display: true,
