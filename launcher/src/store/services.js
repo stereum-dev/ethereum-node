@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
+      selectedIcon: "",
+      selectedName: "",
+      selectedStatus: "",
       resyncSeparateModal: false,
       selectedServiceToResync: {},
       network: "",

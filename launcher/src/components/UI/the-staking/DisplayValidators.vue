@@ -405,6 +405,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+      selectedIcon: "selectedIcon"
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -901,10 +902,12 @@ export default {
     },
 
     async confirmRemoveAllValidators(picked) {
-      let keys = this.keys.map((key) => key.key);
+      
+      let filteredKey=this.keys.filter(key=>key.icon===this.selectedIcon)
+      let keys = filteredKey.map((key) => key.key);
       let id = "";
       let changed = 0;
-      this.keys.forEach((key) => {
+      filteredKey.forEach((key) => {
         if (id != key.validatorID) {
           id = key.validatorID;
           changed++;

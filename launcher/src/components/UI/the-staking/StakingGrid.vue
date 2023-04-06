@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
@@ -74,15 +74,16 @@ export default {
         // },
       ],
       button: {},
-      selectedIcon: "",
-      selectedName: "",
-      selectedStatus: "",
+      
     };
   },
 
   computed: {
-    ...mapState(useServices, {
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      selectedIcon: "selectedIcon",
+      selectedName: "selectedName",
+      selectedStatus: "selectedStatus",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
