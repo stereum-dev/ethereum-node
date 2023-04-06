@@ -3,8 +3,22 @@ export const useServices = defineStore("services", {
   state: () => {
     return {
       selectedIcon: "",
-      selectedName: "",
-      selectedStatus: "",
+      buttonState: [
+        {
+          id: 1,
+          name: "graffiti",
+          displayName: "Graffiti",
+          icon: "/img/icon/the-staking/option-graffiti.png",
+          display: true,
+        },
+        {
+          id: 2,
+          name: "remove",
+          displayName: "Remove all keys",
+          icon: "/img/icon/the-staking/option-remove.png",
+          display: true,
+        },
+      ],
       resyncSeparateModal: false,
       selectedServiceToResync: {},
       network: "",

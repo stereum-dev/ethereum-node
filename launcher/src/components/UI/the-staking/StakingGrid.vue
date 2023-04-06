@@ -5,6 +5,7 @@
         <display-validators :button="button"></display-validators>
         <ValidatorState />
         <selection-options
+          :key="refresh"
           :button-state="buttonState"
           :validator-icon="selectedIcon"
           :validator-name="selectedName"
@@ -39,42 +40,10 @@ export default {
   },
   data() {
     return {
-      buttonState: [
-        {
-          id: 1,
-          name: "graffiti",
-          displayName: "Graffiti",
-          icon: "/img/icon/the-staking/option-graffiti.png",
-          method: this.grafitiBtn,
-          display: true,
-        },
-        {
-          id: 2,
-          name: "remove",
-          displayName: "Remove all keys",
-          icon: "/img/icon/the-staking/option-remove.png",
-          method: this.removeBtn,
-          display: true,
-        },
-        // {
-        //   id: 3,
-        //   name: "fee",
-        //   displayName: "change fee recipient",
-        //   icon: "img/icon/the-staking/fee-icon2.png",
-        //   method: this.feeBtn,
-        //   display: false,
-        // },
-        // {
-        //   id: 4,
-        //   name: "withdraw",
-        //   displayName: "withdrawal",
-        //   icon: "img/icon/the-staking/withdraw.png",
-        //   method: this.exitBtn,
-        //   display: false,
-        // },
-      ],
+      refresh:0,
       button: {},
-      
+      selectedName: "",
+      selectedStatus: "",
     };
   },
 
@@ -82,8 +51,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       selectedIcon: "selectedIcon",
-      selectedName: "selectedName",
-      selectedStatus: "selectedStatus",
+      buttonState:'buttonState'
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -102,6 +70,7 @@ export default {
       setTimeout(() => {
         this.button = el;
       });
+   
     },
     selectedValidator(validator) {
       this.selectedIcon = validator.icon;

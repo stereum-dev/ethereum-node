@@ -97,6 +97,7 @@ export default {
       this.$emit("vld-picker", validator);
       this.selector = false;
     },
+  
   },
 };
 </script>

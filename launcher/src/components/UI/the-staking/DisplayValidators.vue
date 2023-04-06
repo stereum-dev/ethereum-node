@@ -405,7 +405,8 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      selectedIcon: "selectedIcon"
+      selectedIcon: "selectedIcon",
+      buttonState:'buttonState'
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -435,7 +436,64 @@ export default {
       }
     },
   },
+  created() {
+  //  this.keys.forEach(item=>{
+  //     if(item.icon !==this.selectedIcon){
+  //       this.buttonState.forEach(displayBtn=>{
+  //         displayBtn.display=false;
+  //       })
+  //     }else if(this.keys===[]){
+  //       this.buttonState.forEach(displayBtn=>{
+  //         displayBtn.display=false;
+  //       })
+  //     }
+  //   })
+  
+
+    
+  },
   watch: {
+    keys: {
+  deep: true,
+  immediate: true,
+  handler(val) {
+    if (val.length === 0) {
+      this.buttonState.forEach(displayBtn => {
+        displayBtn.display = false;
+      });
+    } else if (val.length !== 0) {
+      val.forEach(item => {
+        if (item.icon === this.selectedIcon) {
+          this.buttonState.forEach(displayBtn => {
+            displayBtn.display = true;
+          });
+        } else {
+          this.buttonState.forEach(displayBtn => {
+            displayBtn.display = false;
+          });
+        }
+      });
+    }
+  }
+},
+
+selectedIcon: {
+  deep: true,
+  immediate: true,
+  handler(val) {
+    const hasMatchingIcon = this.keys.some(item => item.icon === val);
+    this.buttonState.forEach(displayBtn => {
+      displayBtn.display = hasMatchingIcon;
+    });
+  }
+},
+
+
+
+
+
+     
+  
     button: {
       deep: true,
       handler(val) {
@@ -504,9 +562,11 @@ export default {
   },
   updated() {
     this.checkKeyExists();
+   
   },
 
   methods: {
+   
     checkValidatorClientsExist() {
       const clients = this.installedServices.filter(
         (service) => service.category === "validator" && service.state === "running"
@@ -925,6 +985,8 @@ export default {
       } else {
         console.log("Multiple validator services are not supported yet!");
       }
+      this.updateValidatorStats()
+
     },
     checkSelectedService(service) {
       this.selectedService = service;
