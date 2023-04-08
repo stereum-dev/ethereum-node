@@ -11,7 +11,9 @@
           :validator-name="selectedName"
           :validator-state="selectedStatus"
           :validators="installedValidators"
-          @click-btn="clickBtnHandler"
+          :disable="display"
+          @click-btn-graffiti="grafittiHandler"
+          @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
         ></selection-options>
         <validators-box></validators-box>
@@ -25,6 +27,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
@@ -40,7 +43,7 @@ export default {
   },
   data() {
     return {
-      refresh:0,
+      refresh: 0,
       button: {},
       selectedName: "",
       selectedStatus: "",
@@ -51,7 +54,15 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       selectedIcon: "selectedIcon",
-      buttonState:'buttonState'
+      buttonState: "buttonState",
+    }),
+    ...mapWritableState(useStakingStore, {
+      insertKeyBoxActive: "insertKeyBoxActive",
+      enterPasswordBox: "enterPasswordBox",
+      exitChainForMultiValidatorsActive: "exitChainForMultiValidatorsActive",
+      removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
+      grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
+      display: "display",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -65,12 +76,17 @@ export default {
     this.selectedStatus = this.installedValidators[0].state;
   },
   methods: {
-    clickBtnHandler(el) {
-      this.button = {};
-      setTimeout(() => {
-        this.button = el;
-      });
-   
+    grafittiHandler() {
+      this.insertKeyBoxActive = false;
+      this.enterPasswordBox = false;
+      this.exitChainForMultiValidatorsActive = false;
+      this.removeForMultiValidatorsActive = false;
+      this.grafitiForMultiValidatorsActive = true;
+    },
+    removeHandler() {
+      this.exitChainForMultiValidatorsActive = false;
+      this.grafitiForMultiValidatorsActive = false;
+      this.removeForMultiValidatorsActive = true;
     },
     selectedValidator(validator) {
       this.selectedIcon = validator.icon;

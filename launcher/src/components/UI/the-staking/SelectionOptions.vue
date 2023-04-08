@@ -34,24 +34,24 @@
           </div>
         </li>
       </ul>
-      <template v-for="(button, index) in buttonState" :key="index">
-        <div class="buttonRow" :class="{ disabled: !button.display }" @click.stop="$emit('clickBtn', button)">
-          <div class="btnContent">
-            <img :src="button.icon" alt="icon" />
-            <span>{{ button.displayName }}</span>
-          </div>
+      <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnGraffiti')">
+        <div class="btnContent">
+          <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
+          <span>graffiti</span>
         </div>
-      </template>
+      </div>
+      <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnRemove')">
+        <div class="btnContent">
+          <img src="/img/icon/the-staking/option-remove.png" alt="icon" />
+          <span>Remove all keys</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
 export default {
   props: {
-    buttonState: {
-      type: Array,
-      required: true,
-    },
     validatorIcon: {
       type: String,
       required: true,
@@ -76,6 +76,11 @@ export default {
       type: Array,
       required: true,
     },
+    disable: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
   },
   emits: ["vld-picker"],
   data() {
@@ -97,7 +102,6 @@ export default {
       this.$emit("vld-picker", validator);
       this.selector = false;
     },
-  
   },
 };
 </script>

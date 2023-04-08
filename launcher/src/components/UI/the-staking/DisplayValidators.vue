@@ -283,7 +283,7 @@
       v-if="removeForMultiValidatorsActive"
       @remove-modal="
         removeForMultiValidatorsActive = false;
-        keys.forEach((k) => (k.toRemove = false));
+        keys.filter((key) => key.icon === selectedIcon).forEach((k) => (k.toRemove = false));
       "
       @delete-key="confirmRemoveAllValidators"
     />
@@ -340,12 +340,7 @@ export default {
     DisabledStaking,
     SearchBox,
   },
-      props:{
-      button: {
-        type: Object,
-        required: false,
-      },
-    },
+
   data() {
     return {
       deactiveInsertValidator: false,
@@ -359,19 +354,14 @@ export default {
       isDragOver: false,
       keyFiles: [],
       importValidatorKeyActive: true,
-      insertKeyBoxActive: true,
       selectValidatorServiceForKey: false,
-      enterPasswordBox: false,
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
       exitInfo: false,
       importIsDone: false,
-      grafitiForMultiValidatorsActive: false,
-      exitChainForMultiValidatorsActive: false,
       exitChainModalForMultiValidators: false,
-      removeForMultiValidatorsActive: false,
       downloadForMultiValidatorsActive: false,
       password: this.enteredPassword,
       fileInput: "",
@@ -406,7 +396,7 @@ export default {
       installedServices: "installedServices",
       runningServices: "runningServices",
       selectedIcon: "selectedIcon",
-      buttonState:'buttonState'
+      buttonState: "buttonState",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -415,6 +405,12 @@ export default {
       totalBalance: "totalBalance",
       keys: "keys",
       forceRefresh: "forceRefresh",
+      insertKeyBoxActive: "insertKeyBoxActive",
+      enterPasswordBox: "enterPasswordBox",
+      exitChainForMultiValidatorsActive: "exitChainForMultiValidatorsActive",
+      removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
+      grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
+      display: "display",
     }),
     importingErrorMessage() {
       return {
@@ -436,88 +432,27 @@ export default {
       }
     },
   },
-  created() {
-  //  this.keys.forEach(item=>{
-  //     if(item.icon !==this.selectedIcon){
-  //       this.buttonState.forEach(displayBtn=>{
-  //         displayBtn.display=false;
-  //       })
-  //     }else if(this.keys===[]){
-  //       this.buttonState.forEach(displayBtn=>{
-  //         displayBtn.display=false;
-  //       })
-  //     }
-  //   })
-  
-
-    
-  },
   watch: {
     keys: {
-  deep: true,
-  immediate: true,
-  handler(val) {
-    if (val.length === 0) {
-      this.buttonState.forEach(displayBtn => {
-        displayBtn.display = false;
-      });
-    } else if (val.length !== 0) {
-      val.forEach(item => {
-        if (item.icon === this.selectedIcon) {
-          this.buttonState.forEach(displayBtn => {
-            displayBtn.display = true;
-          });
-        } else {
-          this.buttonState.forEach(displayBtn => {
-            displayBtn.display = false;
-          });
-        }
-      });
-    }
-  }
-},
-
-selectedIcon: {
-  deep: true,
-  immediate: true,
-  handler(val) {
-    const hasMatchingIcon = this.keys.some(item => item.icon === val);
-    this.buttonState.forEach(displayBtn => {
-      displayBtn.display = hasMatchingIcon;
-    });
-  }
-},
-
-
-
-
-
-     
-  
-    button: {
       deep: true,
+      immediate: true,
       handler(val) {
-        if (val.name === "graffiti") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.exitChainForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = false;
-          this.grafitiForMultiValidatorsActive = true;
-        } else if (val.name === "remove") {
-          this.exitChainForMultiValidatorsActive = false;
-          this.grafitiForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = true;
-          this.keys.forEach((k) => (k.toRemove = true));
-        } else if (val.name === "withdraw") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.grafitiForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = false;
-          this.exitChainForMultiValidatorsActive = true;
-          this.keys.forEach((k) => (k.toRemove = true));
-        }
+        const hasMatchingIcon = val.some((item) => item.icon === this.selectedIcon);
+
+        this.display = !hasMatchingIcon;
       },
     },
+
+    selectedIcon: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        const hasMatchingIcon = this.keys.some((item) => item.icon === val);
+
+        this.display = !hasMatchingIcon;
+      },
+    },
+
     isPubkeyVisible: {
       deep: true,
       handler(val) {
@@ -562,11 +497,9 @@ selectedIcon: {
   },
   updated() {
     this.checkKeyExists();
-   
   },
 
   methods: {
-   
     checkValidatorClientsExist() {
       const clients = this.installedServices.filter(
         (service) => service.category === "validator" && service.state === "running"
@@ -962,8 +895,7 @@ selectedIcon: {
     },
 
     async confirmRemoveAllValidators(picked) {
-      
-      let filteredKey=this.keys.filter(key=>key.icon===this.selectedIcon)
+      let filteredKey = this.keys.filter((key) => key.icon === this.selectedIcon);
       let keys = filteredKey.map((key) => key.key);
       let id = "";
       let changed = 0;
@@ -973,20 +905,20 @@ selectedIcon: {
           changed++;
         }
       });
-      this.removeForMultiValidatorsActive = false;
       this.downloadForMultiValidatorsActive = true;
+      this.removeForMultiValidatorsActive = false;
+
       if (changed === 1 && id) {
         const returnVal = await this.deleteValidators(id, keys, picked);
         if (picked === "yes") {
           this.downloadFile(returnVal);
+          this.updateValidatorStats();
         }
       } else if (changed === 0) {
         console.log("Nothing to delete!");
       } else {
         console.log("Multiple validator services are not supported yet!");
       }
-      this.updateValidatorStats()
-
     },
     checkSelectedService(service) {
       this.selectedService = service;

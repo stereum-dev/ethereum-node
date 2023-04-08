@@ -7,6 +7,12 @@ export const useStakingStore = defineStore("theStaking", {
       keys: [],
       forceRefresh: false,
       storedValidatorKeys: [],
+      insertKeyBoxActive: true,
+      enterPasswordBox: false,
+      exitChainForMultiValidatorsActive: false,
+      removeForMultiValidatorsActive: false,
+      grafitiForMultiValidatorsActive: false,
+      display: true,
     };
   },
   actions: {},
