@@ -264,6 +264,18 @@ ipcMain.handle("checkUpdates", async () => {
   return await nodeConnection.checkUpdates();
 });
 
+ipcMain.handle("getCurrentOsVersion", async () => {
+  return await nodeConnection.getCurrentOsVersion();
+});
+
+ipcMain.handle("getCountOfUpdatableOSUpdate", async () => {
+  return await nodeConnection.getCountOfUpdatableOSUpdate();
+});
+
+ipcMain.handle("updateOS", async () => {
+  return await nodeConnection.updateOS();
+});
+
 ipcMain.handle("getCurrentStereumVersion", async () => {
   return await nodeConnection.getCurrentStereumVersion();
 });
