@@ -59,7 +59,7 @@
             <span>{{ $t("updatePanel.osTitle") }}</span>
           </div>
           <div class="versionContainer">
-            <comming-soon></comming-soon>
+            <!-- <comming-soon></comming-soon> -->
             <div class="versionBox">
               <div id="current">
                 <span>{{ $t("updatePanel.current") }}:</span>
@@ -75,14 +75,10 @@
               </div>
             </div>
             <div class="btnBox">
-              <div class="searchBtn no-events" @click="testData">
+              <div class="searchBtn" @click="getUpdatablePackagesCount">
                 <img src="/img/icon/header-icons/search.png" alt="icon" />
               </div>
-              <div
-                class="downloadBtn no-events"
-                :class="{ disabled: !checkStereumUpdate() || updating }"
-                @click="$emit('runUpdate', stereumUpdate)"
-              >
+              <div class="downloadBtn" :class="{ disabled: osVersionLatest === 0 }" @click="updateOS">
                 <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
               </div>
 
@@ -203,6 +199,10 @@ export default {
   updated() {
     this.getSettings();
   },
+  async mounted() {
+    await this.getOsVersion();
+    await this.getUpdatablePackagesCount();
+  },
   methods: {
     searchUpdate() {
       this.forceUpdateCheck = true;
@@ -231,6 +231,26 @@ export default {
         return false;
       }
       return true;
+    },
+    async getUpdatablePackagesCount() {
+      try {
+        const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
+
+        this.osVersionLatest = Number(packagesCount);
+
+        return this.getOsVersion();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async getOsVersion() {
+      try {
+        const osVersion = await ControlService.getCurrentOsVersion();
+
+        this.osVersionCurrent = osVersion;
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
