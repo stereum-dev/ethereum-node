@@ -303,6 +303,12 @@ export default {
     DisabledStaking,
     SearchBox,
   },
+      props:{
+      button: {
+        type: Object,
+        required: false,
+      },
+    },
   data() {
     return {
       riskWarning: false,
@@ -391,7 +397,7 @@ export default {
     button: {
       deep: true,
       handler(val) {
-        if (val.name === "grafiti") {
+        if (val.name === "graffiti") {
           this.insertKeyBoxActive = false;
           this.enterPasswordBox = false;
           this.exitChainForMultiValidatorsActive = false;

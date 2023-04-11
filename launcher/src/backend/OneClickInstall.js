@@ -85,6 +85,7 @@ export class OneClickInstall {
     this.choosenClient = undefined;
     this.network = undefined;
     this.mevboost = undefined;
+    this.needsKeystore = [];
   }
 
   getConfigurations() {
@@ -105,7 +106,7 @@ export class OneClickInstall {
 
 
   async createServices(constellation, checkpointURL, relayURL) {
-    let needsKeystore = [];
+    this.needsKeystore = [];
     let args = {
       network: this.network,
       installDir: this.installDir,
@@ -170,27 +171,25 @@ export class OneClickInstall {
     if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
       this.beaconService = this.serviceManager.getService("NimbusBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-      needsKeystore.push(this.beaconService)
+      this.needsKeystore.push(this.beaconService)
     }
 
     if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
       this.beaconService = this.serviceManager.getService("TekuBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-      needsKeystore.push(this.beaconService)
+      this.needsKeystore.push(this.beaconService)
     }
 
     if (constellation.includes("SSVNetworkService")) {
       //SSVNetworkService
       this.validatorService = this.serviceManager.getService("SSVNetworkService", { ...args, beaconServices: [this.beaconService], executionClients: [this.executionClient] })
-      needsKeystore.push(this.validatorService)
+      this.needsKeystore.push(this.validatorService)
     }
 
     this.prometheusNodeExporter = this.serviceManager.getService("PrometheusNodeExporterService", args)
     this.prometheus = this.serviceManager.getService("PrometheusService", args)
     this.grafana = this.serviceManager.getService("GrafanaService", args)
     this.notificationService = this.serviceManager.getService("NotificationService", args)
-
-    await this.serviceManager.createKeystores(needsKeystore);
 
     let versions;
     try {
@@ -239,6 +238,7 @@ export class OneClickInstall {
           await this.nodeConnection.writeServiceConfiguration(config);
         })
       );
+      await this.serviceManager.createKeystores(this.needsKeystore);
       return configs;
     }
   }

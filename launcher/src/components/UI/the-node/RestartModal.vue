@@ -3,10 +3,10 @@
     <div class="bg-dark" @click="$emit('closeWindow')"></div>
     <div class="browser-modal">
       <div class="restart-icon">
-        <img src="/img/icon/node-journal-icons/restart.png" alt="restart warning" />
+        <img :src="icon" alt="restart warning" />
       </div>
       <div class="restart-question">
-        <span>{{ $t("restartModal.restarQ") }}</span>
+        <span>are you sure you want to {{ title }}?</span>
       </div>
       <div class="nameId">
         <span class="service-name">{{ service.name }}</span>
@@ -15,7 +15,7 @@
       <div class="restart-message">{{ $t("restartModal.restartMessage") }}</div>
       <div class="restart-button" :class="{ disabled: loading }" @click="$emit('restartConfirm', service)">
         <img v-if="loading" src="/img/icon/control/spinner.gif" alt="loading" />
-        <span v-else>{{ $t("restartModal.restart") }}</span>
+        <span v-else>{{ title }}</span>
       </div>
       <span class="clickOut">click outside to close</span>
     </div>
@@ -30,6 +30,14 @@ export default {
     },
     loading: {
       type: Boolean,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    icon: {
+      type: String,
       required: true,
     },
   },

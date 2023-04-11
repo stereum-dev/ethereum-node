@@ -195,8 +195,9 @@
           :client-type="service.category"
           :service-icon="service.icon"
           :disabled="serviceStateStatus(service)"
-          @open-log="stateHandler(service)"
+          @open-log="switchService(service)"
         ></service-log-button>
+        <!-- stateHandler(service) -->
       </div>
     </div>
     <div v-if="openRestart && !openLog" class="configBtn">
@@ -230,15 +231,17 @@
           @open-log="restartService(service)"
         >
         </service-log-button>
-        <restart-modal
-          v-if="restartModalShow"
-          :service="itemToRestart"
-          :loading="restartLoad"
-          @close-window="restartModalClose"
-          @restart-confirm="restartConfirmed"
-        ></restart-modal>
       </div>
     </div>
+    <restart-modal
+      v-if="restartModalShow || switchModalShow"
+      :title="titlePicker"
+      :icon="iconPicker"
+      :service="itemToRestart"
+      :loading="restartLoad"
+      @close-window="restartModalClose"
+      @restart-confirm="modalClickHandler"
+    ></restart-modal>
     <confirm-modal
       v-if="confirmModal"
       :main-icon="checkStatus()"
@@ -272,6 +275,7 @@ export default {
   data() {
     return {
       test: true,
+      functionCondition: true,
       loading: false,
       updateTableIsOpen: false,
       openLog: false,
@@ -279,6 +283,10 @@ export default {
       itemToLogs: {},
       isPluginLogPageActive: false,
       restartModalShow: false,
+      restartTitle: "restart",
+      restartIcon: "/img/icon/node-journal-icons/restart.png",
+      switchIcon: "/img/icon/node-journal-icons/start-stop.png",
+      startTitle: "start / stop",
       itemToRestart: {},
       restartLoad: false,
       openPower: false,
@@ -286,6 +294,8 @@ export default {
       nameParentWidth: null,
       confirmModal: false,
       openResync: false,
+      titlePicker: "",
+      iconPicker: "",
     };
   },
 
@@ -359,9 +369,23 @@ export default {
       this.itemToLogs = el;
       this.isPluginLogPageActive = true;
     },
+
     restartService(el) {
       this.itemToRestart = el;
       this.restartModalShow = true;
+      this.titlePicker = this.restartTitle;
+      this.iconPicker = this.restartIcon;
+      this.functionCondition = true;
+    },
+    switchService(el) {
+      this.itemToRestart = el;
+      this.restartModalShow = true;
+      this.titlePicker = this.startTitle;
+      this.iconPicker = this.switchIcon;
+      this.functionCondition = false;
+    },
+    modalClickHandler(el) {
+      return this.functionCondition ? this.restartConfirmed(el) : this.stateHandler(el);
     },
     resyncToggleModal(el) {
       this.resyncSeparateModal = true;
@@ -472,6 +496,7 @@ export default {
       }
     },
     stateHandler: async function (item) {
+      this.restartModalShow = false;
       item.yaml = await ControlService.getServiceYAML(item.config.serviceID);
       if (!item.yaml.includes("isPruning: true")) {
         item.serviceIsPending = true;
