@@ -37,15 +37,11 @@
           </div>
         </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
-          <div class="title-box" :class="{ 'bg-red': exitValidatorResponse.stdout === '' }">
+          <div :class="{ 'bg-blue': exitValidatorResponse.rc }" class="title-box">
             <span>{{
-              importIsProcessing === true || importIsDone === true
-                ? $t("displayValidator.importKey")
-                : exitValidatorResponse.stdout === ""
-                ? "ERROR - WITHDRAWAL FAILED"
-                : "WITHDRAWAL SUCCESSFUL"
+              importIsProcessing === true || importIsDone === true ? $t("displayValidator.importKey") : ""
             }}</span>
-            <!-- <span>tessssst</span> -->
+            <span v-if="exitInfo">withdraw Logs </span>
           </div>
           <div v-if="importIsProcessing" class="processImg">
             <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
@@ -58,17 +54,17 @@
           <!-- start of new exit modal -->
 
           <div v-if="exitInfo" class="import-message">
+            <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p>
             <p :class="importingErrorMessage">
-              {{
-                exitValidatorResponse.stdout === ""
-                  ? exitFormat(exitValidatorResponse.stderr)
-                  : exitValidatorResponse.stdout
-              }}
+              {{ exitValidatorResponse.stdout }}
+            </p>
+            <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
+              {{ exitValidatorResponse.sterr }}
             </p>
           </div>
           <div v-if="exitInfo" class="confirm-btn">
             <div class="confirm-box" @click="hideBDialog">
-              <span>OK</span>
+              <span>Close</span>
             </div>
           </div>
 
@@ -79,7 +75,7 @@
           </div>
           <div v-if="importIsDone" class="confirm-btn">
             <div class="confirm-box" @click="hideBDialog">
-              <span>OK</span>
+              <span>Close</span>
             </div>
           </div>
         </key-modal>
@@ -964,8 +960,8 @@ export default {
 };
 </script>
 <style scoped>
-.bg-red {
-  background: #b22020 !important;
+.bg-blue {
+  background: #3180cf !important;
 }
 .deactive {
   opacity: 0.9;
@@ -1457,7 +1453,7 @@ remove-validator {
   width: 100%;
   height: 27%;
   background-color: rgb(55, 107, 102);
-  border-radius: 75px 75px 0 0;
+  border-radius: 71px 71px 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1465,7 +1461,7 @@ remove-validator {
 }
 
 .title-box span {
-  color: rgb(162, 162, 162);
+  color: rgb(216, 216, 216);
   font-size: 1.2rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -1518,7 +1514,7 @@ remove-validator {
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }
@@ -1537,6 +1533,7 @@ remove-validator {
 }
 .import-message p {
   width: 96%;
+  min-height: 35px;
   color: rgb(211, 211, 211);
   background-color: rgb(36, 40, 43);
   border: 1px solid rgb(147, 150, 152);
@@ -1548,7 +1545,7 @@ remove-validator {
   word-break: break-all;
   text-align: left;
   white-space: pre-wrap;
-  overflow: scroll;
+  overflow: auto;
   font-family: "Courier New";
 }
 
@@ -1570,16 +1567,16 @@ remove-validator {
   height: 45%;
   border-radius: 10px;
   border: 1px solid #8f8f8f;
-  background-color: #8f8f8f;
+  background-color: #d63f3f;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: rgb(210, 210, 210);
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .confirm-box:hover {
