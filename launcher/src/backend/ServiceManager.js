@@ -21,7 +21,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
-import { KeysAPIService } from "./ethereum-services/KeysAPIService"
+import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 
 const log = require("electron-log");
 
@@ -210,8 +210,8 @@ export class ServiceManager {
     if (dataDir.length > 0) {
       await this.deleteDataVolume(dataDir);
     }
-    //Prysm specific
-    if (client.service == "PrysmBeaconService") {
+    //if command is string
+    if (typeof client.command === "string") {
       //remove old checkpoint command
       if (client.command.includes(checkpointCommands[client.service])) {
         let commands = client.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
@@ -702,9 +702,7 @@ export class ServiceManager {
         return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
 
       case "KeysAPIService":
-        ports = [
-          new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp),
-        ];
+        ports = [new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp)];
         return KeysAPIService.buildByUserInput(args.network, ports);
 
       case "SSVNetworkService":
@@ -730,11 +728,11 @@ export class ServiceManager {
       await this.nodeConnection.sshService.exec(
         `docker run --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
       );
-      keyAPI.env.DB_NAME = dbName
-      keyAPI.env.DB_USER = dbUser
-      keyAPI.env.DB_PASSWORD = dbPass
+      keyAPI.env.DB_NAME = dbName;
+      keyAPI.env.DB_USER = dbUser;
+      keyAPI.env.DB_PASSWORD = dbPass;
 
-      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`
+      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`;
     } catch (err) {
       log.error("Creating CachingDB failed: ", err);
       await this.nodeConnection.sshService.exec(
