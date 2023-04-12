@@ -4,19 +4,49 @@
       <img class="exit-icon" src="../../../../public/img/icon/the-staking/redexit-icon.png" alt="icon" />
     </div>
     <div class="inputBox">
-      <input type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
+      <input v-model="enteredPassword" type="password" :placeholder="$t('exitMultipleValidator.passMessage')" />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmPassword')">
+      <div class="back_button" @click="$emit('backBtn', backBtn)">
+        <img src="/img/icon/arrows/arrow_back.png" alt="back icon" />
+      </div>
+      <button
+        class="confirmBtn"
+        :class="{ deactive: enteredPassword === '' ? true : false }"
+        @click="$emit('confirmPassword', enteredPassword)"
+      >
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      enteredPassword: "",
+    };
+  },
+};
 </script>
 <style scoped>
+.back_button {
+  margin-right: 5%;
+  cursor: pointer;
+  display: flex;
+  height: 100%;
+}
+.back_button img:active {
+  transform: scale(0.8);
+}
+.back_button img {
+  width: 90%;
+  height: 100%;
+}
+.deactive {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .exitRow {
   grid-column: 1/8;
   grid-row: 1;
@@ -81,7 +111,10 @@ export default {};
   border-radius: 0 35px 35px 0;
   background-color: #292929;
   color: #b5b5b5;
-  font-size: 0.7rem;
+  font-size: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: 700;
   cursor: pointer;
   text-transform: uppercase;
@@ -94,6 +127,6 @@ export default {};
 }
 .confirmBtn:active {
   background-color: #292929;
-  font-size: 0.67rem;
+  font-size: 47%;
 }
 </style>

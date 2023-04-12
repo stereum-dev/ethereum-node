@@ -1,0 +1,22 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # Prometheus
+    - name: Read PrometheusService file
+      slurp:
+        src: "/etc/stereum/services/b6d8373f-2819-45d2-a923-57842f163a9b.yaml"
+      register: prometheus_service_configuration_raw
+
+    - name: Parse PrometheusService configuration
+      set_fact:
+        prometheus_service_configuration: "{{ prometheus_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ prometheus_service_configuration }}"
+
+    - assert:
+        that:
+          - prometheus_service_configuration.command.find('--storage.tsdb.retention.time=15d') != 0
+# EOF

@@ -320,6 +320,14 @@ class ControlService extends EventEmitter {
       slashingDB: args.slashingDB,
     });
   }
+
+  async exitValidator(args) {
+    return await this.promiseIpc.send("exitValidator", {
+      pubkey: args.pubkey,
+      password: args.password,
+      serviceID: args.serviceID,
+    });
+  }
 }
 if (!instance) {
   instance = new ControlService(window.electron);
