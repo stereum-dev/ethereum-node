@@ -7,4 +7,7 @@
 
 - include_tasks: "2.0-rc13/updates-20-rc13.yaml"
   ignore_errors: yes
+
+- include_tasks: "2.0-rc16/updates-20-rc16.yaml"
+  ignore_errors: yes
 # EOF

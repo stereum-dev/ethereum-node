@@ -425,7 +425,15 @@ export const useServices = defineStore("services", {
           docsUrl: "https://prometheus.io/docs/introduction/overview/",
           headerOption: true,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Data retention (in days)",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/DataRetention.png",
+              pattern: "(--storage.tsdb.retention.time=)(.*)(d)",
+            },
+          ],
           tunnelLink: true,
           drag: true,
           state: "exited",
