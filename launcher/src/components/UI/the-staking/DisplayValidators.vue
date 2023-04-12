@@ -37,7 +37,7 @@
           </div>
         </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
-          <div :class="{ 'bg-blue': exitValidatorResponse.rc }" class="title-box">
+          <div :class="{ 'bg-blue': exitInfo }" class="title-box">
             <span>{{
               importIsProcessing === true || importIsDone === true ? $t("displayValidator.importKey") : ""
             }}</span>
@@ -55,11 +55,13 @@
 
           <div v-if="exitInfo" class="import-message">
             <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p>
-            <p :class="importingErrorMessage">
+            <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
+              <span> Output:</span><br />
               {{ exitValidatorResponse.stdout }}
             </p>
             <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
-              {{ exitValidatorResponse.sterr }}
+              <span> Error:</span><br />
+              {{ exitValidatorResponse.stderr }}
             </p>
           </div>
           <div v-if="exitInfo" class="confirm-btn">
