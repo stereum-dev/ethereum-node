@@ -75,13 +75,13 @@ export default {
   z-index: 501;
 }
 .exit-modal-content {
-  width: 40%;
-  height: 45%;
-  border-radius: 45px;
+  width: 55%;
+  height: 60%;
+  border-radius: 80px;
   border: 3px solid #bfbfbf;
   position: absolute;
-  top: 20%;
-  left: 30%;
+  top: 5%;
+  left: 22%;
   background-color: #336666;
   display: flex;
   flex-direction: column;
@@ -170,18 +170,19 @@ export default {
   font-weight: 700;
   color: rgb(210, 210, 210);
   text-transform: uppercase;
+  transform: scale(0.9);
 }
 .disabled {
   opacity: 0.7;
   pointer-events: none;
 }
 .confirmBtn:hover {
-  transform: scale(1.08);
+  transform: scale(1);
   transition-duration: 150ms;
   box-shadow: 0 1px 5px 1px rgb(35, 59, 53);
 }
 .confirmBtn:active {
-  transform: scale(1);
+  transform: scale(0.9);
   box-shadow: none;
 }
 .close {
