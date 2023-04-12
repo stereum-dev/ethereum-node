@@ -1,0 +1,31 @@
+---
+- name: Read service file
+  slurp:
+    src: "{{ item.path }}"
+  register: service_configuration_raw
+
+- name: Parse service's configuration
+  set_fact:
+    service_configuration: "{{ service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+- name: set new config
+  ansible.utils.update_fact:
+    updates:
+      - path: service_configuration.command
+        value: "sh -c '/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --web.enable-lifecycle --storage.tsdb.retention.time=15d'"
+  register: updated
+  when: service_configuration.service == "PrometheusService"
+
+- name: update config
+  set_fact:
+    service_configuration: "{{ updated.service_configuration }}"
+  when: service_configuration.service == "PrometheusService"
+
+- name: Write Config
+  copy:
+    dest: "{{ item.path }}"
+    content: "{{ service_configuration | to_nice_yaml(indent=2) }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  when: service_configuration.service == "PrometheusService"
