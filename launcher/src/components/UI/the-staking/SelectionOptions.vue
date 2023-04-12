@@ -34,7 +34,11 @@
           </div>
         </li>
       </ul>
-      <div class="buttonRow" :class="{ disabled: disable }" @click.stop="$emit('clickBtnGraffiti')">
+      <div
+        class="buttonRow"
+        :class="{ disabled: disable || validatorName === 'Lodestar' }"
+        @click.stop="$emit('clickBtnGraffiti')"
+      >
         <div class="btnContent">
           <img src="/img/icon/the-staking/option-graffiti.png" alt="icon" />
           <span>graffiti</span>
@@ -89,6 +93,7 @@ export default {
       multiValidator: false,
     };
   },
+
   mounted() {
     if (this.validators.length > 1) {
       this.multiValidator = true;
@@ -101,6 +106,9 @@ export default {
     vldPicker(validator) {
       this.$emit("vld-picker", validator);
       this.selector = false;
+    },
+    checkLodestar() {
+      this.lodestarValidator = this.validators.find((validator) => validator.name === "lodestar");
     },
   },
 };
