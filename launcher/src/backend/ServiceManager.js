@@ -285,7 +285,6 @@ export class ServiceManager {
         modifiedServices.push(service);
         let dependenciesToRemove = services
           .filter((s) => s.dependencies.mevboost.map((m) => m.id).includes(service.id))
-          .filter((m) => !dependencies.map((d) => d.id).includes(m.id));
         dependenciesToRemove.forEach((dependency) => {
           modifiedServices.push(this.removeDependencies(dependency, service));
         });
