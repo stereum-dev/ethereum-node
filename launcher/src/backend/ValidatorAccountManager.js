@@ -297,8 +297,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${
-        validatorPorts[service.service]
+      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }/eth/v1/keystores`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -565,14 +564,43 @@ export class ValidatorAccountManager {
           break;
         }
         case "nimbus": {
-          await this.nodeConnection.sshService.exec(
-            `docker exec -u 0 stereum-${serviceID} sh -c "chmod -R 700 /opt/app/beacon"`
-          );
-          const exitNimbusCmd = `docker exec stereum-${serviceID} sh -c "/home/user/nimbus_beacon_node deposits exit --data-dir=/opt/app/beacon --rest-url=http://localhost:5052 --validator=${pubkey} --network=${client.network} --non-interactive=true"`;
-          result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
-          await this.nodeConnection.sshService.exec(
-            `docker exec -u 0 stereum-${serviceID} sh -c "chmod -R 755 /opt/app/beacon"`
-          );
+          const exitNimbusCmd = `docker exec -u 0 -it stereum-${serviceID} sh -c "/home/user/nimbus_beacon_node deposits exit --validator=/opt/app/validators/${pubkey}/keystore.json"`;
+          let okToExit = false;
+          let checkMessage = false;
+          let counter = 0;
+          result = { stdout: "", stderr: "" };
+          await new Promise((resolve, reject) => {
+            this.nodeConnection.sshService.conn.shell(function (err, stream) {
+              stream.stdin.write(exitNimbusCmd + "\r\n")
+
+              stream.stderr.on("data", (err) => {
+                log.error(err);
+                reject();
+              });
+              stream.stdout.on("data", (data) => {
+                if (/Password:/.test(data)) {
+                  okToExit = true;
+                  stream.stdin.write(`${password}\r\n`);
+                  counter++;
+                  if (counter > 10) {
+                    stream.end();
+                    resolve()
+                  }
+                }
+                if (/Your choice:/.test(data)) {
+                  stream.stdin.write(`I understand the implications of submitting a voluntary exit\r\n`);
+                  checkMessage = true;
+                }
+                if (/:~#/.test(data) && okToExit) {
+                  stream.end();
+                  resolve();
+                }
+                if (checkMessage) {
+                  result.stdout += data.toString()
+                }
+              });
+            });
+          });
           break;
         }
         case "prysm": {

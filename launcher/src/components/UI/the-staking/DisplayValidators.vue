@@ -149,7 +149,6 @@
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
-                    :class="{ disabled: currentNetwork.network !== 'goerli' }"
                     @click="passwordBoxSingleExitChain(item)"
                   />
                 </div>
