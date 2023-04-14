@@ -428,7 +428,8 @@ export class ServiceManager {
         builderCommand = "--builder.urls=";
         break;
       case "NimbusBeaconService":
-        command.push("--payload-builder=true");
+        if (!command.includes("--payload-builder=true"))
+          command.push("--payload-builder=true");
         builderCommand = "--payload-builder-url=";
         break;
       case "TekuBeaconService":
