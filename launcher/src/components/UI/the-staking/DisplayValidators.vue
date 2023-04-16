@@ -779,7 +779,11 @@ export default {
           let now = new Date();
           latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
           let activationEpoch = parseInt(info.activationepoch);
-          d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
+          if (this.currentNetwork.network === "gnosis") {
+            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
+          } else {
+            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
+          }
           key.status = info.status;
           key.balance = info.balance / 1000000000;
           key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
