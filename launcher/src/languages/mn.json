@@ -94,18 +94,19 @@
     "delete": "УСТГАХ"
   },
   "updatePanel": {
-    "launcherTitle": "лаунчэрийн шинэчлэлтүүд",
+    "launcherTitle": "launcher",
     "current": "одоогийн",
     "nodeTitle": "нөүд шинэчлэлтүүд",
     "latest": "сүүлийн",
     "auto": "Auto Update",
     "available": "боломжтой",
     "searching": "шинэ шинэчлэлтүүдийг хайж байна",
-    "serviceTitle": "Сервисийн шинэчлэлтүүд",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "ПЛАГ-ИН-үүдийн суулгасан сонголтын шинэчлэлтүүд",
     "availablePlugin": "БОЛОМЖИТ ПЛАГ-ИН ШИНЭЧЛЭЛТҮҮД",
     "all": "бүгдийг шинэчлэх",
-    "osTitle": "operating system (server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "НӨҮД",
