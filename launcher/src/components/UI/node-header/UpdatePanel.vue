@@ -3,109 +3,129 @@
     <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
-        <div class="launcherUpdate">
-          <span class="title">{{ $t("updatePanel.launcherTitle") }}</span>
-          <div class="launcherBox">
-            <span class="currentLauncher">{{ $t("updatePanel.current") }}:</span>
-            <span class="valueLauncher">{{ launcherVersion }}</span>
-          </div>
-        </div>
+        <div class="launcherUpdate"></div>
 
-        <div class="stereum-updateBox">
-          <div class="nodeUpdate-title_row">
-            <span>{{ $t("updatePanel.nodeTitle") }}</span>
-          </div>
-          <div class="versionContainer">
-            <div class="versionBox">
-              <div id="current">
-                <span>{{ $t("updatePanel.current") }}:</span>
-              </div>
-              <div id="latest">
-                <span>{{ $t("updatePanel.latest") }}:</span>
-              </div>
-
-              <div id="currentValue">
-                <span>{{ stereumUpdate.current }}</span>
-              </div>
-              <div id="latestValue">
-                <span>{{ stereumUpdate.version }}</span>
-              </div>
+        <div class="stereum-updateBoxesWrapper">
+          <div class="stereum-updateBoxWithIcon">
+            <div class="icon">
+              <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
             </div>
-            <div class="btnBox">
-              <div class="searchBtn" @click="searchUpdate">
-                <img src="/img/icon/header-icons/search.png" alt="icon" />
+            <div class="stereum-updateBox">
+              <div class="nodeUpdate-title_row white">
+                <span>{{ $t("updatePanel.osTitle") }}</span>
               </div>
-              <div
-                class="downloadBtn"
-                :class="{ disabled: !checkStereumUpdate() || updating }"
-                @click="$emit('runUpdate', stereumUpdate)"
-              >
-                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-              </div>
-
-              <div v-if="checkStereumUpdate()" class="available">
-                <div class="updateIcon">
-                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+              <div class="versionContainer">
+                <div class="versionBox">
+                  <div id="current">
+                    <span>{{ $t("updatePanel.current") }}:</span>
+                  </div>
+                  <div id="latest">
+                    <span>{{ $t("updatePanel.availableUpdates") }}:</span>
+                  </div>
+                  <div id="currentValue">
+                    <span>{{ osVersionCurrent }}</span>
+                  </div>
+                  <div id="latestValue">
+                    <span class="red-circle">{{ osVersionLatest }}</span>
+                  </div>
                 </div>
-                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
-              </div>
-              <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
-                <span class="circle pulse"></span>
-                <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="nodeUpdate-title_row">
-            <span>{{ $t("updatePanel.osTitle") }}</span>
-          </div>
-          <div class="versionContainer">
-            <!-- <comming-soon></comming-soon> -->
-            <div class="versionBox">
-              <div id="current">
-                <span>{{ $t("updatePanel.current") }}:</span>
-              </div>
-              <div id="latest">
-                <span>{{ $t("updatePanel.latest") }}:</span>
-              </div>
-              <div id="currentValue">
-                <span>{{ osVersionCurrent }}</span>
-              </div>
-              <div id="latestValue">
-                <span>{{ osVersionLatest }}</span>
-              </div>
-            </div>
-            <div class="btnBox">
-              <div class="searchBtn" @click="getUpdatablePackagesCount">
-                <img src="/img/icon/header-icons/search.png" alt="icon" />
-              </div>
-              <div class="downloadBtn" :class="{ disabled: osVersionLatest === 0 }" @click="updateOS">
-                <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
-              </div>
-
-              <div v-if="checkStereumUpdate()" class="available">
-                <div class="updateIcon">
-                  <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+                <div class="btnBox">
+                  <div class="searchBtn" @click="getUpdatablePackagesCount">
+                    <img src="/img/icon/header-icons/search.png" alt="icon" />
+                  </div>
+                  <div class="downloadBtn" :class="{ disabled: osVersionLatest === 0 }" @click="updateOS">
+                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                  </div>
                 </div>
-                <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
               </div>
-              <!-- <div
-                class="available"
-                v-if="forceUpdateCheck && !checkStereumUpdate()"
-              >
-                <span class="circle pulse"></span>
-                <span class="searchingText">{{
-                  $t("updatePanel.searching")
-                }}</span>
-              </div> -->
+            </div>
+          </div>
+
+          <div class="stereum-updateBoxWithIcon">
+            <div class="icon">
+              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" />
+            </div>
+            <div class="stereum-updateBox">
+              <div class="nodeUpdate-title_row">
+                <span>{{ $t("updatePanel.launcherTitle") }}</span>
+              </div>
+              <div class="versionContainer">
+                <div class="versionBox">
+                  <div id="current">
+                    <span>{{ $t("updatePanel.current") }}:</span>
+                  </div>
+                  <div id="currentValue">
+                    <span>{{ launcherVersion }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stereum-updateBoxWithIcon">
+            <div class="icon">
+              <img src="/img/icon/stereum-logo/stereum_logo_extern.png" />
+            </div>
+            <div class="stereum-updateBox">
+              <div class="nodeUpdate-title_row">
+                <span>{{ $t("updatePanel.nodeTitle") }}</span>
+              </div>
+              <div class="versionContainer">
+                <div class="versionBox">
+                  <div id="current">
+                    <span>{{ $t("updatePanel.current") }}:</span>
+                  </div>
+                  <div id="latest">
+                    <span>{{ $t("updatePanel.latest") }}:</span>
+                  </div>
+
+                  <div id="currentValue">
+                    <span>{{ stereumUpdate.current }}</span>
+                  </div>
+                  <div id="latestValue">
+                    <span>{{ stereumUpdate.version }}</span>
+                  </div>
+                </div>
+                <div class="btnBox">
+                  <div class="searchBtn" @click="searchUpdate">
+                    <img src="/img/icon/header-icons/search.png" alt="icon" />
+                  </div>
+                  <div
+                    class="downloadBtn"
+                    :class="{ disabled: !checkStereumUpdate() || updating }"
+                    @click="$emit('runUpdate', stereumUpdate)"
+                  >
+                    <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                  </div>
+
+                  <div v-if="checkStereumUpdate()" class="available">
+                    <div class="updateIcon">
+                      <img src="/img/icon/header-icons/update-green.png" alt="icon" />
+                    </div>
+                    <span class="availableText">{{ stereumUpdate.version }} {{ $t("updatePanel.available") }}</span>
+                  </div>
+                  <div v-if="forceUpdateCheck && !checkStereumUpdate()" class="available">
+                    <span class="circle pulse"></span>
+                    <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <div class="serviceUpdates">
-        <div class="serviceUpdates-title">
-          <span class="title">{{ $t("updatePanel.serviceTitle") }}</span>
-          <span class="description">{{ $t("updatePanel.serviceDesc") }}</span>
+        <div class="serviceUpdates-titleWithIcon">
+          <div class="icon">
+            <img src="/img/icon/click-installation/mainnet-icon.png" />
+          </div>
+          <div class="serviceUpdates-title">
+            <span class="title white">{{ $t("updatePanel.serviceTitle") }}</span>
+            <span class="description">{{ $t("updatePanel.serviceDesc") }}</span>
+          </div>
         </div>
+
         <div class="service-updateBox">
           <div class="availableTable">
             <div class="tableHeader">
@@ -265,6 +285,22 @@ export default {
 .red {
   color: #c70505;
 }
+
+.white {
+  color: white !important;
+}
+
+.red-circle {
+  color: white !important;
+  background-color: #c70505;
+
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 4px;
+  text-align: center;
+}
+
 .panelParent {
   width: 36%;
   height: 91%;
@@ -309,7 +345,6 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
 }
 .nodeUpdate-title {
   font-size: 1.1rem;
@@ -329,10 +364,22 @@ export default {
   margin-left: 1.5%;
   text-transform: uppercase;
 }
+
+.serviceUpdates-titleWithIcon {
+  display: flex;
+  padding: 0 10px;
+  align-items: center;
+}
+
+.serviceUpdates-titleWithIcon > .icon > img,
+.stereum-updateBoxWithIcon > .icon > img {
+  width: 25px;
+}
+
 .launcherUpdate,
 .serviceUpdates-title {
   width: 100%;
-  height: 20%;
+  /* height: 20%; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -381,6 +428,18 @@ export default {
   text-transform: uppercase;
   color: #b4b443;
   text-align: left;
+}
+
+.stereum-updateBoxesWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-between;
+}
+
+.stereum-updateBoxWithIcon {
+  display: flex;
+  padding: 0 10px;
 }
 .stereum-updateBox {
   width: 94%;
