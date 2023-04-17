@@ -37,8 +37,11 @@
           </div>
         </key-modal>
         <key-modal v-if="bDialogVisible" @hide-modal="hideBDialog">
-          <div class="title-box">
-            <span>{{ $t("displayValidator.importKey") }}</span>
+          <div :class="{ 'bg-blue': exitInfo }" class="title-box">
+            <span>{{
+              importIsProcessing === true || importIsDone === true ? $t("displayValidator.importKey") : ""
+            }}</span>
+            <span v-if="exitInfo">withdraw Logs </span>
           </div>
           <div v-if="importIsProcessing" class="processImg">
             <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
@@ -47,12 +50,34 @@
             <span>{{ $t("displayValidator.waitMessage") }}</span>
             <span>{{ $t("displayValidator.waitForImport") }}</span>
           </div>
+
+          <!-- start of new exit modal -->
+
+          <div v-if="exitInfo" class="import-message">
+            <p :class="importingErrorMessage">Status:{{ exitValidatorResponse.rc }}</p>
+            <p v-if="exitValidatorResponse.stdout !== ''" :class="importingErrorMessage">
+              <span> Output:</span><br />
+              {{ exitValidatorResponse.stdout }}
+            </p>
+            <p v-if="exitValidatorResponse.stderr !== ''" :class="importingErrorMessage">
+              <span> Error:</span><br />
+              {{ exitValidatorResponse.stderr }}
+            </p>
+          </div>
+          <div v-if="exitInfo" class="confirm-btn">
+            <div class="confirm-box" @click="hideBDialog">
+              <span>Close</span>
+            </div>
+          </div>
+
+          <!-- end of new exit modal -->
+
           <div v-if="importIsDone" class="import-message">
             <p :class="importingErrorMessage">{{ message }}</p>
           </div>
           <div v-if="importIsDone" class="confirm-btn">
             <div class="confirm-box" @click="hideBDialog">
-              <span>OK</span>
+              <span>Close</span>
             </div>
           </div>
         </key-modal>
@@ -121,7 +146,6 @@
                 </div>
                 <div class="withdraw-box">
                   <img
-                    :class="{ disabled: disable }"
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
                     alt="icon"
@@ -137,7 +161,16 @@
               @close-rename="closeRenameHandler"
             />
             <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
-            <ExitValidator v-if="item.isExitBoxActive" @confirm-password="confirmPasswordSingleExitChain(item)" />
+            <ExitValidator
+              v-if="item.isExitBoxActive"
+              @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
+              @confirm-password="
+                (enteredPassword) => {
+                  confirmPasswordSingleExitChain(item, enteredPassword);
+                }
+              "
+            />
+
             <ExitValidatorsModal
               v-if="item.displayExitModal || exitChainModalForMultiValidators"
               :item="item"
@@ -185,6 +218,7 @@
     <!-- Click box to import key -->
     <InsertValidator
       v-if="insertKeyBoxActive"
+      :class="{ deactive: deactiveInsertValidator === true ? true : false }"
       :services="installedServices"
       @open-upload="openUploadHandler"
       @upload-file="uploadFileHandler"
@@ -246,7 +280,7 @@
       v-if="removeForMultiValidatorsActive"
       @remove-modal="
         removeForMultiValidatorsActive = false;
-        keys.forEach((k) => (k.toRemove = false));
+        keys.filter((key) => key.icon === selectedIcon).forEach((k) => (k.toRemove = false));
       "
       @delete-key="confirmRemoveAllValidators"
     />
@@ -303,14 +337,11 @@ export default {
     DisabledStaking,
     SearchBox,
   },
-      props:{
-      button: {
-        type: Object,
-        required: false,
-      },
-    },
+
   data() {
     return {
+      deactiveInsertValidator: false,
+      exitPassword: "",
       riskWarning: false,
       stakingIsDisabled: false,
       disable: true,
@@ -320,18 +351,14 @@ export default {
       isDragOver: false,
       keyFiles: [],
       importValidatorKeyActive: true,
-      insertKeyBoxActive: true,
       selectValidatorServiceForKey: false,
-      enterPasswordBox: false,
       passwordInputActive: false,
       feeRecipientBoxActive: false,
       feeInputActive: false,
-      importIsProcessing: true,
+      importIsProcessing: true, //it has to change to true
+      exitInfo: false,
       importIsDone: false,
-      grafitiForMultiValidatorsActive: false,
-      exitChainForMultiValidatorsActive: false,
       exitChainModalForMultiValidators: false,
-      removeForMultiValidatorsActive: false,
       downloadForMultiValidatorsActive: false,
       password: this.enteredPassword,
       fileInput: "",
@@ -358,12 +385,15 @@ export default {
       isPubkeyVisible: false,
       isActiveRunning: [],
       checkActiveValidatorsResponse: [],
+      exitValidatorResponse: {},
     };
   },
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+      selectedIcon: "selectedIcon",
+      buttonState: "buttonState",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -372,6 +402,12 @@ export default {
       totalBalance: "totalBalance",
       keys: "keys",
       forceRefresh: "forceRefresh",
+      insertKeyBoxActive: "insertKeyBoxActive",
+      enterPasswordBox: "enterPasswordBox",
+      exitChainForMultiValidatorsActive: "exitChainForMultiValidatorsActive",
+      removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
+      grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
+      display: "display",
     }),
     importingErrorMessage() {
       return {
@@ -394,30 +430,26 @@ export default {
     },
   },
   watch: {
-    button: {
+    keys: {
       deep: true,
+      immediate: true,
       handler(val) {
-        if (val.name === "graffiti") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.exitChainForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = false;
-          this.grafitiForMultiValidatorsActive = true;
-        } else if (val.name === "remove") {
-          this.exitChainForMultiValidatorsActive = false;
-          this.grafitiForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = true;
-          this.keys.forEach((k) => (k.toRemove = true));
-        } else if (val.name === "withdraw") {
-          this.insertKeyBoxActive = false;
-          this.enterPasswordBox = false;
-          this.grafitiForMultiValidatorsActive = false;
-          this.removeForMultiValidatorsActive = false;
-          this.exitChainForMultiValidatorsActive = true;
-          this.keys.forEach((k) => (k.toRemove = true));
-        }
+        const hasMatchingIcon = val.some((item) => item.icon === this.selectedIcon);
+
+        this.display = !hasMatchingIcon;
       },
     },
+
+    selectedIcon: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        const hasMatchingIcon = this.keys.some((item) => item.icon === val);
+
+        this.display = !hasMatchingIcon;
+      },
+    },
+
     isPubkeyVisible: {
       deep: true,
       handler(val) {
@@ -519,6 +551,21 @@ export default {
       el.toRemove = true;
       el.isRemoveBoxActive = true;
     },
+    exitFormat(arg) {
+      const lines = arg.split(/\r?\n/);
+
+      const formattedLines = lines.map((line) => {
+        const parts = line.split(" ");
+        const time = parts.shift();
+        const level = parts.shift();
+        const message = parts.join(" ");
+
+        return `${time}\n${level}\n${message}\n\n`;
+      });
+
+      const formattedData = formattedLines.join("");
+      return formattedData || "";
+    },
     async validatorRemoveConfirm(item, picked) {
       item.isRemoveBoxActive = false;
       item.isDownloadModalActive = true;
@@ -537,24 +584,58 @@ export default {
       link.click();
       window.URL.revokeObjectURL(url);
     },
-    confirmPasswordSingleExitChain(el) {
+    confirmPasswordSingleExitChain(el, val) {
       el.displayExitModal = true;
+      this.exitPassword = val;
+    },
+    checkRisk: async function (val) {
+      this.password = val;
+      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+        files: this.keyFiles,
+        password: this.password,
+        serviceID: this.selectedService.config.serviceID,
+        slashingDB: this.slashingDB,
+      });
+      this.keyFiles = [];
+      if (
+        this.checkActiveValidatorsResponse.length === 0 ||
+        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
+      ) {
+        this.importKey(val);
+      } else {
+        this.riskWarning = true;
+      }
     },
     confirmPasswordMultiExitChain() {
       this.exitChainForMultiValidatorsActive = false;
       this.exitChainModalForMultiValidators = true;
     },
-    confirmExitChainForValidators(el) {
+    confirmExitChainForValidators: async function (el) {
       if (el.displayExitModal || el.isExitBoxActive) {
         el.displayExitModal = false;
         el.isExitBoxActive = false;
+        this.deactiveInsertValidator = false;
       } else {
         this.exitChainModalForMultiValidators = false;
       }
       this.insertKeyBoxActive = true;
+      try {
+        this.exitValidatorResponse = await ControlService.exitValidator({
+          pubkey: el.key,
+          password: this.exitPassword,
+          serviceID: el.validatorID,
+        });
+        this.importIsProcessing = false;
+        this.exitInfo = true;
+        this.bDialogVisible = true;
+        this.importIsDone = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     passwordBoxSingleExitChain(el) {
       el.isExitBoxActive = true;
+      this.deactiveInsertValidator = true;
     },
     closeExitChainModal(el) {
       if (el.displayExitModal || el.isExitBoxActive) {
@@ -698,7 +779,11 @@ export default {
           let now = new Date();
           latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
           let activationEpoch = parseInt(info.activationepoch);
-          d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
+          if (this.currentNetwork.network === "gnosis") {
+            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
+          } else {
+            d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);
+          }
           key.status = info.status;
           key.balance = info.balance / 1000000000;
           key.activeSince = ((now.getTime() - d.getTime()) / 86400000).toFixed(1) + " Days";
@@ -710,31 +795,13 @@ export default {
       });
       this.totalBalance = totalBalance;
     },
-    checkRisk: async function (val) {
-      this.password = val;
-      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
-        files: this.keyFiles,
-        password: this.password,
-        serviceID: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
-      this.keyFiles = [];
-      if (
-        this.checkActiveValidatorsResponse.length === 0 ||
-        this.checkActiveValidatorsResponse.includes("Validator check error:\n")
-      ) {
-        this.importKey(val);
-      } else {
-        this.riskWarning = true;
-      }
-    },
 
     importKey: async function (val) {
       this.bDialogVisible = true;
       this.importIsProcessing = true;
       this.importIsDone = false;
       this.password = val;
-
+      this.exitInfo = false;
       this.message = await ControlService.importKey(this.selectedService.config.serviceID);
 
       this.slashingDB = "";
@@ -829,21 +896,24 @@ export default {
     },
 
     async confirmRemoveAllValidators(picked) {
-      let keys = this.keys.map((key) => key.key);
+      let filteredKey = this.keys.filter((key) => key.icon === this.selectedIcon);
+      let keys = filteredKey.map((key) => key.key);
       let id = "";
       let changed = 0;
-      this.keys.forEach((key) => {
+      filteredKey.forEach((key) => {
         if (id != key.validatorID) {
           id = key.validatorID;
           changed++;
         }
       });
-      this.removeForMultiValidatorsActive = false;
       this.downloadForMultiValidatorsActive = true;
+      this.removeForMultiValidatorsActive = false;
+
       if (changed === 1 && id) {
         const returnVal = await this.deleteValidators(id, keys, picked);
         if (picked === "yes") {
           this.downloadFile(returnVal);
+          this.updateValidatorStats();
         }
       } else if (changed === 0) {
         console.log("Nothing to delete!");
@@ -895,6 +965,13 @@ export default {
 };
 </script>
 <style scoped>
+.bg-blue {
+  background: #3180cf !important;
+}
+.deactive {
+  opacity: 0.9;
+  pointer-events: none;
+}
 .import-message::-webkit-scrollbar {
   width: none;
 }
@@ -1381,7 +1458,7 @@ remove-validator {
   width: 100%;
   height: 27%;
   background-color: rgb(55, 107, 102);
-  border-radius: 75px 75px 0 0;
+  border-radius: 71px 71px 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1389,7 +1466,7 @@ remove-validator {
 }
 
 .title-box span {
-  color: rgb(162, 162, 162);
+  color: rgb(216, 216, 216);
   font-size: 1.2rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -1442,7 +1519,7 @@ remove-validator {
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
 }
@@ -1461,6 +1538,7 @@ remove-validator {
 }
 .import-message p {
   width: 96%;
+  min-height: 35px;
   color: rgb(211, 211, 211);
   background-color: rgb(36, 40, 43);
   border: 1px solid rgb(147, 150, 152);
@@ -1472,7 +1550,7 @@ remove-validator {
   word-break: break-all;
   text-align: left;
   white-space: pre-wrap;
-  overflow: scroll;
+  overflow: auto;
   font-family: "Courier New";
 }
 
@@ -1494,16 +1572,16 @@ remove-validator {
   height: 45%;
   border-radius: 10px;
   border: 1px solid #8f8f8f;
-  background-color: #8f8f8f;
+  background-color: #d63f3f;
   box-shadow: 0 1px 3px 1px rgb(35, 59, 53);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 700;
+  font-size: 1rem;
+  font-weight: 600;
   color: rgb(210, 210, 210);
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .confirm-box:hover {

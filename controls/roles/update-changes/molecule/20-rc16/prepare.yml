@@ -1,0 +1,42 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Make sure Stereum's config path exists
+      file:
+        path: "/etc/stereum/services"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: yes
+
+    - name: Create Prometheus service config
+      copy:
+        dest: "/etc/stereum/services/b6d8373f-2819-45d2-a923-57842f163a9b.yaml"
+        owner: "root"
+        group: "root"
+        mode: 0644
+        content: |
+          service: PrometheusService
+          id: b6d8373f-2819-45d2-a923-57842f163a9b
+          configVersion: 1
+          command: sh -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml
+            --web.enable-lifecycle"
+          entrypoint: []
+          env: {}
+          image: prom/prometheus:v2.41.0
+          ports:
+            - 127.0.0.1:9090:9090/tcp
+          volumes:
+            - /opt/stereum/prometheus-b6d8373f-2819-45d2-a923-57842f163a9b/data/prometheus:/prometheus
+            - /opt/stereum/prometheus-b6d8373f-2819-45d2-a923-57842f163a9b/config:/etc/prometheus
+          user: "2000"
+          autoupdate: true
+          network: goerli
+          dependencies:
+            executionClients: []
+            consensusClients: []
+            mevboost: []
+      become: yes
+# EOF
