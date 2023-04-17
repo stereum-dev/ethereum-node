@@ -381,6 +381,10 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
   );
 });
 
+ipcMain.handle("exitValidator", async (event, args) => {
+  return await validatorAccountManager.exitValidator(args.pubkey, args.password, args.serviceID);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

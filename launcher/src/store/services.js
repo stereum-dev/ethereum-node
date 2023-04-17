@@ -2,6 +2,23 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
+      selectedIcon: "",
+      buttonState: [
+        {
+          id: 1,
+          name: "graffiti",
+          displayName: "Graffiti",
+          icon: "/img/icon/the-staking/option-graffiti.png",
+          display: true,
+        },
+        {
+          id: 2,
+          name: "remove",
+          displayName: "Remove all keys",
+          icon: "/img/icon/the-staking/option-remove.png",
+          display: true,
+        },
+      ],
       resyncSeparateModal: false,
       selectedServiceToResync: {},
       network: "",
@@ -425,7 +442,15 @@ export const useServices = defineStore("services", {
           docsUrl: "https://prometheus.io/docs/introduction/overview/",
           headerOption: true,
           expertOptionsModal: false,
-          expertOptions: [],
+          expertOptions: [
+            {
+              title: "Data retention (in days)",
+              type: "text",
+              changeValue: null,
+              icon: "/img/icon/plugin-menu-icons/DataRetention.png",
+              pattern: "(--storage.tsdb.retention.time=)(.*)(d)",
+            },
+          ],
           tunnelLink: true,
           drag: true,
           state: "exited",
