@@ -126,7 +126,7 @@ export class NodeConnection {
         status: false,
       });
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
-      throw new Error("not implemented yet")
+      throw new Error("not implemented yet");
     } else if (this.os == nodeOS.ubuntu) {
       log.debug("procede on ubuntu");
       this.taskManager.otherSubTasks.push({
@@ -290,7 +290,7 @@ export class NodeConnection {
       throw new Error("Can't run configure-firewall playbook: " + err);
     }
 
-    return playbookRuns
+    return playbookRuns;
   }
 
   /**
@@ -318,17 +318,17 @@ export class NodeConnection {
         "             ANSIBLE_LOAD_CALLBACK_PLUGINS=1\
                         ANSIBLE_STDOUT_CALLBACK=stereumjson\
                         ANSIBLE_LOG_FOLDER=/tmp/" +
-        playbookRunRef +
-        "\
+          playbookRunRef +
+          "\
                         ansible-playbook\
                         --connection=local\
                         --inventory 127.0.0.1,\
                         --extra-vars " +
-        StringUtils.escapeStringForShell(extraVarsJson) +
-        "\
+          StringUtils.escapeStringForShell(extraVarsJson) +
+          "\
                         " +
-        this.settings.stereum.settings.controls_install_path +
-        "/ansible/controls/genericPlaybook.yaml\
+          this.settings.stereum.settings.controls_install_path +
+          "/ansible/controls/genericPlaybook.yaml\
                         "
       );
     } catch (err) {
@@ -343,7 +343,7 @@ export class NodeConnection {
     return {
       playbook: playbook,
       playbookRunRef: playbookRunRef,
-    }
+    };
   }
 
   /**
@@ -366,7 +366,7 @@ export class NodeConnection {
       );
     }
 
-    return statusResult.stdout
+    return statusResult.stdout;
   }
 
   /**
@@ -385,7 +385,7 @@ export class NodeConnection {
       throw new Error("Failed reading services configurations: " + SSHService.extractExecError(services));
     }
 
-    return services.stdout.split("\n").filter((i) => i)
+    return services.stdout.split("\n").filter((i) => i);
   }
 
   /**
@@ -407,7 +407,7 @@ export class NodeConnection {
       );
     }
 
-    return YAML.parse(serviceConfig.stdout)
+    return YAML.parse(serviceConfig.stdout);
   }
 
   /**
@@ -427,7 +427,7 @@ export class NodeConnection {
       throw new Error("Failed reading service yaml " + serviceId + ": " + SSHService.extractExecError(serviceYAML));
     }
 
-    return serviceYAML.stdout
+    return serviceYAML.stdout;
   }
 
   async readSSVNetworkConfig(serviceID) {
@@ -449,7 +449,7 @@ export class NodeConnection {
       throw new Error("Failed reading SSV config " + serviceID + ": " + SSHService.extractExecError(SSVNetworkConfig));
     }
 
-    return SSVNetworkConfig.stdout
+    return SSVNetworkConfig.stdout;
   }
 
   async writeSSVNetworkConfig(serviceID, config) {
@@ -506,10 +506,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(service.data.trim()) +
-        " > /etc/stereum/services/" +
-        service.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(service.data.trim()) +
+          " > /etc/stereum/services/" +
+          service.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -554,10 +554,10 @@ export class NodeConnection {
     try {
       configStatus = await this.sshService.exec(
         "echo -e " +
-        StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
-        " > /etc/stereum/services/" +
-        serviceConfiguration.id +
-        ".yaml"
+          StringUtils.escapeStringForShell(YAML.stringify(serviceConfiguration)) +
+          " > /etc/stereum/services/" +
+          serviceConfiguration.id +
+          ".yaml"
       );
     } catch (err) {
       this.taskManager.otherSubTasks.push({
@@ -579,9 +579,9 @@ export class NodeConnection {
       this.taskManager.finishedOtherTasks.push({ otherRunRef: ref });
       throw new Error(
         "Failed writing service configuration " +
-        serviceConfiguration.id +
-        ": " +
-        SSHService.extractExecError(configStatus)
+          serviceConfiguration.id +
+          ": " +
+          SSHService.extractExecError(configStatus)
       );
     }
     this.taskManager.otherSubTasks.push({
@@ -609,7 +609,12 @@ export class NodeConnection {
       throw new Error("Failed listing services: " + SSHService.extractExecError(serviceJsons));
     }
 
-    return serviceJsons.stdout.split(/\n/).slice(0, -1).map((json) => { return JSON.parse(json); })
+    return serviceJsons.stdout
+      .split(/\n/)
+      .slice(0, -1)
+      .map((json) => {
+        return JSON.parse(json);
+      });
   }
 
   /**
@@ -632,7 +637,7 @@ export class NodeConnection {
       );
     }
 
-    return JSON.parse(serviceJson.stdout)
+    return JSON.parse(serviceJson.stdout);
   }
 
   async getServiceLogs(serviceID) {
@@ -645,9 +650,9 @@ export class NodeConnection {
     }
 
     if (logs.stdout.length > 0) {
-      return logs.stdout
+      return logs.stdout;
     }
-    return logs.stderr
+    return logs.stderr;
   }
 
   async destroyNode(serviceConfigs = []) {
@@ -882,6 +887,39 @@ export class NodeConnection {
     }
   }
 
+  async getCurrentOsVersion() {
+    try {
+      const res = await this.sshService.exec(`uname -s -r`);
+
+      return res.stdout;
+    } catch (err) {
+      log.error("Error occurred during get count pd updating os packages:\n", err);
+    }
+  }
+
+  async getCountOfUpdatableOSUpdate() {
+    try {
+      const res = await this.sshService.exec(`LANG=C apt-get upgrade -s |grep -P '^\\d+ upgraded'|cut -d" " -f1`);
+
+      return res.stdout;
+    } catch (err) {
+      log.error("Error occurred during get count pd updating os packages:\n", err);
+    }
+  }
+
+  async updateOS() {
+    try {
+      const res = await this.runPlaybook("Update Changes", {
+        stereum_role: "update-os",
+        stereum_args: { only_os_updates: true },
+      });
+
+      console.log(res);
+    } catch (err) {
+      log.error("Error occurred during updating os:\n", err);
+    }
+  }
+
   async getCurrentStereumVersion() {
     let response;
     try {
@@ -896,7 +934,7 @@ export class NodeConnection {
     if (SSHService.checkExecError(response)) {
       throw new Error("Failed reading Stereum Version:\n" + SSHService.extractExecError(response));
     }
-    return response.stdout
+    return response.stdout;
   }
 
   async getCurrentLauncherVersion() {
@@ -906,7 +944,9 @@ export class NodeConnection {
 
   async getLargestVolumePath() {
     try {
-      const dfOutput = await this.sshService.exec("df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1");
+      const dfOutput = await this.sshService.exec(
+        "df | grep -wv /var/lib/docker | tail -n +2 | sort -k 4 -rn | head -n 1"
+      );
 
       if (SSHService.checkExecError(dfOutput)) {
         throw new Error("Failed reading df command: " + SSHService.extractExecError(dfOutput));
@@ -914,7 +954,7 @@ export class NodeConnection {
 
       const path = dfOutput.stdout.split(" ").pop().trim();
 
-      return path
+      return path;
     } catch (err) {
       log.error("Can't read df", err);
       throw new Error("Can't read df: " + err);
@@ -966,7 +1006,7 @@ export class NodeConnection {
       throw new Error("Can't run setup playbook: " + err);
     }
 
-    return settings
+    return settings;
   }
 
   async logout() {
