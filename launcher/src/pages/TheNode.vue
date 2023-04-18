@@ -68,7 +68,7 @@
             <div class="info-button" @click="infoAlarm = !infoAlarm">
               <img src="/img/icon/round-icon.png" alt="information" />
             </div>
-            <!-- <NodeTutorial @show-modal="openTutorialModalHandler" /> -->
+            <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
           </div>
         </div>
         <div class="footer">
@@ -113,7 +113,6 @@ export default {
 
   data() {
     return {
-      infoAlarm: false,
       isModalActive: false,
       isTutorialModalActive: false,
       playYoutubeVideo: false,
@@ -130,6 +129,7 @@ export default {
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
       serviceLogs: "serviceLogs",
+      infoAlarm: "infoAlarm",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -237,13 +237,14 @@ export default {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin: 4% 0;
 }
 .info-button:active {
   box-shadow: none;
   transform: scale(0.9);
 }
 .info-button img {
-  max-width: 25%;
+  max-width: 19%;
 }
 #head {
   width: 100%;
@@ -428,6 +429,7 @@ export default {
   align-items: center;
   overflow: hidden;
   border-left: none;
+  padding: 1% 0;
 }
 .footer {
   width: 100%;

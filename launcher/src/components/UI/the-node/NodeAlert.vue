@@ -260,7 +260,7 @@ export default {
 
 .status-box {
   width: 100%;
-  height: 86%;
+  height: 92%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -323,7 +323,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 10%;
+  height: 9%;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;

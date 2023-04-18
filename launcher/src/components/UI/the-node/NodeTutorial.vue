@@ -1,6 +1,6 @@
 <template>
   <div class="tutorial-box">
-    <div class="tutorial-table">
+    <!-- <div class="tutorial-table">
       <div
         v-for="(item, index) in configData"
         :key="index"
@@ -18,12 +18,13 @@
     </div>
     <div class="round-icon">
       <img src="/img/icon/round-icon.png" alt="round-icon" />
-    </div>
+    </div> -->
+    <div class="back-button" @click="infoAlarm = !infoAlarm"><div class="up-arrow"></div></div>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
-//import { useNodeStore } from "@/store/theNode";
+import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
@@ -96,6 +97,9 @@ export default {
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
+    ...mapWritableState(useNodeStore, {
+      infoAlarm: "infoAlarm",
+    }),
   },
 
   watch: {
@@ -114,25 +118,26 @@ export default {
       };
     });
     this.serviceController();
+    console.log(this.currentNetwork.network);
   },
   methods: {
     serviceController() {
-      if(this.currentNetwork.network == "gnosis"){
+      if (this.currentNetwork.network == "gnosis") {
         this.configData[0] = {
           name: this.$t("nodeSidebarVideo.gnoStake"),
           videosLink: "https://www.youtube.com/embed/qORXGzhZPns",
           writtenLink: "https://stereum.net/ethereum-node-setup/gno-solo-staking/",
           guideLink: "",
           display: true,
-        }
-      } else if(this.currentNetwork.network) {
-          this.configData[0] = {
+        };
+      } else if (this.currentNetwork.network) {
+        this.configData[0] = {
           name: this.$t("nodeSidebarVideo.stake"),
           videosLink: "https://www.youtube.com/embed/bfToZ_wTh_Q",
           writtenLink: "https://stereum.net/eth-solo-staking-step-by-step-guide/",
           guideLink: "",
           display: true,
-        }
+        };
       }
     },
   },
@@ -148,19 +153,43 @@ export default {
   user-select: none;
 }
 .tutorial-box {
-  width: 96%;
-  height: 50%;
+  width: 90%;
+  height: 89%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-radius: 15px;
-  background-color: #2e5652;
+  position: relative;
+  background: #23272a;
+  border: 1px solid #4c4848;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px 1px #1c1f22;
   margin-bottom: 9px;
 }
-.tutorial-table {
+.back-button {
+  width: 92%;
+  height: 9%;
+  background: #264744;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px 0px #1c1f22;
+  position: absolute;
+  bottom: 2%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.back-button:active {
+  box-shadow: none;
+  transform: scale(0.9);
+}
+.up-arrow {
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 10px solid #ade5ff;
+}
+/*.tutorial-table {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -243,5 +272,5 @@ export default {
 .round-icon img {
   width: 33%;
   height: 100%;
-}
+}*/
 </style>
