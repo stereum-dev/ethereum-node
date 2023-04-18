@@ -94,18 +94,19 @@
     "delete": "SUPPRIMER"
   },
   "updatePanel": {
-    "launcherTitle": "launcher updates",
+    "launcherTitle": "launcher",
     "current": "actuel",
     "nodeTitle": "mises à jour du noeud",
     "latest": "dernière",
     "auto": "Mise à jour automatique",
     "available": "disponible",
     "searching": "recherche de mises à jour",
-    "serviceTitle": "Mises à jour du service",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "Updates for the installed selection of PLUG-INs",
     "availablePlugin": "MISES À JOUR DU PLUG-IN DISPONIBLES",
     "all": "tout mettre à jour",
-    "osTitle": "operating system (server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "NŒUD",
