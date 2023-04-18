@@ -1,180 +1,492 @@
 <template>
-  <div class="reward-parent">
+  <div class="statParent">
+    <div class="balanceParent">
+      <TotalBalance />
+    </div>
     <div class="stateBox">
-      <div class="balance">
-        <div class="balance-title">
-          <span>{{ $t("timeReward.totalText") }} {{ keys.length }} {{ $t("timeReward.validators") }}</span>
-        </div>
-        <div class="balance-value">
-          <span>{{ totalBalance }}</span>
-        </div>
-      </div>
-      <div class="proposed">
-        <comming-soon></comming-soon>
-        <div class="proposedHeader">
-          <span class="header-text">VALIDATOR RECIPIENT ADDRESS</span>
-          <span class="header-counter">1/1</span>
-        </div>
-        <div class="proposedContent">
-          <div class="left-side">
-            <div class="view">
-              <img src="../../../../public/img/icon/the-staking/eye.png" alt="icon" />
-              <div class="view-value">
-                <span></span>
-              </div>
-            </div>
-            <div class="cube">
-              <img src="../../../../public/img/icon/the-staking/cube-icon.png" alt="icon" />
-              <div class="cube-value">
-                <span>135456456</span>
-              </div>
-            </div>
-            <div class="meet">
-              <img src="../../../../public/img/icon/the-staking/meet.png" alt="icon" />
-              <div class="meet-value">
-                <span></span>
-              </div>
-            </div>
+      <div class="stateInnerBox">
+        <div class="dropDown_parent">
+          <div class="title">
+            <span>VALIDATOR</span>
           </div>
-          <div class="right-side">
-            <div class="percentage">
-              <img src="../../../../public/img/icon/the-staking/percentage.png" alt="icon" />
-              <div class="percentage-value">
-                <span>100</span>
+          <div class="dropDown_box">
+            <div class="dropDown" @click="toggleDropDown">
+              <div v-if="!selectedValidator.key" class="options">Choose a validator</div>
+              <div v-else class="options">
+                {{ selectedValidator.key }}
+              </div>
+
+              <div class="dropDown_icon">
+                <img :class="{ rotate: dropDownIsOpen }" src="/img/icon/arrows/arrow-down.png" alt="Arrow Icon" />
               </div>
             </div>
-            <div class="percentage">
-              <img src="../../../../public/img/icon/the-staking/percentage.png" alt="icon" />
-              <div class="percentage-value">
-                <span>95</span>
-              </div>
-            </div>
-            <div class="slashing">
-              <img src="../../../../public/img/icon/the-staking/slasher.png" alt="icon" />
-              <div class="slashing-value">
-                <span></span>
+            <div v-if="dropDownIsOpen" class="valueBox" @mouseleave="dropDownIsOpen = false">
+              <div v-for="(key, index) in keys" :key="index" class="options_value" @click="chooseValidator(key)">
+                <span>{{ `${key.key.substring(0, 10)}...${key.key.substring(key.key.length - 15)}` }}</span>
               </div>
             </div>
           </div>
         </div>
+        <div class="indexParent">
+          <div class="indexBox">
+            <div class="index">
+              <span class="indexTitle">INDEX NO.</span>
+              <span class="indexValue">123564</span>
+            </div>
+            <div class="apr">
+              <span class="aprTitle">APR (all time)</span>
+              <span class="aprValue">9.99%</span>
+            </div>
+          </div>
+          <div class="withdrawal">
+            <div class="withdrawal_title">
+              <span>Withdrawal Addr.</span>
+            </div>
+            <div class="withdrawal_value">
+              <span>{{
+                `${withdrawalAddress.substring(0, 8)}...${withdrawalAddress.substring(withdrawalAddress.length - 13)}`
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="tabBarParent">
+          <div class="tabBar_innerBox">
+            <TabBar :tabs="tabs" @get-title="getActiveComponent" />
+          </div>
+        </div>
+        <div class="componentParent">
+          <div class="dynamicComponent">
+            <component :is="SyncCommitte" />
+          </div>
+          <div class="predicitionIcon">
+            <img src="/img/icon/the-staking/predicition-icon.png" alt="Icon" />
+          </div>
+        </div>
+
+        <div v-if="SyncCommitteIsActive" class="syncParent">
+          <SyncCommitte />
+          <div class="description">
+            <p>New Sync Committee in <span>256</span> Epochs</p>
+          </div>
+        </div>
+        <div class="historyParent"></div>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import { mapState } from "pinia";
-import { useStakingStore } from "../../../store/theStaking";
+import TotalBalance from "./TotalBalance.vue";
+import TabBar from "./TabBar.vue";
+import SyncCommitte from "./SyncCommitte.vue";
+import { mapWritableState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
 
 export default {
+  components: {
+    TotalBalance,
+    TabBar,
+    SyncCommitte,
+  },
+  data() {
+    return {
+      tabs: [
+        { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
+        { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
+        { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
+        // { id: 4, title: "", imgPath: "", display: false },
+        // { id: 5, title: "", imgPath: "", display: false },
+      ],
+      selectedValidator: {},
+      dropDownIsOpen: false,
+      maxCharacters: 30,
+      withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
+    };
+  },
   computed: {
-    ...mapState(useStakingStore, {
-      totalBalance: "totalBalance",
+    ...mapWritableState(useStakingStore, {
       keys: "keys",
     }),
   },
+  methods: {
+    toggleDropDown() {
+      this.dropDownIsOpen = !this.dropDownIsOpen;
+    },
+    chooseValidator(key) {
+      this.selectedValidator = key;
+      this.dropDownIsOpen = false;
+    },
+    getActiveComponent(item) {
+      this.tabs.forEach((tab) => {
+        if (tab.title === item) {
+          tab.display = true;
+        } else {
+          tab.display = false;
+        }
+      });
+    },
+  },
 };
 </script>
+
 <style scoped>
-.reward-parent {
-  width: 100%;
-  height: 95%;
-  margin-top: 8px;
+.statParent {
   grid-column: 10/13;
-  grid-row: 1;
+  grid-row: 1/3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 320px;
+  height: 100%;
+  padding: 10px 5px 10px 5px;
+}
+.balanceParent {
+  width: 100%;
+  height: 25%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .stateBox {
-  width: 90%;
-  position: relative;
-  height: 95%;
+  width: 100%;
+  height: 74%;
   background-color: #bfbfbf;
-  margin: 0 auto;
   border-radius: 10px;
   padding: 3px;
-}
-.stateBox .balance {
-  width: 100%;
-  height: 35%;
-  background-color: #464a44;
-  margin: 0 auto;
-  border-radius: 10px;
-  text-align: left;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.stateInnerBox {
+  width: 100%;
+  height: 100%;
+  background-color: #242529;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+}
+.dropDown_parent {
+  grid-column: 1/7;
+  grid-row: 1/2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px 0 5px;
+}
+.dropDown_parent .title {
+  width: 30%;
+  height: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
-.balance .balance-title {
+.dropDown_parent .title span {
   color: #fff;
   font-size: 0.6rem;
   font-weight: 700;
 }
-.balance .balance-value {
-  width: 92%;
-  height: 22px;
-  margin: 0 auto 3px auto;
-  background-color: #242529;
-  border-radius: 25px;
-}
-.balance .balance-value span {
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  margin: 2% auto 0 6px;
+.dropDown_parent .dropDown_box {
+  width: 70%;
+  height: 100%;
+  padding: 2px;
   display: flex;
-  justify-content: left;
-  align-items: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
 }
-.stateBox .proposed {
+.dropDown_box .dropDown {
   width: 100%;
-  height: 63%;
-  background-color: #464a44;
-  margin: 3px auto 0 auto;
-  border-radius: 10px;
+  height: 100%;
+  border: 1px solid rgb(238, 238, 238);
+  border-radius: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+.dropDown_box .dropDown .options {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 2px;
+  color: #e7e7e7;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dropDown_box .valueBox {
+  width: 94%;
+  height: 85%;
+  padding: 5px 2px;
+  max-height: 180px;
+  background-color: #1258a2;
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  transition-duration: 300ms;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: 14%;
+  left: 3%;
 }
-.proposed {
-  position: relative;
+
+.valueBox::-webkit-scrollbar-thumb {
+  background: #efefef;
+  border-radius: 5px;
 }
-.proposed .proposedHeader {
+
+.options_value {
   width: 100%;
-  height: 25%;
-  padding: 3px;
+  height: 30px;
+  border-bottom: 1px solid #3b3f42;
+  padding: 2px 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.options_value:hover {
+  transition-duration: 300ms;
+  background-color: #e4e4e4;
+}
+.options_value:hover span {
+  color: #2d2d2d;
+}
+
+.options_value span {
+  width: 100%;
+  color: #cdcdcd;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+}
+.dropDown_box .dropDown .dropDown_icon {
+  width: 10%;
+  height: 100%;
+  background-color: #0a7ae2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dropDown_box .dropDown .dropDown_icon img {
+  width: 70%;
+  height: 50%;
+}
+.rotate {
+  transform: rotate(180deg) !important;
+}
+
+.indexParent {
+  grid-column: 1/7;
+  grid-row: 2/3;
+  width: 100%;
+  height: 100%;
+}
+.indexParent .indexBox {
+  width: 100%;
+  height: 50%;
+  padding: 0 5px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  color: #cdcdcd;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.indexBox .index {
+  width: 60%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow: hidden;
+}
+.indexBox .index .indexTitle {
+  width: 50%;
+  height: 100%;
+  color: #efd96bdf;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+.indexBox .index .indexValue {
+  width: 50%;
+  height: 100%;
+  color: #cdcdcd;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+
+.indexBox .apr {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  overflow: hidden;
+}
+.indexBox .apr .aprTitle {
+  width: 80%;
+  height: 100%;
+  color: #efd96bdf;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+.indexBox .apr .aprValue {
+  width: 30%;
+  height: 100%;
+  color: #47c42e;
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+
+.indexParent .withdrawal {
+  width: 100%;
+  height: 50%;
+  padding: 0 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.indexParent .withdrawal .withdrawal_title {
+  width: 40%;
+  height: 100%;
+  text-align: left;
+  color: #efd96bdf;
+  font-size: 0.5rem;
+  font-weight: 700;
+}
+.indexParent .withdrawal .withdrawal_value {
+  width: 60%;
+  height: 100%;
+  padding: 0 2px;
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
 }
 
-.proposedHeader .header-text {
+.indexParent .withdrawal .withdrawal_value span {
+  width: 100%;
+  color: #cdcdcd;
   font-size: 0.6rem;
   font-weight: 600;
-  color: #dadada;
-  margin-left: 2%;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
 }
-.proposedHeader .header-counter {
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-align: center;
-  color: rgb(159, 230, 136);
-  width: 18%;
-  height: 100%;
-  margin-right: 1%;
-  background-color: #242529;
-  border-radius: 25px;
-}
-.proposed .proposedContent {
+
+.tabBarParent {
+  grid-column: 1/7;
+  grid-row: 3/6;
   width: 100%;
-  height: 73%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 5px;
+  z-index: 0;
+}
+.tabBarParent .tabBar_innerBox {
+  width: 100%;
+  height: 100%;
+  padding: 5px 3px;
+  border-radius: 10px;
+  background-color: #4d4d4d;
+  border: 2px solid #505559;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+}
+.componentParent {
+  grid-column: 1/7;
+  grid-row: 6/11;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+}
+.componentParent .dynamicComponent {
+  width: 58%;
+  height: 100%;
+  padding: 0 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.componentParent .predicitionIcon {
+  width: 32%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+.componentParent .predicitionIcon img {
+  width: 100%;
+  height: 100%;
+}
+
+.blockBox .cubeIcon span {
+  color: #cdcdcd;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+.tabBarParent .blockBox .cubeIcon img {
+  width: 80%;
+}
+.tabBarParent .attestation .attestationTitle,
+.tabBarParent .blockBox .blockTitle {
+  width: 80%;
+  height: 62%;
+  padding: 0 3px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #318d1f;
+  border: 1px solid #9e9e9e;
+  border-radius: 3px;
+}
+.tabBarParent .attestation .attestationTitle span,
+.tabBarParent .blockBox .blockTitle span {
+  width: 100%;
+  color: #f0f0f0;
+  font-size: 0.5rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tabBarParent .blockBox {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: space-evenly;
   align-items: center;
 }
-.proposed .left-side {
+.tabBarParent .attestationSlot {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.tabBarParent .attestationSlot .attestationSlotBox {
   width: 60%;
   height: 100%;
   display: flex;
@@ -182,7 +494,85 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
-.proposed .right-side {
+.attestationSlotBox .attestationSlot_row_1 {
+  width: 100%;
+  height: 33%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.attestationSlot_row_1 .attestationSlotTitle {
+  width: 60%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.attestationSlot_row_1 .attestationSlotTitle span {
+  width: 100%;
+  color: #cdcdcd;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.attestationSlot_row_1 .attestationSlotValue {
+  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.attestationSlot_row_1 .attestationSlotValue span {
+  color: #efd96bdf;
+  font-size: 0.5rem;
+  font-weight: 700;
+  overflow: hidden;
+}
+.attestationSlotBox .attestationSlot_row_2,
+.attestationSlotBox .attestationSlot_row_3 {
+  width: 100%;
+  height: 33%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 2px;
+}
+.attestationSlot_row_2 .attestationSlotTitle,
+.attestationSlot_row_3 .attestationSlotTitle {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.attestationSlot_row_2 .attestationSlotTitle span,
+.attestationSlot_row_3 .attestationSlotTitle span {
+  color: #cdcdcd;
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+.attestationSlot_row_2 .attestationSlotValue,
+.attestationSlot_row_3 .attestationSlotValue {
+  width: max-content;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.attestationSlot_row_2 .attestationSlotValue span,
+.attestationSlot_row_3 .attestationSlotValue span {
+  color: #efd96bdf;
+  font-size: 0.5rem;
+  font-weight: 600;
+  overflow: hidden;
+}
+
+.blockSlotBox {
   width: 40%;
   height: 100%;
   display: flex;
@@ -190,89 +580,81 @@ export default {
   justify-content: space-evenly;
   align-items: center;
 }
-
-.left-side .cube,
-.left-side .view,
-.left-side .meet {
+.blockSlotBox .blockSlotTitle {
   width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.left-side img {
-  width: 12%;
-  margin-left: 5%;
-}
-.view img,
-.meet img {
-  width: 13%;
-  margin-left: 5%;
-}
-
-.cube .cube-value,
-.view .view-value,
-.meet .meet-value {
-  width: 70%;
-  height: 90%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  background-color: #242424;
-  border-radius: 20px;
-  text-align: left;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #dadada;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.cube-value span,
-.view-value span,
-.meet-value span {
-  width: max-content;
-  padding-top: 2px;
-  padding-left: 10%;
-}
-.right-side .percentage,
-.right-side .slashing {
-  width: 100%;
-  height: 30%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.percentage .percentage-value,
-.slashing .slashing-value {
-  width: 45%;
-  height: 90%;
-  background-color: #242424;
-  border-radius: 20px;
-  text-align: center;
-  margin-right: 5%;
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #dadada;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+.blockSlotBox .blockSlotTitle span {
+  width: 100%;
+  color: #318d1f;
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+.blockSlotBox .blockSlotValue {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.blockSlotBox .blockSlotValue span {
+  width: 100%;
+  color: #efd96bdf;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-align: center;
 }
 
-.percentage-value span,
-.slashing-value span {
-  padding-top: 1px;
-  padding-left: 10%;
+.syncParent {
+  grid-column: 1/7;
+  grid-row: 6/10;
+  width: 100%;
+  height: 100%;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
 }
-.right-side img {
-  width: 20%;
-  margin-left: 10%;
+.description {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
-.slashing img {
-  width: 23%;
-  margin-left: 10%;
+.description p {
+  color: #efefef;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: capitalize;
+}
+.description p span {
+  color: #f3e32f;
+  font-size: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.sync-icon {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.historyParent {
+  grid-column: 1/7;
+  grid-row: 10/11;
+  width: 100%;
+  height: 100%;
 }
 </style>

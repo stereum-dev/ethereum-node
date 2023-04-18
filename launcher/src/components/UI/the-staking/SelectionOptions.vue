@@ -284,7 +284,7 @@ export default {
 .selection-box {
   grid-column: 10/13;
   grid-row: 3/4;
-  width: 93%;
+  width: 96%;
   height: 77%;
   border: 4px solid #bfbfbf;
   border-radius: 10px;
