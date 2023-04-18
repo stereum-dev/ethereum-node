@@ -19,6 +19,7 @@
     <div class="round-icon">
       <img src="/img/icon/round-icon.png" alt="round-icon" />
     </div> -->
+    <TutorialButtons />
     <div class="back-button" @click="infoAlarm = !infoAlarm"><div class="up-arrow"></div></div>
   </div>
 </template>
@@ -28,8 +29,10 @@ import { useNodeStore } from "@/store/theNode";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
+import TutorialButtons from "./TutorialButtons.vue";
 
 export default {
+  components: { TutorialButtons },
   data() {
     return {
       configData: [
@@ -158,7 +161,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
   position: relative;
@@ -167,6 +170,7 @@ export default {
   border-radius: 5px;
   box-shadow: 0 1px 3px 1px #1c1f22;
   margin-bottom: 9px;
+  padding: 5% 0;
 }
 .back-button {
   width: 92%;
