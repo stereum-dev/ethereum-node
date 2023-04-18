@@ -3,15 +3,13 @@
     <div v-if="clickBg" class="clickOutside" @click="$emit('clickOut')"></div>
     <div class="panelContent">
       <div class="stereumUpdates">
-        <div class="launcherUpdate"></div>
-
         <div class="stereum-updateBoxesWrapper">
           <div class="stereum-updateBoxWithIcon">
             <div class="icon">
               <img src="../../../../public/img/icon/control/ubuntuIco.svg" />
             </div>
             <div class="stereum-updateBox">
-              <div class="nodeUpdate-title_row white">
+              <div class="nodeUpdate-title_row">
                 <span>{{ $t("updatePanel.osTitle") }}</span>
               </div>
               <div class="versionContainer">
@@ -20,13 +18,15 @@
                     <span>{{ $t("updatePanel.current") }}:</span>
                   </div>
                   <div id="latest">
-                    <span>{{ $t("updatePanel.availableUpdates") }}:</span>
+                    <span>{{ $t("updatePanel.available") }}:</span>
                   </div>
                   <div id="currentValue">
                     <span>{{ osVersionCurrent }}</span>
                   </div>
                   <div id="latestValue">
-                    <span class="red-circle">{{ osVersionLatest }}</span>
+                    <div class="redCircle">
+                      <span>{{ osVersionLatest }}</span>
+                    </div>
                   </div>
                 </div>
                 <div class="btnBox">
@@ -121,7 +121,7 @@
             <img src="/img/icon/click-installation/mainnet-icon.png" />
           </div>
           <div class="serviceUpdates-title">
-            <span class="title white">{{ $t("updatePanel.serviceTitle") }}</span>
+            <span class="title">{{ $t("updatePanel.serviceTitle") }}</span>
             <span class="description">{{ $t("updatePanel.serviceDesc") }}</span>
           </div>
         </div>
@@ -293,11 +293,10 @@ export default {
 .red-circle {
   color: white !important;
   background-color: #c70505;
-
-  border-radius: 50%;
   width: 20px;
   height: 20px;
   padding: 4px;
+  border-radius: 30px;
   text-align: center;
 }
 
@@ -338,6 +337,7 @@ export default {
 .stereumUpdates {
   width: 100%;
   height: 40%;
+  padding: 10px;
 }
 .serviceUpdates {
   width: 100%;
@@ -360,7 +360,7 @@ export default {
   display: flex;
   font-size: 1.1rem;
   font-weight: 800;
-  color: #375b5c;
+  color: #4b8789;
   margin-left: 1.5%;
   text-transform: uppercase;
 }
@@ -368,12 +368,14 @@ export default {
 .serviceUpdates-titleWithIcon {
   display: flex;
   padding: 0 10px;
-  align-items: center;
 }
 
 .serviceUpdates-titleWithIcon > .icon > img,
 .stereum-updateBoxWithIcon > .icon > img {
   width: 25px;
+  border: 1px solid #d6d6d6;
+  border-radius: 50%;
+  box-shadow: 1px 1px 5px 1px #252525;
 }
 
 .launcherUpdate,
@@ -384,22 +386,21 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin: 1% 0;
 }
 .launcherUpdate .title,
 .serviceUpdates-title .title {
   font-size: 100%;
   font-weight: 800;
-  color: #375b5c;
-  margin-left: 15px;
+  color: #4b8789;
+  margin-left: 5px;
   text-transform: uppercase;
 }
 .description,
 .description {
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 400;
-  color: #9f9f9f;
-  margin-left: 15px;
+  color: #c7c7c7;
+  margin-left: 5px;
 }
 
 .launcherBox {
@@ -431,6 +432,8 @@ export default {
 }
 
 .stereum-updateBoxesWrapper {
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -439,7 +442,7 @@ export default {
 
 .stereum-updateBoxWithIcon {
   display: flex;
-  padding: 0 10px;
+  margin-top: 5px;
 }
 .stereum-updateBox {
   width: 94%;
@@ -457,12 +460,13 @@ export default {
   position: relative;
 }
 .stereum-updateBox .versionBox {
-  width: 50%;
+  width: 60%;
   height: 100%;
   display: grid;
-  grid-template-columns: 46% 54%;
+  grid-template-columns: 40% 60%;
   grid-template-rows: repeat(2, 1fr);
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 .stereum-updateBox .versionBox #current {
   grid-column: 1/2;
@@ -484,7 +488,7 @@ export default {
   height: 100%;
   grid-column: 2/3;
   grid-row: 1/2;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #b4b443;
@@ -536,7 +540,7 @@ export default {
 }
 #currentValue span,
 #latestValue span {
-  width: max-content;
+  width: 100%;
   font-size: 0.7rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -546,6 +550,20 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
+}
+#latestValue .redCircle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ec110e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#latestValue .redCircle span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
 }
 .stereum-updateBox .versionBox #autoUpdate {
   grid-column: 1/2;
@@ -576,20 +594,22 @@ export default {
   white-space: nowrap;
 }
 .btnBox {
-  width: 50%;
+  width: 40%;
   height: 100%;
+  max-height: 33px;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(12, 1fr);
 }
 .btnBox .searchBtn {
   grid-column: 1/4;
-  grid-row: 2/8;
+  grid-row: 2/9;
   border-radius: 3px;
-  margin-left: 20px;
+  margin-left: 10px;
   box-shadow: 0 1px 3px 1px rgb(42, 42, 42);
   width: 70%;
-  height: 80%;
+  height: 100%;
+  min-height: 20px;
   border: 1px solid #17a2b8;
   background-color: #17a2b8;
   display: flex;
@@ -605,18 +625,18 @@ export default {
   background-color: #028397;
 }
 .btnBox .searchBtn:active {
-  border: none;
+  border-color: #028397;
   box-shadow: none;
-  transform: scale(0.95);
 }
 .btnBox .downloadBtn {
   grid-column: 4/7;
-  grid-row: 2/8;
+  grid-row: 2/9;
   margin-right: 20px;
   border: 1px solid #067c5a;
   border-radius: 3px;
   width: 70%;
-  height: 80%;
+  height: 100%;
+  min-height: 20px;
   background-color: #067c5a;
   display: flex;
   justify-content: center;
@@ -631,13 +651,12 @@ export default {
   background-color: rgb(3, 82, 60);
 }
 .btnBox .downloadBtn:active {
-  border: none;
+  border-color: rgb(3, 82, 60);
   box-shadow: none;
-  transform: scale(0.95);
 }
 .available {
   grid-column: 1/7;
-  grid-row: 9/12;
+  grid-row: 10/12;
   margin-left: 0;
   width: 90%;
   height: 100%;
@@ -689,7 +708,7 @@ export default {
   grid-row: 1;
   width: 10px;
   height: 10px;
-  background: #17a2b8;
+  background: #17a3b8b3;
   border-radius: 50%;
   box-shadow: 0px 0px 1px 1px #666666;
   align-self: center;
@@ -701,10 +720,10 @@ export default {
 
 @keyframes pulse-animation {
   0% {
-    box-shadow: 0 0 0 0px #637973;
+    box-shadow: 0 0 0 0px #6379737d;
   }
   100% {
-    box-shadow: 0 0 0 10px #2e3533;
+    box-shadow: 0 0 0 10px #2e353363;
   }
 }
 
