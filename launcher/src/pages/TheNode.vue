@@ -64,8 +64,11 @@
         </div>
         <div class="node-side">
           <div class="sidebar-container">
-            <NodeAlert />
-            <NodeTutorial @show-modal="openTutorialModalHandler" />
+            <NodeAlert v-if="infoAlarm" />
+            <div class="info-button" @click="infoAlarm = !infoAlarm">
+              <img src="/img/icon/round-icon.png" alt="information" />
+            </div>
+            <!-- <NodeTutorial @show-modal="openTutorialModalHandler" /> -->
           </div>
         </div>
         <div class="footer">
@@ -110,6 +113,7 @@ export default {
 
   data() {
     return {
+      infoAlarm: false,
       isModalActive: false,
       isTutorialModalActive: false,
       playYoutubeVideo: false,
@@ -223,6 +227,24 @@ export default {
 </script>
 
 <style scoped>
+.info-button {
+  width: 90%;
+  height: 8%;
+  background: #264744;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px 0px #1c1f22;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.info-button:active {
+  box-shadow: none;
+  transform: scale(0.9);
+}
+.info-button img {
+  max-width: 25%;
+}
 #head {
   width: 100%;
   position: fixed;
@@ -402,7 +424,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   overflow: hidden;
   border-left: none;
