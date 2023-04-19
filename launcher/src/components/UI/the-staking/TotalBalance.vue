@@ -11,15 +11,13 @@
       </div>
       <div class="epochBox">
         <div class="epoch">
-          <span class="epochText">Epoch</span>
           <span class="epochNumber">155906</span>
         </div>
         <div class="slotBox">
           <span class="firstNumber">16#</span>
-          <span class="outOf">out of</span>
+          <span class="outOf">/</span>
           <span class="secondNumber">32#</span>
           <span class="divider"></span>
-          <span class="slot">Slot</span>
           <span class="slotNumber">4989008</span>
         </div>
       </div>
@@ -50,7 +48,7 @@ export default {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 .balanceInnerBox {
@@ -60,7 +58,7 @@ export default {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
 }
 .balanceInnerBox .balance {
@@ -81,7 +79,7 @@ export default {
 }
 .balance .balance-value {
   width: 97%;
-  height: 50%;
+  height: 60%;
   background: #000;
   border-radius: 25px;
   padding: 1px;
@@ -92,16 +90,15 @@ export default {
 }
 .balance .balance-value span {
   color: #e2e2e2;
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
   letter-spacing: 1px;
 }
 .epochBox {
   width: 100%;
-  height: 40%;
+  height: 30%;
   background-color: #000000;
-  border: 2px solid #f9f8f8;
-  border-radius: 5px;
+  border-radius: 5px 5px 10px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -110,28 +107,24 @@ export default {
   width: 33%;
   height: 100%;
   background-color: #0d5e69;
-  border-radius: 3px 0 0 3px;
+  border-radius: 0 0 0 8px;
   padding: 0 3px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
 }
-.epochBox .epoch .epochText {
-  color: #f4dc06;
-  font-size: 0.6rem;
-  font-weight: 600;
-}
+
 .epochBox .epoch .epochNumber {
-  color: #f4dc06;
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 .slotBox {
   width: 66.6%;
   height: 100%;
   background-color: #1d1d1d;
-  border-radius: 5px;
+  border-radius: 0 0 8px 0;
   padding: 0 2px;
   display: flex;
   justify-content: space-evenly;
@@ -140,29 +133,34 @@ export default {
   overflow: hidden;
 }
 .slotBox .firstNumber {
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 .slotBox .outOf {
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 .slotBox .secondNumber {
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 .slotBox .divider {
-  background: #f4dc06;
+  background: #656565;
   width: 1px;
   height: 100%;
   margin: 0 5px;
 }
 .slotBox .slot {
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 .slotBox .slotNumber {
-  font-size: 0.6rem;
-  font-weight: 700;
+  color: #e4d54e;
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 </style>

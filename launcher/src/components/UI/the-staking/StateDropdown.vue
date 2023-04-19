@@ -57,7 +57,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 5px 0 5px;
+  padding: 3px 5px 0 5px;
 }
 .dropDown_parent .title {
   width: 30%;
@@ -67,28 +67,32 @@ export default {
   align-items: center;
 }
 .dropDown_parent .title span {
-  color: #fff;
+  color: #e6e6e6;
   font-size: 0.6rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 .dropDown_parent .dropDown_box {
-  width: 70%;
+  width: 80%;
   height: 100%;
   padding: 2px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  overflow: hidden;
   z-index: 1;
 }
 .dropDown_box .dropDown {
   width: 100%;
   height: 100%;
-  border: 1px solid rgb(238, 238, 238);
-  border-radius: 2px;
+  border: 1px solid #404c59;
+  background-color: #324154;
+  box-shadow: 1px 1px 3px 1px rgb(15, 15, 15);
+  border-radius: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  overflow: hidden;
 }
 .dropDown_box .dropDown .options {
   width: 90%;
@@ -97,6 +101,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   padding: 2px;
+  padding-left: 5px;
   color: #e7e7e7;
   font-size: 0.7rem;
   font-weight: 600;
@@ -154,15 +159,16 @@ export default {
   text-align: center;
 }
 .dropDown_box .dropDown .dropDown_icon {
-  width: 10%;
+  width: 13%;
   height: 100%;
   background-color: #0a7ae2;
+  border-radius: 0 25px 25px 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .dropDown_box .dropDown .dropDown_icon img {
-  width: 70%;
+  width: 60%;
   height: 50%;
 }
 .rotate {
