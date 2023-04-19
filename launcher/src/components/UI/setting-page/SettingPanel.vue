@@ -247,7 +247,6 @@ export default {
 
     async exportConfig() {
       this.stereumConfig = await ControlService.exportConfig();
-      console.log(this.stereumConfig[0]);
     },
     async getSettings() {
       this.settings = await ControlService.getStereumSettings();
