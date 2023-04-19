@@ -112,22 +112,27 @@ export default {
   data() {
     return {
       stereumConfig: [
-        {
-          filename: "file1.yaml",
-          content: {
-            name: "John Doe",
-            age: 35,
-            email: "johndoe@example.com",
-          },
-        },
-        {
-          filename: "file2.yaml",
-          content: {
-            name: "Jane Smith",
-            age: 27,
-            email: "janesmith@example.com",
-          },
-        },
+        // {
+        //   filename: "file1.yaml",
+        //   content: {
+        //     name: "John Doe",
+        //     age: 35,
+        //     email: "johndoe@example.com",
+        //   },
+        // },
+        // {
+        //   filename: "file2.yaml",
+        //   content: {
+        //     name: "Jane Smith",
+        //     age: 27,
+        //     email: "janesmith@example.com",
+        //   },
+        // },
+        // {
+        //   filename: "NimbusBeaconService.yaml",
+        //   content:
+        //     "{service: NimbusBeaconService\nid: 11ad3d49-8811-9f…decff970\n  consensusClients: []\n  mevboost: []\n\n}",
+        // },
       ],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
@@ -224,13 +229,14 @@ export default {
     this.selector();
     this.checkVersion();
     this.switchOnOff();
+    this.exportConfig();
   },
   methods: {
     exportData() {
       const zip = new JSZip();
 
       this.stereumConfig.forEach((item) => {
-        const yamlData = yaml.dump(item.content);
+        const yamlData = yaml.dump(item.content, { fold: true });
         zip.file(item.filename, yamlData);
       });
 
@@ -239,6 +245,10 @@ export default {
       });
     },
 
+    async exportConfig() {
+      this.stereumConfig = await ControlService.exportConfig();
+      console.log(this.stereumConfig[0]);
+    },
     async getSettings() {
       this.settings = await ControlService.getStereumSettings();
       if (this.settings.stereum?.settings.updates.unattended.install) {
