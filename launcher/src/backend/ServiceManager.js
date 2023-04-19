@@ -1095,12 +1095,12 @@ export class ServiceManager {
     for (let i = 0; i < arrayOfServices.length - 1; i++) {
       ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
 
-      const test = {
+      const contentObject = {
         lines: ConfigContent.stdout,
       };
       const Object = {
         filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
-        content: test.lines,
+        content: contentObject.lines,
       };
       serviceNameConfig.push(Object);
     }
