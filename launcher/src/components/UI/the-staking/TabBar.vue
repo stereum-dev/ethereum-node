@@ -7,7 +7,7 @@
       class="tab"
       @click="getItem(item, index)"
     >
-      <img :src="item.imgPath" alt="icon" @mousedown.prevent />
+      <img :src="item.imgPath" alt="icon" :class="{ 'animate-pulse': index === activeIndex }" @mousedown.prevent />
       <div class="title">
         <span> {{ optionsTitle }}</span>
       </div>
@@ -33,7 +33,7 @@ export default {
     getItem(item, index) {
       this.activeIndex = index;
       this.optionsTitle = item.title;
-      this.$emit("getTitle", this.optionsTitle);
+      this.$emit("getTitle", this.optionsTitle, this.activeInde);
     },
   },
 };
@@ -67,11 +67,11 @@ export default {
 .tabbar-item img {
   width: 20px;
   height: 20px;
-  margin-top: 2px;
 }
 
 .tabbar-item.active {
   color: #333;
+  border: 1px solid #308482;
   background-color: #237e7d;
   box-shadow: 1px 1px 5px 1px rgb(43, 43, 43);
   transition-duration: 200ms;
