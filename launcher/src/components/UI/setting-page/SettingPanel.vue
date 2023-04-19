@@ -111,7 +111,7 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
-      data: [
+      stereumConfig: [
         {
           filename: "file1.yaml",
           content: {
@@ -229,13 +229,13 @@ export default {
     exportData() {
       const zip = new JSZip();
 
-      this.data.forEach((item) => {
+      this.stereumConfig.forEach((item) => {
         const yamlData = yaml.dump(item.content);
         zip.file(item.filename, yamlData);
       });
 
       zip.generateAsync({ type: "blob" }).then(function (blob) {
-        saveAs(blob, "data.zip");
+        saveAs(blob, "stereum_config.zip");
       });
     },
 
