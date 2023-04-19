@@ -97,7 +97,7 @@
 <script>
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
-const yaml = require("js-yaml");
+// const yaml = require("js-yaml");
 
 import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
@@ -236,7 +236,7 @@ export default {
       const zip = new JSZip();
 
       this.stereumConfig.forEach((item) => {
-        const yamlData = yaml.dump(item.content, { fold: true });
+        const yamlData = item.content.trim();
         zip.file(item.filename, yamlData);
       });
 
