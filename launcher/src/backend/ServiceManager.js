@@ -22,7 +22,6 @@ import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
-// const YAML = require("yaml");
 
 const log = require("electron-log");
 
@@ -68,7 +67,6 @@ export class ServiceManager {
    * @returns an array of all service configurations
    */
   async readServiceConfigurations() {
-    this.exportConfig();
     return this.nodeConnection
       .listServicesConfigurations()
       .then(async (services) => {
@@ -1093,7 +1091,6 @@ export class ServiceManager {
     let arrayOfServices = listConfigFiles.stdout.split("\n");
     let serviceNameConfig = [];
     let ConfigContent;
-    const yaml = require("js-yaml");
 
     for (let i = 0; i < arrayOfServices.length - 1; i++) {
       ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
@@ -1105,7 +1102,6 @@ export class ServiceManager {
         filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
         content: test.lines,
       };
-      console.log(yaml.load(ConfigContent.stdout));
       serviceNameConfig.push(Object);
     }
     return serviceNameConfig;
