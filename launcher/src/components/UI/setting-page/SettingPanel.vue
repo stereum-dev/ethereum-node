@@ -504,6 +504,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   overflow-y: auto;
+  margin-top: 0.7%;
 }
 .general-panel_title,
 .update-panel_title {
