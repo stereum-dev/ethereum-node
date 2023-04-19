@@ -184,8 +184,11 @@ export default {
   margin: 0 2%;
 }
 .setting-items_btn:hover,
-setting-items_btn:focus {
+.setting-items_btn:focus {
   font-weight: 700;
   border: 1.5px solid #eee;
+}
+.setting-items_btn:active {
+  transform: scale(0.9);
 }
 </style>
