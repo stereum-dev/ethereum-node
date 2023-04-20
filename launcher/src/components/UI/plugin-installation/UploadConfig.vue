@@ -21,7 +21,7 @@
                 <label class="w-full block mb-2 text-xs text-left font-medium text-slate-100" for="file_input">
                   <span class="ml-2">Config file</span>
                   <div class="input">
-                    <input id="file_input" class="hidden" type="file" accept="application/json" @change="uploadFile" />
+                    <input ref="fileInput" class="hidden" type="file" accept=".zip" @change="uploadFile" />
                     <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
                     <span class="ml-5 text-gray-600 overflow-hidden"> {{ file ? file.name : "Select a file" }}</span>
                   </div>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import JSZip from "jszip";
 export default {
   name: "UploadConfig",
   data() {
@@ -59,11 +60,31 @@ export default {
     };
   },
   methods: {
-    // uploadFile(event) {
-    //   this.file = event.target.files[0];
-    //   if (!this.keyFiles.includes(this.file["name"]) && this.file["type"] === "application/json") {
-    //   }
-    // },
+    uploadFile() {
+      const file = this.$refs.fileInput.files[0];
+      const fileType = file.type;
+      if (fileType !== "application/zip") {
+        alert("Invalid file type. Please select a .zip file.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const zip = new JSZip();
+        zip.loadAsync(reader.result).then((zipFile) => {
+          const yamlFile = zipFile.file(/\.yaml$/i);
+          if (!yamlFile.length) {
+            alert("The zip file does not contain a .yaml file.");
+            return;
+          }
+
+          // Do something with the yaml file
+          const yamlContent = yamlFile[0].async("string");
+          console.log(yamlContent);
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    },
   },
 };
 </script>
