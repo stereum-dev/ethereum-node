@@ -64,12 +64,12 @@ export default {
 }
 
 .button-parent {
-  height: 85%;
+  height: 88%;
   display: flex;
   color: #eee;
   border: 2px solid #eee;
   border-radius: 5px;
-  margin-bottom: 2%;
+  margin-bottom: 1%;
   justify-content: space-around;
   align-items: center;
   font-size: 55%;
@@ -127,12 +127,16 @@ export default {
   justify-content: center;
   align-items: center;
   background: #336666;
-  margin-bottom: 2%;
+  margin-bottom: 3%;
   border-radius: 5px;
   cursor: pointer;
 }
 .sub:active {
   transform: scale(0.9);
+  border: none;
+}
+.sub:hover {
+  border: 2px solid #eee;
 }
 .sub-icon {
   width: 25%;
