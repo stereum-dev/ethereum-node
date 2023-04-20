@@ -20,10 +20,17 @@
               <div class="uploadBox__content__file">
                 <label class="w-full block mb-2 text-xs text-left font-medium text-slate-100" for="file_input">
                   <span class="ml-2">Config file</span>
-                  <div class="input">
-                    <input ref="fileInput" class="hidden" type="file" accept=".zip" @change="uploadFile" />
+                  <div class="input cursor-pointer">
+                    <input
+                      id="file_input"
+                      ref="fileInput"
+                      class="hidden"
+                      type="file"
+                      accept="application/zip"
+                      @change="uploadFile"
+                    />
                     <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
-                    <span class="ml-5 text-gray-600 overflow-hidden"> {{ file ? file.name : "Select a file" }}</span>
+                    <span class="ml-2 text-xl text-gray-700 overflow-hidden"> {{ fileName }}</span>
                   </div>
                 </label>
               </div>
@@ -41,7 +48,7 @@
           <button class="back-btn">{{ $t("pluginName.back") }}</button>
         </router-link>
         <router-link :to="{ path: '/welcome' }">
-          <button class="next-btn" @click="runInstalltion">INSTALL</button>
+          <button class="next-btn" @click="uploadFile">INSTALL</button>
         </router-link>
       </div>
     </div>
@@ -54,8 +61,8 @@ export default {
   name: "UploadConfig",
   data() {
     return {
+      fileName: "",
       file: null,
-      fileType: ["config.json", "config.json.bak", "config.json.bak2", "config.json.bak3"],
       uploadConfirmed: false,
     };
   },
@@ -64,7 +71,7 @@ export default {
       const file = this.$refs.fileInput.files[0];
       const fileType = file.type;
       if (fileType !== "application/zip") {
-        alert("Invalid file type. Please select a .zip file.");
+        console.log("Invalid file type. Please select a .zip file.");
         return;
       }
 
@@ -74,13 +81,15 @@ export default {
         zip.loadAsync(reader.result).then((zipFile) => {
           const yamlFile = zipFile.file(/\.yaml$/i);
           if (!yamlFile.length) {
-            alert("The zip file does not contain a .yaml file.");
+            console.log("The zip file does not contain a .yaml file.");
             return;
           }
 
           // Do something with the yaml file
           const yamlContent = yamlFile[0].async("string");
           console.log(yamlContent);
+
+          this.fileName = file.name;
         });
       };
       reader.readAsArrayBuffer(file);
