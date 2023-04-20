@@ -94,18 +94,19 @@
     "delete": "IZBRIŠI"
   },
   "updatePanel": {
-    "launcherTitle": "launcher ažuriranja",
+    "launcherTitle": "launcher",
     "current": "struja",
     "nodeTitle": "node ažuriranja",
     "latest": "najnovije",
     "auto": "Auto Update",
     "available": "dostupan",
     "searching": "traženje novih ažuriranja",
-    "serviceTitle": "Service ažuriranja",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "Ažuriranja za instalirani izbor od PLUG-INs",
     "availablePlugin": "DOSTUPNA AŽURIRANJA PLUG-INA",
     "all": "ažuriraj sve",
-    "osTitle": "operativni sistem (server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "NODE",
