@@ -207,6 +207,18 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("updateStereum", args);
   }
 
+  async getCurrentOsVersion(args) {
+    return await this.promiseIpc.send("getCurrentOsVersion", args);
+  }
+
+  async getCountOfUpdatableOSUpdate(args) {
+    return await this.promiseIpc.send("getCountOfUpdatableOSUpdate", args);
+  }
+
+  async updateOS(args) {
+    return await this.promiseIpc.send("updateOS", args);
+  }
+
   async restartServices(args) {
     return await this.promiseIpc.send("restartServices", args);
   }
@@ -327,6 +339,10 @@ class ControlService extends EventEmitter {
       password: args.password,
       serviceID: args.serviceID,
     });
+  }
+
+  async exportConfig() {
+    return await this.promiseIpc.send("exportConfig");
   }
 }
 if (!instance) {

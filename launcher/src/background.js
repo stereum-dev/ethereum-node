@@ -264,6 +264,18 @@ ipcMain.handle("checkUpdates", async () => {
   return await nodeConnection.checkUpdates();
 });
 
+ipcMain.handle("getCurrentOsVersion", async () => {
+  return await nodeConnection.getCurrentOsVersion();
+});
+
+ipcMain.handle("getCountOfUpdatableOSUpdate", async () => {
+  return await nodeConnection.getCountOfUpdatableOSUpdate();
+});
+
+ipcMain.handle("updateOS", async () => {
+  return await nodeConnection.updateOS();
+});
+
 ipcMain.handle("getCurrentStereumVersion", async () => {
   return await nodeConnection.getCurrentStereumVersion();
 });
@@ -371,6 +383,10 @@ ipcMain.handle("checkActiveValidators", async (event, args) => {
 
 ipcMain.handle("exitValidator", async (event, args) => {
   return await validatorAccountManager.exitValidator(args.pubkey, args.password, args.serviceID);
+});
+
+ipcMain.handle("exportConfig", async () => {
+  return await serviceManager.exportConfig();
 });
 
 // Scheme must be registered before the app is ready

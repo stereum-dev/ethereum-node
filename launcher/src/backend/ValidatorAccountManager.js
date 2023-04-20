@@ -272,13 +272,24 @@ export class ValidatorAccountManager {
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.keystoreAPI(client, "DELETE", { pubkeys: keys });
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout);
+
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       const data = JSON.parse(result.stdout);
-      if (picked) {
-        this.nodeConnection.taskManager.otherTasksHandler(ref);
-        return data.slashing_protection;
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
       }
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout);
+
       this.nodeConnection.taskManager.otherTasksHandler(ref);
+      //Return slashing protection data
+      if (picked)
+        return data.slashing_protection;
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -480,6 +491,9 @@ export class ValidatorAccountManager {
         } else {
           path = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
+        //Make sure keystores have correct permissions
+        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + path + "/direct/accounts/*")
+        log.info(chmodResult.stdout)
         if (path) {
           result = await this.nodeConnection.sshService.exec("cat " + path + "/auth-token");
           result.stdout = result.stdout

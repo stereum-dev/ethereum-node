@@ -41,6 +41,16 @@
               ></setting-items>
             </div>
           </div>
+          <div class="update-panel_title">
+            <span>NODE</span>
+          </div>
+          <hr />
+          <div class="setting-items export-row">
+            <div class="setting-items_title">
+              <span>Export Config</span>
+            </div>
+            <div class="setting-items_btn export" @click="exportData">export ...</div>
+          </div>
           <div class="update-panel">
             <div class="update-panel_title">
               <span>{{ $t("settingPanel.update") }}</span>
@@ -85,6 +95,10 @@
   </div>
 </template>
 <script>
+const JSZip = require("jszip");
+const saveAs = require("file-saver");
+// const yaml = require("js-yaml");
+
 import LanguagePanel from "./LanguagePanel.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 import ControlService from "@/store/ControlService";
@@ -97,6 +111,29 @@ export default {
   components: { TaskManager, SettingItems, LanguagePanel },
   data() {
     return {
+      stereumConfig: [
+        // {
+        //   filename: "file1.yaml",
+        //   content: {
+        //     name: "John Doe",
+        //     age: 35,
+        //     email: "johndoe@example.com",
+        //   },
+        // },
+        // {
+        //   filename: "file2.yaml",
+        //   content: {
+        //     name: "Jane Smith",
+        //     age: 27,
+        //     email: "janesmith@example.com",
+        //   },
+        // },
+        // {
+        //   filename: "NimbusBeaconService.yaml",
+        //   content:
+        //     "{service: NimbusBeaconService\nid: 11ad3d49-8811-9f…decff970\n  consensusClients: []\n  mevboost: []\n\n}",
+        // },
+      ],
       stereumServiceRef: "manual",
       SIco: "/img/icon/setting-page/setting_icon.png",
       onOff: true,
@@ -192,8 +229,25 @@ export default {
     this.selector();
     this.checkVersion();
     this.switchOnOff();
+    this.exportConfig();
   },
   methods: {
+    exportData() {
+      const zip = new JSZip();
+
+      this.stereumConfig.forEach((item) => {
+        const yamlData = item.content.trim();
+        zip.file(item.filename, yamlData);
+      });
+
+      zip.generateAsync({ type: "blob" }).then(function (blob) {
+        saveAs(blob, "stereum_config.zip");
+      });
+    },
+
+    async exportConfig() {
+      this.stereumConfig = await ControlService.exportConfig();
+    },
     async getSettings() {
       this.settings = await ControlService.getStereumSettings();
       if (this.settings.stereum?.settings.updates.unattended.install) {
@@ -263,6 +317,17 @@ export default {
 </script>
 
 <style scoped>
+.export {
+  background: #316464;
+  color: "#c1c1c1";
+}
+.export:hover {
+  font-weight: 700;
+  border: 1.5px solid #eee;
+}
+.export:active {
+  transform: scale(0.9);
+}
 .setting-items {
   width: 95%;
   display: flex;
@@ -299,8 +364,7 @@ export default {
   font-weight: 500;
   cursor: pointer;
   margin: 0 2%;
-  height: 90%;
-  color: #000;
+  height: 85%;
   font-size: 100%;
   box-shadow: 0 0 1px 0.5px rgb(23, 23, 23);
   box-sizing: border-box;
@@ -449,6 +513,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   overflow-y: auto;
+  margin-top: 0.7%;
 }
 .general-panel_title,
 .update-panel_title {
