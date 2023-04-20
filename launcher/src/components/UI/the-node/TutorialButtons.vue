@@ -8,6 +8,7 @@
       <div v-if="!arrow" class="up-arrow"></div>
       <div v-else class="down-arrow"></div>
     </div>
+    <div class="button-info_sub"></div>
   </div>
 </template>
 <script>
