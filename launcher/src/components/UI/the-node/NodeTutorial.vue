@@ -1,5 +1,11 @@
 <template>
   <div class="tutorial-box">
+    <TutorialButtons
+      v-for="item in tutorialTitles"
+      :key="item"
+      :tutorial-btn-ttl="item.name"
+      :tutorial-icons="item.icon"
+    />
     <!-- <div class="tutorial-table">
       <div
         v-for="(item, index) in configData"
@@ -19,7 +25,7 @@
     <div class="round-icon">
       <img src="/img/icon/round-icon.png" alt="round-icon" />
     </div> -->
-    <TutorialButtons />
+
     <div class="back-button" @click="infoAlarm = !infoAlarm"><div class="up-arrow"></div></div>
   </div>
 </template>
@@ -86,6 +92,12 @@ export default {
           guideLink: "",
           display: true,
         },
+      ],
+      tutorialTitles: [
+        { name: "Alerts on Mobile App", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
+        { name: "Switch Clients", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
+        { name: "Node Migration", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
+        { name: "RPC Connection", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
       ],
     };
   },
