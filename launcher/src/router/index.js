@@ -17,6 +17,7 @@ import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue"
 import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
+import VerifyConfig from "../components/UI/plugin-installation/VerifyConfig.vue";
 
 const routes = [
   {
@@ -79,6 +80,11 @@ const routes = [
     path: "/mevboost",
     name: "MevboostConfig",
     component: MevboostConfig,
+  },
+  {
+    path: "/verifyConfig",
+    name: "VerifyConfig",
+    component: VerifyConfig,
   },
   // {
   //   path: "/videos",

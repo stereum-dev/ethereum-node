@@ -37,9 +37,7 @@
             </div>
           </div>
           <div class="confirmBox">
-            <p v-show="uploadConfirmed" class="text-sm text-green-400 font-semibold mt-0">
-              Stereum config recognized.Press install to continue.
-            </p>
+            <p v-if="message" class="h-5 text-sm text-red-400 font-semibold mt-0">{{ message }}</p>
           </div>
         </div>
       </div>
@@ -48,7 +46,7 @@
           <button class="back-btn">{{ $t("pluginName.back") }}</button>
         </router-link>
         <router-link :to="{ path: '/welcome' }">
-          <button class="next-btn" @click="uploadFile">INSTALL</button>
+          <button class="next-btn" @click="displayConfigClients">INSTALL</button>
         </router-link>
       </div>
     </div>
@@ -62,16 +60,22 @@ export default {
   data() {
     return {
       fileName: "",
+      isMessageActive: false,
+      message: "",
       file: null,
       uploadConfirmed: false,
     };
   },
   methods: {
     uploadFile() {
+      this.isMessageActive = false;
+      this.message = "";
       const file = this.$refs.fileInput.files[0];
       const fileType = file.type;
       if (fileType !== "application/zip") {
-        console.log("Invalid file type. Please select a .zip file.");
+        this.isMessageActive = true;
+        this.message = "Invalid file type. Please select a .zip file.";
+
         return;
       }
 
@@ -81,7 +85,8 @@ export default {
         zip.loadAsync(reader.result).then((zipFile) => {
           const yamlFile = zipFile.file(/\.yaml$/i);
           if (!yamlFile.length) {
-            console.log("The zip file does not contain a .yaml file.");
+            this.isMessageActive = true;
+            this.message = "The zip file does not contain a .yaml file.";
             return;
           }
 
@@ -93,6 +98,10 @@ export default {
         });
       };
       reader.readAsArrayBuffer(file);
+      this.$router.push({ path: "/verifyConfig" });
+    },
+    displayConfigClients() {
+      this.$router.push({ path: "/verifyConfig" });
     },
   },
 };
@@ -158,7 +167,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   padding-bottom: 5px;
   border-radius: 20px;
 }
@@ -181,8 +190,8 @@ export default {
 
 .uploadBox {
   width: 100%;
-  height: 65%;
-  margin-top: 15px;
+  height: 57%;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
