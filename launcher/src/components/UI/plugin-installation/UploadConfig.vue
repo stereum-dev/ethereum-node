@@ -26,8 +26,8 @@
                       ref="fileInput"
                       class="hidden"
                       type="file"
-                      accept="application/zip"
-                      @change="uploadFile"
+                      accept=".zip"
+                      @change="handleFileUpload"
                     />
                     <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
                     <span class="ml-2 text-xl text-gray-700 overflow-hidden"> {{ fileName }}</span>
@@ -67,39 +67,77 @@ export default {
     };
   },
   methods: {
-    uploadFile() {
+    // uploadFile() {
+    //   this.isMessageActive = false;
+    //   this.message = "";
+    //   const file = this.$refs.fileInput.files[0];
+    //   const fileType = file.type;
+    //   if (fileType !== "application/zip") {
+    //     this.isMessageActive = true;
+    //     this.message = "Invalid file type. Please select a .zip file.";
+
+    //     return;
+    //   }
+
+    //   const reader = new FileReader();
+    //   reader.onload = () => {
+    //     const zip = new JSZip();
+    //     zip.loadAsync(reader.result).then((zipFile) => {
+    //       const yamlFile = zipFile.file(/\.yaml$/i);
+    //       if (!yamlFile.length) {
+    //         this.isMessageActive = true;
+    //         this.message = "The zip file does not contain a .yaml file.";
+    //         return;
+    //       }
+
+    //       // Do something with the yaml file
+    //       const yamlContent = yamlFile[0].async("string");
+    //       console.log(yamlContent);
+
+    //       this.fileName = file.name;
+    //     });
+    //   };
+    //   reader.readAsArrayBuffer(file);
+    //   // this.$router.push({ path: "/verifyConfig" });
+    // },
+    handleFileUpload(event) {
       this.isMessageActive = false;
       this.message = "";
-      const file = this.$refs.fileInput.files[0];
-      const fileType = file.type;
-      if (fileType !== "application/zip") {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Check that the file is a zip file
+      if (file.type !== "application/zip") {
         this.isMessageActive = true;
         this.message = "Invalid file type. Please select a .zip file.";
-
+        this.$refs.fileInput.value = "";
         return;
       }
 
+      // Read the contents of the zip file
       const reader = new FileReader();
       reader.onload = () => {
-        const zip = new JSZip();
-        zip.loadAsync(reader.result).then((zipFile) => {
-          const yamlFile = zipFile.file(/\.yaml$/i);
-          if (!yamlFile.length) {
+        const zip = JSZip.loadAsync(reader.result);
+        zip.then((contents) => {
+          // Check that the zip file contains a YAML file
+          const yamlFiles = contents.filter((relativePath, file) => {
+            return !file.dir && /\.yaml$/i.test(file.name);
+          });
+
+          if (yamlFiles.length === 0) {
             this.isMessageActive = true;
             this.message = "The zip file does not contain a .yaml file.";
+            this.$refs.fileInput.value = "";
             return;
           }
-
-          // Do something with the yaml file
-          const yamlContent = yamlFile[0].async("string");
-          console.log(yamlContent);
-
           this.fileName = file.name;
+          // Upload the file
+          // ...
         });
       };
       reader.readAsArrayBuffer(file);
-      this.$router.push({ path: "/verifyConfig" });
     },
+
     displayConfigClients() {
       this.$router.push({ path: "/verifyConfig" });
     },
