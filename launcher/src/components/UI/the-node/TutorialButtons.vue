@@ -48,6 +48,49 @@ export default {
   data() {
     return {
       arrow: false,
+      mainnet: [
+        {
+          title: "Stake with 32 ETH",
+          guide: "",
+          video: "",
+          written: "",
+          icon: "",
+        },
+      ],
+      georli: [
+        {
+          title: "Stake with 32 ETH",
+          guide: "",
+          video: "",
+          written: "",
+          icon: "",
+        },
+        {
+          title: "Use SSV Network",
+          guide: "",
+          video: "",
+          written: "",
+          icon: "",
+        },
+      ],
+      sepoila: [
+        {
+          title: "Stake with 32 ETH",
+          guide: "",
+          video: "",
+          written: "",
+          icon: "",
+        },
+      ],
+      gnosis: [
+        {
+          title: "Stake with 1 GNO",
+          guide: "",
+          video: "",
+          written: "",
+          icon: "",
+        },
+      ],
     };
   },
 };

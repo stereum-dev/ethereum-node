@@ -1,6 +1,13 @@
 <template>
   <div class="tutorial-box">
     <TutorialButtons
+      v-for="(button, index) in tutorialBtns"
+      :key="index"
+      :tutorial-btn-ttl="button.title"
+      :tutorial-icons="button.icon"
+    />
+
+    <TutorialButtons
       v-for="item in tutorialTitles"
       :key="item"
       :tutorial-btn-ttl="item.name"
@@ -99,6 +106,52 @@ export default {
         { name: "Node Migration", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
         { name: "RPC Connection", icon: "/img/icon/manage-node-icons/QuestionMark.png" },
       ],
+      confData: {
+        mainnet: [
+          {
+            title: "Stake with 32 ETH",
+            guide: "",
+            video: "",
+            written: "",
+            icon: "/img/icon/click-installation/mainnet-icon.png",
+          },
+        ],
+        goerli: [
+          {
+            title: "Stake with 32 ETH",
+            guide: "",
+            video: "",
+            written: "",
+            icon: "/img/icon/click-installation/testnet-icon.png",
+          },
+          {
+            title: "Use SSV Network",
+            guide: "",
+            video: "",
+            written: "",
+            icon: "/img/icon/click-installation/testnet-icon.png",
+          },
+        ],
+        sepolia: [
+          {
+            title: "Stake with 32 ETH",
+            guide: "",
+            video: "",
+            written: "",
+            icon: "/img/icon/click-installation/testnet-icon.png",
+          },
+        ],
+        gnosis: [
+          {
+            title: "Stake with 1 GNO",
+            guide: "",
+            video: "",
+            written: "",
+            icon: "/img/icon/control/gno_currency_symbol.png",
+          },
+        ],
+      },
+      tutorialBtns: [],
     };
   },
 
@@ -133,9 +186,27 @@ export default {
       };
     });
     this.serviceController();
+    this.mainButtonController();
     console.log(this.currentNetwork.network);
   },
   methods: {
+    mainButtonController() {
+      const currentService = this.currentNetwork.network;
+
+      for (const service in this.confData) {
+        if (service === currentService) {
+          const buttons = this.confData[service].map((item) => {
+            return {
+              title: item.title,
+              icon: item.icon,
+            };
+          });
+          console.log(this.confData[service]);
+          this.tutorialBtns = buttons;
+          break;
+        }
+      }
+    },
     serviceController() {
       if (this.currentNetwork.network == "gnosis") {
         this.configData[0] = {
