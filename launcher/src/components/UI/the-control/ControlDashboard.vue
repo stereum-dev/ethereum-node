@@ -24,11 +24,14 @@
     <dashboard-card class="the-ram"> <the-ram></the-ram></dashboard-card>
     <dashboard-card class="the-network"><the-network></the-network></dashboard-card>
     <dashboard-card class="portlist_card"><port-list></port-list></dashboard-card>
-
     <div class="half-card">
       <rpc-endpoint></rpc-endpoint>
     </div>
-    <div class="half-card2"><data-api></data-api></div>
+    <div class="half-card2">
+      <ws-endpoint></ws-endpoint>
+    </div>
+
+    <div class="half-card3"><data-api></data-api></div>
   </div>
 </template>
 
@@ -47,6 +50,7 @@ import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
 import TimeGas from "./TimeGas.vue";
 import RpcEndpoint from "./RpcEndpoint.vue";
+import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
 import PortList from "./PortList.vue";
 import TheStaking from "./TheStaking.vue";
@@ -67,6 +71,7 @@ export default {
     TimeGas,
     NodeServerResponse,
     RpcEndpoint,
+    WsEndpoint,
     DiskSpeed,
     TheStaking,
   },
@@ -180,6 +185,13 @@ export default {
 }
 .half-card2 {
   grid-row: 4/5;
+  grid-column: 3/4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.half-card3 {
+  grid-row: 5/6;
   grid-column: 3/4;
   display: flex;
   justify-content: flex-start;

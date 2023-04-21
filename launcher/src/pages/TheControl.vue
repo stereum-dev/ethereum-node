@@ -31,6 +31,7 @@ export default {
       syncstatus: "syncstatus",
       p2pstatus: "p2pstatus",
       rpcstatus: "rpcstatus",
+      wsstatus: "wsstatus",
       beaconstatus: "beaconstatus",
       portstatus: "portstatus",
       storagestatus: "storagestatus",
@@ -52,7 +53,7 @@ export default {
         return;
       }
       this.request[meth] = true;
-      const csvc = ControlService;  // eslint-disable-line no-unused-vars
+      const csvc = ControlService; // eslint-disable-line no-unused-vars
       const func = eval("async () => {return await csvc." + meth + "()}");
       const resp = await func();
       this.request[meth] = false;
@@ -83,6 +84,7 @@ export default {
               this.syncstatus = nodeStats.data.syncstatus;
               this.p2pstatus = nodeStats.data.p2pstatus;
               this.rpcstatus = nodeStats.data.rpcstatus;
+              this.wsstatus = nodeStats.data.wsstatus;
               this.beaconstatus = nodeStats.data.beaconstatus;
               this.portstatus = nodeStats.data.portstatus;
               this.storagestatus = nodeStats.data.storagestatus.data;

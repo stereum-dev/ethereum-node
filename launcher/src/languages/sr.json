@@ -114,6 +114,7 @@
     "read": "PROČITAT",
     "inclusionDistance": "INKLUZIJSKA UDALJENOST",
     "rpc": "RPC-ENDPOINT",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "STATUS SINHRONIZACIJE",
     "hard": "STORAGE VOLUME",
     "free": "FREE",
@@ -283,7 +284,9 @@
     "turnOnMessage": "Molimo prvo UKLJUČITE DATA-API tunel!",
     "copiedMessage": "DATA-API-URL kopiran u clipboard!",
     "RPCTurnOnMessage": "Molimo prvo UKLJUČITE RPC tunel!",
-    "RPCCopiedMessage": "RPC-URL kopiran u clipboard!"
+    "RPCCopiedMessage": "RPC-URL kopiran u clipboard!",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

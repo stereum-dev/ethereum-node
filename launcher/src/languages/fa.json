@@ -283,7 +283,9 @@
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
     "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "پیوند در حافظه موقت کپی شد"
+    "RPCCopiedMessage": "پیوند در حافظه موقت کپی شد",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

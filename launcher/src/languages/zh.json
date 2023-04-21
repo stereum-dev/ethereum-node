@@ -114,6 +114,7 @@
     "read": "READ",
     "inclusionDistance": "INCLUSION DISTANCE",
     "rpc": "RPC-ENDPOINT",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "SYNC STATUS",
     "hard": "STORAGE VOLUME",
     "free": "FREE",
@@ -283,7 +284,9 @@
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
     "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

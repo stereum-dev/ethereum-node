@@ -153,6 +153,16 @@ ipcMain.handle("closeRpcTunnel", async () => {
   return await monitoring.closeRpcTunnel();
 });
 
+// open ws tunnel
+ipcMain.handle("openWsTunnel", async (event, args) => {
+  return await monitoring.openWsTunnel(args);
+});
+
+// close ws tunnel
+ipcMain.handle("closeWsTunnel", async () => {
+  return await monitoring.closeWsTunnel();
+});
+
 // open beacon tunnel
 ipcMain.handle("openBeaconTunnel", async (event, args) => {
   return await monitoring.openBeaconTunnel(args);

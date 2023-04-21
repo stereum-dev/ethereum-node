@@ -114,6 +114,7 @@
     "read": "LESEN",
     "inclusionDistance": "INKLUSIONSDISTANZ",
     "rpc": "RPC-Endpunkt",
+    "ws": "WS-Endpunkt",
     "syncStatus": "SYNC STATUS",
     "hard": "SPEICHERVOLUMEN",
     "free": "FREI",
@@ -283,7 +284,9 @@
     "turnOnMessage": "Bitte schalten Sie zuerst den DATA-API-Tunnel ein!",
     "copiedMessage": "DATA-API-URL kopiert!",
     "RPCTurnOnMessage": "Bitte schalten Sie zuerst den RPC-Tunnel ein!",
-    "RPCCopiedMessage": "RPC-URL kopiert!"
+    "RPCCopiedMessage": "RPC-URL kopiert!",
+    "WSTurnOnMessage": "Bitte schalten Sie zuerst den WS-Tunnel ein!",
+    "WSCopiedMessage": "WS-URL kopiert!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

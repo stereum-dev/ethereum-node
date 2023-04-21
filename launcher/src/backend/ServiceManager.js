@@ -21,7 +21,7 @@ import { ServiceVolume } from "./ethereum-services/ServiceVolume";
 import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
-import { KeysAPIService } from "./ethereum-services/KeysAPIService"
+import { KeysAPIService } from "./ethereum-services/KeysAPIService";
 
 const log = require("electron-log");
 
@@ -66,7 +66,7 @@ export class ServiceManager {
    *
    * @returns an array of all service configurations
    */
-  readServiceConfigurations() {
+  async readServiceConfigurations() {
     return this.nodeConnection
       .listServicesConfigurations()
       .then(async (services) => {
@@ -210,8 +210,8 @@ export class ServiceManager {
     if (dataDir.length > 0) {
       await this.deleteDataVolume(dataDir);
     }
-    //Prysm specific
-    if (client.service == "PrysmBeaconService") {
+    //if command is string
+    if (typeof client.command === "string") {
       //remove old checkpoint command
       if (client.command.includes(checkpointCommands[client.service])) {
         let commands = client.command.replaceAll(/\n/gm, "").replaceAll(/\s\s+/gm, " ").split(" ");
@@ -283,9 +283,9 @@ export class ServiceManager {
       if (service.service === "FlashbotsMevBoostService") {
         service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1] = task.data.relays;
         modifiedServices.push(service);
-        let dependenciesToRemove = services
-          .filter((s) => s.dependencies.mevboost.map((m) => m.id).includes(service.id))
-          .filter((m) => !dependencies.map((d) => d.id).includes(m.id));
+        let dependenciesToRemove = services.filter((s) =>
+          s.dependencies.mevboost.map((m) => m.id).includes(service.id)
+        );
         dependenciesToRemove.forEach((dependency) => {
           modifiedServices.push(this.removeDependencies(dependency, service));
         });
@@ -429,7 +429,7 @@ export class ServiceManager {
         builderCommand = "--builder.urls=";
         break;
       case "NimbusBeaconService":
-        command.push("--payload-builder=true");
+        if (!command.includes("--payload-builder=true")) command.push("--payload-builder=true");
         builderCommand = "--payload-builder-url=";
         break;
       case "TekuBeaconService":
@@ -545,6 +545,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
@@ -553,6 +554,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return BesuService.buildByUserInput(args.network, ports, args.installDir + "/besu");
 
@@ -561,6 +563,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return NethermindService.buildByUserInput(args.network, ports, args.installDir + "/nethermind");
 
@@ -702,9 +705,7 @@ export class ServiceManager {
         return ValidatorEjectorService.buildByUserInput(args.network, args.installDir + "/validatorejector");
 
       case "KeysAPIService":
-        ports = [
-          new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp),
-        ];
+        ports = [new ServicePort("127.0.0.1", 3600, 3600, servicePortProtocol.tcp)];
         return KeysAPIService.buildByUserInput(args.network, ports);
 
       case "SSVNetworkService":
@@ -730,11 +731,11 @@ export class ServiceManager {
       await this.nodeConnection.sshService.exec(
         `docker run --name=cachingDB-${keyAPI.id} --network=stereum -d -e POSTGRES_PASSWORD=${dbPass} -e POSTGRES_USER=${dbUser} -e POSTGRES_DB=${dbName} postgres`
       );
-      keyAPI.env.DB_NAME = dbName
-      keyAPI.env.DB_USER = dbUser
-      keyAPI.env.DB_PASSWORD = dbPass
+      keyAPI.env.DB_NAME = dbName;
+      keyAPI.env.DB_USER = dbUser;
+      keyAPI.env.DB_PASSWORD = dbPass;
 
-      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`
+      keyAPI.env.DB_HOST = `cachingDB-${keyAPI.id}`;
     } catch (err) {
       log.error("Creating CachingDB failed: ", err);
       await this.nodeConnection.sshService.exec(
@@ -1086,5 +1087,26 @@ export class ServiceManager {
         await this.nodeConnection.restartServices(after - before);
       }
     }
+  }
+
+  async exportConfig() {
+    let listConfigFiles = await this.nodeConnection.sshService.exec(`cd /etc/stereum/services && ls`);
+    let arrayOfServices = listConfigFiles.stdout.split("\n");
+    let serviceNameConfig = [];
+    let ConfigContent;
+
+    for (let i = 0; i < arrayOfServices.length - 1; i++) {
+      ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
+
+      const contentObject = {
+        lines: ConfigContent.stdout,
+      };
+      const Object = {
+        filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
+        content: contentObject.lines,
+      };
+      serviceNameConfig.push(Object);
+    }
+    return serviceNameConfig;
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
-// import * as QRCode from "qrcode";
+import * as QRCode from "qrcode";
 import * as log from "electron-log";
 import * as crypto from "crypto";
 import * as fs from "fs";
@@ -15,6 +15,7 @@ export class Monitoring {
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.rpcTunnel = {};
+    this.wsTunnel = {};
     this.beaconTunnel = {};
     this.serviceInfosCacheFile = path.join(os.tmpdir(), "server_infos_cache_" + process.getCreationTime() + ".txt");
     this.lastKnownHeadBlockFile = path.join(os.tmpdir(), "last_head_block_cache.txt");
@@ -23,6 +24,7 @@ export class Monitoring {
   // Cleanup on logout
   async logout() {
     this.rpcTunnel = {};
+    this.wsTunnel = {};
     this.beaconTunnel = {};
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
@@ -1721,6 +1723,188 @@ export class Monitoring {
     };
   }
 
+  // Open WS tunnel(s) on request
+  async openWsTunnel(args) {
+    // Extract arguments
+    var { force_fresh } = Object.assign(
+      {
+        force_fresh: false,
+      },
+      args
+    );
+
+    console.log("on");
+
+    // Get current WS status
+    const wsstatus = await this.getWsStatus();
+    if (wsstatus.code) return wsstatus;
+
+    // Get available ports
+    const localPorts = await this.nodeConnection.checkAvailablePorts({
+      min: 8546,
+      max: 8999,
+      amount: wsstatus.data.length,
+    });
+
+    // Make sure there are enough ports available
+    if (localPorts.length != wsstatus.data.length) {
+      return {
+        code: 1,
+        info: "error: not enough local ports availbe for all WS services",
+        data: "",
+      };
+    }
+
+    // Create a tunnel for each service
+    for (let i = 0; i < wsstatus.data.length; i++) {
+      // Setup details for this service
+      let sid = wsstatus.data[i].sid;
+      let ws = wsstatus.data[i].ws;
+      let addr = ws.destinationIp;
+      let port = ws.destinationPort;
+
+      // Check if the tunnel is already open
+      if (this.wsTunnel[sid] > 0 && !force_fresh) {
+        continue;
+      }
+
+      // Open the tunnel
+      try {
+        var localPort = localPorts.shift();
+        await this.nodeConnection.openTunnels([
+          {
+            dstHost: addr,
+            dstPort: port,
+            localPort: localPort,
+          },
+        ]);
+      } catch (e) {
+        // On any error stop opening further tunnels and close all already opened
+        await this.closeWsTunnel();
+        const freshwsstatus = await this.getWsStatus();
+        freshwsstatus.info = freshwsstatus.info + "(fresh after failed attempt to open ws tunnels)";
+        return {
+          code: 2,
+          info: "error: failed to open tunnels (" + e + ")",
+          data: freshwsstatus,
+        };
+      }
+
+      // Update tunnel with opened port
+      this.wsTunnel[sid] = localPort;
+    }
+
+    // Respond success with fresh WS status data
+    const freshwsstatus = await this.getWsStatus();
+    freshwsstatus.info = freshwsstatus.info + "(fresh after opening ws tunnels)";
+    return {
+      code: 0,
+      info: "success: tunnels successfully opened",
+      data: freshwsstatus,
+    };
+  }
+
+  // Close WS tunnel(s) on request
+  async closeWsTunnel() {
+    // Close all open tunnels, ignore any errors
+    try {
+      const openTunnels = Object.values(this.wsTunnel);
+      if (openTunnels.length) {
+        await this.nodeConnection.closeTunnels(openTunnels);
+        this.wsTunnel = {};
+      }
+    } catch (e) {}
+
+    // Respond success with fresh WS status data
+    const freshwsstatus = await this.getWsStatus();
+    freshwsstatus.info = freshwsstatus.info + "(fresh after closing ws tunnels)";
+    return {
+      code: 0,
+      info: "success: tunnels successfully closed",
+      data: freshwsstatus,
+    };
+  }
+
+  // Get WS status
+  async getWsStatus() {
+    // Service definitions with their associated ws api (service) port
+    const services = {
+      GethService: 8546,
+      BesuService: 8546,
+      NethermindService: 8546,
+      ErigonService: 8545,
+    };
+
+    // Set timestamp in micro seconds
+    var now = Date.now();
+
+    // Get service infos
+    const serviceInfos = await this.getServiceInfos();
+    if (serviceInfos.length < 1) {
+      return {
+        code: 1,
+        info: "error: service infos unavailable",
+        data: "",
+      };
+    }
+
+    // Get execution clients with WS data by service name
+    const data = [];
+    const executions = serviceInfos.filter((s) => Object.keys(services).includes(s.service));
+    for (let i = 0; i < executions.length; i++) {
+      // Make sure execution client is valid and running
+      let execution = executions[i];
+      if (
+        typeof execution !== "object" ||
+        !execution.hasOwnProperty("config") ||
+        !execution.hasOwnProperty("state") ||
+        execution.state != "running"
+      ) {
+        continue;
+      }
+
+      // Filter the WS port configuration and get addr/port that is mapped on docker host
+      const sid = execution.config.serviceID;
+      const ws = execution.config.ports
+        .filter((p) => p.servicePort == services[execution.service])
+        .slice(-1)
+        .pop();
+      ws.destinationIp = ws.destinationIp == "0.0.0.0" ? "127.0.0.1" : ws.destinationIp; // FIX: ws.destinationIp could be 0.0.0.0 if config was changed in expert mode
+      let addr = ws.destinationIp;
+      let port = ws.destinationPort;
+
+      // Check if WS port is enabled
+      // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
+      let result = await this.queryRpcApi({ addr: addr, port: port }, "eth_blockNumber");
+      if (result.code) continue;
+
+      // Add valid client to final result
+      data.push({
+        now: now,
+        sid: sid,
+        ws: ws,
+        url: this.rpcTunnel[sid] > 0 ? "http://" + addr + ":" + this.wsTunnel[sid] : "",
+        clt: execution.service.replace(/Service/gi, "").toUpperCase(),
+      });
+    }
+
+    // Final check
+    if (data.length < 1) {
+      return {
+        code: 2,
+        info: "error: no running execution client with enabled WS port found",
+        data: "",
+      };
+    }
+
+    // Respond success
+    return {
+      code: 0,
+      info: "success: wsstatus successfully retrieved",
+      data: data,
+    };
+  }
+
   // Open BEACON tunnel(s) on request
   async openBeaconTunnel(args) {
     // Extract arguments
@@ -2056,6 +2240,9 @@ export class Monitoring {
       const rpcstatus = await this.getRpcStatus();
       // if(rpcstatus.code)
       //   return rpcstatus;
+      const wsstatus = await this.getWsStatus();
+      // if(wsstatus.code)
+      //   return wsstatus;
       const storagestatus = await this.getStorageStatus();
       // if(storagestatus.code)
       //   return storagestatus;
@@ -2074,6 +2261,7 @@ export class Monitoring {
           p2pstatus: p2pstatus,
           storagestatus: storagestatus,
           rpcstatus: rpcstatus,
+          wsstatus: wsstatus,
           beaconstatus: beaconstatus,
           portstatus: portstatus,
         },
