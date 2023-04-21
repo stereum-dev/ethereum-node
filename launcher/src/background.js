@@ -389,6 +389,10 @@ ipcMain.handle("exportConfig", async () => {
   return await serviceManager.exportConfig();
 });
 
+ipcMain.handle("importConfig", async (event, args) => {
+  return await serviceManager.importConfig(args);
+});
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: true, standard: true } }]);
 

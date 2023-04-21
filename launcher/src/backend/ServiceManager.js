@@ -1106,4 +1106,36 @@ export class ServiceManager {
     }
     return serviceNameConfig;
   }
+
+  async importConfig(configFiles) {
+    console.log("name: ", configFiles.length);
+    // console.log("content: ", configFiles);
+    // console.log("hehe: ", typeof configFiles);
+
+    //     const yamlFile = yamlFiles[0];
+
+    //     yamlFile.async("string").then((yamlContents) => {
+    //       // Save the configurations as an object
+    //       const config = yaml.safeLoad(yamlContents);
+
+    //       // Spawn a new process to start the Ethereum node client
+
+    //       const nodeProcess = spawn("node", ["path/to/client.js", JSON.stringify(config)]);
+    //       nodeProcess.stdout.on("data", (data) => {
+    //         console.log(`stdout: ${data}`);
+    //       });
+    //       nodeProcess.stderr.on("data", (data) => {
+    //         console.error(`stderr: ${data}`);
+    //       });
+    //       nodeProcess.on("close", (code) => {
+    //         console.log(`child process exited with code ${code}`);
+    //       });
+    //     });
+
+    //     // Upload the file
+    //     // ...
+    //   });
+    // };
+    // reader.readAsArrayBuffer(file);
+  }
 }

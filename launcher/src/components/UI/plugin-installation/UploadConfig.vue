@@ -43,10 +43,10 @@
       </div>
       <div class="btn-box">
         <router-link :to="{ path: '/welcome' }">
-          <button class="back-btn">{{ $t("pluginName.back") }}</button>
-        </router-link>
+          <button class="back-btn">{{ $t("pluginName.back") }}</button> </router-link
+        >s
         <router-link :to="{ path: '/welcome' }">
-          <button class="next-btn" @click="displayConfigClients">INSTALL</button>
+          <button class="next-btn" @click="runImportingConfig">INSTALL</button>
         </router-link>
       </div>
     </div>
@@ -55,6 +55,8 @@
 
 <script>
 import JSZip from "jszip";
+import ControlService from "@/store/ControlService";
+
 export default {
   name: "UploadConfig",
   data() {
@@ -64,42 +66,10 @@ export default {
       message: "",
       file: null,
       uploadConfirmed: false,
+      compressedContentArray: [],
     };
   },
   methods: {
-    // uploadFile() {
-    //   this.isMessageActive = false;
-    //   this.message = "";
-    //   const file = this.$refs.fileInput.files[0];
-    //   const fileType = file.type;
-    //   if (fileType !== "application/zip") {
-    //     this.isMessageActive = true;
-    //     this.message = "Invalid file type. Please select a .zip file.";
-
-    //     return;
-    //   }
-
-    //   const reader = new FileReader();
-    //   reader.onload = () => {
-    //     const zip = new JSZip();
-    //     zip.loadAsync(reader.result).then((zipFile) => {
-    //       const yamlFile = zipFile.file(/\.yaml$/i);
-    //       if (!yamlFile.length) {
-    //         this.isMessageActive = true;
-    //         this.message = "The zip file does not contain a .yaml file.";
-    //         return;
-    //       }
-
-    //       // Do something with the yaml file
-    //       const yamlContent = yamlFile[0].async("string");
-    //       console.log(yamlContent);
-
-    //       this.fileName = file.name;
-    //     });
-    //   };
-    //   reader.readAsArrayBuffer(file);
-    //   // this.$router.push({ path: "/verifyConfig" });
-    // },
     handleFileUpload(event) {
       this.isMessageActive = false;
       this.message = "";
@@ -107,7 +77,7 @@ export default {
       if (!file) return;
 
       // Check that the file is a zip file
-      if (file.type !== "application/zip") {
+      if (file.type !== "application/zip" && file.type !== "application/x-zip-compressed") {
         this.isMessageActive = true;
         this.message = "Invalid file type. Please select a .zip file.";
         this.$refs.fileInput.value = "";
@@ -130,16 +100,29 @@ export default {
             this.$refs.fileInput.value = "";
             return;
           }
+
+          yamlFiles.forEach((relativePath) => {
+            this.compressedContentArray.push({
+              name: relativePath.name,
+              content: relativePath._data.compressedContent,
+            });
+          });
+
           this.fileName = file.name;
-          // Upload the file
+          // Upload the file to the server
           // ...
         });
       };
       reader.readAsArrayBuffer(file);
     },
 
-    displayConfigClients() {
-      this.$router.push({ path: "/verifyConfig" });
+    runImportingConfig: async function () {
+      try {
+        console.log(this.compressedContentArray);
+        await ControlService.importConfig(JSON.stringify(this.compressedContentArray));
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
