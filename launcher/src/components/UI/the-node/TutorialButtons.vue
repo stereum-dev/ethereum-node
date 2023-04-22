@@ -11,23 +11,13 @@
       <div v-else class="down-arrow"></div>
     </div>
     <div v-if="arrow" class="button-info_sub">
-      <div class="sub">
+      <div v-for="option in options" :key="option.title" class="sub" @click="handleOptionClick(option)">
         <div class="sub-icon">
-          <img src="../../../../public/img/icon/tutorial-icons/Guide-icon.png" alt="" />
+          <img :src="option.icon" :alt="option.title" />
         </div>
-        <div class="button-info_sub_title"><span>Guided</span></div>
-      </div>
-      <div class="sub">
-        <div class="sub-icon">
-          <img src="../../../../public/img/icon/tutorial-icons/manual-icon.png" alt="" />
+        <div class="button-info_sub_title">
+          <span>{{ option.title }}</span>
         </div>
-        <div class="button-info_sub_title"><span>Written</span></div>
-      </div>
-      <div class="sub">
-        <div class="sub-icon">
-          <img src="../../../../public/img/icon/tutorial-icons/big-camera.png" alt="" />
-        </div>
-        <div class="button-info_sub_title"><span>Video</span></div>
       </div>
     </div>
   </div>
@@ -48,50 +38,35 @@ export default {
   data() {
     return {
       arrow: false,
-      mainnet: [
+      options: [
         {
-          title: "Stake with 32 ETH",
-          guide: "",
-          video: "",
-          written: "",
-          icon: "",
-        },
-      ],
-      georli: [
-        {
-          title: "Stake with 32 ETH",
-          guide: "",
-          video: "",
-          written: "",
-          icon: "",
+          title: "Guided",
+          icon: "/img/icon/tutorial-icons/Guide-icon.png",
         },
         {
-          title: "Use SSV Network",
-          guide: "",
-          video: "",
-          written: "",
-          icon: "",
+          title: "Written",
+          icon: "/img/icon/tutorial-icons/manual-icon.png",
         },
-      ],
-      sepoila: [
         {
-          title: "Stake with 32 ETH",
-          guide: "",
-          video: "",
-          written: "",
-          icon: "",
-        },
-      ],
-      gnosis: [
-        {
-          title: "Stake with 1 GNO",
-          guide: "",
-          video: "",
-          written: "",
-          icon: "",
+          title: "Video",
+          icon: "/img/icon/tutorial-icons/big-camera.png",
         },
       ],
     };
+  },
+  methods: {
+    handleOptionClick(option) {
+      if (option.title === "Guided") {
+        // Emit Guided option clicked event
+        this.$emit("guided-option-clicked");
+      } else if (option.title === "Written") {
+        // Emit Written option clicked event
+        this.$emit("written-option-clicked");
+      } else if (option.title === "Video") {
+        // Emit Video option clicked event
+        this.$emit("video-option-clicked");
+      }
+    },
   },
 };
 </script>

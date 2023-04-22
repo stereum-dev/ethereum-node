@@ -7,14 +7,9 @@
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos :video-url="itemToTutorial.videosLink"></the-videos>
+          <the-videos :video-url="chosenVideo"></the-videos>
         </div>
-        <TutorialModal
-          v-if="isTutorialModalActive"
-          :item-to-tutorial="itemToTutorial"
-          @hide-modal="closeTutorialModalHandler"
-          @show-item="openTutorialStep"
-        />
+
         <div class="journal-box" @mousedown.prevent>
           <JournalNode />
         </div>
@@ -93,7 +88,6 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
-import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 import { useNodeHeader } from "../store/nodeHeader";
@@ -105,7 +99,6 @@ export default {
     BaseModal,
     TaskManager,
     TheVideos,
-    TutorialModal,
     NodeAlert,
     NodeTutorial,
   },
@@ -115,7 +108,6 @@ export default {
     return {
       isModalActive: false,
       isTutorialModalActive: false,
-      playYoutubeVideo: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
       serverVitals: {},
@@ -135,7 +127,8 @@ export default {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useTutorialStore, {
-      steps: "steps",
+      playYoutubeVideo: "playYoutubeVideo",
+      chosenVideo: "chosenVideo",
     }),
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
@@ -207,20 +200,6 @@ export default {
     hideVideoDisplay() {
       this.isTutorialModalActive = false;
       this.playYoutubeVideo = false;
-    },
-    openTutorialStep(data) {
-      if (data.name === "videos" && data.videosLink.length > 0) {
-        this.isTutorialModalActive = false;
-        this.playYoutubeVideo = true;
-      } else if (data.name === "walkthrough" && data.guideLink.length > 0) {
-        this.isTutorialModalActive = false;
-        let url = data.guideLink;
-        window.open(url, "_blank");
-      } else if (data.name === "text guide" && data.writtenLink.length > 0) {
-        this.isTutorialModalActive = false;
-        let url = data.writtenLink;
-        window.open(url, "_blank");
-      }
     },
   },
 };
