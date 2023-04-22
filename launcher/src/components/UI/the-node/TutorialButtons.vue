@@ -40,16 +40,16 @@ export default {
       arrow: false,
       options: [
         {
-          title: "Guided",
-          icon: "/img/icon/tutorial-icons/Guide-icon.png",
+          title: "Video",
+          icon: "/img/icon/tutorial-icons/big-camera.png",
         },
         {
           title: "Written",
           icon: "/img/icon/tutorial-icons/manual-icon.png",
         },
         {
-          title: "Video",
-          icon: "/img/icon/tutorial-icons/big-camera.png",
+          title: "Guided",
+          icon: "/img/icon/tutorial-icons/Guide-icon.png",
         },
       ],
     };
