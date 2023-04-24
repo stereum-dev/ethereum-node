@@ -66,7 +66,7 @@ export class ServiceManager {
    *
    * @returns an array of all service configurations
    */
-  readServiceConfigurations() {
+  async readServiceConfigurations() {
     return this.nodeConnection
       .listServicesConfigurations()
       .then(async (services) => {
@@ -283,8 +283,9 @@ export class ServiceManager {
       if (service.service === "FlashbotsMevBoostService") {
         service.entrypoint[service.entrypoint.findIndex((e) => e === "-relays") + 1] = task.data.relays;
         modifiedServices.push(service);
-        let dependenciesToRemove = services
-          .filter((s) => s.dependencies.mevboost.map((m) => m.id).includes(service.id))
+        let dependenciesToRemove = services.filter((s) =>
+          s.dependencies.mevboost.map((m) => m.id).includes(service.id)
+        );
         dependenciesToRemove.forEach((dependency) => {
           modifiedServices.push(this.removeDependencies(dependency, service));
         });
@@ -428,8 +429,7 @@ export class ServiceManager {
         builderCommand = "--builder.urls=";
         break;
       case "NimbusBeaconService":
-        if (!command.includes("--payload-builder=true"))
-          command.push("--payload-builder=true");
+        if (!command.includes("--payload-builder=true")) command.push("--payload-builder=true");
         builderCommand = "--payload-builder-url=";
         break;
       case "TekuBeaconService":
@@ -1084,5 +1084,26 @@ export class ServiceManager {
         await this.nodeConnection.restartServices(after - before);
       }
     }
+  }
+
+  async exportConfig() {
+    let listConfigFiles = await this.nodeConnection.sshService.exec(`cd /etc/stereum/services && ls`);
+    let arrayOfServices = listConfigFiles.stdout.split("\n");
+    let serviceNameConfig = [];
+    let ConfigContent;
+
+    for (let i = 0; i < arrayOfServices.length - 1; i++) {
+      ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
+
+      const contentObject = {
+        lines: ConfigContent.stdout,
+      };
+      const Object = {
+        filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
+        content: contentObject.lines,
+      };
+      serviceNameConfig.push(Object);
+    }
+    return serviceNameConfig;
   }
 }
