@@ -491,7 +491,6 @@ export default {
     this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
-    console.log(this.currentNetwork.network);
   },
   beforeUnmount() {
     clearInterval(this.polling);
