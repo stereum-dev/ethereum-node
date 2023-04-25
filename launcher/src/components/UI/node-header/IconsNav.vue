@@ -43,6 +43,7 @@
     ></logout-modal>
     <support-modal v-if="supportModalIsActive" @close-me="supportModalClose"></support-modal>
     <notif-modal v-if="notificationModalIsActive" @close-me="notifModalClose"></notif-modal>
+    <TutorialGuide v-if="tutorial" />
   </div>
 </template>
 <script>
@@ -54,10 +55,12 @@ import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import TutorialGuide from "../the-node/TutorialGuide.vue";
 export default {
-  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal },
+  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal, TutorialGuide },
   data() {
     return {
+      test: true,
       displayUpdatePanel: false,
       logoutModalIsActive: false,
       supportModalIsActive: false,
@@ -71,6 +74,7 @@ export default {
       updating: "updating",
       refresh: "refresh",
       stereumUpdate: "stereumUpdate",
+      tutorial: "tutorial",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
