@@ -146,7 +146,7 @@
                 </div>
                 <div
                   class="withdraw-box"
-                  :class="{ disabled: ['goerli', 'gnosis', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
+                  :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
                 >
                   <img
                     class="exit-icon"
