@@ -92,7 +92,7 @@ export default {
 
           if (yamlFiles.length === 0) {
             this.isMessageActive = true;
-            this.message = "The zip file does not contain a .yaml file.";
+            this.message = "Invalid file type. Please try again with a valid .zip file.";
             this.$refs.fileInput.value = "";
             return;
           }
