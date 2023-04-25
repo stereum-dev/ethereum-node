@@ -33,6 +33,7 @@
     "electron-store": "^8.1.0",
     "electron-updater": "^5.2.1",
     "file-saver": "^2.0.5",
+    "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
     "pinia": "^2.0.33",
     "qrcode": "^1.5.1",

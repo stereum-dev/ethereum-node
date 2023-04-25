@@ -30,47 +30,45 @@
   </installation-box>
 </template>
 <script>
-import InstallationBox from "./InstallationBox.vue";
 export default {
   components: {
-    InstallationBox,
   },
   data() {
     return {
-    //   configClients: [
-    //     {
-    //       name: "Besu",
-    //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
-    //       category: "config",
-    //       path: "/besu",
-    //       installed: false,
-    //     },
-    //     {
-    //       name: "Mevboos",
-    //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
-    //       category: "config",
-    //       path: "/mevboos",
-    //       installed: false,
-    //     },
-    //     {
-    //       name: "Lighthouse",
-    //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
-    //       category: "config",
-    //       path: "/lighthouse",
-    //       installed: false,
-    //     },
-    //     {
-    //       name: "Stereum",
-    //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
-    //       category: "config",
-    //       path: "/stereum",
-    //       installed: false,
-    //     },
-    //   ],
+      //   configClients: [
+      //     {
+      //       name: "Besu",
+      //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
+      //       category: "config",
+      //       path: "/besu",
+      //       installed: false,
+      //     },
+      //     {
+      //       name: "Mevboos",
+      //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
+      //       category: "config",
+      //       path: "/mevboos",
+      //       installed: false,
+      //     },
+      //     {
+      //       name: "Lighthouse",
+      //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
+      //       category: "config",
+      //       path: "/lighthouse",
+      //       installed: false,
+      //     },
+      //     {
+      //       name: "Stereum",
+      //       icon: require("../../../../public/img/icon/plugin-icons/consensus/Teku.png"),
+      //       category: "config",
+      //       path: "/stereum",
+      //       installed: false,
+      //     },
+      //   ],
       installationPath: "/apt/Stereum",
-      back: "upload",
-      title: "verify & install",
-      next: "play",
+      back: "importingSyncing",
+      title: "IMPORTED CONFIG",
+      next: "importingVerify",
     };
   },
   computed: {},

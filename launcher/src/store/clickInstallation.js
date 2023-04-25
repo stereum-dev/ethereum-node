@@ -113,6 +113,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         { id: 1, src: "/animation/custom-start.gif", alt: "Animation", display: false },
         { id: 2, src: "/animation/custom-loop.gif", alt: "Animation", display: false },
       ],
+      unzippedData: [],
     };
   },
   actions: {},

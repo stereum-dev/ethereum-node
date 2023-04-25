@@ -35,11 +35,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
-import InstallationBox from "./InstallationBox.vue";
 export default {
-  components: {
-    InstallationBox,
-  },
   data() {
     return {
       back: "sync",
