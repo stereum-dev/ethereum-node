@@ -144,7 +144,10 @@
                     @click="removeModalDisplay(item)"
                   />
                 </div>
-                <div class="withdraw-box">
+                <div
+                  class="withdraw-box"
+                  :class="{ disabled: ['goerli', 'gnosis', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
+                >
                   <img
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"
@@ -488,6 +491,7 @@ export default {
     this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
+    console.log(this.currentNetwork.network);
   },
   beforeUnmount() {
     clearInterval(this.polling);
