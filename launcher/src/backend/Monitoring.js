@@ -1,6 +1,7 @@
 /* eslint-disable no-empty, no-prototype-builtins */
 import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
+import { StringUtils } from "./StringUtils";
 import * as QRCode from "qrcode";
 import * as log from "electron-log";
 import * as crypto from "crypto";
@@ -1733,8 +1734,6 @@ export class Monitoring {
       args
     );
 
-    console.log("on");
-
     // Get current WS status
     const wsstatus = await this.getWsStatus();
     if (wsstatus.code) return wsstatus;
@@ -1875,7 +1874,8 @@ export class Monitoring {
 
       // Check if WS port is enabled
       // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
-      let result = await this.queryRpcApi({ addr: addr, port: port }, "eth_blockNumber");
+      //let result = await this.queryRpcApi({ addr: addr, port: port }, "eth_blockNumber");
+      let result = await this.isWsAvailable({ addr: addr, port: port });
       if (result.code) continue;
 
       // Add valid client to final result
@@ -1883,7 +1883,7 @@ export class Monitoring {
         now: now,
         sid: sid,
         ws: ws,
-        url: this.rpcTunnel[sid] > 0 ? "http://" + addr + ":" + this.wsTunnel[sid] : "",
+        url: this.wsTunnel[sid] > 0 ? "http://" + addr + ":" + this.wsTunnel[sid] : "",
         clt: execution.service.replace(/Service/gi, "").toUpperCase(),
       });
     }
@@ -1902,6 +1902,61 @@ export class Monitoring {
       code: 0,
       info: "success: wsstatus successfully retrieved",
       data: data,
+    };
+  }
+
+  // Check if WS Port is open on the node (via CURL on localhost)
+  // Arguments:
+  // url=<mixed>        : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // Returns true if WS port is open, false otherwiese
+  async isWsAvailable(url) {
+    // Format url
+    if (typeof url === "string") {
+      url = url.trim();
+    } else if (typeof url === "object") {
+      let def = { addr: "127.0.0.1", port: 0 };
+      url = { ...def, ...url };
+      url = `http://${url.addr}:${url.port}`;
+    }
+
+    // Check url
+    if (!url.startsWith("http")) {
+      return {
+        code: 1,
+        info: "error: invalid url specified",
+        data: "",
+      };
+    }
+
+    // Build curl command
+    const rnd = StringUtils.createRandomString();
+    const key = crypto.createHash("md5").update(rnd).digest("hex");
+    const cmd = `
+      curl -i -N \
+      -H "Connection: Upgrade" \
+      -H "Upgrade: websocket" \
+      -H "Sec-WebSocket-Version: 13" \
+      -H "Sec-WebSocket-Key: ${key}" \
+      ${url}
+    `.trim();
+
+    // Execute curl command
+    const wsResult = await this.nodeConnection.sshService.exec(cmd);
+
+    // Respond true if websocket is available, false otherwise
+    if (!wsResult.stdout.toLowerCase().includes("sec-websocket")) {
+      return {
+        code: 2,
+        info: "error: ws port not available",
+        data: "",
+      };
+    }
+
+    // Success
+    return {
+      code: 0,
+      info: "success: ws port available",
+      data: wsResult,
     };
   }
 
