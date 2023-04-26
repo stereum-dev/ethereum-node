@@ -1108,7 +1108,7 @@ export class ServiceManager {
   }
 
   async importConfig(configFiles) {
-    console.log("name: ", configFiles.length);
+    console.log("name: ", configFiles);
     // console.log("content: ", configFiles);
     // console.log("hehe: ", typeof configFiles);
 

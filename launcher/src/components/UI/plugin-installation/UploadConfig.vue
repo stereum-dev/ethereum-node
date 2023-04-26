@@ -43,6 +43,8 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
+
 import JSZip from "jszip";
 // import ControlService from "@/store/ControlService";
 
@@ -58,6 +60,10 @@ export default {
       message: "",
       file: null,
       uploadConfirmed: false,
+      zipFile: null,
+      isValid: false,
+      yamlData: null,
+      yamlFiles: [],
     };
   },
 
@@ -67,67 +73,39 @@ export default {
     }),
   },
   methods: {
-    handleFileUpload(event) {
-      this.isMessageActive = false;
-      this.message = "";
+    async handleFileUpload(event) {
       const file = event.target.files[0];
-      if (!file) return;
-
-      // Check that the file is a zip file
       if (file.type !== "application/zip" && file.type !== "application/x-zip-compressed") {
-        this.isMessageActive = true;
-        this.message = "Invalid file type. Please select a .zip file.";
-        this.$refs.fileInput.value = "";
+        (this.isMessageActive = true), (this.message = "Invalid file type. Please select a valid file.");
         return;
       }
+      this.isMessageActive = false;
+      this.fileName = file.name;
+      const zip = await JSZip.loadAsync(file);
+      const yamlFiles = zip.file(/\.yaml$/i).filter((file) => !file.name.includes("_MACOSX"));
+      console.log("yamlFiles", yamlFiles);
 
-      // Read the contents of the zip file
-      const reader = new FileReader();
-      reader.onload = () => {
-        const zip = JSZip.loadAsync(reader.result);
-        zip.then((contents) => {
-          // Check that the zip file contains a YAML file
-          const yamlFiles = contents.filter((relativePath, file) => {
-            return !file.dir && /\.yaml$/i.test(file.name);
-          });
-
-          if (yamlFiles.length === 0) {
-            this.isMessageActive = true;
-            this.message = "Invalid file type. Please try again with a valid .zip file.";
-            this.$refs.fileInput.value = "";
-            return;
-          }
-          let newYamlFiles = yamlFiles.filter((file) => !file.name.includes("_MACOSX"));
-
-          newYamlFiles.forEach((relativePath) => {
-            const pathParts = relativePath.name.split("/");
-            const fileName = pathParts.pop();
-            // const extractedName = fileName.pop();
-            this.unzippedData.push({
-              name: fileName.split(".")[0],
-              content: relativePath._data.compressedContent,
-            });
-          });
-
-          this.fileName = file.name;
-          this.next = "importingList";
-          // Upload the file to the server
-          // ...
+      if (yamlFiles.length === 0) {
+        this.isMessageActive = true;
+        this.message = "Invalid file type. Please try again with a valid file.";
+        return;
+      }
+      this.isMessageActive = false;
+      this.message = "";
+      for (const file of yamlFiles) {
+        const data = await file.async("string");
+        this.unzippedData.push({
+          name: file.name.split(".")[0],
+          content: data,
         });
-      };
-      reader.readAsArrayBuffer(file);
-    },
+      }
 
-    runImportingConfig: async function () {
-      console.log(JSON.stringify(this.configZipData));
-      this.$router.push({ path: "/importingList" });
-      // try {
-      //   console.log(JSON.stringify(this.configZipData));
-      //   this.$router.push({ path: "/importingList" });
-      //   // await ControlService.importConfig(JSON.stringify(this.compressedContentArray));
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      let test = await ControlService.importConfig(this.unzippedData);
+      console.log("test", test);
+      // const firstYamlFile = yamlFiles[0];
+      // const yamlData = await firstYamlFile.async("string");
+      // this.yamlData = yamlData;
+      // console.log("yamlData", yamlData);
     },
   },
 };
