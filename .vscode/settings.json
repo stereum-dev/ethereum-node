@@ -4,5 +4,6 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "nuxt.isNuxtApp": false
+  "nuxt.isNuxtApp": false,
+  "vue.features.codeActions.enable": false
 }

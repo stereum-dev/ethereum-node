@@ -260,7 +260,7 @@ export default {
 
 .status-box {
   width: 100%;
-  height: 45%;
+  height: 92%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -270,8 +270,8 @@ export default {
 }
 
 .status-box_header {
-  width: 100%;
-  height: 15%;
+  width: 96%;
+  height: 8%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -283,7 +283,7 @@ export default {
 
 .status-box_messages {
   width: 100%;
-  height: 82%;
+  height: 90%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -323,7 +323,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  height: 22%;
+  height: 9%;
   border: 1px solid #707070;
   border-radius: 5px;
   margin: 2px 0;
