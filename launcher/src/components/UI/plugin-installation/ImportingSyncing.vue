@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back" :next="next" :icon="selectedPreset.icon" :btn="disabledBtn">
+  <installation-box :title="title" :back="back" :next="nextRouteHandler" :icon="selectedPreset.icon" :btn="disabledBtn">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
@@ -72,6 +72,14 @@ export default {
     };
   },
   computed: {
+    // eslint-disable-next-line vue/return-in-computed-property
+    nextRouteHandler() {
+      if (!this.btnActive) {
+        return this.checkPointSync !== "" ? "importingVerify" : "disabled";
+      } else if (this.btnActive) {
+        return "importingVerify";
+      }
+    },
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       syncType: "syncType",
@@ -86,15 +94,7 @@ export default {
       allServices: "allServices",
     }),
   },
-  watch: {
-    checkingCheckPoint() {
-      if (this.btnActive) {
-        this.next = "importingVerify";
-      } else {
-        this.next = "disabled";
-      }
-    },
-  },
+
   mounted() {
     console.log(this.btnActive);
     this.filterServices();

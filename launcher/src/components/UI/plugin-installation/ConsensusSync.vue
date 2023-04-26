@@ -97,14 +97,31 @@ export default {
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "importingSyncing")
-        if (val === 1 && this.checkPointSync === "") {
-          console.log(val);
+      if (val === 1) {
+        if (this.checkPointSync === "") {
           this.btnActive = false;
         } else {
-          console.log(val);
+          this.btnActive = false;
+        }
+      } else {
+        this.btnActive = true;
+      }
+    },
+  },
+  updated() {
+    this.checkCurrentSlide();
+  },
+  methods: {
+    checkCurrentSlide() {
+      if (this.currentSlide === 1) {
+        if (this.checkPointSync === "") {
+          this.btnActive = false;
+        } else {
           this.btnActive = true;
         }
+      } else {
+        this.btnActive = true;
+      }
     },
   },
 };

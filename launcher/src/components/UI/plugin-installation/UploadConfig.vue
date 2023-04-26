@@ -51,7 +51,7 @@ export default {
   data() {
     return {
       back: "welcome",
-      title: "IMPORTING CONFIG",
+      title: "CONFIG IMPORT",
       next: "disabled",
       fileName: "",
       isMessageActive: false,
