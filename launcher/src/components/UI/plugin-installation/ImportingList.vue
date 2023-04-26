@@ -56,7 +56,6 @@ export default {
       next: "importingSyncing",
       configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
       configNetwork: "Ethereum - Testnet",
-      configPlugins: [],
     };
   },
   computed: {
@@ -65,6 +64,7 @@ export default {
     }),
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
+      configPlugins: "configPlugins",
     }),
   },
   mounted() {
@@ -247,7 +247,7 @@ export default {
 }
 
 /* 2. declare enter from and leave to state */
-.fade-enter-from{
+.fade-enter-from {
   opacity: 0;
   transform: scaleX(0.1) translate(30px, 0);
 }
