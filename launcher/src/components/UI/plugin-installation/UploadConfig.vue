@@ -52,7 +52,7 @@ export default {
     return {
       back: "welcome",
       title: "IMPORTING CONFIG",
-      next: "importingList",
+      next: "disabled",
       fileName: "",
       isMessageActive: false,
       message: "",
@@ -60,6 +60,7 @@ export default {
       uploadConfirmed: false,
     };
   },
+
   computed: {
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
@@ -107,9 +108,9 @@ export default {
               content: relativePath._data.compressedContent,
             });
           });
-          console.log(this.unzippedData);
 
           this.fileName = file.name;
+          this.next = "importingList";
           // Upload the file to the server
           // ...
         });

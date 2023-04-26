@@ -58,6 +58,7 @@ export default {
       configNetwork: "Ethereum - Testnet",
     };
   },
+
   computed: {
     ...mapWritableState(useServices, {
       allServices: "allServices",
@@ -77,7 +78,11 @@ export default {
       });
     },
     removeServiceFromList(item) {
-      this.configPlugins = this.configPlugins.filter((s) => s.service !== item);
+      this.configPlugins.forEach((element, index) => {
+        if (element.service === item) {
+          this.configPlugins.splice(index, 1);
+        }
+      });
     },
   },
 };
@@ -175,8 +180,8 @@ export default {
   height: 35px;
   margin-top: 5px;
   padding: 2px 10px;
-  background-color: transparent;
-  border: 1px solid rgb(147, 147, 147);
+  background-color: #32363a;
+  border: 1px solid #616569;
   box-shadow: 1px 1px 5px 1px rgb(35, 35, 35);
   border-radius: 5px;
   display: grid;

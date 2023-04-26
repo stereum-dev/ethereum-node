@@ -32,9 +32,9 @@
               />
             </div>
           </div>
-          <div v-else-if="item.type === 'custom source'" class="syncContent">
+          <!-- <div v-else-if="item.type === 'custom source'" class="syncContent">
             <div class="commingSoon">Coming soon...</div>
-            <!-- <span>{{ item.name }}</span>
+            <span>{{ item.name }}</span>
             <span>{{ item.type }}</span>
             <div class="syncText">
               <span>{{ item.name }}</span>
@@ -50,8 +50,8 @@
                 </div>
               </div>
               <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
-            </div> -->
-          </div>
+            </div>
+          </div> -->
         </div>
       </slide>
 
@@ -97,10 +97,12 @@ export default {
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "sync")
+      if (this.$route.path === "importingSyncing")
         if (val === 1 && this.checkPointSync === "") {
+          console.log(val);
           this.btnActive = false;
         } else {
+          console.log(val);
           this.btnActive = true;
         }
     },

@@ -75,6 +75,8 @@ export default {
     ...mapWritableState(useClickInstall, {
       selectedPreset: "selectedPreset",
       syncType: "syncType",
+      btnActive: "btnActive",
+      checkPointSync: "checkPointSync",
       customElements: "customElements",
       configPlugins: "configPlugins",
     }),
@@ -84,10 +86,19 @@ export default {
       allServices: "allServices",
     }),
   },
+  watch: {
+    checkingCheckPoint() {
+      if (this.btnActive) {
+        this.next = "importingVerify";
+      } else {
+        this.next = "disabled";
+      }
+    },
+  },
   mounted() {
+    console.log(this.btnActive);
     this.filterServices();
   },
-
   methods: {
     changeTheOption() {
       if (this.genesisIsActive) {

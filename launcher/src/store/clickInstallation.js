@@ -115,6 +115,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       ],
       unzippedData: [],
       configPlugins: [],
+      filteredConfigs: [],
     };
   },
   actions: {},
