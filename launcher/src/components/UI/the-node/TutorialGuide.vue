@@ -13,7 +13,7 @@
       </transition>
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
-          <div class="first-point_icon"><img src="../../../../public/img/icon/arrows/hand-pointer.png" alt="" /></div>
+          <div class="first-point_icon"><img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" /></div>
           <div class="first-point_title">Lorem ipsum dolor sit</div>
         </div>
         <div class="first-border"></div>
@@ -21,7 +21,7 @@
       <div v-if="thirdPoint" class="point-wrapper">
         <div class="second-point">
           <div class="second-point_title">Lorem ipsum dolor sit</div>
-          <div class="second-point_icon"><img src="../../../../public/img/icon/arrows/hand-pointer.png" alt="" /></div>
+          <div class="second-point_icon"><img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" /></div>
         </div>
         <div class="second-border"></div>
       </div>
@@ -29,8 +29,8 @@
         <div class="step-two"><span>Lorem ipsum dolor, sit amet consectetur adipisicing.</span></div>
         <img src="../../../../public/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
         <div class="fix-place"><RpcEndpoint /></div>
+        <div class="exit"><div class="close" @click="close">x</div></div>
       </div>
-      <div class="exit"><div class="close">x</div></div>
     </div>
   </div>
 </template>
@@ -107,11 +107,39 @@ export default {
         }, 5000);
       }, 5000);
     },
+    close() {
+      this.tutorial = false;
+      this.rpcOne = true;
+      this.rpcTwo = false;
+    },
   },
 };
 </script>
 
 <style scoped>
+.close {
+  width: 60%;
+  height: 90%;
+  border: 2px solid #eee;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 250%;
+  border-radius: 50%;
+  color: rgb(238, 238, 238);
+}
+.close:active {
+  border: none;
+  background: rgba(238, 238, 238, 0.2);
+}
+.exit {
+  width: 10%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .fix-place {
   width: 25%;
   height: 14%;
@@ -119,12 +147,13 @@ export default {
   left: 74%;
   top: 37%;
 }
+.last-part,
 .wrapper {
   width: 100%;
-  height: 100%;
+  height: 85%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 .first-border {
   width: 7%;
@@ -256,6 +285,8 @@ export default {
   justify-content: center;
   align-items: center;
   font-weight: 600;
+  position: absolute;
+  top: 45%;
 }
 .step-two {
   color: #eee;
