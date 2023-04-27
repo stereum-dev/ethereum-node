@@ -12,6 +12,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       tutorial: false,
       rpcOne: true,
       rpcTwo: false,
+      activeRPC: false,
     };
   },
   getters: {},

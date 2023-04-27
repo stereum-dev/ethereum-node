@@ -38,6 +38,7 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import { useControlStore } from "../../../store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
@@ -46,10 +47,10 @@ export default {
     return {
       waitForData: null,
       toggleAllowed: true,
-      showData: false,
       isActive: false,
       refreshId: undefined,
       lastKnownMts: 0.0,
+      showData: false,
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
@@ -68,9 +69,21 @@ export default {
       code: "code",
       rpcstatus: "rpcstatus",
     }),
+
+    ...mapWritableState(useNodeHeader, {
+      activeRPC: "activeRPC",
+    }),
+
     onoff() {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
+    },
+  },
+  watch: {
+    showData(newVal) {
+      if (newVal) {
+        this.activeRPC = true;
+      }
     },
   },
   mounted() {
