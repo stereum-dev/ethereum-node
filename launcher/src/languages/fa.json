@@ -115,6 +115,7 @@
     "read": "خواندن",
     "inclusionDistance": "فاصله گنجاندن",
     "rpc": "RPC - نقطه پایانی",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "وضعیت همگام سازی",
     "hard": "STORAGE VOLUME",
     "free": "آزاد",
