@@ -115,6 +115,7 @@
     "read": "УНШИХ",
     "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
     "rpc": "RPC-ТӨГСГӨЛИЙН ЦЭГ",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "СИНК СТАТУС",
     "hard": "STORAGE VOLUME",
     "free": "ЧӨЛӨӨТЭЙ",
