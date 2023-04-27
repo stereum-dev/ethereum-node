@@ -123,6 +123,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("closeRpcTunnel");
   }
 
+  async openWsTunnel(args) {
+    return await this.promiseIpc.send("openWsTunnel", args);
+  }
+
+  async closeWsTunnel() {
+    return await this.promiseIpc.send("closeWsTunnel");
+  }
+
   async openBeaconTunnel(args) {
     return await this.promiseIpc.send("openBeaconTunnel", args);
   }
