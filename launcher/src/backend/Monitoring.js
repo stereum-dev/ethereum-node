@@ -1874,7 +1874,6 @@ export class Monitoring {
 
       // Check if WS port is enabled
       // Changed query to "eth_blockNumber" since "web3_clientVersion" may not available by default in all clients (like Erigon)
-      //let result = await this.queryRpcApi({ addr: addr, port: port }, "eth_blockNumber");
       let result = await this.isWsAvailable({ addr: addr, port: port });
       if (result.code) continue;
 
@@ -1937,6 +1936,7 @@ export class Monitoring {
       -H "Upgrade: websocket" \
       -H "Sec-WebSocket-Version: 13" \
       -H "Sec-WebSocket-Key: ${key}" \
+      --data-raw '{"jsonrpc":"2.0", "id": 1, "method": "eth_blockNumber", "params": []}' \
       ${url}
     `.trim();
 
