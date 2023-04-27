@@ -94,18 +94,19 @@
     "delete": "ИЗТРИЙ"
   },
   "updatePanel": {
-    "launcherTitle": "актуализации на лаунчъра",
+    "launcherTitle": "launcher",
     "current": "текущ",
     "nodeTitle": "нод актуализации",
     "latest": "последни",
     "auto": "Auto Update",
     "available": "налично",
     "searching": "търсене за актуализации",
-    "serviceTitle": "Актуализиране на услугите",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "Актуализации за инсталираната селекция плъгин-и",
     "availablePlugin": "НАЛИЧНИ АКТУАЛИЗАЦИИ НА ПЛЪГИНИ",
     "all": "актуализиране на всички",
-    "osTitle": "operating system (server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "НОД",

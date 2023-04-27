@@ -94,18 +94,19 @@
     "delete": "LÖSCHEN"
   },
   "updatePanel": {
-    "launcherTitle": "Launcher Updates",
+    "launcherTitle": "launcher",
     "current": "aktuelle",
     "nodeTitle": "Node Updates",
     "latest": "neueste",
     "auto": "Auto Update",
     "available": "verfügbar",
     "searching": "Suche nach Updates...",
-    "serviceTitle": "Service-Updates",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
     "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
     "all": "Alle aktualisieren",
-    "osTitle": "Betriebssystem (Server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "NODE",

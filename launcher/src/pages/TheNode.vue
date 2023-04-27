@@ -7,14 +7,9 @@
           <div class="close-video" @click="hideVideoDisplay">
             <span>Close</span>
           </div>
-          <the-videos :video-url="itemToTutorial.videosLink"></the-videos>
+          <the-videos :video-url="chosenVideo"></the-videos>
         </div>
-        <TutorialModal
-          v-if="isTutorialModalActive"
-          :item-to-tutorial="itemToTutorial"
-          @hide-modal="closeTutorialModalHandler"
-          @show-item="openTutorialStep"
-        />
+
         <div class="journal-box" @mousedown.prevent>
           <JournalNode />
         </div>
@@ -64,8 +59,11 @@
         </div>
         <div class="node-side">
           <div class="sidebar-container">
-            <NodeAlert />
-            <NodeTutorial @show-modal="openTutorialModalHandler" />
+            <NodeAlert v-if="infoAlarm" />
+            <div class="info-button" @click="infoAlarm = !infoAlarm">
+              <img src="/img/icon/round-icon.png" alt="information" />
+            </div>
+            <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
           </div>
         </div>
         <div class="footer">
@@ -90,7 +88,6 @@ import { useNodeManage } from "@/store/nodeManage";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { useControlStore } from "../store/theControl";
 import TheVideos from "../components/UI/tutorial-steps/TheVideos.vue";
-import TutorialModal from "../components/UI/tutorial-steps/TutorialModal.vue";
 import NodeAlert from "../components/UI/the-node/NodeAlert.vue";
 import NodeTutorial from "../components/UI/the-node/NodeTutorial.vue";
 import { useNodeHeader } from "../store/nodeHeader";
@@ -102,7 +99,6 @@ export default {
     BaseModal,
     TaskManager,
     TheVideos,
-    TutorialModal,
     NodeAlert,
     NodeTutorial,
   },
@@ -112,7 +108,6 @@ export default {
     return {
       isModalActive: false,
       isTutorialModalActive: false,
-      playYoutubeVideo: false,
       loadingGIF: "/img/icon/task-manager-icons/turning_circle_blue.gif",
       itemToTutorial: [],
       serverVitals: {},
@@ -126,12 +121,14 @@ export default {
     ...mapWritableState(useNodeStore, {
       configData: "configData_nodeSidebarVideo",
       serviceLogs: "serviceLogs",
+      infoAlarm: "infoAlarm",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useTutorialStore, {
-      steps: "steps",
+      playYoutubeVideo: "playYoutubeVideo",
+      chosenVideo: "chosenVideo",
     }),
     ...mapWritableState(useControlStore, {
       ServerName: "ServerName",
@@ -204,25 +201,30 @@ export default {
       this.isTutorialModalActive = false;
       this.playYoutubeVideo = false;
     },
-    openTutorialStep(data) {
-      if (data.name === "videos" && data.videosLink.length > 0) {
-        this.isTutorialModalActive = false;
-        this.playYoutubeVideo = true;
-      } else if (data.name === "walkthrough" && data.guideLink.length > 0) {
-        this.isTutorialModalActive = false;
-        let url = data.guideLink;
-        window.open(url, "_blank");
-      } else if (data.name === "text guide" && data.writtenLink.length > 0) {
-        this.isTutorialModalActive = false;
-        let url = data.writtenLink;
-        window.open(url, "_blank");
-      }
-    },
   },
 };
 </script>
 
 <style scoped>
+.info-button {
+  width: 90%;
+  height: 8%;
+  background: #264744;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px 0px #1c1f22;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 4% 0;
+}
+.info-button:active {
+  box-shadow: none;
+  transform: scale(0.9);
+}
+.info-button img {
+  max-width: 19%;
+}
 #head {
   width: 100%;
   position: fixed;
@@ -402,10 +404,11 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   overflow: hidden;
   border-left: none;
+  padding: 1% 0;
 }
 .footer {
   width: 100%;

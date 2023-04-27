@@ -94,18 +94,19 @@
     "delete": "پاک کردن"
   },
   "updatePanel": {
-    "launcherTitle": "بروز رسانی لانچر",
+    "launcherTitle": "launcher",
     "current": "کنونی",
     "nodeTitle": "NODE بروز رسانی",
     "latest": "آخرین نسخه",
     "auto": "Auto Update",
     "available": "در دسترس",
     "searching": "جستجوی بروزرسانی جدید",
-    "serviceTitle": "بروزرسانی خدمات",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "انتخاب بروز رسانی برای پلاگین های نصب شده",
     "availablePlugin": "بروزرسانی برای پلاگین های موجود",
     "all": "بروزرسانی همه چیز",
-    "osTitle": "operating system (server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "نود",

@@ -5,12 +5,15 @@
         <display-validators :button="button"></display-validators>
         <ValidatorState />
         <selection-options
+          :key="refresh"
           :button-state="buttonState"
           :validator-icon="selectedIcon"
           :validator-name="selectedName"
           :validator-state="selectedStatus"
           :validators="installedValidators"
-          @click-btn="clickBtnHandler"
+          :disable="display"
+          @click-btn-graffiti="grafittiHandler"
+          @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
         ></selection-options>
         <validators-box></validators-box>
@@ -22,8 +25,9 @@
 </template>
 
 <script>
-import { mapState } from "pinia";
+import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
 import ValidatorsBox from "./ValidatorsBox.vue";
@@ -39,50 +43,26 @@ export default {
   },
   data() {
     return {
-      buttonState: [
-        {
-          id: 1,
-          name: "graffiti",
-          displayName: "Graffiti",
-          icon: "/img/icon/the-staking/option-graffiti.png",
-          method: this.grafitiBtn,
-          display: true,
-        },
-        {
-          id: 2,
-          name: "remove",
-          displayName: "Remove all keys",
-          icon: "/img/icon/the-staking/option-remove.png",
-          method: this.removeBtn,
-          display: true,
-        },
-        // {
-        //   id: 3,
-        //   name: "fee",
-        //   displayName: "change fee recipient",
-        //   icon: "img/icon/the-staking/fee-icon2.png",
-        //   method: this.feeBtn,
-        //   display: false,
-        // },
-        // {
-        //   id: 4,
-        //   name: "withdraw",
-        //   displayName: "withdrawal",
-        //   icon: "img/icon/the-staking/withdraw.png",
-        //   method: this.exitBtn,
-        //   display: false,
-        // },
-      ],
+      refresh: 0,
       button: {},
-      selectedIcon: "",
       selectedName: "",
       selectedStatus: "",
     };
   },
 
   computed: {
-    ...mapState(useServices, {
+    ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      selectedIcon: "selectedIcon",
+      buttonState: "buttonState",
+    }),
+    ...mapWritableState(useStakingStore, {
+      insertKeyBoxActive: "insertKeyBoxActive",
+      enterPasswordBox: "enterPasswordBox",
+      exitChainForMultiValidatorsActive: "exitChainForMultiValidatorsActive",
+      removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
+      grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
+      display: "display",
     }),
     installedValidators() {
       const copyOfInstalledServices = [...this.installedServices];
@@ -96,11 +76,17 @@ export default {
     this.selectedStatus = this.installedValidators[0].state;
   },
   methods: {
-    clickBtnHandler(el) {
-      this.button = {};
-      setTimeout(() => {
-        this.button = el;
-      });
+    grafittiHandler() {
+      this.insertKeyBoxActive = false;
+      this.enterPasswordBox = false;
+      this.exitChainForMultiValidatorsActive = false;
+      this.removeForMultiValidatorsActive = false;
+      this.grafitiForMultiValidatorsActive = true;
+    },
+    removeHandler() {
+      this.exitChainForMultiValidatorsActive = false;
+      this.grafitiForMultiValidatorsActive = false;
+      this.removeForMultiValidatorsActive = true;
     },
     selectedValidator(validator) {
       this.selectedIcon = validator.icon;

@@ -52,7 +52,9 @@ export class ValidatorAccountManager {
     if (pubkeys.length < 11) {
       try {
         for (const pubkey of pubkeys) {
-          let latestEpochsResponse = await axios.get(networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations");
+          let latestEpochsResponse = await axios.get(
+            networks[client.network].dataEndpoint + "/validator/" + pubkey + "/attestations"
+          );
           if (
             latestEpochsResponse.status === 200 &&
             latestEpochsResponse.data.data.length > 0 &&
@@ -270,13 +272,24 @@ export class ValidatorAccountManager {
     try {
       let client = await this.nodeConnection.readServiceConfiguration(serviceID);
       const result = await this.keystoreAPI(client, "DELETE", { pubkeys: keys });
-      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout);
+
+      //Error handling
+      if (SSHService.checkExecError(result) && result.stderr) throw SSHService.extractExecError(result);
       const data = JSON.parse(result.stdout);
-      if (picked) {
-        this.nodeConnection.taskManager.otherTasksHandler(ref);
-        return data.slashing_protection;
+      if (data.data === undefined) {
+        if (data.code === undefined || data.message === undefined) {
+          throw "Undexpected Error: " + result;
+        }
+        throw data.code + " " + data.message;
       }
+
+      //Push successful task
+      this.nodeConnection.taskManager.otherTasksHandler(ref, `Delete Keys`, true, result.stdout);
+
       this.nodeConnection.taskManager.otherTasksHandler(ref);
+      //Return slashing protection data
+      if (picked)
+        return data.slashing_protection;
       return data;
     } catch (err) {
       this.nodeConnection.taskManager.otherTasksHandler(
@@ -334,13 +347,13 @@ export class ValidatorAccountManager {
         let serviceConfig = await this.nodeConnection.readServiceConfiguration(service.config.serviceID);
         serviceConfig.ssv_pk = pk;
         await this.nodeConnection.writeServiceConfiguration(serviceConfig);
-        return serviceConfig.ssv_pk
+        return serviceConfig.ssv_pk;
       } else {
         throw new Error("no ssv config.yaml");
       }
     } catch (err) {
       log.error("Inserting Keys failed:\n", err);
-      return err
+      return err;
     }
   }
   // deactivated on the front end side
@@ -478,6 +491,9 @@ export class ValidatorAccountManager {
         } else {
           path = service.volumes.find((v) => v.servicePath == "/opt/app/data/wallets").destinationPath;
         }
+        //Make sure keystores have correct permissions
+        const chmodResult = await this.nodeConnection.sshService.exec("chmod -Rv 600 " + path + "/direct/accounts/*")
+        log.info(chmodResult.stdout)
         if (path) {
           result = await this.nodeConnection.sshService.exec("cat " + path + "/auth-token");
           result.stdout = result.stdout
@@ -522,5 +538,110 @@ export class ValidatorAccountManager {
       return null;
     }
     return result.stdout.trim();
+  }
+
+  async exitValidator(pubkey, password, serviceID) {
+    let services = await this.serviceManager.readServiceConfigurations();
+    let client = services.find((service) => service.id === serviceID);
+    let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
+
+    let beaconNodeID;
+    if (service === "prysm" || service === "lighthouse" || service === "lodestar") {
+      beaconNodeID = JSON.stringify(
+        JSON.stringify(client.command).match(/[a-f0-9]{8}(?:-[a-f0-9]{4}){4}[a-f0-9]{8}/)
+      ).replace(/['"[\]']/g, "");
+    }
+
+    let result;
+    try {
+      switch (service) {
+        case "lighthouse": {
+          await this.nodeConnection.sshService.exec(
+            `docker exec stereum-${serviceID} sh -c "touch /opt/app/validator/validators/${pubkey}/exit_password.txt && echo "${password}" > /opt/app/validator/validators/${pubkey}/exit_password.txt"`
+          );
+          const exitLighthouseCmd = `docker exec stereum-${serviceID} sh -c "lighthouse account validator exit --keystore=/opt/app/validator/validators/${pubkey}/voting-keystore.json --password-file=/opt/app/validator/validators/${pubkey}/exit_password.txt --network=${client.network} --beacon-node=http://stereum-${beaconNodeID}:5052 --no-confirmation"`;
+          result = await this.nodeConnection.sshService.exec(exitLighthouseCmd);
+          await this.nodeConnection.sshService.exec(
+            `docker exec stereum-${serviceID} sh -c "rm /opt/app/validator/validators/${pubkey}/exit_password.txt"`
+          );
+          break;
+        }
+        case "lodestar": {
+          await this.nodeConnection.sshService.exec(
+            `docker exec stereum-${serviceID} sh -c "touch /opt/app/validator/secrets/exit_password.txt && echo "${password}" > /opt/app/validator/secrets/exit_password.txt"`
+          );
+          const exitLodestarCmd = `docker exec -u 0 stereum-${serviceID} sh -c "node ./packages/cli/bin/lodestar validator voluntary-exit --dataDir=/opt/app/validator --keystore=/opt/app/validator/keystores --passphraseFile=/opt/app/validator/secrets/exit_password.txt --beaconNodes=http://stereum-${beaconNodeID}:9596 --pubkeys=${pubkey} --network=${client.network} --force=true --yes=true"`;
+          result = await this.nodeConnection.sshService.exec(exitLodestarCmd);
+          await this.nodeConnection.sshService.exec(
+            `docker exec stereum-${serviceID} sh -c "rm /opt/app/validator/secrets/exit_password.txt"`
+          );
+          break;
+        }
+        case "nimbus": {
+          const exitNimbusCmd = `docker exec -u 0 -it stereum-${serviceID} sh -c "/home/user/nimbus_beacon_node deposits exit --validator=/opt/app/validators/${pubkey}/keystore.json"`;
+          let okToExit = false;
+          let checkMessage = false;
+          let counter = 0;
+          result = { stdout: "", stderr: "" };
+          await new Promise((resolve, reject) => {
+            this.nodeConnection.sshService.conn.shell(function (err, stream) {
+              stream.stdin.write(exitNimbusCmd + "\r\n")
+
+              stream.stderr.on("data", (err) => {
+                log.error(err);
+                reject();
+              });
+              stream.stdout.on("data", (data) => {
+                if (/Password:/.test(data)) {
+                  okToExit = true;
+                  stream.stdin.write(`${password}\r\n`);
+                  counter++;
+                  if (counter > 10) {
+                    stream.end();
+                    resolve()
+                  }
+                }
+                if (/Your choice:/.test(data)) {
+                  stream.stdin.write(`I understand the implications of submitting a voluntary exit\r\n`);
+                  checkMessage = true;
+                }
+                if (/:~#/.test(data) && okToExit) {
+                  stream.end();
+                  resolve();
+                }
+                if (checkMessage) {
+                  result.stdout += data.toString()
+                }
+              });
+            });
+          });
+          break;
+        }
+        case "prysm": {
+          await this.nodeConnection.sshService.exec(
+            `touch /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt && echo "${password}" > /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+          );
+          await this.nodeConnection.sshService.exec(
+            `chown 2000:2000 /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt && chmod 700 /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+          );
+          const exitPrysmCmd = `docker run -v /opt/stereum/prysm-${serviceID}/data/wallets:/wallets -v /opt/stereum/prysm-${serviceID}/data/passwords:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
+          result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
+          await this.nodeConnection.sshService.exec(
+            `rm /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+          );
+          break;
+        }
+        case "teku": {
+          let noPrefixPubkey = pubkey.slice(2, 98);
+          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+          result = await this.nodeConnection.sshService.exec(exitTekuCmd);
+          break;
+        }
+      }
+      return result;
+    } catch (err) {
+      log.error("Validator Voluntary-Exit Failed:\n", err);
+      return err;
+    }
   }
 }
