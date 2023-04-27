@@ -115,6 +115,7 @@
     "read": "ПРОЧИТАНЕ",
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
     "rpc": "RPC-крайна връзка",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",
     "hard": "STORAGE VOLUME",
     "free": "БЕСПЛАТНО",
