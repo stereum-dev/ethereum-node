@@ -102,7 +102,9 @@ export default {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " " + this.$t("dataAPIAndRPC.RPCCopiedMessage");
-        this.nextStepFlag = 2;
+        setTimeout(() => {
+          this.nextStepFlag = 2;
+        }, 2000);
         console.log(this.nextStepFlag);
         this.dialogIcon = this.copyIcon;
       }

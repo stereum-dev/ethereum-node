@@ -137,22 +137,16 @@ export default {
         this.slide = currentSlide.img;
         this.message = currentSlide.text;
       }
-      if (newVal == 1) {
-        console.log("step 1");
+
+      console.log(`step ${newVal}`);
+      if (newVal === 1 || newVal === 11) {
         this.fixRPC = true;
         this.explainRPC = true;
         this.explainModal = false;
-      } else if (newVal == 2) {
-        console.log("step 2");
+      } else if (newVal === 2) {
         this.fixRPC = false;
         this.explainRPC = false;
         this.explainModal = true;
-      } else if (newVal == 3) {
-        console.log("step 3");
-      } else if (newVal == 4) {
-        console.log("step 4");
-      } else if (newVal == 5) {
-        console.log("step 5");
       }
     },
   },
