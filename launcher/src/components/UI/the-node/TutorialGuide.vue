@@ -34,8 +34,18 @@
         <div class="exit"><div class="close" @click="close">x</div></div>
       </div>
     </div>
-    <div v-if="!explainModal" class="wrapper-modal">
-      <div class="slider-modal"></div>
+    <div v-if="explainModal" class="wrapper-modal">
+      <div class="slider-modal">
+        <div class="slider-modal_header">
+          <span>{{ message }}</span>
+        </div>
+        <div class="slider-container">
+          <div class="arrow"><div class="left" @click="prevSlide"></div></div>
+          <div class="slider"><img :src="slide" alt="" /></div>
+          <div class="arrow"><div class="right" @click="nextSlide"></div></div>
+        </div>
+        <div class="footer"><span>click out</span></div>
+      </div>
     </div>
   </div>
 </template>
@@ -55,6 +65,55 @@ export default {
       fixRPC: false,
       explainRPC: false,
       explainModal: false,
+      slide: "",
+      message: "",
+      sliderTutorial: [
+        {
+          id: 1,
+          img: "/img/icon/tutorial-icons/two.png",
+          text: "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
+        },
+        {
+          id: 2,
+          img: "/img/icon/tutorial-icons/three.png",
+          text: "Click on the Network button",
+        },
+        {
+          id: 3,
+          img: "/img/icon/tutorial-icons/four.png",
+          text: "Click on “Add Network”",
+        },
+        {
+          id: 4,
+          img: "/img/icon/tutorial-icons/five.png",
+          text: "Type in a name for your network",
+        },
+        {
+          id: 5,
+          img: "/img/icon/tutorial-icons/six.png",
+          text: "Paste in the copied URL from Stereum",
+        },
+        {
+          id: 6,
+          img: "/img/icon/tutorial-icons/seven.png",
+          text: "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
+        },
+        {
+          id: 7,
+          img: "/img/icon/tutorial-icons/eight.png",
+          text: "Type in “ETH” as the currency symbol",
+        },
+        {
+          id: 8,
+          img: "/img/icon/tutorial-icons/nine.png",
+          text: "OPTIONAL - you can paste in a Block Explorer URL",
+        },
+        {
+          id: 9,
+          img: "/img/icon/tutorial-icons/ten.png",
+          text: "Click on “SAVE”",
+        },
+      ],
     };
   },
   computed: {
@@ -73,11 +132,27 @@ export default {
       }
     },
     nextStepFlag(newVal) {
-      if (newVal == 2) {
-        console.log("nhlibhkhiljnlkjljknjkln");
+      const currentSlide = this.sliderTutorial.find((slide) => slide.id === newVal - 1);
+      if (currentSlide) {
+        this.slide = currentSlide.img;
+        this.message = currentSlide.text;
+      }
+      if (newVal == 1) {
+        console.log("step 1");
+        this.fixRPC = true;
+        this.explainRPC = true;
+        this.explainModal = false;
+      } else if (newVal == 2) {
+        console.log("step 2");
         this.fixRPC = false;
         this.explainRPC = false;
         this.explainModal = true;
+      } else if (newVal == 3) {
+        console.log("step 3");
+      } else if (newVal == 4) {
+        console.log("step 4");
+      } else if (newVal == 5) {
+        console.log("step 5");
       }
     },
   },
@@ -90,6 +165,14 @@ export default {
     }
   },
   methods: {
+    nextSlide() {
+      this.nextStepFlag++;
+      console.log(this.nextStepFlag);
+    },
+    prevSlide() {
+      this.nextStepFlag--;
+      console.log(this.nextStepFlag);
+    },
     rpcStepOne() {
       this.rpcOne = false;
       setTimeout(() => {
@@ -98,7 +181,6 @@ export default {
       this.rpcTwo = true;
     },
     bigComp() {
-      // Set "one" to true after 1 second
       setTimeout(() => {
         this.firstPoint = true;
       }, 1000);
@@ -107,14 +189,10 @@ export default {
       setTimeout(() => {
         this.secondPoint = true;
       }, 3000);
-
-      // Set "three" to true after 3 seconds
       setTimeout(() => {
         this.thirdPoint = true;
-        // Set "two" to false when "three" is set to true
         this.secondPoint = false;
 
-        // Set "one" and "three" to false after 3 seconds
         setTimeout(() => {
           this.firstPoint = false;
           this.thirdPoint = false;
@@ -191,6 +269,60 @@ export default {
   border: 4px solid grey;
   display: flex;
   flex-direction: column;
+}
+.slider-modal_header {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee;
+  font-size: 100%;
+  font-weight: 600;
+}
+.slider-container {
+  display: flex;
+  width: 100%;
+  height: 75%;
+  display: flex;
+}
+.arrow {
+  display: flex;
+  width: 10%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.slider {
+  display: flex;
+  width: 80%;
+  height: 100%;
+  border-radius: 20px;
+  border: 5px solid grey;
+}
+.slider img {
+  width: 100%;
+  border-radius: 20px;
+}
+.left {
+  width: 0;
+  height: 0;
+  border-top: 90px solid transparent;
+  border-bottom: 90px solid transparent;
+  border-right: 20px solid grey;
+  cursor: pointer;
+}
+.right {
+  width: 0;
+  height: 0;
+  border-top: 90px solid transparent;
+  border-bottom: 90px solid transparent;
+  border-left: 20px solid grey;
+  cursor: pointer;
+}
+.left:active,
+.right:active {
+  transform: scale(0.9);
 }
 .first-border {
   width: 7%;

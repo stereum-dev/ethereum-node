@@ -95,13 +95,14 @@ export default {
       if (!this.toggleAllowed) return;
       if (!s) {
         this.dialogValue = this.$t("dataAPIAndRPC.RPCTurnOnMessage");
+        this.nextStepFlag = 0;
         this.openDialog = true;
         this.dialogIcon = this.infoIcon;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " " + this.$t("dataAPIAndRPC.RPCCopiedMessage");
-        this.nextStepFlag = 1 + 1;
+        this.nextStepFlag = 2;
         console.log(this.nextStepFlag);
         this.dialogIcon = this.copyIcon;
       }
