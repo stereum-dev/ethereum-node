@@ -86,7 +86,7 @@ export default {
       btnActive: "btnActive",
       checkPointSync: "checkPointSync",
       customElements: "customElements",
-      configPlugins: "configPlugins",
+      configServices: "configServices",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -110,8 +110,8 @@ export default {
       }
     },
     filterServices() {
-      this.executionClient = this.configPlugins.filter((service) => service.category === "execution")[0];
-      this.consensusClient = this.configPlugins.filter((service) => service.category === "consensus")[0];
+      this.executionClient = this.configServices.filter((service) => service.category === "execution")[0];
+      this.consensusClient = this.configServices.filter((service) => service.category === "consensus")[0];
     },
   },
 };

@@ -10,7 +10,7 @@
               <span class="path">path</span>
             </div>
             <TransitionGroup name="fade" class="container">
-              <div v-for="(plugin, index) in configPlugins" :key="index" class="table-row duration-500">
+              <div v-for="(plugin, index) in configServices" :key="index" class="table-row duration-500">
                 <div class="plugins">
                   <img :src="plugin.icon" alt="icon" class="pluginIcon" />
                   <div class="pluginName">
@@ -56,7 +56,7 @@ export default {
     }),
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
-      configPlugins: "configPlugins",
+      configServices: "configServices",
     }),
   },
   mounted() {},

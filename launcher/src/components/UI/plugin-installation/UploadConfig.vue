@@ -43,10 +43,9 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import ControlService from "@/store/ControlService";
-
-import JSZip from "jszip";
+import { useServices } from "@/store/services";
 // import ControlService from "@/store/ControlService";
+import JSZip from "jszip";
 
 export default {
   name: "UploadConfig",
@@ -70,38 +69,55 @@ export default {
   computed: {
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
+      configServices: "configServices",
+    }),
+    ...mapWritableState(useServices, {
+      allServices: "allServices",
     }),
   },
   methods: {
     async handleFileUpload(event) {
       const file = event.target.files[0];
       if (file.type !== "application/zip" && file.type !== "application/x-zip-compressed") {
-        (this.isMessageActive = true), (this.message = "Invalid file type. Please select a valid file.");
+        this.isMessageActive = true;
+        this.message = "Invalid file type. Please select a valid file.";
         return;
       }
+
       this.isMessageActive = false;
       this.fileName = file.name;
       const zip = await JSZip.loadAsync(file);
       const yamlFiles = zip.file(/\.yaml$/i).filter((file) => !file.name.includes("_MACOSX"));
-      console.log("yamlFiles", yamlFiles);
 
       if (yamlFiles.length === 0) {
         this.isMessageActive = true;
         this.message = "Invalid file type. Please try again with a valid file.";
         return;
       }
-      this.isMessageActive = false;
-      this.message = "";
+      this.next = "importingList";
       for (const file of yamlFiles) {
         const data = await file.async("string");
+
         this.unzippedData.push({
-          name: file.name.split(".")[0],
+          name: file.name.split("/")[1].split(".")[0],
           content: data,
         });
       }
 
-      let test = await ControlService.importConfig(this.unzippedData);
-      console.log("test", test);
+      const filteredServices = this.allServices.filter((service) => {
+        return this.unzippedData.some((item) => item.name === service.service);
+      });
+      if (filteredServices.length === 0) {
+        this.isMessageActive = true;
+        this.message = "Invalid configuration file.";
+        return;
+      }
+      this.isMessageActive = false;
+      this.message = "";
+      this.next = "importingList";
+      this.configServices = filteredServices;
+
+      // let test = await ControlService.importConfig(this.unzippedData);
       // const firstYamlFile = yamlFiles[0];
       // const yamlData = await firstYamlFile.async("string");
       // this.yamlData = yamlData;

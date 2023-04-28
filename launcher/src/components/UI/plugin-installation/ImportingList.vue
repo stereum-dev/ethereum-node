@@ -14,7 +14,7 @@
               <span>Remove</span>
             </div>
             <TransitionGroup name="fade" class="container">
-              <div v-for="(plugin, index) in configPlugins" :key="index" class="table-row duration-500">
+              <div v-for="(plugin, index) in configServices" :key="index" class="table-row duration-500">
                 <div class="plugins">
                   <img :src="plugin.icon" alt="icon" class="pluginIcon" />
                   <div class="pluginName">
@@ -65,7 +65,7 @@ export default {
     }),
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
-      configPlugins: "configPlugins",
+      configServices: "configServices",
     }),
   },
   mounted() {
@@ -73,14 +73,14 @@ export default {
   },
   methods: {
     checkPluginsToImport() {
-      this.configPlugins = this.allServices.filter((service) => {
+      this.configServices = this.allServices.filter((service) => {
         return this.unzippedData.some((d) => d.name.toLowerCase() === service.service.toLowerCase());
       });
     },
     removeServiceFromList(item) {
-      this.configPlugins.forEach((element, index) => {
+      this.configServices.forEach((element, index) => {
         if (element.service === item) {
-          this.configPlugins.splice(index, 1);
+          this.configServices.splice(index, 1);
         }
       });
     },
