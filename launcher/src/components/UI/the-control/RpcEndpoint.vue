@@ -72,6 +72,7 @@ export default {
 
     ...mapWritableState(useNodeHeader, {
       activeRPC: "activeRPC",
+      nextStepFlag: "nextStepFlag",
     }),
 
     onoff() {
@@ -100,6 +101,8 @@ export default {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " " + this.$t("dataAPIAndRPC.RPCCopiedMessage");
+        this.nextStepFlag = 1 + 1;
+        console.log(this.nextStepFlag);
         this.dialogIcon = this.copyIcon;
       }
       if (this.openDialog === true) {
@@ -162,8 +165,12 @@ export default {
       try {
         if (isActive) {
           result = await ControlService.openRpcTunnel();
+          this.nextStepFlag = 1;
+          console.log(this.nextStepFlag);
         } else {
           result = await ControlService.closeRpcTunnel();
+          this.nextStepFlag = 0;
+          console.log(this.nextStepFlag);
         }
       } catch (e) {
         console.log(e);

@@ -26,11 +26,16 @@
         <div class="second-border"></div>
       </div>
       <div v-if="fixRPC" class="last-part">
-        <div class="step-two"><span>Lorem ipsum dolor, sit amet consectetur adipisicing.</span></div>
-        <img src="../../../../public/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+        <div v-if="explainRPC" class="fixExplain">
+          <div class="step-two"><span>Lorem ipsum dolor, sit amet consectetur adipisicing.</span></div>
+          <img src="../../../../public/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+        </div>
         <div class="fix-place"><RpcEndpoint /></div>
         <div class="exit"><div class="close" @click="close">x</div></div>
       </div>
+    </div>
+    <div v-if="!explainModal" class="wrapper-modal">
+      <div class="slider-modal"></div>
     </div>
   </div>
 </template>
@@ -39,6 +44,7 @@
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import RpcEndpoint from "../the-control/RpcEndpoint.vue";
+
 export default {
   components: { RpcEndpoint },
   data() {
@@ -47,8 +53,8 @@ export default {
       secondPoint: false,
       thirdPoint: false,
       fixRPC: false,
-      message: "Lorem ipsum dolor, sit amet consectetur adipisicing.",
-      characters: [],
+      explainRPC: false,
+      explainModal: false,
     };
   },
   computed: {
@@ -57,12 +63,21 @@ export default {
       rpcOne: "rpcOne",
       rpcTwo: "rpcTwo",
       activeRPC: "activeRPC",
+      nextStepFlag: "nextStepFlag",
     }),
   },
   watch: {
     activeRPC(newVal) {
       if (newVal === true) {
         this.pointScenario();
+      }
+    },
+    nextStepFlag(newVal) {
+      if (newVal == 2) {
+        console.log("nhlibhkhiljnlkjljknjkln");
+        this.fixRPC = false;
+        this.explainRPC = false;
+        this.explainModal = true;
       }
     },
   },
@@ -104,6 +119,11 @@ export default {
           this.firstPoint = false;
           this.thirdPoint = false;
           this.fixRPC = true;
+
+          setTimeout(() => {
+            this.explainRPC = true;
+            this.nextStepFlag = 0;
+          }, 1500);
         }, 5000);
       }, 5000);
     },
@@ -154,6 +174,23 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-end;
+}
+.wrapper-modal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+}
+.slider-modal {
+  width: 80%;
+  height: 80%;
+  background: #264744;
+  border-radius: 20px;
+  border: 4px solid grey;
+  display: flex;
+  flex-direction: column;
 }
 .first-border {
   width: 7%;
