@@ -38,6 +38,7 @@
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import { useControlStore } from "../../../store/theControl";
 import ControlDialog from "./ControlDialog.vue";
 export default {
@@ -46,10 +47,10 @@ export default {
     return {
       waitForData: null,
       toggleAllowed: true,
-      showData: false,
       isActive: false,
       refreshId: undefined,
       lastKnownMts: 0.0,
+      showData: false,
       copyVal: "click to copy",
       openDialog: false,
       dialogValue: "",
@@ -68,9 +69,22 @@ export default {
       code: "code",
       rpcstatus: "rpcstatus",
     }),
+
+    ...mapWritableState(useNodeHeader, {
+      activeRPC: "activeRPC",
+      nextStepFlag: "nextStepFlag",
+    }),
+
     onoff() {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
+    },
+  },
+  watch: {
+    showData(newVal) {
+      if (newVal) {
+        this.activeRPC = true;
+      }
     },
   },
   mounted() {
@@ -81,12 +95,16 @@ export default {
       if (!this.toggleAllowed) return;
       if (!s) {
         this.dialogValue = this.$t("dataAPIAndRPC.RPCTurnOnMessage");
+        this.nextStepFlag = 0;
         this.openDialog = true;
         this.dialogIcon = this.infoIcon;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
         this.dialogValue = t + " " + this.$t("dataAPIAndRPC.RPCCopiedMessage");
+        setTimeout(() => {
+          this.nextStepFlag = 2;
+        }, 2000);
         this.dialogIcon = this.copyIcon;
       }
       if (this.openDialog === true) {
@@ -151,6 +169,7 @@ export default {
           result = await ControlService.openRpcTunnel();
         } else {
           result = await ControlService.closeRpcTunnel();
+          this.nextStepFlag = 0;
         }
       } catch (e) {
         console.log(e);
@@ -294,7 +313,7 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 50%;
+  font-size: 70%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
@@ -364,7 +383,7 @@ export default {
 .btn {
   display: flex;
   width: 30%;
-  font-size: 50%;
+  font-size: 60%;
   font-weight: 800;
   padding: 0 1px;
   border-radius: 5px;
