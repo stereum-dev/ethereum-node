@@ -5,7 +5,9 @@
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
       <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
-      <div class="step-one"><span>Click on “CONTROL” to enter the Control Panel.</span></div>
+      <div class="step-one">
+        <span>{{ $t("rpcGuide.clickNav") }}</span>
+      </div>
     </div>
     <div v-if="rpcTwo" class="wrapper">
       <transition name="modal">
@@ -13,15 +15,17 @@
       </transition>
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
-          <div class="first-point_icon"><img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" /></div>
-          <div class="first-point_title">Click on the “ON/OFF” button to open your port</div>
+          <div class="first-point_icon">
+            <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="pointer" />
+          </div>
+          <div class="first-point_title">{{ $t("rpcGuide.toggleMessage") }}</div>
         </div>
         <div class="first-border"></div>
       </div>
       <div v-if="thirdPoint" class="point-wrapper">
         <div class="second-point">
-          <div class="second-point_title">Click on “your Execution Client” button to copy the RPC URL</div>
-          <div class="second-point_icon"><img src="/img/icon/arrows/Pointer1.png" alt="" /></div>
+          <div class="second-point_title">{{ $t("rpcGuide.clickExtention") }}</div>
+          <div class="second-point_icon"><img src="/img/icon/arrows/Pointer1.png" alt="pointer" /></div>
         </div>
         <div class="second-border"></div>
       </div>
@@ -47,7 +51,7 @@
           <div class="arrow"><div class="right" @click="nextSlide"></div></div>
         </div>
         <div class="footer">
-          <span>Click x to cancel</span>
+          <span>{{ $t("rpcGuide.clickCancel") }}</span>
         </div>
       </div>
       <div class="x-btn" @click="close"><span>x</span></div>
@@ -72,56 +76,54 @@ export default {
       explainModal: false,
       slide: "",
       message: "",
-      firstMessage:
-        'RPC-Endpoint widget located in dashboard. Please turn "on" the button and click "Execution Client" to proceed to the next step.',
-      secondMessage:
-        "WAIT FOR SYNCHRONISATIONYou can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
+      firstMessage: this.$t("rpcGuide.firstMessage"),
+      secondMessage: this.$t("rpcGuide.secondMessage"),
       mainMessage: "",
       sliderTutorial: [
         {
           id: 1,
           img: "/img/icon/tutorial-icons/two.png",
-          text: "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
+          text: this.$t("rpcGuide.firstSlide"),
         },
         {
           id: 2,
           img: "/img/icon/tutorial-icons/three.png",
-          text: "Click on the Network button",
+          text: this.$t("rpcGuide.secondSlide"),
         },
         {
           id: 3,
           img: "/img/icon/tutorial-icons/four.png",
-          text: "Click on “Add Network”",
+          text: this.$t("rpcGuide.thirdSlide"),
         },
         {
           id: 4,
           img: "/img/icon/tutorial-icons/five.png",
-          text: "Type in a name for your network",
+          text: this.$t("rpcGuide.fourthSlide"),
         },
         {
           id: 5,
           img: "/img/icon/tutorial-icons/six.png",
-          text: "Paste in the copied URL from Stereum",
+          text: this.$t("rpcGuide.fivethSlide"),
         },
         {
           id: 6,
           img: "/img/icon/tutorial-icons/seven.png",
-          text: "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
+          text: this.$t("rpcGuide.sixthSlide"),
         },
         {
           id: 7,
           img: "/img/icon/tutorial-icons/eight.png",
-          text: "Type in “ETH” as the currency symbol",
+          text: this.$t("rpcGuide.seventhSlide"),
         },
         {
           id: 8,
           img: "/img/icon/tutorial-icons/nine.png",
-          text: "OPTIONAL - you can paste in a Block Explorer URL",
+          text: this.$t("rpcGuide.eightthSlide"),
         },
         {
           id: 9,
           img: "/img/icon/tutorial-icons/ten.png",
-          text: "Click on “SAVE”",
+          text: this.$t("rpcGuide.ninethSlide"),
         },
       ],
     };
