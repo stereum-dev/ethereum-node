@@ -5,7 +5,7 @@
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
       <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
-      <div class="step-one"><span>Lorem ipsum dolor, sit amet consectetur adipisicing.</span></div>
+      <div class="step-one"><span>Click on “CONTROL” to enter the Control Panel.</span></div>
     </div>
     <div v-if="rpcTwo" class="wrapper">
       <transition name="modal">
@@ -14,21 +14,23 @@
       <div v-if="secondPoint" class="point-wrapper">
         <div class="first-point">
           <div class="first-point_icon"><img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" /></div>
-          <div class="first-point_title">Lorem ipsum dolor sit</div>
+          <div class="first-point_title">Click on the “ON/OFF” button to open your port</div>
         </div>
         <div class="first-border"></div>
       </div>
       <div v-if="thirdPoint" class="point-wrapper">
         <div class="second-point">
-          <div class="second-point_title">Lorem ipsum dolor sit</div>
-          <div class="second-point_icon"><img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" /></div>
+          <div class="second-point_title">Click on “your Execution Client” button to copy the RPC URL</div>
+          <div class="second-point_icon"><img src="/img/icon/arrows/Pointer1.png" alt="" /></div>
         </div>
         <div class="second-border"></div>
       </div>
       <div v-if="fixRPC" class="last-part">
         <div v-if="explainRPC" class="fixExplain">
-          <div class="step-two"><span>Lorem ipsum dolor, sit amet consectetur adipisicing.</span></div>
-          <img src="../../../../public/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+          <div class="step-two">
+            <span>{{ mainMessage }}</span>
+          </div>
+          <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
         <div class="exit"><div class="close" @click="close">x</div></div>
@@ -44,8 +46,11 @@
           <div class="slider"><img :src="slide" alt="" /></div>
           <div class="arrow"><div class="right" @click="nextSlide"></div></div>
         </div>
-        <div class="footer"><span>click out</span></div>
+        <div class="footer">
+          <span>Click x to cancel</span>
+        </div>
       </div>
+      <div class="x-btn" @click="close"><span>x</span></div>
     </div>
   </div>
 </template>
@@ -67,6 +72,11 @@ export default {
       explainModal: false,
       slide: "",
       message: "",
+      firstMessage:
+        'RPC-Endpoint widget located in dashboard. Please turn "on" the button and click "Execution Client" to proceed to the next step.',
+      secondMessage:
+        "WAIT FOR SYNCHRONISATIONYou can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
+      mainMessage: "",
       sliderTutorial: [
         {
           id: 1,
@@ -138,8 +148,7 @@ export default {
         this.message = currentSlide.text;
       }
 
-      console.log(`step ${newVal}`);
-      if (newVal === 1 || newVal === 11) {
+      if (newVal === 1) {
         this.fixRPC = true;
         this.explainRPC = true;
         this.explainModal = false;
@@ -147,6 +156,17 @@ export default {
         this.fixRPC = false;
         this.explainRPC = false;
         this.explainModal = true;
+      } else if (newVal === 11) {
+        this.fixRPC = true;
+        this.explainRPC = true;
+        this.explainModal = false;
+        this.mainMessage = this.secondMessage;
+        setTimeout(() => {
+          this.tutorial = false;
+          this.rpcOne = true;
+          this.rpcTwo = false;
+          this.nextStepFlag = 0;
+        }, 5000);
       }
     },
   },
@@ -161,11 +181,9 @@ export default {
   methods: {
     nextSlide() {
       this.nextStepFlag++;
-      console.log(this.nextStepFlag);
     },
     prevSlide() {
       this.nextStepFlag--;
-      console.log(this.nextStepFlag);
     },
     rpcStepOne() {
       this.rpcOne = false;
@@ -177,12 +195,12 @@ export default {
     bigComp() {
       setTimeout(() => {
         this.firstPoint = true;
-      }, 1000);
+      }, 900);
     },
     pointScenario() {
       setTimeout(() => {
         this.secondPoint = true;
-      }, 3000);
+      }, 2000);
       setTimeout(() => {
         this.thirdPoint = true;
         this.secondPoint = false;
@@ -193,22 +211,42 @@ export default {
           this.fixRPC = true;
 
           setTimeout(() => {
+            this.nextStepFlag = 1;
+            this.mainMessage = this.firstMessage;
             this.explainRPC = true;
-            this.nextStepFlag = 0;
           }, 1500);
-        }, 5000);
-      }, 5000);
+        }, 3000);
+      }, 4500);
     },
     close() {
       this.tutorial = false;
       this.rpcOne = true;
       this.rpcTwo = false;
+      this.nextStepFlag = 0;
     },
   },
 };
 </script>
 
 <style scoped>
+.x-btn {
+  width: 60%;
+  height: 8%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  font-size: 200%;
+  color: #eeeeee;
+}
+.footer {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: red;
+}
 .close {
   width: 60%;
   height: 90%;
@@ -254,6 +292,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
+  flex-direction: column;
 }
 .slider-modal {
   width: 80%;
