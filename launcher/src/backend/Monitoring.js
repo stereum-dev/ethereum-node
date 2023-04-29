@@ -1688,6 +1688,9 @@ export class Monitoring {
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
         .pop();
+      if (typeof rpc !== "object" || !rpc.hasOwnProperty("destinationIp") || !rpc.hasOwnProperty("destinationPort")) {
+        continue;
+      }
       rpc.destinationIp = rpc.destinationIp == "0.0.0.0" ? "127.0.0.1" : rpc.destinationIp; // FIX: rpc.destinationIp could be 0.0.0.0 if config was changed in expert mode
       let addr = rpc.destinationIp;
       let port = rpc.destinationPort;
@@ -1868,6 +1871,9 @@ export class Monitoring {
         .filter((p) => p.servicePort == services[execution.service])
         .slice(-1)
         .pop();
+      if (typeof ws !== "object" || !ws.hasOwnProperty("destinationIp") || !ws.hasOwnProperty("destinationPort")) {
+        continue;
+      }
       ws.destinationIp = ws.destinationIp == "0.0.0.0" ? "127.0.0.1" : ws.destinationIp; // FIX: ws.destinationIp could be 0.0.0.0 if config was changed in expert mode
       let addr = ws.destinationIp;
       let port = ws.destinationPort;
