@@ -115,6 +115,7 @@
     "read": "ПРОЧИТАНЕ",
     "inclusionDistance": "РАЗСТОЯНИЕ НА ВКЛЮЧВАНЕ",
     "rpc": "RPC-крайна връзка",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "СТАТУС СИНХРОНИЗАЦИЯ",
     "hard": "STORAGE VOLUME",
     "free": "БЕСПЛАТНО",
@@ -284,7 +285,9 @@
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
     "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

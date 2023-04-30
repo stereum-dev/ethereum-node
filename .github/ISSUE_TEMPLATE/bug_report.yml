@@ -71,7 +71,7 @@ body:
       label: Desktop OS
       options:
         - Windows
-        - iOS
+        - Mac
         - Linux 
         - Other
     validations:

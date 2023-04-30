@@ -9,6 +9,11 @@ export const useNodeHeader = defineStore("nodeHeader", {
       isUpdateAvailable: false,
       updating: false,
       operators: [{ operatorName: "stereum" }, { operatorName: "Rocklogic GmbH" }],
+      tutorial: false,
+      rpcOne: true,
+      rpcTwo: false,
+      activeRPC: false,
+      nextStepFlag: 0,
     };
   },
   getters: {},

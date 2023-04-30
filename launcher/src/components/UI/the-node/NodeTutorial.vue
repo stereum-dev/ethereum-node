@@ -28,6 +28,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import { useTutorialStore } from "@/store/tutorialSteps";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
@@ -67,7 +68,7 @@ export default {
           icon: "/img/icon/manage-node-icons/QuestionMark.png",
           disable: false,
           video: " https://www.youtube.com/embed/iFzSdjg9r6U",
-          guide: "",
+          guide: "rpc",
           written: "https://stereum.net/ethereum-node-setup/rpc_endpoint_metamask/",
         },
       ],
@@ -131,6 +132,9 @@ export default {
     ...mapWritableState(useNodeStore, {
       infoAlarm: "infoAlarm",
     }),
+    ...mapWritableState(useNodeHeader, {
+      tutorial: "tutorial",
+    }),
   },
 
   mounted() {
@@ -138,8 +142,7 @@ export default {
   },
   methods: {
     handleGuidedOptionClick(item) {
-      let url = item.guide;
-      window.open(url, "_blank");
+      this.tutorial = true;
     },
     handleWrittenOptionClick(item) {
       let url = item.written;

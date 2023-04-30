@@ -115,6 +115,7 @@
     "read": "УНШИХ",
     "inclusionDistance": "ХАМААРУУЛАХ ЗАЙ",
     "rpc": "RPC-ТӨГСГӨЛИЙН ЦЭГ",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "СИНК СТАТУС",
     "hard": "STORAGE VOLUME",
     "free": "ЧӨЛӨӨТЭЙ",
@@ -284,7 +285,9 @@
     "turnOnMessage": "Please turn ON the DATA-API tunnel first!",
     "copiedMessage": "DATA-API-URL copied to clipboard!",
     "RPCTurnOnMessage": "Please turn ON the RPC tunnel first!",
-    "RPCCopiedMessage": "RPC-URL copied to clipboard!"
+    "RPCCopiedMessage": "RPC-URL copied to clipboard!",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",

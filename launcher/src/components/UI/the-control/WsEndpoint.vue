@@ -1,18 +1,18 @@
 <template>
-  <div class="dataApi-parent">
-    <control-dialog :open="openDialog"
-      ><div class="dialogBox">
+  <div class="ws-parent">
+    <control-dialog :open="openDialog">
+      <div class="dialogBox">
         <div class="dialogIcon"><img :src="dialogIcon" /></div>
         <div class="dialogMessage">
           <span>{{ dialogValue }}</span>
         </div>
-      </div></control-dialog
-    >
-    <div v-show="showData" class="dataApi-box">
+      </div>
+    </control-dialog>
+    <div v-show="showData" class="ws-box">
       <!-- removed node-connection-row template start -->
       <div class="rowParent">
         <div class="title">
-          <span>DATA-API</span>
+          <span>{{ $t("controlPage.ws") }}</span>
         </div>
         <div class="btn" :class="{ active: isActive }" @click="toggle">
           <span>{{ onoff }}</span>
@@ -21,13 +21,7 @@
       </div>
       <!-- removed node-connection-row template end -->
       <div class="scrollable">
-        <div
-          v-for="item in dataApiItems"
-          :key="item.id"
-          ref="clone"
-          class="dataApi-data"
-          @click="copy(item.value, item.title)"
-        >
+        <div v-for="item in wsItems" :key="item.id" ref="clone" class="ws-data" @click="copy(item.value, item.title)">
           <span>{{ item.title }}</span>
         </div>
       </div>
@@ -36,10 +30,11 @@
       <span>{{ copyVal }}</span>
     </div>
     <div v-show="!showData" class="spinner">
-      <img src="../../../../public/img/icon/control/spinner.gif" alt="" />
+      <img src="../../../../public/img/icon/control/spinner.gif" alt="loading" />
     </div>
   </div>
 </template>
+
 <script>
 import ControlService from "@/store/ControlService";
 import { mapWritableState } from "pinia";
@@ -61,7 +56,7 @@ export default {
       copyIcon: "/img/icon/control/ok.png",
       infoIcon: "/img/icon/control/info.png",
       bttnLoading: "/img/icon/control/loading.gif",
-      dataApiItems: [],
+      wsItems: [],
       dialogIcon: "",
       copyText: this.$t("dataAPIAndRPC.copy"),
       closedText: this.$t("dataAPIAndRPC.closed"),
@@ -71,28 +66,28 @@ export default {
   computed: {
     ...mapWritableState(useControlStore, {
       code: "code",
-      beaconstatus: "beaconstatus",
+      wsstatus: "wsstatus",
     }),
     onoff() {
       if (!this.toggleAllowed) return "";
       return this.isActive ? "ON" : "OFF";
     },
   },
-  created() {
-    this.beaconControler();
+  mounted() {
+    this.wsControler();
   },
   methods: {
     async copy(s, t) {
       if (!this.toggleAllowed) return;
       if (!s) {
-        this.dialogValue = this.$t("dataAPIAndRPC.turnOnMessage");
-        this.dialogIcon = this.infoIcon;
+        this.dialogValue = this.$t("dataAPIAndRPC.WSTurnOnMessage");
         this.openDialog = true;
+        this.dialogIcon = this.infoIcon;
       } else {
         await navigator.clipboard.writeText(s);
         this.openDialog = !this.openDialog;
+        this.dialogValue = t + " " + this.$t("dataAPIAndRPC.WSCopiedMessage");
         this.dialogIcon = this.copyIcon;
-        this.dialogValue = t + " " + this.$t("dataAPIAndRPC.copiedMessage");
       }
       if (this.openDialog === true) {
         setTimeout(() => {
@@ -108,17 +103,17 @@ export default {
       }
       if (instant) {
         if (async) {
-          await this.beaconControler();
+          await this.wsControler();
         } else {
-          this.beaconControler();
+          this.wsControler();
         }
         return;
       }
       this.refreshId = setTimeout(async () => {
         if (async) {
-          await this.beaconControler();
+          await this.wsControler();
         } else {
-          this.beaconControler();
+          this.wsControler();
         }
       }, timeout);
     },
@@ -153,52 +148,53 @@ export default {
       };
       try {
         if (isActive) {
-          result = await ControlService.openBeaconTunnel();
+          result = await ControlService.openWsTunnel();
         } else {
-          result = await ControlService.closeBeaconTunnel();
+          result = await ControlService.closeWsTunnel();
         }
       } catch (e) {
         console.log(e);
       }
-      this.beaconstatus = result.data;
+      this.wsstatus = result.data;
       await this.refresh(true, true);
       this.toggleAllowed = true;
     },
-    async beaconControler() {
+    async wsControler() {
       let isActive = false;
-      let dataApiItems = [];
-      let dataApiItemsHashBefore = this.createHashByKey(this.dataApiItems, "id");
-      if (this.code === 0 && this.beaconstatus.code === 0) {
-        for (let i = 0; i < this.beaconstatus.data.length; i++) {
-          if (this.beaconstatus.data[i].now < this.lastKnownMts) {
-            //console.log("---------------> DENY OUTDATED BEACON STATUS!");
+      let wsItems = [];
+      let wsItemsHashBefore = this.createHashByKey(this.wsItems, "id");
+      if (this.code === 0 && this.wsstatus.code === 0) {
+        for (let i = 0; i < this.wsstatus.data.length; i++) {
+          if (this.wsstatus.data[i].now < this.lastKnownMts) {
+            //console.log("---------------> DENY OUTDATED WS STATUS!");
             this.refresh();
             return;
           }
-          this.lastKnownMts = this.beaconstatus.data[i].now;
-          dataApiItems.push({
-            id: this.beaconstatus.data[i].sid,
-            title: this.beaconstatus.data[i].clt,
-            value: this.beaconstatus.data[i].url,
+          this.lastKnownMts = this.wsstatus.data[i].now;
+          wsItems.push({
+            id: this.wsstatus.data[i].sid,
+            title: this.wsstatus.data[i].clt,
+            value: this.wsstatus.data[i].url,
           });
-          isActive = this.beaconstatus.data[i].url ? true : isActive;
+          isActive = this.wsstatus.data[i].url ? true : isActive;
         }
       }
-      let dataApiItemsHashAfter = this.createHashByKey(dataApiItems, "id");
+      let wsItemsHashAfter = this.createHashByKey(wsItems, "id");
       this.isActive = isActive;
       this.copyVal = isActive ? this.copyText : this.closedText;
-      this.dataApiItems = dataApiItems;
-      if (dataApiItemsHashBefore != dataApiItemsHashAfter) {
-        //console.log("BEACON TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
+      this.wsItems = wsItems;
+      if (wsItemsHashBefore != wsItemsHashAfter) {
+        //console.log("WS TUNNELS NEED TO BE REFRESHED BECAUSE LIST OF CLIENTS CHANGED");
         this.toggle(true);
         return;
       }
-      this.showData = dataApiItems.length > 0 ? true : false;
+      this.showData = wsItems.length > 0 ? true : false;
       this.refresh();
     },
   },
 };
 </script>
+
 <style scoped>
 .spinner {
   display: flex;
@@ -207,18 +203,20 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .spinner img {
   width: 80%;
 }
-.dataApi-parent {
+
+.ws-parent {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
   box-sizing: border-box;
-  box-shadow: 1px 1px 10px 1px #171717;
   width: 35%;
+  box-shadow: 1px 1px 10px 1px #171717;
   height: 95%;
   border-radius: 10px;
   flex-direction: column;
@@ -234,6 +232,7 @@ export default {
   align-items: center;
   font-weight: 600;
 }
+
 .dialogIcon {
   display: flex;
   height: 100%;
@@ -241,9 +240,11 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .dialogIcon img {
   width: 50%;
 }
+
 .dialogMessage {
   display: flex;
   justify-content: flex-start;
@@ -251,16 +252,17 @@ export default {
   width: 80%;
   height: 100%;
   font-weight: 500;
-  font-size: 65%;
+  font-size: 70%;
   color: #eee;
 }
 
-.dataApi-box {
+.ws-box {
   width: 100%;
   height: 75%;
   display: flex;
   flex-direction: column;
 }
+
 .scrollable {
   width: 100%;
   padding-left: 4%;
@@ -270,9 +272,11 @@ export default {
   flex-direction: column;
   overflow-y: auto;
 }
+
 .bttnLoading {
   width: 50%;
 }
+
 .compTtl {
   display: flex;
   width: 100%;
@@ -281,7 +285,8 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.dataApi-data {
+
+.ws-data {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -289,19 +294,28 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 60%;
+  font-size: 50%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
 }
 
+/*.ws-data:hover,
+.ws-data:active {
+  color: rgb(246, 250, 141);
+  font-weight: 800;
+  background: #313131;
+}*/
+
 /* width */
+
 ::-webkit-scrollbar {
   width: 5px;
 }
 
 /* Track */
+
 ::-webkit-scrollbar-track {
   border: 1px solid #343434;
   background: rgb(42, 42, 42);
@@ -311,12 +325,14 @@ export default {
 }
 
 /* Handle */
+
 ::-webkit-scrollbar-thumb {
   background: #324b3f;
   border-radius: 10px;
 }
 
 /* ON/OFF */
+
 .rowParent {
   display: flex;
   justify-content: center;
@@ -326,22 +342,29 @@ export default {
   border-radius: 10px;
   margin: 1% 0;
 }
+
 .active {
-  color: #adff2f !important;
+  color: greenyellow !important;
 }
+
+.copyactiv {
+  color: greenyellow;
+}
+
 .title {
   display: flex;
   width: 70%;
-  font-size: 48%;
+  font-size: 43%;
   justify-content: flex-start;
   align-items: center;
   margin: 0 4%;
   font-weight: 600;
 }
+
 .btn {
   display: flex;
   width: 30%;
-  font-size: 60%;
+  font-size: 50%;
   font-weight: 800;
   padding: 0 1px;
   border-radius: 5px;
@@ -351,6 +374,6 @@ export default {
   align-items: center;
   height: 90%;
   border: 1px solid #343434;
-  background: #2a2a2a;
+  background: rgb(42, 42, 42);
 }
 </style>

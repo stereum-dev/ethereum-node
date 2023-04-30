@@ -144,7 +144,10 @@
                     @click="removeModalDisplay(item)"
                   />
                 </div>
-                <div class="withdraw-box">
+                <div
+                  class="withdraw-box"
+                  :class="{ disabled: ['goerli', 'mainnet', 'sepolia'].indexOf(currentNetwork.network) === -1 }"
+                >
                   <img
                     class="exit-icon"
                     src="../../../../public/img/icon/the-staking/withdraw.png"

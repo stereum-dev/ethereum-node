@@ -545,6 +545,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
@@ -553,6 +554,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return BesuService.buildByUserInput(args.network, ports, args.installDir + "/besu");
 
@@ -561,6 +563,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", args.port ? args.port : 8546, 8546, servicePortProtocol.tcp),
         ];
         return NethermindService.buildByUserInput(args.network, ports, args.installDir + "/nethermind");
 
