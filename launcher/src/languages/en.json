@@ -365,7 +365,7 @@
     "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
     "clickCancel": "Click x to cancel",
     "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
-    "secondMessage": "WAIT FOR SYNCHRONISATION You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
+    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
     "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
     "secondSlide": "Click on the Network button",
     "thirdSlide": "Click on “Add Network”",
