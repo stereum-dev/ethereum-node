@@ -5,8 +5,8 @@
         <div class="table-box">
           <div class="table">
             <div class="table-header">
-              <img :src="configNetwork_icon" alt="Icon" />
-              <span>{{ configNetwork }}</span>
+              <img :src="configNetwork.icon" alt="Icon" />
+              <span>{{ configNetwork.name }}</span>
             </div>
             <div class="tableTitle">
               <span>Set how the Node clients will synchronize their blockchain data.</span>
@@ -61,8 +61,6 @@ export default {
     return {
       genesisIsActive: true,
       checkPointIsActive: false,
-      configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
-      configNetwork: "Ethereum - Testnet",
       executionClient: {},
       consensusClient: {},
       back: "importingList",
@@ -87,6 +85,7 @@ export default {
       checkPointSync: "checkPointSync",
       customElements: "customElements",
       configServices: "configServices",
+      configNetwork: "configNetwork",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -96,10 +95,10 @@ export default {
   },
 
   mounted() {
-    console.log(this.btnActive);
     this.filterServices();
   },
   methods: {
+    
     changeTheOption() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;

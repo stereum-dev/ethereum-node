@@ -4,17 +4,24 @@
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
           <div class="table-header">
-            <img :src="configNetwork_icon" alt="Icon" />
-            <span>{{ configNetwork }}</span>
+            <img :src="configNetwork.icon" alt="Icon" />
+            <span>{{ configNetwork.name }}</span>
           </div>
 
           <div class="table-content">
-            <div class="content_header">
+            <!-- <div class="content_header">
               <span>Plugins To Import</span>
               <span>Remove</span>
-            </div>
-            <TransitionGroup name="fade" class="container">
-              <div v-for="(plugin, index) in configServices" :key="index" class="table-row duration-500">
+            </div> -->
+            <div class="container_content gap-y-1">
+              <div v-if="configServices.length" class="configTitle">
+                <span>Node Config</span>
+              </div>
+              <div
+                v-for="(plugin, index) in configServices.filter((s) => s.category !== 'service')"
+                :key="index"
+                class="table-row duration-500"
+              >
                 <div class="plugins">
                   <img :src="plugin.icon" alt="icon" class="pluginIcon" />
                   <div class="pluginName">
@@ -36,7 +43,36 @@
                   />
                 </div>
               </div>
-            </TransitionGroup>
+              <div v-if="configServices.length" class="serviceTitle">
+                <span>Services</span>
+              </div>
+              <div
+                v-for="(plugin, index) in configServices.filter((s) => s.category === 'service')"
+                :key="index"
+                class="table-row duration-500"
+              >
+                <div class="plugins">
+                  <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+                  <div class="pluginName">
+                    <span>
+                      {{ plugin.name }}
+                    </span>
+                  </div>
+                  <div class="pluginCategory">
+                    <span>
+                      {{ plugin.category }}
+                    </span>
+                  </div>
+                </div>
+                <div class="remove">
+                  <img
+                    src="/img/icon/click-installation/cancel.png"
+                    alt="remove"
+                    @click="removeServiceFromList(plugin.service)"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -48,30 +84,57 @@
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeManage } from "@/store/nodeManage";
 export default {
   data() {
     return {
       back: "uploadConfig",
       title: "IMPORTED CONFIG",
       next: "importingSyncing",
-      configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
-      configNetwork: "Ethereum - Testnet",
     };
   },
 
   computed: {
+    ...mapWritableState(useNodeManage, {
+      networkList: "networkList",
+    }),
     ...mapWritableState(useServices, {
       allServices: "allServices",
     }),
     ...mapWritableState(useClickInstall, {
       unzippedData: "unzippedData",
       configServices: "configServices",
+      configNetwork: "configNetwork",
     }),
   },
+
   mounted() {
     this.checkPluginsToImport();
+    this.extractNetwork();
   },
   methods: {
+    extractNetwork() {
+      this.configServices = this.configServices.map((item) => {
+        // extract network value
+        const networkRegex = /network:\s*(\S+)/;
+        const networkMatch = item.content.match(networkRegex);
+        const network = networkMatch ? networkMatch[1] : null;
+        return {
+          ...item,
+          network: network,
+        };
+      });
+      // get network value
+      const networkName = this.configServices[0].network;
+      this.networkList.forEach((network) => {
+        if (network.network.toLowerCase() === networkName.toLowerCase()) {
+          this.configNetwork = {
+            name: network.name,
+            icon: network.icon,
+          };
+        }
+      });
+    },
     checkPluginsToImport() {
       this.configServices = this.allServices.filter((service) => {
         return this.unzippedData.some((d) => d.name.toLowerCase() === service.service.toLowerCase());
@@ -110,8 +173,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 10px;
-  padding-bottom: 5px;
+  padding: 10px 5px 5px 5px;
   border-radius: 20px;
 }
 .table {
@@ -136,9 +198,10 @@ export default {
   grid-template-rows: 1fr;
 }
 .table-header img {
-  width: 30px;
+  width: 25px;
   grid-column: 1/2;
   grid-row: 1/2;
+  align-self: center;
 }
 .table-header span {
   grid-column: 2/6;
@@ -146,9 +209,9 @@ export default {
   font-size: 1rem;
   font-weight: 500;
   color: #e1e1e1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
+  align-self: center;
+  text-transform: uppercase;
 }
 .table-content {
   width: 100%;
@@ -158,6 +221,19 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.table-content::-webkit-scrollbar {
+  width: 5px;
+  background-color: #2d3134;
+  padding: 20px 0;
+  z-index: -1;
+}
+.table-content::-webkit-scrollbar-thumb {
+  background-color: #9fb7bb;
+  border-radius: 5px;
 }
 .content_header {
   width: 100%;
@@ -169,6 +245,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
+  top: 0;
 }
 .content_header span {
   font-size: 0.8rem;
@@ -178,7 +256,6 @@ export default {
 .table-row {
   width: 100%;
   height: 35px;
-  margin-top: 5px;
   padding: 2px 10px;
   background-color: #32363a;
   border: 1px solid #616569;
@@ -220,11 +297,14 @@ export default {
   grid-row: 1/2;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: flex-end;
+  display: flex !important
+  ;
+  justify-content: flex-end !important;
   align-items: center;
+  text-align: right;
 }
 .pluginCategory span {
+  text-align: right;
   font-size: 0.7rem;
   font-weight: 500;
   color: #d2c878;
@@ -241,6 +321,35 @@ export default {
   width: 20px;
   cursor: pointer;
 }
+.container_content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 10px 5px 5px 5px;
+  align-items: center;
+}
+
+.container_content .configTitle,
+.container_content .serviceTitle {
+  width: 100%;
+  height: 10%;
+  background-color: #286a6a;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container_content .configTitle span,
+.container_content .serviceTitle span {
+  min-width: 90px;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #e1e1e1;
+}
+
 .container {
   padding: 0;
   position: relative;

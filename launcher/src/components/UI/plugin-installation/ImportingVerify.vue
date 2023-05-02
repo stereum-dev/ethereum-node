@@ -24,7 +24,7 @@
                     </span>
                   </div>
                   <div class="pluginPath">
-                    <span> /opt/xyz </span>
+                    <span> {{ pluginPath }}</span>
                   </div>
                 </div>
               </div>
@@ -48,6 +48,7 @@ export default {
       next: "manage",
       configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
       configNetwork: "Ethereum - Testnet",
+      pluginPath: "opt/xyz",
     };
   },
   computed: {
@@ -60,7 +61,26 @@ export default {
     }),
   },
   mounted() {},
-  methods: {},
+  methods: {
+    extractNetworkAndPath() {
+      this.configServices.map((item) => {
+        const regex = /volumes:\s*(-\s*)?([^\n]+)/g;
+        const matches = regex.exec(item);
+        if (matches) {
+          const volumes = matches[2]
+            .replace(/-[^\s]*/, "")
+            .trim()
+            .replace(/\/[a-zA-Z0-9-_]+$/, "");
+          return {
+            ...item,
+            configPath: volumes,
+          };
+        }
+        return "";
+      });
+      console.log("SERVICE CONFIG", this.configServices);
+    },
+  },
 };
 </script>
 
