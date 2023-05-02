@@ -154,12 +154,15 @@ export default {
         this.fixRPC = true;
         this.explainRPC = true;
         this.explainModal = false;
+        this.firstPoint = false;
       } else if (newVal === 2) {
         this.fixRPC = false;
+        this.firstPoint = false;
         this.explainRPC = false;
         this.explainModal = true;
       } else if (newVal === 11) {
         this.fixRPC = true;
+        this.firstPoint = false;
         this.explainRPC = true;
         this.explainModal = false;
         this.mainMessage = this.secondMessage;
@@ -168,6 +171,8 @@ export default {
           this.rpcOne = true;
           this.rpcTwo = false;
           this.nextStepFlag = 0;
+          this.explainModal = false;
+          this.fixRPC = false;
         }, 5000);
       }
     },
