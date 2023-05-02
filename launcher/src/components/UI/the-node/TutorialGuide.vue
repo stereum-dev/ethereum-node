@@ -151,7 +151,9 @@ export default {
       }
 
       if (newVal === 1) {
-        this.fixRPC = true;
+        setTimeout(() => {
+          this.fixRPC = true;
+        }, 700);
         this.explainRPC = true;
         this.explainModal = false;
         this.firstPoint = false;
@@ -215,7 +217,9 @@ export default {
         setTimeout(() => {
           this.firstPoint = false;
           this.thirdPoint = false;
-          this.fixRPC = true;
+          setTimeout(() => {
+            this.fixRPC = true;
+          }, 500);
 
           setTimeout(() => {
             this.nextStepFlag = 1;
