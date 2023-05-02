@@ -51,7 +51,7 @@
           <template v-if="logsList.length">
             <div v-for="(log, idx) in logsList.slice(-150).reverse()" :key="idx" class="tableRow">
               <div :id="'rowMsg-' + idx" class="rowMsg" @dblclick="copy">
-                <span>#{{ idx + 1 }}</span>
+                <span>#{{ logsList.length - idx }}</span>
                 <span id="log">{{ log }}</span>
               </div>
             </div>
