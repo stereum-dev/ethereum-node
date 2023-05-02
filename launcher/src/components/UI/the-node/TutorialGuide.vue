@@ -151,15 +151,20 @@ export default {
       }
 
       if (newVal === 1) {
-        this.fixRPC = true;
+        setTimeout(() => {
+          this.fixRPC = true;
+        }, 700);
         this.explainRPC = true;
         this.explainModal = false;
+        this.firstPoint = false;
       } else if (newVal === 2) {
         this.fixRPC = false;
+        this.firstPoint = false;
         this.explainRPC = false;
         this.explainModal = true;
       } else if (newVal === 11) {
         this.fixRPC = true;
+        this.firstPoint = false;
         this.explainRPC = true;
         this.explainModal = false;
         this.mainMessage = this.secondMessage;
@@ -168,6 +173,8 @@ export default {
           this.rpcOne = true;
           this.rpcTwo = false;
           this.nextStepFlag = 0;
+          this.explainModal = false;
+          this.fixRPC = false;
         }, 5000);
       }
     },
@@ -210,7 +217,9 @@ export default {
         setTimeout(() => {
           this.firstPoint = false;
           this.thirdPoint = false;
-          this.fixRPC = true;
+          setTimeout(() => {
+            this.fixRPC = true;
+          }, 500);
 
           setTimeout(() => {
             this.nextStepFlag = 1;
