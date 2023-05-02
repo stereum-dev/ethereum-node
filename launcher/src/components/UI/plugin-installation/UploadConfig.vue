@@ -107,6 +107,11 @@ export default {
       const filteredServices = this.allServices.filter((service) => {
         return this.unzippedData.some((item) => item.name === service.service);
       });
+      filteredServices.forEach((service) => {
+        service.content = this.unzippedData.find((item) => item.name === service.service).content;
+      });
+ 
+
       if (filteredServices.length === 0) {
         this.isMessageActive = true;
         this.message = "Invalid configuration file.";
@@ -116,6 +121,7 @@ export default {
       this.message = "";
       this.next = "importingList";
       this.configServices = filteredServices;
+      console.log("this.configServices", this.configServices);
 
       // let test = await ControlService.importConfig(this.unzippedData);
       // const firstYamlFile = yamlFiles[0];
