@@ -357,5 +357,22 @@
   "noData": {
     "noData": "Keine Daten",
     "turnOn": "Bitte einschalten"
+  },
+  "rpcGuide": {
+    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
+    "toggleMessage": "Click on the “ON/OFF” button to open your port",
+    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
+    "clickCancel": "Click x to cancel",
+    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
+    "secondMessage": "WAIT FOR SYNCHRONISATION You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
+    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
+    "secondSlide": "Click on the Network button",
+    "thirdSlide": "Click on “Add Network”",
+    "fourthSlide": "Type in a name for your network",
+    "fivethSlide": "Paste in the copied URL from Stereum",
+    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
+    "seventhSlide": "Type in “ETH” as the currency symbol",
+    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
+    "ninethSlide": "Click on “SAVE”"
   }
 }
