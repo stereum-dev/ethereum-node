@@ -71,7 +71,7 @@
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
           <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
         </div>
-        <div class="export-log" @click="logExport">
+        <div class="export-log" data-tooltip="Export the log" @click="logExport">
           <img src="../../../../public/img/icon/manage-node-icons/log_export.png" alt="" />
         </div>
         <div class="serviceBox">
@@ -191,6 +191,34 @@ export default {
 };
 </script>
 <style scoped>
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: calc(50%-25%);
+
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 4% 20%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-250%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-280%) translateX(-20%);
+}
 .dialogBox {
   display: flex;
   width: 100%;
