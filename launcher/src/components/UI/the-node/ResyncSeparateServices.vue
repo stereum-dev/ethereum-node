@@ -54,40 +54,14 @@
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
                 </div>
-                <div class="inputBox_select" @click="dropdown = true">
+                <div class="inputBox_select">
                   <div class="select">
                     {{ selectedItem }}
-                    <div v-if="dropdown && currentNetwork.id == 1" class="dropParent">
-                      <div class="dropRow">https://mainnet-checkpoint-sync.attestant.io/</div>
-                      <div class="dropRow">https://beaconstate-mainnet.chainsafe.io/</div>
-                      <div class="dropRow">https://beaconstate.ethstaker.cc/</div>
-                      <div class="dropRow">https://sync-mainnet.beaconcha.in/</div>
-                      <div class="dropRow">https://mainnet.checkpoint.sigp.io/</div>
-                      <div class="dropRow">https://beaconstate.info/</div>
-                      <div class="dropRow">https://checkpointz.pietjepuk.net/</div>
-                      <div class="dropRow">https://sync.invis.tools/</div>
-                      <div class="dropRow">https://mainnet-checkpoint-sync.stakely.io/</div>
-                    </div>
-                    <div v-if="dropdown && currentNetwork.id == 2" class="dropParent">
-                      <div class="dropRow">https://prater.checkpoint.sigp.io/</div>
-                      <div class="dropRow">https://goerli-sync.invis.tools/</div>
-                      <div class="dropRow">https://checkpoint-sync.goerli.ethpandaops.io/</div>
-                      <div class="dropRow">https://goerli.beaconstate.info/</div>
-                      <div class="dropRow">https://sync-goerli.beaconcha.in/</div>
-                      <div class="dropRow">https://prater-checkpoint-sync.stakely.io/</div>
-                      <div class="dropRow">https://goerli.beaconstate.ethstaker.cc/</div>
-                      <div class="dropRow">https://beaconstate-goerli.chainsafe.io/</div>
-                    </div>
-                    <div v-if="dropdown && currentNetwork.id == 3" class="dropParent">
-                      <div class="dropRow">https://checkpoint.gnosischain.com/</div>
-                    </div>
-                    <div v-if="dropdown && currentNetwork.id == 4" class="dropParent">
-                      <div class="dropRow">https://sepolia.beaconstate.info/</div>
-                      <div class="dropRow">https://beaconstate-sepolia.chainsafe.io/</div>
-                      <div class="dropRow">https://checkpoint-sync.sepolia.ethpandaops.io/</div>
-                    </div>
                   </div>
-                  <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+                  <div class="triangle" @click="tglDropdown">
+                    <i v-if="drpDown" class="arrow up"></i>
+                    <i v-else class="arrow down"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -97,6 +71,13 @@
             <navigation />
           </template>
         </carousel>
+        <div v-if="drpDown" class="selection-column-modal">
+          <ul class="link-wapper">
+            <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
+              <span>{{ link }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="error">
         <span v-if="error">{{ error }}</span>
@@ -134,11 +115,17 @@ export default {
       checkPointSync: "",
       serviceID: "",
       error: "",
+      drpDown: false,
+      selectedLinks: [],
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
+      mainnet: "mainnet",
+      georli: "georli",
+      sepolia: "sepolia",
+      gnosis: "gnosis",
     }),
     ...mapWritableState(useServices, {
       resyncSeparateModal: "resyncSeparateModal",
@@ -157,6 +144,9 @@ export default {
     checkPointSync(val) {
       this.btnActive = val !== "" || this.currentSlide === 0;
     },
+  },
+  mounted() {
+    this.setSelectedLinks();
   },
   methods: {
     async resync(el) {
@@ -178,11 +168,92 @@ export default {
         this.error = "";
       }
     },
+    tglDropdown() {
+      this.drpDown = !this.drpDown;
+    },
+    linkPicker(item) {
+      this.selectedItem = item;
+      this.drpDown = false;
+      this.btnActive = true;
+    },
+    setSelectedLinks() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedLinks = this.mainnet;
+          break;
+        case 2:
+          this.selectedLinks = this.georli;
+          break;
+        case 3:
+          this.selectedLinks = this.sepolia;
+          break;
+        case 4:
+          this.selectedLinks = this.gnosis;
+          break;
+        default:
+          break;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.selection-column-modal {
+  width: 58%;
+  height: 50%;
+  display: flex;
+  background: #88a297;
+  color: #d5d5d5;
+  font-weight: 400;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 75%;
+  left: 21%;
+  z-index: 500;
+}
+.link-wapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.option-row {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 70%;
+  font-weight: 600;
+  padding: 1%;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #d5d5d5;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow-x: auto;
+  cursor: pointer;
+}
+.option-row:hover {
+  background-color: #151a1e;
+  color: #d5d5d5;
+}
+.option-row span {
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: none;
+}
 .error {
   color: red;
   width: 90%;

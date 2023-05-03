@@ -89,33 +89,6 @@ export default {
       selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
       currentSlide: 0,
       selectedLinks: [],
-      mainnet: [
-        "https://mainnet-checkpoint-sync.attestant.io/",
-        "https://beaconstate-mainnet.chainsafe.io/",
-        "https://beaconstate.ethstaker.cc/",
-        "https://sync-mainnet.beaconcha.in/",
-        "https://mainnet.checkpoint.sigp.io/",
-        "https://beaconstate.info/",
-        "https://checkpointz.pietjepuk.net/",
-        "https://sync.invis.tools/",
-        "https://mainnet-checkpoint-sync.stakely.io/",
-      ],
-      georli: [
-        "https://prater.checkpoint.sigp.io/",
-        "https://goerli-sync.invis.tools/",
-        "https://checkpoint-sync.goerli.ethpandaops.io/",
-        "https://goerli.beaconstate.info/",
-        "https://sync-goerli.beaconcha.in/",
-        "https://prater-checkpoint-sync.stakely.io/",
-        "https://goerli.beaconstate.ethstaker.cc/",
-        "https://beaconstate-goerli.chainsafe.io/",
-      ],
-      sepolia: ["https://checkpoint.gnosischain.com/"],
-      gnosis: [
-        "https://sepolia.beaconstate.info/",
-        "https://beaconstate-sepolia.chainsafe.io/",
-        "https://checkpoint-sync.sepolia.ethpandaops.io/",
-      ],
     };
   },
 
@@ -124,6 +97,10 @@ export default {
       syncType: "syncType",
       checkPointSync: "checkPointSync",
       btnActive: "btnActive",
+      mainnet: "mainnet",
+      georli: "georli",
+      sepolia: "sepolia",
+      gnosis: "gnosis",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
