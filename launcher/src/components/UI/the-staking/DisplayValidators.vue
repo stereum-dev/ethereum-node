@@ -44,7 +44,7 @@
             <span v-if="exitInfo">withdraw Logs </span>
           </div>
           <div v-if="importIsProcessing" class="processImg">
-            <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
+            <img src="/img/icon/the-staking/alice.gif" alt="icon" />
           </div>
           <div v-if="importIsProcessing" class="import-message">
             <span>{{ $t("displayValidator.waitMessage") }}</span>

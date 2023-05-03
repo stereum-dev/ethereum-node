@@ -141,6 +141,7 @@ export default {
           network: network,
         };
       });
+      console.log("configServices", this.configServices);
       // get network value
       const networkName = this.configServices[0].network;
       this.networkList.forEach((network) => {

@@ -120,7 +120,6 @@ export default {
       this.message = "";
       this.next = "importingList";
       this.configServices = filteredServices;
-      console.log("this.configServices", this.configServices);
 
       // let test = await ControlService.importConfig(this.unzippedData);
       // const firstYamlFile = yamlFiles[0];

@@ -24,7 +24,7 @@
                     </span>
                   </div>
                   <div class="pluginPath">
-                    <span> {{ pluginPath }}</span>
+                    <span> {{ rootPath }}</span>
                   </div>
                 </div>
               </div>
@@ -48,7 +48,7 @@ export default {
       next: "manage",
       configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
       configNetwork: "Ethereum - Testnet",
-      pluginPath: "opt/xyz",
+      rootPath: "/opt/stereum/",
     };
   },
   computed: {
@@ -63,23 +63,50 @@ export default {
       return this.configServices.some((service) => service.category !== "service") ? true : false;
     },
   },
+  mounted() {
+    this.extractPath();
+  },
   methods: {
-    extractNetworkAndPath() {
-      this.configServices.map((item) => {
-        const regex = /volumes:\s*(-\s*)?([^\n]+)/g;
-        const matches = regex.exec(item);
-        if (matches) {
-          const volumes = matches[2]
-            .replace(/-[^\s]*/, "")
-            .trim()
-            .replace(/\/[a-zA-Z0-9-_]+$/, "");
-          return {
-            ...item,
-            configPath: volumes,
-          };
-        }
-        return "";
+    extractPath() {
+      this.configServices.forEach((service) => {
+        // const name = service.name;
+        const pattern = /\/opt\/stereum\//;
+        const match = service.content.match(pattern);
+        const path = match[0];
+        console.log(match);
+        console.log(path);
       });
+
+      // let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
+      // let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
+      // let installPath;
+      // for (let i = 0; i < clients.length; i++) {
+      //   let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
+      //   if (catchInstallPath !== null) installPath = catchInstallPath.toString();
+      // }
+      // console.log("installPath: ", installPath);
+      // this.configServices.map((item) => {
+      //   const regex = /volumes:\s*(-\s*)?([^\n]+)/g;
+      //   const volumeMatch = item.content.match(regex);
+      //   const volume = volumeMatch ? volumeMatch[0] : null;
+      //   console.log(volumeMatch);
+      //   return {
+      //     ...item,
+      //     configPath: volume,
+      //   };
+
+      // const matches = regex.exec(item);
+      // if (matches) {
+      //   const volumes = matches[2]
+      //     .replace(/-[^\s]*/, "")
+      //     .trim()
+      //     .replace(/\/[a-zA-Z0-9-_]+$/, "");
+      //   return {
+      //     ...item,
+      //     configPath: volumes,
+      //   };
+      // }
+      // });
     },
   },
 };
