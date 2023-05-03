@@ -18,7 +18,7 @@
                   <span>SYNC SOURCE</span>
                 </div>
               </div>
-              <div class="table-row_2">
+              <div v-if="configServices.some((s) => s.category === 'execution')" class="table-row_2">
                 <div class="plugin-name">
                   <div class="serviceIcon">
                     <img :src="executionClient.icon" alt="icon" />
@@ -37,7 +37,7 @@
                   </div>
                 </div>
               </div>
-              <div class="table-row_3">
+              <div v-if="consensusClient !== ''" class="table-row_3">
                 <ConsensusSync :client="consensusClient" />
               </div>
             </div>
@@ -54,6 +54,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import ConsensusSync from "./ConsensusSync.vue";
 export default {
+  name: "ImportingSyncing",
   components: {
     ConsensusSync,
   },
@@ -73,7 +74,7 @@ export default {
     // eslint-disable-next-line vue/return-in-computed-property
     nextRouteHandler() {
       if (!this.btnActive) {
-        return this.checkPointSync !== "" ? "importingVerify" : "disabled";
+        return this.checkPointSync !== "" || !this.checkPointSync ? "importingVerify" : "disabled";
       } else if (this.btnActive) {
         return "importingVerify";
       }
@@ -98,7 +99,6 @@ export default {
     this.filterServices();
   },
   methods: {
-    
     changeTheOption() {
       if (this.genesisIsActive) {
         this.genesisIsActive = false;

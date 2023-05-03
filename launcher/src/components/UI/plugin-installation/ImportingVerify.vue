@@ -1,5 +1,5 @@
 <template>
-  <installation-box :back="back" :title="title" :next="next">
+  <installation-box :back="backRouteHandler ? 'importingSyncing' : 'importingList'" :title="title" :next="next">
     <div class="list-parent">
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
@@ -41,9 +41,9 @@ import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
 export default {
+  name: "ImportingVerify",
   data() {
     return {
-      back: "importingSyncing",
       title: "IMPORTED CONFIG",
       next: "manage",
       configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
@@ -59,8 +59,10 @@ export default {
       unzippedData: "unzippedData",
       configServices: "configServices",
     }),
+    backRouteHandler() {
+      return this.configServices.some((service) => service.category !== "service") ? true : false;
+    },
   },
-  mounted() {},
   methods: {
     extractNetworkAndPath() {
       this.configServices.map((item) => {
@@ -78,7 +80,6 @@ export default {
         }
         return "";
       });
-      console.log("SERVICE CONFIG", this.configServices);
     },
   },
 };

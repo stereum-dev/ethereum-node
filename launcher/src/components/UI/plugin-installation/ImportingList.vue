@@ -1,5 +1,5 @@
 <template>
-  <installation-box :back="back" :title="title" :next="next">
+  <installation-box :back="back" :title="title" :next="nextRouteHandler ? 'importingSyncing' : 'importingVerify'">
     <div class="list-parent">
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
@@ -14,64 +14,66 @@
               <span>Remove</span>
             </div> -->
             <div class="container_content gap-y-1">
-              <div v-if="configServices.length" class="configTitle">
-                <span>Node Config</span>
-              </div>
-              <div
-                v-for="(plugin, index) in configServices.filter((s) => s.category !== 'service')"
-                :key="index"
-                class="table-row duration-500"
-              >
-                <div class="plugins">
-                  <img :src="plugin.icon" alt="icon" class="pluginIcon" />
-                  <div class="pluginName">
-                    <span>
-                      {{ plugin.name }}
-                    </span>
-                  </div>
-                  <div class="pluginCategory">
-                    <span>
-                      {{ plugin.category }}
-                    </span>
-                  </div>
+              <TransitionGroup name="fade" class="container">
+                <div v-if="configServices.length" class="configTitle">
+                  <span>Node Config</span>
                 </div>
-                <div class="remove">
-                  <img
-                    src="/img/icon/click-installation/cancel.png"
-                    alt="remove"
-                    @click="removeServiceFromList(plugin.service)"
-                  />
-                </div>
-              </div>
-              <div v-if="configServices.length" class="serviceTitle">
-                <span>Services</span>
-              </div>
-              <div
-                v-for="(plugin, index) in configServices.filter((s) => s.category === 'service')"
-                :key="index"
-                class="table-row duration-500"
-              >
-                <div class="plugins">
-                  <img :src="plugin.icon" alt="icon" class="pluginIcon" />
-                  <div class="pluginName">
-                    <span>
-                      {{ plugin.name }}
-                    </span>
+                <div
+                  v-for="(plugin, index) in configServices.filter((s) => s.category !== 'service')"
+                  :key="index"
+                  class="table-row duration-500"
+                >
+                  <div class="plugins">
+                    <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+                    <div class="pluginName">
+                      <span>
+                        {{ plugin.name }}
+                      </span>
+                    </div>
+                    <div class="pluginCategory">
+                      <span>
+                        {{ plugin.category }}
+                      </span>
+                    </div>
                   </div>
-                  <div class="pluginCategory">
-                    <span>
-                      {{ plugin.category }}
-                    </span>
+                  <div class="remove">
+                    <img
+                      src="/img/icon/click-installation/cancel.png"
+                      alt="remove"
+                      @click="removeServiceFromList(plugin.service)"
+                    />
                   </div>
                 </div>
-                <div class="remove">
-                  <img
-                    src="/img/icon/click-installation/cancel.png"
-                    alt="remove"
-                    @click="removeServiceFromList(plugin.service)"
-                  />
+                <div v-if="configServices.length" class="serviceTitle">
+                  <span>Services</span>
                 </div>
-              </div>
+                <div
+                  v-for="(plugin, index) in configServices.filter((s) => s.category === 'service')"
+                  :key="index"
+                  class="table-row duration-500"
+                >
+                  <div class="plugins">
+                    <img :src="plugin.icon" alt="icon" class="pluginIcon" />
+                    <div class="pluginName">
+                      <span>
+                        {{ plugin.name }}
+                      </span>
+                    </div>
+                    <div class="pluginCategory ml-2">
+                      <span>
+                        {{ plugin.category }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="remove">
+                    <img
+                      src="/img/icon/click-installation/cancel.png"
+                      alt="remove"
+                      @click="removeServiceFromList(plugin.service)"
+                    />
+                  </div>
+                </div>
+              </TransitionGroup>
             </div>
           </div>
         </div>
@@ -90,7 +92,6 @@ export default {
     return {
       back: "uploadConfig",
       title: "IMPORTED CONFIG",
-      next: "importingSyncing",
     };
   },
 
@@ -106,13 +107,29 @@ export default {
       configServices: "configServices",
       configNetwork: "configNetwork",
     }),
+    nextRouteHandler() {
+      return this.configServices.some((service) => service.category !== "service") ? true : false;
+    },
   },
 
   mounted() {
     this.checkPluginsToImport();
     this.extractNetwork();
   },
+
   methods: {
+    checkPluginsToImport() {
+      this.configServices = this.allServices.filter((service) => {
+        return this.unzippedData.some((d) => d.name.toLowerCase() === service.service.toLowerCase());
+      });
+    },
+    removeServiceFromList(item) {
+      this.configServices.map((element, index) => {
+        if (element.service === item) {
+          this.configServices.splice(index, 1);
+        }
+      });
+    },
     extractNetwork() {
       this.configServices = this.configServices.map((item) => {
         // extract network value
@@ -132,18 +149,6 @@ export default {
             name: network.name,
             icon: network.icon,
           };
-        }
-      });
-    },
-    checkPluginsToImport() {
-      this.configServices = this.allServices.filter((service) => {
-        return this.unzippedData.some((d) => d.name.toLowerCase() === service.service.toLowerCase());
-      });
-    },
-    removeServiceFromList(item) {
-      this.configServices.forEach((element, index) => {
-        if (element.service === item) {
-          this.configServices.splice(index, 1);
         }
       });
     },
@@ -185,7 +190,7 @@ export default {
   align-items: center;
 }
 .table-header {
-  width: 100%;
+  width: 98%;
   height: 11%;
   max-height: 40px;
   margin-top: 2px;
@@ -202,6 +207,7 @@ export default {
   grid-column: 1/2;
   grid-row: 1/2;
   align-self: center;
+  margin-left: 5px;
 }
 .table-header span {
   grid-column: 2/6;
@@ -235,24 +241,7 @@ export default {
   background-color: #9fb7bb;
   border-radius: 5px;
 }
-.content_header {
-  width: 100%;
-  height: 8%;
-  margin-top: 3px;
-  padding: 1px 10px;
-  background-color: #4c8189;
-  border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  top: 0;
-}
-.content_header span {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #e1e1e1;
-}
+
 .table-row {
   width: 100%;
   height: 35px;
@@ -292,16 +281,15 @@ export default {
   font-weight: 500;
   color: #e1e1e1;
 }
-.plugin .pluginCategory {
-  grid-column: 4/7;
+.plugins .pluginCategory {
+  grid-column: 4/6;
   grid-row: 1/2;
   width: 100%;
   height: 100%;
-  display: flex !important
-  ;
-  justify-content: flex-end !important;
+  display: flex !important;
+  justify-content: flex-start !important;
   align-items: center;
-  text-align: right;
+  padding-left: 20px;
 }
 .pluginCategory span {
   text-align: right;
@@ -334,7 +322,7 @@ export default {
 .container_content .configTitle,
 .container_content .serviceTitle {
   width: 100%;
-  height: 10%;
+  height: 20px;
   background-color: #286a6a;
   border-radius: 3px;
   display: flex;
