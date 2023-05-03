@@ -71,6 +71,9 @@
           <input id="search" v-model="searchValue" type="search" placeholder="Search" />
           <img v-if="!searchValue" src="/img/icon/arrows/search.png" alt="icon" />
         </div>
+        <div class="export-log" @click="logExport">
+          <img src="../../../../public/img/icon/manage-node-icons/log_export.png" alt="" />
+        </div>
         <div class="serviceBox">
           <span>{{ $t("pluginLogs.serviceId") }}:</span>
           <span>{{ logsItem.config.serviceID }}</span>
@@ -85,6 +88,8 @@ import { mapWritableState } from "pinia";
 import { useNodeStore } from "@/store/theNode";
 import { mapState } from "pinia";
 import { useServices } from "../../../store/services";
+import { saveAs } from "file-saver";
+
 export default {
   components: { ControlDialog },
   props: {
@@ -151,6 +156,15 @@ export default {
     this.filteredServiceLogs();
   },
   methods: {
+    logExport() {
+      const data = this.logsList.slice(-150).reverse();
+      const fileName = this.logsItem.name;
+
+      const lineByLine = data.map((line, index) => `#${data.length - index}: ${line}`).join("\n\n");
+
+      const blob = new Blob([lineByLine], { type: "text/plain;charset=utf-8" });
+      saveAs(blob, fileName);
+    },
     displayPluginLogPage(el) {
       this.logsItem = el;
     },
@@ -529,7 +543,7 @@ export default {
   align-items: center;
 }
 .logsFooter .logsText {
-  grid-column: 2/6;
+  grid-column: 1/5;
   grid-row: 1/2;
   width: 72%;
   height: 80%;
@@ -559,6 +573,15 @@ export default {
   align-items: center;
   position: relative;
 }
+.export-log {
+  grid-column: 8/9;
+  grid-row: 1/2;
+  justify-self: flex-end;
+  cursor: pointer;
+}
+.export-log:active {
+  transform: scale(0.9);
+}
 .searchBox img {
   width: 9%;
   margin-right: 1%;
@@ -578,7 +601,7 @@ export default {
   padding: 0 0.5rem;
 }
 .logsFooter .serviceBox {
-  grid-column: 5/9;
+  grid-column: 4/8;
   grid-row: 1/2;
   width: 100%;
   height: 80%;
