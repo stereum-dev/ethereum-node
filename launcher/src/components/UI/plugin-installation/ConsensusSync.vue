@@ -37,10 +37,10 @@
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
             </div>
-            <div class="inputBox_select" @click="dropdown = true">
+            <div class="inputBox_select">
               <div class="select">
                 {{ selectedItem }}
-                <div v-if="dropdown && currentNetwork.id == 1" class="dropParent">
+                <!-- <div v-if="!dropdown && currentNetwork.id == 1" class="dropParent">
                   <div class="dropRow">https://mainnet-checkpoint-sync.attestant.io/</div>
                   <div class="dropRow">https://beaconstate-mainnet.chainsafe.io/</div>
                   <div class="dropRow">https://beaconstate.ethstaker.cc/</div>
@@ -68,9 +68,9 @@
                   <div class="dropRow">https://sepolia.beaconstate.info/</div>
                   <div class="dropRow">https://beaconstate-sepolia.chainsafe.io/</div>
                   <div class="dropRow">https://checkpoint-sync.sepolia.ethpandaops.io/</div>
-                </div>
+                </div> -->
               </div>
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="toggleDropDown" />
             </div>
           </div>
         </div>
@@ -80,6 +80,13 @@
         <navigation />
       </template>
     </carousel>
+    <div v-if="dropdown" class="selection-column">
+      <div v-for="link in mainnet" :key="link" class="link-wapper">
+        <div class="option-row">
+          <span>{{ link }}</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -104,9 +111,20 @@ export default {
   },
   data() {
     return {
-      dropdown: true,
+      dropdown: false,
       selectedItem: " - SELECT A SOURCE -",
       currentSlide: 0,
+      mainnet: [
+        "https://mainnet-checkpoint-sync.attestant.io/",
+        "https://beaconstate-mainnet.chainsafe.io/",
+        "https://beaconstate.ethstaker.cc/",
+        "https://sync-mainnet.beaconcha.in/",
+        "https://mainnet.checkpoint.sigp.io/",
+        "https://beaconstate.info/",
+        "https://checkpointz.pietjepuk.net/",
+        "https://sync.invis.tools/",
+        "https://mainnet-checkpoint-sync.stakely.io/",
+      ],
     };
   },
 
@@ -128,6 +146,12 @@ export default {
         } else {
           this.btnActive = true;
         }
+    },
+  },
+  methods: {
+    toggleDropDown() {
+      this.dropdown = !this.dropdown;
+      console.log(this.dropdown);
     },
   },
 };
@@ -330,13 +354,33 @@ export default {
   border-radius: 5px;
   background-color: #151a1e;
   color: #d5d5d5;
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 400;
   padding: 5px;
   padding-left: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.selection-column {
+  width: 34%;
+  height: 180%;
+  display: flex;
+  background: #c12f2f;
+  color: #d5d5d5;
+  font-weight: 400;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 90%;
+  left: 58%;
+}
+.link-wapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .syncContent .inputBox_select .select .dropParent {
