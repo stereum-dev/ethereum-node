@@ -83,7 +83,7 @@
     </carousel>
     <div v-if="dropdown" class="selection-column">
       <ul class="link-wapper">
-        <li v-for="link in mainnet" :key="link" class="option-row" @click="linkPicker(link)">
+        <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
           <span>{{ link }}</span>
         </li>
       </ul>
