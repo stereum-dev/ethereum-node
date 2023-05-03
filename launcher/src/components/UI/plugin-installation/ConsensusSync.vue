@@ -113,7 +113,7 @@ export default {
   data() {
     return {
       dropdown: false,
-      selectedItem: " - SELECT A SOURCE -",
+      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
       currentSlide: 0,
       selectedLinks: [],
       mainnet: [
@@ -181,19 +181,15 @@ export default {
       switch (this.currentNetwork.id) {
         case 1:
           this.selectedLinks = this.mainnet;
-          console.log(this.selectedLinks);
           break;
         case 2:
           this.selectedLinks = this.georli;
-          console.log(this.selectedLinks);
           break;
         case 3:
           this.selectedLinks = this.sepolia;
-          console.log(this.selectedLinks);
           break;
         case 4:
           this.selectedLinks = this.gnosis;
-          console.log(this.selectedLinks);
           break;
         default:
           break;
@@ -412,10 +408,10 @@ export default {
 }
 
 .selection-column {
-  width: 34%;
+  width: 58%;
   height: 200%;
   display: flex;
-  background: #c12f2f;
+  background: #88a297;
   color: #d5d5d5;
   font-weight: 400;
   position: absolute;
@@ -423,7 +419,7 @@ export default {
   justify-content: center;
   align-items: center;
   top: 90%;
-  left: 58%;
+  left: 35%;
 }
 .link-wapper {
   width: 100%;
@@ -440,7 +436,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 60%;
+  font-size: 55%;
   font-weight: 600;
   padding: 1%;
   margin-bottom: 1%;
