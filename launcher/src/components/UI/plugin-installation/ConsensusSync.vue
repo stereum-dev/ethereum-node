@@ -40,38 +40,11 @@
             <div class="inputBox_select">
               <div class="select">
                 {{ selectedItem }}
-                <!-- <div v-if="!dropdown && currentNetwork.id == 1" class="dropParent">
-                  <div class="dropRow">https://mainnet-checkpoint-sync.attestant.io/</div>
-                  <div class="dropRow">https://beaconstate-mainnet.chainsafe.io/</div>
-                  <div class="dropRow">https://beaconstate.ethstaker.cc/</div>
-                  <div class="dropRow">https://sync-mainnet.beaconcha.in/</div>
-                  <div class="dropRow">https://mainnet.checkpoint.sigp.io/</div>
-                  <div class="dropRow">https://beaconstate.info/</div>
-                  <div class="dropRow">https://checkpointz.pietjepuk.net/</div>
-                  <div class="dropRow">https://sync.invis.tools/</div>
-                  <div class="dropRow">https://mainnet-checkpoint-sync.stakely.io/</div>
-                </div>
-                <div v-if="dropdown && currentNetwork.id == 2" class="dropParent">
-                  <div class="dropRow">https://prater.checkpoint.sigp.io/</div>
-                  <div class="dropRow">https://goerli-sync.invis.tools/</div>
-                  <div class="dropRow">https://checkpoint-sync.goerli.ethpandaops.io/</div>
-                  <div class="dropRow">https://goerli.beaconstate.info/</div>
-                  <div class="dropRow">https://sync-goerli.beaconcha.in/</div>
-                  <div class="dropRow">https://prater-checkpoint-sync.stakely.io/</div>
-                  <div class="dropRow">https://goerli.beaconstate.ethstaker.cc/</div>
-                  <div class="dropRow">https://beaconstate-goerli.chainsafe.io/</div>
-                </div>
-                <div v-if="dropdown && currentNetwork.id == 3" class="dropParent">
-                  <div class="dropRow">https://checkpoint.gnosischain.com/</div>
-                </div>
-                <div v-if="dropdown && currentNetwork.id == 4" class="dropParent">
-                  <div class="dropRow">https://sepolia.beaconstate.info/</div>
-                  <div class="dropRow">https://beaconstate-sepolia.chainsafe.io/</div>
-                  <div class="dropRow">https://checkpoint-sync.sepolia.ethpandaops.io/</div>
-                </div> -->
               </div>
-              <img v-if="!dropdown" src="/img/icon/arrows/left-arrow.png" alt="icon" @click="toggleDropDown" />
-              <img v-else src="/img/icon/arrows/left-arrow.png" alt="icon" class="drop-on" @click="toggleDropDown" />
+              <div class="triangle" @click="toggleDropDown">
+                <i v-if="dropdown" class="arrow up"></i>
+                <i v-else class="arrow down"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -384,10 +357,29 @@ export default {
   padding: 2px;
 }
 
-.inputBox_select img {
-  width: 20px;
-  transform: rotate(-90deg);
-  margin-right: 10px;
+.inputBox_select .triangle {
+  width: 14%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #151a1e;
+}
+.arrow {
+  border: solid #d5d5d5;
+  border-width: 0 2px 2px 0;
+  display: flex;
+  padding: 10%;
+  margin-right: 15%;
+}
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.up {
+  transform: rotate(225deg);
+  -webkit-transform: rotate(225deg);
 }
 
 .syncContent .inputBox_select .select {
@@ -409,7 +401,7 @@ export default {
 
 .selection-column {
   width: 58%;
-  height: 200%;
+  height: 250%;
   display: flex;
   background: #88a297;
   color: #d5d5d5;
@@ -432,11 +424,11 @@ export default {
 }
 .option-row {
   width: 100%;
-  height: 20%;
+  height: 30%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 55%;
+  font-size: 70%;
   font-weight: 600;
   padding: 1%;
   margin-bottom: 1%;
@@ -459,30 +451,6 @@ export default {
 
 ::-webkit-scrollbar-thumb {
   background: none;
-}
-
-.syncContent .inputBox_select .select .dropParent {
-  background-color: #192128;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  width: 207px;
-  height: 130px;
-  z-index: 1000;
-}
-.dropParent .dropRow {
-  width: 100%;
-  height: 40px;
-  margin-top: 5px;
-  color: #d5d5d5;
-  background-color: #c12f2f;
-  font-size: 0.8rem;
-  font-weight: 400;
-  text-align: center;
-  cursor: pointer;
 }
 
 .inputBox input {
