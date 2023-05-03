@@ -69,12 +69,11 @@ export default {
   methods: {
     extractPath() {
       this.configServices.forEach((service) => {
-        // const name = service.name;
-        const pattern = /\/opt\/stereum\//;
-        const match = service.content.match(pattern);
-        const path = match[0];
-        console.log(match);
-        console.log(path);
+        const regex = /\/opt\/\w+\//g;
+        const matches = service.content.match(regex);
+
+        const path = matches[0].trim();
+        console.log("firstPath: ", path);
       });
 
       // let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
