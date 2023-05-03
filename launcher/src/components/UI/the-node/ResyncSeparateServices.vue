@@ -117,6 +117,7 @@ export default {
       error: "",
       drpDown: false,
       selectedLinks: [],
+      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
     };
   },
   computed: {
@@ -185,10 +186,10 @@ export default {
           this.selectedLinks = this.georli;
           break;
         case 3:
-          this.selectedLinks = this.sepolia;
+          this.selectedLinks = this.gnosis;
           break;
         case 4:
-          this.selectedLinks = this.gnosis;
+          this.selectedLinks = this.sepolia;
           break;
         default:
           break;
