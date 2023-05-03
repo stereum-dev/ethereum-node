@@ -70,7 +70,8 @@
                   <div class="dropRow">https://checkpoint-sync.sepolia.ethpandaops.io/</div>
                 </div> -->
               </div>
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" @click="toggleDropDown" />
+              <img v-if="!dropdown" src="/img/icon/arrows/left-arrow.png" alt="icon" @click="toggleDropDown" />
+              <img v-else src="/img/icon/arrows/left-arrow.png" alt="icon" class="drop-on" @click="toggleDropDown" />
             </div>
           </div>
         </div>
@@ -81,11 +82,11 @@
       </template>
     </carousel>
     <div v-if="dropdown" class="selection-column">
-      <div v-for="link in mainnet" :key="link" class="link-wapper">
-        <div class="option-row">
+      <ul class="link-wapper">
+        <li v-for="link in mainnet" :key="link" class="option-row" @click="linkPicker(link)">
           <span>{{ link }}</span>
-        </div>
-      </div>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -114,6 +115,7 @@ export default {
       dropdown: false,
       selectedItem: " - SELECT A SOURCE -",
       currentSlide: 0,
+      selectedLinks: [],
       mainnet: [
         "https://mainnet-checkpoint-sync.attestant.io/",
         "https://beaconstate-mainnet.chainsafe.io/",
@@ -124,6 +126,22 @@ export default {
         "https://checkpointz.pietjepuk.net/",
         "https://sync.invis.tools/",
         "https://mainnet-checkpoint-sync.stakely.io/",
+      ],
+      georli: [
+        "https://prater.checkpoint.sigp.io/",
+        "https://goerli-sync.invis.tools/",
+        "https://checkpoint-sync.goerli.ethpandaops.io/",
+        "https://goerli.beaconstate.info/",
+        "https://sync-goerli.beaconcha.in/",
+        "https://prater-checkpoint-sync.stakely.io/",
+        "https://goerli.beaconstate.ethstaker.cc/",
+        "https://beaconstate-goerli.chainsafe.io/",
+      ],
+      sepolia: ["https://checkpoint.gnosischain.com/"],
+      gnosis: [
+        "https://sepolia.beaconstate.info/",
+        "https://beaconstate-sepolia.chainsafe.io/",
+        "https://checkpoint-sync.sepolia.ethpandaops.io/",
       ],
     };
   },
@@ -148,10 +166,38 @@ export default {
         }
     },
   },
+  mounted() {
+    this.setSelectedLinks();
+  },
   methods: {
     toggleDropDown() {
       this.dropdown = !this.dropdown;
-      console.log(this.dropdown);
+    },
+    linkPicker(item) {
+      this.selectedItem = item;
+      this.dropdown = false;
+    },
+    setSelectedLinks() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedLinks = this.mainnet;
+          console.log(this.selectedLinks);
+          break;
+        case 2:
+          this.selectedLinks = this.georli;
+          console.log(this.selectedLinks);
+          break;
+        case 3:
+          this.selectedLinks = this.sepolia;
+          console.log(this.selectedLinks);
+          break;
+        case 4:
+          this.selectedLinks = this.gnosis;
+          console.log(this.selectedLinks);
+          break;
+        default:
+          break;
+      }
     },
   },
 };
@@ -359,12 +405,15 @@ export default {
   padding: 5px;
   padding-left: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
 }
+
 .selection-column {
   width: 34%;
-  height: 180%;
+  height: 200%;
   display: flex;
   background: #c12f2f;
   color: #d5d5d5;
@@ -381,6 +430,39 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.option-row {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 60%;
+  font-weight: 600;
+  padding: 1%;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #d5d5d5;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow-x: auto;
+  cursor: pointer;
+}
+.option-row:hover {
+  background-color: #151a1e;
+  color: #d5d5d5;
+}
+.option-row span {
+  white-space: nowrap;
+}
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: none;
 }
 
 .syncContent .inputBox_select .select .dropParent {
