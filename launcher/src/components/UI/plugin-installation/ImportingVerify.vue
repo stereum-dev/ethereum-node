@@ -24,7 +24,7 @@
                     </span>
                   </div>
                   <div class="pluginPath">
-                    <span> {{ rootPath }}</span>
+                    <span> {{ plugin.configPath }}</span>
                   </div>
                 </div>
               </div>
@@ -48,7 +48,7 @@ export default {
       next: "manage",
       configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
       configNetwork: "Ethereum - Testnet",
-      rootPath: "/opt/stereum/",
+      rootPath: null,
     };
   },
   computed: {
@@ -68,44 +68,16 @@ export default {
   },
   methods: {
     extractPath() {
-      this.configServices.forEach((service) => {
-        const regex = /\/opt\/\w+\//g;
-        const matches = service.content.match(regex);
+      this.configServices = this.configServices.map((service) => {
+        const volumesRegex = /\/opt\/\w+\//g;
+        let matches = service.content ? service.content.match(volumesRegex) : "";
+        matches = matches !== null ? matches.filter((i) => i !== "/opt/app/") : "";
 
-        const path = matches[0].trim();
-        console.log("firstPath: ", path);
+        return {
+          ...service,
+          configPath: matches[0] !== undefined ? matches[0] : "/opt/stereum/",
+        };
       });
-
-      // let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
-      // let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
-      // let installPath;
-      // for (let i = 0; i < clients.length; i++) {
-      //   let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
-      //   if (catchInstallPath !== null) installPath = catchInstallPath.toString();
-      // }
-      // console.log("installPath: ", installPath);
-      // this.configServices.map((item) => {
-      //   const regex = /volumes:\s*(-\s*)?([^\n]+)/g;
-      //   const volumeMatch = item.content.match(regex);
-      //   const volume = volumeMatch ? volumeMatch[0] : null;
-      //   console.log(volumeMatch);
-      //   return {
-      //     ...item,
-      //     configPath: volume,
-      //   };
-
-      // const matches = regex.exec(item);
-      // if (matches) {
-      //   const volumes = matches[2]
-      //     .replace(/-[^\s]*/, "")
-      //     .trim()
-      //     .replace(/\/[a-zA-Z0-9-_]+$/, "");
-      //   return {
-      //     ...item,
-      //     configPath: volumes,
-      //   };
-      // }
-      // });
     },
   },
 };
