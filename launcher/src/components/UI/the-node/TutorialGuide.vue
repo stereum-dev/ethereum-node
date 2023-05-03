@@ -175,7 +175,7 @@ export default {
           this.nextStepFlag = 0;
           this.explainModal = false;
           this.fixRPC = false;
-        }, 5000);
+        }, 10000);
       }
     },
   },
@@ -225,7 +225,7 @@ export default {
             this.nextStepFlag = 1;
             this.mainMessage = this.firstMessage;
             this.explainRPC = true;
-          }, 1500);
+          }, 1800);
         }, 3000);
       }, 4500);
     },
