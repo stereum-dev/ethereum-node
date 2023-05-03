@@ -8,7 +8,7 @@
           <span>by initiating resync you will delete the database of</span>
         </div>
         <div class="resync-message_nameId">
-          <span>{{ item.name }} - [{{ item.config.serviceID }}}]</span>
+          <span>{{ item.name }} - [{{ item.config.serviceID }}]</span>
         </div>
         <div>
           <span>
@@ -50,24 +50,45 @@
                 </div>
               </div>
               <div v-else-if="Stype.type === 'custom source'" class="syncContent">
-                <div class="commingSoon">Coming soon...</div>
-                <!-- <span>{{ item.name }}</span>
-            <span>{{ item.type }}</span>
-            <div class="syncText">
-              <span>{{ item.name }}</span>
-              <span>{{ item.type }}</span>
-            </div>
-            <div class="inputBox_select" @click="dropdown = true">
-              <div class="select">
-                {{ selectedItem }}
-                <div class="dropParent" v-if="dropdown">
-                  <div class="dropRow">the first</div>
-                  <div class="dropRow">second one</div>
-                  <div class="dropRow">third one</div>
+                <div class="syncText">
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
-              </div>
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
-            </div> -->
+                <div class="inputBox_select" @click="dropdown = true">
+                  <div class="select">
+                    {{ selectedItem }}
+                    <div v-if="dropdown && currentNetwork.id == 1" class="dropParent">
+                      <div class="dropRow">https://mainnet-checkpoint-sync.attestant.io/</div>
+                      <div class="dropRow">https://beaconstate-mainnet.chainsafe.io/</div>
+                      <div class="dropRow">https://beaconstate.ethstaker.cc/</div>
+                      <div class="dropRow">https://sync-mainnet.beaconcha.in/</div>
+                      <div class="dropRow">https://mainnet.checkpoint.sigp.io/</div>
+                      <div class="dropRow">https://beaconstate.info/</div>
+                      <div class="dropRow">https://checkpointz.pietjepuk.net/</div>
+                      <div class="dropRow">https://sync.invis.tools/</div>
+                      <div class="dropRow">https://mainnet-checkpoint-sync.stakely.io/</div>
+                    </div>
+                    <div v-if="dropdown && currentNetwork.id == 2" class="dropParent">
+                      <div class="dropRow">https://prater.checkpoint.sigp.io/</div>
+                      <div class="dropRow">https://goerli-sync.invis.tools/</div>
+                      <div class="dropRow">https://checkpoint-sync.goerli.ethpandaops.io/</div>
+                      <div class="dropRow">https://goerli.beaconstate.info/</div>
+                      <div class="dropRow">https://sync-goerli.beaconcha.in/</div>
+                      <div class="dropRow">https://prater-checkpoint-sync.stakely.io/</div>
+                      <div class="dropRow">https://goerli.beaconstate.ethstaker.cc/</div>
+                      <div class="dropRow">https://beaconstate-goerli.chainsafe.io/</div>
+                    </div>
+                    <div v-if="dropdown && currentNetwork.id == 3" class="dropParent">
+                      <div class="dropRow">https://checkpoint.gnosischain.com/</div>
+                    </div>
+                    <div v-if="dropdown && currentNetwork.id == 4" class="dropParent">
+                      <div class="dropRow">https://sepolia.beaconstate.info/</div>
+                      <div class="dropRow">https://beaconstate-sepolia.chainsafe.io/</div>
+                      <div class="dropRow">https://checkpoint-sync.sepolia.ethpandaops.io/</div>
+                    </div>
+                  </div>
+                  <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
+                </div>
               </div>
             </div>
           </slide>
@@ -89,6 +110,7 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import ControlService from "@/store/ControlService";
@@ -120,6 +142,9 @@ export default {
     }),
     ...mapWritableState(useServices, {
       resyncSeparateModal: "resyncSeparateModal",
+    }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
   },
   watch: {
