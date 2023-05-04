@@ -17,7 +17,7 @@
               src="../../../../public/img/icon/control/stakingWu.svg"
               alt="coin-icon"
             /> -->
-            <img :src="currencyIcon" />
+            {{ selectedCurrency }}
           </div>
         </div>
         <div class="side-bottom">
@@ -41,7 +41,7 @@ export default {
   data() {
     return {
       currencyIcon: "",
-      defaultIcon: "/img/icon/control/stakingWu.svg",
+      selectedCurrency: "",
     };
   },
   computed: {
@@ -60,7 +60,27 @@ export default {
     },
   },
   mounted() {
-    this.currencyIcon = this.currentNetwork.network ? this.currentNetwork.currencyIcon : this.defaultIcon;
+    this.setSelectedCurrency();
+  },
+  methods: {
+    setSelectedCurrency() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedCurrency = "eth";
+          break;
+        case 2:
+          this.selectedCurrency = "geo";
+          break;
+        case 3:
+          this.selectedCurrency = "gno";
+          break;
+        case 4:
+          this.selectedCurrency = "sep";
+          break;
+        default:
+          break;
+      }
+    },
   },
 };
 </script>
@@ -125,24 +145,23 @@ export default {
   align-items: center;
 }
 .top-icon {
-  width: 25%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.top-icon img {
-  width: 70%;
-  height: 90%;
-  min-width: 70%;
-}
-.top-value {
-  width: 75%;
+  width: 35%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  text-transform: uppercase;
+  font-weight: 800;
   font-size: 100%;
+}
+
+.top-value {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 90%;
   font-weight: 600;
   color: #74fa65;
 }
