@@ -9,28 +9,24 @@
       </div>
       <div class="staking-container">
         <div class="side-top">
+          <div class="top-value">
+            <span>{{ formattedBalance }}</span>
+          </div>
           <div class="top-icon">
             <!-- <img
               src="../../../../public/img/icon/control/stakingWu.svg"
               alt="coin-icon"
             /> -->
-            <img :src="currencyIcon" />
-          </div>
-          <div class="top-value">
-            <span>{{ formattedBalance }}</span>
+            {{ selectedCurrency }}
           </div>
         </div>
         <div class="side-bottom">
           <div class="number-of-validators">
-            <span>{{ keys.length }}</span>
+            <span>{{ formattedValidatorNo }}</span>
           </div>
           <div class="number-of-validators_title">
             <span>IMPORTED</span>
             <span>VALIDATOR(s)</span>
-          </div>
-          <div class="controller">
-            <span>INCLUSION DISTANCE</span>
-            <vertical-bar-controller></vertical-bar-controller>
           </div>
         </div>
       </div>
@@ -41,13 +37,11 @@
 import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
-import VerticalBarController from "./VerticalBarController.vue";
 export default {
-  components: { VerticalBarController },
   data() {
     return {
       currencyIcon: "",
-      defaultIcon: "/img/icon/control/stakingWu.svg",
+      selectedCurrency: "",
     };
   },
   computed: {
@@ -61,22 +55,43 @@ export default {
     formattedBalance() {
       return this.totalBalance.toFixed(5);
     },
+    formattedValidatorNo() {
+      return this.keys.length.toString().padStart(3, "0");
+    },
   },
   mounted() {
-    this.currencyIcon = this.currentNetwork.network ? this.currentNetwork.currencyIcon : this.defaultIcon
+    this.setSelectedCurrency();
+  },
+  methods: {
+    setSelectedCurrency() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedCurrency = "eth";
+          break;
+        case 2:
+          this.selectedCurrency = "geo";
+          break;
+        case 3:
+          this.selectedCurrency = "gno";
+          break;
+        case 4:
+          this.selectedCurrency = "sep";
+          break;
+        default:
+          break;
+      }
+    },
   },
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
-}
 .staking-parent {
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
   height: 100%;
+  color: #c1c1c1;
 }
 .staking-box {
   width: 100%;
@@ -130,19 +145,18 @@ export default {
   align-items: center;
 }
 .top-icon {
-  width: 27%;
+  width: 35%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 100%;
 }
-.top-icon img {
-  width: 70%;
-  height: 90%;
-  min-width: 70%;
-}
+
 .top-value {
-  width: 75%;
+  width: 65%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -159,22 +173,22 @@ export default {
   align-items: center;
 }
 .number-of-validators {
-  width: 20%;
+  width: 50%;
   height: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   font-size: 100%;
   font-weight: 800;
 }
 .number-of-validators_title {
-  width: 30%;
+  width: 50%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 48%;
+  font-size: 55%;
   font-weight: 600;
 }
 .controller {

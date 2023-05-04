@@ -2,9 +2,9 @@
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
     <div class="node-serve">
-      <node-server-response></node-server-response>
+      <EpochSlot />
     </div>
-    <div class="sandFull_cell"><time-gas></time-gas></div>
+    <div class="sandFull_cell"><TheBalance /></div>
     <dashboard-card class="hard-disk">
       <the-hard></the-hard>
     </dashboard-card>
@@ -34,12 +34,11 @@
     <div class="half-card3"><data-api></data-api></div>
   </div>
 </template>
-
 <script>
 import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
-import NodeServerResponse from "./NodeServerResponse.vue";
+import EpochSlot from "./EpochSlot.vue";
 import TheCpu from "./TheCpu.vue";
 import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
@@ -48,7 +47,7 @@ import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
-import TimeGas from "./TimeGas.vue";
+import TheBalance from "./TheBalance";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
@@ -68,8 +67,8 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
-    TimeGas,
-    NodeServerResponse,
+    TheBalance,
+    EpochSlot,
     RpcEndpoint,
     WsEndpoint,
     DiskSpeed,
