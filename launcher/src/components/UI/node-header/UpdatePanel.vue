@@ -216,6 +216,7 @@ export default {
       };
     },
   },
+
   updated() {
     this.getSettings();
   },
