@@ -20,7 +20,6 @@ export default {
 .epockSlot_parent {
   display: flex;
   width: 99%;
-
   justify-content: center;
   align-items: center;
   box-sizing: border-box;

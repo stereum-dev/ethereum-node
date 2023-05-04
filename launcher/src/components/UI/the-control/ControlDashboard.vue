@@ -4,7 +4,7 @@
     <div class="node-serve">
       <EpochSlot />
     </div>
-    <div class="sandFull_cell"><time-gas></time-gas></div>
+    <div class="sandFull_cell"><TheBalance /></div>
     <dashboard-card class="hard-disk">
       <the-hard></the-hard>
     </dashboard-card>
@@ -47,7 +47,7 @@ import AmsterdamComponent from "./AmsterdamComponent.vue";
 import TheRam from "./TheRam.vue";
 import PeerToPeer from "./PeerToPeer.vue";
 import TheNetwork from "./TheNetwork.vue";
-import TimeGas from "./TimeGas.vue";
+import TheBalance from "./TheBalance";
 import RpcEndpoint from "./RpcEndpoint.vue";
 import WsEndpoint from "./WsEndpoint.vue";
 import DiskSpeed from "./DiskSpeed.vue";
@@ -67,7 +67,7 @@ export default {
     PeerToPeer,
     TheCpu,
     TheNetwork,
-    TimeGas,
+    TheBalance,
     EpochSlot,
     RpcEndpoint,
     WsEndpoint,
