@@ -118,6 +118,7 @@ export default {
       drpDown: false,
       selectedLinks: [],
       selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
+      prevVal: 0,
     };
   },
   computed: {
@@ -137,8 +138,10 @@ export default {
   },
   watch: {
     currentSlide(val) {
-      if (val === 0) {
+      if (val != this.prevVal) {
+        this.prevVal = val;
         this.checkPointSync = "";
+        this.selectedItem = " - SELECT A SOURCE -";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
     },
@@ -174,6 +177,7 @@ export default {
     },
     linkPicker(item) {
       this.selectedItem = item;
+      this.checkPointSync = item;
       this.drpDown = false;
       this.btnActive = true;
     },
