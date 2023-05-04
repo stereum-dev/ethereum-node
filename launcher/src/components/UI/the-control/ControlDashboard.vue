@@ -2,7 +2,7 @@
   <div class="ctrlParent">
     <div class="machineName_cell"><machine-name></machine-name></div>
     <div class="node-serve">
-      <node-server-response></node-server-response>
+      <EpochSlot />
     </div>
     <div class="sandFull_cell"><time-gas></time-gas></div>
     <dashboard-card class="hard-disk">
@@ -34,12 +34,11 @@
     <div class="half-card3"><data-api></data-api></div>
   </div>
 </template>
-
 <script>
 import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
 import SyncStatus from "./SyncStatus.vue";
-import NodeServerResponse from "./NodeServerResponse.vue";
+import EpochSlot from "./EpochSlot.vue";
 import TheCpu from "./TheCpu.vue";
 import TheHard from "./TheHard.vue";
 import MachineName from "./MachineName.vue";
@@ -69,7 +68,7 @@ export default {
     TheCpu,
     TheNetwork,
     TimeGas,
-    NodeServerResponse,
+    EpochSlot,
     RpcEndpoint,
     WsEndpoint,
     DiskSpeed,
