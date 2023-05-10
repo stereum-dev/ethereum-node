@@ -47,6 +47,7 @@ import { useServices } from "@/store/services";
 import YAML from "yaml";
 // import ControlService from "@/store/ControlService";
 import JSZip from "jszip";
+import YAML from "yaml";
 
 export default {
   name: "UploadConfig",
@@ -81,6 +82,7 @@ export default {
   },
   methods: {
     async handleFileUpload(event) {
+      // load config .zip file
       const file = event.target.files[0];
       if (file.type !== "application/zip" && file.type !== "application/x-zip-compressed") {
         this.isMessageActive = true;
@@ -88,6 +90,7 @@ export default {
         return;
       }
 
+      // extract, then check extensions of the files (.yaml)
       this.isMessageActive = false;
       this.fileName = file.name;
       const zip = await JSZip.loadAsync(file);
@@ -98,28 +101,64 @@ export default {
         this.message = "Invalid file type. Please try again with a valid file.";
         return;
       }
-      this.next = "importingList";
+
+      // check name of the config files
+      let serviceName = [];
       for (const file of yamlFiles) {
         const data = await file.async("string");
-
-        this.unzippedData.push({
-          name: file.name.split("/")[1].split(".")[0],
-          content: data,
+        serviceName.push({
+          name: YAML.parse(data).service,
         });
       }
 
       const filteredServices = this.allServices.filter((service) => {
-        return this.unzippedData.some((item) => item.name === service.service);
+        return serviceName.some((item) => item.name === service.service);
       });
-      filteredServices.forEach((service) => {
-        service.content = this.unzippedData.find((item) => item.name === service.service).content;
-      });
+
+      console.log(filteredServices);
+
+      // filteredServices.forEach((service) => {
+      //   service.content = this.unzippedData.find((item) => item.name === service.service).content;
+      // });
 
       if (filteredServices.length === 0) {
         this.isMessageActive = true;
         this.message = "Invalid configuration file.";
         return;
       }
+
+      let rootPath = "";
+      for (const file of yamlFiles) {
+        const data = await file.async("string");
+        // console.log("service: ", YAML.parse(data).service);
+        // console.log("id: ", YAML.parse(data).id);
+        // console.log("content: ", data);
+
+        let serviceVolume = YAML.parse(data).volumes.find((el) => el.includes(YAML.parse(data).id));
+        // console.log("test: ", serviceVolume);
+
+        let split = {};
+        if (serviceVolume) {
+          let path = serviceVolume.split(YAML.parse(data).id)[0];
+          split = path.split("/");
+        }
+        rootPath = serviceVolume
+          ? split.slice(0, split.length - 1).join("/") + "/"
+          : YAML.parse(data).service === "PrometheusNodeExporterService"
+          ? "/"
+          : rootPath;
+
+        // console.log("path: ", rootPath);
+
+        this.unzippedData.push({
+          name: YAML.parse(data).service,
+          id: YAML.parse(data).id,
+          network: YAML.parse(data).network,
+          content: data,
+          path: rootPath,
+        });
+      }
+      console.log("this Unzipped data: ", this.unzippedData);
       this.isMessageActive = false;
       this.message = "";
       this.next = "importingList";
