@@ -2304,9 +2304,6 @@ export class Monitoring {
       const wsstatus = await this.getWsStatus();
       // if(wsstatus.code)
       //   return wsstatus;
-      const storagestatus = await this.getStorageStatus();
-      // if(storagestatus.code)
-      //   return storagestatus;
       const syncstatus = await this.getSyncStatus();
       // if(syncstatus.code)
       //   return syncstatus;
@@ -2320,7 +2317,6 @@ export class Monitoring {
           debugstatus: debugstatus,
           syncstatus: syncstatus,
           p2pstatus: p2pstatus,
-          storagestatus: storagestatus,
           rpcstatus: rpcstatus,
           wsstatus: wsstatus,
           beaconstatus: beaconstatus,

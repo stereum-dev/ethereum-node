@@ -87,7 +87,14 @@ export default {
               this.wsstatus = nodeStats.data.wsstatus;
               this.beaconstatus = nodeStats.data.beaconstatus;
               this.portstatus = nodeStats.data.portstatus;
-              this.storagestatus = nodeStats.data.storagestatus.data;
+            } catch (e) {}
+          }
+        });
+        // Get Storage Status
+        this.requestQueued("getStorageStatus").then((response) => {
+          if (response) {
+            try {
+              this.storagestatus = response.data;
             } catch (e) {}
           }
         });
