@@ -570,7 +570,7 @@ export class ValidatorAccountManager {
           );
           break;
         }
-        //docker run -v /opt/stereum/nimbus-21ef621f-58cb-252e-6e17-ae7e22c3e206/validator/validators:/validators --network=stereum sigp/lighthouse:v4.1.0 lighthouse account validator exit --keystore=/validators/0x82507cd2f492d61df6a463a449f4fb8a61b61eb62c4a691f9f6dd764955c510d14bfe5eaf344b332327b90ce035f3b59/keystore.json --password-file=/validators/0x82507cd2f492d61df6a463a449f4fb8a61b61eb62c4a691f9f6dd764955c510d14bfe5eaf344b332327b90ce035f3b59/exit_password.txt --network=goerli --beacon-node=http://stereum-2e8cca23-0b1b-e6ab-954b-f38a251f3692:5052 --no-confirmation
+
         case "nimbus": {
           const validatorsDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
 
