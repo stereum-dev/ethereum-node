@@ -216,11 +216,8 @@ export default {
       };
     },
   },
-
-  updated() {
-    this.getSettings();
-  },
   async mounted() {
+    this.getSettings();
     await this.getOsVersion();
     await this.getUpdatablePackagesCount();
   },

@@ -36,7 +36,7 @@
       </ul>
       <div
         class="buttonRow"
-        :class="{ disabled: disable || validatorName === 'Lodestar' }"
+        :class="{ disabled: disable || validatorName === 'Lodestar' ||  validatorName === 'Nimbus'}"
         @click.stop="$emit('clickBtnGraffiti')"
       >
         <div class="btnContent">

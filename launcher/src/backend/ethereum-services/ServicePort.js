@@ -24,7 +24,9 @@ export const validatorPorts = {
   LighthouseValidatorService: 5062,
   PrysmValidatorService: 7500,
   NimbusBeaconService: 5052,
+  NimbusValidatorService: 5052,
   TekuBeaconService: 5052,
+  TekuValidatorService: 5052,
   LodestarValidatorService: 5062,
   Web3SignerService: 9000,
 };

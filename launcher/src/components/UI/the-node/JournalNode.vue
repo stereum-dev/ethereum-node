@@ -234,7 +234,7 @@
       </div>
     </div>
     <restart-modal
-      v-if="restartModalShow || switchModalShow"
+      v-if="restartModalShow"
       :title="titlePicker"
       :icon="iconPicker"
       :service="itemToRestart"
