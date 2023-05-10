@@ -44,6 +44,7 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
+import YAML from "yaml";
 // import ControlService from "@/store/ControlService";
 import JSZip from "jszip";
 
@@ -74,6 +75,9 @@ export default {
     ...mapWritableState(useServices, {
       allServices: "allServices",
     }),
+  },
+  mounted() {
+    this.getInstallationPath();
   },
   methods: {
     async handleFileUpload(event) {
@@ -121,11 +125,23 @@ export default {
       this.next = "importingList";
       this.configServices = filteredServices;
 
-      // let test = await ControlService.importConfig(this.unzippedData);
-      // const firstYamlFile = yamlFiles[0];
-      // const yamlData = await firstYamlFile.async("string");
-      // this.yamlData = yamlData;
-      // console.log("yamlData", yamlData);
+      //get the installation path from the config file
+    },
+    getInstallationPath() {
+      let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
+      console.log("beaconService: ", beaconService);
+
+      // let network = YAML.parse(beaconService.content).network;
+      // console.log("network: ", network);
+
+      let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
+
+      let installPath;
+      for (let i = 0; i < clients.length; i++) {
+        let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
+        if (catchInstallPath !== null) installPath = catchInstallPath.toString();
+      }
+      console.log("installPath: ", installPath);
     },
   },
 };
