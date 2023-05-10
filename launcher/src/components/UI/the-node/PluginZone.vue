@@ -141,7 +141,6 @@ export default {
       resyncSeparateModal: "resyncSeparateModal",
       installedServices: "installedServices",
       runningServices: "runningServices",
-      resyncWarningModal: "resyncWarningModal",
       selectedServiceToResync: "selectedServiceToResync",
     }),
   },

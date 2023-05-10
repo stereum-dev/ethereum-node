@@ -51,20 +51,14 @@ test("buildConfiguration", () => {
 
   expect(nimbusService.command).toContain("--web3-url=Ws-endpoint-string");
   expect(nimbusService.command).toContain("--network=prater");
-  expect(nimbusService.volumes).toHaveLength(4);
+  expect(nimbusService.volumes).toHaveLength(2);
   expect(nimbusService.volumes).toContain("/opt/stereum/nimbus-" + nimbusService.id + "/beacon:/opt/app/beacon");
-  expect(nimbusService.volumes).toContain(
-    "/opt/stereum/nimbus-" + nimbusService.id + "/validator/validators:/opt/app/validators"
-  );
-  expect(nimbusService.volumes).toContain(
-    "/opt/stereum/nimbus-" + nimbusService.id + "/validator/secrets:/opt/app/secrets"
-  );
   expect(nimbusService.volumes).toContain("some/path/engine.jwt:/engine.jwt");
   expect(nimbusService.ports).toHaveLength(3);
   expect(nimbusService.id).toHaveLength(36);
   expect(nimbusService.user).toMatch(/2000/);
   expect(nimbusService.image).toMatch(/statusim\/nimbus-eth2/);
-  expect(nimbusService.configVersion).toBe(1);
+  expect(nimbusService.configVersion).toBe(2);
 });
 
 test("buildConsensusClientWsEndpointUrl", () => {

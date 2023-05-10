@@ -25,12 +25,8 @@ export class NimbusBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/beacon";
-    const validatorsDir = "/opt/app/validators";
-    const secretsDir = "/opt/app/secrets";
     const volumes = [
       new ServiceVolume(workingDir + "/beacon", dataDir),
-      new ServiceVolume(workingDir + "/validator/validators", validatorsDir),
-      new ServiceVolume(workingDir + "/validator/secrets", secretsDir),
     ];
 
     if (executionClients && executionClients.length > 0) {
@@ -41,16 +37,13 @@ export class NimbusBeaconService extends NodeService {
     service.init(
       "NimbusBeaconService", //service
       service.id, // id,
-      1, // configVersion
+      2, // configVersion
       image, // image,
       "multiarch-v22.10.0", // imageVersion,
       [
         `--network=${network}`,
         `--data-dir=${dataDir}`,
-        `--validators-dir=${validatorsDir}`,
-        `--secrets-dir=${secretsDir}`,
         `--web3-url=${executionLayer}`,
-        "--suggested-fee-recipient=0x0000000000000000000000000000000000000000",
         "--tcp-port=9000",
         "--udp-port=9000",
         "--metrics",
@@ -59,10 +52,6 @@ export class NimbusBeaconService extends NodeService {
         "--rest",
         "--rest-address=0.0.0.0",
         "--rest-port=5052",
-        `--graffiti=stereum.net`,
-        "--keymanager",
-        "--keymanager-address=0.0.0.0",
-        "--keymanager-token-file=/opt/app/validators/api-token.txt",
         "--jwt-secret=/engine.jwt",
         "--history=prune",
       ], // command,
