@@ -8,7 +8,8 @@
           <span>{{ validatorName }}</span>
         </div>
         <div v-if="multiValidator" class="arrow-abteilung" @click="selectorToggl">
-          <i class="arrow down"></i>
+          <i v-if="selector" class="arrow up"></i>
+          <i v-else class="arrow down"></i>
         </div>
       </div>
       <div class="validator-commands">
@@ -235,6 +236,10 @@ export default {
 .down {
   transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
+}
+.up {
+  transform: rotate(225deg);
+  -webkit-transform: rotate(225deg);
 }
 .arrow-abteilung {
   width: 20%;

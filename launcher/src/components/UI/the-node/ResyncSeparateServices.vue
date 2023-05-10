@@ -8,7 +8,7 @@
           <span>by initiating resync you will delete the database of</span>
         </div>
         <div class="resync-message_nameId">
-          <span>{{ item.name }} - [{{ item.config.serviceID }}}]</span>
+          <span>{{ item.name }} - [{{ item.config.serviceID }}]</span>
         </div>
         <div>
           <span>
@@ -50,24 +50,19 @@
                 </div>
               </div>
               <div v-else-if="Stype.type === 'custom source'" class="syncContent">
-                <div class="commingSoon">Coming soon...</div>
-                <!-- <span>{{ item.name }}</span>
-            <span>{{ item.type }}</span>
-            <div class="syncText">
-              <span>{{ item.name }}</span>
-              <span>{{ item.type }}</span>
-            </div>
-            <div class="inputBox_select" @click="dropdown = true">
-              <div class="select">
-                {{ selectedItem }}
-                <div class="dropParent" v-if="dropdown">
-                  <div class="dropRow">the first</div>
-                  <div class="dropRow">second one</div>
-                  <div class="dropRow">third one</div>
+                <div class="syncText">
+                  <span>{{ Stype.name }}</span>
+                  <span>{{ Stype.type }}</span>
                 </div>
-              </div>
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
-            </div> -->
+                <div class="inputBox_select">
+                  <div class="select">
+                    {{ selectedItem }}
+                  </div>
+                  <div class="triangle" @click="tglDropdown">
+                    <i v-if="drpDown" class="arrow up"></i>
+                    <i v-else class="arrow down"></i>
+                  </div>
+                </div>
               </div>
             </div>
           </slide>
@@ -76,6 +71,13 @@
             <navigation />
           </template>
         </carousel>
+        <div v-if="drpDown" class="selection-column-modal">
+          <ul class="link-wapper">
+            <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
+              <span>{{ link }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="error">
         <span v-if="error">{{ error }}</span>
@@ -89,6 +91,7 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
+import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 import ControlService from "@/store/ControlService";
@@ -112,26 +115,43 @@ export default {
       checkPointSync: "",
       serviceID: "",
       error: "",
+      drpDown: false,
+      selectedLinks: [],
+      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
+      prevVal: 0,
     };
   },
   computed: {
     ...mapWritableState(useClickInstall, {
       syncType: "syncType",
+      mainnet: "mainnet",
+      georli: "georli",
+      sepolia: "sepolia",
+      gnosis: "gnosis",
+      selectedPreset: "selectedPreset",
     }),
     ...mapWritableState(useServices, {
       resyncSeparateModal: "resyncSeparateModal",
     }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
+    }),
   },
   watch: {
     currentSlide(val) {
-      if (val === 0) {
+      if (val != this.prevVal) {
+        this.prevVal = val;
         this.checkPointSync = "";
+        this.selectedItem = " - SELECT A SOURCE -";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
     },
     checkPointSync(val) {
       this.btnActive = val !== "" || this.currentSlide === 0;
     },
+  },
+  mounted() {
+    this.setSelectedLinks();
   },
   methods: {
     async resync(el) {
@@ -153,11 +173,103 @@ export default {
         this.error = "";
       }
     },
+    tglDropdown() {
+      this.drpDown = !this.drpDown;
+    },
+    linkPicker(item) {
+      this.selectedItem = item;
+      this.checkPointSync = item;
+      this.drpDown = false;
+      this.btnActive = true;
+    },
+    setSelectedLinks() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedLinks = this.mainnet;
+          break;
+        case 2:
+          this.selectedLinks = this.georli;
+          break;
+        case 3:
+          this.selectedLinks = this.gnosis;
+          break;
+        case 4:
+          this.selectedLinks = this.sepolia;
+          break;
+        default:
+          break;
+      }
+      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
+        for (const config of this.selectedPreset.includedPlugins) {
+          if (config.service.toLowerCase() == "tekubeaconservice") {
+            this.selectedLinks = this.selectedLinks.map(function (element) {
+              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
+            });
+            break;
+          }
+        }
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.selection-column-modal {
+  width: 58%;
+  height: 50%;
+  display: flex;
+  background: #88a297;
+  color: #d5d5d5;
+  font-weight: 400;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 75%;
+  left: 21%;
+  z-index: 500;
+}
+.link-wapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.option-row {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 70%;
+  font-weight: 600;
+  padding: 1%;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #d5d5d5;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow-x: auto;
+  cursor: pointer;
+}
+.option-row:hover {
+  background-color: #151a1e;
+  color: #d5d5d5;
+}
+.option-row span {
+  white-space: nowrap;
+}
+
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: none;
+}
 .error {
   color: red;
   width: 90%;
