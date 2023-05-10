@@ -8,7 +8,8 @@
         <span>{{ $t("controlPage.storage") }}</span>
       </div>
       <div class="storage-data_box">
-        <div v-for="item in storagestatus" :key="item.id" class="storage-data_row">
+        <img v-show="isLoading" class="bttnLoading" :src="bttnLoading" />
+        <div v-show="!isLoading" v-for="item in storagestatus" :key="item.id" class="storage-data_row">
           <div class="storage-data_row_title">
             <span>{{ item.title }}</span>
           </div>
@@ -28,6 +29,8 @@ export default {
     return {
       // datas are dummy, but the best stracture for the design is like this
       //for the wiring use this stracture
+      isLoading: true, // initialize this here with true to show a spinner
+      bttnLoading: "/img/icon/control/spinner.gif",
     };
   },
   computed: {
@@ -35,9 +38,22 @@ export default {
       storagestatus: "storagestatus",
     }),
   },
+  watch: {
+    storagestatus(newVal) {
+      if (newVal && Array.isArray(newVal) && newVal.length) {
+        this.isLoading = false;
+      }
+    },
+  },
 };
 </script>
 <style scoped>
+.bttnLoading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+}
 .storage-parent {
   display: flex;
   width: 100%;
