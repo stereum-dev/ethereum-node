@@ -102,6 +102,7 @@ export default {
       georli: "georli",
       sepolia: "sepolia",
       gnosis: "gnosis",
+      selectedPreset: "selectedPreset",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -152,6 +153,16 @@ export default {
           break;
         default:
           break;
+      }
+      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
+        for (const config of this.selectedPreset.includedPlugins) {
+          if (config.service.toLowerCase() == "tekubeaconservice") {
+            this.selectedLinks = this.selectedLinks.map(function (element) {
+              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
+            });
+            break;
+          }
+        }
       }
     },
   },
