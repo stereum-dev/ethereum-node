@@ -1943,14 +1943,24 @@ export class Monitoring {
       -H "Sec-WebSocket-Version: 13" \
       -H "Sec-WebSocket-Key: ${key}" \
       --data-raw '{"jsonrpc":"2.0", "id": 1, "method": "eth_blockNumber", "params": []}' \
+      --connect-timeout 3 \
+      --max-time 3 \
+      -w "\\n%{http_code}" \
       ${url}
     `.trim();
 
     // Execute curl command
     const wsResult = await this.nodeConnection.sshService.exec(cmd);
 
+    let statuscode = 0;
+    try {
+      let r = wsResult.stdout.trim().split("\n");
+      statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
+    } catch (e) {}
+
     // Respond true if websocket is available, false otherwise
-    if (!wsResult.stdout.toLowerCase().includes("sec-websocket")) {
+    //if (!wsResult.stdout.toLowerCase().includes("sec-websocket")) {
+    if (wsResult.rc || statuscode != 200) {
       return {
         code: 2,
         info: "error: ws port not available",
