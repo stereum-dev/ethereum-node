@@ -7,7 +7,7 @@
     <div class="icon-btn" @click="notifModalOpen">
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div v-if="isUpdateAvailable" class="icon-btn" @click="updateModalHandler">
+    <div v-if="isUpdateAvailable || isOsUpdateAvailable" class="icon-btn" @click="updateModalHandler">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
     <div
@@ -30,10 +30,12 @@
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
+      ref="UpdatePanelComp"
       :click-bg="displayUpdatePanel"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
+      @run-os-update="runOsUpdate"
       @click-out="removeUpdateModal"
     ></update-panel>
     <logout-modal
@@ -72,6 +74,9 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
+      isOsUpdateAvailable: "isOsUpdateAvailable",
+      osUpdating: "osUpdating",
+      searchingForOsUpdates: "searchingForOsUpdates",
       refresh: "refresh",
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
@@ -126,6 +131,19 @@ export default {
         await ControlService.restartServices(seconds);
         this.updating = false;
       }
+    },
+    async runOsUpdate() {
+      try {
+        this.osUpdating = true;
+        await ControlService.updateOS();
+      } catch (err) {
+        console.log("OS Update Failed", err);
+      }
+      this.osUpdating = false;
+      this.searchingForOsUpdates = false;
+      this.$refs.UpdatePanelComp.osUpdating = false;
+      this.$refs.UpdatePanelComp.searchingForOsUpdates = false;
+      await this.$refs.UpdatePanelComp.searchOsUpdates();
     },
     clickToCancelLogout() {
       this.logoutModalIsActive = false;

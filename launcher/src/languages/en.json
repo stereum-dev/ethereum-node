@@ -95,6 +95,7 @@
   },
   "updatePanel": {
     "launcherTitle": "launcher",
+    "version": "version",
     "current": "current",
     "nodeTitle": "node updates",
     "latest": "latest",
@@ -106,7 +107,7 @@
     "availablePlugin": "AVAILABLE PLUG-IN UPDATES",
     "all": "update all",
     "osTitle": "server os updates",
-    "availableUpdates": "available updates"
+    "availableUpdates": "updates"
   },
   "controlPage": {
     "node": "NODE",
