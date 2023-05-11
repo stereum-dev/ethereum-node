@@ -33,24 +33,19 @@
             </div>
           </div>
           <div v-else-if="item.type === 'custom source'" class="syncContent">
-            <div class="commingSoon">Coming soon...</div>
-            <!-- <span>{{ item.name }}</span>
-            <span>{{ item.type }}</span>
             <div class="syncText">
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
             </div>
-            <div class="inputBox_select" @click="dropdown = true">
+            <div class="inputBox_select">
               <div class="select">
                 {{ selectedItem }}
-                <div class="dropParent" v-if="dropdown">
-                  <div class="dropRow">the first</div>
-                  <div class="dropRow">second one</div>
-                  <div class="dropRow">third one</div>
-                </div>
               </div>
-              <img src="/img/icon/arrows/left-arrow.png" alt="icon" />
-            </div> -->
+              <div class="triangle" @click="toggleDropDown">
+                <i v-if="dropdown" class="arrow up"></i>
+                <i v-else class="arrow down"></i>
+              </div>
+            </div>
           </div>
         </div>
       </slide>
@@ -59,12 +54,20 @@
         <navigation />
       </template>
     </carousel>
+    <div v-if="dropdown" class="selection-column">
+      <ul class="link-wapper">
+        <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
+          <span>{{ link }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
+import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
 export default {
@@ -82,9 +85,11 @@ export default {
   },
   data() {
     return {
-      dropdown: true,
-      selectedItem: " - SELECT A SOURCE -",
+      dropdown: false,
+      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
       currentSlide: 0,
+      selectedLinks: [],
+      prevVal: 0,
     };
   },
 
@@ -93,16 +98,72 @@ export default {
       syncType: "syncType",
       checkPointSync: "checkPointSync",
       btnActive: "btnActive",
+      mainnet: "mainnet",
+      georli: "georli",
+      sepolia: "sepolia",
+      gnosis: "gnosis",
+      selectedPreset: "selectedPreset",
+    }),
+    ...mapWritableState(useNodeManage, {
+      currentNetwork: "currentNetwork",
     }),
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "sync")
+      if (this.$route.path === "/sync") {
+        if (val != this.prevVal) {
+          this.prevVal = val;
+          this.checkPointSync = "";
+          this.selectedItem = " - SELECT A SOURCE -";
+        }
+
         if (val === 1 && this.checkPointSync === "") {
           this.btnActive = false;
         } else {
           this.btnActive = true;
         }
+      }
+    },
+  },
+  mounted() {
+    this.setSelectedLinks();
+  },
+  methods: {
+    toggleDropDown() {
+      this.dropdown = !this.dropdown;
+    },
+    linkPicker(item) {
+      this.selectedItem = item;
+      this.checkPointSync = item;
+      this.dropdown = false;
+    },
+    setSelectedLinks() {
+      switch (this.currentNetwork.id) {
+        case 1:
+          this.selectedLinks = this.mainnet;
+          break;
+        case 2:
+          this.selectedLinks = this.georli;
+          break;
+        case 3:
+          this.selectedLinks = this.gnosis;
+          break;
+        case 4:
+          this.selectedLinks = this.sepolia;
+          break;
+        default:
+          break;
+      }
+      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
+        for (const config of this.selectedPreset.includedPlugins) {
+          if (config.service.toLowerCase() == "tekubeaconservice") {
+            this.selectedLinks = this.selectedLinks.map(function (element) {
+              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
+            });
+            break;
+          }
+        }
+      }
     },
   },
 };
@@ -293,10 +354,29 @@ export default {
   padding: 2px;
 }
 
-.inputBox_select img {
-  width: 20px;
-  transform: rotate(-90deg);
-  margin-right: 10px;
+.inputBox_select .triangle {
+  width: 14%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #151a1e;
+}
+.arrow {
+  border: solid #d5d5d5;
+  border-width: 0 2px 2px 0;
+  display: flex;
+  padding: 10%;
+  margin-right: 15%;
+}
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.up {
+  transform: rotate(225deg);
+  -webkit-transform: rotate(225deg);
 }
 
 .syncContent .inputBox_select .select {
@@ -305,37 +385,69 @@ export default {
   border-radius: 5px;
   background-color: #151a1e;
   color: #d5d5d5;
-  font-size: 0.8rem;
+  font-size: 80%;
   font-weight: 400;
   padding: 5px;
   padding-left: 10px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
-.syncContent .inputBox_select .select .dropParent {
-  background-color: #192128;
+.selection-column {
+  width: 58%;
+  height: 250%;
+  display: flex;
+  background: #88a297;
+  color: #d5d5d5;
+  font-weight: 400;
+  position: absolute;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 90%;
+  left: 35%;
+}
+.link-wapper {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  width: 207px;
-  height: 130px;
-  z-index: 1000;
+  overflow-y: scroll;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
-.dropParent .dropRow {
+.option-row {
   width: 100%;
-  height: 40px;
-  margin-top: 5px;
-  color: #d5d5d5;
-  background-color: #c12f2f;
-  font-size: 0.8rem;
-  font-weight: 400;
-  text-align: center;
+  height: 30%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 70%;
+  font-weight: 600;
+  padding: 1%;
+  margin-bottom: 1%;
+  border-bottom: 1px solid #d5d5d5;
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow-x: auto;
   cursor: pointer;
+}
+.option-row:hover {
+  background-color: #151a1e;
+  color: #d5d5d5;
+}
+.option-row span {
+  white-space: nowrap;
+}
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background: none;
 }
 
 .inputBox input {

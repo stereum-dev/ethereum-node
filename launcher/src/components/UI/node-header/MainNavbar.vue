@@ -88,7 +88,7 @@ export default {
                 oldService.config = service.config;
               }
               oldService.state = service.state;
-              if (oldService.name === "Teku" || oldService.name === "Nimbus") {
+              if ((oldService.service === "TekuBeaconService" || oldService.service === "NimbusBeaconService") && oldService.config.configVersion && oldService.config.configVersion < 2) {
                 let existing = this.installedServices.find(
                   (s) =>
                     s.config.serviceID === oldService.config.serviceID &&
@@ -99,6 +99,13 @@ export default {
                   vs = existing;
                 } else {
                   vs = allServices.find((element) => element.service === oldService.name + "ValidatorService");
+                }
+                if(vs.service === "TekuValidatorService"){
+                  vs.icon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-Circle.png")
+                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Teku-Validator-Linked-s.png")
+                }else if(vs.service === "NimbusValidatorService"){
+                  vs.icon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-Circle.png")
+                  vs.sIcon = require("/public/img/icon/plugin-icons/validator/Nimbus-Validator-Linked-s.png")
                 }
                 vs.config = oldService.config;
                 vs.state = oldService.state;

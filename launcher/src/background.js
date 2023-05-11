@@ -183,6 +183,11 @@ ipcMain.handle("getServerVitals", async () => {
   return await monitoring.getServerVitals();
 });
 
+// get data for storage comp
+ipcMain.handle("getStorageStatus", async () => {
+  return await monitoring.getStorageStatus();
+});
+
 ipcMain.handle("getConnectionStats", async () => {
   const name = await monitoring.getServerName();
   const address = monitoring.getIPAddress();
@@ -327,7 +332,7 @@ ipcMain.handle("getOperatorPageURL", async (event, args) => {
 });
 
 ipcMain.handle("setGraffitis", async (event, args) => {
-  return await validatorAccountManager.setGraffitis(args);
+  return await validatorAccountManager.setGraffitis(args.id, args.graffiti);
 });
 
 ipcMain.handle("chooseServiceAction", async (event, args) => {

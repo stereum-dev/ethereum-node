@@ -402,6 +402,7 @@ export default {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
+      selectedValdiatorService: "selectedValdiatorService",
       totalBalance: "totalBalance",
       keys: "keys",
       forceRefresh: "forceRefresh",
@@ -592,6 +593,10 @@ export default {
       this.exitPassword = val;
     },
     checkRisk: async function (val) {
+      this.bDialogVisible = true;
+      this.importIsProcessing = true;
+      this.importIsDone = false;
+      this.exitInfo = false;
       this.password = val;
       this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
@@ -606,6 +611,13 @@ export default {
       ) {
         this.importKey(val);
       } else {
+        this.importIsProcessing = false;
+        this.importIsDone = true;
+        this.password = "";
+        this.importValidatorKeyActive = true;
+        this.insertKeyBoxActive = true;
+        this.enterPasswordBox = false;
+        this.passwordInputActive = false;
         this.riskWarning = true;
       }
     },
@@ -800,13 +812,8 @@ export default {
     },
 
     importKey: async function (val) {
-      this.bDialogVisible = true;
-      this.importIsProcessing = true;
-      this.importIsDone = false;
       this.password = val;
-      this.exitInfo = false;
       this.message = await ControlService.importKey(this.selectedService.config.serviceID);
-
       this.slashingDB = "";
       this.forceRefresh = true;
       this.keyFiles = [];
@@ -893,7 +900,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis(graffiti);
+      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
