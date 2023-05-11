@@ -889,8 +889,7 @@ export class NodeConnection {
 
   async getCurrentOsVersion() {
     try {
-      const res = await this.sshService.exec(`uname -s -r`);
-
+      const res = await this.sshService.exec(`lsb_release -d | awk '{print $3}'`);
       return res.stdout;
     } catch (err) {
       log.error("Error occurred during get count pd updating os packages:\n", err);
@@ -909,14 +908,16 @@ export class NodeConnection {
 
   async updateOS() {
     try {
-      const res = await this.runPlaybook("Update Changes", {
+      let before = this.getTimeStamp();
+      const result = await this.runPlaybook("Update OS", {
         stereum_role: "update-os",
         stereum_args: { only_os_updates: true },
       });
-
-      console.log(res);
+      let after = this.getTimeStamp();
+      return after - before;
     } catch (err) {
-      log.error("Error occurred during updating os:\n", err);
+      log.error("Error occurred running os package updates:\n", err);
+      return 0;
     }
   }
 

@@ -17,7 +17,7 @@
               <div class="versionContainer">
                 <div class="versionBox">
                   <div id="current">
-                    <span>{{ $t("updatePanel.current") }}:</span>
+                    <span>{{ $t("updatePanel.version") }}:</span>
                   </div>
                   <div id="latest">
                     <span>{{ $t("updatePanel.availableUpdates") }}:</span>
@@ -26,15 +26,28 @@
                     <span>{{ osVersionCurrent }}</span>
                   </div>
                   <div id="latestValue">
-                    <span class="red-circle">{{ osVersionLatest }}</span>
+                    <span v-if="!searchingForOsUpdates || osUpdating" class="red-circle">{{ osVersionLatest }} </span>
+                    <img
+                      v-if="searchingForOsUpdates && !osUpdating"
+                      class="red-circle spinner"
+                      src="/img/icon/control/loading_circle.gif"
+                    />
                   </div>
                 </div>
                 <div class="btnBox">
-                  <div class="searchBtn" @click="getUpdatablePackagesCount">
+                  <div class="searchBtn" @click="searchOsUpdates">
                     <img src="/img/icon/header-icons/search.png" alt="icon" />
                   </div>
-                  <div class="downloadBtn" :class="{ disabled: osVersionLatest === 0 }" @click="updateOS">
+                  <div
+                    class="downloadBtn"
+                    :class="{ disabled: osVersionLatest === 0 || osUpdating }"
+                    @click="$emit('runOsUpdate')"
+                  >
                     <img src="/img/icon/node-journal-icons/download2.png" alt="icon" />
+                  </div>
+                  <div v-if="searchingForOsUpdates && searchingForOsUpdatesManual && !osUpdating" class="available">
+                    <span class="circle pulse"></span>
+                    <span class="searchingText">{{ $t("updatePanel.searching") }}</span>
                   </div>
                 </div>
               </div>
@@ -196,7 +209,6 @@ export default {
         autoUpdate: "",
       },
       osVersionCurrent: "-",
-      osVersionLatest: "-",
     };
   },
   computed: {
@@ -208,6 +220,11 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+      searchingForOsUpdates: "searchingForOsUpdates",
+      searchingForOsUpdatesManual: "searchingForOsUpdatesManual",
+      isOsUpdateAvailable: "isOsUpdateAvailable",
+      osUpdating: "osUpdating",
+      osVersionLatest: "osVersionLatest",
     }),
     onOff() {
       return {
@@ -219,7 +236,7 @@ export default {
   async mounted() {
     this.getSettings();
     await this.getOsVersion();
-    await this.getUpdatablePackagesCount();
+    await this.searchOsUpdates();
   },
   methods: {
     searchUpdate() {
@@ -250,14 +267,33 @@ export default {
       }
       return true;
     },
+    async searchOsUpdates(manual = false) {
+      if (this.osUpdating) {
+        this.searchingForOsUpdates = false;
+        this.searchingForOsUpdatesManual = false;
+        return;
+      }
+      if (this.searchingForOsUpdates) {
+        return;
+      }
+      this.searchingForOsUpdates = true;
+      if (manual) {
+        this.searchingForOsUpdatesManual = true;
+      }
+      await this.getUpdatablePackagesCount();
+      this.searchingForOsUpdates = false;
+      this.searchingForOsUpdatesManual = false;
+    },
     async getUpdatablePackagesCount() {
       try {
         const packagesCount = await ControlService.getCountOfUpdatableOSUpdate();
-
-        this.osVersionLatest = Number(packagesCount);
-
-        return this.getOsVersion();
+        const numPackages = Number(packagesCount);
+        this.osVersionLatest = isNaN(numPackages) || !numPackages ? 0 : numPackages;
+        this.isOsUpdateAvailable = this.osVersionLatest ? true : false;
+        return this.osVersionLatest;
       } catch (error) {
+        this.osVersionLatest = 0;
+        this.isOsUpdateAvailable = false;
         console.log(error);
       }
     },
@@ -295,8 +331,12 @@ export default {
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  padding: 4px;
+  padding: 2px 5px 0px 5px;
   text-align: center;
+  cursor: default;
+}
+.spinner {
+  padding: 0px;
 }
 
 .panelParent {
