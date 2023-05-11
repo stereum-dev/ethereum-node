@@ -13,13 +13,13 @@ import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
-import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
+import UploadConfig from "../components/UI/plugin-installation/import-config/UploadConfig.vue";
 import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
-import ImportingVerify from "../components/UI/plugin-installation/ImportingVerify.vue";
-import ImportingList from "../components/UI/plugin-installation/ImportingList.vue";
-import ImportingSyncing from "../components/UI/plugin-installation/ImportingSyncing.vue";
+import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
+import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
+import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
 
 const routes = [
   {

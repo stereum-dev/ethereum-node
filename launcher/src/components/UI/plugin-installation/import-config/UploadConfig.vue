@@ -25,7 +25,7 @@
                     accept=".zip"
                     @change="handleFileUpload"
                   />
-                  <img src="../../../../public/img/icon/PLUS_ICON.png" alt="icon" />
+                  <img src="/img/icon/PLUS_ICON.png" alt="icon" />
                   <span class="ml-2 text-xl text-gray-700 overflow-hidden"> {{ fileName }}</span>
                 </div>
               </label>
@@ -47,7 +47,6 @@ import { useServices } from "@/store/services";
 import YAML from "yaml";
 // import ControlService from "@/store/ControlService";
 import JSZip from "jszip";
-import YAML from "yaml";
 
 export default {
   name: "UploadConfig",
@@ -77,9 +76,7 @@ export default {
       allServices: "allServices",
     }),
   },
-  mounted() {
-    this.getInstallationPath();
-  },
+  mounted() {},
   methods: {
     async handleFileUpload(event) {
       // load config .zip file
@@ -110,16 +107,9 @@ export default {
           name: YAML.parse(data).service,
         });
       }
-
       const filteredServices = this.allServices.filter((service) => {
         return serviceName.some((item) => item.name === service.service);
       });
-
-      console.log(filteredServices);
-
-      // filteredServices.forEach((service) => {
-      //   service.content = this.unzippedData.find((item) => item.name === service.service).content;
-      // });
 
       if (filteredServices.length === 0) {
         this.isMessageActive = true;
@@ -148,40 +138,48 @@ export default {
           ? "/"
           : rootPath;
 
-        // console.log("path: ", rootPath);
-
         this.unzippedData.push({
-          name: YAML.parse(data).service,
+          service: YAML.parse(data).service,
           id: YAML.parse(data).id,
           network: YAML.parse(data).network,
           content: data,
           path: rootPath,
         });
       }
-      console.log("this Unzipped data: ", this.unzippedData);
+
       this.isMessageActive = false;
       this.message = "";
       this.next = "importingList";
-      this.configServices = filteredServices;
 
-      //get the installation path from the config file
+      this.configServices = this.allServices
+        .map((service) => {
+          const sameItems = this.unzippedData.find((item) => {
+            return item.service === service.service;
+          });
+          if (!sameItems) {
+            return false;
+          }
+          return {
+            ...sameItems,
+            icon: service.icon,
+            category: service.category,
+            name: service.name,
+          };
+        })
+        .filter((item) => item !== false);
     },
-    getInstallationPath() {
-      let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
-      console.log("beaconService: ", beaconService);
+    // getInstallationPath() {
+    //   let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
+    //   console.log("beaconService: ", beaconService);
 
-      // let network = YAML.parse(beaconService.content).network;
-      // console.log("network: ", network);
+    //   let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
 
-      let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
-
-      let installPath;
-      for (let i = 0; i < clients.length; i++) {
-        let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
-        if (catchInstallPath !== null) installPath = catchInstallPath.toString();
-      }
-      console.log("installPath: ", installPath);
-    },
+    //   let installPath;
+    //   for (let i = 0; i < clients.length; i++) {
+    //     let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
+    //     if (catchInstallPath !== null) installPath = catchInstallPath.toString();
+    //   }
+    // },
   },
 };
 </script>

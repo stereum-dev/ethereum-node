@@ -138,7 +138,9 @@ export default {
 }
 .plugin-name {
   width: 25%;
-  height: 80%;
+  height: 88%;
+  padding: 5px;
+  text-transform: uppercase;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -163,6 +165,12 @@ export default {
   width: 72%;
   height: 100%;
 }
+.carousel__viewport {
+  height: 100% !important;
+}
+.carousel__track {
+  height: 100% !important;
+}
 
 .carousel__item {
   min-height: 200px;
@@ -178,6 +186,7 @@ export default {
 
 .carousel__slide {
   padding: 5px 0;
+  height: 100% !important;
 }
 
 .carousel__prev {
@@ -227,7 +236,7 @@ export default {
 }
 .carouselBox {
   width: 90%;
-  height: 80%;
+  height: 85%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -235,6 +244,7 @@ export default {
 .syncBox {
   width: 85%;
   height: 100%;
+  padding: 5px;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -276,17 +286,16 @@ export default {
   width: 100%;
   height: max-content;
   color: #acaeae;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
   text-transform: uppercase;
-  padding: 2px;
 }
 .syncContent .syncText span:last-child {
   height: max-content;
   width: 100%;
   color: #4d8384;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   text-align: left;
   padding: 2px;

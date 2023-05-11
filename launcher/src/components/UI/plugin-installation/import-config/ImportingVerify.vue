@@ -1,5 +1,9 @@
 <template>
-  <installation-box :back="backRouteHandler ? 'importingSyncing' : 'importingList'" :title="title" :next="next">
+  <installation-box
+    :back="backRouteHandler ? 'importingSyncing' : 'importingList'"
+    :title="title"
+    @run-install="installHandler"
+  >
     <div class="list-parent">
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
@@ -24,7 +28,7 @@
                     </span>
                   </div>
                   <div class="pluginPath">
-                    <span> {{ plugin.configPath }}</span>
+                    <span> {{ plugin.path }}</span>
                   </div>
                 </div>
               </div>
@@ -45,10 +49,7 @@ export default {
   data() {
     return {
       title: "IMPORTED CONFIG",
-      next: "manage",
-      configNetwork_icon: "/img/icon/click-installation/testnet-icon.png",
-      configNetwork: "Ethereum - Testnet",
-      rootPath: null,
+      next: "",
     };
   },
   computed: {
@@ -56,28 +57,18 @@ export default {
       allServices: "allServices",
     }),
     ...mapWritableState(useClickInstall, {
-      unzippedData: "unzippedData",
       configServices: "configServices",
     }),
     backRouteHandler() {
       return this.configServices.some((service) => service.category !== "service") ? true : false;
     },
   },
-  mounted() {
-    this.extractPath();
-  },
   methods: {
-    extractPath() {
-      this.configServices = this.configServices.map((service) => {
-        const volumesRegex = /\/opt\/\w+\//g;
-        let matches = service.content ? service.content.match(volumesRegex) : "";
-        matches = matches !== null ? matches.filter((i) => i !== "/opt/app/") : "";
-
-        return {
-          ...service,
-          configPath: matches[0] !== undefined ? matches[0] : "/opt/stereum/",
-        };
-      });
+    installHandler() {
+      console.log(this.configServices);
+      //Running Animation
+      //After adding all backend functions the route will be path:"node"
+      this.$router.push({ path: "importingVerify" });
     },
   },
 };

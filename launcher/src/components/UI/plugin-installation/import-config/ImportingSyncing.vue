@@ -19,25 +19,9 @@
                 </div>
               </div>
               <div v-if="configServices.some((s) => s.category === 'execution')" class="table-row_2">
-                <div class="plugin-name">
-                  <div class="serviceIcon">
-                    <img :src="executionClient.icon" alt="icon" />
-                  </div>
-                  <div class="serviceBox">
-                    <span>{{ executionClient.name }}</span>
-                    <span>{{ executionClient.displayCategory }}</span>
-                  </div>
-                </div>
-                <div class="syncBox">
-                  <div class="syncContent">
-                    <div class="syncText">
-                      <span>GENESIS</span>
-                      <span>Syncs your clients</span>
-                    </div>
-                  </div>
-                </div>
+                <ExecutionSync :client="executionClient" />
               </div>
-              <div v-if="consensusClient !== ''" class="table-row_3">
+              <div v-if="configServices.some((s) => s.category === 'consensus')" class="table-row_3">
                 <ConsensusSync :client="consensusClient" />
               </div>
             </div>
@@ -52,11 +36,13 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import ConsensusSync from "./ConsensusSync.vue";
+import ConsensusSync from "../ConsensusSync.vue";
+import ExecutionSync from "./ExecutionSync.vue";
 export default {
   name: "ImportingSyncing",
   components: {
     ConsensusSync,
+    ExecutionSync,
   },
   data() {
     return {
@@ -253,6 +239,7 @@ export default {
   grid-row: 2/3;
   width: 100%;
   height: 100%;
+  margin-top: 10px;
   border-bottom: 1px solid #336666;
   display: flex;
   justify-content: space-between;
@@ -263,71 +250,13 @@ export default {
   grid-row: 3/4;
   width: 100%;
   height: 100%;
+  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
 }
 
-.plugin-name {
-  width: 25%;
-  height: 80%;
-  border: 1px solid #394047;
-  border-radius: 5px;
-  background-color: #33393e;
-  box-shadow: 1px 1px 5px 1px rgb(33, 37, 41);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.plugin-name .serviceIcon {
-  width: 40%;
-  height: 100%;
-  padding: 5px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.plugin-name .serviceIcon img {
-  width: 80%;
-}
-
-.plugin-name .serviceBox {
-  width: 70%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-}
-.plugin-name .serviceBox span:first-child {
-  width: 100%;
-  color: #d5d5d5;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-align: center;
-}
-.plugin-name .serviceBox span:last-child {
-  width: 100%;
-  color: #4d8384;
-  font-size: 0.7rem;
-  font-weight: 500;
-  text-align: center;
-}
-
-.syncBox {
-  width: 60.7%;
-  height: 80%;
-  border: 1px solid #394047;
-  border-radius: 5px;
-  background-color: #33393e;
-  box-shadow: 1px 1px 5px 1px rgb(33, 37, 41);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-right: 32px;
-}
 .table-row_5 {
   grid-column: 1/6;
   grid-row: 5/7;
@@ -377,7 +306,7 @@ export default {
   width: 100%;
   height: max-content;
   color: #acaeae;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
   text-transform: uppercase;

@@ -4,30 +4,22 @@
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
           <div class="table-header">
-            <img :src="configNetwork.icon" alt="Icon" />
-            <span>{{ configNetwork.name }}</span>
+            <img :src="configNetwork.icon ? configNetwork.icon : ''" alt="Icon" />
+            <span>{{ configNetwork.name ? configNetwork.name : "" }}</span>
           </div>
 
           <div class="table-content">
-            <!-- <div class="content_header">
-              <span>Plugins To Import</span>
-              <span>Remove</span>
-            </div> -->
             <div class="container_content gap-y-1">
               <TransitionGroup name="fade" class="container">
                 <div v-if="configServices.length" class="configTitle">
                   <span>Node Config</span>
                 </div>
-                <div
-                  v-for="(plugin, index) in configServices.filter((s) => s.category !== 'service')"
-                  :key="index"
-                  class="table-row duration-500"
-                >
+                <div v-for="(plugin, index) in categoryConfig" :key="index" class="table-row duration-500">
                   <div class="plugins">
                     <img :src="plugin.icon" alt="icon" class="pluginIcon" />
                     <div class="pluginName">
                       <span>
-                        {{ plugin.name }}
+                        {{ plugin.name ? plugin.name : plugin.service }}
                       </span>
                     </div>
                     <div class="pluginCategory">
@@ -40,18 +32,14 @@
                     <img
                       src="/img/icon/click-installation/cancel.png"
                       alt="remove"
-                      @click="removeServiceFromList(plugin.service)"
+                      @click="removeServiceFromList(plugin)"
                     />
                   </div>
                 </div>
                 <div v-if="configServices.length" class="serviceTitle">
                   <span>Services</span>
                 </div>
-                <div
-                  v-for="(plugin, index) in configServices.filter((s) => s.category === 'service')"
-                  :key="index"
-                  class="table-row duration-500"
-                >
+                <div v-for="(plugin, index) in categoryService" :key="index" class="table-row duration-500">
                   <div class="plugins">
                     <img :src="plugin.icon" alt="icon" class="pluginIcon" />
                     <div class="pluginName">
@@ -69,7 +57,7 @@
                     <img
                       src="/img/icon/click-installation/cancel.png"
                       alt="remove"
-                      @click="removeServiceFromList(plugin.service)"
+                      @click="removeServiceFromList(plugin)"
                     />
                   </div>
                 </div>
@@ -92,6 +80,8 @@ export default {
     return {
       back: "uploadConfig",
       title: "IMPORTED CONFIG",
+      categoryService: [],
+      categoryConfig: [],
     };
   },
 
@@ -103,53 +93,46 @@ export default {
       allServices: "allServices",
     }),
     ...mapWritableState(useClickInstall, {
-      unzippedData: "unzippedData",
       configServices: "configServices",
       configNetwork: "configNetwork",
     }),
     nextRouteHandler() {
-      return this.configServices.some((service) => service.category !== "service") ? true : false;
+      if (this.configServices.some((item) => item.category !== "service")) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
-
-  mounted() {
-    this.checkPluginsToImport();
+  created() {
     this.extractNetwork();
   },
-
+  mounted() {
+    this.categoryFilter();
+    console.log("configServices: ", this.configServices);
+  },
   methods: {
-    checkPluginsToImport() {
-      this.configServices = this.allServices.filter((service) => {
-        return this.unzippedData.some((d) => d.name.toLowerCase() === service.service.toLowerCase());
-      });
-    },
     removeServiceFromList(item) {
-      this.configServices.map((element, index) => {
-        if (element.service === item) {
-          this.configServices.splice(index, 1);
-        }
-      });
+      const selectedItem = this.configServices.find((service) => service.service === item.service);
+      const selectedIndex = this.configServices.indexOf(selectedItem);
+      if (selectedIndex !== -1) {
+        this.configServices.splice(selectedIndex, 1);
+      }
+      if (item.category === "service") {
+        this.categoryService.splice(this.categoryService.indexOf(item), 1);
+      } else {
+        this.categoryConfig.splice(this.categoryConfig.indexOf(item), 1);
+      }
     },
     extractNetwork() {
-      this.configServices = this.configServices.map((item) => {
-        // extract network value
-        const networkRegex = /network:\s*(\S+)/;
-        const networkMatch = item.content.match(networkRegex);
-        const network = networkMatch ? networkMatch[1] : null;
-        return {
-          ...item,
-          network: network,
-        };
-      });
-      console.log("configServices", this.configServices);
-      // get network value
-      const networkName = this.configServices[0].network;
-      this.networkList.forEach((network) => {
-        if (network.network.toLowerCase() === networkName.toLowerCase()) {
-          this.configNetwork = {
-            name: network.name,
-            icon: network.icon,
-          };
+      this.configNetwork = this.networkList.find((network) => network.network === this.configServices[0].network);
+    },
+    categoryFilter() {
+      this.configServices.forEach((item) => {
+        if (item.category === "service") {
+          this.categoryService.push(item);
+        } else {
+          this.categoryConfig.push(item);
         }
       });
     },
