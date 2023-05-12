@@ -102,7 +102,6 @@ export default {
       georli: "georli",
       sepolia: "sepolia",
       gnosis: "gnosis",
-      selectedPreset: "selectedPreset",
     }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
