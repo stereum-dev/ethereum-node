@@ -34,7 +34,7 @@
                   <span>{{ Stype.type }}</span>
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
+              <div v-else-if="Stype.type === 'custom source' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -49,7 +49,7 @@
                   />
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'custom source'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -198,16 +198,6 @@ export default {
           break;
         default:
           break;
-      }
-      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
-        for (const config of this.selectedPreset.includedPlugins) {
-          if (config.service.toLowerCase() == "tekubeaconservice") {
-            this.selectedLinks = this.selectedLinks.map(function (element) {
-              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
-            });
-            break;
-          }
-        }
       }
     },
   },
