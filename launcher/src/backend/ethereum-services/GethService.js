@@ -23,6 +23,7 @@ export class GethService extends NodeService {
       [
         `--${network}`,
         `--datadir=${dataDir}`,
+        "--db.engine=pebble",
         "--http",
         "--http.port=8545",
         "--http.addr=0.0.0.0",
@@ -85,9 +86,8 @@ export class GethService extends NodeService {
   }
 
   buildPrometheusJob() {
-    return `\n  - job_name: stereum-${
-      this.id
-    }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
+    return `\n  - job_name: stereum-${this.id
+      }\n    metrics_path: /debug/metrics/prometheus\n    static_configs:\n      - targets: [${this.buildExecutionClientMetricsEndpoint()}]`;
   }
 }
 
