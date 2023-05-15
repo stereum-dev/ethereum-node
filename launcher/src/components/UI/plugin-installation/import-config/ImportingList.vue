@@ -1,5 +1,5 @@
 <template>
-  <installation-box :back="backRouteHandler" :title="title" :next="nextRouteHandler ? 'importingSyncing' : 'importingVerify'">
+  <installation-box :back="back" :title="title" :next="nextRouteHandler ? 'importingSyncing' : 'importingVerify'">
     <div class="list-parent">
       <div class="content-box shadow-md shadow-gray-700">
         <div class="table">
@@ -103,13 +103,14 @@ export default {
         return false;
       }
     },
+
   },
+
   created() {
     this.extractNetwork();
   },
   mounted() {
     this.categoryFilter();
-    console.log("configServices: ", this.configServices);
   },
   methods: {
     removeServiceFromList(item) {
@@ -135,10 +136,6 @@ export default {
           this.categoryConfig.push(item);
         }
       });
-    },
-    backRouteHandler() {
-      this.$router.push({ name: "uploadConfig" });
-      this.configServices = [];
     },
   },
 };

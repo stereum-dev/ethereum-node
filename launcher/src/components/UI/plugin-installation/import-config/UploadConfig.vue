@@ -76,7 +76,11 @@ export default {
       allServices: "allServices",
     }),
   },
-  mounted() {},
+  mounted() {
+    this.unzippedData = [];
+    this.configServices = [];
+    this.fileName = "";
+  },
   methods: {
     async handleFileUpload(event) {
       // load config .zip file
