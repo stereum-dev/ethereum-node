@@ -1,6 +1,6 @@
 <template>
   <div class="task-parent">
-    <div class="task-icon" @click="taskModalHandler">
+    <div class="task-icon" data-tooltip="task manager" @click="taskModalHandler">
       <img :src="mainTaskIcon" alt="icon" />
       <span class="notification">{{ displayingTasks.length }}</span>
     </div>
@@ -144,6 +144,34 @@ export default {
 };
 </script>
 <style scoped>
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: 50%;
+  top: -70%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 5% 8%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100%) translateX(-700%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .task-parent {
   max-width: 50px;
   max-height: 55px;

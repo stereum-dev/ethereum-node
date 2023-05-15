@@ -482,7 +482,7 @@ export default {
   text-transform: uppercase;
   visibility: hidden;
   opacity: 0;
-  transform: translateY(-320%);
+  transform: translateY(-350%) translateX(20%);
   transition: opacity 0.3s transform 0.2s;
   font-weight: 600;
 }

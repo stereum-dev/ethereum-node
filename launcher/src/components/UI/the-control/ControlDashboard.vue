@@ -34,6 +34,7 @@
     <div class="half-card3"><data-api></data-api></div>
   </div>
 </template>
+
 <script>
 import TheStorage from "./TheStorage.vue";
 import DataApi from "./DataApi.vue";
