@@ -143,7 +143,7 @@ export default {
     this.mainButtonController();
   },
   methods: {
-    handleGuidedOptionClick(item) {
+    handleGuidedOptionClick() {
       this.tutorial = true;
     },
     handleWrittenOptionClick(item) {

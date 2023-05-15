@@ -52,7 +52,7 @@
           </div>
         </div>
         <div class="service">
-          <div class="title">{{ $t("theNode.servicePlugin") }}</div>
+          <div class="title">{{ headerName }}</div>
           <div class="service-parent">
             <node-service :list="installedServices.filter((service) => service.category === 'service')"> </node-service>
           </div>
@@ -117,6 +117,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+      headerName: "headerName",
     }),
 
     ...mapWritableState(useNodeStore, {
@@ -362,33 +363,29 @@ export default {
   color: rgb(201, 201, 201);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-content: center;
-  border-left: 2px solid #24252994;
-  border-right: 2px solid #242529b4;
-  border: 2px solid #242529b4;
-  box-sizing: border-box;
+  border: 2px solid rgba(36, 37, 41, 0.3);
 }
 .service-parent {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 90%;
   margin: 0 auto;
   overflow: hidden;
 }
 
 .title {
-  width: max-content;
-  min-width: 110px;
-  height: 6%;
-  padding: 0 20px;
-  background-color: #264744;
-  border-radius: 15px;
-  margin: 10px auto;
+  width: 95%;
+  height: 10%;
+  background: #264744;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px 0px #1c1f22;
+  margin: 3% auto 0;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

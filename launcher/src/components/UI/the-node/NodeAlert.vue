@@ -227,10 +227,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-}
-
 .v-leave-from {
   opacity: 1;
   transform: translateY(0);

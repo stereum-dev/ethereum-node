@@ -7,7 +7,13 @@
       @click="$refs.serviceBg.scrollTop = 0"
     />
     <div ref="serviceBg" class="item-box">
-      <div v-for="(item, index) in list" :key="index" class="items" @mouseleave="mouseLeaveToHide(item)">
+      <div
+        v-for="(item, index) in list"
+        :key="index"
+        class="items"
+        @mouseleave="mouseLeaveToHide(item)"
+        @mouseover="titlePeacker(item)"
+      >
         <img
           :src="item.hIcon ? item.hIcon : item.sIcon"
           alt="icon"
@@ -89,6 +95,7 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
+      headerName: "headerName",
     }),
   },
   beforeMount() {
@@ -158,9 +165,13 @@ export default {
       });
     },
     mouseLeaveToHide(el) {
+      this.headerName = "service plugin";
       setTimeout(() => {
         el.displayPluginMenu = false;
       }, 2000);
+    },
+    titlePeacker(el) {
+      this.headerName = el.name;
     },
     displayPluginLogPage(el) {
       el.expertOptionsModal = false;
@@ -196,11 +207,14 @@ export default {
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
+  border: 1px solid #4c4848;
+
+  box-shadow: 0 1px 2px 1px #1c1f22;
 }
 
 .service-arrow {
   width: 50%;
-  height: 10%;
+  height: 5%;
   cursor: pointer;
 }
 .service-arrow:active {
@@ -212,15 +226,16 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  padding: 10px;
+  padding: 14px;
   width: 90%;
-  height: 80%;
+  height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   background: #797979;
   border-radius: 20px;
   overflow-x: hidden;
   overflow-y: auto;
+  z-index: 0;
 }
 .item-box::-webkit-scrollbar {
   display: none;
@@ -228,7 +243,7 @@ export default {
 
 .items {
   width: 65%;
-  height: 70%;
+  height: 65%;
   margin: 10px auto;
   display: flex;
   justify-content: center;
