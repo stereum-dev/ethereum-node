@@ -201,7 +201,7 @@ export default {
   height: 95%;
   background: #4c4c4e;
   border-radius: 20px;
-  padding: 5px;
+  padding: 3%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -226,7 +226,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  padding: 14px;
+  padding: 2%;
   width: 90%;
   height: 100%;
   overflow-x: hidden;
