@@ -44,6 +44,7 @@
 import { mapWritableState } from "pinia";
 import { useServices } from "@/store/services";
 import { useClickInstall } from "@/store/clickInstallation";
+import ControlService from "@/store/ControlService";
 export default {
   name: "ImportingVerify",
   data() {
@@ -65,11 +66,18 @@ export default {
     },
   },
   methods: {
-    installHandler() {
+    installHandler: async function () {
       console.log(this.configServices);
+
+      try {
+        console.log(this.configServices);
+        await ControlService.importConfig(JSON.stringify(this.configServices));
+      } catch (error) {
+        console.log(error);
+      }
       //Running Animation
       //After adding all backend functions the route will be path:"node"
-      this.$router.push({ path: "importingVerify" });
+      // this.$router.push({ path: "importingVerify" });
     },
   },
 };
