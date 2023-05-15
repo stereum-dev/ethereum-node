@@ -58,6 +58,7 @@ export default {
     }),
     ...mapWritableState(useClickInstall, {
       configServices: "configServices",
+      checkPointSync: "checkPointSync",
     }),
     backRouteHandler() {
       return this.configServices.some((service) => service.category !== "service") ? true : false;
