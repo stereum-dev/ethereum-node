@@ -22,7 +22,9 @@
       @video-option-clicked="handleVideoOptionClick(item)"
     />
 
-    <div class="back-button" @click="infoAlarm = !infoAlarm"><div class="up-arrow"></div></div>
+    <div class="back-button" data-tooltip="back to status bar" @click="infoAlarm = !infoAlarm">
+      <div class="up-arrow"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -175,8 +177,33 @@ export default {
 };
 </script>
 <style scoped>
-* {
-  box-sizing: border-box;
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: 0;
+  top: -80%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 2% 3%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100%) translateX(-700%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
 }
 .disabled {
   opacity: 0.5;

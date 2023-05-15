@@ -60,7 +60,7 @@
         <div class="node-side">
           <div class="sidebar-container">
             <NodeAlert v-if="infoAlarm" />
-            <div class="info-button" @click="infoAlarm = !infoAlarm">
+            <div class="info-button" data-tooltip="go to tutorial bar" @click="infoAlarm = !infoAlarm">
               <img src="/img/icon/round-icon.png" alt="information" />
             </div>
             <NodeTutorial v-if="!infoAlarm" @show-modal="openTutorialModalHandler" />
@@ -207,6 +207,34 @@ export default {
 </script>
 
 <style scoped>
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: 0;
+  top: -80%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 2% 3%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100%) translateX(-700%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .info-button {
   width: 90%;
   height: 8%;

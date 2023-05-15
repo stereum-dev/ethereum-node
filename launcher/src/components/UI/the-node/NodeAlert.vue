@@ -85,7 +85,6 @@
     </div>
   </div>
 </template>
-
 <script>
 import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
