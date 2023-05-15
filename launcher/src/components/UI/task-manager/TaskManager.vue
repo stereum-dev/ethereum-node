@@ -36,7 +36,7 @@
       </div>
       <div class="list-cleaner">
         <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
-        <div class="list-cleaner_button" data-tooltip="list cleaner" @click="listCleanerHandler">
+        <div class="list-cleaner_button" data-tooltip="tasks list cleaner" @click="listCleanerHandler">
           <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" />
         </div>
       </div>
