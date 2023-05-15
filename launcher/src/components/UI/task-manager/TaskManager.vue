@@ -36,7 +36,9 @@
       </div>
       <div class="list-cleaner">
         <span class="footer-text">{{ $t("taskManager.clickDisplay") }}</span>
-        <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" @click="listCleanerHandler" />
+        <div class="list-cleaner_button" data-tooltip="list cleaner" @click="listCleanerHandler">
+          <img src="../../../../public/img/icon/task-manager-icons/remove-tasks.png" alt="" />
+        </div>
       </div>
     </div>
   </div>
@@ -381,10 +383,18 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.list-cleaner img {
-  width: 10%;
-  height: 97%;
-  margin-right: 1px;
+.list-cleaner_button {
+  width: 15%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.list-cleaner_button:active {
+  transform: scale(0.9);
+}
+.list-cleaner_button img {
+  width: 70%;
   cursor: pointer;
 }
 .footer-text {
