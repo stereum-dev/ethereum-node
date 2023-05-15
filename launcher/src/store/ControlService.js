@@ -147,6 +147,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("getServerVitals");
   }
 
+  async getStorageStatus() {
+    return await this.promiseIpc.send("getStorageStatus");
+  }
+
   async getConnectionStats() {
     return await this.promiseIpc.send("getConnectionStats");
   }

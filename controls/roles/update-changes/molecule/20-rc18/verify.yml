@@ -1,0 +1,69 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    # Geth
+    - name: Read GethService file
+      slurp:
+        src: "/etc/stereum/services/f47c3e8f-1f0d-96c8-02a0-c5136edfe256.yaml"
+      register: geth_service_configuration_raw
+
+    - name: Parse GethService configuration
+      set_fact:
+        geth_service_configuration: "{{ geth_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ geth_service_configuration }}"
+
+    # Besu
+    - name: Read BesuService file
+      slurp:
+        src: "/etc/stereum/services/709d71ea-f75c-efc4-39f6-382f8b4fbbf5.yaml"
+      register: besu_service_configuration_raw
+
+    - name: Parse BesuService configuration
+      set_fact:
+        besu_service_configuration: "{{ besu_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ besu_service_configuration }}"
+
+    # Nethermind
+    - name: Read NethermindService file
+      slurp:
+        src: "/etc/stereum/services/1d5a0a1b-feff-a954-77e8-9a19adef072c.yaml"
+      register: nethermind_service_configuration_raw
+
+    - name: Parse NethermindService configuration
+      set_fact:
+        nethermind_service_configuration: "{{ nethermind_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ nethermind_service_configuration }}"
+
+    # Erigon
+    - name: Read ErigonService file
+      slurp:
+        src: "/etc/stereum/services/6b0416ae-de58-7c12-ecc7-e7cc2cef4bc4.yaml"
+      register: erigon_service_configuration_raw
+
+    - name: Parse ErigonService configuration
+      set_fact:
+        erigon_service_configuration: "{{ erigon_service_configuration_raw['content'] | b64decode | from_yaml }}"
+
+    - debug:
+        msg: "{{ erigon_service_configuration }}"
+
+    - assert:
+        that:
+          - (geth_service_configuration.ports | select('match', '127.0.0.1:8546:8546/tcp') | length) == 1
+          - (besu_service_configuration.ports | select('match', '127.0.0.1:8546:8546/tcp') | length) == 0
+          - (besu_service_configuration.ports | select('match', '127.0.0.1:5000:8546/tcp') | length) == 1
+          - (nethermind_service_configuration.ports | select('match', '127.0.0.1:8546:8546/tcp') | length) == 0
+          - (nethermind_service_configuration.ports | select('match', '0.0.0.0:8546:8546/tcp') | length) == 1
+          - (erigon_service_configuration.ports | select('match', '127.0.0.1:8546:8546/tcp') | length) == 1
+          - (erigon_service_configuration.command | select('match', '--externalcl') | length) == 0
+          - (erigon_service_configuration.command | select('match', '--prune=htc') | length) == 0
+          - (erigon_service_configuration.command | select('match', '--prune=default') | length) == 1
+# EOF

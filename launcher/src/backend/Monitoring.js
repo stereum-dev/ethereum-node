@@ -1912,9 +1912,10 @@ export class Monitoring {
 
   // Check if WS Port is open on the node (via CURL on localhost)
   // Arguments:
-  // url=<mixed>        : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // url=<mixed>     : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // timeout=<number>: [OPTIONAL] Timeout in seconds for the HTTP request (default: 2)
   // Returns true if WS port is open, false otherwiese
-  async isWsAvailable(url) {
+  async isWsAvailable(url, timeout = 2) {
     // Format url
     if (typeof url === "string") {
       url = url.trim();
@@ -1933,6 +1934,15 @@ export class Monitoring {
       };
     }
 
+    // Check timeout
+    if (isNaN(timeout) || timeout < 0) {
+      return {
+        code: 2,
+        info: "error: invalid timeout specified",
+        data: "",
+      };
+    }
+
     // Build curl command
     const rnd = StringUtils.createRandomString();
     const key = crypto.createHash("md5").update(rnd).digest("hex");
@@ -1942,15 +1952,23 @@ export class Monitoring {
       -H "Upgrade: websocket" \
       -H "Sec-WebSocket-Version: 13" \
       -H "Sec-WebSocket-Key: ${key}" \
-      --data-raw '{"jsonrpc":"2.0", "id": 1, "method": "eth_blockNumber", "params": []}' \
+      --connect-timeout ${timeout} \
+      --max-time 0.25 \
+      -w "\\n%{http_code}" \
       ${url}
     `.trim();
 
     // Execute curl command
     const wsResult = await this.nodeConnection.sshService.exec(cmd);
 
+    let statuscode = 0;
+    try {
+      let r = wsResult.stdout.trim().split("\n");
+      statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
+    } catch (e) {}
+
     // Respond true if websocket is available, false otherwise
-    if (!wsResult.stdout.toLowerCase().includes("sec-websocket")) {
+    if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
       return {
         code: 2,
         info: "error: ws port not available",
@@ -2304,9 +2322,6 @@ export class Monitoring {
       const wsstatus = await this.getWsStatus();
       // if(wsstatus.code)
       //   return wsstatus;
-      const storagestatus = await this.getStorageStatus();
-      // if(storagestatus.code)
-      //   return storagestatus;
       const syncstatus = await this.getSyncStatus();
       // if(syncstatus.code)
       //   return syncstatus;
@@ -2320,7 +2335,6 @@ export class Monitoring {
           debugstatus: debugstatus,
           syncstatus: syncstatus,
           p2pstatus: p2pstatus,
-          storagestatus: storagestatus,
           rpcstatus: rpcstatus,
           wsstatus: wsstatus,
           beaconstatus: beaconstatus,

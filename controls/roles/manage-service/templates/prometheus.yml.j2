@@ -97,7 +97,7 @@ scrape_configs:
         ]
 
 # nimbus consensus client
-  - job_name: nimbus
+  - job_name: nimbus_beacon
     metrics_path: /metrics
     static_configs:
       - targets: [
@@ -105,6 +105,20 @@ scrape_configs:
 {% for service_config in service_configs.results %}
 {%   if (service_config.content | b64decode | from_yaml).service == "NimbusBeaconService" %}
           {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8008"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# nimbus validator client
+  - job_name: nimbus_validator
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "NimbusValidatorService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8108"
           {% set config_count = config_count + 1 %}
 {%   endif %}
 {% endfor %}
@@ -154,8 +168,8 @@ scrape_configs:
 {% endfor %}
         ]
 
-# teku
-  - job_name: teku
+# teku beacon
+  - job_name: teku_beacon
     metrics_path: /metrics
     scheme: http
     static_configs:
@@ -163,6 +177,21 @@ scrape_configs:
 {% set config_count = 0 %}
 {% for service_config in service_configs.results %}
 {%   if (service_config.content | b64decode | from_yaml).service == "TekuBeaconService" %}
+          {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8008"
+          {% set config_count = config_count + 1 %}
+{%   endif %}
+{% endfor %}
+        ]
+
+# teku validator
+  - job_name: teku_validator
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: [
+{% set config_count = 0 %}
+{% for service_config in service_configs.results %}
+{%   if (service_config.content | b64decode | from_yaml).service == "TekuValidatorService" %}
           {% if (config_count > 0) %},{% endif %}"stereum-{{ (service_config.content | b64decode | from_yaml).id }}:8008"
           {% set config_count = config_count + 1 %}
 {%   endif %}
