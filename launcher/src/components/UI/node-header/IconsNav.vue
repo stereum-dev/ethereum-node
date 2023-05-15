@@ -1,18 +1,24 @@
 <template>
   <div class="icons-box">
-    <div class="icon-btn" @click="supportModalOpen">
+    <div class="icon-btn" data-tooltip="support" @click="supportModalOpen">
       <img alt="help" src="/img/icon/header-icons/question-mark.png" />
     </div>
 
-    <div class="icon-btn" @click="notifModalOpen">
+    <div class="icon-btn" data-tooltip="notifications" @click="notifModalOpen">
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div v-if="isUpdateAvailable || isOsUpdateAvailable" class="icon-btn" @click="updateModalHandler">
+    <div
+      v-if="isUpdateAvailable || isOsUpdateAvailable"
+      class="icon-btn"
+      data-tooltip="update"
+      @click="updateModalHandler"
+    >
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
     <div
       v-else
       class="icon-btn"
+      data-tooltip="update"
       @click="updateModalHandler"
       @mouseover="showUpdateText = true"
       @mouseleave="showUpdateText = false"
@@ -20,13 +26,13 @@
       <img alt="update-icon" src="/img/icon/header-icons/update-blue.png" />
     </div>
 
-    <router-link to="/setting" class="icon-btn">
+    <router-link to="/setting" class="icon-btn" data-tooltip="setting">
       <div>
         <img alt="setting" src="/img/icon/header-icons/setting4.png" />
       </div>
     </router-link>
 
-    <div class="icon-btn" @click="logoutModalHandler">
+    <div class="icon-btn" data-tooltip="logout" @click="logoutModalHandler">
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
@@ -180,6 +186,34 @@ export default {
 };
 </script>
 <style scoped>
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: -150%;
+  top: -20%;
+  text-align: center;
+  content: attr(data-tooltip);
+  color: #eee;
+  background: black;
+  border-radius: 5px;
+  font-size: 70%;
+  padding: 5% 8%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100%) translateX(-700%);
+  transition: opacity 0.3s transform 0.2s;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateY(0);
+}
 .icons-box {
   width: 25%;
   max-width: 250px;
