@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @execute-installation="runInstalltion">
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @run-install="runInstalltion">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
