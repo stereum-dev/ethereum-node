@@ -308,7 +308,7 @@ export class ValidatorAccountManager {
     if (!apiToken) apiToken = await this.getApiToken(service);
     let command = [
       "docker run --rm --network=stereum curlimages/curl",
-      `curl ${service.service == "TekuBeaconService" ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
+      `curl ${service.service.includes("Teku") ? "--insecure https" : "http"}://stereum-${service.id}:${validatorPorts[service.service]
       }/eth/v1/keystores`,
       `-X ${method.toUpperCase()}`,
       `-H 'Content-Type: application/json'`,
@@ -389,20 +389,11 @@ export class ValidatorAccountManager {
     return pubKeyHash;
   }
 
-  async setGraffitis(graffiti) {
+  async setGraffitis(id, graffiti) {
     let services = await this.serviceManager.readServiceConfigurations();
-    let validators = await services.filter((service) => {
-      if (
-        service.service.includes("Teku") ||
-        service.service.includes("Nimbus") ||
-        service.service.includes("Validator")
-      ) {
-        return true;
-      }
-      return false;
-    });
+    let client = services.find((service) => service.id === id);
 
-    for (let client of validators) {
+    if (client) {
       let service = client.service.replace(/(Beacon|Validator|Service)/gm, "").toLowerCase();
 
       const graffitiVolume = client.volumes.find((vol) => vol.servicePath === "/opt/app/graffitis");
@@ -511,11 +502,13 @@ export class ValidatorAccountManager {
         );
         break;
       case "NimbusBeaconService":
+      case "NimbusValidatorService":
         result = await this.nodeConnection.sshService.exec(
           `docker exec -u 0 -w /opt/app/validators stereum-${service.id} cat api-token.txt`
         );
         break;
       case "TekuBeaconService":
+      case "TekuValidatorService":
         result = await this.nodeConnection.sshService.exec(
           `docker exec -u 0 -w /opt/app/data/validator/key-manager stereum-${service.id} cat validator-api-bearer`
         );
@@ -577,63 +570,43 @@ export class ValidatorAccountManager {
           );
           break;
         }
-        case "nimbus": {
-          const exitNimbusCmd = `docker exec -u 0 -it stereum-${serviceID} sh -c "/home/user/nimbus_beacon_node deposits exit --validator=/opt/app/validators/${pubkey}/keystore.json"`;
-          let okToExit = false;
-          let checkMessage = false;
-          let counter = 0;
-          result = { stdout: "", stderr: "" };
-          await new Promise((resolve, reject) => {
-            this.nodeConnection.sshService.conn.shell(function (err, stream) {
-              stream.stdin.write(exitNimbusCmd + "\r\n")
 
-              stream.stderr.on("data", (err) => {
-                log.error(err);
-                reject();
-              });
-              stream.stdout.on("data", (data) => {
-                if (/Password:/.test(data)) {
-                  okToExit = true;
-                  stream.stdin.write(`${password}\r\n`);
-                  counter++;
-                  if (counter > 10) {
-                    stream.end();
-                    resolve()
-                  }
-                }
-                if (/Your choice:/.test(data)) {
-                  stream.stdin.write(`I understand the implications of submitting a voluntary exit\r\n`);
-                  checkMessage = true;
-                }
-                if (/:~#/.test(data) && okToExit) {
-                  stream.end();
-                  resolve();
-                }
-                if (checkMessage) {
-                  result.stdout += data.toString()
-                }
-              });
-            });
-          });
+        case "nimbus": {
+          const validatorsDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
+
+          await this.nodeConnection.sshService.exec(
+            `touch ${validatorsDir}/${pubkey}/exit_password.txt && echo "${password}" > ${validatorsDir}/${pubkey}/exit_password.txt`
+          );
+          await this.nodeConnection.sshService.exec(
+            `chown 2000:2000 ${validatorsDir}/${pubkey}/exit_password.txt && chmod 700 ${validatorsDir}/${pubkey}/exit_password.txt`
+          );
+          const exitNimbusCmd = `docker run -v ${validatorsDir}:/validators --network=stereum sigp/lighthouse:latest lighthouse account validator exit --keystore=/validators/${pubkey}/keystore.json --password-file=/validators/${pubkey}/exit_password.txt --network=goerli --beacon-node=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http:stereum-" + client.id + ":5052"} --no-confirmation`;
+          result = await this.nodeConnection.sshService.exec(exitNimbusCmd);
+          await this.nodeConnection.sshService.exec(
+            `rm ${validatorsDir}/${pubkey}/exit_password.txt`
+          );
           break;
         }
         case "prysm": {
+          const passwordDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data/passwords").destinationPath;
+          const walletDir = client.volumes.find((vol) => vol.servicePath === "/opt/app/data/wallets").destinationPath;
+
           await this.nodeConnection.sshService.exec(
-            `touch /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt && echo "${password}" > /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+            `touch ${passwordDir}/exit_password.txt && echo "${password}" > ${passwordDir}/exit_password.txt`
           );
           await this.nodeConnection.sshService.exec(
-            `chown 2000:2000 /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt && chmod 700 /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+            `chown 2000:2000 ${passwordDir}/exit_password.txt && chmod 700 ${passwordDir}/exit_password.txt`
           );
-          const exitPrysmCmd = `docker run -v /opt/stereum/prysm-${serviceID}/data/wallets:/wallets -v /opt/stereum/prysm-${serviceID}/data/passwords:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
+          const exitPrysmCmd = `docker run -v ${walletDir}:/wallets -v ${passwordDir}:/passwords --network=stereum gcr.io/prysmaticlabs/prysm/cmd/prysmctl:latest validator exit --wallet-dir=/wallets --wallet-password-file=/passwords/wallet-password --public-keys=${pubkey} --account-password-file=/passwords/exit_password.txt --beacon-rpc-provider=stereum-${beaconNodeID}:4000 --${client.network}=true --accept-terms-of-use=true --force-exit=true`;
           result = await this.nodeConnection.sshService.exec(exitPrysmCmd);
           await this.nodeConnection.sshService.exec(
-            `rm /opt/stereum/prysm-${serviceID}/data/passwords/exit_password.txt`
+            `rm ${passwordDir}/exit_password.txt`
           );
           break;
         }
         case "teku": {
           let noPrefixPubkey = pubkey.slice(2, 98);
-          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
+          const exitTekuCmd = `docker exec stereum-${serviceID} sh -c "/opt/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=${client.dependencies.consensusClients[0] ? client.dependencies.consensusClients[0].buildConsensusClientHttpEndpointUrl() : "http://127.0.0.1:5051"} --validator-keys=/opt/app/data/validator/key-manager/local/${noPrefixPubkey}.json:/opt/app/data/validator/key-manager/local-passwords/${noPrefixPubkey}.txt --confirmation-enabled=false"`;
           result = await this.nodeConnection.sshService.exec(exitTekuCmd);
           break;
         }

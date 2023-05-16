@@ -94,18 +94,19 @@
     "delete": "LÖSCHEN"
   },
   "updatePanel": {
-    "launcherTitle": "Launcher Updates",
+    "launcherTitle": "launcher",
     "current": "aktuelle",
     "nodeTitle": "Node Updates",
     "latest": "neueste",
     "auto": "Auto Update",
     "available": "verfügbar",
     "searching": "Suche nach Updates...",
-    "serviceTitle": "Service-Updates",
+    "serviceTitle": "plug-in updates",
     "serviceDesc": "Updates für die installierte Auswahl von PLUG-INs",
     "availablePlugin": "VERFÜGBARE PLUG-IN UPDATES",
     "all": "Alle aktualisieren",
-    "osTitle": "Betriebssystem (Server)"
+    "osTitle": "server os updates",
+    "availableUpdates": "available updates"
   },
   "controlPage": {
     "node": "NODE",
@@ -114,6 +115,7 @@
     "read": "LESEN",
     "inclusionDistance": "INKLUSIONSDISTANZ",
     "rpc": "RPC-Endpunkt",
+    "ws": "WS-ENDPOINT",
     "syncStatus": "SYNC STATUS",
     "hard": "SPEICHERVOLUMEN",
     "free": "FREI",
@@ -283,7 +285,9 @@
     "turnOnMessage": "Bitte schalten Sie zuerst den DATA-API-Tunnel ein!",
     "copiedMessage": "DATA-API-URL kopiert!",
     "RPCTurnOnMessage": "Bitte schalten Sie zuerst den RPC-Tunnel ein!",
-    "RPCCopiedMessage": "RPC-URL kopiert!"
+    "RPCCopiedMessage": "RPC-URL kopiert!",
+    "WSTurnOnMessage": "Please turn ON the WS tunnel first!",
+    "WSCopiedMessage": "WS-URL copied to clipboard!"
   },
   "pluginLogs": {
     "pageTitle": "PLUG-IN LOGS",
@@ -353,5 +357,22 @@
   "noData": {
     "noData": "Keine Daten",
     "turnOn": "Bitte einschalten"
+  },
+  "rpcGuide": {
+    "clickNav": "Click on “CONTROL” to enter the Control Panel.",
+    "toggleMessage": "Click on the “ON/OFF” button to open your port",
+    "clickExtention": "Click on “your Execution Client” button to copy the RPC URL",
+    "clickCancel": "Click x to cancel",
+    "firstMessage": "RPC-Endpoint widget located in dashboard. Please turn “ON” the button and click “Execution Client” to proceed to the next step.",
+    "secondMessage": "You can now send your transaction OVER YOUR NODE WITH METAMASK. When you are done sending you transactions, click on “ON” to close your port",
+    "firstSlide": "Now login to your dAPP or wallet you want to use (in our case MetaMask)",
+    "secondSlide": "Click on the Network button",
+    "thirdSlide": "Click on “Add Network”",
+    "fourthSlide": "Type in a name for your network",
+    "fivethSlide": "Paste in the copied URL from Stereum",
+    "sixthSlide": "Type in the CHAIN-ID your node runs on(for GoerliTestnet it is 5)",
+    "seventhSlide": "Type in “ETH” as the currency symbol",
+    "eightthSlide": "OPTIONAL - you can paste in a Block Explorer URL",
+    "ninethSlide": "Click on “SAVE”"
   }
 }

@@ -209,11 +209,13 @@ export const useServices = defineStore("services", {
           expertOptionsModal: false,
           expertOptions: [
             {
-              title: "Default Fee Recipient",
-              type: "text",
+              title: "Pruning Mode",
+              type: "select",
+              value: ["archive", "prune"],
               changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
+              icon: "/img/icon/plugin-menu-icons/prunning.png",
+              unit: "",
+              pattern: "(--history=)(.*)(\\n)",
             },
             // {
             //   title: "Resync",
@@ -262,16 +264,7 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
               pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
-            },
-            {
-              title: "Pruning Mode",
-              type: "select",
-              value: ["archive", "prune"],
-              changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/prunning.png",
-              unit: "",
-              pattern: "(--history=)(.*)(\\n)",
-            },
+            }
           ],
           drag: true,
           state: "exited",
@@ -313,14 +306,7 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: "(JAVA_OPTS: -Xmx)(\\d+)(g)",
-            },
-            {
-              title: "Default Fee Recipient",
-              type: "text",
-              changeValue: null,
-              icon: "/img/icon/plugin-menu-icons/fee.png",
-              pattern: "(- --validators-proposer-default-fee-recipient=)(.*)(\\n)",
-            },
+            }
             // {
             //   title: "Resync",
             //   type: "action",
@@ -899,8 +885,8 @@ export const useServices = defineStore("services", {
           addPanel: false,
           category: "service",
           path: "/validatorejector",
-          icon: "/img/icon/plugin-icons/Other/ValidatorEjector.svg",
-          sIcon: "/img/icon/plugin-icons/Other/ValidatorEjector-s.svg",
+          icon: "/img/icon/plugin-icons/Other/ValidatorEjector.png",
+          sIcon: "/img/icon/plugin-icons/Other/ValidatorEjector-s.png",
           linkUrl: "",
           docsUrl:
             "https://enchanted-direction-844.notion.site/Validator-Exits-NO-Setup-Overview-07436e1694ce4b7091473602049664d7",

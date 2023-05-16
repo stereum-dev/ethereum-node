@@ -123,6 +123,14 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("closeRpcTunnel");
   }
 
+  async openWsTunnel(args) {
+    return await this.promiseIpc.send("openWsTunnel", args);
+  }
+
+  async closeWsTunnel() {
+    return await this.promiseIpc.send("closeWsTunnel");
+  }
+
   async openBeaconTunnel(args) {
     return await this.promiseIpc.send("openBeaconTunnel", args);
   }
@@ -137,6 +145,10 @@ class ControlService extends EventEmitter {
 
   async getServerVitals() {
     return await this.promiseIpc.send("getServerVitals");
+  }
+
+  async getStorageStatus() {
+    return await this.promiseIpc.send("getStorageStatus");
   }
 
   async getConnectionStats() {
@@ -339,6 +351,10 @@ class ControlService extends EventEmitter {
       password: args.password,
       serviceID: args.serviceID,
     });
+  }
+
+  async exportConfig() {
+    return await this.promiseIpc.send("exportConfig");
   }
 }
 if (!instance) {

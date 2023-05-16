@@ -7,7 +7,7 @@
     <div class="icon-btn" @click="notifModalOpen">
       <img alt="notification" src="/img/icon/header-icons/megaphone9.png" />
     </div>
-    <div v-if="isUpdateAvailable" class="icon-btn" @click="updateModalHandler">
+    <div v-if="isUpdateAvailable || isOsUpdateAvailable" class="icon-btn" @click="updateModalHandler">
       <img alt="update-icon" src="/img/icon/header-icons/update-green.png" />
     </div>
     <div
@@ -30,10 +30,12 @@
       <img alt="logout" src="/img/icon/header-icons/exit9.png" />
     </div>
     <update-panel
+      ref="UpdatePanelComp"
       :click-bg="displayUpdatePanel"
       :class="{ 'updatePanel-show': displayUpdatePanel }"
       @update-confirm="updateConfirmationHandler"
       @run-update="runUpdate"
+      @run-os-update="runOsUpdate"
       @click-out="removeUpdateModal"
     ></update-panel>
     <logout-modal
@@ -43,6 +45,7 @@
     ></logout-modal>
     <support-modal v-if="supportModalIsActive" @close-me="supportModalClose"></support-modal>
     <notif-modal v-if="notificationModalIsActive" @close-me="notifModalClose"></notif-modal>
+    <TutorialGuide v-if="tutorial" />
   </div>
 </template>
 <script>
@@ -54,10 +57,12 @@ import NotifModal from "./NotifModal.vue";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import TutorialGuide from "../the-node/TutorialGuide.vue";
 export default {
-  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal },
+  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal, TutorialGuide },
   data() {
     return {
+      test: true,
       displayUpdatePanel: false,
       logoutModalIsActive: false,
       supportModalIsActive: false,
@@ -69,8 +74,12 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       isUpdateAvailable: "isUpdateAvailable",
       updating: "updating",
+      isOsUpdateAvailable: "isOsUpdateAvailable",
+      osUpdating: "osUpdating",
+      searchingForOsUpdates: "searchingForOsUpdates",
       refresh: "refresh",
       stereumUpdate: "stereumUpdate",
+      tutorial: "tutorial",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",
@@ -122,6 +131,19 @@ export default {
         await ControlService.restartServices(seconds);
         this.updating = false;
       }
+    },
+    async runOsUpdate() {
+      try {
+        this.osUpdating = true;
+        await ControlService.updateOS();
+      } catch (err) {
+        console.log("OS Update Failed", err);
+      }
+      this.osUpdating = false;
+      this.searchingForOsUpdates = false;
+      this.$refs.UpdatePanelComp.osUpdating = false;
+      this.$refs.UpdatePanelComp.searchingForOsUpdates = false;
+      await this.$refs.UpdatePanelComp.searchOsUpdates();
     },
     clickToCancelLogout() {
       this.logoutModalIsActive = false;

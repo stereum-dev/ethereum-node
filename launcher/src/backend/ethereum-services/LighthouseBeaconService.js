@@ -1,7 +1,6 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
-import { CL_BootNodes } from "./GnosisBootNodes.js";
 
 export class LighthouseBeaconService extends NodeService {
   static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
@@ -75,7 +74,6 @@ export class LighthouseBeaconService extends NodeService {
 
     if (checkpointURL) service.command.push("--checkpoint-sync-url=" + checkpointURL);
     if (mevboostEndpoint) service.command.push(`--builder=${mevboostEndpoint}`);
-    if (network == "gnosis") service.command.push(`--boot-nodes=${CL_BootNodes.join()}`);
 
     return service;
   }

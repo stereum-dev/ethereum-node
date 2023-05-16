@@ -205,7 +205,7 @@ export default {
     },
     syncItemSytle(item) {
       item = JSON.parse(JSON.stringify(item)); // toRaw()
-      if (!item.hasOwnProperty("style")) {
+      if (item && !item.hasOwnProperty("style")) {
         return "";
       }
       return item.style;
@@ -242,17 +242,22 @@ export default {
       }
       let gid = pageNum - 1;
       let clients =
-        this.syncstatus.hasOwnProperty("data") && Array.isArray(this.syncstatus.data) && gid in this.syncstatus.data
+        this.syncstatus &&
+        this.syncstatus.hasOwnProperty("data") &&
+        Array.isArray(this.syncstatus.data) &&
+        gid in this.syncstatus.data
           ? this.syncstatus.data[gid]
           : false;
       if (!clients) {
         let clients_first =
+          this.syncstatus &&
           this.syncstatus.hasOwnProperty("data") &&
           Array.isArray(this.syncstatus.data) &&
           this.syncstatus.data.length > 0
             ? this.syncstatus.data[0]
             : false;
         let clients_last =
+          this.syncstatus &&
           this.syncstatus.hasOwnProperty("data") &&
           Array.isArray(this.syncstatus.data) &&
           this.syncstatus.data.length > 0
@@ -270,7 +275,11 @@ export default {
           clients = this.syncstatus.data[gid];
         } else {
           // waiting for data on page load (or while invalid data is retrieved)
-          if (this.syncstatus.hasOwnProperty("data") && this.syncstatus.data.hasOwnProperty("error")) {
+          if (
+            this.syncstatus &&
+            this.syncstatus.hasOwnProperty("data") &&
+            this.syncstatus.data.hasOwnProperty("error")
+          ) {
             if (this.syncstatus.data.error == "prometheus service not running") {
               this.syncItemsShow = false;
               this.syncIcoUnknown = true;

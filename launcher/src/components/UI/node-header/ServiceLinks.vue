@@ -10,6 +10,7 @@
             @click="openServiceBrowser(service.service)"
           />
         </div>
+
         <grafana-modal v-if="showGrafanaWindow" @close-window="closeServiceBrowser"></grafana-modal>
         <ssv-modal v-if="showSsvWindow" @close-window="closeServiceBrowser"></ssv-modal>
         <prometheus-modal v-if="showPrometheusWindow" @close-window="closeServiceBrowser"></prometheus-modal>

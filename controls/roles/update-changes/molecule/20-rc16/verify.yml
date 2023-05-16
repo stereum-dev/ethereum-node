@@ -18,5 +18,5 @@
 
     - assert:
         that:
-          - prometheus_service_configuration.command.find('--storage.tsdb.retention.time=15d') != 0
+          - prometheus_service_configuration.command.find('--storage.tsdb.retention.time=15d') != -1
 # EOF
