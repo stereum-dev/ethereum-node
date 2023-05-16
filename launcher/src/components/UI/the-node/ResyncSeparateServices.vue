@@ -28,7 +28,7 @@
         >
           <slide v-for="(Stype, index) in syncType" :key="index">
             <div class="syncBox">
-              <div v-if="Stype.name === 'genesis'" class="syncContent">
+              <div v-if="Stype.type === 'Syncs from genesis' || item.category === 'execution'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -49,7 +49,7 @@
                   />
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'recommended'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -144,7 +144,11 @@ export default {
         this.selectedItem = " - SELECT A SOURCE -";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
+      if (val === 0) {
+        this.btnActive = true;
+      }
     },
+
     checkPointSync(val) {
       this.btnActive = val !== "" || this.currentSlide === 0;
     },
