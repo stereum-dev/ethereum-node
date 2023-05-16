@@ -313,7 +313,7 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 70%;
+  font-size: 50%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
