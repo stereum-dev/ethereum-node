@@ -10,10 +10,10 @@ export const useClickInstall = defineStore("clickInstallation", {
       syncType: [
         {
           id: 1,
-          name: "checkpoint sync",
-          type: "recommended",
-          displayCategory: "Sync your client",
-          display: true,
+          name: "genesis",
+          type: "Syncs from genesis",
+          displayCategory: "Syncs from genesis",
+          display: false,
         },
         {
           id: 2,
@@ -22,12 +22,13 @@ export const useClickInstall = defineStore("clickInstallation", {
           displayCategory: "Sync from a custom source",
           display: true,
         },
+
         {
           id: 3,
-          name: "genesis",
-          type: "Syncs from genesis",
-          displayCategory: "Syncs from genesis",
-          display: false,
+          name: "checkpoint sync",
+          type: "recommended",
+          displayCategory: "Sync your client",
+          display: true,
         },
       ],
       selectedNetwork: {},

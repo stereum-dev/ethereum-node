@@ -14,8 +14,7 @@
     owner: "2000"
     group: "2000"
     mode: 0644
-  when:
-    service == "LighthouseValidatorService"
+  when: service == "LighthouseValidatorService"
 
 - name: Prysm - Create Graffiti File
   copy:
@@ -26,8 +25,7 @@
     owner: "2000"
     group: "2000"
     mode: 0644
-  when:
-    service == "PrysmValidatorService"
+  when: service == "PrysmValidatorService"
 
 - name: Teku - Create Graffiti File
   copy:
@@ -38,4 +36,4 @@
     owner: "2000"
     group: "2000"
     mode: 0644
-  when: service == "TekuBeaconService"
+  when: service == "TekuValidatorService"
