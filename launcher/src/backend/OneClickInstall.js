@@ -171,13 +171,23 @@ export class OneClickInstall {
     if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
       this.beaconService = this.serviceManager.getService("NimbusBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-      this.needsKeystore.push(this.beaconService)
+    }
+
+    if (constellation.includes("NimbusValidatorService")) {
+      //NimbusBeaconService
+      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [this.beaconService] })
+      this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
       this.beaconService = this.serviceManager.getService("TekuBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-      this.needsKeystore.push(this.beaconService)
+    }
+
+    if (constellation.includes("TekuValidatorService")) {
+      //TekuBeaconService
+      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [this.beaconService] })
+      this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("SSVNetworkService")) {

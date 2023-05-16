@@ -42,13 +42,13 @@ test("buildConfiguration", () => {
 
   expect(tekuService.command).toContain("--ee-endpoint=http-endpoint-string");
   expect(tekuService.command).toContain("--network=prater");
-  expect(tekuService.volumes).toHaveLength(3);
-  expect(tekuService.volumes).toContain("/opt/stereum/teku-" + tekuService.id + "/graffitis:/opt/app/graffitis");
+  expect(tekuService.volumes).toHaveLength(2);
+  expect(tekuService.volumes).toContain("/opt/stereum/teku-" + tekuService.id + "/data:/opt/app/data");
   expect(tekuService.ports).toHaveLength(5);
   expect(tekuService.id).toHaveLength(36);
   expect(tekuService.user).toMatch(/2000/);
   expect(tekuService.image).toMatch(/consensys\/teku/);
-  expect(tekuService.configVersion).toBe(1);
+  expect(tekuService.configVersion).toBe(2);
 });
 
 test("buildConsensusClientHttpEndpointUrl", () => {

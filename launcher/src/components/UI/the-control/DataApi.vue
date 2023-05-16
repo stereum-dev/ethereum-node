@@ -289,7 +289,7 @@ export default {
   height: 27%;
   margin: 2% 0;
   padding: 8%;
-  font-size: 55%;
+  font-size: 60%;
   border: 1px solid #707070;
   border-radius: 5px;
   cursor: pointer;
@@ -341,7 +341,7 @@ export default {
 .btn {
   display: flex;
   width: 30%;
-  font-size: 50%;
+  font-size: 60%;
   font-weight: 800;
   padding: 0 1px;
   border-radius: 5px;

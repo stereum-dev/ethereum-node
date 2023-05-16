@@ -19,6 +19,7 @@ export const useControlStore = defineStore("theControl", {
       syncstatus: [],
       p2pstatus: [],
       rpcstatus: null,
+      wsstatus: null,
       beaconstatus: null,
       portstatus: [],
       storagestatus: [],

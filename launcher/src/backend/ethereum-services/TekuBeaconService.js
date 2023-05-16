@@ -1,7 +1,6 @@
 import { NodeService } from "./NodeService.js";
 import { ServicePortDefinition } from "./SerivcePortDefinition.js";
 import { ServiceVolume } from "./ServiceVolume.js";
-import { CL_BootNodes } from "./GnosisBootNodes.js";
 
 export class TekuBeaconService extends NodeService {
   static buildByUserInput(network, ports, dir, executionClients, mevboost, checkpointURL) {
@@ -26,11 +25,9 @@ export class TekuBeaconService extends NodeService {
 
     const JWTDir = "/engine.jwt";
     const dataDir = "/opt/app/data";
-    const graffitiDir = "/opt/app/graffitis";
 
     const volumes = [
-      new ServiceVolume(workingDir + "/data", dataDir),
-      new ServiceVolume(workingDir + "/graffitis", graffitiDir),
+      new ServiceVolume(workingDir + "/data", dataDir)
     ];
 
     if (executionClients && executionClients.length > 0) {
@@ -41,20 +38,16 @@ export class TekuBeaconService extends NodeService {
     service.init(
       "TekuBeaconService", // service
       service.id, // id
-      1, // configVersion
+      2, // configVersion
       image, // image
       "22.10.1", // imageVersion
       [
         `--network=${network}`,
-        "--logging=INFO",
         "--p2p-enabled=true",
         "--p2p-port=9001",
-        "--validators-keystore-locking-enabled=true",
-        `--validators-graffiti-file=${graffitiDir}/graffitis.yaml`,
         //`--eth1-endpoints=${executionLayer}`,
         `--ee-endpoint=${executionLayer}`,
         `--ee-jwt-secret-file=${JWTDir}`,
-        `--validators-proposer-default-fee-recipient=0x0000000000000000000000000000000000000000`,
         "--metrics-enabled=true",
         "--metrics-port=8008",
         "--metrics-interface=0.0.0.0",
@@ -68,14 +61,6 @@ export class TekuBeaconService extends NodeService {
         "--rest-api-docs-enabled=true",
         "--rest-api-enabled=true",
         "--log-destination=CONSOLE",
-        "--validator-api-enabled=true",
-        "--validator-api-port=5052",
-        "--validator-api-host-allowlist=*",
-        "--validator-api-cors-origins=*",
-        `--validator-api-keystore-file=${dataDir}/teku_api_keystore`,
-        `--validator-api-keystore-password-file=${dataDir}/teku_api_password.txt`,
-        "--validators-builder-registration-default-enabled=true",
-        "--validators-proposer-blinded-blocks-enabled=true",
       ], // command
       ["/opt/teku/bin/teku"], // entrypoint
       { JAVA_OPTS: "-Xmx4g" }, // env
@@ -89,7 +74,6 @@ export class TekuBeaconService extends NodeService {
     );
     if (checkpointURL) service.command.push("--initial-state=" + checkpointURL);
     if (mevboostEndpoint) service.command.push(`--builder-endpoint=${mevboostEndpoint}`);
-    if (network == "gnosis") service.command.push(`--p2p-discovery-bootnodes=${CL_BootNodes.join()}`);
     return service;
   }
 

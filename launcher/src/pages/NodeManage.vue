@@ -195,27 +195,12 @@ export default {
         }
         item.id = this.newConfiguration.length;
         this.newConfiguration.push(item);
-        if (item.name === "Nimbus" || item.name === "Teku") {
-          let counterPart = allServices.find(
-            (s) =>
-              s.service ===
-              item.service.replace(/(Beacon)|(Validator)/, (match) => {
-                if (match === "Beacon") return "Validator";
-                return "Beacon";
-              })
-          );
-          this.newConfiguration.push(counterPart);
-          if (counterPart.service.includes("Beacon")) {
-            item = counterPart;
-          }
-        }
         item.addPanel = true;
         this.itemToInstall = item;
         this.displayCustomAddPanel = item.modifierPanel;
       }
     },
     addNewService(i) {
-      const allServices = JSON.parse(JSON.stringify(this.allServices));
       let item = JSON.parse(JSON.stringify(i));
       if (item.category === "service" && this.newConfiguration.map((s) => s.servce).includes(item.service)) {
         return;
@@ -225,21 +210,6 @@ export default {
         }
         item.id = this.newConfiguration.length;
         this.newConfiguration.push(item);
-        if (item.name === "Nimbus" || item.name === "Teku") {
-          let counterPart = allServices.find(
-            (s) =>
-              s.service ===
-              item.service.replace(/(Beacon)|(Validator)/, (match) => {
-                if (match === "Beacon") return "Validator";
-                return "Beacon";
-              })
-          );
-          counterPart.id = this.newConfiguration.length;
-          this.newConfiguration.push(counterPart);
-          if (counterPart.service.includes("Beacon")) {
-            item = counterPart;
-          }
-        }
         item.addPanel = true;
         this.itemToInstall = item;
         this.displayCustomAddPanel = item.modifierPanel;
@@ -269,16 +239,15 @@ export default {
     cancelAddProcess() {
       this.itemToInstall.addPanel = false;
       this.itemToInstall = {};
-      let item = this.newConfiguration.pop();
-      if (item.name === "Nimbus" || item.name === "Teku") this.newConfiguration.pop();
+      this.newConfiguration.pop();
     },
     selectedServiceToModify(item) {
       if (item.config.serviceID) {
+        this.itemToModify = item;
         if (item.name === "Nimbus" || item.name === "Teku") {
           let servicePair = this.newConfiguration.filter((s) => s.config.serviceID === item.config.serviceID);
-          this.itemToModify = servicePair.find((s) => s.service.includes("Beacon"));
-        } else {
-          this.itemToModify = item;
+          if(servicePair.length > 1)
+            this.itemToModify = servicePair.find((s) => s.service.includes("Beacon"));
         }
       }
     },

@@ -1,0 +1,11 @@
+---
+- name: Find service configs
+  find:
+    paths: "/etc/stereum/services"
+  register: service_config_files
+
+- include_tasks: ws_endpoint_mappings_1203.yaml
+  loop: "{{ service_config_files.files }}"
+
+- include_tasks: erigon_changes_1200.yaml
+  loop: "{{ service_config_files.files }}"

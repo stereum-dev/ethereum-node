@@ -8,7 +8,12 @@
         <span>OPEN PORTS</span>
       </div>
       <div class="portlist-data_box">
-        <div v-for="item in portstatus.data" :key="item.id" class="portlist-data_row">
+        <div
+          v-if="portstatus && portstatus.data"
+          v-for="item in portstatus.data"
+          :key="item.id"
+          class="portlist-data_row"
+        >
           <div class="rowName">
             <span>{{ item.name }}</span>
           </div>
