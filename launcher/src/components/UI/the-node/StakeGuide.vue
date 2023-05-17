@@ -1,43 +1,78 @@
 <template>
-  <div class="bg-dark">
-    <div v-if="stakeFirstStep" :key="stakeFirstStep" class="wrapper">
-      <div class="header-node" @click.prevent="stakeGuideStep1">
-        <div class="title">{{ $t("pagesnav.control") }}</div>
-      </div>
-      <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
-      <div class="step-one">
-        <span>{{ $t("rpcGuide.clickNav") }}</span>
+  <div class="stake-guide-parent">
+    <div v-if="stakeFirstStep" :key="stakeFirstStep" class="bg-dark">
+      <div class="wrapper">
+        <div class="header-node" @click.prevent="stakeGuideStep1">
+          <div class="title">{{ $t("pagesnav.control") }}</div>
+        </div>
+        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <div class="step-one">
+          <span>{{ $t("rpcGuide.clickNav") }}</span>
+        </div>
       </div>
     </div>
+    <div v-if="stakeSecondStep" class="wrapper">
+      <h1>First Check if your Node is synced</h1>
+      <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
+      <div class="left-slide"></div>
+      <div class="top-slide"></div>
+      <div class="bottom-slide"></div>
+      <div class="right-slide"></div>
+    </div>
+    <div v-if="stakeThirdStep" class="bg-dark"></div>
   </div>
 </template>
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
+
 export default {
   data() {
-    return {
-      secondStep: false,
-    };
+    return {};
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
       stakeFirstStep: "stakeFirstStep",
       stakeGuide: "stakeGuide",
+      stakeSecondStep: "stakeSecondStep",
+      stakeThirdStep: "stakeThirdStep",
     }),
+  },
+  watch: {
+    stakeSecondStep(newVal) {
+      if (newVal === true) {
+        setTimeout(() => {
+          this.stakeSecondStep = false;
+          this.stakeThirdStep = true;
+          console.log(this.stakeThirdStep);
+        }, 5000);
+      }
+    },
   },
   methods: {
     stakeGuideStep1() {
       this.stakeFirstStep = false;
+
       setTimeout(() => {
         this.$router.push("/control");
       }, 10);
-      this.secondStep = true;
+      this.stakeSecondStep = true;
     },
   },
 };
 </script>
 <style scoped>
+.stake-guide-parent {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 311;
+}
 .bg-dark {
   width: 100%;
   height: 100%;
@@ -52,10 +87,11 @@ export default {
 }
 .wrapper {
   width: 100%;
-  height: 85%;
+  height: 100%;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
+  position: relative;
 }
 .header-node {
   width: 11%;
@@ -98,5 +134,57 @@ export default {
   font-weight: 600;
   position: absolute;
   top: 45%;
+}
+.sync-status-widg {
+  display: flex;
+  width: 50%;
+  height: 45%;
+}
+.left-slide {
+  width: 49%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  left: 0;
+}
+.top-slide {
+  width: 24.5%;
+  height: 50%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0;
+  left: 49%;
+}
+.bottom-slide {
+  width: 24.5%;
+  height: 42%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 65%;
+  left: 49%;
+}
+.right-slide {
+  width: 27%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  position: absolute;
+  top: 0%;
+  left: 73.5%;
+}
+.wrapper h1 {
+  position: absolute;
+  color: #eee;
+  z-index: 400;
+  font-size: 300%;
+  font-weight: 800;
+  top: 30%;
+}
+.comp-arrow {
+  filter: invert(1);
+  z-index: 400;
+  width: 20%;
+  position: absolute;
+  left: 25%;
+  top: 50%;
 }
 </style>

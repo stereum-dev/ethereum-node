@@ -19,6 +19,9 @@ export const useNodeHeader = defineStore("nodeHeader", {
       rpcOne: true,
       rpcTwo: false,
       stakeFirstStep: true,
+      stakeSecondStep: false,
+      stakeThirdStep: false,
+      slidePointer: false,
       activeRPC: false,
       nextStepFlag: 0,
     };
