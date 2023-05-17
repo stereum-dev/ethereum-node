@@ -46,6 +46,7 @@
     <support-modal v-if="supportModalIsActive" @close-me="supportModalClose"></support-modal>
     <notif-modal v-if="notificationModalIsActive" @close-me="notifModalClose"></notif-modal>
     <TutorialGuide v-if="tutorial" />
+    <StakeGuide />
   </div>
 </template>
 <script>
@@ -58,8 +59,9 @@ import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
 import TutorialGuide from "../the-node/TutorialGuide.vue";
+import StakeGuide from "../the-node/StakeGuide.vue";
 export default {
-  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal, TutorialGuide },
+  components: { UpdatePanel, LogoutModal, SupportModal, NotifModal, TutorialGuide, StakeGuide },
   data() {
     return {
       test: true,
