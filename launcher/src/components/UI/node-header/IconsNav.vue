@@ -46,7 +46,7 @@
     <support-modal v-if="supportModalIsActive" @close-me="supportModalClose"></support-modal>
     <notif-modal v-if="notificationModalIsActive" @close-me="notifModalClose"></notif-modal>
     <TutorialGuide v-if="tutorial" />
-    <StakeGuide />
+    <StakeGuide v-if="stakeGuide" />
   </div>
 </template>
 <script>
@@ -82,6 +82,7 @@ export default {
       refresh: "refresh",
       stereumUpdate: "stereumUpdate",
       tutorial: "tutorial",
+      stakeGuide: "stakeGuide",
     }),
     ...mapWritableState(useServices, {
       newUpdates: "newUpdates",

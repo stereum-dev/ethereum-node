@@ -135,6 +135,7 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       tutorial: "tutorial",
+      stakeGuide: "stakeGuide",
     }),
   },
 
@@ -148,7 +149,7 @@ export default {
       if (this.selectedGuide == "rpc") {
         this.tutorial = true;
       } else if (this.selectedGuide == "stake") {
-        console.log("jhiodyjhivjaclkjilj");
+        this.stakeGuide = true;
       }
     },
     handleWrittenOptionClick(item) {

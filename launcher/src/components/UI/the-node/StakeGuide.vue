@@ -1,7 +1,7 @@
 <template>
   <div class="bg-dark">
-    <div class="wrapper">
-      <div class="header-node" @click.prevent="rpcStepOne">
+    <div v-if="stakeFirstStep" :key="stakeFirstStep" class="wrapper">
+      <div class="header-node" @click.prevent="stakeGuideStep1">
         <div class="title">{{ $t("pagesnav.control") }}</div>
       </div>
       <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
@@ -12,11 +12,28 @@
   </div>
 </template>
 <script>
+import { mapWritableState } from "pinia";
+import { useNodeHeader } from "../../../store/nodeHeader";
 export default {
   data() {
     return {
-      firstMessage: true,
+      secondStep: false,
     };
+  },
+  computed: {
+    ...mapWritableState(useNodeHeader, {
+      stakeFirstStep: "stakeFirstStep",
+      stakeGuide: "stakeGuide",
+    }),
+  },
+  methods: {
+    stakeGuideStep1() {
+      this.stakeFirstStep = false;
+      setTimeout(() => {
+        this.$router.push("/control");
+      }, 10);
+      this.secondStep = true;
+    },
   },
 };
 </script>
