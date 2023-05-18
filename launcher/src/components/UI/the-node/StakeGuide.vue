@@ -19,7 +19,16 @@
       <div class="bottom-slide"></div>
       <div class="right-slide"></div>
     </div>
-    <div v-if="stakeThirdStep" class="bg-dark"></div>
+    <div v-if="stakeThirdStep" class="bg-dark">
+      <div class="stake-modal">
+        <div class="stake-modal_header">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+        <div class="stake-modal_container">
+          <div class="stake-modal-arr"><div class="left"></div></div>
+          <div class="slider-tutorial"></div>
+          <div class="stake-modal-arr"><div class="right"></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -44,7 +53,6 @@ export default {
         setTimeout(() => {
           this.stakeSecondStep = false;
           this.stakeThirdStep = true;
-          console.log(this.stakeThirdStep);
         }, 5000);
       }
     },
@@ -186,5 +194,36 @@ export default {
   position: absolute;
   left: 25%;
   top: 50%;
+}
+.stake-modal {
+  width: 80%;
+  height: 80%;
+  background: #264744;
+  border-radius: 20px;
+  border: 4px solid grey;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.stake-modal_header {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 120%;
+  font-weight: 700;
+  color: #eee;
+}
+.stake-modal_container {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  font-weight: 700;
+  color: #eee;
 }
 </style>
