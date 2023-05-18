@@ -54,7 +54,7 @@
         <navigation />
       </template>
     </carousel>
-    <div v-if="dropdown" class="selection-column">
+    <div v-if="dropdown" class="selection-column" @mouseleave="dropdown = false">
       <ul class="link-wapper">
         <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
           <span>{{ link }}</span>
@@ -395,31 +395,44 @@ export default {
 }
 
 .selection-column {
-  width: 58%;
-  height: 250%;
+  width: 50%;
+  height: 200%;
   display: flex;
-  background: #88a297;
-  color: #d5d5d5;
+  background-color: #151a1e;
+  border-radius: 5px;
+  color: #4995e1;
   font-weight: 400;
   position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 90%;
-  left: 35%;
+  overflow-y: scroll;
+  padding: 10px;
+  top: 85%;
+  left: 51%;
 }
 .link-wapper {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   overflow-y: scroll;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
+}
+.link-wapper::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+}
+
+.link-wapper::-webkit-scrollbar-thumb {
+  background: #cfdedf;
+  border-radius: 5px;
 }
 .option-row {
   width: 100%;
-  height: 30%;
+  height: 30px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -427,10 +440,7 @@ export default {
   font-weight: 600;
   padding: 1%;
   margin-bottom: 1%;
-  border-bottom: 1px solid #d5d5d5;
-  flex-shrink: 0;
-  flex-grow: 0;
-  overflow-x: auto;
+  border-bottom: 1px solid #3c4245;
   cursor: pointer;
 }
 .option-row:hover {
