@@ -24,7 +24,7 @@
         <div class="stake-modal_header">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
         <div class="stake-modal_container">
           <div class="stake-modal-arr"><div class="left"></div></div>
-          <div class="slider-tutorial"></div>
+          <div class="stake-modal_slider-tutorial"></div>
           <div class="stake-modal-arr"><div class="right"></div></div>
         </div>
       </div>
@@ -225,5 +225,42 @@ export default {
   font-size: 150%;
   font-weight: 700;
   color: #eee;
+}
+.stake-modal-arr {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stake-modal_slider-tutorial {
+  width: 80%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: blue;
+  border-radius: 20px;
+  border: 3px solid grey;
+}
+.left {
+  width: 0;
+  height: 0;
+  border-top: 90px solid transparent;
+  border-bottom: 90px solid transparent;
+  border-right: 20px solid grey;
+  cursor: pointer;
+}
+.right {
+  width: 0;
+  height: 0;
+  border-top: 80px solid transparent;
+  border-bottom: 90px solid transparent;
+  border-left: 20px solid grey;
+  cursor: pointer;
+}
+.left:active,
+.right:active {
+  transform: scale(0.9);
 }
 </style>
