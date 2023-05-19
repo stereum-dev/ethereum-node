@@ -22,7 +22,7 @@
                 <ExecutionSync :client="executionClient" />
               </div>
               <div v-if="configServices.some((s) => s.category === 'consensus')" class="table-row_3">
-                <ConsensusSync :client="consensusClient" />
+                <ConsensusSync :client="consensusClient" :config-network="configNetwork" />
               </div>
             </div>
           </div>
@@ -238,7 +238,7 @@ export default {
   grid-column: 1/6;
   grid-row: 2/3;
   width: 100%;
-  height: 100%;
+  height: 80%;
   margin-top: 10px;
   border-bottom: 1px solid #336666;
   display: flex;
@@ -250,7 +250,6 @@ export default {
   grid-row: 3/4;
   width: 100%;
   height: 100%;
-  margin-top: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

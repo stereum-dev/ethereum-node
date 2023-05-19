@@ -82,6 +82,11 @@ export default {
       required: true,
       default: () => ({}),
     },
+    configNetwork: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -109,7 +114,7 @@ export default {
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "/sync") {
+      if (this.$route.path === "/sync" || this.$route.path === "/importingSyncing") {
         if (val != this.prevVal) {
           this.prevVal = val;
           this.checkPointSync = "";
@@ -125,6 +130,10 @@ export default {
     },
   },
   mounted() {
+    this.currentNetwork = this.currentNetwork.hasOwnProperty("id") ? this.currentNetwork : this.configNetwork;
+    console.log("client", this.currentNetwork);
+    console.log("config network", this.configNetwork);
+
     this.setSelectedLinks();
   },
   methods: {
@@ -169,7 +178,7 @@ export default {
 }
 .plugin-name {
   width: 25%;
-  height: 88%;
+  height: 80%;
   padding: 5px;
   text-transform: uppercase;
   border: 1px solid #394047;
@@ -274,7 +283,7 @@ export default {
 }
 .syncBox {
   width: 85%;
-  height: 100%;
+  height: 93%;
   padding: 5px;
   border: 1px solid #394047;
   border-radius: 5px;
