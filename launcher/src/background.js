@@ -379,6 +379,10 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getValidatorStats", async (event, args) => {
+  return await monitoring.getValidatorStats(args);
+});
+
 ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
