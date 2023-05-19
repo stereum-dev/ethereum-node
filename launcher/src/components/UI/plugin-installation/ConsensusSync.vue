@@ -131,9 +131,6 @@ export default {
   },
   mounted() {
     this.currentNetwork = this.currentNetwork.hasOwnProperty("id") ? this.currentNetwork : this.configNetwork;
-    console.log("client", this.currentNetwork);
-    console.log("config network", this.configNetwork);
-
     this.setSelectedLinks();
   },
   methods: {
