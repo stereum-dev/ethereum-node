@@ -168,13 +168,13 @@ export default {
       this.ipAddress = stats.ipAddress;
     },
     async updateServiceLogs() {
-      if (this.installedServices && this.installedServices.length > 0) {
+      if (this.installedServices && this.installedServices.length > 0 && this.refresh) {
         const data = await ControlService.getServiceLogs();
         this.serviceLogs = data;
       }
     },
     async updateServerVitals() {
-      if (this.installedServices && this.installedServices.length > 0) {
+      if (this.installedServices && this.installedServices.length > 0 && this.refresh) {
         const data = await ControlService.getServerVitals();
         this.serverVitals = data;
         this.cpu = this.serverVitals.cpu;

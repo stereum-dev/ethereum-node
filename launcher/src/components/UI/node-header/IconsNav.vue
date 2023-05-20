@@ -152,6 +152,7 @@ export default {
       this.logoutModalIsActive = true;
     },
     async loggingOut() {
+      this.refresh = false
       await ControlService.logout();
       this.$router.push("/").then(() => {
         location.reload();

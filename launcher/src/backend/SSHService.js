@@ -4,10 +4,15 @@ const log = require("electron-log");
 
 export class SSHService {
   constructor() {
-    this.conn = null;
+    this.connectionPool = [];
     this.connectionInfo = null;
-    this.connected = false;
+    this.connected = true;
     this.tunnels = [];
+    this.addingConnection = false;
+    this.removeConnectionCount = 0;
+    this.checkPoolPolling = setInterval(async () => {
+      await this.checkConnectionPool();
+    }, 100);
   }
 
   static checkExecError(err) {
@@ -18,39 +23,82 @@ export class SSHService {
     return err && err.stderr ? err.stderr : "<stderr empty>";
   }
 
+  async checkSSHConnection(connectionInfo, timeout) {
+    return new Promise((resolve, reject) => {
+      const conn = new Client();
+
+      conn.on('ready', () => {
+        conn.end();
+        resolve(true);
+      });
+
+      conn.on('error', (err) => {
+        reject(err);
+      });
+
+      conn.connect({
+        host: connectionInfo.host,
+        port: parseInt(connectionInfo.port) || 22,
+        username: connectionInfo.user || "root",
+        password: connectionInfo.password || undefined,
+        privateKey: connectionInfo.privateKey || undefined,
+        passphrase: connectionInfo.passphrase || undefined,
+        readyTimeout: timeout, // Set the readyTimeout parameter 
+      });
+    });
+  }
+
+  async checkConnectionPool() {
+    let lastIndex = this.connectionPool.length - 1
+    const threshholdIndex = lastIndex - 2
+
+    if (this.connectionInfo && !this.addingConnection && (this.connectionPool.length < 5 || this.connectionPool[threshholdIndex]?._chanMgr?._count > 0)) {
+      await this.connect(this.connectionInfo)
+    }
+    if (this.connectionPool.length > 5 && this.connectionPool[threshholdIndex]?._chanMgr?._count === 0) {
+      this.removeConnectionCount++
+    } else {
+      this.removeConnectionCount = 0;
+    }
+    if (this.removeConnectionCount > 100) {
+      this.removeConnectionCount = 0;
+      this.connectionPool.pop().end();
+    }
+  }
+
   async connect(connectionInfo) {
     this.connectionInfo = connectionInfo;
-    this.conn = new Client();
-
+    this.addingConnection = true;
+    const conn = new Client();
     return new Promise((resolve, reject) => {
-      this.conn.on("error", (error) => {
-        this.conn.end();
+      conn.on("error", (error) => {
+        this.addingConnection = false;
+        log.error(error)
         reject(error);
       });
-      this.conn.on("close", () => {
-        this.connected = false;
+      conn.on("close", () => {
       });
       //only works for ubuntu 22.04
-      this.conn.on("banner", (msg) => {
+      conn.on("banner", (msg) => {
         if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(msg.toLowerCase())) {
           if (process.env.NODE_ENV === "test") {
-            resolve(this.conn);
+            resolve(conn);
           }
           reject(msg);
         }
       });
-      this.conn
-        .on("ready", async () => {
-          let test = await this.exec("ls");
-          if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
-            if (process.env.NODE_ENV === "test") {
-              resolve(this.conn);
-            }
-            reject(test.stderr);
+      conn.on("ready", async () => {
+        this.connectionPool.push(conn);
+        this.addingConnection = false;
+        let test = await this.exec("ls");
+        if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
+          if (process.env.NODE_ENV === "test") {
+            resolve(conn);
           }
-          this.connected = true;
-          resolve(this.conn);
-        })
+          reject(test.stderr);
+        }
+        resolve(conn);
+      })
         .connect({
           host: connectionInfo.host,
           port: parseInt(connectionInfo.port) || 22,
@@ -68,7 +116,8 @@ export class SSHService {
 
     return new Promise((resolve, reject) => {
       try {
-        this.conn.end();
+        this.connectionPool.forEach((conn) => { conn.end(); });
+        this.connectionPool = [];
         resolve(true);
       } catch (error) {
         reject(error);
@@ -83,13 +132,22 @@ export class SSHService {
 
   async execCommand(command) {
     return new Promise((resolve, reject) => {
+      let conn
+      let maxVal = 5
+      while (!conn && maxVal < 10) {
+        conn = (this.connectionPool.find(c => c._chanMgr._count < maxVal))
+        maxVal++
+      }
       const data = {
         rc: -1,
         stdout: "",
         stderr: "",
       };
-      this.conn.exec(command, (err, stream) => {
-        if (err) return reject(err);
+      conn.exec(command, (err, stream) => {
+        if (err) {
+          log.error("ERROR:", err)
+          return reject(err);
+        }
         stream
           .on("close", (code) => {
             data.rc = code;
