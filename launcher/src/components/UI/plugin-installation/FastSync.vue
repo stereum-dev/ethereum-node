@@ -34,7 +34,7 @@
                   <div class="syncContent">
                     <div class="syncText">
                       <span>GENESIS</span>
-                      <span>Syncs your clients</span>
+                      <span>Syncs from genesis</span>
                     </div>
                   </div>
                 </div>
