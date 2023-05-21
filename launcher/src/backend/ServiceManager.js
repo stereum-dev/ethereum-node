@@ -7,12 +7,14 @@ import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
+import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
 import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
 import { GrafanaService } from "./ethereum-services/GrafanaService";
 import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
 import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
 import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
+import { TekuValidatorService } from "./ethereum-services/TekuValidatorService";
 import { NethermindService } from "./ethereum-services/NethermindService";
 import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
 import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-services/ServicePort";
@@ -112,6 +114,8 @@ export class ServiceManager {
               services.push(SSVNetworkService.buildByConfiguration(config));
             } else if (config.service == "NimbusBeaconService") {
               services.push(NimbusBeaconService.buildByConfiguration(config));
+            } else if (config.service == "NimbusValidatorService") {
+              services.push(NimbusValidatorService.buildByConfiguration(config));
             } else if (config.service == "PrometheusService") {
               services.push(PrometheusService.buildByConfiguration(config));
             } else if (config.service == "PrometheusNodeExporterService") {
@@ -124,6 +128,8 @@ export class ServiceManager {
               services.push(PrysmValidatorService.buildByConfiguration(config));
             } else if (config.service == "TekuBeaconService") {
               services.push(TekuBeaconService.buildByConfiguration(config));
+            } else if (config.service == "TekuValidatorService") {
+              services.push(TekuValidatorService.buildByConfiguration(config));
             } else if (config.service == "FlashbotsMevBoostService") {
               services.push(FlashbotsMevBoostService.buildByConfiguration(config));
             } else if (config.service == "Web3SignerService") {
@@ -357,12 +363,24 @@ export class ServiceManager {
         }
         break;
       case "Nimbus":
-        filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
-        command = "--web3-url=";
+        if (service.service.includes("Beacon")) {
+          filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
+          command = "--web3-url=";
+        }
+        if (service.service.includes("Validator")) {
+          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          command = "--beacon-node=";
+        }
         break;
       case "Teku":
-        filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
-        command = "--ee-endpoint=";
+        if (service.service.includes("Beacon")) {
+          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+          command = "--ee-endpoint=";
+        }
+        if (service.service.includes("Validator")) {
+          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+          command = "--beacon-node-api-endpoint=";
+        }
         break;
       case "FlashbotsMevBoost":
         return dependencies.map((client) => {
@@ -550,6 +568,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
@@ -558,6 +577,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return BesuService.buildByUserInput(args.network, ports, args.installDir + "/besu");
 
@@ -566,6 +586,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return NethermindService.buildByUserInput(args.network, ports, args.installDir + "/nethermind");
 
@@ -574,6 +595,7 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
+          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
 
@@ -667,6 +689,15 @@ export class ServiceManager {
           args.checkpointURL
         );
 
+      case "NimbusValidatorService":
+        ports = [];
+        return NimbusValidatorService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/nimbus",
+          args.beaconServices
+        );
+
       case "TekuBeaconService":
         ports = [
           new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
@@ -681,6 +712,15 @@ export class ServiceManager {
           args.executionClients,
           args.mevboost ? args.mevboost : [],
           args.checkpointURL
+        );
+
+      case "TekuValidatorService":
+        ports = [];
+        return TekuValidatorService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/teku",
+          args.beaconServices
         );
 
       case "PrometheusNodeExporterService":
@@ -800,12 +840,12 @@ export class ServiceManager {
 
   async createKeystores(services) {
     for (const service of services) {
-      if (service.service.includes("Nimbus")) {
+      if (service.service === "NimbusValidatorService" || (service.service === "NimbusBeaconService" && service.configVersion < 2)) {
         const valDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
         const token = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`);
         await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`);
-      } else if (service.service.includes("Teku")) {
+      } else if (service.service === "TekuValidatorService" || (service.service === "TekuBeaconService" && service.configVersion < 2)) {
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         const password = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
@@ -1215,8 +1255,8 @@ export class ServiceManager {
           file.path === installPath
             ? file.path
             : file.service === "PrometheusNodeExporterService"
-            ? "/opt/stereum"
-            : file.path;
+              ? "/opt/stereum"
+              : file.path;
 
         // create API token for Nimbus | Teku
         if (file.service === "NimbusBeaconService") {
