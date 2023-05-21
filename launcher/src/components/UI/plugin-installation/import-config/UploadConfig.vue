@@ -124,14 +124,9 @@ export default {
       let rootPath = "";
       for (const file of yamlFiles) {
         const data = await file.async("string");
-        // console.log("service: ", YAML.parse(data).service);
-        // console.log("id: ", YAML.parse(data).id);
-        // console.log("content: ", data);
-
         let serviceVolume = YAML.parse(data).volumes.find((el) => el.includes(YAML.parse(data).id));
-        // console.log("test: ", serviceVolume);
-
         let split = {};
+
         if (serviceVolume) {
           let path = serviceVolume.split(YAML.parse(data).id)[0];
           split = path.split("/");
@@ -172,18 +167,6 @@ export default {
         })
         .filter((item) => item !== false);
     },
-    // getInstallationPath() {
-    //   let beaconService = this.configServices.find((item) => item.name.match(/Beacon|Service/gi));
-    //   console.log("beaconService: ", beaconService);
-
-    //   let clients = ["lighthouse", "lodestar", "nimbus", "prysm", "teku"];
-
-    //   let installPath;
-    //   for (let i = 0; i < clients.length; i++) {
-    //     let catchInstallPath = YAML.parse(beaconService.content).volumes[0].match(`.+?(?=${clients[i]})`);
-    //     if (catchInstallPath !== null) installPath = catchInstallPath.toString();
-    //   }
-    // },
   },
 };
 </script>
