@@ -39,6 +39,7 @@
     "vue": "^3.2.33",
     "vue-i18n": "9.2.2",
     "vue-router": "^4.0.15",
+    "vue3-carousel": "^0.3.1",
     "vue3-circle-progress": "^1.0.7",
     "yaml": "^2.2.1"
   },
