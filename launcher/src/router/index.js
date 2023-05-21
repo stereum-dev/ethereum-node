@@ -20,6 +20,7 @@ import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
 import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
 import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
 import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
+import ImportingAnimation from "../components/UI/plugin-installation/import-config/ImportingAnimation.vue";
 
 const routes = [
   {
@@ -138,6 +139,11 @@ const routes = [
     path: "/importingVerify",
     name: "ImportingVerify",
     component: ImportingVerify,
+  },
+  {
+    path: "/importingAnimation",
+    name: "ImportingAnimation",
+    component: ImportingAnimation,
   },
 ];
 

@@ -67,13 +67,16 @@ export default {
   },
   methods: {
     installHandler: async function () {
+      this.$router.push({ path: "/importingAnimation" });
       try {
         await ControlService.importConfig({
           configServices: JSON.stringify(this.configServices),
           checkPointSync: this.checkPointSync,
         });
+        this.$router.push({ path: "/node" });
       } catch (error) {
         console.log(error);
+        this.$router.push({ path: "/importingVerify" });
       }
       //Running Animation
       //After adding all backend functions the route will be path:"node"
