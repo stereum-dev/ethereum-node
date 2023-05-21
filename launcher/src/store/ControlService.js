@@ -358,7 +358,10 @@ class ControlService extends EventEmitter {
   }
 
   async importConfig(args) {
-    return await this.promiseIpc.send("importConfig", args);
+    return await this.promiseIpc.send("importConfig", {
+      configFiles: args.configServices,
+      checkPointSync: args.checkPointSync,
+    });
   }
 }
 if (!instance) {

@@ -405,7 +405,7 @@ ipcMain.handle("exportConfig", async () => {
 });
 
 ipcMain.handle("importConfig", async (event, args) => {
-  return await serviceManager.importConfig(args.configFile);
+  return await serviceManager.importConfig(args.configFiles, args.checkPointSync);
 });
 
 // Scheme must be registered before the app is ready

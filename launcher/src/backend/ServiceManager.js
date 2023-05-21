@@ -7,14 +7,12 @@ import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
-import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
 import { PrometheusNodeExporterService } from "./ethereum-services/PrometheusNodeExporterService";
 import { GrafanaService } from "./ethereum-services/GrafanaService";
 import { PrysmBeaconService } from "./ethereum-services/PrysmBeaconService";
 import { PrysmValidatorService } from "./ethereum-services/PrysmValidatorService";
 import { TekuBeaconService } from "./ethereum-services/TekuBeaconService";
-import { TekuValidatorService } from "./ethereum-services/TekuValidatorService";
 import { NethermindService } from "./ethereum-services/NethermindService";
 import { FlashbotsMevBoostService } from "./ethereum-services/FlashbotsMevBoostService";
 import { ServicePort, servicePortProtocol, changeablePorts } from "./ethereum-services/ServicePort";
@@ -24,8 +22,13 @@ import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import YAML from "yaml";
 
 const log = require("electron-log");
+
+async function Sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * desired states of a service
@@ -109,8 +112,6 @@ export class ServiceManager {
               services.push(SSVNetworkService.buildByConfiguration(config));
             } else if (config.service == "NimbusBeaconService") {
               services.push(NimbusBeaconService.buildByConfiguration(config));
-            } else if (config.service == "NimbusValidatorService") {
-              services.push(NimbusValidatorService.buildByConfiguration(config));
             } else if (config.service == "PrometheusService") {
               services.push(PrometheusService.buildByConfiguration(config));
             } else if (config.service == "PrometheusNodeExporterService") {
@@ -123,8 +124,6 @@ export class ServiceManager {
               services.push(PrysmValidatorService.buildByConfiguration(config));
             } else if (config.service == "TekuBeaconService") {
               services.push(TekuBeaconService.buildByConfiguration(config));
-            } else if (config.service == "TekuValidatorService") {
-              services.push(TekuValidatorService.buildByConfiguration(config));
             } else if (config.service == "FlashbotsMevBoostService") {
               services.push(FlashbotsMevBoostService.buildByConfiguration(config));
             } else if (config.service == "Web3SignerService") {
@@ -358,24 +357,12 @@ export class ServiceManager {
         }
         break;
       case "Nimbus":
-        if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
-          command = "--web3-url=";
-        }
-        if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
-          command = "--beacon-node=";
-        }
+        filter = (e) => e.buildExecutionClientEngineRPCWsEndpointUrl();
+        command = "--web3-url=";
         break;
       case "Teku":
-        if (service.service.includes("Beacon")) {
-          filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
-          command = "--ee-endpoint=";
-        }
-        if (service.service.includes("Validator")) {
-          filter = (e) => e.buildConsensusClientHttpEndpointUrl();
-          command = "--beacon-node-api-endpoint=";
-        }
+        filter = (e) => e.buildExecutionClientEngineRPCHttpEndpointUrl();
+        command = "--ee-endpoint=";
         break;
       case "FlashbotsMevBoost":
         return dependencies.map((client) => {
@@ -563,7 +550,6 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return GethService.buildByUserInput(args.network, ports, args.installDir + "/geth");
 
@@ -572,7 +558,6 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return BesuService.buildByUserInput(args.network, ports, args.installDir + "/besu");
 
@@ -581,7 +566,6 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return NethermindService.buildByUserInput(args.network, ports, args.installDir + "/nethermind");
 
@@ -590,7 +574,6 @@ export class ServiceManager {
           new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
           new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
           new ServicePort("127.0.0.1", args.port ? args.port : 8545, 8545, servicePortProtocol.tcp),
-          new ServicePort("127.0.0.1", 8546, 8546, servicePortProtocol.tcp),
         ];
         return ErigonService.buildByUserInput(args.network, ports, args.installDir + "/erigon");
 
@@ -684,15 +667,6 @@ export class ServiceManager {
           args.checkpointURL
         );
 
-      case "NimbusValidatorService":
-        ports = [];
-        return NimbusValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/nimbus",
-          args.beaconServices
-        );
-
       case "TekuBeaconService":
         ports = [
           new ServicePort(null, 9001, 9001, servicePortProtocol.tcp),
@@ -707,15 +681,6 @@ export class ServiceManager {
           args.executionClients,
           args.mevboost ? args.mevboost : [],
           args.checkpointURL
-        );
-
-      case "TekuValidatorService":
-        ports = [];
-        return TekuValidatorService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/teku",
-          args.beaconServices
         );
 
       case "PrometheusNodeExporterService":
@@ -835,12 +800,12 @@ export class ServiceManager {
 
   async createKeystores(services) {
     for (const service of services) {
-      if (service.service === "NimbusValidatorService" || (service.service === "NimbusBeaconService" && service.configVersion < 2)) {
+      if (service.service.includes("Nimbus")) {
         const valDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
         const token = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`);
         await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`);
-      } else if (service.service === "TekuValidatorService" || (service.service === "TekuBeaconService" && service.configVersion < 2)) {
+      } else if (service.service.includes("Teku")) {
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         const password = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
@@ -1147,35 +1112,239 @@ export class ServiceManager {
     return serviceNameConfig;
   }
 
-  async importConfig(configFiles) {
-    console.log("name: ", configFiles);
-    // console.log("content: ", configFiles);
-    // console.log("hehe: ", typeof configFiles);
+  async importConfig(configFiles, checkPointSync) {
+    let configFile = JSON.parse(configFiles);
+    let getConfig = [];
+    let installPath = "";
+    let existSSV = false;
+    let existConsensus = false;
+    let existExecution = false;
+    let consensusHttpEndpointUrl = "";
+    let executionWsEndpointUrl = "";
 
-    //     const yamlFile = yamlFiles[0];
+    // add if not exists | replace if exists -> checkPointSync
+    if (checkPointSync && configFile.length > 0) {
+      const checkpointCommands = {
+        LighthouseBeaconService: "--checkpoint-sync-url=",
+        LodestarBeaconService: "--checkpointSyncUrl=",
+        PrysmBeaconService: "--checkpoint-sync-url=",
+        NimbusBeaconService: "--trusted-node-url=",
+        TekuBeaconService: "--initial-state=",
+      };
 
-    //     yamlFile.async("string").then((yamlContents) => {
-    //       // Save the configurations as an object
-    //       const config = yaml.safeLoad(yamlContents);
+      for (const file of configFile) {
+        if (file.service.includes("BeaconService")) {
+          if (file.service === "LighthouseBeaconService") {
+            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
+              var lighthouseRegex = `  - ${checkpointCommands[file.service]}.*`;
+              var lh_regex = new RegExp(lighthouseRegex, "g");
+              file.content = file.content.replace(lh_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
+            } else {
+              file.content = file.content.replace(
+                "  - bn\n",
+                `  - bn\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
+              );
+            }
+          }
+          if (file.service === "LodestarBeaconService") {
+            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
+              var lodestarCheckPoint = `  - ${checkpointCommands[file.service]}.*`;
+              var l_regex = new RegExp(lodestarCheckPoint, "g");
+              file.content = file.content.replace(l_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
+            } else {
+              file.content = file.content.replace(
+                "  - beacon\n",
+                `  - beacon\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
+              );
+            }
+          }
+          if (file.service === "PrysmBeaconService") {
+            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
+              var prysmCheckPoint = ` ${checkpointCommands[file.service]}[^\\s]+`;
+              var p_regex = new RegExp(prysmCheckPoint, "g");
+              file.content = file.content.replace(p_regex, ` ${checkpointCommands[file.service]}${checkPointSync}`);
+            } else {
+              file.content = file.content.replace(
+                " /app/cmd/beacon-chain/beacon-chain ",
+                ` /app/cmd/beacon-chain/beacon-chain ${checkpointCommands[file.service]}${checkPointSync}\n  `
+              );
+            }
+          }
+          if (file.service === "NimbusBeaconService") {
+            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
+              var nimbusCheckPoint = `  - ${checkpointCommands[file.service]}.*`;
+              var n_regex = new RegExp(nimbusCheckPoint, "g");
+              file.content = file.content.replace(n_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
+            } else {
+              file.content = file.content.replace(
+                "command:\n",
+                `command:\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
+              );
+            }
+          }
+          if (file.service === "TekuBeaconService") {
+            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
+              var tekuCheckPoint = ` ${checkpointCommands[file.service]}.*`;
+              var t_regex = new RegExp(tekuCheckPoint, "g");
+              file.content = file.content.replace(t_regex, ` ${checkpointCommands[file.service]}${checkPointSync}`);
+            } else {
+              file.content = file.content.replace(
+                "command:\n",
+                `command:\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
+              );
+            }
+          }
+        }
+      }
+    }
 
-    //       // Spawn a new process to start the Ethereum node client
+    // create configuration files
+    if (configFile.length > 0) {
+      await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+      for (const file of configFile) {
+        try {
+          await this.nodeConnection.sshService.exec(
+            `printf '${file.content}' > /etc/stereum/services/'${file.id}'.yaml`
+          );
+        } catch (err) {
+          log.error("Copying Configuration Failed:", err);
+        }
 
-    //       const nodeProcess = spawn("node", ["path/to/client.js", JSON.stringify(config)]);
-    //       nodeProcess.stdout.on("data", (data) => {
-    //         console.log(`stdout: ${data}`);
-    //       });
-    //       nodeProcess.stderr.on("data", (data) => {
-    //         console.error(`stderr: ${data}`);
-    //       });
-    //       nodeProcess.on("close", (code) => {
-    //         console.log(`child process exited with code ${code}`);
-    //       });
-    //     });
+        getConfig.push(YAML.parse(file.content));
+        installPath =
+          file.path === installPath
+            ? file.path
+            : file.service === "PrometheusNodeExporterService"
+            ? "/opt/stereum"
+            : file.path;
 
-    //     // Upload the file
-    //     // ...
-    //   });
-    // };
-    // reader.readAsArrayBuffer(file);
+        // create API token for Nimbus | Teku
+        if (file.service === "NimbusBeaconService") {
+          const validatorDir = file.path + "nimbus-" + file.id + "/validator/validators";
+          const token = StringUtils.createRandomString();
+          await this.nodeConnection.sshService.exec(`mkdir -p ${validatorDir}`);
+          await this.nodeConnection.sshService.exec(`echo ${token} > ${validatorDir}/api-token.txt`);
+        } else if (file.service === "TekuBeaconService") {
+          const dataDir = file.path + "teku-" + file.id + "/data";
+          const password = StringUtils.createRandomString();
+          await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
+          await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`);
+          await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`);
+          await this.nodeConnection.sshService.exec(
+            `cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${file.id}"`
+          );
+        }
+        if (file.service.includes("SSVNetworkService")) existSSV = true;
+        if (file.service.includes("BeaconService")) existConsensus = true;
+        const executionClients = ["BesuService", "ErigonService", "GethService", "NethermindService"];
+        const exist = executionClients.some((el) => file.service.includes(el));
+        if (exist) existExecution = true;
+      }
+
+      // create stereum config file
+      const settings = {
+        stereum_settings: {
+          settings: {
+            controls_install_path: installPath,
+            updates: {
+              lane: "stable",
+              unattended: {
+                install: false,
+              },
+            },
+          },
+        },
+      };
+      await this.nodeConnection.sshService.exec(
+        `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
+      );
+    }
+
+    // create Execution and Consensus client's EndPointURLs for SSV
+    if (existSSV) {
+      if (existConsensus && existExecution) {
+        const consensusHttpPort = {
+          LighthouseBeaconService: 5052,
+          LodestarBeaconService: 9596,
+          PrysmBeaconService: 3500,
+          NimbusBeaconService: 5052,
+          TekuBeaconService: 5051,
+        };
+        const executionWsPort = {
+          BesuService: 8546,
+          ErigonService: 8545,
+          GethService: 8546,
+          NethermindService: 8546,
+        };
+
+        for (const file of configFile) {
+          const consensusClients = [
+            "LighthouseBeaconService",
+            "LodestarBeaconService",
+            "NimbusBeaconService",
+            "PrysmBeaconService",
+            "TekuBeaconService",
+          ];
+          const catchConsensus = consensusClients.some((el) => file.service.includes(el));
+          if (catchConsensus) consensusHttpEndpointUrl = `http://stereum-${file.id}:${consensusHttpPort[file.service]}`;
+
+          const executionClients = ["BesuService", "ErigonService", "GethService", "NethermindService"];
+          const catchExecution = executionClients.some((el) => file.service.includes(el));
+          if (catchExecution) executionWsEndpointUrl = `ws://stereum-${file.id}:${executionWsPort[file.service]}`;
+        }
+      } else {
+        return "SSV needs Execution and Consensus Clients to run!";
+      }
+    }
+
+    //create config.yaml for SSV-Keys
+    if (consensusHttpEndpointUrl.length > 1 && consensusHttpEndpointUrl.length > 1) {
+      let network = "";
+      for (const file of configFile) {
+        if (file.service === "SSVNetworkService") {
+          // create new ssv keys (if needed)
+          /* let configPath = "/etc/stereum/services";
+             await this.nodeConnection.sshService.exec(
+              `head --lines=-4 ${configPath}/${file.id}.yaml > ${configPath}/temp.yaml && cp -f ${configPath}/temp.yaml ${configPath}/${file.id}.yaml && rm ${configPath}/temp.yaml`
+             );
+             await this.nodeConnection.runPlaybook("ssv-key-generator", {
+               stereum_role: "ssv-key-generator",
+               ssv_key_service: file.id,
+             }); */
+          network = file.network === "goerli" ? "prater" : file.network;
+          const ssvConfig = await this.nodeConnection.readServiceConfiguration(file.id);
+          const ssvConfigDir = file.path + "ssv_network-" + file.id + "/data";
+          await this.nodeConnection.sshService.exec(`mkdir -p ${ssvConfigDir}`);
+          await this.nodeConnection.sshService.exec(
+            `echo -e \
+            'eth2: \
+            \n  Network: "${network}" \
+            \n  BeaconNodeAddr: "${consensusHttpEndpointUrl}" \
+            \neth1: \
+            \n  ETH1Addr: "${executionWsEndpointUrl}" \
+            \nOperatorPrivateKey: "${ssvConfig.ssv_sk}" \
+            \nglobal: \
+            \n  LogLevel: info \
+            \nMetricsAPIPort: 15000' \
+            > ${ssvConfigDir}/config.yaml`
+          );
+        }
+      }
+    }
+
+    //prepare node
+    await this.nodeConnection.findStereumSettings();
+    await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
+
+    // start service
+    const runRefs = [];
+    if (getConfig[0] !== undefined) {
+      await Promise.all(
+        getConfig.map(async (service, index) => {
+          Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+        })
+      );
+    }
+    return runRefs;
   }
 }

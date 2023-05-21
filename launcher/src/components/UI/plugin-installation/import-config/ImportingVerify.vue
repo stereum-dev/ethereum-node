@@ -67,11 +67,11 @@ export default {
   },
   methods: {
     installHandler: async function () {
-      console.log(this.configServices);
-
       try {
-        console.log(this.configServices);
-        await ControlService.importConfig(JSON.stringify(this.configServices));
+        await ControlService.importConfig({
+          configServices: JSON.stringify(this.configServices),
+          checkPointSync: this.checkPointSync,
+        });
       } catch (error) {
         console.log(error);
       }
