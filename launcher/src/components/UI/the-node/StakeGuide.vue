@@ -20,7 +20,7 @@
       <div class="right-slide"></div>
     </div>
     <div v-if="stakeThirdStep" class="bg-dark">
-      <div class="stake-modal">
+      <div v-if="sliderModal" class="stake-modal">
         <div class="stake-modal_header">{{ slideID }}# {{ message }}</div>
         <div class="stake-modal_container">
           <div class="stake-modal-arr"><div class="left" @click="prevSlide"></div></div>
@@ -54,6 +54,7 @@ export default {
       stakeGuide: "stakeGuide",
       stakeSecondStep: "stakeSecondStep",
       stakeThirdStep: "stakeThirdStep",
+      sliderModal: "sliderModal",
     }),
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
@@ -65,6 +66,8 @@ export default {
         setTimeout(() => {
           this.stakeSecondStep = false;
           this.stakeThirdStep = true;
+          this.sliderModal = true;
+          console.log(this.sliderModal);
         }, 5000);
       }
     },
@@ -83,9 +86,16 @@ export default {
   methods: {
     nextSlide() {
       this.nextStep++;
+      if (this.nextStep > 56) {
+        this.sliderModal = false;
+      }
     },
     prevSlide() {
       this.nextStep--;
+      if (this.nextStep < 1) {
+        this.nextStep = 1;
+        console.log(this.nextStep);
+      }
     },
     stakeGuideStep1() {
       this.stakeFirstStep = false;
