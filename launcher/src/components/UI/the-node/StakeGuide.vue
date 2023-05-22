@@ -272,6 +272,11 @@ export default {
   border-radius: 20px;
   border: 3px solid grey;
 }
+.stake-modal_slider-tutorial img {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+}
 .left {
   width: 0;
   height: 0;
