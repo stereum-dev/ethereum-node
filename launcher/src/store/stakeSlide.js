@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-export const useNodeHeader = defineStore("nodeHeader", {
+export const useStakeSlide = defineStore("stakeSlide", {
   state: () => {
     return {
       sliderTutorial: [

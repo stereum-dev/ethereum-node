@@ -24,7 +24,9 @@
         <div class="stake-modal_header">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
         <div class="stake-modal_container">
           <div class="stake-modal-arr"><div class="left"></div></div>
-          <div class="stake-modal_slider-tutorial"></div>
+          <div class="stake-modal_slider-tutorial">
+            <img :src="slide" alt="slide" />
+          </div>
           <div class="stake-modal-arr"><div class="right"></div></div>
         </div>
       </div>
@@ -34,6 +36,8 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
+import { mapState } from "pinia";
+import { useStakeSlide } from "../../../store/stakeSlide";
 
 export default {
   data() {
@@ -45,6 +49,9 @@ export default {
       stakeGuide: "stakeGuide",
       stakeSecondStep: "stakeSecondStep",
       stakeThirdStep: "stakeThirdStep",
+    }),
+    ...mapState(useStakeSlide, {
+      sliderTutorial: "sliderTutorial",
     }),
   },
   watch: {
