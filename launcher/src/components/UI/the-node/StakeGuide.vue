@@ -21,13 +21,13 @@
     </div>
     <div v-if="stakeThirdStep" class="bg-dark">
       <div class="stake-modal">
-        <div class="stake-modal_header">Lorem ipsum dolor sit amet consectetur adipisicing elit.</div>
+        <div class="stake-modal_header">{{ slideID }}# {{ message }}</div>
         <div class="stake-modal_container">
-          <div class="stake-modal-arr"><div class="left"></div></div>
+          <div class="stake-modal-arr"><div class="left" @click="prevSlide"></div></div>
           <div class="stake-modal_slider-tutorial">
             <img :src="slide" alt="slide" />
           </div>
-          <div class="stake-modal-arr"><div class="right"></div></div>
+          <div class="stake-modal-arr"><div class="right" @click="nextSlide"></div></div>
         </div>
       </div>
     </div>
@@ -41,7 +41,12 @@ import { useStakeSlide } from "../../../store/stakeSlide";
 
 export default {
   data() {
-    return {};
+    return {
+      slideID: "",
+      slide: "",
+      message: "",
+      nextStep: 0,
+    };
   },
   computed: {
     ...mapWritableState(useNodeHeader, {
@@ -63,8 +68,25 @@ export default {
         }, 5000);
       }
     },
+    nextStep(newVal) {
+      const currentSlide = this.sliderTutorial.find((slide) => slide.id === newVal);
+      if (currentSlide) {
+        this.slideID = currentSlide.id;
+        this.slide = currentSlide.img;
+        this.message = currentSlide.text;
+      }
+    },
+  },
+  mounted() {
+    this.nextStep++;
   },
   methods: {
+    nextSlide() {
+      this.nextStep++;
+    },
+    prevSlide() {
+      this.nextStep--;
+    },
     stakeGuideStep1() {
       this.stakeFirstStep = false;
 
