@@ -21,7 +21,10 @@
     </div>
     <div v-if="stakeThirdStep" class="bg-dark">
       <div v-if="sliderModal" class="stake-modal">
-        <div class="stake-modal_header">{{ slideID }}# {{ message }}</div>
+        <div class="stake-modal_header">
+          <span>{{ slideID }} # </span>
+          <span v-html="parseText(message, slideID)"></span>
+        </div>
         <div class="stake-modal_container">
           <div class="stake-modal-arr"><div class="left" @click="prevSlide"></div></div>
           <div class="stake-modal_slider-tutorial">
@@ -95,6 +98,45 @@ export default {
       if (this.nextStep < 1) {
         this.nextStep = 1;
         console.log(this.nextStep);
+      }
+    },
+    parseText(text, id) {
+      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
+      const matches = text.matchAll(anchorRegex);
+
+      let parsedText = "";
+      let lastIndex = 0;
+
+      for (const match of matches) {
+        const fullMatch = match[0];
+        const href = match[2];
+        const linkText = match[3];
+
+        const beforeText = text.substring(lastIndex, match.index);
+        const linkClass = id === 1 ? "clickable-link" : "";
+        const link = `<a class="${linkClass}" href="${href}" target="_blank">${linkText}</a>`;
+
+        parsedText += beforeText + link;
+        lastIndex = match.index + fullMatch.length;
+      }
+
+      parsedText += text.substring(lastIndex);
+
+      return parsedText;
+    },
+    getLinkHref(text) {
+      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
+      const matches = anchorRegex.exec(text);
+
+      if (matches && matches.length > 2) {
+        return matches[2];
+      }
+
+      return null;
+    },
+    handleLinkClick(href) {
+      if (href) {
+        window.open(href, "_blank");
       }
     },
     stakeGuideStep1() {

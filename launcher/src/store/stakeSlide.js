@@ -6,7 +6,7 @@ export const useStakeSlide = defineStore("stakeSlide", {
         {
           id: 1,
           img: "/img/stake_Guide/1.jpg",
-          text: "Visit the website “https://goerli.launchpad.ethereum.org/en/”",
+          text: "Visit the website <a href='https://goerli.launchpad.ethereum.org/en/' target='_blank'>“https://goerli.launchpad.ethereum.org/en/”</a>",
         },
         {
           id: 2,
