@@ -20,7 +20,7 @@
       <div class="right-slide"></div>
     </div>
     <div v-if="stakeThirdStep" class="bg-dark">
-      <div v-if="sliderModal" class="stake-modal">
+      <div class="stake-modal">
         <div class="stake-modal_header">
           <span>{{ slideID }} # </span>
           <span v-html="parseText(message, slideID)"></span>
@@ -31,6 +31,17 @@
             <img :src="slide" alt="slide" />
           </div>
           <div class="stake-modal-arr"><div class="right" @click="nextSlide"></div></div>
+        </div>
+      </div>
+    </div>
+    <div v-if="goForStake" class="bg-dark">
+      <div class="wrapper">
+        <div class="header-node" @click.prevent="stakeGuideStep2">
+          <div class="title">staking</div>
+        </div>
+        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
+        <div class="step-one">
+          <span>Click on Staking</span>
         </div>
       </div>
     </div>
@@ -57,7 +68,7 @@ export default {
       stakeGuide: "stakeGuide",
       stakeSecondStep: "stakeSecondStep",
       stakeThirdStep: "stakeThirdStep",
-      sliderModal: "sliderModal",
+      goForStake: "goForStake",
     }),
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
@@ -69,8 +80,6 @@ export default {
         setTimeout(() => {
           this.stakeSecondStep = false;
           this.stakeThirdStep = true;
-          this.sliderModal = true;
-          console.log(this.sliderModal);
         }, 5000);
       }
     },
@@ -90,7 +99,8 @@ export default {
     nextSlide() {
       this.nextStep++;
       if (this.nextStep > 56) {
-        this.sliderModal = false;
+        this.stakeThirdStep = false;
+        this.goForStake = true;
       }
     },
     prevSlide() {
@@ -103,7 +113,6 @@ export default {
     parseText(text, id) {
       const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
       const matches = text.matchAll(anchorRegex);
-
       let parsedText = "";
       let lastIndex = 0;
 
@@ -111,11 +120,9 @@ export default {
         const fullMatch = match[0];
         const href = match[2];
         const linkText = match[3];
-
         const beforeText = text.substring(lastIndex, match.index);
         const linkClass = id === 1 ? "clickable-link" : "";
         const link = `<a class="${linkClass}" href="${href}" target="_blank">${linkText}</a>`;
-
         parsedText += beforeText + link;
         lastIndex = match.index + fullMatch.length;
       }
@@ -124,21 +131,7 @@ export default {
 
       return parsedText;
     },
-    getLinkHref(text) {
-      const anchorRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/gi;
-      const matches = anchorRegex.exec(text);
 
-      if (matches && matches.length > 2) {
-        return matches[2];
-      }
-
-      return null;
-    },
-    handleLinkClick(href) {
-      if (href) {
-        window.open(href, "_blank");
-      }
-    },
     stakeGuideStep1() {
       this.stakeFirstStep = false;
 
@@ -146,6 +139,13 @@ export default {
         this.$router.push("/control");
       }, 10);
       this.stakeSecondStep = true;
+    },
+    stakeGuideStep2() {
+      this.stakeFirstStep = false;
+
+      setTimeout(() => {
+        this.$router.push("/staking");
+      }, 10);
     },
   },
 };
@@ -297,6 +297,7 @@ export default {
   font-weight: 700;
   color: #eee;
 }
+
 .stake-modal_container {
   width: 100%;
   height: 80%;
