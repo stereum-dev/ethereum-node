@@ -351,8 +351,7 @@ export default {
       message: "",
       messageIsError: false,
       bDialogVisible: false,
-      isDragOver: false,
-      keyFiles: [],
+
       importValidatorKeyActive: true,
       selectValidatorServiceForKey: false,
       passwordInputActive: false,
@@ -412,6 +411,8 @@ export default {
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
+      isDragOver: "isDragOver",
+      keyFiles: "keyFiles",
     }),
     importingErrorMessage() {
       return {
@@ -441,6 +442,13 @@ export default {
         const hasMatchingIcon = val.some((item) => item.icon === this.selectedIcon);
 
         this.display = !hasMatchingIcon;
+      },
+    },
+    isDragOver: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        console.log(val);
       },
     },
 
@@ -900,7 +908,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
+      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },

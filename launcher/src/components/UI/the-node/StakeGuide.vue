@@ -44,12 +44,22 @@
           <span>Click on Staking</span>
         </div>
       </div>
-      <div v-if="insertVal" class="wrapper">
-        <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-        <div class="staking-step-two">
+      <div
+        v-if="insertVal"
+        class="wrapper"
+        @drag.prevent.stop=""
+        @dragstart.prevent.stop=""
+        @dragend.prevent.stop="isDragOver = false"
+        @dragover.prevent.stop="isDragOver = true"
+        @dragenter.prevent.stop="isDragOver = true"
+        @dragleave.prevent.stop="isDragOver = false"
+        @drop.prevent.stop="dropFileHandler"
+      >
+        <img v-if="!isDragOver" src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+        <div v-if="!isDragOver" class="staking-step-two">
           <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
         </div>
-        <InsertValidator class="insert" />
+        <InsertValidator v-if="insertKeyBoxActive" class="insert" />
       </div>
     </div>
   </div>
@@ -57,6 +67,8 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
+import { useStakingStore } from "@/store/theStaking";
+import { useServices } from "@/store/services";
 import { mapState } from "pinia";
 import { useStakeSlide } from "../../../store/stakeSlide";
 import InsertValidator from "../the-staking/InsertValidator.vue";
@@ -84,6 +96,13 @@ export default {
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
     }),
+    ...mapWritableState(useStakingStore, {
+      isDragOver: "isDragOver",
+      keyFiles: "keyFiles",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
   },
   watch: {
     stakeSecondStep(newVal) {
@@ -107,6 +126,20 @@ export default {
     this.nextStep++;
   },
   methods: {
+    dropFileHandler(event) {
+      let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
+      if (validator && validator.map((e) => e.state).includes("running")) {
+        let droppedFiles = event.dataTransfer.files;
+        if (droppedFiles[0]["type"] === "application/json") {
+          this.keyFiles.push(...droppedFiles);
+          // this.importValidatorKeyActive = false;
+          this.insertKeyBoxActive = false;
+          console.log(this.keyFiles);
+          // this.selectValidatorServiceForKey = true;
+        }
+      }
+      this.isDragOver = false;
+    },
     nextSlide() {
       this.nextStep++;
       if (this.nextStep > 56) {
@@ -186,6 +219,9 @@ export default {
     left: 50%;
   }
 }
+.dropActive {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
 .stake-guide-parent {
   width: 100%;
   height: 100%;
@@ -200,7 +236,7 @@ export default {
 .bg-dark {
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
   left: 0;
   top: 0;
