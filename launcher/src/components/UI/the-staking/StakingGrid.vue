@@ -73,7 +73,7 @@ export default {
   },
   created() {
     if (this.installedValidators.length === 0) return;
-    this.selectedValdiatorService = this.installedValidators[0]
+    this.selectedValdiatorService = this.installedValidators[0];
     this.selectedIcon = this.installedValidators[0].icon;
     this.selectedName = this.installedValidators[0].name;
     this.selectedStatus = this.installedValidators[0].state;

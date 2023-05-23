@@ -44,6 +44,13 @@
           <span>Click on Staking</span>
         </div>
       </div>
+      <div v-if="insertVal" class="wrapper">
+        <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+        <div class="staking-step-two">
+          <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
+        </div>
+        <InsertValidator class="insert" />
+      </div>
     </div>
   </div>
 </template>
@@ -52,8 +59,10 @@ import { mapWritableState } from "pinia";
 import { useNodeHeader } from "../../../store/nodeHeader";
 import { mapState } from "pinia";
 import { useStakeSlide } from "../../../store/stakeSlide";
+import InsertValidator from "../the-staking/InsertValidator.vue";
 
 export default {
+  components: { InsertValidator },
   data() {
     return {
       slideID: "",
@@ -70,6 +79,7 @@ export default {
       stakeThirdStep: "stakeThirdStep",
       goForStake: "goForStake",
       stakeBtn: "stakeBtn",
+      insertVal: "insertVal",
     }),
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
@@ -146,6 +156,7 @@ export default {
 
       setTimeout(() => {
         this.stakeBtn = false;
+        this.insertVal = true;
         this.$router.push("/staking");
       }, 10);
     },
@@ -153,6 +164,28 @@ export default {
 };
 </script>
 <style scoped>
+.insert {
+  width: 50%;
+  left: 13.5%;
+  top: 83%;
+  position: absolute;
+}
+.drag-icon {
+  filter: invert(1);
+  transform: rotate(180deg);
+  width: 5%;
+  position: absolute;
+  animation: dragIcon 3s infinite;
+  top: 57%;
+}
+@keyframes dragIcon {
+  from {
+    left: 80%;
+  }
+  to {
+    left: 50%;
+  }
+}
 .stake-guide-parent {
   width: 100%;
   height: 100%;
@@ -253,6 +286,19 @@ export default {
   width: 80%;
   height: 20%;
   font-size: 250%;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  position: absolute;
+  top: 40%;
+  left: 10%;
+}
+.staking-step-two {
+  color: #eee;
+  display: flex;
+  width: 80%;
+  height: 20%;
+  font-size: 180%;
   justify-content: center;
   align-items: center;
   font-weight: 600;
