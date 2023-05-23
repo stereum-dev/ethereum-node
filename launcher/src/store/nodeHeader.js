@@ -25,6 +25,7 @@ export const useNodeHeader = defineStore("nodeHeader", {
       activeRPC: false,
       nextStepFlag: 0,
       goForStake: false,
+      stakeBtn: false,
     };
   },
   getters: {},

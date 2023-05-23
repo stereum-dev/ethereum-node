@@ -35,12 +35,12 @@
       </div>
     </div>
     <div v-if="goForStake" class="bg-dark">
-      <div class="wrapper">
-        <div class="header-node" @click.prevent="stakeGuideStep2">
+      <div v-if="stakeBtn" class="wrapper">
+        <div class="header-node-staking" @click.prevent="stakeGuideStep2">
           <div class="title">staking</div>
         </div>
-        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow" />
-        <div class="step-one">
+        <img src="../../../../public/img/icon/arrows/curved-arrow.png" class="header-arrow-staking" />
+        <div class="staking-step-one">
           <span>Click on Staking</span>
         </div>
       </div>
@@ -69,6 +69,7 @@ export default {
       stakeSecondStep: "stakeSecondStep",
       stakeThirdStep: "stakeThirdStep",
       goForStake: "goForStake",
+      stakeBtn: "stakeBtn",
     }),
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
@@ -101,13 +102,13 @@ export default {
       if (this.nextStep > 56) {
         this.stakeThirdStep = false;
         this.goForStake = true;
+        this.stakeBtn = true;
       }
     },
     prevSlide() {
       this.nextStep--;
       if (this.nextStep < 1) {
         this.nextStep = 1;
-        console.log(this.nextStep);
       }
     },
     parseText(text, id) {
@@ -144,6 +145,7 @@ export default {
       this.stakeFirstStep = false;
 
       setTimeout(() => {
+        this.stakeBtn = false;
         this.$router.push("/staking");
       }, 10);
     },
@@ -195,6 +197,19 @@ export default {
   font-weight: 800;
   z-index: 312;
 }
+.header-node-staking {
+  width: 11%;
+  height: 7%;
+  cursor: pointer;
+  position: absolute;
+  left: 27%;
+  top: 1%;
+  opacity: 1;
+  color: #eee;
+  text-transform: uppercase;
+  font-weight: 800;
+  z-index: 312;
+}
 .title {
   width: 100%;
   height: 100%;
@@ -212,6 +227,14 @@ export default {
   left: 25%;
   top: 7%;
 }
+.header-arrow-staking {
+  filter: invert(1);
+  transform: rotate(180deg);
+  width: 20%;
+  position: absolute;
+  left: 35%;
+  top: 7%;
+}
 .step-one {
   color: #eee;
   display: flex;
@@ -223,6 +246,19 @@ export default {
   font-weight: 600;
   position: absolute;
   top: 45%;
+}
+.staking-step-one {
+  color: #eee;
+  display: flex;
+  width: 80%;
+  height: 20%;
+  font-size: 250%;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  position: absolute;
+  top: 40%;
+  left: 10%;
 }
 .sync-status-widg {
   display: flex;
