@@ -55,24 +55,15 @@
         @dragleave.prevent.stop="isDragOver = false"
         @drop.prevent.stop="dropFileHandler"
       >
-        <div class="row-box-wrapper">
-          <div v-for="(item, index) in keyFiles" :key="index" class="key-tableRow">
-            <span class="key-circle"></span>
-            <span class="file-name">{{ item.name }}</span>
-            <div class="chosenService">
-              <!-- <img :src="selectedService.icon" alt="icon" /> -->
-            </div>
-            <div class="key-remove-icon">
-              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
-            </div>
+        <div v-if="!isDragOver" class="message-stake-wrapper">
+          <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+          <div class="staking-step-two">
+            <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
           </div>
         </div>
 
-        <img v-if="isDragOver" src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-        <div v-if="isDragOver" class="staking-step-two">
-          <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
-        </div>
-        <InsertValidator v-if="insertKeyBoxActive" class="insert" />
+        <div class="DisplayValidators-bg"></div>
+        <DisplayValidators class="display-val" />
       </div>
     </div>
   </div>
@@ -84,10 +75,10 @@ import { useStakingStore } from "@/store/theStaking";
 import { useServices } from "@/store/services";
 import { mapState } from "pinia";
 import { useStakeSlide } from "../../../store/stakeSlide";
-import InsertValidator from "../the-staking/InsertValidator.vue";
+import DisplayValidators from "../the-staking/DisplayValidators.vue";
 
 export default {
-  components: { InsertValidator },
+  components: { DisplayValidators },
   data() {
     return {
       slideID: "",
@@ -212,6 +203,24 @@ export default {
 };
 </script>
 <style scoped>
+.display-val {
+  width: 74.5%;
+  height: 85%;
+  position: absolute;
+  left: 0.5%;
+  top: 10%;
+  z-index: 1;
+}
+.DisplayValidators-bg {
+  width: 73%;
+  height: 79%;
+  position: absolute;
+  left: 1.5%;
+  top: 12%;
+  background: #121111;
+  z-index: 0;
+  border-radius: 20px;
+}
 .row-box-wrapper {
   width: 72%;
   height: 65%;
@@ -223,21 +232,21 @@ export default {
 }
 .key-tableRow {
   width: 99%;
-  height: 30px;
-  margin: 5px auto 0 auto;
+  height: 8%;
+  margin: 0.7% auto 0 auto;
   display: grid;
   grid-template-columns: 4% 64% 28% 4%;
   grid-template-rows: 100%;
   background-color: rgb(89, 89, 89);
   border-radius: 30px;
-  padding: 1px;
+  padding: 0.1%;
 }
 .key-tableRow .file-name {
   grid-column: 2/3;
   width: 100%;
   height: 95%;
   color: #fff !important;
-  font-size: 1rem !important;
+  font-size: 100% !important;
   font-weight: 400 !important;
   justify-self: center;
   align-self: center;
@@ -268,7 +277,7 @@ export default {
   border-radius: 50px !important;
   width: 80% !important;
   height: 80% !important;
-  padding: 1px;
+  padding: 1% !important;
   background-color: #343434;
   justify-self: center;
   align-self: center;
@@ -281,20 +290,14 @@ export default {
 
 .key-tableRow .key-circle {
   grid-column: 1/2;
-  width: 20px !important;
-  height: 20px !important;
+  width: 65% !important;
+  height: 64% !important;
   border-radius: 50% !important;
   background-color: #fff !important;
   justify-self: center;
   align-self: center;
 }
 
-.insert {
-  width: 50%;
-  left: 13.5%;
-  top: 83%;
-  position: absolute;
-}
 .drag-icon {
   filter: invert(1);
   transform: rotate(180deg);
@@ -302,6 +305,7 @@ export default {
   position: absolute;
   animation: dragIcon 3s infinite;
   top: 57%;
+  z-index: 3;
 }
 @keyframes dragIcon {
   from {
@@ -432,7 +436,8 @@ export default {
   font-weight: 600;
   position: absolute;
   top: 40%;
-  left: 10%;
+  left: 0;
+  z-index: 3;
 }
 .sync-status-widg {
   display: flex;
