@@ -307,6 +307,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("readKeys");
   }
 
+  async getValidatorStats(args) {
+    return await this.promiseIpc.send("getValidatorStats", args);
+  }
+
   async getValidatorState(args) {
     return await this.promiseIpc.send("getValidatorState", args);
   }
