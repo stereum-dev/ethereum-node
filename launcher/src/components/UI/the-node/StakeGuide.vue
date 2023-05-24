@@ -92,7 +92,9 @@ export default {
       goForStake: "goForStake",
       stakeBtn: "stakeBtn",
       insertVal: "insertVal",
+      insertKeyBoxActive: "insertKeyBoxActive",
     }),
+
     ...mapState(useStakeSlide, {
       sliderTutorial: "sliderTutorial",
     }),
