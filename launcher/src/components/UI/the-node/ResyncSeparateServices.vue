@@ -28,13 +28,13 @@
         >
           <slide v-for="(Stype, index) in syncType" :key="index">
             <div class="syncBox">
-              <div v-if="Stype.name === 'genesis'" class="syncContent">
+              <div v-if="Stype.type === 'Syncs from genesis' || item.category === 'execution'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
+              <div v-else-if="Stype.type === 'custom source' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -49,7 +49,7 @@
                   />
                 </div>
               </div>
-              <div v-else-if="Stype.type === 'custom source'" class="syncContent">
+              <div v-else-if="Stype.type === 'recommended' && item.category === 'consensus'" class="syncContent">
                 <div class="syncText">
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
@@ -129,7 +129,6 @@ export default {
       georli: "georli",
       sepolia: "sepolia",
       gnosis: "gnosis",
-      selectedPreset: "selectedPreset",
     }),
     ...mapWritableState(useServices, {
       resyncSeparateModal: "resyncSeparateModal",
@@ -146,12 +145,18 @@ export default {
         this.selectedItem = " - SELECT A SOURCE -";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
+      if (val === 2) {
+        this.btnActive = true;
+      }
     },
+
     checkPointSync(val) {
       this.btnActive = val !== "" || this.currentSlide === 0;
     },
   },
   mounted() {
+    if(this.item.category === "execution")
+      this.currentSlide = 2;
     this.setSelectedLinks();
   },
   methods: {
@@ -199,16 +204,6 @@ export default {
           break;
         default:
           break;
-      }
-      if (this.selectedLinks && Array.isArray(this.selectedLinks) && this.selectedLinks.length) {
-        for (const config of this.selectedPreset.includedPlugins) {
-          if (config.service.toLowerCase() == "tekubeaconservice") {
-            this.selectedLinks = this.selectedLinks.map(function (element) {
-              return element.trimEnd().replace(/\/+$/, "").trimEnd() + "/eth/v2/debug/beacon/states/finalized";
-            });
-            break;
-          }
-        }
       }
     },
   },

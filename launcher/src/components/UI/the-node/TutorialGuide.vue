@@ -45,10 +45,10 @@
         <div class="slider-modal_header">
           <span>{{ message }}</span>
         </div>
-        <div class="slider-container">
-          <div class="arrow"><div class="left" @click="prevSlide"></div></div>
-          <div class="slider"><img :src="slide" alt="" /></div>
-          <div class="arrow"><div class="right" @click="nextSlide"></div></div>
+        <div class="slider-tutorial-container">
+          <div class="slider-arr"><div class="left" @click="prevSlide"></div></div>
+          <div class="slider-tutorial"><img :src="slide" alt="" /></div>
+          <div class="slider-arr"><div class="right" @click="nextSlide"></div></div>
         </div>
         <div class="footer">
           <span>{{ $t("rpcGuide.clickCancel") }}</span>
@@ -172,6 +172,7 @@ export default {
           this.tutorial = false;
           this.rpcOne = true;
           this.rpcTwo = false;
+          this.thirdPoint = false;
           this.nextStepFlag = 0;
           this.explainModal = false;
           this.fixRPC = false;
@@ -324,28 +325,33 @@ export default {
   font-size: 100%;
   font-weight: 600;
 }
-.slider-container {
+.slider-tutorial-container {
   display: flex;
   width: 100%;
   height: 75%;
-  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
-.arrow {
+.slider-arr {
   display: flex;
   width: 10%;
   height: 100%;
   justify-content: center;
   align-items: center;
 }
-.slider {
+
+.slider-tutorial {
   display: flex;
   width: 80%;
   height: 100%;
   border-radius: 20px;
   border: 5px solid grey;
+  justify-content: center;
+  align-items: center;
 }
-.slider img {
+.slider-tutorial img {
   width: 100%;
+  height: 100%;
   border-radius: 20px;
 }
 .left {
@@ -359,7 +365,7 @@ export default {
 .right {
   width: 0;
   height: 0;
-  border-top: 90px solid transparent;
+  border-top: 80px solid transparent;
   border-bottom: 90px solid transparent;
   border-left: 20px solid grey;
   cursor: pointer;

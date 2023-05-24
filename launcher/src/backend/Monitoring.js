@@ -1912,9 +1912,10 @@ export class Monitoring {
 
   // Check if WS Port is open on the node (via CURL on localhost)
   // Arguments:
-  // url=<mixed>        : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // url=<mixed>     : [REQUIRED] Full HTTP API URL of the RPC server or object of {addr:'<addr>',port:'<port>'}
+  // timeout=<number>: [OPTIONAL] Timeout in seconds for the HTTP request (default: 2)
   // Returns true if WS port is open, false otherwiese
-  async isWsAvailable(url) {
+  async isWsAvailable(url, timeout = 2) {
     // Format url
     if (typeof url === "string") {
       url = url.trim();
@@ -1933,6 +1934,15 @@ export class Monitoring {
       };
     }
 
+    // Check timeout
+    if (isNaN(timeout) || timeout < 0) {
+      return {
+        code: 2,
+        info: "error: invalid timeout specified",
+        data: "",
+      };
+    }
+
     // Build curl command
     const rnd = StringUtils.createRandomString();
     const key = crypto.createHash("md5").update(rnd).digest("hex");
@@ -1942,15 +1952,23 @@ export class Monitoring {
       -H "Upgrade: websocket" \
       -H "Sec-WebSocket-Version: 13" \
       -H "Sec-WebSocket-Key: ${key}" \
-      --data-raw '{"jsonrpc":"2.0", "id": 1, "method": "eth_blockNumber", "params": []}' \
+      --connect-timeout ${timeout} \
+      --max-time 0.25 \
+      -w "\\n%{http_code}" \
       ${url}
     `.trim();
 
     // Execute curl command
     const wsResult = await this.nodeConnection.sshService.exec(cmd);
 
+    let statuscode = 0;
+    try {
+      let r = wsResult.stdout.trim().split("\n");
+      statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
+    } catch (e) {}
+
     // Respond true if websocket is available, false otherwise
-    if (!wsResult.stdout.toLowerCase().includes("sec-websocket")) {
+    if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
       return {
         code: 2,
         info: "error: ws port not available",
@@ -2497,6 +2515,131 @@ rm -rf diskoutput
 
     // Return service infos with logs
     return serviceInfos;
+  }
+
+  async getValidatorStats(validatorPublicKey) {
+    const validators_arr = [validatorPublicKey];
+    const verbose = true;
+    const proposer = false;
+
+    const beaconStatus = await this.getBeaconStatus();
+    const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
+
+    const baseURL = `http://localhost:${beaconAPIPort}`;
+
+    const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
+    const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
+
+    let output = {};
+
+    const { genesis_time } = JSON.parse(genesisResShell.stdout).data;
+    const current_time = Math.floor(Date.now() / 1000);
+    const slot_time = 12;
+    const slot_timeout = slot_time - ((current_time - genesis_time) % slot_time);
+    const current_slot = Math.floor((current_time - genesis_time) / slot_time);
+    const current_epoch = Math.floor(current_slot / 32);
+
+    output = { currentEpoch: current_epoch };
+
+    const res = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/validator/duties/attester/${Math.trunc(current_epoch)}`,
+      validators_arr,
+      "POST",
+      {
+        "Content-Type": "application/json",
+      }
+    );
+
+    const res_p = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/validator/duties/proposer/${Math.trunc(current_epoch)}`,
+      null,
+      "GET",
+      {
+        "Content-Type": "application/json",
+      }
+    );
+
+    let current_prop = 0;
+    let next_att_slot = 0;
+    let next_prop_slot = 0;
+
+    function handle_attestation_duty(input) {
+      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+      if (vidx !== undefined && slot !== undefined) {
+        if (vidx.match(/^[-]?\d+$/) !== null) {
+          if (verbose === true) {
+            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
+            let eta_str = "";
+            if (duty_eta > 0) {
+              eta_str = " ETA: " + duty_eta + " sec";
+            } else if (duty_eta > 0 - slot_time) {
+              eta_str = " ETA: now!";
+            }
+            let slot_idx = slot % 32;
+            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
+          }
+          if (slot > current_slot) {
+            if (slot < next_att_slot || next_att_slot === 0) {
+              next_att_slot = slot;
+            }
+          }
+        }
+      }
+    }
+
+    function handle_proposer_duty(input) {
+      let vidx = input.match(/.*"validator_index":"?(\d+)"?.*/)[1];
+      let slot = input.match(/.*"slot":"?(\d+)"?.*/)[1];
+      if (vidx !== undefined && slot !== undefined) {
+        if (vidx.match(/^[-]?\d+$/) !== null && validators_arr.includes(vidx) === true) {
+          if (verbose === true) {
+            let duty_eta = (slot - current_slot - 1) * slot_time + slot_timeout;
+            let eta_str = "";
+            if (duty_eta >= 0) {
+              eta_str = " ETA: " + duty_eta + " sec";
+            } else if (duty_eta > 0 - slot_time) {
+              eta_str = " ETA: now!";
+            }
+            let slot_idx = slot % 32;
+            output = { ...output, validator: vidx, attestationSlot: slot, idx: slot_idx, ETA: eta_str };
+          }
+          if (slot > current_slot) {
+            if (slot < next_prop_slot || next_prop_slot === 0) {
+              next_prop_slot = slot;
+            }
+          } else if (slot === current_slot) {
+            current_prop = vidx;
+          }
+        }
+      }
+    }
+
+    handle_attestation_duty(JSON.stringify(res.data.api_reponse));
+    handle_proposer_duty(JSON.stringify(res_p.data.api_reponse));
+
+    if (proposer === true) {
+      output = { ...output, nextAttSlot: next_att_slot, nextPropSlot: next_prop_slot };
+    }
+
+    let next_duty_slot;
+    if (next_prop_slot > 0 && next_prop_slot < next_att_slot) {
+      next_duty_slot = next_prop_slot;
+    } else {
+      next_duty_slot = next_att_slot;
+    }
+
+    if (next_duty_slot > 0) {
+      const remaining_slots = next_duty_slot - current_slot - 1;
+
+      const remaining_time = remaining_slots * slot_time + slot_timeout;
+
+      output = { ...output, remainingSlots: remaining_slots, remainingTime: remaining_time };
+    }
+
+    return { ...output, currentProp: current_prop };
   }
 
   // get States of Validators
