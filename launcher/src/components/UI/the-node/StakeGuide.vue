@@ -55,7 +55,7 @@
         @dragleave.prevent.stop="isDragOver = false"
         @drop.prevent.stop="dropFileHandler"
       >
-        <div v-if="!isDragOver" class="message-stake-wrapper">
+        <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
           <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
           <div class="staking-step-two">
             <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
@@ -105,6 +105,7 @@ export default {
     ...mapWritableState(useStakingStore, {
       isDragOver: "isDragOver",
       keyFiles: "keyFiles",
+      dragStep: "dragStep",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",

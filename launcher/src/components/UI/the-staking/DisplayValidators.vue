@@ -413,6 +413,7 @@ export default {
       display: "display",
       isDragOver: "isDragOver",
       keyFiles: "keyFiles",
+      dragStep: "dragStep",
     }),
     importingErrorMessage() {
       return {
@@ -869,6 +870,7 @@ export default {
         }
       }
       this.isDragOver = false;
+      this.dragStep = true;
     },
     removeKeyHandler(item) {
       this.keyFiles = this.keyFiles.filter((el) => el.name != item.name);
