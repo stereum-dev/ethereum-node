@@ -55,8 +55,21 @@
         @dragleave.prevent.stop="isDragOver = false"
         @drop.prevent.stop="dropFileHandler"
       >
-        <img v-if="!isDragOver" src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-        <div v-if="!isDragOver" class="staking-step-two">
+        <div class="row-box-wrapper">
+          <div v-for="(item, index) in keyFiles" :key="index" class="key-tableRow">
+            <span class="key-circle"></span>
+            <span class="file-name">{{ item.name }}</span>
+            <div class="chosenService">
+              <!-- <img :src="selectedService.icon" alt="icon" /> -->
+            </div>
+            <div class="key-remove-icon">
+              <img src="../../../../public/img/icon/task-manager-icons/close3.png" alt="icon" />
+            </div>
+          </div>
+        </div>
+
+        <img v-if="isDragOver" src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
+        <div v-if="isDragOver" class="staking-step-two">
           <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
         </div>
         <InsertValidator v-if="insertKeyBoxActive" class="insert" />
@@ -199,6 +212,83 @@ export default {
 };
 </script>
 <style scoped>
+.row-box-wrapper {
+  width: 72%;
+  height: 65%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 1.5%;
+  top: 21%;
+}
+.key-tableRow {
+  width: 99%;
+  height: 30px;
+  margin: 5px auto 0 auto;
+  display: grid;
+  grid-template-columns: 4% 64% 28% 4%;
+  grid-template-rows: 100%;
+  background-color: rgb(89, 89, 89);
+  border-radius: 30px;
+  padding: 1px;
+}
+.key-tableRow .file-name {
+  grid-column: 2/3;
+  width: 100%;
+  height: 95%;
+  color: #fff !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  justify-self: center;
+  align-self: center;
+}
+
+.key-tableRow .chosenService {
+  grid-column: 3/4;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-self: flex-start;
+  align-self: center;
+  justify-self: flex-start;
+  align-self: center;
+}
+.key-tableRow .chosenService img {
+  width: 23%;
+  height: 80%;
+  margin-left: 22px;
+  align-self: center;
+}
+.key-tableRow .key-remove-icon {
+  grid-column: 4/5;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border: 1px solid #4a4a4a !important;
+  border-radius: 50px !important;
+  width: 80% !important;
+  height: 80% !important;
+  padding: 1px;
+  background-color: #343434;
+  justify-self: center;
+  align-self: center;
+}
+
+.key-tableRow .key-remove-icon img {
+  width: 60% !important;
+  height: 60% !important;
+}
+
+.key-tableRow .key-circle {
+  grid-column: 1/2;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background-color: #fff !important;
+  justify-self: center;
+  align-self: center;
+}
+
 .insert {
   width: 50%;
   left: 13.5%;
