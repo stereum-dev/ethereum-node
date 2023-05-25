@@ -43,12 +43,9 @@ ipcMain.handle("connect", async (event, arg) => {
   }
   nodeConnection.nodeConnectionParams = remoteHost;
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnectionProm.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
-  await monitoring.nodeConnectionProm.establish();
+  await monitoring.login(remoteHost);
   return 0;
 });
 
