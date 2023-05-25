@@ -5,6 +5,8 @@ class ControlService extends EventEmitter {
   constructor() {
     super();
     this.promiseIpc = window.promiseIpc;
+    this.addListener = window.promiseIpc.addListener
+    this.removeListener = window.promiseIpc.removeListener
   }
 
   init(store) {

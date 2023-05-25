@@ -6,6 +6,7 @@ import { GethService } from "./ethereum-services/GethService";
 import { ErigonService } from "./ethereum-services/ErigonService";
 import { BesuService } from "./ethereum-services/BesuService";
 import { SSVNetworkService } from "./ethereum-services/SSVNetworkService";
+import { CharonService } from "./ethereum-services/CharonService";
 import { NimbusBeaconService } from "./ethereum-services/NimbusBeaconService";
 import { NimbusValidatorService } from "./ethereum-services/NimbusValidatorService";
 import { PrometheusService } from "./ethereum-services/PrometheusService";
@@ -134,6 +135,8 @@ export class ServiceManager {
             } else if (config.service == "ValidatorEjectorService") {
               services.push(ValidatorEjectorService.buildByConfiguration(config));
             } else if (config.service == "KeysAPIService") {
+              services.push(KeysAPIService.buildByConfiguration(config));
+            } else if (config.service == "CharonService") {
               services.push(KeysAPIService.buildByConfiguration(config));
             }
           } else {
@@ -755,6 +758,16 @@ export class ServiceManager {
           ports,
           args.installDir + "/ssv_network",
           args.executionClients,
+          args.beaconServices
+        );
+      case "CharonService":
+        ports = [
+          new ServicePort(null, 3610, 3610, servicePortProtocol.tcp),
+        ];
+        return CharonService.buildByUserInput(
+          args.network,
+          ports,
+          args.installDir + "/charon",
           args.beaconServices
         );
     }

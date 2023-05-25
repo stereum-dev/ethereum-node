@@ -86,6 +86,8 @@ export class OneClickInstall {
     this.network = undefined;
     this.mevboost = undefined;
     this.needsKeystore = [];
+    this.extraServices = [];
+    this.notToStart = [];
   }
 
   getConfigurations() {
@@ -100,7 +102,7 @@ export class OneClickInstall {
     );
     if (this.mevboost) serviceList.push(this.mevboost.buildConfiguration());
     if (this.validatorService) serviceList.push(this.validatorService.buildConfiguration());
-
+    if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service.buildConfiguration()));
     return serviceList;
   }
 
@@ -196,6 +198,13 @@ export class OneClickInstall {
       this.needsKeystore.push(this.validatorService)
     }
 
+    if (constellation.includes("CharonService")) {
+      //SSVNetworkService
+      let charon = this.serviceManager.getService("CharonService", { ...args, beaconServices: [this.beaconService] })
+      this.extraServices.push(charon)
+      this.notToStart.push(charon.id)
+    }
+
     this.prometheusNodeExporter = this.serviceManager.getService("PrometheusNodeExporterService", args)
     this.prometheus = this.serviceManager.getService("PrometheusService", args)
     this.grafana = this.serviceManager.getService("GrafanaService", args)
@@ -254,7 +263,7 @@ export class OneClickInstall {
   }
 
   async startServices() {
-    const services = this.getConfigurations();
+    const services = this.getConfigurations().filter(s => !this.notToStart.includes(s.id))
     const runRefs = [];
     if (services[0] !== undefined) {
       await Promise.all(
@@ -299,8 +308,8 @@ export class OneClickInstall {
       case "ssv.network":
         services.push("SSVNetworkService");
         break;
-      case "obol ssv":
-        services.push("OBOLSSV");
+      case "obol":
+        services = ["GethService", "LighthouseBeaconService", "TekuValidatorService", "CharonService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
         break;
       case "rocketpool":
         services.push("ROCKETPOOL");
