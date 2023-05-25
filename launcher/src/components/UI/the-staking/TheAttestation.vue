@@ -6,8 +6,8 @@
           <span>Last Attestation Slot:</span>
         </div>
         <div class="attestation_last_value">
-          <span v-if="!attestationIsOnline">--</span>
-          <span v-else :class="{ isOnline: attestationIsOnline }">4989007</span>
+          <span v-if="stats.ETA === ''">{{ stats.attestationSlot }}</span>
+          <span v-else :class="{ isOnline: attestationIsOnline }">{{ stats.currentSlot }}</span>
         </div>
       </div>
       <div class="keyStatus">
@@ -15,8 +15,8 @@
           <span>Key Status:</span>
         </div>
         <div class="keyStatus_value">
-          <span v-if="!attestationIsOnline">OFFLINE</span>
-          <span v-else :class="{ isOnline: attestationIsOnline }">ATTESTED</span>
+          <span v-if="stats.ETA === ' ETA: now!'">ATTESTING</span>
+          <span v-else>PENDING</span>
         </div>
       </div>
     </div>
@@ -26,17 +26,22 @@
           <span>next Attestation Slot:</span>
         </div>
         <div class="attestation_next_value">
-          <span v-if="!attestationIsOnline">--</span>
-          <span v-else :class="{ isOnline: attestationIsOnline }">4989007</span>
+          <span v-if="stats.ETA === ''">----</span>
+          <span v-else-if="stats.ETA === ' ETA: now!'">----</span>
+          <span v-else :class="{ isOnline: attestationIsOnline }">{{ stats.attestationSlot }}</span>
         </div>
       </div>
       <div class="remainingStatus">
         <div class="remaining_title">
-          <p v-if="attestationIsOnline"><span>3</span> Slots remaining</p>
+          <p v-if="attestationIsOnline">
+            <span>{{ stats.remainingSlots }}</span> Slots remaining
+          </p>
           <p v-else><span>??</span> Slots remaining</p>
         </div>
         <div class="remaining_time">
-          <p v-if="attestationIsOnline"><span>42 sec</span> till attestation</p>
+          <p v-if="attestationIsOnline">
+            <span>{{ stats.remainingTime }}</span> till attestation
+          </p>
           <p v-else><span>??</span> till attestation</p>
         </div>
       </div>
@@ -45,11 +50,19 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useStakingStore } from "../../../store/theStaking";
 export default {
   data() {
     return {
       attestationIsOnline: true,
     };
+  },
+  computed: {
+    ...mapState(useStakingStore, {
+      keys: "keys",
+      stats: "stats",
+    }),
   },
 };
 </script>

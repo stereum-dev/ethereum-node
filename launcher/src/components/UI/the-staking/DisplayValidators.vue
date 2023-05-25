@@ -755,6 +755,7 @@ export default {
       let data = [];
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
+        console.log(data);
         if (!data || data.length == 0) {
           data = [];
           let latestEpochResponse = await axios.get(this.currentNetwork.dataEndpoint + "/epoch/latest", {
@@ -900,7 +901,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
+      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },

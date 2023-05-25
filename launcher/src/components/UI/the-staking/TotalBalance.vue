@@ -6,19 +6,19 @@
           <span>{{ $t("timeReward.totalText") }} {{ keys.length }} {{ $t("timeReward.validators") }}</span>
         </div>
         <div class="balance-value">
-          <span>32.000548</span>
+          <span>{{ getTotalBalance }}</span>
         </div>
       </div>
       <div class="epochBox">
         <div class="epoch">
-          <span class="epochNumber">155906</span>
+          <span class="epochNumber">{{ stats.currentEpoch }}</span>
         </div>
         <div class="slotBox">
-          <span class="firstNumber">16#</span>
+          <span class="firstNumber">{{ stats.idx }}#</span>
           <span class="outOf">/</span>
           <span class="secondNumber">32#</span>
           <span class="divider"></span>
-          <span class="slotNumber">4989008</span>
+          <span class="slotNumber">{{ stats.attestationSlot }}</span>
         </div>
       </div>
     </div>
@@ -29,12 +29,35 @@ import { mapState } from "pinia";
 import { useStakingStore } from "../../../store/theStaking";
 
 export default {
+  data() {
+    return {};
+  },
+
   computed: {
     ...mapState(useStakingStore, {
-      totalBalance: 32.0000185,
       keys: "keys",
+      stats: "stats",
     }),
+    getTotalBalance() {
+      let total = 0;
+      total = this.keys.reduce((acc, cur) => {
+        if (cur.balance === "-") return acc;
+        return acc + cur.balance;
+      }, 0);
+
+      return total;
+    },
   },
+  watch: {
+    total: {
+      handler(val) {
+        this.total = val;
+        console.log(this.total);
+      },
+      deep: true,
+    },
+  },
+  mounted() {},
 };
 </script>
 <style scoped>

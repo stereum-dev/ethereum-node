@@ -42,6 +42,7 @@ export default {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     chooseValidator(key) {
+      if (this.keys === []) return;
       this.selectedValidator = key;
       this.dropDownIsOpen = false;
       this.$emit("getValidator", this.selectedValidator);

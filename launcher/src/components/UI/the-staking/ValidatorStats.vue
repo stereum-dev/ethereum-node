@@ -5,26 +5,12 @@
     </div>
     <div class="stateBox">
       <div class="stateInnerBox">
-        <StateDropdown :keys="keys" />
+        <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
             <div class="index">
-              <span class="indexTitle">INDEX NO.</span>
-              <span class="indexValue">123564</span>
-            </div>
-            <div class="apr">
-              <span class="aprTitle">APR (all time)</span>
-              <span class="aprValue">9.99%</span>
-            </div>
-          </div>
-          <div class="withdrawal">
-            <div class="withdrawal_title">
-              <span>Withdrawal Addr.</span>
-            </div>
-            <div class="withdrawal_value">
-              <span>{{
-                `${withdrawalAddress.substring(0, 8)}...${withdrawalAddress.substring(withdrawalAddress.length - 13)}`
-              }}</span>
+              <span class="indexTitle">Index No.</span>
+              <span class="indexValue">{{ stats.validator }}</span>
             </div>
           </div>
         </div>
@@ -62,6 +48,7 @@ import BlockProduction from "./BlockProduction.vue";
 import TheAttestation from "./TheAttestation.vue";
 import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
+import ControlService from "@/store/ControlService";
 
 export default {
   components: {
@@ -103,13 +90,25 @@ export default {
   computed: {
     ...mapWritableState(useStakingStore, {
       keys: "keys",
+      stats: "stats",
     }),
   },
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
+    this.getValidatorStats();
+  },
+  beforeUpdate() {
+    this.getValidatorStats();
   },
   methods: {
+    async getValidatorStats(item) {
+      if (item) {
+        const output = await ControlService.getValidatorStats(item.key);
+        console.log(output);
+        this.stats = output;
+      }
+    },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
@@ -164,9 +163,6 @@ export default {
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(10, 1fr);
 }
-
-
-
 
 .indexParent {
   grid-column: 1/7;

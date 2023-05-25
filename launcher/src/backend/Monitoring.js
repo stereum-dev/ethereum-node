@@ -2609,10 +2609,11 @@ rm -rf diskoutput
 
     const validatorRes = await this.queryBeaconApi(
       baseURL,
-      `/eth/v1/beacon/states/head/validators?id=${validatorPublicKey}`,
+      `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
       undefined,
       "GET"
     );
+    console.log(validatorRes);
 
     const validators_arr = [validatorRes.data.api_reponse.data.index];
 
@@ -2628,7 +2629,7 @@ rm -rf diskoutput
     const current_slot = Math.floor((current_time - genesis_time) / slot_time);
     const current_epoch = Math.floor(current_slot / 32);
 
-    output = { currentEpoch: current_epoch };
+    output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
     const res = await this.queryBeaconApi(
       baseURL,
