@@ -9,24 +9,36 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 
+const globalMonitoringCache = {
+  intervalHandler: null,
+  isRefreshing: 0,
+  refreshIntervalSeconds: 5,
+  nodestatsInitialized: false,
+  storagestatus: {},
+};
+
 export class Monitoring {
   constructor() {
     this.nodeConnection = new NodeConnection();
     this.nodeConnectionProm = new NodeConnection();
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
+    this.isLoggedIn = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
+    this.globalMonitoringCache = { ...globalMonitoringCache };
     this.serviceInfosCacheFile = path.join(os.tmpdir(), "server_infos_cache_" + process.getCreationTime() + ".txt");
     this.lastKnownHeadBlockFile = path.join(os.tmpdir(), "last_head_block_cache.txt");
   }
 
-  // Cleanup on logout
-  async logout() {
+  // Cleanup (for example on connect/logout)
+  async cleanup() {
+    this.isLoggedIn = false;
     this.rpcTunnel = {};
     this.wsTunnel = {};
     this.beaconTunnel = {};
+    this.globalMonitoringCache = { ...globalMonitoringCache };
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
     } catch (e) {}
@@ -34,6 +46,60 @@ export class Monitoring {
     await this.nodeConnectionProm.logout();
     await this.serviceManager.nodeConnection.logout();
     await this.serviceManagerProm.nodeConnection.logout();
+  }
+
+  // Jobs to handle on login
+  async login(remoteHost) {
+    await this.cleanup();
+    this.nodeConnection.nodeConnectionParams = remoteHost;
+    this.nodeConnectionProm.nodeConnectionParams = remoteHost;
+    await this.nodeConnection.establish();
+    await this.nodeConnectionProm.establish();
+    this.isLoggedIn = true;
+    await this.startGlobalMonitoringCacheBackgroundWorker();
+  }
+
+  // Jobs to handle on logout
+  async logout() {
+    await this.stopGlobalMonitoringCacheBackgroundWorker();
+    await this.cleanup();
+  }
+
+  // Refresh global monitoring cache on request
+  async refreshGlobalMonitoringCache() {
+    const uxtsNow = Math.floor(Date.now() / 1000);
+    const elapsedSeconds = uxtsNow - this.globalMonitoringCache.isRefreshing;
+    const refreshTimeoutInSeconds = 30; // allow further refresh at least after 30 seconds
+    const refreshTimeoutReached = elapsedSeconds > refreshTimeoutInSeconds;
+    if (!this.globalMonitoringCache.isRefreshing || refreshTimeoutReached) {
+      this.globalMonitoringCache.isRefreshing = uxtsNow;
+      if (!this.globalMonitoringCache.nodestatsInitialized) {
+        this.getNodeStats(); // dont cache but initialize nodestats in background once for faster page lodaing afterwards
+        this.globalMonitoringCache.nodestatsInitialized = true;
+      }
+      this.globalMonitoringCache.storagestatus = await this.getStorageStatus(true);
+      this.globalMonitoringCache.isRefreshing = 0;
+    }
+  }
+
+  // Start global monitoring cache refreshing periodically each X seconds async in background
+  // Therefore no "await" is used for implemented calls (otherwise the login is blocked)!
+  async startGlobalMonitoringCacheBackgroundWorker() {
+    this.refreshGlobalMonitoringCache();
+    this.globalMonitoringCache.intervalHandler = setInterval(
+      function (me) {
+        me.refreshGlobalMonitoringCache();
+      },
+      this.globalMonitoringCache.refreshIntervalSeconds * 1000,
+      this
+    );
+  }
+
+  // Stop global monitoring cache refreshing
+  async stopGlobalMonitoringCacheBackgroundWorker() {
+    if (this.globalMonitoringCache.intervalHandler) {
+      clearInterval(this.globalMonitoringCache.intervalHandler);
+    }
   }
 
   async getQRCode() {
@@ -1449,7 +1515,22 @@ export class Monitoring {
   }
 
   // Get storage status of all services
-  async getStorageStatus() {
+  async getStorageStatus(live = false) {
+    // By default return cached data (if available)
+    if (!live) {
+      if (
+        !this.globalMonitoringCache.hasOwnProperty("storagestatus") ||
+        !this.globalMonitoringCache.storagestatus.hasOwnProperty("data")
+      ) {
+        return {
+          code: 330,
+          info: "error: storagestatus not available (waiting for updated cache)",
+          data: "",
+        };
+      }
+      return this.globalMonitoringCache.storagestatus;
+    }
+
     // Get all service configurations
     const serviceInfos = await this.getServiceInfos();
     if (serviceInfos.length < 1) {
