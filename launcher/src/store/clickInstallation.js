@@ -76,7 +76,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 3,
-          name: "obol ssv",
+          name: "obol",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/click-installation/OBOL_SSV.png",
           includedPlugins: [],
