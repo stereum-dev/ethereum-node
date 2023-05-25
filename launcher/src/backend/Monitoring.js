@@ -2599,7 +2599,6 @@ rm -rf diskoutput
   }
 
   async getValidatorStats(validatorPublicKey) {
-    const validators_arr = [validatorPublicKey];
     const verbose = true;
     const proposer = false;
 
@@ -2607,6 +2606,15 @@ rm -rf diskoutput
     const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
 
     const baseURL = `http://localhost:${beaconAPIPort}`;
+
+    const validatorRes = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/beacon/states/head/validators?id=${validatorPublicKey}`,
+      undefined,
+      "GET"
+    );
+
+    const validators_arr = [validatorRes.data.api_reponse.data.index];
 
     const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
     const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
