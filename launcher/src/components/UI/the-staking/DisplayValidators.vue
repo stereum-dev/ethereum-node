@@ -755,7 +755,6 @@ export default {
       let data = [];
       try {
         data = await ControlService.getValidatorState(this.keys.map((key) => key.key));
-        console.log(data);
         if (!data || data.length == 0) {
           data = [];
           let latestEpochResponse = await axios.get(this.currentNetwork.dataEndpoint + "/epoch/latest", {
