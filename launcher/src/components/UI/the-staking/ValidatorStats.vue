@@ -65,6 +65,9 @@ export default {
         {
           title: "ATTESTATION",
           comp: TheAttestation,
+          props: {
+            remainingTime: this.remainingTime,
+          },
         },
         {
           title: "SYNC COMMITTEE",
@@ -73,6 +76,9 @@ export default {
         {
           title: "BLOCK PRODUCTION",
           comp: BlockProduction,
+          props: {
+            remainingTime: this.remainingTime,
+          },
         },
       ],
       tabs: [
@@ -81,6 +87,7 @@ export default {
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
+      remainingTime: "",
 
       maxCharacters: 30,
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
@@ -96,17 +103,22 @@ export default {
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-    this.getValidatorStats();
+    setInterval(() => {
+      this.getValidatorStats();
+    }, 1000);
   },
   beforeUpdate() {
-    this.getValidatorStats();
+    setInterval(() => {
+      this.getValidatorStats();
+    }, 1000);
   },
   methods: {
     async getValidatorStats(item) {
       if (item) {
-        const output = await ControlService.getValidatorStats(item.key);
-        console.log(output);
-        this.stats = output;
+        setInterval(async () => {
+          const output = await ControlService.getValidatorStats(item.key);
+          this.stats = output;
+        }, 1000);
       }
     },
     toggleDropDown() {

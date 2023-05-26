@@ -2613,7 +2613,6 @@ rm -rf diskoutput
       undefined,
       "GET"
     );
-    console.log(validatorRes);
 
     const validators_arr = [validatorRes.data.api_reponse.data.index];
 

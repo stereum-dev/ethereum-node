@@ -1,8 +1,5 @@
 <template>
   <div class="dropDown_parent">
-    <div class="title">
-      <span>VALIDATOR</span>
-    </div>
     <div class="dropDown_box">
       <div class="dropDown" @click="toggleDropDown">
         <div v-if="!selectedValidator.key" class="options">Choose a validator</div>
@@ -58,22 +55,11 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 5px 0 5px;
+  padding: 3px;
 }
-.dropDown_parent .title {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.dropDown_parent .title span {
-  color: #e6e6e6;
-  font-size: 0.6rem;
-  font-weight: 600;
-}
+
 .dropDown_parent .dropDown_box {
-  width: 80%;
+  width: 100%;
   height: 100%;
   padding: 2px;
   display: flex;
@@ -88,7 +74,7 @@ export default {
   border: 1px solid #404c59;
   background-color: #324154;
   box-shadow: 1px 1px 3px 1px rgb(15, 15, 15);
-  border-radius: 50px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,7 +149,7 @@ export default {
   width: 13%;
   height: 100%;
   background-color: #0a7ae2;
-  border-radius: 0 25px 25px 0;
+  border-radius: 0 5px 5px 0;
   display: flex;
   justify-content: center;
   align-items: center;

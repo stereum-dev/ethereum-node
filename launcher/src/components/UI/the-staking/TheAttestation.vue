@@ -15,7 +15,7 @@
           <span>Key Status:</span>
         </div>
         <div class="keyStatus_value">
-          <span v-if="stats.ETA === ' ETA: now!'">ATTESTING</span>
+          <span v-if="stats.ETA === ' ETA: now!'" class="attesting">ATTESTING</span>
           <span v-else>PENDING</span>
         </div>
       </div>
@@ -39,10 +39,13 @@
           <p v-else><span>??</span> Slots remaining</p>
         </div>
         <div class="remaining_time">
-          <p v-if="attestationIsOnline">
+          <!-- <p v-if="attestationIsOnline">
             <span>{{ stats.remainingTime }}</span> till attestation
           </p>
-          <p v-else><span>??</span> till attestation</p>
+          <p v-else><span>??</span> till attestation</p> -->
+          <p>
+            <span>{{ getRemainingTime }}</span> till attestation
+          </p>
         </div>
       </div>
     </div>
@@ -56,6 +59,7 @@ export default {
   data() {
     return {
       attestationIsOnline: true,
+      remainingTime: "",
     };
   },
   computed: {
@@ -63,6 +67,16 @@ export default {
       keys: "keys",
       stats: "stats",
     }),
+
+    getRemainingTime() {
+      if (this.stats.ETA === "") {
+        return "";
+      } else if (this.stats.ETA === " ETA: now!") {
+        return "";
+      } else {
+        return `${this.stats.remainingTime} sec`;
+      }
+    },
   },
 };
 </script>
@@ -155,6 +169,9 @@ export default {
   color: #ec3939;
   font-size: 0.6rem;
   font-weight: 600;
+}
+.attesting {
+  color: #35bf35 !important;
 }
 .isOnline {
   color: #35bf35 !important;
