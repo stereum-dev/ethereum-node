@@ -14,11 +14,6 @@
             </div>
           </div>
         </div>
-        <div class="tabBarParent">
-          <div class="tabBar_innerBox">
-            <TabBar :tabs="tabs" @get-title="getActiveComponent" />
-          </div>
-        </div>
         <div class="componentParent">
           <div class="dynamicComponent">
             <div
@@ -32,6 +27,11 @@
           </div>
           <div class="predicitionIcon">
             <img src="/img/icon/the-staking/predicition-icon.png" alt="Icon" />
+          </div>
+        </div>
+        <div class="tabBarParent">
+          <div class="tabBar_innerBox">
+            <TabBar :tabs="tabs" @get-title="getActiveComponent" />
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@ export default {
       ],
       tabs: [
         { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
-        { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
+        // { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
@@ -184,6 +184,7 @@ export default {
 .indexBox .index {
   width: 60%;
   height: 100%;
+
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -192,16 +193,17 @@ export default {
 .indexBox .index .indexTitle {
   width: 50%;
   height: 100%;
-  color: #efd96bdf;
-  font-size: 0.5rem;
-  font-weight: 700;
+  color: #cdcdcd;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .indexBox .index .indexValue {
   width: 50%;
   height: 100%;
-  color: #cdcdcd;
-  font-size: 0.5rem;
-  font-weight: 700;
+
+  color: #efd96bdf;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 
 .indexBox .apr {
@@ -264,14 +266,13 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 3/6;
+  grid-row: 8/11;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0 5px;
   z-index: 0;
 }
 .tabBarParent .tabBar_innerBox {
@@ -288,9 +289,10 @@ export default {
 }
 .componentParent {
   grid-column: 1/7;
-  grid-row: 6/11;
+  grid-row-start: 2;
+  grid-row-end: 8;
   width: 100%;
-  height: 100%;
+  height: 95%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;

@@ -219,14 +219,14 @@ export default {
 }
 .statusTiming p {
   color: #eeeeee;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: right;
   text-transform: capitalize;
 }
 .statusTiming p span {
   color: #efd96bdf;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: center;
   text-transform: capitalize;

@@ -53,7 +53,7 @@ export default {
 .tabbar-item {
   flex: 1;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 7px;
   padding-top: 3px;
   display: flex;
   justify-content: center;
@@ -80,14 +80,14 @@ export default {
   color: #fff;
 }
 .tabbar-item .title {
-  width: 97.2%;
+  width: 97.3%;
   height: 30%;
   min-height: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #237e7d;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 8px 8px;
   position: absolute;
   bottom: 3px;
   left: 3px;
