@@ -87,11 +87,11 @@ export default {
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
-      remainingTime: "",
 
       maxCharacters: 30,
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
       currentComponent: "ATTESTATION",
+      intervalId: null,
     };
   },
   computed: {
@@ -103,25 +103,22 @@ export default {
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-    setInterval(() => {
-      this.getValidatorStats();
-    }, 1000);
+
+    this.getValidatorStats();
   },
   beforeUpdate() {
-    setInterval(() => {
-      this.getValidatorStats();
-    }, 1000);
+    this.getValidatorStats();
   },
   unmounted() {
-    clearInterval(this.getValidatorStats);
+    clearInterval(this.intervalId);
   },
   methods: {
     async getValidatorStats(item) {
       if (item) {
-        setInterval(async () => {
+        this.intervalId = setInterval(async () => {
           const output = await ControlService.getValidatorStats(item.key);
           this.stats = output;
-        }, 1000);
+        }, 12000);
       }
     },
     toggleDropDown() {
