@@ -112,6 +112,9 @@ export default {
       this.getValidatorStats();
     }, 1000);
   },
+  unmounted() {
+    clearInterval(this.getValidatorStats);
+  },
   methods: {
     async getValidatorStats(item) {
       if (item) {
