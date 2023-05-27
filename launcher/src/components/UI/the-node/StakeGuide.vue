@@ -61,6 +61,12 @@
             <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
           </div>
         </div>
+        <div v-if="clickService" class="message-stake-wrapper">
+          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <div class="staking-step-two">
+            <span>Click on the icon of your validator client</span>
+          </div>
+        </div>
 
         <div class="DisplayValidators-bg"></div>
         <DisplayValidators class="display-val" />
@@ -104,6 +110,7 @@ export default {
     }),
     ...mapWritableState(useStakingStore, {
       isDragOver: "isDragOver",
+      clickService: "clickService",
       keyFiles: "keyFiles",
       dragStep: "dragStep",
     }),
@@ -400,6 +407,15 @@ export default {
   position: absolute;
   left: 35%;
   top: 7%;
+}
+.arrow-staking-pass {
+  filter: invert(1);
+  transform: rotate(17deg);
+  width: 15%;
+  position: absolute;
+  left: 10%;
+  top: 58%;
+  z-index: 3;
 }
 .step-one {
   color: #eee;

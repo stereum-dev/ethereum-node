@@ -414,6 +414,7 @@ export default {
       isDragOver: "isDragOver",
       keyFiles: "keyFiles",
       dragStep: "dragStep",
+      clickService: "clickService",
     }),
     importingErrorMessage() {
       return {
@@ -871,6 +872,7 @@ export default {
       }
       this.isDragOver = false;
       this.dragStep = true;
+      this.clickService = true;
     },
     removeKeyHandler(item) {
       this.keyFiles = this.keyFiles.filter((el) => el.name != item.name);
