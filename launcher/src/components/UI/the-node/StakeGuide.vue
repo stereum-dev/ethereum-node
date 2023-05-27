@@ -67,6 +67,18 @@
             <span>Click on the icon of your validator client</span>
           </div>
         </div>
+        <div v-if="passPointer" class="message-stake-wrapper">
+          <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
+          <div class="staking-step-two">
+            <span>password Lorem, ipsum dolor.</span>
+          </div>
+        </div>
+        <div v-if="modalGuide" class="modal-guide-wrapper">
+          <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
+        </div>
+        <div v-if="modalGuide" class="staking-step-three">
+          <span>Lorem ipsum dolor sit amet consectetur adipisicing.</span>
+        </div>
 
         <div class="DisplayValidators-bg"></div>
         <DisplayValidators class="display-val" />
@@ -113,6 +125,8 @@ export default {
       clickService: "clickService",
       keyFiles: "keyFiles",
       dragStep: "dragStep",
+      modalGuide: "modalGuide",
+      passPointer: "passPointer",
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
@@ -417,6 +431,37 @@ export default {
   top: 58%;
   z-index: 3;
 }
+.message-stake-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+.modal-guide-wrapper {
+  width: 35%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+  position: absolute;
+  left: 0;
+  top: 50%;
+}
+.point-to-modal {
+  transform: rotate(180deg);
+  width: 20%;
+  position: absolute;
+  animation: modalPointer 1s infinite;
+}
+
+@keyframes modalPointer {
+  from {
+    left: 70%;
+  }
+  to {
+    left: 80%;
+  }
+}
 .step-one {
   color: #eee;
   display: flex;
@@ -445,8 +490,22 @@ export default {
 .staking-step-two {
   color: #eee;
   display: flex;
-  width: 80%;
-  height: 20%;
+  width: 100%;
+  height: 10%;
+  font-size: 180%;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  position: absolute;
+  top: 40%;
+  left: -15%;
+  z-index: 3;
+}
+.staking-step-three {
+  color: #eee;
+  display: flex;
+  width: 100%;
+  height: 10%;
   font-size: 180%;
   justify-content: center;
   align-items: center;

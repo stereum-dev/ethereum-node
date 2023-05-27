@@ -18,6 +18,8 @@ export const useStakingStore = defineStore("theStaking", {
       keyFiles: [],
       dragStep: false,
       clickService: false,
+      modalGuide: false,
+      passPointer: false,
     };
   },
   actions: {},

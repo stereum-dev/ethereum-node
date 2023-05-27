@@ -415,6 +415,8 @@ export default {
       keyFiles: "keyFiles",
       dragStep: "dragStep",
       clickService: "clickService",
+      modalGuide: "modalGuide",
+      passPointer: "passPointer",
     }),
     importingErrorMessage() {
       return {
@@ -857,6 +859,8 @@ export default {
         this.insertKeyBoxActive = false;
         this.selectValidatorServiceForKey = true;
         this.isDragOver = false;
+        this.dragStep = true;
+        this.clickService = true;
       }
     },
     dropFileHandler(event) {
@@ -947,6 +951,9 @@ export default {
       this.selectedService = service;
       this.selectValidatorServiceForKey = false;
       this.ImportSlashingActive = true;
+      this.dragStep = true;
+      this.clickService = false;
+      this.modalGuide = true;
     },
 
     copyHandler(item) {
@@ -973,6 +980,8 @@ export default {
       }
       this.ImportSlashingActive = false;
       this.enterPasswordBox = true;
+      this.modalGuide = false;
+      this.passPointer = true;
     },
     openSearchBox() {
       if (this.keys.length > 0) {
