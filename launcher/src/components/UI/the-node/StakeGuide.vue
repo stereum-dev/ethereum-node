@@ -25,7 +25,7 @@
           <span>{{ slideID }} # </span>
           <span v-html="parseText(message, slideID)"></span>
         </div>
-        <div class="stake-modal_container">
+        <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr"><div class="left" @click="prevSlide"></div></div>
           <div class="stake-modal_slider-tutorial">
             <img :src="slide" alt="slide" />
@@ -154,6 +154,22 @@ export default {
     this.nextStep++;
   },
   methods: {
+    handleScroll(event) {
+      if (!this.isScrolling) {
+        this.isScrolling = true;
+
+        const delta = event.deltaY;
+        if (delta < 0) {
+          this.prevSlide();
+        } else if (delta > 0) {
+          this.nextSlide();
+        }
+
+        setTimeout(() => {
+          this.isScrolling = false;
+        }, 200);
+      }
+    },
     dropFileHandler(event) {
       let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
       if (validator && validator.map((e) => e.state).includes("running")) {
