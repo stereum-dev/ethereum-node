@@ -900,7 +900,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
+      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
@@ -1195,8 +1195,8 @@ remove-validator {
 
 .tableRow .circle {
   grid-column: 1;
-  width: 80%;
-  height: 70%;
+  width: 90%;
+  height: 74%;
   border-radius: 50%;
   background-color: #bebebe;
   margin: 0 5px;
@@ -1206,7 +1206,7 @@ remove-validator {
   align-items: center;
 }
 .circle img {
-  width: 80%;
+  width: 71%;
 }
 
 .tableRow .category {
