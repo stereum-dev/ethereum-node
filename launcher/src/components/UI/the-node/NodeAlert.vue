@@ -117,6 +117,9 @@ export default {
       missedAttest: false,
       closeNotif: false,
       notification: false,
+      setFeeReciepent: [],
+      setFeeAlarm: false,
+      setValedatorsToAlarm: [],
     };
   },
   computed: {
@@ -165,6 +168,15 @@ export default {
       }
     },
   },
+  mounted() {
+    this.setFeeReciepentInfo();
+    for (const validator of this.setFeeReciepent) {
+      if (validator.changeValue === null || validator.changeValue === "0x0000000000000000000000000000000000000000") {
+        this.setFeeAlarm = true;
+        this.setValedatorsToAlarm.push(validator.name);
+      }
+    }
+  },
 
   created() {
     this.storageCheck();
@@ -173,7 +185,7 @@ export default {
     this.notifHandler();
   },
   methods: {
-    testMethod() {
+    setFeeReciepentInfo() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
       const result = [];
 
@@ -190,7 +202,7 @@ export default {
           }
         }
       }
-      console.log(result);
+      this.setFeeReciepent = result;
     },
 
     closeNotification() {

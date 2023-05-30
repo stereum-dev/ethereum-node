@@ -114,7 +114,9 @@
             v-model="option.changeValue"
             class="toggleTextInput"
             type="text"
-            :class="{ disabled: !option.buttonState }"
+            :class="{
+              disabled: !option.buttonState,
+            }"
             @input="somethingIsChanged(option)"
           />
         </div>
