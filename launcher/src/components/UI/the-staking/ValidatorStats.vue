@@ -103,11 +103,11 @@ export default {
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-
-    this.getValidatorStats();
-  },
-  beforeUpdate() {
-    this.getValidatorStats();
+    this.intervalId = setInterval(() => {
+      if(this.selectedValidator?.key){
+        this.updateValidatorStats(this.selectedValidator.key);
+      }
+    }, 12000);
   },
   unmounted() {
     clearInterval(this.intervalId);
@@ -115,21 +115,19 @@ export default {
   methods: {
     async getValidatorStats(item) {
       if (item) {
-        this.intervalId = setInterval(async () => {
-          const output = await ControlService.getValidatorStats(item.key);
-          this.stats = output;
-        }, 12000);
+        this.selectedValidator = item;
+        await this.updateValidatorStats()
       }
+    },
+    async updateValidatorStats(){
+        const output = await ControlService.getValidatorStats(this.selectedValidator.key);
+        this.stats = output;
     },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     getActiveComponent(item) {
       this.currentComponent = item;
-    },
-    chooseValidator(key) {
-      this.selectedValidator = key;
-      this.dropDownIsOpen = false;
     },
   },
 };
