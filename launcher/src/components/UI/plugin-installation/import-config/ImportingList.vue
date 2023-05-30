@@ -32,7 +32,7 @@
                     <img
                       src="/img/icon/click-installation/cancel.png"
                       alt="remove"
-                      @click="removeServiceFromList(plugin)"
+                      @click="removeServiceFromList(plugin, index)"
                     />
                   </div>
                 </div>
@@ -57,7 +57,7 @@
                     <img
                       src="/img/icon/click-installation/cancel.png"
                       alt="remove"
-                      @click="removeServiceFromList(plugin)"
+                      @click="removeServiceFromList(plugin, index)"
                     />
                   </div>
                 </div>
@@ -95,6 +95,7 @@ export default {
     ...mapWritableState(useClickInstall, {
       configServices: "configServices",
       configNetwork: "configNetwork",
+      removedServices: "removedServices",
     }),
     nextRouteHandler() {
       if (this.configServices.some((item) => item.category !== "service")) {
@@ -112,22 +113,19 @@ export default {
     this.categoryFilter();
   },
   methods: {
-    removeServiceFromList(item) {
-      const selectedItem = this.configServices.find((service) => service.service === item.service);
-      const selectedIndex = this.configServices.indexOf(selectedItem);
-      if (selectedIndex !== -1) {
-        this.configServices.splice(selectedIndex, 1);
-      }
+    removeServiceFromList(item, index) {
       if (item.category === "service") {
-        this.categoryService.splice(this.categoryService.indexOf(item), 1);
+        this.removedServices = this.removedServices.concat(this.categoryService.splice(index, 1));
       } else {
-        this.categoryConfig.splice(this.categoryConfig.indexOf(item), 1);
+        this.removedServices = this.removedServices.concat(this.categoryConfig.splice(index, 1));
       }
+      this.configServices = this.categoryConfig.concat(this.categoryService);
     },
     extractNetwork() {
       this.configNetwork = this.networkList.find((network) => network.network === this.configServices[0].network);
     },
     categoryFilter() {
+      this.removedServices = []
       this.configServices.forEach((item) => {
         if (item.category === "service") {
           this.categoryService.push(item);

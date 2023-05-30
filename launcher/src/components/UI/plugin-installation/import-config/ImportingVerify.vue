@@ -60,6 +60,7 @@ export default {
     ...mapWritableState(useClickInstall, {
       configServices: "configServices",
       checkPointSync: "checkPointSync",
+      removedServices: "removedServices",
     }),
     backRouteHandler() {
       return this.configServices.some((service) => service.category !== "service") ? true : false;
@@ -70,7 +71,8 @@ export default {
       this.$router.push({ path: "/importingAnimation" });
       try {
         await ControlService.importConfig({
-          configServices: JSON.stringify(this.configServices),
+          configServices: JSON.parse(JSON.stringify(this.configServices)),
+          removedServices: JSON.parse(JSON.stringify(this.removedServices)),
           checkPointSync: this.checkPointSync,
         });
         this.$router.push({ path: "/node" });

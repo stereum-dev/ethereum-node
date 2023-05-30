@@ -114,6 +114,7 @@ export const useClickInstall = defineStore("clickInstallation", {
       ],
       unzippedData: [],
       configServices: [],
+      removedServices: [],
       configNetwork: {},
       mainnet: [
         "https://mainnet-checkpoint-sync.attestant.io/",

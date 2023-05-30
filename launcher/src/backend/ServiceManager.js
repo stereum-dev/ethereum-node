@@ -202,13 +202,7 @@ export class ServiceManager {
   async resyncService(serviceID, checkpointUrl) {
     let services = await this.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
-    const checkpointCommands = {
-      LighthouseBeaconService: "--checkpoint-sync-url=",
-      LodestarBeaconService: "--checkpointSyncUrl=",
-      PrysmBeaconService: "--checkpoint-sync-url=",
-      NimbusBeaconService: "--trusted-node-url=",
-      TekuBeaconService: "--initial-state=",
-    };
+
     const dataDir = client.volumes.find(
       (vol) =>
         vol.servicePath === "/opt/app/beacon" ||
@@ -221,6 +215,21 @@ export class ServiceManager {
     if (dataDir.length > 0) {
       await this.deleteDataVolume(dataDir);
     }
+
+    this.updateSyncCommand(client, checkpointUrl);
+
+    await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+    await this.manageServiceState(client.id, "started");
+  }
+
+  updateSyncCommand(client, checkpointUrl) {
+    const checkpointCommands = {
+      LighthouseBeaconService: "--checkpoint-sync-url=",
+      LodestarBeaconService: "--checkpointSyncUrl=",
+      PrysmBeaconService: "--checkpoint-sync-url=",
+      NimbusBeaconService: "--trusted-node-url=",
+      TekuBeaconService: "--initial-state=",
+    };
     //if command is string
     if (typeof client.command === "string") {
       //remove old checkpoint command
@@ -246,8 +255,6 @@ export class ServiceManager {
         client.command.push(checkpointCommands[client.service] + checkpointUrl);
       }
     }
-    await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-    await this.manageServiceState(client.id, "started");
   }
 
   async deleteDataVolume(dataDir) {
@@ -1132,255 +1139,91 @@ export class ServiceManager {
   }
 
   async exportConfig() {
-    let listConfigFiles = await this.nodeConnection.sshService.exec(`cd /etc/stereum/services && ls`);
-    let arrayOfServices = listConfigFiles.stdout.split("\n");
+    let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
     let serviceNameConfig = [];
-    let ConfigContent;
-
+    console.log(arrayOfServices)
     for (let i = 0; i < arrayOfServices.length - 1; i++) {
-      ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
+      let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
 
-      const contentObject = {
-        lines: ConfigContent.stdout,
+      const exportObject = {
+        filename: arrayOfServices[i],
+        content: serviceObject,
       };
-      const Object = {
-        filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
-        content: contentObject.lines,
-      };
-      serviceNameConfig.push(Object);
+      serviceNameConfig.push(exportObject);
     }
     return serviceNameConfig;
   }
 
-  async importConfig(configFiles, checkPointSync) {
-    let configFile = JSON.parse(configFiles);
-    let getConfig = [];
-    let installPath = "";
-    let existSSV = false;
-    let existConsensus = false;
-    let existExecution = false;
-    let consensusHttpEndpointUrl = "";
-    let executionWsEndpointUrl = "";
+  async importConfig(configFiles, removedServices, checkPointSync) {
+    let consensusClients = []
+    //remove existing config files
+    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
 
-    // add if not exists | replace if exists -> checkPointSync
-    if (checkPointSync && configFile.length > 0) {
-      const checkpointCommands = {
-        LighthouseBeaconService: "--checkpoint-sync-url=",
-        LodestarBeaconService: "--checkpointSyncUrl=",
-        PrysmBeaconService: "--checkpoint-sync-url=",
-        NimbusBeaconService: "--trusted-node-url=",
-        TekuBeaconService: "--initial-state=",
-      };
-
-      for (const file of configFile) {
-        if (file.service.includes("BeaconService")) {
-          if (file.service === "LighthouseBeaconService") {
-            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
-              var lighthouseRegex = `  - ${checkpointCommands[file.service]}.*`;
-              var lh_regex = new RegExp(lighthouseRegex, "g");
-              file.content = file.content.replace(lh_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
-            } else {
-              file.content = file.content.replace(
-                "  - bn\n",
-                `  - bn\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
-              );
-            }
-          }
-          if (file.service === "LodestarBeaconService") {
-            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
-              var lodestarCheckPoint = `  - ${checkpointCommands[file.service]}.*`;
-              var l_regex = new RegExp(lodestarCheckPoint, "g");
-              file.content = file.content.replace(l_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
-            } else {
-              file.content = file.content.replace(
-                "  - beacon\n",
-                `  - beacon\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
-              );
-            }
-          }
-          if (file.service === "PrysmBeaconService") {
-            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
-              var prysmCheckPoint = ` ${checkpointCommands[file.service]}[^\\s]+`;
-              var p_regex = new RegExp(prysmCheckPoint, "g");
-              file.content = file.content.replace(p_regex, ` ${checkpointCommands[file.service]}${checkPointSync}`);
-            } else {
-              file.content = file.content.replace(
-                " /app/cmd/beacon-chain/beacon-chain ",
-                ` /app/cmd/beacon-chain/beacon-chain ${checkpointCommands[file.service]}${checkPointSync}\n  `
-              );
-            }
-          }
-          if (file.service === "NimbusBeaconService") {
-            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
-              var nimbusCheckPoint = `  - ${checkpointCommands[file.service]}.*`;
-              var n_regex = new RegExp(nimbusCheckPoint, "g");
-              file.content = file.content.replace(n_regex, `  - ${checkpointCommands[file.service]}${checkPointSync}`);
-            } else {
-              file.content = file.content.replace(
-                "command:\n",
-                `command:\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
-              );
-            }
-          }
-          if (file.service === "TekuBeaconService") {
-            if (file.content.includes(`${checkpointCommands[file.service]}`)) {
-              var tekuCheckPoint = ` ${checkpointCommands[file.service]}.*`;
-              var t_regex = new RegExp(tekuCheckPoint, "g");
-              file.content = file.content.replace(t_regex, ` ${checkpointCommands[file.service]}${checkPointSync}`);
-            } else {
-              file.content = file.content.replace(
-                "command:\n",
-                `command:\n  - ${checkpointCommands[file.service]}${checkPointSync}\n`
-              );
-            }
-          }
-        }
+    //write config files
+    for (let file of configFiles.concat(removedServices)) {
+      await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
+      if (file.category === "consensus") {
+        consensusClients.push(file.id)
       }
     }
+    let services = await this.readServiceConfigurations();
 
-    // create configuration files
-    if (configFile.length > 0) {
-      await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
-      for (const file of configFile) {
-        try {
-          await this.nodeConnection.sshService.exec(
-            `printf '${file.content}' > /etc/stereum/services/'${file.id}'.yaml`
-          );
-        } catch (err) {
-          log.error("Copying Configuration Failed:", err);
+    for (let serviceToDelete of removedServices) {
+      let dependents = [];
+      services.forEach((service) => {
+        for (const dependency in service.dependencies) {
+          service.dependencies[dependency].forEach((s) => {
+            if (s.id === serviceToDelete.id) dependents.push(service);
+          });
         }
+      });
+      dependents.forEach((service) => {
+        this.removeDependencies(service, serviceToDelete);
+      });
+      services = services.filter(s => s.id !== serviceToDelete.id)
+    }
 
-        getConfig.push(YAML.parse(file.content));
-        installPath =
-          file.path === installPath
-            ? file.path
-            : file.service === "PrometheusNodeExporterService"
-              ? "/opt/stereum"
-              : file.path;
+    //Add or Remove Checkpoint Sync
+    for (let service of services.filter(s => consensusClients.includes(s.id))) {
+      this.updateSyncCommand(service, checkPointSync)
+    }
 
-        // create API token for Nimbus | Teku
-        if (file.service === "NimbusBeaconService") {
-          const validatorDir = file.path + "nimbus-" + file.id + "/validator/validators";
-          const token = StringUtils.createRandomString();
-          await this.nodeConnection.sshService.exec(`mkdir -p ${validatorDir}`);
-          await this.nodeConnection.sshService.exec(`echo ${token} > ${validatorDir}/api-token.txt`);
-        } else if (file.service === "TekuBeaconService") {
-          const dataDir = file.path + "teku-" + file.id + "/data";
-          const password = StringUtils.createRandomString();
-          await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
-          await this.nodeConnection.sshService.exec(`mkdir -p ${dataDir}`);
-          await this.nodeConnection.sshService.exec(`echo ${password} > ${dataDir}/teku_api_password.txt`);
-          await this.nodeConnection.sshService.exec(
-            `cd ${dataDir} && keytool -genkeypair -keystore teku_api_keystore -storetype PKCS12 -storepass ${password} -keyalg RSA -keysize 2048 -validity 109500 -dname "CN=teku, OU=MyCompanyUnit, O=MyCompany, L=MyCity, ST=MyState, C=AU" -ext "SAN=DNS:stereum-${file.id}"`
-          );
-        }
-        if (file.service.includes("SSVNetworkService")) existSSV = true;
-        if (file.service.includes("BeaconService")) existConsensus = true;
-        const executionClients = ["BesuService", "ErigonService", "GethService", "NethermindService"];
-        const exist = executionClients.some((el) => file.service.includes(el));
-        if (exist) existExecution = true;
-      }
-
-      // create stereum config file
-      const settings = {
-        stereum_settings: {
-          settings: {
-            controls_install_path: installPath,
-            updates: {
-              lane: "stable",
-              unattended: {
-                install: false,
-              },
+    // create stereum config file
+    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+    const settings = {
+      stereum_settings: {
+        settings: {
+          controls_install_path: "/opt/stereum",
+          updates: {
+            lane: "stable",
+            unattended: {
+              install: false,
             },
           },
         },
-      };
-      await this.nodeConnection.sshService.exec(
-        `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
-      );
-    }
-
-    // create Execution and Consensus client's EndPointURLs for SSV
-    if (existSSV) {
-      if (existConsensus && existExecution) {
-        const consensusHttpPort = {
-          LighthouseBeaconService: 5052,
-          LodestarBeaconService: 9596,
-          PrysmBeaconService: 3500,
-          NimbusBeaconService: 5052,
-          TekuBeaconService: 5051,
-        };
-        const executionWsPort = {
-          BesuService: 8546,
-          ErigonService: 8545,
-          GethService: 8546,
-          NethermindService: 8546,
-        };
-
-        for (const file of configFile) {
-          const consensusClients = [
-            "LighthouseBeaconService",
-            "LodestarBeaconService",
-            "NimbusBeaconService",
-            "PrysmBeaconService",
-            "TekuBeaconService",
-          ];
-          const catchConsensus = consensusClients.some((el) => file.service.includes(el));
-          if (catchConsensus) consensusHttpEndpointUrl = `http://stereum-${file.id}:${consensusHttpPort[file.service]}`;
-
-          const executionClients = ["BesuService", "ErigonService", "GethService", "NethermindService"];
-          const catchExecution = executionClients.some((el) => file.service.includes(el));
-          if (catchExecution) executionWsEndpointUrl = `ws://stereum-${file.id}:${executionWsPort[file.service]}`;
-        }
-      } else {
-        return "SSV needs Execution and Consensus Clients to run!";
-      }
-    }
-
-    //create config.yaml for SSV-Keys
-    if (consensusHttpEndpointUrl.length > 1 && consensusHttpEndpointUrl.length > 1) {
-      let network = "";
-      for (const file of configFile) {
-        if (file.service === "SSVNetworkService") {
-          // create new ssv keys (if needed)
-          /* let configPath = "/etc/stereum/services";
-             await this.nodeConnection.sshService.exec(
-              `head --lines=-4 ${configPath}/${file.id}.yaml > ${configPath}/temp.yaml && cp -f ${configPath}/temp.yaml ${configPath}/${file.id}.yaml && rm ${configPath}/temp.yaml`
-             );
-             await this.nodeConnection.runPlaybook("ssv-key-generator", {
-               stereum_role: "ssv-key-generator",
-               ssv_key_service: file.id,
-             }); */
-          network = file.network === "goerli" ? "prater" : file.network;
-          const ssvConfig = await this.nodeConnection.readServiceConfiguration(file.id);
-          const ssvConfigDir = file.path + "ssv_network-" + file.id + "/data";
-          await this.nodeConnection.sshService.exec(`mkdir -p ${ssvConfigDir}`);
-          await this.nodeConnection.sshService.exec(
-            `echo -e \
-            'eth2: \
-            \n  Network: "${network}" \
-            \n  BeaconNodeAddr: "${consensusHttpEndpointUrl}" \
-            \neth1: \
-            \n  ETH1Addr: "${executionWsEndpointUrl}" \
-            \nOperatorPrivateKey: "${ssvConfig.ssv_sk}" \
-            \nglobal: \
-            \n  LogLevel: info \
-            \nMetricsAPIPort: 15000' \
-            > ${ssvConfigDir}/config.yaml`
-          );
-        }
-      }
-    }
+      },
+    };
+    await this.nodeConnection.sshService.exec(
+      `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
+    );
 
     //prepare node
     await this.nodeConnection.findStereumSettings();
     await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
 
+    await Promise.all(
+      services.map(async (service) => {
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      })
+    );
+
+    await this.createKeystores(services);
+
     // start service
     const runRefs = [];
-    if (getConfig[0] !== undefined) {
+    if (services[0] !== undefined) {
       await Promise.all(
-        getConfig.map(async (service, index) => {
+        services.map(async (service, index) => {
           Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
         })
       );
