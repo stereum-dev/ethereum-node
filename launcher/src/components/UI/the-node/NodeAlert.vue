@@ -65,6 +65,14 @@
           <div class="main-message"><span>MISSED ATTESTATION</span></div>
         </div>
       </div>
+
+      <!-- test -->
+      <div class="status-message_red" @click="testMethod">
+        <div class="message-text_container">
+          <div class="warning"><span>Testttt</span></div>
+        </div>
+      </div>
+      <!-- test -->
       <transition>
         <div v-if="notification" class="status-message_green" @mouseover="iconShow" @mouseleave="iconHide">
           <div class="message-icon" @click="showUpdate">
@@ -91,6 +99,7 @@ import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
 export default {
   components: {
     UpdatePanel,
@@ -120,6 +129,9 @@ export default {
       forceUpdateCheck: "forceUpdateCheck",
       stereumUpdate: "stereumUpdate",
       updating: "updating",
+    }),
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
     }),
     usedPercInt() {
       return parseInt(this.usedPerc);
@@ -161,6 +173,26 @@ export default {
     this.notifHandler();
   },
   methods: {
+    testMethod() {
+      const validators = this.installedServices.filter((i) => i.category === "validator");
+      const result = [];
+
+      for (const validator of validators) {
+        if ("name" in validator && "expertOptions" in validator) {
+          const { name, expertOptions } = validator;
+          for (const option of expertOptions) {
+            if (option.title === "Default Fee Recipient" && "changeValue" in option) {
+              result.push({
+                name,
+                changeValue: option.changeValue,
+              });
+            }
+          }
+        }
+      }
+      console.log(result);
+    },
+
     closeNotification() {
       this.notification = false;
     },

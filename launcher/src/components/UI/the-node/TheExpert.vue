@@ -203,7 +203,7 @@ import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 export default {
-  props:{
+  props: {
     item: {
       type: Object,
       required: true,
