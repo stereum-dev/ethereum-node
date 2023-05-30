@@ -74,6 +74,7 @@ body:
         - Mac
         - Linux 
         - Other
+        - All
     validations:
       required: true
 
