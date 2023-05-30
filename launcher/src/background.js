@@ -43,12 +43,9 @@ ipcMain.handle("connect", async (event, arg) => {
   }
   nodeConnection.nodeConnectionParams = remoteHost;
   taskManager.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnection.nodeConnectionParams = remoteHost;
-  monitoring.nodeConnectionProm.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
   await taskManager.nodeConnection.establish();
-  await monitoring.nodeConnection.establish();
-  await monitoring.nodeConnectionProm.establish();
+  await monitoring.login(remoteHost);
   return 0;
 });
 
@@ -377,6 +374,10 @@ ipcMain.handle("readSSVNetworkConfig", async (event, args) => {
 
 ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
+});
+
+ipcMain.handle("getValidatorStats", async (event, args) => {
+  return await monitoring.getValidatorStats(args);
 });
 
 ipcMain.handle("getValidatorState", async (event, args) => {

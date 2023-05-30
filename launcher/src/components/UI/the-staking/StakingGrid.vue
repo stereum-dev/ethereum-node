@@ -3,7 +3,7 @@
     <div class="staking-green-bg">
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
-        <ValidatorState />
+        <ValidatorStats />
         <selection-options
           :key="refresh"
           :button-state="buttonState"
@@ -29,13 +29,13 @@ import { useServices } from "../../../store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
-import ValidatorState from "./ValidatorState.vue";
+import ValidatorStats from "./ValidatorStats.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     DisplayValidators,
     SelectionOptions,
-    ValidatorState,
+    ValidatorStats,
     TaskManager,
   },
   data() {
@@ -70,7 +70,7 @@ export default {
   },
   created() {
     if (this.installedValidators.length === 0) return;
-    this.selectedValdiatorService = this.installedValidators[0]
+    this.selectedValdiatorService = this.installedValidators[0];
     this.selectedIcon = this.installedValidators[0].icon;
     this.selectedName = this.installedValidators[0].name;
     this.selectedStatus = this.installedValidators[0].state;

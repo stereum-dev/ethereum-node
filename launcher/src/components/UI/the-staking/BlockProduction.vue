@@ -1,13 +1,13 @@
 <template>
   <div class="sync_box divide-y divide-gray-600">
-    <div class="totalBox">
+    <!-- <div class="totalBox">
       <div class="totalTitle">
         <span>total</span>
       </div>
       <div class="totalValue">
         <span>0/0</span>
       </div>
-    </div>
+    </div> -->
     <div class="statusBox">
       <div class="status">
         <div class="statusTitle">
@@ -15,29 +15,39 @@
         </div>
         <div class="statusValue">
           <div class="assignValue">
-            <span v-if="blockIsOnline" class="isOnline">Assigned Slot</span>
+            <span v-if="stats.currentProp !== 0" class="isOnline">Assigned Slot</span>
             <span v-else>Not Assigned</span>
           </div>
           <div class="slotValue">
-            <span v-if="blockIsOnline">4980056</span>
+            <span v-if="stats.currentProp !== 0">{{ stats.attestationSlot }}</span>
             <span v-else class="isOffline">---</span>
           </div>
         </div>
       </div>
     </div>
     <div class="statusTiming">
-      <p v-if="blockIsOnline">Next Block Proposal in: <span>45 Sec</span></p>
+      <p v-if="stats.currentProp !== 0">
+        Next Block Proposal in: <span>{{ stats.currentProp - stats.currentSlot * 12 }}</span>
+      </p>
       <p v-else>Next Block Proposal in: <span>??</span></p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapWritableState } from "pinia";
+import { useStakingStore } from "@/store/theStaking";
 export default {
   data() {
     return {
       blockIsOnline: true,
     };
+  },
+  computed: {
+    ...mapWritableState(useStakingStore, {
+      keys: "keys",
+      stats: "stats",
+    }),
   },
 };
 </script>
@@ -209,14 +219,14 @@ export default {
 }
 .statusTiming p {
   color: #eeeeee;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: right;
   text-transform: capitalize;
 }
 .statusTiming p span {
   color: #efd96bdf;
-  font-size: 0.5rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: center;
   text-transform: capitalize;

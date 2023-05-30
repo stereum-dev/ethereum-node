@@ -329,7 +329,6 @@ export default {
   height: 20px;
   padding: 4px;
   border-radius: 30px;
-  padding: 2px 5px 0px 5px;
   text-align: center;
   cursor: default;
 }

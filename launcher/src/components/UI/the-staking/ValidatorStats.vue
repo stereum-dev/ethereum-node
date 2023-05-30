@@ -5,32 +5,13 @@
     </div>
     <div class="stateBox">
       <div class="stateInnerBox">
-        <StateDropdown :keys="keys" />
+        <StateDropdown :keys="keys" @get-validator="getValidatorStats" />
         <div class="indexParent">
           <div class="indexBox">
             <div class="index">
-              <span class="indexTitle">INDEX NO.</span>
-              <span class="indexValue">123564</span>
+              <span class="indexTitle">Index No.</span>
+              <span class="indexValue">{{ stats.validator }}</span>
             </div>
-            <div class="apr">
-              <span class="aprTitle">APR (all time)</span>
-              <span class="aprValue">9.99%</span>
-            </div>
-          </div>
-          <div class="withdrawal">
-            <div class="withdrawal_title">
-              <span>Withdrawal Addr.</span>
-            </div>
-            <div class="withdrawal_value">
-              <span>{{
-                `${withdrawalAddress.substring(0, 8)}...${withdrawalAddress.substring(withdrawalAddress.length - 13)}`
-              }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="tabBarParent">
-          <div class="tabBar_innerBox">
-            <TabBar :tabs="tabs" @get-title="getActiveComponent" />
           </div>
         </div>
         <div class="componentParent">
@@ -48,6 +29,11 @@
             <img src="/img/icon/the-staking/predicition-icon.png" alt="Icon" />
           </div>
         </div>
+        <div class="tabBarParent">
+          <div class="tabBar_innerBox">
+            <TabBar :tabs="tabs" @get-title="getActiveComponent" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -62,6 +48,7 @@ import BlockProduction from "./BlockProduction.vue";
 import TheAttestation from "./TheAttestation.vue";
 import { mapWritableState } from "pinia";
 import { useStakingStore } from "@/store/theStaking";
+import ControlService from "@/store/ControlService";
 
 export default {
   components: {
@@ -78,6 +65,9 @@ export default {
         {
           title: "ATTESTATION",
           comp: TheAttestation,
+          props: {
+            remainingTime: this.remainingTime,
+          },
         },
         {
           title: "SYNC COMMITTEE",
@@ -86,11 +76,14 @@ export default {
         {
           title: "BLOCK PRODUCTION",
           comp: BlockProduction,
+          props: {
+            remainingTime: this.remainingTime,
+          },
         },
       ],
       tabs: [
         { id: 1, title: "ATTESTATION", imgPath: "/img/icon/the-staking/eye.png", display: false },
-        { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
+        // { id: 2, title: "SYNC COMMITTEE", imgPath: "/img/icon/the-staking/comitte.png", display: false },
         { id: 3, title: "BLOCK PRODUCTION", imgPath: "/img/icon/the-staking/cube.png", display: false },
       ],
       selectedValidator: {},
@@ -98,27 +91,43 @@ export default {
       maxCharacters: 30,
       withdrawalAddress: "0x12345gbfdbf097df9gb7s9dfg7b9sdfg7b67890",
       currentComponent: "ATTESTATION",
+      intervalId: null,
     };
   },
   computed: {
     ...mapWritableState(useStakingStore, {
       keys: "keys",
+      stats: "stats",
     }),
   },
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
+    this.intervalId = setInterval(() => {
+      if(this.selectedValidator?.key){
+        this.updateValidatorStats(this.selectedValidator.key);
+      }
+    }, 12000);
+  },
+  unmounted() {
+    clearInterval(this.intervalId);
   },
   methods: {
+    async getValidatorStats(item) {
+      if (item) {
+        this.selectedValidator = item;
+        await this.updateValidatorStats()
+      }
+    },
+    async updateValidatorStats(){
+        const output = await ControlService.getValidatorStats(this.selectedValidator.key);
+        this.stats = output;
+    },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;
     },
     getActiveComponent(item) {
       this.currentComponent = item;
-    },
-    chooseValidator(key) {
-      this.selectedValidator = key;
-      this.dropDownIsOpen = false;
     },
   },
 };
@@ -165,9 +174,6 @@ export default {
   grid-template-rows: repeat(10, 1fr);
 }
 
-
-
-
 .indexParent {
   grid-column: 1/7;
   grid-row: 2/3;
@@ -188,6 +194,7 @@ export default {
 .indexBox .index {
   width: 60%;
   height: 100%;
+
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -196,16 +203,17 @@ export default {
 .indexBox .index .indexTitle {
   width: 50%;
   height: 100%;
-  color: #efd96bdf;
-  font-size: 0.5rem;
-  font-weight: 700;
+  color: #cdcdcd;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 .indexBox .index .indexValue {
   width: 50%;
   height: 100%;
-  color: #cdcdcd;
-  font-size: 0.5rem;
-  font-weight: 700;
+
+  color: #efd96bdf;
+  font-size: 0.6rem;
+  font-weight: 600;
 }
 
 .indexBox .apr {
@@ -268,14 +276,13 @@ export default {
 
 .tabBarParent {
   grid-column: 1/7;
-  grid-row: 3/6;
+  grid-row: 8/11;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 0 5px;
   z-index: 0;
 }
 .tabBarParent .tabBar_innerBox {
@@ -292,9 +299,10 @@ export default {
 }
 .componentParent {
   grid-column: 1/7;
-  grid-row: 6/11;
+  grid-row-start: 2;
+  grid-row-end: 8;
   width: 100%;
-  height: 100%;
+  height: 95%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
