@@ -6,7 +6,7 @@ export class SSHService {
   constructor() {
     this.connectionPool = [];
     this.connectionInfo = null;
-    this.connected = true;
+    this.connected = false;
     this.tunnels = [];
     this.addingConnection = false;
     this.removeConnectionCount = 0;
@@ -89,6 +89,7 @@ export class SSHService {
       });
       conn.on("ready", async () => {
         this.connectionPool.push(conn);
+        this.connected = true;
         this.addingConnection = false;
         let test = await this.exec("ls");
         if (new RegExp(/^(?=.*\bchange\b)(?=.*\bpassword\b).*$/gm).test(test.stderr.toLowerCase())) {
@@ -116,6 +117,8 @@ export class SSHService {
 
     return new Promise((resolve, reject) => {
       try {
+        this.connected = false;
+        this.connectionInfo = null;
         this.connectionPool.forEach((conn) => { conn.end(); });
         this.connectionPool = [];
         resolve(true);

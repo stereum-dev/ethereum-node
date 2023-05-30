@@ -43,6 +43,7 @@ ipcMain.handle("connect", async (event, arg) => {
   }
   nodeConnection.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
+  await monitoring.login();
   return 0;
 });
 
@@ -86,8 +87,6 @@ ipcMain.handle("closeTunnels", async () => {
 
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
-  await taskManager.nodeConnection.logout();
-  await serviceManager.nodeConnection.logout();
   return await nodeConnection.logout();
 });
 
