@@ -181,7 +181,7 @@ export const useNodeManage = defineStore("nodeManage", {
           icon: "/img/icon/click-installation/testnet-icon.png",
           currencyIcon: "/img/icon/control/goETH_Currency_Symbol.png",
           dataEndpoint: "https://goerli.beaconcha.in/api/v1",
-          support: ["staking", "ssv.network", "mev boost"]
+          support: ["staking", "ssv.network", "mev boost", "obol"]
         },
         {
           id: 3,

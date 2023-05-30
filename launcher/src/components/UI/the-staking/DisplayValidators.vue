@@ -44,7 +44,7 @@
             <span v-if="exitInfo">withdraw Logs </span>
           </div>
           <div v-if="importIsProcessing" class="processImg">
-            <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
+            <img src="/img/icon/the-staking/alice.gif" alt="icon" />
           </div>
           <div v-if="importIsProcessing" class="import-message">
             <span>{{ $t("displayValidator.waitMessage") }}</span>
@@ -900,7 +900,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
+      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
@@ -1195,8 +1195,8 @@ remove-validator {
 
 .tableRow .circle {
   grid-column: 1;
-  width: 80%;
-  height: 70%;
+  width: 90%;
+  height: 74%;
   border-radius: 50%;
   background-color: #bebebe;
   margin: 0 5px;
@@ -1206,7 +1206,7 @@ remove-validator {
   align-items: center;
 }
 .circle img {
-  width: 80%;
+  width: 71%;
 }
 
 .tableRow .category {
@@ -1483,44 +1483,42 @@ remove-validator {
 }
 
 .processImg {
-  width: 80%;
+  width: 95%;
   height: 30%;
   margin: 0 auto;
   position: relative;
-  border-bottom: 1px solid gray;
+  padding: 0 10px;
+  border-bottom: 1px solid rgb(65, 72, 76);
 }
 
 .processImg img {
-  width: 80px;
-  height: 55px;
+  width: 150px;
+  height: 100px;
   position: absolute;
-  animation: move 5s linear infinite;
+  animation: move 3s linear infinite;
 }
 
 @keyframes move {
   0% {
-    left: 0%;
-    bottom: -3px;
+    left: -5%;
+    bottom: 5px;
   }
-
   25% {
-    left: 20%;
-    bottom: -3px;
+    left: 20.5%;
+    bottom: -10px;
   }
-
   50% {
-    left: 40%;
-    bottom: -3px;
+    left: 41%;
+    bottom: 5px;
   }
 
   75% {
-    left: 62%;
-    bottom: -3px;
+    left: 61.5%;
+    bottom: -10px;
   }
-
   100% {
-    left: 85%;
-    bottom: -3px;
+    left: 77%;
+    bottom: 5px;
   }
 }
 
@@ -1529,17 +1527,15 @@ remove-validator {
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
 }
 
 .import-message span {
-  width: 90%;
-  height: 90%;
-  margin: 0 auto;
+  margin: 10px auto;
   color: rgb(156, 156, 156);
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 500;
   margin-bottom: 10px;
   text-overflow: clip;

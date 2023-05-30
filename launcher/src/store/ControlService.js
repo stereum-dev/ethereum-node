@@ -5,6 +5,8 @@ class ControlService extends EventEmitter {
   constructor() {
     super();
     this.promiseIpc = window.promiseIpc;
+    this.addListener = window.promiseIpc.addListener
+    this.removeListener = window.promiseIpc.removeListener
   }
 
   init(store) {
@@ -307,6 +309,10 @@ class ControlService extends EventEmitter {
     return await this.promiseIpc.send("readKeys");
   }
 
+  async getValidatorStats(args) {
+    return await this.promiseIpc.send("getValidatorStats", args);
+  }
+
   async getValidatorState(args) {
     return await this.promiseIpc.send("getValidatorState", args);
   }
@@ -355,6 +361,10 @@ class ControlService extends EventEmitter {
 
   async exportConfig() {
     return await this.promiseIpc.send("exportConfig");
+  }
+
+  async importConfig(args) {
+    return await this.promiseIpc.send("importConfig", args);
   }
 }
 if (!instance) {

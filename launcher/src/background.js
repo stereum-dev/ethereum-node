@@ -372,6 +372,10 @@ ipcMain.handle("writeSSVNetworkConfig", async (event, args) => {
   return await nodeConnection.writeSSVNetworkConfig(args.serviceID, args.config);
 });
 
+ipcMain.handle("getValidatorStats", async (event, args) => {
+  return await monitoring.getValidatorStats(args);
+});
+
 ipcMain.handle("getValidatorState", async (event, args) => {
   return await monitoring.getValidatorState(args);
 });
@@ -395,6 +399,10 @@ ipcMain.handle("exitValidator", async (event, args) => {
 
 ipcMain.handle("exportConfig", async () => {
   return await serviceManager.exportConfig();
+});
+
+ipcMain.handle("importConfig", async (event, args) => {
+  return await serviceManager.importConfig(args.configServices, args.removedServices, args.checkPointSync);
 });
 
 // Scheme must be registered before the app is ready

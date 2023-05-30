@@ -86,7 +86,6 @@
 </template>
 <script>
 import ChangeModal from "./ChangeModal.vue";
-import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import ControlService from "@/store/ControlService";
@@ -94,7 +93,7 @@ import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 
 export default {
-  components: { ChangeModal, InstallationBox },
+  components: { ChangeModal },
 
   data() {
     return {
@@ -214,8 +213,17 @@ export default {
             return item.category === element.category;
           };
           break;
-        case "obol ssv":
-          //filter = (item) => item.category === element.category
+        case "obol":
+          filter = (item) => {
+            if (element.category === "validator" && element.service !== "CharonService") {
+              return item.service === "TekuValidatorService";
+            }else if (element.category === "validator") {
+              return item.service === "CharonService";
+            }
+            if (element.category === "consensus") {
+              return item.service === "LighthouseBeaconService";
+            }
+          };
           break;
         case "rocketpool":
           //filter = (item) => item.category === element.category

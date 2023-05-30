@@ -144,7 +144,7 @@ export default {
         this.selectedItem = " - SELECT A SOURCE -";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
-      if (val === 0) {
+      if (val === 2) {
         this.btnActive = true;
       }
     },
@@ -154,6 +154,8 @@ export default {
     },
   },
   mounted() {
+    if(this.item.category === "execution")
+      this.currentSlide = 2;
     this.setSelectedLinks();
   },
   methods: {

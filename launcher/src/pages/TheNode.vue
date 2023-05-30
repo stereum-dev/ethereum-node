@@ -18,7 +18,7 @@
             <div class="switch-network__content">
               <div class="current">
                 <div class="networkIcon">
-                  <img :src="currentNetwork.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
+                  <img :src="currentNetwork?.icon ? currentNetwork.icon : loadingGIF" alt="icon" />
                 </div>
                 <div class="networkSelect">
                   <span>{{ currentNetwork.name }}</span>

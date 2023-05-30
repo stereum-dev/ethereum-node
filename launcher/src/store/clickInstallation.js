@@ -10,10 +10,10 @@ export const useClickInstall = defineStore("clickInstallation", {
       syncType: [
         {
           id: 1,
-          name: "genesis",
-          type: "Syncs from genesis",
-          displayCategory: "Syncs from genesis",
-          display: false,
+          name: "checkpoint sync",
+          type: "recommended",
+          displayCategory: "Sync your client",
+          display: true,
         },
         {
           id: 2,
@@ -22,13 +22,12 @@ export const useClickInstall = defineStore("clickInstallation", {
           displayCategory: "Sync from a custom source",
           display: true,
         },
-
         {
           id: 3,
-          name: "checkpoint sync",
-          type: "recommended",
-          displayCategory: "Sync your client",
-          display: true,
+          name: "genesis",
+          type: "Syncs from genesis",
+          displayCategory: "Syncs from genesis",
+          display: false,
         },
       ],
       selectedNetwork: {},
@@ -77,7 +76,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 3,
-          name: "obol ssv",
+          name: "obol",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/click-installation/OBOL_SSV.png",
           includedPlugins: [],
@@ -113,6 +112,10 @@ export const useClickInstall = defineStore("clickInstallation", {
         { id: 1, src: "/animation/custom-start.gif", alt: "Animation", display: false },
         { id: 2, src: "/animation/custom-loop.gif", alt: "Animation", display: false },
       ],
+      unzippedData: [],
+      configServices: [],
+      removedServices: [],
+      configNetwork: {},
       mainnet: [
         "https://mainnet-checkpoint-sync.attestant.io/",
         "https://beaconstate-mainnet.chainsafe.io/",
