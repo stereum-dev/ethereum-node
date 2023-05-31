@@ -191,7 +191,7 @@ export default {
         const addresses = [];
         for (const validator of validators) {
           const test = await ControlService.getServiceYAML(validator.config.serviceID);
-          const regex = /pient=(0x[0-9a-fA-F]{40})/g;
+          const regex = /--suggested-fee-recipient=(\S+)/g;
           const match = regex.exec(test);
           if (match && match[1]) {
             const address = match[1];
