@@ -67,9 +67,9 @@
       </div>
 
       <!-- test -->
-      <div class="status-message_red" @click="testMethod">
-        <div class="message-text_container">
-          <div class="warning"><span>Testttt</span></div>
+      <div v-for="validator in notSetAddresses" :key="validator" class="status-message_red">
+        <div class="no-fee-message">
+          <span>(o.o) {{ validator.name }}</span> <span> No Fee Recipient Set</span>
         </div>
       </div>
       <!-- test -->
@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapWritableState } from "pinia";
@@ -120,6 +121,7 @@ export default {
       setFeeReciepent: [],
       setFeeAlarm: false,
       setValedatorsToAlarm: [],
+      notSetAddresses: [],
     };
   },
   computed: {
@@ -168,11 +170,14 @@ export default {
       }
     },
   },
-  mounted() {
-    this.setFeeReciepentInfo();
-    this.setValedatorsToAlarmPicker();
-  },
 
+  mounted() {
+    this.readService();
+
+    setInterval(() => {
+      this.readService();
+    }, 60000);
+  },
   created() {
     this.storageCheck();
     this.cpuMeth();
@@ -180,42 +185,31 @@ export default {
     this.notifHandler();
   },
   methods: {
-    setValedatorsToAlarmPicker() {
-      setInterval(() => {
-        for (const validator of this.setFeeReciepent) {
-          if (
-            validator.changeValue === null ||
-            validator.changeValue === "0x0000000000000000000000000000000000000000"
-          ) {
-            this.setFeeAlarm = true;
-            if (!this.setValedatorsToAlarm.includes(validator.name)) {
-              this.setValedatorsToAlarm.push(validator.name);
-            }
-          }
-        }
-        console.log(this.setValedatorsToAlarm);
-      }, 1000);
-    },
-    setFeeReciepentInfo() {
-      setInterval(() => {
-        const validators = this.installedServices.filter((i) => i.category === "validator");
-        const result = [];
-
+    async readService() {
+      const validators = this.installedServices.filter((i) => i.category === "validator");
+      if (validators && validators.length > 0 && validators[0].config) {
+        const addresses = [];
         for (const validator of validators) {
-          if ("name" in validator && "expertOptions" in validator) {
-            const { name, expertOptions } = validator;
-            for (const option of expertOptions) {
-              if (option.title === "Default Fee Recipient" && "changeValue" in option) {
-                result.push({
-                  name,
-                  changeValue: option.changeValue,
-                });
-              }
-            }
+          const test = await ControlService.getServiceYAML(validator.config.serviceID);
+          const regex = /pient=(0x[0-9a-fA-F]{40})/g;
+          const match = regex.exec(test);
+          if (match && match[1]) {
+            const address = match[1];
+            addresses.push({ name: validator.name, address: address });
+          } else {
+            console.error(
+              "Could not find default-fee-recipient address in the service YAML for validator:",
+              validator.name
+            );
           }
         }
-        this.setFeeReciepent = result;
-      }, 1000);
+        const notSetAddresses = addresses.filter(
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+        );
+        this.notSetAddresses = notSetAddresses;
+      } else {
+        console.error("Invalid item or missing config property.");
+      }
     },
 
     closeNotification() {
@@ -285,8 +279,16 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
+.no-fee-message {
+  font-size: 60%;
+  display: flex;
+  color: #fff;
+  font-weight: 500;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .v-leave-from {
