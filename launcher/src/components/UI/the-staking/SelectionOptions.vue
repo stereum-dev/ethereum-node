@@ -266,7 +266,7 @@ export default {
   height: 100%;
 }
 .validator-icon img {
-  width: 55%;
+  width: 41%;
 }
 .selection-table_validator {
   display: flex;
@@ -289,20 +289,24 @@ export default {
 .selection-box {
   grid-column: 10/13;
   grid-row: 3/4;
-  width: 90%;
-  height: 95%;
+  width: 96%;
+  height: 77%;
   border: 4px solid #bfbfbf;
   border-radius: 10px;
   background-color: #242529;
   display: flex;
+  margin: 0 auto;
+  margin-top: 35px;
+  flex-direction: column;
   justify-content: center;
   align-items: flex-end;
-  margin: 0 auto;
   position: relative;
 }
 .selection-table {
-  width: 98%;
+  width: 100%;
   height: 80%;
+  padding: 0 5px;
+  margin: 0 auto;
   overflow-x: hidden;
   overflow-y: auto;
   display: flex;
