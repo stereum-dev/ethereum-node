@@ -170,12 +170,7 @@ export default {
   },
   mounted() {
     this.setFeeReciepentInfo();
-    for (const validator of this.setFeeReciepent) {
-      if (validator.changeValue === null || validator.changeValue === "0x0000000000000000000000000000000000000000") {
-        this.setFeeAlarm = true;
-        this.setValedatorsToAlarm.push(validator.name);
-      }
-    }
+    this.setValedatorsToAlarmPicker();
   },
 
   created() {
@@ -185,24 +180,42 @@ export default {
     this.notifHandler();
   },
   methods: {
-    setFeeReciepentInfo() {
-      const validators = this.installedServices.filter((i) => i.category === "validator");
-      const result = [];
-
-      for (const validator of validators) {
-        if ("name" in validator && "expertOptions" in validator) {
-          const { name, expertOptions } = validator;
-          for (const option of expertOptions) {
-            if (option.title === "Default Fee Recipient" && "changeValue" in option) {
-              result.push({
-                name,
-                changeValue: option.changeValue,
-              });
+    setValedatorsToAlarmPicker() {
+      setInterval(() => {
+        for (const validator of this.setFeeReciepent) {
+          if (
+            validator.changeValue === null ||
+            validator.changeValue === "0x0000000000000000000000000000000000000000"
+          ) {
+            this.setFeeAlarm = true;
+            if (!this.setValedatorsToAlarm.includes(validator.name)) {
+              this.setValedatorsToAlarm.push(validator.name);
             }
           }
         }
-      }
-      this.setFeeReciepent = result;
+        console.log(this.setValedatorsToAlarm);
+      }, 1000);
+    },
+    setFeeReciepentInfo() {
+      setInterval(() => {
+        const validators = this.installedServices.filter((i) => i.category === "validator");
+        const result = [];
+
+        for (const validator of validators) {
+          if ("name" in validator && "expertOptions" in validator) {
+            const { name, expertOptions } = validator;
+            for (const option of expertOptions) {
+              if (option.title === "Default Fee Recipient" && "changeValue" in option) {
+                result.push({
+                  name,
+                  changeValue: option.changeValue,
+                });
+              }
+            }
+          }
+        }
+        this.setFeeReciepent = result;
+      }, 1000);
     },
 
     closeNotification() {
