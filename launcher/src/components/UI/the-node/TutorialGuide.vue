@@ -37,7 +37,6 @@
           <img src="/img/icon/arrows/rotated-right-arrow.png" class="comp-arrow" />
         </div>
         <div class="fix-place"><RpcEndpoint /></div>
-        <div class="exit"><div class="close" @click="close">x</div></div>
       </div>
     </div>
     <div v-if="explainModal" class="wrapper-modal">
@@ -54,8 +53,8 @@
           <span>{{ $t("rpcGuide.clickCancel") }}</span>
         </div>
       </div>
-      <div class="x-btn" @click="close"><span>x</span></div>
     </div>
+    <div class="x-btn" @click="close"><span>x</span></div>
   </div>
 </template>
 
@@ -242,15 +241,27 @@ export default {
 
 <style scoped>
 .x-btn {
-  width: 60%;
+  width: 5%;
   height: 8%;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  align-items: flex-end;
+  align-items: center;
   font-size: 200%;
-  color: #eeeeee;
+  color: #c1c1c1;
+  position: absolute;
+  bottom: 1.5%;
 }
+.x-btn:hover {
+  border: 2px solid rgb(193, 193, 193);
+  border-radius: 50%;
+}
+.x-btn:active {
+  border: none;
+  border-radius: 50%;
+  background: rgb(193, 193, 193, 0.5);
+}
+
 .footer {
   width: 100%;
   height: 10%;
@@ -259,29 +270,7 @@ export default {
   align-items: flex-end;
   color: red;
 }
-.close {
-  width: 60%;
-  height: 90%;
-  border: 2px solid #eee;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  font-size: 250%;
-  border-radius: 50%;
-  color: rgb(238, 238, 238);
-}
-.close:active {
-  border: none;
-  background: rgba(238, 238, 238, 0.2);
-}
-.exit {
-  width: 10%;
-  height: 15%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 .fix-place {
   width: 25%;
   height: 14%;
