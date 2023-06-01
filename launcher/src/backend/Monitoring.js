@@ -1,5 +1,4 @@
 /* eslint-disable no-empty, no-prototype-builtins */
-import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
 import { StringUtils } from "./StringUtils";
 import * as QRCode from "qrcode";
@@ -18,9 +17,9 @@ const globalMonitoringCache = {
 };
 
 export class Monitoring {
-  constructor() {
-    this.nodeConnection = new NodeConnection();
-    this.nodeConnectionProm = new NodeConnection();
+  constructor(nodeConnection) {
+    this.nodeConnection = nodeConnection
+    this.nodeConnectionProm = nodeConnection
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.isLoggedIn = false;
@@ -42,19 +41,11 @@ export class Monitoring {
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
     } catch (e) { }
-    await this.nodeConnection.logout();
-    await this.nodeConnectionProm.logout();
-    await this.serviceManager.nodeConnection.logout();
-    await this.serviceManagerProm.nodeConnection.logout();
   }
 
   // Jobs to handle on login
-  async login(remoteHost) {
+  async login() {
     await this.cleanup();
-    this.nodeConnection.nodeConnectionParams = remoteHost;
-    this.nodeConnectionProm.nodeConnectionParams = remoteHost;
-    await this.nodeConnection.establish();
-    await this.nodeConnectionProm.establish();
     this.isLoggedIn = true;
     await this.startGlobalMonitoringCacheBackgroundWorker();
   }
