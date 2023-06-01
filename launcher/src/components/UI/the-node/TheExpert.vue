@@ -114,7 +114,11 @@
             v-model="option.changeValue"
             class="toggleTextInput"
             type="text"
-            :class="{ disabled: !option.buttonState }"
+            :class="{
+              disabled:
+                !option.buttonState &&
+                (option.changeValue === null || option.changeValue === '0x0000000000000000000000000000000000000000'),
+            }"
             @input="somethingIsChanged(option)"
           />
         </div>
@@ -203,7 +207,7 @@ import ControlService from "@/store/ControlService";
 import { mapState } from "pinia";
 import { useNodeManage } from "@/store/nodeManage";
 export default {
-  props:{
+  props: {
     item: {
       type: Object,
       required: true,

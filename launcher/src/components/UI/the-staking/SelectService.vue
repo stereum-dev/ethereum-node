@@ -27,7 +27,6 @@ export default {
   computed: {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
-      allServices: "allServices",
     }),
   },
 };
