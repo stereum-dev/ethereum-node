@@ -27,17 +27,15 @@
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="warning"><span>WARNING</span></div>
           <div class="main-message"><span>LOW STORAGE SPACE</span></div>
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
-      <div v-if="cpuWarning" class="status-message_yellow">
+      <div v-if="!cpuWarning" class="status-message_yellow">
         <div class="message-icon">
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="warning"><span>WARNING</span></div>
           <div class="main-message"><span>CPU USAGE</span></div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
@@ -49,7 +47,6 @@
           <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="warning"><span>CRITICAL WARNING</span></div>
           <div class="main-message"><span>CPU USAGE</span></div>
           <div class="val-message">
             <span> > {{ cpu }}%</span>
@@ -61,7 +58,6 @@
           <img src="../../../../public/img/icon/control/key-rot.png" alt="warn_storage" />
         </div>
         <div class="message-text_container">
-          <div class="warning"><span>CRITICAL WARNING</span></div>
           <div class="main-message"><span>MISSED ATTESTATION</span></div>
         </div>
       </div>
@@ -72,7 +68,6 @@
           <img :src="validator.icon" />
         </div>
         <div class="message-text_container">
-          <div class="warning"><span>CRITICAL WARNING</span></div>
           <div class="main-message"><span>no fee recipient</span></div>
           <div class="val-message">
             <span> > {{ validator.name }} vc</span>
@@ -198,9 +193,10 @@ export default {
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
         for (const validator of validators) {
-          if(!validator.yaml)
-            validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
-          const pattern = validator.expertOptions[validator.expertOptions.findIndex(o => o.title === "Default Fee Recipient")].pattern
+          if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+          const pattern =
+            validator.expertOptions[validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient")]
+              .pattern;
           const match = [...validator.yaml.match(new RegExp(pattern))][2];
           if (match) {
             const address = match;
@@ -417,8 +413,8 @@ export default {
 }
 
 .message-icon {
-  width: 28%;
-  height: 95%;
+  width: 24%;
+  height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -439,24 +435,14 @@ export default {
   color: #23272a;
 }
 
-.warning {
-  display: flex;
-  width: 80%;
-  height: 10%;
-  font-size: 8%;
-  justify-content: flex-start;
-  align-items: center;
-  font-weight: 500;
-}
-
 .main-message {
   display: flex;
   width: 95%;
   height: 55%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 40%;
-  font-weight: 800;
+  font-size: 50%;
+  font-weight: 700;
   text-transform: uppercase;
 }
 
@@ -466,7 +452,8 @@ export default {
   height: 35%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 45%;
-  font-weight: 800;
+  font-size: 50%;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 </style>
