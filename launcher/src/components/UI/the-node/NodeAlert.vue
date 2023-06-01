@@ -195,7 +195,7 @@ export default {
           const match = regex.exec(test);
           if (match && match[1]) {
             const address = match[1];
-            addresses.push({ name: validator.name, address: address });
+            addresses.push({ name: validator.name, address: address, icon: validator.sIcon });
           } else {
             console.error(
               "Could not find default-fee-recipient address in the service YAML for validator:",
