@@ -68,8 +68,15 @@
 
       <!-- test -->
       <div v-for="validator in notSetAddresses" :key="validator" class="status-message_red">
-        <div class="no-fee-message">
-          <span>(o.o) {{ validator.name }}</span> <span> No Fee Recipient Set</span>
+        <div class="message-icon">
+          <img :src="validator.icon" />
+        </div>
+        <div class="message-text_container">
+          <div class="warning"><span>CRITICAL WARNING</span></div>
+          <div class="main-message"><span>no fee recipient</span></div>
+          <div class="val-message">
+            <span> > {{ validator.name }} vc</span>
+          </div>
         </div>
       </div>
       <!-- test -->
@@ -443,11 +450,12 @@ export default {
 .main-message {
   display: flex;
   width: 95%;
-  height: 50%;
+  height: 55%;
   justify-content: flex-start;
   align-items: center;
   font-size: 40%;
   font-weight: 800;
+  text-transform: uppercase;
 }
 
 .val-message {
