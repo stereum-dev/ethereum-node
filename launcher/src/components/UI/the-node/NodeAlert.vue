@@ -177,13 +177,14 @@ export default {
       }
     },
   },
-
   mounted() {
     this.readService();
-
-    setInterval(() => {
+    this.polling = setInterval(() => {
       this.readService();
-    }, 60000);
+    }, 10000);
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   },
   created() {
     this.storageCheck();
@@ -197,11 +198,12 @@ export default {
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
         for (const validator of validators) {
-          const test = await ControlService.getServiceYAML(validator.config.serviceID);
-          const regex = /--suggested-fee-recipient=(\S+)/g;
-          const match = regex.exec(test);
-          if (match && match[1]) {
-            const address = match[1];
+          if(!validator.yaml)
+            validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+          const pattern = validator.expertOptions[validator.expertOptions.findIndex(o => o.title === "Default Fee Recipient")].pattern
+          const match = [...validator.yaml.match(new RegExp(pattern))][2];
+          if (match) {
+            const address = match;
             addresses.push({ name: validator.name, address: address, icon: validator.sIcon });
           } else {
             console.error(
