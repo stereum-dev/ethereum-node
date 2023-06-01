@@ -211,9 +211,9 @@ export default {
           (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
-      } else {
-        console.error("Invalid item or missing config property.");
-      }
+      } // else {
+      // console.error("Invalid item or missing config property.");
+      // }
     },
 
     closeNotification() {
