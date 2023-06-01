@@ -31,7 +31,7 @@
           <div class="val-message">{{ availDisk }} GB Free</div>
         </div>
       </div>
-      <div v-if="!cpuWarning" class="status-message_yellow">
+      <div v-if="cpuWarning" class="status-message_yellow">
         <div class="message-icon">
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
         </div>
@@ -122,7 +122,6 @@ export default {
       notification: false,
       setFeeReciepent: [],
       setFeeAlarm: false,
-      setValedatorsToAlarm: [],
       notSetAddresses: [],
     };
   },
