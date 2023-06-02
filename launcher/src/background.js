@@ -14,10 +14,10 @@ import path from "path";
 import { readFileSync } from "fs";
 import url from "url";
 const isDevelopment = process.env.NODE_ENV !== "production";
-const storageService = new StorageService();
-const taskManager = new TaskManager();
-const monitoring = new Monitoring();
 const nodeConnection = new NodeConnection();
+const storageService = new StorageService();
+const taskManager = new TaskManager(nodeConnection);
+const monitoring = new Monitoring(nodeConnection);
 const oneClickInstall = new OneClickInstall();
 const serviceManager = new ServiceManager(nodeConnection);
 const validatorAccountManager = new ValidatorAccountManager(nodeConnection, serviceManager);
@@ -42,34 +42,31 @@ ipcMain.handle("connect", async (event, arg) => {
     });
   }
   nodeConnection.nodeConnectionParams = remoteHost;
-  taskManager.nodeConnection.nodeConnectionParams = remoteHost;
   await nodeConnection.establish(taskManager);
-  await taskManager.nodeConnection.establish();
-  await monitoring.login(remoteHost);
+  await monitoring.login();
   return 0;
 });
 
 ipcMain.handle("reconnect", async () => {
+  if (nodeConnection.sshService.connectionPool.length > 0)
+    await nodeConnection.sshService.disconnect();
   try {
     await nodeConnection.establish(taskManager);
-    await taskManager.nodeConnection.establish();
-    await monitoring.nodeConnection.establish();
-    await monitoring.nodeConnectionProm.establish();
   } catch (err) {
     log.error("Couldn't reconnect:\n", err);
   }
 });
 
 ipcMain.handle("checkConnection", async () => {
-  try {
-    await nodeConnection.sshService.exec("ls");
-    await taskManager.nodeConnection.sshService.exec("ls");
-    await monitoring.nodeConnection.sshService.exec("ls");
-    await monitoring.nodeConnectionProm.sshService.exec("ls");
-  } catch (err) {
-    return false;
-  }
-  return true;
+  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 10000)
+    .then((isConnected) => {
+      nodeConnection.sshService.connected = isConnected;
+    })
+    .catch((error) => {
+      console.error('Error checking SSH connection:', error);
+      nodeConnection.sshService.connected = false;
+    });
+  return nodeConnection.sshService.connected;
 });
 
 ipcMain.handle("destroy", async () => {
@@ -90,8 +87,6 @@ ipcMain.handle("closeTunnels", async () => {
 
 ipcMain.handle("logout", async () => {
   await monitoring.logout();
-  await taskManager.nodeConnection.logout();
-  await serviceManager.nodeConnection.logout();
   return await nodeConnection.logout();
 });
 
