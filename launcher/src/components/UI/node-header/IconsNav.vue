@@ -49,6 +49,7 @@
     <StakeGuide v-if="stakeGuide" />
   </div>
 </template>
+
 <script>
 import ControlService from "@/store/ControlService";
 import UpdatePanel from "./UpdatePanel.vue";
@@ -155,7 +156,7 @@ export default {
       this.logoutModalIsActive = true;
     },
     async loggingOut() {
-      this.refresh = false
+      this.refresh = false;
       await ControlService.logout();
       this.$router.push("/").then(() => {
         location.reload();

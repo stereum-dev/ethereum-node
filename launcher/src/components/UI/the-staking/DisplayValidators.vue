@@ -293,6 +293,7 @@
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
+
 <script>
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
@@ -311,6 +312,7 @@ import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -351,7 +353,6 @@ export default {
       message: "",
       messageIsError: false,
       bDialogVisible: false,
-
       importValidatorKeyActive: true,
       selectValidatorServiceForKey: false,
       passwordInputActive: false,
@@ -381,7 +382,6 @@ export default {
         remoteKey: "./img/icon/the-staking/remotekey.svg",
       },
       keyType: true,
-
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
@@ -391,6 +391,16 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useNodeHeader, {
+      stakeGuide: "stakeGuide",
+      stakeFirstStep: "stakeFirstStep",
+      stakeSecondStep: "stakeSecondStep",
+      stakeThirdStep: "stakeThirdStep",
+      goForStake: "goForStake",
+      stakeBtn: "stakeBtn",
+      insertVal: "insertVal",
+      insertKeyBoxActive: "insertKeyBoxActive",
+    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
@@ -610,12 +620,25 @@ export default {
       this.importIsDone = false;
       this.exitInfo = false;
       this.password = val;
-      this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
-        files: this.keyFiles,
-        password: this.password,
-        serviceID: this.selectedService.config.serviceID,
-        slashingDB: this.slashingDB,
-      });
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.stakeThirdStep = false;
+      this.stakeFirstStep = true;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.goForStake = false;
+      this.insertVal = false;
+      this.stakeBtn = false;
+      this.clickService = false;
+      this.dragStep = false;
+      (this.passPointer = false),
+        (this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
+          files: this.keyFiles,
+          password: this.password,
+          serviceID: this.selectedService.config.serviceID,
+          slashingDB: this.slashingDB,
+        }));
       this.keyFiles = [];
       if (
         this.checkActiveValidatorsResponse.length === 0 ||
