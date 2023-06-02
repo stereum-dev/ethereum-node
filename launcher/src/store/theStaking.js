@@ -15,6 +15,7 @@ export const useStakingStore = defineStore("theStaking", {
       removeForMultiValidatorsActive: false,
       grafitiForMultiValidatorsActive: false,
       display: true,
+      keyCounter: 0,
     };
   },
   actions: {},
