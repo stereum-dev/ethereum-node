@@ -66,16 +66,16 @@ export default {
     setSelectedCurrency() {
       switch (this.currentNetwork.id) {
         case 1:
-          this.selectedCurrency = "eth";
+          this.selectedCurrency = "/img/icon/control/ETH_Currency_Symbol.png";
           break;
         case 2:
-          this.selectedCurrency = "geo";
+          this.selectedCurrency = "/img/icon/control/goETH_Currency_Symbol.png";
           break;
         case 3:
-          this.selectedCurrency = "gno";
+          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
           break;
         case 4:
-          this.selectedCurrency = "sep";
+          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
           break;
         default:
           break;
