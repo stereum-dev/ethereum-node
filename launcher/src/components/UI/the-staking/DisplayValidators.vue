@@ -382,7 +382,6 @@ export default {
         remoteKey: "./img/icon/the-staking/remotekey.svg",
       },
       keyType: true,
-
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
@@ -412,6 +411,7 @@ export default {
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
+      keyCounter: "keyCounter",
     }),
     importingErrorMessage() {
       return {
@@ -449,7 +449,7 @@ export default {
       immediate: true,
       handler(val) {
         const hasMatchingIcon = this.keys.some((item) => item.icon === val);
-
+        this.keyCounter = this.keys.filter((key) => key.icon === val).length;
         this.display = !hasMatchingIcon;
       },
     },
@@ -464,6 +464,7 @@ export default {
         }
       },
     },
+
     // filteredKey(out) {
     //   if (out !== "") {
     //     return this.keys.filter((k) => k.key.toLowerCase().includes(out.toLowerCase()));
@@ -489,6 +490,7 @@ export default {
     });
   },
   mounted() {
+    this.keyCounter = this.keys.filter((key) => key.icon === this.selectedIcon).length;
     this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats

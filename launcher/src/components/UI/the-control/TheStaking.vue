@@ -13,11 +13,7 @@
             <span>{{ formattedBalance }}</span>
           </div>
           <div class="top-icon">
-            <!-- <img
-              src="../../../../public/img/icon/control/stakingWu.svg"
-              alt="coin-icon"
-            /> -->
-            {{ selectedCurrency }}
+            <img :src="selectedCurrency" alt="coin-icon" />
           </div>
         </div>
         <div class="side-bottom">
@@ -66,16 +62,16 @@ export default {
     setSelectedCurrency() {
       switch (this.currentNetwork.id) {
         case 1:
-          this.selectedCurrency = "eth";
+          this.selectedCurrency = "/img/icon/control/ETH_Currency_Symbol.png";
           break;
         case 2:
-          this.selectedCurrency = "geo";
+          this.selectedCurrency = "/img/icon/control/goETH_Currency_Symbol.png";
           break;
         case 3:
-          this.selectedCurrency = "gno";
+          this.selectedCurrency = "/img/icon/control/GNO_Currency_Symbol.png";
           break;
         case 4:
-          this.selectedCurrency = "sep";
+          this.selectedCurrency = "/img/icon/control/sepETH_Currency_Symbol.png";
           break;
         default:
           break;
@@ -148,11 +144,12 @@ export default {
   width: 35%;
   height: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   text-transform: uppercase;
-  font-weight: 800;
-  font-size: 100%;
+}
+.top-icon img {
+  width: 70%;
 }
 
 .top-value {
