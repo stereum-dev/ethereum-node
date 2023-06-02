@@ -3,7 +3,7 @@
     <div class="staking-green-bg">
       <div class="staking-black-bg">
         <display-validators :button="button"></display-validators>
-        <ValidatorState />
+        <ValidatorStats />
         <selection-options
           :key="refresh"
           :button-state="buttonState"
@@ -16,7 +16,6 @@
           @click-btn-remove="removeHandler"
           @vld-picker="selectedValidator"
         ></selection-options>
-        <validators-box></validators-box>
         <div class="footer"></div>
         <TaskManager />
       </div>
@@ -30,15 +29,13 @@ import { useServices } from "../../../store/services";
 import { useStakingStore } from "@/store/theStaking";
 import DisplayValidators from "./DisplayValidators.vue";
 import SelectionOptions from "./SelectionOptions.vue";
-import ValidatorsBox from "./ValidatorsBox.vue";
-import ValidatorState from "./ValidatorState.vue";
+import ValidatorStats from "./ValidatorStats.vue";
 import TaskManager from "../task-manager/TaskManager.vue";
 export default {
   components: {
     DisplayValidators,
     SelectionOptions,
-    ValidatorsBox,
-    ValidatorState,
+    ValidatorStats,
     TaskManager,
   },
   data() {

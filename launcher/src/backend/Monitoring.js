@@ -1,5 +1,4 @@
 /* eslint-disable no-empty, no-prototype-builtins */
-import { NodeConnection } from "./NodeConnection";
 import { ServiceManager } from "./ServiceManager";
 import { StringUtils } from "./StringUtils";
 import * as QRCode from "qrcode";
@@ -18,9 +17,9 @@ const globalMonitoringCache = {
 };
 
 export class Monitoring {
-  constructor() {
-    this.nodeConnection = new NodeConnection();
-    this.nodeConnectionProm = new NodeConnection();
+  constructor(nodeConnection) {
+    this.nodeConnection = nodeConnection
+    this.nodeConnectionProm = nodeConnection
     this.serviceManager = new ServiceManager(this.nodeConnection);
     this.serviceManagerProm = new ServiceManager(this.nodeConnectionProm);
     this.isLoggedIn = false;
@@ -41,20 +40,12 @@ export class Monitoring {
     this.globalMonitoringCache = { ...globalMonitoringCache };
     try {
       fs.unlinkSync(this.serviceInfosCacheFile);
-    } catch (e) {}
-    await this.nodeConnection.logout();
-    await this.nodeConnectionProm.logout();
-    await this.serviceManager.nodeConnection.logout();
-    await this.serviceManagerProm.nodeConnection.logout();
+    } catch (e) { }
   }
 
   // Jobs to handle on login
-  async login(remoteHost) {
+  async login() {
     await this.cleanup();
-    this.nodeConnection.nodeConnectionParams = remoteHost;
-    this.nodeConnectionProm.nodeConnectionParams = remoteHost;
-    await this.nodeConnection.establish();
-    await this.nodeConnectionProm.establish();
     this.isLoggedIn = true;
     await this.startGlobalMonitoringCacheBackgroundWorker();
   }
@@ -237,7 +228,7 @@ export class Monitoring {
         }
         //console.log('REQUIRE fresh cache ' + hash, dnow);
       }
-    } catch (e) {}
+    } catch (e) { }
     if (await this.checkStereumInstallation()) {
       var serviceConfigs = await this.serviceManagerProm.readServiceConfigurations();
       const serviceStates = await this.nodeConnectionProm.listServices();
@@ -396,11 +387,11 @@ export class Monitoring {
     var query =
       rpc_method.trim().indexOf("{") < 0
         ? JSON.stringify({
-            jsonrpc: "2.0",
-            method: rpc_method.trim(),
-            params: rpc_params,
-            id: 1,
-          })
+          jsonrpc: "2.0",
+          method: rpc_method.trim(),
+          params: rpc_params,
+          id: 1,
+        })
         : rpc_method;
 
     // Define default response
@@ -1131,12 +1122,12 @@ export class Monitoring {
             labels.forEach(function (label, index) {
               try {
                 results[label] = xx.filter((s) => s.metric.__name__ == labels[index])[0].value[1];
-              } catch (e) {}
+              } catch (e) { }
             });
             try {
               frstVal = results[labels[1]];
               scndVal = results[labels[0]];
-            } catch (e) {}
+            } catch (e) { }
           }
           // Set chain head block for this client from RPC server (if available)
           if (
@@ -1153,7 +1144,7 @@ export class Monitoring {
                 typeof chain_head_block === "string" && chain_head_block.startsWith("0x")
                   ? parseInt(chain_head_block, 16)
                   : 0;
-            } catch (e) {}
+            } catch (e) { }
             let stay_on_hold_till_first_block = false; // true = enabled | false = disabled
             if (stay_on_hold_till_first_block && !chain_head_block) {
               // stay on hold until EC has responded the first block by RPC
@@ -1456,7 +1447,7 @@ export class Monitoring {
                     .value.pop()
                 );
                 details[clientType]["numPeerBy"]["fields"].push(item);
-              } catch (e) {}
+              } catch (e) { }
             });
           }
 
@@ -1713,7 +1704,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.rpcTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh RPC status data
     const freshrpcstatus = await this.getRpcStatus();
@@ -1896,7 +1887,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.wsTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh WS status data
     const freshwsstatus = await this.getWsStatus();
@@ -2046,7 +2037,7 @@ export class Monitoring {
     try {
       let r = wsResult.stdout.trim().split("\n");
       statuscode = r.length > 0 ? parseInt(r.pop()) : statuscode;
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond true if websocket is available, false otherwise
     if (!wsResult.stdout.toLowerCase().includes("sec-websocket") && statuscode != 200) {
@@ -2153,7 +2144,7 @@ export class Monitoring {
         await this.nodeConnection.closeTunnels(openTunnels);
         this.beaconTunnel = {};
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Respond success with fresh BEACON status data
     const freshbeaconstatus = await this.getBeaconStatus();
@@ -2278,8 +2269,8 @@ export class Monitoring {
     const addr_type = Array.isArray(addr)
       ? "arr"
       : typeof addr === "string" && ["public", "local"].includes(addr)
-      ? "str"
-      : "invalid";
+        ? "str"
+        : "invalid";
     addr = addr_type == "str" ? addr.toLowerCase().trim() : addr;
     if (addr_type == "invalid") {
       return {
@@ -2367,7 +2358,7 @@ export class Monitoring {
     for (let i = 0; i < serviceInfos.length; i++) {
       const hashDependencies =
         serviceInfos[i].config.dependencies.consensusClients.length ||
-        serviceInfos[i].config.dependencies.executionClients.length
+          serviceInfos[i].config.dependencies.executionClients.length
           ? "yes"
           : "no";
       easyInfos.push({
@@ -2599,7 +2590,6 @@ rm -rf diskoutput
   }
 
   async getValidatorStats(validatorPublicKey) {
-    const validators_arr = [validatorPublicKey];
     const verbose = true;
     const proposer = false;
 
@@ -2607,6 +2597,16 @@ rm -rf diskoutput
     const beaconAPIPort = beaconStatus.data[0].beacon.destinationPort;
 
     const baseURL = `http://localhost:${beaconAPIPort}`;
+
+    const validatorRes = await this.queryBeaconApi(
+      baseURL,
+      `/eth/v1/beacon/states/head/validators/${validatorPublicKey}`,
+      undefined,
+      "GET"
+    );
+    log.debug(validatorRes);
+
+    const validators_arr = [validatorRes.data.api_reponse.data.index];
 
     const beaconAPICmdGenesisTime = `curl -s -X GET '${baseURL}/eth/v1/beacon/genesis' -H 'accept: application/json'`;
     const genesisResShell = await this.nodeConnection.sshService.exec(beaconAPICmdGenesisTime);
@@ -2620,7 +2620,7 @@ rm -rf diskoutput
     const current_slot = Math.floor((current_time - genesis_time) / slot_time);
     const current_epoch = Math.floor(current_slot / 32);
 
-    output = { currentEpoch: current_epoch };
+    output = { currentEpoch: current_epoch, currentSlot: current_slot };
 
     const res = await this.queryBeaconApi(
       baseURL,

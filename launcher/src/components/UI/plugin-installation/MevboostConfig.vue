@@ -63,15 +63,12 @@
   </installation-box>
 </template>
 <script>
-import InstallationBox from "./InstallationBox.vue";
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "../../../store/services";
 import { useNodeManage } from "../../../store/nodeManage";
 export default {
-  components: {
-    InstallationBox,
-  },
+
   data() {
     return {
       title: "Mevboost Config",

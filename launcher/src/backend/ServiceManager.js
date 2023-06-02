@@ -25,8 +25,13 @@ import { Web3SignerService } from "./ethereum-services/Web3SignerService";
 import { NotificationService } from "./ethereum-services/NotificationService";
 import { ValidatorEjectorService } from "./ethereum-services/ValidatorEjectorService";
 import { KeysAPIService } from "./ethereum-services/KeysAPIService";
+import YAML from "yaml";
 
 const log = require("electron-log");
+
+async function Sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * desired states of a service
@@ -200,13 +205,7 @@ export class ServiceManager {
   async resyncService(serviceID, checkpointUrl) {
     let services = await this.readServiceConfigurations();
     let client = services.find((service) => service.id === serviceID);
-    const checkpointCommands = {
-      LighthouseBeaconService: "--checkpoint-sync-url=",
-      LodestarBeaconService: "--checkpointSyncUrl=",
-      PrysmBeaconService: "--checkpoint-sync-url=",
-      NimbusBeaconService: "--trusted-node-url=",
-      TekuBeaconService: "--initial-state=",
-    };
+
     const dataDir = client.volumes.find(
       (vol) =>
         vol.servicePath === "/opt/app/beacon" ||
@@ -219,6 +218,21 @@ export class ServiceManager {
     if (dataDir.length > 0) {
       await this.deleteDataVolume(dataDir);
     }
+
+    this.updateSyncCommand(client, checkpointUrl);
+
+    await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
+    await this.manageServiceState(client.id, "started");
+  }
+
+  updateSyncCommand(client, checkpointUrl) {
+    const checkpointCommands = {
+      LighthouseBeaconService: "--checkpoint-sync-url=",
+      LodestarBeaconService: "--checkpointSyncUrl=",
+      PrysmBeaconService: "--checkpoint-sync-url=",
+      NimbusBeaconService: "--trusted-node-url=",
+      TekuBeaconService: "--initial-state=",
+    };
     //if command is string
     if (typeof client.command === "string") {
       //remove old checkpoint command
@@ -244,8 +258,6 @@ export class ServiceManager {
         client.command.push(checkpointCommands[client.service] + checkpointUrl);
       }
     }
-    await this.nodeConnection.writeServiceConfiguration(client.buildConfiguration());
-    await this.manageServiceState(client.id, "started");
   }
 
   async deleteDataVolume(dataDir) {
@@ -1140,23 +1152,95 @@ export class ServiceManager {
   }
 
   async exportConfig() {
-    let listConfigFiles = await this.nodeConnection.sshService.exec(`cd /etc/stereum/services && ls`);
-    let arrayOfServices = listConfigFiles.stdout.split("\n");
+    let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
     let serviceNameConfig = [];
-    let ConfigContent;
-
+    console.log(arrayOfServices)
     for (let i = 0; i < arrayOfServices.length - 1; i++) {
-      ConfigContent = await this.nodeConnection.sshService.exec(`cat /etc/stereum/services/${arrayOfServices[i]}`);
+      let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
 
-      const contentObject = {
-        lines: ConfigContent.stdout,
+      const exportObject = {
+        filename: arrayOfServices[i],
+        content: serviceObject,
       };
-      const Object = {
-        filename: ConfigContent.stdout.split("\n")[0].replace("service: ", "") + ".yaml",
-        content: contentObject.lines,
-      };
-      serviceNameConfig.push(Object);
+      serviceNameConfig.push(exportObject);
     }
     return serviceNameConfig;
+  }
+
+  async importConfig(configFiles, removedServices, checkPointSync) {
+    let consensusClients = []
+    //remove existing config files
+    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+
+    //write config files
+    for (let file of configFiles.concat(removedServices)) {
+      await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
+      if (file.category === "consensus") {
+        consensusClients.push(file.id)
+      }
+    }
+    let services = await this.readServiceConfigurations();
+
+    for (let serviceToDelete of removedServices) {
+      let dependents = [];
+      services.forEach((service) => {
+        for (const dependency in service.dependencies) {
+          service.dependencies[dependency].forEach((s) => {
+            if (s.id === serviceToDelete.id) dependents.push(service);
+          });
+        }
+      });
+      dependents.forEach((service) => {
+        this.removeDependencies(service, serviceToDelete);
+      });
+      services = services.filter(s => s.id !== serviceToDelete.id)
+    }
+
+    //Add or Remove Checkpoint Sync
+    for (let service of services.filter(s => consensusClients.includes(s.id))) {
+      this.updateSyncCommand(service, checkPointSync)
+    }
+
+    // create stereum config file
+    await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
+    const settings = {
+      stereum_settings: {
+        settings: {
+          controls_install_path: "/opt/stereum",
+          updates: {
+            lane: "stable",
+            unattended: {
+              install: false,
+            },
+          },
+        },
+      },
+    };
+    await this.nodeConnection.sshService.exec(
+      `echo -e ${StringUtils.escapeStringForShell(YAML.stringify(settings))} > /etc/stereum/stereum.yaml`
+    );
+
+    //prepare node
+    await this.nodeConnection.findStereumSettings();
+    await this.nodeConnection.prepareStereumNode(this.nodeConnection.settings.stereum.settings.controls_install_path);
+
+    await Promise.all(
+      services.map(async (service) => {
+        await this.nodeConnection.writeServiceConfiguration(service.buildConfiguration());
+      })
+    );
+
+    await this.createKeystores(services);
+
+    // start service
+    const runRefs = [];
+    if (services[0] !== undefined) {
+      await Promise.all(
+        services.map(async (service, index) => {
+          Sleep(index * 1000).then(() => runRefs.push(this.manageServiceState(service.id, "started")));
+        })
+      );
+    }
+    return runRefs;
   }
 }

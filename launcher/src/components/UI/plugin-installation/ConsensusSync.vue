@@ -54,7 +54,7 @@
         <navigation />
       </template>
     </carousel>
-    <div v-if="dropdown" class="selection-column">
+    <div v-if="dropdown" class="selection-column" @mouseleave="dropdown = false">
       <ul class="link-wapper">
         <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
           <span>{{ link }}</span>
@@ -78,6 +78,11 @@ export default {
   },
   props: {
     client: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
+    configNetwork: {
       type: Object,
       required: true,
       default: () => ({}),
@@ -109,7 +114,7 @@ export default {
   },
   watch: {
     currentSlide: function (val) {
-      if (this.$route.path === "/sync") {
+      if (this.$route.path === "/sync" || this.$route.path === "/importingSyncing") {
         if (val != this.prevVal) {
           this.prevVal = val;
           this.checkPointSync = "";
@@ -125,6 +130,7 @@ export default {
     },
   },
   mounted() {
+    this.currentNetwork = this.currentNetwork.hasOwnProperty("id") ? this.currentNetwork : this.configNetwork;
     this.setSelectedLinks();
   },
   methods: {
@@ -170,6 +176,8 @@ export default {
 .plugin-name {
   width: 25%;
   height: 80%;
+  padding: 5px;
+  text-transform: uppercase;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -194,6 +202,12 @@ export default {
   width: 72%;
   height: 100%;
 }
+.carousel__viewport {
+  height: 100% !important;
+}
+.carousel__track {
+  height: 100% !important;
+}
 
 .carousel__item {
   min-height: 200px;
@@ -209,6 +223,7 @@ export default {
 
 .carousel__slide {
   padding: 5px 0;
+  height: 100% !important;
 }
 
 .carousel__prev {
@@ -258,14 +273,15 @@ export default {
 }
 .carouselBox {
   width: 90%;
-  height: 80%;
+  height: 85%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .syncBox {
   width: 85%;
-  height: 100%;
+  height: 93%;
+  padding: 5px;
   border: 1px solid #394047;
   border-radius: 5px;
   background-color: #33393e;
@@ -307,17 +323,16 @@ export default {
   width: 100%;
   height: max-content;
   color: #acaeae;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 600;
   text-align: left;
   text-transform: uppercase;
-  padding: 2px;
 }
 .syncContent .syncText span:last-child {
   height: max-content;
   width: 100%;
   color: #4d8384;
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-weight: 500;
   text-align: left;
   padding: 2px;
@@ -386,31 +401,44 @@ export default {
 }
 
 .selection-column {
-  width: 58%;
-  height: 250%;
+  width: 50%;
+  height: 200%;
   display: flex;
-  background: #88a297;
-  color: #d5d5d5;
+  background-color: #151a1e;
+  border-radius: 5px;
+  color: #4995e1;
   font-weight: 400;
   position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 90%;
-  left: 35%;
+  overflow-y: scroll;
+  padding: 10px;
+  top: 85%;
+  left: 51%;
 }
 .link-wapper {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
   overflow-y: scroll;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
+}
+.link-wapper::-webkit-scrollbar {
+  width: 5px;
+  background: transparent;
+}
+
+.link-wapper::-webkit-scrollbar-thumb {
+  background: #cfdedf;
+  border-radius: 5px;
 }
 .option-row {
   width: 100%;
-  height: 30%;
+  height: 30px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -418,10 +446,7 @@ export default {
   font-weight: 600;
   padding: 1%;
   margin-bottom: 1%;
-  border-bottom: 1px solid #d5d5d5;
-  flex-shrink: 0;
-  flex-grow: 0;
-  overflow-x: auto;
+  border-bottom: 1px solid #3c4245;
   cursor: pointer;
 }
 .option-row:hover {
