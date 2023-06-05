@@ -223,6 +223,9 @@ export default {
             if (element.category === "consensus") {
               return item.service === "LighthouseBeaconService";
             }
+            if (element.category === "execution") {
+              return item.service === "GethService";
+            }
           };
           break;
         case "rocketpool":
