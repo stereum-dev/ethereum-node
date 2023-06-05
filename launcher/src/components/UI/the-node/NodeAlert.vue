@@ -194,10 +194,6 @@ export default {
         const addresses = [];
 
         for (const validator of validators) {
-          if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
-            continue;
-          }
-
           if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
           const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
           if (patternIndex === -1) {
