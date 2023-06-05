@@ -189,9 +189,14 @@ export default {
   methods: {
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
+
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
+
         for (const validator of validators) {
+          if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
+            continue;
+          }
           if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
           const pattern =
             validator.expertOptions[validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient")]
