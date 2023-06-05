@@ -21,6 +21,7 @@ export const useStakingStore = defineStore("theStaking", {
       clickService: false,
       modalGuide: false,
       passPointer: false,
+      keyCounter: 0,
     };
   },
   actions: {},
