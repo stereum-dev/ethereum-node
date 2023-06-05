@@ -54,7 +54,7 @@
         <div class="service">
           <div class="title">{{ $t("theNode.servicePlugin") }}</div>
           <div class="service-parent">
-            <node-service :list="installedServices.filter((service) => service.category === 'service')"> </node-service>
+            <node-service :list="installedServices.filter((service) => service.category === 'service').sort(sortByName)"> </node-service>
           </div>
         </div>
         <div class="node-side">
