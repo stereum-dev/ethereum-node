@@ -189,13 +189,20 @@ export default {
   methods: {
     async readService() {
       const validators = this.installedServices.filter((i) => i.category === "validator");
+
       if (validators && validators.length > 0 && validators[0].config) {
         const addresses = [];
+
         for (const validator of validators) {
+          if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
+            continue;
+          }
           if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
-          const pattern =
-            validator.expertOptions[validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient")]
-              .pattern;
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+          if (patternIndex === -1) {
+            continue;
+          }
+          const pattern = validator.expertOptions[patternIndex].pattern;
           const match = [...validator.yaml.match(new RegExp(pattern))][2];
           if (match) {
             const address = match;
@@ -211,9 +218,7 @@ export default {
           (validator) => validator.address === "0x0000000000000000000000000000000000000000"
         );
         this.notSetAddresses = notSetAddresses;
-      } // else {
-      // console.error("Invalid item or missing config property.");
-      // }
+      }
     },
 
     closeNotification() {
