@@ -63,7 +63,7 @@
       >
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
           <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
-          <div class="staking-step-two">
+          <div>
             <span>Drag or click on “CLICK OR DRAG TO INSERT KEY”</span>
           </div>
         </div>
@@ -71,6 +71,11 @@
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
             <span>Click on the icon of your validator client</span>
+          </div>
+        </div>
+        <div v-if="stakeCongrats" class="message-stake-wrapper-last">
+          <div class="staking-step-two">
+            <span>Congrats you are done!</span>
           </div>
         </div>
         <div v-if="passPointer" class="message-stake-wrapper">
@@ -121,6 +126,7 @@ export default {
       goForStake: "goForStake",
       stakeBtn: "stakeBtn",
       insertVal: "insertVal",
+      stakeCongrats: "stakeCongrats",
     }),
 
     ...mapState(useStakeSlide, {
@@ -161,6 +167,7 @@ export default {
   },
   methods: {
     close() {
+      this.stakeCongrats = false;
       this.stakeFirstStep = true;
       this.stakeGuide = false;
       this.stakeSecondStep = false;
@@ -521,6 +528,16 @@ export default {
   width: 100%;
   height: 100%;
 }
+.message-stake-wrapper-last {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 300;
+  background: #1a1c1c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .modal-guide-wrapper {
   width: 35%;
   height: 10%;
@@ -589,15 +606,15 @@ export default {
 .staking-step-three {
   color: #eee;
   display: flex;
-  width: 100%;
+  width: 80%;
   height: 10%;
   font-size: 180%;
   justify-content: center;
   align-items: center;
   font-weight: 600;
   position: absolute;
-  top: 40%;
-  left: 0;
+  top: 7%;
+  left: 10%;
   z-index: 3;
 }
 .sync-status-widg {
