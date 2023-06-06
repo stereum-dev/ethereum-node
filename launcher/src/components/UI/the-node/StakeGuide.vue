@@ -22,8 +22,10 @@
     <div v-if="stakeThirdStep" class="bg-dark">
       <div class="stake-modal">
         <div class="stake-modal_header">
-          <span>{{ slideID }} # </span>
-          <span v-html="parseText(message, slideID)"></span>
+          <div class="stake-modal_header_slideNo">
+            <span>{{ slideID }}# </span>
+          </div>
+          <div class="stake-modal_header_slide-tex"><span v-html="parseText(message, slideID)"></span></div>
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
           <div class="stake-modal-arr">
@@ -672,7 +674,27 @@ export default {
   font-weight: 700;
   color: #eee;
 }
-
+.stake-modal_header_slideNo {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 180%;
+  font-weight: 700;
+  color: #eee;
+}
+.stake-modal_header_slide-tex {
+  width: 90%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 120%;
+  font-weight: 700;
+  color: #eee;
+  padding: 0 3%;
+}
 .stake-modal_container {
   width: 100%;
   height: 80%;
