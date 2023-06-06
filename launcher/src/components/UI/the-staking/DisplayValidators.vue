@@ -459,13 +459,6 @@ export default {
         this.display = !hasMatchingIcon;
       },
     },
-    isDragOver: {
-      deep: true,
-      immediate: true,
-      handler(val) {
-        console.log(val);
-      },
-    },
 
     selectedIcon: {
       deep: true,

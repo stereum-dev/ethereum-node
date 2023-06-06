@@ -199,7 +199,6 @@ export default {
         let droppedFiles = event.dataTransfer.files;
         if (droppedFiles[0]["type"] === "application/json") {
           this.keyFiles.push(...droppedFiles);
-          console.log(this.keyFiles);
         }
       }
       this.isDragOver = false;
@@ -611,7 +610,18 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
+  animation: slideLeft 0.3s ease-in;
   left: 0;
+}
+@keyframes slideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 .top-slide {
   width: 24.5%;
@@ -620,6 +630,17 @@ export default {
   position: absolute;
   top: 0;
   left: 49%;
+  animation: slideTop 0.3s ease-in;
+}
+@keyframes slideTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .bottom-slide {
   width: 24.5%;
@@ -628,6 +649,17 @@ export default {
   position: absolute;
   top: 65%;
   left: 49%;
+  animation: slideBottom 0.3s ease-in;
+}
+@keyframes slideBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .right-slide {
   width: 27%;
@@ -636,6 +668,17 @@ export default {
   position: absolute;
   top: 0%;
   left: 73.5%;
+  animation: slideRight 0.3s ease-in;
+}
+@keyframes slideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 .wrapper h1 {
   position: absolute;
