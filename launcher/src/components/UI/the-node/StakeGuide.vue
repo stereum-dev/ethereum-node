@@ -83,7 +83,7 @@
           <img src="../../../../public/img/icon/arrows/Pointer1.png" alt="" class="point-to-modal" />
         </div>
         <div v-if="modalGuide" class="staking-step-three">
-          <span>Lorem ipsum dolor sit amet consectetur adipisicing.</span>
+          <span>Choose "No" if you have no Slashing Protection Database from a prior Node</span>
         </div>
 
         <div class="DisplayValidators-bg"></div>
