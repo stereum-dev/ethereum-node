@@ -26,11 +26,15 @@
           <span v-html="parseText(message, slideID)"></span>
         </div>
         <div ref="modalContainer" class="stake-modal_container" @wheel="handleScroll">
-          <div class="stake-modal-arr"><div class="left" @click="prevSlide"></div></div>
+          <div class="stake-modal-arr">
+            <div class="left" data-tooltip="Scroll to change slides faster" @click="prevSlide"></div>
+          </div>
           <div class="stake-modal_slider-tutorial">
             <img :src="slide" alt="slide" />
           </div>
-          <div class="stake-modal-arr"><div class="right" @click="nextSlide"></div></div>
+          <div class="stake-modal-arr">
+            <div class="right" data-tooltip="Scroll to change slides faster" @click="nextSlide"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -255,6 +259,33 @@ export default {
 };
 </script>
 <style scoped>
+[data-tooltip] {
+  position: relative;
+  cursor: default;
+}
+[data-tooltip]::after {
+  position: absolute;
+  width: max-content;
+  left: -30000%;
+  text-align: center;
+  content: attr(data-tooltip);
+  background: black;
+  border-radius: 5px;
+  font-size: 50%;
+  border: 1px solid #929292;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  padding: 5px 10px;
+  transition: opacity 0.3s transform 0.2s;
+  font-weight: 500;
+}
+[data-tooltip]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-430%) translateX(-45%);
+}
+
 .close {
   position: absolute;
   top: 2%;
