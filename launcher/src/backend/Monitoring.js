@@ -117,7 +117,7 @@ export class Monitoring {
       } catch (err) {
         log.debug("checking stereum installation failed:", err);
       }
-      if (settings.stdout.includes("stereum.yaml")) return true;
+      if (settings?.stdout.includes("stereum.yaml")) return true;
     }
     return false;
   }
