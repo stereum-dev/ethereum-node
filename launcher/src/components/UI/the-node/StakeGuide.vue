@@ -84,6 +84,7 @@
         <DisplayValidators class="display-val" />
       </div>
     </div>
+    <div class="close" @click="close">x</div>
   </div>
 </template>
 <script>
@@ -114,7 +115,6 @@ export default {
       goForStake: "goForStake",
       stakeBtn: "stakeBtn",
       insertVal: "insertVal",
-      insertKeyBoxActive: "insertKeyBoxActive",
     }),
 
     ...mapState(useStakeSlide, {
@@ -154,6 +154,23 @@ export default {
     this.nextStep++;
   },
   methods: {
+    close() {
+      this.stakeFirstStep = true;
+      this.stakeGuide = false;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.stakeBtn = false;
+      this.insertVal = false;
+      this.slideID = "";
+      this.slide = "";
+      this.message = "";
+      this.nextStep = 0;
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.goForStake = false;
+      this.dragStep = false;
+    },
     handleScroll(event) {
       if (!this.isScrolling) {
         this.isScrolling = true;
@@ -176,10 +193,7 @@ export default {
         let droppedFiles = event.dataTransfer.files;
         if (droppedFiles[0]["type"] === "application/json") {
           this.keyFiles.push(...droppedFiles);
-          // this.importValidatorKeyActive = false;
-          this.insertKeyBoxActive = false;
           console.log(this.keyFiles);
-          // this.selectValidatorServiceForKey = true;
         }
       }
       this.isDragOver = false;
@@ -241,6 +255,29 @@ export default {
 };
 </script>
 <style scoped>
+.close {
+  position: absolute;
+  top: 2%;
+  right: 2%;
+  cursor: pointer;
+  font-size: 200%;
+  font-weight: bold;
+  color: #eee;
+  z-index: 330;
+  height: 7%;
+  width: 4%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+.close:hover {
+  border: 2px solid #eee;
+}
+.close:active {
+  border: none;
+  background: rgba(238, 238, 238, 0.3);
+}
 .display-val {
   width: 74.5%;
   height: 85%;
