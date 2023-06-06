@@ -76,7 +76,7 @@
         <div v-if="passPointer" class="message-stake-wrapper">
           <img src="/img/icon/arrows/curved-arrow.png" alt="" class="arrow-staking-pass" />
           <div class="staking-step-two">
-            <span>password Lorem, ipsum dolor.</span>
+            <span>Please click here to enter your password and confirm.</span>
           </div>
         </div>
         <div v-if="modalGuide" class="modal-guide-wrapper">
@@ -583,7 +583,7 @@ export default {
   font-weight: 600;
   position: absolute;
   top: 40%;
-  left: -15%;
+  left: -10%;
   z-index: 3;
 }
 .staking-step-three {
