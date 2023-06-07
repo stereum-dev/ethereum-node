@@ -535,11 +535,11 @@ export default {
 @keyframes modal {
   from {
     opacity: 0;
-    transform: translateX(100px) scale(0.5);
+    transform: translateX(100%) translateY(-60%) scale(0.5);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0) translateY(-50%) scale(1);
   }
 }
 </style>
