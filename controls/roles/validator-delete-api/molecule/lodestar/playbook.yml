@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include validator-delete-api"
-      include_role:
-        name: "validator-delete-api"
