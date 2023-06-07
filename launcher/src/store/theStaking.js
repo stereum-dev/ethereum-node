@@ -15,6 +15,12 @@ export const useStakingStore = defineStore("theStaking", {
       removeForMultiValidatorsActive: false,
       grafitiForMultiValidatorsActive: false,
       display: true,
+      isDragOver: false,
+      keyFiles: [],
+      dragStep: false,
+      clickService: false,
+      modalGuide: false,
+      passPointer: false,
       keyCounter: 0,
     };
   },

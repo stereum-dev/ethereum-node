@@ -293,6 +293,7 @@
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
+
 <script>
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
@@ -311,6 +312,7 @@ import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -351,8 +353,6 @@ export default {
       message: "",
       messageIsError: false,
       bDialogVisible: false,
-      isDragOver: false,
-      keyFiles: [],
       importValidatorKeyActive: true,
       selectValidatorServiceForKey: false,
       passwordInputActive: false,
@@ -391,6 +391,17 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useNodeHeader, {
+      stakeGuide: "stakeGuide",
+      stakeFirstStep: "stakeFirstStep",
+      stakeSecondStep: "stakeSecondStep",
+      stakeThirdStep: "stakeThirdStep",
+      goForStake: "goForStake",
+      stakeBtn: "stakeBtn",
+      insertVal: "insertVal",
+      insertKeyBoxActive: "insertKeyBoxActive",
+      stakeCongrats: "stakeCongrats",
+    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
@@ -411,6 +422,12 @@ export default {
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
+      isDragOver: "isDragOver",
+      keyFiles: "keyFiles",
+      dragStep: "dragStep",
+      clickService: "clickService",
+      modalGuide: "modalGuide",
+      passPointer: "passPointer",
       keyCounter: "keyCounter",
     }),
     importingErrorMessage() {
@@ -600,6 +617,23 @@ export default {
       this.importIsDone = false;
       this.exitInfo = false;
       this.password = val;
+
+      this.passPointer = false;
+
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.stakeThirdStep = false;
+      this.stakeFirstStep = true;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.goForStake = false;
+      this.insertVal = false;
+      this.stakeBtn = false;
+      this.clickService = false;
+      this.dragStep = false;
+      this.stakeCongrats = false;
+
       this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
         password: this.password,
@@ -849,6 +883,8 @@ export default {
         this.insertKeyBoxActive = false;
         this.selectValidatorServiceForKey = true;
         this.isDragOver = false;
+        this.dragStep = true;
+        this.clickService = true;
       }
     },
     dropFileHandler(event) {
@@ -863,6 +899,8 @@ export default {
         }
       }
       this.isDragOver = false;
+      this.dragStep = true;
+      this.clickService = true;
     },
     removeKeyHandler(item) {
       this.keyFiles = this.keyFiles.filter((el) => el.name != item.name);
@@ -937,6 +975,9 @@ export default {
       this.selectedService = service;
       this.selectValidatorServiceForKey = false;
       this.ImportSlashingActive = true;
+      this.dragStep = true;
+      this.clickService = false;
+      this.modalGuide = true;
     },
 
     copyHandler(item) {
@@ -963,6 +1004,8 @@ export default {
       }
       this.ImportSlashingActive = false;
       this.enterPasswordBox = true;
+      this.modalGuide = false;
+      this.passPointer = true;
     },
     openSearchBox() {
       if (this.keys.length > 0) {
