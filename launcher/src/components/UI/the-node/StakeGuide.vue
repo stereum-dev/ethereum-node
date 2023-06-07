@@ -150,7 +150,7 @@ export default {
         setTimeout(() => {
           this.stakeSecondStep = false;
           this.stakeThirdStep = true;
-        }, 5000);
+        }, 3000);
       }
     },
     nextStep(newVal) {

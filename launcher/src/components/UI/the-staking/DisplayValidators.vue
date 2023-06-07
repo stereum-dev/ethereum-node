@@ -617,25 +617,22 @@ export default {
       this.importIsDone = false;
       this.exitInfo = false;
       this.password = val;
-      this.stakeCongrats = true;
+
       this.passPointer = false;
-      if (this.stakeGuide === true) {
-        setTimeout(() => {
-          this.stakeGuide = false;
-          this.clickService = false;
-          this.modalGuide = false;
-          this.stakeThirdStep = false;
-          this.stakeFirstStep = true;
-          this.stakeSecondStep = false;
-          this.stakeThirdStep = false;
-          this.goForStake = false;
-          this.insertVal = false;
-          this.stakeBtn = false;
-          this.clickService = false;
-          this.dragStep = false;
-          this.stakeCongrats = false;
-        }, 1500);
-      }
+
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.stakeThirdStep = false;
+      this.stakeFirstStep = true;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.goForStake = false;
+      this.insertVal = false;
+      this.stakeBtn = false;
+      this.clickService = false;
+      this.dragStep = false;
+      this.stakeCongrats = false;
 
       this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
