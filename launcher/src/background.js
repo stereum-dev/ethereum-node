@@ -58,7 +58,7 @@ ipcMain.handle("reconnect", async () => {
 });
 
 ipcMain.handle("checkConnection", async () => {
-  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 10000)
+  await nodeConnection.sshService.checkSSHConnection(nodeConnection.nodeConnectionParams, 18000)
     .then((isConnected) => {
       nodeConnection.sshService.connected = isConnected;
     })
