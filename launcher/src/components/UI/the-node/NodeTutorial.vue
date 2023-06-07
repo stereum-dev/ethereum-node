@@ -38,6 +38,7 @@ export default {
   components: { TutorialButtons },
   data() {
     return {
+      selectedGuide: "",
       tutorialTitles: [
         {
           name: this.$t("nodeSidebarVideo.alert"),
@@ -76,7 +77,7 @@ export default {
         mainnet: [
           {
             title: this.$t("nodeSidebarVideo.stake"),
-            guide: "",
+            guide: "stake",
             video: "https://www.youtube.com/embed/Cbu58ee_Wj4",
             written: "https://stereum.net/ethereum-node-setup/eth-solo-staking-step-by-step-guide/",
             icon: "/img/icon/click-installation/mainnet-icon.png",
@@ -85,7 +86,7 @@ export default {
         goerli: [
           {
             title: this.$t("nodeSidebarVideo.stake"),
-            guide: "",
+            guide: "stake",
             video: "https://www.youtube.com/embed/Cbu58ee_Wj4",
             written: "https://stereum.net/ethereum-node-setup/eth-solo-staking-step-by-step-guide/",
             icon: "/img/icon/click-installation/testnet-icon.png",
@@ -134,6 +135,7 @@ export default {
     }),
     ...mapWritableState(useNodeHeader, {
       tutorial: "tutorial",
+      stakeGuide: "stakeGuide",
     }),
   },
 
@@ -142,7 +144,13 @@ export default {
   },
   methods: {
     handleGuidedOptionClick(item) {
-      this.tutorial = true;
+      this.selectedGuide = item.guide;
+
+      if (this.selectedGuide == "rpc") {
+        this.tutorial = true;
+      } else if (this.selectedGuide == "stake") {
+        this.stakeGuide = true;
+      }
     },
     handleWrittenOptionClick(item) {
       let url = item.written;

@@ -46,7 +46,11 @@
         </div>
         <div class="slider-tutorial-container">
           <div class="slider-arr"><div class="left" @click="prevSlide"></div></div>
-          <div class="slider-tutorial"><img :src="slide" alt="" /></div>
+          <div class="slider-tutorial">
+            <transition name="slide" mode="out-in">
+              <img :key="nextStepFlag" :src="slide" alt="" />
+            </transition>
+          </div>
           <div class="slider-arr"><div class="right" @click="nextSlide"></div></div>
         </div>
         <div class="footer">
@@ -320,6 +324,7 @@ export default {
   height: 75%;
   justify-content: flex-start;
   align-items: center;
+  overflow: hidden;
 }
 .slider-arr {
   display: flex;
@@ -342,6 +347,22 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 20px;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.slide-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
 }
 .left {
   width: 0;
@@ -535,11 +556,11 @@ export default {
 @keyframes modal {
   from {
     opacity: 0;
-    transform: translateX(100px) scale(0.5);
+    transform: translateX(100%) translateY(-60%) scale(0.5);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: translateX(0) translateY(-50%) scale(1);
   }
 }
 </style>
