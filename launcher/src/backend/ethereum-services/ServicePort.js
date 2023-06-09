@@ -41,9 +41,15 @@ export class ServicePort {
 
   static buildByConfig(portString) {
     const portSettings = portString.split(":");
-    const servicePortSettings = portSettings[2].split("/");
+    const servicePortSettings = portSettings[2]?.split("/");
 
-    return new ServicePort(portSettings[0], portSettings[1], servicePortSettings[0], servicePortSettings[1]);
+    const destinationIp = portSettings?.length >= 1 ? portSettings[0] : "";
+    const destinationPort = portSettings?.length >= 2 ? portSettings[1] : "";
+    const servicePort = servicePortSettings?.length >= 1 ? servicePortSettings[0] : "";
+    const servicePortProtocol = servicePortSettings?.length >= 2 ? servicePortSettings[1] : "";
+
+
+    return new ServicePort(destinationIp, destinationPort, servicePort, servicePortProtocol);
   }
 
   buildPortMapping() {

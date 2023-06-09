@@ -8,16 +8,16 @@
     ></update-panel>
     <div class="alert-box">
       <div class="alert-box_header">
-        <div v-if="perfect" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: perfect }">
           <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div v-if="warning" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: warning }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
-        <div v-if="alarm" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: alarm }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div v-if="notification" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: notification }">
           <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -353,6 +353,10 @@ export default {
   align-items: center;
   box-sizing: border-box;
   margin: 0 1.5px;
+  opacity: 25%;
+}
+.active {
+  opacity: 100%;
 }
 .icon_alarm img {
   width: 100%;

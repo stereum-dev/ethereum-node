@@ -142,7 +142,7 @@ export class ServiceManager {
             } else if (config.service == "KeysAPIService") {
               services.push(KeysAPIService.buildByConfiguration(config));
             } else if (config.service == "CharonService") {
-              services.push(KeysAPIService.buildByConfiguration(config));
+              services.push(CharonService.buildByConfiguration(config));
             }
           } else {
             log.error("found configuration without service!");
@@ -392,6 +392,10 @@ export class ServiceManager {
           command = "--beacon-node-api-endpoint=";
         }
         break;
+      case "Charon":
+        filter = (e) => e.buildConsensusClientHttpEndpointUrl();
+        command = "--beacon-node-endpoints="
+        break;
       case "FlashbotsMevBoost":
         return dependencies.map((client) => {
           client.command = this.addMevBoostConnection(service, client);
@@ -414,7 +418,7 @@ export class ServiceManager {
       );
       service.volumes = service.volumes.filter((v) => v.destinationPath.includes(service.id));
       service.volumes = service.volumes.concat(volumes);
-    } else if (service.service.includes("Validator")) {
+    } else if (service.service.includes("Validator") || service.service.includes("Charon")) {
       service.dependencies.consensusClients = dependencies;
     }
     return service;

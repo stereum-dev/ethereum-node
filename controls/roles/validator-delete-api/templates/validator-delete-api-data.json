@@ -1,3 +1,0 @@
-{
-  "pubkeys": {{ item.pubkeys | to_json }}
-}

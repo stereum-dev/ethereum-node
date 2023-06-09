@@ -1002,10 +1002,10 @@ export class Monitoring {
 
     // Prometheus job definitions
     const jobs = {
-      TekuBeaconService: "teku",
+      TekuBeaconService: "teku_beacon",
       LighthouseBeaconService: "lighthouse_beacon",
       PrysmBeaconService: "prysm_beacon",
-      NimbusBeaconService: "nimbus",
+      NimbusBeaconService: "nimbus_beacon",
       LodestarBeaconService: "lodestar_beacon",
       GethService: "geth",
       BesuService: "besu",
@@ -1214,10 +1214,10 @@ export class Monitoring {
 
     // Prometheus job definitions
     const jobs = {
-      TekuBeaconService: "teku",
+      TekuBeaconService: "teku_beacon",
       LighthouseBeaconService: "lighthouse_beacon",
       PrysmBeaconService: "prysm_beacon",
-      NimbusBeaconService: "nimbus",
+      NimbusBeaconService: "nimbus_beacon",
       LodestarBeaconService: "lodestar_beacon",
       GethService: "geth",
       BesuService: "besu",
