@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include validator-fee-recipient-api"
-      include_role:
-        name: "validator-fee-recipient-api"
