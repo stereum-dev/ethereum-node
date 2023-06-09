@@ -7,16 +7,16 @@
     ></update-panel>
     <div class="status-box_header">
       <div class="icon-line">
-        <div v-if="perfect" class="status-icon">
+        <div class="status-icon" :class="{ active: perfect }">
           <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div v-if="warning" class="status-icon">
+        <div class="status-icon" :class="{ active: warning }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
-        <div v-if="alarm" class="status-icon">
+        <div class="status-icon" :class="{ active: alarm }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div v-if="notification" class="status-icon">
+        <div class="status-icon" :class="{ active: notification }">
           <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -377,6 +377,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 25%;
+}
+.active {
+  opacity: 100%;
 }
 
 .status-icon img {
