@@ -3,6 +3,8 @@ export const useServices = defineStore("services", {
   state: () => {
     return {
       selectedIcon: "",
+      importValidatorKeyActive: true,
+      passwordInputActive: false,
       buttonState: [
         {
           id: 1,
@@ -264,7 +266,7 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
               pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
-            }
+            },
           ],
           drag: true,
           state: "exited",
@@ -306,7 +308,7 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: "(JAVA_OPTS: -Xmx)(\\d+)(g)",
-            }
+            },
             // {
             //   title: "Resync",
             //   type: "action",

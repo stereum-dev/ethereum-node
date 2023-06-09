@@ -50,17 +50,7 @@
           <span>Click on Staking</span>
         </div>
       </div>
-      <div
-        v-if="insertVal"
-        class="wrapper"
-        @drag.prevent.stop=""
-        @dragstart.prevent.stop=""
-        @dragend.prevent.stop="isDragOver = false"
-        @dragover.prevent.stop="isDragOver = true"
-        @dragenter.prevent.stop="isDragOver = true"
-        @dragleave.prevent.stop="isDragOver = false"
-        @drop.prevent.stop="dropFileHandler"
-      >
+      <div v-if="insertVal" class="wrapper">
         <div v-if="!isDragOver && dragStep === false" class="message-stake-wrapper">
           <img src="../../../../public/img/icon/arrows/drag.png" class="drag-icon" alt="" />
           <div>
@@ -142,6 +132,7 @@ export default {
     }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
+      importValidatorKeyActive: "importValidatorKeyActive",
     }),
   },
   watch: {
@@ -200,16 +191,16 @@ export default {
         }, 200);
       }
     },
-    dropFileHandler(event) {
-      let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
-      if (validator && validator.map((e) => e.state).includes("running")) {
-        let droppedFiles = event.dataTransfer.files;
-        if (droppedFiles[0]["type"] === "application/json") {
-          this.keyFiles.push(...droppedFiles);
-        }
-      }
-      this.isDragOver = false;
-    },
+    // dropFileHandler(event) {
+    //   let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
+    //   if (validator && validator.map((e) => e.state).includes("running")) {
+    //     let droppedFiles = event.dataTransfer.files;
+    //     if (droppedFiles[0]["type"] === "application/json") {
+    //       this.keyFiles.push(...droppedFiles);
+    //     }
+    //   }
+    //   this.isDragOver = false;
+    // },
     nextSlide() {
       this.nextStep++;
       if (this.nextStep > 56) {
