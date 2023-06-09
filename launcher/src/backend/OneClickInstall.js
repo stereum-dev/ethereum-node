@@ -145,19 +145,9 @@ export class OneClickInstall {
       this.beaconService = this.serviceManager.getService("LighthouseBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
 
-    if (constellation.includes("LighthouseValidatorService")) {
-      //LighthouseValidatorService
-      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, beaconServices: [this.beaconService] })
-    }
-
     if (constellation.includes("LodestarBeaconService")) {
       //LodestarBeaconService
       this.beaconService = this.serviceManager.getService("LodestarBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-    }
-
-    if (constellation.includes("LodestarValidatorService")) {
-      //LodestarValidatorService
-      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, beaconServices: [this.beaconService] })
     }
 
     if (constellation.includes("PrysmBeaconService")) {
@@ -165,30 +155,50 @@ export class OneClickInstall {
       this.beaconService = this.serviceManager.getService("PrysmBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
 
-    if (constellation.includes("PrysmValidatorService")) {
-      //PrysmValidatorService
-      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, beaconServices: [this.beaconService] })
-    }
-
     if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
       this.beaconService = this.serviceManager.getService("NimbusBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-    }
-
-    if (constellation.includes("NimbusValidatorService")) {
-      //NimbusBeaconService
-      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [this.beaconService] })
-      this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
       this.beaconService = this.serviceManager.getService("TekuBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
+    let charon = undefined
+    if (constellation.includes("CharonService")) {
+      //SSVNetworkService
+      charon = this.serviceManager.getService("CharonService", { ...args, beaconServices: [this.beaconService] })
+
+      this.extraServices.push(charon)
+      this.notToStart.push(charon.id)
+    }
+
+    if (constellation.includes("LighthouseValidatorService")) {
+      //LighthouseValidatorService
+      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+    if (constellation.includes("LodestarValidatorService")) {
+      //LodestarValidatorService
+      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+    if (constellation.includes("PrysmValidatorService")) {
+      //PrysmValidatorService
+      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+
+    if (constellation.includes("NimbusValidatorService")) {
+      //NimbusBeaconService
+      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.needsKeystore.push(this.validatorService)
+    }
+
 
     if (constellation.includes("TekuValidatorService")) {
       //TekuBeaconService
-      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [this.beaconService] })
+      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
       this.needsKeystore.push(this.validatorService)
     }
 
@@ -198,12 +208,6 @@ export class OneClickInstall {
       this.needsKeystore.push(this.validatorService)
     }
 
-    if (constellation.includes("CharonService")) {
-      //SSVNetworkService
-      let charon = this.serviceManager.getService("CharonService", { ...args, beaconServices: [this.beaconService] })
-      this.extraServices.push(charon)
-      this.notToStart.push(charon.id)
-    }
 
     this.prometheusNodeExporter = this.serviceManager.getService("PrometheusNodeExporterService", args)
     this.prometheus = this.serviceManager.getService("PrometheusService", args)

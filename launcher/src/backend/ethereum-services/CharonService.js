@@ -30,7 +30,7 @@ export class CharonService extends NodeService {
                 "--log-level=info",
                 "--log-format=console",
                 "--p2p-relays=https://0.relay.obol.tech",
-                "--p2p-tcp-address=3610",
+                "--p2p-tcp-address=0.0.0.0:3610",
                 "--validator-api-address=0.0.0.0:3600",
                 "--monitoring-address=0.0.0.0:3620",
             ], // command
@@ -45,6 +45,26 @@ export class CharonService extends NodeService {
         );
         return service;
 
+    }
+
+    static buildByConfiguration(config) {
+        const service = new CharonService();
+
+        service.initByConfig(config);
+
+        return service;
+    }
+
+    buildConsensusClientHttpEndpointUrl() {
+        return "http://stereum-" + this.id + ":3600";
+    }
+
+    buildConsensusClientEndpoint() {
+        return "stereum-" + this.id + ":3600";
+    }
+
+    buildConsensusClientGateway() {
+        return "stereum-" + this.id + ":3600";
     }
 
     getCharonCreateEnrCommand() {
