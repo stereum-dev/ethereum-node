@@ -102,7 +102,6 @@
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
               <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
-
               <span v-else class="category" @click="logEvent"
                 >{{ item.key.substring(0, 20) }}...{{ item.key.substring(item.key.length - 6, item.key.length) }}</span
               >
@@ -353,9 +352,8 @@ export default {
       message: "",
       messageIsError: false,
       bDialogVisible: false,
-      importValidatorKeyActive: true,
       selectValidatorServiceForKey: false,
-      passwordInputActive: false,
+
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -374,7 +372,7 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
-      selectedService: {},
+
       ImportSlashingActive: false,
       slashingDB: "",
       keyIcon: {
@@ -407,6 +405,8 @@ export default {
       runningServices: "runningServices",
       selectedIcon: "selectedIcon",
       buttonState: "buttonState",
+      importValidatorKeyActive: "importValidatorKeyActive",
+      passwordInputActive: "passwordInputActive",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -424,6 +424,7 @@ export default {
       display: "display",
       isDragOver: "isDragOver",
       keyFiles: "keyFiles",
+      selectedService: "selectedService",
       dragStep: "dragStep",
       clickService: "clickService",
       modalGuide: "modalGuide",
@@ -617,22 +618,6 @@ export default {
       this.importIsDone = false;
       this.exitInfo = false;
       this.password = val;
-
-      this.passPointer = false;
-
-      this.stakeGuide = false;
-      this.clickService = false;
-      this.modalGuide = false;
-      this.stakeThirdStep = false;
-      this.stakeFirstStep = true;
-      this.stakeSecondStep = false;
-      this.stakeThirdStep = false;
-      this.goForStake = false;
-      this.insertVal = false;
-      this.stakeBtn = false;
-      this.clickService = false;
-      this.dragStep = false;
-      this.stakeCongrats = false;
 
       this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
@@ -891,8 +876,10 @@ export default {
       let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
       if (validator && validator.map((e) => e.state).includes("running")) {
         let droppedFiles = event.dataTransfer.files;
+
         if (droppedFiles[0]["type"] === "application/json") {
           this.keyFiles.push(...droppedFiles);
+
           this.importValidatorKeyActive = false;
           this.insertKeyBoxActive = false;
           this.selectValidatorServiceForKey = true;
@@ -917,6 +904,21 @@ export default {
     //Confirm buttons functions
     confirmPasswordHandler() {
       this.passwordInputActive = true;
+      this.passPointer = false;
+      this.importValidatorKeyActive = false;
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.stakeThirdStep = false;
+      this.stakeFirstStep = true;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.goForStake = false;
+      this.insertVal = false;
+      this.stakeBtn = false;
+      this.clickService = false;
+      this.dragStep = false;
+      this.stakeCongrats = false;
     },
 
     checkKeyExists() {

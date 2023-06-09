@@ -17,6 +17,7 @@ export const useStakingStore = defineStore("theStaking", {
       display: true,
       isDragOver: false,
       keyFiles: [],
+      selectedService: {},
       dragStep: false,
       clickService: false,
       modalGuide: false,
