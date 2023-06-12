@@ -154,8 +154,7 @@ export default {
     },
   },
   mounted() {
-    if(this.item.category === "execution")
-      this.currentSlide = 2;
+    if (this.item.category === "execution") this.currentSlide = 2;
     this.setSelectedLinks();
   },
   methods: {
@@ -196,10 +195,10 @@ export default {
           this.selectedLinks = this.georli;
           break;
         case 3:
-          this.selectedLinks = this.gnosis;
+          this.selectedLinks = this.sepolia;
           break;
         case 4:
-          this.selectedLinks = this.sepolia;
+          this.selectedLinks = this.gnosis;
           break;
         default:
           break;
