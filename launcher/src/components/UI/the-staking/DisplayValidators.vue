@@ -360,7 +360,6 @@ export default {
       messageIsError: false,
       bDialogVisible: false,
       selectValidatorServiceForKey: false,
-      feeRecepientAddress: "",
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -554,11 +553,13 @@ export default {
       el.isRemoveModalActive = true;
     },
 
-    feeRecepientConfirmHandler(el, val) {
-      el.isFeeRecepientBoxActive = false;
-      this.feeRecepientAddress = val;
-      console.log(this.feeRecepientAddress);
-      // put the fee recepient func here
+    async feeRecepientConfirmHandler(key, input) {
+      key.isFeeRecepientBoxActive = false;
+      if(/0x[a-fA-F0-9]{40}/g.test(input)) {
+        await ControlService.setFeeRecipient({serviceID: key.validatorID, pubkey: key.key, address: input})
+      } else {
+        await ControlService.deleteFeeRecipient({serviceID: key.validatorID, pubkey: key.key})
+      }
     },
     renameDisplayHandler(el) {
       el.isRenameActive = true;
