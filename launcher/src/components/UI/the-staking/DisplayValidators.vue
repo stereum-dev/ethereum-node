@@ -112,9 +112,8 @@
               <div class="option-box">
                 <div class="grafiti-box">
                   <img
-                    :class="{ disabled: disable }"
                     class="grafiti-icon"
-                    src="../../../../public/img/icon/the-staking/option-graffiti.png"
+                    src="../../../../public/img/icon/the-staking/fee-recepient.png"
                     alt="icon"
                     @click="grafitiDisplayHandler(item)"
                   />

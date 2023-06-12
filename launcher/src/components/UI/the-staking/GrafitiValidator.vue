@@ -1,23 +1,29 @@
 <template>
-  <div class="grafitiRow">
+  <div class="feeRow">
     <div class="iconBox">
-      <img class="grafiti-icon" src="../../../../public/img/icon/the-staking/option-graffiti.png" alt="icon" />
+      <img class="fee-icon" src="../../../../public/img/icon/the-staking/fee-recepient.png" alt="icon" />
     </div>
     <div class="inputBox">
-      <input type="text" :placeholder="$t('grafitiMultipleValidator.textPlaceHolder')" />
+      <input v-model="enteredAddress" type="text" placeholder="0x00000000000000000000000000000000000000" />
     </div>
     <div class="confirmBox">
-      <button class="confirmBtn" @click="$emit('confirmChange')">
+      <button class="confirmBtn" @click="$emit('confirmChange', enteredAddress)">
         {{ $t("exitMultipleValidator.confirm") }}
       </button>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      enteredAddress: "",
+    };
+  },
+};
 </script>
 <style scoped>
-.grafitiRow {
+.feeRow {
   grid-column: 1/8;
   grid-row: 1;
   width: 100%;
@@ -25,7 +31,7 @@ export default {};
   display: grid;
   grid-template-columns: 5% 85% 10%;
   grid-template-rows: 1fr;
-  background-color: #723979;
+  background-color: #4d56cb;
   border-radius: 50px;
   position: absolute;
   z-index: 1000;
@@ -49,7 +55,7 @@ export default {};
   grid-column: 2/3;
   grid-row: 1;
   width: 100%;
-  height: 100%;
+  height: 98%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -59,7 +65,7 @@ export default {};
   height: 95%;
   padding: 0;
   padding-left: 10px;
-  background-color: #3d0444;
+  background-color: rgba(29, 37, 147, 0.5);
   border: 1px solid #958797;
   border-radius: 35px;
   color: #958797;
