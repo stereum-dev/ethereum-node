@@ -115,7 +115,7 @@
                     class="grafiti-icon"
                     src="../../../../public/img/icon/the-staking/fee-recepient.png"
                     alt="icon"
-                    @click="grafitiDisplayHandler(item)"
+                    @click="feeRecepientDisplayHandler(item)"
                   />
                 </div>
                 <div class="copy-box">
@@ -155,13 +155,21 @@
                 </div>
               </div>
             </div>
+            <FeeRecepientValidator
+              v-if="item.isFeeRecepientBoxActive"
+              @confirm-change="
+                (enteredAddress) => {
+                  feeRecepientConfirmHandler(item, enteredAddress);
+                }
+              "
+            />
             <RenameValidator
               v-if="item.isRenameActive"
               :item="item"
               @change-name="renameValidatorHandler"
               @close-rename="closeRenameHandler"
             />
-            <GrafitiValidator v-if="item.isGrafitiBoxActive" @confirm-change="grafitiConfirmHandler(item)" />
+
             <ExitValidator
               v-if="item.isExitBoxActive"
               @back-btn="(item.isExitBoxActive = false), (deactiveInsertValidator = false)"
@@ -294,7 +302,7 @@
 
 <script>
 import KeyModal from "./KeyModal.vue";
-import GrafitiValidator from "./GrafitiValidator.vue";
+import FeeRecepientValidator from "./FeeRecepientValidator.vue";
 import RenameValidator from "./RenameValidator.vue";
 import ExitValidator from "./ExitValidator.vue";
 import ExitValidatorsModal from "./ExitValidatorsModal.vue";
@@ -323,7 +331,7 @@ export default {
   components: {
     KeyModal,
     FeeRecipient,
-    GrafitiValidator,
+    FeeRecepientValidator,
     RenameValidator,
     ExitValidator,
     RemoveValidator,
@@ -352,7 +360,7 @@ export default {
       messageIsError: false,
       bDialogVisible: false,
       selectValidatorServiceForKey: false,
-
+      feeRecepientAddress: "",
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -494,7 +502,7 @@ export default {
   beforeMount() {
     this.keys = this.keys.map((item) => {
       return {
-        isGrafitiBoxActive: false,
+        isFeeRecepientBoxActive: false,
         isRemoveBoxActive: false,
         isRemoveModalActive: false,
         isExitBoxActive: false,
@@ -541,13 +549,16 @@ export default {
           throw err;
         });
     },
-    grafitiDisplayHandler(el) {
-      el.isGrafitiBoxActive = true;
+    feeRecepientDisplayHandler(el) {
+      el.isFeeRecepientBoxActive = true;
       el.isRemoveModalActive = true;
     },
 
-    grafitiConfirmHandler(el) {
-      el.isGrafitiBoxActive = false;
+    feeRecepientConfirmHandler(el, val) {
+      el.isFeeRecepientBoxActive = false;
+      this.feeRecepientAddress = val;
+      console.log(this.feeRecepientAddress);
+      // put the fee recepient func here
     },
     renameDisplayHandler(el) {
       el.isRenameActive = true;
