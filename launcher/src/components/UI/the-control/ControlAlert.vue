@@ -8,16 +8,16 @@
     ></update-panel>
     <div class="alert-box">
       <div class="alert-box_header">
-        <div v-if="perfect" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: perfect }">
           <img src="../../../../public/img/icon/control/NOTIFICATION_GRUN.png" alt="green" />
         </div>
-        <div v-if="warning" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: warning }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_GELB.png" alt="green" />
         </div>
-        <div v-if="alarm" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: alarm }">
           <img src="../../../../public/img/icon/control/WARNSCHILD_ROT.png" alt="green" />
         </div>
-        <div v-if="notification" class="icon_alarm">
+        <div class="icon_alarm" :class="{ active: notification }">
           <img src="../../../../public/img/icon/control/SETTINGS.png" alt="green" />
         </div>
       </div>
@@ -27,7 +27,6 @@
             <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_storage.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>LOW STORAGE SPACE</span></div>
             <div class="val-message">{{ availDisk }} GB Free</div>
           </div>
@@ -37,7 +36,6 @@
             <img src="../../../../public/img/icon/control/WARNSCHILD_GELB_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="warning"><span>WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
             <div class="val-message">
               <span> > {{ cpu }}%</span>
@@ -49,7 +47,6 @@
             <img src="../../../../public/img/icon/control/red_warning_cpu.png" alt="warn_storage" />
           </div>
           <div class="message">
-            <div class="warning"><span>CRITICAL WARNING</span></div>
             <div class="main-message"><span>CPU USAGE</span></div>
             <div class="val-message">
               <span> > {{ cpu }}%</span>
@@ -65,8 +62,18 @@
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
           </div> -->
           <div class="message">
-            <div class="warning"><span>CRITICAL WARNING</span></div>
             <div class="main-message"><span>MISSED ATTESTATION</span></div>
+          </div>
+        </div>
+        <div v-for="validator in notSetAddresses" :key="validator" class="alert-message_red">
+          <div class="icon-box">
+            <img :src="validator.icon" />
+          </div>
+          <div class="message">
+            <div class="main-message"><span>no fee recipient</span></div>
+            <div class="val-message">
+              <span> > {{ validator.name }} vc</span>
+            </div>
           </div>
         </div>
         <transition>
@@ -76,7 +83,6 @@
                 <img src="../../../../public/img/icon/control/logo-icon.png" alt="warn_storage" />
               </div>
               <div class="message-box" @click="showUpdate">
-                <div class="warning"><span>NOTIFICATION</span></div>
                 <div class="main-message"><span>STEREUM UPDATE</span></div>
                 <div class="val-message">
                   <span>{{ stereumUpdate.version }}</span>
@@ -94,10 +100,12 @@
 </template>
 
 <script>
+import ControlService from "@/store/ControlService";
 import UpdatePanel from "../node-header/UpdatePanel.vue";
 import { useControlStore } from "../../../store/theControl";
 import { mapWritableState } from "pinia";
 import { useNodeHeader } from "@/store/nodeHeader";
+import { useServices } from "@/store/services";
 export default {
   components: {
     UpdatePanel,
@@ -115,6 +123,7 @@ export default {
       newUpdate: false,
       missedAttest: false,
       closeNotif: false,
+      notSetAddresses: [],
     };
   },
   computed: {
@@ -131,6 +140,9 @@ export default {
     usedPercInt() {
       return parseInt(this.usedPerc);
     },
+    ...mapWritableState(useServices, {
+      installedServices: "installedServices",
+    }),
   },
   watch: {
     usedPercInt() {
@@ -160,6 +172,15 @@ export default {
       }
     },
   },
+  mounted() {
+    this.readService();
+    this.polling = setInterval(() => {
+      this.readService();
+    }, 10000);
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
+  },
   created() {
     this.storageCheck();
     this.cpuMeth();
@@ -167,6 +188,39 @@ export default {
     this.notifHandler();
   },
   methods: {
+    async readService() {
+      const validators = this.installedServices.filter((i) => i.category === "validator");
+
+      if (validators && validators.length > 0 && validators[0].config) {
+        const addresses = [];
+
+        for (const validator of validators) {
+          if (validator.name === "ssv.network" || validator.name === "Obol Charon") {
+            continue;
+          }
+          if (!validator.yaml) validator.yaml = await ControlService.getServiceYAML(validator.config.serviceID);
+          const patternIndex = validator.expertOptions.findIndex((o) => o.title === "Default Fee Recipient");
+          if (patternIndex === -1) {
+            continue;
+          }
+          const pattern = validator.expertOptions[patternIndex].pattern;
+          const match = [...validator.yaml.match(new RegExp(pattern))][2];
+          if (match) {
+            const address = match;
+            addresses.push({ name: validator.name, address: address, icon: validator.sIcon });
+          } else {
+            console.error(
+              "Could not find default-fee-recipient address in the service YAML for validator:",
+              validator.name
+            );
+          }
+        }
+        const notSetAddresses = addresses.filter(
+          (validator) => validator.address === "0x0000000000000000000000000000000000000000"
+        );
+        this.notSetAddresses = notSetAddresses;
+      }
+    },
     closeNotification() {
       this.notification = false;
     },
@@ -299,6 +353,10 @@ export default {
   align-items: center;
   box-sizing: border-box;
   margin: 0 1.5px;
+  opacity: 25%;
+}
+.active {
+  opacity: 100%;
 }
 .icon_alarm img {
   width: 100%;
@@ -379,24 +437,25 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   flex-direction: column;
-}
-.warning {
-  display: flex;
-  width: 80%;
-  height: 10%;
-  font-size: 10%;
   justify-content: flex-start;
-  align-items: center;
-  font-weight: 500;
 }
+
 .main-message {
   display: flex;
   width: 95%;
-  height: 50%;
+  height: 100%;
+  justify-content: center;
+  align-items: flex-start;
+  font-size: 48%;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.main-message span {
+  display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 40%;
-  font-weight: 800;
+  width: 100%;
+  height: 100%;
 }
 .val-message {
   display: flex;
@@ -404,7 +463,8 @@ export default {
   height: 35%;
   justify-content: flex-start;
   align-items: center;
-  font-size: 45%;
-  font-weight: 800;
+  font-size: 55%;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 </style>

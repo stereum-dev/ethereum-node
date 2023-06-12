@@ -1,5 +1,5 @@
 <template>
-  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @execute-installation="runInstalltion">
+  <installation-box :title="title" :back="back" :icon="selectedPreset.icon" @run-install="runInstalltion">
     <div class="verify-parent">
       <div class="content-box">
         <div class="table-box">
@@ -35,11 +35,7 @@ import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
 import { useNodeHeader } from "@/store/nodeHeader";
 import ControlService from "@/store/ControlService";
-import InstallationBox from "./InstallationBox.vue";
 export default {
-  components: {
-    InstallationBox,
-  },
   data() {
     return {
       back: "sync",

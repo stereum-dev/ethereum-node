@@ -76,7 +76,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         },
         {
           id: 3,
-          name: "obol ssv",
+          name: "obol",
           defaultPath: "/opt/stereum",
           icon: "/img/icon/click-installation/OBOL_SSV.png",
           includedPlugins: [],
@@ -112,6 +112,10 @@ export const useClickInstall = defineStore("clickInstallation", {
         { id: 1, src: "/animation/custom-start.gif", alt: "Animation", display: false },
         { id: 2, src: "/animation/custom-loop.gif", alt: "Animation", display: false },
       ],
+      unzippedData: [],
+      configServices: [],
+      removedServices: [],
+      configNetwork: {},
       mainnet: [
         "https://mainnet-checkpoint-sync.attestant.io/",
         "https://beaconstate-mainnet.chainsafe.io/",

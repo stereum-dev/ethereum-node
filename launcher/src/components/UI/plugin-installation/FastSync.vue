@@ -60,11 +60,9 @@
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
 import { useServices } from "@/store/services";
-import InstallationBox from "./InstallationBox.vue";
 import ConsensusSync from "./ConsensusSync.vue";
 export default {
   components: {
-    InstallationBox,
     ConsensusSync,
   },
   data() {

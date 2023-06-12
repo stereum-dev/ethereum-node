@@ -214,7 +214,7 @@ export default {
         installDir: this.installationPath ? this.installationPath : "/opt/stereum",
         port: parseInt(this.port),
         executionClients: dependencies.filter((s) => s.category === "execution"),
-        beaconServices: dependencies.filter((s) => s.category === "consensus"),
+        beaconServices: dependencies.filter((s) => s.category === "consensus" || s.service === "CharonService"),
         checkpointURL: this.checkPointSync ? this.checkPointSync : false,
         relays: this.checkedRelays.map((r) => r[this.configNetwork.network.toLowerCase()]).join(),
       });
@@ -238,7 +238,7 @@ export default {
       if (this.items.category === "consensus") {
         this.options = this.newConfiguration.filter((service) => service.category === "execution");
       } else if (this.items.category === "validator") {
-        this.options = this.newConfiguration.filter((service) => service.category === "consensus");
+        this.options = this.newConfiguration.filter((service) => service.category === "consensus" || (service.service === "CharonService" && this.items.service !== "CharonService"));
       } else if (this.items.service === "FlashbotsMevBoostService") {
         this.options = this.newConfiguration.filter((service) => service.category === "consensus");
       } else {

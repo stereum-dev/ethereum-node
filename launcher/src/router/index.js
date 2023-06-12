@@ -13,10 +13,14 @@ import PluginName from "../components/UI/plugin-installation/PluginName.vue";
 import VerifyInstallation from "../components/UI/plugin-installation/VerifyInstallation.vue";
 import MevboostConfig from "../components/UI/plugin-installation/MevboostConfig.vue";
 import CustomInstall from "../pages/CustomInstall.vue";
-import UploadConfig from "../components/UI/plugin-installation/UploadConfig.vue";
+import UploadConfig from "../components/UI/plugin-installation/import-config/UploadConfig.vue";
 import FastSync from "../components/UI/plugin-installation/FastSync.vue";
 import InstallingAnimation from "../components/UI/plugin-installation/InstallingAnimation.vue";
 import CustomAnim from "../components/UI/custom-installation/CustomAnim.vue";
+import ImportingVerify from "../components/UI/plugin-installation/import-config/ImportingVerify.vue";
+import ImportingList from "../components/UI/plugin-installation/import-config/ImportingList.vue";
+import ImportingSyncing from "../components/UI/plugin-installation/import-config/ImportingSyncing.vue";
+import ImportingAnimation from "../components/UI/plugin-installation/import-config/ImportingAnimation.vue";
 
 const routes = [
   {
@@ -80,6 +84,7 @@ const routes = [
     name: "MevboostConfig",
     component: MevboostConfig,
   },
+
   // {
   //   path: "/videos",
   //   name: "TheVideos",
@@ -116,9 +121,29 @@ const routes = [
     component: CustomAnim,
   },
   {
-    path: "/upload",
+    path: "/uploadConfig",
     name: "UploadConfig",
     component: UploadConfig,
+  },
+  {
+    path: "/importingList",
+    name: "ImportingList",
+    component: ImportingList,
+  },
+  {
+    path: "/importingSyncing",
+    name: "ImportingSyncing",
+    component: ImportingSyncing,
+  },
+  {
+    path: "/importingVerify",
+    name: "ImportingVerify",
+    component: ImportingVerify,
+  },
+  {
+    path: "/importingAnimation",
+    name: "ImportingAnimation",
+    component: ImportingAnimation,
   },
 ];
 

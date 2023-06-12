@@ -44,7 +44,7 @@
             <span v-if="exitInfo">withdraw Logs </span>
           </div>
           <div v-if="importIsProcessing" class="processImg">
-            <img src="/img/icon/the-staking/validator-import.gif" alt="icon" />
+            <img src="/img/icon/the-staking/alice.gif" alt="icon" />
           </div>
           <div v-if="importIsProcessing" class="import-message">
             <span>{{ $t("displayValidator.waitMessage") }}</span>
@@ -102,7 +102,6 @@
             <div class="rowContent">
               <div class="circle"><img :src="keyIconPicker" alt="keyIcon" /></div>
               <span v-if="item.displayName" class="category">{{ item.displayName }}</span>
-
               <span v-else class="category" @click="logEvent"
                 >{{ item.key.substring(0, 20) }}...{{ item.key.substring(item.key.length - 6, item.key.length) }}</span
               >
@@ -293,6 +292,7 @@
     <DisabledStaking v-if="stakingIsDisabled" />
   </div>
 </template>
+
 <script>
 import KeyModal from "./KeyModal.vue";
 import GrafitiValidator from "./GrafitiValidator.vue";
@@ -311,6 +311,7 @@ import { mapWritableState, mapState } from "pinia";
 import { useServices } from "@/store/services";
 import { useStakingStore } from "@/store/theStaking";
 import { useNodeManage } from "@/store/nodeManage";
+import { useNodeHeader } from "../../../store/nodeHeader";
 import axios from "axios";
 import GrafitiMultipleValidators from "./GrafitiMultipleValidators.vue";
 import RemoveMultipleValidators from "./RemoveMultipleValidators.vue";
@@ -351,11 +352,8 @@ export default {
       message: "",
       messageIsError: false,
       bDialogVisible: false,
-      isDragOver: false,
-      keyFiles: [],
-      importValidatorKeyActive: true,
       selectValidatorServiceForKey: false,
-      passwordInputActive: false,
+
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -374,7 +372,7 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
-      selectedService: {},
+
       ImportSlashingActive: false,
       slashingDB: "",
       keyIcon: {
@@ -382,7 +380,6 @@ export default {
         remoteKey: "./img/icon/the-staking/remotekey.svg",
       },
       keyType: true,
-
       searchBoxActive: false,
       searchModel: "",
       isPubkeyVisible: false,
@@ -392,11 +389,24 @@ export default {
     };
   },
   computed: {
+    ...mapWritableState(useNodeHeader, {
+      stakeGuide: "stakeGuide",
+      stakeFirstStep: "stakeFirstStep",
+      stakeSecondStep: "stakeSecondStep",
+      stakeThirdStep: "stakeThirdStep",
+      goForStake: "goForStake",
+      stakeBtn: "stakeBtn",
+      insertVal: "insertVal",
+      insertKeyBoxActive: "insertKeyBoxActive",
+      stakeCongrats: "stakeCongrats",
+    }),
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
       selectedIcon: "selectedIcon",
       buttonState: "buttonState",
+      importValidatorKeyActive: "importValidatorKeyActive",
+      passwordInputActive: "passwordInputActive",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
@@ -412,6 +422,14 @@ export default {
       removeForMultiValidatorsActive: "removeForMultiValidatorsActive",
       grafitiForMultiValidatorsActive: "grafitiForMultiValidatorsActive",
       display: "display",
+      isDragOver: "isDragOver",
+      keyFiles: "keyFiles",
+      selectedService: "selectedService",
+      dragStep: "dragStep",
+      clickService: "clickService",
+      modalGuide: "modalGuide",
+      passPointer: "passPointer",
+      keyCounter: "keyCounter",
     }),
     importingErrorMessage() {
       return {
@@ -449,7 +467,7 @@ export default {
       immediate: true,
       handler(val) {
         const hasMatchingIcon = this.keys.some((item) => item.icon === val);
-
+        this.keyCounter = this.keys.filter((key) => key.icon === val).length;
         this.display = !hasMatchingIcon;
       },
     },
@@ -464,6 +482,7 @@ export default {
         }
       },
     },
+
     // filteredKey(out) {
     //   if (out !== "") {
     //     return this.keys.filter((k) => k.key.toLowerCase().includes(out.toLowerCase()));
@@ -489,6 +508,7 @@ export default {
     });
   },
   mounted() {
+    this.keyCounter = this.keys.filter((key) => key.icon === this.selectedIcon).length;
     this.checkValidatorClientsExist();
     this.listKeys();
     this.polling = setInterval(this.updateValidatorStats, 384000); //refresh validator account stats
@@ -598,6 +618,7 @@ export default {
       this.importIsDone = false;
       this.exitInfo = false;
       this.password = val;
+
       this.checkActiveValidatorsResponse = await ControlService.checkActiveValidators({
         files: this.keyFiles,
         password: this.password,
@@ -847,20 +868,26 @@ export default {
         this.insertKeyBoxActive = false;
         this.selectValidatorServiceForKey = true;
         this.isDragOver = false;
+        this.dragStep = true;
+        this.clickService = true;
       }
     },
     dropFileHandler(event) {
       let validator = this.installedServices.filter((s) => s.service.includes("Validator"));
       if (validator && validator.map((e) => e.state).includes("running")) {
         let droppedFiles = event.dataTransfer.files;
+
         if (droppedFiles[0]["type"] === "application/json") {
           this.keyFiles.push(...droppedFiles);
+
           this.importValidatorKeyActive = false;
           this.insertKeyBoxActive = false;
           this.selectValidatorServiceForKey = true;
         }
       }
       this.isDragOver = false;
+      this.dragStep = true;
+      this.clickService = true;
     },
     removeKeyHandler(item) {
       this.keyFiles = this.keyFiles.filter((el) => el.name != item.name);
@@ -877,6 +904,21 @@ export default {
     //Confirm buttons functions
     confirmPasswordHandler() {
       this.passwordInputActive = true;
+      this.passPointer = false;
+      this.importValidatorKeyActive = false;
+      this.stakeGuide = false;
+      this.clickService = false;
+      this.modalGuide = false;
+      this.stakeThirdStep = false;
+      this.stakeFirstStep = true;
+      this.stakeSecondStep = false;
+      this.stakeThirdStep = false;
+      this.goForStake = false;
+      this.insertVal = false;
+      this.stakeBtn = false;
+      this.clickService = false;
+      this.dragStep = false;
+      this.stakeCongrats = false;
     },
 
     checkKeyExists() {
@@ -900,7 +942,7 @@ export default {
       this.importKey(this.password);
     },
     async confirmEnteredGrafiti(graffiti) {
-      await ControlService.setGraffitis({id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti});
+      await ControlService.setGraffitis({ id: this.selectedValdiatorService.config.serviceID, graffiti: graffiti });
       this.grafitiForMultiValidatorsActive = false;
       this.insertKeyBoxActive = true;
     },
@@ -935,6 +977,9 @@ export default {
       this.selectedService = service;
       this.selectValidatorServiceForKey = false;
       this.ImportSlashingActive = true;
+      this.dragStep = true;
+      this.clickService = false;
+      this.modalGuide = true;
     },
 
     copyHandler(item) {
@@ -961,6 +1006,8 @@ export default {
       }
       this.ImportSlashingActive = false;
       this.enterPasswordBox = true;
+      this.modalGuide = false;
+      this.passPointer = true;
     },
     openSearchBox() {
       if (this.keys.length > 0) {
@@ -1195,8 +1242,8 @@ remove-validator {
 
 .tableRow .circle {
   grid-column: 1;
-  width: 80%;
-  height: 70%;
+  width: 90%;
+  height: 74%;
   border-radius: 50%;
   background-color: #bebebe;
   margin: 0 5px;
@@ -1206,7 +1253,7 @@ remove-validator {
   align-items: center;
 }
 .circle img {
-  width: 80%;
+  width: 71%;
 }
 
 .tableRow .category {
@@ -1483,44 +1530,42 @@ remove-validator {
 }
 
 .processImg {
-  width: 80%;
+  width: 95%;
   height: 30%;
   margin: 0 auto;
   position: relative;
-  border-bottom: 1px solid gray;
+  padding: 0 10px;
+  border-bottom: 1px solid rgb(65, 72, 76);
 }
 
 .processImg img {
-  width: 80px;
-  height: 55px;
+  width: 150px;
+  height: 100px;
   position: absolute;
-  animation: move 5s linear infinite;
+  animation: move 3s linear infinite;
 }
 
 @keyframes move {
   0% {
-    left: 0%;
-    bottom: -3px;
+    left: -5%;
+    bottom: 5px;
   }
-
   25% {
-    left: 20%;
-    bottom: -3px;
+    left: 20.5%;
+    bottom: -10px;
   }
-
   50% {
-    left: 40%;
-    bottom: -3px;
+    left: 41%;
+    bottom: 5px;
   }
 
   75% {
-    left: 62%;
-    bottom: -3px;
+    left: 61.5%;
+    bottom: -10px;
   }
-
   100% {
-    left: 85%;
-    bottom: -3px;
+    left: 77%;
+    bottom: 5px;
   }
 }
 
@@ -1529,17 +1574,15 @@ remove-validator {
   height: 70%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   overflow: hidden;
 }
 
 .import-message span {
-  width: 90%;
-  height: 90%;
-  margin: 0 auto;
+  margin: 10px auto;
   color: rgb(156, 156, 156);
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: 500;
   margin-bottom: 10px;
   text-overflow: clip;

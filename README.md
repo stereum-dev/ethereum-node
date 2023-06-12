@@ -1,4 +1,5 @@
-![GitHub - Stereum 2 0 - ReadMe](https://user-images.githubusercontent.com/82385103/175423093-03d28d7b-3c2e-44b7-8be1-7f2a5946fcc6.png)
+![GitHub_Stereum_Banner](https://github.com/stereum-dev/ethereum-node/assets/82385103/cf94018a-b926-4fbe-aec8-ceef587053ff)
+
 
 ---
 

@@ -233,16 +233,16 @@ export default {
   },
   methods: {
     exportData() {
-      const zip = new JSZip();
-
-      this.stereumConfig.forEach((item) => {
-        const yamlData = item.content.trim();
-        zip.file(item.filename, yamlData);
-      });
-
-      zip.generateAsync({ type: "blob" }).then(function (blob) {
-        saveAs(blob, "stereum_config.zip");
-      });
+      if(this.stereumConfig.length > 0){
+        const zip = new JSZip();
+        this.stereumConfig.forEach((item) => {
+          zip.file(item.filename, item.content);
+        });
+  
+        zip.generateAsync({ type: "blob" }).then(function (blob) {
+          saveAs(blob, "stereum_config.zip");
+        });
+      }
     },
 
     async exportConfig() {

@@ -3,6 +3,8 @@ export const useServices = defineStore("services", {
   state: () => {
     return {
       selectedIcon: "",
+      importValidatorKeyActive: true,
+      passwordInputActive: false,
       buttonState: [
         {
           id: 1,
@@ -264,7 +266,7 @@ export const useServices = defineStore("services", {
               changeValue: null,
               icon: "/img/icon/plugin-menu-icons/fee.png",
               pattern: "(- --suggested-fee-recipient=)(.*)(\\n)",
-            }
+            },
           ],
           drag: true,
           state: "exited",
@@ -306,7 +308,7 @@ export const useServices = defineStore("services", {
               icon: "/img/icon/plugin-menu-icons/ram.png",
               unit: "GB",
               pattern: "(JAVA_OPTS: -Xmx)(\\d+)(g)",
-            }
+            },
             // {
             //   title: "Resync",
             //   type: "action",
@@ -921,6 +923,39 @@ export const useServices = defineStore("services", {
           linkUrl: "",
           docsUrl: "https://github.com/lidofinance/lido-keys-api",
           headerOption: false,
+          expertOptionsModal: false,
+          expertOptions: [],
+          drag: true,
+          state: "exited",
+          config: {
+            serviceID: "",
+            configVersion: "",
+            image: "",
+            imageVersion: "",
+            ports: [],
+            volumes: [],
+            network: "",
+          },
+        },
+        {
+          id: 24,
+          name: "Obol Charon",
+          service: "CharonService",
+          category: "validator",
+          displayCategory: "vlc",
+          displayTooltip: false,
+          displayPluginMenu: false,
+          serviceIsPending: false,
+          modifierPanel: false,
+          replacePanel: false,
+          addPanel: false,
+          path: "/charon",
+          icon: require("../../public/img/icon/plugin-icons/validator/ObolCharon.png"),
+          sIcon: require("../../public/img/icon/plugin-icons/validator/ObolCharon-s.png"),
+          hIcon: require("../../public/img/icon/plugin-icons/validator/ObolCharon-s.png"),
+          linkUrl: "",
+          docsUrl: "https://docs.obol.tech/docs/intro",
+          headerOption: true,
           expertOptionsModal: false,
           expertOptions: [],
           drag: true,

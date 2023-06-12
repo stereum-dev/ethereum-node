@@ -86,6 +86,8 @@ export class OneClickInstall {
     this.network = undefined;
     this.mevboost = undefined;
     this.needsKeystore = [];
+    this.extraServices = [];
+    this.notToStart = [];
   }
 
   getConfigurations() {
@@ -100,7 +102,7 @@ export class OneClickInstall {
     );
     if (this.mevboost) serviceList.push(this.mevboost.buildConfiguration());
     if (this.validatorService) serviceList.push(this.validatorService.buildConfiguration());
-
+    if (this.extraServices) this.extraServices.forEach((service) => serviceList.push(service.buildConfiguration()));
     return serviceList;
   }
 
@@ -143,19 +145,9 @@ export class OneClickInstall {
       this.beaconService = this.serviceManager.getService("LighthouseBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
 
-    if (constellation.includes("LighthouseValidatorService")) {
-      //LighthouseValidatorService
-      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, beaconServices: [this.beaconService] })
-    }
-
     if (constellation.includes("LodestarBeaconService")) {
       //LodestarBeaconService
       this.beaconService = this.serviceManager.getService("LodestarBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-    }
-
-    if (constellation.includes("LodestarValidatorService")) {
-      //LodestarValidatorService
-      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, beaconServices: [this.beaconService] })
     }
 
     if (constellation.includes("PrysmBeaconService")) {
@@ -163,30 +155,50 @@ export class OneClickInstall {
       this.beaconService = this.serviceManager.getService("PrysmBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
 
-    if (constellation.includes("PrysmValidatorService")) {
-      //PrysmValidatorService
-      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, beaconServices: [this.beaconService] })
-    }
-
     if (constellation.includes("NimbusBeaconService")) {
       //NimbusBeaconService
       this.beaconService = this.serviceManager.getService("NimbusBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
-    }
-
-    if (constellation.includes("NimbusValidatorService")) {
-      //NimbusBeaconService
-      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [this.beaconService] })
-      this.needsKeystore.push(this.validatorService)
     }
 
     if (constellation.includes("TekuBeaconService")) {
       //TekuBeaconService
       this.beaconService = this.serviceManager.getService("TekuBeaconService", { ...args, executionClients: [this.executionClient], ...(this.mevboost && { mevboost: [this.mevboost] }) })
     }
+    let charon = undefined
+    if (constellation.includes("CharonService")) {
+      //SSVNetworkService
+      charon = this.serviceManager.getService("CharonService", { ...args, beaconServices: [this.beaconService] })
+
+      this.extraServices.push(charon)
+      this.notToStart.push(charon.id)
+    }
+
+    if (constellation.includes("LighthouseValidatorService")) {
+      //LighthouseValidatorService
+      this.validatorService = this.serviceManager.getService("LighthouseValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+    if (constellation.includes("LodestarValidatorService")) {
+      //LodestarValidatorService
+      this.validatorService = this.serviceManager.getService("LodestarValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+    if (constellation.includes("PrysmValidatorService")) {
+      //PrysmValidatorService
+      this.validatorService = this.serviceManager.getService("PrysmValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+    }
+
+
+    if (constellation.includes("NimbusValidatorService")) {
+      //NimbusBeaconService
+      this.validatorService = this.serviceManager.getService("NimbusValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
+      this.needsKeystore.push(this.validatorService)
+    }
+
 
     if (constellation.includes("TekuValidatorService")) {
       //TekuBeaconService
-      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [this.beaconService] })
+      this.validatorService = this.serviceManager.getService("TekuValidatorService", { ...args, beaconServices: [charon ? charon : this.beaconService] })
       this.needsKeystore.push(this.validatorService)
     }
 
@@ -195,6 +207,7 @@ export class OneClickInstall {
       this.validatorService = this.serviceManager.getService("SSVNetworkService", { ...args, beaconServices: [this.beaconService], executionClients: [this.executionClient] })
       this.needsKeystore.push(this.validatorService)
     }
+
 
     this.prometheusNodeExporter = this.serviceManager.getService("PrometheusNodeExporterService", args)
     this.prometheus = this.serviceManager.getService("PrometheusService", args)
@@ -254,7 +267,7 @@ export class OneClickInstall {
   }
 
   async startServices() {
-    const services = this.getConfigurations();
+    const services = this.getConfigurations().filter(s => !this.notToStart.includes(s.id))
     const runRefs = [];
     if (services[0] !== undefined) {
       await Promise.all(
@@ -299,8 +312,8 @@ export class OneClickInstall {
       case "ssv.network":
         services.push("SSVNetworkService");
         break;
-      case "obol ssv":
-        services.push("OBOLSSV");
+      case "obol":
+        services = ["GethService", "LighthouseBeaconService", "TekuValidatorService", "CharonService", "GrafanaService", "PrometheusNodeExporterService", "PrometheusService", "NotificationService"];
         break;
       case "rocketpool":
         services.push("ROCKETPOOL");
