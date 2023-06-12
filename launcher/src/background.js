@@ -315,8 +315,16 @@ ipcMain.handle("refreshServiceInfos", async () => {
   return await monitoring.refreshServiceInfos();
 });
 
-ipcMain.handle("addFeeRecipient", async (event, args) => {
-  return await validatorAccountManager.addFeeRecipient(args.keys, args.address);
+ipcMain.handle("getFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.getFeeRecipient(args.serviceID, args.pubkey);
+});
+
+ipcMain.handle("setFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.setFeeRecipient(args.serviceID, args.pubkey, args.address);
+});
+
+ipcMain.handle("deleteFeeRecipient", async (event, args) => {
+  return await validatorAccountManager.deleteFeeRecipient(args.serviceID, args.pubkey);
 });
 
 ipcMain.handle("getOperatorPageURL", async (event, args) => {
