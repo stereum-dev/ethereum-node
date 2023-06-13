@@ -54,8 +54,19 @@
                   <span>{{ Stype.name }}</span>
                   <span>{{ Stype.type }}</span>
                 </div>
-                <div class="inputBox_select">
-                  <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select">
+                <div class="inputBox_select-box">
+                  <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="tglDropdown">
+                    {{ selectedItem }}
+                  </div>
+                  <div v-else class="wrapper" @click="tglDropdown">
+                    <div v-if="selectedIcon !== ''" class="icon-box">
+                      <img :src="selectedIcon" :alt="selectedItem" />
+                    </div>
+                    <div v-if="selectedIcon !== ''" class="selected-item">{{ selectedItem }}</div>
+                    <div v-else class="w-selected">{{ selectedItem }}</div>
+                  </div>
+                </div>
+                <!-- <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select">
                     {{ selectedItem }}
                   </div>
                   <div v-else class="select">
@@ -67,8 +78,7 @@
                   <div class="triangle" @click="tglDropdown">
                     <i v-if="drpDown" class="arrow up"></i>
                     <i v-else class="arrow down"></i>
-                  </div>
-                </div>
+                  </div> -->
               </div>
             </div>
           </slide>
@@ -218,6 +228,86 @@ export default {
 </script>
 
 <style scoped>
+.inputBox_select-box {
+  width: 59%;
+  height: 120%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.icon-box {
+  width: 25%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid rgb(161, 161, 161);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.icon-box img {
+  width: 95%;
+  height: 95%;
+}
+.selected-item {
+  width: 60%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #a1a1a1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.w-selected {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #c1c1c1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.select-button {
+  border: none;
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+  color: #c1c1c1;
+  background: #151a1e;
+  font-size: 80%;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-button:hover {
+  border: none;
+  color: #c1c1c1;
+  box-sizing: border-box;
+  border: 2px solid #c1c1c1;
+}
+
 .select span {
   display: flex;
   width: 55%;
