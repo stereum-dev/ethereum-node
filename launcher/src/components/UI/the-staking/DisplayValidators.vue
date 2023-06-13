@@ -353,7 +353,6 @@ export default {
       messageIsError: false,
       bDialogVisible: false,
       selectValidatorServiceForKey: false,
-
       feeRecipientBoxActive: false,
       feeInputActive: false,
       importIsProcessing: true, //it has to change to true
@@ -372,7 +371,6 @@ export default {
       exitedStatusIcon: "/img/icon/the-staking/Validatorkey_Status_Exited.png",
       apiProblems: "/img/icon/the-staking/State_Icon.png",
       apiLoading: "/img/icon/task-manager-icons/turning_circle.gif",
-
       ImportSlashingActive: false,
       slashingDB: "",
       keyIcon: {
@@ -403,15 +401,15 @@ export default {
     ...mapWritableState(useServices, {
       installedServices: "installedServices",
       runningServices: "runningServices",
-      selectedIcon: "selectedIcon",
       buttonState: "buttonState",
-      importValidatorKeyActive: "importValidatorKeyActive",
-      passwordInputActive: "passwordInputActive",
     }),
     ...mapState(useNodeManage, {
       currentNetwork: "currentNetwork",
     }),
     ...mapWritableState(useStakingStore, {
+      importValidatorKeyActive: "importValidatorKeyActive",
+      passwordInputActive: "passwordInputActive",
+      selectedIcon: "selectedIcon",
       selectedValdiatorService: "selectedValdiatorService",
       totalBalance: "totalBalance",
       keys: "keys",
@@ -751,6 +749,7 @@ export default {
                   activeSince: "-",
                   status: "loading",
                   balance: "-",
+                  network: client.config.network
                 };
               })
             );
@@ -815,7 +814,7 @@ export default {
           let now = new Date();
           latestEpoch = latestEpoch ? parseInt(latestEpoch) : parseInt(info.latestEpoch);
           let activationEpoch = parseInt(info.activationepoch);
-          if (this.currentNetwork.network === "gnosis") {
+          if (key.network === "gnosis") {
             d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 80000);
           } else {
             d.setMilliseconds(d.getMilliseconds() - (latestEpoch - activationEpoch) * 384000);

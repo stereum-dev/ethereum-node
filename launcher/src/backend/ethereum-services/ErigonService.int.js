@@ -3,38 +3,42 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceManager } from "../ServiceManager.js";
-import { ErigonService } from "./ErigonService.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
 test("erigon installation", async () => {
+  const testServer = new HetznerServer();
+  const keyResponse = await testServer.createSSHKey("Erigon--integration-test--ubuntu-2204")
+
   const serverSettings = {
     name: "Erigon--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
+    ssh_keys: [
+      keyResponse.ssh_key.id
+    ],
   };
 
-  const testServer = new HetznerServer();
   await testServer.create(serverSettings);
   log.info("Server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
     port: "22",
-    username: "root",
-    password: testServer.serverRootPassword,
-    privatekey: undefined,
+    user: "root",
+    privateKey: testServer.sshKeyPair.private,
   };
-  const nodeConnection = new NodeConnection(connectionParams);
-  const serviceManager = new ServiceManager(nodeConnection);
-  await testServer.connect(nodeConnection);
 
-  //change password
-  await testServer.passwordAuthentication(testServer.serverRootPassword);
+  const nodeConnection = new NodeConnection(connectionParams);
+  const taskManager = new TaskManager(nodeConnection);
+  const serviceManager = new ServiceManager(nodeConnection);
+  await testServer.checkServerConnection(nodeConnection);
+
+  await nodeConnection.establish(taskManager)
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -51,17 +55,11 @@ test("erigon installation", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install erigon
-  const ports = [
-    new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-    new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-  ];
-  let executionClient = ErigonService.buildByUserInput(
-    "goerli",
-    ports,
-    nodeConnection.settings.stereum.settings.controls_install_path + "/erigon"
-  );
-  //let versions = await nodeConnection.checkUpdates()
-  //executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop()
+  let executionClient = serviceManager.getService("ErigonService", { network: "goerli", installDir: "/opt/stereum" })
+
+  let versions = await nodeConnection.checkUpdates();
+  executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
 
@@ -73,10 +71,11 @@ test("erigon installation", async () => {
     await testServer.Sleep(30000);
     status = await nodeConnection.sshService.exec(`docker logs stereum-${executionClient.id}`);
     if (
+      /Starting metrics server/.test(status.stderr) &&
       /HTTP endpoint opened for Engine API/.test(status.stderr) &&
       /HTTP endpoint opened/.test(status.stderr) &&
       /Started P2P networking/.test(status.stderr) &&
-      !/ws=false/.test(status.stderr)
+      /ws=false/.test(status.stderr)
     ) {
       condition = true;
     }
@@ -86,8 +85,8 @@ test("erigon installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
+  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
   await nodeConnection.destroyNode();
-  await nodeConnection.sshService.disconnect();
   await testServer.destroy();
 
   //check ufw
@@ -102,8 +101,7 @@ test("erigon installation", async () => {
     expect((docker.stdout.match(new RegExp("Up", "g")) || []).length).toBe(1);
   }
 
-  // check if erigon service established WebSocket connection
-  // idk why but logs are stored in stderr but stdout string is empty
+  expect(status.stderr).toMatch(/Starting metrics server/);
   expect(status.stderr).toMatch(/HTTP endpoint opened for Engine API/);
   expect(status.stderr).toMatch(/HTTP endpoint opened/);
   expect(status.stderr).toMatch(/Started P2P networking/);
