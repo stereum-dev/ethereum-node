@@ -418,6 +418,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { secure: tru
 async function createWindow() {
   // Create the browser window.
 
+
   const initwin = {
     width: 1044,
     height: 609,
@@ -443,6 +444,7 @@ async function createWindow() {
   }
 
   const win = new BrowserWindow(initwin);
+  
   win.setMenuBarVisibility(false);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
