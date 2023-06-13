@@ -80,6 +80,7 @@
         <div v-if="drpDown" class="selection-column-modal">
           <ul class="link-wapper">
             <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
+              <div class="icon"><img :src="link.icon" alt="" /></div>
               <span>{{ link.name }}</span>
             </li>
           </ul>
@@ -239,7 +240,7 @@ export default {
   object-fit: contain;
 }
 .selection-column-modal {
-  width: 58%;
+  width: 32%;
   height: 50%;
   display: flex;
   background: #88a297;
@@ -250,7 +251,7 @@ export default {
   justify-content: center;
   align-items: center;
   top: 75%;
-  left: 21%;
+  left: 45%;
   z-index: 500;
 }
 .link-wapper {
@@ -268,7 +269,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  font-size: 70%;
+  font-size: 100%;
   font-weight: 600;
   padding: 1%;
   margin-bottom: 1%;
@@ -277,6 +278,17 @@ export default {
   flex-grow: 0;
   overflow-x: auto;
   cursor: pointer;
+  color: black;
+}
+.icon {
+  width: 40%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.icon img {
+  width: 60%;
 }
 .option-row:hover {
   background-color: #151a1e;
