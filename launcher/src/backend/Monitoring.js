@@ -1015,7 +1015,7 @@ export class Monitoring {
 
     // Execution clients that should be queried by RPC for chain head block
     const get_chain_head_by_rpc = [
-      // 'GethService',
+      "GethService",
       // 'BesuService',
       "NethermindService",
       "ErigonService",
