@@ -120,7 +120,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 1,
           name: "Attestant",
-          icon: "/img/icon/click-installation/attestant.png",
+          icon: "/img/icon/service-icons/attestant.png",
           url: "https://mainnet-checkpoint-sync.attestant.io/",
         },
         {
@@ -132,13 +132,13 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 3,
           name: "EthStaker",
-          icon: "/img/icon/click-installation/ethstaker.png",
+          icon: "/img/icon/service-icons/ethstaker.png",
           url: "https://beaconstate.ethstaker.cc/",
         },
         {
           id: 4,
           name: "beaconcha.in",
-          icon: "/img/icon/click-installation/beaconchain.png",
+          icon: "/img/icon/service-icons/beaconchain.png",
           url: "https://sync-mainnet.beaconcha.in/",
         },
         {
@@ -150,19 +150,19 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 6,
           name: "PietjePuk",
-          icon: "/img/icon/click-installation/pietjepuk.png",
+          icon: "/img/icon/service-icons/pietjepuk.png",
           url: "https://checkpointz.pietjepuk.net/",
         },
         {
           id: 7,
           name: "invis.tools",
-          icon: "/img/icon/click-installation/invis-tools.png",
+          icon: "/img/icon/service-icons/invis-tools.png",
           url: "https://sync.invis.tools/",
         },
         {
           id: 8,
           name: "stakely.io",
-          icon: "/img/icon/click-installation/stakely-io.png",
+          icon: "/img/icon/service-icons/stakely-io.png",
           url: "https://mainnet-checkpoint-sync.stakely.io/",
         },
 
@@ -178,31 +178,31 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 2,
           name: "invis.tools",
-          icon: "/img/icon/click-installation/invis-tools.png",
+          icon: "/img/icon/service-icons/invis-tools.png",
           url: "https://goerli-sync.invis.tools/",
         },
         {
           id: 3,
           name: "Checkpoint",
-          icon: "/img/icon/click-installation/checkpoint.png",
+          icon: "/img/icon/service-icons/checkpoint.png",
           url: "https://checkpoint-sync.goerli.ethpandaops.io/",
         },
         {
           id: 4,
           name: "beaconcha.in",
-          icon: "/img/icon/click-installation/beaconchain.png",
+          icon: "/img/icon/service-icons/beaconchain.png",
           url: "https://sync-goerli.beaconcha.in/",
         },
         {
           id: 5,
           name: "stakely.io",
-          icon: "/img/icon/click-installation/stakely-io.png",
+          icon: "/img/icon/service-icons/stakely-io.png",
           url: "https://prater-checkpoint-sync.stakely.io/",
         },
         {
           id: 6,
           name: "EthStaker",
-          icon: "/img/icon/click-installation/ethstaker.png",
+          icon: "/img/icon/service-icons/ethstaker.png",
           url: "https://goerli.beaconstate.ethstaker.cc/",
         }, //
         {
@@ -224,7 +224,7 @@ export const useClickInstall = defineStore("clickInstallation", {
         {
           id: 2,
           name: "Checkpoint",
-          icon: "/img/icon/click-installation/checkpoint.png",
+          icon: "/img/icon/service-icons/checkpoint.png",
           url: "https://checkpoint-sync.sepolia.ethpandaops.io/",
         },
         // "https://sepolia.beaconstate.info/",

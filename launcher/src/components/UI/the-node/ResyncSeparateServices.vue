@@ -55,8 +55,14 @@
                   <span>{{ Stype.type }}</span>
                 </div>
                 <div class="inputBox_select">
-                  <div class="select">
+                  <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select">
                     {{ selectedItem }}
+                  </div>
+                  <div v-else class="select">
+                    <div class="selected-icon">
+                      <img v-if="selectedIcon !== ''" :src="selectedIcon" :alt="selectedItem" />
+                    </div>
+                    <span>{{ selectedItem }}</span>
                   </div>
                   <div class="triangle" @click="tglDropdown">
                     <i v-if="drpDown" class="arrow up"></i>
@@ -74,7 +80,7 @@
         <div v-if="drpDown" class="selection-column-modal">
           <ul class="link-wapper">
             <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-              <span>{{ link }}</span>
+              <span>{{ link.name }}</span>
             </li>
           </ul>
         </div>
@@ -117,8 +123,9 @@ export default {
       error: "",
       drpDown: false,
       selectedLinks: [],
-      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
+      selectedItem: "- SELECT A SOURCE -", // selected link to use for resync
       prevVal: 0,
+      selectedIcon: "",
     };
   },
   computed: {
@@ -181,8 +188,9 @@ export default {
       this.drpDown = !this.drpDown;
     },
     linkPicker(item) {
-      this.selectedItem = item;
-      this.checkPointSync = item;
+      this.selectedItem = item.name;
+      this.selectedIcon = item.icon;
+      this.checkPointSync = item.url;
       this.drpDown = false;
       this.btnActive = true;
     },
@@ -209,6 +217,27 @@ export default {
 </script>
 
 <style scoped>
+.select span {
+  display: flex;
+  width: 55%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  font-size: 100%;
+  font-weight: 600;
+}
+.selected-icon {
+  width: 40%;
+  height: 120%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.selected-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .selection-column-modal {
   width: 58%;
   height: 50%;
