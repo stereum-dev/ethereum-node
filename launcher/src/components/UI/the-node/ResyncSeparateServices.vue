@@ -58,30 +58,17 @@
                   <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="tglDropdown">
                     {{ selectedItem }}
                   </div>
-                  <div v-else class="wrapper" @click="tglDropdown">
-                    <div v-if="selectedIcon !== ''" class="icon-box">
+                  <div v-else class="wrapper">
+                    <div v-if="selectedIcon !== ''" class="icon-box" @click="tglDropdown">
                       <img :src="selectedIcon" :alt="selectedItem" />
                     </div>
-                    <div v-if="selectedIcon !== ''" class="selected-item">{{ selectedItem }}</div>
-                    <div v-else class="w-selected">{{ selectedItem }}</div>
-                    <div class="openURL">
-                      <img src="../../../../public/img/icon/service-icons/internet.png" alt="Internet" />
+                    <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
+                    <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
+                    <div class="openURL" @click="handleOpenWindow">
+                      <img src="/img/icon/service-icons/internet.png" alt="Internet" />
                     </div>
                   </div>
                 </div>
-                <!-- <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select">
-                    {{ selectedItem }}
-                  </div>
-                  <div v-else class="select">
-                    <div class="selected-icon">
-                      <img v-if="selectedIcon !== ''" :src="selectedIcon" :alt="selectedItem" />
-                    </div>
-                    <span>{{ selectedItem }}</span>
-                  </div>
-                  <div class="triangle" @click="tglDropdown">
-                    <i v-if="drpDown" class="arrow up"></i>
-                    <i v-else class="arrow down"></i>
-                  </div> -->
               </div>
             </div>
           </slide>
@@ -182,6 +169,10 @@ export default {
     this.setSelectedLinks();
   },
   methods: {
+    handleOpenWindow() {
+      let url = this.checkPointSync;
+      window.open(url, "_blank");
+    },
     async resync(el) {
       this.resyncSeparateModal = false;
       await ControlService.chooseServiceAction({
@@ -249,7 +240,7 @@ export default {
   align-items: center;
 }
 .icon-box {
-  width: 22%;
+  width: 20%;
   height: 90%;
   display: flex;
   justify-content: center;
@@ -298,10 +289,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 .openURL img {
   width: 90%;
   height: 65%;
+}
+.openURL:active {
+  transform: scale(0.9);
 }
 .select-button {
   border: none;
