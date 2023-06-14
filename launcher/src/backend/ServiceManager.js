@@ -394,7 +394,7 @@ export class ServiceManager {
         break;
       case "Charon":
         filter = (e) => e.buildConsensusClientHttpEndpointUrl();
-        command = "--beacon-node-endpoints="
+        command = "--beacon-node-endpoints=";
         break;
       case "FlashbotsMevBoost":
         return dependencies.map((client) => {
@@ -573,6 +573,75 @@ export class ServiceManager {
       service: task.service.config.serviceID,
     });
   }
+
+  async switchServices(switchTask) {
+    let services = await this.readServiceConfigurations();
+
+    let previousService = services.filter((service) => service.id === switchTask.service.config.serviceID);
+    previousService = previousService[0];
+    let servicesBelow = [];
+    switch (switchTask.service.category) {
+      case "execution":
+        services.forEach((service) => {
+          service.dependencies.executionClients.forEach((dependingOn) => {
+            if (dependingOn.id === previousService.id) {
+              servicesBelow.push(service);
+            }
+          });
+        });
+        break;
+      case "consensus":
+        switchTask.data.data.executionClients = previousService.dependencies.executionClients;
+        switchTask.data.data.mevboost = previousService.dependencies.mevboost;
+        services.forEach((service) => {
+          service.dependencies.consensusClients.forEach((dependingOn) => {
+            if (dependingOn.id === previousService.id) {
+              servicesBelow.push(service);
+            }
+          });
+        });
+        break;
+      case "validator":
+        switchTask.data.data.beaconServices = previousService.dependencies.consensusClients;
+        break;
+    }
+    try {
+      let installTask = [];
+      installTask.push({
+        service: switchTask.data.itemToInstall,
+        data: switchTask.data.data,
+      });
+
+      await this.addServices(installTask, services);
+    } catch (err) {
+      log.error("Installing Services Failed:", err);
+    }
+
+    let newServices = await this.readServiceConfigurations();
+    let newService = newServices.filter(({ id: id1 }) => !services.some(({ id: id2 }) => id2 === id1));
+    if (switchTask.service.category != "validator") {
+      servicesBelow.forEach((service) => {
+        let newDependencies = [];
+        if (switchTask.service.category === "execution") {
+          service.dependencies.executionClients.forEach((dependency) => {
+            newDependencies.push(dependency);
+          });
+        } else if (switchTask.service.category === "consensus") {
+          service.dependencies.consensusClients.forEach((dependency) => {
+            newDependencies.push(dependency);
+          });
+        }
+        newDependencies.push(newService[0]);
+        try {
+          let updatedDep = this.addDependencies(service, newDependencies);
+          this.nodeConnection.writeServiceConfiguration(updatedDep.buildConfiguration());
+        } catch (err) {
+          log.error("Dependencies Update Failed:", err);
+        }
+      });
+    }
+  }
+
   //args: network, installDir, port, executionClients, checkpointURL, beaconServices, mevboost, relays
   getService(name, args) {
     let ports;
@@ -777,15 +846,8 @@ export class ServiceManager {
           args.beaconServices
         );
       case "CharonService":
-        ports = [
-          new ServicePort(null, 3610, 3610, servicePortProtocol.tcp),
-        ];
-        return CharonService.buildByUserInput(
-          args.network,
-          ports,
-          args.installDir + "/charon",
-          args.beaconServices
-        );
+        ports = [new ServicePort(null, 3610, 3610, servicePortProtocol.tcp)];
+        return CharonService.buildByUserInput(args.network, ports, args.installDir + "/charon", args.beaconServices);
     }
   }
 
@@ -864,12 +926,18 @@ export class ServiceManager {
 
   async createKeystores(services) {
     for (const service of services) {
-      if (service.service === "NimbusValidatorService" || (service.service === "NimbusBeaconService" && service.configVersion < 2)) {
+      if (
+        service.service === "NimbusValidatorService" ||
+        (service.service === "NimbusBeaconService" && service.configVersion < 2)
+      ) {
         const valDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/validators").destinationPath;
         const token = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec(`mkdir -p ${valDir}`);
         await this.nodeConnection.sshService.exec(`echo ${token} > ${valDir}/api-token.txt`);
-      } else if (service.service === "TekuValidatorService" || (service.service === "TekuBeaconService" && service.configVersion < 2)) {
+      } else if (
+        service.service === "TekuValidatorService" ||
+        (service.service === "TekuBeaconService" && service.configVersion < 2)
+      ) {
         const dataDir = service.volumes.find((vol) => vol.servicePath === "/opt/app/data").destinationPath;
         const password = StringUtils.createRandomString();
         await this.nodeConnection.sshService.exec("apt install -y openjdk-8-jre-headless");
@@ -907,50 +975,68 @@ export class ServiceManager {
     let ELInstalls = tasks.filter((t) => t.service.category === "execution");
     ELInstalls.forEach((t) => {
       let service = this.getService(t.service.service, t.data);
-      t.service.config.serviceID = service.id;
+      if (!Object.hasOwn(t.service, "config")) {
+        t.service.id = service.id;
+      } else {
+        t.service.config.serviceID = service.id;
+      }
       newServices.push(service);
     });
     let CLInstalls = tasks.filter((t) => t.service.category === "consensus");
     CLInstalls.forEach((t) => {
       if (t.data.executionClients.length > 0) {
         t.data.executionClients = t.data.executionClients.map((ec) => {
-          let id = ec.config.serviceID;
+          let id = Object.hasOwn(ec, "config") ? ec.config.serviceID : ec.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = ELInstalls.find((el) => el.service.id === ec.id).service.config.serviceID;
+          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === ec.id).service, "config")
+            ? ELInstalls.find((el) => el.service.id === ec.id).service.config.serviceID
+            : ELInstalls.find((el) => el.service.id === ec.id).service.id;
           return newServices.find((s) => s.id === id);
         });
       }
       let service = this.getService(t.service.service, t.data);
-      t.service.config.serviceID = service.id;
+      if (!Object.hasOwn(t.service, "config")) {
+        t.service.id = service.id;
+      } else {
+        t.service.config.serviceID = service.id;
+      }
       newServices.push(service);
     });
     let VLInstalls = tasks.filter((t) => t.service.category === "validator");
     VLInstalls.forEach((t) => {
       if (t.data.beaconServices.length > 0) {
         t.data.beaconServices = t.data.beaconServices.map((bc) => {
-          let id = bc.config.serviceID;
+          let id = Object.hasOwn(bc, "config") ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID;
+          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === bc.id).service, "config")
+            ? CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID
+            : CLInstalls.find((el) => el.service.id === bc.id).service.id;
           return newServices.find((s) => s.id === id);
         });
       }
       let service = this.getService(t.service.service, t.data);
-      t.service.config.serviceID = service.id;
+      if (!Object.hasOwn(t.service, "config")) {
+        t.service.id = service.id;
+      } else {
+        t.service.config.serviceID = service.id;
+      }
       newServices.push(service);
     });
     let PInstalls = tasks.filter((t) => t.service.category === "service");
     PInstalls.forEach((t) => {
       if (t.data.beaconServices.length > 0 && t.service.service === "FlashbotsMevBoostService") {
         t.data.beaconServices = t.data.beaconServices.map((bc) => {
-          let id = bc.config.serviceID;
+          let id = Object.hasOwn(bc, "config") ? bc.config.serviceID : bc.id;
           if (id) {
             return services.find((s) => s.id === id);
           }
-          id = CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID;
+          id = Object.hasOwn(CLInstalls.find((el) => el.service.id === bc.id).service, "config")
+            ? CLInstalls.find((el) => el.service.id === bc.id).service.config.serviceID
+            : CLInstalls.find((el) => el.service.id === bc.id).service.id;
           return newServices.find((s) => s.id === id);
         });
       }
@@ -1153,12 +1239,46 @@ export class ServiceManager {
         await this.nodeConnection.restartServices(after - before);
       }
     }
+    if (jobs.includes("SWITCH CLIENT")) {
+      try {
+        let switchTasks = tasks.filter((t) => t.content === "SWITCH CLIENT");
+        let sortedTasks = [];
+        switchTasks
+          .filter((c) => c.service.category === "validator")
+          .forEach((switchTask) => {
+            sortedTasks.push(switchTask);
+          });
+        switchTasks
+          .filter((c) => c.service.category === "consensus")
+          .forEach((switchTask) => {
+            sortedTasks.push(switchTask);
+            console.log(switchTask.service.service);
+          });
+        switchTasks
+          .filter((c) => c.service.category === "execution")
+          .forEach((switchTask) => {
+            sortedTasks.push(switchTask);
+            console.log(switchTask.service.service);
+          });
+        for (const switchTask of sortedTasks) {
+          await this.switchServices(switchTask);
+        }
+        let services = await this.readServiceConfigurations();
+        await Promise.all(
+          tasks.filter(ServiceManager.uniqueByID("SWITCH CLIENT")).map((task, index, tasks) => {
+            return this.deleteService(task, tasks, services);
+          })
+        );
+      } catch (err) {
+        log.error("Switching Services Failed:", err);
+      }
+    }
   }
 
   async exportConfig() {
     let arrayOfServices = await this.nodeConnection.listServicesConfigurations();
     let serviceNameConfig = [];
-    console.log(arrayOfServices)
+    console.log(arrayOfServices);
     for (let i = 0; i < arrayOfServices.length - 1; i++) {
       let serviceObject = await this.nodeConnection.readServiceYAML(arrayOfServices[i]);
 
@@ -1172,7 +1292,7 @@ export class ServiceManager {
   }
 
   async importConfig(configFiles, removedServices, checkPointSync) {
-    let consensusClients = []
+    let consensusClients = [];
     //remove existing config files
     await this.nodeConnection.sshService.exec(`rm -rf /etc/stereum && mkdir -p /etc/stereum/services`);
 
@@ -1180,7 +1300,7 @@ export class ServiceManager {
     for (let file of configFiles.concat(removedServices)) {
       await this.nodeConnection.writeServiceYAML({ id: file.id, data: file.content, service: file.service });
       if (file.category === "consensus") {
-        consensusClients.push(file.id)
+        consensusClients.push(file.id);
       }
     }
     let services = await this.readServiceConfigurations();
@@ -1197,12 +1317,12 @@ export class ServiceManager {
       dependents.forEach((service) => {
         this.removeDependencies(service, serviceToDelete);
       });
-      services = services.filter(s => s.id !== serviceToDelete.id)
+      services = services.filter((s) => s.id !== serviceToDelete.id);
     }
 
     //Add or Remove Checkpoint Sync
-    for (let service of services.filter(s => consensusClients.includes(s.id))) {
-      this.updateSyncCommand(service, checkPointSync)
+    for (let service of services.filter((s) => consensusClients.includes(s.id))) {
+      this.updateSyncCommand(service, checkPointSync);
     }
 
     // create stereum config file
