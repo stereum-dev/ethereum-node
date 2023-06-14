@@ -90,7 +90,6 @@
 <script>
 import { mapWritableState } from "pinia";
 import { useClickInstall } from "@/store/clickInstallation";
-import { useServices } from "@/store/services";
 import { useNodeManage } from "@/store/nodeManage";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Slide, Navigation } from "vue3-carousel";
@@ -129,11 +128,9 @@ export default {
       sepolia: "sepolia",
       gnosis: "gnosis",
     }),
-    ...mapWritableState(useServices, {
-      resyncSeparateModal: "resyncSeparateModal",
-    }),
     ...mapWritableState(useNodeManage, {
       currentNetwork: "currentNetwork",
+      resyncSeparateModal: "resyncSeparateModal",
     }),
   },
   watch: {

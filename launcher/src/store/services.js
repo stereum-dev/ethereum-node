@@ -2,9 +2,6 @@ import { defineStore } from "pinia";
 export const useServices = defineStore("services", {
   state: () => {
     return {
-      selectedIcon: "",
-      importValidatorKeyActive: true,
-      passwordInputActive: false,
       buttonState: [
         {
           id: 1,
@@ -21,10 +18,6 @@ export const useServices = defineStore("services", {
           display: true,
         },
       ],
-      resyncSeparateModal: false,
-      selectedServiceToResync: {},
-      network: "",
-      options: [],
       installedServices: [],
       runningServices: [],
       allServices: [
@@ -974,7 +967,6 @@ export const useServices = defineStore("services", {
       versions: {},
       stereumVersion: {},
       launcherVersion: "",
-      latestVersion: {},
       newUpdates: [],
     };
   },

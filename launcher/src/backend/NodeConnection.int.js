@@ -3,36 +3,42 @@
  */
 import { NodeConnection } from "./NodeConnection";
 import { nodeOS } from "./NodeOS";
+import { TaskManager } from "./TaskManager";
 import { HetznerServer } from "./HetznerServer";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
 test("prepareStereumNode on ubuntu", async () => {
+  const testServer = new HetznerServer();
+  const keyResponse = await testServer.createSSHKey("NodeConnection--integration-test--ubuntu-2204")
+
   const serverSettings = {
     name: "NodeConnection--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
+    ssh_keys: [
+      keyResponse.ssh_key.id
+    ],
   };
 
-  const testServer = new HetznerServer();
   await testServer.create(serverSettings);
   log.info("Server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
     port: "22",
-    username: "root",
-    password: testServer.serverRootPassword,
-    privatekey: undefined,
+    user: "root",
+    privateKey: testServer.sshKeyPair.private,
   };
 
   const nodeConnection = new NodeConnection(connectionParams);
-  await testServer.connect(nodeConnection);
+  const taskManager = new TaskManager(nodeConnection);
+  await testServer.checkServerConnection(nodeConnection);
 
-  //change password
-  await testServer.passwordAuthentication(testServer.serverRootPassword);
+  await nodeConnection.establish(taskManager)
+
 
   await nodeConnection.findOS();
 
@@ -51,6 +57,8 @@ test("prepareStereumNode on ubuntu", async () => {
   const playbookRun = await nodeConnection.prepareStereumNode("/opt/stereum");
   const ansibleRoles = await nodeConnection.sshService.exec("ls /opt/stereum/ansible/controls");
   const ansibleVersion = await nodeConnection.sshService.exec("ansible --version");
+
+  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
   await nodeConnection.sshService.disconnect();
   await testServer.destroy();
 
