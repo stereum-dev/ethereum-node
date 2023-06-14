@@ -64,6 +64,9 @@
                     </div>
                     <div v-if="selectedIcon !== ''" class="selected-item">{{ selectedItem }}</div>
                     <div v-else class="w-selected">{{ selectedItem }}</div>
+                    <div class="openURL">
+                      <img src="../../../../public/img/icon/service-icons/internet.png" alt="Internet" />
+                    </div>
                   </div>
                 </div>
                 <!-- <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select">
@@ -91,7 +94,9 @@
           <ul class="link-wapper">
             <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
               <div class="icon"><img :src="link.icon" alt="" /></div>
-              <span>{{ link.name }}</span>
+              <div class="name">
+                <span>{{ link.name }}</span>
+              </div>
             </li>
           </ul>
         </div>
@@ -159,7 +164,8 @@ export default {
       if (val != this.prevVal) {
         this.prevVal = val;
         this.checkPointSync = "";
-        this.selectedItem = " - SELECT A SOURCE -";
+        this.selectedItem = "- SELECT A SOURCE -";
+        this.selectedIcon = "";
       }
       this.btnActive = val === 0 || this.checkPointSync !== "";
       if (val === 2) {
@@ -243,7 +249,7 @@ export default {
   align-items: center;
 }
 .icon-box {
-  width: 25%;
+  width: 22%;
   height: 90%;
   display: flex;
   justify-content: center;
@@ -255,11 +261,11 @@ export default {
   cursor: pointer;
 }
 .icon-box img {
-  width: 95%;
+  width: 92%;
   height: 95%;
 }
 .selected-item {
-  width: 60%;
+  width: 58%;
   height: 90%;
   display: flex;
   justify-content: center;
@@ -268,12 +274,12 @@ export default {
   border: 2px solid #a1a1a1;
   border-radius: 10px;
   color: #c1c1c1;
-  font-size: 100%;
+  font-size: 80%;
   font-weight: 600;
   cursor: pointer;
 }
 .w-selected {
-  width: 90%;
+  width: 84%;
   height: 90%;
   display: flex;
   justify-content: center;
@@ -285,6 +291,17 @@ export default {
   font-size: 100%;
   font-weight: 600;
   cursor: pointer;
+}
+.openURL {
+  width: 15%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.openURL img {
+  width: 90%;
+  height: 65%;
 }
 .select-button {
   border: none;
@@ -333,7 +350,7 @@ export default {
   width: 32%;
   height: 50%;
   display: flex;
-  background: #88a297;
+  background: #1258a2;
   color: #d5d5d5;
   font-weight: 400;
   position: absolute;
@@ -357,7 +374,7 @@ export default {
   width: 100%;
   height: 30%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   font-size: 100%;
   font-weight: 600;
@@ -368,21 +385,28 @@ export default {
   flex-grow: 0;
   overflow-x: auto;
   cursor: pointer;
-  color: black;
+  color: #c1c1c1;
 }
 .icon {
-  width: 40%;
+  width: 25%;
   height: 90%;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+.name {
+  width: 75%;
+  height: 90%;
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
 }
 .icon img {
   width: 60%;
 }
 .option-row:hover {
-  background-color: #151a1e;
-  color: #d5d5d5;
+  background-color: #c1c1c1;
+  color: #1258a2;
 }
 .option-row span {
   white-space: nowrap;
