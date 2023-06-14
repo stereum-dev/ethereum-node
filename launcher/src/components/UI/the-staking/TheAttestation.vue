@@ -74,7 +74,7 @@ export default {
       } else if (this.stats.ETA === " ETA: now!") {
         return "";
       } else {
-        return `${this.stats.remainingTime} sec`;
+        return `${this.stats.remainingTime ? this.stats.remainingTime : '-'} sec`;
       }
     },
   },
