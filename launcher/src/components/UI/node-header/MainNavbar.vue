@@ -117,7 +117,7 @@ export default {
               e.id = i;
               return e;
             });
-            let network = this.installedServices[0].config.network
+            let network = this.installedServices[0]?.config.network
             this.currentNetwork = this.networkList.find((item) => item.network === network);
 
             if (needForTunnel.length != 0 && this.refresh) {

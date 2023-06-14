@@ -4,36 +4,41 @@
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
 import { ServiceManager } from "../ServiceManager.js";
-import { FlashbotsMevBoostService } from "./FlashbotsMevBoostService.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(600000);
 
 test("mevboost installation", async () => {
+  const testServer = new HetznerServer();
+  const keyResponse = await testServer.createSSHKey("Mevboost--integration-test--ubuntu-2204")
+
   const serverSettings = {
     name: "Mevboost--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
+    ssh_keys: [
+      keyResponse.ssh_key.id
+    ],
   };
 
-  const testServer = new HetznerServer();
   await testServer.create(serverSettings);
   log.info("Server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
     port: "22",
-    username: "root",
-    password: testServer.serverRootPassword,
-    privatekey: undefined,
+    user: "root",
+    privateKey: testServer.sshKeyPair.private,
   };
-  const nodeConnection = new NodeConnection(connectionParams);
-  const serviceManager = new ServiceManager(nodeConnection);
-  await testServer.connect(nodeConnection);
 
-  //change password
-  await testServer.passwordAuthentication(testServer.serverRootPassword);
+  const nodeConnection = new NodeConnection(connectionParams);
+  const taskManager = new TaskManager(nodeConnection);
+  const serviceManager = new ServiceManager(nodeConnection);
+  await testServer.checkServerConnection(nodeConnection);
+
+  await nodeConnection.establish(taskManager)
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -49,16 +54,15 @@ test("mevboost installation", async () => {
   await nodeConnection.findStereumSettings();
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
-  let mevboost = FlashbotsMevBoostService.buildByUserInput(
-    "goerli",
-    "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-goerli.flashbots.net"
-  );
+  //install mevboost
+  let mevboost = serviceManager.getService("FlashbotsMevBoostService", { network: "goerli", relays: "https://0xafa4c6985aa049fb79dd37010438cfebeb0f2bd42b115b89dd678dab0670c1de38da0c4e9138c9290a398ecd9a0b3110@boost-relay-goerli.flashbots.net" })
+
   let versions = await nodeConnection.checkUpdates();
   mevboost.imageVersion = versions[mevboost.network][mevboost.service].slice(-1).pop();
+
   await nodeConnection.writeServiceConfiguration(mevboost.buildConfiguration());
   await serviceManager.manageServiceState(mevboost.id, "started");
 
-  // mevboost logs
   //get logs
   let condition = false;
   let counter = 0;
@@ -78,8 +82,8 @@ test("mevboost installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
+  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
   await nodeConnection.destroyNode();
-  await nodeConnection.sshService.disconnect();
   await testServer.destroy();
 
   //check docker container

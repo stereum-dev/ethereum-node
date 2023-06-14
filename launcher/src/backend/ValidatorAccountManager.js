@@ -149,7 +149,9 @@ export class ValidatorAccountManager {
           await this.nodeConnection.sshService.exec(
             `echo ${StringUtils.createRandomString()} > ${validator_path}/api-token.txt`
           );
-          await Sleep(180000);
+          await this.serviceManager.manageServiceState(client.id, "stopped");
+          await this.serviceManager.manageServiceState(client.id, "started");
+          await Sleep(30000);
         }
         break;
       }

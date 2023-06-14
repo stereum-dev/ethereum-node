@@ -103,25 +103,26 @@ export default {
 
   mounted() {
     this.getActiveComponent("ATTESTATION");
-    this.intervalId = setInterval(() => {
-      if(this.selectedValidator?.key){
-        this.updateValidatorStats(this.selectedValidator.key);
-      }
-    }, 12000);
   },
   unmounted() {
     clearInterval(this.intervalId);
   },
   methods: {
     async getValidatorStats(item) {
+      clearInterval(this.intervalId);
       if (item) {
+        this.intervalId = setInterval(() => {
+          this.updateValidatorStats();
+        }, item.network === "gnosis" ? 8000 : 12000);
         this.selectedValidator = item;
         await this.updateValidatorStats()
       }
     },
     async updateValidatorStats(){
+      if(this.selectedValidator?.key){
         const output = await ControlService.getValidatorStats(this.selectedValidator.key);
         this.stats = output;
+      }      
     },
     toggleDropDown() {
       this.dropDownIsOpen = !this.dropDownIsOpen;

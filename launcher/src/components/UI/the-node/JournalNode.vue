@@ -263,6 +263,7 @@ import ControlService from "@/store/ControlService";
 import { useControlStore } from "../../../store/theControl";
 import { mapState, mapWritableState } from "pinia";
 import { useServices } from "../../../store/services";
+import { useNodeManage } from "../../../store/nodeManage";
 import PluginLogs from "../the-node/PluginLogs.vue";
 
 export default {
@@ -310,7 +311,7 @@ export default {
         this.loading = newValue;
       },
     },
-    ...mapWritableState(useServices, {
+    ...mapWritableState(useNodeManage, {
       resyncSeparateModal: "resyncSeparateModal",
       selectedServiceToResync: "selectedServiceToResync",
     }),

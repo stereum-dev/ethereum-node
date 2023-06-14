@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 export const useNodeManage = defineStore("nodeManage", {
   state: () => {
     return {
+      selectedServiceToResync: {},
+      resyncSeparateModal: false,
       availableBlocks: [],
       usedBlocks: [],
       relaysList: [
