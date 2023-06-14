@@ -37,13 +37,29 @@
               <span>{{ item.name }}</span>
               <span>{{ item.type }}</span>
             </div>
-            <div class="inputBox_select">
+            <!-- <div class="inputBox_select">
               <div class="select">
                 {{ selectedItem }}
               </div>
               <div class="triangle" @click="toggleDropDown">
                 <i v-if="dropdown" class="arrow up"></i>
                 <i v-else class="arrow down"></i>
+              </div>
+            </div> -->
+
+            <div class="inputBox_select-box">
+              <div v-if="selectedItem == '- SELECT A SOURCE -'" class="select-button" @click="toggleDropDown">
+                {{ selectedItem }}
+              </div>
+              <div v-else class="wrapper">
+                <div v-if="selectedIcon !== ''" class="iconbox" @click="tglDropdown">
+                  <img :src="selectedIcon" :alt="selectedItem" />
+                </div>
+                <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
+                <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
+                <div class="openURL" @click="handleOpenWindow">
+                  <img src="/img/icon/service-icons/internet.png" alt="Internet" />
+                </div>
               </div>
             </div>
           </div>
@@ -57,7 +73,7 @@
     <div v-if="dropdown" class="selection-column" @mouseleave="dropdown = false">
       <ul class="link-wapper">
         <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-          <span>{{ link }}</span>
+          <span>{{ link.name }}</span>
         </li>
       </ul>
     </div>
@@ -91,10 +107,11 @@ export default {
   data() {
     return {
       dropdown: false,
-      selectedItem: " - SELECT A SOURCE -", // selected link to use for resync
+      selectedItem: "- SELECT A SOURCE -", // selected link to use for resync
       currentSlide: 0,
       selectedLinks: [],
       prevVal: 0,
+      selectedIcon: "",
     };
   },
 
@@ -118,7 +135,7 @@ export default {
         if (val != this.prevVal) {
           this.prevVal = val;
           this.checkPointSync = "";
-          this.selectedItem = " - SELECT A SOURCE -";
+          this.selectedItem = "- SELECT A SOURCE -";
         }
 
         if (val === 1 && this.checkPointSync === "") {
@@ -138,8 +155,9 @@ export default {
       this.dropdown = !this.dropdown;
     },
     linkPicker(item) {
-      this.selectedItem = item;
-      this.checkPointSync = item;
+      this.selectedItem = item.name;
+      this.selectedIcon = item.icon;
+      this.checkPointSync = item.link;
       this.dropdown = false;
     },
     setSelectedLinks() {
@@ -165,6 +183,101 @@ export default {
 </script>
 
 <style scope>
+.inputBox_select-box {
+  width: 59%;
+  height: 120%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: red;
+}
+.select-button {
+  border: none;
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+  color: #c1c1c1;
+  background: #151a1e;
+  font-size: 80%;
+  font-weight: 500;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.select-button:hover {
+  border: none;
+  color: #c1c1c1;
+  box-sizing: border-box;
+  border: 2px solid #c1c1c1;
+}
+.wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.iconbox {
+  width: 20%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid rgb(161, 161, 161);
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.iconbox img {
+  width: 100%;
+  height: 95%;
+}
+.selected-item {
+  width: 58%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #a1a1a1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 80%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.w-selected {
+  width: 84%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #151a1e;
+  border: 2px solid #c1c1c1;
+  border-radius: 10px;
+  color: #c1c1c1;
+  font-size: 100%;
+  font-weight: 600;
+  cursor: pointer;
+}
+.openURL {
+  width: 15%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.openURL img {
+  width: 90%;
+  height: 65%;
+}
+.openURL:active {
+  transform: scale(0.9);
+}
 .syncRow {
   width: 100%;
   height: 100%;
@@ -349,13 +462,29 @@ export default {
 }
 .syncContent .inputBox_select {
   width: 60%;
-  height: 100%;
-  border-radius: 5px;
+  height: 80%;
   background-color: #1e2226;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2px;
+}
+.inputBox_select_icon {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #151a1e;
+}
+.inputBox_select_name {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #151a1e;
 }
 
 .inputBox_select .triangle {
