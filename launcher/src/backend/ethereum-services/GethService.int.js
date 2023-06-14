@@ -3,38 +3,42 @@
  */
 import { HetznerServer } from "../HetznerServer.js";
 import { NodeConnection } from "../NodeConnection.js";
-import { ServicePort, servicePortProtocol } from "./ServicePort.js";
 import { ServiceManager } from "../ServiceManager.js";
-import { GethService } from "./GethService.js";
+import { TaskManager } from "../TaskManager.js";
 const log = require("electron-log");
 
 jest.setTimeout(500000);
 
 test("geth installation", async () => {
+  const testServer = new HetznerServer();
+  const keyResponse = await testServer.createSSHKey("Geth--integration-test--ubuntu-2204")
+
   const serverSettings = {
     name: "Geth--integration-test--ubuntu-2204",
     image: "ubuntu-22.04",
     server_type: "cpx21",
     start_after_create: true,
+    ssh_keys: [
+      keyResponse.ssh_key.id
+    ],
   };
 
-  const testServer = new HetznerServer();
   await testServer.create(serverSettings);
   log.info("Server started");
 
   const connectionParams = {
     host: testServer.serverIPv4,
     port: "22",
-    username: "root",
-    password: testServer.serverRootPassword,
-    privatekey: undefined,
+    user: "root",
+    privateKey: testServer.sshKeyPair.private,
   };
-  const nodeConnection = new NodeConnection(connectionParams);
-  const serviceManager = new ServiceManager(nodeConnection);
-  await testServer.connect(nodeConnection);
 
-  //change password
-  await testServer.passwordAuthentication(testServer.serverRootPassword);
+  const nodeConnection = new NodeConnection(connectionParams);
+  const taskManager = new TaskManager(nodeConnection);
+  const serviceManager = new ServiceManager(nodeConnection);
+  await testServer.checkServerConnection(nodeConnection);
+
+  await nodeConnection.establish(taskManager)
 
   //prepare node
   await nodeConnection.sshService.exec(` mkdir /etc/stereum &&
@@ -51,17 +55,11 @@ test("geth installation", async () => {
   await nodeConnection.prepareStereumNode(nodeConnection.settings.stereum.settings.controls_install_path);
 
   //install geth
-  const ports = [
-    new ServicePort(null, 30303, 30303, servicePortProtocol.tcp),
-    new ServicePort(null, 30303, 30303, servicePortProtocol.udp),
-  ];
-  let executionClient = GethService.buildByUserInput(
-    "goerli",
-    ports,
-    nodeConnection.settings.stereum.settings.controls_install_path + "/geth"
-  );
+  let executionClient = serviceManager.getService("GethService", { network: "goerli", installDir: "/opt/stereum" })
+
   let versions = await nodeConnection.checkUpdates();
   executionClient.imageVersion = versions[executionClient.network][executionClient.service].slice(-1).pop();
+
   await nodeConnection.writeServiceConfiguration(executionClient.buildConfiguration());
   await serviceManager.manageServiceState(executionClient.id, "started");
 
@@ -75,7 +73,10 @@ test("geth installation", async () => {
     if (
       /WebSocket enabled/.test(status.stderr) &&
       /Started P2P networking/.test(status.stderr) &&
-      !/Rejected WebSocket connection/.test(status.stderr)
+      /Starting metrics server/.test(status.stderr) &&
+      /Loaded JWT secret file/.test(status.stderr) &&
+      /Looking for peers/.test(status.stderr) &&
+      /HTTP server started/.test(status.stderr)
     ) {
       condition = true;
     }
@@ -85,8 +86,8 @@ test("geth installation", async () => {
   const docker = await nodeConnection.sshService.exec("docker ps");
 
   // destroy
+  await testServer.deleteSSHKey(keyResponse.ssh_key.id)
   await nodeConnection.destroyNode();
-  await nodeConnection.sshService.disconnect();
   await testServer.destroy();
 
   //check ufw
@@ -104,5 +105,9 @@ test("geth installation", async () => {
   // idk why but logs are stored in stderr but stdout string is empty
   expect(status.stderr).toMatch(/WebSocket enabled/);
   expect(status.stderr).toMatch(/Started P2P networking/);
-  expect(status.stderr).not.toMatch(/Rejected WebSocket connection/);
+  expect(status.stderr).toMatch(/Starting metrics server/);
+  expect(status.stderr).toMatch(/Loaded JWT secret file/);
+  expect(status.stderr).toMatch(/Looking for peers/);
+  expect(status.stderr).toMatch(/HTTP server started/);
+
 });
