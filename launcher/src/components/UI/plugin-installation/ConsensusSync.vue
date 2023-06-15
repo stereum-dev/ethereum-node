@@ -52,12 +52,12 @@
                 {{ selectedItem }}
               </div>
               <div v-else class="wrapper">
-                <div v-if="selectedIcon !== ''" class="iconbox" @click="tglDropdown">
+                <div v-if="selectedIcon !== ''" class="iconbox" @click="toggleDropDown">
                   <img :src="selectedIcon" :alt="selectedItem" />
                 </div>
-                <div v-if="selectedIcon !== ''" class="selected-item" @click="tglDropdown">{{ selectedItem }}</div>
+                <div v-if="selectedIcon !== ''" class="selected-item" @click="toggleDropDown">{{ selectedItem }}</div>
                 <div v-else class="w-selected" @click="tglDropdown">{{ selectedItem }}</div>
-                <div class="openURL" @click="handleOpenWindow">
+                <div class="openURL" @click="openWindow">
                   <img src="/img/icon/service-icons/internet.png" alt="Internet" />
                 </div>
               </div>
@@ -73,7 +73,10 @@
     <div v-if="dropdown" class="selection-column" @mouseleave="dropdown = false">
       <ul class="link-wapper">
         <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-          <span>{{ link.name }}</span>
+          <div class="icon"><img :src="link.icon" alt="" /></div>
+          <div class="name">
+            <span>{{ link.name }}</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -151,13 +154,17 @@ export default {
     this.setSelectedLinks();
   },
   methods: {
+    openWindow() {
+      let url = this.checkPointSync;
+      window.open(url, "_blank");
+    },
     toggleDropDown() {
       this.dropdown = !this.dropdown;
     },
     linkPicker(item) {
       this.selectedItem = item.name;
       this.selectedIcon = item.icon;
-      this.checkPointSync = item.link;
+      this.checkPointSync = item.url;
       this.dropdown = false;
     },
     setSelectedLinks() {
@@ -183,13 +190,31 @@ export default {
 </script>
 
 <style scope>
+.icon {
+  width: 25%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5%;
+}
+.name {
+  width: 75%;
+  height: 90%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 130%;
+}
+.icon img {
+  width: 70%;
+}
 .inputBox_select-box {
   width: 59%;
   height: 120%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: red;
 }
 .select-button {
   border: none;
@@ -232,8 +257,8 @@ export default {
   cursor: pointer;
 }
 .iconbox img {
-  width: 100%;
-  height: 95%;
+  width: 90% !important;
+  height: 95% !important;
 }
 .selected-item {
   width: 58%;
@@ -272,8 +297,8 @@ export default {
   cursor: pointer;
 }
 .openURL img {
-  width: 90%;
-  height: 65%;
+  width: 90% !important;
+  height: 65% !important;
 }
 .openURL:active {
   transform: scale(0.9);
@@ -530,21 +555,20 @@ export default {
 }
 
 .selection-column {
-  width: 50%;
+  width: 34%;
   height: 200%;
   display: flex;
-  background-color: #151a1e;
-  border-radius: 5px;
-  color: #4995e1;
+  background-color: #1258a2;
+  border-radius: 0 0 5px 5px;
+  color: #d5d5d5;
   font-weight: 400;
   position: absolute;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow-y: scroll;
-  padding: 10px;
-  top: 85%;
-  left: 51%;
+  top: 80%;
+  left: 59.2%;
 }
 .link-wapper {
   width: 100%;
@@ -557,30 +581,31 @@ export default {
   align-items: center;
 }
 .link-wapper::-webkit-scrollbar {
-  width: 5px;
+  width: none;
   background: transparent;
 }
 
 .link-wapper::-webkit-scrollbar-thumb {
   background: #cfdedf;
-  border-radius: 5px;
+  border-radius: 1px;
+  width: none;
 }
 .option-row {
   width: 100%;
-  height: 30px;
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   font-size: 70%;
   font-weight: 600;
-  padding: 1%;
+  padding: 5px;
   margin-bottom: 1%;
-  border-bottom: 1px solid #3c4245;
+  border-bottom: 1px solid #d5d5d5;
   cursor: pointer;
 }
 .option-row:hover {
-  background-color: #151a1e;
-  color: #d5d5d5;
+  background-color: #d5d5d5;
+  color: #1258a2;
 }
 .option-row span {
   white-space: nowrap;
