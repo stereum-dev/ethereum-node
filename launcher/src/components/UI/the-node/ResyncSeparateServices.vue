@@ -80,8 +80,8 @@
         <div v-if="drpDown" class="selection-column-modal">
           <ul class="link-wapper">
             <li v-for="link in selectedLinks" :key="link" class="option-row" @click="linkPicker(link)">
-              <div class="icon"><img :src="link.icon" alt="" /></div>
-              <div class="name">
+              <div class="iconSelector"><img :src="link.icon" alt="" /></div>
+              <div class="nameSelector">
                 <span>{{ link.name }}</span>
               </div>
             </li>
@@ -350,8 +350,9 @@ export default {
   justify-content: center;
   align-items: center;
   top: 75%;
-  left: 45%;
+  left: 46%;
   z-index: 500;
+  border-radius: 0 0 10px 10px;
 }
 .link-wapper {
   width: 100%;
@@ -361,6 +362,7 @@ export default {
   overflow-y: scroll;
   justify-content: flex-start;
   align-items: flex-start;
+  border-radius: 0 0 10px 10px;
 }
 .option-row {
   width: 100%;
@@ -379,22 +381,24 @@ export default {
   cursor: pointer;
   color: #c1c1c1;
 }
-.icon {
+.iconSelector {
   width: 25%;
   height: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 2%;
 }
-.name {
+.nameSelector {
   width: 75%;
   height: 90%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  font-size: 85%;
 }
-.icon img {
-  width: 60%;
+.iconSelector img {
+  width: 70%;
 }
 .option-row:hover {
   background-color: #c1c1c1;

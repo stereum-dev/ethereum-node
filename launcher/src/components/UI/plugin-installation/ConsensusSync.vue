@@ -587,7 +587,7 @@ export default {
 
 .link-wapper::-webkit-scrollbar-thumb {
   background: #cfdedf;
-  border-radius: 1px;
+  border-radius: 5px;
   width: none;
 }
 .option-row {
